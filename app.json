@@ -22,7 +22,20 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "location"
+        ],
+        "NSLocationWhenInUseUsageDescription": "Saber a localização do entregador",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Saber a localização do entregador",
+        "NSLocationAlwaysUsageDescription": "Saber a localização do entregador"
+      }
+    },
+    "android": {
+      "permissions": [
+        "ACCESS_FINE_LOCATION"
+      ]
     }
   }
 }
