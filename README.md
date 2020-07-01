@@ -1,8 +1,8 @@
 # 1. Clonar repositório e instalar dependências
 
 ```
-git clone git@github.com:appjusto/entregador.git
-cd entregador
+git clone git@github.com:appjusto/app.git
+cd app
 npm install
 ```
 

@@ -3,10 +3,14 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
 
+import { getAppFlavor } from './app.config';
 import locationReducer from './store/reducers/location';
 import { updateLocation } from './store/actions/location';
 import { defineLocationUpdatesTask } from './tasks/location';
-import Home from './screens/home/Home';
+
+import AdminApp from './screens/admin/AdminApp';
+import CourierApp from './screens/courier/CourierApp';
+import ConsumerApp from './screens/consumer/ConsumerApp';
 
 const rootReducer = combineReducers({
   location: locationReducer,
@@ -24,10 +28,17 @@ defineLocationUpdatesTask(({ data: { locations }, error }) => {
   store.dispatch(updateLocation(location));
 });
 
-export default function App() {
+const App = () => {
+  const flavor = getAppFlavor();
+  if (flavor === 'admin') return <AdminApp />
+  if (flavor === 'courier') return <CourierApp />
+  if (flavor === 'consumer') return <ConsumerApp />
+}
+
+export default function() {
   return (
     <Provider store={store}>
-      <Home />
+      <App />
     </Provider>
   );
 }

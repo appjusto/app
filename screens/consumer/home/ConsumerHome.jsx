@@ -5,10 +5,10 @@ import * as Location from 'expo-location';
 import { useSelector, useDispatch } from 'react-redux';
 import MapView, { Marker } from 'react-native-maps';
 
-import { updateLocation } from '../../store/actions/location';
-import { getCurrentLocation } from '../../store/selectors/location';
-import { startLocationUpdatesTask } from '../../tasks/location';
-import { getExtra } from '../../app.config';
+import { updateLocation } from '../../../store/actions/location';
+import { getCurrentLocation } from '../../../store/selectors/location';
+import { startLocationUpdatesTask } from '../../../tasks/location';
+import { getExtra } from '../../../app.config';
 
 const defaultDeltas = {
   latitudeDelta: 0.0250,
