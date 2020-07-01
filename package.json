@@ -9,11 +9,13 @@
   },
   "dependencies": {
     "expo": "^38.0.0",
+    "expo-constants": "~9.1.1",
     "expo-permissions": "~9.0.1",
     "expo-task-manager": "~8.3.0",
     "react": "16.11.0",
     "react-dom": "16.11.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.0.tar.gz",
+    "react-native-dotenv": "^0.2.0",
     "react-native-maps": "0.27.1",
     "react-native-web": "~0.11.7",
     "react-redux": "^7.2.0",
@@ -21,8 +23,9 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.8.6",
     "babel-preset-expo": "^8.2.3",
-    "@babel/core": "^7.8.6"
+    "metro-react-native-babel-preset": "^0.60.0"
   },
   "private": true
 }
