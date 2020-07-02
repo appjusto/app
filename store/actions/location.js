@@ -8,6 +8,3 @@ export const updateLocation = (location, shouldBroadcast) => (dispatch) => {
   }
 };
 
-export const setLocationBroadcast = (value) => (dispatch) => {
-  dispatch({ type: actionTypes.SET_LOCATION_BROADCAST, payload: value });
-};

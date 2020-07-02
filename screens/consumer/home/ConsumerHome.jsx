@@ -6,11 +6,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import MapView, { Marker } from 'react-native-maps';
 
 import { updateLocation } from '../../../store/actions/location';
-import { getCurrentLocation, isBroadcastingLocation } from '../../../store/selectors/location';
+import { getCurrentLocation } from '../../../store/selectors/location';
+import { isBroadcastingLocation } from '../../../store/selectors';
 import { startLocationUpdatesTask } from '../../../tasks/location';
-import { getExtra } from '../../../app.config';
-import { flex } from '../../common/styles';
-import AdminLocationList from '../../../common/admin/AdminLocationList';
 
 const defaultDeltas = {
   latitudeDelta: 0.0250,
@@ -24,7 +22,7 @@ export default function App() {
   // state
   const [locationPermission, setLocationPermission] = useState(null);
   const currentLocation = useSelector(getCurrentLocation);
-  const broadcastLocation = useSelector(isBroadcastingLocation)
+  const shouldBroadcastLocation = useSelector(isBroadcastingLocation);
 
   // helpers
   const askForLocation = async () => {
@@ -34,7 +32,7 @@ export default function App() {
 
   const updateWithCurrentLocation = async () => {
     const position = await Location.getCurrentPositionAsync({})
-    dispatch(updateLocation(position, broadcastLocation));
+    dispatch(updateLocation(position, shouldBroadcastLocation));
   }
 
   // side effects
@@ -65,7 +63,6 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <AdminLocationList />
       {renderMap()}
     </View>
   );
@@ -73,10 +70,10 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 2,
+    flex: 1,
     backgroundColor: '#fff',
   },
   map: {
-    flex: 10,
+    flex: 1,
   },
 });
