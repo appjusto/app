@@ -6,9 +6,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import MapView, { Marker } from 'react-native-maps';
 
 import { updateLocation } from '../../../store/actions/location';
-import { getCurrentLocation } from '../../../store/selectors/location';
+import { getCurrentLocation, isBroadcastingLocation } from '../../../store/selectors/location';
 import { startLocationUpdatesTask } from '../../../tasks/location';
 import { getExtra } from '../../../app.config';
+import { flex } from '../../common/styles';
+import AdminLocationList from '../../../common/admin/AdminLocationList';
 
 const defaultDeltas = {
   latitudeDelta: 0.0250,
@@ -21,8 +23,8 @@ export default function App() {
 
   // state
   const [locationPermission, setLocationPermission] = useState(null);
-  // const [currentLocation, setCurrentLocation] = useState(null);
   const currentLocation = useSelector(getCurrentLocation);
+  const broadcastLocation = useSelector(isBroadcastingLocation)
 
   // helpers
   const askForLocation = async () => {
@@ -32,7 +34,7 @@ export default function App() {
 
   const updateWithCurrentLocation = async () => {
     const position = await Location.getCurrentPositionAsync({})
-    dispatch(updateLocation(position));
+    dispatch(updateLocation(position, broadcastLocation));
   }
 
   // side effects
@@ -47,13 +49,12 @@ export default function App() {
     }
   }, [locationPermission]);
 
-  console.log(getExtra());
-
   // UI
   const renderMap = () => {
     if (!currentLocation) return null;
+    const { width } = Dimensions.get('window');
     return (
-      <MapView style={styles.map} region={{
+      <MapView style={[styles.map, { width }]} region={{
         ...currentLocation,
         ...defaultDeltas,
       }}>
@@ -64,6 +65,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      <AdminLocationList />
       {renderMap()}
     </View>
   );
@@ -71,13 +73,10 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 2,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   map: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    flex: 10,
   },
 });

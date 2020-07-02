@@ -6,6 +6,7 @@ import ReduxThunk from 'redux-thunk';
 import { getAppFlavor } from './app.config';
 import locationReducer from './store/reducers/location';
 import { updateLocation } from './store/actions/location';
+import { isBroadcastingLocation } from './store/selectors/location';
 import { defineLocationUpdatesTask } from './tasks/location';
 
 import AdminApp from './screens/admin/AdminApp';
@@ -25,7 +26,8 @@ defineLocationUpdatesTask(({ data: { locations }, error }) => {
   }
   console.log('Received new locations', locations);
   const [location] = locations;
-  store.dispatch(updateLocation(location));
+  const broadcastLocation = isBroadcastingLocation(store.getState())
+  store.dispatch(updateLocation(location, broadcastLocation));
 });
 
 const App = () => {

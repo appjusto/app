@@ -1,15 +1,18 @@
 import * as actionTypes from '../actionTypes';
 
 const initialState = {
-  current: null
+  current: null,
+  broadcasting: true,
 };
 
 export default function (state = initialState, action) {
-  switch (action.type) {
+  const { type, payload } = action;
+  switch (type) {
     case actionTypes.LOCATION_UPDATE: {
-      return {
-        current: action.payload.coords,
-      };
+      return { ...state, current: payload.coords };
+    }
+    case actionTypes.SET_LOCATION_BROADCAST: {
+      return { ...state, broadcasting: payload };
     }
     default:
       return state;
