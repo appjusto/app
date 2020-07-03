@@ -22,13 +22,15 @@ export default ({ config }) => {
     ios: {
       ...ios,
       config: {
-        googleMaps: GOOGLE_MAPS_API_KEY,
+        googleMapsApiKey: GOOGLE_MAPS_API_KEY,
       }
     },
     android: {
       ...android,
       config: {
-        googleMaps: GOOGLE_MAPS_API_KEY,
+        googleMaps: {
+          apiKey: GOOGLE_MAPS_API_KEY,
+        }
       },
     },
     extra: {
