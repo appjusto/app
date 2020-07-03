@@ -1,5 +1,5 @@
 import Constants from 'expo-constants';
-import { APP_FLAVOR, FIREBASE_API_KEY, FIREBASE_PROJECT_ID, FIREBASE_DATABASE_NAME, FIREBASE_MESSAGING_SENDER_ID, FIREBASE_APP_ID } from 'react-native-dotenv';
+import { APP_FLAVOR, GOOGLE_MAPS_API_KEY, FIREBASE_API_KEY, FIREBASE_PROJECT_ID, FIREBASE_DATABASE_NAME, FIREBASE_MESSAGING_SENDER_ID, FIREBASE_APP_ID } from 'react-native-dotenv';
 import { APP_FLAVOR_ADMIN, APP_FLAVOR_CONSUMER, APP_FLAVOR_COURIER } from './store/constants';
 
 export const getExtra = () => Constants.manifest.extra;
@@ -16,9 +16,21 @@ export const getAppFlavor = () => {
 }
 
 export default ({ config }) => {
-  const { extra } = config;
+  const { ios, android, extra } = config;
   return {
     ...config,
+    ios: {
+      ...ios,
+      config: {
+        googleMaps: GOOGLE_MAPS_API_KEY,
+      }
+    },
+    android: {
+      ...android,
+      config: {
+        googleMaps: GOOGLE_MAPS_API_KEY,
+      },
+    },
     extra: {
       ...extra,
       firebase: {

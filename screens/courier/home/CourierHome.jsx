@@ -3,13 +3,14 @@ import { StyleSheet, View, Dimensions, Text, Button } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
 import { useSelector, useDispatch } from 'react-redux';
-import MapView, { Marker } from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 
 import { ApiContext } from '../../../store/api';
 import { startLocationUpdatesTask } from '../../../tasks/location';
 import { updateCourierLocation } from '../../../store/actions/courier';
 import { setWorking } from '../../../store/actions/courier';
 import { getCourierProfile, isCourierWorking, getCourierLocation } from '../../../store/selectors/courier';
+import DefaultMap from '../../common/DefaultMap';
 
 const defaultDeltas = {
   latitudeDelta: 0.0250,
@@ -59,12 +60,14 @@ export default function App() {
     if (!currentLocation) return null;
     const { width } = Dimensions.get('window');
     return (
-      <MapView style={[styles.map, { width }]} region={{
+      <DefaultMap
+        style={[styles.map, { width }]}
+        region={{
         ...currentLocation,
         ...defaultDeltas,
       }}>
         <Marker coordinate={currentLocation} />
-      </MapView>
+      </DefaultMap>
     )
   }
 

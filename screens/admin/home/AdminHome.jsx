@@ -1,11 +1,12 @@
 import React, { useEffect, useContext } from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ApiContext } from '../../../store/api';
 import { fetchVisibleCouriers } from '../../../store/actions/courier';
 import { getVisibleCouriers } from '../../../store/selectors/courier';
+import DefaultMap from '../../common/DefaultMap';
 
 
 const defaultDeltas = {
@@ -32,11 +33,11 @@ export default function App() {
     // if (!currentLocation) return null;
     const { width } = Dimensions.get('window');
     return (
-      <MapView style={[styles.map, { width }]}>
+      <DefaultMap style={[styles.map, { width }]}>
         {visibleCouriers.map((courier) => (
           <Marker key={courier.id} coordinate={courier.lastKnownLocation} />
         ))}
-      </MapView>
+      </DefaultMap>
     )
   }
 
