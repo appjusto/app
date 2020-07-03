@@ -1,0 +1,1 @@
+export const getOngoingOrders = (state) => state.consumer.ongoingOrders;
