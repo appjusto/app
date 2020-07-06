@@ -19,6 +19,7 @@ import AdminApp from './screens/admin/AdminApp';
 import CourierApp from './screens/courier/CourierApp';
 import ConsumerApp from './screens/consumer/ConsumerApp';
 import AdminControlPainel from './screens/common/admin/AdminControlPainel';
+import useNotificationToken from './hooks/useNotificationToken';
 
 const api = new Api(getExtra().firebase);
 
@@ -56,6 +57,7 @@ const App = () => {
 export default function() {
   const env = getEnv(store.getState())
   const adminPainel = env === 'development' ? <AdminControlPainel /> : null;
+  const [token, error] = useNotificationToken();
   return (
     <ApiContext.Provider value={api}>
       <Provider store={store}>

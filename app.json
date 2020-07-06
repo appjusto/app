@@ -22,6 +22,7 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "br.com.appjusto.app",
       "supportsTablet": true,
       "infoPlist": {
         "UIBackgroundModes": [
@@ -33,9 +34,12 @@
       }
     },
     "android": {
+      "package": "br.com.appjusto.app",
       "permissions": [
         "ACCESS_FINE_LOCATION"
-      ]
+      ],
+      "googleServicesFile": "./google-services.json",
+      "useNextNotificationsApi": true
     }
   }
 }
