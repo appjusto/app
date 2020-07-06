@@ -6,8 +6,8 @@ const pt = {
 
   //Intro
   weAre: 'Somos um delivery aberto, transparente e consciente.',
-  platform:
-    'A plataforma de entregas mais justa, transparente e aberta disponível.',
+  platform: 'A plataforma de entregas mais justa, transparente e aberta disponível.',
+  enter: 'Entrar',
 };
 
 const en = {
@@ -16,6 +16,7 @@ const en = {
   //Intro
   weAre: 'We are an open, transparent and conscious delivery app.',
   platform: 'The most fair, transparent and open delivery platform available.',
+  enter: 'Enter',
 };
 
 i18n.fallbacks = true;
