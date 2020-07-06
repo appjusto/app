@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from 'react';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View, Dimensions, Text } from 'react-native';
 import { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -14,7 +14,7 @@ const defaultDeltas = {
   longitudeDelta: 0.0125,
 };
 
-export default function App() {
+export default function App({ token }) {
   // context
   const dispatch = useDispatch();
   const api = useContext(ApiContext);
@@ -33,11 +33,14 @@ export default function App() {
     // if (!currentLocation) return null;
     const { width } = Dimensions.get('window');
     return (
-      <DefaultMap style={[styles.map, { width }]}>
-        {visibleCouriers.map((courier) => (
-          <Marker key={courier.id} coordinate={courier.lastKnownLocation} />
-        ))}
-      </DefaultMap>
+      <View style={{ flex: 1 }}>
+        <Text>Token: {token}</Text>
+        <DefaultMap style={[styles.map, { width }]}>
+          {visibleCouriers.map((courier) => (
+            <Marker key={courier.id} coordinate={courier.lastKnownLocation} />
+          ))}
+        </DefaultMap>
+      </View>
     )
   }
 

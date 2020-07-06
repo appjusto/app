@@ -47,9 +47,10 @@ defineLocationUpdatesTask(({ data: { locations }, error }) => {
 });
 
 const App = () => {
+  const [token, error] = useNotificationToken();
   const isAdmin = useSelector(isAdminFlavor);
   const isConsumer = useSelector(isConsumerFlavor);
-  if (isAdmin) return <AdminApp />
+  if (isAdmin) return <AdminApp token={token} />
   if (isConsumer) return <ConsumerApp />
   return <CourierApp />
 }
@@ -57,7 +58,6 @@ const App = () => {
 export default function() {
   const env = getEnv(store.getState())
   const adminPainel = env === 'development' ? <AdminControlPainel /> : null;
-  const [token, error] = useNotificationToken();
   return (
     <ApiContext.Provider value={api}>
       <Provider store={store}>

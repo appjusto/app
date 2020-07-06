@@ -1,29 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Platform } from 'react-native';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
+import { colors } from '../screens/common/styles';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
+if (Platform.OS === 'android') {
+  Notifications.setNotificationChannelAsync('default', {
+    name: 'default',
+    importance: Notifications.AndroidImportance.MAX,
+    vibrationPattern: [0, 250, 250, 250],
+    lightColor: colors.lightGreen,
+  });
+}
 
 export default function () {
   const [token, setToken] = useState(null);
   const [error, setError] = useState(null);
-
-  if (token) return [token, null];
-  if (error) return [null, error];
-
-  // won't work in simulator; only in physical devices
-  if (!Constants.isDevice) {
-    setError('not-a-device');
-    return [null, null];
-  }
-
-  if (Platform.OS === 'android') {
-    Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
-    });
-  }
 
   const askPermission = async () => {
     const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
@@ -39,6 +40,16 @@ export default function () {
       setError('permission-denied');
     }
   }
-  askPermission();
+
+  useEffect(() => {
+    // won't work in simulator; only in physical devices
+    if (!Constants.isDevice) {
+      setError('not-a-device');
+    }
+    else {
+      askPermission();
+    }
+  }, []);
+
   return [token, error];
 }
