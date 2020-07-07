@@ -1,19 +1,20 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-import * as fonts from '../../../../assets/fonts'
+import * as fonts from '../../assets/fonts';
+import { colors } from './styles';
 
-export default function RegularButton({ children, isGreen }) {
+export default function RegularButton({ title, disabled }) {
   return (
     <TouchableOpacity>
       <View
         style={{
           ...styles.buttonContainer,
-          backgroundColor: isGreen ? '#78E08F' : '#697667',
+          backgroundColor: disabled ? colors.darkGrey : colors.green,
         }}
       >
-        <Text style={{ ...styles.text, color: isGreen ? 'black' : 'white' }}>
-          {children}
+        <Text style={{ ...styles.text, color: disabled ? colors.white : colors.black }}>
+          {title}
         </Text>
       </View>
     </TouchableOpacity>

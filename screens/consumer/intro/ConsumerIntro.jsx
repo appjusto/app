@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
-import DefaultInput from '../components/default-input/DefaultInput';
-import RegularButton from '../components/regular-button/RegularButton';
+import DefaultInput from '../../common/DefaultInput';
+import DefaultButton from '../../common/DefaultButton';
 import { t } from '../../../strings';
 import { logoWhite } from '../../../assets/icons';
 import * as fonts from '../../../assets/fonts'
 
 export default function ConsumerIntro() {
+  const [phone, setPhone] = useState('');
+
   return (
     <View style={styles.screen}>
       <View style={styles.greenCircle} />
@@ -21,11 +23,14 @@ export default function ConsumerIntro() {
         <Text style={styles.mediumText}>{t('platform')}</Text>
       </View>
       <DefaultInput
-        actionButton
+        value={phone}
         title={t('access')}
-        // keyboardType='numeric'
         placeholder={t('cellPhone')}
-      />
+        onChangeText={setPhone}
+        keyboardType='numeric'
+      >
+        <DefaultButton disabled={phone.length === 0} title={t('enter')} />
+      </DefaultInput>
       <TouchableOpacity style={styles.tb}>
         <View style={styles.enterEmail}>
           <View style={styles.littleCircle} />
