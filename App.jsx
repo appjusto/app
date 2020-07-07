@@ -20,7 +20,7 @@ import consumerReducer from './store/reducers/consumer';
 import AdminApp from './screens/admin/AdminApp';
 import CourierApp from './screens/courier/CourierApp';
 import ConsumerApp from './screens/consumer/ConsumerApp';
-import AdminControlPainel from './screens/common/admin/AdminControlPainel';
+import AdminFlavorChooser from './screens/common/admin/AdminFlavorChooser';
 
 const api = new Api(getExtra().firebase);
 
@@ -55,7 +55,7 @@ const App = () => {
   return (
     <>
       {getAppFlavor() === APP_FLAVOR_ADMIN && (
-        <AdminControlPainel />
+        <AdminFlavorChooser />
       )}
       {isAdmin && <AdminApp token={token} />}
       {isConsumer && <ConsumerApp />}

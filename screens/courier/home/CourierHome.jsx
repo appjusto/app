@@ -6,11 +6,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Marker } from 'react-native-maps';
 
 import { ApiContext } from '../../../store/api';
-import { startLocationUpdatesTask } from '../../../tasks/location';
-import { updateCourierLocation } from '../../../store/actions/courier';
-import { setWorking } from '../../../store/actions/courier';
+import { startLocationUpdatesTask, stopLocationUpdatesTask } from '../../../tasks/location';
+import { updateCourierStatus, updateCourierLocation } from '../../../store/actions/courier';
 import { getCourierProfile, isCourierWorking, getCourierLocation } from '../../../store/selectors/courier';
 import DefaultMap from '../../common/DefaultMap';
+import { COURIER_STATUS_NOT_WORKING, COURIER_STATUS_AVAILABLE, COURIER_STATUS_DISPATCHING } from '../../../store/constants';
 
 const defaultDeltas = {
   latitudeDelta: 0.0250,
@@ -47,12 +47,16 @@ export default function App() {
     if (locationPermission === 'granted') {
       updateWithCurrentLocation();
       startLocationUpdatesTask();
+
+      return async () => {
+        await stopLocationUpdatesTask();
+      }
     }
   }, [locationPermission]);
 
   // handlers
   const toggleWorking = () => {
-    dispatch(setWorking(!isWorking));
+    dispatch(updateCourierStatus(isWorking ? COURIER_STATUS_NOT_WORKING : COURIER_STATUS_AVAILABLE ));
   }
 
   // UI

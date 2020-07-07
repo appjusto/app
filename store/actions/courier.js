@@ -1,7 +1,11 @@
 import * as actionTypes from '../actionTypes';
 
-export const setWorking = (value) => (dispatch) => {
-  dispatch({ type: actionTypes.COURIER_SET_WORKING, payload: value });
+export const setCourierProfile = (profile) => (dispatch) => {
+  dispatch({ type: actionTypes.COURIER_SET_PROFILE, payload: profile });
+}
+
+export const updateCourierStatus = (status) => (dispatch) => {
+  dispatch({ type: actionTypes.COURIER_UPDATE_STATUS, payload: status });
 };
 
 export const updateCourierLocation = (api) => (courier, location, shouldBroadcast) => (dispatch) => {

@@ -11,4 +11,8 @@ export const startLocationUpdatesTask = () => {
   });
 };
 
+export const stopLocationUpdatesTask = () => {
+  Location.stopLocationUpdatesAsync(TASK_FETCH_LOCATION);
+}
+
 export const defineLocationUpdatesTask = (handler) => TaskManager.defineTask(TASK_FETCH_LOCATION, handler);
