@@ -31,7 +31,9 @@
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "expo-notifications": "~0.3.3"
+    "expo-notifications": "~0.3.3",
+    "expo-font": "~8.2.1",
+    "expo-asset": "~8.1.7"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

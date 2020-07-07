@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
+import * as fonts from '../../../../assets/fonts'
+
 export default function RegularButton({ children, isGreen }) {
   return (
     <TouchableOpacity>
@@ -29,6 +31,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center', //the container shrinks to the size of its content
   },
   text: {
+    fontFamily: fonts.medium,
     fontSize: 16,
     lineHeight: 19,
     height: 19,

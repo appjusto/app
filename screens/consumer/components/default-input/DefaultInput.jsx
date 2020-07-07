@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet } from 'react-native';
 
 import RegularButton from '../regular-button/RegularButton';
 import { t } from '../../../../strings';
+import * as fonts from '../../../../assets/fonts'
 
 const DeafaultInput = ({ actionButton, title, placeholder, onChange, value, ...props }) => (
   <View style={styles.container}>
@@ -30,6 +31,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {},
   text: {
+    fontFamily: fonts.medium,
     fontSize: 13,
     lineHeight: 16,
     color: '#63B745',

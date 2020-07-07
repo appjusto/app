@@ -11,6 +11,7 @@ const pt = {
   access: 'Acesse sua conta',
   cellPhone: 'Digite seu celular',
   yourEmail: 'Entrar usando seu e-mail',
+  part: 'Faça parte desse movimento →',
 };
 
 const en = {
@@ -22,7 +23,8 @@ const en = {
   enter: 'Enter',
   access: 'Access your account',
   cellPhone: 'Enter your cell phone number',
-  yourEmail: 'Sign in using your email',
+  yourEmail: 'Log in using your email',
+  part: 'Be a part of this movement →',
 };
 
 i18n.fallbacks = true;

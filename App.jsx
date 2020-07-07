@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider, useSelector } from 'react-redux';
+import * as Font from 'expo-font';
+import { Asset } from 'expo-asset';
+import { AppLoading } from 'expo';
 import ReduxThunk from 'redux-thunk';
 
 import { defineLocationUpdatesTask } from './tasks/location';
 import { updateCourierLocation } from './store/actions/courier';
 import { isCourierWorking, getCourierProfile } from './store/selectors/courier';
-import { isAdminFlavor, isConsumerFlavor, isCourierFlavor } from './store/selectors/config';
+import {
+  isAdminFlavor,
+  isConsumerFlavor,
+  isCourierFlavor,
+} from './store/selectors/config';
 import { getAppFlavor, getExtra } from './app.config';
 import Api, { ApiContext } from './store/api';
 import useNotificationToken from './hooks/useNotificationToken';
@@ -21,6 +28,9 @@ import AdminApp from './screens/admin/AdminApp';
 import CourierApp from './screens/courier/CourierApp';
 import ConsumerApp from './screens/consumer/ConsumerApp';
 import AdminControlPainel from './screens/common/admin/AdminControlPainel';
+
+import fonts from './assets/fonts';
+import icons from './assets/icons';
 
 const api = new Api(getExtra().firebase);
 
@@ -44,7 +54,9 @@ defineLocationUpdatesTask(({ data: { locations }, error }) => {
   const isCourier = isCourierFlavor(state);
   const courier = isCourier && getCourierProfile(state);
   const shouldBroadcastLocation = !!courier && isCourierWorking(state);
-  store.dispatch(updateCourierLocation(api)(courier, location, shouldBroadcastLocation));
+  store.dispatch(
+    updateCourierLocation(api)(courier, location, shouldBroadcastLocation)
+  );
 });
 
 const App = () => {
@@ -52,27 +64,38 @@ const App = () => {
   const isAdmin = useSelector(isAdminFlavor);
   const isConsumer = useSelector(isConsumerFlavor);
   const isCourier = useSelector(isCourierFlavor);
+  const fetchFonts = () => Font.loadAsync(fonts);
+  const fetchAssets = () => Asset.loadAsync(icons);
+  const [assetsLoaded, setAssetsLoaded] = useState(false);
+
+  if (!assetsLoaded) {
+    return (
+      <AppLoading
+        startAsync={() => Promise.all([fetchAssets(), fetchFonts()])}
+        onFinish={() => {
+          setAssetsLoaded(true);
+        }}
+      />
+    );
+  }
   return (
     <>
-      {getAppFlavor() === APP_FLAVOR_ADMIN && (
-        <AdminControlPainel />
-      )}
+      {getAppFlavor() === APP_FLAVOR_ADMIN && <AdminControlPainel />}
       {isAdmin && <AdminApp token={token} />}
       {isConsumer && <ConsumerApp />}
       {isCourier && <CourierApp />}
     </>
   );
-}
+};
 
-export default function() {
+export default function () {
   return (
     <ApiContext.Provider value={api}>
       <Provider store={store}>
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <App />
         </View>
       </Provider>
     </ApiContext.Provider>
   );
 }
-

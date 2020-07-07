@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 import DefaultInput from '../components/default-input/DefaultInput';
+import RegularButton from '../components/regular-button/RegularButton';
 import { t } from '../../../strings';
 import { logoWhite } from '../../../assets/icons';
+import * as fonts from '../../../assets/fonts'
 
 export default function ConsumerIntro() {
   return (
@@ -24,9 +26,17 @@ export default function ConsumerIntro() {
         // keyboardType='numeric'
         placeholder={t('cellPhone')}
       />
-      <View style={styles.enterEmail}>
-        <View style={styles.littleCircle} />
-        <Text style={styles.emailText}>{t('yourEmail')}</Text>
+      <TouchableOpacity style={styles.tb}>
+        <View style={styles.enterEmail}>
+          <View style={styles.littleCircle} />
+          <Text style={styles.emailText}>{t('yourEmail')}</Text>
+        </View>
+      </TouchableOpacity>
+      <View style={styles.bottomContainer}>
+        <View style={styles.bottomBox}>
+          <Text style={styles.bottomText}></Text>
+        </View>
+        {/* <RegularButton isGreen></RegularButton> */}
       </View>
     </View>
   );
@@ -66,6 +76,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     lineHeight: 29,
     color: '#000',
+    fontFamily: fonts.medium,
   },
   containerMediumText: {
     width: '85%',
@@ -78,18 +89,21 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 18,
     color: '#697667',
+    fontFamily: fonts.medium,
+  },
+  tb: {
+    alignSelf: 'center',
+    height: 18,
+    marginTop: 16,
   },
   enterEmail: {
     flexDirection: 'row',
-    alignSelf: 'center',
     alignItems: 'center',
-    height: 18,
-    marginTop: 16,
   },
   littleCircle: {
     height: 4,
     width: 4,
-    borderRadius: 2,
+    borderRadius: 4 / 2,
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: '#63B745',
@@ -99,5 +113,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 18,
     marginLeft: 4,
+    fontFamily: fonts.medium,
   },
+  bottomContainer: {},
+  bottomBox: {},
+  bottomText: {},
 });
