@@ -1,20 +1,18 @@
 import React from 'react';
-import { View, Text, Input, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
 
 import RegularButton from '../regular-button/RegularButton';
 import { t } from '../../../../strings';
 
-export default function ConsumerInput({ hasButton }) {
-  return (
-    <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <Text style={styles.text}>Teste</Text>
-        <Input />
-      </View>
-      {hasButton && <RegularButton>{t('enter')}</RegularButton>}
+const DeafaultInput = ({ actionButton, title, placeholder, onChange, value, ...props }) => (
+  <View style={styles.container}>
+    <View style={styles.inputContainer}>
+      <Text style={styles.text}>{title}</Text>
+      <TextInput placeholder={placeholder} onChange={onChange} value={value} {...props} />
     </View>
-  );
-}
+    {actionButton && <RegularButton>{t('enter')}</RegularButton>}
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -27,6 +25,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 12,
   },
   inputContainer: {},
@@ -37,3 +36,5 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
 });
+
+export default DeafaultInput;

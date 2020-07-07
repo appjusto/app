@@ -8,6 +8,9 @@ const pt = {
   weAre: 'Somos um delivery aberto, transparente e consciente.',
   platform: 'A plataforma de entregas mais justa, transparente e aberta disponível.',
   enter: 'Entrar',
+  access: 'Acesse sua conta',
+  cellPhone: 'Digite seu celular',
+  yourEmail: 'Entrar usando seu e-mail',
 };
 
 const en = {
@@ -17,6 +20,9 @@ const en = {
   weAre: 'We are an open, transparent and conscious delivery app.',
   platform: 'The most fair, transparent and open delivery platform available.',
   enter: 'Enter',
+  access: 'Access your account',
+  cellPhone: 'Enter your cell phone number',
+  yourEmail: 'Sign in using your email',
 };
 
 i18n.fallbacks = true;

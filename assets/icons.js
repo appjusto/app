@@ -1,7 +1,5 @@
-const iconApp = require('./images/app.png');
-const iconJusto = require('./images/justo.png');
+const whiteBG = require('./images/logo-appjusto-bg-white.png');
 
-export const app = iconApp;
-export const justo = iconJusto;
+export const logoWhite = whiteBG;
 
-export default [app, justo];
+export default [logoWhite];

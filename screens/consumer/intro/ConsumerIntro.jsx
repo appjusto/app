@@ -1,17 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 
-import ConsumerInput from '../components/consumer-input/ConsumerInput'
+import DefaultInput from '../components/default-input/DefaultInput';
 import { t } from '../../../strings';
-import { app, justo } from '../../../assets/icons';
+import { logoWhite } from '../../../assets/icons';
 
 export default function ConsumerIntro() {
   return (
     <View style={styles.screen}>
       <View style={styles.greenCircle} />
       <View style={styles.imageContainer}>
-        <Image source={app} style={styles.app} />
-        <Image source={justo} style={styles.justo} />
+        <Image source={logoWhite} style={styles.logo} />
       </View>
       <View style={styles.containerBigText}>
         <Text style={styles.BigText}>{t('weAre')}</Text>
@@ -19,7 +18,16 @@ export default function ConsumerIntro() {
       <View style={styles.containerMediumText}>
         <Text style={styles.mediumText}>{t('platform')}</Text>
       </View>
-      {/* <ConsumerInput hasButton /> */}
+      <DefaultInput
+        actionButton
+        title={t('access')}
+        // keyboardType='numeric'
+        placeholder={t('cellPhone')}
+      />
+      <View style={styles.enterEmail}>
+        <View style={styles.littleCircle} />
+        <Text style={styles.emailText}>{t('yourEmail')}</Text>
+      </View>
     </View>
   );
 }
@@ -44,14 +52,9 @@ const styles = StyleSheet.create({
   imageContainer: {
     marginTop: 41,
   },
-  app: {
-    width: '24,6%',
-    height: 27.15,
-    position: 'absolute',
-  },
-  justo: {
-    width: '42,4%',
-    height: 53.32,
+  logo: {
+    width: '46,5%',
+    height: 74,
   },
   containerBigText: {
     width: '100%',
@@ -75,5 +78,26 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 18,
     color: '#697667',
+  },
+  enterEmail: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    alignItems: 'center',
+    height: 18,
+    marginTop: 16,
+  },
+  littleCircle: {
+    height: 4,
+    width: 4,
+    borderRadius: 2,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: '#63B745',
+    // bottom: 7,
+  },
+  emailText: {
+    fontSize: 15,
+    lineHeight: 18,
+    marginLeft: 4,
   },
 });
