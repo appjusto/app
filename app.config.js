@@ -8,11 +8,14 @@ export const getAppFlavor = () => {
   if (APP_FLAVOR) return APP_FLAVOR;
 
   const { releaseChannel } = Constants.manifest;
-  if (!releaseChannel) return APP_FLAVOR_ADMIN; // default to admin if not set
 
-  if (releaseChannel.indexOf(APP_FLAVOR_CONSUMER) === 0) return APP_FLAVOR_CONSUMER;
-  if (releaseChannel.indexOf(APP_FLAVOR_COURIER) === 0) return APP_FLAVOR_COURIER;
-  if (releaseChannel.indexOf(APP_FLAVOR_ADMIN) === 0) return APP_FLAVOR_ADMIN;
+  if (releaseChannel) {
+    if (releaseChannel.indexOf(APP_FLAVOR_CONSUMER) === 0) return APP_FLAVOR_CONSUMER;
+    if (releaseChannel.indexOf(APP_FLAVOR_COURIER) === 0) return APP_FLAVOR_COURIER;
+  }
+
+  // default to admin
+  return APP_FLAVOR_ADMIN;
 }
 
 export default ({ config }) => {

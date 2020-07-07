@@ -19,6 +19,8 @@ import AdminApp from './screens/admin/AdminApp';
 import CourierApp from './screens/courier/CourierApp';
 import ConsumerApp from './screens/consumer/ConsumerApp';
 import AdminControlPainel from './screens/common/admin/AdminControlPainel';
+import useNotificationToken from './hooks/useNotificationToken';
+import { APP_FLAVOR_ADMIN } from './store/constants';
 
 const api = new Api(getExtra().firebase);
 
@@ -46,21 +48,27 @@ defineLocationUpdatesTask(({ data: { locations }, error }) => {
 });
 
 const App = () => {
+  const [token, error] = useNotificationToken();
   const isAdmin = useSelector(isAdminFlavor);
   const isConsumer = useSelector(isConsumerFlavor);
-  if (isAdmin) return <AdminApp />
-  if (isConsumer) return <ConsumerApp />
-  return <CourierApp />
+  const isCourier = useSelector(isCourierFlavor);
+  return (
+    <>
+      {getAppFlavor() === APP_FLAVOR_ADMIN && (
+        <AdminControlPainel />
+      )}
+      {isAdmin && <AdminApp token={token} />}
+      {isConsumer && <ConsumerApp />}
+      {isCourier && <CourierApp />}
+    </>
+  );
 }
 
 export default function() {
-  const env = getEnv(store.getState())
-  const adminPainel = env === 'development' ? <AdminControlPainel /> : null;
   return (
     <ApiContext.Provider value={api}>
       <Provider store={store}>
         <View style={{flex: 1}}>
-          {adminPainel}
           <App />
         </View>
       </Provider>
