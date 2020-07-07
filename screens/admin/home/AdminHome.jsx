@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { StyleSheet, View, Dimensions, Text } from 'react-native';
+import { StyleSheet, View, Dimensions, Text, TextInput } from 'react-native';
 import { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Notifications from 'expo-notifications';
@@ -29,11 +29,11 @@ export default function App({ token }) {
   }, [])
 
   useEffect(() => {
-    Notifications.addNotificationReceivedListener((n) => {
+    const subscription = Notifications.addNotificationReceivedListener((n) => {
       setNotification(n);
     });
     return () => {
-      Notifications.removeAllNotificationListeners();
+      Notifications.removeNotificationSubscription(subscription);
     };
   }, []);
 
@@ -43,7 +43,7 @@ export default function App({ token }) {
     const { width } = Dimensions.get('window');
     return (
       <View style={{ flex: 1 }}>
-        <Text>Token: {token}</Text>
+        <TextInput style={{ marginTop: 20 }} value={token} />
         <Text>Title: {notification && notification.request.content.title} </Text>
         <Text>Body: {notification && notification.request.content.body}</Text>
         <Text>Data: {notification && JSON.stringify(notification.request.content.data.body)}</Text>
