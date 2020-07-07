@@ -27,7 +27,7 @@ import consumerReducer from './store/reducers/consumer';
 import AdminApp from './screens/admin/AdminApp';
 import CourierApp from './screens/courier/CourierApp';
 import ConsumerApp from './screens/consumer/ConsumerApp';
-import AdminControlPainel from './screens/common/admin/AdminControlPainel';
+import AdminFlavorChooser from './screens/common/admin/AdminFlavorChooser';
 
 import fonts from './assets/fonts';
 import icons from './assets/icons';
@@ -80,7 +80,9 @@ const App = () => {
   }
   return (
     <>
-      {getAppFlavor() === APP_FLAVOR_ADMIN && <AdminControlPainel />}
+      {getAppFlavor() === APP_FLAVOR_ADMIN && (
+        <AdminFlavorChooser />
+      )}
       {isAdmin && <AdminApp token={token} />}
       {isConsumer && <ConsumerApp />}
       {isCourier && <CourierApp />}

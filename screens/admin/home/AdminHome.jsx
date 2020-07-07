@@ -1,13 +1,20 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import { StyleSheet, View, Dimensions, Text, TextInput, FlatList, Button } from 'react-native';
 import { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Notifications from 'expo-notifications';
 
 import { ApiContext } from '../../../store/api';
-import { fetchVisibleCouriers, updateCourierLocation } from '../../../store/actions/courier';
+import { fetchAvailableCouriers, updateCourierLocation, setCourierProfile } from '../../../store/actions/courier';
 import { getCourierProfile, isCourierWorking, getVisibleCouriers } from '../../../store/selectors/courier';
 import DefaultMap from '../../common/DefaultMap';
+
+const couriers = [
+  { title: 'Courier 1', uid: 'courier-1' },
+  { title: 'Courier 2', uid: 'courier-2' },
+  { title: 'Courier 3', uid: 'courier-3' },
+  { title: 'Courier 4', uid: 'courier-4' },
+];
 
 const locations = [
   { title: 'MASP', location: { coords: { latitude: -23.561178, longitude: -46.655860  }} },
@@ -26,17 +33,22 @@ export default function App({ token }) {
   const dispatch = useDispatch();
   const api = useContext(ApiContext);
 
+  // refs
+  const mapRef = useRef();
+
   // state
   const courier = useSelector(getCourierProfile);
   const isWorking = useSelector(isCourierWorking);
   const visibleCouriers = useSelector(getVisibleCouriers);
   const [notification, setNotification] = useState(null);
-
+  
   // side effects
+  // realtime fetch available couriers
   useEffect(() => {
-    dispatch(fetchVisibleCouriers(api));
-  }, [])
+    return dispatch(fetchAvailableCouriers(api));
+  }, []);
 
+  // subscribe to notifications
   useEffect(() => {
     const subscription = Notifications.addNotificationReceivedListener((n) => {
       setNotification(n);
@@ -52,9 +64,25 @@ export default function App({ token }) {
     const { width } = Dimensions.get('window');
     return (
       <View style={{ flex: 1 }}>
+        {/* Couriers */}
+        <View>
+          <Text>Selected courier: {courier ? courier.uid : '' }</Text>
+          <FlatList
+            data={couriers}
+            renderItem={({ item }) => (
+              <Button
+                title={item.title}
+                onPress={() => dispatch(setCourierProfile({uid: item.uid}))}
+              />
+            )}
+            keyExtractor={(item) => item.uid}
+            horizontal
+          />
+        </View>
         {/* Locations */}
-        <View style={styles.rowContainer}>
-          <Text>Update location</Text>
+        <View>
+          <Text>Location</Text>
+          <Button title="Fit map" onPress={() => mapRef.current.fitToElements(true)} />
           <FlatList
             data={locations}
             renderItem={({ item }) => (
@@ -71,9 +99,13 @@ export default function App({ token }) {
         <Text>Title: {notification && notification.request.content.title} </Text>
         <Text>Body: {notification && notification.request.content.body}</Text>
         <Text>Data: {notification && JSON.stringify(notification.request.content.data.body)}</Text>
-        <DefaultMap style={[styles.map, { width }]}>
+        <DefaultMap
+          style={[styles.map, { width }]}
+          ref={mapRef}
+          fitToMarkers
+        >
           {visibleCouriers.map((courier) => (
-            <Marker key={courier.id} coordinate={courier.lastKnownLocation} />
+            <Marker key={courier.uid} coordinate={courier.lastKnownLocation} />
           ))}
         </DefaultMap>
       </View>
