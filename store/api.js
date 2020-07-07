@@ -13,19 +13,32 @@ export default class Api {
 
     console.log('Saving location: ', courier.uid, coords);
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    // SECURITY TODO: this action should be restricted only to the courier himself and admins
     const courierDoc = this.db.collection('couriers').doc(courier.uid);
+    // TODO: create a job to synthesize or remove old data
     courierDoc.collection('locationHistory').add({...coords, courier: courier.uid, timestamp});
 
-    return courierDoc.set({
-      lastKnownLocation: coords,
-      timestamp,
-    }, { merge: true });
+    // TODO: what about geting the most recent from locationHistory instead?
+    return courierDoc.update({
+      lastKnownLocation: coords
+    });
   }
 
-  async fetchVisibleCouriers() {
-    // TODO: limit to a specific number close to a location
-    const querySnapshot = await this.db.collection('couriers').get();
-    return querySnapshot.docs.map((snapshot) => ({ ...snapshot.data(), uid: snapshot.ref.path }));
+  fetchAvailableCouriers(resultHandler) {
+    // TODO: add query filters to limit to couriers:
+    // 1 close to a specific location
+    // 2 max number of results
+    const unsubscribe = this.db.collection('couriers')
+      .where('available', '==', true)
+      .onSnapshot((snapshot) => {
+        const result = [];
+        snapshot.forEach((doc) => {
+          result.push({...doc.data(), uid: doc.ref.path});
+        });
+        resultHandler(result)
+      });
+    // returns the unsubscribe function
+    return unsubscribe;
   }
 }
 

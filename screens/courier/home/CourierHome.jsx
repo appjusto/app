@@ -69,7 +69,8 @@ export default function App() {
         region={{
         ...currentLocation,
         ...defaultDeltas,
-      }}>
+       }}
+      >
         <Marker coordinate={currentLocation} />
       </DefaultMap>
     )

@@ -15,8 +15,9 @@ export const updateCourierLocation = (api) => (courier, location, shouldBroadcas
   }
 };
 
-export const fetchVisibleCouriers = (api) => async (dispatch) => {
-  const couriers = await api.fetchVisibleCouriers();
-
-  dispatch({ type: actionTypes.COURIER_UPDATE_VISIBLE_COURIERS, payload: couriers });
+export const fetchAvailableCouriers = (api) => (dispatch) => {
+  const unsubscribe = api.fetchAvailableCouriers((result) => {
+    dispatch({ type: actionTypes.COURIER_UPDATE_VISIBLE_COURIERS, payload: result });
+  });
+  return unsubscribe;
 }
