@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "506390194883",
+    "firebase_url": "https://endless-bolt-281414.firebaseio.com",
+    "project_id": "endless-bolt-281414",
+    "storage_bucket": "endless-bolt-281414.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:506390194883:android:d9812ec27361631c381076",
+        "android_client_info": {
+          "package_name": "br.com.appjusto.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "506390194883-r3ie8usesf467t7q51kgb1k2i5874ugm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD92iin1Oaf_4rG4MA_OleKWp_2YLuVcmU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "506390194883-r3ie8usesf467t7q51kgb1k2i5874ugm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,7 +1,8 @@
-import React, { useEffect, useContext } from 'react';
-import { StyleSheet, View, Dimensions, FlatList } from 'react-native';
+import React, { useEffect, useContext, useState } from 'react';
+import { StyleSheet, View, Dimensions, Text, TextInput, FlatList, Button } from 'react-native';
 import { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
+import * as Notifications from 'expo-notifications';
 
 import { ApiContext } from '../../../store/api';
 import { fetchVisibleCouriers, updateCourierLocation } from '../../../store/actions/courier';
@@ -20,7 +21,7 @@ const defaultDeltas = {
   longitudeDelta: 0.0125,
 };
 
-export default function App() {
+export default function App({ token }) {
   // context
   const dispatch = useDispatch();
   const api = useContext(ApiContext);
@@ -29,12 +30,21 @@ export default function App() {
   const courier = useSelector(getCourierProfile);
   const isWorking = useSelector(isCourierWorking);
   const visibleCouriers = useSelector(getVisibleCouriers);
-  console.log(visibleCouriers);
+  const [notification, setNotification] = useState(null);
 
   // side effects
   useEffect(() => {
     dispatch(fetchVisibleCouriers(api));
   }, [])
+
+  useEffect(() => {
+    const subscription = Notifications.addNotificationReceivedListener((n) => {
+      setNotification(n);
+    });
+    return () => {
+      Notifications.removeNotificationSubscription(subscription);
+    };
+  }, []);
 
   // UI
   const renderMap = () => {
@@ -48,8 +58,8 @@ export default function App() {
           <FlatList
             data={locations}
             renderItem={({ item }) => (
-              <Item
-                {...item}
+              <Button
+                title={item.title}
                 onPress={() => dispatch(updateCourierLocation(api)(courier, item.location, isWorking))}
               />
             )}
@@ -57,6 +67,10 @@ export default function App() {
             horizontal
           />
         </View>
+        <TextInput style={{ marginTop: 20 }} value={token} />
+        <Text>Title: {notification && notification.request.content.title} </Text>
+        <Text>Body: {notification && notification.request.content.body}</Text>
+        <Text>Data: {notification && JSON.stringify(notification.request.content.data.body)}</Text>
         <DefaultMap style={[styles.map, { width }]}>
           {visibleCouriers.map((courier) => (
             <Marker key={courier.id} coordinate={courier.lastKnownLocation} />

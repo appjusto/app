@@ -7,9 +7,11 @@ import ReduxThunk from 'redux-thunk';
 import { defineLocationUpdatesTask } from './tasks/location';
 import { updateCourierLocation } from './store/actions/courier';
 import { isCourierWorking, getCourierProfile } from './store/selectors/courier';
-import { getEnv, isAdminFlavor, isConsumerFlavor, isCourierFlavor } from './store/selectors/config';
+import { isAdminFlavor, isConsumerFlavor, isCourierFlavor } from './store/selectors/config';
 import { getAppFlavor, getExtra } from './app.config';
 import Api, { ApiContext } from './store/api';
+import useNotificationToken from './hooks/useNotificationToken';
+import { APP_FLAVOR_ADMIN } from './store/constants';
 
 import configReducer from './store/reducers/config';
 import courierReducer from './store/reducers/courier';
@@ -19,8 +21,6 @@ import AdminApp from './screens/admin/AdminApp';
 import CourierApp from './screens/courier/CourierApp';
 import ConsumerApp from './screens/consumer/ConsumerApp';
 import AdminControlPainel from './screens/common/admin/AdminControlPainel';
-import useNotificationToken from './hooks/useNotificationToken';
-import { APP_FLAVOR_ADMIN } from './store/constants';
 
 const api = new Api(getExtra().firebase);
 

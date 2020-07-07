@@ -6,7 +6,20 @@ cd app
 npm install
 ```
 
-# 2. Rodar projeto
+# 2. Configurar .env
+
+```
+APP_FLAVOR=
+GOOGLE_MAPS_API_KEY=
+FIREBASE_API_KEY=
+FIREBASE_PROJECT_ID=
+FIREBASE_DATABASE_NAME=
+FIREBASE_MESSAGING_SENDER_ID=
+FIREBASE_APP_ID=
+FIREBASE_MEASUREMENT_ID=
+```
+
+# 3. Rodar projeto
 
 ```
 expo start
