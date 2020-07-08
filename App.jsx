@@ -33,10 +33,11 @@ import AdminFlavorChooser from './screens/common/admin/AdminFlavorChooser';
 import fonts from './assets/fonts';
 import icons from './assets/icons';
 
-const api = new Api(getExtra().firebase);
+const extra = getExtra();
+const api = new Api(extra.firebase, extra.googleMapsApiKey);
 
 const rootReducer = combineReducers({
-  config: configReducer(getAppFlavor(), getExtra()),
+  config: configReducer(getAppFlavor(), extra),
   courier: courierReducer,
   consumer: consumerReducer,
 });

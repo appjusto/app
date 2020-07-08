@@ -38,6 +38,7 @@ export default ({ config }) => {
     },
     extra: {
       ...extra,
+      googleMapsApiKey: GOOGLE_MAPS_API_KEY,
       firebase: {
         apiKey: FIREBASE_API_KEY,
         authDomain: `${FIREBASE_PROJECT_ID}.firebaseapp.com`,

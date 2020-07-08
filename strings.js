@@ -12,6 +12,26 @@ const pt = {
   cellPhone: 'Digite seu celular',
   yourEmail: 'Entrar usando seu e-mail',
   part: 'Faça parte desse movimento',
+
+  //Order
+  origin: 'Retirada',
+  desination: 'Entrega',
+  confirmation: 'Confirmação',
+  originAddressTitle: 'Endereço de retirada',
+  destinationAddressTitle: 'Endereço de entrega',
+  addressPlaceholder: 'Endereço com número',
+  infoTitle: 'Complemento (se houver)',
+  infoPlaceholder: 'Apartamento, sala, loja, etc.',
+  originInstructionsTitle: 'Instruções de retirada',
+  originInstructionsPlaceholder: 'Informe com quem e o quê deve ser retirado',
+  destinationInstructionsTitle: 'Instruções para entrega',
+  destinationInstructionsPlaceholder: 'Informe para quem deve ser entregue',
+  timeEstimate: 'Tempo aprox.',
+  distance: 'Distância',
+  price: 'Valor da entrega',
+  confirmOrigin: 'Confirmar local de retirada',
+  confirmOrigin: 'Confirmar local de entrega',
+  confirmOrigin: 'Confirmar pedido',
 };
 
 const en = {

@@ -1,11 +1,13 @@
 import React from 'react';
 import firebase from 'firebase';
 import 'firebase/firestore';
+import axios from 'axios';
 
 export default class Api {
-  constructor(firebaseConfig) {
+  constructor(firebaseConfig, googleMapsApiKey) {
     firebase.initializeApp(firebaseConfig);
     this.db = firebase.firestore();
+    this.googleMapsApiKey = googleMapsApiKey;
   }
 
   updateCourierStatus(courier, status) {
@@ -58,6 +60,24 @@ export default class Api {
       });
     // returns the unsubscribe function
     return unsubscribe;
+  }
+
+  async getAddressAutocomplete(input, sessiontoken) {
+    const url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
+    const params = {
+      key: this.googleMapsApiKey,
+      language: 'pt-BR',
+      input,
+      sessiontoken
+    }
+    try {
+      const response = await axios.get(url, { params });
+      console.log(response.data);
+    }
+    catch(err) {
+      console.log(err);
+      return err;
+    }
   }
 }
 
