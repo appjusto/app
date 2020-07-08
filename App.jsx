@@ -9,6 +9,7 @@ import ReduxThunk from 'redux-thunk';
 
 import { defineLocationUpdatesTask } from './tasks/location';
 import { updateCourierLocation } from './store/actions/courier';
+import { setLocation } from './store/actions/location';
 import { isCourierWorking, getCourierProfile } from './store/selectors/courier';
 import {
   isAdminFlavor,
@@ -49,14 +50,17 @@ defineLocationUpdatesTask(({ data: { locations }, error }) => {
   }
   console.log('Received new locations', locations);
   const [location] = locations;
+
   const state = store.getState();
+  store.dispatch(setLocation(location));
 
   const isCourier = isCourierFlavor(state);
-  const courier = isCourier && getCourierProfile(state);
-  const shouldBroadcastLocation = !!courier && isCourierWorking(state);
-  store.dispatch(
-    updateCourierLocation(api)(courier, location, shouldBroadcastLocation)
-  );
+  if (isCourier) {
+    const courier = getCourierProfile(state);
+    const shouldBroadcastLocation = !!courier && isCourierWorking(state);
+    if (shouldBroadcastLocation)
+      store.dispatch(updateCourierLocation(api)(courier, location));
+  }
 });
 
 const App = () => {

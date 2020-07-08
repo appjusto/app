@@ -16,7 +16,7 @@ export default function (state = initialState, action) {
       console.log(payload);
       return { ...state, profile: payload };
     }
-    case actionTypes.SET_COURIER_LOCATION: {
+    case actionTypes.SET_LOCATION: {
       return { ...state, location: payload.coords };
     }    
     case actionTypes.AVAILABLE_COURIERS_UPDATED: {

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState, useRef } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { StyleSheet, View, Dimensions, Text, TextInput, FlatList, Button } from 'react-native';
 import { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,9 +32,6 @@ export default function App({ token }) {
   // context
   const dispatch = useDispatch();
   const api = useContext(ApiContext);
-
-  // refs
-  const mapRef = useRef();
 
   // state
   const courier = useSelector(getCourierProfile);
@@ -82,7 +79,6 @@ export default function App({ token }) {
         {/* Locations */}
         <View>
           <Text>Location</Text>
-          <Button title="Fit map" onPress={() => mapRef.current.fitToElements(true)} />
           <FlatList
             data={locations}
             renderItem={({ item }) => (
@@ -101,8 +97,7 @@ export default function App({ token }) {
         <Text>Data: {notification && JSON.stringify(notification.request.content.data.body)}</Text>
         <DefaultMap
           style={[styles.map, { width }]}
-          ref={mapRef}
-          fitToMarkers
+          fitToElements
         >
           {availableCouriers.map((courier) => (
             <Marker key={courier.uid} coordinate={courier.lastKnownLocation} />

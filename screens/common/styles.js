@@ -10,13 +10,19 @@ export const colors = {
   darkGrey: '#697667',
 }
 
+export const screens = StyleSheet.create({
+  default: {
+    flex: 1,
+  },
+});
+
 export const borders = StyleSheet.create({
   default: {
     borderRadius: 8,
     borderStyle: 'solid',
     borderColor: colors.grey,
     borderWidth: 1,
-  }
+  },
 });
 
 export const texts = StyleSheet.create({
@@ -33,10 +39,5 @@ export const flex = StyleSheet.create({
   }
 });
 
-export const decoration = StyleSheet.create({
-  border: {
-    borderWidth: 2,
-    borderColor: '#ff0000',
-  }
-});
+
 

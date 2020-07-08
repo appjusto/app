@@ -10,13 +10,8 @@ export const updateCourierStatus = (api) => (courier, status) => (dispatch) => {
   api.updateCourierStatus(courier, status);
 };
 
-export const updateCourierLocation = (api) => (courier, location, shouldBroadcast) => (dispatch) => {
-  if (!shouldBroadcast) {
-    dispatch({ type: actionTypes.SET_COURIER_LOCATION, payload: location });
-  }
-  else {
-    api.updateCourierLocation(courier, location);
-  }
+export const updateCourierLocation = (api) => (courier, location) => (dispatch) => {
+  api.updateCourierLocation(courier, location);
 };
 
 // watch for updates
