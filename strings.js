@@ -11,7 +11,7 @@ const pt = {
   access: 'Acesse sua conta',
   cellPhone: 'Digite seu celular',
   yourEmail: 'Entrar usando seu e-mail',
-  part: 'Faça parte desse movimento →',
+  part: 'Faça parte desse movimento',
 };
 
 const en = {
@@ -24,14 +24,14 @@ const en = {
   access: 'Access your account',
   cellPhone: 'Enter your cell phone number',
   yourEmail: 'Log in using your email',
-  part: 'Be a part of this movement →',
+  part: 'Be a part of this movement',
 };
 
 i18n.fallbacks = true;
-i18n.translations = { en, pt };
+i18n.translations = { pt };
 i18n.defaultLocale = 'pt';
 
-export const translations = ['pt', 'en']; // Object.keys(i18n.translations);
+export const translations = ['pt']; // Object.keys(i18n.translations);
 const deviceLocale = Localization.locale.substr(0, 2); // to strip out country codes (pt-BR -> pt)
 const isDeviceLocaleSupported = translations.indexOf(deviceLocale) > -1;
 
