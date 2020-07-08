@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 
-import * as fonts from '../../assets/fonts'
 import { borders, texts, colors } from './styles';
 
 export default ({ title, children, ...props }) => (
