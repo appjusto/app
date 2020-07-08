@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native';
 
 import DefaultInput from '../../common/DefaultInput';
@@ -20,42 +21,53 @@ export default function ConsumerIntro() {
   const [phone, setPhone] = useState('');
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <KeyboardAvoidingView style={styles.screen}>
-        <View style={styles.greenCircle} />
-        <View style={styles.imageContainer}>
-          <Image source={logoWhite} style={styles.logo} />
-        </View>
-        <View style={styles.containerBigText}>
-          <Text style={styles.BigText}>{t('weAre')}</Text>
-        </View>
-        <View style={styles.containerMediumText}>
-          <Text style={styles.mediumText}>{t('platform')}</Text>
-        </View>
-        <DefaultInput
-          value={phone}
-          title={t('access')}
-          placeholder={t('cellPhone')}
-          onChangeText={setPhone}
-          keyboardType='numeric'
-          blurOnSubmit
-        >
-          <DefaultButton disabled={phone.length === 0} title={t('enter')} />
-        </DefaultInput>
-        <TouchableOpacity style={styles.tb}>
-          <View style={styles.enterEmail}>
-            <View style={styles.littleCircle} />
-            <Text style={styles.emailText}>{t('yourEmail')}</Text>
+    <KeyboardAvoidingView
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      style={styles.screen}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View>
+          <View style={styles.greenCircle} />
+          <View style={styles.imageContainer}>
+            <Image source={logoWhite} style={styles.logo} />
           </View>
-        </TouchableOpacity>
-        <View style={styles.bottomContainer}>
-          <View style={styles.bottomBox}>
-            <Text style={styles.bottomText}></Text>
+          <View style={styles.containerBigText}>
+            <Text style={styles.BigText}>{t('weAre')}</Text>
           </View>
-          {/* <RegularButton isGreen></RegularButton> */}
+          <View style={styles.containerMediumText}>
+            <Text style={styles.mediumText}>{t('platform')}</Text>
+          </View>
+          <View style={styles.containerMediumText}>
+            <Text style={styles.mediumText}>{t('platform')}</Text>
+          </View>
+          <View style={styles.containerMediumText}>
+            <Text style={styles.mediumText}>{t('platform')}</Text>
+          </View>
+          <DefaultInput
+            value={phone}
+            title={t('access')}
+            placeholder={t('cellPhone')}
+            onChangeText={setPhone}
+            keyboardType='numeric'
+            blurOnSubmit
+          >
+            <DefaultButton disabled={phone.length === 0} title={t('enter')} />
+          </DefaultInput>
+          <TouchableOpacity style={styles.tb}>
+            <View style={styles.enterEmail}>
+              <View style={styles.littleCircle} />
+              <Text style={styles.emailText}>{t('yourEmail')}</Text>
+            </View>
+          </TouchableOpacity>
+          <View style={styles.bottomContainer}>
+            <View style={styles.bottomBox}>
+              <Text style={styles.bottomText}></Text>
+            </View>
+            {/* <RegularButton isGreen></RegularButton> */}
+          </View>
         </View>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
