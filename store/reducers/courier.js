@@ -5,23 +5,22 @@ const initialState = {
   profile: null,
   location: null,
   status: COURIER_STATUS_NOT_WORKING,
-  visibleCouriers: [],
+  availableCouriers: [],
 };
 
 export default function (state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
-    case actionTypes.COURIER_SET_PROFILE: {
+    case actionTypes.COURIER_SET_PROFILE:
+    case actionTypes.COURIER_PROFILE_UPDATED: {
+      console.log(payload);
       return { ...state, profile: payload };
     }
-    case actionTypes.COURIER_UPDATE_STATUS: {
-      return { ...state, status: payload };
-    }
-    case actionTypes.COURIER_UPDATE_LOCATION: {
+    case actionTypes.SET_COURIER_LOCATION: {
       return { ...state, location: payload.coords };
-    }
-    case actionTypes.COURIER_UPDATE_VISIBLE_COURIERS: {
-      return { ...state, visibleCouriers: payload };
+    }    
+    case actionTypes.AVAILABLE_COURIERS_UPDATED: {
+      return { ...state, availableCouriers: payload };
     }
     default:
       return state;

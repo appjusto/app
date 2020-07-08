@@ -8,7 +8,16 @@ export default class Api {
     this.db = firebase.firestore();
   }
 
-  broadcastCourierLocation(courier, location) {
+  updateCourierStatus(courier, status) {
+    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    const courierDoc = this.db.collection('couriers').doc(courier.uid);
+    return courierDoc.update({
+      status,
+      timestamp
+    });
+  }
+
+  updateCourierLocation(courier, location) {
     const { coords } = location;
 
     console.log('Saving location: ', courier.uid, coords);
@@ -20,19 +29,29 @@ export default class Api {
 
     // TODO: what about geting the most recent from locationHistory instead?
     return courierDoc.update({
-      lastKnownLocation: coords
+      lastKnownLocation: coords,
+      timestamp
     });
   }
 
-  fetchAvailableCouriers(resultHandler) {
+  watchCourier(courier, resultHandler) {
+    const unsubscribe = this.db.collection('couriers').doc(courier.id)
+      .onSnapshot((doc) => {
+        resultHandler({...doc.data(), uid: doc.ref.path})
+      });
+    // returns the unsubscribe function
+    return unsubscribe;
+  }
+
+  watchAvailableCouriers(resultHandler) {
     // TODO: add query filters to limit to couriers:
     // 1 close to a specific location
     // 2 max number of results
     const unsubscribe = this.db.collection('couriers')
-      .where('available', '==', true)
-      .onSnapshot((snapshot) => {
+      .where('status', '==', 'available')
+      .onSnapshot((query) => {
         const result = [];
-        snapshot.forEach((doc) => {
+        query.forEach((doc) => {
           result.push({...doc.data(), uid: doc.ref.path});
         });
         resultHandler(result)

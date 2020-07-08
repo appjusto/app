@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as Notifications from 'expo-notifications';
 
 import { ApiContext } from '../../../store/api';
-import { fetchAvailableCouriers, updateCourierLocation, setCourierProfile } from '../../../store/actions/courier';
-import { getCourierProfile, isCourierWorking, getVisibleCouriers } from '../../../store/selectors/courier';
+import { setCourierProfile, updateCourierLocation, watchAvailableCouriers } from '../../../store/actions/courier';
+import { getCourierProfile, isCourierWorking, getAvailableCouriers } from '../../../store/selectors/courier';
 import DefaultMap from '../../common/DefaultMap';
 
 const couriers = [
@@ -39,13 +39,13 @@ export default function App({ token }) {
   // state
   const courier = useSelector(getCourierProfile);
   const isWorking = useSelector(isCourierWorking);
-  const visibleCouriers = useSelector(getVisibleCouriers);
+  const availableCouriers = useSelector(getAvailableCouriers);
   const [notification, setNotification] = useState(null);
   
   // side effects
-  // realtime fetch available couriers
+  // realtime watch available couriers
   useEffect(() => {
-    return dispatch(fetchAvailableCouriers(api));
+    return dispatch(watchAvailableCouriers(api));
   }, []);
 
   // subscribe to notifications
@@ -104,7 +104,7 @@ export default function App({ token }) {
           ref={mapRef}
           fitToMarkers
         >
-          {visibleCouriers.map((courier) => (
+          {availableCouriers.map((courier) => (
             <Marker key={courier.uid} coordinate={courier.lastKnownLocation} />
           ))}
         </DefaultMap>
