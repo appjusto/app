@@ -23,7 +23,7 @@ export default function RegularButton({ title, disabled }) {
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    borderRadius: 24,
+    borderRadius: 8,
     paddingHorizontal: 24,
     paddingVertical: 14.5,
     height: 48,
