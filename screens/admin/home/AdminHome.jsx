@@ -1,12 +1,12 @@
-import React, { useEffect, useContext, useState, useRef } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { StyleSheet, View, Dimensions, Text, TextInput, FlatList, Button } from 'react-native';
 import { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Notifications from 'expo-notifications';
 
 import { ApiContext } from '../../../store/api';
-import { fetchAvailableCouriers, updateCourierLocation, setCourierProfile } from '../../../store/actions/courier';
-import { getCourierProfile, isCourierWorking, getVisibleCouriers } from '../../../store/selectors/courier';
+import { setCourierProfile, updateCourierLocation, watchAvailableCouriers } from '../../../store/actions/courier';
+import { getCourierProfile, isCourierWorking, getAvailableCouriers } from '../../../store/selectors/courier';
 import DefaultMap from '../../common/DefaultMap';
 
 const couriers = [
@@ -33,19 +33,16 @@ export default function App({ token }) {
   const dispatch = useDispatch();
   const api = useContext(ApiContext);
 
-  // refs
-  const mapRef = useRef();
-
   // state
   const courier = useSelector(getCourierProfile);
   const isWorking = useSelector(isCourierWorking);
-  const visibleCouriers = useSelector(getVisibleCouriers);
+  const availableCouriers = useSelector(getAvailableCouriers);
   const [notification, setNotification] = useState(null);
   
   // side effects
-  // realtime fetch available couriers
+  // realtime watch available couriers
   useEffect(() => {
-    return dispatch(fetchAvailableCouriers(api));
+    return dispatch(watchAvailableCouriers(api));
   }, []);
 
   // subscribe to notifications
@@ -82,7 +79,6 @@ export default function App({ token }) {
         {/* Locations */}
         <View>
           <Text>Location</Text>
-          <Button title="Fit map" onPress={() => mapRef.current.fitToElements(true)} />
           <FlatList
             data={locations}
             renderItem={({ item }) => (
@@ -101,10 +97,9 @@ export default function App({ token }) {
         <Text>Data: {notification && JSON.stringify(notification.request.content.data.body)}</Text>
         <DefaultMap
           style={[styles.map, { width }]}
-          ref={mapRef}
-          fitToMarkers
+          fitToElements
         >
-          {visibleCouriers.map((courier) => (
+          {availableCouriers.map((courier) => (
             <Marker key={courier.uid} coordinate={courier.lastKnownLocation} />
           ))}
         </DefaultMap>

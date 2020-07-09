@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, View, Dimensions, Text, Button } from 'react-native';
-import * as Permissions from 'expo-permissions';
+import React, { useEffect, useContext } from 'react';
+import { StyleSheet, View, Dimensions, Button } from 'react-native';
 import * as Location from 'expo-location';
 import { useSelector, useDispatch } from 'react-redux';
 import { Marker } from 'react-native-maps';
 
 import { ApiContext } from '../../../store/api';
-import { startLocationUpdatesTask, stopLocationUpdatesTask } from '../../../tasks/location';
 import { updateCourierStatus, updateCourierLocation } from '../../../store/actions/courier';
 import { getCourierProfile, isCourierWorking, getCourierLocation } from '../../../store/selectors/courier';
 import DefaultMap from '../../common/DefaultMap';
 import { COURIER_STATUS_NOT_WORKING, COURIER_STATUS_AVAILABLE, COURIER_STATUS_DISPATCHING } from '../../../store/constants';
+import useLocationUpdates from '../../../hooks/useLocationUpdates';
 
 const defaultDeltas = {
   latitudeDelta: 0.0250,
@@ -25,32 +24,18 @@ export default function App() {
   // state
   const courier = useSelector(getCourierProfile);
   const isWorking = useSelector(isCourierWorking);
+  const locationPermission = useLocationUpdates(isWorking);
   const currentLocation = useSelector(getCourierLocation);
-  const [locationPermission, setLocationPermission] = useState(null);
 
   // side effects
-  const askForLocation = async () => {
-    const { status } = await Permissions.askAsync(Permissions.LOCATION);
-    setLocationPermission(status);
-  }
-
   const updateWithCurrentLocation = async () => {
-    const position = await Location.getCurrentPositionAsync({})
-    dispatch(updateCourierLocation(api)(courier, position, isWorking));
+    const location = await Location.getCurrentPositionAsync({})
+    dispatch(updateCourierLocation(api)(courier, location, isWorking));
   }
-
-  useEffect(() => {
-    askForLocation();
-  }, []);
 
   useEffect(() => {
     if (locationPermission === 'granted') {
       updateWithCurrentLocation();
-      startLocationUpdatesTask();
-
-      return async () => {
-        await stopLocationUpdatesTask();
-      }
     }
   }, [locationPermission]);
 

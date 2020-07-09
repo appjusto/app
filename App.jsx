@@ -9,6 +9,7 @@ import ReduxThunk from 'redux-thunk';
 
 import { defineLocationUpdatesTask } from './tasks/location';
 import { updateCourierLocation } from './store/actions/courier';
+import { setLocation } from './store/actions/location';
 import { isCourierWorking, getCourierProfile } from './store/selectors/courier';
 import {
   isAdminFlavor,
@@ -32,10 +33,11 @@ import AdminFlavorChooser from './screens/common/admin/AdminFlavorChooser';
 import fonts from './assets/fonts';
 import icons from './assets/icons';
 
-const api = new Api(getExtra().firebase);
+const extra = getExtra();
+const api = new Api(extra.firebase, extra.googleMapsApiKey);
 
 const rootReducer = combineReducers({
-  config: configReducer(getAppFlavor(), getExtra()),
+  config: configReducer(getAppFlavor(), extra),
   courier: courierReducer,
   consumer: consumerReducer,
 });
@@ -49,14 +51,17 @@ defineLocationUpdatesTask(({ data: { locations }, error }) => {
   }
   console.log('Received new locations', locations);
   const [location] = locations;
+
   const state = store.getState();
+  store.dispatch(setLocation(location));
 
   const isCourier = isCourierFlavor(state);
-  const courier = isCourier && getCourierProfile(state);
-  const shouldBroadcastLocation = !!courier && isCourierWorking(state);
-  store.dispatch(
-    updateCourierLocation(api)(courier, location, shouldBroadcastLocation)
-  );
+  if (isCourier) {
+    const courier = getCourierProfile(state);
+    const shouldBroadcastLocation = !!courier && isCourierWorking(state);
+    if (shouldBroadcastLocation)
+      store.dispatch(updateCourierLocation(api)(courier, location));
+  }
 });
 
 const App = () => {

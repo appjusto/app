@@ -1,13 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
-export default React.forwardRef(({ children, fitToMarkers, ...props }, ref) => {
+export default React.forwardRef(({ children, fitToElements, ...props }, externalRef) => {
+  const internalRef = useRef();
+  const ref = externalRef || internalRef;
+
   // effects
   useEffect(() => {
-    if (fitToMarkers) {
+    if (fitToElements) {
       ref.current.fitToElements(true);
     }
-  }, [children, fitToMarkers]);
+  }, [children, fitToElements]);
 
   // UI
   return (

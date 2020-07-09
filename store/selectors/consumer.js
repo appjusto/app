@@ -1,1 +1,1 @@
-export const getOngoingOrders = (state) => state.consumer.ongoingOrders;
+export const getConsumerLocation = (state) => state.consumer.location;

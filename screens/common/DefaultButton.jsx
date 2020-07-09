@@ -4,9 +4,11 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import * as fonts from '../../assets/fonts';
 import { colors } from './styles';
 
-export default function RegularButton({ title, disabled }) {
+export default function RegularButton({ title, disabled, ...props }) {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity
+      {...props}
+    >
       <View
         style={{
           ...styles.buttonContainer,

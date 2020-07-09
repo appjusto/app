@@ -5,4 +5,4 @@ const courierWorkingStatuses = [COURIER_STATUS_AVAILABLE, COURIER_STATUS_DISPATC
 export const isCourierWorking = (state) => courierWorkingStatuses.indexOf(state.courier.status) !== -1;
 export const getCourierProfile = (state) => state.courier.profile;
 export const getCourierLocation = (state) => state.courier.location;
-export const getVisibleCouriers = (state) => state.courier.visibleCouriers;
+export const getAvailableCouriers = (state) => state.courier.availableCouriers;

@@ -1,7 +1,9 @@
-const whiteBG = require('./icons/logo-appjusto-bg-white.png');
 const arrowSmall = require('./icons/arrow-small.png');
+const logoAppjustoBgWhite = require('./icons/logo-appjusto-bg-white.png');
+const iconPinUser = require('./icons/icon-pin-user.png');
 
-export const logoWhite = whiteBG;
 export const arrow = arrowSmall;
+export const logoWhite = logoAppjustoBgWhite;
+export const pinUser = iconPinUser;
 
-export default [logoWhite, arrow];
+export default [logoWhite, pinUser, arrow];

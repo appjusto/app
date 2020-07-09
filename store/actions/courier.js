@@ -1,23 +1,30 @@
 import * as actionTypes from '../actionTypes';
 
+// change local state only; won't broadcast to backend
 export const setCourierProfile = (profile) => (dispatch) => {
-  dispatch({ type: actionTypes.COURIER_SET_PROFILE, payload: profile });
+  dispatch({ type: actionTypes.SET_COURIER_PROFILE, payload: profile });
 }
 
-export const updateCourierStatus = (status) => (dispatch) => {
-  dispatch({ type: actionTypes.COURIER_UPDATE_STATUS, payload: status });
+// update data on backend
+export const updateCourierStatus = (api) => (courier, status) => (dispatch) => {
+  api.updateCourierStatus(courier, status);
 };
 
-export const updateCourierLocation = (api) => (courier, location, shouldBroadcast) => (dispatch) => {
-  dispatch({ type: actionTypes.COURIER_UPDATE_LOCATION, payload: location });
-  if (shouldBroadcast) {
-    api.broadcastCourierLocation(courier, location);
-  }
+export const updateCourierLocation = (api) => (courier, location) => (dispatch) => {
+  api.updateCourierLocation(courier, location);
 };
 
-export const fetchAvailableCouriers = (api) => (dispatch) => {
-  const unsubscribe = api.fetchAvailableCouriers((result) => {
-    dispatch({ type: actionTypes.COURIER_UPDATE_VISIBLE_COURIERS, payload: result });
+// watch for updates
+export const watchCourier = (api) => (profile) => (dispatch) => {
+  const unsubscribe = api.watchCourier(profile, (courier) => {
+    dispatch({ type: actionTypes.COURIER_PROFILE_UPDATED, payload: courier });
+  });
+  return unsubscribe;
+}
+
+export const watchAvailableCouriers = (api) => (dispatch) => {
+  const unsubscribe = api.watchAvailableCouriers((result) => {
+    dispatch({ type: actionTypes.AVAILABLE_COURIERS_UPDATED, payload: result });
   });
   return unsubscribe;
 }
