@@ -8,37 +8,32 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
-  Platform
+  Platform,
 } from 'react-native';
 
 import DefaultInput from '../../common/DefaultInput';
 import DefaultButton from '../../common/DefaultButton';
 import { t } from '../../../strings';
-import { logoWhite } from '../../../assets/icons';
+import { logoWhite, arrow } from '../../../assets/icons';
 import * as fonts from '../../../assets/fonts';
+import { colors } from '../../common/styles';
 
 export default function ConsumerIntro() {
   const [phone, setPhone] = useState('');
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
       style={styles.screen}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View>
+        <View style={styles.touchable}>
           <View style={styles.greenCircle} />
           <View style={styles.imageContainer}>
             <Image source={logoWhite} style={styles.logo} />
           </View>
           <View style={styles.containerBigText}>
             <Text style={styles.BigText}>{t('weAre')}</Text>
-          </View>
-          <View style={styles.containerMediumText}>
-            <Text style={styles.mediumText}>{t('platform')}</Text>
-          </View>
-          <View style={styles.containerMediumText}>
-            <Text style={styles.mediumText}>{t('platform')}</Text>
           </View>
           <View style={styles.containerMediumText}>
             <Text style={styles.mediumText}>{t('platform')}</Text>
@@ -60,10 +55,17 @@ export default function ConsumerIntro() {
             </View>
           </TouchableOpacity>
           <View style={styles.bottomContainer}>
-            <View style={styles.bottomBox}>
-              <Text style={styles.bottomText}></Text>
+            <View style={styles.innerContainer}>
+              <View style={styles.bottomBox}>
+                <Text style={styles.bottomText} numberOfLines={2}>
+                  {t('part')}
+                  <View style={styles.arrow}>
+                    <Image source={arrow}/>
+                  </View>
+                </Text>
+              </View>
+              <DefaultButton title={t('register')} />
             </View>
-            {/* <RegularButton isGreen></RegularButton> */}
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -74,12 +76,15 @@ export default function ConsumerIntro() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    marginHorizontal: 16,
-    marginTop: 16,
     marginBottom: 0,
     // justifyContent: 'center',
     // alignItems: 'center',
     backgroundColor: '#fff',
+  },
+  touchable: {
+    marginHorizontal: 16,
+    marginTop: 16,
+    flex: 1,
   },
   greenCircle: {
     width: 160,
@@ -105,7 +110,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     lineHeight: 29,
     color: '#000',
-    fontFamily: fonts.medium,
+    fontFamily: fonts.BarlowMedium,
   },
   containerMediumText: {
     width: '85%',
@@ -118,7 +123,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 18,
     color: '#697667',
-    fontFamily: fonts.medium,
+    fontFamily: fonts.BarlowMedium,
   },
   tb: {
     alignSelf: 'center',
@@ -142,9 +147,45 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 18,
     marginLeft: 4,
-    fontFamily: fonts.medium,
+    fontFamily: fonts.BarlowMedium,
   },
-  bottomContainer: {},
-  bottomBox: {},
-  bottomText: {},
+  bottomContainer: {
+    // bottom: 0,
+    width: '100%',
+    height: 80,
+    flexDirection: 'row',
+    backgroundColor: colors.lightGrey,
+    justifyContent: 'space-between',
+    // alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 18,
+  },
+  innerContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 48,
+    // borderStyle: 'solid',
+    // borderWidth: 1,
+    // borderColor: 'red',
+  },
+  bottomBox: {
+    width: 150,
+  },
+  bottomText: {
+    fontFamily: fonts.BarlowMedium,
+    fontSize: 15,
+    lineHeight: 18,
+  },
+  arrow: {
+    width: 10.38,
+    height: 3.51,
+    // justifyContent: 'flex-start',
+    // alignItems: 'center',
+    // marginLeft: 4,
+    // marginBottom: 0,
+    // paddingVertical: 1,
+    // paddingHorizontal: 1,
+  },
 });

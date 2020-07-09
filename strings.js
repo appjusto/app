@@ -12,6 +12,7 @@ const pt = {
   cellPhone: 'Digite seu celular',
   yourEmail: 'Entrar usando seu e-mail',
   part: 'Faça parte desse movimento',
+  register: 'Cadastre-se agora'
 };
 
 const en = {
