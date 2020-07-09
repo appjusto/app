@@ -14,6 +14,11 @@ const pt = {
   part: 'Faça parte desse movimento',
   register: 'Cadastre-se agora',
 
+  //Confirmation
+  code: 'Um código de acesso foi enviado para o seu número.',
+  typeCode: 'Digite o código',
+  sendAgain: 'Enviar confirmação novamente',
+
 
   //Order
   origin: 'Retirada',

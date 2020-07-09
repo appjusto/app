@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import ConsumerIntro from './intro/ConsumerIntro'
+import ConsumerConfirmation from './confirmation/ConsumerConfirmation'
 import ConsumerHome from './home/ConsumerHome';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import AddressComplete from '../common/AddressComplete';
@@ -14,8 +15,9 @@ const CreateOrderNavigator = createStackNavigator();
 
 function Unlogged () {
   return (
-    <UnloggedStack.Navigator>
+    <UnloggedStack.Navigator initialRouteName="ConsumerIntro">
       <UnloggedStack.Screen name="ConsumerIntro" component={ConsumerIntro} />
+      <UnloggedStack.Screen name="ConsumerConfirmation" component={ConsumerConfirmation} />
     </UnloggedStack.Navigator>
   );
 }

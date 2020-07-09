@@ -18,7 +18,7 @@ import { logoWhite, arrow } from '../../../assets/icons';
 import * as fonts from '../../../assets/fonts';
 import { colors } from '../../common/styles';
 
-export default function ConsumerIntro() {
+export default function ConsumerIntro({ navigation }) {
   const [phone, setPhone] = useState('');
 
   return (
@@ -46,7 +46,11 @@ export default function ConsumerIntro() {
               keyboardType='numeric'
               blurOnSubmit
             >
-              <DefaultButton disabled={phone.length === 0} title={t('enter')} />
+              <DefaultButton
+                disabled={phone.length === 0}
+                title={t('enter')}
+                onPress={() => navigation.navigate('ConsumerConfirmation')}
+              />
             </DefaultInput>
             <TouchableOpacity style={styles.tb}>
               <View style={styles.enterEmail}>
@@ -148,7 +152,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.BarlowMedium,
   },
   bottomContainer: {
-    // top: 550,
+    top: 550,
     width: '100%',
     height: 80,
     flexDirection: 'row',
