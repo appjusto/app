@@ -15,9 +15,17 @@ const pt = {
   register: 'Cadastre-se agora',
 
   //Confirmation
-  code: 'Um código de acesso foi enviado para o seu número.',
+  code: 'Código de confirmação',
   typeCode: 'Digite o código',
   sendAgain: 'Enviar confirmação novamente',
+  confirmationCode: 'Um código de acesso foi enviado para o seu número.',
+  email: 'E-mail',
+  linkEmail: 'Enviaremos um link de confirmação para o seu e-mail.',
+  typeEmail: 'Digite seu e-mail',
+  send: 'Enviar',
+
+  //Register
+  soon: 'Assim que sua conta for criada você já poderá fazer pedidos.',
 
 
   //Order

@@ -33,7 +33,7 @@ export default function ConsumerIntro({ navigation }) {
               <Image source={logoWhite} style={styles.logo} />
             </View>
             <View style={styles.containerBigText}>
-              <Text style={styles.BigText}>{t('weAre')}</Text>
+              <Text style={styles.bigText}>{t('weAre')}</Text>
             </View>
             <View style={styles.containerMediumText}>
               <Text style={styles.mediumText}>{t('platform')}</Text>
@@ -49,10 +49,15 @@ export default function ConsumerIntro({ navigation }) {
               <DefaultButton
                 disabled={phone.length === 0}
                 title={t('enter')}
-                onPress={() => navigation.navigate('ConsumerConfirmation')}
+                onPress={
+                  () => navigation.navigate('ConsumerConfirmation', { path: 'sms' })
+                }
               />
             </DefaultInput>
-            <TouchableOpacity style={styles.tb}>
+            <TouchableOpacity
+              style={styles.tb}
+              onPress={() => navigation.navigate('ConsumerConfirmation', { path: 'email' })}
+            >
               <View style={styles.enterEmail}>
                 <View style={styles.littleCircle} />
                 <Text style={styles.emailText}>{t('yourEmail')}</Text>
@@ -110,7 +115,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginTop: 16,
   },
-  BigText: {
+  bigText: {
     fontSize: 24,
     lineHeight: 29,
     color: '#000',
