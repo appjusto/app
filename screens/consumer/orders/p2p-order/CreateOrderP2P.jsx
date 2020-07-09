@@ -1,12 +1,9 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useState, useContext, useCallback, useEffect } from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, useNavigationState } from '@react-navigation/native';
 import { Marker } from 'react-native-maps';
-import { nanoid } from 'nanoid/non-secure';
-import debounce from 'lodash/debounce';
 
-import { ApiContext } from '../../../../store/api';
 import useLocationUpdates from '../../../../hooks/useLocationUpdates';
 import { getConsumerLocation } from '../../../../store/selectors/consumer';
 
@@ -18,31 +15,33 @@ import { screens } from '../../../common/styles';
 import { pinUser } from '../../../../assets/icons';
 import { t } from '../../../../strings';
 
-
-export default function () {
+export default function ({ navigation, route }) {
   // context
-  const api = useContext(ApiContext);
-  const navigation = useNavigation();
-
+  const { params } = route;
   const locationPermission = useLocationUpdates(true);
 
   // state
   const currentLocation = useSelector(getConsumerLocation);
   const [step, setStep] = useState('origin');
-  const [autocompleteSession, setAutocompleteSession] = useState(nanoid())
+  
   const [originAddress, setOriginAddress] = useState('');
 
-  // side effects
-  const getAddress = useCallback(debounce((input) => {
-    api.getAddressAutocomplete(input, autocompleteSession);
-  }, 1000), []);
-
-  useEffect(() => {
-    if (originAddress.length > 9) {
-      getAddress(originAddress, autocompleteSession);
-    }
+  // handlers
+  const navigateToAddressComplete = useCallback((field) => {
+    navigation.navigate('AddressComplete', {
+      originAddress,
+      field,
+      destinationScreen: 'CreateOrderP2P',
+    })
   }, [originAddress])
+  
+  // side effects
+  useEffect(() => {
+    const { field } = params || {};
+    if (field === 'originAddress') setOriginAddress(params[field]);
+  }, [route.params]);
 
+  // UI
   return (
     <View style={style.screen}>
       <DefaultMap
@@ -62,14 +61,14 @@ export default function () {
       {/* origin */}
       <ShowIf test={step === 'origin'}>
         <Touchable
-          onPress={() => navigation.navigate('AddressComplete', { address: originAddress })}
+          onPress={() => navigateToAddressComplete('originAddress')}
         >
           <DefaultInput
             value={originAddress}
             title={t('originAddressTitle')}
             placeholder={t('addressPlaceholder')}
-            onChangeText={setOriginAddress}
-            blurOnSubmit
+            onFocus={() => navigateToAddressComplete('originAddress')}
+            onChangeText={() => navigateToAddressComplete('originAddress')}
           />
         </Touchable>
         <DefaultInput

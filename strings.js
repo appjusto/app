@@ -60,9 +60,10 @@ const en = {
   cellPhone: 'Enter your cell phone number',
   yourEmail: 'Log in using your email',
   part: 'Be a part of this movement',
+  'Pronto': 'Done',
 };
 
-i18n.fallbacks = true;
+i18n.fallbacks = false;
 i18n.translations = { pt };
 i18n.defaultLocale = 'pt';
 
@@ -72,4 +73,8 @@ const isDeviceLocaleSupported = translations.indexOf(deviceLocale) > -1;
 
 i18n.locale = isDeviceLocaleSupported ? deviceLocale : i18n.defaultLocale;
 
-export const { t, locale } = i18n;
+i18n.missingTranslation = () => null;
+
+export const { locale } = i18n;
+export const t = (string) => i18n.t(string) || string;
+
