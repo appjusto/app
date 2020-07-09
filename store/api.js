@@ -62,17 +62,47 @@ export default class Api {
     return unsubscribe;
   }
 
-  async getAddressAutocomplete(input, sessiontoken) {
+  async googlePlacesAutocomplete(input, sessiontoken) {
+    // TODO: location & radius?
     const url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     const params = {
       key: this.googleMapsApiKey,
-      language: 'pt-BR',
       input,
-      sessiontoken
+      sessiontoken,
+      types: 'address',
+      components: 'country:BR', // i18n
+      language: 'pt-BR', // i18n
     }
     try {
       const response = await axios.get(url, { params });
       return response.data;
+    }
+    catch(err) {
+      console.log(err);
+      return err;
+    }
+  }
+
+  async googleGeocode(address) {
+    const url = 'https://maps.googleapis.com/maps/api/geocode/json';
+    const params = {
+      key: this.googleMapsApiKey,
+      address,
+      region: 'br', // i18n
+      components: 'country:BR', // i18n
+      language: 'pt-BR', // i18n
+    }
+    try {
+      const response = await axios.get(url, { params });
+      const { data } = response;
+      const { results } = data;
+      const [result] = results;
+      const { geometry } = result;
+      const { location } = geometry;
+      return {
+        latitude: location.lat,
+        longitude: location.lng,
+      };
     }
     catch(err) {
       console.log(err);

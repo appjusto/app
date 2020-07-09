@@ -16,7 +16,7 @@ export default ({ title, children, ...props }) => (
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: 61,
+    height: 60,
     ...borders.default,
     backgroundColor: 'white',
     flexDirection: 'row',

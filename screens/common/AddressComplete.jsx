@@ -32,7 +32,7 @@ export default function ({ navigation, route }) {
 
   // handlers
   const getAddress = useCallback(debounce(async (input) => {
-    const { predictions } = await api.getAddressAutocomplete(input, autocompleteSession);
+    const { predictions } = await api.googlePlacesAutocomplete(input, autocompleteSession);
     console.log(predictions)
     setAutoCompletePredictions(predictions);
   }, 1000), []);
