@@ -25,7 +25,7 @@ export default function ConsumerIntro({ navigation }) {
     <KeyboardAvoidingView
       behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
     >
-      <TouchableWithoutFeedback>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.screen}>
           <View style={styles.touchable}>
             <View style={styles.greenCircle} />
@@ -74,7 +74,7 @@ export default function ConsumerIntro({ navigation }) {
                   </View>
                 </Text>
               </View>
-              <DefaultButton title={t('register')} />
+              <DefaultButton title={t('register')} onPress={() => navigation.navigate('ConsumerRegister')} />
             </View>
           </View>
         </View>

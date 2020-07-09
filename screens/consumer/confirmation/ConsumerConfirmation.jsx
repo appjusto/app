@@ -36,7 +36,11 @@ const ConsumerConfirmation = ({ navigation, route }) => {
           // keyboardType='numeric'
           blurOnSubmit
         >
-          <DefaultButton title={t('enter')} disabled={code.length === 0} />
+          <DefaultButton
+            title={t('enter')}
+            disabled={code.length === 0}
+            onPress={() => navigation.navigate('ConsumerRegister')}
+          />
         </DefaultInput>
         <TouchableOpacity style={styles.tb}>
           <View style={styles.sendAgain}>
@@ -63,7 +67,11 @@ const ConsumerConfirmation = ({ navigation, route }) => {
         // keyboardType='numeric'
         blurOnSubmit
       >
-        <DefaultButton title={t('send')} disabled={code.length === 0} />
+        <DefaultButton
+          title={t('send')}
+          disabled={code.length === 0}
+          onPress={() => navigation.navigate('ConsumerRegister')}
+        />
       </DefaultInput>
       <TouchableOpacity style={styles.tb}>
         <View style={styles.sendAgain}>
