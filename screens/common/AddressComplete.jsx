@@ -50,8 +50,8 @@ export default function ({ navigation, route }) {
     <View style={{ flex: 1 }}>
       <DefaultInput
         value={address}
-        title={t('originAddressTitle')}
-        placeholder={t('addressPlaceholder')}
+        title={t('Endereço de retirada')}
+        placeholder={t('Endereço com número')}
         onChangeText={textChangeHandler}
       />
       <FlatList

@@ -65,8 +65,8 @@ export default function ({ navigation, route }) {
         >
           <DefaultInput
             value={originAddress}
-            title={t('originAddressTitle')}
-            placeholder={t('addressPlaceholder')}
+            title={t('Endereço de retirada')}
+            placeholder={t('Endereço com número')}
             onFocus={() => navigateToAddressComplete('originAddress')}
             onChangeText={() => navigateToAddressComplete('originAddress')}
           />

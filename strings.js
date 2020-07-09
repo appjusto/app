@@ -32,9 +32,7 @@ const pt = {
   origin: 'Retirada',
   desination: 'Entrega',
   confirmation: 'Confirmação',
-  originAddressTitle: 'Endereço de retirada',
   destinationAddressTitle: 'Endereço de entrega',
-  addressPlaceholder: 'Endereço com número',
   infoTitle: 'Complemento (se houver)',
   infoPlaceholder: 'Apartamento, sala, loja, etc.',
   originInstructionsTitle: 'Instruções de retirada',
@@ -60,6 +58,9 @@ const en = {
   cellPhone: 'Enter your cell phone number',
   yourEmail: 'Log in using your email',
   part: 'Be a part of this movement',
+
+  'Endereço de retirada': 'Source address',
+  'Endereço com número': 'Address with number',
   'Pronto': 'Done',
 };
 
