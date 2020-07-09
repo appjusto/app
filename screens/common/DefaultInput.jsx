@@ -3,17 +3,17 @@ import { View, Text, TextInput, StyleSheet } from 'react-native';
 
 import { borders, texts, colors } from './styles';
 
-export default ({ title, children, ...props }) => (
-  <View style={styles.container}>
-    <View style={styles.inputContainer}>
-      <Text style={styles.text}>{title}</Text>
+export default ({ title, children, style: externalStyle, ...props }) => (
+  <View style={[style.container, externalStyle]}>
+    <View>
+      <Text style={style.text}>{title}</Text>
       <TextInput {...props} />
     </View>
     {children}
   </View>
 );
 
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
   container: {
     width: '100%',
     height: 60,
@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 12,
   },
-  inputContainer: {},
   text: {
     ...texts.default,
     color: colors.darkGreen,

@@ -26,18 +26,6 @@ const pt = {
 
   //Register
   soon: 'Assim que sua conta for criada você já poderá fazer pedidos.',
-
-
-  //Order
-  origin: 'Retirada',
-  desination: 'Entrega',
-  confirmation: 'Confirmação',
-  timeEstimate: 'Tempo aprox.',
-  distance: 'Distância',
-  price: 'Valor da entrega',
-  confirmOrigin: 'Confirmar local de retirada',
-  confirmOrigin: 'Confirmar local de entrega',
-  confirmOrigin: 'Confirmar pedido',
 };
 
 const en = {
