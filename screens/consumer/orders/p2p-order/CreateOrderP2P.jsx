@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 import { Marker } from 'react-native-maps';
 import { nanoid } from 'nanoid/non-secure';
 import debounce from 'lodash/debounce';
@@ -12,13 +13,16 @@ import { getConsumerLocation } from '../../../../store/selectors/consumer';
 import DefaultMap from '../../../common/DefaultMap';
 import DefaultInput from '../../../common/DefaultInput';
 import ShowIf from '../../../common/ShowIf';
+import Touchable from '../../../common/Touchable';
 import { screens } from '../../../common/styles';
 import { pinUser } from '../../../../assets/icons';
 import { t } from '../../../../strings';
 
+
 export default function () {
   // context
   const api = useContext(ApiContext);
+  const navigation = useNavigation();
 
   const locationPermission = useLocationUpdates(true);
 
@@ -31,7 +35,7 @@ export default function () {
   // side effects
   const getAddress = useCallback(debounce((input) => {
     api.getAddressAutocomplete(input, autocompleteSession);
-  }, 3000), []);
+  }, 1000), []);
 
   useEffect(() => {
     if (originAddress.length > 9) {
@@ -57,13 +61,17 @@ export default function () {
 
       {/* origin */}
       <ShowIf test={step === 'origin'}>
-        <DefaultInput
-          value={originAddress}
-          title={t('originAddressTitle')}
-          placeholder={t('addressPlaceholder')}
-          onChangeText={setOriginAddress}
-          blurOnSubmit
-        />
+        <Touchable
+          onPress={() => navigation.navigate('AddressComplete', { address: originAddress })}
+        >
+          <DefaultInput
+            value={originAddress}
+            title={t('originAddressTitle')}
+            placeholder={t('addressPlaceholder')}
+            onChangeText={setOriginAddress}
+            blurOnSubmit
+          />
+        </Touchable>
         <DefaultInput
           title={t('infoTitle')}
           placeholder={t('infoPlaceholder')}
