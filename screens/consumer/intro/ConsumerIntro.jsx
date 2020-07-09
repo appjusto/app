@@ -24,43 +24,44 @@ export default function ConsumerIntro() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-      style={styles.screen}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.touchable}>
-          <View style={styles.greenCircle} />
-          <View style={styles.imageContainer}>
-            <Image source={logoWhite} style={styles.logo} />
-          </View>
-          <View style={styles.containerBigText}>
-            <Text style={styles.BigText}>{t('weAre')}</Text>
-          </View>
-          <View style={styles.containerMediumText}>
-            <Text style={styles.mediumText}>{t('platform')}</Text>
-          </View>
-          <DefaultInput
-            value={phone}
-            title={t('access')}
-            placeholder={t('cellPhone')}
-            onChangeText={setPhone}
-            keyboardType='numeric'
-            blurOnSubmit
-          >
-            <DefaultButton disabled={phone.length === 0} title={t('enter')} />
-          </DefaultInput>
-          <TouchableOpacity style={styles.tb}>
-            <View style={styles.enterEmail}>
-              <View style={styles.littleCircle} />
-              <Text style={styles.emailText}>{t('yourEmail')}</Text>
+      <TouchableWithoutFeedback>
+        <View style={styles.screen}>
+          <View style={styles.touchable}>
+            <View style={styles.greenCircle} />
+            <View style={styles.imageContainer}>
+              <Image source={logoWhite} style={styles.logo} />
             </View>
-          </TouchableOpacity>
+            <View style={styles.containerBigText}>
+              <Text style={styles.BigText}>{t('weAre')}</Text>
+            </View>
+            <View style={styles.containerMediumText}>
+              <Text style={styles.mediumText}>{t('platform')}</Text>
+            </View>
+            <DefaultInput
+              value={phone}
+              title={t('access')}
+              placeholder={t('cellPhone')}
+              onChangeText={setPhone}
+              keyboardType='numeric'
+              blurOnSubmit
+            >
+              <DefaultButton disabled={phone.length === 0} title={t('enter')} />
+            </DefaultInput>
+            <TouchableOpacity style={styles.tb}>
+              <View style={styles.enterEmail}>
+                <View style={styles.littleCircle} />
+                <Text style={styles.emailText}>{t('yourEmail')}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
           <View style={styles.bottomContainer}>
             <View style={styles.innerContainer}>
               <View style={styles.bottomBox}>
                 <Text style={styles.bottomText} numberOfLines={2}>
                   {t('part')}
                   <View style={styles.arrow}>
-                    <Image source={arrow}/>
+                    <Image source={arrow} />
                   </View>
                 </Text>
               </View>
@@ -77,8 +78,6 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     marginBottom: 0,
-    // justifyContent: 'center',
-    // alignItems: 'center',
     backgroundColor: '#fff',
   },
   touchable: {
@@ -94,6 +93,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   imageContainer: {
+    height: 74,
     marginTop: 41,
   },
   logo: {
@@ -117,7 +117,6 @@ const styles = StyleSheet.create({
     height: 58,
     alignItems: 'flex-start',
     marginVertical: 16,
-    // marginRight: 24,
   },
   mediumText: {
     fontSize: 15,
@@ -141,7 +140,6 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: '#63B745',
-    // bottom: 7,
   },
   emailText: {
     fontSize: 15,
@@ -150,15 +148,20 @@ const styles = StyleSheet.create({
     fontFamily: fonts.BarlowMedium,
   },
   bottomContainer: {
-    // bottom: 0,
+    // top: 550,
     width: '100%',
     height: 80,
     flexDirection: 'row',
     backgroundColor: colors.lightGrey,
     justifyContent: 'space-between',
-    // alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 18,
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 22,
+    // position: 'absolute',
+    // left: 0,
+    // right: 0,
+    // bottom: 0,
+    // alignSelf: 'flex-end',
   },
   innerContainer: {
     flexDirection: 'row',
@@ -166,9 +169,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     height: 48,
-    // borderStyle: 'solid',
-    // borderWidth: 1,
-    // borderColor: 'red',
   },
   bottomBox: {
     width: 150,
@@ -181,11 +181,5 @@ const styles = StyleSheet.create({
   arrow: {
     width: 10.38,
     height: 3.51,
-    // justifyContent: 'flex-start',
-    // alignItems: 'center',
-    // marginLeft: 4,
-    // marginBottom: 0,
-    // paddingVertical: 1,
-    // paddingHorizontal: 1,
   },
 });
