@@ -74,7 +74,7 @@ export default function ConsumerIntro({ navigation }) {
                   </View>
                 </Text>
               </View>
-              <DefaultButton title={t('register')} onPress={() => navigation.navigate('ConsumerRegister')} />
+              <DefaultButton title={t('register')} onPress={() => navigation.navigate('ConsumerRegistration')} />
             </View>
           </View>
         </View>

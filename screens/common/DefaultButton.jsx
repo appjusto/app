@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import * as fonts from '../../assets/fonts';
 import { colors } from './styles';
 
-export default function RegularButton({ title, disabled, ...props }) {
+export default function RegularButton({ title, disabled, wide, ...props }) {
   return (
     <TouchableOpacity
       {...props}
@@ -13,6 +13,7 @@ export default function RegularButton({ title, disabled, ...props }) {
         style={{
           ...styles.buttonContainer,
           backgroundColor: disabled ? colors.darkGrey : colors.green,
+          paddingHorizontal: wide ? 56 : 24
         }}
       >
         <Text style={{ ...styles.text, color: disabled ? colors.white : colors.black }}>

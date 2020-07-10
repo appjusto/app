@@ -39,7 +39,7 @@ const ConsumerConfirmation = ({ navigation, route }) => {
           <DefaultButton
             title={t('enter')}
             disabled={code.length === 0}
-            onPress={() => navigation.navigate('ConsumerRegister')}
+            onPress={() => navigation.navigate('ConsumerRegistration')}
           />
         </DefaultInput>
         <TouchableOpacity style={styles.tb}>
@@ -70,7 +70,7 @@ const ConsumerConfirmation = ({ navigation, route }) => {
         <DefaultButton
           title={t('send')}
           disabled={code.length === 0}
-          onPress={() => navigation.navigate('ConsumerRegister')}
+          onPress={() => navigation.navigate('ConsumerRegistration')}
         />
       </DefaultInput>
       <TouchableOpacity style={styles.tb}>
