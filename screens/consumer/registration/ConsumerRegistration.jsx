@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import DefaultInput from '../../common/DefaultInput';
-import DefaultButton from '../../common/DefaultButton'
+import DefaultButton from '../../common/DefaultButton';
 
 import * as fonts from '../../../assets/fonts';
 import { t } from '../../../strings';
@@ -60,15 +60,22 @@ const ConsumerRegistration = ({ navigation }) => {
       </View>
       <View style={styles.checkContainer}>
         <TouchableOpacity onPress={toggleCheckbox}>
-          <Image source={isChecked? checkboxActive : checkboxInactive} style={styles.image} />
+          <Image
+            source={isChecked ? checkboxActive : checkboxInactive}
+            style={styles.image}
+          />
         </TouchableOpacity>
         <Text style={styles.checkText}>
           {t('Aceito os termos de uso e a política de privacidade')}
         </Text>
       </View>
       <View style={styles.buttonContainer}>
-            <DefaultButton disabled title={t('Ler termos de uso')} />
-            <DefaultButton wide title={t('Cadastrar')} />
+        <DefaultButton
+          disabled
+          title={t('Ler termos de uso')}
+          onPress={() => navigation.navigate('Terms')}
+        />
+        <DefaultButton wide title={t('Cadastrar')} />
       </View>
     </KeyboardAvoidingView>
   );

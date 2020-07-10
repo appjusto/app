@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import ConsumerIntro from './intro/ConsumerIntro';
 import ConsumerConfirmation from './confirmation/ConsumerConfirmation';
 import ConsumerRegistration from './registration/ConsumerRegistration';
+import Terms from './terms-of-use/Terms';
 import ConsumerHome from './home/ConsumerHome';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import AddressComplete from '../common/AddressComplete';
@@ -36,13 +37,14 @@ function Unlogged() {
       <UnloggedStack.Screen
         name='ConsumerConfirmation'
         component={ConsumerConfirmation}
-        // options={{
-        //   headerLeft: <BackButton />
-        // }}
       />
       <UnloggedStack.Screen
         name='ConsumerRegistration'
         component={ConsumerRegistration}
+      />
+      <UnloggedStack.Screen
+        name='Terms'
+        component={Terms}
       />
     </UnloggedStack.Navigator>
   );
