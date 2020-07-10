@@ -12,9 +12,9 @@ import {
 import DefaultInput from '../../common/DefaultInput';
 import DefaultButton from '../../common/DefaultButton';
 
-import * as fonts from '../../../assets/fonts';
+// import * as fonts from '../../../assets/fonts';
 import { t } from '../../../strings';
-import { colors } from '../../common/styles';
+import { colors, texts } from '../../common/styles';
 import { checkboxActive, checkboxInactive } from '../../../assets/icons';
 
 const ConsumerRegistration = ({ navigation }) => {
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     lineHeight: 29,
     color: '#000',
-    fontFamily: fonts.BarlowMedium,
+    ...texts.default,
   },
   containerMediumText: {
     width: '85%',
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 18,
     color: colors.darkGrey,
-    fontFamily: fonts.BarlowMedium,
+    ...texts.default,
   },
   inputContainer: {
     marginHorizontal: 16,
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkText: {
-    fontFamily: fonts.BarlowMedium,
+    ...texts.default,
     fontSize: 13,
     lineHeight: 16,
     marginLeft: 8,

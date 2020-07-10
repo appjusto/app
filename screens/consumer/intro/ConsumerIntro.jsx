@@ -15,8 +15,8 @@ import DefaultInput from '../../common/DefaultInput';
 import DefaultButton from '../../common/DefaultButton';
 import { t } from '../../../strings';
 import { logoWhite, arrow } from '../../../assets/icons';
-import * as fonts from '../../../assets/fonts';
-import { colors } from '../../common/styles';
+// import * as fonts from '../../../assets/fonts';
+import { colors, texts } from '../../common/styles';
 
 export default function ConsumerIntro({ navigation }) {
   const [phone, setPhone] = useState('');
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     lineHeight: 29,
     color: '#000',
-    fontFamily: fonts.BarlowMedium,
+    ...texts.default,
   },
   containerMediumText: {
     width: '85%',
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 18,
     color: '#697667',
-    fontFamily: fonts.BarlowMedium,
+    ...texts.default,
   },
   tb: {
     alignSelf: 'center',
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 18,
     marginLeft: 4,
-    fontFamily: fonts.BarlowMedium,
+    ...texts.default,
   },
   bottomContainer: {
     top: 550,
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     width: 150,
   },
   bottomText: {
-    fontFamily: fonts.BarlowMedium,
+    ...texts.default,
     fontSize: 15,
     lineHeight: 18,
   },

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-import { texts } from '../../common/styles';
+import { texts, colors } from '../../common/styles';
 import { t } from '../../../strings';
 
 export default function Terms() {
@@ -19,7 +19,7 @@ export default function Terms() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#F2F7EA',
+    backgroundColor: colors.lightGrey,
   },
   bigText: {
     fontSize: 24,
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   terms: {
     fontSize: 15,
     lineHeight: 18,
-    color: '#697667',
+    color: colors.darkGrey,
     ...texts.default,
     marginHorizontal: 16,
   },

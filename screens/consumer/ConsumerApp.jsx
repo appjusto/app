@@ -42,10 +42,7 @@ function Unlogged() {
         name='ConsumerRegistration'
         component={ConsumerRegistration}
       />
-      <UnloggedStack.Screen
-        name='Terms'
-        component={Terms}
-      />
+      <UnloggedStack.Screen name='Terms' component={Terms} />
     </UnloggedStack.Navigator>
   );
 }
