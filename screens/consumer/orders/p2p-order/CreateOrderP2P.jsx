@@ -1,8 +1,9 @@
 import React, { useState, useContext, useCallback, useEffect, useRef } from 'react';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View, Dimensions, Text } from 'react-native';
 import { useSelector } from 'react-redux';
-import { Marker } from 'react-native-maps';
+import { Marker, Polyline } from 'react-native-maps';
 import ViewPager from '@react-native-community/viewpager';
+import polyline from '@mapbox/polyline';
 
 import { ApiContext } from '../../../../store/api';
 import useLocationUpdates from '../../../../hooks/useLocationUpdates';
@@ -39,6 +40,7 @@ export default function ({ navigation, route }) {
   const [originLocation, setOriginLocation] = useState(null);
   const [destinationAddress, setDestinationAddress] = useState('');
   const [destinationLocation, setDestinationLocation] = useState(null);
+  const [order, setOrder] = useState(null);
 
   // handlers
   const navigateToAddressComplete = useCallback((field) => {
@@ -50,7 +52,6 @@ export default function ({ navigation, route }) {
   }, [originAddress])
 
   const nextStep = useCallback(() => {
-    console.log('nextStep: ', step);
     if (step === 2) {
       // TODO: place order
     }
@@ -85,11 +86,33 @@ export default function ({ navigation, route }) {
   }, [route.params]);
 
   useEffect(() => {
-    if (originAddress) {
-      // Location.geocodeAsync(originAddress).then((locations) => setOriginLocation(locations[0]));
-      api.googleGeocode(originAddress).then(setOriginLocation);
+    const createOrder = async () => {
+      const newOrder = await api.createOrder(originAddress, destinationAddress);
+      // console.log(newOrder);
+      const { directions } = newOrder;
+      const { start_location, end_location } = directions;
+
+      setOriginLocation({
+        latitude: start_location.lat,
+        longitude: start_location.lng,
+      });
+      setDestinationLocation({
+        latitude: end_location.lat,
+        longitude: end_location.lng,
+      })
+      setOrder(newOrder);
     }
-  }, [originAddress])
+
+    if (originAddress && destinationAddress) {
+      createOrder();
+    }
+  }, [originAddress, destinationAddress]);
+
+  // useEffect(() => {
+  //   if (originAddress) {
+  //     // api.googleGeocode(originAddress).then(setOriginLocation);
+  //   }
+  // }, [originAddress])
 
   // UI
   let nextStepTitle;
@@ -108,17 +131,25 @@ export default function ({ navigation, route }) {
         initialRegion={initialRegion}
         fitToElements
       >
-        {currentLocation && (
-          <Marker
-            coordinate={currentLocation}
-            icon={pinUser}
-          />
-        )}
-
         {originLocation && (
           <Marker
             coordinate={originLocation}
             icon={pinPackage}
+          />
+        )}
+
+        {destinationLocation && (
+          <Marker
+            coordinate={destinationLocation}
+            icon={pinUser}
+          />
+        )}
+
+        {order && (
+          <Polyline coordinates={
+            polyline.decode(order.directions.overview_polyline.points).map((pair) => {
+              return { latitude: pair[0], longitude: pair[1] };
+            })}
           />
         )}
       </DefaultMap>
@@ -156,8 +187,8 @@ export default function ({ navigation, route }) {
             />
           </View>
 
+          {/* destination */}
           <View>
-            {/* origin */}
             <Touchable
               onPress={() => navigateToAddressComplete('destinationAddress')}
             >
@@ -182,6 +213,18 @@ export default function ({ navigation, route }) {
               title={t('Instruções para entrega')}
               placeholder={t('Informe para quem deve ser entregue')}
             />
+          </View>
+
+          {/* summary */}
+          <View>
+            <Text>Summary</Text>
+            {order && (
+              <View>
+                <Text>{t('Distância')}: {order.directions.distance.text}</Text>
+                <Text>{t('Estimativa de duração')}: {order.directions.duration.text}</Text>
+                <Text>{t('Valor da entrega R$')}: {order.fare.total}</Text>
+              </View>
+            )}
           </View>
         </ViewPager>
 

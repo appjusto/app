@@ -8,6 +8,7 @@ export default class Api {
     firebase.initializeApp(firebaseConfig);
     this.db = firebase.firestore();
     this.googleMapsApiKey = googleMapsApiKey;
+    this.functionsURL = firebaseConfig.functionsURL;
   }
 
   updateCourierStatus(courier, status) {
@@ -60,6 +61,22 @@ export default class Api {
       });
     // returns the unsubscribe function
     return unsubscribe;
+  }
+
+  async createOrder(origin, destination) {
+    const params = {
+      origin,
+      destination,
+    }
+    try {
+      const url = `${this.functionsURL}/createOrder`;
+      const response = await axios.post(url, params);
+      return response.data;
+    }
+    catch(err) {
+      console.log(err);
+      return err;
+    }
   }
 
   async googlePlacesAutocomplete(input, sessiontoken) {
