@@ -75,7 +75,7 @@ const ConsumerRegistration = ({ navigation }) => {
           title={t('Ler termos de uso')}
           onPress={() => navigation.navigate('Terms')}
         />
-        <DefaultButton wide title={t('Cadastrar')} />
+        <DefaultButton wide title={t('Cadastrar')} onPress={() => navigation.navigate('ConsumerHome')} />
       </View>
     </KeyboardAvoidingView>
   );
