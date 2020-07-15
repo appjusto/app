@@ -11,8 +11,8 @@ import {
 import DefaultInput from '../../common/DefaultInput';
 import DefaultButton from '../../common/DefaultButton';
 import { t } from '../../../strings';
-import * as fonts from '../../../assets/fonts';
-import { colors } from '../../common/styles';
+// import * as fonts from '../../../assets/fonts';
+import { colors, texts } from '../../common/styles';
 
 const ConsumerConfirmation = ({ navigation, route }) => {
   const { path } = route.params;
@@ -36,7 +36,11 @@ const ConsumerConfirmation = ({ navigation, route }) => {
           // keyboardType='numeric'
           blurOnSubmit
         >
-          <DefaultButton title={t('enter')} disabled={code.length === 0} />
+          <DefaultButton
+            title={t('enter')}
+            disabled={code.length === 0}
+            onPress={() => navigation.navigate('ConsumerRegistration')}
+          />
         </DefaultInput>
         <TouchableOpacity style={styles.tb}>
           <View style={styles.sendAgain}>
@@ -63,7 +67,11 @@ const ConsumerConfirmation = ({ navigation, route }) => {
         // keyboardType='numeric'
         blurOnSubmit
       >
-        <DefaultButton title={t('send')} disabled={code.length === 0} />
+        <DefaultButton
+          title={t('send')}
+          disabled={code.length === 0}
+          onPress={() => navigation.navigate('ConsumerRegistration')}
+        />
       </DefaultInput>
       <TouchableOpacity style={styles.tb}>
         <View style={styles.sendAgain}>
@@ -92,7 +100,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     lineHeight: 29,
     color: '#000',
-    fontFamily: fonts.BarlowMedium,
+    ...texts.default,
   },
   tb: {
     alignSelf: 'center',
@@ -115,7 +123,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 18,
     marginLeft: 4,
-    fontFamily: fonts.BarlowMedium,
+    ...texts.default,
   },
 });
 

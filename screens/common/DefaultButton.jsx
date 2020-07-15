@@ -1,10 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-import * as fonts from '../../assets/fonts';
-import { colors } from './styles';
+import { colors, texts } from './styles';
 
-export default function ({ title, disabled, style: externalStyle, ...props }) {
+export default function ({ title, disabled, style: externalStyle, wide, ...props }) {
   return (
     <TouchableOpacity
       {...props}
@@ -14,6 +13,7 @@ export default function ({ title, disabled, style: externalStyle, ...props }) {
           ...style.buttonContainer,
           ...externalStyle,
           backgroundColor: disabled ? colors.darkGrey : colors.green,
+          paddingHorizontal: wide ? 56 : 24
         }}
       >
         <Text style={{ ...style.text, color: disabled ? colors.white : colors.black }}>
@@ -35,7 +35,7 @@ const style = StyleSheet.create({
     alignSelf: 'center', //the container shrinks to the size of its content
   },
   text: {
-    fontFamily: fonts.medium,
+    ...texts.default,
     fontSize: 16,
     lineHeight: 19,
     height: 19,
