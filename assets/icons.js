@@ -6,6 +6,7 @@ const iconArrow = require('./icons/iconArrow.png');
 const iconCheckboxInactive = require('./icons/checkbox-inactive.png');
 const iconCheckboxActive = require('./icons/checkbox-active.png');
 const iconNavigation = require('./icons/icon-navigation.png');
+const iconMotocycle= require('./icons/icon-motocycle.png');
 
 export const arrow = arrowSmall;
 export const logoWhite = logoAppjustoBgWhite;
@@ -15,6 +16,7 @@ export const arrowBack = iconArrow;
 export const checkboxInactive = iconCheckboxInactive;
 export const checkboxActive = iconCheckboxActive;
 export const navigation = iconNavigation;
+export const motocycle = iconMotocycle;
 
 export default [
   logoWhite,
@@ -25,4 +27,5 @@ export default [
   checkboxInactive,
   checkboxActive,
   navigation,
+  motocycle
 ];

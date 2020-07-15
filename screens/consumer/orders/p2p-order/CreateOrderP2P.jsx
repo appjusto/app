@@ -1,20 +1,19 @@
 import React, { useState, useContext, useCallback, useEffect, useRef } from 'react';
-import { StyleSheet, View, Dimensions, Text } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import { useSelector } from 'react-redux';
-import { Marker, Polyline } from 'react-native-maps';
+
 import ViewPager from '@react-native-community/viewpager';
-import polyline from '@mapbox/polyline';
 
 import { ApiContext } from '../../../../store/api';
 import useLocationUpdates from '../../../../hooks/useLocationUpdates';
 import { getConsumerLocation } from '../../../../store/selectors/consumer';
 
-import DefaultMap from '../../../common/DefaultMap';
 import DefaultInput from '../../../common/DefaultInput';
 import DefaultButton from '../../../common/DefaultButton';
 import Touchable from '../../../common/Touchable';
 import { screens, borders } from '../../../common/styles';
-import { pinUser, pinPackage } from '../../../../assets/icons';
+import { motocycle } from '../../../../assets/icons';
+import OrderMap from './OrderMap';
 import { t } from '../../../../strings';
 
 export default function ({ navigation, route }) {
@@ -37,9 +36,7 @@ export default function ({ navigation, route }) {
 
   const [step, setStep] = useState(0);
   const [originAddress, setOriginAddress] = useState('');
-  const [originLocation, setOriginLocation] = useState(null);
   const [destinationAddress, setDestinationAddress] = useState('');
-  const [destinationLocation, setDestinationLocation] = useState(null);
   const [order, setOrder] = useState(null);
 
   // handlers
@@ -85,19 +82,8 @@ export default function ({ navigation, route }) {
 
   useEffect(() => {
     const createOrder = async () => {
-      const result = await api.createOrder(originAddress, destinationAddress);
-      const newOrder = result.order;
-      // console.log(newOrder);
-      const { origin, destination } = newOrder;
-
-      setOriginLocation({
-        latitude: origin.location.lat,
-        longitude: origin.location.lng,
-      });
-      setDestinationLocation({
-        latitude: destination.location.lat,
-        longitude: destination.location.lng,
-      })
+      const newOrder = await api.createOrder(originAddress, destinationAddress);
+      console.log(newOrder);
       setOrder(newOrder);
     }
 
@@ -121,36 +107,9 @@ export default function ({ navigation, route }) {
   return (
     <View style={style.screen}>
 
-      {/* Map */}
-      <DefaultMap
-        style={style.map}
-        minZoomLevel={13}
-        maxZoomLevel={13}
-        initialRegion={initialRegion}
-        fitToElements
-      >
-        {originLocation && (
-          <Marker
-            coordinate={originLocation}
-            icon={pinPackage}
-          />
-        )}
-
-        {destinationLocation && (
-          <Marker
-            coordinate={destinationLocation}
-            icon={pinUser}
-          />
-        )}
-
-        {order && (
-          <Polyline coordinates={
-            polyline.decode(order.directions.overview_polyline.points).map((pair) => {
-              return { latitude: pair[0], longitude: pair[1] };
-            })}
-          />
-        )}
-      </DefaultMap>
+      {step < 2 && (
+        <Image source={motocycle} />
+      )}
 
       <View style={style.details}>
         <ViewPager
@@ -213,13 +172,16 @@ export default function ({ navigation, route }) {
             />
           </View>
 
-          {/* summary */}
+          {/* confirmation step */}
+          {order && (
+            <OrderMap initialRegion={initialRegion} order={order} />
+          )}
           <View>
             <Text>Summary</Text>
             {order && (
               <View>
-                <Text>{t('Distância')}: {order.directions.distance.text}</Text>
-                <Text>{t('Estimativa de duração')}: {order.directions.duration.text}</Text>
+                <Text>{t('Distância')}: {order.distance.text}</Text>
+                <Text>{t('Estimativa de duração')}: {order.duration.text}</Text>
                 <Text>{t('Valor da entrega R$')}: {order.fare.total}</Text>
               </View>
             )}
@@ -238,15 +200,9 @@ export default function ({ navigation, route }) {
   );
 }
 
-const { width, height } = Dimensions.get('window');
-
 const style = StyleSheet.create({
   screen: {
     ...screens.default,
-  },
-  map: {
-    width,
-    height: height * 0.3,
   },
   details: {
     flex: 1,

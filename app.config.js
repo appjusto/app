@@ -31,7 +31,7 @@ const getFirebaseConfig = () => {
     emulator: {
       enabled: FIREBASE_EMULATOR === 'true',
       databaseURL: `localhost:8080`,
-      functionsURL: `http://localhost:5001`,
+      functionsURL: `http://localhost:5001/${FIREBASE_PROJECT_ID}/${FIREBASE_REGION}`,
     }
     // measurementId: null,
   }
