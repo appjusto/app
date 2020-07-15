@@ -49,7 +49,6 @@ defineLocationUpdatesTask(({ data: { locations }, error }) => {
     // check `error.message` for more details.
     return;
   }
-  console.log('Received new locations', locations);
   const [location] = locations;
 
   const state = store.getState();

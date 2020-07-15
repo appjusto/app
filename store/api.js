@@ -7,40 +7,48 @@ export default class Api {
   constructor(firebaseConfig, googleMapsApiKey) {
     firebase.initializeApp(firebaseConfig);
     this.db = firebase.firestore();
-    this.googleMapsApiKey = googleMapsApiKey;
+
     this.functionsURL = firebaseConfig.functionsURL;
+    this.googleMapsApiKey = googleMapsApiKey;
+
+    if (firebaseConfig.emulator.enabled) {
+      this.db.settings({
+        host: firebaseConfig.emulator.databaseURL,
+        ssl: false,
+      });
+      // this is the advertised way to do it but is throwing an excepting for any reason
+      // firebase.functions().useFunctionsEmulator(firebaseConfig.emulator.functionsURL);
+      this.functionsURL = firebaseConfig.emulator.functionsURL;
+    }
   }
 
   updateCourierStatus(courier, status) {
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    const courierDoc = this.db.collection('couriers').doc(courier.uid);
-    return courierDoc.update({
+    const courierDoc = this.db.collection('couriers').doc(courier.id);
+    return courierDoc.set({
       status,
       timestamp
-    });
+    }, { merge: true });
   }
 
   updateCourierLocation(courier, location) {
     const { coords } = location;
 
-    console.log('Saving location: ', courier.uid, coords);
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
     // SECURITY TODO: this action should be restricted only to the courier himself and admins
-    const courierDoc = this.db.collection('couriers').doc(courier.uid);
     // TODO: create a job to synthesize or remove old data
-    courierDoc.collection('locationHistory').add({...coords, courier: courier.uid, timestamp});
-
-    // TODO: what about geting the most recent from locationHistory instead?
-    return courierDoc.update({
-      lastKnownLocation: coords,
+    this.db.collection('locations').add({
+      ...coords,
+      courierId: courier.id,
       timestamp
     });
   }
 
   watchCourier(courier, resultHandler) {
+    // TODO: ensure only people envolved in order are able to know courier's location
     const unsubscribe = this.db.collection('couriers').doc(courier.id)
       .onSnapshot((doc) => {
-        resultHandler({...doc.data(), uid: doc.ref.path})
+        resultHandler({...doc.data(), id: doc.id})
       });
     // returns the unsubscribe function
     return unsubscribe;
@@ -55,7 +63,7 @@ export default class Api {
       .onSnapshot((query) => {
         const result = [];
         query.forEach((doc) => {
-          result.push({...doc.data(), uid: doc.ref.path});
+          result.push({...doc.data(), id: doc.id});
         });
         resultHandler(result)
       });

@@ -71,8 +71,6 @@ export default function ({ navigation, route }) {
     const { nativeEvent } = ev;
     const { pageScrollState } = nativeEvent;
     if (pageScrollState === 'idle') {
-      console.log(nativeEvent)
-      console.log('done');
       // console.log(viewPager.current)
     }
   });
@@ -87,18 +85,18 @@ export default function ({ navigation, route }) {
 
   useEffect(() => {
     const createOrder = async () => {
-      const newOrder = await api.createOrder(originAddress, destinationAddress);
+      const result = await api.createOrder(originAddress, destinationAddress);
+      const newOrder = result.order;
       // console.log(newOrder);
-      const { directions } = newOrder;
-      const { start_location, end_location } = directions;
+      const { origin, destination } = newOrder;
 
       setOriginLocation({
-        latitude: start_location.lat,
-        longitude: start_location.lng,
+        latitude: origin.location.lat,
+        longitude: origin.location.lng,
       });
       setDestinationLocation({
-        latitude: end_location.lat,
-        longitude: end_location.lng,
+        latitude: destination.location.lat,
+        longitude: destination.location.lng,
       })
       setOrder(newOrder);
     }

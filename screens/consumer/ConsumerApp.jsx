@@ -41,7 +41,7 @@ function CreateOrder () {
 export default function () {
   return (
     <NavigationContainer>
-      <RootNavigator.Navigator mode="modal" initialRouteName="Unlogged">
+      <RootNavigator.Navigator mode="modal" initialRouteName="CreateOrder">
         <RootNavigator.Screen name="Unlogged" component={Unlogged} />
         <RootNavigator.Screen name="Logged" component={Logged} />
         <RootNavigator.Screen name="CreateOrder" component={CreateOrder} />

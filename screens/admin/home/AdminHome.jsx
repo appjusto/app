@@ -10,10 +10,10 @@ import { getCourierProfile, isCourierWorking, getAvailableCouriers } from '../..
 import DefaultMap from '../../common/DefaultMap';
 
 const couriers = [
-  { title: 'Courier 1', uid: 'courier-1' },
-  { title: 'Courier 2', uid: 'courier-2' },
-  { title: 'Courier 3', uid: 'courier-3' },
-  { title: 'Courier 4', uid: 'courier-4' },
+  { title: 'Courier 1', id: 'courier-1' },
+  { title: 'Courier 2', id: 'courier-2' },
+  { title: 'Courier 3', id: 'courier-3' },
+  { title: 'Courier 4', id: 'courier-4' },
 ];
 
 const locations = [
@@ -63,16 +63,16 @@ export default function App({ token }) {
       <View style={{ flex: 1 }}>
         {/* Couriers */}
         <View>
-          <Text>Selected courier: {courier ? courier.uid : '' }</Text>
+          <Text>Selected courier: {courier ? courier.id : '' }</Text>
           <FlatList
             data={couriers}
             renderItem={({ item }) => (
               <Button
                 title={item.title}
-                onPress={() => dispatch(setCourierProfile({uid: item.uid}))}
+                onPress={() => dispatch(setCourierProfile({id: item.id}))}
               />
             )}
-            keyExtractor={(item) => item.uid}
+            keyExtractor={(item) => item.id}
             horizontal
           />
         </View>
@@ -100,7 +100,7 @@ export default function App({ token }) {
           fitToElements
         >
           {availableCouriers.map((courier) => (
-            <Marker key={courier.uid} coordinate={courier.lastKnownLocation} />
+            <Marker key={courier.id} coordinate={courier.lastKnownLocation} />
           ))}
         </DefaultMap>
       </View>

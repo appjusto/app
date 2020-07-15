@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Marker } from 'react-native-maps';
 
 import { ApiContext } from '../../../store/api';
-import { updateCourierStatus, updateCourierLocation } from '../../../store/actions/courier';
+import { updateCourierStatus, updateCourierLocation, watchCourier } from '../../../store/actions/courier';
 import { getCourierProfile, isCourierWorking, getCourierLocation } from '../../../store/selectors/courier';
 import DefaultMap from '../../common/DefaultMap';
 import { COURIER_STATUS_NOT_WORKING, COURIER_STATUS_AVAILABLE, COURIER_STATUS_DISPATCHING } from '../../../store/constants';
@@ -28,20 +28,22 @@ export default function App() {
   const currentLocation = useSelector(getCourierLocation);
 
   // side effects
-  const updateWithCurrentLocation = async () => {
-    const location = await Location.getCurrentPositionAsync({})
-    dispatch(updateCourierLocation(api)(courier, location, isWorking));
-  }
-
+  // permission granted
   useEffect(() => {
     if (locationPermission === 'granted') {
-      updateWithCurrentLocation();
+      // TO-DO: send current location?
     }
   }, [locationPermission]);
 
+  // watch for profile updates
+  useEffect(() => {
+    return dispatch(watchCourier(api)(courier));
+  }, []);
+  
+
   // handlers
   const toggleWorking = () => {
-    dispatch(updateCourierStatus(isWorking ? COURIER_STATUS_NOT_WORKING : COURIER_STATUS_AVAILABLE ));
+    dispatch(updateCourierStatus(api)(courier, isWorking ? COURIER_STATUS_NOT_WORKING : COURIER_STATUS_AVAILABLE ));
   }
 
   // UI

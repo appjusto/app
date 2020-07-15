@@ -4,7 +4,6 @@ import * as Location from 'expo-location';
 const TASK_FETCH_LOCATION = 'TASK_FETCH_LOCATION';
 
 export const startLocationUpdatesTask = () => {
-  console.log('startLocationUpdatesTask')
   return Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
     accuracy: Location.Accuracy.Highest,
     distanceInterval: 5, // 5 meter minimum change betweens updates
