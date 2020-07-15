@@ -43,8 +43,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
+    "@types/react": "^16.9.43",
+    "@types/react-native": "^0.63.1",
     "babel-preset-expo": "^8.2.3",
-    "metro-react-native-babel-preset": "^0.60.0"
+    "metro-react-native-babel-preset": "^0.60.0",
+    "typescript": "^3.9.6"
   },
   "private": true
 }

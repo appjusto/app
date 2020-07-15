@@ -2,9 +2,14 @@ import React from 'react';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import axios from 'axios';
+import { Courier } from './types';
 
 export default class Api {
-  constructor(firebaseConfig, googleMapsApiKey) {
+  db: firebase.firestore.Firestore;
+  functionsURL: string;
+  googleMapsApiKey: string;
+
+  constructor(firebaseConfig, googleMapsApiKey: string) {
     firebase.initializeApp(firebaseConfig);
     this.db = firebase.firestore();
 
@@ -31,7 +36,7 @@ export default class Api {
     }, { merge: true });
   }
 
-  updateCourierLocation(courier, location) {
+  updateCourierLocation(courier:Courier, location) {
     const { coords } = location;
 
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
@@ -44,7 +49,7 @@ export default class Api {
     });
   }
 
-  watchCourier(courier, resultHandler) {
+  watchCourier(courier:Courier, resultHandler) {
     // TODO: ensure only people envolved in order are able to know courier's location
     const unsubscribe = this.db.collection('couriers').doc(courier.id)
       .onSnapshot((doc) => {
@@ -71,7 +76,7 @@ export default class Api {
     return unsubscribe;
   }
 
-  async createOrder(origin, destination) {
+  async createOrder(origin: string, destination: string) {
     const params = {
       origin,
       destination,
@@ -87,7 +92,7 @@ export default class Api {
     }
   }
 
-  async googlePlacesAutocomplete(input, sessiontoken) {
+  async googlePlacesAutocomplete(input: string, sessiontoken: string) {
     // TODO: location & radius?
     const url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     const params = {
@@ -108,7 +113,7 @@ export default class Api {
     }
   }
 
-  async googleGeocode(address) {
+  async googleGeocode(address: string) {
     const url = 'https://maps.googleapis.com/maps/api/geocode/json';
     const params = {
       key: this.googleMapsApiKey,
@@ -136,4 +141,4 @@ export default class Api {
   }
 }
 
-export const ApiContext = React.createContext();
+export const ApiContext = React.createContext(null);
