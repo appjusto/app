@@ -4,7 +4,7 @@ import { StyleSheet, View, Dimensions, Text, Image } from 'react-native';
 
 // import { getOngoingOrders } from '../../../store/selectors/consumer';
 import { colors, texts } from '../../common/styles';
-import { navigation } from '../../../assets/icons';
+import { navigation, illustration, pizza } from '../../../assets/icons';
 import { t } from '../../../strings';
 
 export default function ConsumerHome() {
@@ -27,7 +27,40 @@ export default function ConsumerHome() {
         <View style={styles.containerBigText}>
           <Text style={styles.bigText}>{t('weAre')}</Text>
         </View>
-        <View style={styles.optionsContainer}></View>
+        <View style={styles.actionsContainer}>
+          <View style={styles.actionBox}>
+            <View style={styles.illustrationContainer}>
+              <Image source={illustration} style={styles.illustration} />
+            </View>
+            <View style={styles.mediumContainer}>
+              <Text style={styles.mediumText}>
+                {t('Transportar Encomendas')}
+              </Text>
+            </View>
+            <View style={styles.smallContainer}>
+              <Text style={{ ...styles.smallText, color: colors.darkGrey }}>
+                {t('Para buscar e deixar pacotes')}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{ ...styles.actionBox, backgroundColor: colors.lightGreen }}
+          >
+            <View style={styles.illustrationContainer}>
+              <Image source={illustration} style={styles.illustration} />
+            </View>
+            <View style={styles.mediumContainer}>
+              <Text style={styles.mediumText}>
+                {t('Restaurantes e alimentação')}
+              </Text>
+            </View>
+            <View style={styles.smallContainer}>
+              <Text style={styles.smallText }>
+                {t('Seus preferidos estarão por aqui')}
+              </Text>
+            </View>
+          </View>
+        </View>
       </View>
       <View style={styles.whiteContainer}></View>
     </View>
@@ -41,13 +74,13 @@ const styles = StyleSheet.create({
   },
   greenContainer: {
     width: '100%',
-    height: '68.5%',
+    height: '55%',
     backgroundColor: colors.green,
     paddingHorizontal: 16,
   },
   whiteContainer: {
     width: '100%',
-    height: '31.5%',
+    height: '45%',
     paddingHorizontal: 16,
   },
   searchBox: {
@@ -82,9 +115,49 @@ const styles = StyleSheet.create({
     color: '#000',
     ...texts.default,
   },
-  optionsContainer: {
+  actionsContainer: {
     flexDirection: 'row',
     width: '100%',
-    height: 204,
+    height: 224,
+    marginTop: 24,
+    justifyContent: 'space-between',
+  },
+  actionBox: {
+    width: '47.5%',
+    height: '100%',
+    borderRadius: 8,
+    backgroundColor: 'white',
+    borderColor: 'white',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    paddingHorizontal: 12,
+  },
+  illustrationContainer: {
+    width: '100%',
+    height: '52%',
+  },
+  illustration: {
+    // marginHorizontal: 12,
+    width: '100%',
+    height: '100%',
+  },
+  mediumContainer: {
+    height: 36,
+    marginTop: 8,
+  },
+  mediumText: {
+    ...texts.default,
+    fontSize: 15,
+    lineHeight: 18,
+  },
+  smallContainer: {
+    height: 32,
+    width: '80%',
+    marginTop: 8,
+  },
+  smallText: {
+    ...texts.default,
+    fontSize: 13,
+    lineHeight: 16,
   },
 });

@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     marginTop: 41,
   },
   logo: {
-    width: '46,5%',
+    width: '46.5%',
     height: 74,
   },
   containerBigText: {
