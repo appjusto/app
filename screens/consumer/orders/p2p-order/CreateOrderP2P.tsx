@@ -1,10 +1,10 @@
-import React, { useState, useContext, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useContext, useCallback, useEffect, useRef, useMemo } from 'react';
 import { StyleSheet, View, Text, Image } from 'react-native';
 import { useSelector } from 'react-redux';
-
 import ViewPager from '@react-native-community/viewpager';
 
-import { ApiContext } from '../../../../store/api';
+import { Place } from '../../../../store/types';
+import Api, { ApiContext } from '../../../../store/api';
 import useLocationUpdates from '../../../../hooks/useLocationUpdates';
 import { getConsumerLocation } from '../../../../store/selectors/consumer';
 
@@ -16,14 +16,20 @@ import { motocycle } from '../../../../assets/icons';
 import OrderMap from './OrderMap';
 import { t } from '../../../../strings';
 
+enum Steps {
+  Origin = 0,
+  Destination,
+  Confirmation
+}
+
 export default function ({ navigation, route }) {
   // context
-  const api = useContext(ApiContext);
+  const api = useContext(ApiContext) as Api;
   const { params } = route;
   const locationPermission = useLocationUpdates(true);
 
   // refs
-  const viewPager = useRef();
+  const viewPager = useRef<ViewPager>();
 
   // state
   const currentLocation = useSelector(getConsumerLocation);
@@ -34,25 +40,35 @@ export default function ({ navigation, route }) {
     longitudeDelta: 0.0421,
   } : null;
 
-  const [step, setStep] = useState(0);
-  const [originAddress, setOriginAddress] = useState('');
-  const [destinationAddress, setDestinationAddress] = useState('');
+  const [step, setStep] = useState(Steps.Origin);
+  const [origin, setOrigin] = useState({} as Place);
+  const [destination, setDestination] = useState({} as Place);
   const [order, setOrder] = useState(null);
 
   // handlers
-  const navigateToAddressComplete = useCallback((field) => {
+  // navigate to address complete screen
+  const navigateToAddressComplete = useCallback(() => {
+    const value = step === Steps.Origin ? origin.address : destination.address;
+    const destinationParam = step === Steps.Origin ? 'originAddress' : 'destinationAddress';
     navigation.navigate('AddressComplete', {
-      originAddress,
-      field,
+      value,
       destinationScreen: 'CreateOrderP2P',
+      destinationParam,
     })
-  }, [originAddress])
+  }, [step])
+
+  // navigation between steps
+  const nextPage = useCallback(() => {
+    if (viewPager && viewPager.current) viewPager.current.setPage(step + 1)
+  }, [viewPager, step]);
 
   const nextStep = useCallback(() => {
-    if (step === 2) {
+    if (!origin) return;
+    if (step >= 1 && !destination) return;
+    if (step < 2) nextPage();
+    else if (order) {
       // TODO: place order
     }
-    viewPager.current.setPage(step + 1);
   }, [step]);
 
   const onPageScroll = useCallback((ev) => {
@@ -70,33 +86,27 @@ export default function ({ navigation, route }) {
     if (pageScrollState === 'idle') {
       // console.log(viewPager.current)
     }
-  });
+  }, []);
   
   // side effects
   // fires when AddressComplete finishes
   useEffect(() => {
-    const { field } = params || {};
-    if (field === 'originAddress') setOriginAddress(params[field]);
-    else if (field === 'destinationAddress') setDestinationAddress(params[field]);
+    const { originAddress, destinationAddress } = params || {};
+    if (originAddress) setOrigin({...origin, address: originAddress});
+    if (destinationAddress) setDestination({...destination, address: destinationAddress});
   }, [route.params]);
 
   useEffect(() => {
     const createOrder = async () => {
-      const newOrder = await api.createOrder(originAddress, destinationAddress);
+      const newOrder = await api.createOrder(origin, destination);
       console.log(newOrder);
       setOrder(newOrder);
     }
 
-    if (originAddress && destinationAddress) {
+    if (origin.address && destination.address) {
       createOrder();
     }
-  }, [originAddress, destinationAddress]);
-
-  // useEffect(() => {
-  //   if (originAddress) {
-  //     // api.googleGeocode(originAddress).then(setOriginLocation);
-  //   }
-  // }, [originAddress])
+  }, [origin.address, destination.address]);
 
   // UI
   let nextStepTitle;
@@ -107,11 +117,21 @@ export default function ({ navigation, route }) {
   return (
     <View style={style.screen}>
 
+      {/* header */}
+
       {step < 2 && (
         <Image source={motocycle} />
       )}
 
+      {/* confirmation step */}
+      {step === 2 && (
+        <OrderMap initialRegion={initialRegion} order={order} />
+      )}
+
       <View style={style.details}>
+        {/* progress */}
+
+        {/* content */}
         <ViewPager
           ref={viewPager}
           style={{ flex: 1 }}
@@ -120,14 +140,14 @@ export default function ({ navigation, route }) {
         >
           {/* origin */}
           <View>
-            <Touchable onPress={() => navigateToAddressComplete('originAddress')}>
+            <Touchable onPress={navigateToAddressComplete}>
               <DefaultInput
                 style={style.input}
-                value={originAddress}
+                value={origin.address}
                 title={t('Endereço de retirada')}
                 placeholder={t('Endereço com número')}
-                onFocus={() => navigateToAddressComplete('originAddress')}
-                onChangeText={() => navigateToAddressComplete('originAddress')}
+                onFocus={navigateToAddressComplete}
+                onChangeText={navigateToAddressComplete}
               />
             </Touchable>
 
@@ -147,15 +167,15 @@ export default function ({ navigation, route }) {
           {/* destination */}
           <View>
             <Touchable
-              onPress={() => navigateToAddressComplete('destinationAddress')}
+              onPress={navigateToAddressComplete}
             >
               <DefaultInput
                 style={style.input}
-                value={destinationAddress}
+                value={destination.address}
                 title={t('Endereço de entrega')}
                 placeholder={t('Endereço com número')}
-                onFocus={() => navigateToAddressComplete('destinationAddress')}
-                onChangeText={() => navigateToAddressComplete('destinationAddress')}
+                onFocus={navigateToAddressComplete}
+                onChangeText={navigateToAddressComplete}
               />
             </Touchable>
 
@@ -172,10 +192,7 @@ export default function ({ navigation, route }) {
             />
           </View>
 
-          {/* confirmation step */}
-          {order && (
-            <OrderMap initialRegion={initialRegion} order={order} />
-          )}
+          
           <View>
             <Text>Summary</Text>
             {order && (
@@ -190,7 +207,7 @@ export default function ({ navigation, route }) {
 
         <View style={{flex: 1, justifyContent: 'flex-end'}}>
           <DefaultButton
-            style={{ width: '100%' }}
+            styleObject={{ width: '100%' }}
             title={nextStepTitle}
             onPress={nextStep}
           />

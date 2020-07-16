@@ -2,7 +2,7 @@ import React from 'react';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import axios from 'axios';
-import { Courier } from './types';
+import { Courier, Place } from './types';
 
 export default class Api {
   db: firebase.firestore.Firestore;
@@ -76,7 +76,7 @@ export default class Api {
     return unsubscribe;
   }
 
-  async createOrder(origin: string, destination: string) {
+  async createOrder(origin: Place, destination: Place) {
     const params = {
       origin,
       destination,

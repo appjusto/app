@@ -1,9 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ButtonProps } from 'react-native';
 
 import { colors, texts } from './styles';
 
-export default function ({ title, disabled, style: externalStyle, wide, ...props }) {
+export interface Props extends ButtonProps {
+  styleObject?: object;
+  wide?: boolean;
+}
+
+export default function ({ title, disabled, styleObject, wide, ...props }: Props) {
   return (
     <TouchableOpacity
       {...props}
@@ -11,7 +16,7 @@ export default function ({ title, disabled, style: externalStyle, wide, ...props
       <View
         style={{
           ...style.buttonContainer,
-          ...externalStyle,
+          ...styleObject,
           backgroundColor: disabled ? colors.darkGrey : colors.green,
           paddingHorizontal: wide ? 56 : 24
         }}

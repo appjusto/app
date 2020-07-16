@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react';
 import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
 import { nanoid } from 'nanoid/non-secure';
 import debounce from 'lodash/debounce';
 
@@ -17,8 +16,7 @@ export default function ({ navigation, route }) {
   // context
   const api = useContext(ApiContext);
   const { params } = route;
-  const { field, destinationScreen } = params;
-  const initialAddress = params[field];
+  const { value: initialAddress, destinationScreen, destinationParam } = params;
 
   // state
   const dev = useSelector(getEnv) === 'development';
@@ -37,13 +35,16 @@ export default function ({ navigation, route }) {
     setAutoCompletePredictions(predictions);
   }, 1000), []);
 
-  const textChangeHandler = (text) => {
+  const textChangeHandler = useCallback((text) => {
     setAddress(text);
-
     if (text.length > 5) { // TODO: define threshold
       getAddress(address, autocompleteSession);
     }
-  }
+  }, [address, autocompleteSession]);
+
+  const completeHandler = useCallback(() => {
+    navigation.navigate(destinationScreen, { [destinationParam]: address })
+  }, [navigation, destinationScreen, address]);
 
   // UI
   return (
@@ -70,7 +71,7 @@ export default function ({ navigation, route }) {
       />
       <Button
         title={t('Pronto')}
-        onPress={() => navigation.navigate(destinationScreen, { field, [field]: address }) }
+        onPress={completeHandler}
       />
     </View>
   );

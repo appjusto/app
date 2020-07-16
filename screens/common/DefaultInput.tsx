@@ -1,9 +1,14 @@
-import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import React, { Component, ReactNode } from 'react';
+import { View, Text, TextInput, StyleSheet, TextInputProps } from 'react-native';
 
 import { borders, texts, colors } from './styles';
 
-export default ({ title, children, style: externalStyle, ...props }) => (
+export interface Props extends TextInputProps {
+  title: String;
+  children?: ReactNode;
+}
+
+export default ({ title, children, style: externalStyle, ...props }: Props) => (
   <View style={[style.container, externalStyle]}>
     <View>
       <Text style={style.text}>{title}</Text>
