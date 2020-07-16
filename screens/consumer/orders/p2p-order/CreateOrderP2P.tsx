@@ -1,9 +1,9 @@
-import React, { useState, useContext, useCallback, useEffect, useRef, useMemo } from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import React, { useState, useContext, useCallback, useEffect, useRef } from 'react';
+import { StyleSheet, View, Text, Image, Dimensions, NativeSyntheticEvent } from 'react-native';
+import ViewPager, { ViewPagerOnPageScrollEventData, PageScrollStateChangedEvent } from '@react-native-community/viewpager';
 import { useSelector } from 'react-redux';
-import ViewPager from '@react-native-community/viewpager';
 
-import { Place } from '../../../../store/types';
+import { Place, Order } from '../../../../store/types';
 import Api, { ApiContext } from '../../../../store/api';
 import useLocationUpdates from '../../../../hooks/useLocationUpdates';
 import { getConsumerLocation } from '../../../../store/selectors/consumer';
@@ -15,11 +15,22 @@ import { screens, borders } from '../../../common/styles';
 import { motocycle } from '../../../../assets/icons';
 import OrderMap from './OrderMap';
 import { t } from '../../../../strings';
+import ShowIf from '../../../common/ShowIf';
 
 enum Steps {
   Origin = 0,
   Destination,
-  Confirmation
+  Confirmation,
+  ConfirmingOrder,
+}
+
+const placeValid = (place: Place): boolean => {
+  console.log('placeValid', place, place.address)
+  return !!place && !!place.address; // TODO: improve place validation
+}
+
+const orderValid = (order: Order): boolean => {
+  return !!order; // TODO: improve order validation
 }
 
 export default function ({ navigation, route }) {
@@ -43,11 +54,11 @@ export default function ({ navigation, route }) {
   const [step, setStep] = useState(Steps.Origin);
   const [origin, setOrigin] = useState({} as Place);
   const [destination, setDestination] = useState({} as Place);
-  const [order, setOrder] = useState(null);
+  const [order, setOrder] = useState(null as Order);
 
   // handlers
   // navigate to address complete screen
-  const navigateToAddressComplete = useCallback(() => {
+  const navigateToAddressComplete = () => {
     const value = step === Steps.Origin ? origin.address : destination.address;
     const destinationParam = step === Steps.Origin ? 'originAddress' : 'destinationAddress';
     navigation.navigate('AddressComplete', {
@@ -55,58 +66,75 @@ export default function ({ navigation, route }) {
       destinationScreen: 'CreateOrderP2P',
       destinationParam,
     })
-  }, [step])
+  };
 
   // navigation between steps
-  const nextPage = useCallback(() => {
-    if (viewPager && viewPager.current) viewPager.current.setPage(step + 1)
-  }, [viewPager, step]);
+  const stepReady = (value: Steps):boolean => {
+    if (value === Steps.Origin) return true; // always enabled
+    if (value === Steps.Destination) return placeValid(origin); // only if origin is known
+    if (value === Steps.Confirmation) return placeValid(origin) && placeValid(destination); // only if both origin and destination is known
+    if (value === Steps.ConfirmingOrder) return orderValid(order); // when order 
+  };
 
-  const nextStep = useCallback(() => {
-    if (!origin) return;
-    if (step >= 1 && !destination) return;
-    if (step < 2) nextPage();
-    else if (order) {
-      // TODO: place order
+  const nextPage = ():void => {
+    if (viewPager && viewPager.current) viewPager.current.setPage(step + 1);
+  };
+
+  const nextStep = ():void => {
+    const nextStep = step + 1;
+    if (!stepReady(nextStep)) return;
+    if (nextStep === Steps.Destination) {
+      nextPage();
     }
-  }, [step]);
+    else if (nextStep === Steps.Confirmation) {
+      if (order) nextPage();
+      else {
+        // TODO: alert that order is being created and when it is, go to next step automatically
+      }
+    }
+    else if (nextStep === Steps.ConfirmingOrder) {
+      // TODO: confirm order
+    }
+  };
 
-  const onPageScroll = useCallback((ev) => {
+  const onPageScroll = (ev:NativeSyntheticEvent<ViewPagerOnPageScrollEventData>) => {
     const { nativeEvent } = ev;
     const { position } = nativeEvent;
     
     if (position !== step) {
       setStep(position);
     }
-  }, [step]);
-
-  const onPageChanged = useCallback((ev) => {
-    const { nativeEvent } = ev;
-    const { pageScrollState } = nativeEvent;
-    if (pageScrollState === 'idle') {
-      // console.log(viewPager.current)
-    }
-  }, []);
+  };
   
   // side effects
   // fires when AddressComplete finishes
   useEffect(() => {
     const { originAddress, destinationAddress } = params || {};
-    if (originAddress) setOrigin({...origin, address: originAddress});
+    console.log('originAddress', originAddress)
+    if (originAddress) {
+      console.log('set new origin', {...origin, address: originAddress})
+      setOrigin({...origin, address: originAddress});
+    }
     if (destinationAddress) setDestination({...destination, address: destinationAddress});
   }, [route.params]);
 
+  // create order when origin and destination are valid
+  // and whenever either address changes
   useEffect(() => {
     const createOrder = async () => {
+      console.log('creating order');
       const newOrder = await api.createOrder(origin, destination);
       console.log(newOrder);
       setOrder(newOrder);
     }
 
-    if (origin.address && destination.address) {
+    if (placeValid(origin) && placeValid(destination) && (
+      order === null ||
+      order.places[0].address !== origin.address ||
+      order.places[1].address !== destination.address)) {
       createOrder();
     }
-  }, [origin.address, destination.address]);
+  }, [origin, destination]);
 
   // UI
   let nextStepTitle;
@@ -118,16 +146,27 @@ export default function ({ navigation, route }) {
     <View style={style.screen}>
 
       {/* header */}
+      <View style={style.header}>
 
-      {step < 2 && (
-        <Image source={motocycle} />
-      )}
+        {/* when order hasn't been created yet  */}
+        <ShowIf test={!orderValid(order)}>
+          {() => (
+            <View>
+              <Image source={motocycle} />
+            </View>
+          )}
+        </ShowIf>
+        
+        {/* after order has been created */}
+        <ShowIf test={orderValid(order)}>
+          {() => (
+            <OrderMap initialRegion={initialRegion} order={order} />
+          )}
+        </ShowIf>
 
-      {/* confirmation step */}
-      {step === 2 && (
-        <OrderMap initialRegion={initialRegion} order={order} />
-      )}
+      </View>
 
+      {/* details */}
       <View style={style.details}>
         {/* progress */}
 
@@ -136,9 +175,8 @@ export default function ({ navigation, route }) {
           ref={viewPager}
           style={{ flex: 1 }}
           onPageScroll={onPageScroll}
-          onPageScrollStateChanged={onPageChanged}
         >
-          {/* origin */}
+          {/* origin step */}
           <View>
             <Touchable onPress={navigateToAddressComplete}>
               <DefaultInput
@@ -164,45 +202,51 @@ export default function ({ navigation, route }) {
             />
           </View>
 
-          {/* destination */}
-          <View>
-            <Touchable
-              onPress={navigateToAddressComplete}
-            >
-              <DefaultInput
-                style={style.input}
-                value={destination.address}
-                title={t('Endereço de entrega')}
-                placeholder={t('Endereço com número')}
-                onFocus={navigateToAddressComplete}
-                onChangeText={navigateToAddressComplete}
-              />
-            </Touchable>
-
-            <DefaultInput
-              style={style.input}
-              title={t('Complemento (se houver)')}
-              placeholder={t('Apartamento, sala, loja, etc.')}
-            />
-
-            <DefaultInput
-              style={style.input}
-              title={t('Instruções para entrega')}
-              placeholder={t('Informe para quem deve ser entregue')}
-            />
-          </View>
-
-          
-          <View>
-            <Text>Summary</Text>
-            {order && (
+          {/* destination step */}
+          <ShowIf test={placeValid(origin)}>
+            {() => (
               <View>
-                <Text>{t('Distância')}: {order.distance.text}</Text>
-                <Text>{t('Estimativa de duração')}: {order.duration.text}</Text>
-                <Text>{t('Valor da entrega R$')}: {order.fare.total}</Text>
+                <Touchable
+                  onPress={navigateToAddressComplete}
+                >
+                  <DefaultInput
+                    style={style.input}
+                    value={destination.address}
+                    title={t('Endereço de entrega')}
+                    placeholder={t('Endereço com número')}
+                    onFocus={navigateToAddressComplete}
+                    onChangeText={navigateToAddressComplete}
+                  />
+                </Touchable>
+
+                <DefaultInput
+                  style={style.input}
+                  title={t('Complemento (se houver)')}
+                  placeholder={t('Apartamento, sala, loja, etc.')}
+                />
+
+                <DefaultInput
+                  style={style.input}
+                  title={t('Instruções para entrega')}
+                  placeholder={t('Informe para quem deve ser entregue')}
+                />
               </View>
             )}
-          </View>
+          </ShowIf>
+
+          {/* confirmation step */}
+          <ShowIf test={placeValid(destination) && !!order}>
+            {() => (
+              <View>
+                <Text>Summary</Text>
+                <View>
+                  <Text>{t('Distância')}: {order.distance.text}</Text>
+                  <Text>{t('Estimativa de duração')}: {order.duration.text}</Text>
+                  <Text>{t('Valor da entrega R$')}: {order.fare.total}</Text>
+                </View>
+              </View>
+            )}
+          </ShowIf>
         </ViewPager>
 
         <View style={{flex: 1, justifyContent: 'flex-end'}}>
@@ -217,9 +261,17 @@ export default function ({ navigation, route }) {
   );
 }
 
+const { width, height } = Dimensions.get('window');
+
 const style = StyleSheet.create({
   screen: {
     ...screens.default,
+  },
+  header: {
+    width,
+    height: height * 0.3,
+    justifyContent: 'space-between',
+    
   },
   details: {
     flex: 1,

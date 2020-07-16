@@ -26,6 +26,8 @@ export default function ({ navigation, route }) {
     description: 'Av. Paulista, 1578'
   }, {
     description: 'Av. Paulista, 2424'
+  }, {
+    description: 'Largo de São Bento'
   }] : []);
 
   // handlers
