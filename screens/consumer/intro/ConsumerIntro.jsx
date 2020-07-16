@@ -14,7 +14,7 @@ import {
 import DefaultInput from '../../common/DefaultInput';
 import DefaultButton from '../../common/DefaultButton';
 import { t } from '../../../strings';
-import { logoWhite, arrow } from '../../../assets/icons';
+import { logoWhite, arrow, illustration } from '../../../assets/icons';
 // import * as fonts from '../../../assets/fonts';
 import { colors, texts } from '../../common/styles';
 
@@ -28,7 +28,9 @@ export default function ConsumerIntro({ navigation }) {
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.screen}>
           <View style={styles.touchable}>
-            <View style={styles.greenCircle} />
+            <View style={styles.illustration}>
+              <Image source={illustration} />
+            </View>
             <View style={styles.imageContainer}>
               <Image source={logoWhite} style={styles.logo} />
             </View>
@@ -49,14 +51,16 @@ export default function ConsumerIntro({ navigation }) {
               <DefaultButton
                 disabled={phone.length === 0}
                 title={t('enter')}
-                onPress={
-                  () => navigation.navigate('ConsumerConfirmation', { path: 'sms' })
+                onPress={() =>
+                  navigation.navigate('ConsumerConfirmation', { path: 'sms' })
                 }
               />
             </DefaultInput>
             <TouchableOpacity
               style={styles.tb}
-              onPress={() => navigation.navigate('ConsumerConfirmation', { path: 'email' })}
+              onPress={() =>
+                navigation.navigate('ConsumerConfirmation', { path: 'email' })
+              }
             >
               <View style={styles.enterEmail}>
                 <View style={styles.littleCircle} />
@@ -74,7 +78,10 @@ export default function ConsumerIntro({ navigation }) {
                   </View>
                 </Text>
               </View>
-              <DefaultButton title={t('register')} onPress={() => navigation.navigate('ConsumerRegistration')} />
+              <DefaultButton
+                title={t('register')}
+                onPress={() => navigation.navigate('ConsumerRegistration')}
+              />
             </View>
           </View>
         </View>
@@ -87,19 +94,17 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     marginBottom: 0,
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
   },
   touchable: {
     marginHorizontal: 16,
-    marginTop: 16,
+    backgroundColor: 'white',
     flex: 1,
   },
-  greenCircle: {
-    width: 160,
-    height: 160,
-    borderRadius: 160 / 2,
-    backgroundColor: '#78E08F',
-    alignSelf: 'flex-end',
+  illustration: {
+    width: '55.5%',
+    height: 200,
+    alignSelf: 'flex-start',
   },
   imageContainer: {
     height: 74,
@@ -157,7 +162,7 @@ const styles = StyleSheet.create({
     ...texts.default,
   },
   bottomContainer: {
-    top: 550,
+    top: 650,
     width: '100%',
     height: 80,
     flexDirection: 'row',
