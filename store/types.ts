@@ -42,14 +42,24 @@ export interface FareDetails {
   total: number;
 }
 
+export interface OrderDistance {
+  text: string;
+  value: number;
+}
+
+export interface OrderDuration {
+  text: string;
+  value: number;
+}
+
 export interface Order {
   customerId: string;
   status: OrderStatus | FoodOrderStatus;
   paymentStatus: PaymentStatus | null;
   places: Place[];
   routePolyline: string;
-  distance: number;
-  duration: number;
+  distance: OrderDistance;
+  duration: OrderDuration;
   fare: FareDetails;
   courierId?: string;
 }

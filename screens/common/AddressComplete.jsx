@@ -52,6 +52,7 @@ export default function ({ navigation, route }) {
   return (
     <View style={{ flex: 1 }}>
       <DefaultInput
+        defaultValue={initialAddress}
         value={address}
         title={t('Endereço de retirada')}
         placeholder={t('Endereço com número')}

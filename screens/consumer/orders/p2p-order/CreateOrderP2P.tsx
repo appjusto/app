@@ -1,9 +1,9 @@
-import React, { useState, useContext, useCallback, useEffect, useRef } from 'react';
-import { StyleSheet, View, Text, Image, Dimensions, NativeSyntheticEvent } from 'react-native';
-import ViewPager, { ViewPagerOnPageScrollEventData, PageScrollStateChangedEvent } from '@react-native-community/viewpager';
+import React, { useState, useContext, useEffect, useRef } from 'react';
+import { StyleSheet, View, Image, Dimensions, NativeSyntheticEvent } from 'react-native';
+import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { useSelector } from 'react-redux';
 
-import { Place, Order } from '../../../../store/types';
+import { Place, Order, OrderStatus, PaymentStatus } from '../../../../store/types';
 import Api, { ApiContext } from '../../../../store/api';
 import useLocationUpdates from '../../../../hooks/useLocationUpdates';
 import { getConsumerLocation } from '../../../../store/selectors/consumer';
@@ -16,6 +16,8 @@ import { motocycle } from '../../../../assets/icons';
 import OrderMap from './OrderMap';
 import { t } from '../../../../strings';
 import ShowIf from '../../../common/ShowIf';
+import OrderSummary from './OrderSummary';
+import * as fixtures from '../../../../store/fixtures';
 
 enum Steps {
   Origin = 0,
@@ -76,9 +78,10 @@ export default function ({ navigation, route }) {
     if (value === Steps.ConfirmingOrder) return orderValid(order); // when order 
   };
 
-  const nextPage = ():void => {
-    if (viewPager && viewPager.current) viewPager.current.setPage(step + 1);
-  };
+  const setPage = (index: number):void => {
+    if (viewPager && viewPager.current) viewPager.current.setPage(index);
+  }
+  const nextPage = ():void => setPage(step + 1);
 
   const nextStep = ():void => {
     const nextStep = step + 1;
@@ -176,6 +179,13 @@ export default function ({ navigation, route }) {
           style={{ flex: 1 }}
           onPageScroll={onPageScroll}
         >
+          {/* testing */}
+          {/* <View>
+            <OrderSummary
+              order={fixtures.orderStatusQuote}
+              onEdit={() => null}
+            />
+          </View> */}
           {/* origin step */}
           <View>
             <Touchable onPress={navigateToAddressComplete}>
@@ -235,16 +245,12 @@ export default function ({ navigation, route }) {
           </ShowIf>
 
           {/* confirmation step */}
-          <ShowIf test={placeValid(destination) && !!order}>
+          <ShowIf test={orderValid(order)}>
             {() => (
-              <View>
-                <Text>Summary</Text>
-                <View>
-                  <Text>{t('Distância')}: {order.distance.text}</Text>
-                  <Text>{t('Estimativa de duração')}: {order.duration.text}</Text>
-                  <Text>{t('Valor da entrega R$')}: {order.fare.total}</Text>
-                </View>
-              </View>
+              <OrderSummary
+                order={order}
+                onEdit={setPage}
+              />
             )}
           </ShowIf>
         </ViewPager>
