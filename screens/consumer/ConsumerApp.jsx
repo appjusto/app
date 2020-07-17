@@ -36,12 +36,12 @@ function Unlogged() {
       <UnloggedStack.Screen
         name='ConsumerIntro'
         component={ConsumerIntro}
-        
+        // options={{ title: 'Intro' }}
       />
       <UnloggedStack.Screen
         name='ConsumerConfirmation'
         component={ConsumerConfirmation}
-        // options={{ title: 'My home' }}
+        options={{ title: 'Confirme seu acesso' }}
       />
       <UnloggedStack.Screen
         name='ConsumerRegistration'

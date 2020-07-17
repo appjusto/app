@@ -1,10 +1,17 @@
 import React from 'react';
-import { StyleSheet, View, Dimensions, Text, Image } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  Text,
+  Image,
+  ImageBackground,
+} from 'react-native';
 // import { useSelector, useDispatch } from 'react-redux';
 
 // import { getOngoingOrders } from '../../../store/selectors/consumer';
 import { colors, texts } from '../../common/styles';
-import { navigation, illustration, pizza } from '../../../assets/icons';
+import { navigation, illustration, BG, requests } from '../../../assets/icons';
 import { t } from '../../../strings';
 
 export default function ConsumerHome() {
@@ -55,14 +62,36 @@ export default function ConsumerHome() {
               </Text>
             </View>
             <View style={styles.smallContainer}>
-              <Text style={styles.smallText }>
+              <Text style={styles.smallText}>
                 {t('Seus preferidos estarão por aqui')}
               </Text>
             </View>
           </View>
         </View>
       </View>
-      <View style={styles.whiteContainer}></View>
+      <View style={styles.whiteContainer}>
+        <ImageBackground
+          source={BG}
+          style={{ height: '100%', width: '100%' }}
+          style={styles.request}
+        >
+          <View style={{paddingHorizontal: 16}}>
+            <View style={styles.history}>
+              <View style={styles.reqContainer}>
+                <Image source={requests} />
+              </View>
+              <View style={styles.textContainer}>
+                <Text style={styles.mediumText}>
+                  {t('Histórico de pedidos')}
+                </Text>
+                <Text style={{ ...styles.smallText, color: colors.darkGrey }}>
+                  {t('Você ainda não fez pedidos')}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </ImageBackground>
+      </View>
     </View>
   );
 }
@@ -71,6 +100,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    // paddingHorizontal: 16
   },
   greenContainer: {
     width: '100%',
@@ -81,7 +111,7 @@ const styles = StyleSheet.create({
   whiteContainer: {
     width: '100%',
     height: '45%',
-    paddingHorizontal: 16,
+    // paddingHorizontal: 16,
   },
   searchBox: {
     flexDirection: 'row',
@@ -140,6 +170,7 @@ const styles = StyleSheet.create({
     // marginHorizontal: 12,
     width: '100%',
     height: '100%',
+    paddingHorizontal: 16,
   },
   mediumContainer: {
     height: 36,
@@ -159,5 +190,31 @@ const styles = StyleSheet.create({
     ...texts.default,
     fontSize: 13,
     lineHeight: 16,
+  },
+  history: {
+    // marginHorizontal: 16,
+    height: 96,
+    width: '100%',
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: colors.lightGrey,
+    borderRadius: 8,
+    marginTop: 24,
+  },
+  reqContainer: {
+    paddingHorizontal: 16,
+    height: 80,
+    width: '20%',
+  },
+  request: {
+    flex: 1,
+    resizeMode: 'cover',
+    // justifyContent: "center"
+  },
+  textContainer: {
+    paddingLeft: 16,
+    justifyContent: 'center',
   },
 });

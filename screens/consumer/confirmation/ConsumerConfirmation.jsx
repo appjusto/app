@@ -102,7 +102,7 @@ const ConsumerConfirmation = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    marginHorizontal: 16,
+    paddingHorizontal: 16,
     backgroundColor: colors.lightGrey,
   },
   containerBigText: {
