@@ -7,6 +7,7 @@ const iconCheckboxInactive = require('./icons/checkbox-inactive.png');
 const iconCheckboxActive = require('./icons/checkbox-active.png');
 const iconNavigation = require('./icons/icon-navigation.png');
 const iconMotocycle = require('./icons/icon-motocycle.png');
+const iconMotocycleWhite = require('./icons/icon-motocycle-white.png');
 const iconEdit = require('./icons/icon-edit.png');
 const iconIllustration = require('./icons/illustration-intro-screen.png');
 const rectangleBG = require('./icons/Rectangle23.png');
@@ -21,6 +22,7 @@ export const checkboxInactive = iconCheckboxInactive;
 export const checkboxActive = iconCheckboxActive;
 export const navigation = iconNavigation;
 export const motocycle = iconMotocycle;
+export const motocycleWhite = iconMotocycleWhite;
 export const edit = iconEdit;
 export const illustration = iconIllustration;
 export const BG = rectangleBG;
@@ -36,6 +38,7 @@ export default [
   checkboxActive,
   navigation,
   motocycle,
+  motocycleWhite,
   edit,
   illustration,
   BG,
