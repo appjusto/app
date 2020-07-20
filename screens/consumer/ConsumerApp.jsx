@@ -31,12 +31,17 @@ function Unlogged() {
   return (
     <UnloggedStack.Navigator
       initialRouteName='ConsumerIntro'
-      screenOptions={unloggedOptions}
+      // screenOptions={unloggedOptions}
     >
-      <UnloggedStack.Screen name='ConsumerIntro' component={ConsumerIntro} />
+      <UnloggedStack.Screen
+        name='ConsumerIntro'
+        component={ConsumerIntro}
+        // options={{ title: 'Intro' }}
+      />
       <UnloggedStack.Screen
         name='ConsumerConfirmation'
         component={ConsumerConfirmation}
+        options={{ title: 'Confirme seu acesso' }}
       />
       <UnloggedStack.Screen
         name='ConsumerRegistration'
@@ -70,11 +75,14 @@ function CreateOrder() {
 export default function () {
   return (
     <NavigationContainer>
-      <RootNavigator.Navigator mode="modal" initialRouteName="CreateOrder">
-        <RootNavigator.Screen name="Unlogged" component={Unlogged} />
-        <RootNavigator.Screen name="Logged" component={Logged} />
-        <RootNavigator.Screen name="CreateOrder" component={CreateOrder} />
-        <RootNavigator.Screen name="AddressComplete" component={AddressComplete} />
+      <RootNavigator.Navigator mode='modal' initialRouteName='ConsumerIntro'>
+        <RootNavigator.Screen name='Unlogged' component={Unlogged} />
+        <RootNavigator.Screen name='Logged' component={Logged} />
+        <RootNavigator.Screen name='CreateOrder' component={CreateOrder} />
+        <RootNavigator.Screen
+          name='AddressComplete'
+          component={AddressComplete}
+        />
       </RootNavigator.Navigator>
     </NavigationContainer>
   );

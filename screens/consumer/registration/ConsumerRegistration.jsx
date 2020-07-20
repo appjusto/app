@@ -18,9 +18,13 @@ import { colors, texts } from '../../common/styles';
 import { checkboxActive, checkboxInactive } from '../../../assets/icons';
 
 const ConsumerRegistration = ({ navigation }) => {
-  const [isChecked, setIsChecked] = useState(false);
-  const toggleCheckbox = () => {
-    setIsChecked(!isChecked);
+  const [isOneChecked, setIsOneChecked] = useState(false);
+  const [isTwoChecked, setIsTwoChecked] = useState(false);
+  const toggleCheckboxOne = () => {
+    setIsOneChecked(!isOneChecked);
+  };
+  const toggleCheckboxTwo = () => {
+    setIsTwoChecked(!isTwoChecked);
   };
   return (
     <KeyboardAvoidingView
@@ -59,14 +63,25 @@ const ConsumerRegistration = ({ navigation }) => {
         />
       </View>
       <View style={styles.checkContainer}>
-        <TouchableOpacity onPress={toggleCheckbox}>
+        <TouchableOpacity onPress={toggleCheckboxOne}>
           <Image
-            source={isChecked ? checkboxActive : checkboxInactive}
+            source={isOneChecked ? checkboxActive : checkboxInactive}
             style={styles.image}
           />
         </TouchableOpacity>
         <Text style={styles.checkText}>
           {t('Aceito os termos de uso e a política de privacidade')}
+        </Text>
+      </View>
+      <View style={{ ...styles.checkContainer, marginTop: 12 }}>
+        <TouchableOpacity onPress={toggleCheckboxTwo}>
+          <Image
+            source={isTwoChecked ? checkboxActive : checkboxInactive}
+            style={styles.image}
+          />
+        </TouchableOpacity>
+        <Text style={styles.checkText}>
+          {t('Aceito receber comunicações e ofertas')}
         </Text>
       </View>
       <View style={styles.buttonContainer}>
@@ -75,7 +90,11 @@ const ConsumerRegistration = ({ navigation }) => {
           title={t('Ler termos de uso')}
           onPress={() => navigation.navigate('Terms')}
         />
-        <DefaultButton wide title={t('Cadastrar')} onPress={() => navigation.navigate('ConsumerHome')} />
+        <DefaultButton
+          wide
+          title={t('Cadastrar')}
+          onPress={() => navigation.navigate('ConsumerHome')}
+        />
       </View>
     </KeyboardAvoidingView>
   );

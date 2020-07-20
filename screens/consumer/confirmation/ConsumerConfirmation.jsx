@@ -10,6 +10,7 @@ import {
 
 import DefaultInput from '../../common/DefaultInput';
 import DefaultButton from '../../common/DefaultButton';
+import ShowIf from '../../common/ShowIf';
 import { t } from '../../../strings';
 // import * as fonts from '../../../assets/fonts';
 import { colors, texts } from '../../common/styles';
@@ -18,6 +19,7 @@ const ConsumerConfirmation = ({ navigation, route }) => {
   const { path } = route.params;
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
+  const [sendAgain, setSendAgain] = useState('false') //just for now
 
   if (path === 'sms') {
     return (
@@ -42,12 +44,19 @@ const ConsumerConfirmation = ({ navigation, route }) => {
             onPress={() => navigation.navigate('ConsumerRegistration')}
           />
         </DefaultInput>
-        <TouchableOpacity style={styles.tb}>
+        <TouchableOpacity style={styles.tb} onPress={() => setSendAgain(!sendAgain)}>
           <View style={styles.sendAgain}>
             <View style={styles.littleCircle} />
             <Text style={styles.sendAgainText}>{t('sendAgain')}</Text>
           </View>
         </TouchableOpacity>
+        <ShowIf test={sendAgain === true}>
+        <View style={styles.yellowBox}>
+          <Text style={styles.yellowText}>
+            {t('Código enviado com sucesso. Verifique sua caixa de mensagens')}
+          </Text>
+        </View>
+      </ShowIf>
       </KeyboardAvoidingView>
     );
   }
@@ -73,12 +82,19 @@ const ConsumerConfirmation = ({ navigation, route }) => {
           onPress={() => navigation.navigate('ConsumerRegistration')}
         />
       </DefaultInput>
-      <TouchableOpacity style={styles.tb}>
+      <TouchableOpacity style={styles.tb} onPress={() => setSendAgain(!sendAgain)}>
         <View style={styles.sendAgain}>
           <View style={styles.littleCircle} />
           <Text style={styles.sendAgainText}>{t('sendAgain')}</Text>
         </View>
       </TouchableOpacity>
+      <ShowIf test={sendAgain === true}>
+        <View style={styles.yellowBox}>
+          <Text style={styles.yellowText}>
+            {t('Link enviado com sucesso. Verifique seu e-mail.')}
+          </Text>
+        </View>
+      </ShowIf>
     </KeyboardAvoidingView>
   );
 };
@@ -86,7 +102,7 @@ const ConsumerConfirmation = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    marginHorizontal: 16,
+    paddingHorizontal: 16,
     backgroundColor: colors.lightGrey,
   },
   containerBigText: {
@@ -124,6 +140,25 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     marginLeft: 4,
     ...texts.default,
+  },
+  yellowBox: {
+    marginTop: '50%',
+    height: 40,
+    width: '100%',
+    backgroundColor: '#FFBE00',
+    borderColor: '#FFBE00',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderRadius: 8,
+    // paddingHorizontal: 12,
+    // paddingVertical: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  yellowText: {
+    ...texts.default,
+    fontSize: 13,
+    lineHeight: 16,
   },
 });
 
