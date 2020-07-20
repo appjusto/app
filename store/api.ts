@@ -2,19 +2,20 @@ import React from 'react';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import axios from 'axios';
-import { Courier, Place } from './types';
+import { Courier, Place, Identifiable } from './types';
 
 export default class Api {
-  db: firebase.firestore.Firestore;
-  functionsURL: string;
-  googleMapsApiKey: string;
+  private db: firebase.firestore.Firestore;
+  private functionsURL: string;
 
-  constructor(firebaseConfig, googleMapsApiKey: string) {
+  constructor(firebaseConfig: object, private googleMapsApiKey: string) {
     firebase.initializeApp(firebaseConfig);
     this.db = firebase.firestore();
 
     this.functionsURL = firebaseConfig.functionsURL;
     this.googleMapsApiKey = googleMapsApiKey;
+
+    console.log(firebaseConfig.emulator)
 
     if (firebaseConfig.emulator.enabled) {
       this.db.settings({
@@ -27,31 +28,31 @@ export default class Api {
     }
   }
 
-  updateCourierStatus(courier, status) {
+  updateCourier(courierId: string, changes: object) {
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    const courierDoc = this.db.collection('couriers').doc(courier.id);
+    const courierDoc = this.db.collection('couriers').doc(courierId);
     return courierDoc.set({
-      status,
+      ...changes,
       timestamp
     }, { merge: true });
   }
 
-  updateCourierLocation(courier:Courier, location) {
+  updateCourierLocation(courierId: string, location) {
     const { coords } = location;
 
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
     // SECURITY TODO: this action should be restricted only to the courier himself and admins
     // TODO: create a job to synthesize or remove old data
-    this.db.collection('locations').add({
+    return this.db.collection('locations').add({
       ...coords,
-      courierId: courier.id,
+      courierId,
       timestamp
     });
   }
 
-  watchCourier(courier:Courier, resultHandler) {
+  watchCourier(courierId: string, resultHandler): () => void {
     // TODO: ensure only people envolved in order are able to know courier's location
-    const unsubscribe = this.db.collection('couriers').doc(courier.id)
+    const unsubscribe = this.db.collection('couriers').doc(courierId)
       .onSnapshot((doc) => {
         resultHandler({...doc.data(), id: doc.id})
       });
@@ -59,7 +60,7 @@ export default class Api {
     return unsubscribe;
   }
 
-  watchAvailableCouriers(resultHandler) {
+  watchAvailableCouriers(resultHandler): () => void {
     // TODO: add query filters to limit to couriers:
     // 1 close to a specific location
     // 2 max number of results
@@ -141,4 +142,4 @@ export default class Api {
   }
 }
 
-export const ApiContext = React.createContext(null);
+export const ApiContext = React.createContext<Api | null>(null);

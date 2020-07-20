@@ -31,17 +31,17 @@ export const borders = StyleSheet.create({
 });
 
 export const texts = StyleSheet.create({
+  small: {
+    fontFamily: 'BarlowMedium',
+    color: colors.black,
+    fontSize: 13,
+    lineHeight: 16,
+  },
   default: {
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 15,
     lineHeight: 18,
-  },
-  huge: {
-    fontFamily: 'BarlowMedium',
-    color: colors.black,
-    fontSize: 40,
-    lineHeight: 48,
   },
   big: {
     fontFamily: 'BarlowMedium',
@@ -49,12 +49,13 @@ export const texts = StyleSheet.create({
     fontSize: 24,
     lineHeight: 29,
   },
-  small: {
+  huge: {
     fontFamily: 'BarlowMedium',
     color: colors.black,
-    fontSize: 13,
-    lineHeight: 16,
-  }
+    fontSize: 40,
+    lineHeight: 48,
+  },
+ 
 });
 
 export const flex = StyleSheet.create({

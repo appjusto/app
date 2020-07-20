@@ -58,5 +58,5 @@ i18n.locale = isDeviceLocaleSupported ? deviceLocale : i18n.defaultLocale;
 i18n.missingTranslation = () => null;
 
 export const { locale } = i18n;
-export const t = (string) => i18n.t(string) || string;
+export const t = (string: string) => i18n.t(string) || string;
 

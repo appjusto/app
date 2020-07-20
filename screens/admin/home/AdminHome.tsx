@@ -8,6 +8,7 @@ import { ApiContext } from '../../../store/api';
 import { setCourierProfile, updateCourierLocation, watchAvailableCouriers } from '../../../store/actions/courier';
 import { getCourierProfile, isCourierWorking, getAvailableCouriers } from '../../../store/selectors/courier';
 import DefaultMap from '../../common/DefaultMap';
+import { Courier } from '../../../store/types';
 
 const couriers = [
   { title: 'Courier 1', id: 'courier-1' },
@@ -34,7 +35,7 @@ export default function App({ token }) {
   const api = useContext(ApiContext);
 
   // state
-  const courier = useSelector(getCourierProfile);
+  const courier = useSelector(getCourierProfile) as Courier;
   const isWorking = useSelector(isCourierWorking);
   const availableCouriers = useSelector(getAvailableCouriers);
   const [notification, setNotification] = useState(null);
@@ -84,7 +85,7 @@ export default function App({ token }) {
             renderItem={({ item }) => (
               <Button
                 title={item.title}
-                onPress={() => dispatch(updateCourierLocation(api)(courier, item.location, isWorking))}
+                onPress={() => dispatch(updateCourierLocation(api)(courier.id, item.location, isWorking))}
               />
             )}
             keyExtractor={(item) => item.title}

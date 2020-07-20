@@ -3,30 +3,33 @@ import { StyleSheet, View, Dimensions, Text, Image, Switch } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { ApiContext } from '../../../store/api';
-import { updateCourierStatus, watchCourier } from '../../../store/actions/courier';
+import Api, { ApiContext } from '../../../store/api';
+import { updateCourier, watchCourier } from '../../../store/actions/courier';
 import { getCourierProfile, isCourierWorking, getCourierLocation } from '../../../store/selectors/courier';
-import { COURIER_STATUS_NOT_WORKING, COURIER_STATUS_AVAILABLE, COURIER_STATUS_DISPATCHING } from '../../../store/constants';
+import { COURIER_STATUS_NOT_WORKING, COURIER_STATUS_AVAILABLE } from '../../../store/constants';
 import useLocationUpdates from '../../../hooks/useLocationUpdates';
+import useNotificationToken from '../../../hooks/useNotificationToken';
 import { colors, padding, texts, borders } from '../../common/styles';
 import { t } from '../../../strings';
 import { motocycleWhite } from '../../../assets/icons';
+import { Courier } from '../../../store/types';
 
 const { width, height } = Dimensions.get('window');
 
 export default function App() {
   // context
   const dispatch = useDispatch();
-  const api = useContext(ApiContext);
+  const api = useContext(ApiContext) as Api;
 
   // state
-  const courier = useSelector(getCourierProfile);
+  const [notificationToken, notificationError] = useNotificationToken();
+  const courier = useSelector(getCourierProfile) as Courier;
   const working = useSelector(isCourierWorking);
   const locationPermission = useLocationUpdates(working);
   const currentLocation = useSelector(getCourierLocation);
 
   // side effects
-  // permission granted
+  // location permission granted
   useEffect(() => {
     if (locationPermission === 'granted') {
       // TO-DO: send current location?
@@ -38,20 +41,35 @@ export default function App() {
     }
   }, [locationPermission]);
 
+  // notification permission
+  useEffect(() => {
+    console.log('notificationError', notificationError);
+    console.log('notificationToken', notificationToken);
+
+    if (notificationError) {
+      
+    }
+    else if (notificationToken) {
+      const status = working ? COURIER_STATUS_NOT_WORKING : COURIER_STATUS_AVAILABLE;
+      dispatch(updateCourier(api)(courier.id, { notificationToken } ));
+    }
+    
+  }, [notificationToken, notificationError]);
+
   // watch for profile updates
   useEffect(() => {
-    return dispatch(watchCourier(api)(courier));
+    return dispatch(watchCourier(api)(courier.id));
   }, []);
-  
 
   // handlers
   const toggleWorking = () => {
-    dispatch(updateCourierStatus(api)(courier, working ? COURIER_STATUS_NOT_WORKING : COURIER_STATUS_AVAILABLE ));
+    const status = working ? COURIER_STATUS_NOT_WORKING : COURIER_STATUS_AVAILABLE;
+    dispatch(updateCourier(api)(courier.id, { status } ));
   }
 
   // UI
   return (
-    <SafeAreaView style={style.container}>
+    <SafeAreaView>
       {/* Main area */}
       <View style={[style.main, { backgroundColor: working ? colors.green: colors.yellow } ]}>
         <Text style={[texts.big, { paddingTop: 32, paddingBottom: 24 }]}>
@@ -86,8 +104,6 @@ export default function App() {
   );
 }
 const style = StyleSheet.create({
-  container: {
-  },
   main: {
     padding,
   },
@@ -99,7 +115,7 @@ const style = StyleSheet.create({
     ...borders.default,
     borderColor: colors.white,
     width: Math.floor((width - (3 * padding)) / 2),
-    height: Math.floor(height * 0.30),
+    // height: Math.floor(height * 0.30),
     padding: 12,
   },
   priceTag: {

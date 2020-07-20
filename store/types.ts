@@ -22,8 +22,12 @@ export enum PaymentStatus {
   NotAuthorized = 'not_authorized',
 }
 
-export interface Courier {
+export interface Identifiable {
   id: string;
+}
+
+export interface Courier extends Identifiable {
+  
 }
 
 export interface LatLng {
