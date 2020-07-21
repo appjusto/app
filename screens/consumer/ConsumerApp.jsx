@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import ConsumerIntro from './intro/ConsumerIntro';
 import ConsumerConfirmation from './confirmation/ConsumerConfirmation';
@@ -14,6 +14,7 @@ import ConsumerProfile from './profile/ConsumerProfile';
 import ProfileEdit from './profile/ProfileEdit';
 import ProfileErase from './profile/ProfileErase';
 import EraseConfirmed from './profile/EraseConfirmed';
+import ConsumerHistory from './history/ConsumerHistory';
 
 // import BackButton from '../common/BackButton';
 import * as fonts from '../../assets/fonts';
@@ -23,16 +24,25 @@ const UnloggedStack = createStackNavigator();
 const LoggedNavigator = createBottomTabNavigator();
 const CreateOrderNavigator = createStackNavigator();
 const ProfileStack = createStackNavigator();
+const HistoryStack = createStackNavigator();
+
+function History() {
+  return (
+    <HistoryStack.Navigator>
+      <HistoryStack.Screen name='ConsumerHistory' component={ConsumerHistory} />
+    </HistoryStack.Navigator>
+  );
+}
 
 function Profile() {
-  return(
+  return (
     <ProfileStack.Navigator initialRouteName={ConsumerProfile}>
-      <ProfileStack.screen  name='ConsumerProfile' component={ConsumerProfile}/>
+      <ProfileStack.screen name='ConsumerProfile' component={ConsumerProfile} />
       <ProfileStack.screen name='ProfileEdit' component={ProfileEdit} />
-      <ProfileStack.screen name='ProfileErase' component={ProfileErase}/>
+      <ProfileStack.screen name='ProfileErase' component={ProfileErase} />
       <ProfileStack.screen name='EraseConfirmed' component={EraseConfirmed} />
     </ProfileStack.Navigator>
-  )
+  );
 }
 
 function Unlogged() {
@@ -65,7 +75,11 @@ function Logged() {
   return (
     <LoggedNavigator.Navigator>
       <LoggedNavigator.Screen name='ConsumerHome' component={ConsumerHome} />
-      <LoggedNavigator.Screen name='ConsumerProfile' component={ConsumerProfile} />
+      <LoggedNavigator.Screen name='ConsumerHistory' component={ConsumerHistory} />
+      <LoggedNavigator.Screen
+        name='ConsumerProfile'
+        component={ConsumerProfile}
+      />
     </LoggedNavigator.Navigator>
   );
 }
