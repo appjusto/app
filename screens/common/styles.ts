@@ -9,7 +9,10 @@ export const colors = {
   lightGrey: '#F2F7EA',
   grey: '#C8D7CB',
   darkGrey: '#697667',
+  yellow: '#FFBE00',
 }
+
+export const padding = 16;
 
 export const screens = StyleSheet.create({
   default: {
@@ -20,17 +23,39 @@ export const screens = StyleSheet.create({
 
 export const borders = StyleSheet.create({
   default: {
-    borderRadius: 8,
-    borderStyle: 'solid',
-    borderColor: colors.grey,
     borderWidth: 1,
+    borderStyle: 'solid',
+    borderRadius: 8,
+    borderColor: colors.grey,
   },
 });
 
 export const texts = StyleSheet.create({
+  small: {
+    fontFamily: 'BarlowMedium',
+    color: colors.black,
+    fontSize: 13,
+    lineHeight: 16,
+  },
   default: {
     fontFamily: 'BarlowMedium',
-  }
+    color: colors.black,
+    fontSize: 15,
+    lineHeight: 18,
+  },
+  big: {
+    fontFamily: 'BarlowMedium',
+    color: colors.black,
+    fontSize: 24,
+    lineHeight: 29,
+  },
+  huge: {
+    fontFamily: 'BarlowMedium',
+    color: colors.black,
+    fontSize: 40,
+    lineHeight: 48,
+  },
+ 
 });
 
 export const flex = StyleSheet.create({

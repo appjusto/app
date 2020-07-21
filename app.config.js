@@ -29,7 +29,8 @@ const getFirebaseConfig = () => {
     messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
     appId: FIREBASE_APP_ID,
     emulator: {
-      enabled: FIREBASE_EMULATOR === 'true',
+      // enabled: FIREBASE_EMULATOR === 'true',
+      enabled: false,
       databaseURL: `localhost:8080`,
       functionsURL: `http://localhost:5001/${FIREBASE_PROJECT_ID}/${FIREBASE_REGION}`,
     }

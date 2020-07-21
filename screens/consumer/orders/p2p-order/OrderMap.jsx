@@ -39,11 +39,9 @@ export default function ({ initialRegion, order }) {
   );
 }
 
-const { width, height } = Dimensions.get('window');
-
 const style = StyleSheet.create({
   map: {
-    width,
-    height: height * 0.3,
+    width: '100%',
+    height: '100%',
   },
 });

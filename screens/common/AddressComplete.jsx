@@ -26,6 +26,8 @@ export default function ({ navigation, route }) {
     description: 'Av. Paulista, 1578'
   }, {
     description: 'Av. Paulista, 2424'
+  }, {
+    description: 'Largo de São Bento'
   }] : []);
 
   // handlers
@@ -50,6 +52,7 @@ export default function ({ navigation, route }) {
   return (
     <View style={{ flex: 1 }}>
       <DefaultInput
+        defaultValue={initialAddress}
         value={address}
         title={t('Endereço de retirada')}
         placeholder={t('Endereço com número')}

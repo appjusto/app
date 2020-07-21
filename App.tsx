@@ -18,7 +18,6 @@ import {
 } from './store/selectors/config';
 import { getAppFlavor, getExtra } from './app.config';
 import Api, { ApiContext } from './store/api';
-import useNotificationToken from './hooks/useNotificationToken';
 import { APP_FLAVOR_ADMIN } from './store/constants';
 
 import configReducer from './store/reducers/config';
@@ -32,6 +31,7 @@ import AdminFlavorChooser from './screens/common/admin/AdminFlavorChooser';
 
 import fonts from './assets/fonts';
 import icons from './assets/icons';
+import { Courier } from './store/types';
 
 const extra = getExtra();
 const api = new Api(extra.firebase, extra.googleMapsApiKey);
@@ -56,15 +56,17 @@ defineLocationUpdatesTask(({ data: { locations }, error }) => {
 
   const isCourier = isCourierFlavor(state);
   if (isCourier) {
-    const courier = getCourierProfile(state);
+    const courier = getCourierProfile(state) as Courier;
     const shouldBroadcastLocation = !!courier && isCourierWorking(state);
     if (shouldBroadcastLocation)
-      store.dispatch(updateCourierLocation(api)(courier, location));
+      store.dispatch(updateCourierLocation(api)(courier.id, location));
   }
 });
 
+// https://github.com/facebook/react-native/issues/12981#issuecomment-652745831
+console.ignoredYellowBox = ['Setting a timer'];
+
 const App = () => {
-  const [token, error] = useNotificationToken();
   const isAdmin = useSelector(isAdminFlavor);
   const isConsumer = useSelector(isConsumerFlavor);
   const isCourier = useSelector(isCourierFlavor);
