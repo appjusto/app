@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Api, { ApiContext } from '../../../store/api';
 import { updateCourier, watchCourier } from '../../../store/actions/courier';
 import { getCourierProfile, isCourierWorking, getCourierLocation } from '../../../store/selectors/courier';
-import { COURIER_STATUS_NOT_WORKING, COURIER_STATUS_AVAILABLE } from '../../../store/constants';
+import { COURIER_STATUS_UNAVAILABLE, COURIER_STATUS_AVAILABLE } from '../../../store/constants';
 import useLocationUpdates from '../../../hooks/useLocationUpdates';
 import useNotificationToken from '../../../hooks/useNotificationToken';
 import { colors, padding, texts, borders } from '../../common/styles';
@@ -50,7 +50,7 @@ export default function App() {
       
     }
     else if (notificationToken) {
-      const status = working ? COURIER_STATUS_NOT_WORKING : COURIER_STATUS_AVAILABLE;
+      const status = working ? COURIER_STATUS_UNAVAILABLE : COURIER_STATUS_AVAILABLE;
       dispatch(updateCourier(api)(courier.id, { notificationToken } ));
     }
     
@@ -63,7 +63,7 @@ export default function App() {
 
   // handlers
   const toggleWorking = () => {
-    const status = working ? COURIER_STATUS_NOT_WORKING : COURIER_STATUS_AVAILABLE;
+    const status = working ? COURIER_STATUS_UNAVAILABLE : COURIER_STATUS_AVAILABLE;
     dispatch(updateCourier(api)(courier.id, { status } ));
   }
 

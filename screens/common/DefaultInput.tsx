@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { View, Text, TextInput, StyleSheet, TextInputProps } from 'react-native';
 
 import { borders, texts, colors } from './styles';

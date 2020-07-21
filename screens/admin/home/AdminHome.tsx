@@ -29,7 +29,7 @@ const defaultDeltas = {
   longitudeDelta: 0.0125,
 };
 
-export default function App({ token }) {
+export default function App() {
   // context
   const dispatch = useDispatch();
   const api = useContext(ApiContext);
@@ -92,7 +92,6 @@ export default function App({ token }) {
             horizontal
           />
         </View>
-        <TextInput style={{ marginTop: 20 }} value={token} />
         <Text>Title: {notification && notification.request.content.title} </Text>
         <Text>Body: {notification && notification.request.content.body}</Text>
         <Text>Data: {notification && JSON.stringify(notification.request.content.data.body)}</Text>

@@ -1,10 +1,10 @@
 import * as actionTypes from '../actionTypes';
-import { COURIER_STATUS_NOT_WORKING } from '../constants';
+import { COURIER_STATUS_UNAVAILABLE } from '../constants';
 
 const initialState = {
   profile: { id: 'courier-1' },
   location: null,
-  status: COURIER_STATUS_NOT_WORKING,
+  status: COURIER_STATUS_UNAVAILABLE,
   availableCouriers: [],
 };
 
