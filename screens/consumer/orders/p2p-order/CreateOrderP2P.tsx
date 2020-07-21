@@ -3,7 +3,7 @@ import { StyleSheet, View, Image, Dimensions, NativeSyntheticEvent } from 'react
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { useSelector } from 'react-redux';
 
-import { Place, Order, OrderStatus, PaymentStatus } from '../../../../store/types';
+import { Place, Order } from '../../../../store/types';
 import Api, { ApiContext } from '../../../../store/api';
 import useLocationUpdates from '../../../../hooks/useLocationUpdates';
 import { getConsumerLocation } from '../../../../store/selectors/consumer';
@@ -17,7 +17,7 @@ import OrderMap from './OrderMap';
 import { t } from '../../../../strings';
 import ShowIf from '../../../common/ShowIf';
 import OrderSummary from './OrderSummary';
-import * as fixtures from '../../../../store/fixtures';
+// import * as fixtures from '../../../../store/fixtures'; // testing only
 
 enum Steps {
   Origin = 0,
@@ -46,12 +46,6 @@ export default function ({ navigation, route }) {
 
   // state
   const currentLocation = useSelector(getConsumerLocation);
-  const initialRegion = currentLocation ? {
-    latitude: currentLocation.latitude,
-    longitude: currentLocation.longitude,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  } : null;
 
   const [step, setStep] = useState(Steps.Origin);
   const [origin, setOrigin] = useState({} as Place);
@@ -76,6 +70,7 @@ export default function ({ navigation, route }) {
     if (value === Steps.Destination) return placeValid(origin); // only if origin is known
     if (value === Steps.Confirmation) return placeValid(origin) && placeValid(destination); // only if both origin and destination is known
     if (value === Steps.ConfirmingOrder) return orderValid(order); // when order 
+    return false; // should happen
   };
 
   const setPage = (index: number):void => {
@@ -163,7 +158,7 @@ export default function ({ navigation, route }) {
         {/* after order has been created */}
         <ShowIf test={orderValid(order)}>
           {() => (
-            <OrderMap initialRegion={initialRegion} order={order} />
+            <OrderMap order={order} />
           )}
         </ShowIf>
 

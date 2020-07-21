@@ -1,3 +1,12 @@
+// base
+
+export interface Coordinates {
+  latitude: string;
+  longitude: string;
+}
+
+// couriers
+
 export enum OrderStatus {
   Quote = 'quote',
   Matching = 'matching',
@@ -22,24 +31,11 @@ export enum PaymentStatus {
   NotAuthorized = 'not_authorized',
 }
 
-export interface Identifiable {
-  id: string;
-}
-
-export interface Courier extends Identifiable {
-  
-}
-
-export interface LatLng {
-  latitude: string;
-  longitude: string;
-}
-
 export interface Place {
   address: string;
   additionalInfo?: string;
   description?: string;
-  location?: LatLng;
+  location?: Coordinates;
 }
 
 export interface FareDetails {

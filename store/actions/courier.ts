@@ -1,7 +1,8 @@
+import { Dispatch } from 'redux';
+
 import * as actionTypes from '../actionTypes';
 import Api from '../api';
-import { Courier } from '../types';
-import { Dispatch } from 'redux';
+import { Courier } from '../types/courier';
 
 // change local state only; won't broadcast to backend
 export const setCourierProfile = (profile: Courier) => (dispatch: Dispatch<any>) => {
@@ -13,8 +14,9 @@ export const updateCourier = (api:Api) => (courierId: string, changes: object) =
   api.updateCourier(courierId, changes);
 };
 
-export const updateCourierLocation = (api:Api) => (courierId: string, location) => (dispatch: Dispatch<any>) => {
-  api.updateCourierLocation(courierId, location);
+export const updateCourierLocation = (api:Api) => (courier: Courier, location) => (dispatch: Dispatch<any>) => {
+  api.updateCourierLocation(courier, location);
+  dispatch({ type: actionTypes.SET_LOCATION, payload: location });
 };
 
 // watch for updates

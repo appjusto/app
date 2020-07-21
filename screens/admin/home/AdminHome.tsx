@@ -6,9 +6,8 @@ import * as Notifications from 'expo-notifications';
 
 import { ApiContext } from '../../../store/api';
 import { setCourierProfile, updateCourierLocation, watchAvailableCouriers } from '../../../store/actions/courier';
-import { getCourierProfile, isCourierWorking, getAvailableCouriers } from '../../../store/selectors/courier';
+import { isCourierWorking, getAvailableCouriers, getCourier } from '../../../store/selectors/courier';
 import DefaultMap from '../../common/DefaultMap';
-import { Courier } from '../../../store/types';
 
 const couriers = [
   { title: 'Courier 1', id: 'courier-1' },
@@ -35,8 +34,8 @@ export default function App() {
   const api = useContext(ApiContext);
 
   // state
-  const courier = useSelector(getCourierProfile) as Courier;
-  const isWorking = useSelector(isCourierWorking);
+  const courier = useSelector(getCourier);
+  const working = useSelector(isCourierWorking);
   const availableCouriers = useSelector(getAvailableCouriers);
   const [notification, setNotification] = useState(null);
   
@@ -85,7 +84,7 @@ export default function App() {
             renderItem={({ item }) => (
               <Button
                 title={item.title}
-                onPress={() => dispatch(updateCourierLocation(api)(courier.id, item.location, isWorking))}
+                onPress={() => dispatch(updateCourierLocation(api)(courier.id, item.location, working))}
               />
             )}
             keyExtractor={(item) => item.title}

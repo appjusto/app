@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import * as Permissions from 'expo-permissions';
-import * as Location from 'expo-location';
 import { startLocationUpdatesTask, stopLocationUpdatesTask } from '../tasks/location';
 import { useDispatch } from 'react-redux';
-import { setLocation } from '../store/actions/location';
 
 export default function (shouldAskPermission) {
   // context
@@ -18,13 +16,6 @@ export default function (shouldAskPermission) {
     setLocationPermission(status);
   }
 
-  const startLocationUpdates = async () => {
-    const location = await Location.getCurrentPositionAsync({});
-    dispatch(setLocation(location));
-    
-    startLocationUpdatesTask();
-  }
-
   // ask for permission
   useEffect(() => {
     if (shouldAskPermission) askPermission();
@@ -33,7 +24,7 @@ export default function (shouldAskPermission) {
   // start tasks
   useEffect(() => {
     if (locationPermission === 'granted') {
-      startLocationUpdates();
+      startLocationUpdatesTask();
 
       return async () => {
         await stopLocationUpdatesTask();

@@ -6,7 +6,7 @@ import polyline from '@mapbox/polyline';
 import DefaultMap from '../../../common/DefaultMap';
 import { pinUser, pinPackage } from '../../../../assets/icons';
 
-export default function ({ initialRegion, order }) {
+export default function ({ order }) {
   const { places, routePolyline } = order;
   const [ origin, destination ] = places;
 
@@ -29,7 +29,6 @@ export default function ({ initialRegion, order }) {
       style={style.map}
       minZoomLevel={13}
       maxZoomLevel={13}
-      initialRegion={initialRegion}
       fitToElements
     >
       <Marker coordinate={originCoordinate} icon={pinPackage} />

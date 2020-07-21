@@ -5,25 +5,24 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Api, { ApiContext } from '../../../store/api';
 import { updateCourier, watchCourier } from '../../../store/actions/courier';
-import { getCourierProfile, isCourierWorking, getCourierLocation } from '../../../store/selectors/courier';
-import { COURIER_STATUS_UNAVAILABLE, COURIER_STATUS_AVAILABLE } from '../../../store/constants';
+import { isCourierWorking, getCourierLocation, getCourier } from '../../../store/selectors/courier';
 import useLocationUpdates from '../../../hooks/useLocationUpdates';
 import useNotificationToken from '../../../hooks/useNotificationToken';
 import { colors, padding, texts, borders } from '../../common/styles';
 import { t } from '../../../strings';
 import { motocycleWhite } from '../../../assets/icons';
-import { Courier } from '../../../store/types';
+import { CourierStatus } from '../../../store/types/courier';
 
 const { width, height } = Dimensions.get('window');
 
 export default function App() {
   // context
   const dispatch = useDispatch();
-  const api = useContext(ApiContext) as Api;
+  const api = useContext(ApiContext);
 
   // state
   const [notificationToken, notificationError] = useNotificationToken();
-  const courier = useSelector(getCourierProfile) as Courier;
+  const courier = useSelector(getCourier);
   const working = useSelector(isCourierWorking);
   const locationPermission = useLocationUpdates(working);
   const currentLocation = useSelector(getCourierLocation);
@@ -50,7 +49,6 @@ export default function App() {
       
     }
     else if (notificationToken) {
-      const status = working ? COURIER_STATUS_UNAVAILABLE : COURIER_STATUS_AVAILABLE;
       dispatch(updateCourier(api)(courier.id, { notificationToken } ));
     }
     
@@ -63,7 +61,7 @@ export default function App() {
 
   // handlers
   const toggleWorking = () => {
-    const status = working ? COURIER_STATUS_UNAVAILABLE : COURIER_STATUS_AVAILABLE;
+    const status = working ? CourierStatus.Unavailable : CourierStatus.Available;
     dispatch(updateCourier(api)(courier.id, { status } ));
   }
 

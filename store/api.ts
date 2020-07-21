@@ -1,16 +1,20 @@
 import React from 'react';
 import firebase from 'firebase';
 import 'firebase/firestore';
+import * as geofirestore from 'geofirestore'
 import axios from 'axios';
-import { Courier, Place, Identifiable } from './types';
+import { Courier } from './types/courier';
+import { Place } from './types';
 
 export default class Api {
-  private db: firebase.firestore.Firestore;
+  private firestore: firebase.firestore.Firestore;
+  private firestoreWithGeo: geofirestore.GeoFirestore;
   private functionsURL: string;
 
   constructor(firebaseConfig: object, private googleMapsApiKey: string) {
     firebase.initializeApp(firebaseConfig);
-    this.db = firebase.firestore();
+    this.firestore = firebase.firestore();
+    this.firestoreWithGeo = geofirestore.initializeApp(this.firestore);
 
     this.functionsURL = firebaseConfig.functionsURL;
     this.googleMapsApiKey = googleMapsApiKey;
@@ -18,7 +22,7 @@ export default class Api {
     console.log(firebaseConfig.emulator)
 
     if (firebaseConfig.emulator.enabled) {
-      this.db.settings({
+      this.firestore.settings({
         host: firebaseConfig.emulator.databaseURL,
         ssl: false,
       });
@@ -30,29 +34,36 @@ export default class Api {
 
   updateCourier(courierId: string, changes: object) {
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    const courierDoc = this.db.collection('couriers').doc(courierId);
+    const courierDoc = this.firestore.collection('couriers').doc(courierId);
     return courierDoc.set({
       ...changes,
       timestamp
     }, { merge: true });
   }
 
-  updateCourierLocation(courierId: string, location) {
+  updateCourierLocation(courier: Courier, location) {
     const { coords } = location;
 
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
     // SECURITY TODO: this action should be restricted only to the courier himself and admins
     // TODO: create a job to synthesize or remove old data
-    return this.db.collection('locations').add({
-      ...coords,
-      courierId,
+    const collection = this.firestoreWithGeo.collection('locations').doc('couriers').collection(courier.status);
+    
+    return collection.add({
+      coordinates: new firebase.firestore.GeoPoint(coords.latitude, coords.longitude),
+      // accuracy: coords.accuracy,
+      // altitude: coords.altitude,
+      // altitudeAccuracy: coords.altitudeAccuracy,
+      // heading: coords.heading,
+      // speed: coords.speed,
+      courierId: courier.id,
       timestamp
     });
   }
 
   watchCourier(courierId: string, resultHandler): () => void {
     // TODO: ensure only people envolved in order are able to know courier's location
-    const unsubscribe = this.db.collection('couriers').doc(courierId)
+    const unsubscribe = this.firestore.collection('couriers').doc(courierId)
       .onSnapshot((doc) => {
         resultHandler({...doc.data(), id: doc.id})
       });
@@ -64,7 +75,7 @@ export default class Api {
     // TODO: add query filters to limit to couriers:
     // 1 close to a specific location
     // 2 max number of results
-    const unsubscribe = this.db.collection('couriers')
+    const unsubscribe = this.firestore.collection('couriers')
       .where('status', '==', 'available')
       .onSnapshot((query) => {
         const result = [];
