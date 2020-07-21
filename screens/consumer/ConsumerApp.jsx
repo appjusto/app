@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import ConsumerIntro from './intro/ConsumerIntro';
 import ConsumerConfirmation from './confirmation/ConsumerConfirmation';
@@ -9,25 +10,32 @@ import Terms from './terms-of-use/Terms';
 import ConsumerHome from './home/ConsumerHome';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import AddressComplete from '../common/AddressComplete';
+import ConsumerProfile from './profile/ConsumerProfile';
+import ProfileEdit from './profile/ProfileEdit';
+import ProfileErase from './profile/ProfileErase';
+import EraseConfirmed from './profile/EraseConfirmed';
 
 // import BackButton from '../common/BackButton';
 import * as fonts from '../../assets/fonts';
 
 const RootNavigator = createStackNavigator();
 const UnloggedStack = createStackNavigator();
-const LoggedNavigator = createStackNavigator();
+const LoggedNavigator = createBottomTabNavigator();
 const CreateOrderNavigator = createStackNavigator();
+const ProfileStack = createStackNavigator();
+
+function Profile() {
+  return(
+    <ProfileStack.Navigator initialRouteName={ConsumerProfile}>
+      <ProfileStack.screen  name='ConsumerProfile' component={ConsumerProfile}/>
+      <ProfileStack.screen name='ProfileEdit' component={ProfileEdit} />
+      <ProfileStack.screen name='ProfileErase' component={ProfileErase}/>
+      <ProfileStack.screen name='EraseConfirmed' component={EraseConfirmed} />
+    </ProfileStack.Navigator>
+  )
+}
 
 function Unlogged() {
-  const unloggedOptions = {
-    headerTitleStyle: {
-      fontFamily: fonts.BarlowMedium,
-      fontSize: 16,
-      lineHeight: 19,
-      color: 'black',
-    },
-    // headerLeft: () => <BackButton />,
-  };
   return (
     <UnloggedStack.Navigator
       initialRouteName='ConsumerIntro'
@@ -57,6 +65,7 @@ function Logged() {
   return (
     <LoggedNavigator.Navigator>
       <LoggedNavigator.Screen name='ConsumerHome' component={ConsumerHome} />
+      <LoggedNavigator.Screen name='ConsumerProfile' component={ConsumerProfile} />
     </LoggedNavigator.Navigator>
   );
 }
@@ -76,7 +85,7 @@ export default function () {
   return (
     <NavigationContainer>
       <RootNavigator.Navigator mode='modal' initialRouteName='ConsumerIntro'>
-        <RootNavigator.Screen name='Unlogged' component={Unlogged} />
+        {/* <RootNavigator.Screen name='Unlogged' component={Unlogged} /> */}
         <RootNavigator.Screen name='Logged' component={Logged} />
         <RootNavigator.Screen name='CreateOrder' component={CreateOrder} />
         <RootNavigator.Screen

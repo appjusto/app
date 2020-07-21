@@ -32,7 +32,7 @@ export default function ConsumerHome() {
           </Text>
         </View>
         <View style={styles.containerBigText}>
-          <Text style={styles.bigText}>{t('weAre')}</Text>
+          <Text style={styles.bigText}>{t('Somos um delivery aberto, transparente e consciente')}</Text>
         </View>
         <View style={styles.actionsContainer}>
           <View style={styles.actionBox}>
@@ -104,13 +104,13 @@ const styles = StyleSheet.create({
   },
   greenContainer: {
     width: '100%',
-    height: '55%',
+    height: '60%',
     backgroundColor: colors.green,
     paddingHorizontal: 16,
   },
   whiteContainer: {
     width: '100%',
-    height: '45%',
+    height: '40%',
     // paddingHorizontal: 16,
   },
   searchBox: {
@@ -140,10 +140,10 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   bigText: {
-    fontSize: 24,
-    lineHeight: 29,
-    color: '#000',
-    ...texts.default,
+    // fontSize: 24,
+    // lineHeight: 29,
+    // color: '#000',
+    ...texts.big,
   },
   actionsContainer: {
     flexDirection: 'row',
