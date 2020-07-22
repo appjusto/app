@@ -8,9 +8,67 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:506390194883:android:d9812ec27361631c381076",
+        "mobilesdk_app_id": "1:506390194883:android:35d12e26ece0c9a6381076",
         "android_client_info": {
-          "package_name": "br.com.appjusto.app"
+          "package_name": "br.com.appjusto.admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "506390194883-r3ie8usesf467t7q51kgb1k2i5874ugm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD92iin1Oaf_4rG4MA_OleKWp_2YLuVcmU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "506390194883-r3ie8usesf467t7q51kgb1k2i5874ugm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:506390194883:android:4dade4bc0bba7ed8381076",
+        "android_client_info": {
+          "package_name": "br.com.appjusto.consumer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "506390194883-r3ie8usesf467t7q51kgb1k2i5874ugm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD92iin1Oaf_4rG4MA_OleKWp_2YLuVcmU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "506390194883-r3ie8usesf467t7q51kgb1k2i5874ugm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:506390194883:android:48a9a002084f3d72381076",
+        "android_client_info": {
+          "package_name": "br.com.appjusto.courier"
         }
       },
       "oauth_client": [
