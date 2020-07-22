@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import ConsumerIntro from './intro/ConsumerIntro';
 import ConsumerConfirmation from './confirmation/ConsumerConfirmation';
@@ -9,25 +10,39 @@ import Terms from './terms-of-use/Terms';
 import ConsumerHome from './home/ConsumerHome';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import AddressComplete from '../common/AddressComplete';
-
-// import BackButton from '../common/BackButton';
-import * as fonts from '../../assets/fonts';
+import ConsumerProfile from './profile/ConsumerProfile';
+import ProfileEdit from './profile/ProfileEdit';
+import ProfileErase from './profile/ProfileErase';
+import EraseConfirmed from './profile/EraseConfirmed';
+import ConsumerHistory from './history/ConsumerHistory';
 
 const RootNavigator = createStackNavigator();
 const UnloggedStack = createStackNavigator();
-const LoggedNavigator = createStackNavigator();
+const LoggedNavigator = createBottomTabNavigator();
 const CreateOrderNavigator = createStackNavigator();
+const ProfileStack = createStackNavigator();
+const HistoryStack = createStackNavigator();
+
+function History() {
+  return (
+    <HistoryStack.Navigator>
+      <HistoryStack.Screen name='ConsumerHistory' component={ConsumerHistory} />
+    </HistoryStack.Navigator>
+  );
+}
+
+const Profile = () => {
+  return (
+    <ProfileStack.Navigator initialRouteName={ConsumerProfile}>
+      <ProfileStack.screen name='ConsumerProfile' component={ConsumerProfile} />
+      <ProfileStack.screen name='ProfileEdit' component={ProfileEdit} />
+      <ProfileStack.screen name='ProfileErase' component={ProfileErase} />
+      <ProfileStack.screen name='EraseConfirmed' component={EraseConfirmed} />
+    </ProfileStack.Navigator>
+  );
+};
 
 function Unlogged() {
-  const unloggedOptions = {
-    headerTitleStyle: {
-      fontFamily: fonts.BarlowMedium,
-      fontSize: 16,
-      lineHeight: 19,
-      color: 'black',
-    },
-    // headerLeft: () => <BackButton />,
-  };
   return (
     <UnloggedStack.Navigator
       initialRouteName='ConsumerIntro'
@@ -48,7 +63,7 @@ function Unlogged() {
         component={ConsumerRegistration}
       />
       <UnloggedStack.Screen name='Terms' component={Terms} />
-      <UnloggedStack.Screen name='ConsumerHome' component={ConsumerHome} />
+      {/* <UnloggedStack.Screen name='ConsumerHome' component={ConsumerHome} /> */}
     </UnloggedStack.Navigator>
   );
 }
@@ -57,6 +72,15 @@ function Logged() {
   return (
     <LoggedNavigator.Navigator>
       <LoggedNavigator.Screen name='ConsumerHome' component={ConsumerHome} />
+      <LoggedNavigator.Screen
+        name='ConsumerHistory'
+        component={ConsumerHistory}
+      />
+      <LoggedNavigator.Screen
+        name='Profile'
+        component={Profile}
+        options={{ title: 'Sua conta' }}
+      />
     </LoggedNavigator.Navigator>
   );
 }
