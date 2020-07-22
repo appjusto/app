@@ -93,7 +93,7 @@ const ConsumerRegistration = ({ navigation }) => {
         <DefaultButton
           wide
           title={t('Cadastrar')}
-          onPress={() => navigation.navigate('Logged')}
+          onPress={() => navigation.replace('Logged')}
         />
       </View>
     </KeyboardAvoidingView>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, YellowBox, ToastAndroid } from 'react-native';
+import { View, YellowBox, ToastAndroid, Platform } from 'react-native';
 import { Provider, useSelector } from 'react-redux';
 
 import { createStore } from './store';
@@ -26,7 +26,7 @@ defineLocationUpdatesTask(store, api);
 
 if (__DEV__) {
   YellowBox.ignoreWarnings(['Setting a timer']);
-  ToastAndroid.show(getAppFlavor(), ToastAndroid.LONG);
+  if (Platform.OS === 'android') ToastAndroid.show(getAppFlavor(), ToastAndroid.LONG);
 }
 
 const App = () => {
