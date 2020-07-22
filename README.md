@@ -9,7 +9,6 @@ npm install
 # 2. Configurar .env
 
 ```
-APP_FLAVOR=admin
 GOOGLE_MAPS_API_KEY=
 FIREBASE_EMULATOR=false
 FIREBASE_REGION=

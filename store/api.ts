@@ -1,7 +1,7 @@
 import React from 'react';
 import firebase from 'firebase';
 import 'firebase/firestore';
-import * as geofirestore from 'geofirestore'
+import * as geofirestore from 'geofirestore';
 import axios from 'axios';
 import { Courier } from './types/courier';
 import { Place } from './types';
@@ -47,18 +47,22 @@ export default class Api {
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
     // SECURITY TODO: this action should be restricted only to the courier himself and admins
     // TODO: create a job to synthesize or remove old data
-    const collection = this.firestoreWithGeo.collection('locations').doc('couriers').collection(courier.status);
-    
-    return collection.add({
+    const courierLocationRef = this.firestoreWithGeo.collection('locations').doc('couriers').collection(courier.status).doc(courier.id);
+    const courierInfo = {
+    };
+    // workaround for testing in simulators when there's no notification token available
+    if (courier.notificationToken) courierInfo.notificationToken = courier.notificationToken;
+
+    return courierLocationRef.set({
       coordinates: new firebase.firestore.GeoPoint(coords.latitude, coords.longitude),
       // accuracy: coords.accuracy,
       // altitude: coords.altitude,
       // altitudeAccuracy: coords.altitudeAccuracy,
       // heading: coords.heading,
       // speed: coords.speed,
-      courierId: courier.id,
+      ...courierInfo,
       timestamp
-    });
+    }, { merge: true });
   }
 
   watchCourier(courierId: string, resultHandler): () => void {
@@ -75,8 +79,7 @@ export default class Api {
     // TODO: add query filters to limit to couriers:
     // 1 close to a specific location
     // 2 max number of results
-    const unsubscribe = this.firestore.collection('couriers')
-      .where('status', '==', 'available')
+    const unsubscribe = this.firestore.collection('locations/couriers/available')
       .onSnapshot((query) => {
         const result = [];
         query.forEach((doc) => {
@@ -95,6 +98,22 @@ export default class Api {
     }
     try {
       const url = `${this.functionsURL}/createOrder`;
+      const response = await axios.post(url, params);
+      return response.data;
+    }
+    catch(err) {
+      console.log(err);
+      return err;
+    }
+  }
+
+  async confirmOrder(orderId: string, cardId: string) {
+    const params = {
+      orderId,
+      cardId,
+    }
+    try {
+      const url = `${this.functionsURL}/confirmOrder`;
       const response = await axios.post(url, params);
       return response.data;
     }

@@ -27,12 +27,13 @@ enum Steps {
 }
 
 const placeValid = (place: Place): boolean => {
-  console.log('placeValid', place, place.address)
   return !!place && !!place.address; // TODO: improve place validation
 }
 
-const orderValid = (order: Order): boolean => {
-  return !!order; // TODO: improve order validation
+const orderValid = (order: Order | null): boolean => {
+   // TODO: improve order validation
+  if (!order) return false;
+  return true;
 }
 
 export default function ({ navigation, route }) {
@@ -48,9 +49,9 @@ export default function ({ navigation, route }) {
   const currentLocation = useSelector(getConsumerLocation);
 
   const [step, setStep] = useState(Steps.Origin);
-  const [origin, setOrigin] = useState({} as Place);
-  const [destination, setDestination] = useState({} as Place);
-  const [order, setOrder] = useState(null as Order);
+  const [origin, setOrigin] = useState<Place>({} as Place);
+  const [destination, setDestination] = useState<Place>({} as Place);
+  const [order, setOrder] = useState<Order | null>(null);
 
   // handlers
   // navigate to address complete screen
@@ -78,7 +79,7 @@ export default function ({ navigation, route }) {
   }
   const nextPage = ():void => setPage(step + 1);
 
-  const nextStep = ():void => {
+  const nextStep = async ():Promise<void> => {
     const nextStep = step + 1;
     if (!stepReady(nextStep)) return;
     if (nextStep === Steps.Destination) {
@@ -91,7 +92,7 @@ export default function ({ navigation, route }) {
       }
     }
     else if (nextStep === Steps.ConfirmingOrder) {
-      // TODO: confirm order
+      const confirmationResult = await api.confirmOrder(order!.id, 'YY7ED5T2geh0iSmRS9FZ');
     }
   };
 
@@ -128,8 +129,8 @@ export default function ({ navigation, route }) {
 
     if (placeValid(origin) && placeValid(destination) && (
       order === null ||
-      order.places[0].address !== origin.address ||
-      order.places[1].address !== destination.address)) {
+      order.origin.address !== origin.address ||
+      order.destination.address !== destination.address)) {
       createOrder();
     }
   }, [origin, destination]);

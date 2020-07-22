@@ -7,18 +7,7 @@ import DefaultMap from '../../../common/DefaultMap';
 import { pinUser, pinPackage } from '../../../../assets/icons';
 
 export default function ({ order }) {
-  const { places, routePolyline } = order;
-  const [ origin, destination ] = places;
-
-  const originCoordinate = {
-    latitude: origin.location.lat,
-    longitude: origin.location.lng,
-  };
-
-  const destinationCoordinate = {
-    latitude: destination.location.lat,
-    longitude: destination.location.lng,
-  };
+  const { origin, destination, routePolyline } = order;
 
   const routeCoordinates = polyline.decode(routePolyline).map((pair) => {
     return { latitude: pair[0], longitude: pair[1] };
@@ -31,8 +20,8 @@ export default function ({ order }) {
       maxZoomLevel={13}
       fitToElements
     >
-      <Marker coordinate={originCoordinate} icon={pinPackage} />
-      <Marker coordinate={destinationCoordinate} icon={pinUser} />
+      <Marker coordinate={origin.location} icon={pinPackage} />
+      <Marker coordinate={destination.location} icon={pinUser} />
       <Polyline coordinates={routeCoordinates} />
     </DefaultMap>
   );

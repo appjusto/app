@@ -10,6 +10,7 @@ export interface Courier {
   id: string;
   status: CourierStatus;
   location?: Coordinates;
+  notificationToken?: string;
 }
 
 export interface CourierState {

@@ -84,7 +84,7 @@ export default function App() {
             renderItem={({ item }) => (
               <Button
                 title={item.title}
-                onPress={() => dispatch(updateCourierLocation(api)(courier.id, item.location, working))}
+                onPress={() => dispatch(updateCourierLocation(api)(courier, item.location))}
               />
             )}
             keyExtractor={(item) => item.title}
@@ -99,7 +99,7 @@ export default function App() {
           fitToElements
         >
           {availableCouriers.map((courier) => (
-            <Marker key={courier.id} coordinate={courier.lastKnownLocation} />
+            <Marker key={courier.id} coordinate={courier.coordinates} />
           ))}
         </DefaultMap>
       </View>

@@ -14,6 +14,8 @@ export enum OrderStatus {
   Delivered = 'delivered',
 }
 
+// orders
+
 export enum FoodOrderStatus {
   Quote = 'quote',
   Matching = 'matching',
@@ -53,10 +55,12 @@ export interface OrderDuration {
 }
 
 export interface Order {
+  id: string;
   customerId: string;
   status: OrderStatus | FoodOrderStatus;
   paymentStatus: PaymentStatus | null;
-  places: Place[];
+  origin: Place;
+  destination: Place;
   routePolyline: string;
   distance: OrderDistance;
   duration: OrderDuration;

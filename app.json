@@ -40,6 +40,9 @@
       ],
       "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true
+    },
+    "experiments": {
+      "redesignedLogBox": true
     }
   }
 }

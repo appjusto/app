@@ -1,23 +1,18 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, YellowBox, ToastAndroid } from 'react-native';
 import { Provider, useSelector } from 'react-redux';
 
 import { createStore } from './store';
 import { defineLocationUpdatesTask } from './tasks/location';
-import {
-  isAdminFlavor,
-  isConsumerFlavor,
-  isCourierFlavor,
-} from './store/selectors/config';
+import { getFlavor } from './store/selectors/config';
 import { getAppFlavor, getExtra } from './app.config';
 import Api, { ApiContext } from './store/api';
-import { APP_FLAVOR_ADMIN } from './store/constants';
 
 import PreloadAssets from './screens/app/PreloadAssets';
 import AdminApp from './screens/admin/AdminApp';
 import CourierApp from './screens/courier/CourierApp';
 import ConsumerApp from './screens/consumer/ConsumerApp';
-import AdminFlavorChooser from './screens/common/admin/AdminFlavorChooser';
+import ShowIf from './screens/common/ShowIf';
 
 const extra = getExtra();
 const api = new Api(extra.firebase, extra.googleMapsApiKey);
@@ -26,23 +21,32 @@ const store = createStore(getAppFlavor(), extra);
 defineLocationUpdatesTask(store, api);
 
 // https://github.com/facebook/react-native/issues/12981#issuecomment-652745831
-console.ignoredYellowBox = ['Setting a timer'];
+// https://reactnative.dev/docs/debugging#console-errors-and-warnings
+// https://twitter.com/rickhanlonii/status/1255185060208226306
+
+if (__DEV__) {
+  YellowBox.ignoreWarnings(['Setting a timer']);
+  ToastAndroid.show(getAppFlavor(), ToastAndroid.LONG);
+}
 
 const App = () => {
-  const isAdmin = useSelector(isAdminFlavor);
-  const isConsumer = useSelector(isConsumerFlavor);
-  const isCourier = useSelector(isCourierFlavor);
+  const flavor = useSelector(getFlavor);
   
   return (
     <PreloadAssets>
       {() => (
         <>
-          {getAppFlavor() === APP_FLAVOR_ADMIN && (
-            <AdminFlavorChooser />
-          )}
-          {isAdmin && <AdminApp />}
-          {isConsumer && <ConsumerApp />}
-          {isCourier && <CourierApp />}
+          <ShowIf test={flavor === 'admin'}>
+            {() => <AdminApp />}
+          </ShowIf>
+
+          <ShowIf test={flavor === 'consumer'}>
+            {() => <ConsumerApp />}
+          </ShowIf>
+
+          <ShowIf test={flavor === 'courier'}>
+            {() => <CourierApp />}
+          </ShowIf>
         </>
       )}
     </PreloadAssets>

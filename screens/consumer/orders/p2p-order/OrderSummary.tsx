@@ -35,8 +35,7 @@ function PlaceSummary({ place, title, onEdit }: PlaceSummaryProps) {
 }
 
 export default function ({ order, onEdit }: Props) {
-  const { places, distance, duration, fare } = order;
-  const [origin, destination] = places;
+  const { origin, destination, distance, duration, fare } = order;
   return (
     <ScrollView style={style.scroll}>
 

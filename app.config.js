@@ -1,21 +1,18 @@
 import Constants from 'expo-constants';
-import { APP_FLAVOR, GOOGLE_MAPS_API_KEY, FIREBASE_EMULATOR, FIREBASE_REGION, FIREBASE_API_KEY, FIREBASE_PROJECT_ID, FIREBASE_DATABASE_NAME, FIREBASE_MESSAGING_SENDER_ID, FIREBASE_APP_ID } from 'react-native-dotenv';
-import { APP_FLAVOR_ADMIN, APP_FLAVOR_CONSUMER, APP_FLAVOR_COURIER } from './store/constants';
+import { GOOGLE_MAPS_API_KEY, FIREBASE_EMULATOR, FIREBASE_REGION, FIREBASE_API_KEY, FIREBASE_PROJECT_ID, FIREBASE_DATABASE_NAME, FIREBASE_MESSAGING_SENDER_ID, FIREBASE_APP_ID } from 'react-native-dotenv';
 
 export const getExtra = () => Constants.manifest.extra;
 
 export const getAppFlavor = () => {
-  if (APP_FLAVOR) return APP_FLAVOR;
-
   const { releaseChannel } = Constants.manifest;
 
   if (releaseChannel) {
-    if (releaseChannel.indexOf(APP_FLAVOR_CONSUMER) === 0) return APP_FLAVOR_CONSUMER;
-    if (releaseChannel.indexOf(APP_FLAVOR_COURIER) === 0) return APP_FLAVOR_COURIER;
+    if (releaseChannel.indexOf('consumer') === 0) return 'consumer';
+    if (releaseChannel.indexOf('courier') === 0) return 'courier';
   }
 
-  // default to admin
-  return APP_FLAVOR_ADMIN;
+  // default
+  return 'admin';
 }
 
 const getFirebaseConfig = () => {
@@ -30,6 +27,7 @@ const getFirebaseConfig = () => {
     appId: FIREBASE_APP_ID,
     emulator: {
       // enabled: FIREBASE_EMULATOR === 'true',
+      // enabled: true,
       enabled: false,
       databaseURL: `localhost:8080`,
       functionsURL: `http://localhost:5001/${FIREBASE_PROJECT_ID}/${FIREBASE_REGION}`,

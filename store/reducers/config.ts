@@ -1,7 +1,9 @@
 import * as actionTypes from '../actionTypes';
+import { ConfigState } from '../types/config';
+import { AnyAction } from 'redux';
 
-export default function (initialState) {
-  return (state = initialState, action) => {
+export default function (initialState: ConfigState) {
+  return (state = initialState, action: AnyAction) => {
     const { type, payload } = action;
     if (state.env === 'development') console.log(type);
     switch (type) {

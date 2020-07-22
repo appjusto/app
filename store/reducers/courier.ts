@@ -16,7 +16,7 @@ export default function (state: CourierState = initialState, action: AnyAction):
   switch (type) {
     case actionTypes.SET_COURIER_PROFILE:
     case actionTypes.COURIER_PROFILE_UPDATED: {
-      return { ...state, courier: payload };
+      return { ...state, courier: { ...state.courier, ...payload } };
     }
     case actionTypes.SET_LOCATION: {
       return { ...state, courier: { ...state.courier, location: payload.coords } };
