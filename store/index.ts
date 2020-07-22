@@ -12,10 +12,10 @@ export interface State {
   config: ConfigState;
 }
 
-export const createStore = (flavor: 'admin' | 'consumer' | 'courier', extra: object) => {
+export const createStore = (extra: object) => {
   const rootReducer = redux.combineReducers({
     config: configReducer({
-      flavor,
+      flavor: extra.flavor,
       extra,
       env: __DEV__ ? 'development' : 'production',
     }),

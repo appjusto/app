@@ -22,7 +22,7 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "br.com.appjusto.app",
+      "bundleIdentifier": "br.com.appjusto",
       "supportsTablet": true,
       "infoPlist": {
         "UIBackgroundModes": [
@@ -34,7 +34,7 @@
       }
     },
     "android": {
-      "package": "br.com.appjusto.app",
+      "package": "br.com.appjusto",
       "permissions": [
         "ACCESS_FINE_LOCATION"
       ],

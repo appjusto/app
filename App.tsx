@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, YellowBox, ToastAndroid, Platform } from 'react-native';
+import { View, YellowBox } from 'react-native';
 import { Provider, useSelector } from 'react-redux';
 
 import { createStore } from './store';
 import { defineLocationUpdatesTask } from './tasks/location';
 import { getFlavor } from './store/selectors/config';
-import { getAppFlavor, getExtra } from './app.config';
+import { getExtra } from './app.config';
 import Api, { ApiContext } from './store/api';
 
 import PreloadAssets from './screens/app/PreloadAssets';
@@ -16,7 +16,7 @@ import ShowIf from './screens/common/ShowIf';
 
 const extra = getExtra();
 const api = new Api(extra.firebase, extra.googleMapsApiKey);
-const store = createStore(getAppFlavor(), extra);
+const store = createStore(extra);
 
 defineLocationUpdatesTask(store, api);
 
@@ -26,7 +26,6 @@ defineLocationUpdatesTask(store, api);
 
 if (__DEV__) {
   YellowBox.ignoreWarnings(['Setting a timer']);
-  if (Platform.OS === 'android') ToastAndroid.show(getAppFlavor(), ToastAndroid.LONG);
 }
 
 const App = () => {

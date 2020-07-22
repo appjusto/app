@@ -10,7 +10,6 @@ npm install
 
 ```
 GOOGLE_MAPS_API_KEY=
-FIREBASE_EMULATOR=false
 FIREBASE_REGION=
 FIREBASE_API_KEY=
 FIREBASE_PROJECT_ID=
@@ -23,5 +22,6 @@ FIREBASE_MEASUREMENT_ID=
 # 3. Rodar projeto
 
 ```
-expo start
+expo start -c
+FLAVOR=consumer FIREBASE_EMULATOR=true expo start -c # iniciando como consumer e usando backend local
 ```
