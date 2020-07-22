@@ -12,6 +12,7 @@ const iconEdit = require('./icons/icon-edit.png');
 const iconIllustration = require('./icons/illustration-intro-screen.png');
 const rectangleBG = require('./icons/Rectangle23.png');
 const iconRequests = require('./icons/icon-requests.png');
+const iconGoArrow = require('./icons/iconGoArrow.png');
 
 export const arrow = arrowSmall;
 export const logoWhite = logoAppjustoBgWhite;
@@ -27,6 +28,7 @@ export const edit = iconEdit;
 export const illustration = iconIllustration;
 export const BG = rectangleBG;
 export const requests = iconRequests;
+export const goArrow = iconGoArrow;
 
 export default [
   logoWhite,
@@ -43,4 +45,5 @@ export default [
   illustration,
   BG,
   requests,
+  goArrow,
 ];

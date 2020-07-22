@@ -16,9 +16,6 @@ import ProfileErase from './profile/ProfileErase';
 import EraseConfirmed from './profile/EraseConfirmed';
 import ConsumerHistory from './history/ConsumerHistory';
 
-// import BackButton from '../common/BackButton';
-import * as fonts from '../../assets/fonts';
-
 const RootNavigator = createStackNavigator();
 const UnloggedStack = createStackNavigator();
 const LoggedNavigator = createBottomTabNavigator();
@@ -34,7 +31,7 @@ function History() {
   );
 }
 
-function Profile() {
+const Profile = () => {
   return (
     <ProfileStack.Navigator initialRouteName={ConsumerProfile}>
       <ProfileStack.screen name='ConsumerProfile' component={ConsumerProfile} />
@@ -43,7 +40,7 @@ function Profile() {
       <ProfileStack.screen name='EraseConfirmed' component={EraseConfirmed} />
     </ProfileStack.Navigator>
   );
-}
+};
 
 function Unlogged() {
   return (
@@ -66,7 +63,7 @@ function Unlogged() {
         component={ConsumerRegistration}
       />
       <UnloggedStack.Screen name='Terms' component={Terms} />
-      <UnloggedStack.Screen name='ConsumerHome' component={ConsumerHome} />
+      {/* <UnloggedStack.Screen name='ConsumerHome' component={ConsumerHome} /> */}
     </UnloggedStack.Navigator>
   );
 }
@@ -75,10 +72,14 @@ function Logged() {
   return (
     <LoggedNavigator.Navigator>
       <LoggedNavigator.Screen name='ConsumerHome' component={ConsumerHome} />
-      <LoggedNavigator.Screen name='ConsumerHistory' component={ConsumerHistory} />
       <LoggedNavigator.Screen
-        name='ConsumerProfile'
-        component={ConsumerProfile}
+        name='ConsumerHistory'
+        component={ConsumerHistory}
+      />
+      <LoggedNavigator.Screen
+        name='Profile'
+        component={Profile}
+        options={{ title: 'Sua conta' }}
       />
     </LoggedNavigator.Navigator>
   );
@@ -99,7 +100,7 @@ export default function () {
   return (
     <NavigationContainer>
       <RootNavigator.Navigator mode='modal' initialRouteName='ConsumerIntro'>
-        {/* <RootNavigator.Screen name='Unlogged' component={Unlogged} /> */}
+        <RootNavigator.Screen name='Unlogged' component={Unlogged} />
         <RootNavigator.Screen name='Logged' component={Logged} />
         <RootNavigator.Screen name='CreateOrder' component={CreateOrder} />
         <RootNavigator.Screen
