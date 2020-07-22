@@ -19,6 +19,11 @@ export const screens = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
   },
+  lightGrey: {
+    flex: 1,
+    paddingHorizontal: 16,
+    backgroundColor: colors.lightGrey,
+  },
 });
 
 export const borders = StyleSheet.create({
