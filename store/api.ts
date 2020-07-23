@@ -1,35 +1,51 @@
-import React from 'react';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import * as geofirestore from 'geofirestore';
 import axios from 'axios';
 import { Courier } from './types/courier';
 import { Place } from './types';
+import { Extra } from '../utils/config';
 
 export default class Api {
   private firestore: firebase.firestore.Firestore;
   private firestoreWithGeo: geofirestore.GeoFirestore;
-  private functionsURL: string;
+  private functionsEndpoint: string;
 
-  constructor(firebaseConfig: object, private googleMapsApiKey: string) {
-    firebase.initializeApp(firebaseConfig);
+  constructor(private extra:Extra) {
+    firebase.initializeApp(extra.firebase);
     this.firestore = firebase.firestore();
-    this.firestoreWithGeo = geofirestore.initializeApp(this.firestore);
+    this.firestoreWithGeo = geofirestore.initializeApp(this.firestore);    
 
-    this.functionsURL = firebaseConfig.functionsURL;
-    this.googleMapsApiKey = googleMapsApiKey;
-
-    console.log(firebaseConfig.emulator)
-
-    if (firebaseConfig.emulator.enabled) {
+    if (!extra.firebase.emulator.enabled) {
+      this.functionsEndpoint = extra.firebase.functionsURL;
+    }
+    else {
       this.firestore.settings({
-        host: firebaseConfig.emulator.databaseURL,
+        host: extra.firebase.emulator.databaseURL,
         ssl: false,
       });
       // this is the advertised way to do it but is throwing an excepting for any reason
       // firebase.functions().useFunctionsEmulator(firebaseConfig.emulator.functionsURL);
-      this.functionsURL = firebaseConfig.emulator.functionsURL;
+      this.functionsEndpoint = extra.firebase.emulator.functionsURL;
     }
+  }
+
+  signIn(email:string):Promise<void> {
+    return firebase.auth().sendSignInLinkToEmail(email, {
+      // URL you want to redirect back to. The domain (www.example.com) for this
+      // URL must be whitelisted in the Firebase Console.
+      url: 'https://link.appjusto.com.br/signin',
+      handleCodeInApp: true,
+      iOS: {
+        bundleId: this.extra.bundleIdentifier,
+      },
+      android: {
+        packageName: this.extra.androidPackage,
+        installApp: true,
+        minimumVersion: '12'
+      },
+      dynamicLinkDomain: 'link.appjusto.com.br'
+    });
   }
 
   updateCourier(courierId: string, changes: object) {
@@ -97,7 +113,7 @@ export default class Api {
       destination,
     }
     try {
-      const url = `${this.functionsURL}/createOrder`;
+      const url = `${this.functionsEndpoint}/createOrder`;
       const response = await axios.post(url, params);
       return response.data;
     }
@@ -113,7 +129,7 @@ export default class Api {
       cardId,
     }
     try {
-      const url = `${this.functionsURL}/confirmOrder`;
+      const url = `${this.functionsEndpoint}/confirmOrder`;
       const response = await axios.post(url, params);
       return response.data;
     }
@@ -128,7 +144,7 @@ export default class Api {
       orderId,
     }
     try {
-      const url = `${this.functionsURL}/matchOrder`;
+      const url = `${this.functionsEndpoint}/matchOrder`;
       const response = await axios.post(url, params);
       return response.data;
     }
@@ -142,7 +158,7 @@ export default class Api {
     // TODO: location & radius?
     const url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     const params = {
-      key: this.googleMapsApiKey,
+      key: this.extra.googleMapsApiKey,
       input,
       sessiontoken,
       types: 'address',
@@ -162,7 +178,7 @@ export default class Api {
   async googleGeocode(address: string) {
     const url = 'https://maps.googleapis.com/maps/api/geocode/json';
     const params = {
-      key: this.googleMapsApiKey,
+      key: this.extra.googleMapsApiKey,
       address,
       region: 'br', // i18n
       components: 'country:BR', // i18n
@@ -186,5 +202,3 @@ export default class Api {
     }
   }
 }
-
-export const ApiContext = React.createContext<Api | null>(null);

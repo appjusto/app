@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { t } from '../../../strings';
 import { texts } from '../../common/styles';
-import { ApiContext } from '../../../store/api';
+import { ApiContext } from '../../../utils/context';
 
 export default function () {
   // context

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useCallback } from 'react';
 import {
   View,
   Text,
@@ -9,15 +9,34 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
+import { ApiContext } from '../../../utils/context';
 import DefaultInput from '../../common/DefaultInput';
 import DefaultButton from '../../common/DefaultButton';
 import { t } from '../../../strings';
 import { logoWhite, arrow, illustration } from '../../../assets/icons';
-import { colors, texts, borders, padding, screens } from '../../common/styles';
+import { colors, texts, padding, screens } from '../../common/styles';
+import { validateEmail } from '../../../utils/validators';
 
-export default function ConsumerIntro({ navigation }) {
+
+export default function ConsumerIntro() {
+  // context
+  const api = useContext(ApiContext);
+  const navigation = useNavigation();
+  
+  // state
   const [email, setEmail] = useState('');
+
+  // handlers
+  const signInWithEmail = useCallback(async () => {
+    if (validateEmail(email).status === 'ok') {
+      await api.signIn(email);
+    }
+    else {
+      // TODO: handle error
+    }
+  }, [email]);
 
   return (
     <View style={[screens.default, { marginBottom: 0 }]}>
@@ -57,9 +76,7 @@ export default function ConsumerIntro({ navigation }) {
                   <DefaultButton
                     disabled={email.length === 0}
                     title={t('Entrar')}
-                    onPress={() =>
-                      navigation.navigate('ConsumerConfirmation', { path: 'sms' })
-                    }
+                    onPress={signInWithEmail}
                   />
                 </DefaultInput>
               </View>

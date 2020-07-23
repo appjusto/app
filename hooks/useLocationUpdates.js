@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import * as Permissions from 'expo-permissions';
-import { startLocationUpdatesTask, stopLocationUpdatesTask } from '../tasks/location';
+import { startLocationUpdatesTask, stopLocationUpdatesTask } from '../utils/location';
 import { useDispatch } from 'react-redux';
 
 export default function (shouldAskPermission) {

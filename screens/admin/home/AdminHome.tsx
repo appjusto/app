@@ -4,7 +4,7 @@ import { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Notifications from 'expo-notifications';
 
-import { ApiContext } from '../../../store/api';
+import { ApiContext } from '../../../utils/context';
 import { setCourierProfile, updateCourierLocation, watchAvailableCouriers } from '../../../store/actions/courier';
 import { isCourierWorking, getAvailableCouriers, getCourier } from '../../../store/selectors/courier';
 import DefaultMap from '../../common/DefaultMap';

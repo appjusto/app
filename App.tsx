@@ -1,24 +1,15 @@
 import React from 'react';
 import { View, YellowBox } from 'react-native';
-import { Provider, useSelector } from 'react-redux';
-
-import { createStore } from './store';
-import { defineLocationUpdatesTask } from './tasks/location';
+import { useSelector } from 'react-redux';
 import { getFlavor } from './store/selectors/config';
-import { getExtra } from './app.config';
-import Api, { ApiContext } from './store/api';
 
+import { AppContext } from './utils/context';
 import PreloadAssets from './screens/app/PreloadAssets';
+
 import AdminApp from './screens/admin/AdminApp';
 import CourierApp from './screens/courier/CourierApp';
 import ConsumerApp from './screens/consumer/ConsumerApp';
 import ShowIf from './screens/common/ShowIf';
-
-const extra = getExtra();
-const api = new Api(extra.firebase, extra.googleMapsApiKey);
-const store = createStore(extra);
-
-defineLocationUpdatesTask(store, api);
 
 // https://github.com/facebook/react-native/issues/12981#issuecomment-652745831
 // https://reactnative.dev/docs/debugging#console-errors-and-warnings
@@ -30,11 +21,10 @@ if (__DEV__) {
 
 const App = () => {
   const flavor = useSelector(getFlavor);
-  
   return (
     <PreloadAssets>
       {() => (
-        <>
+        <View style={{ flex: 1 }}>
           <ShowIf test={flavor === 'admin'}>
             {() => <AdminApp />}
           </ShowIf>
@@ -46,20 +36,16 @@ const App = () => {
           <ShowIf test={flavor === 'courier'}>
             {() => <CourierApp />}
           </ShowIf>
-        </>
+        </View>
       )}
     </PreloadAssets>
   );
-};
+}
 
-export default function () {
+export default () => {
   return (
-    <ApiContext.Provider value={api}>
-      <Provider store={store}>
-        <View style={{ flex: 1 }}>
-          <App />
-        </View>
-      </Provider>
-    </ApiContext.Provider>
+    <AppContext>
+      <App />
+    </AppContext>
   );
 }

@@ -4,7 +4,7 @@ import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-communi
 import { useSelector } from 'react-redux';
 
 import { Place, Order } from '../../../../store/types';
-import Api, { ApiContext } from '../../../../store/api';
+import { ApiContext } from '../../../../utils/context';
 import useLocationUpdates from '../../../../hooks/useLocationUpdates';
 import { getConsumerLocation } from '../../../../store/selectors/consumer';
 
@@ -38,7 +38,7 @@ const orderValid = (order: Order | null): boolean => {
 
 export default function ({ navigation, route }) {
   // context
-  const api = useContext(ApiContext) as Api;
+  const api = useContext(ApiContext);
   const { params } = route;
   const locationPermission = useLocationUpdates(true);
 

@@ -3,7 +3,7 @@ import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
 import { nanoid } from 'nanoid/non-secure';
 import debounce from 'lodash/debounce';
 
-import { ApiContext } from '../../store/api';
+import { ApiContext } from '../../utils/context';
 
 import DefaultInput from './DefaultInput';
 import { t } from '../../strings';

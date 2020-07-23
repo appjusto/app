@@ -1,9 +1,6 @@
-import Constants from 'expo-constants';
 import { GOOGLE_MAPS_API_KEY, FIREBASE_REGION, FIREBASE_API_KEY, FIREBASE_PROJECT_ID, FIREBASE_DATABASE_NAME, FIREBASE_MESSAGING_SENDER_ID, FIREBASE_APP_ID } from 'react-native-dotenv';
 
-export const getExtra = () => Constants.manifest.extra;
-
-const getFirebaseConfig = () => {
+const createFirebaseConfig = () => {
   return {
     apiKey: FIREBASE_API_KEY,
     authDomain: `${FIREBASE_PROJECT_ID}.firebaseapp.com`,
@@ -23,35 +20,39 @@ const getFirebaseConfig = () => {
 }
 
 export default ({ config }) => {
-  const { slug, name, ios, android, extra } = config;
+  const { slug, ios, android } = config;
   const flavor = process.env.FLAVOR || 'admin';
-  const flavorName = (flavor === 'consumer' && 'Cliente') || (flavor === 'courier' && 'Entregador') || 'Admin'
+  const googleMapsApiKey = GOOGLE_MAPS_API_KEY;
+  const name = (flavor === 'consumer' && 'Cliente') || (flavor === 'courier' && 'Entregador') || 'Admin'
+  const bundleIdentifier = `${ios.bundleIdentifier}.${flavor}`;
+  const androidPackage = `${android.package}.${flavor}`;
 
   return {
     ...config,
     slug: `${slug}-${flavor}`,
-    name: flavorName,
+    name,
     ios: {
       ...ios,
-      bundleIdentifier: `${ios.bundleIdentifier}.${flavor}`,
+      bundleIdentifier,
       config: {
-        googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+        googleMapsApiKey,
       }
     },
     android: {
       ...android,
-      package: `${android.package}.${flavor}`,
+      package: androidPackage,
       config: {
         googleMaps: {
-          apiKey: GOOGLE_MAPS_API_KEY,
+          apiKey: googleMapsApiKey,
         }
       },
     },
     extra: {
-      ...extra,
       flavor,
-      googleMapsApiKey: GOOGLE_MAPS_API_KEY,
-      firebase: getFirebaseConfig(),
+      bundleIdentifier,
+      androidPackage,
+      googleMapsApiKey,
+      firebase: createFirebaseConfig(),
     },
   };
 };

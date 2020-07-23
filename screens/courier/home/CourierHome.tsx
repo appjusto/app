@@ -3,7 +3,7 @@ import { StyleSheet, View, Dimensions, Text, Image, Switch } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import Api, { ApiContext } from '../../../store/api';
+import { ApiContext } from '../../../utils/context';
 import { updateCourier, watchCourier } from '../../../store/actions/courier';
 import { isCourierWorking, getCourierLocation, getCourier } from '../../../store/selectors/courier';
 import useLocationUpdates from '../../../hooks/useLocationUpdates';
