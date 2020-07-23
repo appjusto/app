@@ -28,18 +28,18 @@ const ConsumerConfirmation = ({ navigation, route }) => {
         behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
       >
         <View style={styles.containerBigText}>
-          <Text style={styles.bigText}>{t('confirmationCode')}</Text>
+          <Text style={styles.bigText}>{t('Um código de acesso foi enviado para o seu número.')}</Text>
         </View>
         <DefaultInput
-          title={t('code')}
-          placeholder={t('typeCode')}
+          title={t('Código de confirmação')}
+          placeholder={t('Digite o código')}
           value={code}
           onChangeText={setCode}
           // keyboardType='numeric'
           blurOnSubmit
         >
           <DefaultButton
-            title={t('enter')}
+            title={t('Entrar')}
             disabled={code.length === 0}
             onPress={() => navigation.navigate('ConsumerRegistration')}
           />
@@ -47,7 +47,7 @@ const ConsumerConfirmation = ({ navigation, route }) => {
         <TouchableOpacity style={styles.tb} onPress={() => setSendAgain(!sendAgain)}>
           <View style={styles.sendAgain}>
             <View style={styles.littleCircle} />
-            <Text style={styles.sendAgainText}>{t('sendAgain')}</Text>
+            <Text style={styles.sendAgainText}>{t('Enviar confirmação novamente')}</Text>
           </View>
         </TouchableOpacity>
         <ShowIf test={sendAgain === true}>
@@ -66,18 +66,18 @@ const ConsumerConfirmation = ({ navigation, route }) => {
       behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.containerBigText}>
-        <Text style={styles.bigText}>{t('linkEmail')}</Text>
+        <Text style={styles.bigText}>{t('Enviaremos um link de confirmação para o seu e-mail.')}</Text>
       </View>
       <DefaultInput
-        title={t('email')}
-        placeholder={t('typeEmail')}
+        title={t('E-mail')}
+        placeholder={t('Digite seu e-mail')}
         value={email}
         onChangeText={setEmail}
         // keyboardType='numeric'
         blurOnSubmit
       >
         <DefaultButton
-          title={t('send')}
+          title={t('Enviar')}
           disabled={code.length === 0}
           onPress={() => navigation.navigate('ConsumerRegistration')}
         />
@@ -85,7 +85,7 @@ const ConsumerConfirmation = ({ navigation, route }) => {
       <TouchableOpacity style={styles.tb} onPress={() => setSendAgain(!sendAgain)}>
         <View style={styles.sendAgain}>
           <View style={styles.littleCircle} />
-          <Text style={styles.sendAgainText}>{t('sendAgain')}</Text>
+          <Text style={styles.sendAgainText}>{t('Enviar confirmação novamente')}</Text>
         </View>
       </TouchableOpacity>
       <ShowIf test={sendAgain === true}>

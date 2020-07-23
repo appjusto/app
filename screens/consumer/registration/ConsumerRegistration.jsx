@@ -32,7 +32,7 @@ const ConsumerRegistration = ({ navigation }) => {
       behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.containerBigText}>
-        <Text style={styles.bigText}>{t('soon')}</Text>
+        <Text style={styles.bigText}>{t('Assim que sua conta for criada você já poderá fazer pedidos.')}</Text>
       </View>
       <View style={styles.containerMediumText}>
         <Text style={styles.mediumText}>
