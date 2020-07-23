@@ -1,14 +1,36 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
+
+import DefaultButton from '../../common/DefaultButton';
+import { t } from '../../../strings';
+import { colors, texts, screens } from '../../common/styles';
 
 const ProfileErase = () => {
   return (
-    <View>
-      <Text>Excluir minha conta</Text>
+    <View style={{ ...screens.lightGrey }}>
+      <Text style={{ ...texts.big, marginTop: 16 }}>
+        {t('Tem certeza que deseja excluir sua conta?')}
+      </Text>
+      <Text style={{ ...texts.default, marginTop: 16, color: colors.darkGrey }}>
+        {t(
+          'Todos os seus dados serão apagados do nosso sistema, juntamente com seu histórico de pedidos, e você terá que criar um novo cadastro para usar o AppJusto.'
+        )}
+      </Text>
+      <View style={{ flex: 1 }} />
+      <View>
+        <DefaultButton
+          style={{ width: '100%', marginBottom: 8 }}
+          title={t('Manter minha conta')}
+        />
+        <DefaultButton
+          disabled
+          title={t('Tenho certeza, pode excluir')}
+          style={{ marginBottom: 16 }}
+        />
+      </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({});
 
 export default ProfileErase;

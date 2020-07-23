@@ -57,8 +57,8 @@ const Profile = () => {
   return (
     <ProfileStack.Navigator initialRouteName={ConsumerProfile}>
       <ProfileStack.Screen name='ConsumerProfile' component={ConsumerProfile} />
-      <ProfileStack.Screen name='ProfileEdit' component={ProfileEdit} />
-      <ProfileStack.Screen name='ProfileErase' component={ProfileErase} />
+      <ProfileStack.Screen name='ProfileEdit' component={ProfileEdit} options={{title: 'Seus dados'}} />
+      <ProfileStack.Screen name='ProfileErase' component={ProfileErase} options={{title: 'Excluir minha conta'}}/>
       <ProfileStack.Screen name='EraseConfirmed' component={EraseConfirmed} />
     </ProfileStack.Navigator>
   );
