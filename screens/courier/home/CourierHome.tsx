@@ -12,6 +12,7 @@ import { colors, padding, texts, borders } from '../../common/styles';
 import { t } from '../../../strings';
 import { motocycleWhite } from '../../../assets/icons';
 import { CourierStatus } from '../../../store/types/courier';
+import useNotification from '../../../hooks/useNotification';
 
 const { width, height } = Dimensions.get('window');
 
@@ -22,6 +23,7 @@ export default function App() {
 
   // state
   const [notificationToken, notificationError] = useNotificationToken();
+  useNotification();
   const courier = useSelector(getCourier);
   const working = useSelector(isCourierWorking);
   const locationPermission = useLocationUpdates(working);
@@ -42,11 +44,8 @@ export default function App() {
 
   // notification permission
   useEffect(() => {
-    console.log('notificationError', notificationError);
-    console.log('notificationToken', notificationToken);
-
     if (notificationError) {
-      
+      // TODO: ALERT      
     }
     else if (notificationToken) {
       dispatch(updateCourier(api)(courier.id, { notificationToken } ));
