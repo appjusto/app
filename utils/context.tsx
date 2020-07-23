@@ -1,5 +1,7 @@
 import React, { ReactNode } from 'react';
+import { Linking } from 'expo';
 import { Provider } from 'react-redux';
+import { NavigationContainer } from '@react-navigation/native';
 
 import Api from "../store/api";
 import { createStore } from '../store';
@@ -18,10 +20,18 @@ export interface Props {
 }
 
 export const AppContext = ({ children }: Props) => {
+  const linking = {
+    prefixes: [
+      Linking.makeUrl('/'),
+      'https://appjusto.com.br'
+    ],
+  };
   return (
     <ApiContext.Provider value={api}>
       <Provider store={store}>
-        {children}
+        <NavigationContainer linking={linking}>
+          {children}
+        </NavigationContainer>
       </Provider>
     </ApiContext.Provider>
   );

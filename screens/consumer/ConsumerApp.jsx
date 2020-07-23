@@ -1,5 +1,4 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -97,16 +96,14 @@ function CreateOrder() {
 const RootNavigator = createStackNavigator();
 export default function () {
   return (
-    <NavigationContainer>
-      <RootNavigator.Navigator mode='modal' initialRouteName='Unlogged'>
-        <RootNavigator.Screen name='Unlogged' component={Unlogged} />
-        <RootNavigator.Screen name='Logged' component={Logged} />
-        <RootNavigator.Screen name='CreateOrder' component={CreateOrder} />
-        <RootNavigator.Screen
-          name='AddressComplete'
-          component={AddressComplete}
-        />
-      </RootNavigator.Navigator>
-    </NavigationContainer>
+    <RootNavigator.Navigator mode='modal' initialRouteName='Unlogged'>
+      <RootNavigator.Screen name='Unlogged' component={Unlogged} />
+      <RootNavigator.Screen name='Logged' component={Logged} />
+      <RootNavigator.Screen name='CreateOrder' component={CreateOrder} />
+      <RootNavigator.Screen
+        name='AddressComplete'
+        component={AddressComplete}
+      />
+    </RootNavigator.Navigator>
   );
 }

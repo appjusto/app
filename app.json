@@ -2,6 +2,7 @@
   "expo": {
     "name": "App Justo",
     "slug": "app-justo",
+    "scheme": "appjusto",
     "platforms": [
       "ios",
       "android",
@@ -31,7 +32,10 @@
         "NSLocationWhenInUseUsageDescription": "Saber a localização do entregador",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Saber a localização do entregador",
         "NSLocationAlwaysUsageDescription": "Saber a localização do entregador"
-      }
+      },
+      "associatedDomains": [
+        "applinks:appjusto.com.br"
+      ]
     },
     "android": {
       "package": "br.com.appjusto",
@@ -39,7 +43,22 @@
         "ACCESS_FINE_LOCATION"
       ],
       "googleServicesFile": "./google-services.json",
-      "useNextNotificationsApi": true
+      "useNextNotificationsApi": true,
+      "intentFilters": [{
+        "action": "VIEW",
+        "autoVerify": true,
+        "data": [
+          {
+            "scheme": "https",
+            "host": "appjusto.com.br",
+            "pathPrefix": "/app"
+          }
+        ],
+        "category": [
+          "BROWSABLE",
+          "DEFAULT"
+        ]
+      }]
     },
     "experiments": {
       "redesignedLogBox": true
