@@ -23,5 +23,5 @@ FIREBASE_MEASUREMENT_ID=
 
 ```
 expo start -c
-FLAVOR=consumer FIREBASE_EMULATOR=true expo start -c # iniciando como consumer e usando backend local
+FLAVOR=consumer FIREBASE_EMULATOR=true expo start --tunnel -c # iniciando como consumer e usando backend local
 ```

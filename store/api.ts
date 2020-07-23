@@ -123,6 +123,21 @@ export default class Api {
     }
   }
 
+  async matchOrder(orderId: string) {
+    const params = {
+      orderId,
+    }
+    try {
+      const url = `${this.functionsURL}/matchOrder`;
+      const response = await axios.post(url, params);
+      return response.data;
+    }
+    catch(err) {
+      console.log(err);
+      return err;
+    }
+  }
+
   async googlePlacesAutocomplete(input: string, sessiontoken: string) {
     // TODO: location & radius?
     const url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
