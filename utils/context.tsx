@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Linking } from 'expo';
+import * as Linking from 'expo-linking'
 import { Provider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 

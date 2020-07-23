@@ -19,6 +19,7 @@
     "expo-asset": "~8.1.7",
     "expo-constants": "~9.1.1",
     "expo-font": "~8.2.1",
+    "expo-linking": "^1.0.3",
     "expo-localization": "~8.2.1",
     "expo-location": "~8.2.1",
     "expo-notifications": "~0.3.3",
