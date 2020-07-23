@@ -5,7 +5,7 @@ import DefaultButton from '../../common/DefaultButton';
 import { t } from '../../../strings';
 import { colors, texts, screens } from '../../common/styles';
 
-const ProfileErase = () => {
+const ProfileErase = ({navigation}) => {
   return (
     <View style={{ ...screens.lightGrey }}>
       <Text style={{ ...texts.big, marginTop: 16 }}>
@@ -26,6 +26,7 @@ const ProfileErase = () => {
           disabled
           title={t('Tenho certeza, pode excluir')}
           style={{ marginBottom: 16 }}
+          onPress={()=>{navigation.navigate('EraseConfirmed')}}
         />
       </View>
     </View>

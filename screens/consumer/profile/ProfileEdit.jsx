@@ -11,6 +11,7 @@ import {
   Keyboard,
 } from 'react-native';
 
+import CheckField from '../../common/CheckField';
 import DefaultInput from '../../common/DefaultInput';
 import DefaultButton from '../../common/DefaultButton';
 import { colors, texts, screens } from '../../common/styles';
@@ -73,17 +74,12 @@ const ProfileEdit = ({ navigation }) => {
                   onChangeText={setCpf}
                 />
               </View>
-              <View style={styles.checkContainer}>
-                <TouchableOpacity onPress={toggleCheckBox}>
-                  <Image
-                    source={isChecked ? checkboxActive : checkboxInactive}
-                    style={{ height: 24, width: 24 }}
-                  />
-                </TouchableOpacity>
-                <Text style={{ ...texts.small, marginLeft: 8 }}>
-                  {t('Aceito receber comunicações e ofertas')}
-                </Text>
-              </View>
+              <CheckField
+                marginTop={16}
+                source={isChecked ? checkboxActive : checkboxInactive}
+                onPress={toggleCheckBox}
+                text={t('Aceito receber comunicações e ofertas')}
+              />
               <View style={{ flex: 1 }} />
               <View style={styles.bottomContainer}>
                 <DefaultButton
