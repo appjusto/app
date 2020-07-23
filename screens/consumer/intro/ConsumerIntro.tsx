@@ -19,7 +19,6 @@ import { logoWhite, arrow, illustration } from '../../../assets/icons';
 import { colors, texts, padding, screens } from '../../common/styles';
 import { validateEmail } from '../../../utils/validators';
 
-
 export default function ConsumerIntro() {
   // context
   const api = useContext(ApiContext);
@@ -72,6 +71,7 @@ export default function ConsumerIntro() {
                   onChangeText={setEmail}
                   keyboardType='email-address'
                   blurOnSubmit
+                  autoCapitalize="none"
                 >
                   <DefaultButton
                     disabled={email.length === 0}
