@@ -48,6 +48,12 @@ export const texts = StyleSheet.create({
     fontSize: 15,
     lineHeight: 18,
   },
+  medium: {
+    fontFamily: 'BarlowMedium',
+    color: colors.black,
+    fontSize: 16,
+    lineHeight: 19,
+  },
   big: {
     fontFamily: 'BarlowMedium',
     color: colors.black,
