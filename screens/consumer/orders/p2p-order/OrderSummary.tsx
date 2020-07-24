@@ -1,8 +1,9 @@
 import React from 'react';
-import { Order, Place } from '../../../../store/types';
 import { ScrollView, StyleSheet, View, Text, Image } from 'react-native';
-import { t } from '../../../../strings';
+
 import { edit } from '../../../../assets/icons';
+import { Order, Place } from '../../../../store/types';
+import { t } from '../../../../strings';
 import Touchable from '../../../common/Touchable';
 
 export interface Props {
@@ -38,27 +39,23 @@ export default function ({ order, onEdit }: Props) {
   const { origin, destination, distance, duration, fare } = order;
   return (
     <ScrollView style={style.scroll}>
+      <PlaceSummary title={t(`Retirada`)} place={origin} onEdit={() => onEdit(0)} />
 
-      <PlaceSummary
-        title={t(`Retirada`)}
-        place={origin}
-        onEdit={() => onEdit(0)}
-      />
+      <PlaceSummary title={t(`Entrega`)} place={destination} onEdit={() => onEdit(1)} />
 
-      <PlaceSummary 
-        title={t(`Entrega`)}
-        place={destination}
-        onEdit={() => onEdit(1)}
-      />
-
-      <Text>{t('Distância')}: {distance.text}</Text>
-      <Text>{t('Estimativa de duração')}: {duration.text}</Text>
-      <Text>{t('Valor da entrega R$')}: {fare.total}</Text>
+      <Text>
+        {t('Distância')}: {distance.text}
+      </Text>
+      <Text>
+        {t('Estimativa de duração')}: {duration.text}
+      </Text>
+      <Text>
+        {t('Valor da entrega R$')}: {fare.total}
+      </Text>
     </ScrollView>
   );
 }
 
 const style = StyleSheet.create({
-  scroll: {
-  }
-})
+  scroll: {},
+});

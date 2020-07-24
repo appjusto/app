@@ -24,4 +24,4 @@ export interface FirebaseConfig {
   };
 }
 
-export const getExtra = ():Extra => Constants.manifest.extra as Extra;
+export const getExtra = (): Extra => Constants.manifest.extra as Extra;

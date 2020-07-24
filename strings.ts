@@ -1,14 +1,13 @@
 import * as Localization from 'expo-localization';
 import i18n from 'i18n-js';
 
-const pt = {
-};
+const pt = {};
 
-const en = {
-  'Endereço de retirada': 'Source address',
-  'Endereço com número': 'Address with number',
-  'Pronto': 'Done',
-};
+// const en = {
+//   'Endereço de retirada': 'Source address',
+//   'Endereço com número': 'Address with number',
+//   'Pronto': 'Done',
+// };
 
 i18n.fallbacks = false;
 i18n.translations = { pt };
@@ -24,4 +23,3 @@ i18n.missingTranslation = () => null;
 
 export const { locale } = i18n;
 export const t = (string: string) => i18n.t(string) || string;
-

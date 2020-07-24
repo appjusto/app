@@ -2,11 +2,11 @@ import * as redux from 'redux';
 import ReduxThunk from 'redux-thunk';
 
 import configReducer from './reducers/config';
-import courierReducer from './reducers/courier';
 import consumerReducer from './reducers/consumer';
+import courierReducer from './reducers/courier';
 import { ConfigState } from './types/config';
-import { CourierState } from './types/courier';
 import { ConsumerState } from './types/consumer';
+import { CourierState } from './types/courier';
 
 export interface State {
   config: ConfigState;
@@ -26,4 +26,4 @@ export const createStore = (extra: object) => {
   });
 
   return redux.createStore(rootReducer, redux.applyMiddleware(ReduxThunk));
-}
+};

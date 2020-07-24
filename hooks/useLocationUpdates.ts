@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
 import * as Permissions from 'expo-permissions';
+import { useState, useEffect } from 'react';
+
 import { startLocationUpdatesTask, stopLocationUpdatesTask } from '../utils/location';
 
 export default function (shouldAskPermission: boolean) {
@@ -10,7 +11,7 @@ export default function (shouldAskPermission: boolean) {
   const askPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
     setLocationPermission(status);
-  }
+  };
 
   // ask for permission
   useEffect(() => {
@@ -24,7 +25,7 @@ export default function (shouldAskPermission: boolean) {
 
       return () => {
         stopLocationUpdatesTask();
-      }
+      };
     }
   }, [locationPermission]);
 

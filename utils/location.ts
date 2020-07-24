@@ -1,5 +1,5 @@
-import * as TaskManager from 'expo-task-manager';
 import * as Location from 'expo-location';
+import * as TaskManager from 'expo-task-manager';
 
 import { updateCourierLocation } from '../store/actions/courier';
 import { isCourierFlavor } from '../store/selectors/config';
@@ -17,7 +17,7 @@ export const startLocationUpdatesTask = () => {
 
 export const stopLocationUpdatesTask = () => {
   Location.stopLocationUpdatesAsync(TASK_FETCH_LOCATION);
-}
+};
 
 export const defineLocationUpdatesTask = (store, api) => {
   TaskManager.defineTask(TASK_FETCH_LOCATION, ({ data: { locations }, error }) => {
@@ -26,12 +26,11 @@ export const defineLocationUpdatesTask = (store, api) => {
       return;
     }
     const [location] = locations;
-  
-    const state = store.getState();  
+
+    const state = store.getState();
     const shouldBroadcastLocation = isCourierFlavor(state) && isCourierWorking(state);
     if (shouldBroadcastLocation) {
       store.dispatch(updateCourierLocation(api)(getCourier(state), location));
     }
   });
-}
-
+};

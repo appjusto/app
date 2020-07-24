@@ -1,8 +1,9 @@
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 import { useState, useEffect } from 'react';
 import { Platform } from 'react-native';
-import Constants from 'expo-constants';
-import * as Permissions from 'expo-permissions';
-import * as Notifications from 'expo-notifications';
+
 import { colors } from '../screens/common/styles';
 
 Notifications.setNotificationHandler({
@@ -35,18 +36,16 @@ export default function () {
     }
     if (finalStatus === 'granted') {
       setToken((await Notifications.getExpoPushTokenAsync()).data);
-    }
-    else {
+    } else {
       setError('permission-denied');
     }
-  }
+  };
 
   useEffect(() => {
     // won't work in simulator; only in physical devices
     if (!Constants.isDevice) {
       setError('not-a-device');
-    }
-    else {
+    } else {
       askPermission();
     }
   }, []);

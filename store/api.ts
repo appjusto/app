@@ -1,25 +1,25 @@
+import axios from 'axios';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import * as geofirestore from 'geofirestore';
-import axios from 'axios';
-import { Courier } from './types/courier';
-import { Place } from './types';
+
 import { Extra } from '../utils/config';
+import { Place } from './types';
+import { Courier } from './types/courier';
 
 export default class Api {
   private firestore: firebase.firestore.Firestore;
   private firestoreWithGeo: geofirestore.GeoFirestore;
   private functionsEndpoint: string;
 
-  constructor(private extra:Extra) {
+  constructor(private extra: Extra) {
     firebase.initializeApp(extra.firebase);
     this.firestore = firebase.firestore();
-    this.firestoreWithGeo = geofirestore.initializeApp(this.firestore);    
+    this.firestoreWithGeo = geofirestore.initializeApp(this.firestore);
 
     if (!extra.firebase.emulator.enabled) {
       this.functionsEndpoint = extra.firebase.functionsURL;
-    }
-    else {
+    } else {
       this.firestore.settings({
         host: extra.firebase.emulator.databaseURL,
         ssl: false,
@@ -30,7 +30,7 @@ export default class Api {
     }
   }
 
-  signIn(email:string):Promise<void> {
+  signIn(email: string): Promise<void> {
     return firebase.auth().sendSignInLinkToEmail(email, {
       // URL you want to redirect back to. The domain (www.example.com) for this
       // URL must be whitelisted in the Firebase Console.
@@ -42,19 +42,22 @@ export default class Api {
       android: {
         packageName: this.extra.androidPackage,
         installApp: true,
-        minimumVersion: '12'
+        minimumVersion: '12',
       },
-      dynamicLinkDomain: 'appjusto.com.br'
+      dynamicLinkDomain: 'appjusto.com.br',
     });
   }
 
   updateCourier(courierId: string, changes: object) {
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
     const courierDoc = this.firestore.collection('couriers').doc(courierId);
-    return courierDoc.set({
-      ...changes,
-      timestamp
-    }, { merge: true });
+    return courierDoc.set(
+      {
+        ...changes,
+        timestamp,
+      },
+      { merge: true }
+    );
   }
 
   updateCourierLocation(courier: Courier, location) {
@@ -63,29 +66,37 @@ export default class Api {
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
     // SECURITY TODO: this action should be restricted only to the courier himself and admins
     // TODO: create a job to synthesize or remove old data
-    const courierLocationRef = this.firestoreWithGeo.collection('locations').doc('couriers').collection(courier.status).doc(courier.id);
-    const courierInfo = {
-    };
+    const courierLocationRef = this.firestoreWithGeo
+      .collection('locations')
+      .doc('couriers')
+      .collection(courier.status)
+      .doc(courier.id);
+    const courierInfo = {};
     // workaround for testing in simulators when there's no notification token available
     if (courier.notificationToken) courierInfo.notificationToken = courier.notificationToken;
 
-    return courierLocationRef.set({
-      coordinates: new firebase.firestore.GeoPoint(coords.latitude, coords.longitude),
-      // accuracy: coords.accuracy,
-      // altitude: coords.altitude,
-      // altitudeAccuracy: coords.altitudeAccuracy,
-      // heading: coords.heading,
-      // speed: coords.speed,
-      ...courierInfo,
-      timestamp
-    }, { merge: true });
+    return courierLocationRef.set(
+      {
+        coordinates: new firebase.firestore.GeoPoint(coords.latitude, coords.longitude),
+        // accuracy: coords.accuracy,
+        // altitude: coords.altitude,
+        // altitudeAccuracy: coords.altitudeAccuracy,
+        // heading: coords.heading,
+        // speed: coords.speed,
+        ...courierInfo,
+        timestamp,
+      },
+      { merge: true }
+    );
   }
 
   watchCourier(courierId: string, resultHandler): () => void {
     // TODO: ensure only people envolved in order are able to know courier's location
-    const unsubscribe = this.firestore.collection('couriers').doc(courierId)
+    const unsubscribe = this.firestore
+      .collection('couriers')
+      .doc(courierId)
       .onSnapshot((doc) => {
-        resultHandler({...doc.data(), id: doc.id})
+        resultHandler({ ...doc.data(), id: doc.id });
       });
     // returns the unsubscribe function
     return unsubscribe;
@@ -95,13 +106,14 @@ export default class Api {
     // TODO: add query filters to limit to couriers:
     // 1 close to a specific location
     // 2 max number of results
-    const unsubscribe = this.firestore.collection('locations/couriers/available')
+    const unsubscribe = this.firestore
+      .collection('locations/couriers/available')
       .onSnapshot((query) => {
         const result = [];
         query.forEach((doc) => {
-          result.push({...doc.data(), id: doc.id});
+          result.push({ ...doc.data(), id: doc.id });
         });
-        resultHandler(result)
+        resultHandler(result);
       });
     // returns the unsubscribe function
     return unsubscribe;
@@ -111,13 +123,12 @@ export default class Api {
     const params = {
       origin,
       destination,
-    }
+    };
     try {
       const url = `${this.functionsEndpoint}/createOrder`;
       const response = await axios.post(url, params);
       return response.data;
-    }
-    catch(err) {
+    } catch (err) {
       console.log(err);
       return err;
     }
@@ -127,13 +138,12 @@ export default class Api {
     const params = {
       orderId,
       cardId,
-    }
+    };
     try {
       const url = `${this.functionsEndpoint}/confirmOrder`;
       const response = await axios.post(url, params);
       return response.data;
-    }
-    catch(err) {
+    } catch (err) {
       console.log(err);
       return err;
     }
@@ -142,13 +152,12 @@ export default class Api {
   async matchOrder(orderId: string) {
     const params = {
       orderId,
-    }
+    };
     try {
       const url = `${this.functionsEndpoint}/matchOrder`;
       const response = await axios.post(url, params);
       return response.data;
-    }
-    catch(err) {
+    } catch (err) {
       console.log(err);
       return err;
     }
@@ -164,12 +173,11 @@ export default class Api {
       types: 'address',
       components: 'country:BR', // i18n
       language: 'pt-BR', // i18n
-    }
+    };
     try {
       const response = await axios.get(url, { params });
       return response.data;
-    }
-    catch(err) {
+    } catch (err) {
       console.log(err);
       return err;
     }
@@ -183,7 +191,7 @@ export default class Api {
       region: 'br', // i18n
       components: 'country:BR', // i18n
       language: 'pt-BR', // i18n
-    }
+    };
     try {
       const response = await axios.get(url, { params });
       const { data } = response;
@@ -195,8 +203,7 @@ export default class Api {
         latitude: location.lat,
         longitude: location.lng,
       };
-    }
-    catch(err) {
+    } catch (err) {
       console.log(err);
       return err;
     }

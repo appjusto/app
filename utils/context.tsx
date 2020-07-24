@@ -1,11 +1,11 @@
-import React, { ReactNode } from 'react';
-import * as Linking from 'expo-linking'
-import { Provider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
+import * as Linking from 'expo-linking';
+import React, { ReactNode } from 'react';
+import { Provider } from 'react-redux';
 
-import Api from "../store/api";
 import { createStore } from '../store';
-import { getExtra } from "./config";
+import Api from '../store/api';
+import { getExtra } from './config';
 import { defineLocationUpdatesTask } from './location';
 
 const extra = getExtra();
@@ -21,18 +21,13 @@ export interface Props {
 
 export const AppContext = ({ children }: Props) => {
   const linking = {
-    prefixes: [
-      Linking.makeUrl('/'),
-      'https://appjusto.com.br'
-    ],
+    prefixes: [Linking.makeUrl('/'), 'https://appjusto.com.br'],
   };
   return (
     <ApiContext.Provider value={api}>
       <Provider store={store}>
-        <NavigationContainer linking={linking}>
-          {children}
-        </NavigationContainer>
+        <NavigationContainer linking={linking}>{children}</NavigationContainer>
       </Provider>
     </ApiContext.Provider>
   );
-}
+};

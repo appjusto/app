@@ -1,5 +1,5 @@
-const BarlowMedium = require('./fonts/Barlow-Medium.ttf')
+const BarlowMedium = require('./fonts/Barlow-Medium.ttf');
 
-export default ({
+export default {
   BarlowMedium,
-});
+};

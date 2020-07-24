@@ -1,23 +1,30 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
-import { StyleSheet, View, Image, Dimensions, NativeSyntheticEvent } from 'react-native';
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import React, { useState, useContext, useEffect, useRef } from 'react';
+import {
+  StyleSheet,
+  View,
+  Image,
+  Dimensions,
+  NativeSyntheticEvent,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 
-import { Place, Order } from '../../../../store/types';
-import { ApiContext } from '../../../../utils/context';
+import { motocycle } from '../../../../assets/icons';
 import useLocationUpdates from '../../../../hooks/useLocationUpdates';
 import { getConsumerLocation } from '../../../../store/selectors/consumer';
-
-import DefaultInput from '../../../common/DefaultInput';
+import { Place, Order } from '../../../../store/types';
+import { t } from '../../../../strings';
+import { ApiContext } from '../../../../utils/context';
 import DefaultButton from '../../../common/DefaultButton';
+import DefaultInput from '../../../common/DefaultInput';
+import ShowIf from '../../../common/ShowIf';
 import Touchable from '../../../common/Touchable';
 import { screens, borders } from '../../../common/styles';
-import { motocycle } from '../../../../assets/icons';
 import OrderMap from './OrderMap';
-import { t } from '../../../../strings';
-import ShowIf from '../../../common/ShowIf';
 import OrderSummary from './OrderSummary';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+
 // import * as fixtures from '../../../../store/fixtures'; // testing only
 
 enum Steps {
@@ -28,17 +35,20 @@ enum Steps {
 }
 
 const placeValid = (place: Place): boolean => {
-  return !!place && !!place.address; // TODO: improve place validation
-}
+  return orderValid(null);
+  // return !!place && !!place.address; // TODO: improve place validation
+};
 
 const orderValid = (order: Order | null): boolean => {
-   // TODO: improve order validation
+  // TODO: improve order validation
   if (!order) return false;
   return true;
-}
+};
 
-export default function ({ navigation, route }) {
+export default function () {
   // context
+  const navigation = useNavigation();
+  const route = useRoute();
   const api = useContext(ApiContext);
   const { params } = route;
   const locationPermission = useLocationUpdates(true);
@@ -63,59 +73,55 @@ export default function ({ navigation, route }) {
       value,
       destinationScreen: 'CreateOrderP2P',
       destinationParam,
-    })
+    });
   };
 
   // navigation between steps
-  const stepReady = (value: Steps):boolean => {
+  const stepReady = (value: Steps): boolean => {
     if (value === Steps.Origin) return true; // always enabled
     if (value === Steps.Destination) return placeValid(origin); // only if origin is known
     if (value === Steps.Confirmation) return placeValid(origin) && placeValid(destination); // only if both origin and destination is known
-    if (value === Steps.ConfirmingOrder) return orderValid(order); // when order 
+    if (value === Steps.ConfirmingOrder) return orderValid(order); // when order
     return false; // should happen
   };
 
-  const setPage = (index: number):void => {
-    if (viewPager && viewPager.current) viewPager.current.setPage(index);
-  }
-  const nextPage = ():void => setPage(step + 1);
+  const setPage = (index: number): void => {
+    if (viewPager?.current) viewPager.current.setPage(index);
+  };
+  const nextPage = (): void => setPage(step + 1);
 
-  const nextStep = async ():Promise<void> => {
+  const nextStep = async (): Promise<void> => {
     const nextStep = step + 1;
     if (!stepReady(nextStep)) return;
     if (nextStep === Steps.Destination) {
       nextPage();
-    }
-    else if (nextStep === Steps.Confirmation) {
+    } else if (nextStep === Steps.Confirmation) {
       if (order) nextPage();
       else {
         // TODO: alert that order is being created and when it is, go to next step automatically
       }
-    }
-    else if (nextStep === Steps.ConfirmingOrder) {
+    } else if (nextStep === Steps.ConfirmingOrder) {
       const confirmationResult = await api.confirmOrder(order!.id, 'YY7ED5T2geh0iSmRS9FZ');
     }
   };
 
-  const onPageScroll = (ev:NativeSyntheticEvent<ViewPagerOnPageScrollEventData>) => {
+  const onPageScroll = (ev: NativeSyntheticEvent<ViewPagerOnPageScrollEventData>) => {
     const { nativeEvent } = ev;
     const { position } = nativeEvent;
-    
     if (position !== step) {
       setStep(position);
     }
   };
-  
   // side effects
   // fires when AddressComplete finishes
   useEffect(() => {
-    const { originAddress, destinationAddress } = params || {};
-    console.log('originAddress', originAddress)
+    const { originAddress, destinationAddress } = params ?? {};
+    console.log('originAddress', originAddress);
     if (originAddress) {
-      console.log('set new origin', {...origin, address: originAddress})
-      setOrigin({...origin, address: originAddress});
+      console.log('set new origin', { ...origin, address: originAddress });
+      setOrigin({ ...origin, address: originAddress });
     }
-    if (destinationAddress) setDestination({...destination, address: destinationAddress});
+    if (destinationAddress) setDestination({ ...destination, address: destinationAddress });
   }, [route.params]);
 
   // create order when origin and destination are valid
@@ -126,12 +132,15 @@ export default function ({ navigation, route }) {
       const newOrder = await api.createOrder(origin, destination);
       console.log(newOrder);
       setOrder(newOrder);
-    }
+    };
 
-    if (placeValid(origin) && placeValid(destination) && (
-      order === null ||
-      order.origin.address !== origin.address ||
-      order.destination.address !== destination.address)) {
+    if (
+      placeValid(origin) &&
+      placeValid(destination) &&
+      (order === null ||
+        order.origin.address !== origin.address ||
+        order.destination.address !== destination.address)
+    ) {
       createOrder();
     }
   }, [origin, destination]);
@@ -144,10 +153,8 @@ export default function ({ navigation, route }) {
 
   return (
     <View style={style.screen}>
-
       {/* header */}
       <View style={style.header}>
-
         {/* when order hasn't been created yet  */}
         <ShowIf test={!orderValid(order)}>
           {() => (
@@ -156,14 +163,9 @@ export default function ({ navigation, route }) {
             </View>
           )}
         </ShowIf>
-        
-        {/* after order has been created */}
-        <ShowIf test={orderValid(order)}>
-          {() => (
-            <OrderMap order={order} />
-          )}
-        </ShowIf>
 
+        {/* after order has been created */}
+        <ShowIf test={orderValid(order)}>{() => <OrderMap order={order} />}</ShowIf>
       </View>
 
       {/* details */}
@@ -171,11 +173,7 @@ export default function ({ navigation, route }) {
         {/* progress */}
 
         {/* content */}
-        <ViewPager
-          ref={viewPager}
-          style={{ flex: 1 }}
-          onPageScroll={onPageScroll}
-        >
+        <ViewPager ref={viewPager} style={{ flex: 1 }} onPageScroll={onPageScroll}>
           {/* testing */}
           {/* <View>
             <OrderSummary
@@ -187,14 +185,14 @@ export default function ({ navigation, route }) {
           <View>
             <TouchableWithoutFeedback onPress={navigateToAddressComplete}>
               <View>
-              <DefaultInput
-                style={style.input}
-                value={origin.address}
-                title={t('Endereço de retirada')}
-                placeholder={t('Endereço com número')}
-                onFocus={navigateToAddressComplete}
-                onChangeText={navigateToAddressComplete}
-              />
+                <DefaultInput
+                  style={style.input}
+                  value={origin.address}
+                  title={t('Endereço de retirada')}
+                  placeholder={t('Endereço com número')}
+                  onFocus={navigateToAddressComplete}
+                  onChangeText={navigateToAddressComplete}
+                />
               </View>
             </TouchableWithoutFeedback>
 
@@ -216,9 +214,7 @@ export default function ({ navigation, route }) {
             <ShowIf test={placeValid(origin)}>
               {() => (
                 <View>
-                  <Touchable
-                    onPress={navigateToAddressComplete}
-                  >
+                  <Touchable onPress={navigateToAddressComplete}>
                     <DefaultInput
                       style={style.input}
                       value={destination.address}
@@ -247,21 +243,12 @@ export default function ({ navigation, route }) {
 
           {/* confirmation step */}
           <ShowIf test={orderValid(order)}>
-            {() => (
-              <OrderSummary
-                order={order}
-                onEdit={setPage}
-              />
-            )}
+            {() => <OrderSummary order={order} onEdit={setPage} />}
           </ShowIf>
         </ViewPager>
 
-        <View style={{flex: 1, justifyContent: 'flex-end'}}>
-          <DefaultButton
-            styleObject={{ width: '100%' }}
-            title={nextStepTitle}
-            onPress={nextStep}
-          />
+        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+          <DefaultButton styleObject={{ width: '100%' }} title={nextStepTitle} onPress={nextStep} />
         </View>
       </View>
     </View>
@@ -278,7 +265,6 @@ const style = StyleSheet.create({
     width,
     height: height * 0.3,
     justifyContent: 'space-between',
-    
   },
   details: {
     flex: 1,

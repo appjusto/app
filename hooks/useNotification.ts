@@ -1,16 +1,16 @@
+import { useNavigation } from '@react-navigation/native';
 import * as Notifications from 'expo-notifications';
 import { useEffect, useCallback } from 'react';
 import { Platform, ToastAndroid } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 
-export default function() {
+export default function () {
   // context
   const navigation = useNavigation();
 
   // handlers
-  const handle = useCallback((notification:Notifications.Notification) => {
+  const handle = useCallback((notification: Notifications.Notification) => {
     const { content } = notification.request;
-    
+
     // debugging:start
     console.log('handling notification');
     console.log(content.data);
@@ -24,13 +24,16 @@ export default function() {
     }
   }, []);
 
-  const notificationHandler = useCallback((notification:Notifications.Notification) => {
+  const notificationHandler = useCallback((notification: Notifications.Notification) => {
     handle(notification);
   }, []);
 
-  const notificationResponseHandler = useCallback((response:Notifications.NotificationResponse) => {
-    handle(response.notification);
-  }, []);
+  const notificationResponseHandler = useCallback(
+    (response: Notifications.NotificationResponse) => {
+      handle(response.notification);
+    },
+    []
+  );
 
   // side effects
   useEffect(() => {
@@ -39,6 +42,6 @@ export default function() {
 
     return () => {
       Notifications.removeAllNotificationListeners();
-    }
+    };
   }, []);
 }

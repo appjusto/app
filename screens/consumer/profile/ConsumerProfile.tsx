@@ -1,10 +1,10 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 
+import { t } from '../../../strings';
 import GoButton from '../../common/GoButton';
 import { colors, texts, screens } from '../../common/styles';
-import { t } from '../../../strings';
 
 const ConsumerProfile = () => {
   const navigation = useNavigation();
@@ -15,9 +15,7 @@ const ConsumerProfile = () => {
         <View style={styles.container}>
           <View style={styles.texts}>
             <Text style={styles.black}>{t('Seus dados')}</Text>
-            <Text style={styles.darkGrey}>
-              {t('Edite seus dados pessoais')}
-            </Text>
+            <Text style={styles.darkGrey}>{t('Edite seus dados pessoais')}</Text>
           </View>
           <View style={styles.button}>
             <GoButton />
@@ -28,9 +26,7 @@ const ConsumerProfile = () => {
         <View style={styles.container}>
           <View style={styles.texts}>
             <Text style={styles.black}>{t('Formas de pagamento')}</Text>
-            <Text style={styles.darkGrey}>
-              {t('Edite suas formas de pagamento')}
-            </Text>
+            <Text style={styles.darkGrey}>{t('Edite suas formas de pagamento')}</Text>
           </View>
           <View style={styles.button}>
             <GoButton />
@@ -44,12 +40,8 @@ const ConsumerProfile = () => {
       >
         <View style={styles.container}>
           <View style={styles.texts}>
-            <Text style={styles.black}>
-              {t('Termos de uso e política de privacidade')}
-            </Text>
-            <Text style={styles.darkGrey}>
-              {t('Leia os termos de uso do AppJusto')}
-            </Text>
+            <Text style={styles.black}>{t('Termos de uso e política de privacidade')}</Text>
+            <Text style={styles.darkGrey}>{t('Leia os termos de uso do AppJusto')}</Text>
           </View>
           <View style={styles.button}>
             <GoButton />
