@@ -14,8 +14,6 @@ import ProfileEdit from './profile/ProfileEdit';
 import ProfileErase from './profile/ProfileErase';
 import EraseConfirmed from './profile/EraseConfirmed';
 import ConsumerHistory from './history/ConsumerHistory';
-import { Text } from 'react-native';
-import { t } from '../../strings';
 
 const UnloggedStack = createStackNavigator();
 function Unlogged() {
@@ -60,7 +58,7 @@ function History() {
 const ProfileStack = createStackNavigator();
 const Profile = () => {
   return (
-    <ProfileStack.Navigator initialRouteName={ConsumerProfile}>
+    <ProfileStack.Navigator initialRouteName="ConsumerProfile">
       <ProfileStack.Screen name='ConsumerProfile' component={ConsumerProfile} />
       <ProfileStack.Screen name='ProfileEdit' component={ProfileEdit} options={{title: 'Seus dados'}} />
       <ProfileStack.Screen name='ProfileErase' component={ProfileErase} options={{title: 'Excluir minha conta'}}/>
@@ -102,7 +100,7 @@ function CreateOrder() {
 const RootNavigator = createStackNavigator();
 export default function () {
   return (
-    <RootNavigator.Navigator mode='modal' initialRouteName='CreateOrder'>
+    <RootNavigator.Navigator mode='modal' initialRouteName='Unlogged'>
       <RootNavigator.Screen name='Unlogged'
         component={Unlogged}
         options={{
