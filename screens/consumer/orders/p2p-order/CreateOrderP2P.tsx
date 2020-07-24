@@ -17,6 +17,7 @@ import OrderMap from './OrderMap';
 import { t } from '../../../../strings';
 import ShowIf from '../../../common/ShowIf';
 import OrderSummary from './OrderSummary';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 // import * as fixtures from '../../../../store/fixtures'; // testing only
 
 enum Steps {
@@ -184,7 +185,8 @@ export default function ({ navigation, route }) {
           </View> */}
           {/* origin step */}
           <View>
-            <Touchable onPress={navigateToAddressComplete}>
+            <TouchableWithoutFeedback onPress={navigateToAddressComplete}>
+              <View>
               <DefaultInput
                 style={style.input}
                 value={origin.address}
@@ -193,7 +195,8 @@ export default function ({ navigation, route }) {
                 onFocus={navigateToAddressComplete}
                 onChangeText={navigateToAddressComplete}
               />
-            </Touchable>
+              </View>
+            </TouchableWithoutFeedback>
 
             <DefaultInput
               style={style.input}
@@ -209,36 +212,38 @@ export default function ({ navigation, route }) {
           </View>
 
           {/* destination step */}
-          <ShowIf test={placeValid(origin)}>
-            {() => (
-              <View>
-                <Touchable
-                  onPress={navigateToAddressComplete}
-                >
+          <View>
+            <ShowIf test={placeValid(origin)}>
+              {() => (
+                <View>
+                  <Touchable
+                    onPress={navigateToAddressComplete}
+                  >
+                    <DefaultInput
+                      style={style.input}
+                      value={destination.address}
+                      title={t('Endereço de entrega')}
+                      placeholder={t('Endereço com número')}
+                      onFocus={navigateToAddressComplete}
+                      onChangeText={navigateToAddressComplete}
+                    />
+                  </Touchable>
+
                   <DefaultInput
                     style={style.input}
-                    value={destination.address}
-                    title={t('Endereço de entrega')}
-                    placeholder={t('Endereço com número')}
-                    onFocus={navigateToAddressComplete}
-                    onChangeText={navigateToAddressComplete}
+                    title={t('Complemento (se houver)')}
+                    placeholder={t('Apartamento, sala, loja, etc.')}
                   />
-                </Touchable>
 
-                <DefaultInput
-                  style={style.input}
-                  title={t('Complemento (se houver)')}
-                  placeholder={t('Apartamento, sala, loja, etc.')}
-                />
-
-                <DefaultInput
-                  style={style.input}
-                  title={t('Instruções para entrega')}
-                  placeholder={t('Informe para quem deve ser entregue')}
-                />
-              </View>
-            )}
-          </ShowIf>
+                  <DefaultInput
+                    style={style.input}
+                    title={t('Instruções para entrega')}
+                    placeholder={t('Informe para quem deve ser entregue')}
+                  />
+                </View>
+              )}
+            </ShowIf>
+          </View>
 
           {/* confirmation step */}
           <ShowIf test={orderValid(order)}>
