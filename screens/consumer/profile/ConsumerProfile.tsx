@@ -1,11 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import GoButton from '../../common/GoButton';
 import { colors, texts, screens } from '../../common/styles';
 import { t } from '../../../strings';
 
-const ConsumerProfile = ({ navigation }) => {
+const ConsumerProfile = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.screen}>
       <TouchableOpacity onPress={() => navigation.navigate('ProfileEdit')}>

@@ -16,8 +16,13 @@ import DefaultButton from '../../common/DefaultButton';
 import { t } from '../../../strings';
 import { colors, texts } from '../../common/styles';
 import { checkboxActive, checkboxInactive } from '../../../assets/icons';
+import { useNavigation } from '@react-navigation/native';
 
-const ConsumerRegistration = ({ navigation }) => {
+const ConsumerRegistration = () => {
+  // context
+  const navigation = useNavigation();
+
+  // state
   const [isOneChecked, setIsOneChecked] = useState(false);
   const [isTwoChecked, setIsTwoChecked] = useState(false);
   const toggleCheckboxOne = () => {

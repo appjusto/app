@@ -1,1 +1,0 @@
-export const getConsumerLocation = (state) => state.consumer.location;

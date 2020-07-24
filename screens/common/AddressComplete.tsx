@@ -1,5 +1,6 @@
-import React, { useState, useCallback, useEffect, useContext } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { nanoid } from 'nanoid/non-secure';
 import debounce from 'lodash/debounce';
 
@@ -12,9 +13,11 @@ import Touchable from './Touchable';
 import { useSelector } from 'react-redux';
 import { getEnv } from '../../store/selectors/config';
 
-export default function ({ navigation, route }) {
+export default function () {
   // context
   const api = useContext(ApiContext);
+  const navigation = useNavigation();
+  const route = useRoute();
   const { params } = route;
   const { value: initialAddress, destinationScreen, destinationParam } = params;
 

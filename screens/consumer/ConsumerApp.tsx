@@ -102,7 +102,7 @@ function CreateOrder() {
 const RootNavigator = createStackNavigator();
 export default function () {
   return (
-    <RootNavigator.Navigator mode='modal' initialRouteName='Unlogged'>
+    <RootNavigator.Navigator mode='modal' initialRouteName='CreateOrder'>
       <RootNavigator.Screen name='Unlogged'
         component={Unlogged}
         options={{

@@ -2,7 +2,7 @@ import React from 'react';
 import {View, TouchableOpacity, Image, StyleSheet} from 'react-native'
 
 import {arrowBack} from '../../assets/icons';
-import {colors} from '../common/styles';
+import {colors} from './styles';
 
 const BackButton = ({...props}) => (
   <TouchableOpacity {...props}>

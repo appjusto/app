@@ -4,12 +4,14 @@ import ReduxThunk from 'redux-thunk';
 import configReducer from './reducers/config';
 import courierReducer from './reducers/courier';
 import consumerReducer from './reducers/consumer';
-import { CourierState } from './types/courier';
 import { ConfigState } from './types/config';
+import { CourierState } from './types/courier';
+import { ConsumerState } from './types/consumer';
 
 export interface State {
-  courier: CourierState;
   config: ConfigState;
+  courier: CourierState;
+  consumer: ConsumerState;
 }
 
 export const createStore = (extra: object) => {

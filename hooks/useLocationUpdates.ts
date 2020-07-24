@@ -1,14 +1,10 @@
 import { useState, useEffect } from 'react';
 import * as Permissions from 'expo-permissions';
 import { startLocationUpdatesTask, stopLocationUpdatesTask } from '../utils/location';
-import { useDispatch } from 'react-redux';
 
-export default function (shouldAskPermission) {
-  // context
-  const dispatch = useDispatch();
-
+export default function (shouldAskPermission: boolean) {
   // state
-  const [locationPermission, setLocationPermission] = useState(null);
+  const [locationPermission, setLocationPermission] = useState<string | null>(null);
 
   // side effects
   const askPermission = async () => {
@@ -26,8 +22,8 @@ export default function (shouldAskPermission) {
     if (locationPermission === 'granted') {
       startLocationUpdatesTask();
 
-      return async () => {
-        await stopLocationUpdatesTask();
+      return () => {
+        stopLocationUpdatesTask();
       }
     }
   }, [locationPermission]);

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import DefaultInput from '../../common/DefaultInput';
 import DefaultButton from '../../common/DefaultButton';
@@ -15,11 +16,16 @@ import { t } from '../../../strings';
 // import * as fonts from '../../../assets/fonts';
 import { colors, texts } from '../../common/styles';
 
-const ConsumerConfirmation = ({ navigation, route }) => {
-  const { path } = route.params;
+const ConsumerConfirmation = () => {
+  // context
+  const navigation = useNavigation();
+  const route = useRoute();
+  const path: string = route.params;
+
+  // state
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
-  const [sendAgain, setSendAgain] = useState('false') //just for now
+  const [sendAgain, setSendAgain] = useState(false) //just for now
 
   if (path === 'sms') {
     return (
@@ -51,12 +57,14 @@ const ConsumerConfirmation = ({ navigation, route }) => {
           </View>
         </TouchableOpacity>
         <ShowIf test={sendAgain === true}>
-        <View style={styles.yellowBox}>
-          <Text style={styles.yellowText}>
-            {t('Código enviado com sucesso. Verifique sua caixa de mensagens')}
-          </Text>
-        </View>
-      </ShowIf>
+          {() => (
+            <View style={styles.yellowBox}>
+            <Text style={styles.yellowText}>
+              {t('Código enviado com sucesso. Verifique sua caixa de mensagens')}
+            </Text>
+          </View>
+        )}
+        </ShowIf>
       </KeyboardAvoidingView>
     );
   }
@@ -89,11 +97,13 @@ const ConsumerConfirmation = ({ navigation, route }) => {
         </View>
       </TouchableOpacity>
       <ShowIf test={sendAgain === true}>
-        <View style={styles.yellowBox}>
-          <Text style={styles.yellowText}>
-            {t('Link enviado com sucesso. Verifique seu e-mail.')}
-          </Text>
-        </View>
+        {() => (
+          <View style={styles.yellowBox}>
+            <Text style={styles.yellowText}>
+              {t('Link enviado com sucesso. Verifique seu e-mail.')}
+            </Text>
+          </View>
+        )}
       </ShowIf>
     </KeyboardAvoidingView>
   );
