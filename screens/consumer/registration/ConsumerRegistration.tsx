@@ -23,14 +23,9 @@ const ConsumerRegistration = () => {
   const navigation = useNavigation();
 
   // state
-  const [isOneChecked, setIsOneChecked] = useState(false);
-  const [isTwoChecked, setIsTwoChecked] = useState(false);
-  const toggleCheckboxOne = () => {
-    setIsOneChecked(!isOneChecked);
-  };
-  const toggleCheckboxTwo = () => {
-    setIsTwoChecked(!isTwoChecked);
-  };
+  const [acceptedTerms, setAcceptTerms] = useState(false);
+  const [acceptedMarketing, setAcceptMarketing] = useState(false);
+  
   return (
     <KeyboardAvoidingView
       style={styles.screen}
@@ -72,14 +67,14 @@ const ConsumerRegistration = () => {
       <View style={{ paddingHorizontal: 16 }}>
         <CheckField
           marginTop={12}
-          source={isOneChecked ? checkboxActive : checkboxInactive}
-          onPress={toggleCheckboxOne}
+          source={acceptedTerms ? checkboxActive : checkboxInactive}
+          onPress={() => setAcceptTerms(!acceptedTerms)}
           text={t('Aceito os termos de uso e a política de privacidade')}
         />
         <CheckField
           marginTop={12}
-          source={isTwoChecked ? checkboxActive : checkboxInactive}
-          onPress={toggleCheckboxTwo}
+          source={acceptedMarketing ? checkboxActive : checkboxInactive}
+          onPress={() => setAcceptMarketing(!acceptedMarketing)}
           text={t('Aceito receber comunicações e ofertas')}
         />
       </View>

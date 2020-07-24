@@ -1,25 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import DefaultButton from '../../common/DefaultButton';
 import CheckField from '../../common/CheckField';
 import { t } from '../../../strings';
 import { colors, texts, screens } from '../../common/styles';
-import { checkboxActive, checkboxInactive } from '../../../assets/icons';
 
-const EraseConfirmed = ({ navigation }) => {
-  const [region, setRegion] = useState(false);
-  const toogleRegion = () => setRegion(!region);
-  const [need, setNeed] = useState(false);
-  const toogleNeed = () => setNeed(!need);
-  const [prices, setPrices] = useState(false);
-  const tooglePrices = () => setPrices(!prices);
-  const [app, setApp] = useState(false);
-  const toogleApp = () => setApp(!app);
-  const [safe, setSafe] = useState(false);
-  const toogleSafe = () => setSafe(!safe);
-  const [other, setOther] = useState(false);
-  const toogleOther = () => setOther(!other);
+interface ScreenState {
+  notWorkingOnMyRegion: boolean;
+  didntFindWhatINeeded: boolean;
+  pricesHigherThanAlternatives: boolean;
+  didntLikeApp: boolean;
+  didntFeelSafe: boolean;
+  ratherUseAnotherApp: boolean;
+}
+
+const EraseConfirmed = () => {
+  // context
+  const navigation = useNavigation();
+
+  // state
+  const [state, setState] = useState<ScreenState>({
+    notWorkingOnMyRegion: false,
+    didntFindWhatINeeded: false,
+    pricesHigherThanAlternatives: false,
+    didntLikeApp: false,
+    didntFeelSafe: false,
+    ratherUseAnotherApp: false,
+  });
+
+  useEffect(() => {
+    console.log(state);
+  }, [state])
+  
+  // UI
   return (
     <View style={{ ...screens.lightGrey }}>
       <Text style={{ ...texts.big, marginTop: 16, width: '80%' }}>
@@ -32,43 +47,38 @@ const EraseConfirmed = ({ navigation }) => {
       </Text>
       <View style={{ marginTop: 24, flex: 1 }}>
         <CheckField
-          source={region ? checkboxActive : checkboxInactive}
+          checked={state.notWorkingOnMyRegion}
           text={t('Não atende na minha região')}
-          onPress={toogleRegion}
+          onPress={() => setState({ ...state, notWorkingOnMyRegion: !state.notWorkingOnMyRegion })}
         />
         <CheckField
-          source={need ? checkboxActive : checkboxInactive}
-          marginTop={12}
+          checked={state.didntFindWhatINeeded}
           text={t('Não encontrei o que preciso')}
-          onPress={toogleNeed}
+          onPress={() => setState({ ...state, didntFindWhatINeeded: !state.didntFindWhatINeeded })}
         />
         <CheckField
-          marginTop={12}
-          source={prices ? checkboxActive : checkboxInactive}
+          checked={state.pricesHigherThanAlternatives}
           text={t('Preços mais altos que os concorrentes')}
-          onPress={tooglePrices}
+          onPress={() => setState({ ...state, pricesHigherThanAlternatives: !state.pricesHigherThanAlternatives })}
         />
         <CheckField
-          marginTop={12}
-          source={app ? checkboxActive : checkboxInactive}
+          checked={state.didntLikeApp}
           text={t('Não gostei do aplicativo')}
-          onPress={toogleApp}
+          onPress={() => setState({ ...state, didntLikeApp: !state.didntLikeApp })}
         />
         <CheckField
-          marginTop={12}
-          source={safe ? checkboxActive : checkboxInactive}
+          checked={state.didntFeelSafe}
           text={t('Não me senti seguro')}
-          onPress={toogleSafe}
+          onPress={() => setState({ ...state, didntFeelSafe: !state.didntFeelSafe })}
         />
         <CheckField
-          marginTop={12}
-          source={other ? checkboxActive : checkboxInactive}
+          checked={state.ratherUseAnotherApp}
           text={t('Prefiro usar outro serviço ou aplicativo')}
-          onPress={toogleOther}
+          onPress={() => setState({ ...state, ratherUseAnotherApp: !state.ratherUseAnotherApp })}
         />
         <View style={{ flex: 1 }} />
         <DefaultButton
-          style={{ width: '100%', marginBottom: 16 }}
+          styleObject={{ width: '100%', marginBottom: 16 }}
           title={t('Voltar para a tela inicial')}
           onPress={() => navigation.navigate('ConsumerHome')}
         />
