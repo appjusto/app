@@ -14,29 +14,35 @@ import ProfileEdit from './profile/ProfileEdit';
 import ProfileErase from './profile/ProfileErase';
 import EraseConfirmed from './profile/EraseConfirmed';
 import ConsumerHistory from './history/ConsumerHistory';
+import { Text } from 'react-native';
+import { t } from '../../strings';
 
 const UnloggedStack = createStackNavigator();
 function Unlogged() {
   return (
     <UnloggedStack.Navigator
       initialRouteName='ConsumerIntro'
-      // screenOptions={unloggedOptions}
     >
       <UnloggedStack.Screen
         name='ConsumerIntro'
         component={ConsumerIntro}
-        // options={{ title: 'Intro' }}
+        options={{ headerShown: false, title: '' }}
       />
       <UnloggedStack.Screen
         name='ConsumerConfirmation'
         component={ConsumerConfirmation}
-        options={{ title: 'Confirme seu acesso' }}
+        options={{ title: '' }}
       />
       <UnloggedStack.Screen
         name='ConsumerRegistration'
         component={ConsumerRegistration}
+        options={{ title: '' }}
       />
-      <UnloggedStack.Screen name='Terms' component={Terms} />
+      <UnloggedStack.Screen
+        name='Terms'
+        component={Terms}
+        options={{ title: '' }}
+      />
       {/* <UnloggedStack.Screen name='ConsumerHome' component={ConsumerHome} /> */}
     </UnloggedStack.Navigator>
   );
@@ -97,7 +103,12 @@ const RootNavigator = createStackNavigator();
 export default function () {
   return (
     <RootNavigator.Navigator mode='modal' initialRouteName='Unlogged'>
-      <RootNavigator.Screen name='Unlogged' component={Unlogged} />
+      <RootNavigator.Screen name='Unlogged'
+        component={Unlogged}
+        options={{
+          headerShown: false,
+        }}
+      />
       <RootNavigator.Screen name='Logged' component={Logged} />
       <RootNavigator.Screen name='CreateOrder' component={CreateOrder} />
       <RootNavigator.Screen
