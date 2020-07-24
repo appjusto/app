@@ -12,7 +12,7 @@ import {
 import DefaultInput from '../../common/DefaultInput';
 import DefaultButton from '../../common/DefaultButton';
 
-// import * as fonts from '../../../assets/fonts';
+import CheckField from '../../common/CheckField';
 import { t } from '../../../strings';
 import { colors, texts } from '../../common/styles';
 import { checkboxActive, checkboxInactive } from '../../../assets/icons';
@@ -37,7 +37,9 @@ const ConsumerRegistration = () => {
       behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.containerBigText}>
-        <Text style={styles.bigText}>{t('Assim que sua conta for criada você já poderá fazer pedidos.')}</Text>
+        <Text style={styles.bigText}>
+          {t('Assim que sua conta for criada você já poderá fazer pedidos.')}
+        </Text>
       </View>
       <View style={styles.containerMediumText}>
         <Text style={styles.mediumText}>
@@ -67,27 +69,19 @@ const ConsumerRegistration = () => {
           placeholder={t('Qual o seu email?')}
         />
       </View>
-      <View style={styles.checkContainer}>
-        <TouchableOpacity onPress={toggleCheckboxOne}>
-          <Image
-            source={isOneChecked ? checkboxActive : checkboxInactive}
-            style={styles.image}
-          />
-        </TouchableOpacity>
-        <Text style={styles.checkText}>
-          {t('Aceito os termos de uso e a política de privacidade')}
-        </Text>
-      </View>
-      <View style={{ ...styles.checkContainer, marginTop: 12 }}>
-        <TouchableOpacity onPress={toggleCheckboxTwo}>
-          <Image
-            source={isTwoChecked ? checkboxActive : checkboxInactive}
-            style={styles.image}
-          />
-        </TouchableOpacity>
-        <Text style={styles.checkText}>
-          {t('Aceito receber comunicações e ofertas')}
-        </Text>
+      <View style={{ paddingHorizontal: 16 }}>
+        <CheckField
+          marginTop={12}
+          source={isOneChecked ? checkboxActive : checkboxInactive}
+          onPress={toggleCheckboxOne}
+          text={t('Aceito os termos de uso e a política de privacidade')}
+        />
+        <CheckField
+          marginTop={12}
+          source={isTwoChecked ? checkboxActive : checkboxInactive}
+          onPress={toggleCheckboxTwo}
+          text={t('Aceito receber comunicações e ofertas')}
+        />
       </View>
       <View style={styles.buttonContainer}>
         <DefaultButton

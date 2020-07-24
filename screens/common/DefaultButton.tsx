@@ -37,7 +37,7 @@ const style = StyleSheet.create({
     height: 48,
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'center', //the container shrinks to the size of its content
+    // alignSelf: 'center', //the container shrinks to the size of its content
   },
   text: {
     ...texts.default,

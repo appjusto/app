@@ -4,11 +4,9 @@ import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { goArrow } from '../../assets/icons';
 
 const GoButton = ({ ...props }) => (
-  <TouchableOpacity {...props}>
-    <View style={styles.container}>
-      <Image source={goArrow} />
-    </View>
-  </TouchableOpacity>
+  <View style={styles.container} {...props}>
+    <Image source={goArrow} />
+  </View>
 );
 
 const styles = StyleSheet.create({

@@ -13,6 +13,8 @@ const iconIllustration = require('./icons/illustration-intro-screen.png');
 const rectangleBG = require('./icons/Rectangle23.png');
 const iconRequests = require('./icons/icon-requests.png');
 const iconGoArrow = require('./icons/iconGoArrow.png');
+const iconErase = require('./icons/icon-erase.png');
+const iconCalendar = require('./icons/icon-calendar.png');
 
 export const arrow = arrowSmall;
 export const logoWhite = logoAppjustoBgWhite;
@@ -29,6 +31,8 @@ export const illustration = iconIllustration;
 export const BG = rectangleBG;
 export const requests = iconRequests;
 export const goArrow = iconGoArrow;
+export const erase = iconErase;
+export const calendar = iconCalendar;
 
 export default [
   logoWhite,
@@ -46,4 +50,6 @@ export default [
   BG,
   requests,
   goArrow,
+  erase,
+  calendar,
 ];
