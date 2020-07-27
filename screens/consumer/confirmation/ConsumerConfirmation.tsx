@@ -25,16 +25,19 @@ const ConsumerConfirmation = () => {
   // state
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
-  const [sendAgain, setSendAgain] = useState(false) //just for now
+  const [sendAgain, setSendAgain] = useState(false); //just for now
 
   if (path === 'sms') {
+    //needs refactoring because of the new approach to the KeyboardAvoidingView
     return (
       <KeyboardAvoidingView
         style={styles.screen}
-        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <View style={styles.containerBigText}>
-          <Text style={styles.bigText}>{t('Um código de acesso foi enviado para o seu número.')}</Text>
+          <Text style={{ ...texts.big }}>
+            {t('Um código de acesso foi enviado para o seu número.')}
+          </Text>
         </View>
         <DefaultInput
           title={t('Código de confirmação')}
@@ -53,17 +56,19 @@ const ConsumerConfirmation = () => {
         <TouchableOpacity style={styles.tb} onPress={() => setSendAgain(!sendAgain)}>
           <View style={styles.sendAgain}>
             <View style={styles.littleCircle} />
-            <Text style={styles.sendAgainText}>{t('Enviar confirmação novamente')}</Text>
+            <Text style={{ ...texts.default, marginLeft: 4 }}>
+              {t('Enviar confirmação novamente')}
+            </Text>
           </View>
         </TouchableOpacity>
         <ShowIf test={sendAgain === true}>
           {() => (
             <View style={styles.yellowBox}>
-            <Text style={styles.yellowText}>
-              {t('Código enviado com sucesso. Verifique sua caixa de mensagens')}
-            </Text>
-          </View>
-        )}
+              <Text style={{ ...texts.small }}>
+                {t('Código enviado com sucesso. Verifique sua caixa de mensagens')}
+              </Text>
+            </View>
+          )}
         </ShowIf>
       </KeyboardAvoidingView>
     );
@@ -71,10 +76,12 @@ const ConsumerConfirmation = () => {
   return (
     <KeyboardAvoidingView
       style={styles.screen}
-      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.containerBigText}>
-        <Text style={styles.bigText}>{t('Enviaremos um link de confirmação para o seu e-mail.')}</Text>
+        <Text style={{ ...texts.big }}>
+          {t('Enviaremos um link de confirmação para o seu e-mail.')}
+        </Text>
       </View>
       <DefaultInput
         title={t('E-mail')}
@@ -93,13 +100,15 @@ const ConsumerConfirmation = () => {
       <TouchableOpacity style={styles.tb} onPress={() => setSendAgain(!sendAgain)}>
         <View style={styles.sendAgain}>
           <View style={styles.littleCircle} />
-          <Text style={styles.sendAgainText}>{t('Enviar confirmação novamente')}</Text>
+          <Text style={{ ...texts.default, marginLeft: 4 }}>
+            {t('Enviar confirmação novamente')}
+          </Text>
         </View>
       </TouchableOpacity>
       <ShowIf test={sendAgain === true}>
         {() => (
           <View style={styles.yellowBox}>
-            <Text style={styles.yellowText}>
+            <Text style={{ ...texts.small }}>
               {t('Link enviado com sucesso. Verifique seu e-mail.')}
             </Text>
           </View>
@@ -122,12 +131,6 @@ const styles = StyleSheet.create({
     marginTop: 182,
     marginBottom: 16,
   },
-  bigText: {
-    fontSize: 24,
-    lineHeight: 29,
-    color: '#000',
-    ...texts.default,
-  },
   tb: {
     alignSelf: 'center',
     height: 18,
@@ -145,12 +148,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#63B745',
   },
-  sendAgainText: {
-    fontSize: 15,
-    lineHeight: 18,
-    marginLeft: 4,
-    ...texts.default,
-  },
   yellowBox: {
     marginTop: '50%',
     height: 40,
@@ -164,11 +161,6 @@ const styles = StyleSheet.create({
     // paddingVertical: 12,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  yellowText: {
-    ...texts.default,
-    fontSize: 13,
-    lineHeight: 16,
   },
 });
 

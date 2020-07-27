@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Dimensions,
-  Text,
-  Image,
-  ImageBackground,
-} from 'react-native';
+import { StyleSheet, View, Dimensions, Text, Image, ImageBackground } from 'react-native';
 // import { useSelector, useDispatch } from 'react-redux';
 
 // import { getOngoingOrders } from '../../../store/selectors/consumer';
@@ -27,12 +20,12 @@ export default function ConsumerHome() {
       <View style={styles.greenContainer}>
         <View style={styles.searchBox}>
           <Image source={navigation} />
-          <Text style={styles.searchText}>
-            {t('Avenida Paulista, São Paulo, SP')}
-          </Text>
+          <Text style={styles.searchText}>{t('Avenida Paulista, São Paulo, SP')}</Text>
         </View>
         <View style={styles.containerBigText}>
-          <Text style={styles.bigText}>{t('Somos um delivery aberto, transparente e consciente')}</Text>
+          <Text style={{ ...texts.big }}>
+            {t('Somos um delivery aberto, transparente e consciente')}
+          </Text>
         </View>
         <View style={styles.actionsContainer}>
           <View style={styles.actionBox}>
@@ -40,51 +33,37 @@ export default function ConsumerHome() {
               <Image source={illustration} style={styles.illustration} />
             </View>
             <View style={styles.mediumContainer}>
-              <Text style={styles.mediumText}>
-                {t('Transportar Encomendas')}
-              </Text>
+              <Text style={{ ...texts.default }}>{t('Transportar Encomendas')}</Text>
             </View>
             <View style={styles.smallContainer}>
-              <Text style={{ ...styles.smallText, color: colors.darkGrey }}>
+              <Text style={{ ...texts.small, color: colors.darkGrey }}>
                 {t('Para buscar e deixar pacotes')}
               </Text>
             </View>
           </View>
-          <View
-            style={{ ...styles.actionBox, backgroundColor: colors.lightGreen }}
-          >
+          <View style={{ ...styles.actionBox, backgroundColor: colors.lightGreen }}>
             <View style={styles.illustrationContainer}>
               <Image source={illustration} style={styles.illustration} />
             </View>
             <View style={styles.mediumContainer}>
-              <Text style={styles.mediumText}>
-                {t('Restaurantes e alimentação')}
-              </Text>
+              <Text style={{ ...texts.default }}>{t('Restaurantes e alimentação')}</Text>
             </View>
             <View style={styles.smallContainer}>
-              <Text style={styles.smallText}>
-                {t('Seus preferidos estarão por aqui')}
-              </Text>
+              <Text style={{ ...texts.small }}>{t('Seus preferidos estarão por aqui')}</Text>
             </View>
           </View>
         </View>
       </View>
       <View style={styles.whiteContainer}>
-        <ImageBackground
-          source={BG}
-          style={{ height: '100%', width: '100%' }}
-          style={styles.request}
-        >
-          <View style={{paddingHorizontal: 16}}>
+        <ImageBackground source={BG} style={{ height: '100%', width: '100%', flex: 1 }}>
+          <View style={{ paddingHorizontal: 16 }}>
             <View style={styles.history}>
               <View style={styles.reqContainer}>
                 <Image source={requests} />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.mediumText}>
-                  {t('Histórico de pedidos')}
-                </Text>
-                <Text style={{ ...styles.smallText, color: colors.darkGrey }}>
+                <Text style={{ ...texts.default }}>{t('Histórico de pedidos')}</Text>
+                <Text style={{ ...texts.small, color: colors.darkGrey }}>
                   {t('Você ainda não fez pedidos')}
                 </Text>
               </View>
@@ -128,9 +107,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   searchText: {
-    ...texts.default,
-    fontSize: 13,
-    lineHeight: 16,
+    ...texts.small,
     marginLeft: 9,
   },
   containerBigText: {
@@ -138,12 +115,6 @@ const styles = StyleSheet.create({
     height: 58,
     alignItems: 'flex-start',
     marginTop: 32,
-  },
-  bigText: {
-    // fontSize: 24,
-    // lineHeight: 29,
-    // color: '#000',
-    ...texts.big,
   },
   actionsContainer: {
     flexDirection: 'row',
@@ -176,20 +147,10 @@ const styles = StyleSheet.create({
     height: 36,
     marginTop: 8,
   },
-  mediumText: {
-    ...texts.default,
-    fontSize: 15,
-    lineHeight: 18,
-  },
   smallContainer: {
     height: 32,
     width: '80%',
     marginTop: 8,
-  },
-  smallText: {
-    ...texts.default,
-    fontSize: 13,
-    lineHeight: 16,
   },
   history: {
     // marginHorizontal: 16,

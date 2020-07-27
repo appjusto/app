@@ -7,9 +7,7 @@ import { t } from '../../../strings';
 export default function Terms() {
   return (
     <View style={styles.screen}>
-      <Text style={styles.bigText}>
-        {t('Termos de uso e política de privacidade')}
-      </Text>
+      <Text style={styles.bigText}>{t('Termos de uso e política de privacidade')}</Text>
       <Text style={styles.terms}>Lorem</Text>
       <Text style={styles.terms}>Lorem</Text>
     </View>
@@ -22,19 +20,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightGrey,
   },
   bigText: {
-    fontSize: 24,
-    lineHeight: 29,
-    color: '#000',
-    ...texts.default,
+    ...texts.big,
     marginHorizontal: 16,
     marginBottom: 24,
     marginTop: 16,
   },
   terms: {
-    fontSize: 15,
-    lineHeight: 18,
-    color: colors.darkGrey,
     ...texts.default,
+    color: colors.darkGrey,
     marginHorizontal: 16,
   },
 });

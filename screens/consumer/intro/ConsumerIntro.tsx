@@ -1,14 +1,5 @@
 import React, { useState, useContext, useCallback } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableWithoutFeedback,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { ApiContext } from '../../../utils/context';
@@ -24,7 +15,7 @@ export default function ConsumerIntro() {
   // context
   const api = useContext(ApiContext);
   const navigation = useNavigation();
-  
+
   // state
   const [email, setEmail] = useState('');
 
@@ -32,8 +23,7 @@ export default function ConsumerIntro() {
   const signInWithEmail = useCallback(async () => {
     if (validateEmail(email).status === 'ok') {
       await api.signIn(email);
-    }
-    else {
+    } else {
       // TODO: handle error
     }
   }, [email]);
@@ -45,21 +35,25 @@ export default function ConsumerIntro() {
           <View style={{ flex: 1, justifyContent: 'flex-end' }}>
             <View style={{ paddingHorizontal: padding }}>
               <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-               <View>
+                <View>
                   <View style={{ height: 200 }}>
                     <Image source={illustration} />
                   </View>
-                
+
                   <View style={{ height: 74, marginTop: 41 }}>
                     <Image style={{ width: '46.5%', height: 74 }} source={logoWhite} />
                   </View>
 
                   <View style={{ height: 58, marginTop: 16 }}>
-                    <Text style={[texts.big]}>{t('Somos um delivery aberto, transparente e consciente.')}</Text>
+                    <Text style={[texts.big]}>
+                      {t('Somos um delivery aberto, transparente e consciente.')}
+                    </Text>
                   </View>
 
-                  <View style={{ width: '85%', height: 58, marginVertical: 16}}>
-                    <Text style={[texts.default, { color: colors.darkGrey }]}>{t('A plataforma de entregas mais justa, transparente e aberta disponível.')}</Text>
+                  <View style={{ width: '85%', height: 58, marginVertical: 16 }}>
+                    <Text style={[texts.default, { color: colors.darkGrey }]}>
+                      {t('A plataforma de entregas mais justa, transparente e aberta disponível.')}
+                    </Text>
                   </View>
                 </View>
               </TouchableWithoutFeedback>
@@ -69,7 +63,7 @@ export default function ConsumerIntro() {
                 title={t('Acesse sua conta')}
                 placeholder={t('Digite seu e-mail')}
                 onChangeText={setEmail}
-                keyboardType='email-address'
+                keyboardType="email-address"
                 blurOnSubmit
                 autoCapitalize="none"
               >
@@ -85,7 +79,7 @@ export default function ConsumerIntro() {
             </View>
 
             <View style={{ flex: 1 }} />
-              
+
             {/* sign up */}
             <View style={styles.bottomContainer}>
               <View style={styles.innerContainer}>
