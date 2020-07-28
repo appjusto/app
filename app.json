@@ -3,11 +3,7 @@
     "name": "App Justo",
     "slug": "app-justo",
     "scheme": "appjusto",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,46 +15,37 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "br.com.appjusto",
       "supportsTablet": true,
       "infoPlist": {
-        "UIBackgroundModes": [
-          "location"
-        ],
+        "UIBackgroundModes": ["location"],
         "NSLocationWhenInUseUsageDescription": "Saber a localização do entregador",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Saber a localização do entregador",
         "NSLocationAlwaysUsageDescription": "Saber a localização do entregador"
       },
-      "associatedDomains": [
-        "applinks:appjusto.com.br"
-      ]
+      "associatedDomains": ["applinks:link.appjusto.com.br"]
     },
     "android": {
       "package": "br.com.appjusto",
-      "permissions": [
-        "ACCESS_FINE_LOCATION"
-      ],
+      "permissions": ["ACCESS_FINE_LOCATION"],
       "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true,
-      "intentFilters": [{
-        "action": "VIEW",
-        "autoVerify": true,
-        "data": [
-          {
-            "scheme": "https",
-            "host": "appjusto.com.br",
-            "pathPrefix": "/app"
-          }
-        ],
-        "category": [
-          "BROWSABLE",
-          "DEFAULT"
-        ]
-      }]
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "link.appjusto.com.br",
+              "pathPrefix": "/"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "experiments": {
       "redesignedLogBox": true
