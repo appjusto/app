@@ -34,7 +34,7 @@ export default class Api {
     return firebase.auth().sendSignInLinkToEmail(email, {
       // URL you want to redirect back to. The domain (www.example.com) for this
       // URL must be whitelisted in the Firebase Console.
-      url: 'https://appjusto.com.br/app/signin',
+      url: 'https://link.appjusto.com.br/app/signin',
       handleCodeInApp: true,
       iOS: {
         bundleId: this.extra.bundleIdentifier,
