@@ -2,7 +2,6 @@ import React from 'react';
 import { View, YellowBox } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import AdminApp from './screens/admin/AdminApp';
 import PreloadAssets from './screens/app/PreloadAssets';
 import ShowIf from './screens/common/ShowIf';
 import ConsumerApp from './screens/consumer/ConsumerApp';
@@ -24,8 +23,6 @@ const App = () => {
     <PreloadAssets>
       {() => (
         <View style={{ flex: 1 }}>
-          <ShowIf test={flavor === 'admin'}>{() => <AdminApp />}</ShowIf>
-
           <ShowIf test={flavor === 'consumer'}>{() => <ConsumerApp />}</ShowIf>
 
           <ShowIf test={flavor === 'courier'}>{() => <CourierApp />}</ShowIf>

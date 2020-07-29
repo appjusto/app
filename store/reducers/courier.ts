@@ -10,7 +10,6 @@ const initialState: CourierState = {
 export default function (state: CourierState = initialState, action: AnyAction): CourierState {
   const { type, payload } = action;
   switch (type) {
-    case actionTypes.SET_COURIER_PROFILE:
     case actionTypes.COURIER_PROFILE_UPDATED: {
       return { ...state, courier: { ...state.courier, ...payload } };
     }

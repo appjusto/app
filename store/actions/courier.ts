@@ -4,11 +4,6 @@ import * as actionTypes from '../actionTypes';
 import Api from '../api';
 import { Courier } from '../types/courier';
 
-// change local state only; won't broadcast to backend
-export const setCourierProfile = (profile: Courier) => (dispatch: Dispatch<any>) => {
-  dispatch({ type: actionTypes.SET_COURIER_PROFILE, payload: profile });
-};
-
 // update data on backend
 export const updateCourier = (api: Api) => (courierId: string, changes: object) => (
   dispatch: Dispatch<any>

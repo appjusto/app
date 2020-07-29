@@ -14,6 +14,9 @@ export default class Api {
 
   constructor(private extra: Extra) {
     firebase.initializeApp(extra.firebase);
+
+    // firebase.auth().setPersistence('local');
+
     this.firestore = firebase.firestore();
     this.firestoreWithGeo = geofirestore.initializeApp(this.firestore);
 
@@ -28,6 +31,14 @@ export default class Api {
       // firebase.functions().useFunctionsEmulator(firebaseConfig.emulator.functionsURL);
       this.functionsEndpoint = extra.firebase.emulator.functionsURL;
     }
+  }
+
+  // authentication
+
+  observeSignIn(handler: (a: firebase.User | null) => any): firebase.Unsubscribe {
+    const auth = firebase.auth();
+    const unsubscribe = auth.onAuthStateChanged(handler);
+    return unsubscribe;
   }
 
   sendSignInLinkToEmail(email: string): Promise<void> {
@@ -49,11 +60,18 @@ export default class Api {
     });
   }
 
+  isSignInWithEmailLink(link: string): boolean {
+    return firebase.auth().isSignInWithEmailLink(link);
+  }
+
   async signInWithEmailLink(email: string, link: string) {
     const auth = firebase.auth();
     // if (!auth.isSignInWithEmailLink(link)) return null;
-    return auth.signInWithEmailLink(email, link);
+    const userCredential = await auth.signInWithEmailLink(email, link);
+    return userCredential.user;
   }
+
+  // courier
 
   updateCourier(courierId: string, changes: object) {
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
@@ -97,7 +115,7 @@ export default class Api {
     );
   }
 
-  watchCourier(courierId: string, resultHandler): () => void {
+  watchCourier(courierId: string, resultHandler): firebase.Unsubscribe {
     // TODO: ensure only people envolved in order are able to know courier's location
     const unsubscribe = this.firestore
       .collection('couriers')
@@ -109,7 +127,7 @@ export default class Api {
     return unsubscribe;
   }
 
-  watchAvailableCouriers(resultHandler): () => void {
+  watchAvailableCouriers(resultHandler): firebase.Unsubscribe {
     // TODO: add query filters to limit to couriers:
     // 1 close to a specific location
     // 2 max number of results

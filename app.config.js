@@ -1,4 +1,12 @@
-import { GOOGLE_MAPS_API_KEY, FIREBASE_REGION, FIREBASE_API_KEY, FIREBASE_PROJECT_ID, FIREBASE_DATABASE_NAME, FIREBASE_MESSAGING_SENDER_ID, FIREBASE_APP_ID } from 'react-native-dotenv';
+import {
+  GOOGLE_MAPS_API_KEY,
+  FIREBASE_REGION,
+  FIREBASE_API_KEY,
+  FIREBASE_PROJECT_ID,
+  FIREBASE_DATABASE_NAME,
+  FIREBASE_MESSAGING_SENDER_ID,
+  FIREBASE_APP_ID,
+} from 'react-native-dotenv';
 
 const createFirebaseConfig = () => {
   return {
@@ -14,16 +22,17 @@ const createFirebaseConfig = () => {
       enabled: process.env.FIREBASE_EMULATOR === 'true',
       databaseURL: `localhost:8080`,
       functionsURL: `http://localhost:5001/${FIREBASE_PROJECT_ID}/${FIREBASE_REGION}`,
-    }
+    },
     // measurementId: null,
-  }
-}
+  };
+};
 
 export default ({ config }) => {
   const { slug, ios, android } = config;
   const flavor = process.env.FLAVOR || 'admin';
   const googleMapsApiKey = GOOGLE_MAPS_API_KEY;
-  const name = (flavor === 'consumer' && 'Cliente') || (flavor === 'courier' && 'Entregador') || 'Admin'
+  const name =
+    (flavor === 'consumer' && 'Cliente') || (flavor === 'courier' && 'Entregador') || 'Admin';
   const bundleIdentifier = `${ios.bundleIdentifier}.${flavor}`;
   const androidPackage = `${android.package}.${flavor}`;
 
@@ -36,7 +45,7 @@ export default ({ config }) => {
       bundleIdentifier,
       config: {
         googleMapsApiKey,
-      }
+      },
     },
     android: {
       ...android,
@@ -44,7 +53,7 @@ export default ({ config }) => {
       config: {
         googleMaps: {
           apiKey: googleMapsApiKey,
-        }
+        },
       },
     },
     extra: {

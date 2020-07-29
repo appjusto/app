@@ -1,0 +1,7 @@
+{
+  "files.exclude": {
+    "**/.expo": true,
+    "**/.expo-shared": true,
+    "**/node_modules": true
+  }
+}

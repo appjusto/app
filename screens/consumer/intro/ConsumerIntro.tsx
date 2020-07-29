@@ -4,7 +4,6 @@ import { View, Text, StyleSheet, Image, TouchableWithoutFeedback, Keyboard } fro
 import { useDispatch, useSelector } from 'react-redux';
 
 import { logoWhite, arrow, illustration } from '../../../assets/icons';
-import useDeepLink, { DeepLinkState } from '../../../hooks/useDeepLink';
 import { signInWithEmail } from '../../../store/actions/consumer';
 import { showToast } from '../../../store/actions/ui';
 import { getEnv } from '../../../store/selectors/config';
@@ -30,23 +29,12 @@ export default function ConsumerIntro() {
   const signInHandler = useCallback(async () => {
     if (validateEmail(email).status === 'ok') {
       // dispatch(showToast(t('Enviando link de autenticação para o seu e-mail...')));
-      await dispatch(signInWithEmail(api)(email));
+      await signInWithEmail(api)(email);
       dispatch(showToast(t('Pronto! Acesse seu e-mail e clique no link recebido.')));
     } else {
       // TODO: handle error
     }
   }, [email]);
-
-  // side effects
-  const result = useDeepLink();
-  useEffect(() => {
-    console.log('useEffect');
-    if (result === DeepLinkState.Invalid) {
-      dispatch(
-        showToast(t('Houve um problema na autenticação. Digite seu e-mail novamente.'), 'error')
-      );
-    }
-  }, [result]);
 
   // UI
   return (
