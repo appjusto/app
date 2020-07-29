@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Dimensions, Text, Image, ImageBackground } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, Image, ImageBackground } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 // import { useSelector, useDispatch } from 'react-redux';
 
 // import { getOngoingOrders } from '../../../store/selectors/consumer';
@@ -9,18 +10,21 @@ import { t } from '../../../strings';
 
 export default function ConsumerHome() {
   // context
+  const navigation = useNavigation();
   // const dispatch = useDispatch();
 
   // state
   // const ongoingOrders = useSelector(getOngoingOrders);
 
   return (
-    <View style={styles.container}>
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
       {/* <Text># of ongoing orders: {ongoingOrders.length}</Text> */}
       <View style={styles.greenContainer}>
         <View style={styles.searchBox}>
           <Image source={navigation} />
-          <Text style={styles.searchText}>{t('Avenida Paulista, São Paulo, SP')}</Text>
+          <Text style={{ ...texts.small, marginLeft: 9 }}>
+            {t('Avenida Paulista, São Paulo, SP')}
+          </Text>
         </View>
         <View style={styles.containerBigText}>
           <Text style={{ ...texts.big }}>
@@ -29,45 +33,51 @@ export default function ConsumerHome() {
         </View>
         <View style={styles.actionsContainer}>
           <View style={styles.actionBox}>
-            <View style={styles.illustrationContainer}>
-              <Image source={illustration} style={styles.illustration} />
-            </View>
-            <View style={styles.mediumContainer}>
-              <Text style={{ ...texts.default }}>{t('Transportar Encomendas')}</Text>
-            </View>
-            <View style={styles.smallContainer}>
-              <Text style={{ ...texts.small, color: colors.darkGrey }}>
-                {t('Para buscar e deixar pacotes')}
-              </Text>
-            </View>
+            <TouchableOpacity onPress={() => navigation.navigate('CreateOrderP2P')}>
+              <View style={styles.illustrationContainer}>
+                <Image source={illustration} style={styles.illustration} />
+              </View>
+              <View style={styles.mediumContainer}>
+                <Text style={{ ...texts.default }}>{t('Transportar Encomendas')}</Text>
+              </View>
+              <View style={styles.smallContainer}>
+                <Text style={{ ...texts.small, color: colors.darkGrey }}>
+                  {t('Para buscar e deixar pacotes')}
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
           <View style={{ ...styles.actionBox, backgroundColor: colors.lightGreen }}>
-            <View style={styles.illustrationContainer}>
-              <Image source={illustration} style={styles.illustration} />
-            </View>
-            <View style={styles.mediumContainer}>
-              <Text style={{ ...texts.default }}>{t('Restaurantes e alimentação')}</Text>
-            </View>
-            <View style={styles.smallContainer}>
-              <Text style={{ ...texts.small }}>{t('Seus preferidos estarão por aqui')}</Text>
-            </View>
+            <TouchableOpacity>
+              <View style={styles.illustrationContainer}>
+                <Image source={illustration} style={styles.illustration} />
+              </View>
+              <View style={styles.mediumContainer}>
+                <Text style={{ ...texts.default }}>{t('Restaurantes e alimentação')}</Text>
+              </View>
+              <View style={styles.smallContainer}>
+                <Text style={{ ...texts.small }}>{t('Seus preferidos estarão por aqui')}</Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
       <View style={styles.whiteContainer}>
         <ImageBackground source={BG} style={{ height: '100%', width: '100%', flex: 1 }}>
-          <View style={{ paddingHorizontal: 16 }}>
-            <View style={styles.history}>
-              <View style={styles.reqContainer}>
-                <Image source={requests} />
+          <View style={{ paddingHorizontal: 16, flex: 1, justifyContent: 'center' }}>
+            <TouchableOpacity>
+              <View style={{ ...styles.history, justifyContent: 'center' }}>
+                <View style={styles.reqContainer}>
+                  <Image source={requests} />
+                </View>
+                <View style={styles.textContainer}>
+                  <Text style={{ ...texts.default }}>{t('Histórico de pedidos')}</Text>
+                  <Text style={{ ...texts.small, color: colors.darkGrey }}>
+                    {t('Você ainda não fez pedidos')}
+                  </Text>
+                </View>
               </View>
-              <View style={styles.textContainer}>
-                <Text style={{ ...texts.default }}>{t('Histórico de pedidos')}</Text>
-                <Text style={{ ...texts.small, color: colors.darkGrey }}>
-                  {t('Você ainda não fez pedidos')}
-                </Text>
-              </View>
-            </View>
+            </TouchableOpacity>
           </View>
         </ImageBackground>
       </View>
@@ -76,11 +86,6 @@ export default function ConsumerHome() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    // paddingHorizontal: 16
-  },
   greenContainer: {
     width: '100%',
     height: '60%',
@@ -90,13 +95,12 @@ const styles = StyleSheet.create({
   whiteContainer: {
     width: '100%',
     height: '40%',
-    // paddingHorizontal: 16,
   },
   searchBox: {
     flexDirection: 'row',
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: colors.lightGreen,
+    backgroundColor: 'white',
     height: 40,
     width: '66.6%',
     borderWidth: 1,
@@ -105,10 +109,6 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     marginTop: 16,
     alignItems: 'center',
-  },
-  searchText: {
-    ...texts.small,
-    marginLeft: 9,
   },
   containerBigText: {
     width: '100%',
@@ -165,17 +165,16 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   reqContainer: {
-    paddingHorizontal: 16,
+    // paddingHorizontal: 16,
     height: 80,
     width: '20%',
   },
   request: {
     flex: 1,
     resizeMode: 'cover',
-    // justifyContent: "center"
   },
   textContainer: {
-    paddingLeft: 16,
+    // paddingLeft: 16,
     justifyContent: 'center',
   },
 });
