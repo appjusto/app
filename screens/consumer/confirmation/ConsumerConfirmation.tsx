@@ -1,39 +1,59 @@
 import React, { useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
+import { View, StyleSheet, Text, Image } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 import DefaultInput from '../../common/DefaultInput';
 import DefaultButton from '../../common/DefaultButton';
-import ShowIf from '../../common/ShowIf';
 import { t } from '../../../strings';
-// import * as fonts from '../../../assets/fonts';
 import { colors, texts } from '../../common/styles';
+import AvoidingView from '../../common/AvoidingView';
+import { motocycle } from '../../../assets/icons';
 
 const ConsumerConfirmation = () => {
   // context
   const navigation = useNavigation();
   const route = useRoute();
-  const path: string = route.params;
+  // const path: string = route.params;
 
   // state
-  const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [sendAgain, setSendAgain] = useState(false); //just for now
 
-  if (path === 'sms') {
-    //needs refactoring because of the new approach to the KeyboardAvoidingView
+  //needs refactoring because of the new approach to the KeyboardAvoidingView and the Keyboard.dismiss() method
+  if (sendAgain) {
     return (
-      <KeyboardAvoidingView
-        style={styles.screen}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
+      <View style={styles.screen}>
+        <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+          <View style={{ alignItems: 'center', width: '75%' }}>
+            <Text style={{ ...texts.big }}>{t('Enviamos um link de')}</Text>
+            <Text style={{ ...texts.big }}>{t('confirmação para você.')}</Text>
+            <View style={{ height: 114, width: 114, marginTop: 22, marginBottom: 16 }}>
+              <Image source={motocycle} />
+            </View>
+            <Text style={{ ...texts.default, color: colors.darkGrey }}>
+              {t('Continue o acesso usando seu e-mail')}
+            </Text>
+          </View>
+        </View>
+        <DefaultButton
+          title={t('Enviar confirmação novamente')}
+          onPress={() => {
+            setSendAgain(!sendAgain);
+          }}
+          styleObject={{
+            borderStyle: 'solid',
+            borderWidth: 1,
+            borderColor: '#000',
+            backgroundColor: 'white',
+          }}
+        />
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.screen}>
+      <AvoidingView style={{ flex: 1 }}>
         <View style={styles.containerBigText}>
           <Text style={{ ...texts.big }}>
             {t('Um código de acesso foi enviado para o seu número.')}
@@ -53,68 +73,21 @@ const ConsumerConfirmation = () => {
             onPress={() => navigation.navigate('ConsumerRegistration')}
           />
         </DefaultInput>
-        <TouchableOpacity style={styles.tb} onPress={() => setSendAgain(!sendAgain)}>
-          <View style={styles.sendAgain}>
-            <View style={styles.littleCircle} />
-            <Text style={{ ...texts.default, marginLeft: 4 }}>
-              {t('Enviar confirmação novamente')}
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <ShowIf test={sendAgain === true}>
-          {() => (
-            <View style={styles.yellowBox}>
-              <Text style={{ ...texts.small }}>
-                {t('Código enviado com sucesso. Verifique sua caixa de mensagens')}
-              </Text>
-            </View>
-          )}
-        </ShowIf>
-      </KeyboardAvoidingView>
-    );
-  }
-  return (
-    <KeyboardAvoidingView
-      style={styles.screen}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <View style={styles.containerBigText}>
-        <Text style={{ ...texts.big }}>
-          {t('Enviaremos um link de confirmação para o seu e-mail.')}
-        </Text>
-      </View>
-      <DefaultInput
-        title={t('E-mail')}
-        placeholder={t('Digite seu e-mail')}
-        value={email}
-        onChangeText={setEmail}
-        // keyboardType='numeric'
-        blurOnSubmit
-      >
-        <DefaultButton
-          title={t('Enviar')}
-          disabled={code.length === 0}
-          onPress={() => navigation.navigate('ConsumerRegistration')}
-        />
-      </DefaultInput>
-      <TouchableOpacity style={styles.tb} onPress={() => setSendAgain(!sendAgain)}>
-        <View style={styles.sendAgain}>
-          <View style={styles.littleCircle} />
-          <Text style={{ ...texts.default, marginLeft: 4 }}>
-            {t('Enviar confirmação novamente')}
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <ShowIf test={sendAgain === true}>
-        {() => (
-          <View style={styles.yellowBox}>
-            <Text style={{ ...texts.small }}>
-              {t('Link enviado com sucesso. Verifique seu e-mail.')}
-            </Text>
-          </View>
-        )}
-      </ShowIf>
-    </KeyboardAvoidingView>
+      </AvoidingView>
+      <View style={{ flex: 1 }} />
+      <DefaultButton
+        title={t('Enviar confirmação novamente')}
+        onPress={() => {
+          setSendAgain(!sendAgain);
+        }}
+        styleObject={{
+          borderStyle: 'solid',
+          borderWidth: 1,
+          borderColor: '#000',
+          backgroundColor: 'white',
+        }}
+      />
+    </View>
   );
 };
 
@@ -123,6 +96,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
     backgroundColor: colors.lightGrey,
+    marginBottom: 16,
   },
   containerBigText: {
     width: '85%',

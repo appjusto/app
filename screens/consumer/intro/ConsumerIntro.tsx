@@ -36,12 +36,12 @@ export default function ConsumerIntro() {
             <View style={{ paddingHorizontal: padding }}>
               <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
                 <View>
-                  <View style={{ height: 200 }}>
+                  <View style={{ height: 200, marginTop: 30, width: 275 }}>
                     <Image source={illustration} />
                   </View>
 
-                  <View style={{ height: 74, marginTop: 41 }}>
-                    <Image style={{ width: '46.5%', height: 74 }} source={logoWhite} />
+                  <View style={{ height: 80, marginTop: 16, width: '50%' }}>
+                    <Image style={{ width: '100%', height: '100%' }} source={logoWhite} />
                   </View>
 
                   <View style={{ height: 58, marginTop: 16 }}>
