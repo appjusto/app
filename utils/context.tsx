@@ -3,6 +3,7 @@ import * as Linking from 'expo-linking';
 import React, { ReactNode } from 'react';
 import { Provider } from 'react-redux';
 
+import Toast from '../screens/common/Toast';
 import { createStore } from '../store';
 import Api from '../store/api';
 import { getExtra } from './config';
@@ -21,12 +22,17 @@ export interface Props {
 
 export const AppContext = ({ children }: Props) => {
   const linking = {
-    prefixes: [Linking.makeUrl('/'), 'https://appjusto.com.br'],
+    prefixes: [Linking.makeUrl('/'), 'https://link.appjusto.com.br'],
   };
+
+  // UI
   return (
     <ApiContext.Provider value={api}>
       <Provider store={store}>
-        <NavigationContainer linking={linking}>{children}</NavigationContainer>
+        <NavigationContainer linking={linking}>
+          {children}
+          <Toast />
+        </NavigationContainer>
       </Provider>
     </ApiContext.Provider>
   );

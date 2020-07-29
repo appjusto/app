@@ -1,4 +1,4 @@
-import { Coordinates } from "../types";
+import { Coordinates } from '../types';
 
 export enum CourierStatus {
   Unavailable = 'unavailable',
@@ -14,7 +14,8 @@ export interface Courier {
 }
 
 export interface CourierState {
-  courier: Courier;
-  order: object | null;
+  email?: string;
+  courier?: Courier;
+  order?: object;
   availableCouriers: object[];
 }

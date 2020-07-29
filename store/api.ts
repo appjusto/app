@@ -30,11 +30,13 @@ export default class Api {
     }
   }
 
-  signIn(email: string): Promise<void> {
+  sendSignInLinkToEmail(email: string): Promise<void> {
     return firebase.auth().sendSignInLinkToEmail(email, {
       // URL you want to redirect back to. The domain (www.example.com) for this
       // URL must be whitelisted in the Firebase Console.
-      url: 'https://link.appjusto.com.br/app/signin',
+      url: 'https://link.appjusto.com.br/app/join?something=else',
+      // url: `https://exp.host/--/to-exp/${encodeURIComponent('exp://192.168.15.3:19000')}`,
+      // url: `https://exp.host/@appjusto/app-justo-consumer/--/app/join`,
       handleCodeInApp: true,
       iOS: {
         bundleId: this.extra.bundleIdentifier,
@@ -42,10 +44,15 @@ export default class Api {
       android: {
         packageName: this.extra.androidPackage,
         installApp: true,
-        minimumVersion: '12',
       },
-      dynamicLinkDomain: 'appjusto.com.br',
+      dynamicLinkDomain: 'link.appjusto.com.br',
     });
+  }
+
+  async signInWithEmailLink(email: string, link: string) {
+    const auth = firebase.auth();
+    // if (!auth.isSignInWithEmailLink(link)) return null;
+    return auth.signInWithEmailLink(email, link);
   }
 
   updateCourier(courierId: string, changes: object) {

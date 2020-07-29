@@ -1,43 +1,54 @@
-import React, { useState, useContext, useCallback } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableWithoutFeedback,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import React, { useState, useContext, useCallback, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { ApiContext } from '../../../utils/context';
-import DefaultInput from '../../common/DefaultInput';
-import DefaultButton from '../../common/DefaultButton';
-import { t } from '../../../strings';
 import { logoWhite, arrow, illustration } from '../../../assets/icons';
-import { colors, texts, padding, screens } from '../../common/styles';
+import useDeepLink, { DeepLinkState } from '../../../hooks/useDeepLink';
+import { signInWithEmail } from '../../../store/actions/consumer';
+import { showToast } from '../../../store/actions/ui';
+import { getEnv } from '../../../store/selectors/config';
+import { t } from '../../../strings';
+import { ApiContext } from '../../../utils/context';
 import { validateEmail } from '../../../utils/validators';
 import AvoidingView from '../../common/AvoidingView';
+import DefaultButton from '../../common/DefaultButton';
+import DefaultInput from '../../common/DefaultInput';
+import { colors, texts, padding, screens } from '../../common/styles';
 
 export default function ConsumerIntro() {
   // context
   const api = useContext(ApiContext);
+  const dispatch = useDispatch();
   const navigation = useNavigation();
-  
+
   // state
-  const [email, setEmail] = useState('');
+  const dev = useSelector(getEnv) === 'development';
+  const [email, setEmail] = useState(dev ? 'pdandradeb@gmail.com' : '');
 
   // handlers
-  const signInWithEmail = useCallback(async () => {
+  const signInHandler = useCallback(async () => {
     if (validateEmail(email).status === 'ok') {
-      await api.signIn(email);
-    }
-    else {
+      // dispatch(showToast(t('Enviando link de autenticação para o seu e-mail...')));
+      await dispatch(signInWithEmail(api)(email));
+      dispatch(showToast(t('Pronto! Acesse seu e-mail e clique no link recebido.')));
+    } else {
       // TODO: handle error
     }
   }, [email]);
 
+  // side effects
+  const result = useDeepLink();
+  useEffect(() => {
+    console.log('useEffect');
+    if (result === DeepLinkState.Invalid) {
+      dispatch(
+        showToast(t('Houve um problema na autenticação. Digite seu e-mail novamente.'), 'error')
+      );
+    }
+  }, [result]);
+
+  // UI
   return (
     <View style={[screens.default, { marginBottom: 0 }]}>
       <View style={{ flex: 1 }}>
@@ -45,21 +56,25 @@ export default function ConsumerIntro() {
           <View style={{ flex: 1, justifyContent: 'flex-end' }}>
             <View style={{ paddingHorizontal: padding }}>
               <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-               <View>
+                <View>
                   <View style={{ height: 200 }}>
                     <Image source={illustration} />
                   </View>
-                
+
                   <View style={{ height: 74, marginTop: 41 }}>
                     <Image style={{ width: '46.5%', height: 74 }} source={logoWhite} />
                   </View>
 
                   <View style={{ height: 58, marginTop: 16 }}>
-                    <Text style={[texts.big]}>{t('Somos um delivery aberto, transparente e consciente.')}</Text>
+                    <Text style={[texts.big]}>
+                      {t('Somos um delivery aberto, transparente e consciente.')}
+                    </Text>
                   </View>
 
-                  <View style={{ width: '85%', height: 58, marginVertical: 16}}>
-                    <Text style={[texts.default, { color: colors.darkGrey }]}>{t('A plataforma de entregas mais justa, transparente e aberta disponível.')}</Text>
+                  <View style={{ width: '85%', height: 58, marginVertical: 16 }}>
+                    <Text style={[texts.default, { color: colors.darkGrey }]}>
+                      {t('A plataforma de entregas mais justa, transparente e aberta disponível.')}
+                    </Text>
                   </View>
                 </View>
               </TouchableWithoutFeedback>
@@ -69,14 +84,14 @@ export default function ConsumerIntro() {
                 title={t('Acesse sua conta')}
                 placeholder={t('Digite seu e-mail')}
                 onChangeText={setEmail}
-                keyboardType='email-address'
+                keyboardType="email-address"
                 blurOnSubmit
                 autoCapitalize="none"
               >
                 <DefaultButton
                   disabled={email.length === 0}
                   title={t('Entrar')}
-                  onPress={signInWithEmail}
+                  onPress={signInHandler}
                 />
               </DefaultInput>
 
@@ -85,7 +100,7 @@ export default function ConsumerIntro() {
             </View>
 
             <View style={{ flex: 1 }} />
-              
+
             {/* sign up */}
             <View style={styles.bottomContainer}>
               <View style={styles.innerContainer}>

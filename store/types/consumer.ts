@@ -5,6 +5,7 @@ export interface Consumer {
 }
 
 export interface ConsumerState {
-  consumer: Consumer;
-  ongoingOrders: object[] | null;
+  email?: string;
+  consumer?: Consumer;
+  ongoingOrders?: object[];
 }

@@ -1,13 +1,9 @@
-import * as actionTypes from '../actionTypes';
 import { AnyAction } from 'redux';
-import { CourierState, CourierStatus } from '../types/courier';
+
+import * as actionTypes from '../actionTypes';
+import { CourierState, Courier } from '../types/courier';
 
 const initialState: CourierState = {
-  courier: {
-    id: 'courier-1',
-    status: CourierStatus.Unavailable,
-  },
-  order: null,
   availableCouriers: [],
 };
 
@@ -19,13 +15,12 @@ export default function (state: CourierState = initialState, action: AnyAction):
       return { ...state, courier: { ...state.courier, ...payload } };
     }
     case actionTypes.SET_LOCATION: {
-      return { ...state, courier: { ...state.courier, location: payload.coords } };
-    }    
+      return { ...state, courier: { ...state.courier, location: payload.coords } as Courier };
+    }
     case actionTypes.AVAILABLE_COURIERS_UPDATED: {
       return { ...state, availableCouriers: payload };
     }
     default:
       return state;
   }
-  
 }
