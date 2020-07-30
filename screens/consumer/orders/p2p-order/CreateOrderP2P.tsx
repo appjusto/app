@@ -10,7 +10,7 @@ import {
   TouchableWithoutFeedback,
   Text,
 } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { motocycle } from '../../../../assets/icons';
 import useLocationUpdates from '../../../../hooks/useLocationUpdates';
@@ -25,6 +25,7 @@ import Touchable from '../../../common/Touchable';
 import { screens, borders, texts } from '../../../common/styles';
 import OrderMap from './OrderMap';
 import OrderSummary from './OrderSummary';
+import { showToast } from '../../../../store/actions/ui';
 
 // import * as fixtures from '../../../../store/fixtures'; // testing only
 
@@ -36,8 +37,8 @@ enum Steps {
 }
 
 const placeValid = (place: Place): boolean => {
-  return orderValid(null);
-  // return !!place && !!place.address; // TODO: improve place validation
+  // TODO: improve place validation
+  return !!place && !!place.address;
 };
 
 const orderValid = (order: Order | null): boolean => {
@@ -51,13 +52,14 @@ export default function () {
   const navigation = useNavigation();
   const route = useRoute();
   const api = useContext(ApiContext);
+  const dispatch = useDispatch();
   const { params } = route;
-  const locationPermission = useLocationUpdates(true);
 
   // refs
   const viewPager = useRef<ViewPager>();
 
   // state
+  const locationPermission = useLocationUpdates(true);
   const currentLocation = useSelector(getConsumerLocation);
 
   const [step, setStep] = useState(Steps.Origin);
@@ -99,7 +101,7 @@ export default function () {
     } else if (nextStep === Steps.Confirmation) {
       if (order) nextPage();
       else {
-        // TODO: alert that order is being created and when it is, go to next step automatically
+        dispatch(showToast(t('Aguarde enquanto fazemos a cotação...')));
       }
     } else if (nextStep === Steps.ConfirmingOrder) {
       const confirmationResult = await api.confirmOrder(order!.id, 'YY7ED5T2geh0iSmRS9FZ');
@@ -131,7 +133,6 @@ export default function () {
     const createOrder = async () => {
       console.log('creating order');
       const newOrder = await api.createOrder(origin, destination);
-      console.log(newOrder);
       setOrder(newOrder);
     };
 
@@ -146,6 +147,12 @@ export default function () {
     }
   }, [origin, destination]);
 
+  // whenever order changes
+  useEffect(() => {
+    if (!order) return;
+    nextPage();
+  }, [order]);
+
   // UI
   let nextStepTitle;
   if (step === 0) nextStepTitle = t('Confirmar local de retirada');
@@ -159,7 +166,14 @@ export default function () {
         {/* when order hasn't been created yet  */}
         <ShowIf test={!orderValid(order)}>
           {() => (
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
               <View style={{ width: '40%' }}>
                 <Text style={{ ...texts.big }}>{t('Transportar Encomendas')}</Text>
               </View>
