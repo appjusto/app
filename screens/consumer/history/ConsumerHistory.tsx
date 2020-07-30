@@ -18,9 +18,7 @@ const ConsumerHistory = () => {
           }}
         >
           <Image source={calendar} />
-          <Text style={{ ...texts.medium, marginLeft: 8 }}>
-            {t('Agosto, 2020')}
-          </Text>
+          <Text style={{ ...texts.medium, marginLeft: 8 }}>{t('Agosto, 2020')}</Text>
         </View>
       </View>
       <View style={[styles.border, { marginTop: 16 }]}>
@@ -34,9 +32,7 @@ const ConsumerHistory = () => {
           >
             <View>
               <Text style={{ ...texts.default }}>{t('Rua Augusta, 901')}</Text>
-              <Text style={{ ...texts.default, color: colors.darkGrey }}>
-                {t('Pedido No 1')}
-              </Text>
+              <Text style={{ ...texts.default, color: colors.darkGrey }}>{t('Pedido No 1')}</Text>
               <Text style={{ ...texts.default, color: colors.darkGrey }}>
                 {t('10/07/2020 - 12h30')}
               </Text>
@@ -74,7 +70,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: 24,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
 });
 

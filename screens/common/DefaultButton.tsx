@@ -10,15 +10,13 @@ export interface Props extends ButtonProps {
 
 export default function ({ title, disabled, styleObject, wide, ...props }: Props) {
   return (
-    <TouchableOpacity
-      {...props}
-    >
+    <TouchableOpacity {...props}>
       <View
         style={{
           ...style.buttonContainer,
-          ...styleObject,
           backgroundColor: disabled ? colors.darkGrey : colors.green,
-          paddingHorizontal: wide ? 56 : 24
+          paddingHorizontal: wide ? 56 : 24,
+          ...styleObject,
         }}
       >
         <Text style={{ ...style.text, color: disabled ? colors.white : colors.black }}>

@@ -8,6 +8,7 @@ import {
   Dimensions,
   NativeSyntheticEvent,
   TouchableWithoutFeedback,
+  Text,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 
@@ -21,7 +22,7 @@ import DefaultButton from '../../../common/DefaultButton';
 import DefaultInput from '../../../common/DefaultInput';
 import ShowIf from '../../../common/ShowIf';
 import Touchable from '../../../common/Touchable';
-import { screens, borders } from '../../../common/styles';
+import { screens, borders, texts } from '../../../common/styles';
 import OrderMap from './OrderMap';
 import OrderSummary from './OrderSummary';
 
@@ -152,13 +153,16 @@ export default function () {
   else if (step === 2) nextStepTitle = t('Fazer pedido');
 
   return (
-    <View style={style.screen}>
+    <View style={{ ...screens.default }}>
       {/* header */}
       <View style={style.header}>
         {/* when order hasn't been created yet  */}
         <ShowIf test={!orderValid(order)}>
           {() => (
-            <View>
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <View style={{ width: '40%' }}>
+                <Text style={{ ...texts.big }}>{t('Transportar Encomendas')}</Text>
+              </View>
               <Image source={motocycle} />
             </View>
           )}
@@ -184,7 +188,7 @@ export default function () {
           {/* origin step */}
           <View>
             <TouchableWithoutFeedback onPress={navigateToAddressComplete}>
-              <View>
+              <View style={{ flex: 1 }}>
                 <DefaultInput
                   style={style.input}
                   value={origin.address}
@@ -258,13 +262,11 @@ export default function () {
 const { width, height } = Dimensions.get('window');
 
 const style = StyleSheet.create({
-  screen: {
-    ...screens.default,
-  },
   header: {
     width,
     height: height * 0.3,
     justifyContent: 'space-between',
+    paddingHorizontal: 16,
   },
   details: {
     flex: 1,

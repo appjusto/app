@@ -70,23 +70,24 @@ const Profile = () => {
   );
 };
 
+const HomeStack = createStackNavigator();
+function Home() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen name="ConsumerHome" component={ConsumerHome} />
+      <HomeStack.Screen name="CreateOrderP2P" component={CreateOrderP2P} />
+    </HomeStack.Navigator>
+  );
+}
+
 const LoggedNavigator = createBottomTabNavigator();
 function Logged() {
   return (
     <LoggedNavigator.Navigator>
-      <LoggedNavigator.Screen name="ConsumerHome" component={ConsumerHome} />
+      <LoggedNavigator.Screen name="Home" component={Home} />
       <LoggedNavigator.Screen name="ConsumerHistory" component={History} />
       <LoggedNavigator.Screen name="Profile" component={Profile} options={{ title: 'Sua conta' }} />
     </LoggedNavigator.Navigator>
-  );
-}
-
-const CreateOrderNavigator = createStackNavigator();
-function CreateOrder() {
-  return (
-    <CreateOrderNavigator.Navigator>
-      <CreateOrderNavigator.Screen name="CreateOrderP2P" component={CreateOrderP2P} />
-    </CreateOrderNavigator.Navigator>
   );
 }
 
@@ -112,7 +113,7 @@ export default function () {
         }}
       />
       <RootNavigator.Screen name="Logged" component={Logged} />
-      <RootNavigator.Screen name="CreateOrder" component={CreateOrder} />
+      {/* <RootNavigator.Screen name="CreateOrder" component={CreateOrder} /> */}
       <RootNavigator.Screen name="AddressComplete" component={AddressComplete} />
     </RootNavigator.Navigator>
   );
