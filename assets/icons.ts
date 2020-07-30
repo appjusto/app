@@ -7,7 +7,7 @@ const iconEdit = require('./icons/icon-edit.png');
 const iconErase = require('./icons/icon-erase.png');
 const iconMotocycleWhite = require('./icons/icon-motocycle-white.png');
 const iconMotocycle = require('./icons/icon-motocycle.png');
-const iconNavigation = require('./icons/icon-navigation.png');
+const iconNavigationArrow = require('./icons/icon-navigation.png');
 const iconPinPackage = require('./icons/icon-pin-package.png');
 const iconPinUser = require('./icons/icon-pin-user.png');
 const iconRequests = require('./icons/icon-requests.png');
@@ -23,7 +23,7 @@ export const pinPackage = iconPinPackage;
 export const arrowBack = iconArrow;
 export const checkboxInactive = iconCheckboxInactive;
 export const checkboxActive = iconCheckboxActive;
-export const navigation = iconNavigation;
+export const navigationArrow = iconNavigationArrow;
 export const motocycle = iconMotocycle;
 export const motocycleWhite = iconMotocycleWhite;
 export const edit = iconEdit;
@@ -42,7 +42,7 @@ export default [
   arrowBack,
   checkboxInactive,
   checkboxActive,
-  navigation,
+  navigationArrow,
   motocycle,
   motocycleWhite,
   edit,

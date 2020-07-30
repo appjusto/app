@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-import DefaultButton from '../../common/DefaultButton';
 import { t } from '../../../strings';
+import DefaultButton from '../../common/DefaultButton';
 import { colors, texts, screens } from '../../common/styles';
 
-const ProfileErase = ({navigation}) => {
+const ProfileErase = ({ navigation }) => {
   return (
     <View style={{ ...screens.lightGrey }}>
       <Text style={{ ...texts.big, marginTop: 16 }}>
@@ -19,19 +19,20 @@ const ProfileErase = ({navigation}) => {
       <View style={{ flex: 1 }} />
       <View>
         <DefaultButton
-          style={{ width: '100%', marginBottom: 8 }}
+          styleObject={{ width: '100%', marginBottom: 8 }}
           title={t('Manter minha conta')}
         />
         <DefaultButton
           disabled
           title={t('Tenho certeza, pode excluir')}
-          style={{ marginBottom: 16 }}
-          onPress={()=>{navigation.navigate('EraseConfirmed')}}
+          styleObject={{ marginBottom: 16 }}
+          onPress={() => {
+            navigation.navigate('EraseConfirmed');
+          }}
         />
       </View>
     </View>
   );
 };
-
 
 export default ProfileErase;

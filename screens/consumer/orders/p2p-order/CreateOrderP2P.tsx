@@ -10,11 +10,11 @@ import {
   TouchableWithoutFeedback,
   Text,
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { motocycle } from '../../../../assets/icons';
 import useLocationUpdates from '../../../../hooks/useLocationUpdates';
-import { getConsumerLocation } from '../../../../store/selectors/consumer';
+import { showToast } from '../../../../store/actions/ui';
 import { Place, Order } from '../../../../store/types';
 import { t } from '../../../../strings';
 import { ApiContext } from '../../../../utils/context';
@@ -25,7 +25,6 @@ import Touchable from '../../../common/Touchable';
 import { screens, borders, texts } from '../../../common/styles';
 import OrderMap from './OrderMap';
 import OrderSummary from './OrderSummary';
-import { showToast } from '../../../../store/actions/ui';
 
 // import * as fixtures from '../../../../store/fixtures'; // testing only
 
@@ -60,7 +59,6 @@ export default function () {
 
   // state
   const locationPermission = useLocationUpdates(true);
-  const currentLocation = useSelector(getConsumerLocation);
 
   const [step, setStep] = useState(Steps.Origin);
   const [origin, setOrigin] = useState<Place>({} as Place);

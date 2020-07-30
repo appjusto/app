@@ -4,3 +4,8 @@ export type UnloggedStackParamList = {
   // ConsumerRegistration: undefined;
   Terms: undefined;
 };
+
+export type HomeStackParamList = {
+  ConsumerHome: undefined;
+  CreateOrderP2P: undefined;
+};

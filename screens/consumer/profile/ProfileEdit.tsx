@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import {
   View,
   Text,
@@ -9,8 +9,14 @@ import {
   Image,
   Keyboard,
 } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 
+import { erase } from '../../../assets/icons';
+import { updateConsumer } from '../../../store/actions/consumer';
+import { showToast } from '../../../store/actions/ui';
+import { getConsumer } from '../../../store/selectors/consumer';
 import { t } from '../../../strings';
+import { ApiContext, AppDispatch } from '../../../utils/context';
 import AvoidingView from '../../common/AvoidingView';
 import CheckField from '../../common/CheckField';
 import DefaultButton from '../../common/DefaultButton';
@@ -20,18 +26,39 @@ import { colors, texts, screens } from '../../common/styles';
 const ProfileEdit = () => {
   // context
   const navigation = useNavigation();
+  const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
 
   // state
-  const [isChecked, setIsChecked] = useState(false);
-  const toggleCheckBox = () => {
-    setIsChecked(!isChecked);
-  };
-  const [name, setName] = useState('');
+  const consumer = useSelector(getConsumer);
+  const [updating, setUpdating] = useState(false);
+  const [name, setName] = useState<string>(consumer?.name ?? '');
   const [surname, setSurname] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [cpf, setCpf] = useState('');
+  const [acceptMarketing, setAcceptMarketing] = useState(false);
 
+  // handlers
+  const toggleAcceptMarketing = useCallback(() => {
+    setAcceptMarketing(!acceptMarketing);
+  }, [acceptMarketing]);
+
+  const updateConsumerHandler = async () => {
+    setUpdating(true);
+    dispatch(showToast(t('Atualizando cadastro...')));
+    await updateConsumer(api)(consumer!.id, {
+      name,
+      surname,
+      phone,
+      email,
+      cpf,
+      acceptMarketing,
+    });
+    navigation.goBack();
+  };
+
+  // UI
   return (
     <View style={{ ...screens.lightGrey, marginBottom: 0 }}>
       <View style={{ flex: 1 }}>
@@ -71,8 +98,8 @@ const ProfileEdit = () => {
               </View>
               <CheckField
                 marginTop={16}
-                checked={isChecked}
-                onPress={toggleCheckBox}
+                checked={acceptMarketing}
+                onPress={toggleAcceptMarketing}
                 text={t('Aceito receber comunicações e ofertas')}
               />
               <View style={{ flex: 1 }} />
@@ -80,14 +107,8 @@ const ProfileEdit = () => {
                 <DefaultButton
                   wide
                   title={t('Atualizar')}
-                  disabled={
-                    name.length === 0 ||
-                    surname.length === 0 ||
-                    phone.length === 0 ||
-                    email.length === 0 ||
-                    cpf.length === 0
-                  }
-                  onPress={() => {}}
+                  disabled={updating}
+                  onPress={updateConsumerHandler}
                 />
                 <TouchableOpacity onPress={() => navigation.navigate('ProfileErase')}>
                   <View style={styles.eraseContainer}>

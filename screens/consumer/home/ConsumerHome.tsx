@@ -1,27 +1,45 @@
-import React from 'react';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useEffect, useContext } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Image, ImageBackground } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-// import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-// import { getOngoingOrders } from '../../../store/selectors/consumer';
-import { colors, texts } from '../../common/styles';
-import { navigation, illustration, BG, requests } from '../../../assets/icons';
+import { navigationArrow, illustration, BG, requests } from '../../../assets/icons';
+import useAuth from '../../../hooks/useAuth';
+import { watchConsumer } from '../../../store/actions/consumer';
 import { t } from '../../../strings';
+import { AppDispatch, ApiContext } from '../../../utils/context';
+import { colors, texts } from '../../common/styles';
+import { HomeStackParamList } from '../types';
 
-export default function ConsumerHome() {
+type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'ConsumerHome'>;
+type ScreenRouteProp = RouteProp<HomeStackParamList, 'ConsumerHome'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
+
+export default function ConsumerHome({ navigation }: Props) {
   // context
-  const navigation = useNavigation();
-  // const dispatch = useDispatch();
+  const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
 
   // state
-  // const ongoingOrders = useSelector(getOngoingOrders);
+  const [authState, user] = useAuth();
 
+  // side effects
+  useEffect(() => {
+    if (!user) return;
+    return dispatch(watchConsumer(api)(user.uid));
+  }, [user]);
+
+  // UI
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
-      {/* <Text># of ongoing orders: {ongoingOrders.length}</Text> */}
       <View style={styles.greenContainer}>
         <View style={styles.searchBox}>
-          <Image source={navigation} />
+          <Image source={navigationArrow} />
           <Text style={{ ...texts.small, marginLeft: 9 }}>
             {t('Avenida Paulista, São Paulo, SP')}
           </Text>

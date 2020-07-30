@@ -19,7 +19,7 @@ import ProfileEdit from './profile/ProfileEdit';
 import ProfileErase from './profile/ProfileErase';
 // import ConsumerRegistration from './registration/ConsumerRegistration';
 import Terms from './terms-of-use/Terms';
-import { UnloggedStackParamList } from './types';
+import { UnloggedStackParamList, HomeStackParamList } from './types';
 
 const UnloggedStack = createStackNavigator<UnloggedStackParamList>();
 function Unlogged() {
@@ -75,7 +75,7 @@ const Profile = () => {
   );
 };
 
-const HomeStack = createStackNavigator();
+const HomeStack = createStackNavigator<HomeStackParamList>();
 function Home() {
   return (
     <HomeStack.Navigator>
