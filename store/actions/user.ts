@@ -4,9 +4,9 @@ import { Dispatch } from 'redux';
 import * as actionTypes from '../actionTypes';
 import Api from '../api';
 
-export const observeSignIn = (api: Api) => (flavor: string) => (dispatch: Dispatch<any>) => {
-  const unsubscribe = api.observeSignIn((user) => {
-    if (user) dispatch({ type: actionTypes.USER_LOGGED_IN, payload: { user, flavor } });
+export const observeAuthState = (api: Api) => (dispatch: Dispatch<any>) => {
+  const unsubscribe = api.observeAuthState((user) => {
+    if (user) dispatch({ type: actionTypes.USER_LOGGED_IN, payload: user });
     else dispatch({ type: actionTypes.USER_LOGGED_OUT });
   });
   return unsubscribe;

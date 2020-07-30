@@ -4,8 +4,8 @@ import { View, Text, StyleSheet, Image, TouchableWithoutFeedback, Keyboard } fro
 import { useDispatch, useSelector } from 'react-redux';
 
 import { logoWhite, arrow, illustration } from '../../../assets/icons';
-import { signInWithEmail } from '../../../store/actions/consumer';
 import { showToast } from '../../../store/actions/ui';
+import { signInWithEmail } from '../../../store/actions/user';
 import { getEnv } from '../../../store/selectors/config';
 import { t } from '../../../strings';
 import { ApiContext } from '../../../utils/context';

@@ -3,18 +3,18 @@ import { useEffect, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
-  observeSignIn,
+  observeAuthState,
   getSignInEmail,
   isSignInWithEmailLink,
   signInWithEmailLink,
-} from '../store/actions/consumer';
-import { getFlavor } from '../store/selectors/config';
+} from '../store/actions/user';
+import { getUser } from '../store/selectors/user';
 import { ApiContext } from '../utils/context';
 import useDeepLink from './useDeepLink';
 
 export enum AuthState {
   Checking = 'checking',
-  NoCredentials = 'no-credentials',
+  Unsigned = 'unsigned',
   SigningIn = 'signing-in',
   SignedIn = 'signed-in',
   InvalidCredentials = 'invalid-credentials',
@@ -26,26 +26,27 @@ export default function () {
   const dispatch = useDispatch();
 
   // state
-  const flavor = useSelector(getFlavor);
-  const auth = useSelector((state) => {
-    if (flavor === 'consumer') return state.consumer.auth;
-    return state.courier.auth;
-  });
+  const user = useSelector(getUser);
   const [authState, setAuthState] = useState<AuthState>(AuthState.Checking);
-  const [user, setUser] = useState<firebase.User | null>(null);
 
   // side effects
   // once
   useEffect(() => {
-    dispatch(observeSignIn(api)(flavor));
+    const unsubscribe = dispatch(observeAuthState(api));
+    return () => {
+      console.log('unsubscribe');
+      console.log(unsubscribe);
+      unsubscribe(); // dispatch is probably returning wrong type here.
+    };
   }, []);
 
   // whenever auth changes
   useEffect(() => {
-    if (!auth) return;
-    setUser(auth);
-    setAuthState(AuthState.SignedIn);
-  }, [auth]);
+    if (user) setAuthState(AuthState.SignedIn);
+    else if (authState === AuthState.SignedIn) {
+      setAuthState(AuthState.Unsigned);
+    }
+  }, [user]);
 
   // whenever deeplink changes
   const deepLink = useDeepLink();
@@ -59,8 +60,7 @@ export default function () {
           setAuthState(AuthState.InvalidCredentials);
         } else {
           try {
-            setUser(await signInWithEmailLink(api)(email, link));
-            setAuthState(AuthState.SignedIn);
+            await signInWithEmailLink(api)(email, link);
             const continueUrl = Linking.parse(link).queryParams?.continueUrl;
             console.log('continueUrl:', continueUrl);
           } catch (e) {

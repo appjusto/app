@@ -35,7 +35,7 @@ export default class Api {
 
   // authentication
 
-  observeSignIn(handler: (a: firebase.User | null) => any): firebase.Unsubscribe {
+  observeAuthState(handler: (a: firebase.User | null) => any): firebase.Unsubscribe {
     const auth = firebase.auth();
     const unsubscribe = auth.onAuthStateChanged(handler);
     return unsubscribe;

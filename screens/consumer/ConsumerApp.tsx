@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
 
+import useAuth, { AuthState } from '../../hooks/useAuth';
 import AddressComplete from '../common/AddressComplete';
 import ConsumerConfirmation from './confirmation/ConsumerConfirmation';
 import ConsumerHistory from './history/ConsumerHistory';
@@ -14,7 +15,6 @@ import ProfileEdit from './profile/ProfileEdit';
 import ProfileErase from './profile/ProfileErase';
 import ConsumerRegistration from './registration/ConsumerRegistration';
 import Terms from './terms-of-use/Terms';
-import useAuth, { AuthState } from '../../hooks/useAuth';
 
 const UnloggedStack = createStackNavigator();
 function Unlogged() {
@@ -94,14 +94,12 @@ function Logged() {
 const RootNavigator = createStackNavigator();
 export default function () {
   // side effects
-  const [authState, user] = useAuth();
-  useEffect(() => {
-    console.log('useEffect:', authState, user);
-  }, [authState, user]);
-
+  const [authState] = useAuth();
   // UI
+  // show nothing while checking credentials
   if (authState === AuthState.Checking || authState === AuthState.SigningIn) return null;
 
+  // switch between logged and unlogged stacks
   const initialRouteName = authState === AuthState.SignedIn ? 'Logged' : 'Unlogged';
   return (
     <RootNavigator.Navigator mode="modal" initialRouteName={initialRouteName}>
