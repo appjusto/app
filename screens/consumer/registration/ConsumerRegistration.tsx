@@ -1,14 +1,12 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { View, Platform, StyleSheet, KeyboardAvoidingView, Text } from 'react-native';
 
-import DefaultInput from '../../common/DefaultInput';
-import DefaultButton from '../../common/DefaultButton';
-
-import CheckField from '../../common/CheckField';
 import { t } from '../../../strings';
+import CheckField from '../../common/CheckField';
+import DefaultButton from '../../common/DefaultButton';
+import DefaultInput from '../../common/DefaultInput';
 import { colors, texts } from '../../common/styles';
-import { checkboxActive, checkboxInactive } from '../../../assets/icons';
-import { useNavigation } from '@react-navigation/native';
 
 const ConsumerRegistration = () => {
   // context
@@ -34,27 +32,24 @@ const ConsumerRegistration = () => {
         </Text>
       </View>
       <View style={{ marginHorizontal: 16, marginBottom: 12 }}>
-        <DefaultInput title={t('Nome')} placeholder={t('Qual o seu nome?')} />
+        <DefaultInput title={t('Nome e sobrenome')} placeholder={t('Qual o seu nome?')} />
       </View>
       <View style={{ marginHorizontal: 16, marginBottom: 12 }}>
-        <DefaultInput title={t('Sobrenome')} placeholder={t('Qual o seu sobrenome?')} />
+        <DefaultInput title={t('Celular')} placeholder={t('Qual é o número do seu celular?')} />
       </View>
       <View style={{ marginHorizontal: 16, marginBottom: 12 }}>
-        <DefaultInput title={t('Celular')} placeholder={t('Qual o seu número?')} />
-      </View>
-      <View style={{ marginHorizontal: 16, marginBottom: 12 }}>
-        <DefaultInput title={t('E-mail')} placeholder={t('Qual o seu email?')} />
+        <DefaultInput title={t('E-mail')} placeholder={t('Qual é seu endereço de email?')} />
       </View>
       <View style={{ paddingHorizontal: 16, flex: 1 }}>
         <CheckField
           marginTop={12}
-          source={acceptedTerms ? checkboxActive : checkboxInactive}
+          checked={acceptedTerms}
           onPress={() => setAcceptTerms(!acceptedTerms)}
           text={t('Aceito os termos de uso e a política de privacidade')}
         />
         <CheckField
           marginTop={12}
-          source={acceptedMarketing ? checkboxActive : checkboxInactive}
+          checked={acceptedMarketing}
           onPress={() => setAcceptMarketing(!acceptedMarketing)}
           text={t('Aceito receber comunicações e ofertas')}
         />

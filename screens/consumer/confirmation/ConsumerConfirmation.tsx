@@ -1,14 +1,16 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, Image } from 'react-native';
 import { useDispatch } from 'react-redux';
 
-import { motocycle } from '../../../assets/icons';
+import { motocycle, navigation } from '../../../assets/icons';
+import useAuth, { AuthState } from '../../../hooks/useAuth';
 import { showToast } from '../../../store/actions/ui';
 import { signInWithEmail } from '../../../store/actions/user';
 import { t } from '../../../strings';
 import { ApiContext } from '../../../utils/context';
+import { userDataPending } from '../../../utils/validators';
 import DefaultButton from '../../common/DefaultButton';
 import { colors, texts, borders, screens } from '../../common/styles';
 import { UnloggedStackParamList } from '../types';
@@ -24,11 +26,19 @@ type Props = {
   route: ConsumerConfirmationRouteProp;
 };
 
-export default ({ route }: Props) => {
+export default ({ navigation, route }: Props) => {
   // context
   const api = useContext(ApiContext);
   const { params } = route;
   const dispatch = useDispatch();
+
+  // state
+  const [authState, user] = useAuth();
+  useEffect(() => {
+    if (authState === AuthState.SignedIn && user && userDataPending(user)) {
+      navigation.navigate('ConsumerRegistration');
+    }
+  }, [authState, user]);
 
   // handlers
   const resendLink = (): void => {
@@ -37,6 +47,10 @@ export default ({ route }: Props) => {
   };
 
   // UI
+  if (authState === AuthState.SignedIn) {
+    return null;
+  }
+
   return (
     <View style={[screens.padded, { backgroundColor: colors.lightGrey }]}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

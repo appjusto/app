@@ -1,15 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useState, useContext, useCallback, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { logoWhite, arrow, illustration } from '../../../assets/icons';
+import useAuth, { AuthState } from '../../../hooks/useAuth';
 import { showToast } from '../../../store/actions/ui';
 import { signInWithEmail } from '../../../store/actions/user';
 import { getEnv } from '../../../store/selectors/config';
 import { t } from '../../../strings';
 import { ApiContext } from '../../../utils/context';
-import { validateEmail } from '../../../utils/validators';
+import { validateEmail, userDataPending } from '../../../utils/validators';
 import AvoidingView from '../../common/AvoidingView';
 import DefaultButton from '../../common/DefaultButton';
 import DefaultInput from '../../common/DefaultInput';
@@ -25,6 +26,16 @@ export default function ConsumerIntro() {
   const dev = useSelector(getEnv) === 'development';
   const [email, setEmail] = useState(dev ? 'pdandradeb@gmail.com' : '');
   const [sendingLink, setSendingLink] = useState(false);
+  const [authState, user] = useAuth();
+
+  // side effects
+  useEffect(() => {
+    if (!user) return;
+    if (authState !== AuthState.SignedIn) return;
+    if (userDataPending(user)) {
+      navigation.navigate('ConsumerRegistration');
+    }
+  }, [authState, user]);
 
   // handlers
   const signInHandler = useCallback(async () => {

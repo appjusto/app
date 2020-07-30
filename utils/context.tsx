@@ -37,3 +37,5 @@ export const AppContext = ({ children }: Props) => {
     </ApiContext.Provider>
   );
 };
+
+export type AppDispatch = typeof store.dispatch;

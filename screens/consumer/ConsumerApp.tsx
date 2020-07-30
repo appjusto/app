@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import useAuth, { AuthState } from '../../hooks/useAuth';
 import { showToast } from '../../store/actions/ui';
 import { t } from '../../strings';
+import { userDataPending } from '../../utils/validators';
 import AddressComplete from '../common/AddressComplete';
 import ConsumerConfirmation from './confirmation/ConsumerConfirmation';
 import ConsumerHistory from './history/ConsumerHistory';
@@ -23,7 +24,7 @@ import { UnloggedStackParamList } from './types';
 const UnloggedStack = createStackNavigator<UnloggedStackParamList>();
 function Unlogged() {
   return (
-    <UnloggedStack.Navigator initialRouteName="ConsumerIntro">
+    <UnloggedStack.Navigator>
       <UnloggedStack.Screen
         name="ConsumerIntro"
         component={ConsumerIntro}
@@ -103,7 +104,6 @@ export default function () {
   // side effects
   const [authState, user] = useAuth();
   useEffect(() => {
-    console.log('useEffect:', authState, user);
     if (authState === AuthState.InvalidCredentials) {
       dispatch(showToast(t('Sua sessão expirou. Faça login novamente.')));
     }
@@ -114,7 +114,8 @@ export default function () {
   if (authState === AuthState.Checking || authState === AuthState.SigningIn) return null;
 
   // unlogged stack
-  if (authState !== AuthState.SignedIn) {
+  // (or logged but before completed the signin)
+  if (authState !== AuthState.SignedIn || userDataPending(user)) {
     return (
       <RootNavigator.Navigator mode="modal">
         <RootNavigator.Screen
@@ -129,14 +130,11 @@ export default function () {
   }
 
   // logged stack
-  user?.displayName;
-  if (authState === AuthState.SignedIn) {
-    return (
-      <RootNavigator.Navigator mode="modal">
-        <RootNavigator.Screen name="Logged" component={Logged} />
-        {/* <RootNavigator.Screen name="CreateOrder" component={CreateOrder} /> */}
-        <RootNavigator.Screen name="AddressComplete" component={AddressComplete} />
-      </RootNavigator.Navigator>
-    );
-  }
+  return (
+    <RootNavigator.Navigator mode="modal">
+      <RootNavigator.Screen name="Logged" component={Logged} />
+      {/* <RootNavigator.Screen name="CreateOrder" component={CreateOrder} /> */}
+      <RootNavigator.Screen name="AddressComplete" component={AddressComplete} />
+    </RootNavigator.Navigator>
+  );
 }
