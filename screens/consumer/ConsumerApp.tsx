@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import useAuth, { AuthState } from '../../hooks/useAuth';
 import { showToast } from '../../store/actions/ui';
 import { t } from '../../strings';
-import { userDataPending } from '../../utils/validators';
+// import { userDataPending } from '../../utils/validators';
 import AddressComplete from '../common/AddressComplete';
 import ConsumerConfirmation from './confirmation/ConsumerConfirmation';
 import ConsumerHistory from './history/ConsumerHistory';
@@ -17,7 +17,7 @@ import ConsumerProfile from './profile/ConsumerProfile';
 import EraseConfirmed from './profile/EraseConfirmed';
 import ProfileEdit from './profile/ProfileEdit';
 import ProfileErase from './profile/ProfileErase';
-import ConsumerRegistration from './registration/ConsumerRegistration';
+// import ConsumerRegistration from './registration/ConsumerRegistration';
 import Terms from './terms-of-use/Terms';
 import { UnloggedStackParamList } from './types';
 
@@ -35,11 +35,11 @@ function Unlogged() {
         component={ConsumerConfirmation}
         options={{ title: t('Verifique seu e-mail') }}
       />
-      <UnloggedStack.Screen
+      {/* <UnloggedStack.Screen
         name="ConsumerRegistration"
         component={ConsumerRegistration}
         options={{ title: '' }}
-      />
+      /> */}
       <UnloggedStack.Screen name="Terms" component={Terms} options={{ title: '' }} />
       {/* <UnloggedStack.Screen name='ConsumerHome' component={ConsumerHome} /> */}
     </UnloggedStack.Navigator>
@@ -115,7 +115,8 @@ export default function () {
 
   // unlogged stack
   // (or logged but before completed the signin)
-  if (authState !== AuthState.SignedIn || userDataPending(user)) {
+  // if (authState !== AuthState.SignedIn || userDataPending(user)) {
+  if (authState !== AuthState.SignedIn) {
     return (
       <RootNavigator.Navigator mode="modal">
         <RootNavigator.Screen

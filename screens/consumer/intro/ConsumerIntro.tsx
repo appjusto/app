@@ -12,6 +12,7 @@ import { t } from '../../../strings';
 import { ApiContext } from '../../../utils/context';
 import { validateEmail, userDataPending } from '../../../utils/validators';
 import AvoidingView from '../../common/AvoidingView';
+import CheckField from '../../common/CheckField';
 import DefaultButton from '../../common/DefaultButton';
 import DefaultInput from '../../common/DefaultInput';
 import { colors, texts, padding, screens } from '../../common/styles';
@@ -25,6 +26,7 @@ export default function ConsumerIntro() {
   // state
   const dev = useSelector(getEnv) === 'development';
   const [email, setEmail] = useState(dev ? 'pdandradeb@gmail.com' : '');
+  const [acceptedTerms, setAcceptTerms] = useState(false);
   const [sendingLink, setSendingLink] = useState(false);
   const [authState, user] = useAuth();
 
@@ -33,7 +35,8 @@ export default function ConsumerIntro() {
     if (!user) return;
     if (authState !== AuthState.SignedIn) return;
     if (userDataPending(user)) {
-      navigation.navigate('ConsumerRegistration');
+      // TODO: ConsumerRegistration
+      // navigation.navigate('ConsumerRegistration');
     }
   }, [authState, user]);
 
@@ -96,6 +99,13 @@ export default function ConsumerIntro() {
                 />
               </DefaultInput>
 
+              <CheckField
+                marginTop={12}
+                checked={acceptedTerms}
+                onPress={() => setAcceptTerms(!acceptedTerms)}
+                text={t('Aceito os termos de uso e a política de privacidade')}
+              />
+
               {/* dummy view to accomadate keyboard better */}
               <View style={{ height: 20 }} />
             </View>
@@ -103,7 +113,7 @@ export default function ConsumerIntro() {
             <View style={{ flex: 1 }} />
 
             {/* sign up */}
-            <View style={styles.bottomContainer}>
+            {/* <View style={styles.bottomContainer}>
               <View style={styles.innerContainer}>
                 <View style={{ width: 150 }}>
                   <Text style={[texts.default]} numberOfLines={2}>
@@ -116,7 +126,7 @@ export default function ConsumerIntro() {
                   onPress={() => navigation.navigate('ConsumerRegistration')}
                 />
               </View>
-            </View>
+            </View> */}
           </View>
         </AvoidingView>
       </View>

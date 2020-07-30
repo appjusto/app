@@ -13,7 +13,6 @@ const ConsumerRegistration = () => {
   const navigation = useNavigation();
 
   // state
-  const [acceptedTerms, setAcceptTerms] = useState(false);
   const [acceptedMarketing, setAcceptMarketing] = useState(false);
 
   return (
@@ -28,7 +27,7 @@ const ConsumerRegistration = () => {
       </View>
       <View style={styles.containerMediumText}>
         <Text style={{ ...texts.default, color: colors.darkGrey }}>
-          {t('E fique tranquilo: todos os seus dados estarão protegidos conosco.')}
+          {t('E fique tranquilo: seus dados nunca serão utilizados sem seu consentimento.')}
         </Text>
       </View>
       <View style={{ marginHorizontal: 16, marginBottom: 12 }}>
@@ -37,16 +36,7 @@ const ConsumerRegistration = () => {
       <View style={{ marginHorizontal: 16, marginBottom: 12 }}>
         <DefaultInput title={t('Celular')} placeholder={t('Qual é o número do seu celular?')} />
       </View>
-      <View style={{ marginHorizontal: 16, marginBottom: 12 }}>
-        <DefaultInput title={t('E-mail')} placeholder={t('Qual é seu endereço de email?')} />
-      </View>
       <View style={{ paddingHorizontal: 16, flex: 1 }}>
-        <CheckField
-          marginTop={12}
-          checked={acceptedTerms}
-          onPress={() => setAcceptTerms(!acceptedTerms)}
-          text={t('Aceito os termos de uso e a política de privacidade')}
-        />
         <CheckField
           marginTop={12}
           checked={acceptedMarketing}

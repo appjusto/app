@@ -23,11 +23,11 @@ const ConsumerProfile = () => {
       ),
       [
         {
-          text: 'Cancelar',
+          text: t('Cancelar'),
           style: 'cancel',
         },
         {
-          text: 'Confirmar',
+          text: t('Confirmar'),
           style: 'destructive',
           onPress: () => signOut(api),
         },

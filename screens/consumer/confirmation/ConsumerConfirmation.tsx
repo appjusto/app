@@ -4,13 +4,13 @@ import React, { useContext, useEffect } from 'react';
 import { View, Text, Image } from 'react-native';
 import { useDispatch } from 'react-redux';
 
-import { motocycle, navigation } from '../../../assets/icons';
+import { motocycle } from '../../../assets/icons';
 import useAuth, { AuthState } from '../../../hooks/useAuth';
 import { showToast } from '../../../store/actions/ui';
 import { signInWithEmail } from '../../../store/actions/user';
 import { t } from '../../../strings';
 import { ApiContext } from '../../../utils/context';
-import { userDataPending } from '../../../utils/validators';
+// import { userDataPending } from '../../../utils/validators';
 import DefaultButton from '../../common/DefaultButton';
 import { colors, texts, borders, screens } from '../../common/styles';
 import { UnloggedStackParamList } from '../types';
@@ -26,7 +26,7 @@ type Props = {
   route: ConsumerConfirmationRouteProp;
 };
 
-export default ({ navigation, route }: Props) => {
+export default ({ route }: Props) => {
   // context
   const api = useContext(ApiContext);
   const { params } = route;
@@ -35,15 +35,16 @@ export default ({ navigation, route }: Props) => {
   // state
   const [authState, user] = useAuth();
   useEffect(() => {
-    if (authState === AuthState.SignedIn && user && userDataPending(user)) {
-      navigation.navigate('ConsumerRegistration');
-    }
+    // TODO: ConsumerRegistration
+    // if (authState === AuthState.SignedIn && user && userDataPending(user)) {
+    //   navigation.navigate('ConsumerRegistration');
+    // }
   }, [authState, user]);
 
   // handlers
   const resendLink = (): void => {
     dispatch(showToast(t('Enviando link de autenticação para o seu e-mail...')));
-    signInWithEmail(api)(params.email);
+    signInWithEmail(api)(params.email).then((result) => console.log(result));
   };
 
   // UI
