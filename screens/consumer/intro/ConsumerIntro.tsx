@@ -18,19 +18,21 @@ import { colors, texts, padding, screens } from '../../common/styles';
 export default function ConsumerIntro() {
   // context
   const api = useContext(ApiContext);
-  const dispatch = useDispatch();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   // state
   const dev = useSelector(getEnv) === 'development';
   const [email, setEmail] = useState(dev ? 'pdandradeb@gmail.com' : '');
+  const [sendingLink, setSendingLink] = useState(false);
 
   // handlers
   const signInHandler = useCallback(async () => {
     if (validateEmail(email).status === 'ok') {
-      // dispatch(showToast(t('Enviando link de autenticação para o seu e-mail...')));
+      dispatch(showToast(t('Enviando link de autenticação para o seu e-mail...')));
+      setSendingLink(true);
       await signInWithEmail(api)(email);
-      dispatch(showToast(t('Pronto! Acesse seu e-mail e clique no link recebido.')));
+      navigation.navigate('ConsumerConfirmation', { email });
     } else {
       // TODO: handle error
     }
@@ -77,7 +79,7 @@ export default function ConsumerIntro() {
                 autoCapitalize="none"
               >
                 <DefaultButton
-                  disabled={email.length === 0}
+                  disabled={!validateEmail(email) || sendingLink}
                   title={t('Entrar')}
                   onPress={signInHandler}
                 />

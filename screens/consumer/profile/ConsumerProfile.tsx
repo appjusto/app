@@ -1,14 +1,41 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useContext } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 
+import { signOut } from '../../../store/actions/user';
 import { t } from '../../../strings';
+import { ApiContext } from '../../../utils/context';
+import DefaultButton from '../../common/DefaultButton';
 import GoButton from '../../common/GoButton';
-import { colors, texts, screens } from '../../common/styles';
+import { colors, texts, screens, padding } from '../../common/styles';
 
 const ConsumerProfile = () => {
+  // context
   const navigation = useNavigation();
+  const api = useContext(ApiContext);
 
+  // handlers
+  const confirmLogout = () => {
+    Alert.alert(
+      t('Sair da conta'),
+      t(
+        'Sua conta não será excluída mas você precisará fazer login novamente para continuar usando o App.'
+      ),
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Confirmar',
+          style: 'destructive',
+          onPress: () => signOut(api),
+        },
+      ]
+    );
+  };
+
+  // UI
   return (
     <View style={styles.screen}>
       <TouchableOpacity onPress={() => navigation.navigate('ProfileEdit')}>
@@ -22,6 +49,7 @@ const ConsumerProfile = () => {
           </View>
         </View>
       </TouchableOpacity>
+
       <TouchableOpacity>
         <View style={styles.container}>
           <View style={styles.texts}>
@@ -33,6 +61,7 @@ const ConsumerProfile = () => {
           </View>
         </View>
       </TouchableOpacity>
+
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('Unlogged', { screen: 'Terms' });
@@ -48,6 +77,10 @@ const ConsumerProfile = () => {
           </View>
         </View>
       </TouchableOpacity>
+
+      <View style={{ flex: 1 }} />
+
+      <DefaultButton title={t('Sair da conta')} onPress={confirmLogout} />
     </View>
   );
 };
@@ -55,6 +88,7 @@ const ConsumerProfile = () => {
 const styles = StyleSheet.create({
   screen: {
     ...screens.lightGrey,
+    paddingBottom: padding,
   },
   container: {
     flexDirection: 'row',

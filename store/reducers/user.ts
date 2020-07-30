@@ -12,7 +12,7 @@ export default function (state: UserState = initialState, action: AnyAction): Us
       return { ...state, user: payload };
     }
     case actionTypes.USER_LOGGED_OUT: {
-      return { ...state, user: undefined };
+      return { ...state, user: null };
     }
     default:
       return state;

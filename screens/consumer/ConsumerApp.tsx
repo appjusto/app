@@ -1,8 +1,11 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 import useAuth, { AuthState } from '../../hooks/useAuth';
+import { showToast } from '../../store/actions/ui';
+import { t } from '../../strings';
 import AddressComplete from '../common/AddressComplete';
 import ConsumerConfirmation from './confirmation/ConsumerConfirmation';
 import ConsumerHistory from './history/ConsumerHistory';
@@ -15,8 +18,9 @@ import ProfileEdit from './profile/ProfileEdit';
 import ProfileErase from './profile/ProfileErase';
 import ConsumerRegistration from './registration/ConsumerRegistration';
 import Terms from './terms-of-use/Terms';
+import { UnloggedStackParamList } from './types';
 
-const UnloggedStack = createStackNavigator();
+const UnloggedStack = createStackNavigator<UnloggedStackParamList>();
 function Unlogged() {
   return (
     <UnloggedStack.Navigator initialRouteName="ConsumerIntro">
@@ -28,7 +32,7 @@ function Unlogged() {
       <UnloggedStack.Screen
         name="ConsumerConfirmation"
         component={ConsumerConfirmation}
-        options={{ title: '' }}
+        options={{ title: t('Verifique seu e-mail') }}
       />
       <UnloggedStack.Screen
         name="ConsumerRegistration"
@@ -93,26 +97,46 @@ function Logged() {
 
 const RootNavigator = createStackNavigator();
 export default function () {
+  // context
+  const dispatch = useDispatch();
+
   // side effects
-  const [authState] = useAuth();
+  const [authState, user] = useAuth();
+  useEffect(() => {
+    console.log('useEffect:', authState, user);
+    if (authState === AuthState.InvalidCredentials) {
+      dispatch(showToast(t('Sua sessão expirou. Faça login novamente.')));
+    }
+  }, [authState, user]);
+
   // UI
-  // show nothing while checking credentials
+  // show nothing while checking for credentials
   if (authState === AuthState.Checking || authState === AuthState.SigningIn) return null;
 
-  // switch between logged and unlogged stacks
-  const initialRouteName = authState === AuthState.SignedIn ? 'Logged' : 'Unlogged';
-  return (
-    <RootNavigator.Navigator mode="modal" initialRouteName={initialRouteName}>
-      <RootNavigator.Screen
-        name="Unlogged"
-        component={Unlogged}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <RootNavigator.Screen name="Logged" component={Logged} />
-      {/* <RootNavigator.Screen name="CreateOrder" component={CreateOrder} /> */}
-      <RootNavigator.Screen name="AddressComplete" component={AddressComplete} />
-    </RootNavigator.Navigator>
-  );
+  // unlogged stack
+  if (authState !== AuthState.SignedIn) {
+    return (
+      <RootNavigator.Navigator mode="modal">
+        <RootNavigator.Screen
+          name="Unlogged"
+          component={Unlogged}
+          options={{
+            headerShown: false,
+          }}
+        />
+      </RootNavigator.Navigator>
+    );
+  }
+
+  // logged stack
+  user?.displayName;
+  if (authState === AuthState.SignedIn) {
+    return (
+      <RootNavigator.Navigator mode="modal">
+        <RootNavigator.Screen name="Logged" component={Logged} />
+        {/* <RootNavigator.Screen name="CreateOrder" component={CreateOrder} /> */}
+        <RootNavigator.Screen name="AddressComplete" component={AddressComplete} />
+      </RootNavigator.Navigator>
+    );
+  }
 }

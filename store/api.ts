@@ -71,6 +71,10 @@ export default class Api {
     return userCredential.user;
   }
 
+  signOut() {
+    return firebase.auth().signOut();
+  }
+
   // courier
 
   updateCourier(courierId: string, changes: object) {

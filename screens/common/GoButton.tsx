@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
 
 import { goArrow } from '../../assets/icons';
 

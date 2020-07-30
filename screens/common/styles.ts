@@ -10,7 +10,7 @@ export const colors = {
   grey: '#C8D7CB',
   darkGrey: '#697667',
   yellow: '#FFBE00',
-}
+};
 
 export const padding = 16;
 
@@ -19,10 +19,15 @@ export const screens = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
   },
+  padded: {
+    flex: 1,
+    backgroundColor: colors.white,
+    padding,
+  },
   lightGrey: {
     flex: 1,
-    paddingHorizontal: 16,
     backgroundColor: colors.lightGrey,
+    paddingHorizontal: padding,
   },
 });
 
@@ -66,7 +71,6 @@ export const texts = StyleSheet.create({
     fontSize: 40,
     lineHeight: 48,
   },
- 
 });
 
 export const flex = StyleSheet.create({
@@ -74,8 +78,5 @@ export const flex = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
 });
-
-
-

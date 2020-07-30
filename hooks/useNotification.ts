@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import * as Notifications from 'expo-notifications';
 import { useEffect, useCallback } from 'react';
-import { Platform, ToastAndroid } from 'react-native';
+// import { Platform, ToastAndroid } from 'react-native';
 
 export default function () {
   // context
@@ -11,13 +11,13 @@ export default function () {
   const handle = useCallback((notification: Notifications.Notification) => {
     const { content } = notification.request;
 
-    // debugging:start
-    console.log('handling notification');
-    console.log(content.data);
-    if (Platform.OS === 'android') {
-      ToastAndroid.show(JSON.stringify(content.data), ToastAndroid.LONG);
-    }
-    // debugging:end
+    // // debugging:start
+    // console.log('handling notification');
+    // console.log(content.data);
+    // if (Platform.OS === 'android') {
+    //   ToastAndroid.show(JSON.stringify(content.data), ToastAndroid.LONG);
+    // }
+    // // debugging:end
 
     if (content.data.action === 'matching') {
       navigation.navigate('Matching', { data: content.data });

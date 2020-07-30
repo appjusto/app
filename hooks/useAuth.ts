@@ -20,7 +20,7 @@ export enum AuthState {
   InvalidCredentials = 'invalid-credentials',
 }
 
-export default function () {
+export default function (): [AuthState, firebase.User | undefined] {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch();
@@ -42,9 +42,11 @@ export default function () {
 
   // whenever auth changes
   useEffect(() => {
-    if (user) setAuthState(AuthState.SignedIn);
-    else if (authState === AuthState.SignedIn) {
-      setAuthState(AuthState.Unsigned);
+    // undefined means we're still checking
+    // null means that already we've checked and there's no user
+    if (user !== undefined) {
+      if (user === null) setAuthState(AuthState.Unsigned);
+      else setAuthState(AuthState.SignedIn);
     }
   }, [user]);
 

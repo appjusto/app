@@ -6,6 +6,7 @@ import Api from '../api';
 
 export const observeAuthState = (api: Api) => (dispatch: Dispatch<any>) => {
   const unsubscribe = api.observeAuthState((user) => {
+    console.log('##');
     if (user) dispatch({ type: actionTypes.USER_LOGGED_IN, payload: user });
     else dispatch({ type: actionTypes.USER_LOGGED_OUT });
   });
@@ -36,4 +37,8 @@ export const isSignInWithEmailLink = (api: Api) => (link: string): boolean => {
 
 export const signInWithEmailLink = (api: Api) => (email: string, link: string) => {
   return api.signInWithEmailLink(email, link);
+};
+
+export const signOut = (api: Api) => {
+  return api.signOut();
 };

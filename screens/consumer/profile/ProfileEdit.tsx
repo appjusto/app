@@ -1,24 +1,27 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
   TouchableOpacity,
   Image,
-  Platform,
   Keyboard,
 } from 'react-native';
 
-import CheckField from '../../common/CheckField';
-import DefaultInput from '../../common/DefaultInput';
-import DefaultButton from '../../common/DefaultButton';
-import { colors, texts, screens } from '../../common/styles';
-import { checkboxActive, checkboxInactive, erase } from '../../../assets/icons';
 import { t } from '../../../strings';
+import AvoidingView from '../../common/AvoidingView';
+import CheckField from '../../common/CheckField';
+import DefaultButton from '../../common/DefaultButton';
+import DefaultInput from '../../common/DefaultInput';
+import { colors, texts, screens } from '../../common/styles';
 
-const ProfileEdit = ({ navigation }) => {
+const ProfileEdit = () => {
+  // context
+  const navigation = useNavigation();
+
+  // state
   const [isChecked, setIsChecked] = useState(false);
   const toggleCheckBox = () => {
     setIsChecked(!isChecked);
@@ -32,23 +35,15 @@ const ProfileEdit = ({ navigation }) => {
   return (
     <View style={{ ...screens.lightGrey, marginBottom: 0 }}>
       <View style={{ flex: 1 }}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-        >
+        <AvoidingView>
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View>
               <View style={{ marginTop: 16 }}>
                 <Text style={{ ...texts.big }}>{t('Seus dados')}</Text>
-                <Text style={styles.default}>
-                  {t('Edite seus dados pessoais:')}
-                </Text>
+                <Text style={styles.default}>{t('Edite seus dados pessoais:')}</Text>
               </View>
               <View style={{ marginTop: 32 }}>
-                <DefaultInput
-                  title={t('Nome')}
-                  value={name}
-                  onChangeText={setName}
-                />
+                <DefaultInput title={t('Nome')} value={name} onChangeText={setName} />
                 <DefaultInput
                   style={{ marginTop: 12 }}
                   title={t('Sobrenome')}
@@ -76,7 +71,7 @@ const ProfileEdit = ({ navigation }) => {
               </View>
               <CheckField
                 marginTop={16}
-                source={isChecked ? checkboxActive : checkboxInactive}
+                checked={isChecked}
                 onPress={toggleCheckBox}
                 text={t('Aceito receber comunicações e ofertas')}
               />
@@ -94,9 +89,7 @@ const ProfileEdit = ({ navigation }) => {
                   }
                   onPress={() => {}}
                 />
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('ProfileErase')}
-                >
+                <TouchableOpacity onPress={() => navigation.navigate('ProfileErase')}>
                   <View style={styles.eraseContainer}>
                     <Image source={erase} />
                     <Text style={{ ...texts.small, marginLeft: 6 }}>
@@ -107,7 +100,7 @@ const ProfileEdit = ({ navigation }) => {
               </View>
             </View>
           </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
+        </AvoidingView>
       </View>
     </View>
   );
