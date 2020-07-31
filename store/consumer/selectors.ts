@@ -1,5 +1,5 @@
 import { State } from '..';
-import { ConsumerState, Consumer } from '../types/consumer';
+import { ConsumerState, Consumer } from './types';
 
 export const getConsumerState = (state: State): ConsumerState => state.consumer;
 

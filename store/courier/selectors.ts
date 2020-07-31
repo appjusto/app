@@ -1,5 +1,5 @@
 import { State } from '..';
-import { CourierState, Courier, CourierStatus } from '../types/courier';
+import { CourierState, Courier, CourierStatus } from './types';
 
 export const getCourierState = (state: State): CourierState => state.courier;
 

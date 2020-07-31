@@ -2,7 +2,7 @@ import { Dispatch } from 'redux';
 
 import * as actionTypes from '../actionTypes';
 import Api from '../api';
-import { Consumer } from '../types/consumer';
+import { Consumer } from './types';
 
 // update data on backend
 export const updateConsumer = (api: Api) => (consumerId: string, changes: object) => {

@@ -12,9 +12,9 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 
 import { erase } from '../../../assets/icons';
-import { updateConsumer } from '../../../store/actions/consumer';
-import { showToast } from '../../../store/actions/ui';
-import { getConsumer } from '../../../store/selectors/consumer';
+import { updateConsumer } from '../../../store/consumer/actions';
+import { getConsumer } from '../../../store/consumer/selectors';
+import { showToast } from '../../../store/ui/actions';
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import AvoidingView from '../../common/AvoidingView';

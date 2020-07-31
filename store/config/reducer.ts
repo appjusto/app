@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
 
 import * as actionTypes from '../actionTypes';
-import { ConfigState } from '../types/config';
+import { ConfigState } from './types';
 
 export default function (initialState: ConfigState) {
   return (state = initialState, action: AnyAction) => {

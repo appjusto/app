@@ -1,16 +1,16 @@
 import * as redux from 'redux';
 import ReduxThunk, { ThunkDispatch } from 'redux-thunk';
 
-import configReducer from './reducers/config';
-import consumerReducer from './reducers/consumer';
-import courierReducer from './reducers/courier';
-import uiReducer from './reducers/ui';
+import configReducer from './config/reducer';
+import { ConfigState } from './config/types';
+import consumerReducer from './consumer/reducer';
+import { ConsumerState } from './consumer/types';
+import courierReducer from './courier/reducer';
+import { CourierState } from './courier/types';
 import userReducer from './reducers/user';
-import { ConfigState } from './types/config';
-import { ConsumerState } from './types/consumer';
-import { CourierState } from './types/courier';
-import { UIState } from './types/ui';
 import { UserState } from './types/user';
+import uiReducer from './ui/reducers';
+import { UIState } from './ui/types';
 
 export interface State {
   config: ConfigState;

@@ -5,7 +5,7 @@ import React, { useState, useCallback, useContext } from 'react';
 import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import { getEnv } from '../../store/selectors/config';
+import { getEnv } from '../../store/config/selectors';
 import { t } from '../../strings';
 import { ApiContext } from '../app/context';
 import DefaultInput from './DefaultInput';

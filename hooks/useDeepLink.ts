@@ -16,11 +16,14 @@ export default function () {
     Linking.parseInitialURLAsync().then((value) => {
       console.log('1 parsed initial URL: ', value);
       if (hasDeeplink(value)) setDeeplink(value);
+      else setDeeplink(null);
     });
     const handler: Linking.URLListener = (ev) => {
       console.log('2 url changed: ', ev.url);
       const parsedURL = Linking.parse(ev.url);
+      console.log('hasDeeplink:', hasDeeplink(parsedURL));
       if (hasDeeplink(parsedURL)) setDeeplink(parsedURL);
+      else setDeeplink(null);
     };
     Linking.addEventListener('url', handler);
     return () => Linking.removeEventListener('url', handler);
