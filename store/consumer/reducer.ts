@@ -9,7 +9,6 @@ export default function (state: ConsumerState = initialState, action: AnyAction)
   const { type, payload } = action;
   switch (type) {
     case actionTypes.CONSUMER_PROFILE_UPDATED: {
-      console.log(action);
       return { ...state, consumer: { ...state.consumer, ...payload } };
     }
     default:

@@ -1,4 +1,4 @@
-import * as Linking from 'expo-linking';
+// import * as Linking from 'expo-linking';
 import { useEffect, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -40,7 +40,6 @@ export default function (): [AuthState, firebase.User | undefined | null] {
 
   // whenever auth changes
   useEffect(() => {
-    console.log('user', user);
     // undefined means we're still checking; nothing to be done in this case
     if (user === undefined) return;
     // null means that we've already checked and no user was previously stored
@@ -50,6 +49,13 @@ export default function (): [AuthState, firebase.User | undefined | null] {
       setAuthState(AuthState.SignedIn);
     }
   }, [user]);
+
+  // check deeplink again
+  useEffect(() => {
+    if (authState === AuthState.InvalidCredentials || authState === AuthState.Unsigned) {
+      setAuthState(AuthState.CheckingDeeplink);
+    }
+  }, [deepLink]);
 
   useEffect(() => {
     if (authState !== AuthState.CheckingDeeplink) return;
@@ -74,8 +80,7 @@ export default function (): [AuthState, firebase.User | undefined | null] {
       }
       try {
         await signInWithEmailLink(api)(email, link);
-        const continueUrl = Linking.parse(link).queryParams?.continueUrl;
-        console.log('continueUrl:', continueUrl);
+        // const continueUrl = Linking.parse(link).queryParams?.continueUrl;
       } catch (e) {
         setAuthState(AuthState.InvalidCredentials);
       }
