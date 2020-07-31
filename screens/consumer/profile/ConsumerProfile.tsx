@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 
 import { signOut } from '../../../store/actions/user';
 import { t } from '../../../strings';
-import { ApiContext } from '../../../utils/context';
+import { ApiContext } from '../../app/context';
 import DefaultButton from '../../common/DefaultButton';
 import GoButton from '../../common/GoButton';
 import { colors, texts, screens, padding } from '../../common/styles';

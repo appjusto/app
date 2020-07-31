@@ -3,11 +3,11 @@ import { View, YellowBox } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import PreloadAssets from './screens/app/PreloadAssets';
+import { AppContext } from './screens/app/context';
 import ShowIf from './screens/common/ShowIf';
 import ConsumerApp from './screens/consumer/ConsumerApp';
 import CourierApp from './screens/courier/CourierApp';
 import { getFlavor } from './store/selectors/config';
-import { AppContext } from './utils/context';
 
 // https://github.com/facebook/react-native/issues/12981#issuecomment-652745831
 // https://reactnative.dev/docs/debugging#console-errors-and-warnings

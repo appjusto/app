@@ -9,7 +9,7 @@ import useAuth, { AuthState } from '../../../hooks/useAuth';
 import { showToast } from '../../../store/actions/ui';
 import { signInWithEmail } from '../../../store/actions/user';
 import { t } from '../../../strings';
-import { ApiContext } from '../../../utils/context';
+import { ApiContext } from '../../app/context';
 // import { userDataPending } from '../../../utils/validators';
 import DefaultButton from '../../common/DefaultButton';
 import { colors, texts, borders, screens } from '../../common/styles';

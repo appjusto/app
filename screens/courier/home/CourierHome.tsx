@@ -12,7 +12,7 @@ import { isCourierWorking, getCourierLocation } from '../../../store/selectors/c
 import { getUser } from '../../../store/selectors/user';
 import { CourierStatus } from '../../../store/types/courier';
 import { t } from '../../../strings';
-import { ApiContext, AppDispatch } from '../../../utils/context';
+import { ApiContext, AppDispatch } from '../../app/context';
 import { colors, padding, texts, borders } from '../../common/styles';
 
 const { width, height } = Dimensions.get('window');

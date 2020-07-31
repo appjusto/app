@@ -1,11 +1,16 @@
 export type UnloggedStackParamList = {
   ConsumerIntro: undefined;
-  ConsumerConfirmation: { email: string };
+  ConsumerConfirmation: {
+    email: string;
+  };
   // ConsumerRegistration: undefined;
   Terms: undefined;
 };
 
 export type HomeStackParamList = {
   ConsumerHome: undefined;
-  CreateOrderP2P: undefined;
+  CreateOrderP2P: {
+    originAddress?: string;
+    destinationAddress?: string;
+  };
 };

@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 import { getEnv } from '../../store/selectors/config';
 import { t } from '../../strings';
-import { ApiContext } from '../../utils/context';
+import { ApiContext } from '../app/context';
 import DefaultInput from './DefaultInput';
 import Touchable from './Touchable';
 import { borders } from './styles';
@@ -42,12 +42,11 @@ export default function () {
 
   // handlers
   const getAddress = useCallback(
-    debounce(async (input) => {
+    debounce<(input: string) => void>(async (input: string): Promise<void> => {
       const { predictions } = await api.googlePlacesAutocomplete(input, autocompleteSession);
-      console.log(predictions);
       setAutoCompletePredictions(predictions);
     }, 1000),
-    []
+    [autocompleteSession]
   );
 
   const textChangeHandler = useCallback(
@@ -55,10 +54,10 @@ export default function () {
       setAddress(text);
       if (text.length > 5) {
         // TODO: define threshold
-        getAddress(address, autocompleteSession);
+        getAddress(address);
       }
     },
-    [address, autocompleteSession]
+    [address]
   );
 
   const completeHandler = useCallback(() => {

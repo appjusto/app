@@ -16,7 +16,7 @@ import { updateConsumer } from '../../../store/actions/consumer';
 import { showToast } from '../../../store/actions/ui';
 import { getConsumer } from '../../../store/selectors/consumer';
 import { t } from '../../../strings';
-import { ApiContext, AppDispatch } from '../../../utils/context';
+import { ApiContext, AppDispatch } from '../../app/context';
 import AvoidingView from '../../common/AvoidingView';
 import CheckField from '../../common/CheckField';
 import DefaultButton from '../../common/DefaultButton';

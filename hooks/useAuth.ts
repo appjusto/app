@@ -2,6 +2,7 @@ import * as Linking from 'expo-linking';
 import { useEffect, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { ApiContext, AppDispatch } from '../screens/app/context';
 import {
   observeAuthState,
   getSignInEmail,
@@ -9,7 +10,6 @@ import {
   signInWithEmailLink,
 } from '../store/actions/user';
 import { getUser } from '../store/selectors/user';
-import { ApiContext, AppDispatch } from '../utils/context';
 import useDeepLink from './useDeepLink';
 
 export enum AuthState {

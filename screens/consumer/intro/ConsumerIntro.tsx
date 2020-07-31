@@ -1,16 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useContext, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Text, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { logoWhite, arrow, illustration } from '../../../assets/icons';
+import { logoWhite, illustration } from '../../../assets/icons';
 import useAuth, { AuthState } from '../../../hooks/useAuth';
 import { showToast } from '../../../store/actions/ui';
 import { signInWithEmail } from '../../../store/actions/user';
 import { getEnv } from '../../../store/selectors/config';
 import { t } from '../../../strings';
-import { ApiContext } from '../../../utils/context';
 import { validateEmail, userDataPending } from '../../../utils/validators';
+import { ApiContext } from '../../app/context';
 import AvoidingView from '../../common/AvoidingView';
 import CheckField from '../../common/CheckField';
 import DefaultButton from '../../common/DefaultButton';
@@ -134,22 +134,22 @@ export default function ConsumerIntro() {
   );
 }
 
-const styles = StyleSheet.create({
-  bottomContainer: {
-    width: '100%',
-    height: 80,
-    flexDirection: 'row',
-    backgroundColor: colors.lightGrey,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 22,
-  },
-  innerContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    height: 48,
-  },
-});
+// const styles = StyleSheet.create({
+//   bottomContainer: {
+//     width: '100%',
+//     height: 80,
+//     flexDirection: 'row',
+//     backgroundColor: colors.lightGrey,
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     paddingHorizontal: 16,
+//     paddingVertical: 22,
+//   },
+//   innerContainer: {
+//     flexDirection: 'row',
+//     width: '100%',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     height: 48,
+//   },
+// });

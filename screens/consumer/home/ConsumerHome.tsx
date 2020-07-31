@@ -8,7 +8,7 @@ import { navigationArrow, illustration, BG, requests } from '../../../assets/ico
 import useAuth from '../../../hooks/useAuth';
 import { watchConsumer } from '../../../store/actions/consumer';
 import { t } from '../../../strings';
-import { AppDispatch, ApiContext } from '../../../utils/context';
+import { AppDispatch, ApiContext } from '../../app/context';
 import { colors, texts } from '../../common/styles';
 import { HomeStackParamList } from '../types';
 
