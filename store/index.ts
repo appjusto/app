@@ -7,10 +7,10 @@ import consumerReducer from './consumer/reducer';
 import { ConsumerState } from './consumer/types';
 import courierReducer from './courier/reducer';
 import { CourierState } from './courier/types';
-import userReducer from './reducers/user';
-import { UserState } from './types/user';
 import uiReducer from './ui/reducers';
 import { UIState } from './ui/types';
+import userReducer from './user/reducer';
+import { UserState } from './user/types';
 
 export interface State {
   config: ConfigState;

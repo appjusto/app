@@ -6,8 +6,8 @@ import { useDispatch } from 'react-redux';
 
 import { motocycle } from '../../assets/icons';
 import useAuth, { AuthState } from '../../hooks/useAuth';
-import { signInWithEmail } from '../../store/actions/user';
 import { showToast } from '../../store/ui/actions';
+import { signInWithEmail } from '../../store/user/actions';
 import { t } from '../../strings';
 // import { userDataPending } from '../../../utils/validators';
 import { ApiContext } from '../app/context';
