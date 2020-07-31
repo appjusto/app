@@ -17,7 +17,6 @@ import DefaultInput from '../common/DefaultInput';
 import { colors, texts, padding, screens } from '../common/styles';
 
 export default function () {
-  console.log('WelcomeScreen');
   // context
   const api = useContext(ApiContext);
   const navigation = useNavigation();

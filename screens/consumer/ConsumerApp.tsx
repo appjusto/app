@@ -104,17 +104,19 @@ export default function () {
   // side effects
   const [authState, user] = useAuth();
   useEffect(() => {
-    console.log('Consumer App', authState);
     if (authState === AuthState.InvalidCredentials) {
       dispatch(showToast(t('Sua sessão expirou. Faça login novamente.')));
     }
   }, [authState, user]);
 
-  console.log(authState);
-
   // UI
   // show nothing while checking for credentials
-  if (authState === AuthState.Checking || authState === AuthState.SigningIn) return null;
+  if (
+    authState === AuthState.CheckingPreviousSession ||
+    authState === AuthState.CheckingDeeplink ||
+    authState === AuthState.SigningIn
+  )
+    return null;
 
   // unlogged stack
   // (or logged but before completed the signin)
