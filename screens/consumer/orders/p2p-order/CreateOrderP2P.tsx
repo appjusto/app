@@ -1,5 +1,6 @@
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import {
   StyleSheet,
@@ -10,24 +11,30 @@ import {
   TouchableWithoutFeedback,
   Text,
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { motocycle } from '../../../../assets/icons';
 import useLocationUpdates from '../../../../hooks/useLocationUpdates';
-import { getConsumerLocation } from '../../../../store/selectors/consumer';
+import { showToast } from '../../../../store/actions/ui';
 import { Place, Order } from '../../../../store/types';
 import { t } from '../../../../strings';
-import { ApiContext } from '../../../../utils/context';
+import { ApiContext } from '../../../app/context';
 import DefaultButton from '../../../common/DefaultButton';
 import DefaultInput from '../../../common/DefaultInput';
 import ShowIf from '../../../common/ShowIf';
 import Touchable from '../../../common/Touchable';
 import { screens, borders, texts } from '../../../common/styles';
+import { HomeStackParamList } from '../../types';
 import OrderMap from './OrderMap';
 import OrderSummary from './OrderSummary';
-import { showToast } from '../../../../store/actions/ui';
 
-// import * as fixtures from '../../../../store/fixtures'; // testing only
+type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'CreateOrderP2P'>;
+type ScreenRouteProp = RouteProp<HomeStackParamList, 'CreateOrderP2P'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
 
 enum Steps {
   Origin = 0,
@@ -47,10 +54,8 @@ const orderValid = (order: Order | null): boolean => {
   return true;
 };
 
-export default function () {
+export default function ({ navigation, route }: Props) {
   // context
-  const navigation = useNavigation();
-  const route = useRoute();
   const api = useContext(ApiContext);
   const dispatch = useDispatch();
   const { params } = route;
@@ -60,7 +65,6 @@ export default function () {
 
   // state
   const locationPermission = useLocationUpdates(true);
-  const currentLocation = useSelector(getConsumerLocation);
 
   const [step, setStep] = useState(Steps.Origin);
   const [origin, setOrigin] = useState<Place>({} as Place);
@@ -154,7 +158,7 @@ export default function () {
   }, [order]);
 
   // UI
-  let nextStepTitle;
+  let nextStepTitle = '';
   if (step === 0) nextStepTitle = t('Confirmar local de retirada');
   else if (step === 1) nextStepTitle = t('Confirmar local de entrega');
   else if (step === 2) nextStepTitle = t('Fazer pedido');
@@ -265,7 +269,7 @@ export default function () {
           <ShowIf test={orderValid(order)}>
             {() => (
               <View style={{ flex: 1 }}>
-                <OrderSummary order={order} onEdit={setPage} />
+                <OrderSummary order={order!} onEdit={setPage} />
               </View>
             )}
           </ShowIf>

@@ -1,21 +1,23 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState, useContext, useCallback } from 'react';
-import { View, Text, StyleSheet, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import React, { useState, useContext, useCallback, useEffect } from 'react';
+import { View, Text, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { logoWhite, arrow, illustration } from '../../../assets/icons';
-import { showToast } from '../../../store/actions/ui';
-import { signInWithEmail } from '../../../store/actions/user';
-import { getEnv } from '../../../store/selectors/config';
-import { t } from '../../../strings';
-import { ApiContext } from '../../../utils/context';
-import { validateEmail } from '../../../utils/validators';
-import AvoidingView from '../../common/AvoidingView';
-import DefaultButton from '../../common/DefaultButton';
-import DefaultInput from '../../common/DefaultInput';
-import { colors, texts, padding, screens } from '../../common/styles';
+import { logoWhite, illustration } from '../../assets/icons';
+import useAuth, { AuthState } from '../../hooks/useAuth';
+import { showToast } from '../../store/actions/ui';
+import { signInWithEmail } from '../../store/actions/user';
+import { getEnv } from '../../store/selectors/config';
+import { t } from '../../strings';
+import { validateEmail, userDataPending } from '../../utils/validators';
+import { ApiContext } from '../app/context';
+import AvoidingView from '../common/AvoidingView';
+import CheckField from '../common/CheckField';
+import DefaultButton from '../common/DefaultButton';
+import DefaultInput from '../common/DefaultInput';
+import { colors, texts, padding, screens } from '../common/styles';
 
-export default function ConsumerIntro() {
+export default function () {
   // context
   const api = useContext(ApiContext);
   const navigation = useNavigation();
@@ -24,7 +26,19 @@ export default function ConsumerIntro() {
   // state
   const dev = useSelector(getEnv) === 'development';
   const [email, setEmail] = useState(dev ? 'pdandradeb@gmail.com' : '');
+  const [acceptedTerms, setAcceptTerms] = useState(false);
   const [sendingLink, setSendingLink] = useState(false);
+  const [authState, user] = useAuth();
+
+  // side effects
+  useEffect(() => {
+    if (!user) return;
+    if (authState !== AuthState.SignedIn) return;
+    if (userDataPending(user)) {
+      // TODO: ConsumerRegistration
+      // navigation.navigate('ConsumerRegistration');
+    }
+  }, [authState, user]);
 
   // handlers
   const signInHandler = useCallback(async () => {
@@ -32,7 +46,7 @@ export default function ConsumerIntro() {
       dispatch(showToast(t('Enviando link de autenticação para o seu e-mail...')));
       setSendingLink(true);
       await signInWithEmail(api)(email);
-      navigation.navigate('ConsumerConfirmation', { email });
+      navigation.navigate('SignInFeedback', { email });
     } else {
       // TODO: handle error
     }
@@ -85,6 +99,13 @@ export default function ConsumerIntro() {
                 />
               </DefaultInput>
 
+              <CheckField
+                marginTop={12}
+                checked={acceptedTerms}
+                onPress={() => setAcceptTerms(!acceptedTerms)}
+                text={t('Aceito os termos de uso e a política de privacidade')}
+              />
+
               {/* dummy view to accomadate keyboard better */}
               <View style={{ height: 20 }} />
             </View>
@@ -92,7 +113,7 @@ export default function ConsumerIntro() {
             <View style={{ flex: 1 }} />
 
             {/* sign up */}
-            <View style={styles.bottomContainer}>
+            {/* <View style={styles.bottomContainer}>
               <View style={styles.innerContainer}>
                 <View style={{ width: 150 }}>
                   <Text style={[texts.default]} numberOfLines={2}>
@@ -105,7 +126,7 @@ export default function ConsumerIntro() {
                   onPress={() => navigation.navigate('ConsumerRegistration')}
                 />
               </View>
-            </View>
+            </View> */}
           </View>
         </AvoidingView>
       </View>
@@ -113,22 +134,22 @@ export default function ConsumerIntro() {
   );
 }
 
-const styles = StyleSheet.create({
-  bottomContainer: {
-    width: '100%',
-    height: 80,
-    flexDirection: 'row',
-    backgroundColor: colors.lightGrey,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 22,
-  },
-  innerContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    height: 48,
-  },
-});
+// const styles = StyleSheet.create({
+//   bottomContainer: {
+//     width: '100%',
+//     height: 80,
+//     flexDirection: 'row',
+//     backgroundColor: colors.lightGrey,
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     paddingHorizontal: 16,
+//     paddingVertical: 22,
+//   },
+//   innerContainer: {
+//     flexDirection: 'row',
+//     width: '100%',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     height: 48,
+//   },
+// });

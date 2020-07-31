@@ -2,6 +2,7 @@ import * as Linking from 'expo-linking';
 import { useEffect, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { ApiContext, AppDispatch } from '../screens/app/context';
 import {
   observeAuthState,
   getSignInEmail,
@@ -9,7 +10,6 @@ import {
   signInWithEmailLink,
 } from '../store/actions/user';
 import { getUser } from '../store/selectors/user';
-import { ApiContext } from '../utils/context';
 import useDeepLink from './useDeepLink';
 
 export enum AuthState {
@@ -20,60 +20,67 @@ export enum AuthState {
   InvalidCredentials = 'invalid-credentials',
 }
 
-export default function (): [AuthState, firebase.User | undefined] {
+export default function (): [AuthState, firebase.User | undefined | null] {
   // context
   const api = useContext(ApiContext);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   // state
   const user = useSelector(getUser);
   const [authState, setAuthState] = useState<AuthState>(AuthState.Checking);
+  const deepLink = useDeepLink();
+  const [checkDeeplink, setCheckDeeplink] = useState(false);
 
   // side effects
-  // once
+  // subscribe once to be notified whenever the user changes (capture by the next effect)
   useEffect(() => {
     const unsubscribe = dispatch(observeAuthState(api));
-    return () => {
-      console.log('unsubscribe');
-      console.log(unsubscribe);
-      unsubscribe(); // dispatch is probably returning wrong type here.
-    };
+    return unsubscribe;
   }, []);
 
   // whenever auth changes
   useEffect(() => {
-    // undefined means we're still checking
-    // null means that already we've checked and there's no user
-    if (user !== undefined) {
-      if (user === null) setAuthState(AuthState.Unsigned);
-      else setAuthState(AuthState.SignedIn);
+    // undefined means we're still checking; nothing to be done in this case
+    if (user === undefined) return;
+    // null means that we've already checked and no user was previously stored
+    if (user === null) {
+      setCheckDeeplink(true);
+    } else {
+      setAuthState(AuthState.SignedIn);
     }
   }, [user]);
 
   // whenever deeplink changes
-  const deepLink = useDeepLink();
   useEffect(() => {
-    if (!deepLink) return;
-    const link = deepLink?.queryParams?.link ?? '';
-    if (isSignInWithEmailLink(api)(link)) {
-      setAuthState(AuthState.SigningIn);
-      getSignInEmail().then(async (email) => {
-        if (!email) {
-          setAuthState(AuthState.InvalidCredentials);
-        } else {
-          try {
-            await signInWithEmailLink(api)(email, link);
-            const continueUrl = Linking.parse(link).queryParams?.continueUrl;
-            console.log('continueUrl:', continueUrl);
-          } catch (e) {
-            setAuthState(AuthState.InvalidCredentials);
-          }
-        }
-      });
-    } else {
-      setAuthState(AuthState.InvalidCredentials);
+    // deeplink is checked only if user was not logged before
+    if (!checkDeeplink) return;
+    // undefined means we're still checkin for the deeplink
+    if (deepLink === undefined) return;
+    // null means that no deeplink was found
+    if (deepLink === null) {
+      setAuthState(AuthState.Unsigned);
+      return;
     }
-  }, [deepLink]);
+    const link = deepLink.queryParams?.link ?? '';
+    if (!isSignInWithEmailLink(api)(link)) {
+      setAuthState(AuthState.InvalidCredentials);
+      return;
+    }
+    setAuthState(AuthState.SigningIn);
+    getSignInEmail().then(async (email) => {
+      if (!email) {
+        setAuthState(AuthState.InvalidCredentials);
+        return;
+      }
+      try {
+        await signInWithEmailLink(api)(email, link);
+        const continueUrl = Linking.parse(link).queryParams?.continueUrl;
+        console.log('continueUrl:', continueUrl);
+      } catch (e) {
+        setAuthState(AuthState.InvalidCredentials);
+      }
+    });
+  }, [checkDeeplink, deepLink]);
 
   return [authState, user];
 }

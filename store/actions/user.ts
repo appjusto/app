@@ -6,9 +6,11 @@ import Api from '../api';
 
 export const observeAuthState = (api: Api) => (dispatch: Dispatch<any>) => {
   const unsubscribe = api.observeAuthState((user) => {
-    console.log('##');
-    if (user) dispatch({ type: actionTypes.USER_LOGGED_IN, payload: user });
-    else dispatch({ type: actionTypes.USER_LOGGED_OUT });
+    if (user) {
+      dispatch({ type: actionTypes.USER_LOGGED_IN, payload: user });
+    } else {
+      dispatch({ type: actionTypes.USER_LOGGED_OUT });
+    }
   });
   return unsubscribe;
 };

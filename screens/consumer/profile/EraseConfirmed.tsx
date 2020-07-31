@@ -1,10 +1,10 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 
-import DefaultButton from '../../common/DefaultButton';
-import CheckField from '../../common/CheckField';
 import { t } from '../../../strings';
+import CheckField from '../../common/CheckField';
+import DefaultButton from '../../common/DefaultButton';
 import { colors, texts, screens } from '../../common/styles';
 
 interface ScreenState {
@@ -32,8 +32,8 @@ const EraseConfirmed = () => {
 
   useEffect(() => {
     console.log(state);
-  }, [state])
-  
+  }, [state]);
+
   // UI
   return (
     <View style={{ ...screens.lightGrey }}>
@@ -59,7 +59,12 @@ const EraseConfirmed = () => {
         <CheckField
           checked={state.pricesHigherThanAlternatives}
           text={t('Preços mais altos que os concorrentes')}
-          onPress={() => setState({ ...state, pricesHigherThanAlternatives: !state.pricesHigherThanAlternatives })}
+          onPress={() =>
+            setState({
+              ...state,
+              pricesHigherThanAlternatives: !state.pricesHigherThanAlternatives,
+            })
+          }
         />
         <CheckField
           checked={state.didntLikeApp}

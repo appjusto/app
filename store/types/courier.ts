@@ -7,13 +7,13 @@ export enum CourierStatus {
 }
 
 export interface Courier {
-  status: CourierStatus;
+  id: string;
+  status?: CourierStatus;
   location?: Coordinates;
   notificationToken?: string;
 }
 
 export interface CourierState {
-  email?: string;
   courier?: Courier;
   order?: object;
   availableCouriers: object[];

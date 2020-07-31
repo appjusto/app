@@ -6,6 +6,7 @@ import * as geofirestore from 'geofirestore';
 import { Extra } from '../utils/config';
 import { Place } from './types';
 import { Courier } from './types/courier';
+import { Consumer } from './types/consumer';
 
 export default class Api {
   private firestore: firebase.firestore.Firestore;
@@ -65,17 +66,19 @@ export default class Api {
   }
 
   async signInWithEmailLink(email: string, link: string) {
-    const auth = firebase.auth();
-    // if (!auth.isSignInWithEmailLink(link)) return null;
-    const userCredential = await auth.signInWithEmailLink(email, link);
+    const userCredential = await firebase.auth().signInWithEmailLink(email, link);
     return userCredential.user;
+  }
+
+  updateProfile(profile: { displayName?: string | null; photoURL?: string | null }) {
+    return firebase.auth().currentUser?.updateProfile(profile);
   }
 
   signOut() {
     return firebase.auth().signOut();
   }
 
-  // courier
+  // couriers
 
   updateCourier(courierId: string, changes: object) {
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
@@ -98,7 +101,7 @@ export default class Api {
     const courierLocationRef = this.firestoreWithGeo
       .collection('locations')
       .doc('couriers')
-      .collection(courier.status)
+      .collection(courier.status!)
       .doc(courier.id);
     const courierInfo = {};
     // workaround for testing in simulators when there's no notification token available
@@ -119,7 +122,7 @@ export default class Api {
     );
   }
 
-  watchCourier(courierId: string, resultHandler): firebase.Unsubscribe {
+  watchCourier(courierId: string, resultHandler: (courier: Courier) => void): firebase.Unsubscribe {
     // TODO: ensure only people envolved in order are able to know courier's location
     const unsubscribe = this.firestore
       .collection('couriers')
@@ -138,7 +141,7 @@ export default class Api {
     const unsubscribe = this.firestore
       .collection('locations/couriers/available')
       .onSnapshot((query) => {
-        const result = [];
+        const result: Courier[] = [];
         query.forEach((doc) => {
           result.push({ ...doc.data(), id: doc.id });
         });
@@ -147,6 +150,36 @@ export default class Api {
     // returns the unsubscribe function
     return unsubscribe;
   }
+
+  // consumers
+
+  updateConsumer(consumerId: string, changes: object) {
+    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    const courierDoc = this.firestore.collection('consumers').doc(consumerId);
+    return courierDoc.set(
+      {
+        ...changes,
+        timestamp,
+      },
+      { merge: true }
+    );
+  }
+
+  watchConsumer(
+    consumerId: string,
+    resultHandler: (consumer: Consumer) => void
+  ): firebase.Unsubscribe {
+    const unsubscribe = this.firestore
+      .collection('consumers')
+      .doc(consumerId)
+      .onSnapshot((doc) => {
+        resultHandler({ ...doc.data(), id: doc.id });
+      });
+    // returns the unsubscribe function
+    return unsubscribe;
+  }
+
+  // orders
 
   async createOrder(origin: Place, destination: Place) {
     const params = {
@@ -191,6 +224,8 @@ export default class Api {
       return err;
     }
   }
+
+  // maps
 
   async googlePlacesAutocomplete(input: string, sessiontoken: string) {
     // TODO: location & radius?

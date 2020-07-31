@@ -1,11 +1,11 @@
-import React, { useEffect, useContext, useCallback } from 'react';
-import { Text, StyleSheet, Button } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import React, { useEffect, useContext, useCallback } from 'react';
+import { Text, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { t } from '../../../strings';
+import { ApiContext } from '../../app/context';
 import { texts } from '../../common/styles';
-import { ApiContext } from '../../../utils/context';
 
 export default function () {
   // context
@@ -26,7 +26,7 @@ export default function () {
     navigation.goBack();
     // TODO: ask why
   }, [data]);
-  
+
   // side effects
   useEffect(() => {
     if (!data) navigation.goBack();
@@ -37,16 +37,20 @@ export default function () {
 
   return (
     <SafeAreaView>
-      <Text style={[texts.default, { fontSize: 20, lineHeight: 24 }]}>{t('Nova corrida para você!')}</Text>
-      <Text style={[texts.huge]}>{t('R$')} {data.fare}</Text>
-      <Text style={[texts.huge]}>{t('Retirada')} {data.origin.address}</Text>
-      <Text style={[texts.huge]}>{t('Entrega')} {data.destination.address}</Text>
+      <Text style={[texts.default, { fontSize: 20, lineHeight: 24 }]}>
+        {t('Nova corrida para você!')}
+      </Text>
+      <Text style={[texts.huge]}>
+        {t('R$')} {data.fare}
+      </Text>
+      <Text style={[texts.huge]}>
+        {t('Retirada')} {data.origin.address}
+      </Text>
+      <Text style={[texts.huge]}>
+        {t('Entrega')} {data.destination.address}
+      </Text>
       <Button title={t('Aceitar')} onPress={acceptHandler} />
       <Button title={t('Recusar')} onPress={rejectHandler} />
     </SafeAreaView>
   );
 }
-
-const style = StyleSheet.create({
-
-})

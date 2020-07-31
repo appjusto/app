@@ -3,11 +3,11 @@ import * as Linking from 'expo-linking';
 import React, { ReactNode } from 'react';
 import { Provider } from 'react-redux';
 
-import Toast from '../screens/common/Toast';
-import { createStore } from '../store';
-import Api from '../store/api';
-import { getExtra } from './config';
-import { defineLocationUpdatesTask } from './location';
+import { createStore } from '../../store';
+import Api from '../../store/api';
+import { getExtra } from '../../utils/config';
+import { defineLocationUpdatesTask } from '../../utils/location';
+import Toast from '../common/Toast';
 
 const extra = getExtra();
 export const api = new Api(extra);
@@ -37,3 +37,5 @@ export const AppContext = ({ children }: Props) => {
     </ApiContext.Provider>
   );
 };
+
+export type AppDispatch = typeof store.dispatch;

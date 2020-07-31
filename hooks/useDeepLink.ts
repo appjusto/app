@@ -8,7 +8,7 @@ const hasDeeplink = (url: Linking.ParsedURL): boolean => {
 
 export default function () {
   // state
-  const [deepLink, setDeeplink] = useState<Linking.ParsedURL | null>(null);
+  const [deepLink, setDeeplink] = useState<Linking.ParsedURL | undefined | null>(undefined);
 
   // side effects
   // once

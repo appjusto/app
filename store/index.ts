@@ -1,5 +1,5 @@
 import * as redux from 'redux';
-import ReduxThunk from 'redux-thunk';
+import ReduxThunk, { ThunkDispatch } from 'redux-thunk';
 
 import configReducer from './reducers/config';
 import consumerReducer from './reducers/consumer';
@@ -32,6 +32,10 @@ export const createStore = (extra: object) => {
     user: userReducer,
     ui: uiReducer,
   });
-
-  return redux.createStore(rootReducer, redux.applyMiddleware(ReduxThunk));
+  type StateType = typeof rootReducer;
+  type DispatchFunctionType = ThunkDispatch<StateType, undefined, redux.AnyAction>;
+  return redux.createStore(
+    rootReducer,
+    redux.applyMiddleware<DispatchFunctionType, StateType>(ReduxThunk)
+  );
 };
