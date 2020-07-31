@@ -231,17 +231,19 @@ export default function () {
           <View>
             <ShowIf test={placeValid(origin)}>
               {() => (
-                <View>
-                  <Touchable onPress={navigateToAddressComplete}>
-                    <DefaultInput
-                      style={style.input}
-                      value={destination.address}
-                      title={t('Endereço de entrega')}
-                      placeholder={t('Endereço com número')}
-                      onFocus={navigateToAddressComplete}
-                      onChangeText={navigateToAddressComplete}
-                    />
-                  </Touchable>
+                <View style={{ flex: 1 }}>
+                  <TouchableWithoutFeedback onPress={navigateToAddressComplete}>
+                    <View style={{ flex: 1 }}>
+                      <DefaultInput
+                        style={style.input}
+                        value={destination.address}
+                        title={t('Endereço de entrega')}
+                        placeholder={t('Endereço com número')}
+                        onFocus={navigateToAddressComplete}
+                        onChangeText={navigateToAddressComplete}
+                      />
+                    </View>
+                  </TouchableWithoutFeedback>
 
                   <DefaultInput
                     style={style.input}
@@ -261,7 +263,11 @@ export default function () {
 
           {/* confirmation step */}
           <ShowIf test={orderValid(order)}>
-            {() => <OrderSummary order={order} onEdit={setPage} />}
+            {() => (
+              <View style={{ flex: 1 }}>
+                <OrderSummary order={order} onEdit={setPage} />
+              </View>
+            )}
           </ShowIf>
         </ViewPager>
 

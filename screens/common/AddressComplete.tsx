@@ -8,9 +8,10 @@ import { useSelector } from 'react-redux';
 import { getEnv } from '../../store/selectors/config';
 import { t } from '../../strings';
 import { ApiContext } from '../../utils/context';
+import DefaultButton from './DefaultButton';
 import DefaultInput from './DefaultInput';
 import Touchable from './Touchable';
-import { borders } from './styles';
+import { borders, texts, screens, colors } from './styles';
 
 export default function () {
   // context
@@ -67,28 +68,36 @@ export default function () {
 
   // UI
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ ...screens.lightGrey, paddingTop: 16 }}>
       <DefaultInput
         defaultValue={initialAddress}
         value={address}
         title={t('Endereço de retirada')}
         placeholder={t('Endereço com número')}
         onChangeText={textChangeHandler}
+        style={{ marginBottom: 32 }}
       />
+      <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: 14 }}>
+        {t('Últimos endereços utilizados')}
+      </Text>
       <FlatList
         data={autocompletePredictions}
         renderItem={({ item }) => {
           return (
             <Touchable onPress={() => setAddress(item.description)}>
               <View style={style.item}>
-                <Text>{item.description}</Text>
+                <Text style={{ ...texts.medium }}>{item.description}</Text>
               </View>
             </Touchable>
           );
         }}
         keyExtractor={(item) => item.description}
       />
-      <Button title={t('Pronto')} onPress={completeHandler} />
+      <DefaultButton
+        styleObject={{ marginBottom: 16 }}
+        title={t('Confirmar endereço')}
+        onPress={completeHandler}
+      />
     </View>
   );
 }

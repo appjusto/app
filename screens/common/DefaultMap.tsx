@@ -14,11 +14,7 @@ export default React.forwardRef(({ children, fitToElements, ...props }, external
 
   // UI
   return (
-    <MapView
-      ref={ref}
-      provider={PROVIDER_GOOGLE}
-      {...props}
-    >
+    <MapView ref={ref} provider={PROVIDER_GOOGLE} {...props}>
       {children}
     </MapView>
   );

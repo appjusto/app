@@ -14,12 +14,7 @@ export default function ({ order }) {
   });
 
   return (
-    <DefaultMap
-      style={style.map}
-      minZoomLevel={13}
-      maxZoomLevel={13}
-      fitToElements
-    >
+    <DefaultMap style={style.map} minZoomLevel={13} maxZoomLevel={13} fitToElements>
       <Marker coordinate={origin.location} icon={pinPackage} />
       <Marker coordinate={destination.location} icon={pinUser} />
       <Polyline coordinates={routeCoordinates} />
