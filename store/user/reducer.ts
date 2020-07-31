@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
 
 import * as actionTypes from '../actionTypes';
-import { UserState } from '../types/user';
+import { UserState } from './types';
 
 const initialState: UserState = {};
 

@@ -1,5 +1,5 @@
 import { State } from '..';
-import { UserState } from '../types/user';
+import { UserState } from './types';
 
 export const getUserState = (state: State): UserState => state.user;
 

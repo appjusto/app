@@ -4,9 +4,9 @@ import { View, Text, Image, TouchableWithoutFeedback, Keyboard } from 'react-nat
 import { useDispatch, useSelector } from 'react-redux';
 
 import { logoWhite, illustration } from '../../assets/icons';
-import { signInWithEmail } from '../../store/actions/user';
 import { getEnv } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
+import { signInWithEmail } from '../../store/user/actions';
 import { t } from '../../strings';
 import { validateEmail } from '../../utils/validators';
 import { ApiContext } from '../app/context';

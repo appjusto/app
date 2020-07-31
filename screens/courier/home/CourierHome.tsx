@@ -10,12 +10,12 @@ import useNotificationToken from '../../../hooks/useNotificationToken';
 import { updateCourier, watchCourier } from '../../../store/courier/actions';
 import { isCourierWorking, getCourierLocation } from '../../../store/courier/selectors';
 import { CourierStatus } from '../../../store/courier/types';
-import { getUser } from '../../../store/selectors/user';
+import { getUser } from '../../../store/user/selectors';
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import { colors, padding, texts, borders } from '../../common/styles';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 export default function App() {
   // context

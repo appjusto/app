@@ -8,8 +8,8 @@ import {
   getSignInEmail,
   isSignInWithEmailLink,
   signInWithEmailLink,
-} from '../store/actions/user';
-import { getUser } from '../store/selectors/user';
+} from '../store/user/actions';
+import { getUser } from '../store/user/selectors';
 import useDeepLink from './useDeepLink';
 
 export enum AuthState {
