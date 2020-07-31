@@ -3,21 +3,21 @@ import React, { useState, useContext, useCallback, useEffect } from 'react';
 import { View, Text, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { logoWhite, illustration } from '../../../assets/icons';
-import useAuth, { AuthState } from '../../../hooks/useAuth';
-import { showToast } from '../../../store/actions/ui';
-import { signInWithEmail } from '../../../store/actions/user';
-import { getEnv } from '../../../store/selectors/config';
-import { t } from '../../../strings';
-import { validateEmail, userDataPending } from '../../../utils/validators';
-import { ApiContext } from '../../app/context';
-import AvoidingView from '../../common/AvoidingView';
-import CheckField from '../../common/CheckField';
-import DefaultButton from '../../common/DefaultButton';
-import DefaultInput from '../../common/DefaultInput';
-import { colors, texts, padding, screens } from '../../common/styles';
+import { logoWhite, illustration } from '../../assets/icons';
+import useAuth, { AuthState } from '../../hooks/useAuth';
+import { showToast } from '../../store/actions/ui';
+import { signInWithEmail } from '../../store/actions/user';
+import { getEnv } from '../../store/selectors/config';
+import { t } from '../../strings';
+import { validateEmail, userDataPending } from '../../utils/validators';
+import { ApiContext } from '../app/context';
+import AvoidingView from '../common/AvoidingView';
+import CheckField from '../common/CheckField';
+import DefaultButton from '../common/DefaultButton';
+import DefaultInput from '../common/DefaultInput';
+import { colors, texts, padding, screens } from '../common/styles';
 
-export default function ConsumerIntro() {
+export default function () {
   // context
   const api = useContext(ApiContext);
   const navigation = useNavigation();
@@ -46,7 +46,7 @@ export default function ConsumerIntro() {
       dispatch(showToast(t('Enviando link de autenticação para o seu e-mail...')));
       setSendingLink(true);
       await signInWithEmail(api)(email);
-      navigation.navigate('ConsumerConfirmation', { email });
+      navigation.navigate('SignInFeedback', { email });
     } else {
       // TODO: handle error
     }

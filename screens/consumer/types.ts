@@ -1,6 +1,6 @@
 export type UnloggedStackParamList = {
-  ConsumerIntro: undefined;
-  ConsumerConfirmation: {
+  WelcomeScreen: undefined;
+  SignInFeedback: {
     email: string;
   };
   // ConsumerRegistration: undefined;

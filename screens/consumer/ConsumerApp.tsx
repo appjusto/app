@@ -8,10 +8,10 @@ import { showToast } from '../../store/actions/ui';
 import { t } from '../../strings';
 // import { userDataPending } from '../../utils/validators';
 import AddressComplete from '../common/AddressComplete';
-import ConsumerConfirmation from './confirmation/ConsumerConfirmation';
+import SignInFeedback from '../welcome/SignInFeedback';
+import WelcomeScreen from '../welcome/WelcomeScreen';
 import ConsumerHistory from './history/ConsumerHistory';
 import ConsumerHome from './home/ConsumerHome';
-import ConsumerIntro from './intro/ConsumerIntro';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import ConsumerProfile from './profile/ConsumerProfile';
 import EraseConfirmed from './profile/EraseConfirmed';
@@ -26,13 +26,13 @@ function Unlogged() {
   return (
     <UnloggedStack.Navigator>
       <UnloggedStack.Screen
-        name="ConsumerIntro"
-        component={ConsumerIntro}
+        name="WelcomeScreen"
+        component={WelcomeScreen}
         options={{ headerShown: false, title: '' }}
       />
       <UnloggedStack.Screen
-        name="ConsumerConfirmation"
-        component={ConsumerConfirmation}
+        name="SignInFeedback"
+        component={SignInFeedback}
         options={{ title: t('Verifique seu e-mail') }}
       />
       {/* <UnloggedStack.Screen
