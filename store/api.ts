@@ -4,9 +4,9 @@ import 'firebase/firestore';
 import * as geofirestore from 'geofirestore';
 
 import { Extra } from '../utils/config';
+import { Consumer } from './consumer/types';
+import { Courier } from './courier/types';
 import { Place } from './types';
-import { Courier } from './types/courier';
-import { Consumer } from './types/consumer';
 
 export default class Api {
   private firestore: firebase.firestore.Firestore;

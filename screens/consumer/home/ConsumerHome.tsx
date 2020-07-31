@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 
 import { navigationArrow, illustration, BG, requests } from '../../../assets/icons';
 import useAuth from '../../../hooks/useAuth';
-import { watchConsumer } from '../../../store/actions/consumer';
+import { watchConsumer } from '../../../store/consumer/actions';
 import { t } from '../../../strings';
 import { AppDispatch, ApiContext } from '../../app/context';
 import { colors, texts } from '../../common/styles';

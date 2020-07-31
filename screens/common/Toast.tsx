@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, useWindowDimensions, Animated } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { hideToast } from '../../store/actions/ui';
-import { getToastMessage, getToastType } from '../../store/selectors/ui';
+import { hideToast } from '../../store/ui/actions';
+import { getToastMessage, getToastType } from '../../store/ui/selectors';
 import { colors, texts } from './styles';
 
 const percentualWidth = 0.8;

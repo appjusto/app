@@ -15,8 +15,8 @@ import { useDispatch } from 'react-redux';
 
 import { motocycle } from '../../../../assets/icons';
 import useLocationUpdates from '../../../../hooks/useLocationUpdates';
-import { showToast } from '../../../../store/actions/ui';
 import { Place, Order } from '../../../../store/types';
+import { showToast } from '../../../../store/ui/actions';
 import { t } from '../../../../strings';
 import { ApiContext } from '../../../app/context';
 import DefaultButton from '../../../common/DefaultButton';

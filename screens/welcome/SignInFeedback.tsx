@@ -1,13 +1,13 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { View, Text, Image } from 'react-native';
 import { useDispatch } from 'react-redux';
 
 import { motocycle } from '../../assets/icons';
 import useAuth, { AuthState } from '../../hooks/useAuth';
-import { showToast } from '../../store/actions/ui';
 import { signInWithEmail } from '../../store/actions/user';
+import { showToast } from '../../store/ui/actions';
 import { t } from '../../strings';
 // import { userDataPending } from '../../../utils/validators';
 import { ApiContext } from '../app/context';
@@ -30,13 +30,7 @@ export default ({ route }: Props) => {
   const dispatch = useDispatch();
 
   // state
-  const [authState, user] = useAuth();
-  useEffect(() => {
-    // TODO: ConsumerRegistration
-    // if (authState === AuthState.SignedIn && user && userDataPending(user)) {
-    //   navigation.navigate('ConsumerRegistration');
-    // }
-  }, [authState, user]);
+  const [authState] = useAuth();
 
   // handlers
   const resendLink = (): void => {

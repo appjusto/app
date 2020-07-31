@@ -1,5 +1,5 @@
 import { State } from '..';
-import { ConfigState } from '../types/config';
+import { ConfigState } from './types';
 
 export const getConfigState = (state: State): ConfigState => {
   return state.config;

@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
 
 import * as actionTypes from '../actionTypes';
-import { ToastState, UIState } from '../types/ui';
+import { ToastState, UIState } from './types';
 
 const initialToastState: ToastState = {
   message: null,

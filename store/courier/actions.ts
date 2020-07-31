@@ -2,7 +2,7 @@ import { Dispatch } from 'redux';
 
 import * as actionTypes from '../actionTypes';
 import Api from '../api';
-import { Courier } from '../types/courier';
+import { Courier } from './types';
 
 // update data on backend
 export const updateCourier = (api: Api) => (courierId: string, changes: object) => {

@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import useAuth, { AuthState } from '../../hooks/useAuth';
-import { showToast } from '../../store/actions/ui';
+import { showToast } from '../../store/ui/actions';
 import { t } from '../../strings';
 // import { userDataPending } from '../../utils/validators';
 import AddressComplete from '../common/AddressComplete';
@@ -104,10 +104,13 @@ export default function () {
   // side effects
   const [authState, user] = useAuth();
   useEffect(() => {
+    console.log('Consumer App', authState);
     if (authState === AuthState.InvalidCredentials) {
       dispatch(showToast(t('Sua sessão expirou. Faça login novamente.')));
     }
   }, [authState, user]);
+
+  console.log(authState);
 
   // UI
   // show nothing while checking for credentials

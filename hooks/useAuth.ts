@@ -13,7 +13,8 @@ import { getUser } from '../store/selectors/user';
 import useDeepLink from './useDeepLink';
 
 export enum AuthState {
-  Checking = 'checking',
+  CheckingPreviousSession = 'checking-previous-sesssion',
+  CheckingDeeplink = 'checking-deeplink',
   Unsigned = 'unsigned',
   SigningIn = 'signing-in',
   SignedIn = 'signed-in',
@@ -27,9 +28,8 @@ export default function (): [AuthState, firebase.User | undefined | null] {
 
   // state
   const user = useSelector(getUser);
-  const [authState, setAuthState] = useState<AuthState>(AuthState.Checking);
+  const [authState, setAuthState] = useState<AuthState>(AuthState.CheckingPreviousSession);
   const deepLink = useDeepLink();
-  const [checkDeeplink, setCheckDeeplink] = useState(false);
 
   // side effects
   // subscribe once to be notified whenever the user changes (capture by the next effect)
@@ -40,27 +40,27 @@ export default function (): [AuthState, firebase.User | undefined | null] {
 
   // whenever auth changes
   useEffect(() => {
+    console.log('user', user);
     // undefined means we're still checking; nothing to be done in this case
     if (user === undefined) return;
     // null means that we've already checked and no user was previously stored
     if (user === null) {
-      setCheckDeeplink(true);
+      setAuthState(AuthState.CheckingDeeplink);
     } else {
       setAuthState(AuthState.SignedIn);
     }
   }, [user]);
 
-  // whenever deeplink changes
   useEffect(() => {
-    // deeplink is checked only if user was not logged before
-    if (!checkDeeplink) return;
-    // undefined means we're still checkin for the deeplink
+    if (authState !== AuthState.CheckingDeeplink) return;
+    // undefined means useDeeplink hasnt finished yet
     if (deepLink === undefined) return;
-    // null means that no deeplink was found
+    // null means there's no deeplink
     if (deepLink === null) {
       setAuthState(AuthState.Unsigned);
       return;
     }
+
     const link = deepLink.queryParams?.link ?? '';
     if (!isSignInWithEmailLink(api)(link)) {
       setAuthState(AuthState.InvalidCredentials);
@@ -80,7 +80,7 @@ export default function (): [AuthState, firebase.User | undefined | null] {
         setAuthState(AuthState.InvalidCredentials);
       }
     });
-  }, [checkDeeplink, deepLink]);
+  }, [deepLink, authState]);
 
   return [authState, user];
 }

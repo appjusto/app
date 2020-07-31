@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
 
 import * as actionTypes from '../actionTypes';
-import { ConsumerState } from '../types/consumer';
+import { ConsumerState } from './types';
 
 const initialState: ConsumerState = {};
 

@@ -1,9 +1,9 @@
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 
-import { updateCourierLocation } from '../store/actions/courier';
-import { isCourierFlavor } from '../store/selectors/config';
-import { isCourierWorking, getCourier } from '../store/selectors/courier';
+import { isCourierFlavor } from '../store/config/selectors';
+import { updateCourierLocation } from '../store/courier/actions';
+import { isCourierWorking, getCourier } from '../store/courier/selectors';
 
 const TASK_FETCH_LOCATION = 'TASK_FETCH_LOCATION';
 

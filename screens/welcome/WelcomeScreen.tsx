@@ -1,15 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState, useContext, useCallback, useEffect } from 'react';
+import React, { useState, useContext, useCallback } from 'react';
 import { View, Text, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { logoWhite, illustration } from '../../assets/icons';
-import useAuth, { AuthState } from '../../hooks/useAuth';
-import { showToast } from '../../store/actions/ui';
 import { signInWithEmail } from '../../store/actions/user';
-import { getEnv } from '../../store/selectors/config';
+import { getEnv } from '../../store/config/selectors';
+import { showToast } from '../../store/ui/actions';
 import { t } from '../../strings';
-import { validateEmail, userDataPending } from '../../utils/validators';
+import { validateEmail } from '../../utils/validators';
 import { ApiContext } from '../app/context';
 import AvoidingView from '../common/AvoidingView';
 import CheckField from '../common/CheckField';
@@ -18,6 +17,7 @@ import DefaultInput from '../common/DefaultInput';
 import { colors, texts, padding, screens } from '../common/styles';
 
 export default function () {
+  console.log('WelcomeScreen');
   // context
   const api = useContext(ApiContext);
   const navigation = useNavigation();
@@ -28,17 +28,6 @@ export default function () {
   const [email, setEmail] = useState(dev ? 'pdandradeb@gmail.com' : '');
   const [acceptedTerms, setAcceptTerms] = useState(false);
   const [sendingLink, setSendingLink] = useState(false);
-  const [authState, user] = useAuth();
-
-  // side effects
-  useEffect(() => {
-    if (!user) return;
-    if (authState !== AuthState.SignedIn) return;
-    if (userDataPending(user)) {
-      // TODO: ConsumerRegistration
-      // navigation.navigate('ConsumerRegistration');
-    }
-  }, [authState, user]);
 
   // handlers
   const signInHandler = useCallback(async () => {

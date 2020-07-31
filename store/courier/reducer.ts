@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
 
 import * as actionTypes from '../actionTypes';
-import { CourierState, Courier } from '../types/courier';
+import { CourierState, Courier } from './types';
 
 const initialState: CourierState = {
   availableCouriers: [],

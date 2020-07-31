@@ -1,5 +1,5 @@
 import { State } from '..';
-import { UIState } from '../types/ui';
+import { UIState } from './types';
 
 export const getUIState = (state: State): UIState => state.ui;
 
