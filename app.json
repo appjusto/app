@@ -32,6 +32,11 @@
       "permissions": ["ACCESS_FINE_LOCATION"],
       "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true,
+      "icon": "./assets/icon.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#78E08F"
+      },
       "intentFilters": [
         {
           "action": "VIEW",

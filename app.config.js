@@ -50,6 +50,10 @@ export default ({ config }) => {
     android: {
       ...android,
       package: androidPackage,
+      intentFilters: android.intentFilters.map((intent) => ({
+        ...intent,
+        data: intent.data.map((data) => ({ ...data, pathPrefix: `/${flavor}` })), // update path prefix according with flavor to avoid conflict when user has both apps installed
+      })),
       config: {
         googleMaps: {
           apiKey: googleMapsApiKey,
