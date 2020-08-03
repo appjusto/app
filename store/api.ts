@@ -58,7 +58,7 @@ export default class Api {
         packageName: this.extra.androidPackage,
         installApp: true,
       },
-      dynamicLinkDomain: 'link.appjusto.com.br',
+      dynamicLinkDomain: 'appjusto.com.br',
     });
   }
 

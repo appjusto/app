@@ -30,6 +30,13 @@
             {
               "client_id": "506390194883-r3ie8usesf467t7q51kgb1k2i5874ugm.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "506390194883-75t4tt4ktg5ph8bqu6jjtph56k9fqdl5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.com.appjusto.consumer"
+              }
             }
           ]
         }
@@ -44,6 +51,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "506390194883-ouscqab0fsom09u9546na07cs8i8ssaa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.appjusto.consumer",
+            "certificate_hash": "c04e8ad92a621d672a52a1e98c864539c0407aa7"
+          }
+        },
+        {
           "client_id": "506390194883-r3ie8usesf467t7q51kgb1k2i5874ugm.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -59,6 +74,13 @@
             {
               "client_id": "506390194883-r3ie8usesf467t7q51kgb1k2i5874ugm.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "506390194883-75t4tt4ktg5ph8bqu6jjtph56k9fqdl5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.com.appjusto.consumer"
+              }
             }
           ]
         }
@@ -73,6 +95,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "506390194883-l43pr1hm3530c05hkmsr8t4g0r1tnu7j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.appjusto.courier",
+            "certificate_hash": "007a72971f91670a414386dc0bd17fa54d512142"
+          }
+        },
+        {
           "client_id": "506390194883-r3ie8usesf467t7q51kgb1k2i5874ugm.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -88,6 +118,13 @@
             {
               "client_id": "506390194883-r3ie8usesf467t7q51kgb1k2i5874ugm.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "506390194883-75t4tt4ktg5ph8bqu6jjtph56k9fqdl5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.com.appjusto.consumer"
+              }
             }
           ]
         }
