@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-import { texts, colors } from '../../common/styles';
-import { t } from '../../../strings';
+import { t } from '../../strings';
+import { texts, colors } from '../common/styles';
 
 export default function Terms() {
   return (

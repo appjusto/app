@@ -11,17 +11,17 @@ import {
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { erase } from '../../../assets/icons';
-import { updateConsumer } from '../../../store/consumer/actions';
-import { getConsumer } from '../../../store/consumer/selectors';
-import { showToast } from '../../../store/ui/actions';
-import { t } from '../../../strings';
-import { ApiContext, AppDispatch } from '../../app/context';
-import AvoidingView from '../../common/AvoidingView';
-import CheckField from '../../common/CheckField';
-import DefaultButton from '../../common/DefaultButton';
-import DefaultInput from '../../common/DefaultInput';
-import { colors, texts, screens } from '../../common/styles';
+import { erase } from '../../assets/icons';
+import { updateConsumer } from '../../store/consumer/actions';
+import { getConsumer } from '../../store/consumer/selectors';
+import { showToast } from '../../store/ui/actions';
+import { t } from '../../strings';
+import { ApiContext, AppDispatch } from '../app/context';
+import AvoidingView from '../common/AvoidingView';
+import CheckField from '../common/CheckField';
+import DefaultButton from '../common/DefaultButton';
+import DefaultInput from '../common/DefaultInput';
+import { colors, texts, screens } from '../common/styles';
 
 const ProfileEdit = () => {
   // context

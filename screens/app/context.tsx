@@ -10,9 +10,11 @@ import { defineLocationUpdatesTask } from '../../utils/location';
 import Toast from '../common/Toast';
 
 const extra = getExtra();
-export const api = new Api(extra);
-export const store = createStore(extra);
+const api = new Api(extra);
+const store = createStore(extra);
+
 export const ApiContext = React.createContext<Api>(api);
+export type AppDispatch = typeof store.dispatch;
 
 defineLocationUpdatesTask(store, api);
 
@@ -37,5 +39,3 @@ export const AppContext = ({ children }: Props) => {
     </ApiContext.Provider>
   );
 };
-
-export type AppDispatch = typeof store.dispatch;

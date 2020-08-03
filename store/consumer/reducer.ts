@@ -11,6 +11,9 @@ export default function (state: ConsumerState = initialState, action: AnyAction)
     case actionTypes.CONSUMER_PROFILE_UPDATED: {
       return { ...state, consumer: { ...state.consumer, ...payload } };
     }
+    case actionTypes.USER_LOGGED_OUT: {
+      return { ...state, consumer: undefined };
+    }
     default:
       return state;
   }

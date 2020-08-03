@@ -24,7 +24,7 @@ import DefaultInput from '../../../common/DefaultInput';
 import ShowIf from '../../../common/ShowIf';
 import Touchable from '../../../common/Touchable';
 import { screens, borders, texts } from '../../../common/styles';
-import { HomeStackParamList } from '../../types';
+import { HomeStackParamList } from '../../home/types';
 import OrderMap from './OrderMap';
 import OrderSummary from './OrderSummary';
 

@@ -1,19 +1,25 @@
-import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 
-import CourierHome from './home/CourierHome';
-import Matching from './matching/Matching';
+import AuthContainer from '../app/AuthContainer';
+import ProfileStack from '../profile/ProfileStack';
+import Unlogged from '../unlogged/UnloggedStack';
+import HomeStack from './home/HomeStack';
 
-const CourierRootNavigator = createStackNavigator();
-function CourierRoot() {
+const LoggedNavigator = createBottomTabNavigator();
+function Logged() {
   return (
-    <CourierRootNavigator.Navigator>
-      <CourierRootNavigator.Screen name="Home" component={CourierHome} />
-      <CourierRootNavigator.Screen name="Matching" component={Matching} />
-    </CourierRootNavigator.Navigator>
+    <LoggedNavigator.Navigator>
+      <LoggedNavigator.Screen name="Home" component={HomeStack} />
+      <LoggedNavigator.Screen
+        name="Profile"
+        component={ProfileStack}
+        options={{ title: 'Sua conta' }}
+      />
+    </LoggedNavigator.Navigator>
   );
 }
 
 export default function () {
-  return <CourierRoot />;
+  return <AuthContainer Logged={Logged} Unlogged={Unlogged} />;
 }

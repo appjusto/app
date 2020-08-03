@@ -9,11 +9,10 @@ import useAuth, { AuthState } from '../../hooks/useAuth';
 import { showToast } from '../../store/ui/actions';
 import { signInWithEmail } from '../../store/user/actions';
 import { t } from '../../strings';
-// import { userDataPending } from '../../../utils/validators';
 import { ApiContext } from '../app/context';
 import DefaultButton from '../common/DefaultButton';
 import { colors, texts, borders, screens } from '../common/styles';
-import { UnloggedStackParamList } from '../consumer/types';
+import { UnloggedStackParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<UnloggedStackParamList, 'SignInFeedback'>;
 type ScreenRouteProp = RouteProp<UnloggedStackParamList, 'SignInFeedback'>;

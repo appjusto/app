@@ -10,7 +10,7 @@ import { watchConsumer } from '../../../store/consumer/actions';
 import { t } from '../../../strings';
 import { AppDispatch, ApiContext } from '../../app/context';
 import { colors, texts } from '../../common/styles';
-import { HomeStackParamList } from '../types';
+import { HomeStackParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'ConsumerHome'>;
 type ScreenRouteProp = RouteProp<HomeStackParamList, 'ConsumerHome'>;

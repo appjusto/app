@@ -2,10 +2,10 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
 
-import { t } from '../../../strings';
-import CheckField from '../../common/CheckField';
-import DefaultButton from '../../common/DefaultButton';
-import { colors, texts, screens } from '../../common/styles';
+import { t } from '../../strings';
+import CheckField from '../common/CheckField';
+import DefaultButton from '../common/DefaultButton';
+import { colors, texts, screens } from '../common/styles';
 
 interface ScreenState {
   notWorkingOnMyRegion: boolean;

@@ -1,4 +1,6 @@
-import React, { useEffect, useContext } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import * as Notifications from 'expo-notifications';
+import React, { useEffect, useContext, useCallback } from 'react';
 import { StyleSheet, View, Dimensions, Text, Image, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,18 +19,18 @@ import { colors, padding, texts, borders } from '../../common/styles';
 
 const { width } = Dimensions.get('window');
 
-export default function App() {
+export default function () {
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = useContext(ApiContext);
+  const navigation = useNavigation();
 
   // state
-  const [notificationToken, notificationError] = useNotificationToken();
-  useNotification();
   const user = useSelector(getUser);
   const working = useSelector(isCourierWorking);
   const locationPermission = useLocationUpdates(working);
   const currentLocation = useSelector(getCourierLocation);
+  const [notificationToken, notificationError] = useNotificationToken();
 
   // side effects
   // location permission granted
@@ -44,12 +46,13 @@ export default function App() {
 
   // notification permission
   useEffect(() => {
+    if (!user) return;
     if (notificationError) {
       // TODO: ALERT
     } else if (notificationToken) {
-      updateCourier(api)(user!.uid, { notificationToken });
+      updateCourier(api)(user.uid, { notificationToken });
     }
-  }, [notificationToken, notificationError]);
+  }, [notificationToken, notificationError, user]);
 
   // watch for profile updates
   useEffect(() => {
@@ -58,6 +61,16 @@ export default function App() {
   }, [user]);
 
   // handlers
+  const notificationHandler = useCallback(
+    (content: Notifications.NotificationContent) => {
+      if (content.data.action === 'matching') {
+        navigation.navigate('Matching', { data: content.data });
+      }
+    },
+    [navigation]
+  );
+  useNotification(notificationHandler);
+
   const toggleWorking = () => {
     const status = working ? CourierStatus.Unavailable : CourierStatus.Available;
     updateCourier(api)(user!.uid, { status });
