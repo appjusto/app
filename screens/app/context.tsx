@@ -27,7 +27,7 @@ export interface Props {
 export const AppContext = ({ children }: Props) => {
   const path = extra.flavor;
   const linking = {
-    prefixes: [Linking.makeUrl(path), `https://link.appjusto.com.br/app/${path}`],
+    prefixes: [Linking.makeUrl(path), `https://link.appjusto.com.br`],
   };
 
   const log = { l: linking, r: Constants.manifest.revisionId ?? '' };

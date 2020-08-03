@@ -47,7 +47,7 @@ export default class Api {
     return firebase.auth().sendSignInLinkToEmail(email, {
       // URL you want to redirect back to. The domain (www.example.com) for this
       // URL must be whitelisted in the Firebase Console.
-      url: `https://link.appjusto.com.br/app/${this.extra.flavor}?something=else'`,
+      url: `https://link.appjusto.com.br/${this.extra.flavor}/join?something=else'`,
       // url: `https://exp.host/--/to-exp/${encodeURIComponent('exp://192.168.15.3:19000')}`,
       // url: `https://exp.host/@appjusto/app-justo-consumer/--/app/join`,
       handleCodeInApp: true,
