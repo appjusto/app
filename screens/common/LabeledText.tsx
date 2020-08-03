@@ -1,20 +1,21 @@
-import React, { ReactNode } from 'react';
-import { View, Text, TextInput, StyleSheet, TextInputProps } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TextInputProps } from 'react-native';
 
 import { borders, texts, colors } from './styles';
 
 export interface Props extends TextInputProps {
   title: string;
-  children?: ReactNode;
+  children?: React.ReactNode;
 }
 
 export default ({ title, children, style: externalStyle, ...props }: Props) => (
   <View style={[style.container, externalStyle]}>
     <View>
       <Text style={style.label}>{title}</Text>
-      <TextInput style={style.input} {...props} />
+      <Text style={style.text} {...props}>
+        {children}
+      </Text>
     </View>
-    {children}
   </View>
 );
 
@@ -34,7 +35,7 @@ const style = StyleSheet.create({
     color: colors.darkGreen,
     paddingVertical: 2,
   },
-  input: {
+  text: {
     ...texts.medium,
     color: colors.darkGrey,
   },

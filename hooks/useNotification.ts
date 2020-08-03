@@ -21,11 +21,15 @@ export default function (
 
   // side effects
   useEffect(() => {
-    Notifications.addNotificationReceivedListener(notificationHandler);
-    Notifications.addNotificationResponseReceivedListener(notificationResponseHandler);
+    const subscription = Notifications.addNotificationReceivedListener(notificationHandler);
+    const responseSubscription = Notifications.addNotificationResponseReceivedListener(
+      notificationResponseHandler
+    );
 
     return () => {
-      Notifications.removeAllNotificationListeners();
+      Notifications.removeNotificationSubscription(subscription);
+      Notifications.removeNotificationSubscription(responseSubscription);
+      // Notifications.removeAllNotificationListeners();
     };
   }, []);
 }
