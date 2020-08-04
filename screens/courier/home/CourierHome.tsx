@@ -10,7 +10,7 @@ import useLocationUpdates from '../../../hooks/useLocationUpdates';
 import useNotification from '../../../hooks/useNotification';
 import useNotificationToken from '../../../hooks/useNotificationToken';
 import { updateCourier, watchCourier } from '../../../store/courier/actions';
-import { isCourierWorking, getCourierLocation } from '../../../store/courier/selectors';
+import { isCourierWorking, getCourierLocation, getCourier } from '../../../store/courier/selectors';
 import { CourierStatus } from '../../../store/courier/types';
 import { getUser } from '../../../store/user/selectors';
 import { t } from '../../../strings';
@@ -27,22 +27,13 @@ export default function () {
 
   // state
   const user = useSelector(getUser);
+  const courier = useSelector(getCourier);
   const working = useSelector(isCourierWorking);
   const locationPermission = useLocationUpdates(working);
   const currentLocation = useSelector(getCourierLocation);
   const [notificationToken, notificationError] = useNotificationToken();
 
   // side effects
-  // location permission granted
-  useEffect(() => {
-    if (locationPermission === 'granted') {
-      // TO-DO: send current location?
-    } else {
-      // TODO: Linking.openURL('app-settings:')
-      // Linking.openURL('app-settings://notification/<bundleIdentifier>')
-      // IntentLauncher.startActivityAsync(IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS);
-    }
-  }, [locationPermission]);
 
   // notification permission
   useEffect(() => {
@@ -76,13 +67,23 @@ export default function () {
     updateCourier(api)(user!.uid, { status });
   };
 
-  // UI
+  // location permission granted
+  useEffect(() => {
+    if (locationPermission === 'denied') {
+      // TODO: Linking.openURL('app-settings:')
+      // Linking.openURL('app-settings://notification/<bundleIdentifier>')
+      // IntentLauncher.startActivityAsync(IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS);
+    }
+  }, [locationPermission]);
+
   return (
     <SafeAreaView>
       {/* Main area */}
       <View style={[style.main, { backgroundColor: working ? colors.green : colors.yellow }]}>
         <Text style={[texts.big, { paddingTop: 32, paddingBottom: 24 }]}>
-          {t('Olá, João Paulo. Faça suas corridas com segurança.')}
+          {`${t('Olá')}, ${courier?.name ?? 'entregador'}. ${t(
+            'Faça suas corridas com segurança.'
+          )}`}
         </Text>
 
         {/* controls */}

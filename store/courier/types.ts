@@ -8,6 +8,7 @@ export enum CourierStatus {
 
 export interface Courier {
   id: string;
+  name?: string;
   status?: CourierStatus;
   location?: Coordinates;
   notificationToken?: string;

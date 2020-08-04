@@ -6,7 +6,7 @@ import { Courier } from './types';
 
 // update data on backend
 export const updateCourier = (api: Api) => (courierId: string, changes: object) => {
-  api.updateCourier(courierId, changes);
+  return api.updateCourier(courierId, changes);
 };
 
 export const updateCourierLocation = (api: Api) => (courier: Courier, location) => (

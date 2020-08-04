@@ -12,8 +12,10 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 
 import { erase } from '../../assets/icons';
+import { getFlavor } from '../../store/config/selectors';
 import { updateConsumer } from '../../store/consumer/actions';
 import { getConsumer } from '../../store/consumer/selectors';
+import { getCourier } from '../../store/courier/selectors';
 import { showToast } from '../../store/ui/actions';
 import { t } from '../../strings';
 import { ApiContext, AppDispatch } from '../app/context';
@@ -22,6 +24,8 @@ import CheckField from '../common/CheckField';
 import DefaultButton from '../common/DefaultButton';
 import DefaultInput from '../common/DefaultInput';
 import { colors, texts, screens } from '../common/styles';
+import { updateCourier } from '../../store/courier/actions';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const ProfileEdit = () => {
   // context
@@ -30,9 +34,10 @@ const ProfileEdit = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // state
-  const consumer = useSelector(getConsumer);
+  const flavor = useSelector(getFlavor);
+  const user = useSelector(flavor === 'consumer' ? getConsumer : getCourier);
   const [updating, setUpdating] = useState(false);
-  const [name, setName] = useState<string>(consumer?.name ?? '');
+  const [name, setName] = useState<string>(user?.name ?? '');
   const [surname, setSurname] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -40,14 +45,15 @@ const ProfileEdit = () => {
   const [acceptMarketing, setAcceptMarketing] = useState(false);
 
   // handlers
+  const updateUser = flavor === 'consumer' ? updateConsumer : updateCourier;
   const toggleAcceptMarketing = useCallback(() => {
     setAcceptMarketing(!acceptMarketing);
   }, [acceptMarketing]);
 
-  const updateConsumerHandler = async () => {
+  const updateUserHander = async () => {
     setUpdating(true);
     dispatch(showToast(t('Atualizando cadastro...')));
-    await updateConsumer(api)(consumer!.id, {
+    await updateUser(api)(user!.id, {
       name,
       surname,
       phone,
@@ -64,7 +70,7 @@ const ProfileEdit = () => {
       <View style={{ flex: 1 }}>
         <AvoidingView>
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <View>
+            <ScrollView>
               <View style={{ marginTop: 16 }}>
                 <Text style={{ ...texts.big }}>{t('Seus dados')}</Text>
                 <Text style={styles.default}>{t('Edite seus dados pessoais:')}</Text>
@@ -108,7 +114,7 @@ const ProfileEdit = () => {
                   wide
                   title={t('Atualizar')}
                   disabled={updating}
-                  onPress={updateConsumerHandler}
+                  onPress={updateUserHander}
                 />
                 <TouchableOpacity onPress={() => navigation.navigate('ProfileErase')}>
                   <View style={styles.eraseContainer}>
@@ -119,7 +125,7 @@ const ProfileEdit = () => {
                   </View>
                 </TouchableOpacity>
               </View>
-            </View>
+            </ScrollView>
           </TouchableWithoutFeedback>
         </AvoidingView>
       </View>
