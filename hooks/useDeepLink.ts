@@ -1,6 +1,6 @@
 import * as Linking from 'expo-linking';
 import { useEffect, useState } from 'react';
-import { Platform, ToastAndroid } from 'react-native';
+// import { Platform, ToastAndroid } from 'react-native';
 
 export default function () {
   // state
@@ -20,13 +20,13 @@ export default function () {
   }, []);
 
   // debug only
-  useEffect(() => {
-    if (deepLink) {
-      if (Platform.OS === 'android') {
-        ToastAndroid.show(deepLink, ToastAndroid.LONG);
-      }
-    }
-  }, [deepLink]);
+  // useEffect(() => {
+  //   if (deepLink) {
+  //     if (Platform.OS === 'android') {
+  //       ToastAndroid.show(deepLink, ToastAndroid.LONG);
+  //     }
+  //   }
+  // }, [deepLink]);
 
   return deepLink;
 }

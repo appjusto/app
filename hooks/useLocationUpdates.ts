@@ -3,31 +3,45 @@ import { useState, useEffect } from 'react';
 
 import { startLocationUpdatesTask, stopLocationUpdatesTask } from '../utils/location';
 
-export default function (shouldAskPermission: boolean) {
+const shouldAskPermission = (response: Permissions.PermissionResponse | null): boolean => {
+  if (response === null) return true;
+  if (response.granted) return false;
+  return response.canAskAgain;
+};
+
+export default function (enabled: boolean): Permissions.PermissionStatus {
   // state
-  const [locationPermission, setLocationPermission] = useState<string | null>(null);
+  const [
+    permissionResponse,
+    setPermissionResponse,
+  ] = useState<Permissions.PermissionResponse | null>(null);
 
   // side effects
+  // ask permission
   const askPermission = async () => {
-    const { status } = await Permissions.askAsync(Permissions.LOCATION);
-    setLocationPermission(status);
+    setPermissionResponse(await Permissions.askAsync(Permissions.LOCATION));
   };
-
-  // ask for permission
-  useEffect(() => {
-    if (shouldAskPermission) askPermission();
-  }, [shouldAskPermission]);
 
   // start tasks
   useEffect(() => {
-    if (locationPermission === 'granted') {
-      startLocationUpdatesTask();
-
-      return () => {
-        stopLocationUpdatesTask();
-      };
+    if (enabled) {
+      if (shouldAskPermission(permissionResponse)) {
+        askPermission();
+        return;
+      }
+      if (permissionResponse) {
+        if (permissionResponse.granted) {
+          startLocationUpdatesTask();
+          // we probably shouldn't ever stop automatically; just when user disables location manually
+          // return () => {
+          //   stopLocationUpdatesTask();
+          // };
+        }
+      }
+    } else {
+      stopLocationUpdatesTask();
     }
-  }, [locationPermission]);
+  }, [enabled, permissionResponse]);
 
-  return locationPermission;
+  return permissionResponse?.status ?? Permissions.PermissionStatus.UNDETERMINED;
 }

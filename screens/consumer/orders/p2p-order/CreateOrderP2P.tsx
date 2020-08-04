@@ -14,7 +14,6 @@ import {
 import { useDispatch } from 'react-redux';
 
 import { motocycle } from '../../../../assets/icons';
-import useLocationUpdates from '../../../../hooks/useLocationUpdates';
 import { Place, Order } from '../../../../store/types';
 import { showToast } from '../../../../store/ui/actions';
 import { t } from '../../../../strings';
@@ -65,8 +64,6 @@ export default function ({ navigation, route }: Props) {
   const viewPager = useRef<ViewPager>();
 
   // state
-  const locationPermission = useLocationUpdates(true);
-
   const [step, setStep] = useState(Steps.Origin);
   const [origin, setOrigin] = useState<Place>({} as Place);
   const [destination, setDestination] = useState<Place>({} as Place);
