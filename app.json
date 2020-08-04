@@ -25,7 +25,7 @@
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Saber a localização do entregador",
         "NSLocationAlwaysUsageDescription": "Saber a localização do entregador"
       },
-      "associatedDomains": ["applinks:appjusto.com.br"]
+      "associatedDomains": ["applinks:deeplink.appjusto.com.br"]
     },
     "android": {
       "package": "br.com.appjusto",
@@ -44,7 +44,7 @@
           "data": [
             {
               "scheme": "https",
-              "host": "appjusto.com.br",
+              "host": "deeplink.appjusto.com.br",
               "pathPrefix": "/"
             }
           ],

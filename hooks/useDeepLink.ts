@@ -1,33 +1,32 @@
 import * as Linking from 'expo-linking';
 import { useEffect, useState } from 'react';
-
-const hasDeeplink = (url: Linking.ParsedURL): boolean => {
-  if (url.queryParams?.link) return true;
-  return false;
-};
+import { Platform, ToastAndroid } from 'react-native';
 
 export default function () {
   // state
-  const [deepLink, setDeeplink] = useState<Linking.ParsedURL | undefined | null>(undefined);
+  const [deepLink, setDeeplink] = useState<string | undefined | null>(undefined);
 
   // side effects
   // once
   useEffect(() => {
-    Linking.parseInitialURLAsync().then((value) => {
-      console.log('1 parsed initial URL: ', value);
-      if (hasDeeplink(value)) setDeeplink(value);
-      else setDeeplink(null);
+    Linking.getInitialURL().then((value) => {
+      setDeeplink(value);
     });
     const handler: Linking.URLListener = (ev) => {
-      console.log('2 url changed: ', ev.url);
-      const parsedURL = Linking.parse(ev.url);
-      console.log('hasDeeplink:', hasDeeplink(parsedURL));
-      if (hasDeeplink(parsedURL)) setDeeplink(parsedURL);
-      else setDeeplink(null);
+      setDeeplink(ev.url);
     };
     Linking.addEventListener('url', handler);
     return () => Linking.removeEventListener('url', handler);
   }, []);
+
+  // debug only
+  useEffect(() => {
+    if (deepLink) {
+      if (Platform.OS === 'android') {
+        ToastAndroid.show(deepLink, ToastAndroid.LONG);
+      }
+    }
+  }, [deepLink]);
 
   return deepLink;
 }

@@ -45,7 +45,7 @@ export default class Api {
   sendSignInLinkToEmail(email: string): Promise<void> {
     firebase.auth().languageCode = 'pt'; // i18n
     return firebase.auth().sendSignInLinkToEmail(email, {
-      url: `https://appjusto.com.br/app/${this.extra.flavor}/join?something=else'`,
+      url: `https://deeplink.appjusto.com.br/${this.extra.flavor}/join?something=else'`,
       handleCodeInApp: true,
       iOS: {
         bundleId: this.extra.bundleIdentifier,
@@ -54,11 +54,12 @@ export default class Api {
         packageName: this.extra.androidPackage,
         installApp: true,
       },
-      dynamicLinkDomain: 'appjusto.com.br',
+      dynamicLinkDomain: 'deeplink.appjusto.com.br',
     });
   }
 
-  isSignInWithEmailLink(link: string): boolean {
+  isSignInWithEmailLink(link: string | null): boolean {
+    if (!link) return false;
     return firebase.auth().isSignInWithEmailLink(link);
   }
 
