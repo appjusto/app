@@ -1,6 +1,8 @@
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import * as Notifications from 'expo-notifications';
-import React, { useEffect, useContext, useCallback } from 'react';
+import { nanoid } from 'nanoid/non-secure';
+import React, { useEffect, useContext, useCallback, useState } from 'react';
 import { StyleSheet, View, Dimensions, Text, Image, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,31 +12,39 @@ import useLocationUpdates from '../../../hooks/useLocationUpdates';
 import useNotification from '../../../hooks/useNotification';
 import useNotificationToken from '../../../hooks/useNotificationToken';
 import { updateCourier, watchCourier } from '../../../store/courier/actions';
-import { isCourierWorking, getCourierLocation, getCourier } from '../../../store/courier/selectors';
+import { isCourierWorking, getCourier } from '../../../store/courier/selectors';
 import { CourierStatus } from '../../../store/courier/types';
+import { OrderMatchRequest } from '../../../store/types';
 import { getUser } from '../../../store/user/selectors';
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import { colors, padding, texts, borders } from '../../common/styles';
+import { HomeStackParamList } from './types';
 
 const { width } = Dimensions.get('window');
 
-export default function () {
+type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'CourierHome'>;
+type ScreenRouteProp = RouteProp<HomeStackParamList, 'CourierHome'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
+
+export default function ({ navigation }: Props) {
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = useContext(ApiContext);
-  const navigation = useNavigation();
 
   // state
   const user = useSelector(getUser);
   const courier = useSelector(getCourier);
   const working = useSelector(isCourierWorking);
-  const locationPermission = useLocationUpdates(working);
-  const currentLocation = useSelector(getCourierLocation);
+  const [retryKey, setRetryKey] = useState(nanoid());
+  const locationPermission = useLocationUpdates(working, retryKey);
   const [notificationToken, notificationError] = useNotificationToken();
 
   // side effects
-
   // notification permission
   useEffect(() => {
     if (!user) return;
@@ -49,13 +59,20 @@ export default function () {
   useEffect(() => {
     if (!user) return;
     return dispatch(watchCourier(api)(user.uid));
-  }, [user]);
+  }, []);
+
+  // location permission denied
+  useEffect(() => {
+    if (working && locationPermission === 'denied') {
+      navigation.navigate('PermissionDeniedFeedback');
+    }
+  }, [working, locationPermission]);
 
   // handlers
   const notificationHandler = useCallback(
     (content: Notifications.NotificationContent) => {
       if (content.data.action === 'matching') {
-        navigation.navigate('Matching', { data: content.data });
+        navigation.navigate('Matching', { order: (content.data as unknown) as OrderMatchRequest });
       }
     },
     [navigation]
@@ -65,17 +82,13 @@ export default function () {
   const toggleWorking = () => {
     const status = working ? CourierStatus.Unavailable : CourierStatus.Available;
     updateCourier(api)(user!.uid, { status });
+
+    if (status === CourierStatus.Available) {
+      setRetryKey(nanoid());
+    }
   };
 
-  // location permission granted
-  useEffect(() => {
-    if (locationPermission === 'denied') {
-      // TODO: Linking.openURL('app-settings:')
-      // Linking.openURL('app-settings://notification/<bundleIdentifier>')
-      // IntentLauncher.startActivityAsync(IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS);
-    }
-  }, [locationPermission]);
-
+  // UI
   return (
     <SafeAreaView>
       {/* Main area */}

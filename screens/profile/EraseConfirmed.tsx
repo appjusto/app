@@ -30,10 +30,6 @@ const EraseConfirmed = () => {
     ratherUseAnotherApp: false,
   });
 
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
-
   // UI
   return (
     <View style={{ ...screens.lightGrey }}>

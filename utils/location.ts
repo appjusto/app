@@ -25,10 +25,10 @@ export const startLocationUpdatesTask = () => {
 };
 
 export const stopLocationUpdatesTask = async () => {
-  const hasStarted = await Location.hasStartedLocationUpdatesAsync(TASK_FETCH_LOCATION);
-  if (hasStarted) {
-    Location.stopLocationUpdatesAsync(TASK_FETCH_LOCATION);
-  }
+  // const hasStarted = await Location.hasStartedLocationUpdatesAsync(TASK_FETCH_LOCATION);
+  // hasStartedLocationUpdatesAsync is returning true even when the task wasn't started yet
+  // probably no harm to just ignore the error when stop un non started task
+  Location.stopLocationUpdatesAsync(TASK_FETCH_LOCATION).catch(() => null);
 };
 
 export const defineLocationUpdatesTask = (store: AppStore, api: Api) => {

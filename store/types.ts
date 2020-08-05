@@ -67,3 +67,18 @@ export interface Order {
   fare: FareDetails;
   courierId?: string;
 }
+
+export interface OrderMatchRequest {
+  orderId: string;
+  fare: number;
+  distance: {
+    toOrigin: number;
+    route: string;
+  };
+  origin: {
+    address: string;
+  };
+  destination: {
+    address: string;
+  };
+}

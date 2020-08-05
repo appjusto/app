@@ -1,8 +1,9 @@
+import { OrderMatchRequest } from '../../../store/types';
+
 export type HomeStackParamList = {
   CourierHome: undefined;
+  PermissionDeniedFeedback: undefined;
   Matching: {
-    data: {
-      [key: string]: unknown;
-    };
+    order: OrderMatchRequest;
   };
 };

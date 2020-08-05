@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, Image } from 'react-native';
 
 import { motocycle } from '../../assets/icons';
-import useAuth, { AuthState } from '../../hooks/useAuth';
 import { colors, texts, screens } from './styles';
 
 type Props = {
@@ -12,15 +11,7 @@ type Props = {
   children: React.ReactNode | React.ReactNode[];
 };
 
-export default ({ header, icon, description, children }: Props) => {
-  // state
-  const [authState] = useAuth();
-
-  // UI
-  if (authState === AuthState.SignedIn) {
-    return null;
-  }
-
+export default ({ header, description, children }: Props) => {
   return (
     <View style={[screens.padded, { backgroundColor: colors.lightGrey }]}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

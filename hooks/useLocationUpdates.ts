@@ -3,30 +3,34 @@ import { useState, useEffect } from 'react';
 
 import { startLocationUpdatesTask, stopLocationUpdatesTask } from '../utils/location';
 
-const shouldAskPermission = (response: Permissions.PermissionResponse | null): boolean => {
+const shouldAskPermission = (
+  response: Permissions.PermissionResponse | null | undefined
+): boolean => {
+  if (response === undefined) return false; // during initialization
   if (response === null) return true;
   if (response.granted) return false;
   return response.canAskAgain;
 };
 
-export default function (enabled: boolean): Permissions.PermissionStatus {
+export default function (enabled: boolean, key: string): Permissions.PermissionStatus {
   // state
-  const [
-    permissionResponse,
-    setPermissionResponse,
-  ] = useState<Permissions.PermissionResponse | null>(null);
+  const [permissionResponse, setPermissionResponse] = useState<
+    Permissions.PermissionResponse | null | undefined
+  >(undefined);
 
   // side effects
-  // ask permission
-  const askPermission = async () => {
-    setPermissionResponse(await Permissions.askAsync(Permissions.LOCATION));
-  };
+  // key is used to allow restarting the process of verification
+  useEffect(() => {
+    setPermissionResponse(null); // start or reset permission check process
+  }, [key]);
 
-  // start tasks
+  // check if we should ask permission or start/stop location updates task
   useEffect(() => {
     if (enabled) {
       if (shouldAskPermission(permissionResponse)) {
-        askPermission();
+        (async () => {
+          setPermissionResponse(await Permissions.askAsync(Permissions.LOCATION));
+        })();
         return;
       }
       if (permissionResponse) {
