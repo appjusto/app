@@ -1,39 +1,47 @@
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect, useContext, useCallback } from 'react';
 import { Text, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { t } from '../../../strings';
-import { ApiContext } from '../../app/context';
-import { texts } from '../../common/styles';
+import { t } from '../../../../strings';
+import { ApiContext } from '../../../app/context';
+import { texts } from '../../../common/styles';
+import { HomeStackParamList } from '../types';
 
-export default function () {
+type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'Matching'>;
+type ScreenRouteProp = RouteProp<HomeStackParamList, 'Matching'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
+
+export default function ({ navigation, route }: Props) {
   // context
-  const navigation = useNavigation();
   const api = useContext(ApiContext);
-  const route = useRoute();
   const { params } = route;
-  const { data } = params || {};
+  const order = params.order;
 
   // handlers
   const acceptHandler = useCallback(async () => {
-    const match = await api.matchOrder(data.orderId);
+    const match = await api.matchOrder(order.orderId);
     console.log(match);
     // TODO: if successful, go to Delivering screen
-  }, [data]);
+  }, [order]);
 
   const rejectHandler = useCallback(() => {
     navigation.goBack();
     // TODO: ask why
-  }, [data]);
+  }, [order]);
 
   // side effects
   useEffect(() => {
-    if (!data) navigation.goBack();
+    if (!order) navigation.goBack();
   }, []);
 
   // UI
-  if (!data) return null;
+  if (!order) return null;
 
   return (
     <SafeAreaView>
@@ -41,13 +49,13 @@ export default function () {
         {t('Nova corrida para você!')}
       </Text>
       <Text style={[texts.huge]}>
-        {t('R$')} {data.fare}
+        {t('R$')} {order.fare}
       </Text>
       <Text style={[texts.huge]}>
-        {t('Retirada')} {data.origin.address}
+        {t('Retirada')} {order.origin.address}
       </Text>
       <Text style={[texts.huge]}>
-        {t('Entrega')} {data.destination.address}
+        {t('Entrega')} {order.destination.address}
       </Text>
       <Button title={t('Aceitar')} onPress={acceptHandler} />
       <Button title={t('Recusar')} onPress={rejectHandler} />

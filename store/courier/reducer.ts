@@ -13,6 +13,9 @@ export default function (state: CourierState = initialState, action: AnyAction):
     case actionTypes.COURIER_PROFILE_UPDATED: {
       return { ...state, courier: { ...state.courier, ...payload } };
     }
+    case actionTypes.USER_LOGGED_OUT: {
+      return { ...state, courier: undefined };
+    }
     case actionTypes.SET_LOCATION: {
       return { ...state, courier: { ...state.courier, location: payload.coords } as Courier };
     }

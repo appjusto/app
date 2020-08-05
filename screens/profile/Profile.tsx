@@ -2,12 +2,12 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 
-import { signOut } from '../../../store/user/actions';
-import { t } from '../../../strings';
-import { ApiContext } from '../../app/context';
-import DefaultButton from '../../common/DefaultButton';
-import GoButton from '../../common/GoButton';
-import { colors, texts, screens, padding } from '../../common/styles';
+import { signOut } from '../../store/user/actions';
+import { t } from '../../strings';
+import { ApiContext } from '../app/context';
+import DefaultButton from '../common/DefaultButton';
+import GoButton from '../common/GoButton';
+import { colors, texts, screens, padding } from '../common/styles';
 
 const ConsumerProfile = () => {
   // context

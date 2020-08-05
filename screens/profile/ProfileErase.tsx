@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-import { t } from '../../../strings';
-import DefaultButton from '../../common/DefaultButton';
-import { colors, texts, screens } from '../../common/styles';
+import { t } from '../../strings';
+import DefaultButton from '../common/DefaultButton';
+import { colors, texts, screens } from '../common/styles';
 
 const ProfileErase = ({ navigation }) => {
   return (

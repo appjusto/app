@@ -25,21 +25,26 @@
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Saber a localização do entregador",
         "NSLocationAlwaysUsageDescription": "Saber a localização do entregador"
       },
-      "associatedDomains": ["applinks:link.appjusto.com.br"]
+      "associatedDomains": ["applinks:deeplink.appjusto.com.br"]
     },
     "android": {
       "package": "br.com.appjusto",
       "permissions": ["ACCESS_FINE_LOCATION"],
       "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true,
+      "icon": "./assets/icon.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#78E08F"
+      },
       "intentFilters": [
         {
           "action": "VIEW",
-          "autoVerify": true,
+          "autoVerify": false,
           "data": [
             {
               "scheme": "https",
-              "host": "link.appjusto.com.br",
+              "host": "deeplink.appjusto.com.br",
               "pathPrefix": "/"
             }
           ],

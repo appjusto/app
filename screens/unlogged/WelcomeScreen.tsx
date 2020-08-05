@@ -1,4 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState, useContext, useCallback } from 'react';
 import { View, Text, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,11 +16,19 @@ import CheckField from '../common/CheckField';
 import DefaultButton from '../common/DefaultButton';
 import DefaultInput from '../common/DefaultInput';
 import { colors, texts, padding, screens } from '../common/styles';
+import { UnloggedStackParamList } from './types';
 
-export default function () {
+type ScreenNavigationProp = StackNavigationProp<UnloggedStackParamList, 'WelcomeScreen'>;
+type ScreenRouteProp = RouteProp<UnloggedStackParamList, 'WelcomeScreen'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
+
+export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
-  const navigation = useNavigation();
   const dispatch = useDispatch();
 
   // state
@@ -29,15 +38,20 @@ export default function () {
   const [sendingLink, setSendingLink] = useState(false);
 
   // handlers
-  const signInHandler = useCallback(async () => {
+  const sendEmail = async (): Promise<void> => {
     if (validateEmail(email).status === 'ok') {
+      Keyboard.dismiss();
       dispatch(showToast(t('Enviando link de autenticação para o seu e-mail...')));
       setSendingLink(true);
       await signInWithEmail(api)(email);
-      navigation.navigate('SignInFeedback', { email });
-    } else {
-      // TODO: handle error
+      setSendingLink(false);
     }
+  };
+
+  // handlers
+  const signInHandler = useCallback(async () => {
+    await sendEmail();
+    navigation.navigate('SignInFeedback', { email });
   }, [email]);
 
   // UI
@@ -99,22 +113,6 @@ export default function () {
             </View>
 
             <View style={{ flex: 1 }} />
-
-            {/* sign up */}
-            {/* <View style={styles.bottomContainer}>
-              <View style={styles.innerContainer}>
-                <View style={{ width: 150 }}>
-                  <Text style={[texts.default]} numberOfLines={2}>
-                    {t('Faça parte desse movimento')}
-                    <Image source={arrow} width={11} height={4} />
-                  </Text>
-                </View>
-                <DefaultButton
-                  title={t('Cadastre-se agora')}
-                  onPress={() => navigation.navigate('ConsumerRegistration')}
-                />
-              </View>
-            </View> */}
           </View>
         </AvoidingView>
       </View>

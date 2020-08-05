@@ -33,7 +33,7 @@ export const getSignInEmail = () => {
   }
 };
 
-export const isSignInWithEmailLink = (api: Api) => (link: string): boolean => {
+export const isSignInWithEmailLink = (api: Api) => (link: string | null): boolean => {
   return api.isSignInWithEmailLink(link);
 };
 

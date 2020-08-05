@@ -1,4 +1,8 @@
-import React, { useEffect, useContext } from 'react';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import * as Notifications from 'expo-notifications';
+import { nanoid } from 'nanoid/non-secure';
+import React, { useEffect, useContext, useCallback, useState } from 'react';
 import { StyleSheet, View, Dimensions, Text, Image, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,59 +12,80 @@ import useLocationUpdates from '../../../hooks/useLocationUpdates';
 import useNotification from '../../../hooks/useNotification';
 import useNotificationToken from '../../../hooks/useNotificationToken';
 import { updateCourier, watchCourier } from '../../../store/courier/actions';
-import { isCourierWorking, getCourierLocation } from '../../../store/courier/selectors';
+import { isCourierWorking, getCourier } from '../../../store/courier/selectors';
 import { CourierStatus } from '../../../store/courier/types';
+import { OrderMatchRequest } from '../../../store/types';
 import { getUser } from '../../../store/user/selectors';
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import { colors, padding, texts, borders } from '../../common/styles';
+import { HomeStackParamList } from './types';
 
 const { width } = Dimensions.get('window');
 
-export default function App() {
+type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'CourierHome'>;
+type ScreenRouteProp = RouteProp<HomeStackParamList, 'CourierHome'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
+
+export default function ({ navigation }: Props) {
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = useContext(ApiContext);
 
   // state
-  const [notificationToken, notificationError] = useNotificationToken();
-  useNotification();
   const user = useSelector(getUser);
+  const courier = useSelector(getCourier);
   const working = useSelector(isCourierWorking);
-  const locationPermission = useLocationUpdates(working);
-  const currentLocation = useSelector(getCourierLocation);
+  const [retryKey, setRetryKey] = useState(nanoid());
+  const locationPermission = useLocationUpdates(working, retryKey);
+  const [notificationToken, notificationError] = useNotificationToken();
 
   // side effects
-  // location permission granted
-  useEffect(() => {
-    if (locationPermission === 'granted') {
-      // TO-DO: send current location?
-    } else {
-      // TODO: Linking.openURL('app-settings:')
-      // Linking.openURL('app-settings://notification/<bundleIdentifier>')
-      // IntentLauncher.startActivityAsync(IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS);
-    }
-  }, [locationPermission]);
-
   // notification permission
   useEffect(() => {
+    if (!user) return;
     if (notificationError) {
       // TODO: ALERT
     } else if (notificationToken) {
-      updateCourier(api)(user!.uid, { notificationToken });
+      updateCourier(api)(user.uid, { notificationToken });
     }
-  }, [notificationToken, notificationError]);
+  }, [notificationToken, notificationError, user]);
 
   // watch for profile updates
   useEffect(() => {
     if (!user) return;
     return dispatch(watchCourier(api)(user.uid));
-  }, [user]);
+  }, []);
+
+  // location permission denied
+  useEffect(() => {
+    if (working && locationPermission === 'denied') {
+      navigation.navigate('PermissionDeniedFeedback');
+    }
+  }, [working, locationPermission]);
 
   // handlers
+  const notificationHandler = useCallback(
+    (content: Notifications.NotificationContent) => {
+      if (content.data.action === 'matching') {
+        navigation.navigate('Matching', { order: (content.data as unknown) as OrderMatchRequest });
+      }
+    },
+    [navigation]
+  );
+  useNotification(notificationHandler);
+
   const toggleWorking = () => {
     const status = working ? CourierStatus.Unavailable : CourierStatus.Available;
     updateCourier(api)(user!.uid, { status });
+
+    if (status === CourierStatus.Available) {
+      setRetryKey(nanoid());
+    }
   };
 
   // UI
@@ -69,7 +94,9 @@ export default function App() {
       {/* Main area */}
       <View style={[style.main, { backgroundColor: working ? colors.green : colors.yellow }]}>
         <Text style={[texts.big, { paddingTop: 32, paddingBottom: 24 }]}>
-          {t('Olá, João Paulo. Faça suas corridas com segurança.')}
+          {`${t('Olá')}, ${courier?.name ?? 'entregador'}. ${t(
+            'Faça suas corridas com segurança.'
+          )}`}
         </Text>
 
         {/* controls */}

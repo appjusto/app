@@ -1,4 +1,4 @@
-// import * as Linking from 'expo-linking';
+import * as Linking from 'expo-linking';
 import { useEffect, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -20,6 +20,14 @@ export enum AuthState {
   SignedIn = 'signed-in',
   InvalidCredentials = 'invalid-credentials',
 }
+
+const extractAuthLink = (link: string): string | null => {
+  const parsedURL = Linking.parse(link);
+  if (parsedURL.scheme === 'exp') return parsedURL.queryParams?.link ?? null;
+  // if (parsedURL.scheme === 'appjusto') return parsedURL.queryParams?.link ?? null;
+  if (parsedURL.scheme === 'https') return link;
+  return null;
+};
 
 export default function (): [AuthState, firebase.User | undefined | null] {
   // context
@@ -67,7 +75,7 @@ export default function (): [AuthState, firebase.User | undefined | null] {
       return;
     }
 
-    const link = deepLink.queryParams?.link ?? '';
+    const link = extractAuthLink(deepLink);
     if (!isSignInWithEmailLink(api)(link)) {
       setAuthState(AuthState.InvalidCredentials);
       return;
@@ -79,7 +87,7 @@ export default function (): [AuthState, firebase.User | undefined | null] {
         return;
       }
       try {
-        await signInWithEmailLink(api)(email, link);
+        await signInWithEmailLink(api)(email, link!);
         // const continueUrl = Linking.parse(link).queryParams?.continueUrl;
       } catch (e) {
         setAuthState(AuthState.InvalidCredentials);

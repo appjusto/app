@@ -14,17 +14,17 @@ import {
 import { useDispatch } from 'react-redux';
 
 import { motocycle } from '../../../../assets/icons';
-import useLocationUpdates from '../../../../hooks/useLocationUpdates';
 import { Place, Order } from '../../../../store/types';
 import { showToast } from '../../../../store/ui/actions';
 import { t } from '../../../../strings';
 import { ApiContext } from '../../../app/context';
 import DefaultButton from '../../../common/DefaultButton';
 import DefaultInput from '../../../common/DefaultInput';
+import LabeledText from '../../../common/LabeledText';
 import ShowIf from '../../../common/ShowIf';
 import Touchable from '../../../common/Touchable';
 import { screens, borders, texts } from '../../../common/styles';
-import { HomeStackParamList } from '../../types';
+import { HomeStackParamList } from '../../home/types';
 import OrderMap from './OrderMap';
 import OrderSummary from './OrderSummary';
 
@@ -64,8 +64,6 @@ export default function ({ navigation, route }: Props) {
   const viewPager = useRef<ViewPager>();
 
   // state
-  const locationPermission = useLocationUpdates(true);
-
   const [step, setStep] = useState(Steps.Origin);
   const [origin, setOrigin] = useState<Place>({} as Place);
   const [destination, setDestination] = useState<Place>({} as Place);
@@ -207,14 +205,9 @@ export default function ({ navigation, route }: Props) {
           <View>
             <TouchableWithoutFeedback onPress={navigateToAddressComplete}>
               <View style={{ flex: 1 }}>
-                <DefaultInput
-                  style={style.input}
-                  value={origin.address}
-                  title={t('Endereço de retirada')}
-                  placeholder={t('Endereço com número')}
-                  onFocus={navigateToAddressComplete}
-                  onChangeText={navigateToAddressComplete}
-                />
+                <LabeledText style={style.input} title={t('Endereço de retirada')}>
+                  {origin.address ?? t('Endereço com número')}
+                </LabeledText>
               </View>
             </TouchableWithoutFeedback>
 
@@ -235,19 +228,12 @@ export default function ({ navigation, route }: Props) {
           <View>
             <ShowIf test={placeValid(origin)}>
               {() => (
-                <View style={{ flex: 1 }}>
-                  <TouchableWithoutFeedback onPress={navigateToAddressComplete}>
-                    <View style={{ flex: 1 }}>
-                      <DefaultInput
-                        style={style.input}
-                        value={destination.address}
-                        title={t('Endereço de entrega')}
-                        placeholder={t('Endereço com número')}
-                        onFocus={navigateToAddressComplete}
-                        onChangeText={navigateToAddressComplete}
-                      />
-                    </View>
-                  </TouchableWithoutFeedback>
+                <View>
+                  <Touchable onPress={navigateToAddressComplete}>
+                    <LabeledText style={style.input} title={t('Endereço de entrega')}>
+                      {destination.address ?? t('Endereço com número')}
+                    </LabeledText>
+                  </Touchable>
 
                   <DefaultInput
                     style={style.input}
