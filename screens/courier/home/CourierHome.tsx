@@ -11,7 +11,7 @@ import { motocycleWhite } from '../../../assets/icons';
 import useLocationUpdates from '../../../hooks/useLocationUpdates';
 import useNotification from '../../../hooks/useNotification';
 import useNotificationToken from '../../../hooks/useNotificationToken';
-import { updateCourier, watchCourier } from '../../../store/courier/actions';
+import { updateCourier, observeCourier } from '../../../store/courier/actions';
 import { isCourierWorking, getCourier } from '../../../store/courier/selectors';
 import { CourierStatus } from '../../../store/courier/types';
 import { OrderMatchRequest } from '../../../store/types';
@@ -45,21 +45,28 @@ export default function ({ navigation }: Props) {
   const [notificationToken, notificationError] = useNotificationToken();
 
   // side effects
-  // notification permission
+  // only once to subscribe for profile changes
   useEffect(() => {
     if (!user) return;
+    return dispatch(observeCourier(api)(user.uid));
+  }, []);
+
+  useEffect(() => {
+    if (!courier) return;
+    if (courier.info?.situation === 'pending') {
+      console.log('pending!');
+    }
+  }, [courier]);
+
+  // notification permission
+  useEffect(() => {
+    if (!courier) return;
     if (notificationError) {
       // TODO: ALERT
     } else if (notificationToken) {
-      updateCourier(api)(user.uid, { notificationToken });
+      updateCourier(api)(courier.id, { notificationToken });
     }
-  }, [notificationToken, notificationError, user]);
-
-  // watch for profile updates
-  useEffect(() => {
-    if (!user) return;
-    return dispatch(watchCourier(api)(user.uid));
-  }, []);
+  }, [notificationToken, notificationError, courier]);
 
   // location permission denied
   useEffect(() => {

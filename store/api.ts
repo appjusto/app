@@ -37,9 +37,7 @@ export default class Api {
   // authentication
 
   observeAuthState(handler: (a: firebase.User | null) => any): firebase.Unsubscribe {
-    const auth = firebase.auth();
-    const unsubscribe = auth.onAuthStateChanged(handler);
-    return unsubscribe;
+    return firebase.auth().onAuthStateChanged(handler);
   }
 
   sendSignInLinkToEmail(email: string): Promise<void> {
@@ -68,16 +66,64 @@ export default class Api {
     return userCredential.user;
   }
 
-  updateProfile(profile: { displayName?: string | null; photoURL?: string | null }) {
-    return firebase.auth().currentUser?.updateProfile(profile);
-  }
-
   signOut() {
     return firebase.auth().signOut();
   }
 
   // couriers
+  // private helpers
+  private getCourierRef(courierId: string) {
+    return this.firestore.collection('couriers').doc(courierId);
+  }
+  private getCourierPrivateInfoRef(courierId: string) {
+    return this.getCourierRef(courierId).collection('info').doc('private');
+  }
 
+  // create courier profile
+  createCourier(courierId: string) {
+    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    return this.getCourierRef(courierId).set({
+      timestamp,
+    });
+  }
+
+  // observe courier profile changes
+  observeCourier(
+    courierId: string,
+    resultHandler: (courier: Courier) => void
+  ): firebase.Unsubscribe {
+    const unsubscribe = this.getCourierRef(courierId).onSnapshot(
+      async (doc) => {
+        // ensure courier exists
+        if (!doc.exists) await this.createCourier(courierId);
+        else resultHandler({ ...doc.data(), id: courierId });
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+    // returns the unsubscribe function
+    return unsubscribe;
+  }
+
+  // observe for courier private info changes
+  observeCourierPrivateInfo(
+    courierId: string,
+    resultHandler: (courier: Courier) => void
+  ): firebase.Unsubscribe {
+    const unsubscribe = this.getCourierPrivateInfoRef(courierId).onSnapshot(
+      (doc) => {
+        resultHandler({ id: courierId, info: doc.data() });
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+    // returns the unsubscribe function
+    return unsubscribe;
+  }
+
+  // update courier profile
   updateCourier(courierId: string, changes: object) {
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
     const courierDoc = this.firestore.collection('couriers').doc(courierId);
@@ -90,6 +136,7 @@ export default class Api {
     );
   }
 
+  // update courier location
   updateCourierLocation(courier: Courier, location) {
     const { coords } = location;
 
@@ -118,35 +165,6 @@ export default class Api {
       },
       { merge: true }
     );
-  }
-
-  watchCourier(courierId: string, resultHandler: (courier: Courier) => void): firebase.Unsubscribe {
-    // TODO: ensure only people envolved in order are able to know courier's location
-    const unsubscribe = this.firestore
-      .collection('couriers')
-      .doc(courierId)
-      .onSnapshot((doc) => {
-        resultHandler({ ...doc.data(), id: doc.id });
-      });
-    // returns the unsubscribe function
-    return unsubscribe;
-  }
-
-  watchAvailableCouriers(resultHandler): firebase.Unsubscribe {
-    // TODO: add query filters to limit to couriers:
-    // 1 close to a specific location
-    // 2 max number of results
-    const unsubscribe = this.firestore
-      .collection('locations/couriers/available')
-      .onSnapshot((query) => {
-        const result: Courier[] = [];
-        query.forEach((doc) => {
-          result.push({ ...doc.data(), id: doc.id });
-        });
-        resultHandler(result);
-      });
-    // returns the unsubscribe function
-    return unsubscribe;
   }
 
   // consumers
@@ -189,7 +207,7 @@ export default class Api {
       const response = await axios.post(url, params);
       return response.data;
     } catch (err) {
-      console.log(err);
+      console.error(err);
       return err;
     }
   }
@@ -204,7 +222,7 @@ export default class Api {
       const response = await axios.post(url, params);
       return response.data;
     } catch (err) {
-      console.log(err);
+      console.error(err);
       return err;
     }
   }
@@ -218,7 +236,7 @@ export default class Api {
       const response = await axios.post(url, params);
       return response.data;
     } catch (err) {
-      console.log(err);
+      console.error(err);
       return err;
     }
   }
@@ -240,7 +258,7 @@ export default class Api {
       const response = await axios.get(url, { params });
       return response.data;
     } catch (err) {
-      console.log(err);
+      console.error(err);
       return err;
     }
   }
@@ -266,7 +284,7 @@ export default class Api {
         longitude: location.lng,
       };
     } catch (err) {
-      console.log(err);
+      console.error(err);
       return err;
     }
   }

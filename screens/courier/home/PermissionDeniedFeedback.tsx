@@ -9,7 +9,6 @@ import DefaultButton from '../../common/DefaultButton';
 import FeedbackView from '../../common/FeedbackView';
 import { colors, borders } from '../../common/styles';
 import { HomeStackParamList } from './types';
-import { View, Platform } from 'react-native';
 
 type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'PermissionDeniedFeedback'>;
 type ScreenRouteProp = RouteProp<HomeStackParamList, 'PermissionDeniedFeedback'>;
