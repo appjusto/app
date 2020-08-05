@@ -13,18 +13,21 @@ export interface Props {
 
 export default ({ onPress, text, marginTop = 0, checked = false }: Props) => {
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        height: 24,
-        marginTop: marginTop,
-      }}
-    >
-      <TouchableOpacity onPress={onPress}>
-        <Image source={checked ? checkboxActive : checkboxInactive} style={{ height: 24, width: 24 }} />
-      </TouchableOpacity>
-      <Text style={{ ...texts.small, marginLeft: 8 }}>{text}</Text>
-    </View>
+    <TouchableOpacity onPress={onPress}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          height: 24,
+          marginTop: marginTop,
+        }}
+      >
+        <Image
+          source={checked ? checkboxActive : checkboxInactive}
+          style={{ height: 24, width: 24 }}
+        />
+        <Text style={{ ...texts.small, marginLeft: 8 }}>{text}</Text>
+      </View>
+    </TouchableOpacity>
   );
 };

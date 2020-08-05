@@ -1,10 +1,10 @@
 import React from 'react';
-import {View, TouchableOpacity, Image, StyleSheet} from 'react-native'
+import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
 
-import {arrowBack} from '../../assets/icons';
-import {colors} from './styles';
+import { arrowBack } from '../../assets/icons';
+import { colors } from './styles';
 
-const BackButton = ({...props}) => (
+const BackButton = ({ ...props }) => (
   <TouchableOpacity {...props}>
     <View style={styles.imgContainer}>
       <Image source={arrowBack} />
@@ -21,6 +21,8 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: colors.lightGrey,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

@@ -1,7 +1,14 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState, useContext, useCallback } from 'react';
-import { View, Text, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableWithoutFeedback,
+  Keyboard,
+  TouchableOpacity,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { logoWhite, illustration } from '../../assets/icons';
@@ -33,7 +40,7 @@ export default function ({ navigation, route }: Props) {
 
   // state
   const dev = useSelector(getEnv) === 'development';
-  const [email, setEmail] = useState(dev ? 'pdandradeb@gmail.com' : '');
+  const [email, setEmail] = useState(dev ? '' : '');
   const [acceptedTerms, setAcceptTerms] = useState(false);
   const [sendingLink, setSendingLink] = useState(false);
 
@@ -77,9 +84,9 @@ export default function ({ navigation, route }: Props) {
                     </Text>
                   </View>
 
-                  <View style={{ width: '85%', height: 58, marginVertical: 16 }}>
-                    <Text style={[texts.default, { color: colors.darkGrey }]}>
-                      {t('A plataforma de entregas mais justa, transparente e aberta disponível.')}
+                  <View style={{ width: '85%', height: 58, marginTop: 16 }}>
+                    <Text style={[texts.default, { color: colors.darkGrey, lineHeight: 21 }]}>
+                      {t('Digite seu e-mail para entrar ou criar sua conta.')}
                     </Text>
                   </View>
                 </View>
@@ -93,26 +100,46 @@ export default function ({ navigation, route }: Props) {
                 keyboardType="email-address"
                 blurOnSubmit
                 autoCapitalize="none"
-              >
-                <DefaultButton
-                  disabled={!validateEmail(email) || sendingLink}
-                  title={t('Entrar')}
-                  onPress={signInHandler}
-                />
-              </DefaultInput>
-
-              <CheckField
-                marginTop={12}
-                checked={acceptedTerms}
-                onPress={() => setAcceptTerms(!acceptedTerms)}
-                text={t('Aceito os termos de uso e a política de privacidade')}
               />
-
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginTop: 16,
+                }}
+              >
+                <View>
+                  <CheckField
+                    checked={acceptedTerms}
+                    onPress={() => setAcceptTerms(!acceptedTerms)}
+                    text={t('Aceito os termos de uso do app')}
+                  />
+                </View>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('Terms');
+                    }}
+                  >
+                    <Text style={[texts.small, { color: colors.darkGreen, lineHeight: 18 }]}>
+                      {t('Ler os termos')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
               {/* dummy view to accomadate keyboard better */}
               <View style={{ height: 20 }} />
             </View>
 
             <View style={{ flex: 1 }} />
+            <View style={{ paddingHorizontal: 16, marginBottom: 32 }}>
+              <DefaultButton
+                disabled={validateEmail(email).status !== 'ok' || sendingLink || !acceptedTerms}
+                title={t('Entrar')}
+                onPress={signInHandler}
+              />
+            </View>
           </View>
         </AvoidingView>
       </View>

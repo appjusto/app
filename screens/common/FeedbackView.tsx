@@ -13,7 +13,7 @@ type Props = {
 
 export default ({ header, description, children }: Props) => {
   return (
-    <View style={[screens.padded, { backgroundColor: colors.lightGrey }]}>
+    <View style={[screens.padded, { backgroundColor: colors.white }]}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <View style={{ alignItems: 'center' }}>
           <Text style={{ ...texts.big, textAlign: 'center' }}>{header}</Text>
