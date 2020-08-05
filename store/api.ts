@@ -126,8 +126,7 @@ export default class Api {
   // update courier profile
   updateCourier(courierId: string, changes: object) {
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    const courierDoc = this.firestore.collection('couriers').doc(courierId);
-    return courierDoc.set(
+    return this.getCourierRef(courierId).set(
       {
         ...changes,
         timestamp,
@@ -141,8 +140,6 @@ export default class Api {
     const { coords } = location;
 
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    // SECURITY TODO: this action should be restricted only to the courier himself and admins
-    // TODO: create a job to synthesize or remove old data
     const courierLocationRef = this.firestoreWithGeo
       .collection('locations')
       .doc('couriers')
@@ -168,31 +165,47 @@ export default class Api {
   }
 
   // consumers
+  private getConsumerRef(consumerId: string) {
+    return this.firestore.collection('consumers').doc(consumerId);
+  }
 
+  // create consumer profile
+  createConsumer(consumerId: string) {
+    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    return this.getConsumerRef(consumerId).set({
+      timestamp,
+    });
+  }
+
+  // observe consumer profile changes
+  observeConsumer(
+    consumerId: string,
+    resultHandler: (courier: Courier) => void
+  ): firebase.Unsubscribe {
+    const unsubscribe = this.getConsumerRef(consumerId).onSnapshot(
+      async (doc) => {
+        // ensure courier exists
+        if (!doc.exists) await this.createConsumer(consumerId);
+        else resultHandler({ ...doc.data(), id: consumerId });
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+    // returns the unsubscribe function
+    return unsubscribe;
+  }
+
+  // update consumer
   updateConsumer(consumerId: string, changes: object) {
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    const courierDoc = this.firestore.collection('consumers').doc(consumerId);
-    return courierDoc.set(
+    return this.getConsumerRef(consumerId).set(
       {
         ...changes,
         timestamp,
       },
       { merge: true }
     );
-  }
-
-  watchConsumer(
-    consumerId: string,
-    resultHandler: (consumer: Consumer) => void
-  ): firebase.Unsubscribe {
-    const unsubscribe = this.firestore
-      .collection('consumers')
-      .doc(consumerId)
-      .onSnapshot((doc) => {
-        resultHandler({ ...doc.data(), id: doc.id });
-      });
-    // returns the unsubscribe function
-    return unsubscribe;
   }
 
   // orders
