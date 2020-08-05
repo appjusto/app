@@ -1,5 +1,6 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useRef, useCallback } from 'react';
 import { View, Text, TextInput, StyleSheet, TextInputProps } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import { borders, texts, colors } from './styles';
 
@@ -8,15 +9,26 @@ export interface Props extends TextInputProps {
   children?: ReactNode;
 }
 
-export default ({ title, children, style: externalStyle, ...props }: Props) => (
-  <View style={[style.container, externalStyle]}>
-    <View>
-      <Text style={style.label}>{title}</Text>
-      <TextInput style={style.input} {...props} />
-    </View>
-    {children}
-  </View>
-);
+export default ({ title, children, style: externalStyle, ...props }: Props) => {
+  const inputRef = useRef<TextInput>();
+  const focus = useCallback(() => {
+    if (!inputRef.current) return null;
+    if (!inputRef.current.isFocused()) {
+      inputRef.current.focus();
+    }
+  }, [inputRef.current]);
+  return (
+    <TouchableWithoutFeedback onPress={focus}>
+      <View style={[style.container, externalStyle]}>
+        <View>
+          <Text style={style.label}>{title}</Text>
+          <TextInput ref={inputRef} style={style.input} {...props} />
+        </View>
+        {children}
+      </View>
+    </TouchableWithoutFeedback>
+  );
+};
 
 const style = StyleSheet.create({
   container: {
