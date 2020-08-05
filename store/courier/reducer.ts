@@ -19,9 +19,6 @@ export default function (state: CourierState = initialState, action: AnyAction):
     case actionTypes.SET_LOCATION: {
       return { ...state, courier: { ...state.courier, location: payload.coords } as Courier };
     }
-    case actionTypes.AVAILABLE_COURIERS_UPDATED: {
-      return { ...state, availableCouriers: payload };
-    }
     default:
       return state;
   }

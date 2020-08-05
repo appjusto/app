@@ -11,7 +11,6 @@ export const HIDE_TOAST = 'HIDE_TOAST';
 // couriers
 
 export const COURIER_PROFILE_UPDATED = 'COURIER_PROFILE_UPDATED';
-export const AVAILABLE_COURIERS_UPDATED = 'AVAILABLE_COURIERS_UPDATED';
 
 // consumers
 

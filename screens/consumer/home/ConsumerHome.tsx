@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 
 import { navigationArrow, illustration, BG, requests } from '../../../assets/icons';
 import useAuth from '../../../hooks/useAuth';
-import { watchConsumer } from '../../../store/consumer/actions';
+import { observeConsumer } from '../../../store/consumer/actions';
 import { t } from '../../../strings';
 import { AppDispatch, ApiContext } from '../../app/context';
 import { colors, texts } from '../../common/styles';
@@ -31,7 +31,7 @@ export default function ConsumerHome({ navigation }: Props) {
   // side effects
   useEffect(() => {
     if (!user) return;
-    return dispatch(watchConsumer(api)(user.uid));
+    return dispatch(observeConsumer(api)(user.uid));
   }, [user]);
 
   // UI
