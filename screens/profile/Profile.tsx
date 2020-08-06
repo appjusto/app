@@ -63,14 +63,30 @@ const ConsumerProfile = () => {
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('Unlogged', { screen: 'Terms' });
-        }}
+      // onPress={() => {
+      //   navigation.navigate('Unlogged', { screen: 'Terms' });
+      // }}
       >
         <View style={styles.container}>
           <View style={styles.texts}>
             <Text style={styles.black}>{t('Termos de uso e política de privacidade')}</Text>
             <Text style={styles.darkGrey}>{t('Leia os termos de uso do AppJusto')}</Text>
+          </View>
+          <View style={styles.button}>
+            <GoButton />
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={confirmLogout}>
+        <View style={styles.container}>
+          <View style={styles.texts}>
+            <Text style={styles.black}>{t('Sair do app')}</Text>
+            <Text style={styles.darkGrey}>
+              {t(
+                'Desconecte-se do aplicativo. Para retornar, você precisará confirmar seu e-mail cadastrado'
+              )}
+            </Text>
           </View>
           <View style={styles.button}>
             <GoButton />
