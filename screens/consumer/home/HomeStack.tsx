@@ -1,12 +1,12 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
-import BackButton from '../../common/BackButton';
+import { t } from '../../../strings';
 import AddressComplete from '../../common/AddressComplete';
+import BackButton from '../../common/buttons/BackButton';
 import CreateOrderP2P from '../orders/p2p-order/CreateOrderP2P';
 import ConsumerHome from './ConsumerHome';
 import { HomeStackParamList } from './types';
-import { t } from '../../../strings';
 
 const Stack = createStackNavigator<HomeStackParamList>();
 export default function () {

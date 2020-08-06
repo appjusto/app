@@ -1,20 +1,20 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
-import BackButton from '../common/BackButton';
+import { t } from '../../strings';
+import BackButton from '../common/buttons/BackButton';
 import EraseConfirmed from './EraseConfirmed';
-import ConsumerProfile from './Profile';
+import Profile from './Profile';
 import ProfileEdit from './ProfileEdit';
 import ProfileErase from './ProfileErase';
-import { t } from '../../strings';
 
 const Stack = createStackNavigator();
 export default function () {
   return (
-    <Stack.Navigator initialRouteName="ConsumerProfile">
+    <Stack.Navigator initialRouteName="Profile">
       <Stack.Screen
-        name="ConsumerProfile"
-        component={ConsumerProfile}
+        name="Profile"
+        component={Profile}
         options={({ navigation }) => ({
           title: t('Sua conta'),
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,

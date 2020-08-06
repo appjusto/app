@@ -1,7 +1,9 @@
-const rectangleBG = require('./icons/Rectangle23.png');
 const arrowSmall = require('./icons/arrow-small.png');
 const iconCheckboxActive = require('./icons/checkbox-active.png');
 const iconCheckboxInactive = require('./icons/checkbox-inactive.png');
+const iconChecklistTick = require('./icons/checklist-tick.png');
+const iconHome = require('./icons/home.png');
+const iconButtonArrow = require('./icons/icon-button-arrow.png');
 const iconCalendar = require('./icons/icon-calendar.png');
 const iconEdit = require('./icons/icon-edit.png');
 const iconErase = require('./icons/icon-erase.png');
@@ -11,31 +13,29 @@ const iconNavigationArrow = require('./icons/icon-navigation.png');
 const iconPinPackage = require('./icons/icon-pin-package.png');
 const iconPinUser = require('./icons/icon-pin-user.png');
 const iconRequests = require('./icons/icon-requests.png');
-const iconArrow = require('./icons/iconArrow.png');
-const iconGoArrow = require('./icons/iconGoArrow.png');
-const iconHome = require('./icons/home.png');
-const iconOrders = require('./icons/orders.png');
-const iconUser = require('./icons/user.png');
 const iconIllustration = require('./icons/illustration-intro-screen.png');
 const logoAppjustoBgWhite = require('./icons/logo-appjusto-bg-white.png');
+const iconOrders = require('./icons/orders.png');
+const rectangleBG = require('./icons/rectangle23.png');
+const iconUser = require('./icons/user.png');
 
 export const arrow = arrowSmall;
-export const logoWhite = logoAppjustoBgWhite;
-export const pinUser = iconPinUser;
-export const pinPackage = iconPinPackage;
-export const arrowBack = iconArrow;
-export const checkboxInactive = iconCheckboxInactive;
 export const checkboxActive = iconCheckboxActive;
-export const navigationArrow = iconNavigationArrow;
+export const checkboxInactive = iconCheckboxInactive;
+export const checklistTick = iconChecklistTick;
+export const buttonArrow = iconButtonArrow;
+export const calendar = iconCalendar;
+export const edit = iconEdit;
+export const erase = iconErase;
 export const motocycle = iconMotocycle;
 export const motocycleWhite = iconMotocycleWhite;
-export const edit = iconEdit;
-export const illustration = iconIllustration;
-export const BG = rectangleBG;
+export const navigationArrow = iconNavigationArrow;
+export const pinPackage = iconPinPackage;
+export const pinUser = iconPinUser;
 export const requests = iconRequests;
-export const goArrow = iconGoArrow;
-export const erase = iconErase;
-export const calendar = iconCalendar;
+export const illustration = iconIllustration;
+export const logoWhite = logoAppjustoBgWhite;
+export const BG = rectangleBG;
 export const home = iconHome;
 export const orders = iconOrders;
 export const user = iconUser;
@@ -45,7 +45,6 @@ export default [
   pinUser,
   pinPackage,
   arrow,
-  arrowBack,
   checkboxInactive,
   checkboxActive,
   navigationArrow,
@@ -55,9 +54,10 @@ export default [
   illustration,
   BG,
   requests,
-  goArrow,
+  buttonArrow,
   erase,
   calendar,
+  checklistTick,
   home,
   orders,
   user,

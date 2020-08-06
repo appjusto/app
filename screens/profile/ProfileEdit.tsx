@@ -40,7 +40,6 @@ const ProfileEdit = () => {
   const [name, setName] = useState<string>(user?.name ?? '');
   const [surname, setSurname] = useState('');
   const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
   const [cpf, setCpf] = useState('');
   const [acceptMarketing, setAcceptMarketing] = useState(false);
 
@@ -57,7 +56,6 @@ const ProfileEdit = () => {
       name,
       surname,
       phone,
-      email,
       cpf,
       acceptMarketing,
     });
@@ -72,8 +70,10 @@ const ProfileEdit = () => {
           <ScrollView>
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
               <View style={{ marginTop: 16 }}>
-                <Text style={{ ...texts.big }}>{t('Seus dados')}</Text>
-                <Text style={styles.default}>{t('Edite seus dados pessoais:')}</Text>
+                <Text style={[texts.big]}>{t('Seus dados')}</Text>
+                <Text style={[texts.default, { color: colors.darkGrey, paddingTop: 8 }]}>
+                  {t('Edite seus dados pessoais:')}
+                </Text>
               </View>
             </TouchableWithoutFeedback>
             <View style={{ marginTop: 32 }}>
@@ -86,21 +86,15 @@ const ProfileEdit = () => {
               />
               <DefaultInput
                 style={{ marginTop: 12 }}
-                title={t('Celular')}
-                value={phone}
-                onChangeText={setPhone}
-              />
-              <DefaultInput
-                style={{ marginTop: 12 }}
-                title={t('E-mail')}
-                value={email}
-                onChangeText={setEmail}
-              />
-              <DefaultInput
-                style={{ marginTop: 12 }}
                 title={t('CPF')}
                 value={cpf}
                 onChangeText={setCpf}
+              />
+              <DefaultInput
+                style={{ marginTop: 12 }}
+                title={t('Celular')}
+                value={phone}
+                onChangeText={setPhone}
               />
             </View>
             <CheckField
@@ -132,11 +126,6 @@ const ProfileEdit = () => {
 };
 
 const styles = StyleSheet.create({
-  default: {
-    ...texts.default,
-    color: colors.darkGrey,
-    paddingTop: 8,
-  },
   checkContainer: {
     // width: '100%',
     marginTop: 12,

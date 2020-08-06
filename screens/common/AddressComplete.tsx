@@ -2,7 +2,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import debounce from 'lodash/debounce';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useState, useCallback, useContext } from 'react';
-import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Button, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import { getEnv } from '../../store/config/selectors';
@@ -10,7 +10,6 @@ import { t } from '../../strings';
 import { ApiContext } from '../app/context';
 import DefaultButton from './DefaultButton';
 import DefaultInput from './DefaultInput';
-import Touchable from './Touchable';
 import { borders, texts, screens, colors } from './styles';
 
 export default function () {
@@ -83,11 +82,11 @@ export default function () {
         data={autocompletePredictions}
         renderItem={({ item }) => {
           return (
-            <Touchable onPress={() => setAddress(item.description)}>
+            <TouchableOpacity onPress={() => setAddress(item.description)}>
               <View style={style.item}>
                 <Text style={{ ...texts.medium }}>{item.description}</Text>
               </View>
-            </Touchable>
+            </TouchableOpacity>
           );
         }}
         keyExtractor={(item) => item.description}

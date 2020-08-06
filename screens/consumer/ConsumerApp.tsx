@@ -3,15 +3,15 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { Image } from 'react-native';
 
-import BackButton from '../common/BackButton';
+import { home, orders, user } from '../../assets/icons';
+import { t } from '../../strings';
 import AuthContainer from '../app/AuthContainer';
-import ProfileStack from '../profile/ProfileStack';
+import BackButton from '../common/buttons/BackButton';
+import { colors } from '../common/styles';
+import ProfileNavigator from '../profile/ProfileNavigator';
 import UnloggedStack from '../unlogged/UnloggedNavigator';
 import ConsumerHistory from './history/ConsumerHistory';
 import HomeStack from './home/HomeStack';
-import { home, orders, user } from '../../assets/icons';
-import { colors } from '../common/styles';
-import { t } from '../../strings';
 
 const HistoryStack = createStackNavigator();
 function History() {
@@ -52,7 +52,7 @@ function Logged() {
       />
       <LoggedNavigator.Screen
         name="Profile"
-        component={ProfileStack}
+        component={ProfileNavigator}
         options={{ title: 'Sua conta', tabBarIcon: () => <Image source={user} /> }}
       />
     </LoggedNavigator.Navigator>

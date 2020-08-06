@@ -2,9 +2,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
 import { t } from '../../strings';
+import BackButton from '../common/buttons/BackButton';
 import SignInFeedback from './SignInFeedback';
 import Terms from './Terms';
-import BackButton from '../common/BackButton';
 import WelcomeScreen from './WelcomeScreen';
 import { UnloggedParamList } from './types';
 

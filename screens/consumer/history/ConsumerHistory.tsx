@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
-import GoButton from '../../common/GoButton';
-import { colors, texts, screens } from '../../common/styles';
 import { calendar } from '../../../assets/icons';
 import { t } from '../../../strings';
+import ArrowBox from '../../common/ArrowBox';
+import { colors, texts, screens } from '../../common/styles';
 
 const ConsumerHistory = () => {
   return (
@@ -38,7 +38,7 @@ const ConsumerHistory = () => {
               </Text>
             </View>
             <View>
-              <GoButton />
+              <ArrowBox />
             </View>
           </View>
         </TouchableOpacity>
