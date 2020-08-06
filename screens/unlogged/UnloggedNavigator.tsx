@@ -25,7 +25,7 @@ export default function () {
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />
-      <UnloggedStack.Screen
+      <StackNavigator.Screen
         name="Terms"
         component={Terms}
         options={({ navigation }) => ({
@@ -33,11 +33,6 @@ export default function () {
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />
-<<<<<<< HEAD:screens/unlogged/UnloggedStack.tsx
-    </UnloggedStack.Navigator>
-=======
-      <StackNavigator.Screen name="Terms" component={Terms} options={{ title: '' }} />
     </StackNavigator.Navigator>
->>>>>>> bf8b7580f56711a9c14670f62789150232671564:screens/unlogged/UnloggedNavigator.tsx
   );
 }

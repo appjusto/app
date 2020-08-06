@@ -83,7 +83,7 @@ export default function ConsumerHome({ navigation }: Props) {
       <View style={styles.whiteContainer}>
         <ImageBackground source={BG} style={{ height: '100%', width: '100%', flex: 1 }}>
           <View style={{ paddingHorizontal: 16, flex: 1, justifyContent: 'center' }}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('ConsumerHistory')}>
               <View style={{ ...styles.history, justifyContent: 'center' }}>
                 <View style={styles.reqContainer}>
                   <Image source={requests} />
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderColor: 'white',
     borderRadius: 32,
-    marginTop: 16,
+    marginTop: 48,
     alignItems: 'center',
   },
   containerBigText: {

@@ -13,6 +13,9 @@ const iconPinUser = require('./icons/icon-pin-user.png');
 const iconRequests = require('./icons/icon-requests.png');
 const iconArrow = require('./icons/iconArrow.png');
 const iconGoArrow = require('./icons/iconGoArrow.png');
+const iconHome = require('./icons/home.png');
+const iconOrders = require('./icons/orders.png');
+const iconUser = require('./icons/user.png');
 const iconIllustration = require('./icons/illustration-intro-screen.png');
 const logoAppjustoBgWhite = require('./icons/logo-appjusto-bg-white.png');
 
@@ -33,6 +36,9 @@ export const requests = iconRequests;
 export const goArrow = iconGoArrow;
 export const erase = iconErase;
 export const calendar = iconCalendar;
+export const home = iconHome;
+export const orders = iconOrders;
+export const user = iconUser;
 
 export default [
   logoWhite,
@@ -52,4 +58,7 @@ export default [
   goArrow,
   erase,
   calendar,
+  home,
+  orders,
+  user,
 ];
