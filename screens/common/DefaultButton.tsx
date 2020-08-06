@@ -14,7 +14,7 @@ export default function ({ title, disabled, styleObject, wide, ...props }: Props
       <View
         style={{
           ...style.buttonContainer,
-          backgroundColor: disabled ? colors.darkGrey : colors.green,
+          backgroundColor: disabled ? colors.grey : colors.green,
           paddingHorizontal: wide ? 56 : 24,
           ...styleObject,
         }}

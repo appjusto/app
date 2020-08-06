@@ -253,7 +253,11 @@ export default function ({ navigation, route }: Props) {
 
           {/* confirmation step */}
           <ShowIf test={orderValid(order)}>
-            {() => <OrderSummary order={order!} onEdit={setPage} />}
+            {() => (
+              <View style={{ flex: 1 }}>
+                <OrderSummary order={order!} onEdit={setPage} />
+              </View>
+            )}
           </ShowIf>
         </ViewPager>
 

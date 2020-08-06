@@ -2,6 +2,7 @@ const arrowSmall = require('./icons/arrow-small.png');
 const iconCheckboxActive = require('./icons/checkbox-active.png');
 const iconCheckboxInactive = require('./icons/checkbox-inactive.png');
 const iconChecklistTick = require('./icons/checklist-tick.png');
+const iconHome = require('./icons/home.png');
 const iconButtonArrow = require('./icons/icon-button-arrow.png');
 const iconCalendar = require('./icons/icon-calendar.png');
 const iconEdit = require('./icons/icon-edit.png');
@@ -14,7 +15,9 @@ const iconPinUser = require('./icons/icon-pin-user.png');
 const iconRequests = require('./icons/icon-requests.png');
 const iconIllustration = require('./icons/illustration-intro-screen.png');
 const logoAppjustoBgWhite = require('./icons/logo-appjusto-bg-white.png');
+const iconOrders = require('./icons/orders.png');
 const rectangleBG = require('./icons/rectangle23.png');
+const iconUser = require('./icons/user.png');
 
 export const arrow = arrowSmall;
 export const checkboxActive = iconCheckboxActive;
@@ -33,6 +36,9 @@ export const requests = iconRequests;
 export const illustration = iconIllustration;
 export const logoWhite = logoAppjustoBgWhite;
 export const BG = rectangleBG;
+export const home = iconHome;
+export const orders = iconOrders;
+export const user = iconUser;
 
 export default [
   logoWhite,
@@ -52,4 +58,7 @@ export default [
   erase,
   calendar,
   checklistTick,
+  home,
+  orders,
+  user,
 ];

@@ -2,6 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
 import { t } from '../../strings';
+import BackButton from '../common/buttons/BackButton';
 import SignInFeedback from './SignInFeedback';
 import Terms from './Terms';
 import WelcomeScreen from './WelcomeScreen';
@@ -19,9 +20,19 @@ export default function () {
       <StackNavigator.Screen
         name="SignInFeedback"
         component={SignInFeedback}
-        options={{ title: t('Verifique seu e-mail') }}
+        options={({ navigation }) => ({
+          title: t('Verifique seu e-mail'),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
       />
-      <StackNavigator.Screen name="Terms" component={Terms} options={{ title: '' }} />
+      <StackNavigator.Screen
+        name="Terms"
+        component={Terms}
+        options={({ navigation }) => ({
+          title: t('Fique por dentro'),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
+      />
     </StackNavigator.Navigator>
   );
 }
