@@ -5,6 +5,7 @@ import { t } from '../../../strings';
 import ProfileEdit from '../../profile/ProfileEdit';
 import PendingChecklist from './PendingChecklist';
 import { PendingParamList } from './types';
+import BackButton from '../../common/buttons/BackButton';
 
 const Stack = createStackNavigator<PendingParamList>();
 export default function () {
@@ -18,9 +19,10 @@ export default function () {
       <Stack.Screen
         name="ProfileEdit"
         component={ProfileEdit}
-        options={{
+        options={({ navigation }) => ({
           title: t('Seus dados'),
-        }}
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
       />
     </Stack.Navigator>
   );
