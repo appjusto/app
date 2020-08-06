@@ -15,10 +15,3 @@ export const validateEmail = (email: string): ValidationResult => {
   if (!email || email.length === 0) return { status: 'error', message: t('E-mail não é válido') };
   return { status: 'ok' };
 };
-
-export const userDataPending = (user: firebase.User | null | undefined): boolean => {
-  if (user) {
-    if (user.displayName) return false;
-  }
-  return true;
-};

@@ -2,14 +2,16 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { useSelector } from 'react-redux';
 
+import { getCourier } from '../../../store/courier/selectors';
 import { t } from '../../../strings';
 import AvoidingView from '../../common/AvoidingView';
 import ConfigItem from '../../common/ConfigItem';
 import DefaultButton from '../../common/DefaultButton';
 import { screens, texts, colors } from '../../common/styles';
-import { PendingParamList } from './types';
 import PaddedView from '../../common/views/PaddedView';
+import { PendingParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<PendingParamList, 'PendingChecklist'>;
 type ScreenRouteProp = RouteProp<PendingParamList, 'PendingChecklist'>;
@@ -20,6 +22,8 @@ type Props = {
 };
 
 export default function ({ navigation }: Props) {
+  const courier = useSelector(getCourier);
+
   return (
     <View style={{ ...screens.configScreen }}>
       <AvoidingView>
@@ -42,6 +46,7 @@ export default function ({ navigation }: Props) {
               title={t('Seus dados')}
               subtitle={t('Preencha seus dados pessoais')}
               onPress={() => navigation.navigate('ProfileEdit')}
+              checked={courier!.personalInfoSet()}
             />
             <ConfigItem
               title={t('Fotos e documentos')}

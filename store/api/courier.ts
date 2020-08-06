@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import * as geofirestore from 'geofirestore';
 
-import { Courier } from '../courier/types';
+import { CourierObject } from '../courier/Courier';
 
 export default class CourierApi {
   private firestoreWithGeo: geofirestore.GeoFirestore;
@@ -29,7 +29,7 @@ export default class CourierApi {
   // observe courier profile changes
   observeCourier(
     courierId: string,
-    resultHandler: (courier: Courier) => void
+    resultHandler: (courier: CourierObject) => void
   ): firebase.Unsubscribe {
     const unsubscribe = this.getCourierRef(courierId).onSnapshot(
       async (doc) => {
@@ -48,7 +48,7 @@ export default class CourierApi {
   // observe for courier private info changes
   observeCourierPrivateInfo(
     courierId: string,
-    resultHandler: (courier: Courier) => void
+    resultHandler: (courier: CourierObject) => void
   ): firebase.Unsubscribe {
     const unsubscribe = this.getCourierPrivateInfoRef(courierId).onSnapshot(
       (doc) => {
@@ -75,7 +75,7 @@ export default class CourierApi {
   }
 
   // update courier location
-  updateCourierLocation(courier: Courier, location) {
+  updateCourierLocation(courier: CourierObject, location) {
     const { coords } = location;
 
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
@@ -84,21 +84,21 @@ export default class CourierApi {
       .doc('couriers')
       .collection(courier.status!)
       .doc(courier.id);
-    const courierInfo = {};
-    // workaround for testing in simulators when there's no notification token available
-    if (courier.notificationToken) courierInfo.notificationToken = courier.notificationToken;
 
+    const { notificationToken } = courier;
     return courierLocationRef.set(
-      {
-        coordinates: new firebase.firestore.GeoPoint(coords.latitude, coords.longitude),
-        // accuracy: coords.accuracy,
-        // altitude: coords.altitude,
-        // altitudeAccuracy: coords.altitudeAccuracy,
-        // heading: coords.heading,
-        // speed: coords.speed,
-        ...courierInfo,
-        timestamp,
-      },
+      Object.assign(
+        {
+          coordinates: new firebase.firestore.GeoPoint(coords.latitude, coords.longitude),
+          // accuracy: coords.accuracy,
+          // altitude: coords.altitude,
+          // altitudeAccuracy: coords.altitudeAccuracy,
+          // heading: coords.heading,
+          // speed: coords.speed,
+          timestamp,
+        },
+        notificationToken ? { notificationToken } : null
+      ),
       { merge: true }
     );
   }

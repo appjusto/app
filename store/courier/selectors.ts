@@ -1,5 +1,6 @@
 import { State } from '..';
-import { CourierState, Courier, CourierStatus } from './types';
+import Courier from './Courier';
+import { CourierState, CourierStatus } from './types';
 
 export const getCourierState = (state: State): CourierState => state.courier;
 
@@ -11,5 +12,4 @@ export const getCourierStatus = (state: State): CourierStatus =>
 export const isCourierWorking = (state: State) =>
   getCourierStatus(state) !== CourierStatus.Unavailable;
 
-export const getCourierLocation = (state: State) => getCourier(state)?.location;
-export const getAvailableCouriers = (state: State) => getCourierState(state).availableCouriers;
+export const getCourierLocation = (state: State) => getCourierState(state).location;

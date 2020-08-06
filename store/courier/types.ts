@@ -1,5 +1,6 @@
 import { Coordinates } from '../types';
 import { ProfileInfo } from '../user/types';
+import Courier from './Courier';
 
 export enum CourierStatus {
   Unavailable = 'unavailable',
@@ -9,17 +10,8 @@ export enum CourierStatus {
 
 export interface CourierInfo extends ProfileInfo {}
 
-export interface Courier {
-  id: string;
-  info?: CourierInfo;
-  name?: string;
-  status?: CourierStatus;
-  location?: Coordinates;
-  notificationToken?: string;
-}
-
 export interface CourierState {
   courier?: Courier;
   order?: object;
-  availableCouriers: object[];
+  location?: Coordinates;
 }

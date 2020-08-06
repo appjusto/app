@@ -1,23 +1,23 @@
 import { AnyAction } from 'redux';
 
 import * as actionTypes from '../actionTypes';
-import { CourierState, Courier } from './types';
+import Courier from './Courier';
+import { CourierState } from './types';
 
-const initialState: CourierState = {
-  availableCouriers: [],
-};
+const initialState: CourierState = {};
 
 export default function (state: CourierState = initialState, action: AnyAction): CourierState {
   const { type, payload } = action;
   switch (type) {
     case actionTypes.COURIER_PROFILE_UPDATED: {
-      return { ...state, courier: { ...state.courier, ...payload } };
+      const courier = new Courier(Object.assign({}, state.courier?.getSource(), payload));
+      return { ...state, courier };
     }
     case actionTypes.USER_LOGGED_OUT: {
       return { ...state, courier: undefined };
     }
     case actionTypes.SET_LOCATION: {
-      return { ...state, courier: { ...state.courier, location: payload.coords } as Courier };
+      return { ...state, location: payload.coords };
     }
     default:
       return state;

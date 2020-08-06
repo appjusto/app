@@ -2,20 +2,20 @@ import { Dispatch } from 'redux';
 
 import * as actionTypes from '../actionTypes';
 import Api from '../api/api';
-import { Courier } from './types';
+import Courier, { CourierObject } from './Courier';
 
 // watch for updates
 export const observeCourier = (api: Api) => (courierId: string) => (dispatch: Dispatch<any>) => {
   // watch profile changes
   const unsubscribeProfileUpdate = api
     .courier()
-    .observeCourier(courierId, (courier: Courier): void => {
+    .observeCourier(courierId, (courier: CourierObject): void => {
       dispatch({ type: actionTypes.COURIER_PROFILE_UPDATED, payload: courier });
     });
   // watch private info changes
   const unsubscribePrivateInfoUpdate = api
     .courier()
-    .observeCourierPrivateInfo(courierId, (courier: Courier): void => {
+    .observeCourierPrivateInfo(courierId, (courier: CourierObject): void => {
       dispatch({ type: actionTypes.COURIER_PROFILE_UPDATED, payload: courier });
     });
 
