@@ -34,7 +34,6 @@ export default class Api {
 
     this._auth = new AuthApi(extra);
     this._courier = new CourierApi(this.firestore);
-    this._courier = new CourierApi(this.firestore);
     this._consumer = new ConsumerApi(this.firestore);
     this._order = new OrderApi(functionsEndpoint);
     this._maps = new MapsApi(extra.googleMapsApiKey);

@@ -5,26 +5,26 @@ import { nanoid } from 'nanoid/non-secure';
 import React, { useEffect, useContext, useCallback, useState } from 'react';
 import { StyleSheet, View, Dimensions, Text, Image, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { motocycleWhite } from '../../../assets/icons';
-import useLocationUpdates from '../../../hooks/useLocationUpdates';
-import useNotification from '../../../hooks/useNotification';
-import useNotificationToken from '../../../hooks/useNotificationToken';
-import { updateCourier, observeCourier } from '../../../store/courier/actions';
-import { isCourierWorking, getCourier } from '../../../store/courier/selectors';
-import { CourierStatus } from '../../../store/courier/types';
-import { OrderMatchRequest } from '../../../store/types';
-import { getUser } from '../../../store/user/selectors';
-import { t } from '../../../strings';
-import { ApiContext, AppDispatch } from '../../app/context';
-import { colors, padding, texts, borders } from '../../common/styles';
-import { HomeStackParamList } from './types';
+import { motocycleWhite } from '../../../../assets/icons';
+import useLocationUpdates from '../../../../hooks/useLocationUpdates';
+import useNotification from '../../../../hooks/useNotification';
+import useNotificationToken from '../../../../hooks/useNotificationToken';
+import { updateCourier } from '../../../../store/courier/actions';
+import { isCourierWorking, getCourier } from '../../../../store/courier/selectors';
+import { CourierStatus } from '../../../../store/courier/types';
+import { OrderMatchRequest } from '../../../../store/types';
+import { getUser } from '../../../../store/user/selectors';
+import { t } from '../../../../strings';
+import { ApiContext } from '../../../app/context';
+import { colors, padding, texts, borders } from '../../../common/styles';
+import { HomeParamList } from './types';
 
 const { width } = Dimensions.get('window');
 
-type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'CourierHome'>;
-type ScreenRouteProp = RouteProp<HomeStackParamList, 'CourierHome'>;
+type ScreenNavigationProp = StackNavigationProp<HomeParamList, 'Home'>;
+type ScreenRouteProp = RouteProp<HomeParamList, 'Home'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -33,7 +33,6 @@ type Props = {
 
 export default function ({ navigation }: Props) {
   // context
-  const dispatch = useDispatch<AppDispatch>();
   const api = useContext(ApiContext);
 
   // state
@@ -45,26 +44,12 @@ export default function ({ navigation }: Props) {
   const [notificationToken, notificationError] = useNotificationToken();
 
   // side effects
-  // only once to subscribe for profile changes
-  useEffect(() => {
-    if (!user) return;
-    return dispatch(observeCourier(api)(user.uid));
-  }, []);
-
-  useEffect(() => {
-    if (!courier) return;
-    if (courier.info?.situation === 'pending') {
-      console.log('pending!');
-    }
-  }, [courier]);
-
   // notification permission
   useEffect(() => {
-    if (!courier) return;
     if (notificationError) {
       // TODO: ALERT
     } else if (notificationToken) {
-      updateCourier(api)(courier.id, { notificationToken });
+      updateCourier(api)(courier!.id, { notificationToken });
     }
   }, [notificationToken, notificationError, courier]);
 

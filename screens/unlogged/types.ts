@@ -1,4 +1,4 @@
-export type UnloggedStackParamList = {
+export type UnloggedParamList = {
   WelcomeScreen: undefined;
   SignInFeedback: {
     email: string;
