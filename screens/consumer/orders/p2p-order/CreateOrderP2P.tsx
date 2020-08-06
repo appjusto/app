@@ -106,7 +106,7 @@ export default function ({ navigation, route }: Props) {
         dispatch(showToast(t('Aguarde enquanto fazemos a cotação...')));
       }
     } else if (nextStep === Steps.ConfirmingOrder) {
-      const confirmationResult = await api.confirmOrder(order!.id, 'YY7ED5T2geh0iSmRS9FZ');
+      const confirmationResult = await api.order().confirmOrder(order!.id, 'YY7ED5T2geh0iSmRS9FZ');
     }
   };
 
@@ -134,7 +134,7 @@ export default function ({ navigation, route }: Props) {
   useEffect(() => {
     const createOrder = async () => {
       console.log('creating order');
-      const newOrder = await api.createOrder(origin, destination);
+      const newOrder = await api.order().createOrder(origin, destination);
       setOrder(newOrder);
     };
 
