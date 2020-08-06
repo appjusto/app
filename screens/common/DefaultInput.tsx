@@ -10,7 +10,7 @@ export interface Props extends TextInputProps {
 }
 
 export default ({ title, children, style: externalStyle, ...props }: Props) => {
-  const inputRef = useRef<TextInput>();
+  const inputRef = useRef<TextInput>(null);
   const focus = useCallback(() => {
     if (!inputRef.current) return null;
     // if (!inputRef.current.isFocused()) {

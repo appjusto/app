@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback, useContext, useRef } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   Keyboard,
+  ScrollView,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -15,6 +16,7 @@ import { erase } from '../../assets/icons';
 import { getFlavor } from '../../store/config/selectors';
 import { updateConsumer } from '../../store/consumer/actions';
 import { getConsumer } from '../../store/consumer/selectors';
+import { updateCourier } from '../../store/courier/actions';
 import { getCourier } from '../../store/courier/selectors';
 import { showToast } from '../../store/ui/actions';
 import { t } from '../../strings';
@@ -24,14 +26,15 @@ import CheckField from '../common/CheckField';
 import DefaultButton from '../common/DefaultButton';
 import DefaultInput from '../common/DefaultInput';
 import { colors, texts, screens } from '../common/styles';
-import { updateCourier } from '../../store/courier/actions';
-import { ScrollView } from 'react-native-gesture-handler';
 
 const ProfileEdit = () => {
   // context
   const navigation = useNavigation();
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+
+  // refs
+  const scrollViewRef = useRef<ScrollView>(null);
 
   // state
   const flavor = useSelector(getFlavor);
@@ -47,6 +50,7 @@ const ProfileEdit = () => {
   const updateUser = flavor === 'consumer' ? updateConsumer : updateCourier;
   const toggleAcceptMarketing = useCallback(() => {
     setAcceptMarketing(!acceptMarketing);
+    scrollViewRef.current?.scrollToEnd();
   }, [acceptMarketing]);
 
   const updateUserHander = async () => {
@@ -67,7 +71,7 @@ const ProfileEdit = () => {
     <View style={{ ...screens.lightGrey, marginBottom: 0 }}>
       <View style={{ flex: 1 }}>
         <AvoidingView>
-          <ScrollView>
+          <ScrollView ref={scrollViewRef}>
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
               <View style={{ marginTop: 16 }}>
                 <Text style={[texts.big]}>{t('Seus dados')}</Text>
