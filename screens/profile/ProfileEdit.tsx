@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
+import { trim } from 'lodash';
 import React, { useState, useCallback, useContext, useRef } from 'react';
 import {
   View,
@@ -16,8 +17,10 @@ import { erase } from '../../assets/icons';
 import { getFlavor } from '../../store/config/selectors';
 import { updateConsumer } from '../../store/consumer/actions';
 import { getConsumer } from '../../store/consumer/selectors';
+import Consumer from '../../store/consumer/types/Consumer';
 import { updateCourier } from '../../store/courier/actions';
 import { getCourier } from '../../store/courier/selectors';
+import Courier from '../../store/courier/types/Courier';
 import { showToast } from '../../store/ui/actions';
 import { t } from '../../strings';
 import { ApiContext, AppDispatch } from '../app/context';
@@ -38,12 +41,14 @@ const ProfileEdit = () => {
 
   // state
   const flavor = useSelector(getFlavor);
-  const user = useSelector(flavor === 'consumer' ? getConsumer : getCourier);
+  const courier = useSelector(getCourier);
+  const consumer = useSelector(getConsumer);
+  const user: Consumer | Courier | undefined = flavor === 'consumer' ? consumer : courier;
   const [updating, setUpdating] = useState(false);
-  const [name, setName] = useState<string>(user?.name ?? '');
-  const [surname, setSurname] = useState('');
-  const [phone, setPhone] = useState('');
-  const [cpf, setCpf] = useState('');
+  const [name, setName] = useState<string>(user!.name!);
+  const [surname, setSurname] = useState(user!.surname!);
+  const [phone, setPhone] = useState(user!.phone!);
+  const [cpf, setCpf] = useState(user!.cpf!);
   const [acceptMarketing, setAcceptMarketing] = useState(false);
 
   // handlers
@@ -81,24 +86,28 @@ const ProfileEdit = () => {
               </View>
             </TouchableWithoutFeedback>
             <View style={{ marginTop: 32 }}>
-              <DefaultInput title={t('Nome')} value={name} onChangeText={setName} />
+              <DefaultInput
+                title={t('Nome')}
+                value={name}
+                onChangeText={(text) => setName(trim(text))}
+              />
               <DefaultInput
                 style={{ marginTop: 12 }}
                 title={t('Sobrenome')}
                 value={surname}
-                onChangeText={setSurname}
+                onChangeText={(text) => setSurname(trim(text))}
               />
               <DefaultInput
                 style={{ marginTop: 12 }}
                 title={t('CPF')}
                 value={cpf}
-                onChangeText={setCpf}
+                onChangeText={(text) => setCpf(trim(text))}
               />
               <DefaultInput
                 style={{ marginTop: 12 }}
                 title={t('Celular')}
                 value={phone}
-                onChangeText={setPhone}
+                onChangeText={(text) => setPhone(trim(text))}
               />
             </View>
             <CheckField

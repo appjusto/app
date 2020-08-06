@@ -1,5 +1,5 @@
-import { Coordinates } from '../types';
-import { ProfileInfo } from '../user/types';
+import { Coordinates } from '../../types';
+import { ProfileInfo } from '../../user/types';
 import Courier from './Courier';
 
 export enum CourierStatus {

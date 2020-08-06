@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import * as geofirestore from 'geofirestore';
 
-import { CourierObject } from '../courier/Courier';
+import { CourierProfile } from '../courier/types/Courier';
 
 export default class CourierApi {
   private firestoreWithGeo: geofirestore.GeoFirestore;
@@ -29,7 +29,7 @@ export default class CourierApi {
   // observe courier profile changes
   observeCourier(
     courierId: string,
-    resultHandler: (courier: CourierObject) => void
+    resultHandler: (courier: CourierProfile) => void
   ): firebase.Unsubscribe {
     const unsubscribe = this.getCourierRef(courierId).onSnapshot(
       async (doc) => {
@@ -48,7 +48,7 @@ export default class CourierApi {
   // observe for courier private info changes
   observeCourierPrivateInfo(
     courierId: string,
-    resultHandler: (courier: CourierObject) => void
+    resultHandler: (courier: CourierProfile) => void
   ): firebase.Unsubscribe {
     const unsubscribe = this.getCourierPrivateInfoRef(courierId).onSnapshot(
       (doc) => {
@@ -75,7 +75,7 @@ export default class CourierApi {
   }
 
   // update courier location
-  updateCourierLocation(courier: CourierObject, location) {
+  updateCourierLocation(courier: CourierProfile, location) {
     const { coords } = location;
 
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();

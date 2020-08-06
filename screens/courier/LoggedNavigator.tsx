@@ -27,6 +27,7 @@ export default function () {
   if (!courier) return null;
   if (courier.info?.situation === 'blocked') {
   } else if (courier.info?.situation === 'reject') {
+  } else if (courier.info?.situation === 'submitted') {
   } else if (courier.info?.situation === 'approved') {
     return ApprovedNavigator();
   }
