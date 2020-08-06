@@ -6,7 +6,7 @@ import React, { ReactNode } from 'react';
 import { Provider } from 'react-redux';
 
 import { createStore } from '../../store';
-import Api from '../../store/api';
+import Api from '../../store/api/api';
 import { getExtra } from '../../utils/config';
 import { defineLocationUpdatesTask } from '../../utils/location';
 import Toast from '../common/Toast';

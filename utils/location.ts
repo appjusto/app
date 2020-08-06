@@ -2,7 +2,7 @@ import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 
 import { AppStore } from '../screens/app/context';
-import Api from '../store/api';
+import Api from '../store/api/api';
 import { isCourierFlavor } from '../store/config/selectors';
 import { updateCourierLocation } from '../store/courier/actions';
 import { isCourierWorking, getCourier } from '../store/courier/selectors';

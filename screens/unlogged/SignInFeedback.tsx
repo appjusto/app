@@ -12,10 +12,10 @@ import { ApiContext } from '../app/context';
 import DefaultButton from '../common/DefaultButton';
 import FeedbackView from '../common/FeedbackView';
 import { colors, borders } from '../common/styles';
-import { UnloggedStackParamList } from './types';
+import { UnloggedParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<UnloggedStackParamList, 'SignInFeedback'>;
-type ScreenRouteProp = RouteProp<UnloggedStackParamList, 'SignInFeedback'>;
+type ScreenNavigationProp = StackNavigationProp<UnloggedParamList, 'SignInFeedback'>;
+type ScreenRouteProp = RouteProp<UnloggedParamList, 'SignInFeedback'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

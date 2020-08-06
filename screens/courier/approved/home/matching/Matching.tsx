@@ -4,13 +4,13 @@ import React, { useEffect, useContext, useCallback } from 'react';
 import { Text, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { t } from '../../../../strings';
-import { ApiContext } from '../../../app/context';
-import { texts } from '../../../common/styles';
-import { HomeStackParamList } from '../types';
+import { t } from '../../../../../strings';
+import { ApiContext } from '../../../../app/context';
+import { texts } from '../../../../common/styles';
+import { HomeParamList } from '../types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'Matching'>;
-type ScreenRouteProp = RouteProp<HomeStackParamList, 'Matching'>;
+type ScreenNavigationProp = StackNavigationProp<HomeParamList, 'Matching'>;
+type ScreenRouteProp = RouteProp<HomeParamList, 'Matching'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -25,7 +25,7 @@ export default function ({ navigation, route }: Props) {
 
   // handlers
   const acceptHandler = useCallback(async () => {
-    const match = await api.matchOrder(order.orderId);
+    const match = await api.order().matchOrder(order.orderId);
     console.log(match);
     // TODO: if successful, go to Delivering screen
   }, [order]);

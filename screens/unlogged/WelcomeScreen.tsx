@@ -23,10 +23,10 @@ import CheckField from '../common/CheckField';
 import DefaultButton from '../common/DefaultButton';
 import DefaultInput from '../common/DefaultInput';
 import { colors, texts, padding, screens } from '../common/styles';
-import { UnloggedStackParamList } from './types';
+import { UnloggedParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<UnloggedStackParamList, 'WelcomeScreen'>;
-type ScreenRouteProp = RouteProp<UnloggedStackParamList, 'WelcomeScreen'>;
+type ScreenNavigationProp = StackNavigationProp<UnloggedParamList, 'WelcomeScreen'>;
+type ScreenRouteProp = RouteProp<UnloggedParamList, 'WelcomeScreen'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

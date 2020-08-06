@@ -6,18 +6,18 @@ import SignInFeedback from './SignInFeedback';
 import Terms from './Terms';
 import BackButton from '../common/BackButton';
 import WelcomeScreen from './WelcomeScreen';
-import { UnloggedStackParamList } from './types';
+import { UnloggedParamList } from './types';
 
-const UnloggedStack = createStackNavigator<UnloggedStackParamList>();
+const StackNavigator = createStackNavigator<UnloggedParamList>();
 export default function () {
   return (
-    <UnloggedStack.Navigator>
-      <UnloggedStack.Screen
+    <StackNavigator.Navigator>
+      <StackNavigator.Screen
         name="WelcomeScreen"
         component={WelcomeScreen}
         options={{ headerShown: false, title: '' }}
       />
-      <UnloggedStack.Screen
+      <StackNavigator.Screen
         name="SignInFeedback"
         component={SignInFeedback}
         options={({ navigation }) => ({
@@ -33,6 +33,11 @@ export default function () {
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />
+<<<<<<< HEAD:screens/unlogged/UnloggedStack.tsx
     </UnloggedStack.Navigator>
+=======
+      <StackNavigator.Screen name="Terms" component={Terms} options={{ title: '' }} />
+    </StackNavigator.Navigator>
+>>>>>>> bf8b7580f56711a9c14670f62789150232671564:screens/unlogged/UnloggedNavigator.tsx
   );
 }

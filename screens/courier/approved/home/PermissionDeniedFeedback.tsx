@@ -3,15 +3,15 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import * as Linking from 'expo-linking';
 import React from 'react';
 
-import { motocycle } from '../../../assets/icons';
-import { t } from '../../../strings';
-import DefaultButton from '../../common/DefaultButton';
-import FeedbackView from '../../common/FeedbackView';
-import { colors, borders } from '../../common/styles';
-import { HomeStackParamList } from './types';
+import { motocycle } from '../../../../assets/icons';
+import { t } from '../../../../strings';
+import DefaultButton from '../../../common/DefaultButton';
+import FeedbackView from '../../../common/FeedbackView';
+import { colors, borders } from '../../../common/styles';
+import { HomeParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'PermissionDeniedFeedback'>;
-type ScreenRouteProp = RouteProp<HomeStackParamList, 'PermissionDeniedFeedback'>;
+type ScreenNavigationProp = StackNavigationProp<HomeParamList, 'PermissionDeniedFeedback'>;
+type ScreenRouteProp = RouteProp<HomeParamList, 'PermissionDeniedFeedback'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

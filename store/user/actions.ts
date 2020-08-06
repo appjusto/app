@@ -2,10 +2,10 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Dispatch } from 'redux';
 
 import * as actionTypes from '../actionTypes';
-import Api from '../api';
+import Api from '../api/api';
 
 export const observeAuthState = (api: Api) => (dispatch: Dispatch<any>) => {
-  const unsubscribe = api.observeAuthState((user) => {
+  const unsubscribe = api.auth().observeAuthState((user) => {
     if (user) {
       dispatch({ type: actionTypes.USER_LOGGED_IN, payload: user });
     } else {
@@ -21,7 +21,7 @@ export const signInWithEmail = (api: Api) => (email: string) => {
   } catch (e) {
     console.error(e);
   }
-  return api.sendSignInLinkToEmail(email);
+  return api.auth().sendSignInLinkToEmail(email);
 };
 
 export const getSignInEmail = () => {
@@ -34,13 +34,13 @@ export const getSignInEmail = () => {
 };
 
 export const isSignInWithEmailLink = (api: Api) => (link: string | null): boolean => {
-  return api.isSignInWithEmailLink(link);
+  return api.auth().isSignInWithEmailLink(link);
 };
 
 export const signInWithEmailLink = (api: Api) => (email: string, link: string) => {
-  return api.signInWithEmailLink(email, link);
+  return api.auth().signInWithEmailLink(email, link);
 };
 
 export const signOut = (api: Api) => {
-  return api.signOut();
+  return api.auth().signOut();
 };

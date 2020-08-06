@@ -44,7 +44,7 @@ export default function () {
   // handlers
   const getAddress = useCallback(
     debounce<(input: string) => void>(async (input: string): Promise<void> => {
-      const { predictions } = await api.googlePlacesAutocomplete(input, autocompleteSession);
+      const { predictions } = await api.maps().googlePlacesAutocomplete(input, autocompleteSession);
       setAutoCompletePredictions(predictions);
     }, 1000),
     [autocompleteSession]

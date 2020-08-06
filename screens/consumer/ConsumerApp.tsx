@@ -4,7 +4,7 @@ import React from 'react';
 
 import AuthContainer from '../app/AuthContainer';
 import ProfileStack from '../profile/ProfileStack';
-import UnloggedStack from '../unlogged/UnloggedStack';
+import UnloggedStack from '../unlogged/UnloggedNavigator';
 import ConsumerHistory from './history/ConsumerHistory';
 import HomeStack from './home/HomeStack';
 
