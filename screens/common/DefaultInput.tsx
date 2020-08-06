@@ -13,20 +13,20 @@ export default ({ title, children, style: externalStyle, ...props }: Props) => {
   const inputRef = useRef<TextInput>();
   const focus = useCallback(() => {
     if (!inputRef.current) return null;
-    if (!inputRef.current.isFocused()) {
-      inputRef.current.focus();
-    }
+    // if (!inputRef.current.isFocused()) {
+    inputRef.current.focus();
+    // }
   }, [inputRef.current]);
   return (
-    <TouchableWithoutFeedback onPress={focus}>
-      <View style={[style.container, externalStyle]}>
-        <View>
+    <View style={[style.container, externalStyle]}>
+      <View style={{ width: '100%' }}>
+        <TouchableWithoutFeedback onPress={focus}>
           <Text style={style.label}>{title}</Text>
-          <TextInput ref={inputRef} style={style.input} {...props} />
-        </View>
-        {children}
+        </TouchableWithoutFeedback>
+        <TextInput ref={inputRef} style={style.input} {...props} />
       </View>
-    </TouchableWithoutFeedback>
+      {children}
+    </View>
   );
 };
 
@@ -40,14 +40,19 @@ const style = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 12,
+    // ...borders.default,
   },
   label: {
     ...texts.small,
     color: colors.darkGreen,
     paddingVertical: 2,
+    width: '100%',
+    // ...borders.default,
   },
   input: {
     ...texts.medium,
     color: colors.darkGrey,
+    width: '100%',
+    // ...borders.default,
   },
 });

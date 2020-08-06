@@ -69,64 +69,62 @@ const ProfileEdit = () => {
     <View style={{ ...screens.lightGrey, marginBottom: 0 }}>
       <View style={{ flex: 1 }}>
         <AvoidingView>
-          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <ScrollView>
+          <ScrollView>
+            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
               <View style={{ marginTop: 16 }}>
                 <Text style={{ ...texts.big }}>{t('Seus dados')}</Text>
                 <Text style={styles.default}>{t('Edite seus dados pessoais:')}</Text>
               </View>
-              <View style={{ marginTop: 32 }}>
-                <DefaultInput title={t('Nome')} value={name} onChangeText={setName} />
-                <DefaultInput
-                  style={{ marginTop: 12 }}
-                  title={t('Sobrenome')}
-                  value={surname}
-                  onChangeText={setSurname}
-                />
-                <DefaultInput
-                  style={{ marginTop: 12 }}
-                  title={t('Celular')}
-                  value={phone}
-                  onChangeText={setPhone}
-                />
-                <DefaultInput
-                  style={{ marginTop: 12 }}
-                  title={t('E-mail')}
-                  value={email}
-                  onChangeText={setEmail}
-                />
-                <DefaultInput
-                  style={{ marginTop: 12 }}
-                  title={t('CPF')}
-                  value={cpf}
-                  onChangeText={setCpf}
-                />
-              </View>
-              <CheckField
-                marginTop={16}
-                checked={acceptMarketing}
-                onPress={toggleAcceptMarketing}
-                text={t('Aceito receber comunicações e ofertas')}
+            </TouchableWithoutFeedback>
+            <View style={{ marginTop: 32 }}>
+              <DefaultInput title={t('Nome')} value={name} onChangeText={setName} />
+              <DefaultInput
+                style={{ marginTop: 12 }}
+                title={t('Sobrenome')}
+                value={surname}
+                onChangeText={setSurname}
               />
-              <View style={{ flex: 1 }} />
-              <View style={styles.bottomContainer}>
-                <DefaultButton
-                  wide
-                  title={t('Atualizar')}
-                  disabled={updating}
-                  onPress={updateUserHander}
-                />
-                <TouchableOpacity onPress={() => navigation.navigate('ProfileErase')}>
-                  <View style={styles.eraseContainer}>
-                    <Image source={erase} />
-                    <Text style={{ ...texts.small, marginLeft: 6 }}>
-                      {t('Excluir minha conta')}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
-          </TouchableWithoutFeedback>
+              <DefaultInput
+                style={{ marginTop: 12 }}
+                title={t('Celular')}
+                value={phone}
+                onChangeText={setPhone}
+              />
+              <DefaultInput
+                style={{ marginTop: 12 }}
+                title={t('E-mail')}
+                value={email}
+                onChangeText={setEmail}
+              />
+              <DefaultInput
+                style={{ marginTop: 12 }}
+                title={t('CPF')}
+                value={cpf}
+                onChangeText={setCpf}
+              />
+            </View>
+            <CheckField
+              marginTop={16}
+              checked={acceptMarketing}
+              onPress={toggleAcceptMarketing}
+              text={t('Aceito receber comunicações e ofertas')}
+            />
+            <View style={{ flex: 1 }} />
+            <View style={styles.bottomContainer}>
+              <DefaultButton
+                wide
+                title={t('Atualizar')}
+                disabled={updating}
+                onPress={updateUserHander}
+              />
+              <TouchableOpacity onPress={() => navigation.navigate('ProfileErase')}>
+                <View style={styles.eraseContainer}>
+                  <Image source={erase} />
+                  <Text style={{ ...texts.small, marginLeft: 6 }}>{t('Excluir minha conta')}</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
         </AvoidingView>
       </View>
     </View>
