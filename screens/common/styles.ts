@@ -19,6 +19,10 @@ export const screens = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
   },
+  configScreen: {
+    flex: 1,
+    backgroundColor: colors.lightGrey,
+  },
   padded: {
     flex: 1,
     backgroundColor: colors.white,

@@ -10,6 +10,7 @@ import {
   NativeSyntheticEvent,
   TouchableWithoutFeedback,
   Text,
+  TouchableOpacity,
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 
@@ -22,7 +23,6 @@ import DefaultButton from '../../../common/DefaultButton';
 import DefaultInput from '../../../common/DefaultInput';
 import LabeledText from '../../../common/LabeledText';
 import ShowIf from '../../../common/ShowIf';
-import Touchable from '../../../common/Touchable';
 import { screens, borders, texts } from '../../../common/styles';
 import { HomeStackParamList } from '../../home/types';
 import OrderMap from './OrderMap';
@@ -229,11 +229,11 @@ export default function ({ navigation, route }: Props) {
             <ShowIf test={placeValid(origin)}>
               {() => (
                 <View>
-                  <Touchable onPress={navigateToAddressComplete}>
+                  <TouchableOpacity onPress={navigateToAddressComplete}>
                     <LabeledText style={style.input} title={t('Endereço de entrega')}>
                       {destination.address ?? t('Endereço com número')}
                     </LabeledText>
-                  </Touchable>
+                  </TouchableOpacity>
 
                   <DefaultInput
                     style={style.input}

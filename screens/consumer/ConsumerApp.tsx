@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
 import AuthContainer from '../app/AuthContainer';
-import ProfileStack from '../profile/ProfileStack';
+import ProfileNavigator from '../profile/ProfileNavigator';
 import UnloggedStack from '../unlogged/UnloggedNavigator';
 import ConsumerHistory from './history/ConsumerHistory';
 import HomeStack from './home/HomeStack';
@@ -25,7 +25,7 @@ function Logged() {
       <LoggedNavigator.Screen name="ConsumerHistory" component={History} />
       <LoggedNavigator.Screen
         name="Profile"
-        component={ProfileStack}
+        component={ProfileNavigator}
         options={{ title: 'Sua conta' }}
       />
     </LoggedNavigator.Navigator>

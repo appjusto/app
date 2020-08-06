@@ -1,10 +1,9 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, Text, Image } from 'react-native';
+import { ScrollView, StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 
 import { edit } from '../../../../assets/icons';
 import { Order, Place } from '../../../../store/types';
 import { t } from '../../../../strings';
-import Touchable from '../../../common/Touchable';
 
 export interface Props {
   order: Order;
@@ -27,9 +26,9 @@ function PlaceSummary({ place, title, onEdit }: PlaceSummaryProps) {
         <Text>{place.description}</Text>
       </View>
       <View>
-        <Touchable onPress={() => onEdit()}>
+        <TouchableOpacity onPress={() => onEdit()}>
           <Image style={{ width: 32, height: 32 }} source={edit} />
-        </Touchable>
+        </TouchableOpacity>
       </View>
     </View>
   );

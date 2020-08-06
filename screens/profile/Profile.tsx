@@ -5,11 +5,11 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { signOut } from '../../store/user/actions';
 import { t } from '../../strings';
 import { ApiContext } from '../app/context';
+import ArrowBox from '../common/ArrowBox';
 import DefaultButton from '../common/DefaultButton';
-import GoButton from '../common/GoButton';
 import { colors, texts, screens, padding } from '../common/styles';
 
-const ConsumerProfile = () => {
+export default function () {
   // context
   const navigation = useNavigation();
   const api = useContext(ApiContext);
@@ -45,7 +45,7 @@ const ConsumerProfile = () => {
             <Text style={styles.darkGrey}>{t('Edite seus dados pessoais')}</Text>
           </View>
           <View style={styles.button}>
-            <GoButton />
+            <ArrowBox />
           </View>
         </View>
       </TouchableOpacity>
@@ -57,7 +57,7 @@ const ConsumerProfile = () => {
             <Text style={styles.darkGrey}>{t('Edite suas formas de pagamento')}</Text>
           </View>
           <View style={styles.button}>
-            <GoButton />
+            <ArrowBox />
           </View>
         </View>
       </TouchableOpacity>
@@ -73,7 +73,7 @@ const ConsumerProfile = () => {
             <Text style={styles.darkGrey}>{t('Leia os termos de uso do AppJusto')}</Text>
           </View>
           <View style={styles.button}>
-            <GoButton />
+            <ArrowBox />
           </View>
         </View>
       </TouchableOpacity>
@@ -83,7 +83,7 @@ const ConsumerProfile = () => {
       <DefaultButton title={t('Sair da conta')} onPress={confirmLogout} />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   screen: {
@@ -114,5 +114,3 @@ const styles = StyleSheet.create({
     paddingBottom: 28,
   },
 });
-
-export default ConsumerProfile;
