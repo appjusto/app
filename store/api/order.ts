@@ -6,14 +6,14 @@ export default class OrderApi {
   // functions
   // submit profile
   async createOrder(origin: Place, destination: Place) {
-    return this.functions.httpsCallable('createOrder')({ origin, destination });
+    return (await this.functions.httpsCallable('createOrder')({ origin, destination })).data;
   }
 
   async confirmOrder(orderId: string, cardId: string) {
-    return this.functions.httpsCallable('confirmOrder')({ orderId, cardId });
+    return (await this.functions.httpsCallable('confirmOrder')({ orderId, cardId })).data;
   }
 
   async matchOrder(orderId: string) {
-    return this.functions.httpsCallable('matchOrder')({ orderId });
+    return (await this.functions.httpsCallable('matchOrder')({ orderId })).data;
   }
 }

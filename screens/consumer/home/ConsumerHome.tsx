@@ -106,13 +106,13 @@ export default function ConsumerHome({ navigation }: Props) {
 const styles = StyleSheet.create({
   greenContainer: {
     width: '100%',
-    height: '60%',
+    height: '70%',
     backgroundColor: colors.green,
     paddingHorizontal: 16,
   },
   whiteContainer: {
     width: '100%',
-    height: '40%',
+    height: '30%',
   },
   searchBox: {
     flexDirection: 'row',
