@@ -51,7 +51,7 @@ export default function ({ navigation }: Props) {
     } else if (notificationToken) {
       updateCourier(api)(courier!.id, { notificationToken });
     }
-  }, [notificationToken, notificationError, courier]);
+  }, [notificationToken, notificationError]);
 
   // location permission denied
   useEffect(() => {
