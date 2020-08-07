@@ -135,6 +135,7 @@ export default function ({ navigation, route }: Props) {
     const createOrder = async () => {
       console.log('creating order');
       const newOrder = await api.order().createOrder(origin, destination);
+      console.log(newOrder);
       setOrder(newOrder);
     };
 
