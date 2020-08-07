@@ -2,6 +2,7 @@ import { AnyAction } from 'redux';
 
 import * as actionTypes from '../actionTypes';
 import { ConsumerState } from './types';
+import Consumer from './types/Consumer';
 
 const initialState: ConsumerState = {};
 
@@ -9,7 +10,8 @@ export default function (state: ConsumerState = initialState, action: AnyAction)
   const { type, payload } = action;
   switch (type) {
     case actionTypes.CONSUMER_PROFILE_UPDATED: {
-      return { ...state, consumer: { ...state.consumer, ...payload } };
+      const consumer = new Consumer(Object.assign({}, state.consumer?.getSource(), payload));
+      return { ...state, consumer };
     }
     case actionTypes.USER_LOGGED_OUT: {
       return { ...state, consumer: undefined };

@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 
-import { Consumer } from '../consumer/types';
+import { ConsumerProfile } from '../consumer/types/Consumer';
 
 export default class ConsumerApi {
   constructor(private firestore: firebase.firestore.Firestore) {}
@@ -20,7 +20,7 @@ export default class ConsumerApi {
   // observe consumer profile changes
   observeConsumer(
     consumerId: string,
-    resultHandler: (consumer: Consumer) => void
+    resultHandler: (consumer: ConsumerProfile) => void
   ): firebase.Unsubscribe {
     const unsubscribe = this.getConsumerRef(consumerId).onSnapshot(
       async (doc) => {

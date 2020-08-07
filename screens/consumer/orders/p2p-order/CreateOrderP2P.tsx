@@ -61,7 +61,7 @@ export default function ({ navigation, route }: Props) {
   const { params } = route;
 
   // refs
-  const viewPager = useRef<ViewPager>();
+  const viewPager = useRef<ViewPager>(null);
 
   // state
   const [step, setStep] = useState(Steps.Origin);
