@@ -48,7 +48,7 @@ export default function ({ navigation }: Props) {
   useEffect(() => {
     if (notificationError) {
       // TODO: ALERT
-    } else if (notificationToken) {
+    } else if (notificationToken && notificationToken !== courier!.notificationToken) {
       updateCourier(api)(courier!.id, { notificationToken });
     }
   }, [notificationToken, notificationError]);
