@@ -3,12 +3,12 @@ import React from 'react';
 
 import { t } from '../../strings';
 import BackButton from '../common/buttons/BackButton';
-import EraseConfirmed from './EraseConfirmed';
 import Profile from './Profile';
 import ProfileEdit from './ProfileEdit';
 import ProfileErase from './ProfileErase';
+import { ProfileParamList } from './types';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<ProfileParamList>();
 export default function () {
   return (
     <Stack.Navigator initialRouteName="Profile">
@@ -26,7 +26,6 @@ export default function () {
         component={ProfileErase}
         options={{ title: 'Excluir minha conta' }}
       />
-      <Stack.Screen name="EraseConfirmed" component={EraseConfirmed} />
     </Stack.Navigator>
   );
 }

@@ -1,7 +1,9 @@
 export type PendingParamList = {
   PendingChecklist: undefined;
-  ProfileEdit: undefined;
-  DocumentsUploader: undefined;
+  ProfileEdit?: {
+    hideDeleteAccount?: boolean;
+  };
+  ProfilePhotos: undefined;
   BankInfo: undefined;
   FleetChooser: undefined;
 };
