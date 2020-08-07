@@ -8,7 +8,7 @@ type Props = {
   header: string;
   icon: any;
   description: string;
-  children: React.ReactNode | React.ReactNode[];
+  children?: React.ReactNode | React.ReactNode[];
 };
 
 export default ({ header, description, children }: Props) => {

@@ -6,7 +6,10 @@ import { CourierProfile } from '../courier/types/Courier';
 export default class CourierApi {
   private firestoreWithGeo: geofirestore.GeoFirestore;
 
-  constructor(private firestore: firebase.firestore.Firestore) {
+  constructor(
+    private firestore: firebase.firestore.Firestore,
+    private functions: firebase.functions.Functions
+  ) {
     this.firestoreWithGeo = geofirestore.initializeApp(this.firestore);
   }
 
@@ -17,15 +20,19 @@ export default class CourierApi {
   private getCourierPrivateInfoRef(courierId: string) {
     return this.getCourierRef(courierId).collection('info').doc('private');
   }
-
-  // create courier profile
-  createCourier(courierId: string) {
+  private createCourier(courierId: string) {
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
     return this.getCourierRef(courierId).set({
       timestamp,
     });
   }
+  // functions
+  // submit profile
+  async submitProfile() {
+    return this.functions.httpsCallable('submitCourierProfile')();
+  }
 
+  // firestore
   // observe courier profile changes
   observeCourier(
     courierId: string,

@@ -7,6 +7,7 @@ import ProfileEdit from '../../profile/ProfileEdit';
 import ProfilePhotos from '../../profile/photos/ProfilePhotos';
 import PendingChecklist from './PendingChecklist';
 import { PendingParamList } from './types';
+import ProfileFeedback from './ProfileFeedback';
 
 const Stack = createStackNavigator<PendingParamList>();
 export default function () {
@@ -30,6 +31,14 @@ export default function () {
         component={ProfilePhotos}
         options={({ navigation }) => ({
           title: t('Fotos e documentos'),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
+      />
+      <Stack.Screen
+        name="ProfileFeedback"
+        component={ProfileFeedback}
+        options={({ navigation }) => ({
+          title: t('Novo cadastro'),
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />

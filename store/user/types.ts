@@ -11,6 +11,8 @@ export interface UserProfile {
   notificationToken?: string;
 }
 
+export type ProfileSituation = 'pending' | 'submitted' | 'approved' | 'rejected' | 'blocked';
+
 export interface ProfileInfo {
-  situation?: 'pending' | 'submitted' | 'approved' | 'reject' | 'blocked';
+  situation?: ProfileSituation;
 }

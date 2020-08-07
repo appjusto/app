@@ -1,11 +1,12 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import { getCourier } from '../../../store/courier/selectors';
 import { t } from '../../../strings';
+import { ApiContext } from '../../app/context';
 import AvoidingView from '../../common/AvoidingView';
 import ConfigItem from '../../common/ConfigItem';
 import DefaultButton from '../../common/DefaultButton';
@@ -22,10 +23,28 @@ type Props = {
 };
 
 export default function ({ navigation }: Props) {
+  // context
+  const api = useContext(ApiContext);
+
+  // state
   const courier = useSelector(getCourier);
+  const situation = courier!.info?.situation ?? 'pending';
+  const submitEnabled = situation === 'pending' && courier!.personalInfoSet();
 
-  const submitEnabled = courier!.personalInfoSet();
+  // handlers
+  const submitHandler = async () => {
+    await api.courier().submitProfile();
+  };
 
+  // side effects
+  useEffect(() => {
+    const feedbackSituations = ['blocked', 'rejected', 'submitted'];
+    if (feedbackSituations.indexOf(situation) > -1) {
+      navigation.navigate('ProfileFeedback');
+    }
+  }, [situation]);
+
+  // UI
   return (
     <View style={{ ...screens.configScreen }}>
       <AvoidingView>
@@ -36,7 +55,7 @@ export default function ({ navigation }: Props) {
               <Text style={[texts.big]}>{t('Cadastro de novo entregador')}</Text>
               <DefaultButton
                 title={t('Enviar cadastro')}
-                onPress={() => null}
+                onPress={submitHandler}
                 disabled={!submitEnabled}
               />
               <Text style={[texts.default, { color: colors.darkGrey, paddingTop: 8 }]}>

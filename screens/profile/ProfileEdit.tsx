@@ -12,7 +12,6 @@ import {
   Keyboard,
   ScrollView,
 } from 'react-native';
-// import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { erase } from '../../assets/icons';
@@ -56,10 +55,10 @@ export default function ({ navigation, route }: Props) {
   const consumer = useSelector(getConsumer);
   const user: Consumer | Courier | undefined = flavor === 'consumer' ? consumer : courier;
   const [updating, setUpdating] = useState(false);
-  const [name, setName] = useState<string>(user!.name!);
-  const [surname, setSurname] = useState(user!.surname!);
-  const [phone, setPhone] = useState(user!.phone!);
-  const [cpf, setCpf] = useState(user!.cpf!);
+  const [name, setName] = useState<string>(user!.name! ?? '');
+  const [surname, setSurname] = useState(user!.surname! ?? '');
+  const [phone, setPhone] = useState(user!.phone! ?? '');
+  const [cpf, setCpf] = useState(user!.cpf! ?? '');
   const [acceptMarketing, setAcceptMarketing] = useState(false);
 
   // handlers
@@ -69,7 +68,7 @@ export default function ({ navigation, route }: Props) {
     scrollViewRef.current?.scrollToEnd();
   }, [acceptMarketing]);
 
-  const updateUserHander = async () => {
+  const updateUserHandler = async () => {
     setUpdating(true);
     dispatch(showToast(t('Atualizando cadastro...')));
     await updateUser(api)(user!.id, {
@@ -127,7 +126,7 @@ export default function ({ navigation, route }: Props) {
             text={t('Aceito receber comunicações e ofertas')}
           />
           <View style={{ flex: 1 }} />
-          <DefaultButton title={t('Atualizar')} disabled={updating} onPress={updateUserHander} />
+          <DefaultButton title={t('Atualizar')} disabled={updating} onPress={updateUserHandler} />
           <ShowIf test={!route.params?.hideDeleteAccount}>
             {() => (
               <TouchableOpacity onPress={() => navigation.navigate('ProfileErase')}>
