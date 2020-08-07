@@ -4,7 +4,7 @@ import { ScrollView, View, Text, Image, TouchableOpacity } from 'react-native';
 import { edit } from '../../../../assets/icons';
 import { Order, Place } from '../../../../store/types';
 import { t } from '../../../../strings';
-import { texts, colors, borders } from '../../../common/styles';
+import { texts, colors, borders, screens } from '../../../common/styles';
 
 export interface Props {
   order: Order;
@@ -26,7 +26,7 @@ function PlaceSummary({ place, title, onEdit }: PlaceSummaryProps) {
         <Text>{place.additionalInfo}</Text>
         <Text>{place.description}</Text>
       </View>
-      <View>
+      <View style={{ alignSelf: 'center' }}>
         <TouchableOpacity onPress={() => onEdit()}>
           <Image style={{ width: 32, height: 32 }} source={edit} />
         </TouchableOpacity>
@@ -55,18 +55,70 @@ export default function ({ order, onEdit }: Props) {
         </View> */}
         <View
           style={{
-            flex: 1,
             ...borders.default,
             paddingHorizontal: 8,
             flexDirection: 'row',
             alignItems: 'center',
-            alignSelf: 'center',
+            alignSelf: 'flex-start',
             justifyContent: 'space-between',
           }}
         >
           <Text>{distance.text}</Text>
           <Text>{duration.text}</Text>
         </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 16,
+            justifyContent: 'space-between',
+            height: 60,
+            width: '100%',
+          }}
+        >
+          <Text style={{ ...texts.medium, lineHeight: 22 }}>{t('Valor total a pagar')}</Text>
+          <Text style={{ ...texts.medium, lineHeight: 22 }}>R$ ${fare.total}</Text>
+        </View>
+      </View>
+      <View style={{ ...screens.lightGrey, paddingVertical: 24 }}>
+        <View>
+          <Text style={{ ...texts.default, lineHeight: 22 }}>{t('Entenda os valores')}</Text>
+          <Text style={{ ...texts.small, lineHeight: 18, color: colors.darkGrey }}>
+            {t('Somos transparentes do início ao fim da entrega')}
+          </Text>
+        </View>
+        <View
+          style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: 16 }}
+        >
+          <Text style={{ ...texts.default, lineHeight: 21 }}>{t('Entregador')}</Text>
+          <Text style={{ ...texts.default, lineHeight: 21 }}>R$ 7,50</Text>
+        </View>
+        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
+            {t('Impostos')}
+          </Text>
+          <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>R$ 1,00</Text>
+        </View>
+        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
+            {t('Tarifa financeira')}
+          </Text>
+          <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>R$ 0,50</Text>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 12,
+            }}
+          >
+            <Text style={{ ...texts.default, lineHeight: 21 }}>{t('AppJusto')}</Text>
+            <Text style={{ ...texts.default, lineHeight: 21 }}>R$ 1,00</Text>
+          </View>
+        </View>
+        <Text style={{ ...texts.small, lineHeight: 19, color: colors.darkGrey }}>
+          O AppJusto cobra menos para ser mais justo com todos. Você pode aumentar a sua
+          contribuição se desejar.
+        </Text>
       </View>
     </ScrollView>
   );
