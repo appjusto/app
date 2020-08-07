@@ -9,12 +9,14 @@ import {
   Image,
   Keyboard,
 } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { erase } from '../../assets/icons';
 import { getFlavor } from '../../store/config/selectors';
 import { updateConsumer } from '../../store/consumer/actions';
 import { getConsumer } from '../../store/consumer/selectors';
+import { updateCourier } from '../../store/courier/actions';
 import { getCourier } from '../../store/courier/selectors';
 import { showToast } from '../../store/ui/actions';
 import { t } from '../../strings';
@@ -24,8 +26,6 @@ import CheckField from '../common/CheckField';
 import DefaultButton from '../common/DefaultButton';
 import DefaultInput from '../common/DefaultInput';
 import { colors, texts, screens } from '../common/styles';
-import { updateCourier } from '../../store/courier/actions';
-import { ScrollView } from 'react-native-gesture-handler';
 
 const ProfileEdit = () => {
   // context
@@ -37,6 +37,7 @@ const ProfileEdit = () => {
   const flavor = useSelector(getFlavor);
   const user = useSelector(flavor === 'consumer' ? getConsumer : getCourier);
   const [updating, setUpdating] = useState(false);
+  const [email, setEmail] = useState<string>(user?.email ?? '');
   const [name, setName] = useState<string>(user?.name ?? '');
   const [surname, setSurname] = useState('');
   const [phone, setPhone] = useState('');
@@ -77,7 +78,13 @@ const ProfileEdit = () => {
               </View>
             </TouchableWithoutFeedback>
             <View style={{ marginTop: 32 }}>
-              <DefaultInput title={t('Nome')} value={name} onChangeText={setName} />
+              <DefaultInput title={t('E-mail')} value={email} onChangeText={setEmail} />
+              <DefaultInput
+                title={t('Nome')}
+                value={name}
+                onChangeText={setName}
+                style={{ marginTop: 12 }}
+              />
               <DefaultInput
                 style={{ marginTop: 12 }}
                 title={t('Sobrenome')}

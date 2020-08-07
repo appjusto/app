@@ -1,6 +1,7 @@
 export interface Consumer {
   id: string;
   name?: string;
+  email?: string;
   notificationToken?: string;
 }
 

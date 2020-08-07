@@ -63,9 +63,9 @@ export default function () {
       </TouchableOpacity>
 
       <TouchableOpacity
-      // onPress={() => {
-      //   navigation.navigate('Unlogged', { screen: 'Terms' });
-      // }}
+        onPress={() => {
+          navigation.navigate('Terms');
+        }}
       >
         <View style={styles.container}>
           <View style={styles.texts}>
@@ -89,7 +89,7 @@ export default function () {
             </Text>
           </View>
           <View style={styles.button}>
-            <GoButton />
+            <ArrowBox />
           </View>
         </View>
       </TouchableOpacity>
