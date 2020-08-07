@@ -1,3 +1,4 @@
+const rectangleBG = require('./icons/Rectangle23.png');
 const arrowSmall = require('./icons/arrow-small.png');
 const iconCheckboxActive = require('./icons/checkbox-active.png');
 const iconCheckboxInactive = require('./icons/checkbox-inactive.png');
@@ -18,7 +19,6 @@ const iconSelfie = require('./icons/icon-selfie.png');
 const iconIllustration = require('./icons/illustration-intro-screen.png');
 const logoAppjustoBgWhite = require('./icons/logo-appjusto-bg-white.png');
 const iconOrders = require('./icons/orders.png');
-const rectangleBG = require('./icons/rectangle23.png');
 const iconUser = require('./icons/user.png');
 
 export const arrow = arrowSmall;

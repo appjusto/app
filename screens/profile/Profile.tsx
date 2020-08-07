@@ -64,13 +64,29 @@ export default function () {
 
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('Unlogged', { screen: 'Terms' });
+          navigation.navigate('Terms');
         }}
       >
         <View style={styles.container}>
           <View style={styles.texts}>
             <Text style={styles.black}>{t('Termos de uso e política de privacidade')}</Text>
             <Text style={styles.darkGrey}>{t('Leia os termos de uso do AppJusto')}</Text>
+          </View>
+          <View style={styles.button}>
+            <ArrowBox />
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={confirmLogout}>
+        <View style={styles.container}>
+          <View style={styles.texts}>
+            <Text style={styles.black}>{t('Sair do app')}</Text>
+            <Text style={styles.darkGrey}>
+              {t(
+                'Desconecte-se do aplicativo. Para retornar, você precisará confirmar seu e-mail cadastrado'
+              )}
+            </Text>
           </View>
           <View style={styles.button}>
             <ArrowBox />

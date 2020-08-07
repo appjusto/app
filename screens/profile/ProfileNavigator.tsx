@@ -3,6 +3,7 @@ import React from 'react';
 
 import { t } from '../../strings';
 import BackButton from '../common/buttons/BackButton';
+import Terms from '../unlogged/Terms';
 import Profile from './Profile';
 import ProfileEdit from './ProfileEdit';
 import ProfileErase from './ProfileErase';
@@ -20,11 +21,29 @@ export default function () {
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />
-      <Stack.Screen name="ProfileEdit" component={ProfileEdit} options={{ title: 'Seus dados' }} />
+      <Stack.Screen
+        name="ProfileEdit"
+        component={ProfileEdit}
+        options={({ navigation }) => ({
+          title: t('Sua conta'),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
+      />
+      <Stack.Screen
+        name="Terms"
+        component={Terms}
+        options={({ navigation }) => ({
+          title: t('Fique por dentro'),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
+      />
       <Stack.Screen
         name="ProfileErase"
         component={ProfileErase}
-        options={{ title: 'Excluir minha conta' }}
+        options={({ navigation }) => ({
+          title: t('Excluir minha conta'),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
       />
     </Stack.Navigator>
   );

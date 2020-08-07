@@ -12,6 +12,7 @@ import {
   Keyboard,
   ScrollView,
 } from 'react-native';
+// import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { erase } from '../../assets/icons';

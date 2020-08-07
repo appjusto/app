@@ -204,7 +204,7 @@ export default function ({ navigation, route }: Props) {
           {/* origin step */}
           <View>
             <TouchableWithoutFeedback onPress={navigateToAddressComplete}>
-              <View style={{ flex: 1 }}>
+              <View>
                 <LabeledText style={style.input} title={t('Endereço de retirada')}>
                   {origin.address ?? t('Endereço com número')}
                 </LabeledText>
@@ -219,21 +219,21 @@ export default function ({ navigation, route }: Props) {
 
             <DefaultInput
               style={style.input}
-              title={t('Instruções de retirada')}
-              placeholder={t('Informe com quem e o quê deve ser retirado')}
+              title={t('Descrição curta')}
+              placeholder={t('Qual encomenda será transportada')}
             />
           </View>
 
           {/* destination step */}
-          <View>
+          <View style={{ flex: 1 }}>
             <ShowIf test={placeValid(origin)}>
               {() => (
                 <View>
-                  <TouchableOpacity onPress={navigateToAddressComplete}>
+                  <TouchableWithoutFeedback onPress={navigateToAddressComplete}>
                     <LabeledText style={style.input} title={t('Endereço de entrega')}>
                       {destination.address ?? t('Endereço com número')}
                     </LabeledText>
-                  </TouchableOpacity>
+                  </TouchableWithoutFeedback>
 
                   <DefaultInput
                     style={style.input}
@@ -242,9 +242,9 @@ export default function ({ navigation, route }: Props) {
                   />
 
                   <DefaultInput
-                    style={style.input}
-                    title={t('Instruções para entrega')}
-                    placeholder={t('Informe para quem deve ser entregue')}
+                    style={[style.input]}
+                    title={t('Responsável no local')}
+                    placeholder={t('Entregar para')}
                   />
                 </View>
               )}
@@ -252,16 +252,18 @@ export default function ({ navigation, route }: Props) {
           </View>
 
           {/* confirmation step */}
-          <ShowIf test={orderValid(order)}>
-            {() => (
-              <View style={{ flex: 1 }}>
-                <OrderSummary order={order!} onEdit={setPage} />
-              </View>
-            )}
-          </ShowIf>
+          <View style={{ flex: 1 }}>
+            <ShowIf test={orderValid(order)}>
+              {() => (
+                <View style={{ flex: 1 }}>
+                  <OrderSummary order={order!} onEdit={setPage} />
+                </View>
+              )}
+            </ShowIf>
+          </View>
         </ViewPager>
 
-        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+        <View style={{ justifyContent: 'flex-end' }}>
           <DefaultButton styleObject={{ width: '100%' }} title={nextStepTitle} onPress={nextStep} />
         </View>
       </View>
