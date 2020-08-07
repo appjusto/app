@@ -4,6 +4,5 @@ export type PendingParamList = {
     hideDeleteAccount?: boolean;
   };
   ProfilePhotos: undefined;
-  BankInfo: undefined;
-  FleetChooser: undefined;
+  ProfileFeedback: undefined;
 };

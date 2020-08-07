@@ -55,10 +55,10 @@ export default function ({ navigation, route }: Props) {
   const consumer = useSelector(getConsumer);
   const user: Consumer | Courier | undefined = flavor === 'consumer' ? consumer : courier;
   const [updating, setUpdating] = useState(false);
-  const [name, setName] = useState<string>(user!.name!);
-  const [surname, setSurname] = useState(user!.surname!);
-  const [phone, setPhone] = useState(user!.phone!);
-  const [cpf, setCpf] = useState(user!.cpf!);
+  const [name, setName] = useState<string>(user!.name! ?? '');
+  const [surname, setSurname] = useState(user!.surname! ?? '');
+  const [phone, setPhone] = useState(user!.phone! ?? '');
+  const [cpf, setCpf] = useState(user!.cpf! ?? '');
   const [acceptMarketing, setAcceptMarketing] = useState(false);
 
   // handlers

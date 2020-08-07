@@ -1,5 +1,6 @@
 import firebase from 'firebase';
 import 'firebase/firestore';
+import 'firebase/functions';
 
 import { Extra } from '../../utils/config';
 import AuthApi from './auth';
@@ -10,6 +11,7 @@ import OrderApi from './order';
 
 export default class Api {
   private firestore: firebase.firestore.Firestore;
+  private functions: firebase.functions.Functions;
 
   private _auth: AuthApi;
   private _courier: CourierApi;
@@ -21,21 +23,20 @@ export default class Api {
     firebase.initializeApp(extra.firebase);
 
     this.firestore = firebase.firestore();
+    this.functions = firebase.functions();
 
     if (extra.firebase.emulator.enabled) {
       this.firestore.settings({
         host: extra.firebase.emulator.databaseURL,
         ssl: false,
       });
+      this.functions.useFunctionsEmulator(extra.firebase.emulator.functionsURL);
     }
-    const functionsEndpoint = !extra.firebase.emulator.enabled
-      ? extra.firebase.functionsURL
-      : extra.firebase.emulator.functionsURL;
 
     this._auth = new AuthApi(extra);
-    this._courier = new CourierApi(this.firestore);
+    this._courier = new CourierApi(this.firestore, this.functions);
     this._consumer = new ConsumerApi(this.firestore);
-    this._order = new OrderApi(functionsEndpoint);
+    this._order = new OrderApi(this.functions);
     this._maps = new MapsApi(extra.googleMapsApiKey);
   }
 
