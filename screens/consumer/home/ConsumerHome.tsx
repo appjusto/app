@@ -2,15 +2,16 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect, useContext } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Image, ImageBackground } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { navigationArrow, illustration, BG, requests } from '../../../assets/icons';
 import useAuth from '../../../hooks/useAuth';
-import { observeConsumer } from '../../../store/consumer/actions';
+import { observeProfile } from '../../../store/user/actions';
 import { t } from '../../../strings';
 import { AppDispatch, ApiContext } from '../../app/context';
 import { colors, texts } from '../../common/styles';
 import { HomeStackParamList } from './types';
+import { getFlavor } from '../../../store/config/selectors';
 
 type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'ConsumerHome'>;
 type ScreenRouteProp = RouteProp<HomeStackParamList, 'ConsumerHome'>;
@@ -26,12 +27,13 @@ export default function ConsumerHome({ navigation }: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   // state
+  const flavor = useSelector(getFlavor);
   const [authState, user] = useAuth();
 
   // side effects
   useEffect(() => {
     if (!user) return;
-    return dispatch(observeConsumer(api)(user.uid));
+    return dispatch(observeProfile(api)(flavor, user.uid));
   }, [user]);
 
   // UI

@@ -8,12 +8,14 @@ import ConsumerApi from './consumer';
 import CourierApi from './courier';
 import MapsApi from './maps';
 import OrderApi from './order';
+import ProfileApi from './profile';
 
 export default class Api {
   private firestore: firebase.firestore.Firestore;
   private functions: firebase.functions.Functions;
 
   private _auth: AuthApi;
+  private _profile: ProfileApi;
   private _courier: CourierApi;
   private _consumer: ConsumerApi;
   private _order: OrderApi;
@@ -33,7 +35,10 @@ export default class Api {
       this.functions.useFunctionsEmulator(extra.firebase.emulator.functionsURL);
     }
 
+    const collectionName = extra.flavor === 'consumer' ? 'consumers' : 'couriers';
+
     this._auth = new AuthApi(extra);
+    this._profile = new ProfileApi(this.firestore, this.functions, collectionName);
     this._courier = new CourierApi(this.firestore, this.functions);
     this._consumer = new ConsumerApi(this.firestore);
     this._order = new OrderApi(this.functions);
@@ -42,6 +47,10 @@ export default class Api {
 
   auth() {
     return this._auth;
+  }
+
+  profile() {
+    return this._profile;
   }
 
   courier() {

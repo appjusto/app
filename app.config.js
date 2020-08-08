@@ -29,10 +29,9 @@ const createFirebaseConfig = () => {
 
 export default ({ config }) => {
   const { slug, ios, android } = config;
-  const flavor = process.env.FLAVOR || 'admin';
+  const flavor = process.env.FLAVOR;
   const googleMapsApiKey = GOOGLE_MAPS_API_KEY;
-  const name =
-    (flavor === 'consumer' && 'Cliente') || (flavor === 'courier' && 'Entregador') || 'Admin';
+  const name = (flavor === 'consumer' && 'Cliente') || (flavor === 'courier' && 'Entregador');
   const bundleIdentifier = `${ios.bundleIdentifier}.${flavor}`;
   const androidPackage = `${android.package}.${flavor}`;
 

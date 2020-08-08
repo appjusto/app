@@ -1,5 +1,5 @@
 import { Coordinates } from '../../types';
-import { ProfileInfo } from '../../user/types';
+import { ProfileInfo, UserProfile } from '../../user/types';
 import Courier from './Courier';
 
 export enum CourierStatus {
@@ -9,6 +9,11 @@ export enum CourierStatus {
 }
 
 export interface CourierInfo extends ProfileInfo {}
+
+export interface CourierProfile extends UserProfile {
+  info?: CourierInfo;
+  status?: CourierStatus;
+}
 
 export interface CourierState {
   courier?: Courier;

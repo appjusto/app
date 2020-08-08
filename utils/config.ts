@@ -1,7 +1,9 @@
 import Constants from 'expo-constants';
 
+import { Flavor } from '../store/config/types';
+
 export interface Extra {
-  flavor: string;
+  flavor: Flavor;
   bundleIdentifier: string;
   androidPackage: string;
   firebase: FirebaseConfig;

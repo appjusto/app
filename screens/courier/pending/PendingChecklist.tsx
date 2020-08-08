@@ -33,7 +33,7 @@ export default function ({ navigation }: Props) {
 
   // handlers
   const submitHandler = async () => {
-    await api.courier().submitProfile();
+    await api.profile().submitProfile();
   };
 
   // side effects

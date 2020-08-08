@@ -16,13 +16,12 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { erase } from '../../assets/icons';
 import { getFlavor } from '../../store/config/selectors';
-import { updateConsumer } from '../../store/consumer/actions';
 import { getConsumer } from '../../store/consumer/selectors';
 import Consumer from '../../store/consumer/types/Consumer';
-import { updateCourier } from '../../store/courier/actions';
 import { getCourier } from '../../store/courier/selectors';
 import Courier from '../../store/courier/types/Courier';
 import { showToast } from '../../store/ui/actions';
+import { updateProfile } from '../../store/user/actions';
 import { t } from '../../strings';
 import { ApiContext, AppDispatch } from '../app/context';
 import AvoidingView from '../common/AvoidingView';
@@ -62,16 +61,15 @@ export default function ({ navigation, route }: Props) {
   const [acceptMarketing, setAcceptMarketing] = useState(false);
 
   // handlers
-  const updateUser = flavor === 'consumer' ? updateConsumer : updateCourier;
   const toggleAcceptMarketing = useCallback(() => {
     setAcceptMarketing(!acceptMarketing);
     scrollViewRef.current?.scrollToEnd();
   }, [acceptMarketing]);
 
-  const updateUserHandler = async () => {
+  const updateProfileHandler = async () => {
     setUpdating(true);
     dispatch(showToast(t('Atualizando cadastro...')));
-    await updateUser(api)(user!.id, {
+    await updateProfile(api)(user!.id, {
       name,
       surname,
       phone,
@@ -126,7 +124,11 @@ export default function ({ navigation, route }: Props) {
             text={t('Aceito receber comunicações e ofertas')}
           />
           <View style={{ flex: 1 }} />
-          <DefaultButton title={t('Atualizar')} disabled={updating} onPress={updateUserHandler} />
+          <DefaultButton
+            title={t('Atualizar')}
+            disabled={updating}
+            onPress={updateProfileHandler}
+          />
           <ShowIf test={!route.params?.hideDeleteAccount}>
             {() => (
               <TouchableOpacity onPress={() => navigation.navigate('ProfileErase')}>

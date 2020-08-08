@@ -1,11 +1,5 @@
-import { CourierStatus, CourierInfo } from '.';
-import { UserProfile } from '../../user/types';
+import { CourierProfile } from '.';
 import User from '../../user/types/User';
-
-export interface CourierProfile extends UserProfile {
-  info?: CourierInfo;
-  status?: CourierStatus;
-}
 
 export default class Courier extends User {
   constructor(protected source: CourierProfile) {
