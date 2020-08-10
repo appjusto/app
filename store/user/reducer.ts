@@ -1,6 +1,6 @@
 import { AnyAction } from 'redux';
 
-import * as actionTypes from '../actionTypes';
+import { USER_LOGGED_IN, USER_LOGGED_OUT } from './actions';
 import { UserState } from './types';
 
 const initialState: UserState = {};
@@ -8,10 +8,10 @@ const initialState: UserState = {};
 export default function (state: UserState = initialState, action: AnyAction): UserState {
   const { type, payload } = action;
   switch (type) {
-    case actionTypes.USER_LOGGED_IN: {
+    case USER_LOGGED_IN: {
       return { ...state, user: payload };
     }
-    case actionTypes.USER_LOGGED_OUT: {
+    case USER_LOGGED_OUT: {
       return { ...state, user: null };
     }
     default:

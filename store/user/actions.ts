@@ -1,17 +1,21 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { Dispatch } from 'redux';
 
-import * as actionTypes from '../actionTypes';
+import { AppDispatch } from '../../screens/app/context';
 import Api from '../api/api';
 import { Flavor } from '../config/types';
 import { UserProfile } from './types';
 
-export const observeAuthState = (api: Api) => (dispatch: Dispatch<any>) => {
+export const USER_LOGGED_IN = 'USER_LOGGED_IN';
+export const USER_LOGGED_OUT = 'USER_LOGGED_OUT';
+export const CONSUMER_PROFILE_UPDATED = 'CONSUMER_PROFILE_UPDATED';
+export const COURIER_PROFILE_UPDATED = 'COURIER_PROFILE_UPDATED';
+
+export const observeAuthState = (api: Api) => (dispatch: AppDispatch) => {
   const unsubscribe = api.auth().observeAuthState((user) => {
     if (user) {
-      dispatch({ type: actionTypes.USER_LOGGED_IN, payload: user });
+      dispatch({ type: USER_LOGGED_IN, payload: user });
     } else {
-      dispatch({ type: actionTypes.USER_LOGGED_OUT });
+      dispatch({ type: USER_LOGGED_OUT });
     }
   });
   return unsubscribe;
@@ -49,12 +53,9 @@ export const signOut = (api: Api) => {
 
 // watch for updates
 export const observeProfile = (api: Api) => (flavor: Flavor, id: string) => (
-  dispatch: Dispatch<any>
+  dispatch: AppDispatch
 ) => {
-  const actionType =
-    flavor === 'consumer'
-      ? actionTypes.CONSUMER_PROFILE_UPDATED
-      : actionTypes.COURIER_PROFILE_UPDATED;
+  const actionType = flavor === 'consumer' ? CONSUMER_PROFILE_UPDATED : COURIER_PROFILE_UPDATED;
 
   const unsubscribeProfileUpdate = api
     .profile()

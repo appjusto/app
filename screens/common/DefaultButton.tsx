@@ -1,14 +1,30 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ButtonProps } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ButtonProps,
+  ActivityIndicator,
+} from 'react-native';
 
 import { colors, texts } from './styles';
+import ShowIf from './ShowIf';
 
 export interface Props extends ButtonProps {
   styleObject?: object;
   wide?: boolean;
+  activityIndicator?: boolean;
 }
 
-export default function ({ title, disabled, styleObject, wide, ...props }: Props) {
+export default function ({
+  title,
+  disabled,
+  styleObject,
+  wide = false,
+  activityIndicator = false,
+  ...props
+}: Props) {
   return (
     <TouchableOpacity {...props}>
       <View
@@ -19,9 +35,14 @@ export default function ({ title, disabled, styleObject, wide, ...props }: Props
           ...styleObject,
         }}
       >
-        <Text style={{ ...style.text, color: disabled ? colors.white : colors.black }}>
-          {title}
-        </Text>
+        <ShowIf test={!activityIndicator}>
+          {() => (
+            <Text style={{ ...style.text, color: disabled ? colors.white : colors.black }}>
+              {title}
+            </Text>
+          )}
+        </ShowIf>
+        <ShowIf test={activityIndicator}>{() => <ActivityIndicator />}</ShowIf>
       </View>
     </TouchableOpacity>
   );
@@ -29,6 +50,7 @@ export default function ({ title, disabled, styleObject, wide, ...props }: Props
 
 const style = StyleSheet.create({
   buttonContainer: {
+    flexDirection: 'row',
     borderRadius: 8,
     paddingHorizontal: 24,
     paddingVertical: 14.5,

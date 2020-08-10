@@ -14,7 +14,8 @@ import {
 import { useDispatch } from 'react-redux';
 
 import { motocycle } from '../../../../../assets/icons';
-import { Place, Order } from '../../../../../store/types';
+import { createOrder } from '../../../../../store/order/actions';
+import { Place, Order } from '../../../../../store/order/types';
 import { showToast } from '../../../../../store/ui/actions';
 import { t } from '../../../../../strings';
 import { ApiContext } from '../../../../app/context';
@@ -47,9 +48,13 @@ const placeValid = (place: Place): boolean => {
   return !!place && !!place.address;
 };
 
-const orderValid = (order: Order | null): boolean => {
+const orderValid = (order: Order | undefined | null): boolean => {
   // TODO: improve order validation
   if (!order) return false;
+  return true;
+};
+
+const paymentValid = (): boolean => {
   return true;
 };
 
@@ -66,7 +71,7 @@ export default function ({ navigation, route }: Props) {
   const [step, setStep] = useState(Steps.Origin);
   const [origin, setOrigin] = useState<Place>({} as Place);
   const [destination, setDestination] = useState<Place>({} as Place);
-  const [order, setOrder] = useState<Order | null>(null);
+  const [order, setOrder] = useState<Order | undefined | null>(undefined);
 
   // handlers
   // navigate to address complete screen
@@ -84,9 +89,9 @@ export default function ({ navigation, route }: Props) {
   const stepReady = (value: Steps): boolean => {
     if (value === Steps.Origin) return true; // always enabled
     if (value === Steps.Destination) return placeValid(origin); // only if origin is known
-    if (value === Steps.Confirmation) return placeValid(origin) && placeValid(destination); // only if both origin and destination is known
-    if (value === Steps.ConfirmingOrder) return orderValid(order); // when order
-    return false; // should happen
+    if (value === Steps.Confirmation) return placeValid(destination) && orderValid(order); // only if order has been created
+    if (value === Steps.ConfirmingOrder) return paymentValid(); // when if payment informaton is known
+    return false; // should never happen
   };
 
   const setPage = (index: number): void => {
@@ -96,16 +101,31 @@ export default function ({ navigation, route }: Props) {
 
   const nextStep = async (): Promise<void> => {
     const nextStep = step + 1;
-    if (!stepReady(nextStep)) return;
     if (nextStep === Steps.Destination) {
-      nextPage();
+      if (!stepReady(nextStep)) {
+        dispatch(showToast(t('Preencha o endereço e as instruções de retirada.')));
+      } else {
+        nextPage();
+      }
     } else if (nextStep === Steps.Confirmation) {
-      if (order) nextPage();
-      else {
-        dispatch(showToast(t('Aguarde enquanto fazemos a cotação...')));
+      if (!stepReady(nextStep)) {
+        if (!placeValid(destination)) {
+          dispatch(showToast(t('Preencha o endereço e as instruções de entrega.')));
+        } else if (!order) {
+          dispatch(showToast(t('Aguarde enquanto a cotação é feita.')));
+        }
+      } else {
+        nextPage();
       }
     } else if (nextStep === Steps.ConfirmingOrder) {
-      const confirmationResult = await api.order().confirmOrder(order!.id, 'YY7ED5T2geh0iSmRS9FZ');
+      if (!stepReady(nextStep)) {
+        dispatch(showToast(t('É preciso definir um meio de pagamento para finalizar o pedido.')));
+      } else {
+        // TODO: replace hardcoded card ID
+        const confirmationResult = await api
+          .order()
+          .confirmOrder(order!.id, 'YY7ED5T2geh0iSmRS9FZ');
+      }
     }
   };
 
@@ -128,38 +148,43 @@ export default function ({ navigation, route }: Props) {
     if (destinationAddress) setDestination({ ...destination, address: destinationAddress });
   }, [route.params]);
 
-  // create order when origin and destination are valid
-  // and whenever either address changes
+  // create order whenever origin or destination changes
   useEffect(() => {
-    const createOrder = async () => {
-      console.log('creating order');
-      const newOrder = await api.order().createOrder(origin, destination);
-      console.log(newOrder);
-      setOrder(newOrder);
-    };
-
     if (
       placeValid(origin) &&
       placeValid(destination) &&
-      (order === null ||
+      (!order ||
         order.origin.address !== origin.address ||
         order.destination.address !== destination.address)
     ) {
-      createOrder();
+      (async () => {
+        setOrder(null);
+        const newOrder = await createOrder(api)(origin, destination);
+        console.log(newOrder);
+        setOrder(newOrder);
+      })();
     }
   }, [origin, destination]);
 
-  // whenever order changes
-  useEffect(() => {
-    if (!order) return;
-    nextPage();
-  }, [order]);
-
   // UI
-  let nextStepTitle = '';
-  if (step === 0) nextStepTitle = t('Confirmar local de retirada');
-  else if (step === 1) nextStepTitle = t('Confirmar local de entrega');
-  else if (step === 2) nextStepTitle = t('Fazer pedido');
+  function NextStepButton() {
+    let title = '';
+    if (step === 0) title = t('Confirmar local de retirada');
+    else if (step === 1) title = t('Confirmar local de entrega');
+    else if (step === 2) title = t('Fazer pedido');
+    const nexStepReady = stepReady(step + 1);
+    // order null (instead of undefined) means that we're waiting for the backend create the order
+    const activityIndicator = step === 1 && order === null;
+    return (
+      <DefaultButton
+        styleObject={{ width: '100%' }}
+        title={title}
+        onPress={nextStep}
+        disabled={!nexStepReady}
+        activityIndicator={activityIndicator}
+      />
+    );
+  }
 
   return (
     <View style={{ ...screens.default }}>
@@ -264,7 +289,7 @@ export default function ({ navigation, route }: Props) {
         </ViewPager>
 
         <View style={{ justifyContent: 'flex-end' }}>
-          <DefaultButton styleObject={{ width: '100%' }} title={nextStepTitle} onPress={nextStep} />
+          <NextStepButton />
         </View>
       </View>
     </View>

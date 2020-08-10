@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../../assets/icons';
 import { getFlavor } from '../../store/config/selectors';
 import { getConsumer } from '../../store/consumer/selectors';
+import { observeOrdersCreatedBy } from '../../store/order/actions';
 import { observeProfile } from '../../store/user/actions';
 import { getUser } from '../../store/user/selectors';
 import { t } from '../../strings';
@@ -30,6 +31,10 @@ export default function () {
   // subscribe for profile changes
   useEffect(() => {
     return dispatch(observeProfile(api)(flavor, user!.uid));
+  }, []);
+  // subscribe for order changes
+  useEffect(() => {
+    return dispatch(observeOrdersCreatedBy(api)(user!.uid));
   }, []);
 
   // UI

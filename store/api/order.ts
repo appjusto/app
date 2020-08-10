@@ -1,7 +1,35 @@
-import { Place } from '../types';
+import { Order, Place } from '../order/types';
 
 export default class OrderApi {
-  constructor(private functions: firebase.functions.Functions) {}
+  constructor(
+    private firestore: firebase.firestore.Firestore,
+    private functions: firebase.functions.Functions
+  ) {}
+
+  // observe orders
+  observeOrdersCreatedBy(
+    consumerId: string,
+    resultHandler: (orders: Order[]) => void
+  ): firebase.Unsubscribe {
+    const unsubscribe = this.firestore
+      .collection('orders')
+      .where('consumerId', '==', consumerId)
+      .where('status', 'in', ['quote', 'matching', 'dispatching', 'delivered'])
+      .onSnapshot(
+        (querySnapshot) => {
+          const docs: Order[] = [];
+          querySnapshot.forEach((doc) => {
+            docs.push({ ...(doc.data() as Order), id: doc.id });
+          });
+          resultHandler(docs);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    // returns the unsubscribe function
+    return unsubscribe;
+  }
 
   // functions
   // submit profile

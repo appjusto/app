@@ -1,6 +1,6 @@
 import { AnyAction } from 'redux';
 
-import * as actionTypes from '../actionTypes';
+import { HIDE_TOAST, SHOW_TOAST } from './actions';
 import { ToastState, UIState } from './types';
 
 const initialToastState: ToastState = {
@@ -13,14 +13,12 @@ const initialState: UIState = {
 
 export default function (state: UIState = initialState, action: AnyAction) {
   switch (action.type) {
-    case actionTypes.SHOW_TOAST: {
+    case SHOW_TOAST: {
       return { ...state, toast: action.payload };
     }
-
-    case actionTypes.HIDE_TOAST: {
+    case HIDE_TOAST: {
       return { ...state, toast: initialToastState };
     }
-
     default:
       return state;
   }

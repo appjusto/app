@@ -1,7 +1,7 @@
-import { Dispatch } from 'redux';
+import { AppDispatch } from '../../screens/app/context';
 
-import * as actionTypes from '../actionTypes';
+export const CONFIG_SET_FLAVOR = 'CONFIG_SET_FLAVOR';
 
-export const setFlavor = (value: string) => (dispatch: Dispatch<any>) => {
-  dispatch({ type: actionTypes.CONFIG_SET_FLAVOR, payload: value });
+export const setFlavor = (value: string) => (dispatch: AppDispatch) => {
+  dispatch({ type: CONFIG_SET_FLAVOR, payload: value });
 };

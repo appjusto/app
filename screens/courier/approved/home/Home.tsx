@@ -13,7 +13,7 @@ import useNotification from '../../../../hooks/useNotification';
 import useNotificationToken from '../../../../hooks/useNotificationToken';
 import { isCourierWorking, getCourier } from '../../../../store/courier/selectors';
 import { CourierStatus } from '../../../../store/courier/types';
-import { OrderMatchRequest } from '../../../../store/types';
+import { OrderMatchRequest } from '../../../../store/order/types';
 import { updateProfile } from '../../../../store/user/actions';
 import { getUser } from '../../../../store/user/selectors';
 import { t } from '../../../../strings';

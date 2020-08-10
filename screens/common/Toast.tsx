@@ -3,7 +3,7 @@ import { StyleSheet, Text, useWindowDimensions, Animated } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { hideToast } from '../../store/ui/actions';
-import { getToastMessage, getToastType } from '../../store/ui/selectors';
+import { getToast } from '../../store/ui/selectors';
 import { colors, texts } from './styles';
 
 const percentualWidth = 0.8;
@@ -15,13 +15,11 @@ export default function () {
   const { width, height } = useWindowDimensions();
   const dispatch = useDispatch();
 
-  // data
-  const message = useSelector(getToastMessage);
-  const type = useSelector(getToastType);
-
   // state
+  const { message, type, autoHide } = useSelector(getToast);
   const [top] = useState(new Animated.Value(height));
 
+  // UI
   if (!message) return null;
 
   const background = {
@@ -33,19 +31,21 @@ export default function () {
   };
   const left = (width - size.width) * 0.5;
 
-  Animated.sequence([
-    Animated.timing(top, {
-      useNativeDriver: false,
-      toValue: height - size.height,
-      duration,
-    }),
-    Animated.timing(top, {
-      useNativeDriver: false,
-      delay,
-      toValue: height,
-      duration,
-    }),
-  ]).start(() => dispatch(hideToast()));
+  if (autoHide) {
+    Animated.sequence([
+      Animated.timing(top, {
+        useNativeDriver: false,
+        toValue: height - size.height,
+        duration,
+      }),
+      Animated.timing(top, {
+        useNativeDriver: false,
+        delay,
+        toValue: height,
+        duration,
+      }),
+    ]).start(() => dispatch(hideToast()));
+  }
 
   return (
     <Animated.View style={{ ...style.container, ...background, ...size, left, top }}>
@@ -68,7 +68,6 @@ const style = StyleSheet.create({
     padding: 6,
   },
   text: {
-    // borderWidth: 1,
     ...texts.small,
   },
 });

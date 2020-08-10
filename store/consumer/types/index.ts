@@ -3,9 +3,11 @@ import Consumer from './Consumer';
 
 export interface ConsumerInfo extends ProfileInfo {}
 
-export interface ConsumerProfile extends UserProfile {}
+export interface ConsumerProfile extends UserProfile {
+  paymentChannelId?: string;
+  cards: object[];
+}
 
 export interface ConsumerState {
   consumer?: Consumer;
-  ongoingOrders?: object[];
 }

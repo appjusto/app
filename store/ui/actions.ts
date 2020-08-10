@@ -1,13 +1,14 @@
-import { Dispatch } from 'redux';
+import { AppDispatch } from '../../screens/app/context';
 
-import * as actionTypes from '../actionTypes';
+export const SHOW_TOAST = 'SHOW_TOAST';
+export const HIDE_TOAST = 'HIDE_TOAST';
 
-export const showToast = (message: string, type: string = 'success') => (
-  dispatch: Dispatch<any>
+export const showToast = (message: string, type: string = 'success', autoHide: boolean = true) => (
+  dispatch: AppDispatch
 ) => {
-  dispatch({ type: actionTypes.SHOW_TOAST, payload: { message, type } });
+  dispatch({ type: SHOW_TOAST, payload: { message, type, autoHide } });
 };
 
-export const hideToast = () => (dispatch: Dispatch<any>) => {
-  dispatch({ type: actionTypes.HIDE_TOAST });
+export const hideToast = () => (dispatch: AppDispatch) => {
+  dispatch({ type: HIDE_TOAST });
 };

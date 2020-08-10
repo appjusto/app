@@ -8,6 +8,8 @@ import consumerReducer from './consumer/reducer';
 import { ConsumerState } from './consumer/types';
 import courierReducer from './courier/reducer';
 import { CourierState } from './courier/types';
+import orderReducer from './order/reducer';
+import { OrderState } from './order/types';
 import uiReducer from './ui/reducers';
 import { UIState } from './ui/types';
 import userReducer from './user/reducer';
@@ -17,6 +19,7 @@ export interface State {
   config: ConfigState;
   courier: CourierState;
   consumer: ConsumerState;
+  order: OrderState;
   user: UserState;
   ui: UIState;
 }
@@ -30,6 +33,7 @@ export const createStore = (extra: Extra) => {
     }),
     courier: courierReducer,
     consumer: consumerReducer,
+    order: orderReducer,
     user: userReducer,
     ui: uiReducer,
   });
