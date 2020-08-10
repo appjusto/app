@@ -6,6 +6,10 @@ import {
   FIREBASE_DATABASE_NAME,
   FIREBASE_MESSAGING_SENDER_ID,
   FIREBASE_APP_ID,
+  SEGMENT_ANDROID_KEY,
+  SEGMENT_IOS_KEY,
+  SENTRY_DSN,
+  SENTRY_AUTH_TOKEN,
 } from 'react-native-dotenv';
 
 const createFirebaseConfig = () => {
@@ -34,6 +38,11 @@ export default ({ config }) => {
   const name = (flavor === 'consumer' && 'Cliente') || (flavor === 'courier' && 'Entregador');
   const bundleIdentifier = `${ios.bundleIdentifier}.${flavor}`;
   const androidPackage = `${android.package}.${flavor}`;
+  const analytics = {
+    segmentAndroidKey: SEGMENT_ANDROID_KEY,
+    segmentiOSKey: SEGMENT_IOS_KEY,
+    sentryDNS: SENTRY_DSN,
+  };
 
   return {
     ...config,
@@ -55,12 +64,20 @@ export default ({ config }) => {
         },
       },
     },
+    hooks: {
+      ...config.hooks,
+      postPublish: config.hooks.postPublish.map(({ file, config }) => ({
+        file,
+        config: { ...config, authToken: SENTRY_AUTH_TOKEN },
+      })),
+    },
     extra: {
       flavor,
       bundleIdentifier,
       androidPackage,
       googleMapsApiKey,
       firebase: createFirebaseConfig(),
+      analytics,
     },
   };
 };

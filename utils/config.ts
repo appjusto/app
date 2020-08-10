@@ -8,6 +8,11 @@ export interface Extra {
   androidPackage: string;
   firebase: FirebaseConfig;
   googleMapsApiKey: string;
+  analytics: {
+    segmentAndroidKey: string;
+    segmentiOSKey: string;
+    sentryDNS: string;
+  };
 }
 
 export interface FirebaseConfig {
