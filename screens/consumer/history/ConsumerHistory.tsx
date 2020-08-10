@@ -4,9 +4,9 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { calendar } from '../../../assets/icons';
 import { t } from '../../../strings';
 import ArrowBox from '../../common/ArrowBox';
-import { colors, texts, screens } from '../../common/styles';
+import { colors, texts, screens, borders } from '../../common/styles';
 
-const ConsumerHistory = () => {
+export default function () {
   return (
     <View style={{ ...screens.lightGrey, marginTop: 16, paddingHorizontal: 0 }}>
       <View style={styles.border}>
@@ -48,7 +48,7 @@ const ConsumerHistory = () => {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   border: {
@@ -60,10 +60,8 @@ const styles = StyleSheet.create({
   status: {
     marginTop: 8,
     marginHorizontal: 16,
-    borderStyle: 'solid',
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 8,
+    ...borders.default,
+    borderColor: colors.black,
     paddingHorizontal: 8,
     paddingVertical: 4,
     backgroundColor: colors.yellow,
@@ -73,5 +71,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
-export default ConsumerHistory;

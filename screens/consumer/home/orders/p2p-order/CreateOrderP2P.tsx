@@ -10,21 +10,20 @@ import {
   NativeSyntheticEvent,
   TouchableWithoutFeedback,
   Text,
-  TouchableOpacity,
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 
-import { motocycle } from '../../../../assets/icons';
-import { Place, Order } from '../../../../store/types';
-import { showToast } from '../../../../store/ui/actions';
-import { t } from '../../../../strings';
-import { ApiContext } from '../../../app/context';
-import DefaultButton from '../../../common/DefaultButton';
-import DefaultInput from '../../../common/DefaultInput';
-import LabeledText from '../../../common/LabeledText';
-import ShowIf from '../../../common/ShowIf';
-import { screens, borders, texts } from '../../../common/styles';
-import { HomeStackParamList } from '../../home/types';
+import { motocycle } from '../../../../../assets/icons';
+import { Place, Order } from '../../../../../store/types';
+import { showToast } from '../../../../../store/ui/actions';
+import { t } from '../../../../../strings';
+import { ApiContext } from '../../../../app/context';
+import DefaultButton from '../../../../common/DefaultButton';
+import DefaultInput from '../../../../common/DefaultInput';
+import LabeledText from '../../../../common/LabeledText';
+import ShowIf from '../../../../common/ShowIf';
+import { screens, borders, texts } from '../../../../common/styles';
+import { HomeStackParamList } from '../../types';
 import OrderMap from './OrderMap';
 import OrderSummary from './OrderSummary';
 

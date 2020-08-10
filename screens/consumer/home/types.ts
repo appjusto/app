@@ -1,6 +1,6 @@
 export type HomeStackParamList = {
   ConsumerHome: undefined;
-  CreateOrderP2P: {
+  CreateOrderP2P?: {
     originAddress?: string;
     destinationAddress?: string;
   };

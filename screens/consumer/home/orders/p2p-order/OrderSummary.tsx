@@ -1,10 +1,10 @@
 import React from 'react';
 import { ScrollView, View, Text, Image, TouchableOpacity } from 'react-native';
 
-import { edit } from '../../../../assets/icons';
-import { Order, Place } from '../../../../store/types';
-import { t } from '../../../../strings';
-import { texts, colors, borders, screens } from '../../../common/styles';
+import { edit } from '../../../../../assets/icons';
+import { Order, Place } from '../../../../../store/types';
+import { t } from '../../../../../strings';
+import { texts, colors, borders, screens } from '../../../../common/styles';
 
 export interface Props {
   order: Order;

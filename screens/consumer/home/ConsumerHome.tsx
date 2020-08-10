@@ -6,12 +6,12 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { navigationArrow, illustration, BG, requests } from '../../../assets/icons';
 import useAuth from '../../../hooks/useAuth';
+import { getFlavor } from '../../../store/config/selectors';
 import { observeProfile } from '../../../store/user/actions';
 import { t } from '../../../strings';
 import { AppDispatch, ApiContext } from '../../app/context';
 import { colors, texts } from '../../common/styles';
 import { HomeStackParamList } from './types';
-import { getFlavor } from '../../../store/config/selectors';
 
 type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'ConsumerHome'>;
 type ScreenRouteProp = RouteProp<HomeStackParamList, 'ConsumerHome'>;

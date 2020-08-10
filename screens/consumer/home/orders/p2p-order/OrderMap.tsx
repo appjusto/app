@@ -1,10 +1,10 @@
-import React from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
-import { Marker, Polyline } from 'react-native-maps';
 import polyline from '@mapbox/polyline';
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { Marker, Polyline } from 'react-native-maps';
 
-import DefaultMap from '../../../common/DefaultMap';
-import { pinUser, pinPackage } from '../../../../assets/icons';
+import { pinUser, pinPackage } from '../../../../../assets/icons';
+import DefaultMap from '../../../../common/DefaultMap';
 
 export default function ({ order }) {
   const { origin, destination, routePolyline } = order;
