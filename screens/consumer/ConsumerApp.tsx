@@ -48,7 +48,7 @@ function Logged() {
       <LoggedNavigator.Screen
         name="ConsumerHistory"
         component={History}
-        options={{ tabBarIcon: () => <Image source={orders} /> }}
+        options={{ title: 'Seus pedidos', tabBarIcon: () => <Image source={orders} /> }}
       />
       <LoggedNavigator.Screen
         name="Profile"

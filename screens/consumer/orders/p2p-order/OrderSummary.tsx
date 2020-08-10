@@ -42,17 +42,6 @@ export default function ({ order, onEdit }: Props) {
       <View style={{ flex: 1 }}>
         <PlaceSummary title={t(`Retirada`)} place={origin} onEdit={() => onEdit(0)} />
         <PlaceSummary title={t(`Entrega`)} place={destination} onEdit={() => onEdit(1)} />
-        {/* <View style={{ flex: 1 }}>
-          <Text>
-            {t('Distância')}: {distance.text}
-          </Text>
-          <Text>
-            {t('Estimativa de duração')}: {duration.text}
-          </Text>
-          <Text>
-            {t('Valor da entrega R$')}: {fare.total}
-          </Text>
-        </View> */}
         <View
           style={{
             ...borders.default,
@@ -103,17 +92,17 @@ export default function ({ order, onEdit }: Props) {
             {t('Tarifa financeira')}
           </Text>
           <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>R$ 0,50</Text>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginTop: 12,
-            }}
-          >
-            <Text style={{ ...texts.default, lineHeight: 21 }}>{t('AppJusto')}</Text>
-            <Text style={{ ...texts.default, lineHeight: 21 }}>R$ 1,00</Text>
-          </View>
+        </View>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginVertical: 12,
+          }}
+        >
+          <Text style={{ ...texts.default, lineHeight: 21 }}>{t('AppJusto')}</Text>
+          <Text style={{ ...texts.default, lineHeight: 21 }}>R$ 1,00</Text>
         </View>
         <Text style={{ ...texts.small, lineHeight: 19, color: colors.darkGrey }}>
           O AppJusto cobra menos para ser mais justo com todos. Você pode aumentar a sua
