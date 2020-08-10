@@ -20,7 +20,6 @@ import { getConsumer } from '../../store/consumer/selectors';
 import Consumer from '../../store/consumer/types/Consumer';
 import { getCourier } from '../../store/courier/selectors';
 import Courier from '../../store/courier/types/Courier';
-import { showToast } from '../../store/ui/actions';
 import { updateProfile } from '../../store/user/actions';
 import { t } from '../../strings';
 import { ApiContext, AppDispatch } from '../app/context';
@@ -29,7 +28,7 @@ import CheckField from '../common/CheckField';
 import DefaultButton from '../common/DefaultButton';
 import DefaultInput from '../common/DefaultInput';
 import ShowIf from '../common/ShowIf';
-import { colors, texts, screens } from '../common/styles';
+import { colors, texts, screens, padding } from '../common/styles';
 import { ProfileParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileEdit'>;
@@ -67,8 +66,8 @@ export default function ({ navigation, route }: Props) {
   }, [acceptMarketing]);
 
   const updateProfileHandler = async () => {
+    if (updating) return;
     setUpdating(true);
-    dispatch(showToast(t('Atualizando cadastro...')));
     await updateProfile(api)(user!.id, {
       name,
       surname,
@@ -76,21 +75,18 @@ export default function ({ navigation, route }: Props) {
       cpf,
       acceptMarketing,
     });
-    navigation.goBack();
+    if (!route.params?.nextScreen) {
+      navigation.goBack();
+    } else {
+      navigation.navigate(route.params!.nextScreen!, route.params!.nextScreenParams);
+    }
+    setUpdating(false);
   };
 
   // UI
   return (
     <View style={{ ...screens.lightGrey }}>
       <ScrollView ref={scrollViewRef} contentContainerStyle={{ flex: 1 }}>
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <View style={{ marginTop: 16 }}>
-            <Text style={[texts.big]}>{t('Seus dados')}</Text>
-            <Text style={[texts.default, { color: colors.darkGrey, paddingTop: 8 }]}>
-              {t('Edite seus dados pessoais:')}
-            </Text>
-          </View>
-        </TouchableWithoutFeedback>
         <AvoidingView style={{ flex: 1 }}>
           <View style={{ marginTop: 32 }}>
             <DefaultInput
@@ -118,16 +114,16 @@ export default function ({ navigation, route }: Props) {
             />
           </View>
           <CheckField
-            marginTop={16}
+            marginTop={padding}
             checked={acceptMarketing}
             onPress={toggleAcceptMarketing}
             text={t('Aceito receber comunicações e ofertas')}
           />
-          <View style={{ flex: 1 }} />
           <DefaultButton
+            styleObject={{ marginTop: padding }}
             title={t('Atualizar')}
-            disabled={updating}
             onPress={updateProfileHandler}
+            activityIndicator={updating}
           />
           <ShowIf test={!route.params?.hideDeleteAccount}>
             {() => (

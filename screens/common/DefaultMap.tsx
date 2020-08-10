@@ -1,7 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, MapViewProps } from 'react-native-maps';
 
-export default React.forwardRef(({ children, fitToElements, ...props }, externalRef) => {
+interface Props extends MapViewProps {
+  children?: React.ReactNode | React.ReactNode[];
+  fitToElements?: boolean;
+}
+
+export default React.forwardRef(({ children, fitToElements, ...props }: Props, externalRef) => {
   const internalRef = useRef<MapView>(null);
   const ref = (externalRef as React.RefObject<MapView>) || internalRef;
 

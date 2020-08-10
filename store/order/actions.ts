@@ -10,7 +10,6 @@ export const observeOrdersCreatedBy = (api: Api) => (consumerId: string) => (
 ) => {
   return api.order().observeOrdersCreatedBy(consumerId, (orders: Order[]): void => {
     dispatch({ type: ORDERS_UPDATED, payload: orders });
-    console.log(orders);
   });
 };
 

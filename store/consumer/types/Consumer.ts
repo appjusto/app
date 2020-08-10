@@ -6,6 +6,10 @@ export default class Consumer extends User {
     super(source);
   }
 
+  public get info() {
+    return this.source.info;
+  }
+
   public getSource(): ConsumerProfile {
     return this.source;
   }

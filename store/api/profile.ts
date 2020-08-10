@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 
-import { UserProfile } from '../user/types';
+import { UserProfile, ProfileInfo } from '../user/types';
 
 export default class ProfileApi {
   constructor(
@@ -50,11 +50,11 @@ export default class ProfileApi {
   // observe for private info changes
   observePrivateInfo(
     id: string,
-    resultHandler: (profile: UserProfile) => void
+    resultHandler: (profile: ProfileInfo) => void
   ): firebase.Unsubscribe {
     const unsubscribe = this.getProfilePrivateInfoRef(id).onSnapshot(
       (doc) => {
-        resultHandler({ id, info: doc.data() });
+        resultHandler(doc.data() as ProfileInfo);
       },
       (error) => {
         console.error(error);

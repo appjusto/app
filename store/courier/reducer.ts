@@ -1,6 +1,10 @@
 import { AnyAction } from 'redux';
 
-import { COURIER_PROFILE_UPDATED, USER_LOGGED_OUT } from '../user/actions';
+import {
+  COURIER_PROFILE_UPDATED,
+  COURIER_PROFILE_INFO_UPDATED,
+  USER_LOGGED_OUT,
+} from '../user/actions';
 import { SET_LOCATION } from './actions';
 import { CourierState } from './types';
 import Courier from './types/Courier';
@@ -11,8 +15,12 @@ export default function (state: CourierState = initialState, action: AnyAction):
   const { type, payload } = action;
   switch (type) {
     case COURIER_PROFILE_UPDATED: {
-      // const info = Object.assign({}, state.courier?.info, payload.info);
       const courier = new Courier(Object.assign({}, state.courier?.getSource(), payload));
+      return { ...state, courier };
+    }
+    case COURIER_PROFILE_INFO_UPDATED: {
+      const info = Object.assign({}, state.courier?.info, payload);
+      const courier = new Courier(Object.assign({}, state.courier?.getSource(), { info }));
       return { ...state, courier };
     }
     case USER_LOGGED_OUT: {

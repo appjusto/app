@@ -5,6 +5,7 @@ import { t } from '../../strings';
 import BackButton from '../common/buttons/BackButton';
 import Terms from '../unlogged/Terms';
 import Profile from './Profile';
+import ProfileCards from './ProfileCards';
 import ProfileEdit from './ProfileEdit';
 import ProfileErase from './ProfileErase';
 import { ProfileParamList } from './types';
@@ -42,6 +43,14 @@ export default function () {
         component={ProfileErase}
         options={({ navigation }) => ({
           title: t('Excluir minha conta'),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
+      />
+      <Stack.Screen
+        name="ProfileCards"
+        component={ProfileCards}
+        options={({ navigation }) => ({
+          title: t('Formas de pagamento'),
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />

@@ -9,4 +9,14 @@ export type HomeStackParamList = {
     destinationScreen: string;
     destinationParam: string;
   };
+  ProfileEdit?: {
+    hideDeleteAccount?: boolean;
+    nextScreen?: 'ProfileCards';
+    nextScreenParams?: {
+      popCount?: number;
+    };
+  };
+  ProfileCards?: {
+    popCount?: number;
+  };
 };

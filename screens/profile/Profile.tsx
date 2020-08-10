@@ -1,4 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 
@@ -8,10 +9,18 @@ import { ApiContext } from '../app/context';
 import ArrowBox from '../common/ArrowBox';
 import DefaultButton from '../common/DefaultButton';
 import { colors, texts, screens, padding } from '../common/styles';
+import { ProfileParamList } from './types';
 
-export default function () {
+type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'Profile'>;
+type ScreenRouteProp = RouteProp<ProfileParamList, 'Profile'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
+
+export default function ({ navigation }: Props) {
   // context
-  const navigation = useNavigation();
   const api = useContext(ApiContext);
 
   // handlers
@@ -50,7 +59,7 @@ export default function () {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('ProfileCards')}>
         <View style={styles.container}>
           <View style={styles.texts}>
             <Text style={styles.black}>{t('Formas de pagamento')}</Text>

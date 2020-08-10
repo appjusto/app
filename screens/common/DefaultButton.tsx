@@ -8,8 +8,8 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-import { colors, texts } from './styles';
 import ShowIf from './ShowIf';
+import { colors, texts } from './styles';
 
 export interface Props extends ButtonProps {
   styleObject?: object;

@@ -55,7 +55,7 @@ const orderValid = (order: Order | undefined | null): boolean => {
 };
 
 const paymentValid = (): boolean => {
-  return true;
+  return false;
 };
 
 export default function ({ navigation, route }: Props) {
@@ -82,6 +82,16 @@ export default function ({ navigation, route }: Props) {
       value,
       destinationScreen: 'CreateOrderP2P',
       destinationParam,
+    });
+  };
+
+  const navigateToProfileEdit = () => {
+    navigation.navigate('ProfileEdit', {
+      nextScreen: 'ProfileCards',
+      nextScreenParams: {
+        popCount: 2,
+      },
+      hideDeleteAccount: true,
     });
   };
 
@@ -289,7 +299,18 @@ export default function ({ navigation, route }: Props) {
         </ViewPager>
 
         <View style={{ justifyContent: 'flex-end' }}>
-          <NextStepButton />
+          <ShowIf test={step !== Steps.Confirmation || paymentValid()}>
+            {() => <NextStepButton />}
+          </ShowIf>
+          <ShowIf test={step === Steps.Confirmation && !paymentValid()}>
+            {() => (
+              <DefaultButton
+                styleObject={{ width: '100%' }}
+                title={t('Completar dados e forma de pagamento')}
+                onPress={navigateToProfileEdit}
+              />
+            )}
+          </ShowIf>
         </View>
       </View>
     </View>

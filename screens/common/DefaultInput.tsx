@@ -9,26 +9,29 @@ export interface Props extends TextInputProps {
   children?: ReactNode;
 }
 
-export default ({ title, children, style: externalStyle, ...props }: Props) => {
-  const inputRef = useRef<TextInput>(null);
-  const focus = useCallback(() => {
-    if (!inputRef.current) return null;
-    // if (!inputRef.current.isFocused()) {
-    inputRef.current.focus();
-    // }
-  }, [inputRef.current]);
-  return (
-    <View style={[style.container, externalStyle]}>
-      <View style={{ width: '100%' }}>
-        <TouchableWithoutFeedback onPress={focus}>
-          <Text style={style.label}>{title}</Text>
-        </TouchableWithoutFeedback>
-        <TextInput ref={inputRef} style={style.input} {...props} />
+export default React.forwardRef(
+  ({ title, children, style: externalStyle, ...props }: Props, externalRef) => {
+    const internalRef = useRef<TextInput>(null);
+    const ref = (externalRef as React.RefObject<TextInput>) || internalRef;
+    const focus = useCallback(() => {
+      if (!ref.current) return null;
+      // if (!ref.current.isFocused()) {
+      ref.current.focus();
+      // }
+    }, [ref.current]);
+    return (
+      <View style={[style.container, externalStyle]}>
+        <View style={{ width: '100%' }}>
+          <TouchableWithoutFeedback onPress={focus}>
+            <Text style={style.label}>{title}</Text>
+          </TouchableWithoutFeedback>
+          <TextInput ref={ref} style={style.input} {...props} />
+        </View>
+        {children}
       </View>
-      {children}
-    </View>
-  );
-};
+    );
+  }
+);
 
 const style = StyleSheet.create({
   container: {

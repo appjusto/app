@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, ImageSourcePropType } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 
-import { texts } from './styles';
 import { checkboxActive, checkboxInactive } from '../../assets/icons';
+import { texts } from './styles';
 
 export interface Props {
   onPress: () => void;
@@ -19,7 +19,7 @@ export default ({ onPress, text, marginTop = 0, checked = false }: Props) => {
           flexDirection: 'row',
           alignItems: 'center',
           height: 24,
-          marginTop: marginTop,
+          marginTop,
         }}
       >
         <Image
