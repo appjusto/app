@@ -42,6 +42,10 @@ export interface Place {
 
 export interface FareDetails {
   total: number;
+  courierFee: number;
+  financialFee: number;
+  platformFee: number;
+  taxes: number;
 }
 
 export interface OrderDistance {
