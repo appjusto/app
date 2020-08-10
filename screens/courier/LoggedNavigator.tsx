@@ -1,8 +1,9 @@
 import { useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { observeCourier } from '../../store/courier/actions';
+import { getFlavor } from '../../store/config/selectors';
 import { getCourier } from '../../store/courier/selectors';
+import { observeProfile } from '../../store/user/actions';
 import { getUser } from '../../store/user/selectors';
 import { AppDispatch, ApiContext } from '../app/context';
 import ApprovedNavigator from './approved/ApprovedNavigator';
@@ -14,13 +15,14 @@ export default function () {
   const api = useContext(ApiContext);
 
   // state
+  const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
   const courier = useSelector(getCourier);
 
   // side effects
   // subscribe for profile changes
   useEffect(() => {
-    return dispatch(observeCourier(api)(user!.uid));
+    return dispatch(observeProfile(api)(flavor, user!.uid));
   }, []);
 
   // UI

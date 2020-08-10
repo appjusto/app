@@ -2,32 +2,7 @@ import { Dispatch } from 'redux';
 
 import * as actionTypes from '../actionTypes';
 import Api from '../api/api';
-import Courier, { CourierProfile } from './types/Courier';
-
-// watch for updates
-export const observeCourier = (api: Api) => (courierId: string) => (dispatch: Dispatch<any>) => {
-  // watch profile changes
-  const unsubscribeProfileUpdate = api
-    .courier()
-    .observeCourier(courierId, (courier: CourierProfile): void => {
-      dispatch({ type: actionTypes.COURIER_PROFILE_UPDATED, payload: courier });
-    });
-  // watch private info changes
-  const unsubscribePrivateInfoUpdate = api
-    .courier()
-    .observeCourierPrivateInfo(courierId, (courier: CourierProfile): void => {
-      dispatch({ type: actionTypes.COURIER_PROFILE_UPDATED, payload: courier });
-    });
-
-  return (): void => {
-    unsubscribeProfileUpdate();
-    unsubscribePrivateInfoUpdate();
-  };
-};
-
-export const updateCourier = (api: Api) => (courierId: string, changes: object) => {
-  return api.courier().updateCourier(courierId, changes);
-};
+import Courier from './types/Courier';
 
 export const updateCourierLocation = (api: Api) => (courier: Courier, location) => (
   dispatch: Dispatch<any>

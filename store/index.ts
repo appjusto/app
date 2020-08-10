@@ -1,6 +1,7 @@
 import * as redux from 'redux';
 import ReduxThunk, { ThunkDispatch } from 'redux-thunk';
 
+import { Extra } from '../utils/config';
 import configReducer from './config/reducer';
 import { ConfigState } from './config/types';
 import consumerReducer from './consumer/reducer';
@@ -20,7 +21,7 @@ export interface State {
   ui: UIState;
 }
 
-export const createStore = (extra: object) => {
+export const createStore = (extra: Extra) => {
   const rootReducer = redux.combineReducers({
     config: configReducer({
       flavor: extra.flavor,

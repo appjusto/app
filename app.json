@@ -54,6 +54,18 @@
     },
     "experiments": {
       "redesignedLogBox": true
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "app-justo",
+            "project": "app-justo",
+            "authToken": ""
+          }
+        }
+      ]
     }
   }
 }

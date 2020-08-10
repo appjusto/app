@@ -1,7 +1,5 @@
-import { UserProfile } from '../../user/types';
+import { ConsumerProfile } from '.';
 import User from '../../user/types/User';
-
-export interface ConsumerProfile extends UserProfile {}
 
 export default class Consumer extends User {
   constructor(protected source: ConsumerProfile) {

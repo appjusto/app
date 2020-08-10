@@ -10,16 +10,18 @@ import Api from '../../store/api/api';
 import { getExtra } from '../../utils/config';
 import { defineLocationUpdatesTask } from '../../utils/location';
 import Toast from '../common/Toast';
+import * as analytics from './analytics';
 
 const extra = getExtra();
 const api = new Api(extra);
 const store = createStore(extra);
 
+defineLocationUpdatesTask(store, api);
+analytics.init(extra.analytics);
+
 export const ApiContext = React.createContext<Api>(api);
 export type AppDispatch = typeof store.dispatch;
 export type AppStore = typeof store;
-
-defineLocationUpdatesTask(store, api);
 
 export interface Props {
   children: ReactNode;

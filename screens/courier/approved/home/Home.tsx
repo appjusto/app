@@ -11,10 +11,10 @@ import { motocycleWhite } from '../../../../assets/icons';
 import useLocationUpdates from '../../../../hooks/useLocationUpdates';
 import useNotification from '../../../../hooks/useNotification';
 import useNotificationToken from '../../../../hooks/useNotificationToken';
-import { updateCourier } from '../../../../store/courier/actions';
 import { isCourierWorking, getCourier } from '../../../../store/courier/selectors';
 import { CourierStatus } from '../../../../store/courier/types';
 import { OrderMatchRequest } from '../../../../store/types';
+import { updateProfile } from '../../../../store/user/actions';
 import { getUser } from '../../../../store/user/selectors';
 import { t } from '../../../../strings';
 import { ApiContext } from '../../../app/context';
@@ -49,7 +49,7 @@ export default function ({ navigation }: Props) {
     if (notificationError) {
       // TODO: ALERT
     } else if (notificationToken && notificationToken !== courier!.notificationToken) {
-      updateCourier(api)(courier!.id, { notificationToken });
+      updateProfile(api)(courier!.id, { notificationToken });
     }
   }, [notificationToken, notificationError]);
 
@@ -73,7 +73,7 @@ export default function ({ navigation }: Props) {
 
   const toggleWorking = () => {
     const status = working ? CourierStatus.Unavailable : CourierStatus.Available;
-    updateCourier(api)(user!.uid, { status });
+    updateProfile(api)(user!.uid, { status });
 
     if (status === CourierStatus.Available) {
       setRetryKey(nanoid());

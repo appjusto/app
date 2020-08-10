@@ -3,6 +3,8 @@ import { Dispatch } from 'redux';
 
 import * as actionTypes from '../actionTypes';
 import Api from '../api/api';
+import { Flavor } from '../config/types';
+import { UserProfile } from './types';
 
 export const observeAuthState = (api: Api) => (dispatch: Dispatch<any>) => {
   const unsubscribe = api.auth().observeAuthState((user) => {
@@ -43,4 +45,35 @@ export const signInWithEmailLink = (api: Api) => (email: string, link: string) =
 
 export const signOut = (api: Api) => {
   return api.auth().signOut();
+};
+
+// watch for updates
+export const observeProfile = (api: Api) => (flavor: Flavor, id: string) => (
+  dispatch: Dispatch<any>
+) => {
+  const actionType =
+    flavor === 'consumer'
+      ? actionTypes.CONSUMER_PROFILE_UPDATED
+      : actionTypes.COURIER_PROFILE_UPDATED;
+
+  const unsubscribeProfileUpdate = api
+    .profile()
+    .observeProfile(id, (courier: UserProfile): void => {
+      dispatch({ type: actionType, payload: courier });
+    });
+  // watch private info changes
+  const unsubscribePrivateInfoUpdate = api
+    .profile()
+    .observePrivateInfo(id, (courier: UserProfile): void => {
+      dispatch({ type: actionType, payload: courier });
+    });
+
+  return (): void => {
+    unsubscribeProfileUpdate();
+    unsubscribePrivateInfoUpdate();
+  };
+};
+
+export const updateProfile = (api: Api) => (id: string, changes: object) => {
+  return api.profile().updateProfile(id, changes);
 };
