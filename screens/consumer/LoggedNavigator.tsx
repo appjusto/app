@@ -51,7 +51,7 @@ export default function () {
       <Tab.Screen
         name="ConsumerHistory"
         component={HistoryNavigator}
-        options={{ title: t('Histórico'), tabBarIcon: () => <Image source={icons.orders} /> }}
+        options={{ title: t('Seus pedidos'), tabBarIcon: () => <Image source={icons.orders} /> }}
       />
       <Tab.Screen
         name="Profile"

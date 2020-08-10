@@ -42,17 +42,6 @@ export default function ({ order, onEdit }: Props) {
       <View style={{ flex: 1 }}>
         <PlaceSummary title={t(`Retirada`)} place={origin} onEdit={() => onEdit(0)} />
         <PlaceSummary title={t(`Entrega`)} place={destination} onEdit={() => onEdit(1)} />
-        {/* <View style={{ flex: 1 }}>
-          <Text>
-            {t('Distância')}: {distance.text}
-          </Text>
-          <Text>
-            {t('Estimativa de duração')}: {duration.text}
-          </Text>
-          <Text>
-            {t('Valor da entrega R$')}: {fare.total}
-          </Text>
-        </View> */}
         <View
           style={{
             ...borders.default,
