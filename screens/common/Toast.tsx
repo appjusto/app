@@ -48,15 +48,15 @@ export default function () {
   }
 
   return (
-    <Animated.View style={{ ...style.container, ...background, ...size, left, top }}>
-      <Text style={style.text} numberOfLines={2}>
+    <Animated.View style={{ ...styles.container, ...background, ...size, left, top }}>
+      <Text style={styles.text} numberOfLines={2}>
         {message}
       </Text>
     </Animated.View>
   );
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     position: 'absolute',

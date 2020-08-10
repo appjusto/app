@@ -9,17 +9,17 @@ export interface Props extends TextInputProps {
 }
 
 export default ({ title, children, style: externalStyle, ...props }: Props) => (
-  <View style={[style.container, externalStyle]}>
+  <View style={[styles.container, externalStyle]}>
     <View>
-      <Text style={style.label}>{title}</Text>
-      <Text style={style.text} {...props}>
+      <Text style={styles.label}>{title}</Text>
+      <Text style={styles.text} {...props}>
         {children}
       </Text>
     </View>
   </View>
 );
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: 60,

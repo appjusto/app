@@ -36,7 +36,7 @@ export default (props: Props) => {
       <DefaultButton
         title={t('Acessar cofigurações do dispositivo')}
         onPress={openSettings}
-        styleObject={{ ...borders.default, borderColor: colors.black, backgroundColor: 'white' }}
+        style={{ ...borders.default, borderColor: colors.black, backgroundColor: 'white' }}
       />
     </FeedbackView>
   );

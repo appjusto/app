@@ -6,7 +6,7 @@ export type HomeStackParamList = {
   };
   AddressComplete: {
     value: string;
-    destinationScreen: string;
+    destinationScreen: 'CreateOrderP2P';
     destinationParam: string;
   };
   ProfileEdit?: {

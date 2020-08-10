@@ -90,14 +90,14 @@ export default function ({ navigation }: Props) {
       <View style={{ flex: 1 }} />
       <View>
         <DefaultButton
-          styleObject={{ width: '100%', marginBottom: 8 }}
+          style={{ width: '100%', marginBottom: 8 }}
           title={t('Manter minha conta')}
           onPress={() => navigation.goBack()}
         />
         <DefaultButton
           disabled
           title={t('Tenho certeza, pode excluir')}
-          styleObject={{ marginBottom: 16 }}
+          style={{ marginBottom: 16 }}
           onPress={() => {
             navigation.navigate('EraseConfirmed');
           }}

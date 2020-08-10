@@ -2,17 +2,8 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { trim } from 'lodash';
 import React, { useState, useCallback, useContext, useRef } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  TouchableOpacity,
-  Image,
-  Keyboard,
-  ScrollView,
-} from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { useSelector } from 'react-redux';
 
 import { erase } from '../../assets/icons';
 import { getFlavor } from '../../store/config/selectors';
@@ -22,13 +13,13 @@ import { getCourier } from '../../store/courier/selectors';
 import Courier from '../../store/courier/types/Courier';
 import { updateProfile } from '../../store/user/actions';
 import { t } from '../../strings';
-import { ApiContext, AppDispatch } from '../app/context';
+import { ApiContext } from '../app/context';
 import AvoidingView from '../common/AvoidingView';
 import CheckField from '../common/CheckField';
 import DefaultButton from '../common/DefaultButton';
 import DefaultInput from '../common/DefaultInput';
 import ShowIf from '../common/ShowIf';
-import { colors, texts, screens, padding } from '../common/styles';
+import { texts, screens, padding } from '../common/styles';
 import { ProfileParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileEdit'>;
@@ -42,7 +33,6 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
 
   // refs
   const scrollViewRef = useRef<ScrollView>(null);
@@ -114,13 +104,13 @@ export default function ({ navigation, route }: Props) {
             />
           </View>
           <CheckField
-            marginTop={padding}
+            style={{ marginTop: padding }}
             checked={acceptMarketing}
             onPress={toggleAcceptMarketing}
             text={t('Aceito receber comunicações e ofertas')}
           />
           <DefaultButton
-            styleObject={{ marginTop: padding }}
+            style={{ marginTop: padding }}
             title={t('Atualizar')}
             onPress={updateProfileHandler}
             activityIndicator={updating}
@@ -147,19 +137,3 @@ export default function ({ navigation, route }: Props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  checkContainer: {
-    // width: '100%',
-    marginTop: 12,
-    flexDirection: 'row',
-    height: 24,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-  eraseContainer: {
-    flexDirection: 'row',
-    height: 48,
-    alignItems: 'center',
-  },
-});

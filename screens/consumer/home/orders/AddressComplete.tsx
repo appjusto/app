@@ -1,22 +1,30 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import debounce from 'lodash/debounce';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useState, useCallback, useContext } from 'react';
-import { View, Text, FlatList, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import { getEnv } from '../../store/config/selectors';
-import { t } from '../../strings';
-import { ApiContext } from '../app/context';
-import DefaultButton from './DefaultButton';
-import DefaultInput from './DefaultInput';
-import { borders, texts, screens, colors } from './styles';
+import { getEnv } from '../../../../store/config/selectors';
+import { t } from '../../../../strings';
+import { ApiContext } from '../../../app/context';
+import DefaultButton from '../../../common/DefaultButton';
+import DefaultInput from '../../../common/DefaultInput';
+import { borders, texts, screens, colors } from '../../../common/styles';
+import { HomeStackParamList } from '../types';
 
-export default function () {
+type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'AddressComplete'>;
+type ScreenRouteProp = RouteProp<HomeStackParamList, 'AddressComplete'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
+
+export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
-  const navigation = useNavigation();
-  const route = useRoute();
   const { params } = route;
   const { value: initialAddress, destinationScreen, destinationParam } = params;
 
@@ -83,7 +91,7 @@ export default function () {
         renderItem={({ item }) => {
           return (
             <TouchableOpacity onPress={() => setAddress(item.description)}>
-              <View style={style.item}>
+              <View style={styles.item}>
                 <Text style={{ ...texts.medium }}>{item.description}</Text>
               </View>
             </TouchableOpacity>
@@ -92,7 +100,7 @@ export default function () {
         keyExtractor={(item) => item.description}
       />
       <DefaultButton
-        styleObject={{ marginBottom: 16 }}
+        style={{ marginBottom: 16 }}
         title={t('Confirmar endereço')}
         onPress={completeHandler}
       />
@@ -100,7 +108,7 @@ export default function () {
   );
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   item: {
     width: '100%',
     height: 61,

@@ -51,7 +51,7 @@ export default ({ route }: Props) => {
       <DefaultButton
         title={t('Enviar confirmação novamente')}
         onPress={resendLink}
-        styleObject={{ ...borders.default, borderColor: colors.black, backgroundColor: 'white' }}
+        style={{ ...borders.default, borderColor: colors.black, backgroundColor: 'white' }}
       />
     </FeedbackView>
   );

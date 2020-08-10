@@ -1,26 +1,27 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ViewProps } from 'react-native';
 
 import { checkboxActive, checkboxInactive } from '../../assets/icons';
 import { texts } from './styles';
 
-export interface Props {
+interface Props extends ViewProps {
   onPress: () => void;
   text: string;
-  marginTop?: number;
   checked?: boolean;
 }
 
-export default ({ onPress, text, marginTop = 0, checked = false }: Props) => {
+export default ({ onPress, text, style: externalStyle, checked = false }: Props) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          height: 24,
-          marginTop,
-        }}
+        style={[
+          {
+            flexDirection: 'row',
+            alignItems: 'center',
+            height: 24,
+          },
+          externalStyle,
+        ]}
       >
         <Image
           source={checked ? checkboxActive : checkboxInactive}

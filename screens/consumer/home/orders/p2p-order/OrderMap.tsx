@@ -1,12 +1,16 @@
 import polyline from '@mapbox/polyline';
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { Marker, Polyline } from 'react-native-maps';
 
 import { pinUser, pinPackage } from '../../../../../assets/icons';
+import { Order } from '../../../../../store/order/types';
 import DefaultMap from '../../../../common/DefaultMap';
 
-export default function ({ order }) {
+type Props = {
+  order: Order;
+};
+
+export default function ({ order }: Props) {
   const { origin, destination, routePolyline } = order;
 
   const routeCoordinates = polyline.decode(routePolyline).map((pair) => {
@@ -14,17 +18,15 @@ export default function ({ order }) {
   });
 
   return (
-    <DefaultMap style={style.map} minZoomLevel={13} maxZoomLevel={13} fitToElements>
+    <DefaultMap
+      style={{ width: '100%', height: '100%' }}
+      minZoomLevel={13}
+      maxZoomLevel={13}
+      fitToElements
+    >
       <Marker coordinate={origin.location} icon={pinPackage} />
       <Marker coordinate={destination.location} icon={pinUser} />
       <Polyline coordinates={routeCoordinates} />
     </DefaultMap>
   );
 }
-
-const style = StyleSheet.create({
-  map: {
-    width: '100%',
-    height: '100%',
-  },
-});

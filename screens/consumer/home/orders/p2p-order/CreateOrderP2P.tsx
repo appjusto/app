@@ -187,7 +187,7 @@ export default function ({ navigation, route }: Props) {
     const activityIndicator = step === 1 && order === null;
     return (
       <DefaultButton
-        styleObject={{ width: '100%' }}
+        style={{ width: '100%' }}
         title={title}
         onPress={nextStep}
         disabled={!nexStepReady}
@@ -199,7 +199,7 @@ export default function ({ navigation, route }: Props) {
   return (
     <View style={{ ...screens.default }}>
       {/* header */}
-      <View style={style.header}>
+      <View style={styles.header}>
         {/* when order hasn't been created yet  */}
         <ShowIf test={!orderValid(order)}>
           {() => (
@@ -224,7 +224,7 @@ export default function ({ navigation, route }: Props) {
       </View>
 
       {/* details */}
-      <View style={style.details}>
+      <View style={styles.details}>
         {/* progress */}
 
         {/* content */}
@@ -240,20 +240,20 @@ export default function ({ navigation, route }: Props) {
           <View>
             <TouchableWithoutFeedback onPress={navigateToAddressComplete}>
               <View>
-                <LabeledText style={style.input} title={t('Endereço de retirada')}>
+                <LabeledText style={styles.input} title={t('Endereço de retirada')}>
                   {origin.address ?? t('Endereço com número')}
                 </LabeledText>
               </View>
             </TouchableWithoutFeedback>
 
             <DefaultInput
-              style={style.input}
+              style={styles.input}
               title={t('Complemento (se houver)')}
               placeholder={t('Apartamento, sala, loja, etc.')}
             />
 
             <DefaultInput
-              style={style.input}
+              style={styles.input}
               title={t('Descrição curta')}
               placeholder={t('Qual encomenda será transportada')}
             />
@@ -265,19 +265,19 @@ export default function ({ navigation, route }: Props) {
               {() => (
                 <View>
                   <TouchableWithoutFeedback onPress={navigateToAddressComplete}>
-                    <LabeledText style={style.input} title={t('Endereço de entrega')}>
+                    <LabeledText style={styles.input} title={t('Endereço de entrega')}>
                       {destination.address ?? t('Endereço com número')}
                     </LabeledText>
                   </TouchableWithoutFeedback>
 
                   <DefaultInput
-                    style={style.input}
+                    style={styles.input}
                     title={t('Complemento (se houver)')}
                     placeholder={t('Apartamento, sala, loja, etc.')}
                   />
 
                   <DefaultInput
-                    style={[style.input]}
+                    style={[styles.input]}
                     title={t('Responsável no local')}
                     placeholder={t('Entregar para')}
                   />
@@ -305,7 +305,7 @@ export default function ({ navigation, route }: Props) {
           <ShowIf test={step === Steps.Confirmation && !paymentValid()}>
             {() => (
               <DefaultButton
-                styleObject={{ width: '100%' }}
+                style={{ width: '100%' }}
                 title={t('Completar dados e forma de pagamento')}
                 onPress={navigateToProfileEdit}
               />
@@ -319,7 +319,7 @@ export default function ({ navigation, route }: Props) {
 
 const { width, height } = Dimensions.get('window');
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   header: {
     width,
     height: height * 0.3,

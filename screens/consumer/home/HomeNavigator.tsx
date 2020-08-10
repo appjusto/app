@@ -2,11 +2,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
 import { t } from '../../../strings';
-import AddressComplete from '../../common/AddressComplete';
 import BackButton from '../../common/buttons/BackButton';
 import ProfileCards from '../../profile/ProfileCards';
 import ProfileEdit from '../../profile/ProfileEdit';
 import ConsumerHome from './ConsumerHome';
+import AddressComplete from './orders/AddressComplete';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import { HomeStackParamList } from './types';
 

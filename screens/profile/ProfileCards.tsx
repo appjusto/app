@@ -11,8 +11,8 @@ import AvoidingView from '../common/AvoidingView';
 import DefaultButton from '../common/DefaultButton';
 import DefaultInput from '../common/DefaultInput';
 import { screens, padding } from '../common/styles';
-import { ProfileParamList } from './types';
 import PaddedView from '../common/views/PaddedView';
+import { ProfileParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileCards'>;
 type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfileCards'>;
@@ -147,7 +147,7 @@ export default function ({ navigation, route }: Props) {
             blurOnSubmit
           />
           <DefaultButton
-            styleObject={{ marginTop: padding }}
+            style={{ marginTop: padding }}
             title={t('Salvar')}
             onPress={saveCardHandler}
             activityIndicator={updating}

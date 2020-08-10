@@ -20,12 +20,12 @@ export default React.forwardRef(
       // }
     }, [ref.current]);
     return (
-      <View style={[style.container, externalStyle]}>
+      <View style={[styles.container, externalStyle]}>
         <View style={{ width: '100%' }}>
           <TouchableWithoutFeedback onPress={focus}>
-            <Text style={style.label}>{title}</Text>
+            <Text style={styles.label}>{title}</Text>
           </TouchableWithoutFeedback>
-          <TextInput ref={ref} style={style.input} {...props} />
+          <TextInput ref={ref} style={styles.input} {...props} />
         </View>
         {children}
       </View>
@@ -33,7 +33,7 @@ export default React.forwardRef(
   }
 );
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: 60,

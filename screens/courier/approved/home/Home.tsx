@@ -84,7 +84,7 @@ export default function ({ navigation }: Props) {
   return (
     <SafeAreaView>
       {/* Main area */}
-      <View style={[style.main, { backgroundColor: working ? colors.green : colors.yellow }]}>
+      <View style={[styles.main, { backgroundColor: working ? colors.green : colors.yellow }]}>
         <Text style={[texts.big, { paddingTop: 32, paddingBottom: 24 }]}>
           {`${t('Olá')}, ${courier?.name ?? 'entregador'}. ${t(
             'Faça suas corridas com segurança.'
@@ -92,8 +92,8 @@ export default function ({ navigation }: Props) {
         </Text>
 
         {/* controls */}
-        <View style={style.controls}>
-          <View style={style.controlItem}>
+        <View style={styles.controls}>
+          <View style={styles.controlItem}>
             <Image source={motocycleWhite} width={64} height={64} />
             <Text style={[texts.default, { paddingTop: 4 }]}>
               {t('Indisponível para corridas')}
@@ -109,8 +109,8 @@ export default function ({ navigation }: Props) {
               value={working}
             />
           </View>
-          <View style={[style.controlItem, { backgroundColor: colors.white }]}>
-            <View style={[style.priceTag]}>
+          <View style={[styles.controlItem, { backgroundColor: colors.white }]}>
+            <View style={[styles.priceTag]}>
               <Text style={[texts.small, { position: 'absolute', left: 6 }]}>{t('R$')}</Text>
               <Text style={[texts.huge]}>7</Text>
             </View>
@@ -126,7 +126,7 @@ export default function ({ navigation }: Props) {
     </SafeAreaView>
   );
 }
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   main: {
     padding,
   },
