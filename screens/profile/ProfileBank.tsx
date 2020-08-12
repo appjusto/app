@@ -1,19 +1,20 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { useSelector } from 'react-redux';
+import { View, Text, TouchableWithoutFeedback, ScrollView } from 'react-native';
+// import { useSelector } from 'react-redux';
 
 import { t } from '../../strings';
 import AvoidingView from '../common/AvoidingView';
-import { getFlavor } from '../../store/config/selectors';
-import { getConsumer } from '../../store/consumer/selectors';
-import { getCourier } from '../../store/courier/selectors';
-import Consumer from '../../store/consumer/types/Consumer';
-import Courier from '../../store/courier/types/Courier';
+// import { getFlavor } from '../../store/config/selectors';
+// import { getConsumer } from '../../store/consumer/selectors';
+// import { getCourier } from '../../store/courier/selectors';
+// import Consumer from '../../store/consumer/types/Consumer';
+// import Courier from '../../store/courier/types/Courier';
 import DefaultButton from '../common/DefaultButton';
 import DefaultInput from '../common/DefaultInput';
+import LabeledText from '../common/LabeledText';
 import { texts, screens, padding, colors } from '../common/styles';
 
-export default function () {
+export default function ({ navigation }) {
   //state
   // const flavor = useSelector(getFlavor);
   // const courier = useSelector(getCourier);
@@ -35,7 +36,18 @@ export default function () {
             {t('A conta precisa estar no seu CPF. Não serão aceitas contas de terceiros.')}
           </Text>
           <View style={{ marginTop: 24 }}>
-            <DefaultInput title={t('Banco')} value={bank} onChangeText={(text) => setBank(text)} />
+            {/* <DefaultInput title={t('Banco')} value={bank} onChangeText={(text) => setBank(text)} /> */}
+            <TouchableWithoutFeedback
+              onPress={() => {
+                navigation.navigate('SelectBank');
+              }}
+            >
+              <View>
+                <LabeledText style={{ marginTop: padding }} title={t('Banco')}>
+                  {t('Nome do seu banco')}
+                </LabeledText>
+              </View>
+            </TouchableWithoutFeedback>
             <DefaultInput
               style={{ marginTop: 16 }}
               title={t('Agência')}

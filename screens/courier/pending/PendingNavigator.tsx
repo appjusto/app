@@ -5,6 +5,7 @@ import { t } from '../../../strings';
 import BackButton from '../../common/buttons/BackButton';
 import ProfileBank from '../../profile/ProfileBank';
 import ProfileEdit from '../../profile/ProfileEdit';
+import SelectBank from '../../profile/SelectBank';
 import ProfilePhotos from '../../profile/photos/ProfilePhotos';
 import PendingChecklist from './PendingChecklist';
 import ProfileFeedback from './ProfileFeedback';
@@ -40,6 +41,14 @@ export default function () {
         component={ProfileBank}
         options={({ navigation }) => ({
           title: t('Dados bancários'),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
+      />
+      <Stack.Screen
+        name="SelectBank"
+        component={SelectBank}
+        options={({ navigation }) => ({
+          title: t('Nome do seu banco'),
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />
