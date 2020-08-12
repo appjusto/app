@@ -4,10 +4,10 @@ export interface LatLng {
 }
 
 export interface Place {
-  address: string;
+  address?: string;
   additionalInfo?: string;
   description?: string;
-  location: LatLng;
+  location?: LatLng;
 }
 
 export enum OrderStatus {

@@ -3,15 +3,15 @@ import React from 'react';
 import { Marker, Polyline } from 'react-native-maps';
 
 import { pinUser, pinPackage } from '../../../../../assets/icons';
-import { Order } from '../../../../../store/order/types';
+import OrderImpl from '../../../../../store/order/types/OrderImpl';
 import DefaultMap from '../../../../common/DefaultMap';
 
 type Props = {
-  order: Order;
+  order: OrderImpl;
 };
 
 export default function ({ order }: Props) {
-  const { origin, destination, routePolyline } = order;
+  const { origin, destination, routePolyline } = order.getData();
 
   const routeCoordinates = polyline.decode(routePolyline).map((pair) => {
     return { latitude: pair[0], longitude: pair[1] };
@@ -24,8 +24,8 @@ export default function ({ order }: Props) {
       maxZoomLevel={13}
       fitToElements
     >
-      <Marker coordinate={origin.location} icon={pinPackage} />
-      <Marker coordinate={destination.location} icon={pinUser} />
+      <Marker coordinate={origin.location!} icon={pinPackage} />
+      <Marker coordinate={destination.location!} icon={pinUser} />
       <Polyline coordinates={routeCoordinates} />
     </DefaultMap>
   );

@@ -2,20 +2,16 @@ import React from 'react';
 import { ScrollView, View, Text, Image, TouchableOpacity } from 'react-native';
 
 import { edit } from '../../../../../assets/icons';
-import { Order, Place } from '../../../../../store/types';
+import { Place } from '../../../../../store/order/types';
+import OrderImpl from '../../../../../store/order/types/OrderImpl';
 import { t } from '../../../../../strings';
 import { texts, colors, borders, screens } from '../../../../common/styles';
 
-export interface Props {
-  order: Order;
-  onEdit: (index: number) => void;
-}
-
-interface PlaceSummaryProps {
+type PlaceSummaryProps = {
   place: Place;
   title: string;
   onEdit: () => void;
-}
+};
 
 function PlaceSummary({ place, title, onEdit }: PlaceSummaryProps) {
   return (
@@ -35,8 +31,13 @@ function PlaceSummary({ place, title, onEdit }: PlaceSummaryProps) {
   );
 }
 
+type Props = {
+  order: OrderImpl;
+  onEdit: (index: number) => void;
+};
+
 export default function ({ order, onEdit }: Props) {
-  const { origin, destination, distance, duration, fare } = order;
+  const { origin, destination, distance, duration, fare } = order.getData();
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
