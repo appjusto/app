@@ -2,10 +2,7 @@ export type ProfileParamList = {
   Profile: undefined;
   ProfileEdit?: {
     hideDeleteAccount?: boolean;
-    nextScreen?: 'ProfileCards';
-    nextScreenParams?: {
-      popCount?: number;
-    };
+    allowPartialSave?: boolean;
   };
   ProfileErase: undefined;
   ProfilePhotos: undefined;

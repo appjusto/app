@@ -11,10 +11,7 @@ export type HomeStackParamList = {
   };
   ProfileEdit?: {
     hideDeleteAccount?: boolean;
-    nextScreen?: 'ProfileCards';
-    nextScreenParams?: {
-      popCount?: number;
-    };
+    allowPartialSave?: boolean;
   };
   ProfileCards?: {
     popCount?: number;

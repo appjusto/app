@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { trim } from 'lodash';
 import React, { useState, useCallback, useContext, useRef } from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { erase } from '../../assets/icons';
 import { getFlavor } from '../../store/config/selectors';
@@ -11,11 +11,11 @@ import { getConsumer } from '../../store/consumer/selectors';
 import Consumer from '../../store/consumer/types/Consumer';
 import { getCourier } from '../../store/courier/selectors';
 import Courier from '../../store/courier/types/Courier';
+import { showToast } from '../../store/ui/actions';
 import { updateProfile } from '../../store/user/actions';
 import { t } from '../../strings';
-import { ApiContext } from '../app/context';
+import { ApiContext, AppDispatch } from '../app/context';
 import AvoidingView from '../common/AvoidingView';
-import CheckField from '../common/CheckField';
 import DefaultButton from '../common/DefaultButton';
 import DefaultInput from '../common/DefaultInput';
 import ShowIf from '../common/ShowIf';
@@ -32,44 +32,41 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // context
+  const dispatch = useDispatch<AppDispatch>();
   const api = useContext(ApiContext);
+  const { hideDeleteAccount, allowPartialSave } = route.params ?? {};
 
   // refs
   const scrollViewRef = useRef<ScrollView>(null);
 
-  // state
+  // app state
   const flavor = useSelector(getFlavor);
   const courier = useSelector(getCourier);
   const consumer = useSelector(getConsumer);
-  const user: Consumer | Courier | undefined = flavor === 'consumer' ? consumer : courier;
+  const user: Consumer | Courier = flavor === 'consumer' ? consumer! : courier!;
+
+  // state
   const [updating, setUpdating] = useState(false);
   const [name, setName] = useState<string>(user!.name! ?? '');
   const [surname, setSurname] = useState(user!.surname! ?? '');
   const [phone, setPhone] = useState(user!.phone! ?? '');
   const [cpf, setCpf] = useState(user!.cpf! ?? '');
-  const [acceptMarketing, setAcceptMarketing] = useState(false);
 
   // handlers
-  const toggleAcceptMarketing = useCallback(() => {
-    setAcceptMarketing(!acceptMarketing);
-    scrollViewRef.current?.scrollToEnd();
-  }, [acceptMarketing]);
-
   const updateProfileHandler = async () => {
     if (updating) return;
+    if (!allowPartialSave && !user.personalInfoSet()) {
+      dispatch(showToast(t('Você precisa preencher todos os dados.')));
+      return;
+    }
     setUpdating(true);
     await updateProfile(api)(user!.id, {
       name,
       surname,
       phone,
       cpf,
-      acceptMarketing,
     });
-    if (!route.params?.nextScreen) {
-      navigation.goBack();
-    } else {
-      navigation.navigate(route.params!.nextScreen!, route.params!.nextScreenParams);
-    }
+    navigation.goBack();
     setUpdating(false);
   };
 
@@ -96,26 +93,24 @@ export default function ({ navigation, route }: Props) {
               value={cpf}
               onChangeText={(text) => setCpf(trim(text))}
             />
-            <DefaultInput
-              style={{ marginTop: 12 }}
-              title={t('Celular')}
-              value={phone}
-              onChangeText={(text) => setPhone(trim(text))}
-            />
+            <ShowIf test={flavor === 'courier'}>
+              {() => (
+                <DefaultInput
+                  style={{ marginTop: 12 }}
+                  title={t('Celular')}
+                  value={phone}
+                  onChangeText={(text) => setPhone(trim(text))}
+                />
+              )}
+            </ShowIf>
           </View>
-          <CheckField
-            style={{ marginTop: padding }}
-            checked={acceptMarketing}
-            onPress={toggleAcceptMarketing}
-            text={t('Aceito receber comunicações e ofertas')}
-          />
           <DefaultButton
             style={{ marginTop: padding }}
             title={t('Atualizar')}
             onPress={updateProfileHandler}
             activityIndicator={updating}
           />
-          <ShowIf test={!route.params?.hideDeleteAccount}>
+          <ShowIf test={!hideDeleteAccount}>
             {() => (
               <TouchableOpacity onPress={() => navigation.navigate('ProfileErase')}>
                 <View

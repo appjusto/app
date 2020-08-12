@@ -2,8 +2,10 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet, View, Image, Dimensions, Text } from 'react-native';
+import { useSelector } from 'react-redux';
 
 import { motocycle } from '../../../../../assets/icons';
+import { getConsumer } from '../../../../../store/consumer/selectors';
 import { createOrder, confirmOrder } from '../../../../../store/order/actions';
 import OrderImpl from '../../../../../store/order/types/OrderImpl';
 import PlaceImpl from '../../../../../store/order/types/PlaceImpl';
@@ -27,7 +29,9 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
   const { params } = route;
-
+  // app state
+  const consumer = useSelector(getConsumer);
+  const paymentInfoSet = consumer?.paymentInfoSet() === true;
   // state
   // order is initially undefined to let us know that wasn't been created yet
   // when we set it to null, we're indicating that we're in process of creating it.
@@ -45,8 +49,6 @@ export default function ({ navigation, route }: Props) {
 
   // create order whenever origin or destination changes
   useEffect(() => {
-    console.log(origin.valid(), origin);
-    console.log(destination.valid(), destination);
     if (
       origin.valid() &&
       destination.valid() &&
@@ -73,19 +75,13 @@ export default function ({ navigation, route }: Props) {
     });
   };
   // navigate to ProfileEdit screen to allow user fill missing information
-  const navigateToProfileEdit = () => {
-    navigation.navigate('ProfileEdit', {
-      nextScreen: 'ProfileCards',
-      nextScreenParams: {
-        popCount: 2,
-      },
-      hideDeleteAccount: true,
-    });
+  const navigateToFillPaymentInfo = () => {
+    navigation.navigate('ProfileCards');
   };
   // confirm order
   const confirmOrderHandler = async () => {
-    // TODO: replace hardcoded card ID
-    await confirmOrder(api)(order!.getData().id, 'YY7ED5T2geh0iSmRS9FZ');
+    // TODO: replace fixed card ID
+    await confirmOrder(api)(order!.getData().id, consumer!.info!.cards![0].id);
   };
 
   // UI
@@ -125,8 +121,9 @@ export default function ({ navigation, route }: Props) {
           origin={origin}
           destination={destination}
           order={order}
+          paymentInfoSet={paymentInfoSet}
           navigateToAddressComplete={navigateToAddressComplete}
-          navigateToProfileEdit={navigateToProfileEdit}
+          navigateToFillPaymentInfo={navigateToFillPaymentInfo}
           confirmOrder={confirmOrderHandler}
         />
       </View>

@@ -21,8 +21,7 @@ export default function () {
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = useContext(ApiContext);
-
-  // state
+  // app state
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
   const consumer = useSelector(getConsumer);
