@@ -21,6 +21,10 @@ export const confirmOrder = (api: Api) => (orderId: string, cardId: string) => {
   return api.order().confirmOrder(orderId, cardId);
 };
 
+export const cancelOrder = (api: Api) => (orderId: string) => {
+  return api.order().cancelOrder(orderId);
+};
+
 export const matchOrder = (api: Api) => (orderId: string) => {
   return api.order().matchOrder(orderId);
 };

@@ -16,4 +16,7 @@ export type HomeStackParamList = {
   ProfileCards?: {
     popCount?: number;
   };
+  OrderFeedback: {
+    orderId: string;
+  };
 };

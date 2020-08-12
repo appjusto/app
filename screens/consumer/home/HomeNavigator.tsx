@@ -9,6 +9,7 @@ import ConsumerHome from './ConsumerHome';
 import AddressComplete from './orders/AddressComplete';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import { HomeStackParamList } from './types';
+import OrderFeedback from './orders/OrderFeedback';
 
 const Stack = createStackNavigator<HomeStackParamList>();
 export default function () {
@@ -50,6 +51,13 @@ export default function () {
           title: t('Formas de pagamento'),
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
+      />
+      <Stack.Screen
+        name="OrderFeedback"
+        component={OrderFeedback}
+        options={{
+          headerShown: false,
+        }}
       />
     </Stack.Navigator>
   );

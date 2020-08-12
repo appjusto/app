@@ -2,15 +2,16 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet, View, Image, Dimensions, Text } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { motocycle } from '../../../../../assets/icons';
 import { getConsumer } from '../../../../../store/consumer/selectors';
 import { createOrder, confirmOrder } from '../../../../../store/order/actions';
 import OrderImpl from '../../../../../store/order/types/OrderImpl';
 import PlaceImpl from '../../../../../store/order/types/PlaceImpl';
+import { showToast } from '../../../../../store/ui/actions';
 import { t } from '../../../../../strings';
-import { ApiContext } from '../../../../app/context';
+import { ApiContext, AppDispatch } from '../../../../app/context';
 import ShowIf from '../../../../common/ShowIf';
 import { screens, borders, texts } from '../../../../common/styles';
 import { HomeStackParamList } from '../../types';
@@ -28,7 +29,7 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
-  const { params } = route;
+  const dispatch = useDispatch<AppDispatch>();
   // app state
   const consumer = useSelector(getConsumer);
   const paymentInfoSet = consumer?.paymentInfoSet() === true;
@@ -37,12 +38,13 @@ export default function ({ navigation, route }: Props) {
   // when we set it to null, we're indicating that we're in process of creating it.
   const [origin, setOrigin] = useState(new PlaceImpl({}));
   const [destination, setDestination] = useState(new PlaceImpl({}));
-  const [order, setOrder] = useState<OrderImpl | undefined | null>(undefined);
+  const [order, setOrder] = useState<OrderImpl | null>(null);
+  const [waiting, setWaiting] = useState(false);
 
   // side effects
   // fires when AddressComplete finishes
   useEffect(() => {
-    const { originAddress, destinationAddress } = params ?? {};
+    const { originAddress, destinationAddress } = route.params ?? {};
     if (originAddress) setOrigin(origin.merge({ address: originAddress }));
     if (destinationAddress) setDestination(destination.merge({ address: destinationAddress }));
   }, [route.params]);
@@ -58,9 +60,11 @@ export default function ({ navigation, route }: Props) {
     ) {
       (async () => {
         setOrder(null);
+        setWaiting(true);
         const newOrder = await createOrder(api)(origin.getData(), destination.getData());
         console.log(newOrder);
         setOrder(new OrderImpl(newOrder));
+        setWaiting(false);
       })();
     }
   }, [origin, destination]);
@@ -80,8 +84,17 @@ export default function ({ navigation, route }: Props) {
   };
   // confirm order
   const confirmOrderHandler = async () => {
-    // TODO: replace fixed card ID
-    await confirmOrder(api)(order!.getData().id, consumer!.info!.cards![0].id);
+    try {
+      const orderId = order!.getData().id;
+      // TODO: replace fixed card ID
+      const cardId = consumer!.info!.cards![0].id;
+      setWaiting(true);
+      await confirmOrder(api)(orderId, cardId);
+      setWaiting(false);
+      navigation.replace('OrderFeedback', { orderId });
+    } catch (error) {
+      dispatch(showToast(error.toString()));
+    }
   };
 
   // UI
@@ -122,6 +135,7 @@ export default function ({ navigation, route }: Props) {
           destination={destination}
           order={order}
           paymentInfoSet={paymentInfoSet}
+          waiting={waiting}
           navigateToAddressComplete={navigateToAddressComplete}
           navigateToFillPaymentInfo={navigateToFillPaymentInfo}
           confirmOrder={confirmOrderHandler}

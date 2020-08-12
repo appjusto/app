@@ -28,6 +28,7 @@ type Props = {
   destination: PlaceImpl;
   order?: OrderImpl | null;
   paymentInfoSet: boolean;
+  waiting: boolean;
   navigateToAddressComplete: (currentValue: string, destinationParam: string) => void;
   navigateToFillPaymentInfo: () => void;
   confirmOrder: () => Promise<void>;
@@ -38,6 +39,7 @@ export default function ({
   destination,
   order,
   paymentInfoSet,
+  waiting,
   navigateToAddressComplete,
   navigateToFillPaymentInfo,
   confirmOrder,
@@ -181,7 +183,7 @@ export default function ({
               title={getNextStepTitle(step)}
               onPress={nextStepHandler}
               disabled={!stepReady(step + 1)}
-              activityIndicator={step === Steps.Destination && order === null}
+              activityIndicator={waiting}
             />
           )}
         </ShowIf>
