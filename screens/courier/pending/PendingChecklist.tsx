@@ -81,7 +81,7 @@ export default function ({ navigation }: Props) {
             <ConfigItem
               title={t('Dados bancários')}
               subtitle={t('Cadastre seu banco para recebimento')}
-              onPress={() => navigation.navigate('ProfileEdit')}
+              onPress={() => navigation.navigate('ProfileBank')}
             />
             {/* <ConfigItem
               title={t('Método de entrega')}

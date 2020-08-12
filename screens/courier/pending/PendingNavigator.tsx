@@ -3,11 +3,12 @@ import React from 'react';
 
 import { t } from '../../../strings';
 import BackButton from '../../common/buttons/BackButton';
+import ProfileBank from '../../profile/ProfileBank';
 import ProfileEdit from '../../profile/ProfileEdit';
 import ProfilePhotos from '../../profile/photos/ProfilePhotos';
 import PendingChecklist from './PendingChecklist';
-import { PendingParamList } from './types';
 import ProfileFeedback from './ProfileFeedback';
+import { PendingParamList } from './types';
 
 const Stack = createStackNavigator<PendingParamList>();
 export default function () {
@@ -31,6 +32,14 @@ export default function () {
         component={ProfilePhotos}
         options={({ navigation }) => ({
           title: t('Fotos e documentos'),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
+      />
+      <Stack.Screen
+        name="ProfileBank"
+        component={ProfileBank}
+        options={({ navigation }) => ({
+          title: t('Dados bancários'),
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />
