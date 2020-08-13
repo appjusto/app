@@ -22,6 +22,7 @@ export interface Card {
 
 export interface ConsumerInfo extends ProfileInfo {
   paymentChannelId?: string;
+  lastCardId?: string;
   cards?: Card[];
 }
 

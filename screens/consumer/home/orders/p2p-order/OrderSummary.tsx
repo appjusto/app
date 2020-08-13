@@ -2,18 +2,21 @@ import React from 'react';
 import { ScrollView, View, Text, Image, TouchableOpacity } from 'react-native';
 
 import { edit } from '../../../../../assets/icons';
+import { Card } from '../../../../../store/consumer/types';
 import { Place } from '../../../../../store/order/types';
 import OrderImpl from '../../../../../store/order/types/OrderImpl';
 import { t } from '../../../../../strings';
+import DefaultButton from '../../../../common/DefaultButton';
+import ShowIf from '../../../../common/ShowIf';
 import { texts, colors, borders, screens } from '../../../../common/styles';
 
 type PlaceSummaryProps = {
   place: Place;
   title: string;
-  onEdit: () => void;
+  editStepHandler: () => void;
 };
 
-function PlaceSummary({ place, title, onEdit }: PlaceSummaryProps) {
+function PlaceSummary({ place, title, editStepHandler }: PlaceSummaryProps) {
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
       <View style={{ width: '60%', flex: 1 }}>
@@ -23,7 +26,7 @@ function PlaceSummary({ place, title, onEdit }: PlaceSummaryProps) {
         <Text>{place.description}</Text>
       </View>
       <View style={{ alignSelf: 'center' }}>
-        <TouchableOpacity onPress={() => onEdit()}>
+        <TouchableOpacity onPress={editStepHandler}>
           <Image style={{ width: 32, height: 32 }} source={edit} />
         </TouchableOpacity>
       </View>
@@ -33,16 +36,35 @@ function PlaceSummary({ place, title, onEdit }: PlaceSummaryProps) {
 
 type Props = {
   order: OrderImpl;
-  onEdit: (index: number) => void;
+  card: Card | null;
+  waiting: boolean;
+  editStepHandler: (index: number) => void;
+  nextStepHandler: () => void;
+  navigateToFillPaymentInfo: () => void;
 };
 
-export default function ({ order, onEdit }: Props) {
+export default function ({
+  order,
+  card,
+  waiting,
+  editStepHandler,
+  nextStepHandler,
+  navigateToFillPaymentInfo,
+}: Props) {
   const { origin, destination, distance, duration, fare } = order.getData();
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
-        <PlaceSummary title={t(`Retirada`)} place={origin} onEdit={() => onEdit(0)} />
-        <PlaceSummary title={t(`Entrega`)} place={destination} onEdit={() => onEdit(1)} />
+        <PlaceSummary
+          title={t(`Retirada`)}
+          place={origin}
+          editStepHandler={() => editStepHandler(0)}
+        />
+        <PlaceSummary
+          title={t(`Entrega`)}
+          place={destination}
+          editStepHandler={() => editStepHandler(1)}
+        />
         <View
           style={{
             ...borders.default,
@@ -114,6 +136,37 @@ export default function ({ order, onEdit }: Props) {
           contribuição se desejar.
         </Text>
       </View>
+
+      <ShowIf test={!!card}>
+        {() => (
+          <TouchableOpacity onPress={() => navigateToFillPaymentInfo()}>
+            <View>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text>{t('Forma de pagamento')}</Text>
+                <Image style={{ width: 32, height: 32 }} source={edit} />
+              </View>
+              <Text>{t(`Cartão de crédito: **** ${card!.lastFourDigits}`)}</Text>
+            </View>
+          </TouchableOpacity>
+        )}
+      </ShowIf>
+
+      <ShowIf test={!card}>
+        {() => (
+          <DefaultButton
+            style={{ width: '100%' }}
+            title={t('Incluir forma de pagamento')}
+            onPress={navigateToFillPaymentInfo}
+          />
+        )}
+      </ShowIf>
+
+      <DefaultButton
+        title={t('Fazer pedido')}
+        onPress={nextStepHandler}
+        disabled={!card}
+        activityIndicator={waiting}
+      />
     </ScrollView>
   );
 }

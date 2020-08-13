@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash';
 
-import { ConsumerProfile } from '.';
+import { ConsumerProfile, Card } from '.';
 import User from '../../user/types/User';
 
 export default class Consumer extends User {
@@ -16,7 +16,16 @@ export default class Consumer extends User {
     return this.source;
   }
 
-  public paymentInfoSet(): boolean {
-    return !isEmpty(this.info?.paymentChannelId) && !!this.info?.cards?.length;
+  public getCards(): Card[] {
+    return this.info?.cards ?? [];
+  }
+
+  public getCardById(cardId: string): Card | undefined {
+    return this.getCards().find((card) => card.id === cardId);
+  }
+
+  public getLastCard(): Card | undefined {
+    if (this.info?.lastCardId) return this.getCardById(this.info.lastCardId);
+    return undefined;
   }
 }

@@ -6,8 +6,11 @@ export type ProfileParamList = {
   };
   ProfileErase: undefined;
   ProfilePhotos: undefined;
-  ProfileCards?: {
-    popCount?: number;
+  ProfilePaymentMethods?: {
+    returnScreen: 'CreateOrderP2P';
+  };
+  ProfileAddCard?: {
+    returnScreen: 'CreateOrderP2P';
   };
   ProfileBank?: {
     bank: {
@@ -17,4 +20,8 @@ export type ProfileParamList = {
   };
   SelectBank: undefined;
   Terms: undefined;
+
+  CreateOrderP2P: {
+    cardId: string;
+  };
 };

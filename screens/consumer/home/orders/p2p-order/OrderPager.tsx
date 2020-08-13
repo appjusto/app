@@ -4,6 +4,7 @@ import { View, NativeSyntheticEvent } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 
+import { Card } from '../../../../../store/consumer/types';
 import OrderImpl from '../../../../../store/order/types/OrderImpl';
 import PlaceImpl from '../../../../../store/order/types/PlaceImpl';
 import { showToast } from '../../../../../store/ui/actions';
@@ -26,8 +27,8 @@ enum Steps {
 type Props = {
   origin: PlaceImpl;
   destination: PlaceImpl;
-  order?: OrderImpl | null;
-  paymentInfoSet: boolean;
+  order: OrderImpl | null;
+  card: Card | null;
   waiting: boolean;
   navigateToAddressComplete: (currentValue: string, destinationParam: string) => void;
   navigateToFillPaymentInfo: () => void;
@@ -38,7 +39,7 @@ export default function ({
   origin,
   destination,
   order,
-  paymentInfoSet,
+  card,
   waiting,
   navigateToAddressComplete,
   navigateToFillPaymentInfo,
@@ -58,7 +59,7 @@ export default function ({
     if (value === Steps.Origin) return true; // always enabled
     if (value === Steps.Destination) return origin.valid(); // only if origin is known
     if (value === Steps.Confirmation) return destination.valid() && order?.valid() === true; // only if order has been created
-    if (value === Steps.ConfirmingOrder) return paymentInfoSet;
+    if (value === Steps.ConfirmingOrder) return !!card;
     return false; // should never happen
   };
 
@@ -101,19 +102,11 @@ export default function ({
     }
   };
 
-  // UI
-  const getNextStepTitle = (step: Steps) => {
-    if (step === Steps.Origin) return t('Confirmar local de retirada');
-    else if (step === 1) return t('Confirmar local de entrega');
-    else if (step === 2) return t('Fazer pedido');
-    return '';
-  };
-
   return (
     <View style={{ flex: 1 }}>
       <ViewPager ref={viewPager} style={{ flex: 1 }} onPageScroll={onPageScroll}>
         {/* origin */}
-        <View>
+        <View style={{ justifyContent: 'flex-end' }}>
           <TouchableWithoutFeedback
             onPress={() => {
               navigateToAddressComplete(origin.getData().address ?? '', 'originAddress');
@@ -137,12 +130,20 @@ export default function ({
             title={t('Descrição curta')}
             placeholder={t('Qual encomenda será transportada')}
           />
+
+          <View style={{ flex: 1 }} />
+
+          <DefaultButton
+            title={t('Confirmar local de retirada')}
+            onPress={nextStepHandler}
+            disabled={!stepReady(step + 1)}
+          />
         </View>
 
         {/* destination */}
         <ShowIf test={origin.valid()}>
           {() => (
-            <View>
+            <View style={{ justifyContent: 'flex-end' }}>
               <TouchableWithoutFeedback
                 onPress={() => {
                   navigateToAddressComplete(
@@ -167,36 +168,33 @@ export default function ({
                 title={t('Responsável no local')}
                 placeholder={t('Entregar para')}
               />
+
+              <View style={{ flex: 1 }} />
+
+              <DefaultButton
+                title={t('Confirmar local de entrega')}
+                onPress={nextStepHandler}
+                disabled={!stepReady(step + 1)}
+                activityIndicator={step === Steps.Destination && waiting}
+              />
             </View>
           )}
         </ShowIf>
 
         {/* confirmation */}
         <ShowIf test={order?.valid() === true}>
-          {() => <OrderSummary order={order!} onEdit={setPage} />}
+          {() => (
+            <OrderSummary
+              order={order!}
+              card={card}
+              waiting={waiting}
+              editStepHandler={setPage}
+              nextStepHandler={nextStepHandler}
+              navigateToFillPaymentInfo={navigateToFillPaymentInfo}
+            />
+          )}
         </ShowIf>
       </ViewPager>
-      <View style={{ justifyContent: 'flex-end' }}>
-        <ShowIf test={step !== Steps.Confirmation || paymentInfoSet}>
-          {() => (
-            <DefaultButton
-              title={getNextStepTitle(step)}
-              onPress={nextStepHandler}
-              disabled={!stepReady(step + 1)}
-              activityIndicator={waiting}
-            />
-          )}
-        </ShowIf>
-        <ShowIf test={step === Steps.Confirmation && !paymentInfoSet}>
-          {() => (
-            <DefaultButton
-              style={{ width: '100%' }}
-              title={t('Incluir forma de pagamento')}
-              onPress={navigateToFillPaymentInfo}
-            />
-          )}
-        </ShowIf>
-      </View>
     </View>
   );
 }

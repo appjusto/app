@@ -6,11 +6,11 @@ import BackButton from '../common/buttons/BackButton';
 import Terms from '../unlogged/Terms';
 import Profile from './Profile';
 import ProfileBank from './ProfileBank';
-import ProfileCards from './ProfileCards';
 import ProfileEdit from './ProfileEdit';
 import ProfileErase from './ProfileErase';
-import { ProfileParamList } from './types';
 import SelectBank from './SelectBank';
+import ProfileAddCard from './payment/ProfileAddCard';
+import { ProfileParamList } from './types';
 
 const Stack = createStackNavigator<ProfileParamList>();
 export default function () {
@@ -49,8 +49,8 @@ export default function () {
         })}
       />
       <Stack.Screen
-        name="ProfileCards"
-        component={ProfileCards}
+        name="ProfileAddCard"
+        component={ProfileAddCard}
         options={({ navigation }) => ({
           title: t('Formas de pagamento'),
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
