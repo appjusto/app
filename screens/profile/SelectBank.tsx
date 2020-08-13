@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { t } from '../../strings';
@@ -7,9 +7,16 @@ import DefaultInput from '../common/DefaultInput';
 import { borders, texts, screens, colors } from '../common/styles';
 import { BANKS } from './banks';
 
-export default function () {
+export default function ({ navigation, route }) {
+  //context
+  const { params } = route;
   //state
   const [bank, setBank] = useState('');
+
+  //handlers
+  const selectBankHandler = useCallback(() => {
+    navigation.navigate('ProfileBank', { params: bank });
+  }, [route.params]);
   //UI
   return (
     <View style={{ ...screens.lightGrey, paddingTop: 16 }}>
@@ -38,7 +45,11 @@ export default function () {
         }}
         keyExtractor={(item) => item.value}
       />
-      <DefaultButton style={{ marginBottom: 16 }} title={t('Confirmar banco')} onPress={() => {}} />
+      <DefaultButton
+        style={{ marginBottom: 16 }}
+        title={t('Confirmar banco')}
+        onPress={selectBankHandler}
+      />
     </View>
   );
 }

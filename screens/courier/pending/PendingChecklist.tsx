@@ -91,7 +91,7 @@ export default function ({ navigation }: Props) {
             <ConfigItem
               title={t('Escolha sua frota')}
               subtitle={t('Faça parte de uma frota existente ou crie sua própria frota.')}
-              onPress={() => navigation.navigate('ProfileEdit')}
+              onPress={() => navigation.navigate('FleetStack')}
             />
           </PaddedView>
         </ScrollView>

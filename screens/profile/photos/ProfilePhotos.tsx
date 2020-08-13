@@ -26,7 +26,7 @@ export default function ({ navigation }: Props) {
     const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert('Permission to access camera roll is required!');
+      alert(t('A permissão ao acesso às fotos é necessária'));
       return;
     }
 
@@ -63,7 +63,7 @@ export default function ({ navigation }: Props) {
           <Image source={selfie} width={32} height={48} />
         </DocumentButton>
 
-        <DocumentButton title={t('RG ou CNH aberta')} onPress={openImagePickerAsync}>
+        <DocumentButton title={t('RG ou CNH aberta')} onPress={() => {}}>
           <Image source={license} width={40} height={54} />
         </DocumentButton>
       </View>
