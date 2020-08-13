@@ -6,12 +6,11 @@ import BackButton from '../../common/buttons/BackButton';
 import ProfileBank from '../../profile/ProfileBank';
 import ProfileEdit from '../../profile/ProfileEdit';
 import SelectBank from '../../profile/SelectBank';
-import FleeNavigator from '../../profile/fleet/FleetNavigator';
+import FleetNavigator from '../../profile/fleet/FleetNavigator';
 import ProfilePhotos from '../../profile/photos/ProfilePhotos';
 import PendingChecklist from './PendingChecklist';
 import ProfileFeedback from './ProfileFeedback';
 import { PendingParamList } from './types';
-import FleetNavigator from '../../profile/fleet/FleetNavigator';
 
 const Stack = createStackNavigator<PendingParamList>();
 export default function () {
@@ -50,7 +49,7 @@ export default function () {
         name="SelectBank"
         component={SelectBank}
         options={({ navigation }) => ({
-          title: t('Nome do seu banco'),
+          title: t('Selecione seu banco'),
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />

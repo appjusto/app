@@ -9,4 +9,12 @@ export type ProfileParamList = {
   ProfileCards?: {
     popCount?: number;
   };
+  ProfileBank?: {
+    bank: {
+      bankId: string;
+      bankName: string;
+    };
+  };
+  SelectBank: undefined;
+  Terms: undefined;
 };

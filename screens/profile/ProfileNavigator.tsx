@@ -5,10 +5,12 @@ import { t } from '../../strings';
 import BackButton from '../common/buttons/BackButton';
 import Terms from '../unlogged/Terms';
 import Profile from './Profile';
+import ProfileBank from './ProfileBank';
 import ProfileCards from './ProfileCards';
 import ProfileEdit from './ProfileEdit';
 import ProfileErase from './ProfileErase';
 import { ProfileParamList } from './types';
+import SelectBank from './SelectBank';
 
 const Stack = createStackNavigator<ProfileParamList>();
 export default function () {
@@ -51,6 +53,22 @@ export default function () {
         component={ProfileCards}
         options={({ navigation }) => ({
           title: t('Formas de pagamento'),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
+      />
+      <Stack.Screen
+        name="ProfileBank"
+        component={ProfileBank}
+        options={({ navigation }) => ({
+          title: t('Dados bancários'),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
+      />
+      <Stack.Screen
+        name="SelectBank"
+        component={SelectBank}
+        options={({ navigation }) => ({
+          title: t('Selecione seu banco'),
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />

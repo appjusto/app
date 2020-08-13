@@ -1,4 +1,6 @@
-import React, { useRef, useState } from 'react';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, TouchableWithoutFeedback, ScrollView } from 'react-native';
 // import { useSelector } from 'react-redux';
 
@@ -13,20 +15,36 @@ import DefaultButton from '../common/DefaultButton';
 import DefaultInput from '../common/DefaultInput';
 import LabeledText from '../common/LabeledText';
 import { texts, screens, padding, colors } from '../common/styles';
+import { ProfileParamList } from './types';
 
-export default function ({ navigation }) {
-  //state
+type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileBank'>;
+type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfileBank'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
+
+export default function ({ navigation, route }: Props) {
+  // state
   // const flavor = useSelector(getFlavor);
   // const courier = useSelector(getCourier);
   // const consumer = useSelector(getConsumer);
   // const user: Consumer | Courier | undefined = flavor === 'consumer' ? consumer : courier;
-  const [bank, setBank] = useState<string>('');
+  const [bank, setBank] = useState<null | { bankId: string; bankName: string }>(null);
   const [agency, setAgency] = useState<string>('');
   const [account, setAccount] = useState<string>('');
   const [digit, setDigit] = useState<string>('');
-  //refs
+  // refs
   const scrollViewRef = useRef<ScrollView>(null);
-  //UI
+
+  // side effects
+  useEffect(() => {
+    const { bank } = route.params ?? {};
+    if (bank) setBank(bank);
+  }, [route.params]);
+
+  // UI
   return (
     <View style={{ ...screens.configScreen, paddingHorizontal: padding }}>
       <ScrollView ref={scrollViewRef} contentContainerStyle={{ flex: 1 }}>
@@ -44,7 +62,7 @@ export default function ({ navigation }) {
             >
               <View>
                 <LabeledText style={{ marginTop: padding }} title={t('Banco')}>
-                  {t('Nome do seu banco')}
+                  {bank?.bankName ?? t('Nome do seu banco')}
                 </LabeledText>
               </View>
             </TouchableWithoutFeedback>

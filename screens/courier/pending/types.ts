@@ -6,4 +6,11 @@ export type PendingParamList = {
   };
   ProfilePhotos: undefined;
   ProfileFeedback: undefined;
+  ProfileBank?: {
+    bank: {
+      bankId: string;
+      bankName: string;
+    };
+  };
+  SelectBank: undefined;
 };
