@@ -12,10 +12,10 @@ import { ApiContext } from '../../../app/context';
 import DefaultButton from '../../../common/DefaultButton';
 import DefaultInput from '../../../common/DefaultInput';
 import { borders, texts, screens, colors } from '../../../common/styles';
-import { HomeStackParamList } from '../types';
+import { HomeNavigatorParamList } from '../types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'AddressComplete'>;
-type ScreenRouteProp = RouteProp<HomeStackParamList, 'AddressComplete'>;
+type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'AddressComplete'>;
+type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'AddressComplete'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

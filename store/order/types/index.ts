@@ -81,4 +81,7 @@ export interface OrderMatchRequest {
 
 export interface OrderState {
   orders: Order[];
+  ordersById: {
+    [key: string]: Order;
+  };
 }

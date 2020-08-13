@@ -53,7 +53,7 @@ export default function () {
         options={{ title: t('Início'), tabBarIcon: () => <Image source={icons.home} /> }}
       />
       <Tab.Screen
-        name="ConsumerHistory"
+        name="History"
         component={HistoryNavigator}
         options={{ title: t('Seus pedidos'), tabBarIcon: () => <Image source={icons.orders} /> }}
       />

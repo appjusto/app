@@ -13,6 +13,14 @@ export const observeOrdersCreatedBy = (api: Api) => (consumerId: string) => (
   });
 };
 
+export const observeOrdersDeliveredBy = (api: Api) => (courierId: string) => (
+  dispatch: AppDispatch
+) => {
+  return api.order().observeOrdersDeliveredBy(courierId, (orders: Order[]): void => {
+    dispatch({ type: ORDERS_UPDATED, payload: orders });
+  });
+};
+
 export const createOrder = (api: Api) => (origin: Place, destination: Place) => {
   return api.order().createOrder(origin, destination);
 };

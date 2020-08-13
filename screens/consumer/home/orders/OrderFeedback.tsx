@@ -1,23 +1,22 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../../assets/icons';
 import { cancelOrder } from '../../../../store/order/actions';
+import { getOrders } from '../../../../store/order/selectors';
+import { OrderStatus } from '../../../../store/order/types';
+import { showToast } from '../../../../store/ui/actions';
 import { t } from '../../../../strings';
 import { ApiContext, AppDispatch } from '../../../app/context';
 import DefaultButton from '../../../common/DefaultButton';
 import FeedbackView from '../../../common/FeedbackView';
 import { borders, colors } from '../../../common/styles';
-import { HomeStackParamList } from '../types';
-import { showToast } from '../../../../store/ui/actions';
-import { useDispatch, useSelector } from 'react-redux';
-import { getOrders } from '../../../../store/order/selectors';
-import ShowIf from '../../../common/ShowIf';
-import { OrderStatus } from '../../../../store/order/types';
+import { HomeNavigatorParamList } from '../types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'OrderFeedback'>;
-type ScreenRouteProp = RouteProp<HomeStackParamList, 'OrderFeedback'>;
+type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'OrderFeedback'>;
+type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'OrderFeedback'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

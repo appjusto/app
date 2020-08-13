@@ -5,30 +5,30 @@ import { StyleSheet, View, TouchableOpacity, Text, Image, ImageBackground } from
 import { useDispatch, useSelector } from 'react-redux';
 
 import { navigationArrow, illustration, BG, requests } from '../../../assets/icons';
-import useAuth from '../../../hooks/useAuth';
 import { getFlavor } from '../../../store/config/selectors';
 import { observeProfile } from '../../../store/user/actions';
+import { getUser } from '../../../store/user/selectors';
 import { t } from '../../../strings';
 import { AppDispatch, ApiContext } from '../../app/context';
 import { colors, texts } from '../../common/styles';
-import { HomeStackParamList } from './types';
+import { HomeNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'ConsumerHome'>;
-type ScreenRouteProp = RouteProp<HomeStackParamList, 'ConsumerHome'>;
+type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'Home'>;
+type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'Home'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
   route: ScreenRouteProp;
 };
 
-export default function ConsumerHome({ navigation }: Props) {
+export default function ({ navigation }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
 
   // state
   const flavor = useSelector(getFlavor);
-  const [authState, user] = useAuth();
+  const user = useSelector(getUser);
 
   // side effects
   useEffect(() => {
@@ -85,7 +85,7 @@ export default function ConsumerHome({ navigation }: Props) {
       <View style={styles.whiteContainer}>
         <ImageBackground source={BG} style={{ height: '100%', width: '100%', flex: 1 }}>
           <View style={{ paddingHorizontal: 16, flex: 1, justifyContent: 'center' }}>
-            <TouchableOpacity onPress={() => navigation.navigate('ConsumerHistory')}>
+            <TouchableOpacity onPress={() => navigation.navigate('History')}>
               <View style={{ ...styles.history, justifyContent: 'center' }}>
                 <View style={styles.reqContainer}>
                   <Image source={requests} />

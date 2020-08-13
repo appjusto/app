@@ -14,12 +14,12 @@ import { t } from '../../../../../strings';
 import { ApiContext, AppDispatch } from '../../../../app/context';
 import ShowIf from '../../../../common/ShowIf';
 import { screens, borders, texts } from '../../../../common/styles';
-import { HomeStackParamList } from '../../types';
+import { HomeNavigatorParamList } from '../../types';
 import OrderMap from './OrderMap';
 import OrderPager from './OrderPager';
 
-type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'CreateOrderP2P'>;
-type ScreenRouteProp = RouteProp<HomeStackParamList, 'CreateOrderP2P'>;
+type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
+type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

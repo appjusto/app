@@ -1,5 +1,5 @@
-export type HomeStackParamList = {
-  ConsumerHome: undefined;
+export type HomeNavigatorParamList = {
+  Home: undefined;
   CreateOrderP2P?: {
     originAddress?: string;
     destinationAddress?: string;
@@ -19,4 +19,5 @@ export type HomeStackParamList = {
   OrderFeedback: {
     orderId: string;
   };
+  History: undefined;
 };
