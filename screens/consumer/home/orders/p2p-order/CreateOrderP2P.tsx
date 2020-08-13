@@ -2,21 +2,24 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet, View, Image, Dimensions, Text } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { motocycle } from '../../../../../assets/icons';
+import { getConsumer } from '../../../../../store/consumer/selectors';
 import { createOrder, confirmOrder } from '../../../../../store/order/actions';
 import OrderImpl from '../../../../../store/order/types/OrderImpl';
 import PlaceImpl from '../../../../../store/order/types/PlaceImpl';
+import { showToast } from '../../../../../store/ui/actions';
 import { t } from '../../../../../strings';
-import { ApiContext } from '../../../../app/context';
+import { ApiContext, AppDispatch } from '../../../../app/context';
 import ShowIf from '../../../../common/ShowIf';
 import { screens, borders, texts } from '../../../../common/styles';
-import { HomeStackParamList } from '../../types';
+import { HomeNavigatorParamList } from '../../types';
 import OrderMap from './OrderMap';
 import OrderPager from './OrderPager';
 
-type ScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'CreateOrderP2P'>;
-type ScreenRouteProp = RouteProp<HomeStackParamList, 'CreateOrderP2P'>;
+type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
+type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -26,27 +29,28 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
-  const { params } = route;
-
+  const dispatch = useDispatch<AppDispatch>();
+  // app state
+  const consumer = useSelector(getConsumer);
+  const paymentInfoSet = consumer?.paymentInfoSet() === true;
   // state
   // order is initially undefined to let us know that wasn't been created yet
   // when we set it to null, we're indicating that we're in process of creating it.
   const [origin, setOrigin] = useState(new PlaceImpl({}));
   const [destination, setDestination] = useState(new PlaceImpl({}));
-  const [order, setOrder] = useState<OrderImpl | undefined | null>(undefined);
+  const [order, setOrder] = useState<OrderImpl | null>(null);
+  const [waiting, setWaiting] = useState(false);
 
   // side effects
   // fires when AddressComplete finishes
   useEffect(() => {
-    const { originAddress, destinationAddress } = params ?? {};
+    const { originAddress, destinationAddress } = route.params ?? {};
     if (originAddress) setOrigin(origin.merge({ address: originAddress }));
     if (destinationAddress) setDestination(destination.merge({ address: destinationAddress }));
   }, [route.params]);
 
   // create order whenever origin or destination changes
   useEffect(() => {
-    console.log(origin.valid(), origin);
-    console.log(destination.valid(), destination);
     if (
       origin.valid() &&
       destination.valid() &&
@@ -56,9 +60,11 @@ export default function ({ navigation, route }: Props) {
     ) {
       (async () => {
         setOrder(null);
+        setWaiting(true);
         const newOrder = await createOrder(api)(origin.getData(), destination.getData());
         console.log(newOrder);
         setOrder(new OrderImpl(newOrder));
+        setWaiting(false);
       })();
     }
   }, [origin, destination]);
@@ -73,19 +79,22 @@ export default function ({ navigation, route }: Props) {
     });
   };
   // navigate to ProfileEdit screen to allow user fill missing information
-  const navigateToProfileEdit = () => {
-    navigation.navigate('ProfileEdit', {
-      nextScreen: 'ProfileCards',
-      nextScreenParams: {
-        popCount: 2,
-      },
-      hideDeleteAccount: true,
-    });
+  const navigateToFillPaymentInfo = () => {
+    navigation.navigate('ProfileCards');
   };
   // confirm order
   const confirmOrderHandler = async () => {
-    // TODO: replace hardcoded card ID
-    await confirmOrder(api)(order!.getData().id, 'YY7ED5T2geh0iSmRS9FZ');
+    try {
+      const orderId = order!.getData().id;
+      // TODO: replace fixed card ID
+      const cardId = consumer!.info!.cards![0].id;
+      setWaiting(true);
+      await confirmOrder(api)(orderId, cardId);
+      setWaiting(false);
+      navigation.replace('OrderFeedback', { orderId });
+    } catch (error) {
+      dispatch(showToast(error.toString()));
+    }
   };
 
   // UI
@@ -125,8 +134,10 @@ export default function ({ navigation, route }: Props) {
           origin={origin}
           destination={destination}
           order={order}
+          paymentInfoSet={paymentInfoSet}
+          waiting={waiting}
           navigateToAddressComplete={navigateToAddressComplete}
-          navigateToProfileEdit={navigateToProfileEdit}
+          navigateToFillPaymentInfo={navigateToFillPaymentInfo}
           confirmOrder={confirmOrderHandler}
         />
       </View>

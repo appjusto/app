@@ -21,8 +21,7 @@ export default function () {
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = useContext(ApiContext);
-
-  // state
+  // app state
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
   const consumer = useSelector(getConsumer);
@@ -54,7 +53,7 @@ export default function () {
         options={{ title: t('Início'), tabBarIcon: () => <Image source={icons.home} /> }}
       />
       <Tab.Screen
-        name="ConsumerHistory"
+        name="History"
         component={HistoryNavigator}
         options={{ title: t('Seus pedidos'), tabBarIcon: () => <Image source={icons.orders} /> }}
       />

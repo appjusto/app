@@ -1,3 +1,5 @@
+import { isEmpty } from 'lodash';
+
 import { CourierProfile } from '.';
 import User from '../../user/types/User';
 
@@ -16,5 +18,15 @@ export default class Courier extends User {
 
   public getSource(): CourierProfile {
     return this.source;
+  }
+
+  public personalInfoSet(): boolean {
+    return (
+      super.personalInfoSet() &&
+      !isEmpty(this.name) &&
+      !isEmpty(this.surname) &&
+      !isEmpty(this.cpf) &&
+      !isEmpty(this.phone)
+    );
   }
 }

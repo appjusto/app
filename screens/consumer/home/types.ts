@@ -1,5 +1,5 @@
-export type HomeStackParamList = {
-  ConsumerHome: undefined;
+export type HomeNavigatorParamList = {
+  Home: undefined;
   CreateOrderP2P?: {
     originAddress?: string;
     destinationAddress?: string;
@@ -11,12 +11,13 @@ export type HomeStackParamList = {
   };
   ProfileEdit?: {
     hideDeleteAccount?: boolean;
-    nextScreen?: 'ProfileCards';
-    nextScreenParams?: {
-      popCount?: number;
-    };
+    allowPartialSave?: boolean;
   };
   ProfileCards?: {
     popCount?: number;
   };
+  OrderFeedback: {
+    orderId: string;
+  };
+  History: undefined;
 };

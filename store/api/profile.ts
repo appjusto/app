@@ -16,10 +16,9 @@ export default class ProfileApi {
   private getProfilePrivateInfoRef(id: string) {
     return this.getProfileRef(id).collection('info').doc('private');
   }
-  private createProfile(id: string) {
-    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    return this.getProfileRef(id).set({
-      timestamp,
+  private async createProfile(id: string) {
+    await this.getProfileRef(id).set({
+      updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
     });
   }
   // functions
@@ -66,13 +65,6 @@ export default class ProfileApi {
 
   // update profile
   updateProfile(id: string, changes: object) {
-    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    return this.getProfileRef(id).set(
-      {
-        ...changes,
-        timestamp,
-      },
-      { merge: true }
-    );
+    return this.getProfileRef(id).set(changes, { merge: true });
   }
 }

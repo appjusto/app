@@ -3,10 +3,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { trim } from 'lodash';
 import React, { useState, useRef, useContext } from 'react';
 import { ScrollView, View, TextInput } from 'react-native';
+import { useDispatch } from 'react-redux';
 
 import { saveCard } from '../../store/consumer/actions';
+import { showToast } from '../../store/ui/actions';
 import { t } from '../../strings';
-import { ApiContext } from '../app/context';
+import { ApiContext, AppDispatch } from '../app/context';
 import AvoidingView from '../common/AvoidingView';
 import DefaultButton from '../common/DefaultButton';
 import DefaultInput from '../common/DefaultInput';
@@ -25,6 +27,7 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
 
   // refs
   const expirationMonthRef = useRef<TextInput>(null);
@@ -57,7 +60,7 @@ export default function ({ navigation, route }: Props) {
       });
       navigation.pop(route.params?.popCount);
     } catch (error) {
-      console.error(error);
+      dispatch(showToast(error.toString()));
     }
     setUpdating(false);
   };

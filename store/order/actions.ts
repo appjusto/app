@@ -13,12 +13,24 @@ export const observeOrdersCreatedBy = (api: Api) => (consumerId: string) => (
   });
 };
 
+export const observeOrdersDeliveredBy = (api: Api) => (courierId: string) => (
+  dispatch: AppDispatch
+) => {
+  return api.order().observeOrdersDeliveredBy(courierId, (orders: Order[]): void => {
+    dispatch({ type: ORDERS_UPDATED, payload: orders });
+  });
+};
+
 export const createOrder = (api: Api) => (origin: Place, destination: Place) => {
   return api.order().createOrder(origin, destination);
 };
 
 export const confirmOrder = (api: Api) => (orderId: string, cardId: string) => {
   return api.order().confirmOrder(orderId, cardId);
+};
+
+export const cancelOrder = (api: Api) => (orderId: string) => {
+  return api.order().cancelOrder(orderId);
 };
 
 export const matchOrder = (api: Api) => (orderId: string) => {

@@ -1,5 +1,3 @@
-import { isEmpty } from 'lodash';
-
 import { UserProfile } from '.';
 
 export default class User {
@@ -34,6 +32,6 @@ export default class User {
   }
 
   public personalInfoSet(): boolean {
-    return !isEmpty(this.name) && !isEmpty(this.surname) && !isEmpty(this.cpf);
+    return true;
   }
 }

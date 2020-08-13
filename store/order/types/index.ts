@@ -15,6 +15,7 @@ export enum OrderStatus {
   Matching = 'matching',
   Dispatching = 'dispatching',
   Delivered = 'delivered',
+  Canceled = 'canceled',
 }
 
 export enum PaymentStatus {
@@ -60,7 +61,7 @@ export interface Order {
   duration: OrderDuration;
   fare: Fare;
   courierId?: string;
-  timestamp: firebase.firestore.FieldValue;
+  createdOn: firebase.firestore.FieldValue;
 }
 
 export interface OrderMatchRequest {
@@ -80,4 +81,7 @@ export interface OrderMatchRequest {
 
 export interface OrderState {
   orders: Order[];
+  ordersById: {
+    [key: string]: Order;
+  };
 }

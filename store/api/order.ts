@@ -14,7 +14,32 @@ export default class OrderApi {
     const unsubscribe = this.firestore
       .collection('orders')
       .where('consumerId', '==', consumerId)
-      .where('status', 'in', ['quote', 'matching', 'dispatching', 'delivered'])
+      .where('status', 'in', ['quote', 'matching', 'dispatching', 'delivered', 'canceled'])
+      .onSnapshot(
+        (querySnapshot) => {
+          const docs: Order[] = [];
+          querySnapshot.forEach((doc) => {
+            docs.push({ ...(doc.data() as Order), id: doc.id });
+          });
+          resultHandler(docs);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    // returns the unsubscribe function
+    return unsubscribe;
+  }
+
+  // observe orders
+  observeOrdersDeliveredBy(
+    courierId: string,
+    resultHandler: (orders: Order[]) => void
+  ): firebase.Unsubscribe {
+    const unsubscribe = this.firestore
+      .collection('orders')
+      .where('courierId', '==', courierId)
+      .where('status', 'in', ['dispatching', 'delivered', 'canceled'])
       .onSnapshot(
         (querySnapshot) => {
           const docs: Order[] = [];
@@ -39,6 +64,10 @@ export default class OrderApi {
 
   async confirmOrder(orderId: string, cardId: string) {
     return (await this.functions.httpsCallable('confirmOrder')({ orderId, cardId })).data;
+  }
+
+  async cancelOrder(orderId: string) {
+    return (await this.functions.httpsCallable('cancelOrder')({ orderId })).data;
   }
 
   async matchOrder(orderId: string) {

@@ -5,20 +5,17 @@ import { t } from '../../../strings';
 import BackButton from '../../common/buttons/BackButton';
 import ProfileCards from '../../profile/ProfileCards';
 import ProfileEdit from '../../profile/ProfileEdit';
-import ConsumerHome from './ConsumerHome';
+import Home from './Home';
 import AddressComplete from './orders/AddressComplete';
+import OrderFeedback from './orders/OrderFeedback';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
-import { HomeStackParamList } from './types';
+import { HomeNavigatorParamList } from './types';
 
-const Stack = createStackNavigator<HomeStackParamList>();
+const Stack = createStackNavigator<HomeNavigatorParamList>();
 export default function () {
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="ConsumerHome"
-        component={ConsumerHome}
-        options={{ headerShown: false, title: '' }}
-      />
+      <Stack.Screen name="Home" component={Home} options={{ headerShown: false, title: '' }} />
       <Stack.Screen
         name="CreateOrderP2P"
         component={CreateOrderP2P}
@@ -50,6 +47,13 @@ export default function () {
           title: t('Formas de pagamento'),
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
+      />
+      <Stack.Screen
+        name="OrderFeedback"
+        component={OrderFeedback}
+        options={{
+          headerShown: false,
+        }}
       />
     </Stack.Navigator>
   );

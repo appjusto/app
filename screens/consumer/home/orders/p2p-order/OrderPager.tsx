@@ -27,8 +27,10 @@ type Props = {
   origin: PlaceImpl;
   destination: PlaceImpl;
   order?: OrderImpl | null;
+  paymentInfoSet: boolean;
+  waiting: boolean;
   navigateToAddressComplete: (currentValue: string, destinationParam: string) => void;
-  navigateToProfileEdit: () => void;
+  navigateToFillPaymentInfo: () => void;
   confirmOrder: () => Promise<void>;
 };
 
@@ -36,8 +38,10 @@ export default function ({
   origin,
   destination,
   order,
+  paymentInfoSet,
+  waiting,
   navigateToAddressComplete,
-  navigateToProfileEdit,
+  navigateToFillPaymentInfo,
   confirmOrder,
 }: Props) {
   // context
@@ -49,15 +53,12 @@ export default function ({
   // state
   const [step, setStep] = useState(Steps.Origin);
 
-  // TODO
-  const paymentValid = () => false;
-
   // helpers
   const stepReady = (value: Steps): boolean => {
     if (value === Steps.Origin) return true; // always enabled
     if (value === Steps.Destination) return origin.valid(); // only if origin is known
     if (value === Steps.Confirmation) return destination.valid() && order?.valid() === true; // only if order has been created
-    if (value === Steps.ConfirmingOrder) return false; // when if payment informaton is known
+    if (value === Steps.ConfirmingOrder) return paymentInfoSet;
     return false; // should never happen
   };
 
@@ -176,22 +177,22 @@ export default function ({
         </ShowIf>
       </ViewPager>
       <View style={{ justifyContent: 'flex-end' }}>
-        <ShowIf test={step !== Steps.Confirmation || paymentValid()}>
+        <ShowIf test={step !== Steps.Confirmation || paymentInfoSet}>
           {() => (
             <DefaultButton
               title={getNextStepTitle(step)}
               onPress={nextStepHandler}
               disabled={!stepReady(step + 1)}
-              activityIndicator={step === Steps.Destination && order === null}
+              activityIndicator={waiting}
             />
           )}
         </ShowIf>
-        <ShowIf test={step === Steps.Confirmation && !paymentValid()}>
+        <ShowIf test={step === Steps.Confirmation && !paymentInfoSet}>
           {() => (
             <DefaultButton
               style={{ width: '100%' }}
-              title={t('Completar dados e forma de pagamento')}
-              onPress={navigateToProfileEdit}
+              title={t('Incluir forma de pagamento')}
+              onPress={navigateToFillPaymentInfo}
             />
           )}
         </ShowIf>
