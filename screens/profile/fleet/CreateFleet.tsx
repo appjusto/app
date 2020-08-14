@@ -1,5 +1,5 @@
 import Slider from '@react-native-community/slider';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 import { slider } from '../../../assets/icons';
@@ -10,6 +10,12 @@ import { texts, screens, colors, borders } from '../../common/styles';
 import PaddedView from '../../common/views/PaddedView';
 
 export default function () {
+  // state
+  const [fare, setFare] = useState(0);
+  // try an effect to save the value everytime it changes
+  const fareHandler = useEffect(() => {
+    return setFare(fare);
+  }, [fare]);
   return (
     <PaddedView style={{ ...screens.configScreen }}>
       <Text style={{ ...texts.big }}>{t('Criar uma nova frota')}</Text>
@@ -30,18 +36,20 @@ export default function () {
         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 64 }}>
           <Text style={{ ...texts.medium }}>{t('Defina o valor inicial da corrida: ')}</Text>
           <View style={styles.fareDisplay}>
-            <Text style={{ ...texts.default }}>R$ 6,00</Text>
+            <Text style={{ ...texts.default }}>R$ {fare}</Text>
           </View>
         </View>
         <Slider
           style={{ width: '100%', height: 40, marginTop: 12 }}
           minimumValue={0}
           maximumValue={20}
+          // step={200}
           minimumTrackTintColor="#000000"
           maximumTrackTintColor="#000000"
           thumbImage={slider}
-          onValueChange={() => {}}
-          onSlidingComplete={() => {}}
+          value={fare}
+          onValueChange={fareHandler}
+          // onSlidingComplete={() => setFare(fare)}
         />
         <View style={{ flexDirection: 'row', marginTop: 8, justifyContent: 'space-between' }}>
           <Text style={{ ...texts.small, color: colors.darkGrey }}>{t('min: R$ 0')}</Text>
