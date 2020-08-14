@@ -5,7 +5,7 @@ import { t } from '../../../strings';
 import DefaultButton from '../../common/DefaultButton';
 import { borders, texts, colors } from '../../common/styles';
 
-export default function ({ name, participants, description, onPress }) {
+export default function ({ name, participants, description, onButtonPress }) {
   const [isActive, setIsActive] = useState(false);
   const touchHandler = () => setIsActive(!isActive);
   return (
@@ -26,7 +26,7 @@ export default function ({ name, participants, description, onPress }) {
         <DefaultButton
           style={{ marginTop: 16 }}
           title={t('Confirmar')}
-          onPress={onPress}
+          onPress={onButtonPress}
           disabled={!isActive}
         />
       </View>
