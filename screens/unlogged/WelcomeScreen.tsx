@@ -65,7 +65,7 @@ export default function ({ navigation, route }: Props) {
   return (
     <View style={[screens.default, { marginBottom: 0 }]}>
       <View style={{ flex: 1 }}>
-        <AvoidingView style={{ flex: 1 }}>
+        <AvoidingView>
           <View style={{ flex: 1, justifyContent: 'flex-end' }}>
             <View style={{ paddingHorizontal: padding }}>
               <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>

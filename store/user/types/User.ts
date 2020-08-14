@@ -31,6 +31,10 @@ export default class User {
     return this.source;
   }
 
+  public merge(newSource: UserProfile): User {
+    return new User(Object.assign({}, this.source, newSource));
+  }
+
   public personalInfoSet(): boolean {
     return true;
   }

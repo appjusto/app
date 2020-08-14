@@ -13,7 +13,7 @@ import { showToast } from '../../../../../store/ui/actions';
 import { t } from '../../../../../strings';
 import { ApiContext, AppDispatch } from '../../../../app/context';
 import ShowIf from '../../../../common/ShowIf';
-import { screens, borders, texts } from '../../../../common/styles';
+import { screens, texts } from '../../../../common/styles';
 import { HomeNavigatorParamList } from '../../types';
 import OrderMap from './OrderMap';
 import OrderPager from './OrderPager';
@@ -127,22 +127,17 @@ export default function ({ navigation, route }: Props) {
         <ShowIf test={order?.valid() === true}>{() => <OrderMap order={order!} />}</ShowIf>
       </View>
 
-      {/* details */}
-      <View style={styles.details}>
-        {/* progress */}
-
-        {/* pager */}
-        <OrderPager
-          origin={origin}
-          destination={destination}
-          order={order}
-          card={card}
-          waiting={waiting}
-          navigateToAddressComplete={navigateToAddressComplete}
-          navigateToFillPaymentInfo={navigateToFillPaymentInfo}
-          confirmOrder={confirmOrderHandler}
-        />
-      </View>
+      {/* pager */}
+      <OrderPager
+        origin={origin}
+        destination={destination}
+        order={order}
+        card={card}
+        waiting={waiting}
+        navigateToAddressComplete={navigateToAddressComplete}
+        navigateToFillPaymentInfo={navigateToFillPaymentInfo}
+        confirmOrder={confirmOrderHandler}
+      />
     </View>
   );
 }
@@ -155,11 +150,6 @@ const styles = StyleSheet.create({
     height: height * 0.3,
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-  },
-  details: {
-    flex: 1,
-    padding: 16,
-    ...borders.default,
   },
   input: {
     marginTop: 12,

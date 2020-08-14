@@ -16,6 +16,10 @@ export default class Consumer extends User {
     return this.source;
   }
 
+  public merge(newSource: ConsumerProfile): User {
+    return new Consumer(Object.assign({}, this.source, newSource));
+  }
+
   public getCards(): Card[] {
     return this.info?.cards ?? [];
   }

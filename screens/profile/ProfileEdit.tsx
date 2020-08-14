@@ -1,8 +1,8 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { trim } from 'lodash';
-import React, { useState, useCallback, useContext, useRef } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { trim, isEmpty } from 'lodash';
+import React, { useState, useContext, useRef } from 'react';
+import { View, Text, TouchableOpacity, Image, ScrollView, TextInput } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { erase } from '../../assets/icons';
@@ -20,6 +20,7 @@ import DefaultButton from '../common/DefaultButton';
 import DefaultInput from '../common/DefaultInput';
 import ShowIf from '../common/ShowIf';
 import { texts, screens, padding } from '../common/styles';
+import PaddedView from '../common/views/PaddedView';
 import { ProfileParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileEdit'>;
@@ -37,7 +38,10 @@ export default function ({ navigation, route }: Props) {
   const { hideDeleteAccount, allowPartialSave } = route.params ?? {};
 
   // refs
-  const scrollViewRef = useRef<ScrollView>(null);
+  const surnameRef = useRef<TextInput>(null);
+  const cpfRef = useRef<TextInput>(null);
+  const dddRef = useRef<TextInput>(null);
+  const phoneRef = useRef<TextInput>(null);
 
   // app state
   const flavor = useSelector(getFlavor);
@@ -49,21 +53,23 @@ export default function ({ navigation, route }: Props) {
   const [updating, setUpdating] = useState(false);
   const [name, setName] = useState<string>(user!.name! ?? '');
   const [surname, setSurname] = useState(user!.surname! ?? '');
+  const [ddd, setDDD] = useState(user!.phone! ?? '');
   const [phone, setPhone] = useState(user!.phone! ?? '');
   const [cpf, setCpf] = useState(user!.cpf! ?? '');
 
   // handlers
   const updateProfileHandler = async () => {
     if (updating) return;
-    if (!allowPartialSave && !user.personalInfoSet()) {
+    const newUser = user.merge({ id: user.id, name, surname, phone, cpf });
+    if (!allowPartialSave && !newUser.personalInfoSet()) {
       dispatch(showToast(t('Você precisa preencher todos os dados.')));
       return;
     }
     setUpdating(true);
     await updateProfile(api)(user!.id, {
-      name,
-      surname,
-      phone,
+      name: trim(name),
+      surname: trim(surname),
+      phone: !isEmpty(phone) ? `+55${ddd}${phone}` : '',
       cpf,
     });
     navigation.goBack();
@@ -72,40 +78,73 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <View style={{ ...screens.lightGrey }}>
-      <ScrollView ref={scrollViewRef} contentContainerStyle={{ flex: 1 }}>
-        <AvoidingView style={{ flex: 1 }}>
-          <View style={{ marginTop: 32 }}>
-            <DefaultInput
-              title={t('Nome')}
-              value={name}
-              onChangeText={(text) => setName(trim(text))}
-            />
-            <DefaultInput
-              style={{ marginTop: 12 }}
-              title={t('Sobrenome')}
-              value={surname}
-              onChangeText={(text) => setSurname(trim(text))}
-            />
-            <DefaultInput
-              style={{ marginTop: 12 }}
-              title={t('CPF')}
-              value={cpf}
-              onChangeText={(text) => setCpf(trim(text))}
-            />
-            <ShowIf test={flavor === 'courier'}>
-              {() => (
+    <PaddedView style={{ ...screens.lightGrey }}>
+      <AvoidingView>
+        <ScrollView>
+          <DefaultInput
+            title={t('Nome')}
+            value={name}
+            returnKeyType="next"
+            blurOnSubmit={false}
+            onChangeText={(text) => setName(text)}
+            onSubmitEditing={() => surnameRef.current?.focus()}
+          />
+          <DefaultInput
+            ref={surnameRef}
+            style={{ marginTop: padding }}
+            title={t('Sobrenome')}
+            value={surname}
+            returnKeyType="next"
+            blurOnSubmit={false}
+            onChangeText={(text) => setSurname(text)}
+            onSubmitEditing={() => cpfRef.current?.focus()}
+          />
+          <DefaultInput
+            ref={cpfRef}
+            style={{ marginTop: padding }}
+            title={t('CPF')}
+            value={cpf}
+            placeholder={t('00000000000')}
+            maxLength={11}
+            keyboardType="number-pad"
+            returnKeyType={flavor === 'courier' ? 'next' : 'done'}
+            blurOnSubmit={flavor !== 'courier'}
+            onChangeText={(text) => setCpf(trim(text))}
+            onSubmitEditing={() => dddRef.current?.focus()}
+          />
+          <ShowIf test={flavor === 'courier'}>
+            {() => (
+              <View style={{ flexDirection: 'row', marginTop: padding }}>
                 <DefaultInput
-                  style={{ marginTop: 12 }}
+                  ref={dddRef}
+                  style={{ flex: 1 }}
+                  title={t('DDD')}
+                  value={ddd}
+                  placeholder={t('00')}
+                  maxLength={2}
+                  keyboardType="number-pad"
+                  returnKeyType="next"
+                  blurOnSubmit={false}
+                  onChangeText={(text) => setDDD(trim(text))}
+                  onSubmitEditing={() => phoneRef.current?.focus()}
+                />
+                <DefaultInput
+                  ref={phoneRef}
+                  style={{ flex: 4, marginLeft: padding }}
                   title={t('Celular')}
                   value={phone}
+                  placeholder={t('000000000')}
+                  maxLength={9}
+                  keyboardType="number-pad"
+                  returnKeyType="done"
+                  blurOnSubmit
                   onChangeText={(text) => setPhone(trim(text))}
                 />
-              )}
-            </ShowIf>
-          </View>
+              </View>
+            )}
+          </ShowIf>
           <DefaultButton
-            style={{ marginTop: padding }}
+            style={{ marginVertical: padding }}
             title={t('Atualizar')}
             onPress={updateProfileHandler}
             activityIndicator={updating}
@@ -127,8 +166,9 @@ export default function ({ navigation, route }: Props) {
               </TouchableOpacity>
             )}
           </ShowIf>
-        </AvoidingView>
-      </ScrollView>
-    </View>
+          <View style={{ flex: 1 }} />
+        </ScrollView>
+      </AvoidingView>
+    </PaddedView>
   );
 }

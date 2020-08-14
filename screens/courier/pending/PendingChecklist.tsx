@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux';
 import { getCourier } from '../../../store/courier/selectors';
 import { t } from '../../../strings';
 import { ApiContext } from '../../app/context';
-import AvoidingView from '../../common/AvoidingView';
 import ConfigItem from '../../common/ConfigItem';
 import DefaultButton from '../../common/DefaultButton';
 import { screens, texts, colors } from '../../common/styles';
@@ -47,55 +46,53 @@ export default function ({ navigation }: Props) {
   // UI
   return (
     <View style={{ ...screens.configScreen }}>
-      <AvoidingView>
-        <ScrollView>
-          {/* header */}
-          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <PaddedView>
-              <Text style={[texts.big]}>{t('Cadastro de novo entregador')}</Text>
-              <DefaultButton
-                title={t('Enviar cadastro')}
-                onPress={submitHandler}
-                disabled={!submitEnabled}
-              />
-              <Text style={[texts.default, { color: colors.darkGrey, paddingTop: 8 }]}>
-                {t(
-                  'Seu cadastro passará por uma análise do nosso sistema para que você possa começar a fazer suas entregas.'
-                )}
-              </Text>
-            </PaddedView>
-          </TouchableWithoutFeedback>
-
+      <ScrollView>
+        {/* header */}
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <PaddedView>
-            <ConfigItem
-              title={t('Seus dados')}
-              subtitle={t('Preencha seus dados pessoais')}
-              onPress={() => navigation.navigate('ProfileEdit', { hideDeleteAccount: true })}
-              checked={courier!.personalInfoSet()}
+            <Text style={[texts.big]}>{t('Cadastro de novo entregador')}</Text>
+            <DefaultButton
+              title={t('Enviar cadastro')}
+              onPress={submitHandler}
+              disabled={!submitEnabled}
             />
-            <ConfigItem
-              title={t('Fotos e documentos')}
-              subtitle={t('Envie uma selfie e seus documentos')}
-              onPress={() => navigation.navigate('ProfilePhotos')}
-            />
-            <ConfigItem
-              title={t('Dados bancários')}
-              subtitle={t('Cadastre seu banco para recebimento')}
-              onPress={() => navigation.navigate('ProfileBank')}
-            />
-            {/* <ConfigItem
-              title={t('Método de entrega')}
-              subtitle={t('Selecione a forma que você vai fazer suas entregas')}
-              onPress={() => navigation.navigate('ProfileEdit')}
-            /> */}
-            <ConfigItem
-              title={t('Escolha sua frota')}
-              subtitle={t('Faça parte de uma frota existente ou crie sua própria frota.')}
-              onPress={() => navigation.navigate('FleetStack')}
-            />
+            <Text style={[texts.default, { color: colors.darkGrey, paddingTop: 8 }]}>
+              {t(
+                'Seu cadastro passará por uma análise do nosso sistema para que você possa começar a fazer suas entregas.'
+              )}
+            </Text>
           </PaddedView>
-        </ScrollView>
-      </AvoidingView>
+        </TouchableWithoutFeedback>
+
+        <PaddedView>
+          <ConfigItem
+            title={t('Seus dados')}
+            subtitle={t('Preencha seus dados pessoais')}
+            onPress={() => navigation.navigate('ProfileEdit', { hideDeleteAccount: true })}
+            checked={courier!.personalInfoSet()}
+          />
+          <ConfigItem
+            title={t('Fotos e documentos')}
+            subtitle={t('Envie uma selfie e seus documentos')}
+            onPress={() => navigation.navigate('ProfilePhotos')}
+          />
+          <ConfigItem
+            title={t('Dados bancários')}
+            subtitle={t('Cadastre seu banco para recebimento')}
+            onPress={() => navigation.navigate('ProfileBank')}
+          />
+          {/* <ConfigItem
+            title={t('Método de entrega')}
+            subtitle={t('Selecione a forma que você vai fazer suas entregas')}
+            onPress={() => navigation.navigate('ProfileEdit')}
+          /> */}
+          <ConfigItem
+            title={t('Escolha sua frota')}
+            subtitle={t('Faça parte de uma frota existente ou crie sua própria frota.')}
+            onPress={() => navigation.navigate('FleetStack')}
+          />
+        </PaddedView>
+      </ScrollView>
     </View>
   );
 }

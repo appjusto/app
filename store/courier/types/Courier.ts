@@ -20,6 +20,10 @@ export default class Courier extends User {
     return this.source;
   }
 
+  public merge(newSource: CourierProfile): User {
+    return new Courier(Object.assign({}, this.source, newSource));
+  }
+
   public personalInfoSet(): boolean {
     return (
       super.personalInfoSet() &&
