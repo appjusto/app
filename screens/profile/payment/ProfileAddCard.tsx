@@ -5,19 +5,19 @@ import React, { useState, useRef, useContext } from 'react';
 import { ScrollView, View, TextInput } from 'react-native';
 import { useDispatch } from 'react-redux';
 
-import { saveCard } from '../../store/consumer/actions';
-import { showToast } from '../../store/ui/actions';
-import { t } from '../../strings';
-import { ApiContext, AppDispatch } from '../app/context';
-import AvoidingView from '../common/AvoidingView';
-import DefaultButton from '../common/DefaultButton';
-import DefaultInput from '../common/DefaultInput';
-import { screens, padding } from '../common/styles';
-import PaddedView from '../common/views/PaddedView';
-import { ProfileParamList } from './types';
+import { saveCard } from '../../../store/consumer/actions';
+import { showToast } from '../../../store/ui/actions';
+import { t } from '../../../strings';
+import { ApiContext, AppDispatch } from '../../app/context';
+import AvoidingView from '../../common/AvoidingView';
+import DefaultButton from '../../common/DefaultButton';
+import DefaultInput from '../../common/DefaultInput';
+import { screens, padding } from '../../common/styles';
+import PaddedView from '../../common/views/PaddedView';
+import { ProfileParamList } from '../types';
 
-type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileCards'>;
-type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfileCards'>;
+type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileAddCard'>;
+type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfileAddCard'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -28,6 +28,7 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  const { returnScreen } = route.params ?? {};
 
   // refs
   const expirationMonthRef = useRef<TextInput>(null);
@@ -50,7 +51,7 @@ export default function ({ navigation, route }: Props) {
     if (updating) return;
     setUpdating(true);
     try {
-      await saveCard(api)({
+      const cardResult = await saveCard(api)({
         number,
         expirationMonth,
         expirationYear,
@@ -58,7 +59,8 @@ export default function ({ navigation, route }: Props) {
         holderName: name,
         holderDocument: cpf,
       });
-      navigation.pop(route.params?.popCount);
+      if (returnScreen) navigation.navigate(returnScreen, { cardId: cardResult.id });
+      else navigation.pop();
     } catch (error) {
       dispatch(showToast(error.toString()));
     }

@@ -59,7 +59,7 @@ export default function ({ navigation }: Props) {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('ProfileCards')}>
+      <TouchableOpacity onPress={() => navigation.navigate('ProfileAddCard')}>
         <View style={styles.container}>
           <View style={styles.texts}>
             <Text style={styles.black}>{t('Formas de pagamento')}</Text>

@@ -3,8 +3,9 @@ import React from 'react';
 
 import { t } from '../../../strings';
 import BackButton from '../../common/buttons/BackButton';
-import ProfileCards from '../../profile/ProfileCards';
 import ProfileEdit from '../../profile/ProfileEdit';
+import ProfileAddCard from '../../profile/payment/ProfileAddCard';
+import ProfilePaymentMethods from '../../profile/payment/ProfilePaymentMethods';
 import Home from './Home';
 import AddressComplete from './orders/AddressComplete';
 import OrderFeedback from './orders/OrderFeedback';
@@ -41,8 +42,16 @@ export default function () {
         })}
       />
       <Stack.Screen
-        name="ProfileCards"
-        component={ProfileCards}
+        name="ProfileAddCard"
+        component={ProfileAddCard}
+        options={({ navigation }) => ({
+          title: t('Adicionar cartão'),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
+      />
+      <Stack.Screen
+        name="ProfilePaymentMethods"
+        component={ProfilePaymentMethods}
         options={({ navigation }) => ({
           title: t('Formas de pagamento'),
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,

@@ -3,18 +3,18 @@ export type HomeNavigatorParamList = {
   CreateOrderP2P?: {
     originAddress?: string;
     destinationAddress?: string;
+    cardId?: string;
   };
   AddressComplete: {
     value: string;
     destinationScreen: 'CreateOrderP2P';
     destinationParam: string;
   };
-  ProfileEdit?: {
-    hideDeleteAccount?: boolean;
-    allowPartialSave?: boolean;
+  ProfileAddCard?: {
+    returnScreen: 'CreateOrderP2P';
   };
-  ProfileCards?: {
-    popCount?: number;
+  ProfilePaymentMethods?: {
+    returnScreen: 'CreateOrderP2P';
   };
   OrderFeedback: {
     orderId: string;

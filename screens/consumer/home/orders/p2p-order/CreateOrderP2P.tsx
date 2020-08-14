@@ -30,23 +30,25 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+
   // app state
   const consumer = useSelector(getConsumer);
-  const paymentInfoSet = consumer?.paymentInfoSet() === true;
-  // state
+  // screen state
   // order is initially undefined to let us know that wasn't been created yet
   // when we set it to null, we're indicating that we're in process of creating it.
   const [origin, setOrigin] = useState(new PlaceImpl({}));
   const [destination, setDestination] = useState(new PlaceImpl({}));
   const [order, setOrder] = useState<OrderImpl | null>(null);
+  const [card, setCard] = useState(consumer?.getLastCard() ?? null);
   const [waiting, setWaiting] = useState(false);
 
   // side effects
-  // fires when AddressComplete finishes
+  // route changes when interacting with 'AddressComplete' and 'PaymentSelector' screens;
   useEffect(() => {
-    const { originAddress, destinationAddress } = route.params ?? {};
+    const { originAddress, destinationAddress, cardId } = route.params ?? {};
     if (originAddress) setOrigin(origin.merge({ address: originAddress }));
     if (destinationAddress) setDestination(destination.merge({ address: destinationAddress }));
+    if (cardId) setCard(consumer?.getCardById(cardId) ?? null);
   }, [route.params]);
 
   // create order whenever origin or destination changes
@@ -80,16 +82,16 @@ export default function ({ navigation, route }: Props) {
   };
   // navigate to ProfileEdit screen to allow user fill missing information
   const navigateToFillPaymentInfo = () => {
-    navigation.navigate('ProfileCards');
+    // if user has no payment method, go direct to 'AddCard' screen
+    if (!card) navigation.navigate('ProfileAddCard', { returnScreen: 'CreateOrderP2P' });
+    else navigation.navigate('ProfilePaymentMethods', { returnScreen: 'CreateOrderP2P' });
   };
   // confirm order
   const confirmOrderHandler = async () => {
     try {
       const orderId = order!.getData().id;
-      // TODO: replace fixed card ID
-      const cardId = consumer!.info!.cards![0].id;
       setWaiting(true);
-      await confirmOrder(api)(orderId, cardId);
+      await confirmOrder(api)(orderId, card!.id);
       setWaiting(false);
       navigation.replace('OrderFeedback', { orderId });
     } catch (error) {
@@ -134,7 +136,7 @@ export default function ({ navigation, route }: Props) {
           origin={origin}
           destination={destination}
           order={order}
-          paymentInfoSet={paymentInfoSet}
+          card={card}
           waiting={waiting}
           navigateToAddressComplete={navigateToAddressComplete}
           navigateToFillPaymentInfo={navigateToFillPaymentInfo}
