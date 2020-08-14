@@ -12,10 +12,9 @@ import PaddedView from '../../common/views/PaddedView';
 export default function () {
   // state
   const [fare, setFare] = useState(0);
-  // try an effect to save the value everytime it changes
-  const fareHandler = useEffect(() => {
-    return setFare(fare);
-  }, [fare]);
+  const [farePerKm, setFarePerKm] = useState(0);
+  // TODO: change the number of steps and show two decimal places in the fare numbers.
+  //UI
   return (
     <PaddedView style={{ ...screens.configScreen }}>
       <Text style={{ ...texts.big }}>{t('Criar uma nova frota')}</Text>
@@ -43,13 +42,12 @@ export default function () {
           style={{ width: '100%', height: 40, marginTop: 12 }}
           minimumValue={0}
           maximumValue={20}
-          // step={200}
+          step={1}
           minimumTrackTintColor="#000000"
           maximumTrackTintColor="#000000"
           thumbImage={slider}
           value={fare}
-          onValueChange={fareHandler}
-          // onSlidingComplete={() => setFare(fare)}
+          onValueChange={(fare) => setFare(fare)}
         />
         <View style={{ flexDirection: 'row', marginTop: 8, justifyContent: 'space-between' }}>
           <Text style={{ ...texts.small, color: colors.darkGrey }}>{t('min: R$ 0')}</Text>
@@ -60,18 +58,19 @@ export default function () {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={{ ...texts.medium }}>{t('Defina o valor por km: ')}</Text>
           <View style={[styles.fareDisplay, { width: 112 }]}>
-            <Text style={{ ...texts.default }}>R$ 1,00 por km</Text>
+            <Text style={{ ...texts.default }}>R$ {farePerKm} por km</Text>
           </View>
         </View>
         <Slider
           style={{ width: '100%', height: 40, marginTop: 12 }}
           minimumValue={0}
           maximumValue={20}
+          step={1}
           minimumTrackTintColor="#000000"
           maximumTrackTintColor="#000000"
           thumbImage={slider}
-          onValueChange={() => {}}
-          onSlidingComplete={() => {}}
+          value={farePerKm}
+          onValueChange={(farePerKm) => setFarePerKm(farePerKm)}
         />
         <View style={{ flexDirection: 'row', marginTop: 8, justifyContent: 'space-between' }}>
           <Text style={{ ...texts.small, color: colors.darkGrey }}>{t('min: R$ 0')}</Text>
