@@ -1,7 +1,9 @@
 import {
-  GOOGLE_MAPS_API_KEY,
   FIREBASE_REGION,
-  FIREBASE_API_KEY,
+  GOOGLE_MAPS_ANDROID_API_KEY,
+  GOOGLE_MAPS_IOS_API_KEY,
+  GOOGLE_ANDROID_API_KEY,
+  GOOGLE_IOS_API_KEY,
   FIREBASE_PROJECT_ID,
   FIREBASE_DATABASE_NAME,
   FIREBASE_MESSAGING_SENDER_ID,
@@ -14,7 +16,7 @@ import {
 
 const createFirebaseConfig = () => {
   return {
-    apiKey: FIREBASE_API_KEY,
+    apiKey: null, // it will be filled in runtime according with user's OS
     authDomain: `${FIREBASE_PROJECT_ID}.firebaseapp.com`,
     databaseURL: `https://${FIREBASE_DATABASE_NAME}.firebaseio.com`,
     functionsURL: `https://${FIREBASE_REGION}-${FIREBASE_PROJECT_ID}.cloudfunctions.net`,
@@ -34,7 +36,10 @@ const createFirebaseConfig = () => {
 export default ({ config }) => {
   const { slug, ios, android } = config;
   const flavor = process.env.FLAVOR;
-  const googleMapsApiKey = GOOGLE_MAPS_API_KEY;
+  const googleApiKeys = {
+    android: GOOGLE_ANDROID_API_KEY,
+    ios: GOOGLE_IOS_API_KEY,
+  };
   const name = (flavor === 'consumer' && 'Cliente') || (flavor === 'courier' && 'Entregador');
   const bundleIdentifier = `${ios.bundleIdentifier}.${flavor}`;
   const androidPackage = `${android.package}.${flavor}`;
@@ -52,7 +57,7 @@ export default ({ config }) => {
       ...ios,
       bundleIdentifier,
       config: {
-        googleMapsApiKey,
+        googleMapsApiKey: GOOGLE_MAPS_IOS_API_KEY,
       },
     },
     android: {
@@ -60,7 +65,7 @@ export default ({ config }) => {
       package: androidPackage,
       config: {
         googleMaps: {
-          apiKey: googleMapsApiKey,
+          apiKey: GOOGLE_MAPS_ANDROID_API_KEY,
         },
       },
     },
@@ -75,7 +80,7 @@ export default ({ config }) => {
       flavor,
       bundleIdentifier,
       androidPackage,
-      googleMapsApiKey,
+      googleApiKeys,
       firebase: createFirebaseConfig(),
       analytics,
     },

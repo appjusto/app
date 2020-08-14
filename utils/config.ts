@@ -7,7 +7,10 @@ export interface Extra {
   bundleIdentifier: string;
   androidPackage: string;
   firebase: FirebaseConfig;
-  googleMapsApiKey: string;
+  googleApiKeys: {
+    android: string;
+    ios: string;
+  };
   analytics: {
     segmentAndroidKey: string;
     segmentiOSKey: string;

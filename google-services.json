@@ -8,42 +8,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:506390194883:android:35d12e26ece0c9a6381076",
-        "android_client_info": {
-          "package_name": "br.com.appjusto.admin"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "506390194883-r3ie8usesf467t7q51kgb1k2i5874ugm.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyD92iin1Oaf_4rG4MA_OleKWp_2YLuVcmU"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "506390194883-r3ie8usesf467t7q51kgb1k2i5874ugm.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "506390194883-75t4tt4ktg5ph8bqu6jjtph56k9fqdl5.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "br.com.appjusto.consumer"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:506390194883:android:4dade4bc0bba7ed8381076",
         "android_client_info": {
           "package_name": "br.com.appjusto.consumer"
@@ -57,10 +21,6 @@
             "package_name": "br.com.appjusto.consumer",
             "certificate_hash": "c04e8ad92a621d672a52a1e98c864539c0407aa7"
           }
-        },
-        {
-          "client_id": "506390194883-r3ie8usesf467t7q51kgb1k2i5874ugm.apps.googleusercontent.com",
-          "client_type": 3
         }
       ],
       "api_key": [
@@ -71,10 +31,6 @@
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
-            {
-              "client_id": "506390194883-r3ie8usesf467t7q51kgb1k2i5874ugm.apps.googleusercontent.com",
-              "client_type": 3
-            },
             {
               "client_id": "506390194883-75t4tt4ktg5ph8bqu6jjtph56k9fqdl5.apps.googleusercontent.com",
               "client_type": 2,
@@ -101,10 +57,6 @@
             "package_name": "br.com.appjusto.courier",
             "certificate_hash": "007a72971f91670a414386dc0bd17fa54d512142"
           }
-        },
-        {
-          "client_id": "506390194883-r3ie8usesf467t7q51kgb1k2i5874ugm.apps.googleusercontent.com",
-          "client_type": 3
         }
       ],
       "api_key": [
@@ -115,10 +67,6 @@
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
-            {
-              "client_id": "506390194883-r3ie8usesf467t7q51kgb1k2i5874ugm.apps.googleusercontent.com",
-              "client_type": 3
-            },
             {
               "client_id": "506390194883-75t4tt4ktg5ph8bqu6jjtph56k9fqdl5.apps.googleusercontent.com",
               "client_type": 2,
