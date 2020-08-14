@@ -5,6 +5,7 @@ import { t } from '../../../strings';
 import DefaultButton from '../../common/DefaultButton';
 import DefaultInput from '../../common/DefaultInput';
 import { texts, screens, colors } from '../../common/styles';
+import PaddedView from '../../common/views/PaddedView';
 import FleetCard from './FleetCard';
 
 const FLEETS = [
@@ -31,7 +32,7 @@ const FLEETS = [
 export default function ({ navigation }) {
   //UI
   return (
-    <View style={{ ...screens.configScreen, paddingVertical: 16, paddingHorizontal: 16 }}>
+    <PaddedView style={{ ...screens.configScreen }}>
       <FlatList
         data={FLEETS}
         renderItem={({ item }) => {
@@ -81,6 +82,6 @@ export default function ({ navigation }) {
           />
         }
       />
-    </View>
+    </PaddedView>
   );
 }

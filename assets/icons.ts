@@ -2,6 +2,7 @@ const arrowSmall = require('./icons/arrow-small.png');
 const iconCheckboxActive = require('./icons/checkbox-active.png');
 const iconCheckboxInactive = require('./icons/checkbox-inactive.png');
 const iconChecklistTick = require('./icons/checklist-tick.png');
+const dragButton = require('./icons/drag-button.png');
 const iconHome = require('./icons/home.png');
 const iconButtonArrow = require('./icons/icon-button-arrow.png');
 const iconCalendar = require('./icons/icon-calendar.png');
@@ -43,6 +44,7 @@ export const logoWhite = logoAppjustoBgWhite;
 export const BG = rectangleBG;
 export const orders = iconOrders;
 export const user = iconUser;
+export const slider = dragButton;
 
 export default [
   logoWhite,
@@ -67,4 +69,5 @@ export default [
   home,
   orders,
   user,
+  slider,
 ];
