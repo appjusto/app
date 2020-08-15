@@ -1,7 +1,5 @@
 import {
   FIREBASE_REGION,
-  GOOGLE_MAPS_ANDROID_API_KEY,
-  GOOGLE_MAPS_IOS_API_KEY,
   GOOGLE_ANDROID_API_KEY,
   GOOGLE_IOS_API_KEY,
   FIREBASE_PROJECT_ID,
@@ -57,7 +55,7 @@ export default ({ config }) => {
       ...ios,
       bundleIdentifier,
       config: {
-        googleMapsApiKey: GOOGLE_MAPS_IOS_API_KEY,
+        googleMapsApiKey: GOOGLE_IOS_API_KEY,
       },
     },
     android: {
@@ -65,7 +63,7 @@ export default ({ config }) => {
       package: androidPackage,
       config: {
         googleMaps: {
-          apiKey: GOOGLE_MAPS_ANDROID_API_KEY,
+          apiKey: GOOGLE_ANDROID_API_KEY,
         },
       },
     },

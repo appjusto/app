@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef, useCallback } from 'react';
 import MapView, { PROVIDER_GOOGLE, MapViewProps } from 'react-native-maps';
 
 interface Props extends MapViewProps {
@@ -11,15 +11,15 @@ export default React.forwardRef(({ children, fitToElements, ...props }: Props, e
   const ref = (externalRef as React.RefObject<MapView>) || internalRef;
 
   // effects
-  useEffect(() => {
+  const onMapReadyHandler = useCallback(() => {
     if (fitToElements) {
       ref.current?.fitToElements(true);
     }
-  }, [children, fitToElements]);
+  }, [ref, children, fitToElements]);
 
   // UI
   return (
-    <MapView ref={ref} provider={PROVIDER_GOOGLE} {...props}>
+    <MapView ref={ref} provider={PROVIDER_GOOGLE} onMapReady={onMapReadyHandler} {...props}>
       {children}
     </MapView>
   );
