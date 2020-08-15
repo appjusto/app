@@ -23,6 +23,7 @@ export default function ({
   activityIndicator = false,
   ...props
 }: Props) {
+  //shouldn't we remove the touchable when the button is disabled?
   return (
     <TouchableOpacity {...props}>
       <View

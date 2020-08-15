@@ -1,5 +1,5 @@
 import Slider from '@react-native-community/slider';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 import { slider } from '../../../assets/icons';

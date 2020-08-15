@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { Text, FlatList } from 'react-native';
 
 import { t } from '../../../strings';
 import DefaultButton from '../../common/DefaultButton';
