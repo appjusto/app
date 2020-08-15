@@ -1,25 +1,24 @@
 import Slider from '@react-native-community/slider';
 import React, { useCallback, useRef, useState } from 'react';
-import { View, Image, Text } from 'react-native';
+import { View, Image, Text, ViewProps } from 'react-native';
 
 import * as icons from '../../../../../assets/icons';
 import { t } from '../../../../../strings';
 import { colors, texts, padding } from '../../../../common/styles';
 
-type Props = {
+interface Props extends ViewProps {
   acceptHandler: () => void;
   rejectHandler: () => void;
   disabled: boolean;
-};
+}
 
-export default function ({ acceptHandler, rejectHandler, disabled }: Props) {
+export default function ({ acceptHandler, rejectHandler, disabled, ...props }: Props) {
   // refs
   const sliderRef = useRef<Slider>(null);
   // helpers
   const updateSliderValue = (value: number) => sliderRef.current?.setNativeProps({ value });
   // handlers
   const completeHandler = useCallback((value) => {
-    console.log(value);
     if (value <= 10) {
       updateSliderValue(0);
       rejectHandler();
@@ -33,7 +32,7 @@ export default function ({ acceptHandler, rejectHandler, disabled }: Props) {
 
   // UI
   return (
-    <View>
+    <View {...props}>
       {/* track */}
       <View
         style={{

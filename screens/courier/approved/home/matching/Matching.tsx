@@ -11,6 +11,7 @@ import { HomeParamList } from '../types';
 import AcceptControl from './AcceptControl';
 import PaddedView from '../../../../common/views/PaddedView';
 import * as icons from '../../../../../assets/icons';
+import { formatDistance } from '../../../../../utils/formatters';
 
 type ScreenNavigationProp = StackNavigationProp<HomeParamList, 'Matching'>;
 type ScreenRouteProp = RouteProp<HomeParamList, 'Matching'>;
@@ -53,7 +54,6 @@ export default function ({ navigation, route }: Props) {
 
   return (
     <PaddedView style={{ ...screens.default }}>
-      <View style={{ flex: 1 }} />
       {/* header */}
       <View style={{ alignItems: 'center' }}>
         <Text style={[texts.big, { color: colors.darkGreen }]}>{t('Nova corrida para você!')}</Text>
@@ -68,7 +68,7 @@ export default function ({ navigation, route }: Props) {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Image source={icons.transit} style={{ width: 32, height: 32, marginRight: padding }} />
           <Text style={[texts.medium]}>
-            {`${matchRequest.distanceToOrigin}km`} {t('até a retirada')}
+            {formatDistance(matchRequest.distanceToOrigin)} {t('até a retirada')}
           </Text>
         </View>
         <View
@@ -76,7 +76,7 @@ export default function ({ navigation, route }: Props) {
             borderLeftWidth: 1,
             borderLeftColor: colors.black,
             marginLeft: padding,
-            height: 30,
+            height: 15,
           }}
         />
         {/* origin */}
@@ -95,7 +95,7 @@ export default function ({ navigation, route }: Props) {
             borderLeftWidth: 1,
             borderLeftColor: colors.black,
             marginLeft: padding,
-            height: 30,
+            height: 15,
           }}
         />
         {/* destination */}
@@ -114,25 +114,28 @@ export default function ({ navigation, route }: Props) {
             borderLeftWidth: 1,
             borderLeftColor: colors.black,
             marginLeft: padding,
-            height: 30,
+            height: 15,
           }}
         />
         {/* total distance */}
-        <View style={{ flexDirection: 'row' }}>
-          <Image source={icons.transitConclusion} width={32} height={32} />
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Image
+            source={icons.transitConclusion}
+            style={{ width: 32, height: 32, marginRight: padding }}
+          />
           <Text style={[texts.medium]}>
-            {`${matchRequest.totalDistance}km`} {t('no percurso total')}
+            {formatDistance(matchRequest.totalDistance)} {t('no percurso total')}
           </Text>
         </View>
       </View>
       <View style={{ flex: 1 }} />
       {/* accept / reject control */}
       <AcceptControl
+        style={{ paddingBottom: padding }}
         acceptHandler={acceptHandler}
         rejectHandler={rejectHandler}
         disabled={waiting}
       />
-      <View style={{ flex: 1 }} />
     </PaddedView>
   );
 }
