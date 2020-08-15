@@ -42,24 +42,24 @@ export default function ({ navigation, route }: Props) {
   const dev = useSelector(getEnv) === 'development';
   const [email, setEmail] = useState(dev ? '' : '');
   const [acceptedTerms, setAcceptTerms] = useState(false);
-  const [sendingLink, setSendingLink] = useState(false);
-
-  // handlers
-  const sendEmail = async (): Promise<void> => {
-    if (validateEmail(email).status === 'ok') {
-      Keyboard.dismiss();
-      dispatch(showToast(t('Enviando link de autenticação para o seu e-mail...')));
-      setSendingLink(true);
-      await signInWithEmail(api)(email);
-      setSendingLink(false);
-    }
-  };
+  const [waiting, setWaiting] = useState(false);
 
   // handlers
   const signInHandler = useCallback(async () => {
-    await sendEmail();
+    if (!acceptedTerms) {
+      dispatch(showToast(t('Você precisa aceitar os termos para criar sua conta.')));
+      return;
+    }
+    if (validateEmail(email).status !== 'ok') {
+      dispatch(showToast(t('Digite um e-mail válido.')));
+      return;
+    }
+    Keyboard.dismiss();
+    setWaiting(true);
+    await signInWithEmail(api)(email);
+    setWaiting(false);
     navigation.navigate('SignInFeedback', { email });
-  }, [email]);
+  }, [acceptedTerms, email]);
 
   // UI
   return (
@@ -135,9 +135,10 @@ export default function ({ navigation, route }: Props) {
             <View style={{ flex: 1 }} />
             <View style={{ paddingHorizontal: 16, marginBottom: 32 }}>
               <DefaultButton
-                disabled={validateEmail(email).status !== 'ok' || sendingLink || !acceptedTerms}
+                disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || waiting}
                 title={t('Entrar')}
                 onPress={signInHandler}
+                activityIndicator={waiting}
               />
             </View>
           </View>

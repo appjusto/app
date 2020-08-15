@@ -17,6 +17,7 @@ import { screens, texts } from '../../../../common/styles';
 import { HomeNavigatorParamList } from '../../types';
 import OrderMap from './OrderMap';
 import OrderPager from './OrderPager';
+import PaddedView from '../../../../common/views/PaddedView';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
 type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
@@ -107,7 +108,7 @@ export default function ({ navigation, route }: Props) {
         {/* when order hasn't been created yet  */}
         <ShowIf test={!order}>
           {() => (
-            <View
+            <PaddedView
               style={{
                 flex: 1,
                 flexDirection: 'row',
@@ -119,7 +120,7 @@ export default function ({ navigation, route }: Props) {
                 <Text style={{ ...texts.big }}>{t('Transportar Encomendas')}</Text>
               </View>
               <Image source={motocycle} />
-            </View>
+            </PaddedView>
           )}
         </ShowIf>
 
@@ -149,7 +150,6 @@ const styles = StyleSheet.create({
     width,
     height: height * 0.3,
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
   },
   input: {
     marginTop: 12,

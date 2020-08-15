@@ -87,6 +87,7 @@ export default function ({ navigation, route }: Props) {
         {t('Últimos endereços utilizados')}
       </Text>
       <FlatList
+        style={{ flex: 1 }}
         data={autocompletePredictions}
         renderItem={({ item }) => {
           return (
@@ -99,11 +100,7 @@ export default function ({ navigation, route }: Props) {
         }}
         keyExtractor={(item) => item.description}
       />
-      <DefaultButton
-        style={{ marginBottom: 16 }}
-        title={t('Confirmar endereço')}
-        onPress={completeHandler}
-      />
+      <DefaultButton title={t('Confirmar endereço')} onPress={completeHandler} />
     </View>
   );
 }
