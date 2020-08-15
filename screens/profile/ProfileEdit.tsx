@@ -1,5 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { validate } from 'gerador-validador-cpf';
 import { trim, isEmpty } from 'lodash';
 import React, { useState, useContext, useRef } from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView, TextInput } from 'react-native';
@@ -65,6 +66,11 @@ export default function ({ navigation, route }: Props) {
       dispatch(showToast(t('Você precisa preencher todos os dados.')));
       return;
     }
+    // TODO: disabling to make tests easier
+    // if (cpf.length !== 11 || !validate(cpf)) {
+    //   dispatch(showToast(t('CPF não é válido.')));
+    //   return;
+    // }
     setUpdating(true);
     await updateProfile(api)(user!.id, {
       name: trim(name),

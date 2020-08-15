@@ -1,5 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { validate } from 'gerador-validador-cpf';
 import { trim } from 'lodash';
 import React, { useState, useRef, useContext } from 'react';
 import { ScrollView, View, TextInput } from 'react-native';
@@ -49,6 +50,11 @@ export default function ({ navigation, route }: Props) {
   // handlers
   const saveCardHandler = async () => {
     if (updating) return;
+    // TODO: validate all card information
+    if (!validate(cpf)) {
+      dispatch(showToast(t('CPF não é válido.')));
+      return;
+    }
     setUpdating(true);
     try {
       const cardResult = await saveCard(api)({

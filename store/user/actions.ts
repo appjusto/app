@@ -53,6 +53,10 @@ export const signOut = (api: Api) => {
   return api.auth().signOut();
 };
 
+export const submitProfile = (api: Api) => {
+  return api.profile().submitProfile();
+};
+
 // watch for updates
 export const observeProfile = (api: Api) => (flavor: Flavor, id: string) => (
   dispatch: AppDispatch
