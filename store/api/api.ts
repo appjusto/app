@@ -2,6 +2,8 @@ import firebase from 'firebase';
 import 'firebase/firestore';
 import 'firebase/functions';
 
+import { Platform } from 'react-native';
+
 import { Extra } from '../../utils/config';
 import AuthApi from './auth';
 import ConsumerApi from './consumer';
@@ -22,7 +24,8 @@ export default class Api {
   private _maps: MapsApi;
 
   constructor(extra: Extra) {
-    firebase.initializeApp(extra.firebase);
+    const apiKey = Platform.select(extra.googleApiKeys);
+    firebase.initializeApp({ ...extra.firebase, apiKey });
 
     this.firestore = firebase.firestore();
     this.functions = firebase.functions();
@@ -42,7 +45,7 @@ export default class Api {
     this._courier = new CourierApi(this.firestore, this.functions);
     this._consumer = new ConsumerApi(this.firestore, this.functions);
     this._order = new OrderApi(this.firestore, this.functions);
-    this._maps = new MapsApi(extra.googleMapsApiKey);
+    this._maps = new MapsApi(apiKey!);
   }
 
   auth() {

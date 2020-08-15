@@ -6,15 +6,24 @@ export interface Props extends ViewProps {
   children: ReactNode | ReactNode[];
 }
 
-export default function ({ children, ...props }: Props) {
+export default function ({ children, style, ...props }: Props) {
   const headerHeight = useHeaderHeight();
 
   if (Platform.OS === 'ios')
     return (
-      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={headerHeight} {...props}>
+      <KeyboardAvoidingView
+        style={[{ flex: 1, justifyContent: 'flex-end' }, style]}
+        behavior="padding"
+        keyboardVerticalOffset={headerHeight}
+        {...props}
+      >
         {children}
       </KeyboardAvoidingView>
     );
 
-  return <View {...props}>{children}</View>;
+  return (
+    <View style={[{ flex: 1, justifyContent: 'flex-end' }, style]} {...props}>
+      {children}
+    </View>
+  );
 }

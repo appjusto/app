@@ -13,10 +13,11 @@ import { showToast } from '../../../../../store/ui/actions';
 import { t } from '../../../../../strings';
 import { ApiContext, AppDispatch } from '../../../../app/context';
 import ShowIf from '../../../../common/ShowIf';
-import { screens, borders, texts } from '../../../../common/styles';
+import { screens, texts } from '../../../../common/styles';
 import { HomeNavigatorParamList } from '../../types';
 import OrderMap from './OrderMap';
 import OrderPager from './OrderPager';
+import PaddedView from '../../../../common/views/PaddedView';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
 type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
@@ -107,7 +108,7 @@ export default function ({ navigation, route }: Props) {
         {/* when order hasn't been created yet  */}
         <ShowIf test={!order}>
           {() => (
-            <View
+            <PaddedView
               style={{
                 flex: 1,
                 flexDirection: 'row',
@@ -119,7 +120,7 @@ export default function ({ navigation, route }: Props) {
                 <Text style={{ ...texts.big }}>{t('Transportar Encomendas')}</Text>
               </View>
               <Image source={motocycle} />
-            </View>
+            </PaddedView>
           )}
         </ShowIf>
 
@@ -127,22 +128,17 @@ export default function ({ navigation, route }: Props) {
         <ShowIf test={order?.valid() === true}>{() => <OrderMap order={order!} />}</ShowIf>
       </View>
 
-      {/* details */}
-      <View style={styles.details}>
-        {/* progress */}
-
-        {/* pager */}
-        <OrderPager
-          origin={origin}
-          destination={destination}
-          order={order}
-          card={card}
-          waiting={waiting}
-          navigateToAddressComplete={navigateToAddressComplete}
-          navigateToFillPaymentInfo={navigateToFillPaymentInfo}
-          confirmOrder={confirmOrderHandler}
-        />
-      </View>
+      {/* pager */}
+      <OrderPager
+        origin={origin}
+        destination={destination}
+        order={order}
+        card={card}
+        waiting={waiting}
+        navigateToAddressComplete={navigateToAddressComplete}
+        navigateToFillPaymentInfo={navigateToFillPaymentInfo}
+        confirmOrder={confirmOrderHandler}
+      />
     </View>
   );
 }
@@ -154,12 +150,6 @@ const styles = StyleSheet.create({
     width,
     height: height * 0.3,
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-  },
-  details: {
-    flex: 1,
-    padding: 16,
-    ...borders.default,
   },
   input: {
     marginTop: 12,

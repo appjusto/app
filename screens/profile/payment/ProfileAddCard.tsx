@@ -71,7 +71,7 @@ export default function ({ navigation, route }: Props) {
   return (
     <PaddedView style={{ ...screens.configScreen }}>
       <ScrollView contentContainerStyle={{ flex: 1 }}>
-        <AvoidingView style={{ flex: 1 }}>
+        <AvoidingView>
           <View style={{ flexDirection: 'row', marginTop: padding }}>
             <DefaultInput
               style={{ flex: 1 }}
@@ -151,6 +151,7 @@ export default function ({ navigation, route }: Props) {
             returnKeyType="done"
             blurOnSubmit
           />
+          <View style={{ flex: 1 }} />
           <DefaultButton
             style={{ marginTop: padding }}
             title={t('Salvar')}

@@ -16,6 +16,7 @@ import LabeledText from '../../../../common/LabeledText';
 import ShowIf from '../../../../common/ShowIf';
 import { padding } from '../../../../common/styles';
 import OrderSummary from './OrderSummary';
+import PaddedView from '../../../../common/views/PaddedView';
 
 enum Steps {
   Origin = 0,
@@ -106,7 +107,7 @@ export default function ({
     <View style={{ flex: 1 }}>
       <ViewPager ref={viewPager} style={{ flex: 1 }} onPageScroll={onPageScroll}>
         {/* origin */}
-        <View style={{ justifyContent: 'flex-end' }}>
+        <PaddedView style={{ justifyContent: 'flex-end' }}>
           <TouchableWithoutFeedback
             onPress={() => {
               navigateToAddressComplete(origin.getData().address ?? '', 'originAddress');
@@ -127,8 +128,8 @@ export default function ({
 
           <DefaultInput
             style={{ marginTop: padding }}
-            title={t('Descrição curta')}
-            placeholder={t('Qual encomenda será transportada')}
+            title={t('Instruções para retirada')}
+            placeholder={t('Quem irá atender o entregador, etc.')}
           />
 
           <View style={{ flex: 1 }} />
@@ -138,52 +139,50 @@ export default function ({
             onPress={nextStepHandler}
             disabled={!stepReady(step + 1)}
           />
-        </View>
+        </PaddedView>
 
         {/* destination */}
-        <ShowIf test={origin.valid()}>
-          {() => (
-            <View style={{ justifyContent: 'flex-end' }}>
-              <TouchableWithoutFeedback
-                onPress={() => {
-                  navigateToAddressComplete(
-                    destination.getData().address ?? '',
-                    'destinationAddress'
-                  );
-                }}
-              >
-                <LabeledText style={{ marginTop: padding }} title={t('Endereço de entrega')}>
-                  {destination.getData().address ?? t('Endereço com número')}
-                </LabeledText>
-              </TouchableWithoutFeedback>
+        {origin.valid() && (
+          <PaddedView style={{ justifyContent: 'flex-end' }}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                navigateToAddressComplete(
+                  destination.getData().address ?? '',
+                  'destinationAddress'
+                );
+              }}
+            >
+              <LabeledText style={{ marginTop: padding }} title={t('Endereço de entrega')}>
+                {destination.getData().address ?? t('Endereço com número')}
+              </LabeledText>
+            </TouchableWithoutFeedback>
 
-              <DefaultInput
-                style={{ marginTop: padding }}
-                title={t('Complemento (se houver)')}
-                placeholder={t('Apartamento, sala, loja, etc.')}
-              />
+            <DefaultInput
+              style={{ marginTop: padding }}
+              title={t('Complemento (se houver)')}
+              placeholder={t('Apartamento, sala, loja, etc.')}
+            />
 
-              <DefaultInput
-                style={{ marginTop: padding }}
-                title={t('Responsável no local')}
-                placeholder={t('Entregar para')}
-              />
+            <DefaultInput
+              style={{ marginTop: padding }}
+              title={t('Instruções para entrega')}
+              placeholder={t('Quem irá atender o entregador, etc.')}
+            />
 
-              <View style={{ flex: 1 }} />
+            <View style={{ flex: 1 }} />
 
-              <DefaultButton
-                title={t('Confirmar local de entrega')}
-                onPress={nextStepHandler}
-                disabled={!stepReady(step + 1)}
-                activityIndicator={step === Steps.Destination && waiting}
-              />
-            </View>
-          )}
-        </ShowIf>
+            <DefaultButton
+              title={t('Confirmar local de entrega')}
+              onPress={nextStepHandler}
+              disabled={!stepReady(step + 1)}
+              activityIndicator={step === Steps.Destination && waiting}
+            />
+          </PaddedView>
+        )}
 
         {/* confirmation */}
-        <ShowIf test={order?.valid() === true}>
-          {() => (
+        {order?.valid() === true && (
+          <PaddedView>
             <OrderSummary
               order={order!}
               card={card}
@@ -192,8 +191,8 @@ export default function ({
               nextStepHandler={nextStepHandler}
               navigateToFillPaymentInfo={navigateToFillPaymentInfo}
             />
-          )}
-        </ShowIf>
+          </PaddedView>
+        )}
       </ViewPager>
     </View>
   );

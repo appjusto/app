@@ -48,7 +48,7 @@ export default function ({ navigation, route }: Props) {
   return (
     <View style={{ ...screens.configScreen, paddingHorizontal: padding }}>
       <ScrollView ref={scrollViewRef} contentContainerStyle={{ flex: 1 }}>
-        <AvoidingView style={{ flex: 1 }}>
+        <AvoidingView>
           <Text style={{ ...texts.big, marginTop: 16 }}>{t('Dados bancários')}</Text>
           <Text style={{ ...texts.default, marginTop: 8, color: colors.darkGrey }}>
             {t('A conta precisa estar no seu CPF. Não serão aceitas contas de terceiros.')}
