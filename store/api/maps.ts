@@ -1,8 +1,18 @@
 import axios from 'axios';
 
+type GoogleAddressResult = {
+  structured_formatting: {
+    main_text: string;
+    secondary_text: string;
+  };
+};
+
 export default class MapsApi {
   constructor(private googleMapsApiKey: string) {}
-  async googlePlacesAutocomplete(input: string, sessiontoken: string) {
+  async googlePlacesAutocomplete(
+    input: string,
+    sessiontoken: string
+  ): Promise<GoogleAddressResult[]> {
     // TODO: location & radius?
     const url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     const params = {

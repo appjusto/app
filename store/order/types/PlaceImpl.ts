@@ -13,9 +13,15 @@ export default class PlaceImpl {
     return new PlaceImpl(Object.assign({}, this.source, newSource));
   }
 
+  public sameAdddress(anotherPlace: PlaceImpl): boolean {
+    const { addressTexts } = this.getData();
+    const { addressTexts: anotherPlaceaddressTexts } = anotherPlace.getData();
+    return addressTexts?.every((t, i) => t === anotherPlaceaddressTexts?.[i]) === true;
+  }
+
   public valid(): boolean {
     // TODO: implement validation
-    return !isEmpty(this.source.address) /*&& !isEmpty(this.source.description)*/;
+    return !isEmpty(this.source.addressTexts) /*&& !isEmpty(this.source.description)*/;
   }
 
   public toSring() {

@@ -1,5 +1,5 @@
 import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { StackNavigationProp, useHeaderHeight } from '@react-navigation/stack';
 import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet, View, Image, Dimensions, Text } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,12 +12,12 @@ import PlaceImpl from '../../../../../store/order/types/PlaceImpl';
 import { showToast } from '../../../../../store/ui/actions';
 import { t } from '../../../../../strings';
 import { ApiContext, AppDispatch } from '../../../../app/context';
+import AvoidingView from '../../../../common/AvoidingView';
 import ShowIf from '../../../../common/ShowIf';
-import { screens, texts } from '../../../../common/styles';
+import { screens, texts, borders, padding, colors } from '../../../../common/styles';
 import { HomeNavigatorParamList } from '../../types';
 import OrderMap from './OrderMap';
 import OrderPager from './OrderPager';
-import PaddedView from '../../../../common/views/PaddedView';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
 type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
@@ -46,9 +46,9 @@ export default function ({ navigation, route }: Props) {
   // side effects
   // route changes when interacting with 'AddressComplete' and 'PaymentSelector' screens;
   useEffect(() => {
-    const { originAddress, destinationAddress, cardId } = route.params ?? {};
-    if (originAddress) setOrigin(origin.merge({ address: originAddress }));
-    if (destinationAddress) setDestination(destination.merge({ address: destinationAddress }));
+    const { origin: newOrigin, destination: newDestination, cardId } = route.params ?? {};
+    if (newOrigin) setOrigin(origin.merge(newOrigin));
+    if (newDestination) setDestination(destination.merge(newDestination));
     if (cardId) setCard(consumer?.getCardById(cardId) ?? null);
   }, [route.params]);
 
@@ -58,8 +58,8 @@ export default function ({ navigation, route }: Props) {
       origin.valid() &&
       destination.valid() &&
       (!order ||
-        order!.getData().origin.address !== origin.getData().address ||
-        order!.getData().destination.address !== destination.getData().address)
+        !order.getOrigin().sameAdddress(origin) ||
+        !order.getDestination().sameAdddress(destination))
     ) {
       (async () => {
         setOrder(null);
@@ -77,6 +77,7 @@ export default function ({ navigation, route }: Props) {
   const navigateToAddressComplete = (currentValue: string, destinationParam: string) => {
     navigation.navigate('AddressComplete', {
       value: currentValue,
+
       destinationScreen: 'CreateOrderP2P',
       destinationParam,
     });
@@ -101,26 +102,30 @@ export default function ({ navigation, route }: Props) {
   };
 
   // UI
+  const headerHeight = useHeaderHeight();
   return (
-    <View style={{ ...screens.default }}>
+    <AvoidingView style={{ ...screens.default }}>
       {/* header */}
-      <View style={styles.header}>
+      <View style={{ justifyContent: 'space-between' }}>
         {/* when order hasn't been created yet  */}
         <ShowIf test={!order}>
           {() => (
-            <PaddedView
+            <View
               style={{
                 flex: 1,
                 flexDirection: 'row',
+                marginHorizontal: padding,
                 justifyContent: 'space-between',
                 alignItems: 'center',
+                marginTop: headerHeight,
+                ...borders.default,
               }}
             >
-              <View style={{ width: '40%' }}>
-                <Text style={{ ...texts.big }}>{t('Transportar Encomendas')}</Text>
-              </View>
+              <Text style={{ ...texts.big, ...borders.default }}>
+                {t('Transportar\nEncomendas')}
+              </Text>
               <Image source={motocycle} />
-            </PaddedView>
+            </View>
           )}
         </ShowIf>
 
@@ -139,19 +144,6 @@ export default function ({ navigation, route }: Props) {
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         confirmOrder={confirmOrderHandler}
       />
-    </View>
+    </AvoidingView>
   );
 }
-
-const { width, height } = Dimensions.get('window');
-
-const styles = StyleSheet.create({
-  header: {
-    width,
-    height: height * 0.3,
-    justifyContent: 'space-between',
-  },
-  input: {
-    marginTop: 12,
-  },
-});

@@ -14,9 +14,10 @@ import DefaultButton from '../../../../common/DefaultButton';
 import DefaultInput from '../../../../common/DefaultInput';
 import LabeledText from '../../../../common/LabeledText';
 import ShowIf from '../../../../common/ShowIf';
-import { padding } from '../../../../common/styles';
+import { padding, borders } from '../../../../common/styles';
 import OrderSummary from './OrderSummary';
 import PaddedView from '../../../../common/views/PaddedView';
+import { Place } from '../../../../../store/order/types';
 
 enum Steps {
   Origin = 0,
@@ -31,7 +32,7 @@ type Props = {
   order: OrderImpl | null;
   card: Card | null;
   waiting: boolean;
-  navigateToAddressComplete: (currentValue: string, destinationParam: string) => void;
+  navigateToAddressComplete: (currentPlace: Place, destinationParam: string) => void;
   navigateToFillPaymentInfo: () => void;
   confirmOrder: () => Promise<void>;
 };
@@ -105,12 +106,17 @@ export default function ({
 
   return (
     <View style={{ flex: 1 }}>
-      <ViewPager ref={viewPager} style={{ flex: 1 }} onPageScroll={onPageScroll}>
+      <ViewPager
+        ref={viewPager}
+        style={{ flex: 1, ...borders.default }}
+        onPageScroll={onPageScroll}
+      >
         {/* origin */}
         <PaddedView style={{ justifyContent: 'flex-end' }}>
+          <View style={{ flex: 1 }} />
           <TouchableWithoutFeedback
             onPress={() => {
-              navigateToAddressComplete(origin.getData().address ?? '', 'originAddress');
+              navigateToAddressComplete(origin ?? null, 'originAddress');
             }}
           >
             <View>

@@ -7,6 +7,7 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native
 import { useSelector } from 'react-redux';
 
 import { getEnv } from '../../../../store/config/selectors';
+import { getAddressAutocomplete } from '../../../../store/order/actions';
 import { t } from '../../../../strings';
 import { ApiContext } from '../../../app/context';
 import DefaultButton from '../../../common/DefaultButton';
@@ -25,35 +26,22 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
-  const { params } = route;
-  const { value: initialAddress, destinationScreen, destinationParam } = params;
+  const { value: initialAddress, destinationScreen, destinationParam } = route.params ?? {};
 
   // state
   const dev = useSelector(getEnv) === 'development';
   const autocompleteSession = nanoid();
-  const [address, setAddress] = useState(initialAddress);
-  const [autocompletePredictions, setAutoCompletePredictions] = useState(
-    dev
-      ? [
-          {
-            description: 'Av. Paulista, 1578',
-          },
-          {
-            description: 'Av. Paulista, 2424',
-          },
-          {
-            description: 'Largo de São Bento',
-          },
-        ]
-      : []
+  const [address, setAddress] = useState(initialAddress?.[0] ?? '');
+  const [autocompletePredictions, setAutoCompletePredictions] = useState<string[][]>(
+    dev ? [['Av. Paulista, 1578'], ['Av. Paulista, 2424'], ['Largo de São Bento']] : []
   );
 
   // handlers
   const getAddress = useCallback(
     debounce<(input: string) => void>(async (input: string): Promise<void> => {
-      const { predictions } = await api.maps().googlePlacesAutocomplete(input, autocompleteSession);
-      setAutoCompletePredictions(predictions);
-    }, 1000),
+      const results = await getAddressAutocomplete(api)(input, autocompleteSession);
+      setAutoCompletePredictions(results);
+    }, 300),
     [autocompleteSession]
   );
 

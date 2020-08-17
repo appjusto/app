@@ -21,6 +21,17 @@ export const observeOrdersDeliveredBy = (api: Api) => (courierId: string) => (
   });
 };
 
+export const getAddressAutocomplete = (api: Api) => async (
+  input: string,
+  sessiontoken: string
+): Promise<string[][]> => {
+  const result = await api.maps().googlePlacesAutocomplete(input, sessiontoken);
+  return result.map((result) => [
+    result.structured_formatting.main_text,
+    result.structured_formatting.secondary_text,
+  ]);
+};
+
 export const createOrder = (api: Api) => (origin: Place, destination: Place) => {
   return api.order().createOrder(origin, destination);
 };
