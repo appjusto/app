@@ -22,6 +22,7 @@ const iconSelfie = require('./icons/icon-selfie.png');
 const iconTransitConclusion = require('./icons/icon-transit-conclusion.png');
 const iconTransit = require('./icons/icon-transit.png');
 const iconIllustration = require('./icons/illustration-intro-screen.png');
+const iconIllustrationPizza = require('./icons/illustration-pizza.png');
 const logoAppjustoBgWhite = require('./icons/logo-appjusto-bg-white.png');
 const iconOrders = require('./icons/orders.png');
 const rectangleBG = require('./icons/rectangle23.png');
@@ -50,6 +51,7 @@ export const selfie = iconSelfie;
 export const transit = iconTransit;
 export const transitConclusion = iconTransitConclusion;
 export const illustration = iconIllustration;
+export const illustrationPizza = iconIllustrationPizza;
 export const logoWhite = logoAppjustoBgWhite;
 export const BG = rectangleBG;
 export const orders = iconOrders;
@@ -80,6 +82,7 @@ export default [
   transit,
   transitConclusion,
   illustration,
+  illustrationPizza,
   logoWhite,
   BG,
   orders,

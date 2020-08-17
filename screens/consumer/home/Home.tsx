@@ -4,13 +4,14 @@ import React, { useEffect, useContext } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Image, ImageBackground } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { navigationArrow, illustration, BG, requests } from '../../../assets/icons';
+import * as icons from '../../../assets/icons';
 import { getFlavor } from '../../../store/config/selectors';
 import { observeProfile } from '../../../store/user/actions';
 import { getUser } from '../../../store/user/selectors';
 import { t } from '../../../strings';
 import { AppDispatch, ApiContext } from '../../app/context';
-import { colors, texts } from '../../common/styles';
+import { colors, texts, padding, borders } from '../../common/styles';
+import PaddedView from '../../common/views/PaddedView';
 import { HomeNavigatorParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'Home'>;
@@ -38,59 +39,76 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff' }}>
-      <View style={styles.greenContainer}>
-        <View style={styles.searchBox}>
-          <Image source={navigationArrow} />
-          <Text style={{ ...texts.small, marginLeft: 9 }}>
-            {t('Avenida Paulista, São Paulo, SP')}
-          </Text>
-        </View>
-        <View style={styles.containerBigText}>
-          <Text style={{ ...texts.big }}>
-            {t('Somos um delivery aberto, transparente e consciente')}
-          </Text>
-        </View>
-        <View style={styles.actionsContainer}>
-          <View style={styles.actionBox}>
+    <View style={{ flex: 1 }}>
+      <PaddedView style={{ flex: 1, backgroundColor: colors.green }}>
+        <Text style={{ ...texts.big, marginTop: padding }}>
+          {t('Somos um delivery aberto, transparente e consciente')}
+        </Text>
+        {/* buttons */}
+        <View style={{ flexDirection: 'row', marginTop: padding, justifyContent: 'space-between' }}>
+          <View
+            style={{
+              width: '47.5%',
+              paddingHorizontal: 12,
+              backgroundColor: 'white',
+              ...borders.default,
+              borderColor: 'white',
+            }}
+          >
             <TouchableOpacity onPress={() => navigation.navigate('CreateOrderP2P')}>
-              <View style={styles.illustrationContainer}>
-                <Image source={illustration} style={styles.illustration} />
+              <View style={{ width: '100%', height: '52%' }}>
+                <Image
+                  source={icons.illustration}
+                  style={{ width: '100%', height: '100%', paddingHorizontal: 16 }}
+                />
               </View>
-              <View style={styles.mediumContainer}>
-                <Text style={{ ...texts.default }}>{t('Transportar Encomendas')}</Text>
-              </View>
-              <View style={styles.smallContainer}>
-                <Text style={{ ...texts.small, color: colors.darkGrey }}>
-                  {t('Para buscar e deixar pacotes')}
-                </Text>
-              </View>
+              <Text style={{ marginTop: 8, ...texts.default }}>{t('Transportar Encomendas')}</Text>
+              <Text style={{ marginTop: 8, ...texts.small, color: colors.darkGrey }}>
+                {t('Para buscar e deixar pacotes')}
+              </Text>
             </TouchableOpacity>
           </View>
-          <View style={{ ...styles.actionBox, backgroundColor: colors.lightGreen }}>
+          <View
+            style={{
+              width: '47.5%',
+              paddingHorizontal: 12,
+              backgroundColor: colors.lightGreen,
+              ...borders.default,
+              borderColor: 'white',
+            }}
+          >
             <TouchableOpacity>
-              <View style={styles.illustrationContainer}>
-                <Image source={illustration} style={styles.illustration} />
+              <View style={{ width: '100%', height: '52%' }}>
+                <Image
+                  source={icons.illustrationPizza}
+                  style={{ width: '100%', height: '100%', paddingHorizontal: 16 }}
+                />
               </View>
-              <View style={styles.mediumContainer}>
-                <Text style={{ ...texts.default }}>{t('Restaurantes e alimentação')}</Text>
-              </View>
-              <View style={styles.smallContainer}>
-                <Text style={{ ...texts.small }}>{t('Seus preferidos estarão por aqui')}</Text>
-              </View>
+              <Text style={{ marginTop: 8, ...texts.default }}>
+                {t('Restaurantes e alimentação')}
+              </Text>
+              <Text style={{ marginTop: 8, ...texts.small }}>
+                {t('Seus preferidos estarão por aqui')}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
-      </View>
-      <View style={styles.whiteContainer}>
-        <ImageBackground source={BG} style={{ height: '100%', width: '100%', flex: 1 }}>
+      </PaddedView>
+      {/* history */}
+      <View style={{ width: '100%', height: '30%' }}>
+        <ImageBackground
+          source={icons.BG}
+          resizeMethod="resize"
+          resizeMode="contain"
+          style={{ height: 181, width: '100%' }}
+        >
           <View style={{ paddingHorizontal: 16, flex: 1, justifyContent: 'center' }}>
             <TouchableOpacity onPress={() => navigation.navigate('History')}>
               <View style={{ ...styles.history, justifyContent: 'center' }}>
-                <View style={styles.reqContainer}>
-                  <Image source={requests} />
+                <View style={{ height: 80, width: '20%' }}>
+                  <Image source={icons.requests} />
                 </View>
-                <View style={styles.textContainer}>
+                <View style={{ justifyContent: 'center' }}>
                   <Text style={{ ...texts.default }}>{t('Histórico de pedidos')}</Text>
                   <Text style={{ ...texts.small, color: colors.darkGrey }}>
                     {t('Você ainda não fez pedidos')}
@@ -106,72 +124,6 @@ export default function ({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  greenContainer: {
-    width: '100%',
-    height: '70%',
-    backgroundColor: colors.green,
-    paddingHorizontal: 16,
-  },
-  whiteContainer: {
-    width: '100%',
-    height: '30%',
-  },
-  searchBox: {
-    flexDirection: 'row',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    backgroundColor: 'white',
-    height: 40,
-    width: '66.6%',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: 'white',
-    borderRadius: 32,
-    marginTop: 48,
-    alignItems: 'center',
-  },
-  containerBigText: {
-    width: '100%',
-    height: 58,
-    alignItems: 'flex-start',
-    marginTop: 32,
-  },
-  actionsContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    height: 224,
-    marginTop: 24,
-    justifyContent: 'space-between',
-  },
-  actionBox: {
-    width: '47.5%',
-    height: '100%',
-    borderRadius: 8,
-    backgroundColor: 'white',
-    borderColor: 'white',
-    borderStyle: 'solid',
-    borderWidth: 1,
-    paddingHorizontal: 12,
-  },
-  illustrationContainer: {
-    width: '100%',
-    height: '52%',
-  },
-  illustration: {
-    // marginHorizontal: 12,
-    width: '100%',
-    height: '100%',
-    paddingHorizontal: 16,
-  },
-  mediumContainer: {
-    height: 36,
-    marginTop: 8,
-  },
-  smallContainer: {
-    height: 32,
-    width: '80%',
-    marginTop: 8,
-  },
   history: {
     // marginHorizontal: 16,
     height: 96,
@@ -183,18 +135,5 @@ const styles = StyleSheet.create({
     borderColor: colors.lightGrey,
     borderRadius: 8,
     marginTop: 24,
-  },
-  reqContainer: {
-    // paddingHorizontal: 16,
-    height: 80,
-    width: '20%',
-  },
-  request: {
-    flex: 1,
-    resizeMode: 'cover',
-  },
-  textContainer: {
-    // paddingLeft: 16,
-    justifyContent: 'center',
   },
 });
