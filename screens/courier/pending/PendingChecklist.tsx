@@ -5,6 +5,7 @@ import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard } from 'reac
 import { useSelector } from 'react-redux';
 
 import { getCourier } from '../../../store/courier/selectors';
+import { submitProfile } from '../../../store/user/actions';
 import { t } from '../../../strings';
 import { ApiContext } from '../../app/context';
 import ConfigItem from '../../common/ConfigItem';
@@ -32,7 +33,7 @@ export default function ({ navigation }: Props) {
 
   // handlers
   const submitHandler = async () => {
-    await api.profile().submitProfile();
+    await submitProfile(api);
   };
 
   // side effects

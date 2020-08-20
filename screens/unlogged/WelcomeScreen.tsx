@@ -46,6 +46,7 @@ export default function ({ navigation, route }: Props) {
 
   // handlers
   const signInHandler = useCallback(async () => {
+    Keyboard.dismiss();
     if (!acceptedTerms) {
       dispatch(showToast(t('Você precisa aceitar os termos para criar sua conta.')));
       return;
@@ -54,7 +55,6 @@ export default function ({ navigation, route }: Props) {
       dispatch(showToast(t('Digite um e-mail válido.')));
       return;
     }
-    Keyboard.dismiss();
     setWaiting(true);
     await signInWithEmail(api)(email);
     setWaiting(false);

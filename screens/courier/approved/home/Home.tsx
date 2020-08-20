@@ -60,11 +60,29 @@ export default function ({ navigation }: Props) {
     }
   }, [working, locationPermission]);
 
+  // test only
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     navigation.navigate('Matching', {
+  //       matchRequest: {
+  //         orderId: '12',
+  //         courierFee: '10',
+  //         originAddress: 'Largo São Francisco',
+  //         destinationAddress: 'Av. Bernardino de Campos, 144',
+  //         distanceToOrigin: 2,
+  //         totalDistance: 10,
+  //       },
+  //     });
+  //   }, 50);
+  // }, []);
+
   // handlers
   const notificationHandler = useCallback(
     (content: Notifications.NotificationContent) => {
       if (content.data.action === 'matching') {
-        navigation.navigate('Matching', { order: (content.data as unknown) as OrderMatchRequest });
+        navigation.navigate('Matching', {
+          matchRequest: (content.data as unknown) as OrderMatchRequest,
+        });
       }
     },
     [navigation]

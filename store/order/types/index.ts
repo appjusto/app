@@ -39,16 +39,6 @@ export interface OrderRequest {
   destination: Place;
 }
 
-export interface OrderDistance {
-  text: string;
-  value: number;
-}
-
-export interface OrderDuration {
-  text: string;
-  value: number;
-}
-
 export interface Order {
   id: string;
   consumerId: string;
@@ -57,8 +47,8 @@ export interface Order {
   origin: Place;
   destination: Place;
   routePolyline: string;
-  distance: OrderDistance;
-  duration: OrderDuration;
+  distance: number;
+  duration: number;
   fare: Fare;
   courierId?: string;
   createdOn: firebase.firestore.FieldValue;
@@ -66,17 +56,11 @@ export interface Order {
 
 export interface OrderMatchRequest {
   orderId: string;
-  fare: number;
-  distance: {
-    toOrigin: number;
-    route: string;
-  };
-  origin: {
-    address: string;
-  };
-  destination: {
-    address: string;
-  };
+  courierFee: string;
+  distanceToOrigin: number;
+  totalDistance: number;
+  originAddress: string;
+  destinationAddress: string;
 }
 
 export interface OrderState {

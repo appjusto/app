@@ -75,8 +75,8 @@ export default function ({
             justifyContent: 'space-between',
           }}
         >
-          <Text>{distance.text}</Text>
-          <Text>{duration.text}</Text>
+          <Text>{distance}</Text>
+          <Text>{duration}</Text>
         </View>
         <View
           style={{
