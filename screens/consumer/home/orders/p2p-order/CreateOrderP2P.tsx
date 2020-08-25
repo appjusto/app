@@ -1,5 +1,5 @@
 import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp, useHeaderHeight } from '@react-navigation/stack';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState, useContext, useEffect } from 'react';
 import { View, Image, Text } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
@@ -18,7 +18,6 @@ import { screens, texts, borders, padding } from '../../../../common/styles';
 import { HomeNavigatorParamList } from '../../types';
 import OrderMap from './OrderMap';
 import OrderPager from './OrderPager';
-import { getUIBlocked } from '../../../../../store/ui/selectors';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
 type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
@@ -96,29 +95,24 @@ export default function ({ navigation, route }: Props) {
   };
 
   // UI
-  const headerHeight = useHeaderHeight();
   return (
-    <AvoidingView style={{ ...screens.default }}>
+    <AvoidingView style={{ ...screens.default, justifyContent: 'space-between' }}>
       {/* header */}
-      <View style={{ justifyContent: 'space-between' }}>
+      <View style={{ height: 160, justifyContent: 'center', ...borders.default }}>
         {/* when order hasn't been created yet  */}
         <ShowIf test={!order}>
           {() => (
             <View
               style={{
-                flex: 1,
                 flexDirection: 'row',
                 marginHorizontal: padding,
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginTop: headerHeight,
                 ...borders.default,
               }}
             >
-              <Text style={{ ...texts.big, ...borders.default }}>
-                {t('Transportar\nEncomendas')}
-              </Text>
-              <Image source={motocycle} />
+              <Text style={{ ...texts.big, ...borders.default }}>{t('Detalhes do\nPedido')}</Text>
+              <Image source={motocycle} style={{ width: 114, height: 114 }} />
             </View>
           )}
         </ShowIf>
@@ -133,7 +127,6 @@ export default function ({ navigation, route }: Props) {
         destination={destination}
         order={order}
         card={card}
-        waiting={useSelector(getUIBlocked)}
         navigateToAddressComplete={navigateToAddressComplete}
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         confirmOrder={confirmOrderHandler}

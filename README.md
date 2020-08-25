@@ -33,8 +33,8 @@ FLAVOR=<consumer | courier> expo start -c
 FLAVOR=<consumer | courier> FIREBASE_EMULATOR=true expo start --tunnel -c
 
 # Deeplink testing
-xcrun simctl openurl booted "exp://192.168.15.3:19000/--/?link=<link>"
-adb shell am start -a "android.intent.action.VIEW" -d "exp://192.168.15.3:19000/--/?link=<link>"
+xcrun simctl openurl booted "exp://<local-ip-address>:19000/--/?link=<link>"
+adb shell am start -a "android.intent.action.VIEW" -d "exp://<local-ip-address>:19000/--/?link=<link>"
 ```
 
 # 4. Building locally

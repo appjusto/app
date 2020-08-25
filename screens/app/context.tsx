@@ -11,6 +11,7 @@ import { getExtra } from '../../utils/config';
 import { defineLocationUpdatesTask } from '../../utils/location';
 import Toast from '../common/Toast';
 import * as analytics from './analytics';
+import { Platform, UIManager } from 'react-native';
 
 const extra = getExtra();
 const api = new Api(extra);
@@ -32,6 +33,11 @@ export const AppContext = ({ children }: Props) => {
   const linking = {
     prefixes: [Linking.makeUrl(path), `https://deeplink.appjusto.com.br`],
   };
+
+  // https://reactnative.dev/docs/layoutanimation.html
+  if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
 
   // debug only
   // const log = { l: linking, r: Constants.manifest.revisionId ?? '' };
