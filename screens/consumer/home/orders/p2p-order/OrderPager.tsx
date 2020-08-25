@@ -13,11 +13,9 @@ import { AppDispatch } from '../../../../app/context';
 import DefaultButton from '../../../../common/DefaultButton';
 import DefaultInput from '../../../../common/DefaultInput';
 import LabeledText from '../../../../common/LabeledText';
-import ShowIf from '../../../../common/ShowIf';
 import { padding, borders } from '../../../../common/styles';
-import OrderSummary from './OrderSummary';
 import PaddedView from '../../../../common/views/PaddedView';
-import { Place } from '../../../../../store/order/types';
+import OrderSummary from './OrderSummary';
 
 enum Steps {
   Origin = 0,
@@ -32,7 +30,7 @@ type Props = {
   order: OrderImpl | null;
   card: Card | null;
   waiting: boolean;
-  navigateToAddressComplete: (currentPlace: Place, destinationParam: string) => void;
+  navigateToAddressComplete: (value: string, returnParam: string) => void;
   navigateToFillPaymentInfo: () => void;
   confirmOrder: () => Promise<void>;
 };
@@ -116,7 +114,7 @@ export default function ({
           <View style={{ flex: 1 }} />
           <TouchableWithoutFeedback
             onPress={() => {
-              navigateToAddressComplete(origin ?? null, 'originAddress');
+              navigateToAddressComplete(origin.address ?? '', 'origin');
             }}
           >
             <View>
@@ -152,10 +150,7 @@ export default function ({
           <PaddedView style={{ justifyContent: 'flex-end' }}>
             <TouchableWithoutFeedback
               onPress={() => {
-                navigateToAddressComplete(
-                  destination.getData().address ?? '',
-                  'destinationAddress'
-                );
+                navigateToAddressComplete(destination.address ?? '', 'destination');
               }}
             >
               <LabeledText style={{ marginTop: padding }} title={t('Endereço de entrega')}>

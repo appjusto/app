@@ -5,6 +5,30 @@ import { Place } from '.';
 export default class PlaceImpl {
   constructor(protected source: Place) {}
 
+  public get address() {
+    return this.source.address;
+  }
+
+  public get structuredAddress() {
+    return this.source.structuredAddress;
+  }
+
+  public get googlePlaceId() {
+    return this.source.googlePlaceId;
+  }
+
+  public get additionalInfo() {
+    return this.source.additionalInfo;
+  }
+
+  public get location() {
+    return this.source.location;
+  }
+
+  public get description() {
+    return this.source.description;
+  }
+
   public getData(): Place {
     return this.source;
   }
@@ -14,14 +38,12 @@ export default class PlaceImpl {
   }
 
   public sameAdddress(anotherPlace: PlaceImpl): boolean {
-    const { addressTexts } = this.getData();
-    const { addressTexts: anotherPlaceaddressTexts } = anotherPlace.getData();
-    return addressTexts?.every((t, i) => t === anotherPlaceaddressTexts?.[i]) === true;
+    return this.address === anotherPlace.address;
   }
 
   public valid(): boolean {
     // TODO: implement validation
-    return !isEmpty(this.source.addressTexts) /*&& !isEmpty(this.source.description)*/;
+    return !isEmpty(this.address) /*&& !isEmpty(this.source.description)*/;
   }
 
   public toSring() {

@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp, useHeaderHeight } from '@react-navigation/stack';
 import React, { useState, useContext, useEffect } from 'react';
-import { StyleSheet, View, Image, Dimensions, Text } from 'react-native';
+import { View, Image, Text } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { motocycle } from '../../../../../assets/icons';
@@ -14,10 +14,11 @@ import { t } from '../../../../../strings';
 import { ApiContext, AppDispatch } from '../../../../app/context';
 import AvoidingView from '../../../../common/AvoidingView';
 import ShowIf from '../../../../common/ShowIf';
-import { screens, texts, borders, padding, colors } from '../../../../common/styles';
+import { screens, texts, borders, padding } from '../../../../common/styles';
 import { HomeNavigatorParamList } from '../../types';
 import OrderMap from './OrderMap';
 import OrderPager from './OrderPager';
+import { getUIBlocked } from '../../../../../store/ui/selectors';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
 type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
@@ -35,18 +36,17 @@ export default function ({ navigation, route }: Props) {
   // app state
   const consumer = useSelector(getConsumer);
   // screen state
-  // order is initially undefined to let us know that wasn't been created yet
-  // when we set it to null, we're indicating that we're in process of creating it.
   const [origin, setOrigin] = useState(new PlaceImpl({}));
   const [destination, setDestination] = useState(new PlaceImpl({}));
   const [order, setOrder] = useState<OrderImpl | null>(null);
   const [card, setCard] = useState(consumer?.getLastCard() ?? null);
-  const [waiting, setWaiting] = useState(false);
 
   // side effects
   // route changes when interacting with 'AddressComplete' and 'PaymentSelector' screens;
   useEffect(() => {
     const { origin: newOrigin, destination: newDestination, cardId } = route.params ?? {};
+    console.log(newOrigin);
+    console.log(newDestination);
     if (newOrigin) setOrigin(origin.merge(newOrigin));
     if (newDestination) setDestination(destination.merge(newDestination));
     if (cardId) setCard(consumer?.getCardById(cardId) ?? null);
@@ -63,23 +63,19 @@ export default function ({ navigation, route }: Props) {
     ) {
       (async () => {
         setOrder(null);
-        setWaiting(true);
-        const newOrder = await createOrder(api)(origin.getData(), destination.getData());
-        console.log(newOrder);
+        const newOrder = await dispatch(createOrder(api)(origin.getData(), destination.getData()));
         setOrder(new OrderImpl(newOrder));
-        setWaiting(false);
       })();
     }
   }, [origin, destination]);
 
   // handlers
   // navigate to 'AddressComplete' to choose type or choose an address
-  const navigateToAddressComplete = (currentValue: string, destinationParam: string) => {
+  const navigateToAddressComplete = (value: string, returnParam: string) => {
     navigation.navigate('AddressComplete', {
-      value: currentValue,
-
-      destinationScreen: 'CreateOrderP2P',
-      destinationParam,
+      value,
+      returnScreen: 'CreateOrderP2P',
+      returnParam,
     });
   };
   // navigate to ProfileEdit screen to allow user fill missing information
@@ -92,9 +88,7 @@ export default function ({ navigation, route }: Props) {
   const confirmOrderHandler = async () => {
     try {
       const orderId = order!.getData().id;
-      setWaiting(true);
-      await confirmOrder(api)(orderId, card!.id);
-      setWaiting(false);
+      await dispatch(confirmOrder(api)(orderId, card!.id));
       navigation.replace('OrderFeedback', { orderId });
     } catch (error) {
       dispatch(showToast(error.toString()));
@@ -139,7 +133,7 @@ export default function ({ navigation, route }: Props) {
         destination={destination}
         order={order}
         card={card}
-        waiting={waiting}
+        waiting={useSelector(getUIBlocked)}
         navigateToAddressComplete={navigateToAddressComplete}
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         confirmOrder={confirmOrderHandler}

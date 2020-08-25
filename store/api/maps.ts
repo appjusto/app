@@ -1,6 +1,8 @@
 import axios from 'axios';
 
 type GoogleAddressResult = {
+  description: string;
+  place_id: string;
   structured_formatting: {
     main_text: string;
     secondary_text: string;
@@ -25,7 +27,7 @@ export default class MapsApi {
     };
     try {
       const response = await axios.get(url, { params });
-      return response.data;
+      return response.data.predictions;
     } catch (err) {
       console.error(err);
       return err;

@@ -1,5 +1,6 @@
 import { AppDispatch } from '../../screens/app/context';
 import Api from '../api/api';
+import { BLOCK_UI } from '../ui/actions';
 import { Place, Order } from './types';
 
 export const ORDERS_UPDATED = 'ORDERS_UPDATED';
@@ -24,20 +25,35 @@ export const observeOrdersDeliveredBy = (api: Api) => (courierId: string) => (
 export const getAddressAutocomplete = (api: Api) => async (
   input: string,
   sessiontoken: string
-): Promise<string[][]> => {
+): Promise<Place[]> => {
   const result = await api.maps().googlePlacesAutocomplete(input, sessiontoken);
-  return result.map((result) => [
-    result.structured_formatting.main_text,
-    result.structured_formatting.secondary_text,
-  ]);
+  console.log(result);
+  return result.map((result) => ({
+    googlePlaceId: result.place_id,
+    address: result.description,
+    structuredAddress: {
+      main: result.structured_formatting.main_text,
+      secondary: result.structured_formatting.secondary_text,
+    },
+  }));
 };
 
-export const createOrder = (api: Api) => (origin: Place, destination: Place) => {
-  return api.order().createOrder(origin, destination);
+export const createOrder = (api: Api) => (origin: Place, destination: Place) => async (
+  dispatch: AppDispatch
+) => {
+  dispatch({ type: BLOCK_UI, payload: true });
+  const result = await api.order().createOrder(origin, destination);
+  dispatch({ type: BLOCK_UI, payload: false });
+  return result;
 };
 
-export const confirmOrder = (api: Api) => (orderId: string, cardId: string) => {
-  return api.order().confirmOrder(orderId, cardId);
+export const confirmOrder = (api: Api) => (orderId: string, cardId: string) => async (
+  dispatch: AppDispatch
+) => {
+  dispatch({ type: BLOCK_UI, payload: true });
+  const result = await api.order().confirmOrder(orderId, cardId);
+  dispatch({ type: BLOCK_UI, payload: false });
+  return result;
 };
 
 export const cancelOrder = (api: Api) => (orderId: string) => {

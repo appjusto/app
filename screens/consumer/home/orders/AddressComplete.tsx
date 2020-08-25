@@ -2,12 +2,13 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import debounce from 'lodash/debounce';
 import { nanoid } from 'nanoid/non-secure';
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback, useContext, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import { getEnv } from '../../../../store/config/selectors';
 import { getAddressAutocomplete } from '../../../../store/order/actions';
+import { Place } from '../../../../store/order/types';
 import { t } from '../../../../strings';
 import { ApiContext } from '../../../app/context';
 import DefaultButton from '../../../common/DefaultButton';
@@ -26,15 +27,31 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
-  const { value: initialAddress, destinationScreen, destinationParam } = route.params ?? {};
+  const { value, returnScreen, returnParam } = route.params ?? {};
+
+  console.log(returnScreen, returnParam);
 
   // state
-  const dev = useSelector(getEnv) === 'development';
   const autocompleteSession = nanoid();
-  const [address, setAddress] = useState(initialAddress?.[0] ?? '');
-  const [autocompletePredictions, setAutoCompletePredictions] = useState<string[][]>(
-    dev ? [['Av. Paulista, 1578'], ['Av. Paulista, 2424'], ['Largo de São Bento']] : []
+  const [searchText, setSearchText] = useState(value ?? '');
+  const [autocompletePredictions, setAutoCompletePredictions] = useState<Place[]>(
+    useSelector(getEnv) === 'development'
+      ? [
+          { address: 'Av. Paulista, 1578' },
+          { address: 'Av. Paulista, 2424' },
+          { address: 'Largo de São Bento' },
+        ]
+      : []
   );
+  const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+
+  // effects
+  // update search text when user selects a place from suggestion list
+  useEffect(() => {
+    if (selectedPlace) {
+      setSearchText(selectedPlace.address!);
+    }
+  }, [selectedPlace]);
 
   // handlers
   const getAddress = useCallback(
@@ -45,27 +62,33 @@ export default function ({ navigation, route }: Props) {
     [autocompleteSession]
   );
 
+  // fires whenever use change the input text
   const textChangeHandler = useCallback(
     (text) => {
-      setAddress(text);
-      if (text.length > 5) {
-        // TODO: define threshold
-        getAddress(address);
+      if (text === searchText) return; // avoid searching when user selects from suggestion list
+      setSearchText(text); // update source text
+      setSelectedPlace(null); // so we know text is freshier than what it was selected
+      // TODO: what would be a better threshold than 3 characteres?
+      if (text.length > 3) {
+        getAddress(text);
       }
     },
-    [address]
+    [searchText]
   );
 
+  // confirm button callback
   const completeHandler = useCallback(() => {
-    navigation.navigate(destinationScreen, { [destinationParam]: address });
-  }, [navigation, destinationScreen, address]);
+    // create a place object when user confirm without selecting from suggestion list
+    const place = selectedPlace ?? { address: searchText };
+    navigation.navigate(returnScreen, { [returnParam]: place });
+  }, [navigation, returnScreen, selectedPlace, searchText]);
 
   // UI
   return (
     <View style={{ ...screens.lightGrey, paddingTop: 16 }}>
       <DefaultInput
-        defaultValue={initialAddress}
-        value={address}
+        defaultValue={searchText}
+        value={searchText}
         title={t('Endereço de retirada')}
         placeholder={t('Endereço com número')}
         onChangeText={textChangeHandler}
@@ -79,14 +102,15 @@ export default function ({ navigation, route }: Props) {
         data={autocompletePredictions}
         renderItem={({ item }) => {
           return (
-            <TouchableOpacity onPress={() => setAddress(item.description)}>
+            <TouchableOpacity onPress={() => setSelectedPlace(item)}>
               <View style={styles.item}>
-                <Text style={{ ...texts.medium }}>{item.description}</Text>
+                <Text style={{ ...texts.medium }}>{item.address}</Text>
               </View>
             </TouchableOpacity>
           );
         }}
-        keyExtractor={(item) => item.description}
+        // TODO: use google place id
+        keyExtractor={(item) => item.googlePlaceId ?? item.address!}
       />
       <DefaultButton title={t('Confirmar endereço')} onPress={completeHandler} />
     </View>

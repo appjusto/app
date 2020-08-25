@@ -8,9 +8,9 @@ export type HomeNavigatorParamList = {
     cardId?: string;
   };
   AddressComplete: {
-    value?: Place;
-    destinationScreen: 'CreateOrderP2P';
-    destinationParam: string;
+    value?: string;
+    returnScreen: 'CreateOrderP2P';
+    returnParam: string;
   };
   ProfileAddCard?: {
     returnScreen: 'CreateOrderP2P';

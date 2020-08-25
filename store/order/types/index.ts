@@ -4,7 +4,11 @@ export interface LatLng {
 }
 
 export interface Place {
-  addressTexts?: string[];
+  address?: string;
+  structuredAddress?: {
+    main: string;
+    secondary?: string;
+  };
   googlePlaceId?: string;
   additionalInfo?: string;
   description?: string;
