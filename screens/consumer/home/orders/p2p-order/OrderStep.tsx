@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, Text, LayoutAnimation } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import * as icons from '../../../../../assets/icons';
 import { t } from '../../../../../strings';
-import { borders, colors, padding, texts } from '../../../../common/styles';
+import { colors, texts } from '../../../../common/styles';
 import { Steps } from './types';
-import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 
 type JustifyContent = 'flex-end' | 'flex-start' | 'center';
 
@@ -53,7 +53,10 @@ type Props = {
 export default function ({ step, changeStepHandler }: Props) {
   const [justifyContent, setJustifyContent] = useState<JustifyContent | null>(null);
   useEffect(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    // to avoid initial animation
+    if (justifyContent !== null) {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    }
     if (step === Steps.Origin) setJustifyContent('flex-start');
     else if (step === Steps.Destination) setJustifyContent('center');
     else setJustifyContent('flex-end');
@@ -62,7 +65,7 @@ export default function ({ step, changeStepHandler }: Props) {
   if (!justifyContent) return null;
 
   return (
-    <View style={{ ...borders.default }}>
+    <View>
       <View
         style={{
           flexDirection: 'row',

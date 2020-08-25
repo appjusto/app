@@ -3,11 +3,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import debounce from 'lodash/debounce';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useState, useCallback, useContext, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Keyboard } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import { getEnv } from '../../../../store/config/selectors';
 import { getAddressAutocomplete } from '../../../../store/order/actions';
+import { getPlacesFromPreviousOrders } from '../../../../store/order/selectors';
 import { Place } from '../../../../store/order/types';
 import { t } from '../../../../strings';
 import { ApiContext } from '../../../app/context';
@@ -29,19 +29,14 @@ export default function ({ navigation, route }: Props) {
   const api = useContext(ApiContext);
   const { value, returnScreen, returnParam } = route.params ?? {};
 
-  console.log(returnScreen, returnParam);
+  // app state
+  const placesFromPreviousOrders = useSelector(getPlacesFromPreviousOrders);
 
   // state
   const autocompleteSession = nanoid();
   const [searchText, setSearchText] = useState(value ?? '');
   const [autocompletePredictions, setAutoCompletePredictions] = useState<Place[]>(
-    useSelector(getEnv) === 'development'
-      ? [
-          { address: 'Av. Paulista, 1578' },
-          { address: 'Av. Paulista, 2424' },
-          { address: 'Largo de São Bento' },
-        ]
-      : []
+    placesFromPreviousOrders
   );
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
@@ -100,9 +95,15 @@ export default function ({ navigation, route }: Props) {
       <FlatList
         style={{ flex: 1 }}
         data={autocompletePredictions}
+        keyboardShouldPersistTaps="handled"
         renderItem={({ item }) => {
           return (
-            <TouchableOpacity onPress={() => setSelectedPlace(item)}>
+            <TouchableOpacity
+              onPress={() => {
+                Keyboard.dismiss();
+                setSelectedPlace(item);
+              }}
+            >
               <View style={styles.item}>
                 <Text style={{ ...texts.medium }}>{item.address}</Text>
               </View>
