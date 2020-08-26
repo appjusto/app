@@ -1,17 +1,19 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useEffect, useContext, useCallback, useState } from 'react';
-import { Text, Button, View, Image } from 'react-native';
+import React, { useEffect, useContext, useCallback } from 'react';
+import { Text, View, Image } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 
+import * as icons from '../../../../../assets/icons';
 import { matchOrder } from '../../../../../store/order/actions';
+import { getUIBusy } from '../../../../../store/ui/selectors';
 import { t } from '../../../../../strings';
-import { ApiContext } from '../../../../app/context';
-import { texts, screens, colors, padding, borders } from '../../../../common/styles';
+import { formatDistance } from '../../../../../utils/formatters';
+import { ApiContext, AppDispatch } from '../../../../app/context';
+import { texts, screens, colors, padding } from '../../../../common/styles';
+import PaddedView from '../../../../common/views/PaddedView';
 import { HomeParamList } from '../types';
 import AcceptControl from './AcceptControl';
-import PaddedView from '../../../../common/views/PaddedView';
-import * as icons from '../../../../../assets/icons';
-import { formatDistance } from '../../../../../utils/formatters';
 
 type ScreenNavigationProp = StackNavigationProp<HomeParamList, 'Matching'>;
 type ScreenRouteProp = RouteProp<HomeParamList, 'Matching'>;
@@ -25,16 +27,15 @@ export default function ({ navigation, route }: Props) {
   console.log('Matching!');
   // context
   const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
   const { matchRequest } = route.params ?? {};
 
-  // state
-  const [waiting, setWaiting] = useState(false);
+  // app state
+  const busy = useSelector(getUIBusy);
 
   // handlers
   const acceptHandler = useCallback(async () => {
-    setWaiting(true);
-    const match = await matchOrder(api)(matchRequest.orderId);
-    setWaiting(false);
+    const match = await dispatch(matchOrder(api)(matchRequest.orderId));
     console.log(match);
     // TODO: if successful, go to Delivering screen
   }, [matchRequest]);
@@ -134,7 +135,7 @@ export default function ({ navigation, route }: Props) {
         style={{ paddingBottom: padding }}
         acceptHandler={acceptHandler}
         rejectHandler={rejectHandler}
-        disabled={waiting}
+        disabled={busy}
       />
     </PaddedView>
   );

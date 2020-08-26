@@ -33,6 +33,7 @@
       "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true,
       "icon": "./assets/icon.png",
+      "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#78E08F"

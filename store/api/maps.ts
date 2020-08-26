@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { CancelToken } from 'axios';
 
 type GooglePlacesAddressResult = {
   description: string;
@@ -29,8 +29,9 @@ export default class MapsApi {
   constructor(private googleMapsApiKey: string) {}
   async googlePlacesAutocomplete(
     input: string,
-    sessiontoken: string
-  ): Promise<AutoCompleteResult[]> {
+    sessiontoken: string,
+    cancelToken: CancelToken
+  ): Promise<AutoCompleteResult[] | null> {
     // TODO: location & radius?
     const url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     const params = {
@@ -42,7 +43,7 @@ export default class MapsApi {
       language: 'pt-BR', // i18n
     };
     try {
-      const response = await axios.get(url, { params });
+      const response = await axios.get(url, { cancelToken, params });
       const { predictions } = response.data as GooglePlacesPredictionsResult;
       return predictions.map((prediction) => {
         const { description, place_id: placeId, terms, structured_formatting } = prediction;
@@ -60,6 +61,10 @@ export default class MapsApi {
         };
       });
     } catch (err) {
+      if (axios.isCancel(err)) {
+        console.log('Request canceled!');
+        return null;
+      }
       console.error(err);
       return err;
     }

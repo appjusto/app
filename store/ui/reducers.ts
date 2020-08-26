@@ -1,6 +1,6 @@
 import { AnyAction } from 'redux';
 
-import { HIDE_TOAST, SHOW_TOAST, BLOCK_UI } from './actions';
+import { HIDE_TOAST, SHOW_TOAST, BUSY } from './actions';
 import { ToastState, UIState } from './types';
 
 const initialToastState: ToastState = {
@@ -9,7 +9,7 @@ const initialToastState: ToastState = {
 
 const initialState: UIState = {
   toast: initialToastState,
-  blockUI: false,
+  busy: false,
 };
 
 export default function (state: UIState = initialState, action: AnyAction) {
@@ -20,8 +20,8 @@ export default function (state: UIState = initialState, action: AnyAction) {
     case HIDE_TOAST: {
       return { ...state, toast: initialToastState };
     }
-    case BLOCK_UI: {
-      return { ...state, blockUI: action.payload };
+    case BUSY: {
+      return { ...state, busy: action.payload };
     }
     default:
       return state;

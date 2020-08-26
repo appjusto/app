@@ -6,5 +6,5 @@ export interface ToastState {
 
 export interface UIState {
   toast: ToastState;
-  blockUI: boolean;
+  busy: boolean;
 }

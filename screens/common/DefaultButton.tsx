@@ -25,12 +25,12 @@ export default function ({
 }: Props) {
   //shouldn't we remove the touchable when the button is disabled?
   return (
-    <TouchableOpacity {...props}>
+    <TouchableOpacity disabled={disabled} {...props}>
       <View
         style={[
           {
             ...styles.buttonContainer,
-            backgroundColor: disabled ? colors.grey : colors.green,
+            backgroundColor: disabled || activityIndicator ? colors.grey : colors.green,
           },
           externalStyle,
         ]}

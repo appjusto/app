@@ -5,11 +5,24 @@ import { padding } from '../styles';
 
 interface Props extends ViewProps {
   children: React.ReactNode;
+  vertical?: boolean;
+  horizontal?: boolean;
 }
 
-export default function ({ children, style: externalStyle, ...props }: Props) {
+export default function ({
+  children,
+  vertical = true,
+  horizontal = true,
+  style: externalStyle,
+  ...props
+}: Props) {
+  const styles = [
+    vertical ? { paddingVertical: padding } : null,
+    horizontal ? { paddingHorizontal: padding } : null,
+    externalStyle,
+  ];
   return (
-    <View style={[{ padding }, externalStyle]} {...props}>
+    <View style={styles} {...props}>
       {children}
     </View>
   );

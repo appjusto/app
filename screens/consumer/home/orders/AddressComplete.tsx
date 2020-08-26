@@ -14,14 +14,16 @@ import {
   SectionList,
   SectionListData,
 } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
+import useAxiosCancelToken from '../../../../hooks/useAxiosCancelToken';
 import { AutoCompleteResult } from '../../../../store/api/maps';
 import { getAddressAutocomplete } from '../../../../store/order/actions';
 import { getPlacesFromPreviousOrders } from '../../../../store/order/selectors';
 import { Place } from '../../../../store/order/types';
+import { getUIBusy } from '../../../../store/ui/selectors';
 import { t } from '../../../../strings';
-import { ApiContext } from '../../../app/context';
+import { ApiContext, AppDispatch } from '../../../app/context';
 import DefaultButton from '../../../common/DefaultButton';
 import DefaultInput from '../../../common/DefaultInput';
 import { texts, screens, colors, padding } from '../../../common/styles';
@@ -30,10 +32,6 @@ import { HomeNavigatorParamList } from '../types';
 
 function isPlace(item: Place | AutoCompleteResult): item is Place {
   return (item as Place).address !== undefined;
-}
-
-function isAutoCompleteResult(item: Place | AutoCompleteResult): item is AutoCompleteResult {
-  return (item as AutoCompleteResult).description !== undefined;
 }
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'AddressComplete'>;
@@ -47,6 +45,7 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
   const { value, returnScreen, returnParam } = route.params ?? {};
 
   // refs
@@ -54,9 +53,10 @@ export default function ({ navigation, route }: Props) {
 
   // app state
   const placesFromPreviousOrders = useSelector(getPlacesFromPreviousOrders);
+  const busy = useSelector(getUIBusy);
 
   // state
-  const autocompleteSession = nanoid();
+  const [autocompleteSession] = useState(nanoid());
   const [searchText, setSearchText] = useState(value ?? '');
   const [autocompletePredictions, setAutoCompletePredictions] = useState<AutoCompleteResult[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
@@ -73,18 +73,29 @@ export default function ({ navigation, route }: Props) {
     }
     return sections;
   }, [placesFromPreviousOrders, autocompletePredictions]);
-
   // helpers
+  // using cancel token to allow canceling ongoing requests after unmounting
+  const cancelToken = useAxiosCancelToken();
+  // debounced callback to avoid calling the maps API more often than necessary
   // TODO: what would be a better threshold than 500ms?
   const getAddress = useCallback(
     debounce<(input: string, session: string) => void>(async (input: string, session) => {
-      const results = await getAddressAutocomplete(api)(input, session);
-      setAutoCompletePredictions(results);
+      console.log('searching', input);
+      const results = await dispatch(getAddressAutocomplete(api)(input, session, cancelToken));
+      if (results) setAutoCompletePredictions(results);
     }, 500),
     []
   );
 
   // effects
+  // search for suggestions whenever user changes the input
+  useEffect(() => {
+    // TODO: what would be a better threshold than 3 characteres?
+    if (searchText.length <= 3) return;
+    // do not search after user selects from list
+    if (selectedPlace?.address === searchText) return;
+    getAddress(searchText, autocompleteSession);
+  }, [searchText, autocompleteSession]);
   // update search text when user selects a place from suggestion list
   useEffect(() => {
     if (selectedPlace) {
@@ -92,14 +103,7 @@ export default function ({ navigation, route }: Props) {
     }
   }, [selectedPlace]);
 
-  useEffect(() => {
-    // TODO: what would be a better threshold than 3 characteres?
-    if (searchText.length <= 3) return;
-    getAddress(searchText, autocompleteSession);
-  }, [searchText, autocompleteSession]);
-
   // handlers
-
   // fires whenever use change the input text
   const textChangeHandler = useCallback(
     (text) => {
@@ -109,7 +113,6 @@ export default function ({ navigation, route }: Props) {
     },
     [searchText]
   );
-
   // when user select item from list
   const selectPlaceHandler = useCallback((place: Place) => {
     Keyboard.dismiss();
@@ -170,7 +173,12 @@ export default function ({ navigation, route }: Props) {
         }}
         SectionSeparatorComponent={() => <View style={{ height: padding }} />}
       />
-      <DefaultButton title={t('Confirmar endereço')} onPress={completeHandler} />
+      <DefaultButton
+        title={t('Confirmar endereço')}
+        onPress={completeHandler}
+        activityIndicator={busy}
+        disabled={busy}
+      />
     </PaddedView>
   );
 }

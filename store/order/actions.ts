@@ -1,7 +1,9 @@
+import { CancelToken } from 'axios';
+
 import { AppDispatch } from '../../screens/app/context';
 import Api from '../api/api';
 import { AutoCompleteResult } from '../api/maps';
-import { BLOCK_UI } from '../ui/actions';
+import { BUSY } from '../ui/actions';
 import { Place, Order } from './types';
 
 export const ORDERS_UPDATED = 'ORDERS_UPDATED';
@@ -23,35 +25,45 @@ export const observeOrdersDeliveredBy = (api: Api) => (courierId: string) => (
   });
 };
 
-export const getAddressAutocomplete = (api: Api) => async (
+export const getAddressAutocomplete = (api: Api) => (
   input: string,
-  sessiontoken: string
-): Promise<AutoCompleteResult[]> => {
-  return api.maps().googlePlacesAutocomplete(input, sessiontoken);
+  sessiontoken: string,
+  cancelToken: CancelToken
+) => async (dispatch: AppDispatch): Promise<AutoCompleteResult[] | null> => {
+  dispatch({ type: BUSY, payload: true });
+  const result = await api.maps().googlePlacesAutocomplete(input, sessiontoken, cancelToken);
+  dispatch({ type: BUSY, payload: false });
+  return result;
 };
 
 export const createOrder = (api: Api) => (origin: Place, destination: Place) => async (
   dispatch: AppDispatch
 ) => {
-  dispatch({ type: BLOCK_UI, payload: true });
+  dispatch({ type: BUSY, payload: true });
   const result = await api.order().createOrder(origin, destination);
-  dispatch({ type: BLOCK_UI, payload: false });
+  dispatch({ type: BUSY, payload: false });
   return result;
 };
 
 export const confirmOrder = (api: Api) => (orderId: string, cardId: string) => async (
   dispatch: AppDispatch
 ) => {
-  dispatch({ type: BLOCK_UI, payload: true });
+  dispatch({ type: BUSY, payload: true });
   const result = await api.order().confirmOrder(orderId, cardId);
-  dispatch({ type: BLOCK_UI, payload: false });
+  dispatch({ type: BUSY, payload: false });
   return result;
 };
 
-export const cancelOrder = (api: Api) => (orderId: string) => {
-  return api.order().cancelOrder(orderId);
+export const cancelOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
+  dispatch({ type: BUSY, payload: true });
+  const result = api.order().cancelOrder(orderId);
+  dispatch({ type: BUSY, payload: false });
+  return result;
 };
 
-export const matchOrder = (api: Api) => (orderId: string) => {
-  return api.order().matchOrder(orderId);
+export const matchOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
+  dispatch({ type: BUSY, payload: true });
+  const result = api.order().matchOrder(orderId);
+  dispatch({ type: BUSY, payload: false });
+  return result;
 };
