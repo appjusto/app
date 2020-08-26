@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logoWhite, illustration } from '../../assets/icons';
 import { getEnv } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
+import { getUIBusy } from '../../store/ui/selectors';
 import { signInWithEmail } from '../../store/user/actions';
 import { t } from '../../strings';
 import { validateEmail } from '../../utils/validators';
@@ -24,7 +25,6 @@ import DefaultButton from '../common/DefaultButton';
 import DefaultInput from '../common/DefaultInput';
 import { colors, texts, padding, screens } from '../common/styles';
 import { UnloggedParamList } from './types';
-import { getUIBusy } from '../../store/ui/selectors';
 
 type ScreenNavigationProp = StackNavigationProp<UnloggedParamList, 'WelcomeScreen'>;
 type ScreenRouteProp = RouteProp<UnloggedParamList, 'WelcomeScreen'>;

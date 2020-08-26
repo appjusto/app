@@ -34,10 +34,6 @@ function isPlace(item: Place | AutoCompleteResult): item is Place {
   return (item as Place).address !== undefined;
 }
 
-// function isAutoCompleteResult(item: Place | AutoCompleteResult): item is AutoCompleteResult {
-//   return (item as AutoCompleteResult).description !== undefined;
-// }
-
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'AddressComplete'>;
 type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'AddressComplete'>;
 
@@ -179,6 +175,7 @@ export default function ({ navigation, route }: Props) {
         title={t('Confirmar endereço')}
         onPress={completeHandler}
         activityIndicator={busy}
+        disabled={busy}
       />
     </PaddedView>
   );
