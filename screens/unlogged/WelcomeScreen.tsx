@@ -17,13 +17,14 @@ import { showToast } from '../../store/ui/actions';
 import { signInWithEmail } from '../../store/user/actions';
 import { t } from '../../strings';
 import { validateEmail } from '../../utils/validators';
-import { ApiContext } from '../app/context';
+import { ApiContext, AppDispatch } from '../app/context';
 import AvoidingView from '../common/AvoidingView';
 import CheckField from '../common/CheckField';
 import DefaultButton from '../common/DefaultButton';
 import DefaultInput from '../common/DefaultInput';
 import { colors, texts, padding, screens } from '../common/styles';
 import { UnloggedParamList } from './types';
+import { getUIBusy } from '../../store/ui/selectors';
 
 type ScreenNavigationProp = StackNavigationProp<UnloggedParamList, 'WelcomeScreen'>;
 type ScreenRouteProp = RouteProp<UnloggedParamList, 'WelcomeScreen'>;
@@ -36,13 +37,14 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+
+  // app state
+  const busy = useSelector(getUIBusy);
 
   // state
-  const dev = useSelector(getEnv) === 'development';
-  const [email, setEmail] = useState(dev ? '' : '');
+  const [email, setEmail] = useState('');
   const [acceptedTerms, setAcceptTerms] = useState(false);
-  const [waiting, setWaiting] = useState(false);
 
   // handlers
   const signInHandler = useCallback(async () => {
@@ -55,9 +57,7 @@ export default function ({ navigation, route }: Props) {
       dispatch(showToast(t('Digite um e-mail válido.')));
       return;
     }
-    setWaiting(true);
-    await signInWithEmail(api)(email);
-    setWaiting(false);
+    await dispatch(signInWithEmail(api)(email));
     navigation.navigate('SignInFeedback', { email });
   }, [acceptedTerms, email]);
 
@@ -135,10 +135,10 @@ export default function ({ navigation, route }: Props) {
             <View style={{ flex: 1 }} />
             <View style={{ paddingHorizontal: 16, marginBottom: 32 }}>
               <DefaultButton
-                disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || waiting}
+                disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
                 title={t('Entrar')}
                 onPress={signInHandler}
-                activityIndicator={waiting}
+                activityIndicator={busy}
               />
             </View>
           </View>

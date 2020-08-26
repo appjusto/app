@@ -24,12 +24,12 @@ export default function ({
   ...props
 }: Props) {
   return (
-    <TouchableOpacity {...props}>
+    <TouchableOpacity disabled={disabled} {...props}>
       <View
         style={[
           {
             ...styles.buttonContainer,
-            backgroundColor: disabled ? colors.grey : colors.green,
+            backgroundColor: disabled || activityIndicator ? colors.grey : colors.green,
           },
           externalStyle,
         ]}

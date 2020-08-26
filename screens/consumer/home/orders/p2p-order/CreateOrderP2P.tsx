@@ -1,22 +1,17 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Image, Text } from 'react-native';
+import { View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { motocycle } from '../../../../../assets/icons';
 import { getConsumer } from '../../../../../store/consumer/selectors';
 import { createOrder, confirmOrder } from '../../../../../store/order/actions';
 import OrderImpl from '../../../../../store/order/types/OrderImpl';
 import PlaceImpl from '../../../../../store/order/types/PlaceImpl';
 import { showToast } from '../../../../../store/ui/actions';
-import { t } from '../../../../../strings';
 import { ApiContext, AppDispatch } from '../../../../app/context';
-import AvoidingView from '../../../../common/AvoidingView';
-import ShowIf from '../../../../common/ShowIf';
-import { screens, texts, borders, padding } from '../../../../common/styles';
 import { HomeNavigatorParamList } from '../../types';
-import OrderMap from './OrderMap';
+import OrderHeader from './OrderHeader';
 import OrderPager from './OrderPager';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
@@ -94,32 +89,8 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <AvoidingView style={{ ...screens.default, justifyContent: 'space-between' }}>
-      {/* header */}
-      <View style={{ height: 160, justifyContent: 'center', ...borders.default }}>
-        {/* when order hasn't been created yet  */}
-        <ShowIf test={!order}>
-          {() => (
-            <View
-              style={{
-                flexDirection: 'row',
-                marginHorizontal: padding,
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                ...borders.default,
-              }}
-            >
-              <Text style={{ ...texts.big, ...borders.default }}>{t('Detalhes do\nPedido')}</Text>
-              <Image source={motocycle} style={{ width: 114, height: 114 }} />
-            </View>
-          )}
-        </ShowIf>
-
-        {/* after order has been created */}
-        <ShowIf test={order?.valid() === true}>{() => <OrderMap order={order!} />}</ShowIf>
-      </View>
-
-      {/* pager */}
+    <View style={{ flex: 1 }}>
+      <OrderHeader order={order} />
       <OrderPager
         origin={origin}
         destination={destination}
@@ -129,6 +100,6 @@ export default function ({ navigation, route }: Props) {
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         confirmOrder={confirmOrderHandler}
       />
-    </AvoidingView>
+    </View>
   );
 }

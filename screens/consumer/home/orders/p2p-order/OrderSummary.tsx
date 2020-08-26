@@ -23,7 +23,7 @@ function PlaceSummary({ place, title, editStepHandler }: PlaceSummaryProps) {
         <Text style={{ ...texts.small, lineHeight: 18, color: colors.darkGreen }}>{title}</Text>
         <Text style={{ ...texts.medium, lineHeight: 22 }}>{place.address}</Text>
         <Text>{place.additionalInfo}</Text>
-        <Text>{place.description}</Text>
+        <Text>{place.address}</Text>
       </View>
       <View style={{ alignSelf: 'center' }}>
         <TouchableOpacity onPress={editStepHandler}>
@@ -164,7 +164,7 @@ export default function ({
       <DefaultButton
         title={t('Fazer pedido')}
         onPress={nextStepHandler}
-        disabled={!card}
+        disabled={!card || waiting}
         activityIndicator={waiting}
       />
     </ScrollView>

@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../../assets/icons';
@@ -8,6 +8,7 @@ import { cancelOrder } from '../../../../store/order/actions';
 import { getOrders } from '../../../../store/order/selectors';
 import { OrderStatus } from '../../../../store/order/types';
 import { showToast } from '../../../../store/ui/actions';
+import { getUIBusy } from '../../../../store/ui/selectors';
 import { t } from '../../../../strings';
 import { ApiContext, AppDispatch } from '../../../app/context';
 import DefaultButton from '../../../common/DefaultButton';
@@ -30,11 +31,9 @@ export default ({ navigation, route }: Props) => {
   const { orderId } = route.params ?? {};
 
   // app state
+  const busy = useSelector(getUIBusy);
   const orders = useSelector(getOrders);
   const order = orders.find(({ id }) => id === orderId);
-
-  // state
-  const [waiting, setWaiting] = useState(false);
 
   // side effects
   useEffect(() => {
@@ -49,9 +48,7 @@ export default ({ navigation, route }: Props) => {
   // handlers
   const cancelOrderHandler = async () => {
     try {
-      setWaiting(true);
-      await cancelOrder(api)(orderId);
-      setWaiting(false);
+      await dispatch(cancelOrder(api)(orderId));
     } catch (error) {
       dispatch(showToast(error.toString()));
     }
@@ -68,8 +65,8 @@ export default ({ navigation, route }: Props) => {
       <DefaultButton
         title={t('Cancelar pedido')}
         onPress={cancelOrderHandler}
-        activityIndicator={waiting}
-        disabled={waiting}
+        activityIndicator={busy}
+        disabled={busy}
         style={{ ...borders.default, borderColor: colors.black, backgroundColor: 'white' }}
       />
 

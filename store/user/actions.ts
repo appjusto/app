@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { AppDispatch } from '../../screens/app/context';
 import Api from '../api/api';
 import { Flavor } from '../config/types';
+import { BUSY } from '../ui/actions';
 import { UserProfile, ProfileInfo } from './types';
 
 export const USER_LOGGED_IN = 'USER_LOGGED_IN';
@@ -23,13 +24,16 @@ export const observeAuthState = (api: Api) => (dispatch: AppDispatch) => {
   return unsubscribe;
 };
 
-export const signInWithEmail = (api: Api) => (email: string) => {
+export const signInWithEmail = (api: Api) => (email: string) => (dispatch: AppDispatch) => {
   try {
     AsyncStorage.setItem('email', email);
   } catch (e) {
     console.error(e);
   }
-  return api.auth().sendSignInLinkToEmail(email);
+  dispatch({ type: BUSY, payload: true });
+  const result = api.auth().sendSignInLinkToEmail(email);
+  dispatch({ type: BUSY, payload: false });
+  return result;
 };
 
 export const getSignInEmail = () => {
