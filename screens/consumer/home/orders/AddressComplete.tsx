@@ -92,6 +92,8 @@ export default function ({ navigation, route }: Props) {
   useEffect(() => {
     // TODO: what would be a better threshold than 3 characteres?
     if (searchText.length <= 3) return;
+    // do not search after user selects from list
+    if (selectedPlace?.address === searchText) return;
     getAddress(searchText, autocompleteSession);
   }, [searchText, autocompleteSession]);
   // update search text when user selects a place from suggestion list

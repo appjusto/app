@@ -14,7 +14,7 @@ import { AppDispatch } from '../../../../app/context';
 import DefaultButton from '../../../../common/DefaultButton';
 import DefaultInput from '../../../../common/DefaultInput';
 import LabeledText from '../../../../common/LabeledText';
-import { padding, borders } from '../../../../common/styles';
+import { padding } from '../../../../common/styles';
 import PaddedView from '../../../../common/views/PaddedView';
 import OrderStep from './OrderStep';
 import OrderSummary from './OrderSummary';
@@ -107,13 +107,9 @@ export default function ({
         <OrderStep step={step} changeStepHandler={setPage} />
       </PaddedView>
 
-      <ViewPager
-        ref={viewPager}
-        style={{ flex: 1, ...borders.default }}
-        onPageScroll={onPageScroll}
-      >
+      <ViewPager ref={viewPager} style={{ flex: 1 }} onPageScroll={onPageScroll}>
         {/* origin */}
-        <PaddedView style={{ flex: 1, justifyContent: 'flex-end', ...borders.default }}>
+        <PaddedView style={{ flex: 1, justifyContent: 'flex-end' }}>
           <TouchableWithoutFeedback
             onPress={() => {
               navigateToAddressComplete(origin.address ?? '', 'origin');
@@ -149,7 +145,7 @@ export default function ({
 
         {/* destination */}
         {origin.valid() && (
-          <PaddedView style={{ flex: 1, justifyContent: 'flex-end', ...borders.default }}>
+          <PaddedView style={{ flex: 1, justifyContent: 'flex-end' }}>
             <TouchableWithoutFeedback
               onPress={() => {
                 navigateToAddressComplete(destination.address ?? '', 'destination');
@@ -185,16 +181,14 @@ export default function ({
 
         {/* confirmation */}
         {order?.valid() === true && (
-          <PaddedView>
-            <OrderSummary
-              order={order!}
-              card={card}
-              waiting={busy}
-              editStepHandler={setPage}
-              nextStepHandler={nextStepHandler}
-              navigateToFillPaymentInfo={navigateToFillPaymentInfo}
-            />
-          </PaddedView>
+          <OrderSummary
+            order={order!}
+            card={card}
+            waiting={busy}
+            editStepHandler={setPage}
+            nextStepHandler={nextStepHandler}
+            navigateToFillPaymentInfo={navigateToFillPaymentInfo}
+          />
         )}
       </ViewPager>
     </View>

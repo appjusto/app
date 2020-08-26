@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Text, Image, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, Image, TouchableOpacity, Dimensions } from 'react-native';
 
 import { edit } from '../../../../../assets/icons';
 import { Card } from '../../../../../store/consumer/types';
@@ -9,6 +9,8 @@ import { t } from '../../../../../strings';
 import DefaultButton from '../../../../common/DefaultButton';
 import ShowIf from '../../../../common/ShowIf';
 import { texts, colors, borders, screens } from '../../../../common/styles';
+import OrderMap from './OrderMap';
+import PaddedView from '../../../../common/views/PaddedView';
 
 type PlaceSummaryProps = {
   place: Place;
@@ -51,46 +53,63 @@ export default function ({
   nextStepHandler,
   navigateToFillPaymentInfo,
 }: Props) {
+  const { height } = Dimensions.get('window');
   const { origin, destination, distance, duration, fare } = order.getData();
   return (
     <ScrollView style={{ flex: 1 }}>
+      {/* show map if it was hidden on previous pages */}
+      <ShowIf test={height < 700}>
+        {() => (
+          <View style={{ height: 160 }}>
+            <OrderMap order={order} />
+          </View>
+        )}
+      </ShowIf>
       <View style={{ flex: 1 }}>
-        <PlaceSummary
-          title={t(`Retirada`)}
-          place={origin}
-          editStepHandler={() => editStepHandler(0)}
-        />
-        <PlaceSummary
-          title={t(`Entrega`)}
-          place={destination}
-          editStepHandler={() => editStepHandler(1)}
-        />
-        <View
-          style={{
-            ...borders.default,
-            paddingHorizontal: 8,
-            flexDirection: 'row',
-            alignItems: 'center',
-            alignSelf: 'flex-start',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Text>{distance}</Text>
-          <Text>{duration}</Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 16,
-            justifyContent: 'space-between',
-            height: 60,
-            width: '100%',
-          }}
-        >
-          <Text style={{ ...texts.medium, lineHeight: 22 }}>{t('Valor total a pagar')}</Text>
-          <Text style={{ ...texts.medium, lineHeight: 22 }}>R$ {fare.total}</Text>
-        </View>
+        {/* origin and destionatin */}
+        <PaddedView>
+          <PlaceSummary
+            title={t(`Retirada`)}
+            place={origin}
+            editStepHandler={() => editStepHandler(0)}
+          />
+          <PlaceSummary
+            title={t(`Entrega`)}
+            place={destination}
+            editStepHandler={() => editStepHandler(1)}
+          />
+        </PaddedView>
+
+        {/* details */}
+        <PaddedView>
+          <View
+            style={{
+              ...borders.default,
+              paddingHorizontal: 8,
+              flexDirection: 'row',
+              alignItems: 'center',
+              alignSelf: 'flex-start',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Text>{distance}</Text>
+            <Text>{duration}</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: 16,
+              justifyContent: 'space-between',
+              height: 60,
+              width: '100%',
+            }}
+          >
+            <Text style={{ ...texts.medium, lineHeight: 22 }}>{t('Valor total a pagar')}</Text>
+            <Text style={{ ...texts.medium, lineHeight: 22 }}>R$ {fare.total}</Text>
+          </View>
+        </PaddedView>
       </View>
+
       <View style={{ ...screens.lightGrey, paddingVertical: 24 }}>
         <View>
           <Text style={{ ...texts.default, lineHeight: 22 }}>{t('Entenda os valores')}</Text>

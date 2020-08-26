@@ -10,6 +10,7 @@ import OrderImpl from '../../../../../store/order/types/OrderImpl';
 import PlaceImpl from '../../../../../store/order/types/PlaceImpl';
 import { showToast } from '../../../../../store/ui/actions';
 import { ApiContext, AppDispatch } from '../../../../app/context';
+import { screens } from '../../../../common/styles';
 import { HomeNavigatorParamList } from '../../types';
 import OrderHeader from './OrderHeader';
 import OrderPager from './OrderPager';
@@ -89,7 +90,7 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ ...screens.default }}>
       <OrderHeader order={order} />
       <OrderPager
         origin={origin}
