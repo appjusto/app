@@ -5,6 +5,26 @@ import { Place } from '.';
 export default class PlaceImpl {
   constructor(protected source: Place) {}
 
+  public get address() {
+    return this.source.address;
+  }
+
+  public get googlePlaceId() {
+    return this.source.googlePlaceId;
+  }
+
+  public get additionalInfo() {
+    return this.source.additionalInfo;
+  }
+
+  public get location() {
+    return this.source.location;
+  }
+
+  public get description() {
+    return this.source.description;
+  }
+
   public getData(): Place {
     return this.source;
   }
@@ -13,9 +33,13 @@ export default class PlaceImpl {
     return new PlaceImpl(Object.assign({}, this.source, newSource));
   }
 
+  public sameAdddress(anotherPlace: PlaceImpl): boolean {
+    return this.address === anotherPlace.address;
+  }
+
   public valid(): boolean {
     // TODO: implement validation
-    return !isEmpty(this.source.address) /*&& !isEmpty(this.source.description)*/;
+    return !isEmpty(this.address) /*&& !isEmpty(this.source.description)*/;
   }
 
   public toSring() {

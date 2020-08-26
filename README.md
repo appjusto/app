@@ -9,14 +9,18 @@ npm install
 # 2. Configure .env
 
 ```bash
-GOOGLE_MAPS_API_KEY=
+GOOGLE_IOS_API_KEY=
+GOOGLE_ANDROID_API_KEY=
 FIREBASE_REGION=
-FIREBASE_API_KEY=
 FIREBASE_PROJECT_ID=
 FIREBASE_DATABASE_NAME=
 FIREBASE_MESSAGING_SENDER_ID=
 FIREBASE_APP_ID=
 FIREBASE_MEASUREMENT_ID=
+SEGMENT_ANDROID_KEY=
+SEGMENT_IOS_KEY=
+SENTRY_DSN=
+SENTRY_AUTH_TOKEN=
 ```
 
 # 3. Running locally
@@ -29,8 +33,8 @@ FLAVOR=<consumer | courier> expo start -c
 FLAVOR=<consumer | courier> FIREBASE_EMULATOR=true expo start --tunnel -c
 
 # Deeplink testing
-xcrun simctl openurl booted "exp://192.168.15.3:19000/--/?link=<link>"
-adb shell am start -a "android.intent.action.VIEW" -d "exp://192.168.15.3:19000/--/?link=<link>"
+xcrun simctl openurl booted "exp://<local-ip-address>:19000/--/?link=<link>"
+adb shell am start -a "android.intent.action.VIEW" -d "exp://<local-ip-address>:19000/--/?link=<link>"
 ```
 
 # 4. Building locally

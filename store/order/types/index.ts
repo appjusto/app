@@ -5,8 +5,9 @@ export interface LatLng {
 
 export interface Place {
   address?: string;
+  googlePlaceId?: string;
   additionalInfo?: string;
-  description?: string;
+  intructions?: string;
   location?: LatLng;
 }
 

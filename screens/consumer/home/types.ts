@@ -1,14 +1,16 @@
+import { Place } from '../../../store/order/types';
+
 export type HomeNavigatorParamList = {
   Home: undefined;
   CreateOrderP2P?: {
-    originAddress?: string;
-    destinationAddress?: string;
+    origin?: Place;
+    destination?: Place;
     cardId?: string;
   };
   AddressComplete: {
-    value: string;
-    destinationScreen: 'CreateOrderP2P';
-    destinationParam: string;
+    value?: string;
+    returnScreen: 'CreateOrderP2P';
+    returnParam: string;
   };
   ProfileAddCard?: {
     returnScreen: 'CreateOrderP2P';

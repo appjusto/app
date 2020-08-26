@@ -1,37 +1,31 @@
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import React, { useRef, useState } from 'react';
-import { View, NativeSyntheticEvent } from 'react-native';
+import { View, NativeSyntheticEvent, ScrollView } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Card } from '../../../../../store/consumer/types';
 import OrderImpl from '../../../../../store/order/types/OrderImpl';
 import PlaceImpl from '../../../../../store/order/types/PlaceImpl';
 import { showToast } from '../../../../../store/ui/actions';
+import { getUIBlocked } from '../../../../../store/ui/selectors';
 import { t } from '../../../../../strings';
 import { AppDispatch } from '../../../../app/context';
 import DefaultButton from '../../../../common/DefaultButton';
 import DefaultInput from '../../../../common/DefaultInput';
 import LabeledText from '../../../../common/LabeledText';
-import ShowIf from '../../../../common/ShowIf';
-import { padding } from '../../../../common/styles';
-import OrderSummary from './OrderSummary';
+import { padding, borders } from '../../../../common/styles';
 import PaddedView from '../../../../common/views/PaddedView';
-
-enum Steps {
-  Origin = 0,
-  Destination,
-  Confirmation,
-  ConfirmingOrder,
-}
+import OrderStep from './OrderStep';
+import OrderSummary from './OrderSummary';
+import { Steps } from './types';
 
 type Props = {
   origin: PlaceImpl;
   destination: PlaceImpl;
   order: OrderImpl | null;
   card: Card | null;
-  waiting: boolean;
-  navigateToAddressComplete: (currentValue: string, destinationParam: string) => void;
+  navigateToAddressComplete: (value: string, returnParam: string) => void;
   navigateToFillPaymentInfo: () => void;
   confirmOrder: () => Promise<void>;
 };
@@ -41,7 +35,6 @@ export default function ({
   destination,
   order,
   card,
-  waiting,
   navigateToAddressComplete,
   navigateToFillPaymentInfo,
   confirmOrder,
@@ -51,6 +44,9 @@ export default function ({
 
   // refs
   const viewPager = useRef<ViewPager>(null);
+
+  // app state
+  const waiting = useSelector(getUIBlocked);
 
   // state
   const [step, setStep] = useState(Steps.Origin);
@@ -65,7 +61,9 @@ export default function ({
   };
 
   const setPage = (index: number): void => {
-    if (viewPager?.current) viewPager.current.setPage(index);
+    if (stepReady(index)) {
+      if (viewPager?.current) viewPager.current.setPage(index);
+    }
   };
   const nextPage = (): void => setPage(step + 1);
 
@@ -105,51 +103,58 @@ export default function ({
 
   return (
     <View style={{ flex: 1 }}>
-      <ViewPager ref={viewPager} style={{ flex: 1 }} onPageScroll={onPageScroll}>
+      <PaddedView>
+        <OrderStep step={step} changeStepHandler={setPage} />
+      </PaddedView>
+
+      <ViewPager
+        ref={viewPager}
+        style={{ flex: 1, ...borders.default }}
+        onPageScroll={onPageScroll}
+      >
         {/* origin */}
-        <PaddedView style={{ justifyContent: 'flex-end' }}>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              navigateToAddressComplete(origin.getData().address ?? '', 'originAddress');
-            }}
-          >
-            <View>
-              <LabeledText style={{ marginTop: padding }} title={t('Endereço de retirada')}>
-                {origin.getData().address ?? t('Endereço com número')}
-              </LabeledText>
-            </View>
-          </TouchableWithoutFeedback>
+        <ScrollView>
+          <PaddedView style={{ flex: 1, justifyContent: 'flex-end', ...borders.default }}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                navigateToAddressComplete(origin.address ?? '', 'origin');
+              }}
+            >
+              <View>
+                <LabeledText title={t('Endereço de retirada')}>
+                  {origin.getData().address ?? t('Endereço com número')}
+                </LabeledText>
+              </View>
+            </TouchableWithoutFeedback>
 
-          <DefaultInput
-            style={{ marginTop: padding }}
-            title={t('Complemento (se houver)')}
-            placeholder={t('Apartamento, sala, loja, etc.')}
-          />
+            <DefaultInput
+              style={{ marginTop: padding }}
+              title={t('Complemento (se houver)')}
+              placeholder={t('Apartamento, sala, loja, etc.')}
+            />
 
-          <DefaultInput
-            style={{ marginTop: padding }}
-            title={t('Instruções para retirada')}
-            placeholder={t('Quem irá atender o entregador, etc.')}
-          />
+            <DefaultInput
+              style={{ marginTop: padding }}
+              title={t('Instruções para retirada')}
+              placeholder={t('Quem irá atender o entregador, etc.')}
+            />
 
-          <View style={{ flex: 1 }} />
+            <View style={{ flex: 1 }} />
 
-          <DefaultButton
-            title={t('Confirmar local de retirada')}
-            onPress={nextStepHandler}
-            disabled={!stepReady(step + 1)}
-          />
-        </PaddedView>
+            <DefaultButton
+              title={t('Confirmar local de retirada')}
+              onPress={nextStepHandler}
+              disabled={!stepReady(step + 1)}
+            />
+          </PaddedView>
+        </ScrollView>
 
         {/* destination */}
         {origin.valid() && (
-          <PaddedView style={{ justifyContent: 'flex-end' }}>
+          <ScrollView>
             <TouchableWithoutFeedback
               onPress={() => {
-                navigateToAddressComplete(
-                  destination.getData().address ?? '',
-                  'destinationAddress'
-                );
+                navigateToAddressComplete(destination.address ?? '', 'destination');
               }}
             >
               <LabeledText style={{ marginTop: padding }} title={t('Endereço de entrega')}>
@@ -177,7 +182,7 @@ export default function ({
               disabled={!stepReady(step + 1)}
               activityIndicator={step === Steps.Destination && waiting}
             />
-          </PaddedView>
+          </ScrollView>
         )}
 
         {/* confirmation */}
