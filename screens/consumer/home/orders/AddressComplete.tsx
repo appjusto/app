@@ -1,11 +1,22 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { isEmpty } from 'lodash';
 import debounce from 'lodash/debounce';
 import { nanoid } from 'nanoid/non-secure';
-import React, { useState, useCallback, useContext, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Keyboard } from 'react-native';
+import React, { useState, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Keyboard,
+  SectionList,
+  SectionListData,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 
+import { AutoCompleteResult } from '../../../../store/api/maps';
 import { getAddressAutocomplete } from '../../../../store/order/actions';
 import { getPlacesFromPreviousOrders } from '../../../../store/order/selectors';
 import { Place } from '../../../../store/order/types';
@@ -13,8 +24,17 @@ import { t } from '../../../../strings';
 import { ApiContext } from '../../../app/context';
 import DefaultButton from '../../../common/DefaultButton';
 import DefaultInput from '../../../common/DefaultInput';
-import { borders, texts, screens, colors } from '../../../common/styles';
+import { texts, screens, colors, padding } from '../../../common/styles';
+import PaddedView from '../../../common/views/PaddedView';
 import { HomeNavigatorParamList } from '../types';
+
+function isPlace(item: Place | AutoCompleteResult): item is Place {
+  return (item as Place).address !== undefined;
+}
+
+function isAutoCompleteResult(item: Place | AutoCompleteResult): item is AutoCompleteResult {
+  return (item as AutoCompleteResult).description !== undefined;
+}
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'AddressComplete'>;
 type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'AddressComplete'>;
@@ -29,16 +49,40 @@ export default function ({ navigation, route }: Props) {
   const api = useContext(ApiContext);
   const { value, returnScreen, returnParam } = route.params ?? {};
 
+  // refs
+  const searchInputRef = useRef<TextInput>();
+
   // app state
   const placesFromPreviousOrders = useSelector(getPlacesFromPreviousOrders);
 
   // state
   const autocompleteSession = nanoid();
   const [searchText, setSearchText] = useState(value ?? '');
-  const [autocompletePredictions, setAutoCompletePredictions] = useState<Place[]>(
-    placesFromPreviousOrders
-  );
+  const [autocompletePredictions, setAutoCompletePredictions] = useState<AutoCompleteResult[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+  const sections: SectionListData<Place | AutoCompleteResult>[] = useMemo(() => {
+    let sections: SectionListData<Place | AutoCompleteResult>[] = [];
+    if (!isEmpty(autocompletePredictions)) {
+      sections = [...sections, { title: t('Resultados da busca'), data: autocompletePredictions }];
+    }
+    if (!isEmpty(placesFromPreviousOrders)) {
+      sections = [
+        ...sections,
+        { title: t('Últimos endereços utilizados'), data: placesFromPreviousOrders },
+      ];
+    }
+    return sections;
+  }, [placesFromPreviousOrders, autocompletePredictions]);
+
+  // helpers
+  // TODO: what would be a better threshold than 500ms?
+  const getAddress = useCallback(
+    debounce<(input: string, session: string) => void>(async (input: string, session) => {
+      const results = await getAddressAutocomplete(api)(input, session);
+      setAutoCompletePredictions(results);
+    }, 500),
+    []
+  );
 
   // effects
   // update search text when user selects a place from suggestion list
@@ -48,14 +92,13 @@ export default function ({ navigation, route }: Props) {
     }
   }, [selectedPlace]);
 
+  useEffect(() => {
+    // TODO: what would be a better threshold than 3 characteres?
+    if (searchText.length <= 3) return;
+    getAddress(searchText, autocompleteSession);
+  }, [searchText, autocompleteSession]);
+
   // handlers
-  const getAddress = useCallback(
-    debounce<(input: string) => void>(async (input: string): Promise<void> => {
-      const results = await getAddressAutocomplete(api)(input, autocompleteSession);
-      setAutoCompletePredictions(results);
-    }, 300),
-    [autocompleteSession]
-  );
 
   // fires whenever use change the input text
   const textChangeHandler = useCallback(
@@ -63,13 +106,16 @@ export default function ({ navigation, route }: Props) {
       if (text === searchText) return; // avoid searching when user selects from suggestion list
       setSearchText(text); // update source text
       setSelectedPlace(null); // so we know text is freshier than what it was selected
-      // TODO: what would be a better threshold than 3 characteres?
-      if (text.length > 3) {
-        getAddress(text);
-      }
     },
     [searchText]
   );
+
+  // when user select item from list
+  const selectPlaceHandler = useCallback((place: Place) => {
+    Keyboard.dismiss();
+    setSelectedPlace(place);
+    setAutoCompletePredictions([]); // clearing predictions hides the modal
+  }, []);
 
   // confirm button callback
   const completeHandler = useCallback(() => {
@@ -80,41 +126,52 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <View style={{ ...screens.lightGrey, paddingTop: 16 }}>
+    <PaddedView style={{ ...screens.configScreen }}>
       <DefaultInput
+        ref={searchInputRef}
         defaultValue={searchText}
         value={searchText}
         title={t('Endereço de retirada')}
         placeholder={t('Endereço com número')}
         onChangeText={textChangeHandler}
-        style={{ marginBottom: 32 }}
+        style={{ marginBottom: padding }}
+        autoCorrect={false}
       />
-      <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: 14 }}>
-        {t('Últimos endereços utilizados')}
-      </Text>
-      <FlatList
+      <SectionList
         style={{ flex: 1 }}
-        data={autocompletePredictions}
-        keyboardShouldPersistTaps="handled"
-        renderItem={({ item }) => {
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                Keyboard.dismiss();
-                setSelectedPlace(item);
-              }}
-            >
-              <View style={styles.item}>
-                <Text style={{ ...texts.medium }}>{item.address}</Text>
-              </View>
-            </TouchableOpacity>
-          );
+        sections={sections}
+        keyExtractor={(item) => {
+          if (isPlace(item)) return item.googlePlaceId ?? item.address!;
+          return item.placeId ?? item.description!;
         }}
-        // TODO: use google place id
-        keyExtractor={(item) => item.googlePlaceId ?? item.address!}
+        keyboardShouldPersistTaps="handled"
+        renderSectionHeader={({ section }) => (
+          <Text style={{ ...texts.small, color: colors.darkGrey }}>{section.title}</Text>
+        )}
+        renderItem={({ item }) => {
+          if (isPlace(item)) {
+            return (
+              <TouchableOpacity onPress={() => selectPlaceHandler(item)}>
+                <View style={styles.item}>
+                  <Text style={{ ...texts.medium }}>{item.address}</Text>
+                </View>
+              </TouchableOpacity>
+            );
+          } else {
+            return (
+              <TouchableOpacity onPress={() => selectPlaceHandler({ address: item.description })}>
+                <View style={styles.item}>
+                  <Text style={{ ...texts.medium }}>{item.main}</Text>
+                  <Text style={{ ...texts.small }}>{item.secondary}</Text>
+                </View>
+              </TouchableOpacity>
+            );
+          }
+        }}
+        SectionSeparatorComponent={() => <View style={{ height: padding }} />}
       />
       <DefaultButton title={t('Confirmar endereço')} onPress={completeHandler} />
-    </View>
+    </PaddedView>
   );
 }
 
@@ -122,7 +179,6 @@ const styles = StyleSheet.create({
   item: {
     width: '100%',
     height: 61,
-    ...borders.default,
     justifyContent: 'center',
   },
 });

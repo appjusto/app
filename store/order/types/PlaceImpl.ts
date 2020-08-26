@@ -9,10 +9,6 @@ export default class PlaceImpl {
     return this.source.address;
   }
 
-  public get structuredAddress() {
-    return this.source.structuredAddress;
-  }
-
   public get googlePlaceId() {
     return this.source.googlePlaceId;
   }

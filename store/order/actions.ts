@@ -1,5 +1,6 @@
 import { AppDispatch } from '../../screens/app/context';
 import Api from '../api/api';
+import { AutoCompleteResult } from '../api/maps';
 import { BLOCK_UI } from '../ui/actions';
 import { Place, Order } from './types';
 
@@ -25,17 +26,8 @@ export const observeOrdersDeliveredBy = (api: Api) => (courierId: string) => (
 export const getAddressAutocomplete = (api: Api) => async (
   input: string,
   sessiontoken: string
-): Promise<Place[]> => {
-  const result = await api.maps().googlePlacesAutocomplete(input, sessiontoken);
-  console.log(result);
-  return result.map((result) => ({
-    googlePlaceId: result.place_id,
-    address: result.description,
-    structuredAddress: {
-      main: result.structured_formatting.main_text,
-      secondary: result.structured_formatting.secondary_text,
-    },
-  }));
+): Promise<AutoCompleteResult[]> => {
+  return api.maps().googlePlacesAutocomplete(input, sessiontoken);
 };
 
 export const createOrder = (api: Api) => (origin: Place, destination: Place) => async (

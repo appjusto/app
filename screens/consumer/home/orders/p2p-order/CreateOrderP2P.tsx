@@ -44,8 +44,6 @@ export default function ({ navigation, route }: Props) {
   // route changes when interacting with 'AddressComplete' and 'PaymentSelector' screens;
   useEffect(() => {
     const { origin: newOrigin, destination: newDestination, cardId } = route.params ?? {};
-    console.log(newOrigin);
-    console.log(newDestination);
     if (newOrigin) setOrigin(origin.merge(newOrigin));
     if (newDestination) setDestination(destination.merge(newDestination));
     if (cardId) setCard(consumer?.getCardById(cardId) ?? null);

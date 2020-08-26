@@ -113,8 +113,8 @@ export default function ({
         onPageScroll={onPageScroll}
       >
         {/* origin */}
-        <ScrollView contentContainerStyle={{ flex: 1 }}>
-          <PaddedView style={{ flex: 1, justifyContent: 'flex-end' }}>
+        <ScrollView>
+          <PaddedView style={{ flex: 1, justifyContent: 'flex-end', ...borders.default }}>
             <TouchableWithoutFeedback
               onPress={() => {
                 navigateToAddressComplete(origin.address ?? '', 'origin');
@@ -151,7 +151,7 @@ export default function ({
 
         {/* destination */}
         {origin.valid() && (
-          <PaddedView style={{ justifyContent: 'flex-end' }}>
+          <ScrollView>
             <TouchableWithoutFeedback
               onPress={() => {
                 navigateToAddressComplete(destination.address ?? '', 'destination');
@@ -182,7 +182,7 @@ export default function ({
               disabled={!stepReady(step + 1)}
               activityIndicator={step === Steps.Destination && waiting}
             />
-          </PaddedView>
+          </ScrollView>
         )}
 
         {/* confirmation */}
