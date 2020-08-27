@@ -1,7 +1,8 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
-import React, { useState } from 'react';
+import * as Permissions from 'expo-permissions';
+import React, { useState, useCallback } from 'react';
 import { View, Text, Image } from 'react-native';
 
 import { license, selfie } from '../../../assets/icons';
@@ -18,37 +19,54 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-export default function ({ navigation }: Props) {
-  //Pick an image (what to do with the image?)
-  const [selectedImage, setSelectedImage] = useState(null);
+export default function ({ navigation, image }: Props) {
+  // const imageOptions = {
+  //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //   allowsEditing: true,
+  //   aspect: [1, 1],
+  //   quality: 1,
+  // };
 
-  const openImagePickerAsync = async () => {
-    const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
+  // const getImageFromLibrary = () => ImagePicker.launchImageLibraryAsync(imageOptions);
+  // const getImageFromCamera = () => ImagePicker.launchCameraAsync(imageOptions);
+  // const getImageFromSource = (source) =>
+  //   source === 'library' ? getImageFromLibrary() : getImageFromCamera();
+  // const source = 'library';
 
-    if (permissionResult.granted === false) {
-      alert(t('A permissão ao acesso às fotos é necessária'));
-      return;
-    }
+  // state
+  // initial, denied, ready, edit
 
-    const pickerResult = await ImagePicker.launchImageLibraryAsync();
+  // const initialState = !image ? 'ready' : 'edit';
+  // const [state, setState] = useState(null);
+  // // const [placeholderImage, setPlaceholderImage] = useState(image || placeholder);
 
-    if (pickerResult.cancelled === true) {
-      return;
-    }
+  // handlers
+  // const getPermissionAsync = useCallback(async () => {
+  //   const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL, Permissions.CAMERA);
+  //   if (status === 'denied') setState('denied');
+  //   else if (status === 'undefined') {
+  //     // TODO: improve as we are asking multiple permissions
+  //   } else if (status === 'granted') {
+  //     setState(initialState);
+  //   }
+  // }, [initialState]);
 
-    setSelectedImage({ localUri: pickerResult.uri });
-  };
+  // const pickImage = useCallback(async () => {
+  //   if (['denied', 'undefined'].indexOf(state) !== -1) getPermissionAsync();
+  //   else {
+  //     try {
+  //       const result = await getImageFromSource(source);
+  //       if (!result.cancelled) {
+  //         setState('edit');
+  //         // setPlaceholderImage({ uri: result.uri });
+  //         // onChange(result);
+  //       }
+  //     } catch (e) {
+  //       console.log('TODO: handle');
+  //     }
+  //   }
+  // }, [state, getPermissionAsync]);
 
-  if (selectedImage !== null) {
-    return (
-      <View style={{ flex: 1 }}>
-        <Image
-          source={{ uri: selectedImage.localUri }}
-          style={{ width: 300, height: 300, resizeMode: 'contain' }}
-        />
-      </View>
-    );
-  }
   // UI
   return (
     <View style={{ ...screens.lightGrey }}>
@@ -59,12 +77,11 @@ export default function ({ navigation }: Props) {
         )}
       </Text>
       <View style={{ marginTop: 24, flex: 1, alignItems: 'center' }}>
-        <DocumentButton title={t('Foto de rosto')} onPress={openImagePickerAsync}>
-          <Image source={selfie} width={32} height={48} />
+        <DocumentButton title={t('Foto de rosto')} onPress={() => navigation.navigate('Camera')}>
+          <Image source={selfie || image} width={32} height={48} />
         </DocumentButton>
-
         <DocumentButton title={t('RG ou CNH aberta')} onPress={() => {}}>
-          <Image source={license} width={40} height={54} />
+          <Image source={license || image} width={40} height={54} />
         </DocumentButton>
       </View>
     </View>
