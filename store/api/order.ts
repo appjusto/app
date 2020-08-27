@@ -15,6 +15,7 @@ export default class OrderApi {
       .collection('orders')
       .where('consumerId', '==', consumerId)
       .where('status', 'in', ['quote', 'matching', 'dispatching', 'delivered', 'canceled'])
+      .orderBy('createdOn', 'desc')
       .onSnapshot(
         (querySnapshot) => {
           const docs: Order[] = [];

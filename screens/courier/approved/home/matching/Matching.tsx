@@ -86,9 +86,13 @@ export default function ({ navigation, route }: Props) {
             source={icons.pinPackageWhite}
             style={{ width: 34, height: 44, marginRight: padding }}
           />
-          <View>
+          <View style={{ flex: 1 }}>
             <Text style={[texts.default, { color: colors.darkGreen }]}>{t('Retirada')}</Text>
-            <Text style={[texts.medium]}>{matchRequest.originAddress}</Text>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={[texts.medium, { flexWrap: 'wrap' }]} numberOfLines={3}>
+                {matchRequest.originAddress}
+              </Text>
+            </View>
           </View>
         </View>
         <View
@@ -105,9 +109,13 @@ export default function ({ navigation, route }: Props) {
             source={icons.pinPackage}
             style={{ width: 34, height: 44, marginRight: padding }}
           />
-          <View>
+          <View style={{ flex: 1 }}>
             <Text style={[texts.default, { color: colors.darkGreen }]}>{t('Entrega')}</Text>
-            <Text style={[texts.medium]}>{matchRequest.destinationAddress}</Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              <Text style={[texts.medium, { flexWrap: 'wrap' }]} numberOfLines={3}>
+                {matchRequest.destinationAddress}
+              </Text>
+            </View>
           </View>
         </View>
         <View
@@ -131,12 +139,7 @@ export default function ({ navigation, route }: Props) {
       </View>
       <View style={{ flex: 1 }} />
       {/* accept / reject control */}
-      <AcceptControl
-        style={{ paddingBottom: padding }}
-        acceptHandler={acceptHandler}
-        rejectHandler={rejectHandler}
-        disabled={busy}
-      />
+      <AcceptControl acceptHandler={acceptHandler} rejectHandler={rejectHandler} disabled={busy} />
     </PaddedView>
   );
 }

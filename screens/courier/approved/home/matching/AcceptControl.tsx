@@ -1,10 +1,10 @@
 import Slider from '@react-native-community/slider';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { View, Image, Text, ViewProps } from 'react-native';
 
 import * as icons from '../../../../../assets/icons';
 import { t } from '../../../../../strings';
-import { colors, texts, padding } from '../../../../common/styles';
+import { colors, texts, padding, borders } from '../../../../common/styles';
 
 interface Props extends ViewProps {
   acceptHandler: () => void;
@@ -30,36 +30,43 @@ export default function ({ acceptHandler, rejectHandler, disabled, ...props }: P
     }
   }, []);
 
+  const height = 88;
+  const delta = 14;
+  const trakcHeight = height - delta;
+  const top = delta / 2;
+
   // UI
   return (
-    <View {...props}>
+    <View style={{ height }} {...props}>
       {/* track */}
       <View
         style={{
           position: 'absolute',
-          height: 96,
+          top,
+          height: trakcHeight,
           width: '100%',
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          borderRadius: 64,
           backgroundColor: colors.lightGrey,
           paddingHorizontal: padding * 2,
+          borderRadius: 64,
         }}
       >
         <View style={{ alignItems: 'center' }}>
-          <Image source={icons.reject} width={24} height={24} />
+          <Image source={icons.reject} />
           <Text style={[texts.default, { color: colors.darkGrey }]}>{t('Recusar')}</Text>
         </View>
         <View style={{ alignItems: 'center' }}>
-          <Image source={icons.accept} width={24} height={24} />
+          <Image source={icons.accept} />
           <Text style={[texts.default]}>{t('Aceitar')}</Text>
         </View>
       </View>
+      {/* slider */}
       <Slider
         ref={sliderRef}
         disabled={disabled}
-        style={{ width: '100%', height: 40, marginTop: 28 }}
+        style={{ width: '100%', height }}
         minimumValue={0}
         maximumValue={100}
         step={1}

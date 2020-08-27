@@ -12,7 +12,6 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 
 import { logoWhite, illustration } from '../../assets/icons';
-import { getEnv } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
 import { signInWithEmail } from '../../store/user/actions';
@@ -147,23 +146,3 @@ export default function ({ navigation, route }: Props) {
     </View>
   );
 }
-
-// const styles = StyleSheet.create({
-//   bottomContainer: {
-//     width: '100%',
-//     height: 80,
-//     flexDirection: 'row',
-//     backgroundColor: colors.lightGrey,
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     paddingHorizontal: 16,
-//     paddingVertical: 22,
-//   },
-//   innerContainer: {
-//     flexDirection: 'row',
-//     width: '100%',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     height: 48,
-//   },
-// });

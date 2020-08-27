@@ -4,13 +4,21 @@ import { Image } from 'react-native';
 
 import * as icons from '../../../assets/icons';
 import { t } from '../../../strings';
+import { colors } from '../../common/styles';
 import ProfileNavigator from '../../profile/ProfileNavigator';
 import HomeNavigator from './home/HomeNavigator';
 
 const Tab = createBottomTabNavigator();
 export default function () {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      tabBarOptions={{
+        activeTintColor: colors.black,
+        inactiveTintColor: colors.black,
+        activeBackgroundColor: colors.green,
+        inactiveBackgroundColor: colors.white,
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={HomeNavigator}

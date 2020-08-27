@@ -24,8 +24,8 @@ if (Platform.OS === 'android') {
 }
 
 export default function () {
-  const [token, setToken] = useState<null | string>(null);
-  const [error, setError] = useState<null | 'granted' | 'permission-denied' | 'not-a-device'>(null);
+  const [token, setToken] = useState<string>();
+  const [error, setError] = useState<'granted' | 'permission-denied' | 'not-a-device'>();
 
   const askPermission = async () => {
     const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);

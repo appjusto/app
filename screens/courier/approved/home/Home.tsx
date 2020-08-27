@@ -49,7 +49,7 @@ export default function ({ navigation }: Props) {
     if (notificationError) {
       // TODO: ALERT
     } else if (notificationToken && notificationToken !== courier!.notificationToken) {
-      updateProfile(api)(courier!.id, { notificationToken });
+      updateProfile(api)(courier!.id!, { notificationToken });
     }
   }, [notificationToken, notificationError]);
 
@@ -67,8 +67,8 @@ export default function ({ navigation }: Props) {
   //       matchRequest: {
   //         orderId: '12',
   //         courierFee: '10',
-  //         originAddress: 'Largo São Francisco',
-  //         destinationAddress: 'Av. Bernardino de Campos, 144',
+  //         originAddress: 'Shopping Iguatemi - Edson Queiroz, Fortaleza - CE, 60810-350, Brasil',
+  //         destinationAddress: 'Rua Canuto de Aguiar, 500 - Meireles, Fortaleza - CE, 60160-120, Brasil',
   //         distanceToOrigin: 2,
   //         totalDistance: 10,
   //       },
@@ -91,7 +91,7 @@ export default function ({ navigation }: Props) {
 
   const toggleWorking = () => {
     const status = working ? CourierStatus.Unavailable : CourierStatus.Available;
-    updateProfile(api)(user!.uid, { status });
+    updateProfile(api)(user!.uid, { status, notificationToken });
 
     if (status === CourierStatus.Available) {
       setRetryKey(nanoid());

@@ -2,17 +2,18 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { getCourier } from '../../../store/courier/selectors';
 import { submitProfile } from '../../../store/user/actions';
 import { t } from '../../../strings';
-import { ApiContext } from '../../app/context';
+import { ApiContext, AppDispatch } from '../../app/context';
 import ConfigItem from '../../common/ConfigItem';
 import DefaultButton from '../../common/DefaultButton';
 import { screens, texts, colors } from '../../common/styles';
 import PaddedView from '../../common/views/PaddedView';
 import { PendingParamList } from './types';
+import { getUIBusy } from '../../../store/ui/selectors';
 
 type ScreenNavigationProp = StackNavigationProp<PendingParamList, 'PendingChecklist'>;
 type ScreenRouteProp = RouteProp<PendingParamList, 'PendingChecklist'>;
@@ -25,15 +26,17 @@ type Props = {
 export default function ({ navigation }: Props) {
   // context
   const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
 
-  // state
+  // app state
+  const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier);
   const situation = courier!.info?.situation ?? 'pending';
   const submitEnabled = situation === 'pending' && courier!.personalInfoSet();
 
   // handlers
   const submitHandler = async () => {
-    await submitProfile(api);
+    await dispatch(submitProfile(api));
   };
 
   // side effects
@@ -55,7 +58,8 @@ export default function ({ navigation }: Props) {
             <DefaultButton
               title={t('Enviar cadastro')}
               onPress={submitHandler}
-              disabled={!submitEnabled}
+              disabled={!submitEnabled || busy}
+              activityIndicator={busy}
             />
             <Text style={[texts.default, { color: colors.darkGrey, paddingTop: 8 }]}>
               {t(

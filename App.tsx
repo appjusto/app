@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, YellowBox } from 'react-native';
+import { YellowBox } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import PreloadAssets from './screens/app/PreloadAssets';
@@ -20,22 +20,21 @@ if (__DEV__) {
 const App = () => {
   const flavor = useSelector(getFlavor);
   return (
-    <PreloadAssets>
-      {() => (
-        <View style={{ flex: 1 }}>
-          <ShowIf test={flavor === 'consumer'}>{() => <ConsumerApp />}</ShowIf>
-
-          <ShowIf test={flavor === 'courier'}>{() => <CourierApp />}</ShowIf>
-        </View>
-      )}
-    </PreloadAssets>
+    <>
+      <ShowIf test={flavor === 'consumer'}>{() => <ConsumerApp />}</ShowIf>
+      <ShowIf test={flavor === 'courier'}>{() => <CourierApp />}</ShowIf>
+    </>
   );
 };
 
 export default () => {
   return (
-    <AppContext>
-      <App />
-    </AppContext>
+    <PreloadAssets>
+      {() => (
+        <AppContext>
+          <App />
+        </AppContext>
+      )}
+    </PreloadAssets>
   );
 };

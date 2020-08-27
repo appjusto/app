@@ -1,8 +1,9 @@
 import { NavigationContainer } from '@react-navigation/native';
-// import Constants from 'expo-constants';
+import Constants from 'expo-constants';
 import * as Linking from 'expo-linking';
 import React, { ReactNode } from 'react';
 // import { Platform, ToastAndroid } from 'react-native';
+import { Platform, UIManager, ToastAndroid } from 'react-native';
 import { Provider } from 'react-redux';
 
 import { createStore } from '../../store';
@@ -11,7 +12,6 @@ import { getExtra } from '../../utils/config';
 import { defineLocationUpdatesTask } from '../../utils/location';
 import Toast from '../common/Toast';
 import * as analytics from './analytics';
-import { Platform, UIManager } from 'react-native';
 
 const extra = getExtra();
 const api = new Api(extra);
@@ -40,10 +40,9 @@ export const AppContext = ({ children }: Props) => {
   }
 
   // debug only
-  // const log = { l: linking, r: Constants.manifest.revisionId ?? '' };
-  // if (Platform.OS === 'android') {
-  //   ToastAndroid.show(JSON.stringify(log), ToastAndroid.LONG);
-  // }
+  if (Platform.OS === 'android') {
+    ToastAndroid.show(Constants.manifest.revisionId ?? '', ToastAndroid.LONG);
+  }
 
   // UI
   return (

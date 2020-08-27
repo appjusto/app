@@ -1,4 +1,4 @@
-import Constants from 'expo-constants';
+// import Constants from 'expo-constants';
 import * as Linking from 'expo-linking';
 import { useEffect, useState } from 'react';
 // import { Platform, ToastAndroid } from 'react-native';

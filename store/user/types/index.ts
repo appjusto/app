@@ -9,11 +9,14 @@ export interface ProfileInfo {
 }
 
 export interface UserProfile {
-  id: string;
+  id?: string;
   name?: string;
   surname?: string;
   cpf?: string;
-  phone?: string;
+  phone?: {
+    ddd: string;
+    number: string;
+  };
   notificationToken?: string;
   info?: ProfileInfo;
 }
