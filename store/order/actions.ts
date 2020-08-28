@@ -27,11 +27,11 @@ export const observeOrdersDeliveredBy = (api: Api) => (courierId: string) => (
 
 export const getAddressAutocomplete = (api: Api) => (
   input: string,
-  sessiontoken: string,
+  sessionToken: string,
   cancelToken: CancelToken
 ) => async (dispatch: AppDispatch): Promise<AutoCompleteResult[] | null> => {
   dispatch({ type: BUSY, payload: true });
-  const result = await api.maps().googlePlacesAutocomplete(input, sessiontoken, cancelToken);
+  const result = await api.maps().googlePlacesAutocomplete(input, sessionToken, cancelToken);
   dispatch({ type: BUSY, payload: false });
   return result;
 };

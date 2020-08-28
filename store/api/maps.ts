@@ -29,7 +29,7 @@ export default class MapsApi {
   constructor(private googleMapsApiKey: string) {}
   async googlePlacesAutocomplete(
     input: string,
-    sessiontoken: string,
+    sessionToken: string,
     cancelToken: CancelToken
   ): Promise<AutoCompleteResult[] | null> {
     // TODO: location & radius?
@@ -37,7 +37,7 @@ export default class MapsApi {
     const params = {
       key: this.googleMapsApiKey,
       input,
-      sessiontoken,
+      sessionToken,
       types: 'address',
       components: 'country:BR', // i18n
       language: 'pt-BR', // i18n
