@@ -67,6 +67,35 @@ export default function ({ navigation, image }: Props) {
   //   }
   // }, [state, getPermissionAsync]);
 
+  const pickFromGallery = async () => {
+    const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (granted) {
+      let data = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.5,
+      });
+      // console.log(data);
+    } else {
+      alert('Precisamos do acesso à sua galeria');
+    }
+  };
+  const pickFromCamera = async () => {
+    const { granted } = await Permissions.askAsync(Permissions.CAMERA);
+    if (granted) {
+      let data = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.5,
+      });
+      // console.log(data);
+    } else {
+      alert('Precisamos do acesso à câmera');
+    }
+  };
+
   // UI
   return (
     <View style={{ ...screens.lightGrey }}>
@@ -77,10 +106,10 @@ export default function ({ navigation, image }: Props) {
         )}
       </Text>
       <View style={{ marginTop: 24, flex: 1, alignItems: 'center' }}>
-        <DocumentButton title={t('Foto de rosto')} onPress={() => navigation.navigate('Camera')}>
+        <DocumentButton title={t('Foto de rosto')} onPress={pickFromCamera}>
           <Image source={selfie || image} width={32} height={48} />
         </DocumentButton>
-        <DocumentButton title={t('RG ou CNH aberta')} onPress={() => {}}>
+        <DocumentButton title={t('RG ou CNH aberta')} onPress={pickFromGallery}>
           <Image source={license || image} width={40} height={54} />
         </DocumentButton>
       </View>
