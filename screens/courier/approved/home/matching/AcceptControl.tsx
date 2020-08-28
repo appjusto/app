@@ -1,6 +1,6 @@
 import Slider from '@react-native-community/slider';
 import React, { useCallback, useRef } from 'react';
-import { View, Image, Text, ViewProps } from 'react-native';
+import { View, Image, Text, ViewProps, Dimensions } from 'react-native';
 
 import * as icons from '../../../../../assets/icons';
 import { t } from '../../../../../strings';
@@ -12,7 +12,7 @@ interface Props extends ViewProps {
   disabled: boolean;
 }
 
-export default function ({ acceptHandler, rejectHandler, disabled, ...props }: Props) {
+export default function ({ acceptHandler, rejectHandler, disabled }: Props) {
   // refs
   const sliderRef = useRef<Slider>(null);
   // helpers
@@ -30,26 +30,34 @@ export default function ({ acceptHandler, rejectHandler, disabled, ...props }: P
     }
   }, []);
 
+  // couldn't get track to stick with "width: '100%'", probably because its absolute positioning;
+  // using device's width instead
+  const { width } = Dimensions.get('window');
+  const paddingHorizontal = padding * 2;
+  // height of the component is based on the thumb height
+  // delta is how much the thumb is taller than the track
   const height = 88;
   const delta = 14;
-  const trakcHeight = height - delta;
+  const trackHeight = height - delta;
   const top = delta / 2;
 
   // UI
   return (
-    <View style={{ height }} {...props}>
+    <View style={{ height, paddingHorizontal, ...borders.default }}>
       {/* track */}
       <View
         style={{
           position: 'absolute',
           top,
-          height: trakcHeight,
-          width: '100%',
+          width: width - paddingHorizontal,
+          height: trackHeight,
+          // flex: 1,
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
           backgroundColor: colors.lightGrey,
-          paddingHorizontal: padding * 2,
+          paddingHorizontal,
+          ...borders.default,
           borderRadius: 64,
         }}
       >
