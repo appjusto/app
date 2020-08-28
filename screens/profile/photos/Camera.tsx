@@ -5,6 +5,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, Modal, Image } from 'react-native';
 import { database } from 'firebase';
 
+//DELETE ??????
+
 export default function () {
   const camRef = useRef(null);
   // state
@@ -59,6 +61,7 @@ export default function () {
   }
 
   //UI
+  // flash?
   return (
     <View style={{ flex: 1 }}>
       <Camera style={{ flex: 1 }} type={type} ref={camRef}>
