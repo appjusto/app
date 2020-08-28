@@ -26,14 +26,14 @@ export const observeAuthState = (api: Api) => (dispatch: AppDispatch) => {
   return unsubscribe;
 };
 
-export const signInWithEmail = (api: Api) => (email: string) => (dispatch: AppDispatch) => {
+export const signInWithEmail = (api: Api) => (email: string) => async (dispatch: AppDispatch) => {
   try {
     AsyncStorage.setItem('email', email);
   } catch (e) {
     console.error(e);
   }
   dispatch({ type: BUSY, payload: true });
-  const result = api.auth().sendSignInLinkToEmail(email);
+  const result = await api.auth().sendSignInLinkToEmail(email);
   dispatch({ type: BUSY, payload: false });
   return result;
 };

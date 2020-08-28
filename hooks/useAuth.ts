@@ -74,8 +74,11 @@ export default function (): [AuthState, firebase.User | undefined | null] {
       setAuthState(AuthState.Unsigned);
       return;
     }
-
     const link = extractAuthLink(deepLink);
+    if (link === null) {
+      setAuthState(AuthState.Unsigned);
+      return;
+    }
     if (!isSignInWithEmailLink(api)(link)) {
       setAuthState(AuthState.InvalidCredentials);
       return;
