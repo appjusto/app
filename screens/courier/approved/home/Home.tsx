@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid/non-secure';
 import React, { useEffect, useContext, useState } from 'react';
 import { StyleSheet, View, Dimensions, Text, Image, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { motocycleWhite } from '../../../../assets/icons';
 import useLocationUpdates from '../../../../hooks/useLocationUpdates';
@@ -13,9 +13,10 @@ import { isCourierWorking, getCourier } from '../../../../store/courier/selector
 import { CourierStatus } from '../../../../store/courier/types';
 import { updateProfile } from '../../../../store/user/actions';
 import { t } from '../../../../strings';
-import { ApiContext } from '../../../app/context';
+import { ApiContext, AppDispatch } from '../../../app/context';
 import { colors, padding, texts, borders } from '../../../common/styles';
 import { HomeParamList } from './types';
+import { showToast } from '../../../../store/ui/actions';
 
 const { width } = Dimensions.get('window');
 
@@ -30,14 +31,16 @@ type Props = {
 export default function ({ navigation }: Props) {
   // context
   const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
 
   // app state
   const courier = useSelector(getCourier);
-  const working = useSelector(isCourierWorking);
+  const status = courier!.status;
+  const working = status !== CourierStatus.Unavailable;
 
   // state
-  const [retryKey, setRetryKey] = useState(nanoid());
-  const locationPermission = useLocationUpdates(working, retryKey);
+  const [locationKey, setLocationKey] = useState(nanoid());
+  const locationPermission = useLocationUpdates(working, locationKey);
   const [notificationToken, notificationError] = useNotificationToken();
 
   // side effects
@@ -58,12 +61,17 @@ export default function ({ navigation }: Props) {
   }, [working, locationPermission]);
 
   const toggleWorking = () => {
-    const status = working ? CourierStatus.Unavailable : CourierStatus.Available;
-    updateProfile(api)(courier!.id!, { status, notificationToken });
-
-    if (status === CourierStatus.Available) {
-      setRetryKey(nanoid());
+    if (status === CourierStatus.Dispatching) {
+      dispatch(
+        showToast(t('Você precisa finalizar a entrega antes de parar de trabalhar.'), 'error')
+      );
+      return;
     }
+    const newStatus = working ? CourierStatus.Unavailable : CourierStatus.Available;
+    if (newStatus === CourierStatus.Available) {
+      setLocationKey(nanoid());
+    }
+    updateProfile(api)(courier!.id!, { status: newStatus, notificationToken });
   };
 
   // UI
