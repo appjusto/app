@@ -4,19 +4,19 @@ import React, { useEffect, useContext, useCallback } from 'react';
 import { Text, View, Image } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import * as icons from '../../../../../assets/icons';
-import { matchOrder } from '../../../../../store/order/actions';
-import { getUIBusy } from '../../../../../store/ui/selectors';
-import { t } from '../../../../../strings';
-import { formatDistance } from '../../../../../utils/formatters';
-import { ApiContext, AppDispatch } from '../../../../app/context';
-import { texts, screens, colors, padding } from '../../../../common/styles';
-import PaddedView from '../../../../common/views/PaddedView';
-import { HomeParamList } from '../types';
+import * as icons from '../../../../assets/icons';
+import { matchOrder } from '../../../../store/order/actions';
+import { getUIBusy } from '../../../../store/ui/selectors';
+import { t } from '../../../../strings';
+import { formatDistance } from '../../../../utils/formatters';
+import { ApiContext, AppDispatch } from '../../../app/context';
+import { texts, screens, colors, padding } from '../../../common/styles';
+import PaddedView from '../../../common/views/PaddedView';
+import { ApprovedParamList } from '../types';
 import AcceptControl from './AcceptControl';
 
-type ScreenNavigationProp = StackNavigationProp<HomeParamList, 'Matching'>;
-type ScreenRouteProp = RouteProp<HomeParamList, 'Matching'>;
+type ScreenNavigationProp = StackNavigationProp<ApprovedParamList, 'Matching'>;
+type ScreenRouteProp = RouteProp<ApprovedParamList, 'Matching'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -35,8 +35,11 @@ export default function ({ navigation, route }: Props) {
 
   // handlers
   const acceptHandler = useCallback(async () => {
-    const match = await dispatch(matchOrder(api)(matchRequest.orderId));
-    console.log(match);
+    try {
+      await dispatch(matchOrder(api)(matchRequest.orderId));
+    } catch (error) {
+      navigation.navigate('MatchingFeedback');
+    }
     // TODO: if successful, go to Delivering screen
   }, [matchRequest]);
 

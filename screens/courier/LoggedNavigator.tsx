@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getFlavor } from '../../store/config/selectors';
@@ -14,10 +14,11 @@ export default function () {
   const dispatch = useDispatch<AppDispatch>();
   const api = useContext(ApiContext);
 
-  // state
+  // app state
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
   const courier = useSelector(getCourier);
+  const situation = courier?.info?.situation;
 
   // side effects
   // subscribe for profile changes
@@ -26,9 +27,11 @@ export default function () {
   }, []);
 
   // UI
-  if (!courier) return null;
-  if (courier.info?.situation === 'approved') {
-    return ApprovedNavigator();
+  // TO-DO: add activity indicator while loading courier profile
+  if (!situation) return null;
+
+  if (situation === 'approved') {
+    return <ApprovedNavigator />;
   }
-  return PendingNavigator();
+  return <PendingNavigator />;
 }

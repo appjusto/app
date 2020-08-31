@@ -2,9 +2,9 @@ import Slider from '@react-native-community/slider';
 import React, { useCallback, useRef } from 'react';
 import { View, Image, Text, ViewProps, Dimensions } from 'react-native';
 
-import * as icons from '../../../../../assets/icons';
-import { t } from '../../../../../strings';
-import { colors, texts, padding, borders } from '../../../../common/styles';
+import * as icons from '../../../../assets/icons';
+import { t } from '../../../../strings';
+import { colors, texts, padding, borders } from '../../../common/styles';
 
 interface Props extends ViewProps {
   acceptHandler: () => void;

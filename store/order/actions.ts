@@ -56,14 +56,14 @@ export const confirmOrder = (api: Api) => (orderId: string, cardId: string) => a
 
 export const cancelOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
   dispatch({ type: BUSY, payload: true });
-  const result = api.order().cancelOrder(orderId);
+  const result = await api.order().cancelOrder(orderId);
   dispatch({ type: BUSY, payload: false });
   return result;
 };
 
 export const matchOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
   dispatch({ type: BUSY, payload: true });
-  const result = api.order().matchOrder(orderId);
+  const result = await api.order().matchOrder(orderId);
   dispatch({ type: BUSY, payload: false });
   return result;
 };
