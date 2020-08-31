@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { Platform } from 'react-native';
 
 import { colors } from '../screens/common/styles';
+import { t } from '../strings';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -15,17 +16,25 @@ Notifications.setNotificationHandler({
 });
 
 if (Platform.OS === 'android') {
-  Notifications.setNotificationChannelAsync('default', {
-    name: 'default',
-    importance: Notifications.AndroidImportance.MAX,
-    vibrationPattern: [0, 250, 250, 250],
-    lightColor: colors.lightGreen,
-  });
+  (async () => {
+    // await Notifications.deleteNotificationChannelAsync('matching');
+    // const notificationChannels = await Notifications.getNotificationChannelsAsync();
+    // console.log(notificationChannels);
+    Notifications.setNotificationChannelAsync('matching', {
+      name: t('Corridas'),
+      importance: Notifications.AndroidImportance.HIGH,
+      enableVibrate: true,
+      vibrationPattern: [0, 250, 250, 250],
+      lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+      bypassDnd: true,
+      lightColor: colors.lightGreen,
+    });
+  })();
 }
 
 export default function () {
-  const [token, setToken] = useState<null | string>(null);
-  const [error, setError] = useState<null | 'granted' | 'permission-denied' | 'not-a-device'>(null);
+  const [token, setToken] = useState<string>();
+  const [error, setError] = useState<'granted' | 'permission-denied' | 'not-a-device'>();
 
   const askPermission = async () => {
     const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);

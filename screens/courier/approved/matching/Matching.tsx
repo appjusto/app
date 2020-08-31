@@ -4,19 +4,19 @@ import React, { useEffect, useContext, useCallback } from 'react';
 import { Text, View, Image } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import * as icons from '../../../../../assets/icons';
-import { matchOrder } from '../../../../../store/order/actions';
-import { getUIBusy } from '../../../../../store/ui/selectors';
-import { t } from '../../../../../strings';
-import { formatDistance } from '../../../../../utils/formatters';
-import { ApiContext, AppDispatch } from '../../../../app/context';
-import { texts, screens, colors, padding } from '../../../../common/styles';
-import PaddedView from '../../../../common/views/PaddedView';
-import { HomeParamList } from '../types';
+import * as icons from '../../../../assets/icons';
+import { matchOrder } from '../../../../store/order/actions';
+import { getUIBusy } from '../../../../store/ui/selectors';
+import { t } from '../../../../strings';
+import { formatDistance } from '../../../../utils/formatters';
+import { ApiContext, AppDispatch } from '../../../app/context';
+import { texts, screens, colors, padding } from '../../../common/styles';
+import PaddedView from '../../../common/views/PaddedView';
+import { ApprovedParamList } from '../types';
 import AcceptControl from './AcceptControl';
 
-type ScreenNavigationProp = StackNavigationProp<HomeParamList, 'Matching'>;
-type ScreenRouteProp = RouteProp<HomeParamList, 'Matching'>;
+type ScreenNavigationProp = StackNavigationProp<ApprovedParamList, 'Matching'>;
+type ScreenRouteProp = RouteProp<ApprovedParamList, 'Matching'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -35,8 +35,11 @@ export default function ({ navigation, route }: Props) {
 
   // handlers
   const acceptHandler = useCallback(async () => {
-    const match = await dispatch(matchOrder(api)(matchRequest.orderId));
-    console.log(match);
+    try {
+      await dispatch(matchOrder(api)(matchRequest.orderId));
+    } catch (error) {
+      navigation.navigate('MatchingFeedback');
+    }
     // TODO: if successful, go to Delivering screen
   }, [matchRequest]);
 
@@ -86,9 +89,13 @@ export default function ({ navigation, route }: Props) {
             source={icons.pinPackageWhite}
             style={{ width: 34, height: 44, marginRight: padding }}
           />
-          <View>
+          <View style={{ flex: 1 }}>
             <Text style={[texts.default, { color: colors.darkGreen }]}>{t('Retirada')}</Text>
-            <Text style={[texts.medium]}>{matchRequest.originAddress}</Text>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={[texts.medium, { flexWrap: 'wrap' }]} numberOfLines={3}>
+                {matchRequest.originAddress}
+              </Text>
+            </View>
           </View>
         </View>
         <View
@@ -105,9 +112,13 @@ export default function ({ navigation, route }: Props) {
             source={icons.pinPackage}
             style={{ width: 34, height: 44, marginRight: padding }}
           />
-          <View>
+          <View style={{ flex: 1 }}>
             <Text style={[texts.default, { color: colors.darkGreen }]}>{t('Entrega')}</Text>
-            <Text style={[texts.medium]}>{matchRequest.destinationAddress}</Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              <Text style={[texts.medium, { flexWrap: 'wrap' }]} numberOfLines={3}>
+                {matchRequest.destinationAddress}
+              </Text>
+            </View>
           </View>
         </View>
         <View
@@ -131,12 +142,7 @@ export default function ({ navigation, route }: Props) {
       </View>
       <View style={{ flex: 1 }} />
       {/* accept / reject control */}
-      <AcceptControl
-        style={{ paddingBottom: padding }}
-        acceptHandler={acceptHandler}
-        rejectHandler={rejectHandler}
-        disabled={busy}
-      />
+      <AcceptControl acceptHandler={acceptHandler} rejectHandler={rejectHandler} disabled={busy} />
     </PaddedView>
   );
 }

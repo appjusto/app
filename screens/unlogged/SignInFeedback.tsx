@@ -1,14 +1,10 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 
 import { motocycle } from '../../assets/icons';
 import useAuth, { AuthState } from '../../hooks/useAuth';
-import { showToast } from '../../store/ui/actions';
-import { signInWithEmail } from '../../store/user/actions';
 import { t } from '../../strings';
-import { ApiContext } from '../app/context';
 import DefaultButton from '../common/DefaultButton';
 import FeedbackView from '../common/FeedbackView';
 import { colors, borders } from '../common/styles';
@@ -22,20 +18,9 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-export default ({ route }: Props) => {
-  // context
-  const api = useContext(ApiContext);
-  const { params } = route;
-  const dispatch = useDispatch();
-
+export default ({ navigation }: Props) => {
   // state
   const [authState] = useAuth();
-
-  // handlers
-  const resendLink = (): void => {
-    dispatch(showToast(t('Enviando link de autenticação para o seu e-mail...')));
-    signInWithEmail(api)(params.email).then((result) => console.log(result));
-  };
 
   // UI
   if (authState === AuthState.SignedIn) {
@@ -49,8 +34,8 @@ export default ({ route }: Props) => {
       icon={motocycle}
     >
       <DefaultButton
-        title={t('Enviar confirmação novamente')}
-        onPress={resendLink}
+        title={t('Voltar')}
+        onPress={() => navigation.goBack()}
         style={{ ...borders.default, borderColor: colors.black, backgroundColor: 'white' }}
       />
     </FeedbackView>

@@ -8,11 +8,12 @@ const dragButton = require('./icons/drag-button.png');
 const iconHome = require('./icons/home.png');
 const iconButtonArrow = require('./icons/icon-button-arrow.png');
 const iconCalendar = require('./icons/icon-calendar.png');
+const iconConeYellow = require('./icons/icon-cone-yellow.png');
 const iconEdit = require('./icons/icon-edit.png');
 const iconErase = require('./icons/icon-erase.png');
 const iconLicense = require('./icons/icon-license.png');
+const iconMotocycle = require('./icons/icon-motocycle-green.png');
 const iconMotocycleWhite = require('./icons/icon-motocycle-white.png');
-const iconMotocycle = require('./icons/icon-motocycle.png');
 const iconNavigationArrow = require('./icons/icon-navigation.png');
 const iconPinPackageWhite = require('./icons/icon-pin-package-white.png');
 const iconPinPackage = require('./icons/icon-pin-package.png');
@@ -37,6 +38,7 @@ export const checklistTick = iconChecklistTick;
 export const home = iconHome;
 export const buttonArrow = iconButtonArrow;
 export const calendar = iconCalendar;
+export const coneYellow = iconConeYellow;
 export const edit = iconEdit;
 export const erase = iconErase;
 export const license = iconLicense;
@@ -68,6 +70,7 @@ export default [
   home,
   buttonArrow,
   calendar,
+  coneYellow,
   edit,
   erase,
   license,

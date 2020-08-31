@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { validate } from 'gerador-validador-cpf';
+// import { validate } from 'gerador-validador-cpf';
 import { trim, isEmpty } from 'lodash';
 import React, { useState, useContext, useRef } from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView, TextInput } from 'react-native';
@@ -52,10 +52,11 @@ export default function ({ navigation, route }: Props) {
 
   // state
   const [updating, setUpdating] = useState(false);
-  const [name, setName] = useState<string>(user!.name! ?? '');
-  const [surname, setSurname] = useState(user!.surname! ?? '');
-  const [ddd, setDDD] = useState(user!.phone! ?? '');
-  const [phone, setPhone] = useState(user!.phone! ?? '');
+  const [name, setName] = useState<string>(user!.name ?? '');
+  const [surname, setSurname] = useState(user!.surname ?? '');
+  const [ddd, setDDD] = useState(user!.phone?.ddd ?? '');
+  const [phoneNumber, setPhoneNumber] = useState(user!.phone?.number ?? '');
+  const phone = { ddd, number: phoneNumber };
   const [cpf, setCpf] = useState(user!.cpf! ?? '');
 
   // handlers
@@ -72,10 +73,13 @@ export default function ({ navigation, route }: Props) {
     //   return;
     // }
     setUpdating(true);
-    await updateProfile(api)(user!.id, {
+    await updateProfile(api)(user.id!, {
       name: trim(name),
       surname: trim(surname),
-      phone: !isEmpty(phone) ? `+55${ddd}${phone}` : '',
+      phone: {
+        ddd,
+        number: phoneNumber,
+      },
       cpf,
     });
     navigation.goBack();
@@ -138,13 +142,13 @@ export default function ({ navigation, route }: Props) {
                   ref={phoneRef}
                   style={{ flex: 4, marginLeft: padding }}
                   title={t('Celular')}
-                  value={phone}
+                  value={phoneNumber}
                   placeholder={t('000000000')}
                   maxLength={9}
                   keyboardType="number-pad"
                   returnKeyType="done"
                   blurOnSubmit
-                  onChangeText={(text) => setPhone(trim(text))}
+                  onChangeText={(text) => setPhoneNumber(trim(text))}
                 />
               </View>
             )}

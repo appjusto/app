@@ -1,21 +1,17 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import * as Notifications from 'expo-notifications';
 import { nanoid } from 'nanoid/non-secure';
-import React, { useEffect, useContext, useCallback, useState } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { StyleSheet, View, Dimensions, Text, Image, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 
 import { motocycleWhite } from '../../../../assets/icons';
 import useLocationUpdates from '../../../../hooks/useLocationUpdates';
-import useNotification from '../../../../hooks/useNotification';
 import useNotificationToken from '../../../../hooks/useNotificationToken';
 import { isCourierWorking, getCourier } from '../../../../store/courier/selectors';
 import { CourierStatus } from '../../../../store/courier/types';
-import { OrderMatchRequest } from '../../../../store/order/types';
 import { updateProfile } from '../../../../store/user/actions';
-import { getUser } from '../../../../store/user/selectors';
 import { t } from '../../../../strings';
 import { ApiContext } from '../../../app/context';
 import { colors, padding, texts, borders } from '../../../common/styles';
@@ -35,10 +31,11 @@ export default function ({ navigation }: Props) {
   // context
   const api = useContext(ApiContext);
 
-  // state
-  const user = useSelector(getUser);
+  // app state
   const courier = useSelector(getCourier);
   const working = useSelector(isCourierWorking);
+
+  // state
   const [retryKey, setRetryKey] = useState(nanoid());
   const locationPermission = useLocationUpdates(working, retryKey);
   const [notificationToken, notificationError] = useNotificationToken();
@@ -49,7 +46,7 @@ export default function ({ navigation }: Props) {
     if (notificationError) {
       // TODO: ALERT
     } else if (notificationToken && notificationToken !== courier!.notificationToken) {
-      updateProfile(api)(courier!.id, { notificationToken });
+      updateProfile(api)(courier!.id!, { notificationToken });
     }
   }, [notificationToken, notificationError]);
 
@@ -60,38 +57,9 @@ export default function ({ navigation }: Props) {
     }
   }, [working, locationPermission]);
 
-  // test only
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     navigation.navigate('Matching', {
-  //       matchRequest: {
-  //         orderId: '12',
-  //         courierFee: '10',
-  //         originAddress: 'Largo São Francisco',
-  //         destinationAddress: 'Av. Bernardino de Campos, 144',
-  //         distanceToOrigin: 2,
-  //         totalDistance: 10,
-  //       },
-  //     });
-  //   }, 50);
-  // }, []);
-
-  // handlers
-  const notificationHandler = useCallback(
-    (content: Notifications.NotificationContent) => {
-      if (content.data.action === 'matching') {
-        navigation.navigate('Matching', {
-          matchRequest: (content.data as unknown) as OrderMatchRequest,
-        });
-      }
-    },
-    [navigation]
-  );
-  useNotification(notificationHandler);
-
   const toggleWorking = () => {
     const status = working ? CourierStatus.Unavailable : CourierStatus.Available;
-    updateProfile(api)(user!.uid, { status });
+    updateProfile(api)(courier!.id!, { status, notificationToken });
 
     if (status === CourierStatus.Available) {
       setRetryKey(nanoid());

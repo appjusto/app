@@ -3,6 +3,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { AppDispatch } from '../../screens/app/context';
 import Api from '../api/api';
 import { Flavor } from '../config/types';
+import { ConsumerProfile } from '../consumer/types';
+import { CourierProfile } from '../courier/types';
 import { BUSY } from '../ui/actions';
 import { UserProfile, ProfileInfo } from './types';
 
@@ -24,14 +26,14 @@ export const observeAuthState = (api: Api) => (dispatch: AppDispatch) => {
   return unsubscribe;
 };
 
-export const signInWithEmail = (api: Api) => (email: string) => (dispatch: AppDispatch) => {
+export const signInWithEmail = (api: Api) => (email: string) => async (dispatch: AppDispatch) => {
   try {
     AsyncStorage.setItem('email', email);
   } catch (e) {
     console.error(e);
   }
   dispatch({ type: BUSY, payload: true });
-  const result = api.auth().sendSignInLinkToEmail(email);
+  const result = await api.auth().sendSignInLinkToEmail(email);
   dispatch({ type: BUSY, payload: false });
   return result;
 };
@@ -57,8 +59,11 @@ export const signOut = (api: Api) => {
   return api.auth().signOut();
 };
 
-export const submitProfile = (api: Api) => {
-  return api.profile().submitProfile();
+export const submitProfile = (api: Api) => async (dispatch: AppDispatch) => {
+  dispatch({ type: BUSY, payload: true });
+  const result = await api.profile().submitProfile();
+  dispatch({ type: BUSY, payload: false });
+  return result;
 };
 
 // watch for updates
@@ -86,6 +91,9 @@ export const observeProfile = (api: Api) => (flavor: Flavor, id: string) => (
   };
 };
 
-export const updateProfile = (api: Api) => (id: string, changes: object) => {
+export const updateProfile = (api: Api) => (
+  id: string,
+  changes: CourierProfile | ConsumerProfile
+) => {
   return api.profile().updateProfile(id, changes);
 };
