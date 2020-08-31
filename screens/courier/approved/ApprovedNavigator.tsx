@@ -13,7 +13,6 @@ import { CourierStatus } from '../../../store/courier/types';
 import { observeOrdersDeliveredBy } from '../../../store/order/actions';
 import { getOngoingOrders } from '../../../store/order/selectors';
 import { OrderMatchRequest } from '../../../store/order/types';
-import { getUser } from '../../../store/user/selectors';
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import BackButton from '../../common/buttons/BackButton';
@@ -52,9 +51,8 @@ function Main({ navigation }: Props) {
 
   // when a courier accept the order
   useEffect(() => {
-    // as the courier can only dispatch a single order at a time ongoingOrders should be 0 or 1
+    // as the courier can only dispatch a single order at a time ongoingOrders should be always 0 or 1
     if (ongoingOrders.length > 0) {
-      console.log('ongoinOrders');
       const [order] = ongoingOrders;
       navigation.navigate('Deliveries', {
         screen: 'OngoingOrder',

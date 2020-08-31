@@ -24,7 +24,6 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  console.log('Matching!');
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
