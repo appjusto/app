@@ -1,5 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Asset } from 'expo-asset';
+import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import React, { useState, useCallback, useEffect } from 'react';
@@ -31,9 +33,15 @@ export default function ({ navigation }: Props) {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1, 1],
-        quality: 0.5,
+        // quality: 0.5,
       });
-      const galleryImage = data;
+      const image = Asset.fromModule(require('../../../assets/icons/icon-motocycle-green.png'));
+      const galleryImage = await ImageManipulator.manipulateAsync(
+        image.localUri || image.uri,
+        [{ resize: { width: 100, height: 100 } }],
+        { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
+      );
+      console.log(galleryImage);
       setGalleryImage(galleryImage);
       console.log(data);
     } else {
