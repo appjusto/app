@@ -2,19 +2,18 @@ import { createBottomTabNavigator, BottomTabNavigationProp } from '@react-naviga
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import * as Notifications from 'expo-notifications';
-import React, { useEffect, useCallback, useContext } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Image } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import * as icons from '../../../assets/icons';
 import useNotification from '../../../hooks/useNotification';
+import useObserveOrders from '../../../hooks/useObserveOrders';
 import { getCourier } from '../../../store/courier/selectors';
 import { CourierStatus } from '../../../store/courier/types';
-import { observeOrdersDeliveredBy } from '../../../store/order/actions';
 import { getOngoingOrders } from '../../../store/order/selectors';
 import { OrderMatchRequest } from '../../../store/order/types';
 import { t } from '../../../strings';
-import { ApiContext, AppDispatch } from '../../app/context';
 import BackButton from '../../common/buttons/BackButton';
 import { colors } from '../../common/styles';
 import ProfileNavigator from '../../profile/ProfileNavigator';
@@ -35,19 +34,13 @@ type Props = {
 
 const MainNavigator = createBottomTabNavigator<MainParamList>();
 function Main({ navigation }: Props) {
-  // context
-  const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
-
   // app state
   const courier = useSelector(getCourier);
   const ongoingOrders = useSelector(getOngoingOrders);
 
   // effects
   // subscribe for order changes
-  useEffect(() => {
-    return dispatch(observeOrdersDeliveredBy(api)(courier!.id!));
-  }, []);
+  useObserveOrders({ deliveredBy: courier!.id! });
 
   // when a courier accept the order
   useEffect(() => {

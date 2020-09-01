@@ -45,6 +45,9 @@ export const borders = StyleSheet.create({
     borderRadius: 8,
     borderColor: colors.grey,
   },
+  rounder: {
+    borderRadius: 16,
+  },
 });
 
 export const texts = StyleSheet.create({

@@ -47,6 +47,20 @@ export interface OrderRequest {
   destination: Place;
 }
 
+export interface ChatMessage {
+  id: string;
+  from: string;
+  to: string;
+  message: string;
+  timestamp: firebase.firestore.FieldValue;
+}
+
+export interface GroupedChatMessages {
+  id: string;
+  from: string;
+  messages: ChatMessage[];
+}
+
 export interface Order {
   id: string;
   consumerId: string;
@@ -79,5 +93,8 @@ export interface OrderState {
   orders: Order[];
   ordersById: {
     [key: string]: Order;
+  };
+  chatByOrderId: {
+    [key: string]: GroupedChatMessages[];
   };
 }
