@@ -61,7 +61,7 @@ export default function ({
       <ShowIf test={height < 700}>
         {() => (
           <View style={{ height: 160 }}>
-            <OrderMap order={order} />
+            <OrderMap order={order.getData()} />
           </View>
         )}
       </ShowIf>

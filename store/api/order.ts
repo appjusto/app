@@ -74,4 +74,12 @@ export default class OrderApi {
   async matchOrder(orderId: string) {
     return (await this.functions.httpsCallable('matchOrder')({ orderId })).data;
   }
+
+  async nextDispatchingState(orderId: string) {
+    return (await this.functions.httpsCallable('nextDispatchingState')({ orderId })).data;
+  }
+
+  async completeDelivery(orderId: string) {
+    return (await this.functions.httpsCallable('completeDelivery')({ orderId })).data;
+  }
 }

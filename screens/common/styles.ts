@@ -2,14 +2,17 @@ import { StyleSheet } from 'react-native';
 
 export const colors = {
   white: '#FFFFFF',
-  black: '#000000',
-  lightGreen: '#B8E994',
-  green: '#78E08F',
-  darkGreen: '#63B745',
-  lightGrey: '#F2F7EA',
+  lightGrey: '#F2F6EA',
   grey: '#C8D7CB',
   darkGrey: '#697667',
+  black: '#000000',
+  ultraLightGreen: '#F2FFE8',
+  lightGreen: '#B8E994',
+  green: '#78E08F',
+  darkGreen: '#4EA031',
   yellow: '#FFBE00',
+  lightRed: '#FFF8F8',
+  red: '#DC3545',
 };
 
 export const padding = 16;

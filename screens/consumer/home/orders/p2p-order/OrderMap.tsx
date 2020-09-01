@@ -3,15 +3,15 @@ import React from 'react';
 import { Marker, Polyline } from 'react-native-maps';
 
 import { pinUser, pinPackage } from '../../../../../assets/icons';
-import OrderImpl from '../../../../../store/order/types/OrderImpl';
+import { Order } from '../../../../../store/order/types';
 import DefaultMap from '../../../../common/DefaultMap';
 
 type Props = {
-  order: OrderImpl;
+  order: Order;
 };
 
 export default function ({ order }: Props) {
-  const { origin, destination, routePolyline } = order.getData();
+  const { origin, destination, routePolyline } = order;
 
   const routeCoordinates = polyline.decode(routePolyline).map((pair) => {
     return { latitude: pair[0], longitude: pair[1] };

@@ -19,6 +19,13 @@ export enum OrderStatus {
   Canceled = 'canceled',
 }
 
+export enum DispatchingState {
+  GoingPickUp = 'going-pickup',
+  ArrivedPickUp = 'arrived-pickup',
+  GoingDestination = 'going-destination',
+  ArrivedDestination = 'arrived-destination',
+}
+
 export enum PaymentStatus {
   AuthorizedPendingCapture = 'authorized_pending_capture',
   Captured = 'captured',
@@ -43,6 +50,7 @@ export interface OrderRequest {
 export interface Order {
   id: string;
   consumerId: string;
+  consumerName?: string;
   status: OrderStatus;
   paymentStatus: PaymentStatus | null;
   origin: Place;
@@ -52,7 +60,10 @@ export interface Order {
   duration: number;
   fare: Fare;
   courierId?: string;
+  courierName: string;
+  dispatchingState?: DispatchingState;
   createdOn: firebase.firestore.FieldValue;
+  updatedOn?: firebase.firestore.FieldValue;
 }
 
 export interface OrderMatchRequest {

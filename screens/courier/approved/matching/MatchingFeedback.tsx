@@ -6,8 +6,8 @@ import * as icons from '../../../../assets/icons';
 import { t } from '../../../../strings';
 import DefaultButton from '../../../common/DefaultButton';
 import FeedbackView from '../../../common/FeedbackView';
-import { ApprovedParamList } from '../types';
 import { borders, colors } from '../../../common/styles';
+import { ApprovedParamList } from '../types';
 
 type ScreenNavigationProp = StackNavigationProp<ApprovedParamList, 'MatchingFeedback'>;
 type ScreenRouteProp = RouteProp<ApprovedParamList, 'MatchingFeedback'>;
