@@ -52,7 +52,7 @@ export interface ChatMessage {
   from: string;
   to: string;
   message: string;
-  timestamp: firebase.firestore.FieldValue;
+  timestamp: firebase.firestore.Timestamp;
 }
 
 export interface GroupedChatMessages {
@@ -76,8 +76,8 @@ export interface Order {
   courierId?: string;
   courierName: string;
   dispatchingState?: DispatchingState;
-  createdOn: firebase.firestore.FieldValue;
-  updatedOn?: firebase.firestore.FieldValue;
+  createdOn: firebase.firestore.Timestamp;
+  updatedOn?: firebase.firestore.Timestamp;
 }
 
 export interface OrderMatchRequest {

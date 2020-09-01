@@ -51,6 +51,12 @@ export const borders = StyleSheet.create({
 });
 
 export const texts = StyleSheet.create({
+  tiny: {
+    fontFamily: 'BarlowMedium',
+    color: colors.black,
+    fontSize: 11,
+    lineHeight: 13,
+  },
   small: {
     fontFamily: 'BarlowMedium',
     color: colors.black,

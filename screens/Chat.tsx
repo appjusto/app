@@ -1,4 +1,5 @@
 import { RouteProp } from '@react-navigation/native';
+import { trim } from 'lodash';
 import React, { useState, useCallback, useContext } from 'react';
 import { View, FlatList, Text } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +14,7 @@ import DefaultInput from './common/DefaultInput';
 import { ProfileIcon } from './common/icons/RoundedIcon';
 import { screens, colors, padding, texts, borders } from './common/styles';
 import PaddedView from './common/views/PaddedView';
+import { hhMMFromDate } from '../utils/formatters';
 
 export type ChatParamList = {
   orderId: string;
@@ -38,6 +40,10 @@ export default function ({ route }: Props) {
   // app state
   const user = useSelector(getUser);
   const order = useSelector(getOrderById)(orderId);
+  const names = {
+    [order.courierId!]: order.courierName,
+    [order.consumerId]: order.consumerName ?? t('Cliente'),
+  };
 
   // screen state
   const [inputText, setInputText] = useState('');
@@ -45,7 +51,7 @@ export default function ({ route }: Props) {
 
   // handlers
   const sendMessageHandler = useCallback(async () => {
-    dispatch(sendMessage(api)(order, user!.uid, inputText));
+    dispatch(sendMessage(api)(order, user!.uid, trim(inputText)));
     setInputText('');
   }, [order, inputText]);
   // UI
@@ -65,9 +71,8 @@ export default function ({ route }: Props) {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <ProfileIcon />
-              <View>
-                <Text>{item.from}</Text>
-                <Text>00h00</Text>
+              <View style={{ marginLeft: padding / 2 }}>
+                <Text style={[texts.medium]}>{names[item.from]}</Text>
               </View>
             </View>
             {item.messages.map((message) => (
@@ -81,7 +86,12 @@ export default function ({ route }: Props) {
                 }}
                 padding={12}
               >
-                <Text style={[texts.small]}>{message.message}</Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                  <Text style={[texts.small, { flexWrap: 'wrap' }]}>{message.message}</Text>
+                  <Text style={[texts.tiny, { marginLeft: padding / 2, alignSelf: 'flex-end' }]}>
+                    {hhMMFromDate(message.timestamp?.toDate()) ?? ''}
+                  </Text>
+                </View>
               </PaddedView>
             ))}
           </PaddedView>
