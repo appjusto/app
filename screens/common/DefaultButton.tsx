@@ -4,15 +4,16 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ButtonProps,
   ActivityIndicator,
   ViewProps,
+  TouchableOpacityProps,
 } from 'react-native';
 
 import ShowIf from './ShowIf';
 import { colors, texts } from './styles';
 
-export interface Props extends ButtonProps, ViewProps {
+export interface DefaultButtonProps extends TouchableOpacityProps, ViewProps {
+  title: string;
   activityIndicator?: boolean;
 }
 
@@ -22,7 +23,7 @@ export default function ({
   style: externalStyle,
   activityIndicator = false,
   ...props
-}: Props) {
+}: DefaultButtonProps) {
   return (
     <TouchableOpacity disabled={disabled} {...props}>
       <View
@@ -36,7 +37,7 @@ export default function ({
       >
         <ShowIf test={!activityIndicator}>
           {() => (
-            <Text style={{ ...styles.text, color: disabled ? colors.white : colors.black }}>
+            <Text style={{ ...texts.medium, color: disabled ? colors.white : colors.black }}>
               {title}
             </Text>
           )}
@@ -57,11 +58,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // alignSelf: 'center', //the container shrinks to the size of its content
-  },
-  text: {
-    ...texts.default,
-    fontSize: 16,
-    lineHeight: 19,
-    height: 19,
   },
 });

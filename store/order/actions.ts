@@ -8,19 +8,11 @@ import { Place, Order } from './types';
 
 export const ORDERS_UPDATED = 'ORDERS_UPDATED';
 
-// watch for updates
+// consumers
 export const observeOrdersCreatedBy = (api: Api) => (consumerId: string) => (
   dispatch: AppDispatch
 ) => {
   return api.order().observeOrdersCreatedBy(consumerId, (orders: Order[]): void => {
-    dispatch({ type: ORDERS_UPDATED, payload: orders });
-  });
-};
-
-export const observeOrdersDeliveredBy = (api: Api) => (courierId: string) => (
-  dispatch: AppDispatch
-) => {
-  return api.order().observeOrdersDeliveredBy(courierId, (orders: Order[]): void => {
     dispatch({ type: ORDERS_UPDATED, payload: orders });
   });
 };
@@ -61,9 +53,37 @@ export const cancelOrder = (api: Api) => (orderId: string) => async (dispatch: A
   return result;
 };
 
+// couriers
+
+export const observeOrdersDeliveredBy = (api: Api) => (courierId: string) => (
+  dispatch: AppDispatch
+) => {
+  return api.order().observeOrdersDeliveredBy(courierId, (orders: Order[]): void => {
+    dispatch({ type: ORDERS_UPDATED, payload: orders });
+  });
+};
+
 export const matchOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
   dispatch({ type: BUSY, payload: true });
   const result = await api.order().matchOrder(orderId);
+  dispatch({ type: BUSY, payload: false });
+  return result;
+};
+
+export const nextDispatchingState = (api: Api) => (orderId: string) => async (
+  dispatch: AppDispatch
+) => {
+  dispatch({ type: BUSY, payload: true });
+  const result = await api.order().nextDispatchingState(orderId);
+  dispatch({ type: BUSY, payload: false });
+  return result;
+};
+
+export const completeDelivery = (api: Api) => (orderId: string) => async (
+  dispatch: AppDispatch
+) => {
+  dispatch({ type: BUSY, payload: true });
+  const result = await api.order().completeDelivery(orderId);
   dispatch({ type: BUSY, payload: false });
   return result;
 };

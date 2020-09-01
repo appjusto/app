@@ -39,7 +39,7 @@ export default function ({ order }: Props) {
       </ShowIf>
 
       {/* after order has been created */}
-      <ShowIf test={order?.valid() === true}>{() => <OrderMap order={order!} />}</ShowIf>
+      <ShowIf test={order?.valid() === true}>{() => <OrderMap order={order!.getData()} />}</ShowIf>
     </View>
   );
 }

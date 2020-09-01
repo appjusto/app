@@ -9,14 +9,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { motocycleWhite } from '../../../../assets/icons';
 import useLocationUpdates from '../../../../hooks/useLocationUpdates';
 import useNotificationToken from '../../../../hooks/useNotificationToken';
-import { isCourierWorking, getCourier } from '../../../../store/courier/selectors';
+import { getCourier } from '../../../../store/courier/selectors';
 import { CourierStatus } from '../../../../store/courier/types';
+import { showToast } from '../../../../store/ui/actions';
 import { updateProfile } from '../../../../store/user/actions';
 import { t } from '../../../../strings';
 import { ApiContext, AppDispatch } from '../../../app/context';
 import { colors, padding, texts, borders } from '../../../common/styles';
 import { HomeParamList } from './types';
-import { showToast } from '../../../../store/ui/actions';
 
 const { width } = Dimensions.get('window');
 
