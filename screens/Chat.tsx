@@ -96,7 +96,11 @@ export default function ({ route }: Props) {
           multiline
           numberOfLines={3}
         >
-          <DefaultButton title={t('Enviar')} onPress={sendMessageHandler} />
+          <DefaultButton
+            title={t('Enviar')}
+            onPress={sendMessageHandler}
+            disabled={inputText.length === 0}
+          />
         </DefaultInput>
       </PaddedView>
     </View>
