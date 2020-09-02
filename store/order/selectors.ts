@@ -1,12 +1,15 @@
 import { createSelector } from 'reselect';
 
 import { State } from '..';
-import { OrderState, Order, Place, OrderStatus } from './types';
+import { OrderState, Order, Place, OrderStatus, GroupedChatMessages } from './types';
 
 export const getOrderState = (state: State): OrderState => state.order;
 
 export const getOrderById = (state: State) => (id: string): Order =>
   getOrderState(state).ordersById[id];
+
+export const getOrderChat = (id: string) => (state: State): GroupedChatMessages[] =>
+  getOrderState(state).chatByOrderId[id];
 
 export const getOrders = (state: State): Order[] => getOrderState(state).orders;
 

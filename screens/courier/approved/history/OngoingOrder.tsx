@@ -2,8 +2,10 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext, useCallback, useMemo } from 'react';
 import { View, Text } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
 
+import * as icons from '../../../../assets/icons';
 import { nextDispatchingState, completeDelivery } from '../../../../store/order/actions';
 import { getOrderById } from '../../../../store/order/selectors';
 import { DispatchingState } from '../../../../store/order/types';
@@ -12,6 +14,7 @@ import { t } from '../../../../strings';
 import { AppDispatch, ApiContext } from '../../../app/context';
 import DefaultButton from '../../../common/DefaultButton';
 import { colors, screens, texts } from '../../../common/styles';
+import RoundedText from '../../../common/texts/RoundedText';
 import PaddedView from '../../../common/views/PaddedView';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
 import { HistoryNavigatorParamList } from './types';
@@ -28,7 +31,7 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  const { orderId } = route.params ?? {};
+  const { orderId } = route.params;
 
   // app state
   const busy = useSelector(getUIBusy);
@@ -43,6 +46,11 @@ export default function ({ navigation, route }: Props) {
     }
   }, [order]);
 
+  const openChatHandler = useCallback(() => {
+    navigation.navigate('Chat', { orderId });
+  }, [order]);
+
+  // UI
   const nextStepLabel = useMemo(() => {
     if (order.dispatchingState === DispatchingState.GoingPickUp) {
       return t('Cheguei no local de retirada');
@@ -56,7 +64,6 @@ export default function ({ navigation, route }: Props) {
     return '';
   }, [order]);
 
-  // UI
   return (
     <View style={{ ...screens.default }}>
       <View style={{ flex: 1 }}>
@@ -65,6 +72,9 @@ export default function ({ navigation, route }: Props) {
       <PaddedView style={{ backgroundColor: colors.lightGrey }}>
         <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Pedido de')}</Text>
         <Text style={[texts.medium]}>{order.consumerName}</Text>
+        <TouchableOpacity onPress={openChatHandler}>
+          <RoundedText text={t('Iniciar chat')} leftIcon={icons.chat} />
+        </TouchableOpacity>
       </PaddedView>
       <PaddedView>
         <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Retirada')}</Text>

@@ -3,20 +3,14 @@ import { CancelToken } from 'axios';
 import { AppDispatch } from '../../screens/app/context';
 import Api from '../api/api';
 import { AutoCompleteResult } from '../api/maps';
+import { ObserveOrdersOptions } from '../api/order';
 import { BUSY } from '../ui/actions';
-import { Place, Order } from './types';
+import { Place, Order, ChatMessage } from './types';
 
 export const ORDERS_UPDATED = 'ORDERS_UPDATED';
+export const ORDER_CHAT_UPDATED = 'ORDER_CHAT_UPDATED';
 
 // consumers
-export const observeOrdersCreatedBy = (api: Api) => (consumerId: string) => (
-  dispatch: AppDispatch
-) => {
-  return api.order().observeOrdersCreatedBy(consumerId, (orders: Order[]): void => {
-    dispatch({ type: ORDERS_UPDATED, payload: orders });
-  });
-};
-
 export const getAddressAutocomplete = (api: Api) => (
   input: string,
   sessionToken: string,
@@ -55,14 +49,6 @@ export const cancelOrder = (api: Api) => (orderId: string) => async (dispatch: A
 
 // couriers
 
-export const observeOrdersDeliveredBy = (api: Api) => (courierId: string) => (
-  dispatch: AppDispatch
-) => {
-  return api.order().observeOrdersDeliveredBy(courierId, (orders: Order[]): void => {
-    dispatch({ type: ORDERS_UPDATED, payload: orders });
-  });
-};
-
 export const matchOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
   dispatch({ type: BUSY, payload: true });
   const result = await api.order().matchOrder(orderId);
@@ -84,6 +70,32 @@ export const completeDelivery = (api: Api) => (orderId: string) => async (
 ) => {
   dispatch({ type: BUSY, payload: true });
   const result = await api.order().completeDelivery(orderId);
+  dispatch({ type: BUSY, payload: false });
+  return result;
+};
+
+// both courier & consumer
+
+export const observeOrders = (api: Api) => (options: ObserveOrdersOptions) => (
+  dispatch: AppDispatch
+) => {
+  return api.order().observeOrders(options, (orders: Order[]): void => {
+    dispatch({ type: ORDERS_UPDATED, payload: orders });
+  });
+};
+
+export const observeOrderChat = (api: Api) => (orderId: string) => (dispatch: AppDispatch) => {
+  return api.order().observeOrderChat(orderId, (messages: ChatMessage[]): void => {
+    dispatch({ type: ORDER_CHAT_UPDATED, payload: { orderId, messages } });
+  });
+};
+
+export const sendMessage = (api: Api) => (order: Order, from: string, message: string) => async (
+  dispatch: AppDispatch
+) => {
+  dispatch({ type: BUSY, payload: true });
+  const to = order.courierId === from ? order.consumerId : order.courierId;
+  const result = await api.order().sendMessage(order.id, from, to!, message);
   dispatch({ type: BUSY, payload: false });
   return result;
 };

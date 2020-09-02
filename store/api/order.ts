@@ -1,4 +1,11 @@
-import { Order, Place } from '../order/types';
+import firebase from 'firebase';
+
+import { Order, Place, ChatMessage } from '../order/types';
+
+export type ObserveOrdersOptions = {
+  createdBy?: string;
+  deliveredBy?: string;
+};
 
 export default class OrderApi {
   constructor(
@@ -6,59 +13,8 @@ export default class OrderApi {
     private functions: firebase.functions.Functions
   ) {}
 
-  // observe orders
-  observeOrdersCreatedBy(
-    consumerId: string,
-    resultHandler: (orders: Order[]) => void
-  ): firebase.Unsubscribe {
-    const unsubscribe = this.firestore
-      .collection('orders')
-      .where('consumerId', '==', consumerId)
-      .where('status', 'in', ['quote', 'matching', 'dispatching', 'delivered', 'canceled'])
-      .orderBy('createdOn', 'desc')
-      .onSnapshot(
-        (querySnapshot) => {
-          const docs: Order[] = [];
-          querySnapshot.forEach((doc) => {
-            docs.push({ ...(doc.data() as Order), id: doc.id });
-          });
-          resultHandler(docs);
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    // returns the unsubscribe function
-    return unsubscribe;
-  }
-
-  // observe orders
-  observeOrdersDeliveredBy(
-    courierId: string,
-    resultHandler: (orders: Order[]) => void
-  ): firebase.Unsubscribe {
-    const unsubscribe = this.firestore
-      .collection('orders')
-      .where('courierId', '==', courierId)
-      .where('status', 'in', ['dispatching', 'delivered', 'canceled'])
-      .onSnapshot(
-        (querySnapshot) => {
-          const docs: Order[] = [];
-          querySnapshot.forEach((doc) => {
-            docs.push({ ...(doc.data() as Order), id: doc.id });
-          });
-          resultHandler(docs);
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    // returns the unsubscribe function
-    return unsubscribe;
-  }
-
+  // consumer
   // functions
-  // submit profile
   async createOrder(origin: Place, destination: Place) {
     return (await this.functions.httpsCallable('createOrder')({ origin, destination })).data;
   }
@@ -71,6 +27,7 @@ export default class OrderApi {
     return (await this.functions.httpsCallable('cancelOrder')({ orderId })).data;
   }
 
+  // courier
   async matchOrder(orderId: string) {
     return (await this.functions.httpsCallable('matchOrder')({ orderId })).data;
   }
@@ -81,5 +38,70 @@ export default class OrderApi {
 
   async completeDelivery(orderId: string) {
     return (await this.functions.httpsCallable('completeDelivery')({ orderId })).data;
+  }
+
+  // both courier & customers
+  // observe orders
+  observeOrders(
+    options: ObserveOrdersOptions,
+    resultHandler: (orders: Order[]) => void
+  ): firebase.Unsubscribe {
+    const { createdBy, deliveredBy } = options;
+    let query = this.firestore
+      .collection('orders')
+      .orderBy('createdOn', 'desc')
+      .where('status', 'in', ['quote', 'matching', 'dispatching', 'delivered', 'canceled']);
+    if (createdBy) query = query.where('consumerId', '==', createdBy);
+    if (deliveredBy) query = query.where('courierId', '==', deliveredBy);
+
+    const unsubscribe = query.onSnapshot(
+      (querySnapshot) => {
+        const docs: Order[] = [];
+        querySnapshot.forEach((doc) => {
+          docs.push({ ...(doc.data() as Order), id: doc.id });
+        });
+        resultHandler(docs);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+    // returns the unsubscribe function
+    return unsubscribe;
+  }
+  // observe order's chat
+  observeOrderChat(
+    orderId: string,
+    resultHandler: (orders: ChatMessage[]) => void
+  ): firebase.Unsubscribe {
+    const unsubscribe = this.firestore
+      .collection('orders')
+      .doc(orderId)
+      .collection('chat')
+      .orderBy('timestamp', 'asc')
+      .onSnapshot(
+        (querySnapshot) => {
+          const docs: ChatMessage[] = [];
+          querySnapshot.forEach((doc) => {
+            docs.push({ ...(doc.data() as ChatMessage), id: doc.id });
+          });
+          resultHandler(docs);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    // returns the unsubscribe function
+    return unsubscribe;
+  }
+
+  async sendMessage(orderId: string, from: string, to: string, message: string) {
+    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    return this.firestore.collection('orders').doc(orderId).collection('chat').add({
+      from,
+      to,
+      message,
+      timestamp,
+    });
   }
 }

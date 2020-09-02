@@ -4,9 +4,9 @@ import { Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../assets/icons';
+import useObserveOrders from '../../hooks/useObserveOrders';
 import { getFlavor } from '../../store/config/selectors';
 import { getConsumer } from '../../store/consumer/selectors';
-import { observeOrdersCreatedBy } from '../../store/order/actions';
 import { observeProfile } from '../../store/user/actions';
 import { getUser } from '../../store/user/selectors';
 import { t } from '../../strings';
@@ -32,9 +32,7 @@ export default function () {
     return dispatch(observeProfile(api)(flavor, user!.uid));
   }, []);
   // subscribe for order changes
-  useEffect(() => {
-    return dispatch(observeOrdersCreatedBy(api)(user!.uid));
-  }, []);
+  useObserveOrders({ createdBy: consumer!.id });
 
   // UI
   if (!consumer) return null;
