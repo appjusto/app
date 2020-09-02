@@ -5,6 +5,7 @@ import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard } from 'reac
 import { useSelector, useDispatch } from 'react-redux';
 
 import { getCourier } from '../../../store/courier/selectors';
+import { getUIBusy } from '../../../store/ui/selectors';
 import { submitProfile } from '../../../store/user/actions';
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
@@ -13,7 +14,6 @@ import DefaultButton from '../../common/DefaultButton';
 import { screens, texts, colors } from '../../common/styles';
 import PaddedView from '../../common/views/PaddedView';
 import { PendingParamList } from './types';
-import { getUIBusy } from '../../../store/ui/selectors';
 
 type ScreenNavigationProp = StackNavigationProp<PendingParamList, 'PendingChecklist'>;
 type ScreenRouteProp = RouteProp<PendingParamList, 'PendingChecklist'>;

@@ -8,6 +8,7 @@ import { View, Text, Image } from 'react-native';
 
 import { license, selfie } from '../../../assets/icons';
 import { t } from '../../../strings';
+import DefaultButton from '../../common/DefaultButton';
 import { colors, texts, screens } from '../../common/styles';
 import { ProfileParamList } from '../types';
 import DocumentButton from './DocumentButton';
@@ -96,6 +97,12 @@ export default function ({ navigation }: Props) {
           />
         </DocumentButton>
       </View>
+      <DefaultButton
+        title={t('Avançar')}
+        style={{ marginTop: 30, marginBottom: 16 }}
+        disabled={!photo && !galleryImage}
+        onPress={() => navigation.navigate('PendingChecklist')}
+      />
     </View>
   );
 }
