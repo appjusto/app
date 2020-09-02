@@ -1,10 +1,9 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Asset } from 'expo-asset';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, Image } from 'react-native';
 
 import { license, selfie } from '../../../assets/icons';
@@ -33,17 +32,16 @@ export default function ({ navigation }: Props) {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1, 1],
-        // quality: 0.5,
+        quality: 1,
       });
-      const image = Asset.fromModule(require('../../../assets/icons/icon-motocycle-green.png'));
       const galleryImage = await ImageManipulator.manipulateAsync(
-        image.localUri || image.uri,
+        data.uri,
         [{ resize: { width: 100, height: 100 } }],
         { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
       );
       console.log(galleryImage);
       setGalleryImage(galleryImage);
-      console.log(data);
+      // console.log(data);
     } else {
       alert('Precisamos do acesso à sua galeria');
     }
@@ -55,11 +53,15 @@ export default function ({ navigation }: Props) {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1, 1],
-        quality: 0.5,
+        quality: 1,
       });
-      const photo = data;
+      const photo = await ImageManipulator.manipulateAsync(
+        data.uri,
+        [{ resize: { width: 100, height: 100 } }],
+        { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
+      );
       setPhoto(photo);
-      console.log(data);
+      // console.log(data);
     } else {
       alert('Precisamos do acesso à câmera');
     }
@@ -76,14 +78,22 @@ export default function ({ navigation }: Props) {
       </Text>
       <View style={{ marginTop: 24, flex: 1, alignItems: 'center' }}>
         <DocumentButton title={t('Foto de rosto')} onPress={pickFromCamera}>
-          <View style={{ width: 32, height: 48 }}>
-            <Image source={photo} width={32} height={48} resizeMode="cover" />
-          </View>
+          <Image
+            source={photo}
+            width={32}
+            height={48}
+            resizeMode="contain"
+            style={{ borderRadius: 50 }}
+          />
         </DocumentButton>
         <DocumentButton title={t('RG ou CNH aberta')} onPress={pickFromGallery}>
-          <View style={{ width: 32, height: 48 }}>
-            <Image source={galleryImage} width={32} height={48} resizeMode="cover" />
-          </View>
+          <Image
+            source={galleryImage}
+            width={32}
+            height={48}
+            resizeMode="contain"
+            style={{ borderRadius: 50 }}
+          />
         </DocumentButton>
       </View>
     </View>
