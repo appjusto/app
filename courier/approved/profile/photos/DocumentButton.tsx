@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, View, ButtonProps, Text } from 'react-native';
 
-import { padding, colors, borders } from '../../../common/styles';
+import { padding, colors, borders } from '../../../../common/styles';
 
 interface Props extends ButtonProps {
   children: React.ReactNode;

@@ -8,16 +8,16 @@ import React, { useState, useCallback, useContext } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
-import * as icons from '../../../assets/icons';
-import { AppDispatch, ApiContext } from '../../../common/app/context';
-import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import { uploadProfileImages } from '../../../common/store/courier/actions';
-import { getCourier } from '../../../common/store/courier/selectors';
-import { colors, texts, screens } from '../../../common/styles';
-import { t } from '../../../strings';
+import * as icons from '../../../../assets/icons';
+import { AppDispatch, ApiContext } from '../../../../common/app/context';
+import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../../common/components/views/PaddedView';
+import { uploadProfileImages } from '../../../../common/store/courier/actions';
+import { getCourier } from '../../../../common/store/courier/selectors';
+import { colors, texts, screens } from '../../../../common/styles';
+import { t } from '../../../../strings';
 import { ProfileParamList } from '../types';
 import DocumentButton from './DocumentButton';
-import PaddedView from '../../../common/components/views/PaddedView';
 
 const defaultImageOptions: ImagePicker.ImagePickerOptions = {
   mediaTypes: ImagePicker.MediaTypeOptions.Images,

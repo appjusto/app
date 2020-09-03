@@ -3,12 +3,12 @@ import React from 'react';
 
 import BackButton from '../../common/components/buttons/BackButton';
 import ProfileEdit from '../../common/screens/profile/ProfileEdit';
-import Camera from '../../consumer/profile/photos/Camera';
-import ProfilePhotos from '../../consumer/profile/photos/ProfilePhotos';
 import { t } from '../../strings';
 import ProfileBank from '../approved/profile/bank/ProfileBank';
 import SelectBank from '../approved/profile/bank/SelectBank';
 import FleetNavigator from '../approved/profile/fleet/FleetNavigator';
+import Camera from '../approved/profile/photos/Camera';
+import ProfilePhotos from '../approved/profile/photos/ProfilePhotos';
 import PendingChecklist from './PendingChecklist';
 import ProfileFeedback from './ProfileFeedback';
 import { PendingParamList } from './types';

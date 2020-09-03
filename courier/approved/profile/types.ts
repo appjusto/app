@@ -5,6 +5,7 @@ export type ProfileParamList = {
   Profile: undefined;
   ProfileEdit: ProfileEditParamList;
   ProfilePhotos: undefined;
+  Camera: undefined;
   ProfileBank?: {
     bank: {
       bankId: string;
