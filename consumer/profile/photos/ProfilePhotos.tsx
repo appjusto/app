@@ -17,6 +17,7 @@ import { colors, texts, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ProfileParamList } from '../types';
 import DocumentButton from './DocumentButton';
+import PaddedView from '../../../common/components/views/PaddedView';
 
 const defaultImageOptions: ImagePicker.ImagePickerOptions = {
   mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -98,14 +99,14 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <View style={{ ...screens.lightGrey }}>
-      <Text style={{ ...texts.big, marginTop: 16 }}>{t('Fotos e documentos')}</Text>
-      <Text style={{ ...texts.default, marginTop: 16, color: colors.darkGrey }}>
+    <PaddedView style={{ ...screens.lightGrey }}>
+      <Text style={{ ...texts.default, color: colors.darkGrey }}>
         {t(
           'Agora precisamos da sua foto sua e de um documento. Se você for fazer entregas utilizando Moto e/ou Carro, envia a foto da sua CNH; caso contrário, é só enviar a foto do seu RG'
         )}
       </Text>
-      <View style={{ marginTop: 24, flex: 1, alignItems: 'center' }}>
+      <View style={{ flex: 1 }} />
+      <View style={{ alignSelf: 'center' }}>
         <DocumentButton title={t('Foto de rosto')} onPress={pickFromCamera}>
           <Image
             source={selfie ?? icons.selfie}
@@ -113,6 +114,9 @@ export default function ({ navigation }: Props) {
             style={selfie ? styles.image : styles.icon}
           />
         </DocumentButton>
+      </View>
+      <View style={{ flex: 1 }} />
+      <View style={{ alignSelf: 'center' }}>
         <DocumentButton title={t('RG ou CNH aberta')} onPress={pickFromGallery}>
           <Image
             source={documentImage ?? icons.license}
@@ -121,13 +125,13 @@ export default function ({ navigation }: Props) {
           />
         </DocumentButton>
       </View>
+      <View style={{ flex: 1 }} />
       <DefaultButton
         title={t('Avançar')}
-        style={{ marginTop: 30, marginBottom: 16 }}
         disabled={!selfie || !documentImage}
         onPress={uploadHandler}
       />
-    </View>
+    </PaddedView>
   );
 }
 
