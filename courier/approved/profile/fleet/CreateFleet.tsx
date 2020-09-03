@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 import { slider } from '../../../../assets/icons';
+import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import DefaultInput from '../../../../common/components/inputs/DefaultInput';
+import PaddedView from '../../../../common/components/views/PaddedView';
+import { texts, screens, colors, borders } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import DefaultButton from '../../../components/buttons/DefaultButton';
-import DefaultInput from '../../../components/inputs/DefaultInput';
-import PaddedView from '../../../components/views/PaddedView';
-import { texts, screens, colors, borders } from '../../../styles';
 
 export default function () {
   // state

@@ -2,13 +2,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
 import BackButton from '../../common/components/buttons/BackButton';
-import ProfileBank from '../../common/screens/profile/ProfileBank';
 import ProfileEdit from '../../common/screens/profile/ProfileEdit';
-import SelectBank from '../../common/screens/profile/SelectBank';
-import FleetNavigator from '../../common/screens/profile/fleet/FleetNavigator';
-import Camera from '../../common/screens/profile/photos/Camera';
-import ProfilePhotos from '../../common/screens/profile/photos/ProfilePhotos';
+import Camera from '../../consumer/profile/photos/Camera';
+import ProfilePhotos from '../../consumer/profile/photos/ProfilePhotos';
 import { t } from '../../strings';
+import ProfileBank from '../approved/profile/bank/ProfileBank';
+import SelectBank from '../approved/profile/bank/SelectBank';
+import FleetNavigator from '../approved/profile/fleet/FleetNavigator';
 import PendingChecklist from './PendingChecklist';
 import ProfileFeedback from './ProfileFeedback';
 import { PendingParamList } from './types';

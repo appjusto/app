@@ -1,11 +1,11 @@
 import React from 'react';
 import { Text, FlatList } from 'react-native';
 
+import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import DefaultInput from '../../../../common/components/inputs/DefaultInput';
+import PaddedView from '../../../../common/components/views/PaddedView';
+import { texts, screens, colors } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import DefaultButton from '../../../components/buttons/DefaultButton';
-import DefaultInput from '../../../components/inputs/DefaultInput';
-import PaddedView from '../../../components/views/PaddedView';
-import { texts, screens, colors } from '../../../styles';
 import FleetCard from './FleetCard';
 
 const FLEETS = [

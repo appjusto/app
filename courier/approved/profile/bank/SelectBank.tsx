@@ -3,12 +3,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState, useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 
-import { t } from '../../../strings';
-import DefaultButton from '../../components/buttons/DefaultButton';
-import DefaultInput from '../../components/inputs/DefaultInput';
-import { borders, texts, screens, colors } from '../../styles';
+import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import DefaultInput from '../../../../common/components/inputs/DefaultInput';
+import { ProfileParamList } from '../../../../common/screens/profile/types';
+import { borders, texts, screens, colors } from '../../../../common/styles';
+import { t } from '../../../../strings';
 import { BANKS } from './banks';
-import { ProfileParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'SelectBank'>;
 type ScreenRouteProp = RouteProp<ProfileParamList, 'SelectBank'>;

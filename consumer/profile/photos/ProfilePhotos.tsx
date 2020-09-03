@@ -6,11 +6,11 @@ import * as Permissions from 'expo-permissions';
 import React, { useState, useCallback } from 'react';
 import { View, Text, Image } from 'react-native';
 
-import { license, selfie } from '../../../../assets/icons';
-import { t } from '../../../../strings';
-import DefaultButton from '../../../components/buttons/DefaultButton';
-import { colors, texts, screens } from '../../../styles';
-import { ProfileParamList } from '../types';
+import { license, selfie } from '../../../assets/icons';
+import DefaultButton from '../../../common/components/buttons/DefaultButton';
+import { ProfileParamList } from '../../../common/screens/profile/types';
+import { colors, texts, screens } from '../../../common/styles';
+import { t } from '../../../strings';
 import DocumentButton from './DocumentButton';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfilePhotos'>;

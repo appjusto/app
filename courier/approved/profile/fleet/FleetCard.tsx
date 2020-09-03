@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 
+import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import { borders, texts, colors } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import DefaultButton from '../../../components/buttons/DefaultButton';
-import { borders, texts, colors } from '../../../styles';
 
 type Props = {
   name: string;

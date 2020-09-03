@@ -3,9 +3,9 @@ import React from 'react';
 
 import BackButton from '../../common/components/buttons/BackButton';
 import ProfileEdit from '../../common/screens/profile/ProfileEdit';
-import ProfileAddCard from '../../common/screens/profile/payment/ProfileAddCard';
-import ProfilePaymentMethods from '../../common/screens/profile/payment/ProfilePaymentMethods';
 import { t } from '../../strings';
+import ProfileAddCard from '../profile/payment/ProfileAddCard';
+import ProfilePaymentMethods from '../profile/payment/ProfilePaymentMethods';
 import Home from './Home';
 import AddressComplete from './orders/AddressComplete';
 import OrderFeedback from './orders/OrderFeedback';

@@ -2,20 +2,14 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, TouchableWithoutFeedback, ScrollView } from 'react-native';
-// import { useSelector } from 'react-redux';
 
-import { t } from '../../../strings';
-import DefaultButton from '../../components/buttons/DefaultButton';
-// import { getFlavor } from '../../store/config/selectors';
-// import { getConsumer } from '../../store/consumer/selectors';
-// import { getCourier } from '../../store/courier/selectors';
-// import Consumer from '../../store/consumer/types/Consumer';
-// import Courier from '../../store/courier/types/Courier';
-import DefaultInput from '../../components/inputs/DefaultInput';
-import LabeledText from '../../components/texts/LabeledText';
-import AvoidingView from '../../components/views/AvoidingView';
-import { texts, screens, padding, colors } from '../../styles';
-import { ProfileParamList } from './types';
+import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import DefaultInput from '../../../../common/components/inputs/DefaultInput';
+import LabeledText from '../../../../common/components/texts/LabeledText';
+import AvoidingView from '../../../../common/components/views/AvoidingView';
+import { ProfileParamList } from '../../../../common/screens/profile/types';
+import { texts, screens, padding, colors } from '../../../../common/styles';
+import { t } from '../../../../strings';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileBank'>;
 type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfileBank'>;
@@ -27,10 +21,6 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // state
-  // const flavor = useSelector(getFlavor);
-  // const courier = useSelector(getCourier);
-  // const consumer = useSelector(getConsumer);
-  // const user: Consumer | Courier | undefined = flavor === 'consumer' ? consumer : courier;
   const [bank, setBank] = useState<null | { bankId: string; bankName: string }>(null);
   const [agency, setAgency] = useState<string>('');
   const [account, setAccount] = useState<string>('');

@@ -6,16 +6,16 @@ import React, { useState, useRef, useContext } from 'react';
 import { ScrollView, View, TextInput } from 'react-native';
 import { useDispatch } from 'react-redux';
 
-import { t } from '../../../../strings';
-import { ApiContext, AppDispatch } from '../../../app/context';
-import DefaultButton from '../../../components/buttons/DefaultButton';
-import DefaultInput from '../../../components/inputs/DefaultInput';
-import AvoidingView from '../../../components/views/AvoidingView';
-import PaddedView from '../../../components/views/PaddedView';
-import { saveCard } from '../../../store/consumer/actions';
-import { showToast } from '../../../store/ui/actions';
-import { screens, padding } from '../../../styles';
-import { ProfileParamList } from '../types';
+import { ApiContext, AppDispatch } from '../../../common/app/context';
+import DefaultButton from '../../../common/components/buttons/DefaultButton';
+import DefaultInput from '../../../common/components/inputs/DefaultInput';
+import AvoidingView from '../../../common/components/views/AvoidingView';
+import PaddedView from '../../../common/components/views/PaddedView';
+import { ProfileParamList } from '../../../common/screens/profile/types';
+import { saveCard } from '../../../common/store/consumer/actions';
+import { showToast } from '../../../common/store/ui/actions';
+import { screens, padding } from '../../../common/styles';
+import { t } from '../../../strings';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileAddCard'>;
 type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfileAddCard'>;

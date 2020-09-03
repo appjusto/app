@@ -4,11 +4,11 @@ import React from 'react';
 import { View, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import { t } from '../../../../strings';
-import ConfigItem from '../../../components/ConfigItem';
-import { getConsumer } from '../../../store/consumer/selectors';
-import { screens, padding } from '../../../styles';
-import { ProfileParamList } from '../types';
+import ConfigItem from '../../../common/components/ConfigItem';
+import { ProfileParamList } from '../../../common/screens/profile/types';
+import { getConsumer } from '../../../common/store/consumer/selectors';
+import { screens, padding } from '../../../common/styles';
+import { t } from '../../../strings';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfilePaymentMethods'>;
 type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfilePaymentMethods'>;

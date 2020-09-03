@@ -10,7 +10,6 @@ import * as icons from '../../assets/icons';
 import BackButton from '../../common/components/buttons/BackButton';
 import useNotification from '../../common/hooks/useNotification';
 import useObserveOrders from '../../common/hooks/useObserveOrders';
-import ProfileNavigator from '../../common/screens/profile/ProfileNavigator';
 import { getCourier } from '../../common/store/courier/selectors';
 import { CourierStatus } from '../../common/store/courier/types';
 import { getOngoingOrders } from '../../common/store/order/selectors';
@@ -21,6 +20,7 @@ import DeliveriesNavigator from './history/DeliveriesNavigator';
 import HomeNavigator from './home/HomeNavigator';
 import Matching from './matching/Matching';
 import MatchingFeedback from './matching/MatchingFeedback';
+import ProfileNavigator from './profile/ProfileNavigator';
 import { MainParamList, ApprovedParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<

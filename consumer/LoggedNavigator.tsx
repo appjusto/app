@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../assets/icons';
 import { AppDispatch, ApiContext } from '../common/app/context';
 import useObserveOrders from '../common/hooks/useObserveOrders';
-import ProfileNavigator from '../common/screens/profile/ProfileNavigator';
 import { getFlavor } from '../common/store/config/selectors';
 import { getConsumer } from '../common/store/consumer/selectors';
 import { observeProfile } from '../common/store/user/actions';
@@ -15,6 +14,7 @@ import { colors } from '../common/styles';
 import { t } from '../strings';
 import HistoryNavigator from './history/HistoryNavigator';
 import HomeNavigator from './home/HomeNavigator';
+import ProfileNavigator from './profile/ProfileNavigator';
 
 const Tab = createBottomTabNavigator();
 export default function () {
