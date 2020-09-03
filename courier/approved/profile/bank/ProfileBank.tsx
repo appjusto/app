@@ -1,14 +1,18 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import { View, Text, TouchableWithoutFeedback, ScrollView } from 'react-native';
+import { useDispatch } from 'react-redux';
 
+import { ApiContext } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../../common/components/texts/LabeledText';
 import AvoidingView from '../../../../common/components/views/AvoidingView';
-import { ProfileParamList } from '../../../../common/screens/profile/types';
+import { showToast } from '../../../../common/store/ui/actions';
+import { updateProfile } from '../../../../common/store/user/actions';
 import { texts, screens, padding, colors } from '../../../../common/styles';
+import { ProfileParamList } from '../../../../consumer/profile/types';
 import { t } from '../../../../strings';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileBank'>;
@@ -20,6 +24,9 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
+  //context
+  const dispatch = useDispatch();
+  const api = useContext(ApiContext);
   // state
   const [bank, setBank] = useState<null | { bankId: string; bankName: string }>(null);
   const [agency, setAgency] = useState<string>('');
@@ -33,6 +40,25 @@ export default function ({ navigation, route }: Props) {
     const { bank } = route.params ?? {};
     if (bank) setBank(bank);
   }, [route.params]);
+
+  //handlers
+  const submitBankHandler = async () => {
+    if (!bank || !agency || !account || !digit) {
+      dispatch(showToast(t('Você precisa preencher todos os dados.')));
+      return;
+    }
+    await dispatch(
+      updateProfile(api)(bank.bankId!, {
+        bank: {
+          name: bank.bankName,
+          agency,
+          account,
+          digit,
+        },
+      })
+    );
+    navigation.goBack();
+  };
 
   // UI
   return (
@@ -77,7 +103,7 @@ export default function ({ navigation, route }: Props) {
             </View>
           </View>
           <View style={{ flex: 1 }} />
-          <DefaultButton style={{ marginBottom: 32 }} title={t('Avançar')} onPress={() => {}} />
+          <DefaultButton style={{ marginBottom: 32 }} title={t('Avançar')} onPress={submitBankHandler} />
         </AvoidingView>
       </ScrollView>
     </View>
