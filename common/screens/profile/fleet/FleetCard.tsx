@@ -5,7 +5,14 @@ import { t } from '../../../../strings';
 import DefaultButton from '../../../components/buttons/DefaultButton';
 import { borders, texts, colors } from '../../../styles';
 
-export default function ({ name, participants, description, onButtonPress }) {
+type Props = {
+  name: string;
+  participants: string;
+  description: boolean;
+  onButtonPress: () => void;
+};
+
+export default function ({ name, participants, description, onButtonPress }: Props) {
   const [isActive, setIsActive] = useState(false);
   const touchHandler = () => setIsActive(!isActive);
   return (

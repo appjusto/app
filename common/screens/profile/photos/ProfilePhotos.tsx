@@ -1,11 +1,14 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
-import React, { useState } from 'react';
+import * as Permissions from 'expo-permissions';
+import React, { useState, useCallback } from 'react';
 import { View, Text, Image } from 'react-native';
 
 import { license, selfie } from '../../../../assets/icons';
 import { t } from '../../../../strings';
+import DefaultButton from '../../../components/buttons/DefaultButton';
 import { colors, texts, screens } from '../../../styles';
 import { ProfileParamList } from '../types';
 import DocumentButton from './DocumentButton';
@@ -19,36 +22,52 @@ type Props = {
 };
 
 export default function ({ navigation }: Props) {
-  //Pick an image (what to do with the image?)
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  const openImagePickerAsync = async () => {
-    const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      alert(t('A permissão ao acesso às fotos é necessária'));
-      return;
+  //state
+  const [photo, setPhoto] = useState(selfie);
+  const [galleryImage, setGalleryImage] = useState(license);
+  //handlers
+  const pickFromGallery = useCallback(async () => {
+    const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (granted) {
+      const data = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+      const galleryImage = await ImageManipulator.manipulateAsync(
+        data.uri,
+        [{ resize: { width: 100, height: 100 } }],
+        { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
+      );
+      console.log(galleryImage);
+      setGalleryImage(galleryImage);
+      // console.log(data);
+    } else {
+      alert('Precisamos do acesso à sua galeria');
     }
-
-    const pickerResult = await ImagePicker.launchImageLibraryAsync();
-
-    if (pickerResult.cancelled === true) {
-      return;
+  }, [galleryImage]);
+  const pickFromCamera = useCallback(async () => {
+    const { granted } = await Permissions.askAsync(Permissions.CAMERA);
+    if (granted) {
+      const data = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+      const photo = await ImageManipulator.manipulateAsync(
+        data.uri,
+        [{ resize: { width: 100, height: 100 } }],
+        { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
+      );
+      setPhoto(photo);
+      // console.log(data);
+    } else {
+      alert('Precisamos do acesso à câmera');
     }
+  }, [photo]);
 
-    setSelectedImage({ localUri: pickerResult.uri });
-  };
-
-  if (selectedImage !== null) {
-    return (
-      <View style={{ flex: 1 }}>
-        <Image
-          source={{ uri: selectedImage.localUri }}
-          style={{ width: 300, height: 300, resizeMode: 'contain' }}
-        />
-      </View>
-    );
-  }
   // UI
   return (
     <View style={{ ...screens.lightGrey }}>
@@ -59,14 +78,31 @@ export default function ({ navigation }: Props) {
         )}
       </Text>
       <View style={{ marginTop: 24, flex: 1, alignItems: 'center' }}>
-        <DocumentButton title={t('Foto de rosto')} onPress={openImagePickerAsync}>
-          <Image source={selfie} width={32} height={48} />
+        <DocumentButton title={t('Foto de rosto')} onPress={pickFromCamera}>
+          <Image
+            source={photo}
+            width={32}
+            height={48}
+            resizeMode="contain"
+            style={{ borderRadius: 50 }}
+          />
         </DocumentButton>
-
-        <DocumentButton title={t('RG ou CNH aberta')} onPress={() => {}}>
-          <Image source={license} width={40} height={54} />
+        <DocumentButton title={t('RG ou CNH aberta')} onPress={pickFromGallery}>
+          <Image
+            source={galleryImage}
+            width={32}
+            height={48}
+            resizeMode="contain"
+            style={{ borderRadius: 50 }}
+          />
         </DocumentButton>
       </View>
+      <DefaultButton
+        title={t('Avançar')}
+        style={{ marginTop: 30, marginBottom: 16 }}
+        disabled={!photo && !galleryImage}
+        onPress={() => navigation.navigate('PendingChecklist')}
+      />
     </View>
   );
 }

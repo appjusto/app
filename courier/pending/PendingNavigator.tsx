@@ -7,6 +7,7 @@ import ProfileEdit from '../../common/screens/profile/ProfileEdit';
 import SelectBank from '../../common/screens/profile/SelectBank';
 import FleetNavigator from '../../common/screens/profile/fleet/FleetNavigator';
 import ProfilePhotos from '../../common/screens/profile/photos/ProfilePhotos';
+import Camera from '../../profile/photos/Camera';
 import { t } from '../../strings';
 import PendingChecklist from './PendingChecklist';
 import ProfileFeedback from './ProfileFeedback';
@@ -34,6 +35,14 @@ export default function () {
         component={ProfilePhotos}
         options={({ navigation }) => ({
           title: t('Fotos e documentos'),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
+      />
+      <Stack.Screen
+        name="Camera"
+        component={Camera}
+        options={({ navigation }) => ({
+          title: t('Câmera'),
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />
