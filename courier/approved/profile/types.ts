@@ -3,7 +3,6 @@ import { ProfileEraseParamList } from '../../../common/screens/profile/ProfileEr
 
 export type ProfileParamList = {
   Profile: undefined;
-  ProfileEdit: ProfileEditParamList;
   ProfilePhotos: undefined;
   Camera: undefined;
   ProfileBank?: {
@@ -14,5 +13,5 @@ export type ProfileParamList = {
   };
   SelectBank: undefined;
   Terms: undefined;
-  ProfileErase: ProfileEraseParamList;
-};
+} & ProfileEditParamList &
+  ProfileEraseParamList;

@@ -3,7 +3,6 @@ import { ProfileEraseParamList } from '../../common/screens/profile/ProfileErase
 
 export type ProfileParamList = {
   Profile: undefined;
-  ProfileEdit: ProfileEditParamList;
   ProfilePaymentMethods?: {
     returnScreen: 'CreateOrderP2P';
   };
@@ -11,8 +10,8 @@ export type ProfileParamList = {
     returnScreen: 'CreateOrderP2P';
   };
   Terms: undefined;
-  ProfileErase: ProfileEraseParamList;
   CreateOrderP2P: {
     cardId: string;
   };
-};
+} & ProfileEditParamList &
+  ProfileEraseParamList;
