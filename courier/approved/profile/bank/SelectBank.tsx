@@ -5,9 +5,9 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native
 
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
-import { ProfileParamList } from '../../../../common/screens/profile/types';
-import { borders, texts, screens, colors } from '../../../../common/styles';
+import { texts, screens, colors } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { ProfileParamList } from '../../../approved/profile/types';
 import { BANKS } from './banks';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'SelectBank'>;
@@ -41,8 +41,9 @@ export default function ({ navigation, route }: Props) {
         style={{ marginBottom: 32 }}
       />
       <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: 14 }}>
-        {t('Últimos endereços utilizados')}
+        {t('Principais bancos:')}
       </Text>
+      {/* //Todo: should the list initially display only a few pre-selected ("principais") banks? */}
       <FlatList
         data={filteredBanks}
         renderItem={({ item }) => {
@@ -76,7 +77,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     height: 60,
-    ...borders.default,
-    justifyContent: 'space-between',
   },
 });

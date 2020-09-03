@@ -5,7 +5,7 @@ import { ImageResult } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import React, { useState, useCallback, useContext } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, Dimensions, Platform } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../../assets/icons';
@@ -50,6 +50,7 @@ type Props = {
 };
 
 export default function ({ navigation }: Props) {
+  const { height } = Dimensions.get('window');
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -106,30 +107,57 @@ export default function ({ navigation }: Props) {
         )}
       </Text>
       <View style={{ flex: 1 }} />
-      <View style={{ alignSelf: 'center' }}>
-        <DocumentButton title={t('Foto de rosto')} onPress={pickFromCamera}>
-          <Image
-            source={selfie ?? icons.selfie}
-            resizeMode="contain"
-            style={selfie ? styles.image : styles.icon}
-          />
-        </DocumentButton>
-      </View>
-      <View style={{ flex: 1 }} />
-      <View style={{ alignSelf: 'center' }}>
-        <DocumentButton title={t('RG ou CNH aberta')} onPress={pickFromGallery}>
-          <Image
-            source={documentImage ?? icons.license}
-            resizeMode="contain"
-            style={documentImage ? styles.image : styles.icon}
-          />
-        </DocumentButton>
-      </View>
+      {height < 700 ? (
+        <View>
+          <View style={{ alignSelf: 'center' }}>
+            <DocumentButton title={t('Foto de rosto')} onPress={pickFromCamera}>
+              <Image
+                source={selfie ?? icons.selfie}
+                resizeMode="contain"
+                style={selfie ? styles.image : styles.icon}
+              />
+            </DocumentButton>
+          </View>
+          <View style={{ flex: 1 }} />
+          <View style={{ alignSelf: 'center' }}>
+            <DocumentButton title={t('RG ou CNH aberta')} onPress={pickFromGallery}>
+              <Image
+                source={documentImage ?? icons.license}
+                resizeMode="contain"
+                style={documentImage ? styles.image : styles.icon}
+              />
+            </DocumentButton>
+          </View>
+        </View>
+      ) : (
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={{ alignSelf: 'center' }}>
+            <DocumentButton title={t('Foto de rosto')} onPress={pickFromCamera}>
+              <Image
+                source={selfie ?? icons.selfie}
+                resizeMode="contain"
+                style={selfie ? styles.image : styles.icon}
+              />
+            </DocumentButton>
+          </View>
+          <View style={{ alignSelf: 'center' }}>
+            <DocumentButton title={t('RG ou CNH aberta')} onPress={pickFromGallery}>
+              <Image
+                source={documentImage ?? icons.license}
+                resizeMode="contain"
+                style={documentImage ? styles.image : styles.icon}
+              />
+            </DocumentButton>
+          </View>
+        </View>
+      )}
+
       <View style={{ flex: 1 }} />
       <DefaultButton
         title={t('Avançar')}
         disabled={!selfie || !documentImage}
         onPress={uploadHandler}
+        style={Platform.OS === 'ios' ? { marginBottom: 16 } : ''}
       />
     </PaddedView>
   );
