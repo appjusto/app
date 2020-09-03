@@ -49,6 +49,7 @@ function Main({ navigation }: Props) {
       const [order] = ongoingOrders;
       navigation.navigate('Deliveries', {
         screen: 'OngoingOrder',
+        initial: false,
         params: { orderId: order.id },
       });
     }

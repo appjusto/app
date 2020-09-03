@@ -8,13 +8,13 @@ import { sendMessage } from '../store/order/actions';
 import { getOrderById, getOrderChat } from '../store/order/selectors';
 import { getUser } from '../store/user/selectors';
 import { t } from '../strings';
+import { hhMMFromDate } from '../utils/formatters';
 import { ApiContext, AppDispatch } from './app/context';
 import DefaultButton from './common/DefaultButton';
 import DefaultInput from './common/DefaultInput';
 import { ProfileIcon } from './common/icons/RoundedIcon';
 import { screens, colors, padding, texts, borders } from './common/styles';
 import PaddedView from './common/views/PaddedView';
-import { hhMMFromDate } from '../utils/formatters';
 
 export type ChatParamList = {
   orderId: string;

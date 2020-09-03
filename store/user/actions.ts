@@ -94,6 +94,9 @@ export const observeProfile = (api: Api) => (flavor: Flavor, id: string) => (
 export const updateProfile = (api: Api) => (
   id: string,
   changes: CourierProfile | ConsumerProfile
-) => {
-  return api.profile().updateProfile(id, changes);
+) => async (dispatch: AppDispatch) => {
+  dispatch({ type: BUSY, payload: true });
+  const result = await api.profile().updateProfile(id, changes);
+  dispatch({ type: BUSY, payload: false });
+  return result;
 };

@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 // import { validate } from 'gerador-validador-cpf';
-import { trim, isEmpty } from 'lodash';
+import { trim } from 'lodash';
 import React, { useState, useContext, useRef } from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView, TextInput } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
@@ -13,6 +13,7 @@ import Consumer from '../../store/consumer/types/Consumer';
 import { getCourier } from '../../store/courier/selectors';
 import Courier from '../../store/courier/types/Courier';
 import { showToast } from '../../store/ui/actions';
+import { getUIBusy } from '../../store/ui/selectors';
 import { updateProfile } from '../../store/user/actions';
 import { t } from '../../strings';
 import { ApiContext, AppDispatch } from '../app/context';
@@ -45,13 +46,13 @@ export default function ({ navigation, route }: Props) {
   const phoneRef = useRef<TextInput>(null);
 
   // app state
+  const busy = useSelector(getUIBusy);
   const flavor = useSelector(getFlavor);
   const courier = useSelector(getCourier);
   const consumer = useSelector(getConsumer);
   const user: Consumer | Courier = flavor === 'consumer' ? consumer! : courier!;
 
   // state
-  const [updating, setUpdating] = useState(false);
   const [name, setName] = useState<string>(user!.name ?? '');
   const [surname, setSurname] = useState(user!.surname ?? '');
   const [ddd, setDDD] = useState(user!.phone?.ddd ?? '');
@@ -61,7 +62,6 @@ export default function ({ navigation, route }: Props) {
 
   // handlers
   const updateProfileHandler = async () => {
-    if (updating) return;
     const newUser = user.merge({ id: user.id, name, surname, phone, cpf });
     if (!allowPartialSave && !newUser.personalInfoSet()) {
       dispatch(showToast(t('Você precisa preencher todos os dados.')));
@@ -72,18 +72,18 @@ export default function ({ navigation, route }: Props) {
     //   dispatch(showToast(t('CPF não é válido.')));
     //   return;
     // }
-    setUpdating(true);
-    await updateProfile(api)(user.id!, {
-      name: trim(name),
-      surname: trim(surname),
-      phone: {
-        ddd,
-        number: phoneNumber,
-      },
-      cpf,
-    });
+    await dispatch(
+      updateProfile(api)(user.id!, {
+        name: trim(name),
+        surname: trim(surname),
+        phone: {
+          ddd,
+          number: phoneNumber,
+        },
+        cpf,
+      })
+    );
     navigation.goBack();
-    setUpdating(false);
   };
 
   // UI
@@ -157,7 +157,8 @@ export default function ({ navigation, route }: Props) {
             style={{ marginVertical: padding }}
             title={t('Atualizar')}
             onPress={updateProfileHandler}
-            activityIndicator={updating}
+            disabled={busy}
+            activityIndicator={busy}
           />
           <ShowIf test={!hideDeleteAccount}>
             {() => (

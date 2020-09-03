@@ -26,9 +26,11 @@ export default class CourierApi {
       .doc(courier.id);
 
     const { notificationToken } = courier;
-    return courierLocationRef.set(
-      Object.assign(
+    // no reason to update courier's location if token is unknown
+    if (notificationToken) {
+      courierLocationRef.set(
         {
+          notificationToken,
           coordinates: new firebase.firestore.GeoPoint(coords.latitude, coords.longitude),
           // accuracy: coords.accuracy,
           // altitude: coords.altitude,
@@ -37,9 +39,8 @@ export default class CourierApi {
           // speed: coords.speed,
           timestamp,
         },
-        notificationToken ? { notificationToken } : null
-      ),
-      { merge: true }
-    );
+        { merge: true }
+      );
+    }
   }
 }

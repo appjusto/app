@@ -71,7 +71,7 @@ export default function ({ navigation }: Props) {
     if (newStatus === CourierStatus.Available) {
       setLocationKey(nanoid());
     }
-    updateProfile(api)(courier!.id!, { status: newStatus, notificationToken });
+    updateProfile(api)(courier!.id!, { status: newStatus });
   };
 
   // UI
