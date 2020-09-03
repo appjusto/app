@@ -47,7 +47,9 @@ export default function ({ navigation }: Props) {
   // UI
   return (
     <View style={styles.screen}>
-      <TouchableOpacity onPress={() => navigation.navigate('ProfileEdit')}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('ProfileEdit', { allowPartialSave: false })}
+      >
         <View style={styles.container}>
           <View style={styles.texts}>
             <Text style={styles.black}>{t('Seus dados')}</Text>

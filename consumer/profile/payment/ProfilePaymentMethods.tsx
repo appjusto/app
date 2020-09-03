@@ -5,10 +5,10 @@ import { View, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import ConfigItem from '../../../common/components/ConfigItem';
-import { ProfileParamList } from '../../../common/screens/profile/types';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { screens, padding } from '../../../common/styles';
 import { t } from '../../../strings';
+import { ProfileParamList } from '../types';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfilePaymentMethods'>;
 type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfilePaymentMethods'>;

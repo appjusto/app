@@ -5,5 +5,4 @@ export type HistoryNavigatorParamList = {
   OngoingOrder: {
     orderId: string;
   };
-  Chat: ChatParamList;
-};
+} & ChatParamList;

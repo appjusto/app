@@ -23,7 +23,6 @@ export default class FilesApi {
   async upload(path: string, uri: string) {
     const blob = await this.blobFromUri(uri);
 
-    // do something with the blob, eg. upload it to firebase (API v5.6.0 below)
     const ref = this.storage.ref().child(path);
     const task = ref.put(blob);
     task.on('state_changed', null, null, () => {

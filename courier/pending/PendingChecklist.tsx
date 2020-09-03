@@ -73,7 +73,7 @@ export default function ({ navigation }: Props) {
           <ConfigItem
             title={t('Seus dados')}
             subtitle={t('Preencha seus dados pessoais')}
-            onPress={() => navigation.navigate('ProfileEdit', { hideDeleteAccount: true })}
+            onPress={() => navigation.navigate('ProfileEdit', { allowPartialSave: false })}
             checked={courier!.personalInfoSet()}
           />
           <ConfigItem
@@ -85,16 +85,6 @@ export default function ({ navigation }: Props) {
             title={t('Dados bancários')}
             subtitle={t('Cadastre seu banco para recebimento')}
             onPress={() => navigation.navigate('ProfileBank')}
-          />
-          {/* <ConfigItem
-            title={t('Método de entrega')}
-            subtitle={t('Selecione a forma que você vai fazer suas entregas')}
-            onPress={() => navigation.navigate('ProfileEdit')}
-          /> */}
-          <ConfigItem
-            title={t('Escolha sua frota')}
-            subtitle={t('Faça parte de uma frota existente ou crie sua própria frota.')}
-            onPress={() => navigation.navigate('FleetStack')}
           />
         </PaddedView>
       </ScrollView>

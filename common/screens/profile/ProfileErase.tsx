@@ -1,16 +1,19 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text } from 'react-native';
 
 import { t } from '../../../strings';
 import CheckField from '../../components/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import { colors, texts, screens } from '../../styles';
-import { ProfileParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileErase'>;
-type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfileErase'>;
+export type ProfileEraseParamList = {
+  ProfileErase: undefined;
+};
+
+type ScreenNavigationProp = StackNavigationProp<ProfileEraseParamList, 'ProfileErase'>;
+type ScreenRouteProp = RouteProp<ProfileEraseParamList, 'ProfileErase'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -36,6 +39,9 @@ export default function ({ navigation }: Props) {
     didntFeelSafe: false,
     ratherUseAnotherApp: false,
   });
+  // handlers
+  const eraseHandler = useCallback(() => {}, []);
+
   // UI
   return (
     <View style={{ ...screens.lightGrey }}>
@@ -98,9 +104,7 @@ export default function ({ navigation }: Props) {
           disabled
           title={t('Tenho certeza, pode excluir')}
           style={{ marginBottom: 16 }}
-          onPress={() => {
-            navigation.navigate('EraseConfirmed');
-          }}
+          onPress={eraseHandler}
         />
       </View>
     </View>

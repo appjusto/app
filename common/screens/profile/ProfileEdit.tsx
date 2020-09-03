@@ -3,10 +3,9 @@ import { StackNavigationProp } from '@react-navigation/stack';
 // import { validate } from 'gerador-validador-cpf';
 import { trim } from 'lodash';
 import React, { useState, useContext, useRef } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView, TextInput } from 'react-native';
+import { View, ScrollView, TextInput } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { erase } from '../../../assets/icons';
 import { t } from '../../../strings';
 import { AppDispatch, ApiContext } from '../../app/context';
 import DefaultButton from '../../components/buttons/DefaultButton';
@@ -22,11 +21,16 @@ import Courier from '../../store/courier/types/Courier';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
 import { updateProfile } from '../../store/user/actions';
-import { texts, screens, padding } from '../../styles';
-import { ProfileParamList } from './types';
+import { screens, padding } from '../../styles';
 
-type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileEdit'>;
-type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfileEdit'>;
+export type ProfileEditParamList = {
+  ProfileEdit: {
+    allowPartialSave: boolean;
+  };
+};
+
+type ScreenNavigationProp = StackNavigationProp<ProfileEditParamList, 'ProfileEdit'>;
+type ScreenRouteProp = RouteProp<ProfileEditParamList, 'ProfileEdit'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -37,7 +41,7 @@ export default function ({ navigation, route }: Props) {
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = useContext(ApiContext);
-  const { hideDeleteAccount, allowPartialSave } = route.params ?? {};
+  const { allowPartialSave } = route.params ?? {};
 
   // refs
   const surnameRef = useRef<TextInput>(null);
@@ -160,23 +164,6 @@ export default function ({ navigation, route }: Props) {
             disabled={busy}
             activityIndicator={busy}
           />
-          <ShowIf test={!hideDeleteAccount}>
-            {() => (
-              <TouchableOpacity onPress={() => navigation.navigate('ProfileErase')}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    height: 48,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Image source={erase} />
-                  <Text style={{ ...texts.small, marginLeft: 6 }}>{t('Excluir minha conta')}</Text>
-                </View>
-              </TouchableOpacity>
-            )}
-          </ShowIf>
           <View style={{ flex: 1 }} />
         </ScrollView>
       </AvoidingView>

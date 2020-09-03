@@ -11,11 +11,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../../../assets/icons';
 import { AppDispatch, ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import { ProfileParamList } from '../../../common/screens/profile/types';
 import { uploadProfileImages } from '../../../common/store/courier/actions';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { colors, texts, screens } from '../../../common/styles';
 import { t } from '../../../strings';
+import { ProfileParamList } from '../types';
 import DocumentButton from './DocumentButton';
 
 const defaultImageOptions: ImagePicker.ImagePickerOptions = {

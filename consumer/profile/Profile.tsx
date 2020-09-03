@@ -6,10 +6,10 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { ApiContext } from '../../common/app/context';
 import ArrowBox from '../../common/components/ArrowBox';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
-import { ProfileParamList } from '../../common/screens/profile/types';
 import { signOut } from '../../common/store/user/actions';
 import { colors, texts, screens, padding } from '../../common/styles';
 import { t } from '../../strings';
+import { ProfileParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'Profile'>;
 type ScreenRouteProp = RouteProp<ProfileParamList, 'Profile'>;
@@ -47,23 +47,13 @@ export default function ({ navigation }: Props) {
   // UI
   return (
     <View style={styles.screen}>
-      <TouchableOpacity onPress={() => navigation.navigate('ProfileEdit')}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('ProfileEdit', { allowPartialSave: true })}
+      >
         <View style={styles.container}>
           <View style={styles.texts}>
             <Text style={styles.black}>{t('Seus dados')}</Text>
             <Text style={styles.darkGrey}>{t('Edite seus dados pessoais')}</Text>
-          </View>
-          <View style={styles.button}>
-            <ArrowBox />
-          </View>
-        </View>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => navigation.navigate('ProfileAddCard')}>
-        <View style={styles.container}>
-          <View style={styles.texts}>
-            <Text style={styles.black}>{t('Formas de pagamento')}</Text>
-            <Text style={styles.darkGrey}>{t('Edite suas formas de pagamento')}</Text>
           </View>
           <View style={styles.button}>
             <ArrowBox />

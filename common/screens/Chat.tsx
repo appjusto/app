@@ -17,15 +17,12 @@ import { screens, colors, padding, texts, borders } from '../styles';
 import { hhMMFromDate } from '../utils/formatters';
 
 export type ChatParamList = {
-  orderId: string;
+  Chat: {
+    orderId: string;
+  };
 };
 
-type ScreenRoute = RouteProp<
-  {
-    Chat: ChatParamList;
-  },
-  'Chat'
->;
+type ScreenRoute = RouteProp<ChatParamList, 'Chat'>;
 
 type Props = {
   route: ScreenRoute;
