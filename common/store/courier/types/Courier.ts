@@ -16,6 +16,10 @@ export default class Courier extends User {
     return this.source.info;
   }
 
+  public get bankInfo() {
+    return this.source.bankInfo;
+  }
+
   public getSource(): CourierProfile {
     return this.source;
   }

@@ -13,6 +13,12 @@ export interface CourierInfo extends ProfileInfo {}
 export interface CourierProfile extends UserProfile {
   info?: CourierInfo;
   status?: CourierStatus;
+  bankInfo?: {
+    name: string;
+    agency: string;
+    account: string;
+    digit: string;
+  };
 }
 
 export interface CourierState {

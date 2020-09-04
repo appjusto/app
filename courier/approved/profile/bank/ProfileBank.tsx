@@ -1,19 +1,22 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useRef, useState, useEffect, useContext } from 'react';
+import React, { useRef, useState, useEffect, useContext, useMemo } from 'react';
 import { View, Text, TouchableWithoutFeedback, ScrollView } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { ApiContext } from '../../../../common/app/context';
+import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../../common/components/texts/LabeledText';
 import AvoidingView from '../../../../common/components/views/AvoidingView';
+import { getCourier } from '../../../../common/store/courier/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { texts, screens, padding, colors } from '../../../../common/styles';
-import { ProfileParamList } from '../../../../consumer/profile/types';
 import { t } from '../../../../strings';
+import { ProfileParamList } from '../types';
+import { isEmpty } from 'lodash';
+import { getUIBusy } from '../../../../common/store/ui/selectors';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileBank'>;
 type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfileBank'>;
@@ -24,14 +27,23 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  //context
-  const dispatch = useDispatch();
+  // context
+  const dispatch = useDispatch<AppDispatch>();
   const api = useContext(ApiContext);
-  // state
+
+  // app state
+  const busy = useSelector(getUIBusy);
+  const courier = useSelector(getCourier);
+
+  // screen state
   const [bank, setBank] = useState<null | { bankId: string; bankName: string }>(null);
-  const [agency, setAgency] = useState<string>('');
-  const [account, setAccount] = useState<string>('');
-  const [digit, setDigit] = useState<string>('');
+  const [agency, setAgency] = useState<string>(courier?.bankInfo?.agency ?? '');
+  const [account, setAccount] = useState<string>(courier?.bankInfo?.account ?? '');
+  const [digit, setDigit] = useState<string>(courier?.bankInfo?.digit ?? '');
+  const canSubmit = useMemo(() => {
+    return bank != null && !isEmpty(agency) && !isEmpty(account) && !isEmpty(digit);
+  }, [bank, agency, account, digit]);
+
   // refs
   const scrollViewRef = useRef<ScrollView>(null);
 
@@ -44,13 +56,12 @@ export default function ({ navigation, route }: Props) {
   //handlers
   const submitBankHandler = async () => {
     if (!bank || !agency || !account || !digit) {
-      dispatch(showToast(t('Você precisa preencher todos os dados.')));
       return;
     }
     await dispatch(
-      updateProfile(api)(bank.bankId!, {
-        bank: {
-          name: bank.bankName,
+      updateProfile(api)(courier!.id!, {
+        bankInfo: {
+          name: `${bank.bankId} - ${bank.bankName}`, // TODO: leave just ID after moving bank database to firebase
           agency,
           account,
           digit,
@@ -103,7 +114,13 @@ export default function ({ navigation, route }: Props) {
             </View>
           </View>
           <View style={{ flex: 1 }} />
-          <DefaultButton style={{ marginBottom: 32 }} title={t('Avançar')} onPress={submitBankHandler} />
+          <DefaultButton
+            style={{ marginBottom: 32 }}
+            title={t('Avançar')}
+            disabled={!canSubmit}
+            activityIndicator={busy}
+            onPress={submitBankHandler}
+          />
         </AvoidingView>
       </ScrollView>
     </View>

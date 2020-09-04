@@ -19,10 +19,4 @@ export interface UserProfile {
   };
   notificationToken?: string;
   info?: ProfileInfo;
-  bank?: {
-    name: string;
-    agency: string;
-    account: string;
-    digit: string;
-  };
 }
