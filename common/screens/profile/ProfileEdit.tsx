@@ -102,6 +102,7 @@ export default function ({ navigation, route }: Props) {
             blurOnSubmit={false}
             onChangeText={(text) => setName(text)}
             onSubmitEditing={() => surnameRef.current?.focus()}
+            keyboardType="default"
           />
           <DefaultInput
             ref={surnameRef}
@@ -112,6 +113,7 @@ export default function ({ navigation, route }: Props) {
             blurOnSubmit={false}
             onChangeText={(text) => setSurname(text)}
             onSubmitEditing={() => cpfRef.current?.focus()}
+            keyboardType="default"
           />
           <DefaultInput
             ref={cpfRef}
@@ -120,7 +122,7 @@ export default function ({ navigation, route }: Props) {
             value={cpf}
             placeholder={t('00000000000')}
             maxLength={11}
-            keyboardType="number-pad"
+            keyboardType="number-pad" // are we going to use "-" and "."?
             returnKeyType={flavor === 'courier' ? 'next' : 'done'}
             blurOnSubmit={flavor !== 'courier'}
             onChangeText={(text) => setCpf(trim(text))}
@@ -136,7 +138,7 @@ export default function ({ navigation, route }: Props) {
                   value={ddd}
                   placeholder={t('00')}
                   maxLength={2}
-                  keyboardType="number-pad"
+                  keyboardType="phone-pad"
                   returnKeyType="next"
                   blurOnSubmit={false}
                   onChangeText={(text) => setDDD(trim(text))}

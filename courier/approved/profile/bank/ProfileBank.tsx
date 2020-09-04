@@ -1,7 +1,8 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { isEmpty } from 'lodash';
 import React, { useRef, useState, useEffect, useContext, useMemo } from 'react';
-import { View, Text, TouchableWithoutFeedback, ScrollView } from 'react-native';
+import { View, Text, TouchableWithoutFeedback, ScrollView, TextInput } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
@@ -10,13 +11,11 @@ import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../../common/components/texts/LabeledText';
 import AvoidingView from '../../../../common/components/views/AvoidingView';
 import { getCourier } from '../../../../common/store/courier/selectors';
-import { showToast } from '../../../../common/store/ui/actions';
+import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { texts, screens, padding, colors } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ProfileParamList } from '../types';
-import { isEmpty } from 'lodash';
-import { getUIBusy } from '../../../../common/store/ui/selectors';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileBank'>;
 type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfileBank'>;
@@ -46,6 +45,9 @@ export default function ({ navigation, route }: Props) {
 
   // refs
   const scrollViewRef = useRef<ScrollView>(null);
+  // const agencyRef = useRef<TextInput>(null);
+  const accountRef = useRef<TextInput>(null);
+  const digitRef = useRef<TextInput>(null);
 
   // side effects
   useEffect(() => {
@@ -94,22 +96,36 @@ export default function ({ navigation, route }: Props) {
               </View>
             </TouchableWithoutFeedback>
             <DefaultInput
+              // ref={agencyRef}
               style={{ marginTop: 16 }}
               title={t('Agência')}
               value={agency}
               onChangeText={(text) => setAgency(text)}
+              keyboardType="number-pad"
+              returnKeyType="next"
+              blurOnSubmit={false}
+              onSubmitEditing={() => accountRef.current?.focus()}
             />
             <View style={{ marginTop: 16, justifyContent: 'space-between' }}>
               <DefaultInput
+                ref={accountRef}
                 title={t('Conta')}
                 value={account}
                 onChangeText={(text) => setAccount(text)}
+                keyboardType="number-pad"
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onSubmitEditing={() => digitRef.current?.focus()}
               />
               <DefaultInput
+                ref={digitRef}
                 style={{ marginTop: 16 }}
                 title={t('Dígito')}
                 value={digit}
                 onChangeText={(text) => setDigit(text)}
+                keyboardType="number-pad"
+                returnKeyType="done"
+                blurOnSubmit
               />
             </View>
           </View>
