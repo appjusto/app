@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/order
 import firebase from 'firebase';
 import 'firebase/firestore';
 import 'firebase/functions';
@@ -8,10 +9,10 @@ import { Extra } from '../../utils/config';
 import AuthApi from './auth';
 import ConsumerApi from './consumer';
 import CourierApi from './courier';
+import FilesApi from './files';
 import MapsApi from './maps';
 import OrderApi from './order';
 import ProfileApi from './profile';
-import FilesApi from './files';
 
 export default class Api {
   private firestore: firebase.firestore.Firestore;

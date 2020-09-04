@@ -63,14 +63,6 @@ export default function () {
         })}
       />
       <Stack.Screen
-        name="FleetStack"
-        component={FleetNavigator}
-        options={({ navigation }) => ({
-          title: t('Escolha sua frota'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
-      />
-      <Stack.Screen
         name="ProfileFeedback"
         component={ProfileFeedback}
         options={({ navigation }) => ({

@@ -11,50 +11,32 @@ export const updateCourierLocation = (api: Api) => (courier: Courier, location) 
   dispatch({ type: SET_LOCATION, payload: location });
 };
 
-export const uploadProfileImages = (api: Api) => (
+export const uploadSelfie = (api: Api) => (
   courierId: string,
   selfieUri: string,
-  documentUri: string,
-  progressHandler: (progress: number) => void
+  progressHandler?: (progress: number) => void
 ) => async (dispatch: AppDispatch) => {
   const selfiePath = `couriers/${courierId}/selfie.jpg`;
+  return api.files().upload(selfiePath, selfieUri, progressHandler);
+};
+
+export const uploadDocumentImage = (api: Api) => (
+  courierId: string,
+  documentUri: string,
+  progressHandler?: (progress: number) => void
+) => async (dispatch: AppDispatch) => {
   const documentPath = `couriers/${courierId}/document.jpg`;
+  return api.files().upload(documentPath, documentUri, progressHandler);
+};
 
-  let selfieProgress = 0;
-  let documentProgress = 0;
-  let totalProgress = 0;
+export const getSelfieURL = (api: Api) => (courierId: string) => async (dispatch: AppDispatch) => {
+  const selfiePath = `couriers/${courierId}/selfie_100x100.jpg`;
+  return api.files().getDownloadURL(selfiePath);
+};
 
-  const { task: selfieUploadTask } = await api.files().upload(selfiePath, selfieUri);
-  selfieUploadTask.on(
-    'state_changed',
-    (snapshot) => {
-      selfieProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      totalProgress = Math.floor((selfieProgress + documentProgress) / 2);
-      progressHandler(totalProgress);
-    },
-    (error) => {
-      console.error(error);
-    },
-    async () => {
-      const downloadURL = await selfieUploadTask.snapshot.ref.getDownloadURL();
-      console.log(downloadURL);
-    }
-  );
-
-  const { task: documentUploadTask } = await api.files().upload(documentPath, documentUri);
-  documentUploadTask.on(
-    'state_changed',
-    (snapshot) => {
-      documentProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      totalProgress = Math.floor((selfieProgress + documentProgress) / 2);
-      progressHandler(totalProgress);
-    },
-    (error) => {
-      console.error(error);
-    },
-    async () => {
-      const downloadURL = await selfieUploadTask.snapshot.ref.getDownloadURL();
-      console.log(downloadURL);
-    }
-  );
+export const getDocumentImageURL = (api: Api) => (courierId: string) => async (
+  dispatch: AppDispatch
+) => {
+  const documentImagePath = `couriers/${courierId}/document_100x100.jpg`;
+  return api.files().getDownloadURL(documentImagePath);
 };

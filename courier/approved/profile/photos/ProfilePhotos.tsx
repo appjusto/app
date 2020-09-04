@@ -1,18 +1,21 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-// import * as ImageManipulator from 'expo-image-manipulator';
-import { ImageResult } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-import React, { useState, useCallback, useContext } from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, Platform } from 'react-native';
+import React, { useState, useCallback, useContext, useEffect, useMemo } from 'react';
+import { View, Text, Image, StyleSheet, ImageURISource } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../../assets/icons';
 import { AppDispatch, ApiContext } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/views/PaddedView';
-import { uploadProfileImages } from '../../../../common/store/courier/actions';
+import {
+  getSelfieURL,
+  getDocumentImageURL,
+  uploadSelfie,
+  uploadDocumentImage,
+} from '../../../../common/store/courier/actions';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { colors, texts, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -26,21 +29,6 @@ const defaultImageOptions: ImagePicker.ImagePickerOptions = {
   quality: 1,
 };
 
-// const defaultOutputOptions = {
-//   compress: 1,
-//   format: ImageManipulator.SaveFormat.JPEG,
-// };
-
-// const resizeImage = (result: ImagePicker.ImagePickerResult) => {
-//   if (result.cancelled) return null;
-//   const { uri } = result;
-//   return ImageManipulator.manipulateAsync(
-//     uri,
-//     [{ resize: { width: 100, height: 100 } }],
-//     defaultOutputOptions
-//   );
-// };
-
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfilePhotos'>;
 type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfilePhotos'>;
 
@@ -50,7 +38,6 @@ type Props = {
 };
 
 export default function ({ navigation }: Props) {
-  const { height } = Dimensions.get('window');
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -59,44 +46,76 @@ export default function ({ navigation }: Props) {
   const courier = useSelector(getCourier);
 
   // screen state
-  const [selfie, setSelfie] = useState<ImageResult | null>(null);
-  const [documentImage, setDocumentImage] = useState<ImageResult | null>(null);
+  const [previousSelfie, setPreviousSelfie] = useState<ImageURISource | undefined | null>();
+  const [previousDocumentimage, setPreviousDocumentImage] = useState<
+    ImageURISource | undefined | null
+  >();
+  const [newSelfie, setNewSelfie] = useState<ImageURISource | undefined | null>();
+  const [newDocumentImage, setNewDocumentImage] = useState<ImageURISource | undefined | null>();
+  const canUpload = useMemo(() => {
+    // no reason to upload if nothing has changed
+    if (!newSelfie && !newDocumentImage) return false;
+    return (newSelfie || previousSelfie) && (newDocumentImage || previousDocumentimage);
+  }, [newSelfie, newDocumentImage]);
+
+  // effects
+  // check for previously stored images
+  useEffect(() => {
+    // undefined indicates that we don't know yet if user has uploaded selfie
+    if (previousSelfie === undefined) {
+      (async () => {
+        console.log('checking for selfie');
+        const selfieUri = await dispatch(getSelfieURL(api)(courier!.id!));
+        // null means that we've checked and there's none
+        if (!selfieUri) setPreviousSelfie(null);
+        else setPreviousSelfie({ uri: selfieUri });
+      })();
+    }
+  }, [previousSelfie]);
+  useEffect(() => {
+    // undefined indicates that we don't know yet if user has uploaded selfie
+    if (previousDocumentimage === undefined) {
+      (async () => {
+        console.log('checking for document image');
+        const documentImageUri = await dispatch(getDocumentImageURL(api)(courier!.id!));
+        // null means that we've checked and there's none
+        if (!documentImageUri) setPreviousDocumentImage(null);
+        else setPreviousDocumentImage({ uri: documentImageUri });
+      })();
+    }
+  }, [previousDocumentimage]);
 
   // handlers
-  const pickFromGallery = useCallback(async () => {
-    const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    if (granted) {
-      const result = await ImagePicker.launchImageLibraryAsync(defaultImageOptions);
-      if (result.cancelled) return;
-      // const image = await resizeImage(result);
-      // setDocumentImage(image);
-      setDocumentImage(result);
-    } else {
-      alert(t('Precisamos do acesso à sua galeria'));
-    }
-  }, [documentImage]);
   const pickFromCamera = useCallback(async () => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA);
     if (granted) {
       const result = await ImagePicker.launchCameraAsync(defaultImageOptions);
       if (result.cancelled) return;
-      // const image = await resizeImage(result);
-      // setSelfie(image);
-      setSelfie(result);
-      // console.log(data);
+      setNewSelfie(result);
     } else {
       alert(t('Precisamos do acesso à câmera'));
     }
-  }, [selfie]);
+  }, []);
+  const pickFromGallery = useCallback(async () => {
+    const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (granted) {
+      const result = await ImagePicker.launchImageLibraryAsync(defaultImageOptions);
+      if (result.cancelled) return;
+      setNewDocumentImage(result);
+    } else {
+      alert(t('Precisamos do acesso à sua galeria'));
+    }
+  }, []);
   // uploading files
   const uploadHandler = useCallback(() => {
-    if (!selfie || !documentImage) return;
-    dispatch(
-      uploadProfileImages(api)(courier!.id!, selfie.uri, documentImage.uri, (progress: number) => {
-        console.log(progress);
-      })
-    );
-  }, [selfie, documentImage]);
+    if (newSelfie) {
+      dispatch(uploadSelfie(api)(courier!.id!, newSelfie.uri!));
+    }
+    if (newDocumentImage) {
+      dispatch(uploadDocumentImage(api)(courier!.id!, newDocumentImage.uri!));
+    }
+    navigation.goBack();
+  }, [newSelfie, newDocumentImage]);
 
   // UI
   return (
@@ -107,58 +126,33 @@ export default function ({ navigation }: Props) {
         )}
       </Text>
       <View style={{ flex: 1 }} />
-      {height < 700 ? (
-        <View>
-          <View style={{ alignSelf: 'center' }}>
-            <DocumentButton title={t('Foto de rosto')} onPress={pickFromCamera}>
-              <Image
-                source={selfie ?? icons.selfie}
-                resizeMode="contain"
-                style={selfie ? styles.image : styles.icon}
-              />
-            </DocumentButton>
-          </View>
-          <View style={{ flex: 1 }} />
-          <View style={{ alignSelf: 'center' }}>
-            <DocumentButton title={t('RG ou CNH aberta')} onPress={pickFromGallery}>
-              <Image
-                source={documentImage ?? icons.license}
-                resizeMode="contain"
-                style={documentImage ? styles.image : styles.icon}
-              />
-            </DocumentButton>
-          </View>
+      <View>
+        <View style={{ alignSelf: 'center' }}>
+          <DocumentButton title={t('Foto de rosto')} onPress={pickFromCamera}>
+            <Image
+              source={newSelfie ?? previousSelfie ?? icons.selfie}
+              resizeMode="contain"
+              style={(newSelfie ?? previousSelfie) !== undefined ? styles.image : styles.icon}
+            />
+          </DocumentButton>
         </View>
-      ) : (
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <View style={{ alignSelf: 'center' }}>
-            <DocumentButton title={t('Foto de rosto')} onPress={pickFromCamera}>
-              <Image
-                source={selfie ?? icons.selfie}
-                resizeMode="contain"
-                style={selfie ? styles.image : styles.icon}
-              />
-            </DocumentButton>
-          </View>
-          <View style={{ alignSelf: 'center' }}>
-            <DocumentButton title={t('RG ou CNH aberta')} onPress={pickFromGallery}>
-              <Image
-                source={documentImage ?? icons.license}
-                resizeMode="contain"
-                style={documentImage ? styles.image : styles.icon}
-              />
-            </DocumentButton>
-          </View>
+        <View style={{ flex: 1 }} />
+        <View style={{ alignSelf: 'center' }}>
+          <DocumentButton title={t('RG ou CNH aberta')} onPress={pickFromGallery}>
+            <Image
+              source={newDocumentImage ?? previousDocumentimage ?? icons.license}
+              resizeMode="contain"
+              style={
+                (newDocumentImage ?? previousDocumentimage) !== undefined
+                  ? styles.image
+                  : styles.icon
+              }
+            />
+          </DocumentButton>
         </View>
-      )}
-
+      </View>
       <View style={{ flex: 1 }} />
-      <DefaultButton
-        title={t('Avançar')}
-        disabled={!selfie || !documentImage}
-        onPress={uploadHandler}
-        style={Platform.OS === 'ios' ? { marginBottom: 16 } : ''}
-      />
+      <DefaultButton title={t('Avançar')} disabled={!canUpload} onPress={uploadHandler} />
     </PaddedView>
   );
 }
