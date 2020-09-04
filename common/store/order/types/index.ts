@@ -95,6 +95,6 @@ export interface OrderState {
     [key: string]: Order;
   };
   chatByOrderId: {
-    [key: string]: GroupedChatMessages[];
+    [key: string]: ChatMessage[];
   };
 }

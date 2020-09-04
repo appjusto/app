@@ -44,7 +44,7 @@ export default function ({ route }: Props) {
 
   // screen state
   const [inputText, setInputText] = useState('');
-  const orderChat = useSelector(getOrderChat(orderId));
+  const orderChat = useSelector(getOrderChat)(orderId);
 
   // handlers
   const sendMessageHandler = useCallback(async () => {
