@@ -98,18 +98,21 @@ export default function ({ navigation, route }: Props) {
               title={t('Agência')}
               value={agency}
               onChangeText={(text) => setAgency(text)}
+              keyboardType="number-pad"
             />
             <View style={{ marginTop: 16, justifyContent: 'space-between' }}>
               <DefaultInput
                 title={t('Conta')}
                 value={account}
                 onChangeText={(text) => setAccount(text)}
+                keyboardType="number-pad"
               />
               <DefaultInput
                 style={{ marginTop: 16 }}
                 title={t('Dígito')}
                 value={digit}
                 onChangeText={(text) => setDigit(text)}
+                keyboardType="number-pad"
               />
             </View>
           </View>

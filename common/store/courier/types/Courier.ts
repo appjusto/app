@@ -37,4 +37,14 @@ export default class Courier extends User {
       !isEmpty(this.phone)
     );
   }
+
+  public bankInfoSet(): boolean {
+    return (
+      super.bankInfoSet() &&
+      !isEmpty(this.bankInfo?.name) &&
+      !isEmpty(this.bankInfo?.agency) &&
+      !isEmpty(this.bankInfo?.account) &&
+      !isEmpty(this.bankInfo?.digit)
+    );
+  }
 }
