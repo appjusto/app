@@ -17,6 +17,6 @@ export interface UserProfile {
     ddd: string;
     number: string;
   };
-  notificationToken?: string;
+  notificationToken?: string | null;
   info?: ProfileInfo;
 }

@@ -17,6 +17,7 @@ import { updateProfile } from '../../../common/store/user/actions';
 import { colors, padding, texts, borders } from '../../../common/styles';
 import { t } from '../../../strings';
 import { HomeParamList } from './types';
+import { isEmpty } from 'lodash';
 
 const { width } = Dimensions.get('window');
 
@@ -46,16 +47,22 @@ export default function ({ navigation }: Props) {
   // side effects
   // notification permission
   useEffect(() => {
-    if (notificationError) {
-      // TODO: ALERT
-    } else if (notificationToken && notificationToken !== courier!.notificationToken) {
-      dispatch(updateProfile(api)(courier!.id!, { notificationToken }));
+    // cases that we need to update token:
+    // some error ocurred; token is not valid (null); token is different from what's on the backend
+    const shouldDeleteToken = notificationError !== null || notificationToken === null;
+    const shouldUpdateToken =
+      !shouldDeleteToken && notificationToken !== courier!.notificationToken;
+    if (shouldDeleteToken || shouldUpdateToken) {
+      const token = shouldUpdateToken ? notificationToken : null;
+      dispatch(updateProfile(api)(courier!.id!, { notificationToken: token }));
     }
   }, [notificationToken, notificationError]);
 
   // location permission denied
   useEffect(() => {
     if (working && locationPermission === 'denied') {
+      // removing previous token
+      dispatch(updateProfile(api)(courier!.id!, { notificationToken: null }));
       navigation.navigate('PermissionDeniedFeedback');
     }
   }, [working, locationPermission]);

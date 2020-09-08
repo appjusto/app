@@ -3,6 +3,7 @@ import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import { useState, useEffect } from 'react';
 import { Platform } from 'react-native';
+import * as Sentry from 'sentry-expo';
 
 import { t } from '../../strings';
 import { colors } from '../styles';
@@ -33,8 +34,8 @@ if (Platform.OS === 'android') {
 }
 
 export default function () {
-  const [token, setToken] = useState<string>();
-  const [error, setError] = useState<'granted' | 'permission-denied' | 'not-a-device'>();
+  const [token, setToken] = useState<string | null>(null);
+  const [error, setError] = useState<'permission-denied' | 'not-a-device' | null>(null);
 
   const askPermission = async () => {
     const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
@@ -44,7 +45,13 @@ export default function () {
       finalStatus = status;
     }
     if (finalStatus === 'granted') {
-      setToken((await Notifications.getExpoPushTokenAsync()).data);
+      try {
+        setToken((await Notifications.getExpoPushTokenAsync()).data);
+      } catch (error) {
+        Sentry.captureException(error);
+        console.log('Error while calling Notifications.getExpoPushTokenAsync()');
+        console.error(error);
+      }
     } else {
       setError('permission-denied');
     }
