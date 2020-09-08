@@ -45,7 +45,6 @@ export default function ({ navigation, route }: Props) {
 
   // refs
   const scrollViewRef = useRef<ScrollView>(null);
-  // const agencyRef = useRef<TextInput>(null);
   const accountRef = useRef<TextInput>(null);
   const digitRef = useRef<TextInput>(null);
 
@@ -96,7 +95,6 @@ export default function ({ navigation, route }: Props) {
               </View>
             </TouchableWithoutFeedback>
             <DefaultInput
-              // ref={agencyRef}
               style={{ marginTop: 16 }}
               title={t('Agência')}
               value={agency}

@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../../assets/icons';
 import { AppDispatch, ApiContext } from '../../../../common/app/context';
+import ConfigItem from '../../../../common/components/ConfigItem';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/views/PaddedView';
 import {
@@ -120,38 +121,51 @@ export default function ({ navigation }: Props) {
   // UI
   return (
     <PaddedView style={{ ...screens.lightGrey }}>
+      <Text style={{ ...texts.big, color: colors.black, marginBottom: 8 }}>
+        {t('Fotos e Documentos')}
+      </Text>
       <Text style={{ ...texts.default, color: colors.darkGrey }}>
         {t(
-          'Agora precisamos da sua foto sua e de um documento. Se você for fazer entregas utilizando Moto e/ou Carro, envia a foto da sua CNH; caso contrário, é só enviar a foto do seu RG'
+          'Agora precisamos da sua foto para incluir nas entregas. Se você optou por Moto e/ou Carro, vamos precisar também da foto da sua CNH; caso contrário, é só enviar a foto do seu RG.'
         )}
       </Text>
-      <View style={{ flex: 1 }} />
-      <View>
-        <View style={{ alignSelf: 'center' }}>
-          <DocumentButton title={t('Foto de rosto')} onPress={pickFromCamera}>
-            <Image
-              source={newSelfie ?? previousSelfie ?? icons.selfie}
-              resizeMode="contain"
-              style={(newSelfie ?? previousSelfie) !== undefined ? styles.image : styles.icon}
-            />
-          </DocumentButton>
-        </View>
-        <View style={{ flex: 1 }} />
-        <View style={{ alignSelf: 'center' }}>
-          <DocumentButton title={t('RG ou CNH aberta')} onPress={pickFromGallery}>
-            <Image
-              source={newDocumentImage ?? previousDocumentimage ?? icons.license}
-              resizeMode="contain"
-              style={
-                (newDocumentImage ?? previousDocumentimage) !== undefined
-                  ? styles.image
-                  : styles.icon
-              }
-            />
-          </DocumentButton>
-        </View>
+      {/* <View style={{ flex: 1 }} /> */}
+      <View
+        style={{
+          borderBottomColor: colors.grey,
+          borderStyle: 'solid',
+          borderBottomWidth: 1,
+          marginTop: 32,
+        }}
+      />
+      <ConfigItem
+        title={t('Foto do rosto')}
+        subtitle={t('Adicionar selfie')}
+        onPress={pickFromCamera}
+      />
+      <ConfigItem
+        title={t('RG ou CNH aberta')}
+        subtitle={t('Adicionar foto do documento')}
+        onPress={pickFromGallery}
+      />
+      <View style={{ marginVertical: 32, flexDirection: 'row', justifyContent: 'space-between' }}>
+        <DocumentButton title={t('Foto de rosto')} onPress={() => {}}>
+          <Image
+            source={newSelfie ?? previousSelfie ?? icons.selfie}
+            resizeMode="contain"
+            style={(newSelfie ?? previousSelfie) !== undefined ? styles.image : styles.icon}
+          />
+        </DocumentButton>
+        <DocumentButton title={t('RG ou CNH aberta')} onPress={() => {}}>
+          <Image
+            source={newDocumentImage ?? previousDocumentimage ?? icons.license}
+            resizeMode="contain"
+            style={
+              (newDocumentImage ?? previousDocumentimage) !== undefined ? styles.image : styles.icon
+            }
+          />
+        </DocumentButton>
       </View>
-      <View style={{ flex: 1 }} />
       <DefaultButton title={t('Avançar')} disabled={!canUpload} onPress={uploadHandler} />
     </PaddedView>
   );
@@ -165,6 +179,5 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
-    borderRadius: 50,
   },
 });

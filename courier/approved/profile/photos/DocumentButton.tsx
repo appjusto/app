@@ -13,26 +13,15 @@ export default function ({ children, title, onPress }: Props) {
         style={{
           width: 160,
           height: 160,
-          backgroundColor: colors.white,
+          backgroundColor: colors.lightGrey,
           ...borders.default,
+          borderColor: colors.white,
           padding,
           justifyContent: 'center',
           alignItems: 'center',
         }}
       >
-        <View
-          style={{
-            width: 100,
-            height: 100,
-            backgroundColor: colors.lightGrey,
-            ...borders.default,
-            borderRadius: 50,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          {children}
-        </View>
+        {children}
         <Text style={{ marginTop: padding }}>{title}</Text>
       </View>
     </TouchableOpacity>
