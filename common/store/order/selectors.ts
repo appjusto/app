@@ -1,4 +1,4 @@
-import { first, memoize, merge, uniq } from 'lodash';
+import { first, memoize, uniq } from 'lodash';
 import { createSelector } from 'reselect';
 
 import { State } from '..';
@@ -12,43 +12,38 @@ export const getOrderById = createSelector(getOrderState, (orderState) =>
 
 export const getOrders = (state: State): Order[] => getOrderState(state).orders;
 
-export type OrderSummary = {
-  years: string[];
-  months: string[];
-  monthSummary?: {
-    [key: string]: {
-      deliveries: number;
-      fee: number;
-    };
-  };
-};
-
-export const getOrdersSummary = createSelector(getOrders, (orders) => {
-  return orders.reduce<OrderSummary>(
-    (result, order) => {
-      const createdOn = order.createdOn.toDate();
-      const year = String(createdOn.getFullYear());
-      const month = String(createdOn.getMonth());
-      const key = `${year}/${month}`;
-      const { deliveries, fee } = result.monthSummary?.[key] ?? { deliveries: 0, fee: 0 };
-      return merge(result, {
-        years: [year],
-        months: [key],
-        monthSummary: {
-          [key]: {
-            deliveries: deliveries + 1,
-            fee: fee + order.fare.courierFee,
-          },
-        },
-      });
-    },
-    { years: [], months: [] }
-  );
-});
-
 export const getOngoingOrders = createSelector(getOrders, (orders) =>
   orders.filter((order) => order.status === OrderStatus.Dispatching)
 );
+
+export const getYearsWithOrders = createSelector(getOrders, (orders) =>
+  uniq(orders.map((order) => order.createdOn.toDate().getFullYear()))
+);
+
+export const getMonthsWithOrdersInYear = createSelector(getOrders, (orders) =>
+  memoize((year: number) =>
+    uniq(
+      orders
+        .filter((order) => order.createdOn.toDate().getFullYear() === year)
+        .map((order) => order.createdOn.toDate().getMonth())
+    )
+  )
+);
+
+export const getOrdersWithFilter = createSelector(getOrders, (orders) =>
+  memoize((year: number, month?: number) => {
+    return orders.filter((order) => {
+      const createdOn = order.createdOn.toDate();
+      if (createdOn.getFullYear() !== year) return false;
+      return month === undefined || createdOn.getMonth() === month;
+    });
+  })
+);
+
+export const summarizeOrders = memoize((orders: Order[]) => ({
+  deliveries: orders.length,
+  courierFee: orders.reduce((result, order) => result + order.fare.courierFee, 0),
+}));
 
 export const getPlacesFromPreviousOrders = createSelector(getOrders, (orders) =>
   orders.reduce<Place[]>((places, order) => {

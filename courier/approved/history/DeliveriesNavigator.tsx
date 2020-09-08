@@ -5,6 +5,7 @@ import BackButton from '../../../common/components/buttons/BackButton';
 import Chat from '../../../common/screens/Chat';
 import { t } from '../../../strings';
 import DeliveryHistory from './DeliveryHistory';
+import DeliveryHistoryByMonth from './DeliveryHistoryByMonth';
 import OngoingOrder from './OngoingOrder';
 import { HistoryNavigatorParamList } from './types';
 
@@ -18,6 +19,14 @@ export default function () {
         options={{
           headerShown: false,
         }}
+      />
+      <Stack.Screen
+        name="DeliveryHistoryByMonth"
+        component={DeliveryHistoryByMonth}
+        options={({ navigation }) => ({
+          title: t('Corrida em '),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
       />
       <Stack.Screen
         name="OngoingOrder"
