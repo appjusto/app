@@ -142,24 +142,30 @@ export default function ({ navigation }: Props) {
         title={t('Foto do rosto')}
         subtitle={t('Adicionar selfie')}
         onPress={pickFromCamera}
+        checked={previousSelfie}
       />
       <ConfigItem
         title={t('RG ou CNH aberta')}
         subtitle={t('Adicionar foto do documento')}
         onPress={pickFromGallery}
+        checked={previousDocumentimage}
       />
       <View style={{ marginVertical: 32, flexDirection: 'row', justifyContent: 'space-between' }}>
-        <DocumentButton title={t('Foto de rosto')} onPress={() => {}}>
+        <DocumentButton title={t('Foto de rosto')} onPress={() => {}} hasTitle={!previousSelfie}>
           <Image
             source={newSelfie ?? previousSelfie ?? icons.selfie}
-            resizeMode="contain"
+            resizeMode="cover"
             style={(newSelfie ?? previousSelfie) !== undefined ? styles.image : styles.icon}
           />
         </DocumentButton>
-        <DocumentButton title={t('RG ou CNH aberta')} onPress={() => {}}>
+        <DocumentButton
+          title={t('RG ou CNH aberta')}
+          onPress={() => {}}
+          hasTitle={!previousDocumentimage}
+        >
           <Image
             source={newDocumentImage ?? previousDocumentimage ?? icons.license}
-            resizeMode="contain"
+            resizeMode="cover"
             style={
               (newDocumentImage ?? previousDocumentimage) !== undefined ? styles.image : styles.icon
             }
@@ -177,7 +183,8 @@ const styles = StyleSheet.create({
     height: 48,
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 160,
+    height: 160,
+    borderRadius: 8,
   },
 });

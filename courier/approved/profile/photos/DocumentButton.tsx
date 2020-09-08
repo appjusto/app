@@ -5,8 +5,9 @@ import { padding, colors, borders } from '../../../../common/styles';
 
 interface Props extends ButtonProps {
   children: React.ReactNode;
+  hasTitle: boolean;
 }
-export default function ({ children, title, onPress }: Props) {
+export default function ({ children, title, onPress, hasTitle }: Props) {
   return (
     <TouchableOpacity onPress={onPress}>
       <View
@@ -22,7 +23,7 @@ export default function ({ children, title, onPress }: Props) {
         }}
       >
         {children}
-        <Text style={{ marginTop: padding }}>{title}</Text>
+        {hasTitle && <Text style={{ marginTop: padding }}>{title}</Text>}
       </View>
     </TouchableOpacity>
   );
