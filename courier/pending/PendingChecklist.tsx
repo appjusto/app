@@ -8,6 +8,7 @@ import { ApiContext, AppDispatch } from '../../common/app/context';
 import ConfigItem from '../../common/components/ConfigItem';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/views/PaddedView';
+import { uploadSelfie, uploadDocumentImage } from '../../common/store/courier/actions';
 import { getCourier } from '../../common/store/courier/selectors';
 import { getUIBusy } from '../../common/store/ui/selectors';
 import { submitProfile } from '../../common/store/user/actions';
@@ -23,16 +24,18 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-export default function ({ navigation }: Props) {
+export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  const { newSelfie, newDocumentImage } = route.params ?? {};
 
   // app state
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier);
   const situation = courier!.info?.situation ?? 'pending';
-  const submitEnabled = situation === 'pending' && courier!.personalInfoSet() && courier!.bankInfoSet();
+  const submitEnabled =
+    situation === 'pending' && courier!.personalInfoSet() && courier!.bankInfoSet();
 
   // handlers
   const submitHandler = async () => {
@@ -46,6 +49,16 @@ export default function ({ navigation }: Props) {
       navigation.navigate('ProfileFeedback');
     }
   }, [situation]);
+
+  useEffect(() => {
+    if (newSelfie) {
+      dispatch(uploadSelfie(api)(courier!.id!, newSelfie.uri!));
+      console.log(newSelfie);
+    }
+    if (newDocumentImage) {
+      dispatch(uploadDocumentImage(api)(courier!.id!, newDocumentImage.uri!));
+    }
+  }, [route.params]);
 
   // UI
   return (

@@ -53,7 +53,7 @@ export default function ({ navigation }: Props) {
   >();
   const [newSelfie, setNewSelfie] = useState<ImageURISource | undefined | null>();
   const [newDocumentImage, setNewDocumentImage] = useState<ImageURISource | undefined | null>();
-  const canUpload = useMemo(() => {
+  const canNavigate = useMemo(() => {
     // no reason to upload if nothing has changed
     if (!newSelfie && !newDocumentImage) return false;
     return (newSelfie || previousSelfie) && (newDocumentImage || previousDocumentimage);
@@ -107,16 +107,14 @@ export default function ({ navigation }: Props) {
       alert(t('Precisamos do acesso à sua galeria'));
     }
   }, []);
-  // uploading files
-  const uploadHandler = useCallback(() => {
-    if (newSelfie) {
-      dispatch(uploadSelfie(api)(courier!.id!, newSelfie.uri!));
-    }
-    if (newDocumentImage) {
-      dispatch(uploadDocumentImage(api)(courier!.id!, newDocumentImage.uri!));
-    }
-    navigation.goBack();
-  }, [newSelfie, newDocumentImage]);
+  // navigating back to the PendingChecklist screen to start the upload there
+  const navigationHandler = () => {
+    navigation.navigate('PendingChecklist', {
+      newSelfie: { uri: newSelfie.uri! },
+      newDocumentImage: { uri: newDocumentImage.uri! },
+    });
+    // console.log(newSelfie.uri);
+  };
 
   // UI
   return (
@@ -172,7 +170,7 @@ export default function ({ navigation }: Props) {
           />
         </DocumentButton>
       </View>
-      <DefaultButton title={t('Avançar')} disabled={!canUpload} onPress={uploadHandler} />
+      <DefaultButton title={t('Avançar')} disabled={!canNavigate} onPress={navigationHandler} />
     </PaddedView>
   );
 }
