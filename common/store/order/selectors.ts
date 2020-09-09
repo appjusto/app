@@ -31,19 +31,32 @@ export const getMonthsWithOrdersInYear = createSelector(getOrders, (orders) =>
 );
 
 export const getOrdersWithFilter = createSelector(getOrders, (orders) =>
-  memoize((year: number, month?: number) => {
+  memoize((year: number, month?: number, status?: OrderStatus) => {
+    console.log(year, month, status);
     return orders.filter((order) => {
       const createdOn = order.createdOn.toDate();
-      if (createdOn.getFullYear() !== year) return false;
-      return month === undefined || createdOn.getMonth() === month;
+      if (year !== createdOn.getFullYear()) return false;
+      if (month && month !== createdOn.getMonth()) return false;
+      if (status && status !== order.status) return false;
+      return true;
     });
   })
 );
 
-export const summarizeOrders = memoize((orders: Order[]) => ({
-  deliveries: orders.length,
-  courierFee: orders.reduce((result, order) => result + order.fare.courierFee, 0),
-}));
+export const summarizeOrders = memoize((orders: Order[]) =>
+  orders.reduce(
+    (result, order) => ({
+      delivered: order.status === OrderStatus.Delivered ? result.delivered + 1 : result.delivered,
+      dispatching:
+        order.status === OrderStatus.Dispatching ? result.dispatching + 1 : result.dispatching,
+      courierFee:
+        order.status === OrderStatus.Delivered
+          ? result.courierFee + order.fare.courierFee
+          : result.courierFee,
+    }),
+    { delivered: 0, dispatching: 0, courierFee: 0 }
+  )
+);
 
 export const getPlacesFromPreviousOrders = createSelector(getOrders, (orders) =>
   orders.reduce<Place[]>((places, order) => {

@@ -81,7 +81,7 @@ export default function ({ navigation, route }: Props) {
                   {getMonthName(item.month)}
                 </Text>
                 <Text style={[texts.medium, { color: colors.darkGrey }]}>
-                  {item.deliveries} {t('corridas finalizadas')}
+                  {item.delivered} {t('corridas finalizadas')}
                 </Text>
                 <Text style={[texts.medium, { color: colors.darkGrey }]}>
                   {t('Total recebido: R$ ')}
