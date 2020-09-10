@@ -11,6 +11,7 @@ import * as icons from '../../../../assets/icons';
 import { AppDispatch, ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/ConfigItem';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import RoundedText from '../../../../common/components/texts/RoundedText';
 import PaddedView from '../../../../common/components/views/PaddedView';
 import {
   getSelfieURL,
@@ -117,7 +118,7 @@ export default function ({ navigation }: Props) {
         })
       );
     }
-  }, [newSelfie]);
+  }, [newDocumentImage]);
 
   // handlers
   const pickFromCamera = useCallback(async () => {
@@ -140,6 +141,14 @@ export default function ({ navigation }: Props) {
       alert(t('Precisamos do acesso à sua galeria'));
     }
   }, []);
+
+  const selfieCheckHandler =
+    (!isEmpty(previousSelfie) && uploadingNewSelfie === UploadStatus.Unstarted) ||
+    uploadingNewSelfie === UploadStatus.Done;
+
+  const documentImageCheckHandler =
+    (!isEmpty(previousDocumentimage) && uploadingNewDocumentImage === UploadStatus.Unstarted) ||
+    uploadingNewDocumentImage === UploadStatus.Done;
 
   // UI
   return (
@@ -165,14 +174,26 @@ export default function ({ navigation }: Props) {
         title={t('Foto do rosto')}
         subtitle={t('Adicionar selfie')}
         onPress={pickFromCamera}
-        checked={!isEmpty(previousSelfie)}
-      />
+        checked={selfieCheckHandler}
+      >
+        {uploadingNewSelfie === UploadStatus.Uploading && (
+          <View style={{ marginBottom: 16 }}>
+            <RoundedText backgroundColor={colors.white}>{t('Enviando imagem')}</RoundedText>
+          </View>
+        )}
+      </ConfigItem>
       <ConfigItem
         title={t('RG ou CNH aberta')}
         subtitle={t('Adicionar foto do documento')}
         onPress={pickFromGallery}
-        checked={!isEmpty(previousDocumentimage)}
-      />
+        checked={documentImageCheckHandler}
+      >
+        {uploadingNewDocumentImage === UploadStatus.Uploading && (
+          <View style={{ marginBottom: 16 }}>
+            <RoundedText backgroundColor={colors.white}>{t('Enviando imagem')}</RoundedText>
+          </View>
+        )}
+      </ConfigItem>
       <View style={{ marginVertical: 32, flexDirection: 'row', justifyContent: 'space-between' }}>
         <DocumentButton title={t('Foto de rosto')} onPress={() => {}} hasTitle={!previousSelfie}>
           <Image

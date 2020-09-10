@@ -1,7 +1,14 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ImageURISource,
+} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../common/app/context';
@@ -14,6 +21,7 @@ import { submitProfile } from '../../common/store/user/actions';
 import { screens, texts, colors } from '../../common/styles';
 import { t } from '../../strings';
 import { PendingParamList } from './types';
+import { getDocumentImageURL, getSelfieURL } from '../../common/store/courier/actions';
 
 type ScreenNavigationProp = StackNavigationProp<PendingParamList, 'PendingChecklist'>;
 type ScreenRouteProp = RouteProp<PendingParamList, 'PendingChecklist'>;
@@ -35,6 +43,9 @@ export default function ({ navigation, route }: Props) {
   const submitEnabled =
     situation === 'pending' && courier!.personalInfoSet() && courier!.bankAccountSet();
 
+  // screen state
+  const [hasImagesUris, setHasImagesUris] = useState(false);
+
   // handlers
   const submitHandler = async () => {
     await dispatch(submitProfile(api));
@@ -47,6 +58,16 @@ export default function ({ navigation, route }: Props) {
       navigation.navigate('ProfileFeedback');
     }
   }, [situation]);
+
+  useEffect(() => {
+    (async () => {
+      const documentImageUri = await dispatch(getDocumentImageURL(api)(courier!.id!));
+      const selfieUri = await dispatch(getSelfieURL(api)(courier!.id!));
+      if (documentImageUri && selfieUri) {
+        setHasImagesUris(true);
+      }
+    })();
+  }, [hasImagesUris]);
 
   // UI
   return (
@@ -81,7 +102,7 @@ export default function ({ navigation, route }: Props) {
             title={t('Fotos e documentos')}
             subtitle={t('Envie uma selfie e seus documentos')}
             onPress={() => navigation.navigate('ProfilePhotos')}
-            // checked={newSelfie && newDocumentImage}
+            checked={hasImagesUris}
             // sending={route.params}
           />
           <ConfigItem
