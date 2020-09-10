@@ -23,7 +23,7 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-export default function ({ navigation }: Props) {
+export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -32,7 +32,8 @@ export default function ({ navigation }: Props) {
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier);
   const situation = courier!.info?.situation ?? 'pending';
-  const submitEnabled = situation === 'pending' && courier!.personalInfoSet() && courier!.bankInfoSet();
+  const submitEnabled =
+    situation === 'pending' && courier!.personalInfoSet() && courier!.bankInfoSet();
 
   // handlers
   const submitHandler = async () => {
@@ -80,6 +81,8 @@ export default function ({ navigation }: Props) {
             title={t('Fotos e documentos')}
             subtitle={t('Envie uma selfie e seus documentos')}
             onPress={() => navigation.navigate('ProfilePhotos')}
+            // checked={newSelfie && newDocumentImage}
+            // sending={route.params}
           />
           <ConfigItem
             title={t('Dados bancários')}
