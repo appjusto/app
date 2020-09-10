@@ -1,27 +1,20 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard,
-  ImageURISource,
-} from 'react-native';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
+import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../common/app/context';
 import ConfigItem from '../../common/components/ConfigItem';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/views/PaddedView';
+import { getDocumentImageURL, getSelfieURL } from '../../common/store/courier/actions';
 import { getCourier } from '../../common/store/courier/selectors';
 import { getUIBusy } from '../../common/store/ui/selectors';
 import { submitProfile } from '../../common/store/user/actions';
 import { screens, texts, colors } from '../../common/styles';
 import { t } from '../../strings';
 import { PendingParamList } from './types';
-import { getDocumentImageURL, getSelfieURL } from '../../common/store/courier/actions';
 
 type ScreenNavigationProp = StackNavigationProp<PendingParamList, 'PendingChecklist'>;
 type ScreenRouteProp = RouteProp<PendingParamList, 'PendingChecklist'>;
@@ -40,11 +33,14 @@ export default function ({ navigation, route }: Props) {
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier);
   const situation = courier!.info?.situation ?? 'pending';
-  const submitEnabled =
-    situation === 'pending' && courier!.personalInfoSet() && courier!.bankAccountSet();
 
   // screen state
   const [hasImagesUris, setHasImagesUris] = useState(false);
+  const submitEnabled =
+    situation === 'pending' &&
+    courier!.personalInfoSet() &&
+    courier!.bankAccountSet() &&
+    hasImagesUris;
 
   // handlers
   const submitHandler = async () => {
@@ -60,14 +56,20 @@ export default function ({ navigation, route }: Props) {
   }, [situation]);
 
   useEffect(() => {
+    navigation.addListener('focus', focusHandler);
+    return () => navigation.removeListener('focus', focusHandler);
+  }, []);
+
+  // handler
+  const focusHandler = useCallback(() => {
     (async () => {
-      const documentImageUri = await dispatch(getDocumentImageURL(api)(courier!.id!));
-      const selfieUri = await dispatch(getSelfieURL(api)(courier!.id!));
-      if (documentImageUri && selfieUri) {
-        setHasImagesUris(true);
-      }
+      try {
+        const documentImageUri = await dispatch(getDocumentImageURL(api)(courier!.id!));
+        const selfieUri = await dispatch(getSelfieURL(api)(courier!.id!));
+        setHasImagesUris(documentImageUri !== null && selfieUri !== null);
+      } catch (error) {}
     })();
-  }, [hasImagesUris]);
+  }, []);
 
   // UI
   return (
@@ -108,7 +110,7 @@ export default function ({ navigation, route }: Props) {
           <ConfigItem
             title={t('Dados bancários')}
             subtitle={t('Cadastre seu banco para recebimento')}
-            onPress={() => navigation.navigate('ProfileBank')}
+            onPress={() => navigation.navigate('Bank')}
             checked={courier!.bankAccountSet()}
           />
         </PaddedView>
