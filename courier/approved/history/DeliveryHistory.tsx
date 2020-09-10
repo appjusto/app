@@ -6,15 +6,17 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 
 import * as icons from '../../../assets/icons';
+import RoundedText from '../../../common/components/texts/RoundedText';
 import PaddedView from '../../../common/components/views/PaddedView';
+import ShowIf from '../../../common/components/views/ShowIf';
 import {
   getYearsWithOrders,
   getMonthsWithOrdersInYear,
   getOrdersWithFilter,
   summarizeOrders,
 } from '../../../common/store/order/selectors';
-import { screens, texts, padding, colors } from '../../../common/styles';
-import { getMonthName } from '../../../common/utils/formatters';
+import { screens, texts, padding, halfPadding, colors } from '../../../common/styles';
+import { getMonthName, formatCurrency } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { HistoryNavigatorParamList } from './types';
 
@@ -53,7 +55,7 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <View style={{ ...screens.default, marginTop: padding }}>
+    <View style={{ ...screens.configScreen, marginTop: padding }}>
       <SectionList
         style={{ flex: 1 }}
         sections={sections}
@@ -84,9 +86,18 @@ export default function ({ navigation, route }: Props) {
                   {item.delivered} {t('corridas finalizadas')}
                 </Text>
                 <Text style={[texts.medium, { color: colors.darkGrey }]}>
-                  {t('Total recebido: R$ ')}
-                  {item.courierFee}
+                  {t('Total recebido: ')}
+                  {formatCurrency(item.courierFee)}
                 </Text>
+                <ShowIf test={item.dispatching > 0}>
+                  {() => (
+                    <View style={{ marginTop: halfPadding }}>
+                      <RoundedText backgroundColor={colors.yellow}>
+                        {t('Corrida em andamento')}
+                      </RoundedText>
+                    </View>
+                  )}
+                </ShowIf>
               </PaddedView>
             </TouchableOpacity>
           </View>

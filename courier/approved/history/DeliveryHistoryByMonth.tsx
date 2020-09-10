@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import PaddedView from '../../../common/components/views/PaddedView';
 import { getOrdersWithFilter } from '../../../common/store/order/selectors';
 import { screens, texts, padding, colors } from '../../../common/styles';
-import { hhMMFromDate } from '../../../common/utils/formatters';
+import { hhMMFromDate, formatCurrency } from '../../../common/utils/formatters';
 import { HistoryNavigatorParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<
@@ -30,7 +30,7 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <View style={{ ...screens.default }}>
+    <View style={{ ...screens.configScreen }}>
       <FlatList
         style={{ flex: 1 }}
         data={orders}
@@ -40,7 +40,7 @@ export default function ({ navigation, route }: Props) {
             <TouchableOpacity onPress={() => null}>
               <PaddedView>
                 <Text style={{ ...texts.medium, marginBottom: padding }}>
-                  {item.fare.courierFee}
+                  {formatCurrency(item.fare.courierFee)}
                 </Text>
                 <Text style={[texts.medium, { color: colors.darkGrey }]}>
                   {item.origin.address}

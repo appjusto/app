@@ -3,6 +3,7 @@ import React from 'react';
 
 import BackButton from '../../../common/components/buttons/BackButton';
 import Chat from '../../../common/screens/Chat';
+import { getMonthName } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import DeliveryHistory from './DeliveryHistory';
 import DeliveryHistoryByMonth from './DeliveryHistoryByMonth';
@@ -23,8 +24,8 @@ export default function () {
       <Stack.Screen
         name="DeliveryHistoryByMonth"
         component={DeliveryHistoryByMonth}
-        options={({ navigation }) => ({
-          title: t('Corrida em '),
+        options={({ navigation, route }) => ({
+          title: `${t('Corridas em')} ${getMonthName(route.params.month)}`,
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />

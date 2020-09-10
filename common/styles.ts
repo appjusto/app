@@ -16,6 +16,7 @@ export const colors = {
 };
 
 export const padding = 16;
+export const halfPadding = padding / 2;
 
 export const screens = StyleSheet.create({
   default: {

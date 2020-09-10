@@ -7,6 +7,11 @@ export const formatDistance = (distance: number) => {
   return `${round(distance / 1000, 2)}km`;
 };
 
+export const getMonthName = (month: number) =>
+  i18n.strftime(new Date(`2020-${padWithZero(month)}-01`), '%B');
+
+export const formatCurrency = (value: number) => i18n.toCurrency(value);
+
 export const padWithZero = (value: number) => (value < 10 ? `0${value}` : `${value}`);
 
 export const hhMMFromDate = (date: Date) => {
@@ -17,6 +22,3 @@ export const hhMMFromDate = (date: Date) => {
 
   return `${padWithZero(hours)}:${padWithZero(minutes)}`;
 };
-
-export const getMonthName = (month: number) =>
-  i18n.strftime(new Date(`2020-${padWithZero(month)}-01`), '%B');
