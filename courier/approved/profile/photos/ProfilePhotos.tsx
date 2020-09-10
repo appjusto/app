@@ -2,6 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+import { isEmpty } from 'lodash';
 import React, { useState, useCallback, useContext, useEffect, useMemo } from 'react';
 import { View, Text, Image, StyleSheet, ImageURISource } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -30,6 +31,12 @@ const defaultImageOptions: ImagePicker.ImagePickerOptions = {
   quality: 1,
 };
 
+enum UploadStatus {
+  Unstarted,
+  Uploading,
+  Done,
+}
+
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfilePhotos'>;
 type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfilePhotos'>;
 
@@ -53,7 +60,13 @@ export default function ({ navigation }: Props) {
   >();
   const [newSelfie, setNewSelfie] = useState<ImageURISource | undefined | null>();
   const [newDocumentImage, setNewDocumentImage] = useState<ImageURISource | undefined | null>();
-  const canNavigate = useMemo(() => {
+  const [uploadingNewSelfie, setUploadingNewSelfie] = useState<UploadStatus>(
+    UploadStatus.Unstarted
+  );
+  const [uploadingNewDocumentImage, setUploadingNewDocumentImage] = useState<UploadStatus>(
+    UploadStatus.Unstarted
+  );
+  const canProceed = useMemo(() => {
     // no reason to upload if nothing has changed
     if (!newSelfie && !newDocumentImage) return false;
     return (newSelfie || previousSelfie) && (newDocumentImage || previousDocumentimage);
@@ -85,6 +98,26 @@ export default function ({ navigation }: Props) {
       })();
     }
   }, [previousDocumentimage]);
+  useEffect(() => {
+    if (newSelfie) {
+      setUploadingNewSelfie(UploadStatus.Uploading);
+      dispatch(
+        uploadSelfie(api)(courier!.id!, newSelfie.uri!, (progress: number) => {
+          if (progress === 100) setUploadingNewSelfie(UploadStatus.Done);
+        })
+      );
+    }
+  }, [newSelfie]);
+  useEffect(() => {
+    if (newDocumentImage) {
+      setUploadingNewDocumentImage(UploadStatus.Uploading);
+      dispatch(
+        uploadDocumentImage(api)(courier!.id!, newDocumentImage.uri!, (progress: number) => {
+          if (progress === 100) setUploadingNewDocumentImage(UploadStatus.Done);
+        })
+      );
+    }
+  }, [newSelfie]);
 
   // handlers
   const pickFromCamera = useCallback(async () => {
@@ -107,14 +140,6 @@ export default function ({ navigation }: Props) {
       alert(t('Precisamos do acesso à sua galeria'));
     }
   }, []);
-  // navigating back to the PendingChecklist screen to start the upload there
-  const navigationHandler = () => {
-    navigation.navigate('PendingChecklist', {
-      newSelfie: { uri: newSelfie.uri! },
-      newDocumentImage: { uri: newDocumentImage.uri! },
-    });
-    // console.log(newSelfie.uri);
-  };
 
   // UI
   return (
@@ -140,13 +165,13 @@ export default function ({ navigation }: Props) {
         title={t('Foto do rosto')}
         subtitle={t('Adicionar selfie')}
         onPress={pickFromCamera}
-        checked={previousSelfie}
+        checked={!isEmpty(previousSelfie)}
       />
       <ConfigItem
         title={t('RG ou CNH aberta')}
         subtitle={t('Adicionar foto do documento')}
         onPress={pickFromGallery}
-        checked={previousDocumentimage}
+        checked={!isEmpty(previousDocumentimage)}
       />
       <View style={{ marginVertical: 32, flexDirection: 'row', justifyContent: 'space-between' }}>
         <DocumentButton title={t('Foto de rosto')} onPress={() => {}} hasTitle={!previousSelfie}>
@@ -170,7 +195,11 @@ export default function ({ navigation }: Props) {
           />
         </DocumentButton>
       </View>
-      <DefaultButton title={t('Avançar')} disabled={!canNavigate} onPress={navigationHandler} />
+      <DefaultButton
+        title={t('Avançar')}
+        disabled={!canProceed}
+        onPress={() => navigation.goBack()}
+      />
     </PaddedView>
   );
 }
