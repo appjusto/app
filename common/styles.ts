@@ -62,7 +62,7 @@ export const texts = StyleSheet.create({
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 13,
-    lineHeight: 16,
+    lineHeight: 18,
   },
   default: {
     fontFamily: 'BarlowMedium',
@@ -75,6 +75,12 @@ export const texts = StyleSheet.create({
     color: colors.black,
     fontSize: 16,
     lineHeight: 19,
+  },
+  mediumToBig: {
+    fontFamily: 'BarlowMedium',
+    color: colors.black,
+    fontSize: 20,
+    lineHeight: 26,
   },
   big: {
     fontFamily: 'BarlowMedium',

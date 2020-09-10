@@ -7,10 +7,11 @@ import { getMonthName } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import DeliveryHistory from './DeliveryHistory';
 import DeliveryHistoryByMonth from './DeliveryHistoryByMonth';
-import OngoingOrder from './OngoingOrder';
-import { HistoryNavigatorParamList } from './types';
+import DeliverySummary from './DeliverySummary';
+import OngoingDelivery from './OngoingDelivery';
+import { DeliveriesNavigatorParamList } from './types';
 
-const Stack = createStackNavigator<HistoryNavigatorParamList>();
+const Stack = createStackNavigator<DeliveriesNavigatorParamList>();
 export default function () {
   return (
     <Stack.Navigator>
@@ -30,8 +31,8 @@ export default function () {
         })}
       />
       <Stack.Screen
-        name="OngoingOrder"
-        component={OngoingOrder}
+        name="OngoingDelivery"
+        component={OngoingDelivery}
         options={({ navigation }) => ({
           title: t('Corrida em andamento'),
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
@@ -42,6 +43,14 @@ export default function () {
         component={Chat}
         options={({ navigation }) => ({
           title: t('Conversa'),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
+      />
+      <Stack.Screen
+        name="DeliverySummary"
+        component={DeliverySummary}
+        options={({ navigation }) => ({
+          title: t('Corrida finalizada'),
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />

@@ -1,40 +1,16 @@
 import React from 'react';
 import { ScrollView, View, Text, Image, TouchableOpacity, Dimensions } from 'react-native';
 
-import { edit } from '../../../../assets/icons';
+import * as icons from '../../../../assets/icons';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/views/PaddedView';
 import ShowIf from '../../../../common/components/views/ShowIf';
 import { Card } from '../../../../common/store/consumer/types';
-import { Place } from '../../../../common/store/order/types';
 import OrderImpl from '../../../../common/store/order/types/OrderImpl';
 import { texts, colors, borders, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import OrderMap from './OrderMap';
-
-type PlaceSummaryProps = {
-  place: Place;
-  title: string;
-  editStepHandler: () => void;
-};
-
-function PlaceSummary({ place, title, editStepHandler }: PlaceSummaryProps) {
-  return (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-      <View style={{ width: '60%', flex: 1 }}>
-        <Text style={{ ...texts.small, lineHeight: 18, color: colors.darkGreen }}>{title}</Text>
-        <Text style={{ ...texts.medium, lineHeight: 22 }}>{place.address}</Text>
-        <Text>{place.additionalInfo}</Text>
-        <Text>{place.address}</Text>
-      </View>
-      <View style={{ alignSelf: 'center' }}>
-        <TouchableOpacity onPress={editStepHandler}>
-          <Image style={{ width: 32, height: 32 }} source={edit} />
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-}
+import PlaceSummary from './PlaceSummary';
 
 type Props = {
   order: OrderImpl;
@@ -69,12 +45,12 @@ export default function ({
         {/* origin and destionatin */}
         <PaddedView>
           <PlaceSummary
-            title={t(`Retirada`)}
+            title={t('Retirada')}
             place={origin}
             editStepHandler={() => editStepHandler(0)}
           />
           <PlaceSummary
-            title={t(`Entrega`)}
+            title={t('Entrega')}
             place={destination}
             editStepHandler={() => editStepHandler(1)}
           />
@@ -162,7 +138,7 @@ export default function ({
             <View>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text>{t('Forma de pagamento')}</Text>
-                <Image style={{ width: 32, height: 32 }} source={edit} />
+                <Image style={{ width: 32, height: 32 }} source={icons.edit} />
               </View>
               <Text>{t(`Cartão de crédito: **** ${card!.lastFourDigits}`)}</Text>
             </View>

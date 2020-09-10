@@ -1,12 +1,15 @@
 import { ChatParamList } from '../../../common/screens/Chat';
 
-export type HistoryNavigatorParamList = {
+export type DeliveriesNavigatorParamList = {
   DeliveryHistory: undefined;
   DeliveryHistoryByMonth: {
     year: number;
     month: number;
   };
-  OngoingOrder: {
+  OngoingDelivery: {
+    orderId: string;
+  };
+  DeliverySummary: {
     orderId: string;
   };
 } & ChatParamList;

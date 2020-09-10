@@ -17,10 +17,10 @@ import { getUIBusy } from '../../../common/store/ui/selectors';
 import { colors, screens, texts } from '../../../common/styles';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
 import { t } from '../../../strings';
-import { HistoryNavigatorParamList } from './types';
+import { DeliveriesNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<HistoryNavigatorParamList, 'OngoingOrder'>;
-type ScreenRoute = RouteProp<HistoryNavigatorParamList, 'OngoingOrder'>;
+type ScreenNavigationProp = StackNavigationProp<DeliveriesNavigatorParamList, 'OngoingDelivery'>;
+type ScreenRoute = RouteProp<DeliveriesNavigatorParamList, 'OngoingDelivery'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

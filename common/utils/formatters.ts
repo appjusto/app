@@ -7,6 +7,10 @@ export const formatDistance = (distance: number) => {
   return `${round(distance / 1000, 2)}km`;
 };
 
+export const formatDuration = (duration: number) => {
+  return `${round(duration / 60, 0)} min`;
+};
+
 export const getMonthName = (month: number) =>
   i18n.strftime(new Date(`2020-${padWithZero(month)}-01`), '%B');
 

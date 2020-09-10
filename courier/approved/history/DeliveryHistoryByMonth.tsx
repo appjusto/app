@@ -7,15 +7,16 @@ import { useSelector } from 'react-redux';
 
 import PaddedView from '../../../common/components/views/PaddedView';
 import { getOrdersWithFilter } from '../../../common/store/order/selectors';
+import { Order, OrderStatus } from '../../../common/store/order/types';
 import { screens, texts, padding, colors } from '../../../common/styles';
 import { hhMMFromDate, formatCurrency } from '../../../common/utils/formatters';
-import { HistoryNavigatorParamList } from './types';
+import { DeliveriesNavigatorParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<
-  HistoryNavigatorParamList,
+  DeliveriesNavigatorParamList,
   'DeliveryHistoryByMonth'
 >;
-type ScreenRoute = RouteProp<HistoryNavigatorParamList, 'DeliveryHistoryByMonth'>;
+type ScreenRoute = RouteProp<DeliveriesNavigatorParamList, 'DeliveryHistoryByMonth'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -25,9 +26,18 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const { year, month } = route.params;
+
   // app state
   const orders = useSelector(getOrdersWithFilter)(year, month);
 
+  // handlers
+  const orderPressHandler = (order: Order) => {
+    if (order.status === OrderStatus.Dispatching) {
+      navigation.navigate('OngoingDelivery', { orderId: order.id });
+    } else {
+      navigation.navigate('DeliverySummary', { orderId: order.id });
+    }
+  };
   // UI
   return (
     <View style={{ ...screens.configScreen }}>
@@ -37,7 +47,7 @@ export default function ({ navigation, route }: Props) {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={{ borderBottomColor: colors.grey, borderBottomWidth: 1 }}>
-            <TouchableOpacity onPress={() => null}>
+            <TouchableOpacity onPress={() => orderPressHandler(item)}>
               <PaddedView>
                 <Text style={{ ...texts.medium, marginBottom: padding }}>
                   {formatCurrency(item.fare.courierFee)}

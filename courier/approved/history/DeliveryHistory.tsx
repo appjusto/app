@@ -18,10 +18,10 @@ import {
 import { screens, texts, padding, halfPadding, colors } from '../../../common/styles';
 import { getMonthName, formatCurrency } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
-import { HistoryNavigatorParamList } from './types';
+import { DeliveriesNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<HistoryNavigatorParamList, 'DeliveryHistory'>;
-type ScreenRoute = RouteProp<HistoryNavigatorParamList, 'DeliveryHistory'>;
+type ScreenNavigationProp = StackNavigationProp<DeliveriesNavigatorParamList, 'DeliveryHistory'>;
+type ScreenRoute = RouteProp<DeliveriesNavigatorParamList, 'DeliveryHistory'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
