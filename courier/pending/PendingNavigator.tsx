@@ -4,9 +4,7 @@ import React from 'react';
 import BackButton from '../../common/components/buttons/BackButton';
 import ProfileEdit from '../../common/screens/profile/ProfileEdit';
 import { t } from '../../strings';
-import ProfileBank from '../approved/profile/bank/ProfileBank';
-import SelectBank from '../approved/profile/bank/SelectBank';
-import FleetNavigator from '../approved/profile/fleet/FleetNavigator';
+import BankNavigator from '../approved/profile/bank/BankNavigator';
 import Camera from '../approved/profile/photos/Camera';
 import ProfilePhotos from '../approved/profile/photos/ProfilePhotos';
 import PendingChecklist from './PendingChecklist';
@@ -47,18 +45,10 @@ export default function () {
         })}
       />
       <Stack.Screen
-        name="ProfileBank"
-        component={ProfileBank}
+        name="Bank"
+        component={BankNavigator}
         options={({ navigation }) => ({
           title: t('Dados bancários'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
-      />
-      <Stack.Screen
-        name="SelectBank"
-        component={SelectBank}
-        options={({ navigation }) => ({
-          title: t('Selecione seu banco'),
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />

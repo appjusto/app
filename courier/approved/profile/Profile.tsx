@@ -1,15 +1,15 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 
 import { ApiContext } from '../../../common/app/context';
-import ArrowBox from '../../../common/components/ArrowBox';
+import ConfigItem from '../../../common/components/ConfigItem';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import { ProfileParamList } from '../../../common/screens/profile/types';
 import { signOut } from '../../../common/store/user/actions';
 import { colors, texts, screens, padding } from '../../../common/styles';
 import { t } from '../../../strings';
+import { ProfileParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'Profile'>;
 type ScreenRouteProp = RouteProp<ProfileParamList, 'Profile'>;
@@ -47,51 +47,28 @@ export default function ({ navigation }: Props) {
   // UI
   return (
     <View style={styles.screen}>
-      <TouchableOpacity
+      <ConfigItem
+        title={t('Seus dados')}
+        subtitle={t('Edite seus dados pessoais')}
         onPress={() => navigation.navigate('ProfileEdit', { allowPartialSave: false })}
-      >
-        <View style={styles.container}>
-          <View style={styles.texts}>
-            <Text style={styles.black}>{t('Seus dados')}</Text>
-            <Text style={styles.darkGrey}>{t('Edite seus dados pessoais')}</Text>
-          </View>
-          <View style={styles.button}>
-            <ArrowBox />
-          </View>
-        </View>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('Terms');
-        }}
-      >
-        <View style={styles.container}>
-          <View style={styles.texts}>
-            <Text style={styles.black}>{t('Termos de uso e política de privacidade')}</Text>
-            <Text style={styles.darkGrey}>{t('Leia os termos de uso do AppJusto')}</Text>
-          </View>
-          <View style={styles.button}>
-            <ArrowBox />
-          </View>
-        </View>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={confirmLogout}>
-        <View style={styles.container}>
-          <View style={styles.texts}>
-            <Text style={styles.black}>{t('Sair do app')}</Text>
-            <Text style={styles.darkGrey}>
-              {t(
-                'Desconecte-se do aplicativo. Para retornar, você precisará confirmar seu e-mail cadastrado'
-              )}
-            </Text>
-          </View>
-          <View style={styles.button}>
-            <ArrowBox />
-          </View>
-        </View>
-      </TouchableOpacity>
+      />
+      <ConfigItem
+        title={t('Dados bancários')}
+        subtitle={t('Edite seus dados pessoais')}
+        onPress={() => navigation.navigate('Bank')}
+      />
+      <ConfigItem
+        title={t('Termos de uso e política de privacidade')}
+        subtitle={t('Leia os termos de uso do AppJusto')}
+        onPress={() => navigation.navigate('Terms')}
+      />
+      <ConfigItem
+        title={t('Sair do App')}
+        subtitle={t(
+          'Desconecte-se do aplicativo. Para retornar, você precisará confirmar seu e-mail cadastrado'
+        )}
+        onPress={confirmLogout}
+      />
 
       <View style={{ flex: 1 }} />
 

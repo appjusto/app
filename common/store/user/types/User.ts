@@ -38,8 +38,4 @@ export default class User {
   public personalInfoSet(): boolean {
     return true;
   }
-
-  public bankInfoSet(): boolean {
-    return true;
-  }
 }

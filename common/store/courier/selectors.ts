@@ -13,3 +13,5 @@ export const isCourierWorking = (state: State) =>
   getCourierStatus(state) !== CourierStatus.Unavailable;
 
 export const getCourierLocation = (state: State) => getCourierState(state).location;
+
+export const getBanks = (state: State) => getCourierState(state).banks;

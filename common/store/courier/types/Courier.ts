@@ -16,8 +16,8 @@ export default class Courier extends User {
     return this.source.info;
   }
 
-  public get bankInfo() {
-    return this.source.bankInfo;
+  public get bankAccount() {
+    return this.source.bankAccount;
   }
 
   public getSource(): CourierProfile {
@@ -38,13 +38,13 @@ export default class Courier extends User {
     );
   }
 
-  public bankInfoSet(): boolean {
+  public bankAccountSet(): boolean {
     return (
-      super.bankInfoSet() &&
-      !isEmpty(this.bankInfo?.name) &&
-      !isEmpty(this.bankInfo?.agency) &&
-      !isEmpty(this.bankInfo?.account) &&
-      !isEmpty(this.bankInfo?.digit)
+      !isEmpty(this.bankAccount?.id) &&
+      !isEmpty(this.bankAccount?.name) &&
+      !isEmpty(this.bankAccount?.agency) &&
+      !isEmpty(this.bankAccount?.account) &&
+      !isEmpty(this.bankAccount?.digit)
     );
   }
 }

@@ -33,7 +33,7 @@ export default function ({ navigation, route }: Props) {
   const courier = useSelector(getCourier);
   const situation = courier!.info?.situation ?? 'pending';
   const submitEnabled =
-    situation === 'pending' && courier!.personalInfoSet() && courier!.bankInfoSet();
+    situation === 'pending' && courier!.personalInfoSet() && courier!.bankAccountSet();
 
   // handlers
   const submitHandler = async () => {
@@ -88,7 +88,7 @@ export default function ({ navigation, route }: Props) {
             title={t('Dados bancários')}
             subtitle={t('Cadastre seu banco para recebimento')}
             onPress={() => navigation.navigate('ProfileBank')}
-            checked={courier!.bankInfoSet()}
+            checked={courier!.bankAccountSet()}
           />
         </PaddedView>
       </ScrollView>

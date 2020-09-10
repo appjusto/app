@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import * as geofirestore from 'geofirestore';
 
-import { CourierProfile } from '../courier/types';
+import { CourierProfile, Bank } from '../courier/types';
 
 export default class CourierApi {
   private firestoreWithGeo: geofirestore.GeoFirestore;
@@ -14,6 +14,17 @@ export default class CourierApi {
   }
 
   // firestore
+  // get supported banks
+  async fetchBanks() {
+    const banksQuerySnapshot = await this.firestore.collection('banks').get();
+    const docs: Bank[] = [];
+    if (!banksQuerySnapshot.empty) {
+      banksQuerySnapshot.forEach((doc) => {
+        docs.push({ ...(doc.data() as Bank), id: doc.id });
+      });
+    }
+    return docs;
+  }
   // update courier location
   updateCourierLocation(courier: CourierProfile, location) {
     const { coords } = location;

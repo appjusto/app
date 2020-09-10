@@ -5,13 +5,7 @@ export type ProfileParamList = {
   Profile: undefined;
   ProfilePhotos: undefined;
   Camera: undefined;
-  ProfileBank?: {
-    bank: {
-      bankId: string;
-      bankName: string;
-    };
-  };
-  SelectBank: undefined;
   Terms: undefined;
+  Bank: undefined;
 } & ProfileEditParamList &
   ProfileEraseParamList;

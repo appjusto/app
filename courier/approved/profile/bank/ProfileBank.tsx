@@ -11,11 +11,13 @@ import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../../common/components/texts/LabeledText';
 import AvoidingView from '../../../../common/components/views/AvoidingView';
 import { getCourier } from '../../../../common/store/courier/selectors';
+import { Bank } from '../../../../common/store/courier/types';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
-import { texts, screens, padding, colors } from '../../../../common/styles';
+import { texts, screens, padding, colors, halfPadding } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ProfileParamList } from '../types';
+import PaddedView from '../../../../common/components/views/PaddedView';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileBank'>;
 type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfileBank'>;
@@ -35,10 +37,10 @@ export default function ({ navigation, route }: Props) {
   const courier = useSelector(getCourier);
 
   // screen state
-  const [bank, setBank] = useState<null | { bankId: string; bankName: string }>(null);
-  const [agency, setAgency] = useState<string>(courier?.bankInfo?.agency ?? '');
-  const [account, setAccount] = useState<string>(courier?.bankInfo?.account ?? '');
-  const [digit, setDigit] = useState<string>(courier?.bankInfo?.digit ?? '');
+  const [bank, setBank] = useState<null | Bank>(null);
+  const [agency, setAgency] = useState<string>(courier?.bankAccount?.agency ?? '');
+  const [account, setAccount] = useState<string>(courier?.bankAccount?.account ?? '');
+  const [digit, setDigit] = useState<string>(courier?.bankAccount?.digit ?? '');
   const canSubmit = useMemo(() => {
     return bank != null && !isEmpty(agency) && !isEmpty(account) && !isEmpty(digit);
   }, [bank, agency, account, digit]);
@@ -61,8 +63,8 @@ export default function ({ navigation, route }: Props) {
     }
     await dispatch(
       updateProfile(api)(courier!.id!, {
-        bankInfo: {
-          name: `${bank.bankId} - ${bank.bankName}`, // TODO: leave just ID after moving bank database to firebase
+        bankAccount: {
+          ...bank,
           agency,
           account,
           digit,
@@ -74,14 +76,13 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <View style={{ ...screens.configScreen, paddingHorizontal: padding }}>
+    <PaddedView style={{ ...screens.configScreen }}>
       <ScrollView ref={scrollViewRef} contentContainerStyle={{ flex: 1 }}>
         <AvoidingView>
-          <Text style={{ ...texts.big, marginTop: 16 }}>{t('Dados bancários')}</Text>
-          <Text style={{ ...texts.default, marginTop: 8, color: colors.darkGrey }}>
+          <Text style={{ ...texts.default, marginTop: halfPadding, color: colors.darkGrey }}>
             {t('A conta precisa estar no seu CPF. Não serão aceitas contas de terceiros.')}
           </Text>
-          <View style={{ marginTop: 24 }}>
+          <View style={{ marginTop: padding }}>
             {/* <DefaultInput title={t('Banco')} value={bank} onChangeText={(text) => setBank(text)} /> */}
             <TouchableWithoutFeedback
               onPress={() => {
@@ -90,7 +91,7 @@ export default function ({ navigation, route }: Props) {
             >
               <View>
                 <LabeledText style={{ marginTop: padding }} title={t('Banco')}>
-                  {bank?.bankName ?? t('Nome do seu banco')}
+                  {bank?.name ?? t('Nome do seu banco')}
                 </LabeledText>
               </View>
             </TouchableWithoutFeedback>
@@ -104,9 +105,10 @@ export default function ({ navigation, route }: Props) {
               blurOnSubmit={false}
               onSubmitEditing={() => accountRef.current?.focus()}
             />
-            <View style={{ marginTop: 16, justifyContent: 'space-between' }}>
+            <View style={{ marginTop: 16, flexDirection: 'row', justifyContent: 'space-between' }}>
               <DefaultInput
                 ref={accountRef}
+                style={{ flex: 7 }}
                 title={t('Conta')}
                 value={account}
                 onChangeText={(text) => setAccount(text)}
@@ -117,7 +119,7 @@ export default function ({ navigation, route }: Props) {
               />
               <DefaultInput
                 ref={digitRef}
-                style={{ marginTop: 16 }}
+                style={{ flex: 3, marginLeft: halfPadding }}
                 title={t('Dígito')}
                 value={digit}
                 onChangeText={(text) => setDigit(text)}
@@ -129,7 +131,6 @@ export default function ({ navigation, route }: Props) {
           </View>
           <View style={{ flex: 1 }} />
           <DefaultButton
-            style={{ marginBottom: 32 }}
             title={t('Avançar')}
             disabled={!canSubmit}
             activityIndicator={busy}
@@ -137,6 +138,6 @@ export default function ({ navigation, route }: Props) {
           />
         </AvoidingView>
       </ScrollView>
-    </View>
+    </PaddedView>
   );
 }

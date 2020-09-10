@@ -1,14 +1,20 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useState, useCallback } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useCallback, useEffect, useContext, useMemo } from 'react';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 
+import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
-import { texts, screens, colors } from '../../../../common/styles';
+import PaddedView from '../../../../common/components/views/PaddedView';
+import { fetchBanks } from '../../../../common/store/courier/actions';
+import { getBanks } from '../../../../common/store/courier/selectors';
+import { Bank } from '../../../../common/store/courier/types';
+import { texts, screens, padding } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ProfileParamList } from '../../../approved/profile/types';
-import { BANKS } from './banks';
+import { getUIBusy } from '../../../../common/store/ui/selectors';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'SelectBank'>;
 type ScreenRouteProp = RouteProp<ProfileParamList, 'SelectBank'>;
@@ -19,19 +25,40 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  //state
-  const [bank, setBank] = useState<null | { bankId: string; bankName: string }>(null);
-  const [bankSearch, setBankSearch] = useState('');
-  const filteredBanks = BANKS.filter((bank) => bank.label.indexOf(bankSearch) !== -1);
+  // context
+  const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
 
-  //handlers
+  // app state
+  const busy = useSelector(getUIBusy);
+  const banks = useSelector(getBanks);
+
+  // screen state
+  const [bank, setBank] = useState<null | Bank>(null);
+  const [bankSearch, setBankSearch] = useState('');
+  const filteredBanks = useMemo(() => {
+    if (!banks) return [];
+    return banks.filter(
+      (bank) => bank.name.indexOf(bankSearch) !== -1 || bank.id.indexOf(bankSearch) !== -1
+    );
+  }, [banks, bankSearch]);
+
+  // effects
+  useEffect(() => {
+    // fetch banks if not fetched previously
+    if (banks === undefined) {
+      dispatch(fetchBanks(api));
+    }
+  }, [banks]);
+
+  // handlers
   const selectBankHandler = useCallback(() => {
-    if (!bank) return; // TODO: showToast
-    navigation.navigate('ProfileBank', { bank: bank! });
+    if (!bank) return;
+    navigation.navigate('ProfileBank', { bank });
   }, [bank]);
-  //UI
+  // UI
   return (
-    <View style={{ ...screens.lightGrey, paddingTop: 16 }}>
+    <PaddedView style={{ ...screens.lightGrey }}>
       <DefaultInput
         // defaultValue={initialAddress}
         value={bankSearch}
@@ -40,42 +67,37 @@ export default function ({ navigation, route }: Props) {
         onChangeText={setBankSearch}
         style={{ marginBottom: 32 }}
       />
-      <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: 14 }}>
-        {t('Principais bancos:')}
-      </Text>
-      {/* //Todo: should the list initially display only a few pre-selected ("principais") banks? */}
       <FlatList
         data={filteredBanks}
         renderItem={({ item }) => {
           return (
             <TouchableOpacity
               onPress={() => {
-                setBank({ bankId: item.value, bankName: item.label });
-                setBankSearch(item.label);
+                setBank(item);
+                setBankSearch(item.name);
               }}
             >
-              <View style={styles.item}>
-                <Text style={{ ...texts.medium }}>{item.label}</Text>
-                <Text style={{ ...texts.medium }}> - {item.value}</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: '100%',
+                  height: 60,
+                }}
+              >
+                <Text style={{ ...texts.medium }}>{`${item.name} - ${item.id}`}</Text>
               </View>
             </TouchableOpacity>
           );
         }}
-        keyExtractor={(item) => item.value}
+        keyExtractor={(item) => item.id}
       />
       <DefaultButton
-        style={{ marginBottom: 16 }}
+        style={{ marginTop: padding }}
         title={t('Confirmar banco')}
+        disabled={!bank}
+        activityIndicator={busy}
         onPress={selectBankHandler}
       />
-    </View>
+    </PaddedView>
   );
 }
-
-const styles = StyleSheet.create({
-  item: {
-    flexDirection: 'row',
-    width: '100%',
-    height: 60,
-  },
-});

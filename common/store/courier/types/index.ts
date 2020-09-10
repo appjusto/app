@@ -10,11 +10,15 @@ export enum CourierStatus {
 
 export interface CourierInfo extends ProfileInfo {}
 
+export interface Bank {
+  id: string;
+  name: string;
+}
+
 export interface CourierProfile extends UserProfile {
   info?: CourierInfo;
   status?: CourierStatus;
-  bankInfo?: {
-    name: string;
+  bankAccount?: Bank & {
     agency: string;
     account: string;
     digit: string;
@@ -25,4 +29,5 @@ export interface CourierState {
   courier?: Courier;
   order?: object;
   location?: Coordinates;
+  banks?: Bank[];
 }

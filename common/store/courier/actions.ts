@@ -1,14 +1,23 @@
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
+import { BUSY } from '../ui/actions';
 import Courier from './types/Courier';
 
 export const SET_LOCATION = 'SET_LOCATION';
+export const UPDATE_BANKS = 'UPDATE_BANKS';
 
 export const updateCourierLocation = (api: Api) => (courier: Courier, location) => (
   dispatch: AppDispatch
 ) => {
   api.courier().updateCourierLocation(courier, location);
   dispatch({ type: SET_LOCATION, payload: location });
+};
+
+export const fetchBanks = (api: Api) => async (dispatch: AppDispatch) => {
+  dispatch({ type: BUSY, payload: true });
+  const banks = await api.courier().fetchBanks();
+  dispatch({ type: UPDATE_BANKS, payload: banks });
+  dispatch({ type: BUSY, payload: false });
 };
 
 export const uploadSelfie = (api: Api) => (
