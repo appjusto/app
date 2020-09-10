@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { TouchableOpacity, View, StyleSheet, Text, Image } from 'react-native';
 
 import { checklistTick } from '../../assets/icons';
@@ -11,11 +11,11 @@ type Props = {
   title: string;
   subtitle: string;
   checked?: boolean;
-  sending?: boolean;
+  children?: ReactNode;
   onPress: () => void;
 };
 
-export default function ({ title, subtitle, checked, sending, onPress }: Props) {
+export default function ({ title, subtitle, checked, children, onPress }: Props) {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
@@ -41,13 +41,7 @@ export default function ({ title, subtitle, checked, sending, onPress }: Props) 
             <ArrowBox />
           </View>
         </View>
-        <ShowIf test={sending ?? false}>
-          {() => (
-            <View style={styles.sending}>
-              <Text style={{ ...texts.small, color: colors.black }}>{t('Enviando')}</Text>
-            </View>
-          )}
-        </ShowIf>
+        {children}
       </View>
     </TouchableOpacity>
   );
