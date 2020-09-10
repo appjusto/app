@@ -6,7 +6,7 @@ import { Flavor } from '../config/types';
 import { ConsumerProfile } from '../consumer/types';
 import { CourierProfile } from '../courier/types';
 import { BUSY } from '../ui/actions';
-import { UserProfile, ProfileInfo } from './types';
+import { UserProfile, ProfileInfo, DeleteAccountSurvey } from './types';
 
 export const USER_LOGGED_IN = 'USER_LOGGED_IN';
 export const USER_LOGGED_OUT = 'USER_LOGGED_OUT';
@@ -57,6 +57,10 @@ export const signInWithEmailLink = (api: Api) => (email: string, link: string) =
 
 export const signOut = (api: Api) => {
   return api.auth().signOut();
+};
+
+export const deleteAccount = (api: Api) => (survey: DeleteAccountSurvey) => {
+  return api.auth().deleteAccount(survey);
 };
 
 export const submitProfile = (api: Api) => async (dispatch: AppDispatch) => {

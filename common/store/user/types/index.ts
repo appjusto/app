@@ -20,3 +20,12 @@ export interface UserProfile {
   notificationToken?: string | null;
   info?: ProfileInfo;
 }
+
+export interface DeleteAccountSurvey {
+  notWorkingOnMyRegion: boolean;
+  didntFindWhatINeeded: boolean;
+  pricesHigherThanAlternatives: boolean;
+  didntLikeApp: boolean;
+  didntFeelSafe: boolean;
+  ratherUseAnotherApp: boolean;
+}

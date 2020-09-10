@@ -15,6 +15,7 @@ import OrderApi from './order';
 import ProfileApi from './profile';
 
 export default class Api {
+  private authentication: firebase.auth.Auth;
   private firestore: firebase.firestore.Firestore;
   private functions: firebase.functions.Functions;
   private storage: firebase.storage.Storage;
@@ -31,6 +32,7 @@ export default class Api {
     const apiKey = Platform.select(extra.googleApiKeys);
     firebase.initializeApp({ ...extra.firebase, apiKey });
 
+    this.authentication = firebase.auth();
     this.firestore = firebase.firestore();
     this.functions = firebase.functions();
     this.storage = firebase.storage();
@@ -45,7 +47,7 @@ export default class Api {
 
     const collectionName = extra.flavor === 'consumer' ? 'consumers' : 'couriers';
 
-    this._auth = new AuthApi(extra);
+    this._auth = new AuthApi(this.authentication, this.functions, extra);
     this._profile = new ProfileApi(this.firestore, this.functions, collectionName);
     this._courier = new CourierApi(this.firestore, this.functions);
     this._consumer = new ConsumerApi(this.firestore, this.functions);

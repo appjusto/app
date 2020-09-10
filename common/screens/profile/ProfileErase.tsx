@@ -1,11 +1,14 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { View, Text } from 'react-native';
 
 import { t } from '../../../strings';
+import { ApiContext } from '../../app/context';
 import CheckField from '../../components/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
+import { deleteAccount } from '../../store/user/actions';
+import { DeleteAccountSurvey } from '../../store/user/types';
 import { colors, texts, screens } from '../../styles';
 
 export type ProfileEraseParamList = {
@@ -20,18 +23,12 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-interface ScreenState {
-  notWorkingOnMyRegion: boolean;
-  didntFindWhatINeeded: boolean;
-  pricesHigherThanAlternatives: boolean;
-  didntLikeApp: boolean;
-  didntFeelSafe: boolean;
-  ratherUseAnotherApp: boolean;
-}
-
 export default function ({ navigation }: Props) {
-  // state
-  const [state, setState] = useState<ScreenState>({
+  // context
+  const api = useContext(ApiContext);
+
+  // screen state
+  const [survey, setSurvey] = useState<DeleteAccountSurvey>({
     notWorkingOnMyRegion: false,
     didntFindWhatINeeded: false,
     pricesHigherThanAlternatives: false,
@@ -40,7 +37,9 @@ export default function ({ navigation }: Props) {
     ratherUseAnotherApp: false,
   });
   // handlers
-  const eraseHandler = useCallback(() => {}, []);
+  const eraseHandler = useCallback(() => {
+    deleteAccount(api)(survey);
+  }, []);
 
   // UI
   return (
@@ -58,39 +57,43 @@ export default function ({ navigation }: Props) {
       </Text>
       <View style={{ marginTop: 24, flex: 1 }}>
         <CheckField
-          checked={state.notWorkingOnMyRegion}
+          checked={survey.notWorkingOnMyRegion}
           text={t('Não atende na minha região')}
-          onPress={() => setState({ ...state, notWorkingOnMyRegion: !state.notWorkingOnMyRegion })}
+          onPress={() =>
+            setSurvey({ ...survey, notWorkingOnMyRegion: !survey.notWorkingOnMyRegion })
+          }
         />
         <CheckField
-          checked={state.didntFindWhatINeeded}
+          checked={survey.didntFindWhatINeeded}
           text={t('Não encontrei o que preciso')}
-          onPress={() => setState({ ...state, didntFindWhatINeeded: !state.didntFindWhatINeeded })}
+          onPress={() =>
+            setSurvey({ ...survey, didntFindWhatINeeded: !survey.didntFindWhatINeeded })
+          }
         />
         <CheckField
-          checked={state.pricesHigherThanAlternatives}
+          checked={survey.pricesHigherThanAlternatives}
           text={t('Preços mais altos que os concorrentes')}
           onPress={() =>
-            setState({
-              ...state,
-              pricesHigherThanAlternatives: !state.pricesHigherThanAlternatives,
+            setSurvey({
+              ...survey,
+              pricesHigherThanAlternatives: !survey.pricesHigherThanAlternatives,
             })
           }
         />
         <CheckField
-          checked={state.didntLikeApp}
+          checked={survey.didntLikeApp}
           text={t('Não gostei do aplicativo')}
-          onPress={() => setState({ ...state, didntLikeApp: !state.didntLikeApp })}
+          onPress={() => setSurvey({ ...survey, didntLikeApp: !survey.didntLikeApp })}
         />
         <CheckField
-          checked={state.didntFeelSafe}
+          checked={survey.didntFeelSafe}
           text={t('Não me senti seguro')}
-          onPress={() => setState({ ...state, didntFeelSafe: !state.didntFeelSafe })}
+          onPress={() => setSurvey({ ...survey, didntFeelSafe: !survey.didntFeelSafe })}
         />
         <CheckField
-          checked={state.ratherUseAnotherApp}
+          checked={survey.ratherUseAnotherApp}
           text={t('Prefiro usar outro serviço ou aplicativo')}
-          onPress={() => setState({ ...state, ratherUseAnotherApp: !state.ratherUseAnotherApp })}
+          onPress={() => setSurvey({ ...survey, ratherUseAnotherApp: !survey.ratherUseAnotherApp })}
         />
       </View>
       <View style={{ flex: 1 }} />

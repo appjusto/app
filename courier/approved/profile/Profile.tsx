@@ -1,13 +1,12 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import React, { useContext, useCallback } from 'react';
+import { View, Alert } from 'react-native';
 
 import { ApiContext } from '../../../common/app/context';
 import ConfigItem from '../../../common/components/ConfigItem';
-import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import { signOut } from '../../../common/store/user/actions';
-import { colors, texts, screens, padding } from '../../../common/styles';
+import { screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ProfileParamList } from './types';
 
@@ -24,7 +23,7 @@ export default function ({ navigation }: Props) {
   const api = useContext(ApiContext);
 
   // handlers
-  const confirmLogout = () => {
+  const confirmLogout = useCallback(() => {
     Alert.alert(
       t('Sair da conta'),
       t(
@@ -42,11 +41,11 @@ export default function ({ navigation }: Props) {
         },
       ]
     );
-  };
+  }, []);
 
   // UI
   return (
-    <View style={styles.screen}>
+    <View style={screens.configScreen}>
       <ConfigItem
         title={t('Seus dados')}
         subtitle={t('Edite seus dados pessoais')}
@@ -69,40 +68,13 @@ export default function ({ navigation }: Props) {
         )}
         onPress={confirmLogout}
       />
-
-      <View style={{ flex: 1 }} />
-
-      <DefaultButton title={t('Sair da conta')} onPress={confirmLogout} />
+      <ConfigItem
+        title={t('Excluir minha conta')}
+        subtitle={t(
+          'Todos os seus dados serão apagados do nosso sistema e você não fará mais parte do AppJusto'
+        )}
+        onPress={() => navigation.navigate('ProfileErase')}
+      />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  screen: {
-    ...screens.lightGrey,
-    paddingBottom: padding,
-  },
-  container: {
-    flexDirection: 'row',
-    marginTop: 16,
-    borderBottomColor: colors.grey,
-    borderStyle: 'solid',
-    borderBottomWidth: 1,
-    justifyContent: 'space-between',
-  },
-  texts: {},
-  black: {
-    paddingBottom: 8,
-    ...texts.default,
-  },
-  darkGrey: {
-    paddingBottom: 16,
-    ...texts.default,
-    color: colors.darkGrey,
-  },
-  button: {
-    // justifyContent: 'flex-end',
-    // alignItems: 'center',
-    paddingBottom: 28,
-  },
-});
