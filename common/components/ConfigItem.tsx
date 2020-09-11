@@ -10,7 +10,7 @@ import ShowIf from './views/ShowIf';
 type Props = {
   title: string;
   subtitle: string;
-  checked?: boolean;
+  checked?: boolean | Promise<boolean>;
   children?: ReactNode;
   onPress: () => void;
 };
