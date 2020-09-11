@@ -1,79 +1,78 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import React from 'react';
+import { View, Text, TouchableWithoutFeedback } from 'react-native';
 
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
-import { borders, texts, colors } from '../../../../common/styles';
+import RoundedText from '../../../../common/components/texts/RoundedText';
+import { Fleet } from '../../../../common/store/fleet/types';
+import { borders, texts, colors, padding } from '../../../../common/styles';
+import { currencyFromCents, formatDistance } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 
 type Props = {
-  name: string;
-  participants: string;
-  description: boolean;
-  onButtonPress: () => void;
+  fleet: Fleet;
+  selected: boolean;
+  onSelect: () => void;
+  onConfirm: () => void;
 };
 
-export default function ({ name, participants, description, onButtonPress }: Props) {
-  const [isActive, setIsActive] = useState(false);
-  const touchHandler = () => setIsActive(!isActive);
+export default function ({ fleet, selected, onSelect, onConfirm }: Props) {
   return (
-    <TouchableWithoutFeedback onPress={touchHandler}>
-      <View style={isActive ? styles.activeBox : styles.box}>
+    <TouchableWithoutFeedback onPress={onSelect}>
+      <View
+        style={[
+          {
+            ...borders.default,
+            paddingHorizontal: 12,
+            paddingTop: 12,
+            paddingBottom: padding,
+            backgroundColor: colors.white,
+          },
+          selected
+            ? {
+                borderWidth: 2,
+                borderColor: colors.green,
+              }
+            : null,
+        ]}
+      >
         <View>
-          <Text style={{ ...texts.default }}>{name}</Text>
+          <Text style={{ ...texts.default }}>{fleet.name}</Text>
           <Text style={{ ...texts.small, marginTop: 4, color: colors.darkGreen }}>
-            {participants}
+            {fleet.totalParticipants} {t('participantes')}
           </Text>
           <Text style={{ ...texts.small, marginTop: 12, height: 54, color: colors.darkGrey }}>
-            {description}
+            {fleet.description}
           </Text>
-          <View style={styles.fareContainer}>
-            <Text style={{ ...texts.small }}>{t('R$ 6,00 valor mínimo + R$ 1,00 por km')}</Text>
+          <View style={{ marginTop: padding }}>
+            <RoundedText>{`${currencyFromCents(fleet.minimumFee)} ${t('até')} ${formatDistance(
+              fleet.distanceThreshold
+            )} + ${currencyFromCents(fleet.additionalPerKmAfterThreshold)} ${t(
+              'por km adicional'
+            )}`}</RoundedText>
           </View>
+          {/* <View style={{ marginTop: padding }}>
+            <RoundedText>{`${formatPct(fleet.feePctOverValue)} ${t(
+              'para pedidos a partir de'
+            )} ${currencyFromCents(fleet.valueThreshold)}`}</RoundedText>
+          </View>
+          <View style={{ marginTop: padding }}>
+            <RoundedText>{`${t('Distância máxima até a origen: ')} ${formatDistance(
+              fleet.maxDistanceToOrigin
+            )}`}</RoundedText>
+          </View>
+          <View style={{ marginTop: padding }}>
+            <RoundedText>{`${t('Distância máxima total: ')} ${formatDistance(
+              fleet.maxDistance
+            )}`}</RoundedText>
+          </View> */}
         </View>
         <DefaultButton
-          style={{ marginTop: 16 }}
+          style={{ marginTop: padding }}
           title={t('Confirmar')}
-          onPress={onButtonPress}
-          disabled={!isActive}
+          onPress={onConfirm}
+          disabled={!selected}
         />
       </View>
     </TouchableWithoutFeedback>
   );
 }
-
-const styles = StyleSheet.create({
-  box: {
-    width: '100%',
-    height: 243,
-    ...borders.default,
-    marginTop: 8,
-    paddingHorizontal: 12,
-    paddingTop: 12,
-    paddingBottom: 16,
-    backgroundColor: colors.white,
-  },
-  activeBox: {
-    width: '100%',
-    height: 243,
-    borderWidth: 2,
-    borderStyle: 'solid',
-    borderRadius: 8,
-    borderColor: colors.green,
-    marginTop: 8,
-    paddingHorizontal: 12,
-    paddingTop: 12,
-    paddingBottom: 16,
-    backgroundColor: colors.white,
-  },
-  fareContainer: {
-    ...borders.default,
-    borderColor: colors.black,
-    borderRadius: 32,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    height: 26,
-    alignItems: 'center',
-    width: 240,
-    marginTop: 16,
-  },
-});

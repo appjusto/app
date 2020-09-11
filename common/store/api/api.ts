@@ -13,6 +13,7 @@ import FilesApi from './files';
 import MapsApi from './maps';
 import OrderApi from './order';
 import ProfileApi from './profile';
+import FleetApi from './fleet';
 
 export default class Api {
   private authentication: firebase.auth.Auth;
@@ -23,6 +24,7 @@ export default class Api {
   private _auth: AuthApi;
   private _profile: ProfileApi;
   private _courier: CourierApi;
+  private _fleet: FleetApi;
   private _consumer: ConsumerApi;
   private _order: OrderApi;
   private _maps: MapsApi;
@@ -50,6 +52,7 @@ export default class Api {
     this._auth = new AuthApi(this.authentication, this.functions, extra);
     this._profile = new ProfileApi(this.firestore, this.functions, collectionName);
     this._courier = new CourierApi(this.firestore, this.functions);
+    this._fleet = new FleetApi(this.firestore, this.functions);
     this._consumer = new ConsumerApi(this.firestore, this.functions);
     this._order = new OrderApi(this.firestore, this.functions);
     this._maps = new MapsApi(apiKey!);
@@ -66,6 +69,10 @@ export default class Api {
 
   courier() {
     return this._courier;
+  }
+
+  fleet() {
+    return this._fleet;
   }
 
   consumer() {
