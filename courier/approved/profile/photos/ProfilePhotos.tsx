@@ -153,12 +153,9 @@ export default function ({ navigation }: Props) {
   // UI
   return (
     <PaddedView style={{ ...screens.lightGrey }}>
-      <Text style={{ ...texts.big, color: colors.black, marginBottom: 8 }}>
-        {t('Fotos e Documentos')}
-      </Text>
       <Text style={{ ...texts.default, color: colors.darkGrey }}>
         {t(
-          'Agora precisamos da sua foto para incluir nas entregas. Se você optou por Moto e/ou Carro, vamos precisar também da foto da sua CNH; caso contrário, é só enviar a foto do seu RG.'
+          'Precisamos da sua foto para incluir nas entregas. Se você optou por Moto e/ou Carro, vamos precisar também da foto da sua CNH; caso contrário, é só enviar a foto do seu RG.'
         )}
       </Text>
       {/* <View style={{ flex: 1 }} /> */}

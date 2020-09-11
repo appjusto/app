@@ -10,17 +10,17 @@ import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../../common/components/texts/LabeledText';
 import AvoidingView from '../../../../common/components/views/AvoidingView';
+import PaddedView from '../../../../common/components/views/PaddedView';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { Bank } from '../../../../common/store/courier/types';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { texts, screens, padding, colors, halfPadding } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import { ProfileParamList } from '../types';
-import PaddedView from '../../../../common/components/views/PaddedView';
+import { BankParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileBank'>;
-type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfileBank'>;
+type ScreenNavigationProp = StackNavigationProp<BankParamList, 'ProfileBank'>;
+type ScreenRouteProp = RouteProp<BankParamList, 'ProfileBank'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -38,9 +38,9 @@ export default function ({ navigation, route }: Props) {
 
   // screen state
   const [bank, setBank] = useState<null | Bank>(null);
-  const [agency, setAgency] = useState<string>(courier?.bankAccount?.agency ?? '');
-  const [account, setAccount] = useState<string>(courier?.bankAccount?.account ?? '');
-  const [digit, setDigit] = useState<string>(courier?.bankAccount?.digit ?? '');
+  const [agency, setAgency] = useState<string>('');
+  const [account, setAccount] = useState<string>('');
+  const [digit, setDigit] = useState<string>('');
   const canSubmit = useMemo(() => {
     return bank != null && !isEmpty(agency) && !isEmpty(account) && !isEmpty(digit);
   }, [bank, agency, account, digit]);
@@ -51,6 +51,21 @@ export default function ({ navigation, route }: Props) {
   const digitRef = useRef<TextInput>(null);
 
   // side effects
+  // checking initial bank information
+  useEffect(() => {
+    if (courier!.bankAccountSet()) {
+      const { bankAccount } = courier!;
+      const courierBank: Bank = {
+        id: bankAccount!.id!,
+        name: bankAccount!.name!,
+      };
+      setBank(courierBank);
+      setAgency(bankAccount!.agency!);
+      setAccount(bankAccount!.account);
+      setDigit(bankAccount!.digit!);
+    }
+  }, []);
+  // update bank according with route parameters
   useEffect(() => {
     const { bank } = route.params ?? {};
     if (bank) setBank(bank);
@@ -98,10 +113,12 @@ export default function ({ navigation, route }: Props) {
             <DefaultInput
               style={{ marginTop: 16 }}
               title={t('Agência')}
+              placeholder={t('Número da agência sem o dígito')}
               value={agency}
               onChangeText={(text) => setAgency(text)}
               keyboardType="number-pad"
               returnKeyType="next"
+              maxLength={5}
               blurOnSubmit={false}
               onSubmitEditing={() => accountRef.current?.focus()}
             />
@@ -110,10 +127,12 @@ export default function ({ navigation, route }: Props) {
                 ref={accountRef}
                 style={{ flex: 7 }}
                 title={t('Conta')}
+                placeholder={t('Número sem o dígito')}
                 value={account}
                 onChangeText={(text) => setAccount(text)}
                 keyboardType="number-pad"
                 returnKeyType="next"
+                maxLength={20}
                 blurOnSubmit={false}
                 onSubmitEditing={() => digitRef.current?.focus()}
               />
@@ -123,7 +142,8 @@ export default function ({ navigation, route }: Props) {
                 title={t('Dígito')}
                 value={digit}
                 onChangeText={(text) => setDigit(text)}
-                keyboardType="number-pad"
+                keyboardType="default"
+                maxLength={1}
                 returnKeyType="done"
                 blurOnSubmit
               />
