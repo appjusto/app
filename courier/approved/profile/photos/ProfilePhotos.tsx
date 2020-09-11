@@ -71,6 +71,7 @@ export default function ({ navigation }: Props) {
   const [uploadingNewDocumentImage, setUploadingNewDocumentImage] = useState<UploadStatus>(
     UploadStatus.Unstarted
   );
+  type ChangeImageType = typeof setNewSelfie;
   const canProceed = useMemo(() => {
     // no reason to upload if nothing has changed
     if (!newSelfie && !newDocumentImage) return false;
@@ -125,22 +126,22 @@ export default function ({ navigation }: Props) {
   }, [newDocumentImage]);
 
   // handlers
-  const pickFromCamera = useCallback(async () => {
+  const pickFromCamera = useCallback(async (changeImage: ChangeImageType) => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA);
     if (granted) {
       const result = await ImagePicker.launchCameraAsync(defaultImageOptions);
       if (result.cancelled) return;
-      setNewSelfie(result);
+      changeImage(result);
     } else {
       alert(t('Precisamos do acesso à câmera'));
     }
   }, []);
-  const pickFromGallery = useCallback(async () => {
+  const pickFromGallery = useCallback(async (changeImage: ChangeImageType) => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (granted) {
       const result = await ImagePicker.launchImageLibraryAsync(defaultImageOptions);
       if (result.cancelled) return;
-      setNewDocumentImage(result);
+      changeImage(result);
     } else {
       alert(t('Precisamos do acesso à sua galeria'));
     }
@@ -154,7 +155,7 @@ export default function ({ navigation }: Props) {
     (!isEmpty(previousDocumentimage) && uploadingNewDocumentImage === UploadStatus.Unstarted) ||
     uploadingNewDocumentImage === UploadStatus.Done;
 
-  const actionSheetHandler = () =>
+  const actionSheetHandler = (changeImage: ChangeImageType) =>
     showActionSheetWithOptions(
       {
         options: [t('Tirar uma foto'), t('Escolher da galeria'), t('Cancelar')],
@@ -164,9 +165,9 @@ export default function ({ navigation }: Props) {
         if (buttonIndex === 2) {
           // cancel action
         } else if (buttonIndex === 1) {
-          pickFromGallery();
+          pickFromGallery(changeImage);
         } else if (buttonIndex === 0) {
-          pickFromCamera();
+          pickFromCamera(changeImage);
         }
       }
     );
@@ -191,7 +192,7 @@ export default function ({ navigation }: Props) {
       <ConfigItem
         title={t('Foto do rosto')}
         subtitle={t('Adicionar selfie')}
-        onPress={actionSheetHandler}
+        onPress={() => actionSheetHandler(setNewSelfie)}
         checked={selfieCheckHandler}
       >
         {uploadingNewSelfie === UploadStatus.Uploading && (
@@ -203,7 +204,7 @@ export default function ({ navigation }: Props) {
       <ConfigItem
         title={t('RG ou CNH aberta')}
         subtitle={t('Adicionar foto do documento')}
-        onPress={actionSheetHandler}
+        onPress={() => actionSheetHandler(setNewDocumentImage)}
         checked={documentImageCheckHandler}
       >
         {uploadingNewDocumentImage === UploadStatus.Uploading && (
