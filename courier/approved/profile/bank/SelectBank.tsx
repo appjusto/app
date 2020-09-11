@@ -11,13 +11,13 @@ import PaddedView from '../../../../common/components/views/PaddedView';
 import { fetchBanks } from '../../../../common/store/courier/actions';
 import { getBanks } from '../../../../common/store/courier/selectors';
 import { Bank } from '../../../../common/store/courier/types';
+import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { texts, screens, padding } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import { ProfileParamList } from '../../../approved/profile/types';
-import { getUIBusy } from '../../../../common/store/ui/selectors';
+import { BankParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'SelectBank'>;
-type ScreenRouteProp = RouteProp<ProfileParamList, 'SelectBank'>;
+type ScreenNavigationProp = StackNavigationProp<BankParamList, 'SelectBank'>;
+type ScreenRouteProp = RouteProp<BankParamList, 'SelectBank'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
