@@ -14,17 +14,18 @@ export default class CourierApi {
   }
 
   // firestore
-  // get supported banks
+  // fetch supported banks
   async fetchBanks() {
-    const banksQuerySnapshot = await this.firestore.collection('banks').get();
+    const querySnapshot = await this.firestore.collection('banks').get();
     const docs: Bank[] = [];
-    if (!banksQuerySnapshot.empty) {
-      banksQuerySnapshot.forEach((doc) => {
+    if (!querySnapshot.empty) {
+      querySnapshot.forEach((doc) => {
         docs.push({ ...(doc.data() as Bank), id: doc.id });
       });
     }
     return docs;
   }
+
   // update courier location
   updateCourierLocation(courier: CourierProfile, location) {
     const { coords } = location;

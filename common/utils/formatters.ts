@@ -15,6 +15,8 @@ export const getMonthName = (month: number) =>
   i18n.strftime(new Date(`2020-${padWithZero(month)}-01`), '%B');
 
 export const formatCurrency = (value: number) => i18n.toCurrency(value);
+export const currencyFromCents = (value: number) => i18n.toCurrency(value / 100);
+export const formatPct = (value: number) => `${parseFloat((value * 100).toFixed(2))}%`;
 
 export const padWithZero = (value: number) => (value < 10 ? `0${value}` : `${value}`);
 
