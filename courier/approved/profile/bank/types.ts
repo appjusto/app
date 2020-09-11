@@ -1,4 +1,8 @@
+import { Bank } from '../../../../common/store/courier/types';
+
 export type BankParamList = {
-  ProfileBank: undefined;
+  ProfileBank: {
+    bank: Bank;
+  };
   SelectBank: undefined;
 };

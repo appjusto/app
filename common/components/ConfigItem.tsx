@@ -1,10 +1,10 @@
 import React, { ReactNode } from 'react';
-import { TouchableOpacity, View, StyleSheet, Text, Image } from 'react-native';
+import { TouchableOpacity, View, Text, Image } from 'react-native';
 
 import { checklistTick } from '../../assets/icons';
-import { t } from '../../strings';
-import { colors, texts, padding, borders } from '../styles';
+import { colors, texts, padding } from '../styles';
 import ArrowBox from './ArrowBox';
+import PaddedView from './views/PaddedView';
 import ShowIf from './views/ShowIf';
 
 type Props = {
@@ -12,58 +12,60 @@ type Props = {
   subtitle: string;
   checked?: boolean | Promise<boolean>;
   children?: ReactNode;
+  bottomBorder?: boolean;
   onPress: () => void;
 };
 
-export default function ({ title, subtitle, checked, children, onPress }: Props) {
+export default function ({
+  title,
+  subtitle,
+  checked,
+  children,
+  bottomBorder = true,
+  onPress,
+}: Props) {
   return (
     <TouchableOpacity onPress={onPress}>
-      <View style={styles.container}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <View>
+      <View
+        style={[
+          bottomBorder
+            ? {
+                borderBottomColor: colors.grey,
+                borderStyle: 'solid',
+                borderBottomWidth: 1,
+              }
+            : null,
+        ]}
+      >
+        <PaddedView
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <View style={{ flex: 1 }}>
             <View style={{ flexDirection: 'row' }}>
               <ShowIf test={checked ?? false}>
                 {() => <Image source={checklistTick} style={{ marginRight: 8 }} />}
               </ShowIf>
-              <Text style={{ ...texts.default, paddingBottom: 8 }}>{title}</Text>
+              <Text style={{ ...texts.default }}>{title}</Text>
             </View>
             <Text
               style={{
                 ...texts.default,
                 color: colors.darkGrey,
-                paddingBottom: padding,
+                flexWrap: 'wrap',
               }}
             >
               {subtitle}
             </Text>
           </View>
-          <View>
+          <View style={{ marginLeft: padding }}>
             <ArrowBox />
           </View>
-        </View>
+        </PaddedView>
         {children}
       </View>
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 16,
-    borderBottomColor: colors.grey,
-    borderStyle: 'solid',
-    borderBottomWidth: 1,
-    // flexWrap: 'wrap',
-  },
-  sending: {
-    backgroundColor: colors.white,
-    ...borders.default,
-    borderColor: colors.black,
-    borderRadius: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 26,
-    width: 116,
-    marginBottom: 16,
-  },
-});

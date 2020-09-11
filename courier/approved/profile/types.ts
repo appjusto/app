@@ -4,8 +4,8 @@ import { ProfileEraseParamList } from '../../../common/screens/profile/ProfileEr
 export type ProfileParamList = {
   Profile: undefined;
   ProfilePhotos: undefined;
-  Camera: undefined;
   Terms: undefined;
   Bank: undefined;
+  Fleet: undefined;
 } & ProfileEditParamList &
   ProfileEraseParamList;

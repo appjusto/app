@@ -5,7 +5,6 @@ import BackButton from '../../common/components/buttons/BackButton';
 import ProfileEdit from '../../common/screens/profile/ProfileEdit';
 import { t } from '../../strings';
 import BankNavigator from '../approved/profile/bank/BankNavigator';
-import Camera from '../approved/profile/photos/Camera';
 import ProfilePhotos from '../approved/profile/photos/ProfilePhotos';
 import PendingChecklist from './PendingChecklist';
 import ProfileFeedback from './ProfileFeedback';
@@ -33,14 +32,6 @@ export default function () {
         component={ProfilePhotos}
         options={({ navigation }) => ({
           title: t('Fotos e documentos'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
-      />
-      <Stack.Screen
-        name="Camera"
-        component={Camera}
-        options={({ navigation }) => ({
-          title: t('Câmera'),
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />
