@@ -1,10 +1,11 @@
+import { useActionSheet } from '@expo/react-native-action-sheet';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import { isEmpty } from 'lodash';
 import React, { useState, useCallback, useContext, useEffect, useMemo } from 'react';
-import { View, Text, Image, StyleSheet, ImageURISource } from 'react-native';
+import { View, Text, Image, StyleSheet, ImageURISource, Dimensions } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../../assets/icons';
@@ -32,6 +33,8 @@ const defaultImageOptions: ImagePicker.ImagePickerOptions = {
   quality: 1,
 };
 
+const { height } = Dimensions.get('window');
+
 enum UploadStatus {
   Unstarted,
   Uploading,
@@ -50,6 +53,7 @@ export default function ({ navigation }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  const { showActionSheetWithOptions } = useActionSheet();
 
   // app state
   const courier = useSelector(getCourier);
@@ -67,6 +71,7 @@ export default function ({ navigation }: Props) {
   const [uploadingNewDocumentImage, setUploadingNewDocumentImage] = useState<UploadStatus>(
     UploadStatus.Unstarted
   );
+  type ChangeImageType = typeof setNewSelfie;
   const canProceed = useMemo(() => {
     // no reason to upload if nothing has changed
     if (!newSelfie && !newDocumentImage) return false;
@@ -121,22 +126,22 @@ export default function ({ navigation }: Props) {
   }, [newDocumentImage]);
 
   // handlers
-  const pickFromCamera = useCallback(async () => {
+  const pickFromCamera = useCallback(async (changeImage: ChangeImageType) => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA);
     if (granted) {
       const result = await ImagePicker.launchCameraAsync(defaultImageOptions);
       if (result.cancelled) return;
-      setNewSelfie(result);
+      changeImage(result);
     } else {
       alert(t('Precisamos do acesso à câmera'));
     }
   }, []);
-  const pickFromGallery = useCallback(async () => {
+  const pickFromGallery = useCallback(async (changeImage: ChangeImageType) => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (granted) {
       const result = await ImagePicker.launchImageLibraryAsync(defaultImageOptions);
       if (result.cancelled) return;
-      setNewDocumentImage(result);
+      changeImage(result);
     } else {
       alert(t('Precisamos do acesso à sua galeria'));
     }
@@ -150,6 +155,23 @@ export default function ({ navigation }: Props) {
     (!isEmpty(previousDocumentimage) && uploadingNewDocumentImage === UploadStatus.Unstarted) ||
     uploadingNewDocumentImage === UploadStatus.Done;
 
+  const actionSheetHandler = (changeImage: ChangeImageType) =>
+    showActionSheetWithOptions(
+      {
+        options: [t('Tirar uma foto'), t('Escolher da galeria'), t('Cancelar')],
+        cancelButtonIndex: 2,
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 2) {
+          // cancel action
+        } else if (buttonIndex === 1) {
+          pickFromGallery(changeImage);
+        } else if (buttonIndex === 0) {
+          pickFromCamera(changeImage);
+        }
+      }
+    );
+
   // UI
   return (
     <PaddedView style={{ ...screens.lightGrey }}>
@@ -158,7 +180,7 @@ export default function ({ navigation }: Props) {
           'Precisamos da sua foto para incluir nas entregas. Se você optou por Moto e/ou Carro, vamos precisar também da foto da sua CNH; caso contrário, é só enviar a foto do seu RG.'
         )}
       </Text>
-      {/* <View style={{ flex: 1 }} /> */}
+      {/* {height > 700 && <View style={{ flex: 1 }} />} */}
       <View
         style={{
           borderBottomColor: colors.grey,
@@ -170,7 +192,7 @@ export default function ({ navigation }: Props) {
       <ConfigItem
         title={t('Foto do rosto')}
         subtitle={t('Adicionar selfie')}
-        onPress={pickFromCamera}
+        onPress={() => actionSheetHandler(setNewSelfie)}
         checked={selfieCheckHandler}
       >
         {uploadingNewSelfie === UploadStatus.Uploading && (
@@ -182,7 +204,7 @@ export default function ({ navigation }: Props) {
       <ConfigItem
         title={t('RG ou CNH aberta')}
         subtitle={t('Adicionar foto do documento')}
-        onPress={pickFromGallery}
+        onPress={() => actionSheetHandler(setNewDocumentImage)}
         checked={documentImageCheckHandler}
       >
         {uploadingNewDocumentImage === UploadStatus.Uploading && (
@@ -191,12 +213,15 @@ export default function ({ navigation }: Props) {
           </View>
         )}
       </ConfigItem>
-      <View style={{ marginVertical: 32, flexDirection: 'row', justifyContent: 'space-between' }}>
+      <View style={{ flex: 1 }} />
+      <View style={styles.imagesContainer}>
         <DocumentButton title={t('Foto de rosto')} onPress={() => {}} hasTitle={!previousSelfie}>
           <Image
             source={newSelfie ?? previousSelfie ?? icons.selfie}
             resizeMode="cover"
-            style={(newSelfie ?? previousSelfie) !== undefined ? styles.image : styles.icon}
+            style={
+              (newDocumentImage ?? previousDocumentimage) !== undefined ? styles.image : styles.icon
+            }
           />
         </DocumentButton>
         <DocumentButton
@@ -213,6 +238,7 @@ export default function ({ navigation }: Props) {
           />
         </DocumentButton>
       </View>
+      <View style={{ flex: 1 }} />
       <DefaultButton
         title={t('Avançar')}
         disabled={!canProceed}
@@ -228,8 +254,15 @@ const styles = StyleSheet.create({
     height: 48,
   },
   image: {
-    width: 160,
-    height: 160,
+    width: height > 700 ? 180 : 160,
+    height: height > 700 ? 180 : 160,
     borderRadius: 8,
+  },
+  imagesContainer: {
+    flexDirection: height > 700 ? 'column' : 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    height: height > 700 ? 350 : 168,
+    alignItems: 'center',
   },
 });
