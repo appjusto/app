@@ -1,3 +1,4 @@
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import React from 'react';
 import { YellowBox } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -32,7 +33,9 @@ export default () => {
     <PreloadAssets>
       {() => (
         <AppContext>
-          <App />
+          <ActionSheetProvider>
+            <App />
+          </ActionSheetProvider>
         </AppContext>
       )}
     </PreloadAssets>

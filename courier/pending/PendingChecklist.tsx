@@ -105,7 +105,6 @@ export default function ({ navigation, route }: Props) {
             subtitle={t('Envie uma selfie e seus documentos')}
             onPress={() => navigation.navigate('ProfilePhotos')}
             checked={hasImagesUris}
-            // sending={route.params}
           />
           <ConfigItem
             title={t('Dados bancários')}
