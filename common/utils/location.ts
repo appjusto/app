@@ -7,15 +7,15 @@ import Api from '../store/api/api';
 import { isCourierFlavor } from '../store/config/selectors';
 import { updateCourierLocation } from '../store/courier/actions';
 import { getCourier, isCourierWorking } from '../store/courier/selectors';
+import { LocationUpdateResult } from '../store/types';
 
 const TASK_FETCH_LOCATION = 'TASK_FETCH_LOCATION';
 
 export const startLocationUpdatesTask = () => {
   return Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
     accuracy: Location.Accuracy.Highest,
-    // TODO: fine tune these parameters before release
-    distanceInterval: 1, // 5 meter minimum change betweens updates
-    deferredUpdatesInterval: 1000, // 5 seconds minimum interval between updates
+    distanceInterval: 1, // 1 meter minimum change betweens updates
+    deferredUpdatesInterval: 1000, // 1 second minimum interval between updates
     foregroundService: {
       notificationTitle: t('Localização ativa'),
       notificationBody: t('Para desativar, entre no app e pare de trabalhar.'),
@@ -31,19 +31,25 @@ export const stopLocationUpdatesTask = async () => {
   Location.stopLocationUpdatesAsync(TASK_FETCH_LOCATION).catch(() => null);
 };
 
-export const defineLocationUpdatesTask = (store: AppStore, api: Api) => {
-  TaskManager.defineTask(TASK_FETCH_LOCATION, ({ data: { locations }, error }) => {
-    if (error) {
-      // TODO: log `error.message`
-      return;
-    }
-    const [location] = locations;
+const locationTaskExecutor = (store: AppStore, api: Api): TaskManager.TaskManagerTaskExecutor => (
+  body: TaskManager.TaskManagerTaskBody
+) => {
+  if (body.error) {
+    // TODO: log `error.message`
+    return;
+  }
+  const result = body.data as LocationUpdateResult;
+  console.log(result);
+  const [location] = result.locations;
 
-    const state = store.getState();
-    const courier = getCourier(state);
-    const shouldBroadcastLocation = isCourierFlavor(state) && isCourierWorking(state);
-    if (courier && shouldBroadcastLocation) {
-      store.dispatch(updateCourierLocation(api)(courier, location));
-    }
-  });
+  const state = store.getState();
+  const courier = getCourier(state);
+  const shouldBroadcastLocation = isCourierFlavor(state) && isCourierWorking(state);
+  if (courier && shouldBroadcastLocation) {
+    store.dispatch(updateCourierLocation(api)(courier, location));
+  }
+};
+
+export const defineLocationUpdatesTask = (store: AppStore, api: Api) => {
+  TaskManager.defineTask(TASK_FETCH_LOCATION, locationTaskExecutor(store, api));
 };

@@ -1,7 +1,8 @@
-import { Coordinates } from '../../types';
+import { LocationData } from 'expo-location';
+
+import { Fleet } from '../../fleet/types';
 import { ProfileInfo, UserProfile } from '../../user/types';
 import Courier from './Courier';
-import { Fleet } from '../../fleet/types';
 
 export enum CourierStatus {
   Unavailable = 'unavailable',
@@ -30,6 +31,6 @@ export interface CourierProfile extends UserProfile {
 export interface CourierState {
   courier?: Courier;
   order?: object;
-  location?: Coordinates;
+  location?: LocationData;
   banks?: Bank[];
 }

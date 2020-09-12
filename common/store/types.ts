@@ -1,4 +1,5 @@
-export interface Coordinates {
-  latitude: string;
-  longitude: string;
+import { LocationData } from 'expo-location';
+
+export interface LocationUpdateResult {
+  locations: LocationData[];
 }

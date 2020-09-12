@@ -1,3 +1,5 @@
+import { LocationData } from 'expo-location';
+
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
 import { BUSY } from '../ui/actions';
@@ -6,7 +8,7 @@ import Courier from './types/Courier';
 export const SET_LOCATION = 'SET_LOCATION';
 export const UPDATE_BANKS = 'UPDATE_BANKS';
 
-export const updateCourierLocation = (api: Api) => (courier: Courier, location) => (
+export const updateCourierLocation = (api: Api) => (courier: Courier, location: LocationData) => (
   dispatch: AppDispatch
 ) => {
   api.courier().updateCourierLocation(courier, location);

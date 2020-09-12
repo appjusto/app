@@ -1,3 +1,4 @@
+import { LocationData } from 'expo-location';
 import firebase from 'firebase';
 import * as geofirestore from 'geofirestore';
 
@@ -27,7 +28,7 @@ export default class CourierApi {
   }
 
   // update courier location
-  updateCourierLocation(courier: CourierProfile, location) {
+  updateCourierLocation(courier: CourierProfile, location: LocationData) {
     const { coords } = location;
 
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();

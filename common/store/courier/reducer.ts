@@ -30,7 +30,7 @@ export default function (state: CourierState = initialState, action: AnyAction):
       return { ...state, courier: undefined };
     }
     case SET_LOCATION: {
-      return { ...state, location: payload.coords };
+      return { ...state, location: payload };
     }
     default:
       return state;
