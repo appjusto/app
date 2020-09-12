@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableWithoutFeedback } from 'react-native';
+import { useSelector } from 'react-redux';
 
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import { Fleet } from '../../../../common/store/fleet/types';
+import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { borders, texts, colors, padding } from '../../../../common/styles';
 import { currencyFromCents, formatDistance } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
@@ -16,6 +18,10 @@ type Props = {
 };
 
 export default function ({ fleet, selected, onSelect, onConfirm }: Props) {
+  // app state
+  const busy = useSelector(getUIBusy);
+
+  // UI
   return (
     <TouchableWithoutFeedback onPress={onSelect}>
       <View
@@ -71,6 +77,7 @@ export default function ({ fleet, selected, onSelect, onConfirm }: Props) {
           title={t('Confirmar')}
           onPress={onConfirm}
           disabled={!selected}
+          activityIndicator={busy && selected}
         />
       </View>
     </TouchableWithoutFeedback>

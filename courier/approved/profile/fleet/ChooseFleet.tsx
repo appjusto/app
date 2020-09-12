@@ -10,12 +10,15 @@ import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import PaddedView from '../../../../common/components/views/PaddedView';
 import { fetchAvailableCities, fetchApprovedFleets } from '../../../../common/store/fleet/actions';
 import { getAvailableCities, getApprovedFleets } from '../../../../common/store/fleet/selectors';
+import { Fleet, City } from '../../../../common/store/fleet/types';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { texts, screens, colors, padding } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import FleetCard from './FleetCard';
 import { FleetParamList } from './types';
-import { Fleet, City } from '../../../../common/store/fleet/types';
+import { updateProfile } from '../../../../common/store/user/actions';
+import { getCourier } from '../../../../common/store/courier/selectors';
+import { isEmpty } from 'lodash';
 
 type ScreenNavigationProp = StackNavigationProp<FleetParamList, 'ChooseFleet'>;
 type ScreenRouteProp = RouteProp<FleetParamList, 'ChooseFleet'>;
@@ -30,20 +33,22 @@ export default function ({ navigation, route }: Props) {
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
 
-  // state
+  // app state
   const busy = useSelector(getUIBusy);
+  const courier = useSelector(getCourier);
   const availableCities = useSelector(getAvailableCities);
   const approvedFleets = useSelector(getApprovedFleets);
 
   // screen state
-  const [selectedCity, setSelectedCity] = useState<City | null>(null);
-  const [selectedFleet, setSelectedFleet] = useState<Fleet | null>(null);
+  const [selectedCity, setSelectedCity] = useState<City>();
+  const [selectedFleet, setSelectedFleet] = useState<Fleet>();
 
   // effects
   // fetch available cities
   useEffect(() => {
-    dispatch(fetchAvailableCities(api));
+    if (availableCities === undefined) dispatch(fetchAvailableCities(api));
   }, []);
+  // when available cities are fetched, select the first one
   useEffect(() => {
     if (availableCities) setSelectedCity(availableCities[0]);
   }, [availableCities]);
@@ -51,10 +56,18 @@ export default function ({ navigation, route }: Props) {
   useEffect(() => {
     if (selectedCity != null) dispatch(fetchApprovedFleets(api)(selectedCity.id));
   }, [selectedCity]);
+  // when approved fleets are fetched, select courier's
+  useEffect(() => {
+    const courierFleet = approvedFleets?.find((fleet) => fleet.id === courier!.fleet?.id);
+    if (courierFleet !== undefined) {
+      setSelectedFleet(courierFleet);
+    }
+  }, [approvedFleets]);
 
   // handers
-  const confirmFleet = useCallback(() => {
+  const confirmFleet = useCallback(async () => {
     // TODO: change fleet
+    await dispatch(updateProfile(api)(courier!.id!, { fleet: selectedFleet }));
     navigation.goBack();
   }, [selectedFleet]);
 
@@ -91,6 +104,8 @@ export default function ({ navigation, route }: Props) {
             <DefaultButton
               style={{ marginTop: 8 }}
               title={t('Minha cidade não está disponível')}
+              disabled={availableCities === undefined}
+              activityIndicator={busy}
               onPress={() => navigation.navigate('CityUnavailable')}
             />
             <Text style={{ ...texts.big, marginTop: padding }}>{t('Escolha sua frota')}</Text>
@@ -106,7 +121,6 @@ export default function ({ navigation, route }: Props) {
             <DefaultButton
               title={t('Criar uma nova frota')}
               onPress={() => navigation.navigate('CreateFleet')}
-              activityIndicator={busy}
             />
           </PaddedView>
         }

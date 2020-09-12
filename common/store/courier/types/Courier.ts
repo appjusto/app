@@ -20,6 +20,10 @@ export default class Courier extends User {
     return this.source.bankAccount;
   }
 
+  public get fleet() {
+    return this.source.fleet;
+  }
+
   public getSource(): CourierProfile {
     return this.source;
   }

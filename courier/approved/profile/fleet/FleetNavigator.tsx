@@ -5,8 +5,9 @@ import BackButton from '../../../../common/components/buttons/BackButton';
 import { t } from '../../../../strings';
 import ChooseFleet from './ChooseFleet';
 import CreateFleet from './CreateFleet';
+import { FleetParamList } from './types';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<FleetParamList>();
 
 export default function () {
   return (

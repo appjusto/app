@@ -1,6 +1,7 @@
 import { Coordinates } from '../../types';
 import { ProfileInfo, UserProfile } from '../../user/types';
 import Courier from './Courier';
+import { Fleet } from '../../fleet/types';
 
 export enum CourierStatus {
   Unavailable = 'unavailable',
@@ -23,6 +24,7 @@ export interface CourierProfile extends UserProfile {
     account: string;
     digit: string;
   };
+  fleet?: Fleet;
 }
 
 export interface CourierState {

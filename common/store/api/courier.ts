@@ -38,11 +38,17 @@ export default class CourierApi {
       .doc(courier.id);
 
     const { notificationToken } = courier;
+    const { maxDistance, maxDistanceToOrigin } = courier.fleet ?? {
+      maxDistance: 0,
+      maxDistanceToOrigin: 0,
+    };
     // no reason to update courier's location if token is unknown
     if (notificationToken) {
       courierLocationRef.set(
         {
           notificationToken,
+          maxDistance,
+          maxDistanceToOrigin,
           coordinates: new firebase.firestore.GeoPoint(coords.latitude, coords.longitude),
           // accuracy: coords.accuracy,
           // altitude: coords.altitude,
