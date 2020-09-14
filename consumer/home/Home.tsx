@@ -97,7 +97,7 @@ export default function ({ navigation }: Props) {
       {/* history */}
       <View style={{ width: '100%', height: '30%' }}>
         <ImageBackground
-          source={icons.BG}
+          source={icons.backgroundPattern}
           resizeMethod="resize"
           resizeMode="contain"
           style={{ height: 181, width: '100%' }}

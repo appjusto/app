@@ -1,5 +1,6 @@
 const acceptIcon = require('./icons/accept-icon.png');
 const arrowSmall = require('./icons/arrow-small.png');
+const backgroundPatternIcon = require('./icons/background-pattern.png');
 const rejectIcon = require('./icons/cancel-icon.png');
 const iconCheckboxActive = require('./icons/checkbox-active.png');
 const iconCheckboxInactive = require('./icons/checkbox-inactive.png');
@@ -27,7 +28,6 @@ const iconIllustration = require('./icons/illustration-intro-screen.png');
 const iconIllustrationPizza = require('./icons/illustration-pizza.png');
 const logoAppjustoBgWhite = require('./icons/logo-appjusto-bg-white.png');
 const iconOrders = require('./icons/orders.png');
-const rectangleBG = require('./icons/rectangle23.png');
 const iconUser = require('./icons/user.png');
 
 export const accept = acceptIcon;
@@ -57,7 +57,7 @@ export const transitConclusion = iconTransitConclusion;
 export const illustration = iconIllustration;
 export const illustrationPizza = iconIllustrationPizza;
 export const logoWhite = logoAppjustoBgWhite;
-export const BG = rectangleBG;
+export const backgroundPattern = backgroundPatternIcon;
 export const orders = iconOrders;
 export const user = iconUser;
 export const slider = dragButton;
@@ -90,7 +90,7 @@ export default [
   illustration,
   illustrationPizza,
   logoWhite,
-  BG,
+  backgroundPattern,
   orders,
   user,
   slider,

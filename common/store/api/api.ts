@@ -10,10 +10,10 @@ import AuthApi from './auth';
 import ConsumerApi from './consumer';
 import CourierApi from './courier';
 import FilesApi from './files';
+import FleetApi from './fleet';
 import MapsApi from './maps';
 import OrderApi from './order';
 import ProfileApi from './profile';
-import FleetApi from './fleet';
 
 export default class Api {
   private authentication: firebase.auth.Auth;
