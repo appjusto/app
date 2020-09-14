@@ -1,6 +1,5 @@
+import { Place } from 'appjusto-types';
 import { isEmpty } from 'lodash';
-
-import { Place } from '.';
 
 export default class PlaceImpl {
   constructor(protected source: Place) {}
@@ -39,7 +38,7 @@ export default class PlaceImpl {
 
   public valid(): boolean {
     // TODO: implement validation
-    return !isEmpty(this.address) /*&& !isEmpty(this.source.description)*/;
+    return !isEmpty(this.address) /*&& !isEmpty(this.source.instructions)*/;
   }
 
   public toSring() {

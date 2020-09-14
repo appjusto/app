@@ -11,7 +11,6 @@ import BackButton from '../../common/components/buttons/BackButton';
 import useNotification from '../../common/hooks/useNotification';
 import useObserveOrders from '../../common/hooks/useObserveOrders';
 import { getCourier } from '../../common/store/courier/selectors';
-import { CourierStatus } from '../../common/store/courier/types';
 import { getOngoingOrders } from '../../common/store/order/selectors';
 import { OrderMatchRequest } from '../../common/store/order/types';
 import { colors } from '../../common/styles';
@@ -61,7 +60,7 @@ function Main({ navigation }: Props) {
       if (content.data.action === 'matching') {
         console.log(courier?.status);
         // should always be true as couriers should receive matching notifications only when they're available
-        if (courier!.status === CourierStatus.Available) {
+        if (courier!.status === 'available') {
           navigation.navigate('Matching', {
             matchRequest: (content.data as unknown) as OrderMatchRequest,
           });

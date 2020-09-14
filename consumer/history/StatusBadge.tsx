@@ -1,16 +1,16 @@
+import { OrderStatus } from 'appjusto-types';
 import React from 'react';
 import { View, Text } from 'react-native';
 
-import { OrderStatus } from '../../common/store/order/types';
 import { texts, borders, colors } from '../../common/styles';
 import { t } from '../../strings';
 
 const getStatusLabel = (status: OrderStatus) => {
-  if (status === OrderStatus.Quote) return t('Cotação');
-  if (status === OrderStatus.Matching) return t('Aguardando');
-  if (status === OrderStatus.Dispatching) return t('Em andamento');
-  if (status === OrderStatus.Delivered) return t('Entregue');
-  if (status === OrderStatus.Canceled) return t('Cancelado');
+  if (status === 'quote') return t('Cotação');
+  if (status === 'matching') return t('Aguardando');
+  if (status === 'dispatching') return t('Em andamento');
+  if (status === 'delivered') return t('Entregue');
+  if (status === 'canceled') return t('Cancelado');
 };
 
 type Props = {

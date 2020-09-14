@@ -9,7 +9,6 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { cancelOrder } from '../../../common/store/order/actions';
 import { getOrders } from '../../../common/store/order/selectors';
-import { OrderStatus } from '../../../common/store/order/types';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors } from '../../../common/styles';
@@ -38,9 +37,9 @@ export default ({ navigation, route }: Props) => {
   // side effects
   useEffect(() => {
     if (!order) return;
-    if (order.status === OrderStatus.Canceled) {
+    if (order.status === 'canceled') {
       navigation.popToTop();
-    } else if (order.status === OrderStatus.Dispatching) {
+    } else if (order.status === 'dispatching') {
       // TODO: go to the Orders Navigator
     }
   }, [order]);

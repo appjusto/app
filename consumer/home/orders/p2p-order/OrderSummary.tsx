@@ -1,3 +1,4 @@
+import { Card } from 'appjusto-types';
 import React from 'react';
 import { ScrollView, View, Text, Image, TouchableOpacity, Dimensions } from 'react-native';
 
@@ -5,7 +6,6 @@ import * as icons from '../../../../assets/icons';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/views/PaddedView';
 import ShowIf from '../../../../common/components/views/ShowIf';
-import { Card } from '../../../../common/store/consumer/types';
 import OrderImpl from '../../../../common/store/order/types/OrderImpl';
 import { texts, colors, borders, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -81,7 +81,7 @@ export default function ({
             }}
           >
             <Text style={{ ...texts.medium, lineHeight: 22 }}>{t('Valor total a pagar')}</Text>
-            <Text style={{ ...texts.medium, lineHeight: 22 }}>R$ {fare.total}</Text>
+            <Text style={{ ...texts.medium, lineHeight: 22 }}>VALOR TOTAL</Text>
           </View>
         </PaddedView>
       </View>
@@ -97,22 +97,20 @@ export default function ({
           style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: 16 }}
         >
           <Text style={{ ...texts.default, lineHeight: 21 }}>{t('Entregador')}</Text>
-          <Text style={{ ...texts.default, lineHeight: 21 }}>R$ {fare.courierFee}</Text>
+          <Text style={{ ...texts.default, lineHeight: 21 }}>COURIER FEE</Text>
         </View>
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
             {t('Impostos')}
           </Text>
-          <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
-            R$ {fare.taxes}
-          </Text>
+          <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>TAXES</Text>
         </View>
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
             {t('Tarifa financeira')}
           </Text>
           <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
-            R$ {fare.financialFee}
+            FINANCIAL FEE
           </Text>
         </View>
         <View
@@ -124,7 +122,7 @@ export default function ({
           }}
         >
           <Text style={{ ...texts.default, lineHeight: 21 }}>{t('AppJusto')}</Text>
-          <Text style={{ ...texts.default, lineHeight: 21 }}>R$ {fare.platformFee} </Text>
+          <Text style={{ ...texts.default, lineHeight: 21 }}>PLATFORM FEE</Text>
         </View>
         <Text style={{ ...texts.small, lineHeight: 19, color: colors.darkGrey }}>
           O AppJusto cobra menos para ser mais justo com todos. Você pode aumentar a sua

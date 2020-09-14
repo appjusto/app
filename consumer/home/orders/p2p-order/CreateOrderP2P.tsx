@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, ApiContext } from '../../../../common/app/context';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { createOrder, confirmOrder } from '../../../../common/store/order/actions';
+import { getOrderById } from '../../../../common/store/order/selectors';
 import OrderImpl from '../../../../common/store/order/types/OrderImpl';
 import PlaceImpl from '../../../../common/store/order/types/PlaceImpl';
 import { showToast } from '../../../../common/store/ui/actions';
@@ -30,6 +31,8 @@ export default function ({ navigation, route }: Props) {
 
   // app state
   const consumer = useSelector(getConsumer);
+  const getOrder = useSelector(getOrderById);
+
   // screen state
   const [origin, setOrigin] = useState(new PlaceImpl({}));
   const [destination, setDestination] = useState(new PlaceImpl({}));
@@ -37,13 +40,22 @@ export default function ({ navigation, route }: Props) {
   const [card, setCard] = useState(consumer?.getLastCard() ?? null);
 
   // side effects
-  // route changes when interacting with 'AddressComplete' and 'PaymentSelector' screens;
+  // route changes when interacting with other screens;
   useEffect(() => {
-    const { origin: newOrigin, destination: newDestination, cardId } = route.params ?? {};
-    if (newOrigin) setOrigin(origin.merge(newOrigin));
-    if (newDestination) setDestination(destination.merge(newDestination));
-    if (cardId) setCard(consumer?.getCardById(cardId) ?? null);
+    const { orderId, origin: newOrigin, destination: newDestination, cardId } = route.params ?? {};
+    if (orderId) setOrder(new OrderImpl(getOrder(orderId))); // from 'OrderHistory'
+    if (newOrigin) setOrigin(origin.merge(newOrigin)); // from 'AddressComplete'
+    if (newDestination) setDestination(destination.merge(newDestination)); // from 'AddressComplete'
+    if (cardId) setCard(consumer?.getCardById(cardId) ?? null); // from 'PaymentSelector'
   }, [route.params]);
+
+  // to handle `setOrder()` from route changes
+  // if origin/destination aren't valid but those from order's are, we suppose that we need to update origin/destination
+  useEffect(() => {
+    if (!origin.valid() && order?.getOrigin().valid()) setOrigin(order?.getOrigin()!);
+    if (!destination.valid() && order?.getDestination().valid())
+      setDestination(order?.getDestination()!);
+  }, [order]);
 
   // create order whenever origin or destination changes
   useEffect(() => {
@@ -55,9 +67,8 @@ export default function ({ navigation, route }: Props) {
         !order.getDestination().sameAdddress(destination))
     ) {
       (async () => {
-        setOrder(null);
         const newOrder = await dispatch(createOrder(api)(origin.getData(), destination.getData()));
-        setOrder(new OrderImpl(newOrder));
+        if (newOrder) setOrder(new OrderImpl(newOrder));
       })();
     }
   }, [origin, destination]);

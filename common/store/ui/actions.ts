@@ -13,3 +13,16 @@ export const showToast = (message: string, type: string = 'success', autoHide: b
 export const hideToast = () => (dispatch: AppDispatch) => {
   dispatch({ type: HIDE_TOAST });
 };
+
+export const awaitWithFeedback = (promise: Promise<any>) => async (dispatch: AppDispatch) => {
+  dispatch({ type: BUSY, payload: true });
+  try {
+    const result = await promise;
+    dispatch({ type: BUSY, payload: false });
+    return result;
+  } catch (error) {
+    // console.error(error);
+    dispatch({ type: BUSY, payload: false });
+    return null;
+  }
+};

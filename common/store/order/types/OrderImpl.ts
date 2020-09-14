@@ -1,4 +1,5 @@
-import { Order } from '.';
+import { Order } from 'appjusto-types';
+
 import PlaceImpl from './PlaceImpl';
 
 export default class OrderImpl {

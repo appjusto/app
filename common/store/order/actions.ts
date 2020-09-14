@@ -1,11 +1,12 @@
+import { Place, Order } from 'appjusto-types';
 import { CancelToken } from 'axios';
 
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
 import { AutoCompleteResult } from '../api/maps';
 import { ObserveOrdersOptions } from '../api/order';
-import { BUSY } from '../ui/actions';
-import { Place, Order, ChatMessage } from './types';
+import { BUSY, awaitWithFeedback } from '../ui/actions';
+import { ChatMessage } from './types';
 
 export const ORDERS_UPDATED = 'ORDERS_UPDATED';
 export const ORDER_CHAT_UPDATED = 'ORDER_CHAT_UPDATED';
@@ -25,10 +26,7 @@ export const getAddressAutocomplete = (api: Api) => (
 export const createOrder = (api: Api) => (origin: Place, destination: Place) => async (
   dispatch: AppDispatch
 ) => {
-  dispatch({ type: BUSY, payload: true });
-  const result = await api.order().createOrder(origin, destination);
-  dispatch({ type: BUSY, payload: false });
-  return result;
+  return dispatch(awaitWithFeedback(api.order().createOrder(origin, destination)));
 };
 
 export const confirmOrder = (api: Api) => (orderId: string, cardId: string) => async (

@@ -1,8 +1,9 @@
-import { Place } from '../../common/store/order/types';
+import { Place } from 'appjusto-types';
 
 export type HomeNavigatorParamList = {
   Home: undefined;
   CreateOrderP2P?: {
+    orderId: string;
     origin?: Place;
     destination?: Place;
     cardId?: string;

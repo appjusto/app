@@ -20,7 +20,7 @@ type Props = {
 export default function ({ navigation }: Props) {
   // state
   const courier = useSelector(getCourier);
-  const situation = courier!.info!.situation ?? null;
+  const situation = courier!.situation ?? null;
   let header = '';
   let description = '';
   const icon = motocycle;

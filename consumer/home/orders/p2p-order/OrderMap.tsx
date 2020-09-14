@@ -1,10 +1,10 @@
 import polyline from '@mapbox/polyline';
+import { Order } from 'appjusto-types';
 import React from 'react';
 import { Marker, Polyline } from 'react-native-maps';
 
 import { pinUser, pinPackage } from '../../../../assets/icons';
 import DefaultMap from '../../../../common/components/DefaultMap';
-import { Order } from '../../../../common/store/order/types';
 
 type Props = {
   order: Order;

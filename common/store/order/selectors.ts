@@ -1,8 +1,9 @@
+import { Order, OrderStatus, Place } from 'appjusto-types';
 import { first, memoize, uniq } from 'lodash';
 import { createSelector } from 'reselect';
 
 import { State } from '..';
-import { OrderState, Order, Place, OrderStatus, GroupedChatMessages } from './types';
+import { OrderState, GroupedChatMessages } from './types';
 
 export const getOrderState = (state: State): OrderState => state.order;
 
@@ -13,7 +14,7 @@ export const getOrderById = createSelector(getOrderState, (orderState) =>
 export const getOrders = (state: State): Order[] => getOrderState(state).orders;
 
 export const getOngoingOrders = createSelector(getOrders, (orders) =>
-  orders.filter((order) => order.status === OrderStatus.Dispatching)
+  orders.filter((order) => order.status === 'dispatching')
 );
 
 export const getYearsWithOrders = createSelector(getOrders, (orders) =>
@@ -46,12 +47,11 @@ export const getOrdersWithFilter = createSelector(getOrders, (orders) =>
 export const summarizeOrders = memoize((orders: Order[]) =>
   orders.reduce(
     (result, order) => ({
-      delivered: order.status === OrderStatus.Delivered ? result.delivered + 1 : result.delivered,
-      dispatching:
-        order.status === OrderStatus.Dispatching ? result.dispatching + 1 : result.dispatching,
+      delivered: order.status === 'delivered' ? result.delivered + 1 : result.delivered,
+      dispatching: order.status === 'dispatching' ? result.dispatching + 1 : result.dispatching,
       courierFee:
-        order.status === OrderStatus.Delivered
-          ? result.courierFee + order.fare.courierFee
+        order.status === 'delivered'
+          ? result.courierFee + (order.fare?.courierFee ?? 0)
           : result.courierFee,
     }),
     { delivered: 0, dispatching: 0, courierFee: 0 }

@@ -53,7 +53,7 @@ export default function ({ navigation, route }: Props) {
             }}
           >
             <Text style={[texts.medium]}>{t('Você recebeu')}</Text>
-            <Text style={[texts.mediumToBig]}>{formatCurrency(order.fare.courierFee)}</Text>
+            <Text style={[texts.mediumToBig]}>{formatCurrency(order.fare?.courierFee ?? 0)}</Text>
           </View>
         </PaddedView>
         <HR />
@@ -65,7 +65,7 @@ export default function ({ navigation, route }: Props) {
           <View style={{ marginTop: padding }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={[texts.medium]}>{t('Tarifa')}</Text>
-              <Text style={[texts.medium]}>{formatCurrency(order.fare.courierFee)}</Text>
+              <Text style={[texts.medium]}>{formatCurrency(order.fare?.courierFee ?? 0)}</Text>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={styles.priceDetailText}>{t('Gorjeta')}</Text>
@@ -74,15 +74,19 @@ export default function ({ navigation, route }: Props) {
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={styles.priceDetailText}>{t('Impostos')}</Text>
-              <Text style={styles.priceDetailText}>{formatCurrency(order.fare.taxes)}</Text>
+              <Text style={styles.priceDetailText}>{formatCurrency(order.fare?.taxes ?? 0)}</Text>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={styles.priceDetailText}>{t('Tarifa financeira')}</Text>
-              <Text style={styles.priceDetailText}>{formatCurrency(order.fare.financialFee)}</Text>
+              <Text style={styles.priceDetailText}>
+                {formatCurrency(order.fare?.financialFee ?? 0)}
+              </Text>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={styles.priceDetailText}>{t('App Justo')}</Text>
-              <Text style={styles.priceDetailText}>{formatCurrency(order.fare.platformFee)}</Text>
+              <Text style={styles.priceDetailText}>
+                {formatCurrency(order.fare?.platformFee ?? 0)}
+              </Text>
             </View>
           </View>
         </PaddedView>

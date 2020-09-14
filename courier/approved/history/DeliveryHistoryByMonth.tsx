@@ -1,5 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Order } from 'appjusto-types';
 import React from 'react';
 import { View, FlatList, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -7,7 +8,6 @@ import { useSelector } from 'react-redux';
 
 import PaddedView from '../../../common/components/views/PaddedView';
 import { getOrdersWithFilter } from '../../../common/store/order/selectors';
-import { Order, OrderStatus } from '../../../common/store/order/types';
 import { screens, texts, padding, colors } from '../../../common/styles';
 import { hhMMFromDate, formatCurrency } from '../../../common/utils/formatters';
 import { DeliveriesNavigatorParamList } from './types';
@@ -32,7 +32,7 @@ export default function ({ navigation, route }: Props) {
 
   // handlers
   const orderPressHandler = (order: Order) => {
-    if (order.status === OrderStatus.Dispatching) {
+    if (order.status === 'dispatching') {
       navigation.navigate('OngoingDelivery', { orderId: order.id });
     } else {
       navigation.navigate('DeliverySummary', { orderId: order.id });

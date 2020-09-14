@@ -1,5 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Place } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import debounce from 'lodash/debounce';
 import { nanoid } from 'nanoid/non-secure';
@@ -24,7 +25,6 @@ import useAxiosCancelToken from '../../../common/hooks/useAxiosCancelToken';
 import { AutoCompleteResult } from '../../../common/store/api/maps';
 import { getAddressAutocomplete } from '../../../common/store/order/actions';
 import { getPlacesFromPreviousOrders } from '../../../common/store/order/selectors';
-import { Place } from '../../../common/store/order/types';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { texts, screens, colors, padding } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -88,6 +88,10 @@ export default function ({ navigation, route }: Props) {
   );
 
   // effects
+  // auto focus on input
+  useEffect(() => {
+    searchInputRef.current?.focus();
+  }, []);
   // search for suggestions whenever user changes the input
   useEffect(() => {
     // TODO: what would be a better threshold than 3 characteres?
@@ -134,8 +138,8 @@ export default function ({ navigation, route }: Props) {
         ref={searchInputRef}
         defaultValue={searchText}
         value={searchText}
-        title={t('Endereço de retirada')}
-        placeholder={t('Endereço com número')}
+        title={t('Endereço com número')}
+        placeholder={t('Ex: Av. Paulista 1578')}
         onChangeText={textChangeHandler}
         style={{ marginBottom: padding }}
         autoCorrect={false}
@@ -162,7 +166,7 @@ export default function ({ navigation, route }: Props) {
             );
           } else {
             return (
-              <TouchableOpacity onPress={() => selectPlaceHandler({ address: item.description })}>
+              <TouchableOpacity onPress={() => selectPlaceHandler({ address: item.instructions })}>
                 <View style={styles.item}>
                   <Text style={{ ...texts.medium }}>{item.main}</Text>
                   <Text style={{ ...texts.small }}>{item.secondary}</Text>
