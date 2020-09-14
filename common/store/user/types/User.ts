@@ -1,4 +1,4 @@
-import { UserProfile } from '.';
+import { UserProfile } from 'appjusto-types';
 
 export default class User {
   constructor(protected source: UserProfile) {}

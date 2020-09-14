@@ -1,4 +1,5 @@
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
+import { Card } from 'appjusto-types';
 import React, { useRef, useState } from 'react';
 import { View, NativeSyntheticEvent } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -9,7 +10,6 @@ import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../../common/components/texts/LabeledText';
 import PaddedView from '../../../../common/components/views/PaddedView';
-import { Card } from '../../../../common/store/consumer/types';
 import OrderImpl from '../../../../common/store/order/types/OrderImpl';
 import PlaceImpl from '../../../../common/store/order/types/PlaceImpl';
 import { showToast } from '../../../../common/store/ui/actions';

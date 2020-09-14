@@ -21,8 +21,8 @@ export default class PlaceImpl {
     return this.source.location;
   }
 
-  public get description() {
-    return this.source.description;
+  public get intructions() {
+    return this.source.intructions;
   }
 
   public getData(): Place {

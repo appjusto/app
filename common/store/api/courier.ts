@@ -1,17 +1,16 @@
-import { LocationData } from 'expo-location';
+import { Bank } from 'appjusto-types';
 import firebase from 'firebase';
-import * as geofirestore from 'geofirestore';
-
-import { CourierProfile, Bank } from '../courier/types';
 
 export default class CourierApi {
-  private firestoreWithGeo: geofirestore.GeoFirestore;
-
   constructor(
     private firestore: firebase.firestore.Firestore,
     private functions: firebase.functions.Functions
-  ) {
-    this.firestoreWithGeo = geofirestore.initializeApp(this.firestore);
+  ) {}
+
+  // functions
+  // submit profile
+  async submitProfile() {
+    return this.functions.httpsCallable('submitProfile')();
   }
 
   // firestore
@@ -25,41 +24,5 @@ export default class CourierApi {
       });
     }
     return docs;
-  }
-
-  // update courier location
-  updateCourierLocation(courier: CourierProfile, location: LocationData) {
-    const { coords } = location;
-
-    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    const courierLocationRef = this.firestoreWithGeo
-      .collection('locations')
-      .doc('couriers')
-      .collection(courier.status!)
-      .doc(courier.id);
-
-    const { notificationToken } = courier;
-    const { maxDistance, maxDistanceToOrigin } = courier.fleet ?? {
-      maxDistance: 0,
-      maxDistanceToOrigin: 0,
-    };
-    // no reason to update courier's location if token is unknown
-    if (notificationToken) {
-      courierLocationRef.set(
-        {
-          notificationToken,
-          maxDistance,
-          maxDistanceToOrigin,
-          coordinates: new firebase.firestore.GeoPoint(coords.latitude, coords.longitude),
-          // accuracy: coords.accuracy,
-          // altitude: coords.altitude,
-          // altitudeAccuracy: coords.altitudeAccuracy,
-          // heading: coords.heading,
-          // speed: coords.speed,
-          timestamp,
-        },
-        { merge: true }
-      );
-    }
   }
 }

@@ -1,15 +1,9 @@
-import { isEmpty } from 'lodash';
-
 import { ConsumerProfile, Card } from '.';
 import User from '../../user/types/User';
 
 export default class Consumer extends User {
   constructor(protected source: ConsumerProfile) {
     super(source);
-  }
-
-  public get info() {
-    return this.source.info;
   }
 
   public getSource(): ConsumerProfile {
@@ -21,7 +15,7 @@ export default class Consumer extends User {
   }
 
   public getCards(): Card[] {
-    return this.info?.cards ?? [];
+    return this.source.cards ?? [];
   }
 
   public getCardById(cardId: string): Card | undefined {
@@ -29,7 +23,7 @@ export default class Consumer extends User {
   }
 
   public getLastCard(): Card | undefined {
-    if (this.info?.lastCardId) return this.getCardById(this.info.lastCardId);
+    if (this.source.lastCardId) return this.getCardById(this.source.lastCardId);
     return undefined;
   }
 }

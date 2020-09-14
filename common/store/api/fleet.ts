@@ -41,12 +41,11 @@ export default class FleetApi {
   }
 
   // fetch available fleets
-  async fetchApprovedFleets(cityId: string) {
+  async fetchApprovedFleets() {
     const querySnapshot = await this.firestore
       .collection('fleets')
       .where('situation', '==', 'approved')
-      .where('city.id', '==', cityId)
-      .orderBy('totalParticipants', 'desc')
+      .orderBy('participantsOnline', 'desc')
       .get();
     const docs: Fleet[] = [];
     if (!querySnapshot.empty) {

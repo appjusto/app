@@ -44,7 +44,7 @@ export default function ({ fleet, selected, onSelect, onConfirm }: Props) {
         <View>
           <Text style={{ ...texts.default }}>{fleet.name}</Text>
           <Text style={{ ...texts.small, marginTop: 4, color: colors.darkGreen }}>
-            {fleet.totalParticipants} {t('participantes')}
+            {fleet.participantsOnline} {t('participantes online')}
           </Text>
           <Text style={{ ...texts.small, marginTop: 12, height: 54, color: colors.darkGrey }}>
             {fleet.description}

@@ -24,8 +24,8 @@ const createFirebaseConfig = () => {
     appId: FIREBASE_APP_ID,
     emulator: {
       enabled: process.env.FIREBASE_EMULATOR === 'true',
-      databaseURL: `localhost:8080`,
-      functionsURL: `http://localhost:5001`,
+      databaseURL: `192.168.15.3:8080`,
+      functionsURL: `http://192.168.15.3:5001`,
     },
     // measurementId: null,
   };

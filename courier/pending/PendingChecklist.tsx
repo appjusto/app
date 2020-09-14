@@ -8,10 +8,13 @@ import { ApiContext, AppDispatch } from '../../common/app/context';
 import ConfigItem from '../../common/components/ConfigItem';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/views/PaddedView';
-import { getDocumentImageURL, getSelfieURL } from '../../common/store/courier/actions';
+import {
+  submitProfile,
+  getDocumentImageURL,
+  getSelfieURL,
+} from '../../common/store/courier/actions';
 import { getCourier } from '../../common/store/courier/selectors';
 import { getUIBusy } from '../../common/store/ui/selectors';
-import { submitProfile } from '../../common/store/user/actions';
 import { screens, texts, colors } from '../../common/styles';
 import { t } from '../../strings';
 import { PendingParamList } from './types';
@@ -32,7 +35,7 @@ export default function ({ navigation, route }: Props) {
   // app state
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier);
-  const situation = courier!.info?.situation ?? 'pending';
+  const situation = courier!.situation ?? 'pending';
 
   // screen state
   const [hasImagesUris, setHasImagesUris] = useState(false);

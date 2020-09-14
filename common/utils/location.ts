@@ -1,13 +1,13 @@
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
+import firebase from 'firebase';
 
 import { t } from '../../strings';
 import { AppStore } from '../app/context';
 import Api from '../store/api/api';
-import { isCourierFlavor } from '../store/config/selectors';
-import { updateCourierLocation } from '../store/courier/actions';
-import { getCourier, isCourierWorking } from '../store/courier/selectors';
-import { LocationUpdateResult } from '../store/types';
+import { getConsumer } from '../store/consumer/selectors';
+import { getCourier } from '../store/courier/selectors';
+import { updateLocation } from '../store/user/actions';
 
 const TASK_FETCH_LOCATION = 'TASK_FETCH_LOCATION';
 
@@ -31,6 +31,10 @@ export const stopLocationUpdatesTask = async () => {
   Location.stopLocationUpdatesAsync(TASK_FETCH_LOCATION).catch(() => null);
 };
 
+interface LocationUpdateResult {
+  locations: Location.LocationData[];
+}
+
 const locationTaskExecutor = (store: AppStore, api: Api): TaskManager.TaskManagerTaskExecutor => (
   body: TaskManager.TaskManagerTaskBody
 ) => {
@@ -39,15 +43,13 @@ const locationTaskExecutor = (store: AppStore, api: Api): TaskManager.TaskManage
     return;
   }
   const result = body.data as LocationUpdateResult;
-  console.log(result);
   const [location] = result.locations;
+  const { latitude, longitude } = location.coords;
+  const coordinates = new firebase.firestore.GeoPoint(latitude, longitude);
 
   const state = store.getState();
-  const courier = getCourier(state);
-  const shouldBroadcastLocation = isCourierFlavor(state) && isCourierWorking(state);
-  if (courier && shouldBroadcastLocation) {
-    store.dispatch(updateCourierLocation(api)(courier, location));
-  }
+  const profile = getCourier(state) ?? getConsumer(state);
+  if (profile?.id) store.dispatch(updateLocation(api)(profile.id, coordinates));
 };
 
 export const defineLocationUpdatesTask = (store: AppStore, api: Api) => {

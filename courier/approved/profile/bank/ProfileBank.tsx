@@ -1,5 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Bank } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React, { useRef, useState, useEffect, useContext, useMemo } from 'react';
 import { View, Text, TouchableWithoutFeedback, ScrollView, TextInput } from 'react-native';
@@ -12,7 +13,6 @@ import LabeledText from '../../../../common/components/texts/LabeledText';
 import AvoidingView from '../../../../common/components/views/AvoidingView';
 import PaddedView from '../../../../common/components/views/PaddedView';
 import { getCourier } from '../../../../common/store/courier/selectors';
-import { Bank } from '../../../../common/store/courier/types';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { texts, screens, padding, colors, halfPadding } from '../../../../common/styles';

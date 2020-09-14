@@ -1,5 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { CourierStatus } from 'appjusto-types';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useEffect, useContext, useState } from 'react';
 import { StyleSheet, View, Dimensions, Text, Image, Switch } from 'react-native';
@@ -11,13 +12,11 @@ import { ApiContext, AppDispatch } from '../../../common/app/context';
 import useLocationUpdates from '../../../common/hooks/useLocationUpdates';
 import useNotificationToken from '../../../common/hooks/useNotificationToken';
 import { getCourier } from '../../../common/store/courier/selectors';
-import { CourierStatus } from '../../../common/store/courier/types';
 import { showToast } from '../../../common/store/ui/actions';
 import { updateProfile } from '../../../common/store/user/actions';
 import { colors, padding, texts, borders } from '../../../common/styles';
 import { t } from '../../../strings';
 import { HomeParamList } from './types';
-import { isEmpty } from 'lodash';
 
 const { width } = Dimensions.get('window');
 
@@ -37,7 +36,7 @@ export default function ({ navigation }: Props) {
   // app state
   const courier = useSelector(getCourier);
   const status = courier!.status;
-  const working = status !== CourierStatus.Unavailable;
+  const working = status !== undefined && status !== ('unavailable' as CourierStatus);
 
   // state
   const [locationKey, setLocationKey] = useState(nanoid());
@@ -68,14 +67,14 @@ export default function ({ navigation }: Props) {
   }, [working, locationPermission]);
 
   const toggleWorking = () => {
-    if (status === CourierStatus.Dispatching) {
+    if (status === 'dispatching') {
       dispatch(
         showToast(t('Você precisa finalizar a entrega antes de parar de trabalhar.'), 'error')
       );
       return;
     }
-    const newStatus = working ? CourierStatus.Unavailable : CourierStatus.Available;
-    if (newStatus === CourierStatus.Available) {
+    const newStatus: CourierStatus = working ? 'unavailable' : 'available';
+    if (newStatus === 'available') {
       setLocationKey(nanoid());
     }
     dispatch(updateProfile(api)(courier!.id!, { status: newStatus }));

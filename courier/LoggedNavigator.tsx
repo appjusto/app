@@ -18,7 +18,7 @@ export default function () {
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
   const courier = useSelector(getCourier);
-  const situation = courier?.info?.situation;
+  const situation = courier?.situation;
 
   // side effects
   // subscribe for profile changes

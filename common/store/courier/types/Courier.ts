@@ -1,6 +1,6 @@
+import { CourierProfile } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 
-import { CourierProfile } from '.';
 import User from '../../user/types/User';
 
 export default class Courier extends User {
@@ -12,8 +12,8 @@ export default class Courier extends User {
     return this.source.status;
   }
 
-  public get info() {
-    return this.source.info;
+  public get situation() {
+    return this.source.situation;
   }
 
   public get bankAccount() {

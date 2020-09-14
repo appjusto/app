@@ -1,5 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Bank } from 'appjusto-types';
 import React, { useState, useCallback, useEffect, useContext, useMemo } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,7 +11,6 @@ import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import PaddedView from '../../../../common/components/views/PaddedView';
 import { fetchBanks } from '../../../../common/store/courier/actions';
 import { getBanks } from '../../../../common/store/courier/selectors';
-import { Bank } from '../../../../common/store/courier/types';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { texts, screens, padding } from '../../../../common/styles';
 import { t } from '../../../../strings';

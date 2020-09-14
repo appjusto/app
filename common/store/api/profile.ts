@@ -1,32 +1,25 @@
+import { UserProfile, CourierProfile, ConsumerProfile } from 'appjusto-types';
 import firebase from 'firebase';
-
-import { UserProfile, ProfileInfo } from '../user/types';
+import * as geofirestore from 'geofirestore';
 
 export default class ProfileApi {
+  private firestoreWithGeo: geofirestore.GeoFirestore;
   constructor(
     private firestore: firebase.firestore.Firestore,
     private functions: firebase.functions.Functions,
     private collectionName: string
-  ) {}
+  ) {
+    this.firestoreWithGeo = geofirestore.initializeApp(this.firestore);
+  }
 
   // private helpers
   private getProfileRef(id: string) {
     return this.firestore.collection(this.collectionName).doc(id);
   }
-  private getProfilePrivateInfoRef(id: string) {
-    return this.getProfileRef(id).collection('info').doc('private');
-  }
   private async createProfile(id: string) {
     await this.getProfileRef(id).set({
-      updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-    });
-  }
-  // functions
-  // submit profile
-  async submitProfile() {
-    return this.functions.httpsCallable('submitProfile')({
-      collectionName: this.collectionName,
-    });
+      situation: 'pending',
+    } as UserProfile);
   }
 
   // firestore
@@ -46,25 +39,14 @@ export default class ProfileApi {
     return unsubscribe;
   }
 
-  // observe for private info changes
-  observePrivateInfo(
-    id: string,
-    resultHandler: (profile: ProfileInfo) => void
-  ): firebase.Unsubscribe {
-    const unsubscribe = this.getProfilePrivateInfoRef(id).onSnapshot(
-      (doc) => {
-        resultHandler(doc.data() as ProfileInfo);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-    // returns the unsubscribe function
-    return unsubscribe;
+  // update profile
+  updateProfile(id: string, changes: CourierProfile | ConsumerProfile) {
+    return this.getProfileRef(id).set(changes, { merge: true });
   }
 
-  // update profile
-  updateProfile(id: string, changes: object) {
-    return this.getProfileRef(id).set(changes, { merge: true });
+  updateLocation(id: string, location: firebase.firestore.GeoPoint) {
+    return this.firestoreWithGeo.collection(this.collectionName).doc(id).update({
+      coordinates: location,
+    });
   }
 }

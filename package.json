@@ -19,6 +19,7 @@
     "@react-navigation/native": "^5.6.1",
     "@react-navigation/stack": "^5.6.2",
     "@types/lodash": "^4.14.158",
+    "appjusto-types": "file:../types",
     "axios": "^0.19.2",
     "expo": "^38.0.0",
     "expo-analytics-segment": "~8.2.1",

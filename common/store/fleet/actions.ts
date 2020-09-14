@@ -20,11 +20,9 @@ export const fetchAllCities = (api: Api) => async (dispatch: AppDispatch) => {
   dispatch({ type: BUSY, payload: false });
 };
 
-export const fetchApprovedFleets = (api: Api) => (cityId: string) => async (
-  dispatch: AppDispatch
-) => {
+export const fetchApprovedFleets = (api: Api) => async (dispatch: AppDispatch) => {
   dispatch({ type: BUSY, payload: true });
-  const fleets = await api.fleet().fetchApprovedFleets(cityId);
+  const fleets = await api.fleet().fetchApprovedFleets();
   dispatch({ type: UPDATE_APPROVED_FLEETS, payload: fleets });
   dispatch({ type: BUSY, payload: false });
 };
