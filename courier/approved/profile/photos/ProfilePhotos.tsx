@@ -254,15 +254,15 @@ const styles = StyleSheet.create({
     height: 48,
   },
   image: {
-    width: height > 700 ? 180 : 160,
-    height: height > 700 ? 180 : 160,
+    width: 160,
+    height: 160,
     borderRadius: 8,
   },
   imagesContainer: {
     flexDirection: height > 700 ? 'column' : 'row',
     justifyContent: 'space-between',
     width: '100%',
-    height: height > 700 ? 350 : 168,
+    height: height > 700 ? 340 : 168,
     alignItems: 'center',
   },
 });

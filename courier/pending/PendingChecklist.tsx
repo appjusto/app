@@ -112,6 +112,12 @@ export default function ({ navigation, route }: Props) {
             onPress={() => navigation.navigate('Bank')}
             checked={courier!.bankAccountSet()}
           />
+          <ConfigItem
+            title={t('Escolha sua frota')}
+            subtitle={t('Faça parte de uma frota existente ou crie sua própria frota')}
+            onPress={() => {}}
+            // checked={courier!.bankAccountSet()}
+          />
         </PaddedView>
       </ScrollView>
     </View>

@@ -94,7 +94,7 @@ export default function ({ navigation, route }: Props) {
   return (
     <PaddedView style={{ ...screens.lightGrey }}>
       <AvoidingView>
-        <ScrollView>
+        <ScrollView contentContainerStyle={{ flex: 1 }}>
           <DefaultInput
             title={t('Nome')}
             value={name}
@@ -159,6 +159,7 @@ export default function ({ navigation, route }: Props) {
               </View>
             )}
           </ShowIf>
+          <View style={{ flex: 1 }} />
           <DefaultButton
             style={{ marginVertical: padding }}
             title={t('Atualizar')}
@@ -166,7 +167,6 @@ export default function ({ navigation, route }: Props) {
             disabled={busy}
             activityIndicator={busy}
           />
-          <View style={{ flex: 1 }} />
         </ScrollView>
       </AvoidingView>
     </PaddedView>

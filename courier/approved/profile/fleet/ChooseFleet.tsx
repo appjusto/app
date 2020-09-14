@@ -10,12 +10,12 @@ import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import PaddedView from '../../../../common/components/views/PaddedView';
 import { fetchAvailableCities, fetchApprovedFleets } from '../../../../common/store/fleet/actions';
 import { getAvailableCities, getApprovedFleets } from '../../../../common/store/fleet/selectors';
+import { Fleet, City } from '../../../../common/store/fleet/types';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { texts, screens, colors, padding } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import FleetCard from './FleetCard';
 import { FleetParamList } from './types';
-import { Fleet, City } from '../../../../common/store/fleet/types';
 
 type ScreenNavigationProp = StackNavigationProp<FleetParamList, 'ChooseFleet'>;
 type ScreenRouteProp = RouteProp<FleetParamList, 'ChooseFleet'>;
