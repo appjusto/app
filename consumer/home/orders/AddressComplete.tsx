@@ -103,7 +103,8 @@ export default function ({ navigation, route }: Props) {
   // update search text when user selects a place from suggestion list
   useEffect(() => {
     if (selectedPlace) {
-      setSearchText(selectedPlace.address!);
+      console.log(selectedPlace);
+      setSearchText(selectedPlace.address ?? '');
     }
   }, [selectedPlace]);
 
@@ -166,7 +167,7 @@ export default function ({ navigation, route }: Props) {
             );
           } else {
             return (
-              <TouchableOpacity onPress={() => selectPlaceHandler({ address: item.instructions })}>
+              <TouchableOpacity onPress={() => selectPlaceHandler({ address: item.description })}>
                 <View style={styles.item}>
                   <Text style={{ ...texts.medium }}>{item.main}</Text>
                   <Text style={{ ...texts.small }}>{item.secondary}</Text>

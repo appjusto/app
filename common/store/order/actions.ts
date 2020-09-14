@@ -29,13 +29,15 @@ export const createOrder = (api: Api) => (origin: Place, destination: Place) => 
   return dispatch(awaitWithFeedback(api.order().createOrder(origin, destination)));
 };
 
-export const confirmOrder = (api: Api) => (orderId: string, cardId: string) => async (
-  dispatch: AppDispatch
-) => {
-  dispatch({ type: BUSY, payload: true });
-  const result = await api.order().confirmOrder(orderId, cardId);
-  dispatch({ type: BUSY, payload: false });
-  return result;
+export const confirmOrder = (api: Api) => (
+  orderId: string,
+  cardId: string,
+  fleetId: string,
+  platformFee: number
+) => (dispatch: AppDispatch) => {
+  return dispatch(
+    awaitWithFeedback(api.order().confirmOrder(orderId, cardId, fleetId, platformFee))
+  );
 };
 
 export const cancelOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {

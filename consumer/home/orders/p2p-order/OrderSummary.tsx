@@ -1,5 +1,5 @@
 import { Card, Order } from 'appjusto-types';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   View,
@@ -31,7 +31,7 @@ type Props = {
   card: Card | null;
   waiting: boolean;
   editStepHandler: (index: number) => void;
-  nextStepHandler: () => void;
+  confirmOrder: (fleetId: string, platformFee: number) => void;
   navigateToFillPaymentInfo: () => void;
 };
 
@@ -40,11 +40,19 @@ export default function ({
   card,
   waiting,
   editStepHandler,
-  nextStepHandler,
+  confirmOrder,
   navigateToFillPaymentInfo,
 }: Props) {
+  // context
   const { height } = Dimensions.get('window');
-  const { origin, destination, distance, duration, fare } = order;
+  const { origin, destination, distance, duration } = order;
+
+  // state
+  const [selectedFare, setSelectedFare] = useState(order.fare ?? order.quotes?.[0]);
+
+  // effects
+
+  // UI
   return (
     <ScrollView style={{ flex: 1 }}>
       {/* show map if it was hidden on previous pages */}
@@ -90,7 +98,28 @@ export default function ({
               {order.quotes?.length ?? 0} {t('frotas ativas no momento')}
             </Text>
           </View>
-          {/* <FlatList data={order.quotes} keyExtractor={null} /> */}
+          <Text style={{ ...texts.small, color: colors.darkGrey }}>
+            {t(
+              'Você pode escolher a frota que quiser para sua entrega. Frotas podem ter preços e características diferentes.'
+            )}
+          </Text>
+          <FlatList
+            data={order.quotes}
+            keyExtractor={(item) => item.fleet.id}
+            renderItem={({ item }) => {
+              return (
+                <View style={{ width: 156, ...borders.default }}>
+                  <View style={{ backgroundColor: colors.lightGreen }}>
+                    <Text style={[texts.default]}>{item.fleet.name}</Text>
+                  </View>
+                  <View>
+                    <Text>{formatCurrency(item.total)}</Text>
+                  </View>
+                </View>
+              );
+            }}
+            horizontal
+          />
         </PaddedView>
 
         <HR height={padding} />
@@ -105,15 +134,15 @@ export default function ({
             }}
           >
             <Text style={{ ...texts.medium, ...texts.bold }}>{t('Valor total a pagar')}</Text>
-            <Text style={{ ...texts.mediumToBig }}>{formatCurrency(fare?.total ?? 0)}</Text>
+            <Text style={{ ...texts.mediumToBig }}>{formatCurrency(selectedFare?.total ?? 0)}</Text>
           </View>
         </PaddedView>
       </View>
 
       <View style={{ ...screens.lightGrey, paddingVertical: 24 }}>
         <View>
-          <Text style={{ ...texts.default, lineHeight: 22 }}>{t('Entenda os valores')}</Text>
-          <Text style={{ ...texts.small, lineHeight: 18, color: colors.darkGrey }}>
+          <Text style={{ ...texts.default }}>{t('Entenda os valores')}</Text>
+          <Text style={{ ...texts.small, color: colors.darkGrey }}>
             {t('Somos transparentes do início ao fim da entrega')}
           </Text>
         </View>
@@ -122,7 +151,7 @@ export default function ({
         >
           <Text style={{ ...texts.default, lineHeight: 21 }}>{t('Entregador')}</Text>
           <Text style={{ ...texts.default, lineHeight: 21 }}>
-            {formatCurrency(fare?.courierFee ?? 0)}
+            {formatCurrency(selectedFare?.courierFee ?? 0)}
           </Text>
         </View>
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -130,7 +159,7 @@ export default function ({
             {t('Impostos')}
           </Text>
           <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
-            {formatCurrency(fare?.taxes ?? 0)}
+            {formatCurrency(selectedFare?.taxes ?? 0)}
           </Text>
         </View>
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -138,7 +167,7 @@ export default function ({
             {t('Tarifa financeira')}
           </Text>
           <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
-            {formatCurrency(fare?.financialFee ?? 0)}
+            {formatCurrency(selectedFare?.financialFee ?? 0)}
           </Text>
         </View>
         <View
@@ -151,7 +180,7 @@ export default function ({
         >
           <Text style={{ ...texts.default, lineHeight: 21 }}>{t('AppJusto')}</Text>
           <Text style={{ ...texts.default, lineHeight: 21 }}>
-            {formatCurrency(fare?.platformFee ?? 0)}
+            {formatCurrency(selectedFare?.platformFee ?? 0)}
           </Text>
         </View>
         <Text style={{ ...texts.small, lineHeight: 19, color: colors.darkGrey }}>
@@ -186,7 +215,7 @@ export default function ({
 
       <DefaultButton
         title={t('Fazer pedido')}
-        onPress={nextStepHandler}
+        onPress={() => confirmOrder(selectedFare?.fleet?.id!, 100)}
         disabled={!card || waiting}
         activityIndicator={waiting}
       />

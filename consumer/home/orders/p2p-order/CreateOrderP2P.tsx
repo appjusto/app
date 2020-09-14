@@ -89,10 +89,11 @@ export default function ({ navigation, route }: Props) {
     else navigation.navigate('ProfilePaymentMethods', { returnScreen: 'CreateOrderP2P' });
   };
   // confirm order
-  const confirmOrderHandler = async () => {
+  const confirmOrderHandler = async (fleetId: string, platformFee: number) => {
     try {
       const orderId = order!.getData().id;
-      await dispatch(confirmOrder(api)(orderId, card!.id));
+      const result = await dispatch(confirmOrder(api)(orderId, card!.id, fleetId, platformFee));
+      console.log(result);
       navigation.replace('OrderFeedback', { orderId });
     } catch (error) {
       dispatch(showToast(error.toString()));

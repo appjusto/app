@@ -27,7 +27,7 @@ type Props = {
   card: Card | null;
   navigateToAddressComplete: (value: string, returnParam: string) => void;
   navigateToFillPaymentInfo: () => void;
-  confirmOrder: () => Promise<void>;
+  confirmOrder: (fleetId: string) => Promise<void>;
 };
 
 export default function ({
@@ -72,9 +72,7 @@ export default function ({
   const nextStepHandler = async (): Promise<void> => {
     const nextStep = step + 1;
     if (stepReady(nextStep)) {
-      if (nextStep === Steps.ConfirmingOrder) {
-        await confirmOrder();
-      } else {
+      if (nextStep !== Steps.ConfirmingOrder) {
         nextPage();
       }
     } else {
@@ -184,7 +182,7 @@ export default function ({
             card={card}
             waiting={busy}
             editStepHandler={setPage}
-            nextStepHandler={nextStepHandler}
+            confirmOrder={confirmOrder}
             navigateToFillPaymentInfo={navigateToFillPaymentInfo}
           />
         )}

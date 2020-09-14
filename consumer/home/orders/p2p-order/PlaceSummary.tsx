@@ -1,3 +1,4 @@
+import { Place } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { View, Text, Image } from 'react-native';
@@ -5,7 +6,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import * as icons from '../../../../assets/icons';
 import ShowIf from '../../../../common/components/views/ShowIf';
-import { Place } from '../../../../common/store/order/types';
 import { texts, colors } from '../../../../common/styles';
 
 type Props = {

@@ -1,6 +1,7 @@
+import { Place, Order } from 'appjusto-types';
 import firebase from 'firebase';
 
-import { Order, Place, ChatMessage } from '../order/types';
+import { ChatMessage } from '../order/types';
 
 export type ObserveOrdersOptions = {
   createdBy?: string;
@@ -19,8 +20,18 @@ export default class OrderApi {
     return (await this.functions.httpsCallable('createOrder')({ origin, destination })).data;
   }
 
-  async confirmOrder(orderId: string, cardId: string) {
-    return (await this.functions.httpsCallable('confirmOrder')({ orderId, cardId })).data;
+  async confirmOrder(orderId: string, cardId: string, fleetId: string, platformFee: number) {
+    try {
+      const result = await this.functions.httpsCallable('confirmOrder')({
+        orderId,
+        cardId,
+        fleetId,
+        platformFee,
+      });
+      return result.data;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async cancelOrder(orderId: string) {
