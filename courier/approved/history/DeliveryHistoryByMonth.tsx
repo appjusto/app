@@ -50,7 +50,7 @@ export default function ({ navigation, route }: Props) {
             <TouchableOpacity onPress={() => orderPressHandler(item)}>
               <PaddedView>
                 <Text style={{ ...texts.medium, marginBottom: padding }}>
-                  {formatCurrency(item.fare.courierFee)}
+                  {formatCurrency(item.fare!.courierFee)}
                 </Text>
                 <Text style={[texts.medium, { color: colors.darkGrey }]}>
                   {item.origin.address}

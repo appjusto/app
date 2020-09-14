@@ -115,11 +115,9 @@ export default function ({
               navigateToAddressComplete(origin.address ?? '', 'origin');
             }}
           >
-            <View>
-              <LabeledText title={t('Endereço de retirada')}>
-                {origin.getData().address ?? t('Endereço com número')}
-              </LabeledText>
-            </View>
+            <LabeledText title={t('Endereço de retirada')}>
+              {origin.getData().address ?? t('Endereço com número')}
+            </LabeledText>
           </TouchableWithoutFeedback>
 
           <DefaultInput
@@ -151,7 +149,7 @@ export default function ({
                 navigateToAddressComplete(destination.address ?? '', 'destination');
               }}
             >
-              <LabeledText style={{ marginTop: padding }} title={t('Endereço de entrega')}>
+              <LabeledText title={t('Endereço de entrega')}>
                 {destination.getData().address ?? t('Endereço com número')}
               </LabeledText>
             </TouchableWithoutFeedback>
@@ -182,7 +180,7 @@ export default function ({
         {/* confirmation */}
         {order?.valid() === true && (
           <OrderSummary
-            order={order!}
+            order={order!.getData()}
             card={card}
             waiting={busy}
             editStepHandler={setPage}

@@ -1,19 +1,33 @@
-import { Card } from 'appjusto-types';
+import { Card, Order } from 'appjusto-types';
 import React from 'react';
-import { ScrollView, View, Text, Image, TouchableOpacity, Dimensions } from 'react-native';
+import {
+  ScrollView,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+  FlatList,
+} from 'react-native';
 
 import * as icons from '../../../../assets/icons';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import RoundedText from '../../../../common/components/texts/RoundedText';
+import HR from '../../../../common/components/views/HR';
 import PaddedView from '../../../../common/components/views/PaddedView';
 import ShowIf from '../../../../common/components/views/ShowIf';
-import OrderImpl from '../../../../common/store/order/types/OrderImpl';
-import { texts, colors, borders, screens } from '../../../../common/styles';
+import { texts, colors, screens, padding, borders } from '../../../../common/styles';
+import {
+  formatDistance,
+  formatDuration,
+  formatCurrency,
+} from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import OrderMap from './OrderMap';
 import PlaceSummary from './PlaceSummary';
 
 type Props = {
-  order: OrderImpl;
+  order: Order;
   card: Card | null;
   waiting: boolean;
   editStepHandler: (index: number) => void;
@@ -30,19 +44,19 @@ export default function ({
   navigateToFillPaymentInfo,
 }: Props) {
   const { height } = Dimensions.get('window');
-  const { origin, destination, distance, duration, fare } = order.getData();
+  const { origin, destination, distance, duration, fare } = order;
   return (
     <ScrollView style={{ flex: 1 }}>
       {/* show map if it was hidden on previous pages */}
       <ShowIf test={height < 700}>
         {() => (
           <View style={{ height: 160 }}>
-            <OrderMap order={order.getData()} />
+            <OrderMap order={order} />
           </View>
         )}
       </ShowIf>
       <View style={{ flex: 1 }}>
-        {/* origin and destionatin */}
+        {/* origin, destination, distance, duration */}
         <PaddedView>
           <PlaceSummary
             title={t('Retirada')}
@@ -54,34 +68,44 @@ export default function ({
             place={destination}
             editStepHandler={() => editStepHandler(1)}
           />
+
+          <RoundedText>
+            {`${formatDistance(distance)} \u25CF ${formatDuration(duration)}`}
+          </RoundedText>
         </PaddedView>
+
+        <HR height={padding} />
+
+        {/* choose fare */}
+        <PaddedView>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ ...texts.medium, ...texts.bold }}>{t('Escolha a frota')}</Text>
+            <Text style={{ ...texts.small }}>
+              {order.quotes?.length ?? 0} {t('frotas ativas no momento')}
+            </Text>
+          </View>
+          {/* <FlatList data={order.quotes} keyExtractor={null} /> */}
+        </PaddedView>
+
+        <HR height={padding} />
 
         {/* details */}
         <PaddedView>
           <View
             style={{
-              ...borders.default,
-              paddingHorizontal: 8,
               flexDirection: 'row',
+              justifyContent: 'space-between',
               alignItems: 'center',
-              alignSelf: 'flex-start',
-              justifyContent: 'space-between',
             }}
           >
-            <Text>{distance}</Text>
-            <Text>{duration}</Text>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 16,
-              justifyContent: 'space-between',
-              height: 60,
-              width: '100%',
-            }}
-          >
-            <Text style={{ ...texts.medium, lineHeight: 22 }}>{t('Valor total a pagar')}</Text>
-            <Text style={{ ...texts.medium, lineHeight: 22 }}>VALOR TOTAL</Text>
+            <Text style={{ ...texts.medium, ...texts.bold }}>{t('Valor total a pagar')}</Text>
+            <Text style={{ ...texts.mediumToBig }}>{formatCurrency(fare?.total ?? 0)}</Text>
           </View>
         </PaddedView>
       </View>
@@ -97,20 +121,24 @@ export default function ({
           style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: 16 }}
         >
           <Text style={{ ...texts.default, lineHeight: 21 }}>{t('Entregador')}</Text>
-          <Text style={{ ...texts.default, lineHeight: 21 }}>COURIER FEE</Text>
+          <Text style={{ ...texts.default, lineHeight: 21 }}>
+            {formatCurrency(fare?.courierFee ?? 0)}
+          </Text>
         </View>
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
             {t('Impostos')}
           </Text>
-          <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>TAXES</Text>
+          <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
+            {formatCurrency(fare?.taxes ?? 0)}
+          </Text>
         </View>
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
             {t('Tarifa financeira')}
           </Text>
           <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
-            FINANCIAL FEE
+            {formatCurrency(fare?.financialFee ?? 0)}
           </Text>
         </View>
         <View
@@ -122,7 +150,9 @@ export default function ({
           }}
         >
           <Text style={{ ...texts.default, lineHeight: 21 }}>{t('AppJusto')}</Text>
-          <Text style={{ ...texts.default, lineHeight: 21 }}>PLATFORM FEE</Text>
+          <Text style={{ ...texts.default, lineHeight: 21 }}>
+            {formatCurrency(fare?.platformFee ?? 0)}
+          </Text>
         </View>
         <Text style={{ ...texts.small, lineHeight: 19, color: colors.darkGrey }}>
           O AppJusto cobra menos para ser mais justo com todos. Você pode aumentar a sua

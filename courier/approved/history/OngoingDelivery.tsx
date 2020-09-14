@@ -12,7 +12,6 @@ import RoundedText from '../../../common/components/texts/RoundedText';
 import PaddedView from '../../../common/components/views/PaddedView';
 import { nextDispatchingState, completeDelivery } from '../../../common/store/order/actions';
 import { getOrderById } from '../../../common/store/order/selectors';
-import { DispatchingState } from '../../../common/store/order/types';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { colors, screens, texts } from '../../../common/styles';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
@@ -39,7 +38,7 @@ export default function ({ navigation, route }: Props) {
 
   // handlers
   const nextStatepHandler = useCallback(async () => {
-    if (order.dispatchingState !== DispatchingState.ArrivedDestination) {
+    if (order.dispatchingState !== 'arrived-destination') {
       dispatch(nextDispatchingState(api)(order.id));
     } else {
       dispatch(completeDelivery(api)(order.id));
@@ -52,13 +51,13 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   const nextStepLabel = useMemo(() => {
-    if (order.dispatchingState === DispatchingState.GoingPickUp) {
+    if (order.dispatchingState === 'going-pickup') {
       return t('Cheguei no local de retirada');
-    } else if (order.dispatchingState === DispatchingState.ArrivedPickUp) {
+    } else if (order.dispatchingState === 'arrived-pickup') {
       return t('Sai para a entrega');
-    } else if (order.dispatchingState === DispatchingState.GoingDestination) {
+    } else if (order.dispatchingState === 'going-destination') {
       return t('Cheguei no local de entrega');
-    } else if (order.dispatchingState === DispatchingState.ArrivedDestination) {
+    } else if (order.dispatchingState === 'arrived-destination') {
       return t('Finalizar entrega');
     }
     return '';

@@ -94,6 +94,9 @@ export const texts = StyleSheet.create({
     fontSize: 40,
     lineHeight: 48,
   },
+  bold: {
+    fontFamily: 'BarlowBold',
+  },
 });
 
 export const flex = StyleSheet.create({
