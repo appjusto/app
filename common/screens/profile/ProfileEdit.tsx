@@ -69,7 +69,7 @@ export default function ({ navigation, route }: Props) {
   // handlers
   const updateProfileHandler = async () => {
     const newUser = { ...user, name, surname, phone, cpf };
-    if (!allowPartialSave && personalInfoSet(newUser)) {
+    if (!allowPartialSave && !personalInfoSet(newUser)) {
       dispatch(showToast(t('Você precisa preencher todos os dados.')));
       return;
     }
