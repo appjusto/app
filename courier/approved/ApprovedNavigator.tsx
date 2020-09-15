@@ -10,7 +10,7 @@ import * as icons from '../../assets/icons';
 import BackButton from '../../common/components/buttons/BackButton';
 import useNotification from '../../common/hooks/useNotification';
 import useObserveOrders from '../../common/hooks/useObserveOrders';
-import { getCourier } from '../../common/store/courier/selectors';
+import { getCourier, getCourierStatus } from '../../common/store/courier/selectors';
 import { getOngoingOrders } from '../../common/store/order/selectors';
 import { OrderMatchRequest } from '../../common/store/order/types';
 import { colors } from '../../common/styles';
@@ -35,6 +35,7 @@ const MainNavigator = createBottomTabNavigator<MainParamList>();
 function Main({ navigation }: Props) {
   // app state
   const courier = useSelector(getCourier);
+  const status = useSelector(getCourierStatus);
   const ongoingOrders = useSelector(getOngoingOrders);
 
   // effects
@@ -58,16 +59,17 @@ function Main({ navigation }: Props) {
   const notificationHandler = useCallback(
     (content: Notifications.NotificationContent) => {
       if (content.data.action === 'matching') {
-        console.log(courier?.status);
+        console.log(status);
         // should always be true as couriers should receive matching notifications only when they're available
-        if (courier!.status === 'available') {
+        if (status === 'available') {
+          console.log(content.data);
           navigation.navigate('Matching', {
             matchRequest: (content.data as unknown) as OrderMatchRequest,
           });
         }
       }
     },
-    [navigation]
+    [navigation, status]
   );
   useNotification(notificationHandler);
 

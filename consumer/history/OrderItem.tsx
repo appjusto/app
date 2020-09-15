@@ -1,8 +1,8 @@
+import { Order } from 'appjusto-types';
 import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 
 import ArrowBox from '../../common/components/ArrowBox';
-import { Order } from '../../common/store/order/types';
 import { colors, texts, borders, padding } from '../../common/styles';
 import { t } from '../../strings';
 import StatusBadge from './StatusBadge';
@@ -18,7 +18,7 @@ export default function ({ order, onPress }: Props) {
       <View style={{ padding, borderBottomColor: colors.grey, borderBottomWidth: 1 }}>
         <View style={{ flexDirection: 'row' }}>
           <View style={{ ...borders.default }}>
-            <Text style={{ ...texts.default }}>{order.origin.address}</Text>
+            <Text style={{ ...texts.default }}>{order.origin.address?.description}</Text>
             <Text style={{ ...texts.default, color: colors.darkGrey }}>{t('Pedido No 1')}</Text>
             <Text style={{ ...texts.default, color: colors.darkGrey }}>
               {t('10/07/2020 - 12h30')}

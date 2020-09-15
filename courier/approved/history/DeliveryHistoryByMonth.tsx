@@ -33,9 +33,9 @@ export default function ({ navigation, route }: Props) {
   // handlers
   const orderPressHandler = (order: Order) => {
     if (order.status === 'dispatching') {
-      navigation.navigate('OngoingDelivery', { orderId: order.id });
+      navigation.navigate('OngoingDelivery', { orderId: order.id! });
     } else {
-      navigation.navigate('DeliverySummary', { orderId: order.id });
+      navigation.navigate('DeliverySummary', { orderId: order.id! });
     }
   };
   // UI
@@ -44,7 +44,7 @@ export default function ({ navigation, route }: Props) {
       <FlatList
         style={{ flex: 1 }}
         data={orders}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id!}
         renderItem={({ item }) => (
           <View style={{ borderBottomColor: colors.grey, borderBottomWidth: 1 }}>
             <TouchableOpacity onPress={() => orderPressHandler(item)}>
@@ -53,7 +53,7 @@ export default function ({ navigation, route }: Props) {
                   {formatCurrency(item.fare!.courierFee)}
                 </Text>
                 <Text style={[texts.medium, { color: colors.darkGrey }]}>
-                  {item.origin.address}
+                  {item.origin.address?.description}
                 </Text>
                 <Text style={[texts.medium, { color: colors.darkGrey }]}>
                   {hhMMFromDate(item.createdOn.toDate())}

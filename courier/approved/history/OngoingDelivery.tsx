@@ -83,7 +83,7 @@ export default function ({ navigation, route }: Props) {
       </PaddedView>
       <PaddedView>
         <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Retirada')}</Text>
-        <Text style={[texts.medium]}>{order.origin.address}</Text>
+        <Text style={[texts.medium]}>{order.origin.address?.description}</Text>
         <Text style={[texts.medium]}>{order.origin.intructions}</Text>
 
         <DefaultButton

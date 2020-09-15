@@ -10,7 +10,7 @@ const pt = {
         precision: 2,
         separator: ',',
         unit: 'R$',
-        strip_insignificant_zeros: true,
+        strip_insignificant_zeros: false,
       },
     },
   },

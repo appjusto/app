@@ -21,7 +21,7 @@ export default function ({ navigation, route }: Props) {
 
   return (
     <View>
-      <Text>{order.origin.address}</Text>
+      <Text>{order.origin.address?.description}</Text>
     </View>
   );
 }
