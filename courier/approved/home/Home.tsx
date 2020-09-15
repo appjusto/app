@@ -51,9 +51,6 @@ export default function ({ navigation }: Props) {
     const shouldDeleteToken = notificationError !== null || notificationToken === null;
     const shouldUpdateToken =
       !shouldDeleteToken && notificationToken !== courier!.notificationToken;
-    console.log('shouldDeleteToken', shouldDeleteToken);
-    console.log('shouldUpdateToken', shouldUpdateToken);
-    console.log('notificationToken', notificationToken);
     if (shouldDeleteToken || shouldUpdateToken) {
       const token = shouldUpdateToken ? notificationToken : null;
       dispatch(updateProfile(api)(courier!.id!, { notificationToken: token }));

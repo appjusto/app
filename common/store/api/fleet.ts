@@ -1,6 +1,5 @@
+import { Fleet, City } from 'appjusto-types';
 import firebase from 'firebase';
-
-import { City, Fleet } from '../fleet/types';
 
 export default class FleetApi {
   constructor(
@@ -54,5 +53,9 @@ export default class FleetApi {
       });
     }
     return docs;
+  }
+
+  async createFleet(fleet: Fleet) {
+    return this.firestore.collection('fleets').add(fleet);
   }
 }
