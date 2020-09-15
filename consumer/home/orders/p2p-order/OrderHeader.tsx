@@ -1,16 +1,16 @@
+import { Order } from 'appjusto-types';
 import React from 'react';
 import { View, Dimensions, Text, Image } from 'react-native';
 
 import * as icons from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/views/PaddedView';
 import ShowIf from '../../../../common/components/views/ShowIf';
-import OrderImpl from '../../../../common/store/order/types/OrderImpl';
 import { texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import OrderMap from './OrderMap';
 
 type Props = {
-  order?: OrderImpl | null;
+  order?: Order | null;
 };
 
 export default function ({ order }: Props) {
@@ -39,7 +39,7 @@ export default function ({ order }: Props) {
       </ShowIf>
 
       {/* after order has been created */}
-      <ShowIf test={order?.valid() === true}>{() => <OrderMap order={order!.getData()} />}</ShowIf>
+      <ShowIf test={!!order}>{() => <OrderMap order={order!} />}</ShowIf>
     </View>
   );
 }

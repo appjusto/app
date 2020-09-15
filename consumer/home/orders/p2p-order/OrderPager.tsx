@@ -1,5 +1,5 @@
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
-import { Card } from 'appjusto-types';
+import { Card, Place, Order } from 'appjusto-types';
 import React, { useRef, useState } from 'react';
 import { View, NativeSyntheticEvent } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -10,8 +10,7 @@ import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../../common/components/texts/LabeledText';
 import PaddedView from '../../../../common/components/views/PaddedView';
-import OrderImpl from '../../../../common/store/order/types/OrderImpl';
-import PlaceImpl from '../../../../common/store/order/types/PlaceImpl';
+import { placeValid } from '../../../../common/store/order/validators';
 import { showToast } from '../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { padding } from '../../../../common/styles';
@@ -21,13 +20,13 @@ import OrderSummary from './OrderSummary';
 import { Steps } from './types';
 
 type Props = {
-  origin: PlaceImpl;
-  destination: PlaceImpl;
-  order: OrderImpl | null;
+  origin: Place;
+  destination: Place;
+  order: Order | null;
   card: Card | null;
   navigateToAddressComplete: (value: string, returnParam: string) => void;
   navigateToFillPaymentInfo: () => void;
-  confirmOrder: (fleetId: string) => Promise<void>;
+  confirmOrder: (fleetId: string, platformFee: number) => Promise<void>;
 };
 
 export default function ({
@@ -54,8 +53,8 @@ export default function ({
   // helpers
   const stepReady = (value: Steps): boolean => {
     if (value === Steps.Origin) return true; // always enabled
-    if (value === Steps.Destination) return origin.valid(); // only if origin is known
-    if (value === Steps.Confirmation) return destination.valid() && order?.valid() === true; // only if order has been created
+    if (value === Steps.Destination) return placeValid(origin); // only if origin is known
+    if (value === Steps.Confirmation) return placeValid(destination) && !!order; // only if order has been created
     if (value === Steps.ConfirmingOrder) return !!card;
     return false; // should never happen
   };
@@ -79,7 +78,7 @@ export default function ({
       if (nextStep === Steps.Destination) {
         dispatch(showToast(t('Preencha o endereço e as instruções de retirada.')));
       } else if (nextStep === Steps.Confirmation) {
-        if (!destination.valid()) {
+        if (!placeValid(destination)) {
           dispatch(showToast(t('Preencha o endereço e as instruções de entrega.')));
         } else if (!order) {
           dispatch(showToast(t('Aguarde enquanto a cotação é feita.')));
@@ -110,11 +109,11 @@ export default function ({
         <PaddedView style={{ flex: 1, justifyContent: 'flex-end' }}>
           <TouchableWithoutFeedback
             onPress={() => {
-              navigateToAddressComplete(origin.address ?? '', 'origin');
+              navigateToAddressComplete(origin.address?.description ?? '', 'origin');
             }}
           >
             <LabeledText title={t('Endereço de retirada')}>
-              {origin.getData().address ?? t('Endereço com número')}
+              {origin.address?.description ?? t('Endereço com número')}
             </LabeledText>
           </TouchableWithoutFeedback>
 
@@ -140,15 +139,15 @@ export default function ({
         </PaddedView>
 
         {/* destination */}
-        {origin.valid() && (
+        {placeValid(origin) && (
           <PaddedView style={{ flex: 1, justifyContent: 'flex-end' }}>
             <TouchableWithoutFeedback
               onPress={() => {
-                navigateToAddressComplete(destination.address ?? '', 'destination');
+                navigateToAddressComplete(destination?.address?.description ?? '', 'destination');
               }}
             >
               <LabeledText title={t('Endereço de entrega')}>
-                {destination.getData().address ?? t('Endereço com número')}
+                {destination.address?.description ?? t('Endereço com número')}
               </LabeledText>
             </TouchableWithoutFeedback>
 
@@ -176,9 +175,9 @@ export default function ({
         )}
 
         {/* confirmation */}
-        {order?.valid() === true && (
+        {!!order && (
           <OrderSummary
-            order={order!.getData()}
+            order={order}
             card={card}
             waiting={busy}
             editStepHandler={setPage}

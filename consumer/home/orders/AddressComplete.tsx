@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Place } from 'appjusto-types';
+import { Address } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import debounce from 'lodash/debounce';
 import { nanoid } from 'nanoid/non-secure';
@@ -30,10 +30,6 @@ import { texts, screens, colors, padding } from '../../../common/styles';
 import { t } from '../../../strings';
 import { HomeNavigatorParamList } from '../types';
 
-function isPlace(item: Place | AutoCompleteResult): item is Place {
-  return (item as Place).address !== undefined;
-}
-
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'AddressComplete'>;
 type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'AddressComplete'>;
 
@@ -59,17 +55,15 @@ export default function ({ navigation, route }: Props) {
   const [autocompleteSession] = useState(nanoid());
   const [searchText, setSearchText] = useState(value ?? '');
   const [autocompletePredictions, setAutoCompletePredictions] = useState<AutoCompleteResult[]>([]);
-  const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
-  const sections: SectionListData<Place | AutoCompleteResult>[] = useMemo(() => {
-    let sections: SectionListData<Place | AutoCompleteResult>[] = [];
+  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
+  const sections: SectionListData<Address>[] = useMemo(() => {
+    let sections: SectionListData<Address>[] = [];
     if (!isEmpty(autocompletePredictions)) {
       sections = [...sections, { title: t('Resultados da busca'), data: autocompletePredictions }];
     }
     if (!isEmpty(placesFromPreviousOrders)) {
-      sections = [
-        ...sections,
-        { title: t('Últimos endereços utilizados'), data: placesFromPreviousOrders },
-      ];
+      const addresses = placesFromPreviousOrders.map((value) => value.address!);
+      sections = [...sections, { title: t('Últimos endereços utilizados'), data: addresses }];
     }
     return sections;
   }, [placesFromPreviousOrders, autocompletePredictions]);
@@ -97,16 +91,15 @@ export default function ({ navigation, route }: Props) {
     // TODO: what would be a better threshold than 3 characteres?
     if (searchText.length <= 3) return;
     // do not search after user selects from list
-    if (selectedPlace?.address === searchText) return;
+    if (selectedAddress?.description === searchText) return;
     getAddress(searchText, autocompleteSession);
   }, [searchText, autocompleteSession]);
   // update search text when user selects a place from suggestion list
   useEffect(() => {
-    if (selectedPlace) {
-      console.log(selectedPlace);
-      setSearchText(selectedPlace.address ?? '');
+    if (selectedAddress) {
+      setSearchText(selectedAddress.description ?? '');
     }
-  }, [selectedPlace]);
+  }, [selectedAddress]);
 
   // handlers
   // fires whenever use change the input text
@@ -114,23 +107,23 @@ export default function ({ navigation, route }: Props) {
     (text) => {
       if (text === searchText) return; // avoid searching when user selects from suggestion list
       setSearchText(text); // update source text
-      setSelectedPlace(null); // so we know text is freshier than what it was selected
+      setSelectedAddress(null); // so we know text is freshier than what it was selected
     },
     [searchText]
   );
   // when user select item from list
-  const selectPlaceHandler = useCallback((place: Place) => {
+  const selectItemHandler = useCallback((item: Address) => {
     Keyboard.dismiss();
-    setSelectedPlace(place);
+    setSelectedAddress(item);
     setAutoCompletePredictions([]); // clearing predictions hides the modal
   }, []);
 
   // confirm button callback
   const completeHandler = useCallback(() => {
     // create a place object when user confirm without selecting from suggestion list
-    const place = selectedPlace ?? { address: searchText };
+    const place = selectedAddress ?? { address: searchText };
     navigation.navigate(returnScreen, { [returnParam]: place });
-  }, [navigation, returnScreen, selectedPlace, searchText]);
+  }, [navigation, returnScreen, selectedAddress, searchText]);
 
   // UI
   return (
@@ -148,34 +141,19 @@ export default function ({ navigation, route }: Props) {
       <SectionList
         style={{ flex: 1 }}
         sections={sections}
-        keyExtractor={(item) => {
-          if (isPlace(item)) return item.googlePlaceId ?? item.address!;
-          return item.placeId ?? item.description!;
-        }}
+        keyExtractor={(item) => item.description}
         keyboardShouldPersistTaps="handled"
         renderSectionHeader={({ section }) => (
           <Text style={{ ...texts.small, color: colors.darkGrey }}>{section.title}</Text>
         )}
-        renderItem={({ item }) => {
-          if (isPlace(item)) {
-            return (
-              <TouchableOpacity onPress={() => selectPlaceHandler(item)}>
-                <View style={styles.item}>
-                  <Text style={{ ...texts.medium }}>{item.address}</Text>
-                </View>
-              </TouchableOpacity>
-            );
-          } else {
-            return (
-              <TouchableOpacity onPress={() => selectPlaceHandler({ address: item.description })}>
-                <View style={styles.item}>
-                  <Text style={{ ...texts.medium }}>{item.main}</Text>
-                  <Text style={{ ...texts.small }}>{item.secondary}</Text>
-                </View>
-              </TouchableOpacity>
-            );
-          }
-        }}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => selectItemHandler(item)}>
+            <View style={styles.item}>
+              <Text style={{ ...texts.medium }}>{item.main}</Text>
+              <Text style={{ ...texts.small }}>{item.secondary}</Text>
+            </View>
+          </TouchableOpacity>
+        )}
         SectionSeparatorComponent={() => <View style={{ height: padding }} />}
       />
       <DefaultButton

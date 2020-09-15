@@ -1,5 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Place, Order } from 'appjusto-types';
 import React, { useState, useContext, useEffect } from 'react';
 import { View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,8 +9,7 @@ import { AppDispatch, ApiContext } from '../../../../common/app/context';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { createOrder, confirmOrder } from '../../../../common/store/order/actions';
 import { getOrderById } from '../../../../common/store/order/selectors';
-import OrderImpl from '../../../../common/store/order/types/OrderImpl';
-import PlaceImpl from '../../../../common/store/order/types/PlaceImpl';
+import { placeValid, sameAdddress } from '../../../../common/store/order/validators';
 import { showToast } from '../../../../common/store/ui/actions';
 import { screens } from '../../../../common/styles';
 import { HomeNavigatorParamList } from '../../types';
@@ -34,41 +34,46 @@ export default function ({ navigation, route }: Props) {
   const getOrder = useSelector(getOrderById);
 
   // screen state
-  const [origin, setOrigin] = useState(new PlaceImpl({}));
-  const [destination, setDestination] = useState(new PlaceImpl({}));
-  const [order, setOrder] = useState<OrderImpl | null>(null);
+  const [origin, setOrigin] = useState<Place>({});
+  const [destination, setDestination] = useState<Place>({});
+  const [order, setOrder] = useState<Order | null>(null);
   const [card, setCard] = useState(consumer?.getLastCard() ?? null);
 
   // side effects
   // route changes when interacting with other screens;
   useEffect(() => {
     const { orderId, origin: newOrigin, destination: newDestination, cardId } = route.params ?? {};
-    if (orderId) setOrder(new OrderImpl(getOrder(orderId))); // from 'OrderHistory'
-    if (newOrigin) setOrigin(origin.merge(newOrigin)); // from 'AddressComplete'
-    if (newDestination) setDestination(destination.merge(newDestination)); // from 'AddressComplete'
+    if (orderId) setOrder(getOrder(orderId)); // from 'OrderHistory'
+    if (newOrigin) setOrigin({ ...origin, address: newOrigin }); // from 'AddressComplete'
+    if (newDestination) setDestination({ ...destination, address: newDestination }); // from 'AddressComplete'
     if (cardId) setCard(consumer?.getCardById(cardId) ?? null); // from 'PaymentSelector'
   }, [route.params]);
 
   // to handle `setOrder()` from route changes
   // if origin/destination aren't valid but those from order's are, we suppose that we need to update origin/destination
   useEffect(() => {
-    if (!origin.valid() && order?.getOrigin().valid()) setOrigin(order?.getOrigin()!);
-    if (!destination.valid() && order?.getDestination().valid())
-      setDestination(order?.getDestination()!);
+    if (!placeValid(origin) && placeValid(order?.origin)) {
+      console.log('changing origin', origin, order?.origin);
+      setOrigin(order?.origin!);
+    }
+    if (!placeValid(destination) && placeValid(order?.destination)) {
+      console.log('changing destination', destination, order?.destination);
+      setDestination(order?.destination!);
+    }
   }, [order]);
 
   // create order whenever origin or destination changes
   useEffect(() => {
     if (
-      origin.valid() &&
-      destination.valid() &&
+      placeValid(origin) &&
+      placeValid(destination) &&
       (!order ||
-        !order.getOrigin().sameAdddress(origin) ||
-        !order.getDestination().sameAdddress(destination))
+        !sameAdddress(origin.address!, order.origin.address!) ||
+        !sameAdddress(destination.address!, order.destination.address!))
     ) {
       (async () => {
-        const newOrder = await dispatch(createOrder(api)(origin.getData(), destination.getData()));
-        if (newOrder) setOrder(new OrderImpl(newOrder));
+        const newOrder = await dispatch(createOrder(api)(origin, destination));
+        if (newOrder) setOrder(newOrder);
       })();
     }
   }, [origin, destination]);
@@ -91,7 +96,7 @@ export default function ({ navigation, route }: Props) {
   // confirm order
   const confirmOrderHandler = async (fleetId: string, platformFee: number) => {
     try {
-      const orderId = order!.getData().id;
+      const orderId = order!.id!;
       const result = await dispatch(confirmOrder(api)(orderId, card!.id, fleetId, platformFee));
       console.log(result);
       navigation.replace('OrderFeedback', { orderId });

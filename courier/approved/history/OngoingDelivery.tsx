@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext, useCallback, useMemo } from 'react';
+import React, { useContext, useCallback, useMemo, useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
@@ -36,12 +36,18 @@ export default function ({ navigation, route }: Props) {
   const busy = useSelector(getUIBusy);
   const order = useSelector(getOrderById)(orderId);
 
+  useEffect(() => {
+    if (order.status === 'delivered') {
+      navigation.navigate('DeliverySummary', { orderId });
+    }
+  }, [order]);
+
   // handlers
   const nextStatepHandler = useCallback(async () => {
     if (order.dispatchingState !== 'arrived-destination') {
-      dispatch(nextDispatchingState(api)(order.id));
+      dispatch(nextDispatchingState(api)(order.id!));
     } else {
-      dispatch(completeDelivery(api)(order.id));
+      dispatch(completeDelivery(api)(order.id!));
     }
   }, [order]);
 

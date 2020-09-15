@@ -65,7 +65,7 @@ export default function ({ navigation, route }: Props) {
           <View style={{ marginTop: padding }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={[texts.medium]}>{t('Tarifa')}</Text>
-              <Text style={[texts.medium]}>{formatCurrency(order.fare?.courierFee ?? 0)}</Text>
+              <Text style={[texts.medium]}>{formatCurrency(order.fare?.total ?? 0)}</Text>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={styles.priceDetailText}>{t('Gorjeta')}</Text>
