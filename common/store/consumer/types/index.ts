@@ -1,4 +1,4 @@
-import Consumer from './Consumer';
+import { ConsumerProfile } from 'appjusto-types';
 
 export interface SaveCardPayload {
   holderName: string;
@@ -10,5 +10,5 @@ export interface SaveCardPayload {
 }
 
 export interface ConsumerState {
-  consumer?: Consumer;
+  consumer?: ConsumerProfile;
 }

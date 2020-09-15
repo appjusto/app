@@ -59,10 +59,8 @@ function Main({ navigation }: Props) {
   const notificationHandler = useCallback(
     (content: Notifications.NotificationContent) => {
       if (content.data.action === 'matching') {
-        console.log(status);
         // should always be true as couriers should receive matching notifications only when they're available
         if (status === 'available') {
-          console.log(content.data);
           navigation.navigate('Matching', {
             matchRequest: (content.data as unknown) as OrderMatchRequest,
           });

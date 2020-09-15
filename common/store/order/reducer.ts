@@ -15,6 +15,7 @@ export default function (state: OrderState = initialState, action: AnyAction): O
   const { type, payload } = action;
   switch (type) {
     case ORDERS_UPDATED: {
+      console.log(payload);
       const ordersById = normalize(payload, [schema.order]).entities.orders ?? {};
       return { ...state, orders: payload, ordersById };
     }
