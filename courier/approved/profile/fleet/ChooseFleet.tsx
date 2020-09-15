@@ -12,7 +12,6 @@ import PaddedView from '../../../../common/components/views/PaddedView';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { fetchApprovedFleets } from '../../../../common/store/fleet/actions';
 import { getAvailableCities, getApprovedFleets } from '../../../../common/store/fleet/selectors';
-import { Fleet, City } from '../../../../common/store/fleet/types';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { texts, screens, colors, padding } from '../../../../common/styles';
