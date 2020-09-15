@@ -13,6 +13,7 @@ import LabeledText from '../../../../common/components/texts/LabeledText';
 import AvoidingView from '../../../../common/components/views/AvoidingView';
 import PaddedView from '../../../../common/components/views/PaddedView';
 import { getCourier } from '../../../../common/store/courier/selectors';
+import { bankAccountSet } from '../../../../common/store/courier/validators';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { texts, screens, padding, colors, halfPadding } from '../../../../common/styles';
@@ -53,7 +54,7 @@ export default function ({ navigation, route }: Props) {
   // side effects
   // checking initial bank information
   useEffect(() => {
-    if (courier!.bankAccountSet()) {
+    if (bankAccountSet(courier)) {
       const { bankAccount } = courier!;
       const courierBank: Bank = {
         id: bankAccount!.id!,
