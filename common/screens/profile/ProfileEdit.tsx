@@ -16,13 +16,13 @@ import PaddedView from '../../components/views/PaddedView';
 import ShowIf from '../../components/views/ShowIf';
 import { getFlavor } from '../../store/config/selectors';
 import { getConsumer } from '../../store/consumer/selectors';
+import { consumerInfoSet } from '../../store/consumer/validators';
 import { getCourier } from '../../store/courier/selectors';
+import { courierInfoSet } from '../../store/courier/validators';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
 import { updateProfile } from '../../store/user/actions';
 import { screens, padding } from '../../styles';
-import { courierInfoSet } from '../../store/courier/validators';
-import { consumerInfoSet } from '../../store/consumer/validators';
 
 export type ProfileEditParamList = {
   ProfileEdit: {
