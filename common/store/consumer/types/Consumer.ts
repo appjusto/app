@@ -1,4 +1,5 @@
-import { ConsumerProfile, Card } from '.';
+import { ConsumerProfile, Card } from 'appjusto-types';
+
 import User from '../../user/types/User';
 
 export default class Consumer extends User {
