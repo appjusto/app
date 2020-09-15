@@ -84,8 +84,5 @@ export const updateLocation = (api: Api) => (
   id: string,
   location: firebase.firestore.GeoPoint
 ) => async (dispatch: AppDispatch) => {
-  dispatch({ type: BUSY, payload: true });
-  const result = await api.profile().updateLocation(id, location);
-  dispatch({ type: BUSY, payload: false });
-  return result;
+  api.profile().updateLocation(id, location);
 };

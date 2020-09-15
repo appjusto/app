@@ -39,13 +39,7 @@ export default function () {
           title: t('Fotos & Documentos'),
         }}
       />
-      <Stack.Screen
-        name="Fleet"
-        component={FleetNavigator}
-        options={{
-          title: t('Cidade de Atuação & Frota'),
-        }}
-      />
+      <Stack.Screen name="Fleet" component={FleetNavigator} options={{ headerShown: false }} />
       <Stack.Screen
         name="Bank"
         component={BankNavigator}
