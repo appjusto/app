@@ -14,6 +14,7 @@ import {
   getSelfieURL,
 } from '../../common/store/courier/actions';
 import { getCourier } from '../../common/store/courier/selectors';
+import { personalInfoSet, bankAccountSet } from '../../common/store/order/validators';
 import { getUIBusy } from '../../common/store/ui/selectors';
 import { screens, texts, colors } from '../../common/styles';
 import { t } from '../../strings';
@@ -40,10 +41,7 @@ export default function ({ navigation, route }: Props) {
   // screen state
   const [hasImagesUris, setHasImagesUris] = useState(false);
   const submitEnabled =
-    situation === 'pending' &&
-    courier!.personalInfoSet() &&
-    courier!.bankAccountSet() &&
-    hasImagesUris;
+    situation === 'pending' && personalInfoSet(courier) && bankAccountSet(courier) && hasImagesUris;
 
   // handlers
   const submitHandler = async () => {
@@ -101,7 +99,7 @@ export default function ({ navigation, route }: Props) {
             title={t('Seus dados')}
             subtitle={t('Preencha seus dados pessoais')}
             onPress={() => navigation.navigate('ProfileEdit', { allowPartialSave: false })}
-            checked={courier!.personalInfoSet()}
+            checked={personalInfoSet(courier)}
           />
           <ConfigItem
             title={t('Fotos e documentos')}
@@ -113,7 +111,7 @@ export default function ({ navigation, route }: Props) {
             title={t('Dados bancários')}
             subtitle={t('Cadastre seu banco para recebimento')}
             onPress={() => navigation.navigate('Bank')}
-            checked={courier!.bankAccountSet()}
+            checked={bankAccountSet(courier)}
           />
           <ConfigItem
             title={t('Escolha sua frota')}

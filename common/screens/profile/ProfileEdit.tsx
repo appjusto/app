@@ -1,6 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 // import { validate } from 'gerador-validador-cpf';
+import { ConsumerProfile, CourierProfile } from 'appjusto-types';
 import { trim } from 'lodash';
 import React, { useState, useContext, useRef } from 'react';
 import { View, ScrollView, TextInput } from 'react-native';
@@ -15,13 +16,13 @@ import PaddedView from '../../components/views/PaddedView';
 import ShowIf from '../../components/views/ShowIf';
 import { getFlavor } from '../../store/config/selectors';
 import { getConsumer } from '../../store/consumer/selectors';
-import Consumer from '../../store/consumer/types/Consumer';
 import { getCourier } from '../../store/courier/selectors';
-import Courier from '../../store/courier/types/Courier';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
 import { updateProfile } from '../../store/user/actions';
 import { screens, padding } from '../../styles';
+import { courierInfoSet } from '../../store/courier/validators';
+import { consumerInfoSet } from '../../store/consumer/validators';
 
 export type ProfileEditParamList = {
   ProfileEdit: {
@@ -54,7 +55,8 @@ export default function ({ navigation, route }: Props) {
   const flavor = useSelector(getFlavor);
   const courier = useSelector(getCourier);
   const consumer = useSelector(getConsumer);
-  const user: Consumer | Courier = flavor === 'consumer' ? consumer! : courier!;
+  const user: ConsumerProfile | CourierProfile = flavor === 'consumer' ? consumer! : courier!;
+  const personalInfoSet = flavor === 'consumer' ? consumerInfoSet : courierInfoSet;
 
   // state
   const [name, setName] = useState<string>(user!.name ?? '');
@@ -66,8 +68,8 @@ export default function ({ navigation, route }: Props) {
 
   // handlers
   const updateProfileHandler = async () => {
-    const newUser = user.merge({ id: user.id, name, surname, phone, cpf });
-    if (!allowPartialSave && !newUser.personalInfoSet()) {
+    const newUser = { ...user, name, surname, phone, cpf };
+    if (!allowPartialSave && personalInfoSet(newUser)) {
       dispatch(showToast(t('Você precisa preencher todos os dados.')));
       return;
     }

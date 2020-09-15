@@ -42,6 +42,8 @@ export default function ({ navigation, route }: Props) {
   // side effects
   // route changes when interacting with other screens;
   useEffect(() => {
+    console.log('route.params changed');
+    console.log(route.params);
     const { orderId, origin: newOrigin, destination: newDestination, cardId } = route.params ?? {};
     if (orderId) setOrder(getOrder(orderId)); // from 'OrderHistory'
     if (newOrigin) setOrigin({ ...origin, address: newOrigin }); // from 'AddressComplete'
@@ -52,6 +54,8 @@ export default function ({ navigation, route }: Props) {
   // to handle `setOrder()` from route changes
   // if origin/destination aren't valid but those from order's are, we suppose that we need to update origin/destination
   useEffect(() => {
+    console.log('order changed');
+    console.log(order);
     if (!placeValid(origin) && placeValid(order?.origin)) {
       console.log('changing origin', origin, order?.origin);
       setOrigin(order?.origin!);
@@ -64,6 +68,9 @@ export default function ({ navigation, route }: Props) {
 
   // create order whenever origin or destination changes
   useEffect(() => {
+    console.log('origin / destination changed');
+    console.log(origin);
+    console.log(destination);
     if (
       placeValid(origin) &&
       placeValid(destination) &&
@@ -73,6 +80,8 @@ export default function ({ navigation, route }: Props) {
     ) {
       (async () => {
         const newOrder = await dispatch(createOrder(api)(origin, destination));
+        console.log('new order');
+        console.log(newOrder);
         if (newOrder) setOrder(newOrder);
       })();
     }

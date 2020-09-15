@@ -1,12 +1,12 @@
-import { CourierStatus } from 'appjusto-types';
+import { CourierStatus, CourierProfile } from 'appjusto-types';
 
 import { State } from '..';
 import { CourierState } from './types';
-import Courier from './types/Courier';
 
 export const getCourierState = (state: State): CourierState => state.courier;
 
-export const getCourier = (state: State): Courier | undefined => getCourierState(state).courier;
+export const getCourier = (state: State): CourierProfile | undefined =>
+  getCourierState(state).courier;
 
 export const getCourierStatus = (state: State): CourierStatus =>
   getCourier(state)?.status ?? 'unavailable';
