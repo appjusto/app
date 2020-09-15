@@ -14,7 +14,7 @@ import {
   getSelfieURL,
 } from '../../common/store/courier/actions';
 import { getCourier } from '../../common/store/courier/selectors';
-import { personalInfoSet, bankAccountSet } from '../../common/store/order/validators';
+import { courierInfoSet, bankAccountSet } from '../../common/store/courier/validators';
 import { getUIBusy } from '../../common/store/ui/selectors';
 import { screens, texts, colors } from '../../common/styles';
 import { t } from '../../strings';
@@ -41,7 +41,7 @@ export default function ({ navigation, route }: Props) {
   // screen state
   const [hasImagesUris, setHasImagesUris] = useState(false);
   const submitEnabled =
-    situation === 'pending' && personalInfoSet(courier) && bankAccountSet(courier) && hasImagesUris;
+    situation === 'pending' && courierInfoSet(courier) && bankAccountSet(courier) && hasImagesUris;
 
   // handlers
   const submitHandler = async () => {
@@ -99,7 +99,7 @@ export default function ({ navigation, route }: Props) {
             title={t('Seus dados')}
             subtitle={t('Preencha seus dados pessoais')}
             onPress={() => navigation.navigate('ProfileEdit', { allowPartialSave: false })}
-            checked={personalInfoSet(courier)}
+            checked={courierInfoSet(courier)}
           />
           <ConfigItem
             title={t('Fotos e documentos')}
