@@ -93,7 +93,7 @@ export default function ({ navigation }: Props) {
     <SafeAreaView>
       {/* Main area */}
       <View style={[styles.main, { backgroundColor: working ? colors.green : colors.yellow }]}>
-        <Text style={[texts.big, { paddingTop: 32, paddingBottom: 24 }]}>
+        <Text style={[texts.big, { paddingBottom: 24 }]}>
           {`${t('Olá')}, ${courier?.name ?? 'entregador'}. ${t(
             'Faça suas corridas com segurança.'
           )}`}

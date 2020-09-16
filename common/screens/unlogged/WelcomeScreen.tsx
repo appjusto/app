@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -34,6 +35,7 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
+  const { height } = Dimensions.get('window');
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -73,8 +75,8 @@ export default function ({ navigation, route }: Props) {
                     <Image source={illustration} />
                   </View>
 
-                  <View style={{ height: 80, marginTop: 16, width: '50%' }}>
-                    <Image style={{ width: '100%', height: '100%' }} source={logoWhite} />
+                  <View style={{ height: 64, marginTop: 16, width: 152 }}>
+                    <Image style={{ height: '100%', width: '100%' }} source={logoWhite} />
                   </View>
 
                   <View style={{ height: 58, marginTop: 16 }}>
@@ -105,7 +107,7 @@ export default function ({ navigation, route }: Props) {
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  marginTop: 16,
+                  marginTop: height > 700 ? 32 : 16,
                 }}
               >
                 <View>
@@ -132,7 +134,7 @@ export default function ({ navigation, route }: Props) {
             </View>
 
             <View style={{ flex: 1 }} />
-            <View style={{ paddingHorizontal: 16, marginBottom: 32 }}>
+            <View style={{ paddingHorizontal: 16, marginBottom: height > 700 ? 32 : 16 }}>
               <DefaultButton
                 disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
                 title={t('Entrar')}
