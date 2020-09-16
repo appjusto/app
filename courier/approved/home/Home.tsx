@@ -42,7 +42,7 @@ export default function ({ navigation }: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   // app state
-  const courier = useSelector(getCourier);
+  const courier = useSelector(getCourier)!;
   const status = courier!.status;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
 
@@ -61,7 +61,7 @@ export default function ({ navigation }: Props) {
       !shouldDeleteToken && notificationToken !== courier!.notificationToken;
     if (shouldDeleteToken || shouldUpdateToken) {
       const token = shouldUpdateToken ? notificationToken : null;
-      dispatch(updateProfile(api)(courier!.id!, { notificationToken: token }));
+      dispatch(updateProfile(api)(courier.id, { notificationToken: token }));
     }
   }, [notificationToken, notificationError]);
 

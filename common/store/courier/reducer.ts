@@ -1,3 +1,4 @@
+import { WithId, CourierProfile } from 'appjusto-types';
 import { AnyAction } from 'redux';
 
 import { COURIER_PROFILE_UPDATED, USER_LOGGED_OUT } from '../user/actions';
@@ -10,7 +11,7 @@ export default function (state: CourierState = initialState, action: AnyAction):
   const { type, payload } = action;
   switch (type) {
     case COURIER_PROFILE_UPDATED: {
-      const courier = Object.assign({}, state.courier, payload);
+      const courier = Object.assign({}, state.courier, payload) as WithId<CourierProfile>;
       return { ...state, courier };
     }
     case UPDATE_BANKS: {

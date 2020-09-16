@@ -32,7 +32,7 @@ export default class ProfileApi {
       async (doc) => {
         // ensure profile exists
         if (!doc.exists) await this.createProfile(id);
-        else resultHandler({ ...doc.data(), id });
+        else resultHandler({ ...(doc.data() as UserProfile), id });
       },
       (error) => {
         console.error(error);
@@ -43,7 +43,7 @@ export default class ProfileApi {
   }
 
   // update profile
-  updateProfile(id: string, changes: CourierProfile | ConsumerProfile) {
+  updateProfile(id: string, changes: Partial<CourierProfile> | Partial<ConsumerProfile>) {
     return this.getProfileRef(id).set(changes, { merge: true });
   }
 
