@@ -1,4 +1,4 @@
-import { Place, Order, ChatMessage, WithId } from 'appjusto-types';
+import { Place, Order, ChatMessage, WithId, Fare } from 'appjusto-types';
 import { CancelToken } from 'axios';
 
 import { AppDispatch } from '../../app/context';
@@ -27,6 +27,10 @@ export const createOrder = (api: Api) => (
   destination: Partial<Place>
 ) => async (dispatch: AppDispatch) => {
   return dispatch(awaitWithFeedback(api.order().createOrder(origin, destination)));
+};
+
+export const getOrderQuotes = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
+  return dispatch(awaitWithFeedback<Fare[]>(api.order().getOrderQuotes(orderId)));
 };
 
 export const confirmOrder = (api: Api) => (
