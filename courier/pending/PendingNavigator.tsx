@@ -5,6 +5,7 @@ import BackButton from '../../common/components/buttons/BackButton';
 import ProfileEdit from '../../common/screens/profile/ProfileEdit';
 import { t } from '../../strings';
 import BankNavigator from '../approved/profile/bank/BankNavigator';
+import FleetNavigator from '../approved/profile/fleet/FleetNavigator';
 import ProfilePhotos from '../approved/profile/photos/ProfilePhotos';
 import PendingChecklist from './PendingChecklist';
 import ProfileFeedback from './ProfileFeedback';
@@ -40,6 +41,14 @@ export default function () {
         component={BankNavigator}
         options={({ navigation }) => ({
           title: t('Dados bancários'),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
+      />
+      <Stack.Screen
+        name="Fleet"
+        component={FleetNavigator}
+        options={({ navigation }) => ({
+          title: t('Escolha sua frota'),
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />

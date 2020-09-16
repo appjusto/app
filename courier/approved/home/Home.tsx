@@ -3,11 +3,19 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { CourierStatus } from 'appjusto-types';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useEffect, useContext, useState } from 'react';
-import { StyleSheet, View, Dimensions, Text, Image, Switch } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  Text,
+  Image,
+  Switch,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { motocycleWhite } from '../../../assets/icons';
+import { motocycleWhite, requests } from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import useLocationUpdates from '../../../common/hooks/useLocationUpdates';
 import useNotificationToken from '../../../common/hooks/useNotificationToken';
@@ -123,6 +131,28 @@ export default function ({ navigation }: Props) {
           </View>
         </View>
       </View>
+      <View style={{ paddingHorizontal: 16 }}>
+        <View style={styles.gainsContainer}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Image source={requests} />
+            <View style={{ marginLeft: 16 }}>
+              <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Hoje')}</Text>
+              <Text style={{ ...texts.medium, color: colors.black }}>R$ 00,0</Text>
+            </View>
+            <View style={{ marginLeft: 48 }}>
+              <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Semana')}</Text>
+              <Text style={{ ...texts.medium, color: colors.black }}>R$ 00,0</Text>
+            </View>
+          </View>
+          <View style={{ alignSelf: 'center', bottom: 18 }}>
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <Text style={{ ...texts.small, color: colors.darkGrey }}>
+                {t('Veja todos os seus ganhos')}
+              </Text>
+            </TouchableWithoutFeedback>
+          </View>
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -151,5 +181,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  gainsContainer: {
+    paddingHorizontal: 16,
+    marginVertical: 16,
+    width: '100%',
+    height: 96,
+    ...borders.default,
+    borderColor: colors.lightGrey,
+    backgroundColor: colors.white,
   },
 });

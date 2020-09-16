@@ -12,14 +12,7 @@ const Stack = createStackNavigator<FleetParamList>();
 export default function () {
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="ChooseFleet"
-        component={ChooseFleet}
-        options={({ navigation }) => ({
-          title: t('Escolha sua frota'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
-      />
+      <Stack.Screen name="ChooseFleet" component={ChooseFleet} />
       <Stack.Screen
         name="CreateFleet"
         component={CreateFleet}
