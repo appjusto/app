@@ -1,4 +1,4 @@
-import { Fleet, City } from 'appjusto-types';
+import { Fleet, City, WithId } from 'appjusto-types';
 import firebase from 'firebase';
 
 export default class FleetApi {
@@ -15,7 +15,7 @@ export default class FleetApi {
       .doc('cities')
       .collection('available')
       .get();
-    const docs: City[] = [];
+    const docs: WithId<City>[] = [];
     if (!querySnapshot.empty) {
       querySnapshot.forEach((doc) => {
         docs.push({ ...(doc.data() as City), id: doc.id });
@@ -30,7 +30,7 @@ export default class FleetApi {
       .doc('cities')
       .collection('all')
       .get();
-    const docs: City[] = [];
+    const docs: WithId<City>[] = [];
     if (!querySnapshot.empty) {
       querySnapshot.forEach((doc) => {
         docs.push({ ...(doc.data() as City), id: doc.id });
@@ -46,7 +46,7 @@ export default class FleetApi {
       .where('situation', '==', 'approved')
       .orderBy('participantsOnline', 'desc')
       .get();
-    const docs: Fleet[] = [];
+    const docs: WithId<Fleet>[] = [];
     if (!querySnapshot.empty) {
       querySnapshot.forEach((doc) => {
         docs.push({ ...(doc.data() as Fleet), id: doc.id });

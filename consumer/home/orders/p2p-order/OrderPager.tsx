@@ -20,10 +20,10 @@ import OrderSummary from './OrderSummary';
 import { Steps } from './types';
 
 type Props = {
-  origin: Place;
-  destination: Place;
+  origin: Partial<Place>;
+  destination: Partial<Place>;
   order: Order | null;
-  card: Card | null;
+  card?: Card;
   navigateToAddressComplete: (value: string, returnParam: string) => void;
   navigateToFillPaymentInfo: () => void;
   confirmOrder: (fleetId: string, platformFee: number) => Promise<void>;

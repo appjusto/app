@@ -1,7 +1,7 @@
-import { Bank, CourierProfile } from 'appjusto-types';
+import { Bank, CourierProfile, WithId } from 'appjusto-types';
 
 export interface CourierState {
-  courier?: CourierProfile;
+  courier?: WithId<CourierProfile>;
   order?: object;
   banks?: Bank[];
 }

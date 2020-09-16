@@ -1,7 +1,5 @@
-import { Place, Order } from 'appjusto-types';
+import { Place, Order, WithId, ChatMessage } from 'appjusto-types';
 import firebase from 'firebase';
-
-import { ChatMessage } from '../order/types';
 
 export type ObserveOrdersOptions = {
   createdBy?: string;
@@ -16,7 +14,7 @@ export default class OrderApi {
 
   // consumer
   // functions
-  async createOrder(origin: Place, destination: Place) {
+  async createOrder(origin: Partial<Place>, destination: Partial<Place>) {
     return (await this.functions.httpsCallable('createOrder')({ origin, destination })).data;
   }
 
@@ -55,7 +53,7 @@ export default class OrderApi {
   // observe orders
   observeOrders(
     options: ObserveOrdersOptions,
-    resultHandler: (orders: Order[]) => void
+    resultHandler: (orders: WithId<Order>[]) => void
   ): firebase.Unsubscribe {
     const { createdBy, deliveredBy } = options;
     let query = this.firestore
@@ -67,7 +65,7 @@ export default class OrderApi {
 
     const unsubscribe = query.onSnapshot(
       (querySnapshot) => {
-        const docs: Order[] = [];
+        const docs: WithId<Order>[] = [];
         querySnapshot.forEach((doc) => {
           docs.push({ ...(doc.data() as Order), id: doc.id });
         });
@@ -83,7 +81,7 @@ export default class OrderApi {
   // observe order's chat
   observeOrderChat(
     orderId: string,
-    resultHandler: (orders: ChatMessage[]) => void
+    resultHandler: (orders: WithId<ChatMessage>[]) => void
   ): firebase.Unsubscribe {
     const unsubscribe = this.firestore
       .collection('orders')
@@ -92,7 +90,7 @@ export default class OrderApi {
       .orderBy('timestamp', 'asc')
       .onSnapshot(
         (querySnapshot) => {
-          const docs: ChatMessage[] = [];
+          const docs: WithId<ChatMessage>[] = [];
           querySnapshot.forEach((doc) => {
             docs.push({ ...(doc.data() as ChatMessage), id: doc.id });
           });

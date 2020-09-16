@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Order } from 'appjusto-types';
+import { Order, WithId } from 'appjusto-types';
 import React from 'react';
 import { View, FlatList, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -31,7 +31,7 @@ export default function ({ navigation, route }: Props) {
   const orders = useSelector(getOrdersWithFilter)(year, month);
 
   // handlers
-  const orderPressHandler = (order: Order) => {
+  const orderPressHandler = (order: WithId<Order>) => {
     if (order.status === 'dispatching') {
       navigation.navigate('OngoingDelivery', { orderId: order.id! });
     } else {
@@ -56,7 +56,7 @@ export default function ({ navigation, route }: Props) {
                   {item.origin.address?.description}
                 </Text>
                 <Text style={[texts.medium, { color: colors.darkGrey }]}>
-                  {hhMMFromDate(item.createdOn.toDate())}
+                  {hhMMFromDate((item.createdOn as firebase.firestore.Timestamp).toDate())}
                 </Text>
               </PaddedView>
             </TouchableOpacity>

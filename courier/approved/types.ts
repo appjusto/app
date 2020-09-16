@@ -1,9 +1,9 @@
-import { OrderMatchRequest } from '../../common/store/order/types';
+import { OrderMatchPushMessageData } from 'appjusto-types';
 
 export type ApprovedParamList = {
   Main: undefined;
   Matching: {
-    matchRequest: OrderMatchRequest;
+    matchRequest: OrderMatchPushMessageData;
   };
   MatchingFeedback: undefined;
 };

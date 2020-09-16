@@ -1,4 +1,4 @@
-import { Bank } from 'appjusto-types';
+import { Bank, WithId } from 'appjusto-types';
 import firebase from 'firebase';
 
 export default class CourierApi {
@@ -17,7 +17,7 @@ export default class CourierApi {
   // fetch supported banks
   async fetchBanks() {
     const querySnapshot = await this.firestore.collection('banks').get();
-    const docs: Bank[] = [];
+    const docs: WithId<Bank>[] = [];
     if (!querySnapshot.empty) {
       querySnapshot.forEach((doc) => {
         docs.push({ ...(doc.data() as Bank), id: doc.id });

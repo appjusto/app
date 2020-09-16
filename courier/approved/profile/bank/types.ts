@@ -1,4 +1,4 @@
-import { Bank } from '../../../../common/store/courier/types';
+import { Bank } from 'appjusto-types';
 
 export type BankParamList = {
   ProfileBank: {

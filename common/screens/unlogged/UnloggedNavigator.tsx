@@ -1,8 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
-import BackButton from '../../components/buttons/BackButton';
 import { t } from '../../../strings';
+import BackButton from '../../components/buttons/BackButton';
 import SignInFeedback from './SignInFeedback';
 import Terms from './Terms';
 import WelcomeScreen from './WelcomeScreen';

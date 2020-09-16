@@ -1,5 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { OrderMatchPushMessageData } from 'appjusto-types';
 import * as Notifications from 'expo-notifications';
 import React, { useEffect, useCallback } from 'react';
 import { Image } from 'react-native';
@@ -10,7 +11,6 @@ import useNotification from '../../common/hooks/useNotification';
 import useObserveOrders from '../../common/hooks/useObserveOrders';
 import { getCourier, getCourierStatus } from '../../common/store/courier/selectors';
 import { getOngoingOrders } from '../../common/store/order/selectors';
-import { OrderMatchRequest } from '../../common/store/order/types';
 import { colors } from '../../common/styles';
 import { t } from '../../strings';
 import DeliveriesNavigator from './history/DeliveriesNavigator';
@@ -45,6 +45,7 @@ export default function ({ navigation }: Props) {
         initial: false,
         params: {
           screen: 'OngoingDelivery',
+          initial: false,
           params: {
             orderId: order.id,
           },
@@ -60,7 +61,7 @@ export default function ({ navigation }: Props) {
         // should always be true as couriers should receive matching notifications only when they're available
         if (status === 'available') {
           navigation.navigate('Matching', {
-            matchRequest: (content.data as unknown) as OrderMatchRequest,
+            matchRequest: (content.data as unknown) as OrderMatchPushMessageData,
           });
         }
       }

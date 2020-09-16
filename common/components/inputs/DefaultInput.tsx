@@ -1,5 +1,5 @@
 import React, { ReactNode, useRef, useCallback } from 'react';
-import { View, Text, TextInput, StyleSheet, TextInputProps } from 'react-native';
+import { View, Text, TextInput, TextInputProps } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import { borders, texts, colors } from '../../styles';
@@ -20,7 +20,6 @@ export default React.forwardRef(
       ref.current.focus();
       // }
     }, [ref.current]);
-    const height = (props.numberOfLines ?? 1) * 50;
     return (
       <PaddedView
         half

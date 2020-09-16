@@ -17,6 +17,10 @@ export default function ({ order }: Props) {
     return { latitude: pair[0], longitude: pair[1] };
   });
 
+  console.log('OrderMap');
+  console.log('origin: ', origin.location);
+  console.log('destination: ', destination.location);
+
   return (
     <DefaultMap
       style={{ width: '100%', height: '100%' }}
@@ -24,8 +28,8 @@ export default function ({ order }: Props) {
       maxZoomLevel={13}
       fitToElements
     >
-      <Marker coordinate={origin.location!} icon={pinPackage} />
-      <Marker coordinate={destination.location!} icon={pinUser} />
+      <Marker coordinate={origin.location} icon={pinPackage} />
+      <Marker coordinate={destination.location} icon={pinUser} />
       <Polyline coordinates={routeCoordinates} />
     </DefaultMap>
   );

@@ -1,12 +1,13 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Place, Order } from 'appjusto-types';
+import { Place, Order, WithId } from 'appjusto-types';
+import { isEmpty } from 'lodash';
 import React, { useState, useContext, useEffect } from 'react';
 import { View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { AppDispatch, ApiContext } from '../../../../common/app/context';
-import { getConsumer } from '../../../../common/store/consumer/selectors';
+import { getConsumer, getCardById } from '../../../../common/store/consumer/selectors';
 import { createOrder, confirmOrder } from '../../../../common/store/order/actions';
 import { getOrderById } from '../../../../common/store/order/selectors';
 import { placeValid, sameAdddress } from '../../../../common/store/order/validators';
@@ -32,12 +33,15 @@ export default function ({ navigation, route }: Props) {
   // app state
   const consumer = useSelector(getConsumer);
   const getOrder = useSelector(getOrderById);
+  const cardById = useSelector(getCardById);
+  const lastCardId = consumer?.lastCardId;
+  const lastCard = !isEmpty(lastCardId) ? cardById(lastCardId!) : undefined;
 
   // screen state
-  const [origin, setOrigin] = useState<Place>({});
-  const [destination, setDestination] = useState<Place>({});
-  const [order, setOrder] = useState<Order | null>(null);
-  const [card, setCard] = useState(consumer?.getLastCard() ?? null);
+  const [origin, setOrigin] = useState<Partial<Place>>({});
+  const [destination, setDestination] = useState<Partial<Place>>({});
+  const [order, setOrder] = useState<WithId<Order> | null>(null);
+  const [card, setCard] = useState(lastCard);
 
   // side effects
   // route changes when interacting with other screens;
@@ -48,7 +52,7 @@ export default function ({ navigation, route }: Props) {
     if (orderId) setOrder(getOrder(orderId)); // from 'OrderHistory'
     if (newOrigin) setOrigin({ ...origin, address: newOrigin }); // from 'AddressComplete'
     if (newDestination) setDestination({ ...destination, address: newDestination }); // from 'AddressComplete'
-    if (cardId) setCard(consumer?.getCardById(cardId) ?? null); // from 'PaymentSelector'
+    if (cardId) setCard(cardById(cardId)); // from 'PaymentSelector'
   }, [route.params]);
 
   // to handle `setOrder()` from route changes

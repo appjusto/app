@@ -11,31 +11,35 @@ export const getOrderById = createSelector(getOrderState, (orderState) =>
   memoize((orderId: string) => orderState.ordersById[orderId])
 );
 
-export const getOrders = (state: State): Order[] => getOrderState(state).orders;
+export const getOrders = (state: State) => getOrderState(state).orders;
 
 export const getOngoingOrders = createSelector(getOrders, (orders) =>
   orders.filter((order) => order.status === 'dispatching')
 );
 
 export const getYearsWithOrders = createSelector(getOrders, (orders) =>
-  uniq(orders.map((order) => order.createdOn.toDate().getFullYear()))
+  uniq(
+    orders.map((order) => (order.createdOn as firebase.firestore.Timestamp).toDate().getFullYear())
+  )
 );
 
 export const getMonthsWithOrdersInYear = createSelector(getOrders, (orders) =>
   memoize((year: number) =>
     uniq(
       orders
-        .filter((order) => order.createdOn.toDate().getFullYear() === year)
-        .map((order) => order.createdOn.toDate().getMonth())
+        .filter(
+          (order) =>
+            (order.createdOn as firebase.firestore.Timestamp).toDate().getFullYear() === year
+        )
+        .map((order) => (order.createdOn as firebase.firestore.Timestamp).toDate().getMonth())
     )
   )
 );
 
 export const getOrdersWithFilter = createSelector(getOrders, (orders) =>
   memoize((year: number, month?: number, status?: OrderStatus) => {
-    console.log(year, month, status);
     return orders.filter((order) => {
-      const createdOn = order.createdOn.toDate();
+      const createdOn = (order.createdOn as firebase.firestore.Timestamp).toDate();
       if (year !== createdOn.getFullYear()) return false;
       if (month && month !== createdOn.getMonth()) return false;
       if (status && status !== order.status) return false;
@@ -62,8 +66,9 @@ export const getPlacesFromPreviousOrders = createSelector(getOrders, (orders) =>
   orders.reduce<Place[]>((places, order) => {
     let result = places;
     const { origin, destination } = order;
-    if (!result.some((place) => place.address === origin.address)) result = [...result, origin];
-    if (!result.some((place) => place.address === destination.address))
+    if (!result.some((place) => place.address?.description === origin.address?.description))
+      result = [...result, origin];
+    if (!result.some((place) => place.address?.description === destination.address?.description))
       result = [...result, destination];
 
     return result;
@@ -76,7 +81,7 @@ export const getOrderChat = createSelector(getOrderState, (orderState) =>
     return messages.reduce<GroupedChatMessages[]>((groups, message) => {
       const currentGroup = first(groups);
       if (message.from === currentGroup?.from) {
-        currentGroup.messages.push(message);
+        currentGroup!.messages.push(message);
         return groups;
       }
       // use as id for chat group the id of the first message of the group

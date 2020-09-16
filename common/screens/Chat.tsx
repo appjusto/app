@@ -86,7 +86,7 @@ export default function ({ route }: Props) {
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                   <Text style={[texts.small, { flexWrap: 'wrap' }]}>{message.message}</Text>
                   <Text style={[texts.tiny, { marginLeft: padding / 2, alignSelf: 'flex-end' }]}>
-                    {hhMMFromDate(message.timestamp?.toDate()) ?? ''}
+                    {hhMMFromDate((message.timestamp as firebase.firestore.Timestamp).toDate())}
                   </Text>
                 </View>
               </PaddedView>

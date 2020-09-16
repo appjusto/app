@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { ConsumerProfile, CourierProfile, UserProfile } from 'appjusto-types';
+import { ConsumerProfile, CourierProfile, UserProfile, WithId } from 'appjusto-types';
 
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
@@ -64,7 +64,7 @@ export const deleteAccount = (api: Api) => (survey: DeleteAccountSurvey) => {
 export const observeProfile = (api: Api) => (flavor: Flavor, id: string) => (
   dispatch: AppDispatch
 ) => {
-  return api.profile().observeProfile(id, (profile: UserProfile): void => {
+  return api.profile().observeProfile(id, (profile: WithId<UserProfile>): void => {
     const actionType = flavor === 'consumer' ? CONSUMER_PROFILE_UPDATED : COURIER_PROFILE_UPDATED;
     dispatch({ type: actionType, payload: profile });
   });

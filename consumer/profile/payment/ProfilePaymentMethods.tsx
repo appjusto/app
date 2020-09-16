@@ -23,7 +23,7 @@ export default function ({ navigation, route }: Props) {
   const { returnScreen } = route.params ?? {};
   // app state
   const consumer = useSelector(getConsumer);
-  const cards = consumer?.getCards() ?? [];
+  const cards = consumer?.cards ?? [];
 
   return (
     <View style={{ ...screens.configScreen, marginTop: padding }}>

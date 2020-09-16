@@ -1,4 +1,4 @@
-import { Place, Order } from 'appjusto-types';
+import { Place, Order, ChatMessage, WithId } from 'appjusto-types';
 import { CancelToken } from 'axios';
 
 import { AppDispatch } from '../../app/context';
@@ -6,7 +6,6 @@ import Api from '../api/api';
 import { AutoCompleteResult } from '../api/maps';
 import { ObserveOrdersOptions } from '../api/order';
 import { BUSY, awaitWithFeedback } from '../ui/actions';
-import { ChatMessage } from './types';
 
 export const ORDERS_UPDATED = 'ORDERS_UPDATED';
 export const ORDER_CHAT_UPDATED = 'ORDER_CHAT_UPDATED';
@@ -23,9 +22,10 @@ export const getAddressAutocomplete = (api: Api) => (
   return result;
 };
 
-export const createOrder = (api: Api) => (origin: Place, destination: Place) => async (
-  dispatch: AppDispatch
-) => {
+export const createOrder = (api: Api) => (
+  origin: Partial<Place>,
+  destination: Partial<Place>
+) => async (dispatch: AppDispatch) => {
   return dispatch(awaitWithFeedback(api.order().createOrder(origin, destination)));
 };
 
@@ -85,14 +85,16 @@ export const observeOrders = (api: Api) => (options: ObserveOrdersOptions) => (
 };
 
 export const observeOrderChat = (api: Api) => (orderId: string) => (dispatch: AppDispatch) => {
-  return api.order().observeOrderChat(orderId, (messages: ChatMessage[]): void => {
+  return api.order().observeOrderChat(orderId, (messages: WithId<ChatMessage>[]): void => {
     dispatch({ type: ORDER_CHAT_UPDATED, payload: { orderId, messages } });
   });
 };
 
-export const sendMessage = (api: Api) => (order: Order, from: string, message: string) => async (
-  dispatch: AppDispatch
-) => {
+export const sendMessage = (api: Api) => (
+  order: WithId<Order>,
+  from: string,
+  message: string
+) => async (dispatch: AppDispatch) => {
   dispatch({ type: BUSY, payload: true });
   const to = order.courierId === from ? order.consumerId : order.courierId;
   const result = await api.order().sendMessage(order.id, from, to!, message);

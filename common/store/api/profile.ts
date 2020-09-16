@@ -1,4 +1,4 @@
-import { UserProfile, CourierProfile, ConsumerProfile } from 'appjusto-types';
+import { UserProfile, CourierProfile, ConsumerProfile, WithId } from 'appjusto-types';
 import firebase from 'firebase';
 import * as geofirestore from 'geofirestore';
 
@@ -24,7 +24,10 @@ export default class ProfileApi {
 
   // firestore
   // observe profile changes
-  observeProfile(id: string, resultHandler: (profile: UserProfile) => void): firebase.Unsubscribe {
+  observeProfile(
+    id: string,
+    resultHandler: (profile: WithId<UserProfile>) => void
+  ): firebase.Unsubscribe {
     const unsubscribe = this.getProfileRef(id).onSnapshot(
       async (doc) => {
         // ensure profile exists

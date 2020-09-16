@@ -1,5 +1,5 @@
 import { Card, Order } from 'appjusto-types';
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   ScrollView,
   View,
@@ -28,7 +28,7 @@ import PlaceSummary from './PlaceSummary';
 
 type Props = {
   order: Order;
-  card: Card | null;
+  card?: Card;
   waiting: boolean;
   editStepHandler: (index: number) => void;
   confirmOrder: (fleetId: string, platformFee: number) => void;
@@ -49,6 +49,9 @@ export default function ({
 
   // state
   const [selectedFare, setSelectedFare] = useState(order.fare ?? order.quotes?.[0]);
+  const canSubmit = useMemo(() => {
+    return card !== undefined && selectedFare !== undefined && !waiting;
+  }, [card, selectedFare, waiting]);
 
   // effects
 
@@ -105,7 +108,7 @@ export default function ({
           </Text>
           <FlatList
             data={order.quotes}
-            keyExtractor={(item) => item.fleet.id}
+            keyExtractor={(item) => item.fleet.id!}
             renderItem={({ item }) => {
               return (
                 <View style={{ width: 156, ...borders.default }}>
@@ -216,7 +219,7 @@ export default function ({
       <DefaultButton
         title={t('Fazer pedido')}
         onPress={() => confirmOrder(selectedFare?.fleet?.id!, 100)}
-        disabled={!card || waiting}
+        disabled={!canSubmit}
         activityIndicator={waiting}
       />
     </ScrollView>

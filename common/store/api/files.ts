@@ -9,7 +9,6 @@ export default class FilesApi {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onprogress = (ev) => {
-        console.log(ev.total, ev.loaded);
         if (progressHandler) progressHandler(0);
       };
       xhr.onload = function () {
