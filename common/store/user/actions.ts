@@ -72,7 +72,7 @@ export const observeProfile = (api: Api) => (flavor: Flavor, id: string) => (
 
 export const updateProfile = (api: Api) => (
   id: string,
-  changes: CourierProfile | ConsumerProfile
+  changes: Partial<CourierProfile> | Partial<ConsumerProfile>
 ) => async (dispatch: AppDispatch) => {
   dispatch({ type: BUSY, payload: true });
   const result = await api.profile().updateProfile(id, changes);

@@ -1,4 +1,4 @@
-import { Place, Order, WithId, ChatMessage } from 'appjusto-types';
+import { Place, Order, WithId, ChatMessage, Fare } from 'appjusto-types';
 import firebase from 'firebase';
 
 export type ObserveOrdersOptions = {
@@ -18,6 +18,10 @@ export default class OrderApi {
     return (await this.functions.httpsCallable('createOrder')({ origin, destination })).data;
   }
 
+  async getOrderQuotes(orderId: string) {
+    return (await this.functions.httpsCallable('getOrderQuotes')({ orderId })).data as Fare[];
+  }
+
   async confirmOrder(orderId: string, cardId: string, fleetId: string, platformFee: number) {
     try {
       const result = await this.functions.httpsCallable('confirmOrder')({
@@ -34,6 +38,10 @@ export default class OrderApi {
 
   async cancelOrder(orderId: string) {
     return (await this.functions.httpsCallable('cancelOrder')({ orderId })).data;
+  }
+
+  async deleteOrder(orderId: string) {
+    return this.firestore.collection('orders').doc(orderId).delete();
   }
 
   // courier

@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { AppDispatch, ApiContext } from '../../../../common/app/context';
 import { getConsumer, getCardById } from '../../../../common/store/consumer/selectors';
-import { createOrder, confirmOrder } from '../../../../common/store/order/actions';
+import { createOrder, confirmOrder, deleteOrder } from '../../../../common/store/order/actions';
 import { getOrderById } from '../../../../common/store/order/selectors';
 import { placeValid, sameAdddress } from '../../../../common/store/order/validators';
 import { showToast } from '../../../../common/store/ui/actions';
@@ -40,14 +40,12 @@ export default function ({ navigation, route }: Props) {
   // screen state
   const [origin, setOrigin] = useState<Partial<Place>>({});
   const [destination, setDestination] = useState<Partial<Place>>({});
-  const [order, setOrder] = useState<WithId<Order> | null>(null);
+  const [order, setOrder] = useState<WithId<Order>>();
   const [card, setCard] = useState(lastCard);
 
   // side effects
   // route changes when interacting with other screens;
   useEffect(() => {
-    console.log('route.params changed');
-    console.log(route.params);
     const { orderId, origin: newOrigin, destination: newDestination, cardId } = route.params ?? {};
     if (orderId) setOrder(getOrder(orderId)); // from 'OrderHistory'
     if (newOrigin) setOrigin({ ...origin, address: newOrigin }); // from 'AddressComplete'
@@ -58,34 +56,29 @@ export default function ({ navigation, route }: Props) {
   // to handle `setOrder()` from route changes
   // if origin/destination aren't valid but those from order's are, we suppose that we need to update origin/destination
   useEffect(() => {
-    console.log('order changed');
-    console.log(order);
     if (!placeValid(origin) && placeValid(order?.origin)) {
-      console.log('changing origin', origin, order?.origin);
       setOrigin(order?.origin!);
     }
     if (!placeValid(destination) && placeValid(order?.destination)) {
-      console.log('changing destination', destination, order?.destination);
       setDestination(order?.destination!);
     }
   }, [order]);
 
   // create order whenever origin or destination changes
   useEffect(() => {
-    console.log('origin / destination changed');
-    console.log(origin);
-    console.log(destination);
+    // delete previous quote
+    if (!placeValid(origin)) return;
+    if (!placeValid(destination)) return;
     if (
-      placeValid(origin) &&
-      placeValid(destination) &&
-      (!order ||
-        !sameAdddress(origin.address!, order.origin.address!) ||
-        !sameAdddress(destination.address!, order.destination.address!))
+      !order ||
+      !sameAdddress(origin.address!, order.origin.address!) ||
+      !sameAdddress(destination.address!, order.destination.address!)
     ) {
       (async () => {
         const newOrder = await dispatch(createOrder(api)(origin, destination));
-        console.log('new order');
-        console.log(newOrder);
+        // delete previous quote
+        if (order) dispatch(deleteOrder(api)(order.id));
+        // set new order
         if (newOrder) setOrder(newOrder);
       })();
     }

@@ -14,7 +14,7 @@ export const hideToast = () => (dispatch: AppDispatch) => {
   dispatch({ type: HIDE_TOAST });
 };
 
-export const awaitWithFeedback = (promise: Promise<any>) => async (dispatch: AppDispatch) => {
+export const awaitWithFeedback = <T>(promise: Promise<T>) => async (dispatch: AppDispatch) => {
   dispatch({ type: BUSY, payload: true });
   try {
     const result = await promise;

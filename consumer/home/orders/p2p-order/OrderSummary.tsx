@@ -1,5 +1,6 @@
-import { Card, Order } from 'appjusto-types';
-import React, { useState, useMemo } from 'react';
+import { Card, Order, WithId, Fare } from 'appjusto-types';
+import { isEmpty } from 'lodash';
+import React, { useState, useMemo, useCallback, useContext, useEffect } from 'react';
 import {
   ScrollView,
   View,
@@ -9,13 +10,17 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../../assets/icons';
+import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
 import PaddedView from '../../../../common/components/views/PaddedView';
 import ShowIf from '../../../../common/components/views/ShowIf';
+import { getOrderQuotes } from '../../../../common/store/order/actions';
+import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { texts, colors, screens, padding, borders } from '../../../../common/styles';
 import {
   formatDistance,
@@ -27,7 +32,7 @@ import OrderMap from './OrderMap';
 import PlaceSummary from './PlaceSummary';
 
 type Props = {
-  order: Order;
+  order: WithId<Order>;
   card?: Card;
   waiting: boolean;
   editStepHandler: (index: number) => void;
@@ -44,16 +49,36 @@ export default function ({
   navigateToFillPaymentInfo,
 }: Props) {
   // context
+  const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
   const { height } = Dimensions.get('window');
   const { origin, destination, distance, duration } = order;
 
+  // app state
+  const busy = useSelector(getUIBusy);
+
   // state
-  const [selectedFare, setSelectedFare] = useState(order.fare ?? order.quotes?.[0]);
+  const [quotes, setQuotes] = useState<Fare[]>();
+  const [selectedFare, setSelectedFare] = useState<Fare>();
   const canSubmit = useMemo(() => {
     return card !== undefined && selectedFare !== undefined && !waiting;
   }, [card, selectedFare, waiting]);
 
-  // effects
+  // side effects
+  useEffect(() => {
+    getOrderQuotesHandler();
+  }, [order]);
+
+  useEffect(() => {
+    if (!isEmpty(quotes)) setSelectedFare(quotes![0]);
+  }, [quotes]);
+
+  // handlers
+  const getOrderQuotesHandler = useCallback(async () => {
+    (async () => {
+      setQuotes((await dispatch(getOrderQuotes(api)(order.id))) ?? undefined);
+    })();
+  }, [order]);
 
   // UI
   return (
@@ -98,7 +123,7 @@ export default function ({
           >
             <Text style={{ ...texts.medium, ...texts.bold }}>{t('Escolha a frota')}</Text>
             <Text style={{ ...texts.small }}>
-              {order.quotes?.length ?? 0} {t('frotas ativas no momento')}
+              {quotes?.length ?? 0} {t('frotas ativas no momento')}
             </Text>
           </View>
           <Text style={{ ...texts.small, color: colors.darkGrey }}>
@@ -106,23 +131,37 @@ export default function ({
               'Você pode escolher a frota que quiser para sua entrega. Frotas podem ter preços e características diferentes.'
             )}
           </Text>
-          <FlatList
-            data={order.quotes}
-            keyExtractor={(item) => item.fleet.id!}
-            renderItem={({ item }) => {
-              return (
-                <View style={{ width: 156, ...borders.default }}>
-                  <View style={{ backgroundColor: colors.lightGreen }}>
-                    <Text style={[texts.default]}>{item.fleet.name}</Text>
-                  </View>
-                  <View>
-                    <Text>{formatCurrency(item.total)}</Text>
-                  </View>
-                </View>
-              );
-            }}
-            horizontal
-          />
+          <ShowIf test={isEmpty(quotes)}>
+            {() => (
+              <DefaultButton
+                title={t('Click para tentar novamente')}
+                onPress={getOrderQuotesHandler}
+                activityIndicator={busy}
+                disabled={busy}
+              />
+            )}
+          </ShowIf>
+          <ShowIf test={!isEmpty(quotes)}>
+            {() => (
+              <FlatList
+                data={quotes}
+                keyExtractor={(item) => item.fleet.id!}
+                renderItem={({ item }) => {
+                  return (
+                    <View style={{ width: 156, ...borders.default }}>
+                      <View style={{ backgroundColor: colors.lightGreen }}>
+                        <Text style={[texts.default]}>{item.fleet.name}</Text>
+                      </View>
+                      <View>
+                        <Text>{formatCurrency(item.total)}</Text>
+                      </View>
+                    </View>
+                  );
+                }}
+                horizontal
+              />
+            )}
+          </ShowIf>
         </PaddedView>
 
         <HR height={padding} />

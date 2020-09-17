@@ -17,10 +17,6 @@ export default function ({ order }: Props) {
     return { latitude: pair[0], longitude: pair[1] };
   });
 
-  console.log('OrderMap');
-  console.log('origin: ', origin.location);
-  console.log('destination: ', destination.location);
-
   return (
     <DefaultMap
       style={{ width: '100%', height: '100%' }}
