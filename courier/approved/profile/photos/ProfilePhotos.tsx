@@ -21,7 +21,7 @@ import {
   uploadDocumentImage,
 } from '../../../../common/store/courier/actions';
 import { getCourier } from '../../../../common/store/courier/selectors';
-import { colors, texts, screens } from '../../../../common/styles';
+import { colors, texts, screens, padding } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ProfileParamList } from '../types';
 import DocumentButton from './DocumentButton';
@@ -174,19 +174,22 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <PaddedView style={{ ...screens.lightGrey }}>
-      <Text style={{ ...texts.default, color: colors.darkGrey }}>
-        {t(
-          'Precisamos da sua foto para incluir nas entregas. Se você optou por Moto e/ou Carro, vamos precisar também da foto da sua CNH; caso contrário, é só enviar a foto do seu RG.'
-        )}
-      </Text>
+    <View style={{ ...screens.configScreen }}>
+      <PaddedView>
+        <Text style={{ ...texts.default, color: colors.darkGrey }}>
+          {t(
+            'Precisamos da sua foto para incluir nas entregas. Se você optou por Moto e/ou Carro, vamos precisar também da foto da sua CNH; caso contrário, é só enviar a foto do seu RG.'
+          )}
+        </Text>
+      </PaddedView>
+
       {/* {height > 700 && <View style={{ flex: 1 }} />} */}
       <View
         style={{
           borderBottomColor: colors.grey,
           borderStyle: 'solid',
           borderBottomWidth: 1,
-          marginTop: 32,
+          marginTop: 16,
         }}
       />
       <ConfigItem
@@ -196,7 +199,7 @@ export default function ({ navigation }: Props) {
         checked={selfieCheckHandler}
       >
         {uploadingNewSelfie === UploadStatus.Uploading && (
-          <View style={{ marginBottom: 16 }}>
+          <View style={{ marginBottom: 16, paddingHorizontal: 16 }}>
             <RoundedText backgroundColor={colors.white}>{t('Enviando imagem')}</RoundedText>
           </View>
         )}
@@ -208,7 +211,7 @@ export default function ({ navigation }: Props) {
         checked={documentImageCheckHandler}
       >
         {uploadingNewDocumentImage === UploadStatus.Uploading && (
-          <View style={{ marginBottom: 16 }}>
+          <View style={{ marginBottom: 16, paddingHorizontal: 16 }}>
             <RoundedText backgroundColor={colors.white}>{t('Enviando imagem')}</RoundedText>
           </View>
         )}
@@ -219,9 +222,7 @@ export default function ({ navigation }: Props) {
           <Image
             source={newSelfie ?? previousSelfie ?? icons.selfie}
             resizeMode="cover"
-            style={
-              (newDocumentImage ?? previousDocumentimage) !== undefined ? styles.image : styles.icon
-            }
+            style={(newSelfie ?? previousSelfie) !== undefined ? styles.image : styles.icon}
           />
         </DocumentButton>
         <DocumentButton
@@ -239,12 +240,14 @@ export default function ({ navigation }: Props) {
         </DocumentButton>
       </View>
       <View style={{ flex: 1 }} />
-      <DefaultButton
-        title={t('Avançar')}
-        disabled={!canProceed}
-        onPress={() => navigation.goBack()}
-      />
-    </PaddedView>
+      <View style={{ padding }}>
+        <DefaultButton
+          title={t('Avançar')}
+          disabled={!canProceed}
+          onPress={() => navigation.goBack()}
+        />
+      </View>
+    </View>
   );
 }
 
@@ -262,7 +265,8 @@ const styles = StyleSheet.create({
     flexDirection: height > 700 ? 'column' : 'row',
     justifyContent: 'space-between',
     width: '100%',
-    height: height > 700 ? 340 : 168,
+    height: height > 700 ? 340 : 160,
     alignItems: 'center',
+    padding: 16,
   },
 });

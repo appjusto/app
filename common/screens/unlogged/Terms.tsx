@@ -1,33 +1,50 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 
 import { t } from '../../../strings';
-import { texts, colors } from '../../styles';
+import { texts, colors, screens } from '../../styles';
 
 export default function Terms() {
   return (
-    <View style={styles.screen}>
-      <Text style={styles.bigText}>{t('Termos de uso e política de privacidade')}</Text>
-      <Text style={styles.terms}>Lorem</Text>
-      <Text style={styles.terms}>Lorem</Text>
-    </View>
+    <ScrollView>
+      <View style={{ ...screens.lightGrey, marginBottom: 32 }}>
+        <Text style={{ ...texts.big, marginBottom: 8, marginTop: 16 }}>
+          {t('Termos de uso e política de privacidade')}
+        </Text>
+        <Text style={{ ...texts.default, marginTop: 16, color: colors.darkGrey }}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. In eu pulvinar justo. Ut in purus
+          ipsum. Nulla molestie massa nec nunc pretium vehicula quis non magna. Nullam ac finibus
+          leo. Nam ullamcorper nibh hendrerit dignissim fermentum. Integer nec lorem sollicitudin,
+          ultrices neque non, tincidunt turpis. In porta elit eu erat faucibus, ac convallis risus
+          lacinia. Mauris tempus, ligula in dignissim sollicitudin, dolor mi congue tellus, eu
+          mollis diam nibh sit amet magna. Quisque pellentesque vehicula lacus, sed iaculis libero
+          efficitur eget. Aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing
+          elit. In eu pulvinar justo. Ut in purus ipsum. Nulla molestie massa nec nunc pretium
+          vehicula quis non magna. Nullam ac finibus leo. Nam ullamcorper nibh hendrerit dignissim
+        </Text>
+        <Text style={{ ...texts.default, marginTop: 16, color: colors.darkGrey }}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. In eu pulvinar justo. Ut in purus
+          ipsum. Nulla molestie massa nec nunc pretium vehicula quis non magna. Nullam ac finibus
+          leo. Nam ullamcorper nibh hendrerit dignissim fermentum. Integer nec lorem sollicitudin,
+          ultrices neque non, tincidunt turpis. In porta elit eu erat faucibus, ac convallis risus
+          lacinia. Mauris tempus, ligula in dignissim sollicitudin, dolor mi congue tellus, eu
+          mollis diam nibh sit amet magna. Quisque pellentesque vehicula lacus, sed iaculis libero
+          efficitur eget. Aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing
+          elit. In eu pulvinar justo. Ut in purus ipsum. Nulla molestie massa nec nunc pretium
+          vehicula quis non magna. Nullam ac finibus leo. Nam ullamcorper nibh hendrerit dignissim
+        </Text>
+        <Text style={{ ...texts.default, marginTop: 16, color: colors.darkGrey }}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. In eu pulvinar justo. Ut in purus
+          ipsum. Nulla molestie massa nec nunc pretium vehicula quis non magna. Nullam ac finibus
+          leo. Nam ullamcorper nibh hendrerit dignissim fermentum. Integer nec lorem sollicitudin,
+          ultrices neque non, tincidunt turpis. In porta elit eu erat faucibus, ac convallis risus
+          lacinia. Mauris tempus, ligula in dignissim sollicitudin, dolor mi congue tellus, eu
+          mollis diam nibh sit amet magna. Quisque pellentesque vehicula lacus, sed iaculis libero
+          efficitur eget. Aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing
+          elit. In eu pulvinar justo. Ut in purus ipsum. Nulla molestie massa nec nunc pretium
+          vehicula quis non magna. Nullam ac finibus leo. Nam ullamcorper nibh hendrerit dignissim
+        </Text>
+      </View>
+    </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.lightGrey,
-  },
-  bigText: {
-    ...texts.big,
-    marginHorizontal: 16,
-    marginBottom: 24,
-    marginTop: 16,
-  },
-  terms: {
-    ...texts.default,
-    color: colors.darkGrey,
-    marginHorizontal: 16,
-  },
-});
