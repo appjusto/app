@@ -40,6 +40,10 @@ export default class OrderApi {
     return (await this.functions.httpsCallable('cancelOrder')({ orderId })).data;
   }
 
+  async deleteOrder(orderId: string) {
+    return this.firestore.collection('orders').doc(orderId).delete();
+  }
+
   // courier
   async matchOrder(orderId: string) {
     return (await this.functions.httpsCallable('matchOrder')({ orderId })).data;

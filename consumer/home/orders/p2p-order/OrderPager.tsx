@@ -22,7 +22,7 @@ import { Steps } from './types';
 type Props = {
   origin: Partial<Place>;
   destination: Partial<Place>;
-  order: WithId<Order> | null;
+  order?: WithId<Order>;
   card?: Card;
   navigateToAddressComplete: (value: string, returnParam: string) => void;
   navigateToFillPaymentInfo: () => void;

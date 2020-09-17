@@ -78,7 +78,7 @@ export default function ({
     (async () => {
       setQuotes((await dispatch(getOrderQuotes(api)(order.id))) ?? undefined);
     })();
-  }, []);
+  }, [order]);
 
   // UI
   return (

@@ -51,6 +51,10 @@ export const cancelOrder = (api: Api) => (orderId: string) => async (dispatch: A
   return result;
 };
 
+export const deleteOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
+  return await api.order().deleteOrder(orderId);
+};
+
 // couriers
 
 export const matchOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
