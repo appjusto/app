@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../common/app/context';
 import ConfigItem from '../../common/components/ConfigItem';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
-import PaddedView from '../../common/components/views/PaddedView';
 import {
   submitProfile,
   getDocumentImageURL,
@@ -35,16 +34,16 @@ export default function ({ navigation, route }: Props) {
 
   // app state
   const busy = useSelector(getUIBusy);
-  const courier = useSelector(getCourier);
-  const situation = courier!.situation ?? 'pending';
+  const courier = useSelector(getCourier)!;
+  const hasPersonalInfo = courierInfoSet(courier) ?? false;
+  const hasBankAccount = bankAccountSet(courier) ?? false;
+  const totalSteps = 4;
 
   // screen state
   const [hasImagesUris, setHasImagesUris] = useState(false);
   const submitEnabled =
-    situation === 'pending' && courierInfoSet(courier) && bankAccountSet(courier) && hasImagesUris;
-
-  // steps
-  const [steps, setSteps] = useState(0);
+    courier.situation === 'pending' && hasPersonalInfo && hasBankAccount && hasImagesUris;
+  const [stepsDone, setStepsDone] = useState(0);
 
   // handlers
   const submitHandler = async () => {
@@ -52,24 +51,12 @@ export default function ({ navigation, route }: Props) {
   };
 
   // side effects
-  // useEffect(() => {
-  //   if (courierInfoSet(courier)) {
-  //     setSteps(steps + 1);
-  //     console.log('rolou info');
-  //   } else if (bankAccountSet(courier)) {
-  //     setSteps(steps + 1);
-  //     console.log('rolou banco também');
-  //   } else if (hasImagesUris) {
-  //     setSteps(steps + 1);
-  //     console.log('rolou imagens também');
-  //   }
-  // }, []);
   useEffect(() => {
     const feedbackSituations = ['blocked', 'rejected', 'submitted'];
-    if (feedbackSituations.indexOf(situation) > -1) {
+    if (feedbackSituations.indexOf(courier.situation) > -1) {
       navigation.navigate('ProfileFeedback');
     }
-  }, [situation]);
+  }, [courier.situation]);
 
   useEffect(() => {
     navigation.addListener('focus', focusHandler);
@@ -80,12 +67,22 @@ export default function ({ navigation, route }: Props) {
   const focusHandler = useCallback(() => {
     (async () => {
       try {
-        const documentImageUri = await dispatch(getDocumentImageURL(api)(courier!.id!));
-        const selfieUri = await dispatch(getSelfieURL(api)(courier!.id!));
-        setHasImagesUris(documentImageUri !== null && selfieUri !== null);
+        let hasImages = hasImagesUris;
+        if (!hasImages) {
+          const documentImageUri = await dispatch(getDocumentImageURL(api)(courier.id!));
+          const selfieUri = await dispatch(getSelfieURL(api)(courier.id!));
+          hasImages = documentImageUri !== null && selfieUri !== null;
+        }
+
+        let totalSteps = 0;
+        if (hasPersonalInfo) totalSteps++;
+        if (hasBankAccount) totalSteps++;
+        if (hasImages) totalSteps++;
+        setStepsDone(totalSteps);
+        setHasImagesUris(hasImages);
       } catch (error) {}
     })();
-  }, []);
+  }, [api, courier, hasPersonalInfo, hasBankAccount, hasImagesUris]);
 
   // UI
   return (
@@ -109,7 +106,7 @@ export default function ({ navigation, route }: Props) {
               )}
             </Text>
             <Text style={{ ...texts.default, color: colors.darkGreen, paddingTop: 16 }}>
-              {steps} de 4 dados preenchidos
+              {stepsDone} {t('de')} {totalSteps} {t('dados preenchidos')}
             </Text>
           </View>
         </TouchableWithoutFeedback>
