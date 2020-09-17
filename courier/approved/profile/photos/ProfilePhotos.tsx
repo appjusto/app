@@ -218,7 +218,11 @@ export default function ({ navigation }: Props) {
       </ConfigItem>
       <View style={{ flex: 1 }} />
       <View style={styles.imagesContainer}>
-        <DocumentButton title={t('Foto de rosto')} onPress={() => {}} hasTitle={!previousSelfie}>
+        <DocumentButton
+          title={t('Foto de rosto')}
+          onPress={() => {}}
+          hasTitle={!previousSelfie && !newSelfie}
+        >
           <Image
             source={newSelfie ?? previousSelfie ?? icons.selfie}
             resizeMode="cover"
@@ -228,7 +232,7 @@ export default function ({ navigation }: Props) {
         <DocumentButton
           title={t('RG ou CNH aberta')}
           onPress={() => {}}
-          hasTitle={!previousDocumentimage}
+          hasTitle={!previousDocumentimage && !newDocumentImage}
         >
           <Image
             source={newDocumentImage ?? previousDocumentimage ?? icons.license}
@@ -265,7 +269,7 @@ const styles = StyleSheet.create({
     flexDirection: height > 700 ? 'column' : 'row',
     justifyContent: 'space-between',
     width: '100%',
-    height: height > 700 ? 340 : 160,
+    height: height > 700 ? 368 : 196,
     alignItems: 'center',
     padding: 16,
   },

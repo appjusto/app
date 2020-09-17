@@ -105,6 +105,7 @@ export default function ({ navigation, route }: Props) {
             onChangeText={(text) => setName(text)}
             onSubmitEditing={() => surnameRef.current?.focus()}
             keyboardType="default"
+            maxLength={30}
           />
           <DefaultInput
             ref={surnameRef}
@@ -116,6 +117,7 @@ export default function ({ navigation, route }: Props) {
             onChangeText={(text) => setSurname(text)}
             onSubmitEditing={() => cpfRef.current?.focus()}
             keyboardType="default"
+            maxLength={30}
           />
           <DefaultInput
             ref={cpfRef}

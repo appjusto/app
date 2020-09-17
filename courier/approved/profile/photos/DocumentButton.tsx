@@ -17,7 +17,7 @@ export default function ({ children, title, onPress, hasTitle }: Props) {
           backgroundColor: colors.lightGrey,
           ...borders.default,
           borderColor: colors.white,
-          padding,
+          // padding,
           justifyContent: 'center',
           alignItems: 'center',
         }}
