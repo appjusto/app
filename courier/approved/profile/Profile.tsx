@@ -4,7 +4,7 @@ import React, { useContext, useCallback } from 'react';
 import { View, Alert, ScrollView } from 'react-native';
 
 import { ApiContext } from '../../../common/app/context';
-import ConfigItem from '../../../common/components/ConfigItem';
+import ConfigItem from '../../../common/components/views/ConfigItem';
 import { signOut } from '../../../common/store/user/actions';
 import { screens } from '../../../common/styles';
 import { t } from '../../../strings';

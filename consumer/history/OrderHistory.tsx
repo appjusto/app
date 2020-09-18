@@ -7,8 +7,8 @@ import { View, SectionList, Text, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import * as icons from '../../assets/icons';
-import ConfigItem from '../../common/components/ConfigItem';
-import PaddedView from '../../common/components/views/PaddedView';
+import PaddedView from '../../common/components/containers/PaddedView';
+import ConfigItem from '../../common/components/views/ConfigItem';
 import StatusBadge from '../../common/components/views/StatusBadge';
 import { getYearsWithOrders, getOrdersWithFilter } from '../../common/store/order/selectors';
 import { screens, texts, padding, colors } from '../../common/styles';

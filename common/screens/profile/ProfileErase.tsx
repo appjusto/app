@@ -5,7 +5,7 @@ import { View, Text } from 'react-native';
 
 import { t } from '../../../strings';
 import { ApiContext } from '../../app/context';
-import CheckField from '../../components/CheckField';
+import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import { deleteAccount } from '../../store/user/actions';
 import { DeleteAccountSurvey } from '../../store/user/types';

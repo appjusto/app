@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, ViewProps } from 'react-native';
 
-import { checkboxActive, checkboxInactive } from '../../assets/icons';
-import { texts } from '../styles';
+import { checkboxActive, checkboxInactive } from '../../../assets/icons';
+import { texts } from '../../styles';
 
 interface Props extends ViewProps {
   onPress: () => void;

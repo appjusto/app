@@ -4,7 +4,7 @@ import React from 'react';
 import { Marker, Polyline } from 'react-native-maps';
 
 import { pinUser, pinPackage } from '../../../../assets/icons';
-import DefaultMap from '../../../../common/components/DefaultMap';
+import DefaultMap from '../../../../common/components/views/DefaultMap';
 
 type Props = {
   order: Order;

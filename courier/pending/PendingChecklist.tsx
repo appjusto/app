@@ -5,8 +5,8 @@ import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard } from 'reac
 import { useSelector, useDispatch } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../common/app/context';
-import ConfigItem from '../../common/components/ConfigItem';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
+import ConfigItem from '../../common/components/views/ConfigItem';
 import {
   submitProfile,
   getDocumentImageURL,

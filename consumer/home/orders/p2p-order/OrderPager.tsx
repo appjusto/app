@@ -7,9 +7,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../../common/components/texts/LabeledText';
-import PaddedView from '../../../../common/components/views/PaddedView';
 import { placeValid } from '../../../../common/store/order/validators';
 import { showToast } from '../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';

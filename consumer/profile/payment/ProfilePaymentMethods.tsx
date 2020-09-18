@@ -4,7 +4,7 @@ import React from 'react';
 import { View, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import ConfigItem from '../../../common/components/ConfigItem';
+import ConfigItem from '../../../common/components/views/ConfigItem';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { screens } from '../../../common/styles';
 import { t } from '../../../strings';

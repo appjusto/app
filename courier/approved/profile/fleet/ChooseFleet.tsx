@@ -7,8 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
-import PaddedView from '../../../../common/components/views/PaddedView';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { fetchApprovedFleets } from '../../../../common/store/fleet/actions';
 import { getAvailableCities, getApprovedFleets } from '../../../../common/store/fleet/selectors';

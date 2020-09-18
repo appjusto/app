@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../assets/icons';
 import { AppDispatch, ApiContext } from '../../common/app/context';
-import PaddedView from '../../common/components/views/PaddedView';
+import PaddedView from '../../common/components/containers/PaddedView';
 import { getFlavor } from '../../common/store/config/selectors';
 import { observeProfile } from '../../common/store/user/actions';
 import { getUser } from '../../common/store/user/selectors';

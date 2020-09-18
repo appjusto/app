@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
-import PaddedView from '../../../common/components/views/PaddedView';
+import PaddedView from '../../../common/components/containers/PaddedView';
 import { matchOrder } from '../../../common/store/order/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { texts, screens, colors, padding } from '../../../common/styles';

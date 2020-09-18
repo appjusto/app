@@ -7,8 +7,8 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
-import PaddedView from '../../../../common/components/views/PaddedView';
 import { fetchBanks } from '../../../../common/store/courier/actions';
 import { getBanks } from '../../../../common/store/courier/selectors';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
