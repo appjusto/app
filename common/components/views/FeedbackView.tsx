@@ -10,11 +10,12 @@ type Props = {
   icon: any;
   description?: string;
   children?: React.ReactNode | React.ReactNode[];
+  background?: string;
 };
 
-export default ({ header, description, icon, children }: Props) => {
+export default ({ header, description, icon, children, background }: Props) => {
   return (
-    <View style={[screens.padded, { backgroundColor: colors.white }]}>
+    <View style={[screens.padded, { backgroundColor: background ?? colors.white }]}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <View style={{ alignItems: 'center' }}>
           <Text style={{ ...texts.big, textAlign: 'center' }}>{header}</Text>

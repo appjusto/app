@@ -59,6 +59,7 @@ export default function ({ navigation }: Props) {
         <CheckField
           checked={survey.notWorkingOnMyRegion}
           text={t('Não atende na minha região')}
+          style={{ marginBottom: 12 }}
           onPress={() =>
             setSurvey({ ...survey, notWorkingOnMyRegion: !survey.notWorkingOnMyRegion })
           }
@@ -66,6 +67,7 @@ export default function ({ navigation }: Props) {
         <CheckField
           checked={survey.didntFindWhatINeeded}
           text={t('Não encontrei o que preciso')}
+          style={{ marginBottom: 12 }}
           onPress={() =>
             setSurvey({ ...survey, didntFindWhatINeeded: !survey.didntFindWhatINeeded })
           }
@@ -73,6 +75,7 @@ export default function ({ navigation }: Props) {
         <CheckField
           checked={survey.pricesHigherThanAlternatives}
           text={t('Preços mais altos que os concorrentes')}
+          style={{ marginBottom: 12 }}
           onPress={() =>
             setSurvey({
               ...survey,
@@ -80,16 +83,18 @@ export default function ({ navigation }: Props) {
             })
           }
         />
-        <CheckField
+        {/* <CheckField
           checked={survey.didntLikeApp}
           text={t('Não gostei do aplicativo')}
+          style={{ marginBottom: 12 }}
           onPress={() => setSurvey({ ...survey, didntLikeApp: !survey.didntLikeApp })}
         />
         <CheckField
           checked={survey.didntFeelSafe}
           text={t('Não me senti seguro')}
+          style={{ marginBottom: 12 }}
           onPress={() => setSurvey({ ...survey, didntFeelSafe: !survey.didntFeelSafe })}
-        />
+        /> */}
         <CheckField
           checked={survey.ratherUseAnotherApp}
           text={t('Prefiro usar outro serviço ou aplicativo')}
