@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext, useCallback } from 'react';
-import { View, Alert, ScrollView } from 'react-native';
+import { Alert, ScrollView, SafeAreaView } from 'react-native';
 
 import { ApiContext } from '../../../common/app/context';
 import ConfigItem from '../../../common/components/views/ConfigItem';
@@ -45,7 +45,7 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <View style={screens.configScreen}>
+    <SafeAreaView style={{ ...screens.configScreen, marginTop: 16 }}>
       <ScrollView>
         <ConfigItem
           title={t('Seus dados')}
@@ -88,6 +88,6 @@ export default function ({ navigation }: Props) {
           onPress={() => navigation.navigate('ProfileErase')}
         />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

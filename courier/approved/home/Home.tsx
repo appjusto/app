@@ -37,6 +37,7 @@ type Props = {
 };
 
 export default function ({ navigation }: Props) {
+  const { height } = Dimensions.get('window');
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -93,14 +94,19 @@ export default function ({ navigation }: Props) {
     <SafeAreaView>
       {/* Main area */}
       <View style={[styles.main, { backgroundColor: working ? colors.green : colors.yellow }]}>
-        <Text style={[texts.big, { paddingBottom: 24 }]}>
+        <Text
+          style={[
+            texts.big,
+            { paddingBottom: height > 700 ? 32 : 16, marginTop: height > 700 ? 32 : 0 },
+          ]}
+        >
           {`${t('Olá')}, ${courier?.name ?? 'entregador'}. ${t(
             'Faça suas corridas com segurança.'
           )}`}
         </Text>
 
         {/* controls */}
-        <View style={styles.controls}>
+        <View style={{ ...styles.controls, marginBottom: height > 700 ? 32 : 8 }}>
           <View style={styles.controlItem}>
             <Image source={motocycleWhite} width={64} height={64} />
             <Text style={[texts.default, { paddingTop: 4 }]}>

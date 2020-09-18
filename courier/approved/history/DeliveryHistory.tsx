@@ -9,6 +9,7 @@ import * as icons from '../../../assets/icons';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../common/components/views/ConfigItem';
+import FeedbackView from '../../../common/components/views/FeedbackView';
 import ShowIf from '../../../common/components/views/ShowIf';
 import {
   getYearsWithOrders,
@@ -57,51 +58,60 @@ export default function ({ navigation, route }: Props) {
   // UI
   const paddingTop = Constants.statusBarHeight;
   return (
-    <View style={{ ...screens.configScreen }}>
-      <SectionList
-        style={{ flex: 1, paddingTop }}
-        sections={sections}
-        keyExtractor={(item) => item.key}
-        renderSectionHeader={({ section }) => (
-          <PaddedView
-            style={{ flexDirection: 'row', borderBottomColor: colors.grey, borderBottomWidth: 1 }}
-          >
-            <Image source={icons.calendar} />
-            <Text style={{ ...texts.medium, marginLeft: padding }}>{section.title}</Text>
-          </PaddedView>
-        )}
-        renderItem={({ item }) => {
-          const title = getMonthName(item.month);
-          const subtitle =
-            item.delivered +
-            t('corridas finalizadas') +
-            '\n' +
-            t('Total recebido: ') +
-            formatCurrency(item.courierFee);
-          return (
-            <ConfigItem
-              title={title}
-              subtitle={subtitle}
-              onPress={() =>
-                navigation.navigate('DeliveryHistoryByMonth', {
-                  year: item.year,
-                  month: item.month,
-                })
-              }
-            >
-              <ShowIf test={item.dispatching > 0}>
-                {() => (
-                  <View style={{ marginTop: halfPadding }}>
-                    <RoundedText backgroundColor={colors.yellow}>
-                      {t('Corrida em andamento')}
-                    </RoundedText>
-                  </View>
-                )}
-              </ShowIf>
-            </ConfigItem>
-          );
-        }}
-      />
-    </View>
+    // <View style={{ ...screens.configScreen }}>
+    //   <SectionList
+    //     style={{ flex: 1, paddingTop }}
+    //     sections={sections}
+    //     keyExtractor={(item) => item.key}
+    //     renderSectionHeader={({ section }) => (
+    //       <PaddedView
+    //         style={{ flexDirection: 'row', borderBottomColor: colors.grey, borderBottomWidth: 1 }}
+    //       >
+    //         <Image source={icons.calendar} />
+    //         <Text style={{ ...texts.medium, marginLeft: padding }}>{section.title}</Text>
+    //       </PaddedView>
+    //     )}
+    //     renderItem={({ item }) => {
+    //       const title = getMonthName(item.month);
+    //       const subtitle =
+    //         item.delivered +
+    //         t('corridas finalizadas') +
+    //         '\n' +
+    //         t('Total recebido: ') +
+    //         formatCurrency(item.courierFee);
+    //       return (
+    //         <ConfigItem
+    //           title={title}
+    //           subtitle={subtitle}
+    //           onPress={() =>
+    //             navigation.navigate('DeliveryHistoryByMonth', {
+    //               year: item.year,
+    //               month: item.month,
+    //             })
+    //           }
+    //         >
+    //           <ShowIf test={item.dispatching > 0}>
+    //             {() => (
+    //               <View style={{ marginTop: halfPadding }}>
+    //                 <RoundedText backgroundColor={colors.yellow}>
+    //                   {t('Corrida em andamento')}
+    //                 </RoundedText>
+    //               </View>
+    //             )}
+    //           </ShowIf>
+    //         </ConfigItem>
+    //       );
+    //     }}
+    //   />
+    // </View>
+
+    // For now, since we have no data
+
+    <FeedbackView
+      header={t('Seu histórico está vazio')}
+      description={t('Você ainda não fez nenhuma corrida')}
+      icon={icons.motocycle}
+      background={colors.lightGrey}
+    />
   );
 }

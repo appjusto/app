@@ -5,7 +5,7 @@ import React from 'react';
 import { Text } from 'react-native';
 
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import PaddedView from '../../../common/components/views/PaddedView';
+import PaddedView from '../../../common/components/containers/PaddedView';
 import { colors, borders, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { HomeParamList } from './types';
