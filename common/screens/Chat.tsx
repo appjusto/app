@@ -35,7 +35,7 @@ export default function ({ route }: Props) {
   const { orderId } = route.params;
 
   // app state
-  const user = useSelector(getUser);
+  const user = useSelector(getUser)!;
   const order = useSelector(getOrderById)(orderId);
   const names = {
     [order.courierId!]: order.courierName,
@@ -48,7 +48,7 @@ export default function ({ route }: Props) {
 
   // handlers
   const sendMessageHandler = useCallback(async () => {
-    dispatch(sendMessage(api)(order, user!.uid, trim(inputText)));
+    dispatch(sendMessage(api)(order, user.uid, trim(inputText)));
     setInputText('');
   }, [order, inputText]);
   // UI
@@ -86,7 +86,9 @@ export default function ({ route }: Props) {
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                   <Text style={[texts.small, { flexWrap: 'wrap' }]}>{message.message}</Text>
                   <Text style={[texts.tiny, { marginLeft: padding / 2, alignSelf: 'flex-end' }]}>
-                    {formatTime((message.timestamp as firebase.firestore.Timestamp).toDate())}
+                    {message.timestamp
+                      ? formatTime((message.timestamp as firebase.firestore.Timestamp).toDate())
+                      : ''}
                   </Text>
                 </View>
               </PaddedView>

@@ -1,8 +1,9 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Order, WithId } from 'appjusto-types';
 import Constants from 'expo-constants';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { View, SectionList, Text, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 
@@ -14,13 +15,13 @@ import { getYearsWithOrders, getOrdersWithFilter } from '../../common/store/orde
 import { screens, texts, padding, colors } from '../../common/styles';
 import { formatTime, formatDate, separateWithDot } from '../../common/utils/formatters';
 import { HomeNavigatorParamList } from '../home/types';
-import { HistoryNavigatorParamList } from './types';
+import { HistoryParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<HistoryNavigatorParamList, 'OrderHistory'>,
+  StackNavigationProp<HistoryParamList, 'OrderHistory'>,
   BottomTabNavigationProp<HomeNavigatorParamList>
 >;
-type ScreenRouteProp = RouteProp<HistoryNavigatorParamList, 'OrderHistory'>;
+type ScreenRouteProp = RouteProp<HistoryParamList, 'OrderHistory'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -46,6 +47,21 @@ export default function ({ navigation, route }: Props) {
     });
   }, [yearsWithOrders]);
 
+  // handlers
+  const orderSelectHandler = useCallback((order: WithId<Order>) => {
+    if (order.status === 'quote') {
+      navigation.navigate('CreateOrderP2P', { orderId: order.id });
+    } else if (order.status === 'dispatching') {
+      navigation.navigate('OngoingOrder', {
+        orderId: order.id,
+      });
+    } else if (order.status === 'delivered') {
+      navigation.navigate('OrderSummary', {
+        orderId: order.id,
+      });
+    }
+  }, []);
+
   // UI
   const paddingTop = Constants.statusBarHeight;
   return (
@@ -67,19 +83,7 @@ export default function ({ navigation, route }: Props) {
           const title = item.origin.address.main;
           const subtitle = separateWithDot(formatDate(createdOn), formatTime(createdOn));
           return (
-            <ConfigItem
-              title={title}
-              subtitle={subtitle}
-              onPress={() => {
-                if (item.status === 'quote') {
-                  navigation.navigate('CreateOrderP2P', { orderId: item.id });
-                } else {
-                  navigation.navigate('OrderDetail', {
-                    orderId: item.id,
-                  });
-                }
-              }}
-            >
+            <ConfigItem title={title} subtitle={subtitle} onPress={() => orderSelectHandler(item)}>
               <StatusBadge status={item.status} />
             </ConfigItem>
           );

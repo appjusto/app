@@ -8,6 +8,7 @@ export type DeliveriesNavigatorParamList = {
   };
   OngoingDelivery: {
     orderId: string;
+    newMessage?: boolean;
   };
   DeliverySummary: {
     orderId: string;

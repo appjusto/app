@@ -36,18 +36,28 @@ export default function ({ navigation, route }: Props) {
   const busy = useSelector(getUIBusy);
   const order = useSelector(getOrderById)(orderId);
 
+  // effects
   useEffect(() => {
     if (order.status === 'delivered') {
       navigation.navigate('DeliverySummary', { orderId });
     }
   }, [order]);
 
+  useEffect(() => {
+    const { newMessage } = route.params ?? {};
+    if (newMessage) {
+      // this seems to be necessary to avoid keeping this indefinitely
+      navigation.setParams({ newMessage: false });
+      openChatHandler();
+    }
+  }, [route.params]);
+
   // handlers
   const nextStatepHandler = useCallback(async () => {
     if (order.dispatchingState !== 'arrived-destination') {
-      dispatch(nextDispatchingState(api)(order.id!));
+      dispatch(nextDispatchingState(api)(order.id));
     } else {
-      dispatch(completeDelivery(api)(order.id!));
+      dispatch(completeDelivery(api)(order.id));
     }
   }, [order]);
 

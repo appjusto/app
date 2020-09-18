@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { OrderMatchPushMessageData } from 'appjusto-types';
+import { ChatPushMessageData, OrderMatchPushMessageData, PushMessageData } from 'appjusto-types';
 import * as Notifications from 'expo-notifications';
 import React, { useEffect, useCallback } from 'react';
 import { Image } from 'react-native';
@@ -57,13 +57,27 @@ export default function ({ navigation }: Props) {
   // handlers
   const notificationHandler = useCallback(
     (content: Notifications.NotificationContent) => {
-      if (content.data.action === 'matching') {
+      const data = (content.data as unknown) as PushMessageData;
+      if (data.action === 'matching') {
         // should always be true as couriers should receive matching notifications only when they're available
         if (status === 'available') {
           navigation.navigate('Matching', {
-            matchRequest: (content.data as unknown) as OrderMatchPushMessageData,
+            matchRequest: data as OrderMatchPushMessageData,
           });
         }
+      } else if (data.action === 'order-chat') {
+        navigation.navigate('Main', {
+          screen: 'Deliveries',
+          initial: false,
+          params: {
+            screen: 'OngoingDelivery',
+            initial: false,
+            params: {
+              orderId: (data as ChatPushMessageData).orderId,
+              newMessage: true,
+            },
+          },
+        });
       }
     },
     [navigation, status]

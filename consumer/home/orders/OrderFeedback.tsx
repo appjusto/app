@@ -1,4 +1,5 @@
-import { RouteProp } from '@react-navigation/native';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,14 +9,18 @@ import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { cancelOrder } from '../../../common/store/order/actions';
-import { getOrders } from '../../../common/store/order/selectors';
+import { getOrderById } from '../../../common/store/order/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors } from '../../../common/styles';
 import { t } from '../../../strings';
+import { LoggedParamList } from '../../types';
 import { HomeNavigatorParamList } from '../types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'OrderFeedback'>;
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<HomeNavigatorParamList, 'OrderFeedback'>,
+  BottomTabNavigationProp<LoggedParamList>
+>;
 type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'OrderFeedback'>;
 
 type Props = {
@@ -31,8 +36,7 @@ export default ({ navigation, route }: Props) => {
 
   // app state
   const busy = useSelector(getUIBusy);
-  const orders = useSelector(getOrders);
-  const order = orders.find(({ id }) => id === orderId);
+  const order = useSelector(getOrderById)(orderId);
 
   // side effects
   useEffect(() => {
@@ -40,6 +44,12 @@ export default ({ navigation, route }: Props) => {
     if (order.status === 'canceled') {
       navigation.popToTop();
     } else if (order.status === 'dispatching') {
+      navigation.navigate('History', {
+        screen: 'OngoingOrder',
+        params: {
+          orderId,
+        },
+      });
       // TODO: go to the Orders Navigator
     }
   }, [order]);

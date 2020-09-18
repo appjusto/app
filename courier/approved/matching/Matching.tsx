@@ -10,7 +10,7 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import { matchOrder } from '../../../common/store/order/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { texts, screens, colors, padding } from '../../../common/styles';
-import { formatDistance } from '../../../common/utils/formatters';
+import { formatCurrency, formatDistance } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import AcceptControl from './AcceptControl';
@@ -60,9 +60,7 @@ export default function ({ navigation, route }: Props) {
       {/* header */}
       <View style={{ alignItems: 'center' }}>
         <Text style={[texts.big, { color: colors.darkGreen }]}>{t('Nova corrida para você!')}</Text>
-        <Text style={[texts.huge]}>
-          {t('R$')} {matchRequest.courierFee}
-        </Text>
+        <Text style={[texts.huge]}>{formatCurrency(matchRequest.courierFee)}</Text>
       </View>
       <View style={{ flex: 1 }} />
       {/* body */}

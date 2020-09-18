@@ -112,13 +112,15 @@ export default class OrderApi {
     return unsubscribe;
   }
 
-  async sendMessage(orderId: string, from: string, to: string, message: string) {
+  async sendMessage(orderId: string, message: Partial<ChatMessage>) {
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    return this.firestore.collection('orders').doc(orderId).collection('chat').add({
-      from,
-      to,
-      message,
-      timestamp,
-    });
+    return this.firestore
+      .collection('orders')
+      .doc(orderId)
+      .collection('chat')
+      .add({
+        ...message,
+        timestamp,
+      });
   }
 }

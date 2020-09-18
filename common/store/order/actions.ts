@@ -5,6 +5,7 @@ import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
 import { AutoCompleteResult } from '../api/maps';
 import { ObserveOrdersOptions } from '../api/order';
+import { Flavor } from '../config/types';
 import { BUSY, awaitWithFeedback } from '../ui/actions';
 
 export const ORDERS_UPDATED = 'ORDERS_UPDATED';
@@ -104,8 +105,11 @@ export const sendMessage = (api: Api) => (
   message: string
 ) => async (dispatch: AppDispatch) => {
   dispatch({ type: BUSY, payload: true });
-  const to = order.courierId === from ? order.consumerId : order.courierId;
-  const result = await api.order().sendMessage(order.id, from, to!, message);
+  const destination: 'consumers' | 'couriers' =
+    from === order.consumerId ? 'couriers' : 'consumers';
+  const to = destination === 'consumers' ? order.consumerId : order.courierId!;
+  const chat: Partial<ChatMessage> = { from, to, message, destination };
+  const result = await api.order().sendMessage(order.id, chat);
   dispatch({ type: BUSY, payload: false });
   return result;
 };

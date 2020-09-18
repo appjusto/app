@@ -15,8 +15,9 @@ import { t } from '../strings';
 import HistoryNavigator from './history/HistoryNavigator';
 import HomeNavigator from './home/HomeNavigator';
 import ProfileNavigator from './profile/ProfileNavigator';
+import { LoggedParamList } from './types';
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<LoggedParamList>();
 export default function () {
   // context
   const dispatch = useDispatch<AppDispatch>();
