@@ -145,7 +145,9 @@ export default function ({ navigation }: Props) {
             </View>
           </View>
           <View style={{ alignSelf: 'center', bottom: 18 }}>
-            <TouchableWithoutFeedback onPress={() => {}}>
+            <TouchableWithoutFeedback
+              onPress={() => navigation.navigate('PermissionDeniedFeedback')}
+            >
               <Text style={{ ...texts.small, color: colors.darkGrey }}>
                 {t('Veja todos os seus ganhos')}
               </Text>
