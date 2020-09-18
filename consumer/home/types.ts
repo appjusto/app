@@ -13,6 +13,7 @@ export type HomeNavigatorParamList = {
     returnScreen: 'CreateOrderP2P';
     returnParam: string;
   };
+  ProfileEdit: undefined;
   ProfileAddCard?: {
     returnScreen: 'CreateOrderP2P';
   };

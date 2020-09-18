@@ -11,14 +11,7 @@ const Stack = createStackNavigator<HistoryNavigatorParamList>();
 export default function () {
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="OrderHistory"
-        component={OrderHistory}
-        options={({ navigation }) => ({
-          title: t('Histórico de pedidos'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
-      />
+      <Stack.Screen name="OrderHistory" component={OrderHistory} options={{ headerShown: false }} />
       <Stack.Screen
         name="OrderDetail"
         component={OrderDetail}

@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 
 import ConfigItem from '../../../common/components/ConfigItem';
 import { getConsumer } from '../../../common/store/consumer/selectors';
-import { screens, padding } from '../../../common/styles';
+import { screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ProfileParamList } from '../types';
 
@@ -26,7 +26,7 @@ export default function ({ navigation, route }: Props) {
   const cards = consumer?.cards ?? [];
 
   return (
-    <View style={{ ...screens.configScreen, marginTop: padding }}>
+    <View style={{ ...screens.configScreen }}>
       <FlatList
         data={cards}
         keyExtractor={(item) => item.id}

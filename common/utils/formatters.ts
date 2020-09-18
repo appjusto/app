@@ -1,29 +1,29 @@
 import i18n from 'i18n-js';
 import { round } from 'lodash';
 
-// distance in meters
-export const formatDistance = (distance: number) => {
-  if (distance < 1000) return `${distance}m`;
-  return `${round(distance / 1000, 2)}km`;
-};
+// general
+
+export const padWithZero = (value: number) => (value < 10 ? `0${value}` : `${value}`);
+export const separateWithDot = (left: string, right: string) => `${left} \u25CF ${right}`;
+
+// date & time
+
+export const formatDate = (date: Date) => i18n.l('date.formats.default', date);
+export const formatTime = (date: Date) => i18n.l('time.formats.default', date);
+export const getMonthName = (month: number) =>
+  i18n.strftime(new Date(`2020-${padWithZero(month)}-01`), '%B');
 
 export const formatDuration = (duration: number) => {
   return `${round(duration / 60, 0)} min`;
 };
 
-export const getMonthName = (month: number) =>
-  i18n.strftime(new Date(`2020-${padWithZero(month)}-01`), '%B');
+// distance
+export const formatDistance = (distance: number) => {
+  if (distance < 1000) return `${distance}m`;
+  return `${round(distance / 1000, 2)}km`;
+};
+
+// money and %
 
 export const formatCurrency = (value: number) => i18n.toCurrency(value / 100);
 export const formatPct = (value: number) => `${parseFloat((value * 100).toFixed(2))}%`;
-
-export const padWithZero = (value: number) => (value < 10 ? `0${value}` : `${value}`);
-
-export const hhMMFromDate = (date: Date) => {
-  if (!date) return null;
-
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-
-  return `${padWithZero(hours)}:${padWithZero(minutes)}`;
-};

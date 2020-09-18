@@ -1,5 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import Constants from 'expo-constants';
 import React, { useContext } from 'react';
 import { View, Alert, ScrollView } from 'react-native';
 
@@ -44,13 +45,19 @@ export default function ({ navigation }: Props) {
   };
 
   // UI
+  const paddingTop = Constants.statusBarHeight;
   return (
-    <View style={screens.configScreen}>
+    <View style={{ ...screens.configScreen, paddingTop }}>
       <ScrollView>
         <ConfigItem
           title={t('Seus dados')}
           subtitle={t('Edite seus dados pessoais')}
           onPress={() => navigation.navigate('ProfileEdit', { allowPartialSave: true })}
+        />
+        <ConfigItem
+          title={t('Formas de pagamento')}
+          subtitle={t('Edite suas formas de pagamento')}
+          onPress={() => navigation.navigate('ProfilePaymentMethods')}
         />
         <ConfigItem
           title={t('Termos de uso e política de privacidade')}

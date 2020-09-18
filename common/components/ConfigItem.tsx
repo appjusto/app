@@ -10,7 +10,7 @@ import ShowIf from './views/ShowIf';
 type Props = {
   title: string;
   subtitle: string;
-  checked?: boolean | Promise<boolean>;
+  checked?: boolean;
   children?: ReactNode;
   bottomBorder?: boolean;
   onPress: () => void;
@@ -64,7 +64,9 @@ export default function ({
             <ArrowBox />
           </View>
         </PaddedView>
-        {children}
+        {children && (
+          <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>{children}</View>
+        )}
       </View>
     </TouchableOpacity>
   );

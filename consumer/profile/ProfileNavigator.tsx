@@ -15,14 +15,7 @@ const Stack = createStackNavigator<ProfileParamList>();
 export default function () {
   return (
     <Stack.Navigator initialRouteName="Profile">
-      <Stack.Screen
-        name="Profile"
-        component={Profile}
-        options={({ navigation }) => ({
-          title: t('Sua conta'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
-      />
+      <Stack.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
       <Stack.Screen
         name="ProfileEdit"
         component={ProfileEdit}

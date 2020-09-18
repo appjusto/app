@@ -18,9 +18,7 @@ export default function () {
       <Stack.Screen
         name="DeliveryHistory"
         component={DeliveryHistory}
-        options={{
-          headerShown: false,
-        }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="DeliveryHistoryByMonth"

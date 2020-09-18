@@ -26,6 +26,7 @@ import {
   formatDistance,
   formatDuration,
   formatCurrency,
+  separateWithDot,
 } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import OrderMap from './OrderMap';
@@ -106,7 +107,7 @@ export default function ({
           />
 
           <RoundedText>
-            {`${formatDistance(distance)} \u25CF ${formatDuration(duration)}`}
+            {separateWithDot(formatDistance(distance), formatDuration(duration))}
           </RoundedText>
         </PaddedView>
 

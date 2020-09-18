@@ -1,11 +1,12 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import Constants from 'expo-constants';
 import React, { useMemo } from 'react';
 import { View, SectionList, Text, Image } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 
 import * as icons from '../../../assets/icons';
+import ConfigItem from '../../../common/components/ConfigItem';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import PaddedView from '../../../common/components/views/PaddedView';
 import ShowIf from '../../../common/components/views/ShowIf';
@@ -54,10 +55,11 @@ export default function ({ navigation, route }: Props) {
   }, [yearsWithOrders]);
 
   // UI
+  const paddingTop = Constants.statusBarHeight;
   return (
-    <View style={{ ...screens.configScreen, marginTop: padding }}>
+    <View style={{ ...screens.configScreen }}>
       <SectionList
-        style={{ flex: 1 }}
+        style={{ flex: 1, paddingTop }}
         sections={sections}
         keyExtractor={(item) => item.key}
         renderSectionHeader={({ section }) => (
@@ -68,9 +70,18 @@ export default function ({ navigation, route }: Props) {
             <Text style={{ ...texts.medium, marginLeft: padding }}>{section.title}</Text>
           </PaddedView>
         )}
-        renderItem={({ item }) => (
-          <View style={{ borderBottomColor: colors.grey, borderBottomWidth: 1 }}>
-            <TouchableOpacity
+        renderItem={({ item }) => {
+          const title = getMonthName(item.month);
+          const subtitle =
+            item.delivered +
+            t('corridas finalizadas') +
+            '\n' +
+            t('Total recebido: ') +
+            formatCurrency(item.courierFee);
+          return (
+            <ConfigItem
+              title={title}
+              subtitle={subtitle}
               onPress={() =>
                 navigation.navigate('DeliveryHistoryByMonth', {
                   year: item.year,
@@ -78,30 +89,18 @@ export default function ({ navigation, route }: Props) {
                 })
               }
             >
-              <PaddedView>
-                <Text style={{ ...texts.medium, marginBottom: padding }}>
-                  {getMonthName(item.month)}
-                </Text>
-                <Text style={[texts.medium, { color: colors.darkGrey }]}>
-                  {item.delivered} {t('corridas finalizadas')}
-                </Text>
-                <Text style={[texts.medium, { color: colors.darkGrey }]}>
-                  {t('Total recebido: ')}
-                  {formatCurrency(item.courierFee)}
-                </Text>
-                <ShowIf test={item.dispatching > 0}>
-                  {() => (
-                    <View style={{ marginTop: halfPadding }}>
-                      <RoundedText backgroundColor={colors.yellow}>
-                        {t('Corrida em andamento')}
-                      </RoundedText>
-                    </View>
-                  )}
-                </ShowIf>
-              </PaddedView>
-            </TouchableOpacity>
-          </View>
-        )}
+              <ShowIf test={item.dispatching > 0}>
+                {() => (
+                  <View style={{ marginTop: halfPadding }}>
+                    <RoundedText backgroundColor={colors.yellow}>
+                      {t('Corrida em andamento')}
+                    </RoundedText>
+                  </View>
+                )}
+              </ShowIf>
+            </ConfigItem>
+          );
+        }}
       />
     </View>
   );

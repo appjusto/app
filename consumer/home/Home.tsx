@@ -1,5 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import Constants from 'expo-constants';
 import React, { useEffect, useContext } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Image, ImageBackground } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,9 +39,10 @@ export default function ({ navigation }: Props) {
   }, [user]);
 
   // UI
+  const paddingTop = Constants.statusBarHeight;
   return (
     <View style={{ flex: 1 }}>
-      <PaddedView style={{ flex: 1, backgroundColor: colors.green }}>
+      <PaddedView style={{ flex: 1, paddingTop, backgroundColor: colors.green }}>
         <Text style={{ ...texts.big, marginTop: padding }}>
           {t('Somos um delivery aberto, transparente e consciente')}
         </Text>

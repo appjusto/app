@@ -17,9 +17,6 @@ const pt = {
   date: {
     formats: {
       default: '%d/%m/%Y',
-      short: '%d de %B',
-      long: '%d de %B de %Y',
-      short_with_placeholders: '%d de %B {{p1}} {{p2}}',
     },
     day_names: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
     abbr_day_names: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
@@ -53,6 +50,11 @@ const pt = {
       'Nov',
       'Dez',
     ],
+  },
+  time: {
+    formats: {
+      default: '%Hh%M',
+    },
   },
 };
 

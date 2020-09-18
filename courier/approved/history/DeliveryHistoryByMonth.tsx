@@ -1,15 +1,14 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Order, WithId } from 'appjusto-types';
-import React from 'react';
-import { View, FlatList, Text } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import React, { useCallback } from 'react';
+import { View, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import PaddedView from '../../../common/components/views/PaddedView';
+import ConfigItem from '../../../common/components/ConfigItem';
 import { getOrdersWithFilter } from '../../../common/store/order/selectors';
-import { screens, texts, padding, colors } from '../../../common/styles';
-import { hhMMFromDate, formatCurrency } from '../../../common/utils/formatters';
+import { screens } from '../../../common/styles';
+import { formatTime, formatCurrency } from '../../../common/utils/formatters';
 import { DeliveriesNavigatorParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<
@@ -31,13 +30,14 @@ export default function ({ navigation, route }: Props) {
   const orders = useSelector(getOrdersWithFilter)(year, month);
 
   // handlers
-  const orderPressHandler = (order: WithId<Order>) => {
+  const orderPressHandler = useCallback((order: WithId<Order>) => {
     if (order.status === 'dispatching') {
       navigation.navigate('OngoingDelivery', { orderId: order.id! });
     } else {
       navigation.navigate('DeliverySummary', { orderId: order.id! });
     }
-  };
+  }, []);
+
   // UI
   return (
     <View style={{ ...screens.configScreen }}>
@@ -45,23 +45,16 @@ export default function ({ navigation, route }: Props) {
         style={{ flex: 1 }}
         data={orders}
         keyExtractor={(item) => item.id!}
-        renderItem={({ item }) => (
-          <View style={{ borderBottomColor: colors.grey, borderBottomWidth: 1 }}>
-            <TouchableOpacity onPress={() => orderPressHandler(item)}>
-              <PaddedView>
-                <Text style={{ ...texts.medium, marginBottom: padding }}>
-                  {formatCurrency(item.fare!.courierFee)}
-                </Text>
-                <Text style={[texts.medium, { color: colors.darkGrey }]}>
-                  {item.origin.address?.description}
-                </Text>
-                <Text style={[texts.medium, { color: colors.darkGrey }]}>
-                  {hhMMFromDate((item.createdOn as firebase.firestore.Timestamp).toDate())}
-                </Text>
-              </PaddedView>
-            </TouchableOpacity>
-          </View>
-        )}
+        renderItem={({ item }) => {
+          const title = formatCurrency(item.fare!.courierFee);
+          const subtitle =
+            item.origin.address?.description +
+            '\n' +
+            formatTime((item.createdOn as firebase.firestore.Timestamp).toDate());
+          return (
+            <ConfigItem title={title} subtitle={subtitle} onPress={() => orderPressHandler(item)} />
+          );
+        }}
       />
     </View>
   );

@@ -16,7 +16,7 @@ const Stack = createStackNavigator<HomeNavigatorParamList>();
 export default function () {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={Home} options={{ headerShown: false, title: '' }} />
+      <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
       <Stack.Screen
         name="CreateOrderP2P"
         component={CreateOrderP2P}

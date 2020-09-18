@@ -14,7 +14,7 @@ import { sendMessage } from '../store/order/actions';
 import { getOrderById, getOrderChat } from '../store/order/selectors';
 import { getUser } from '../store/user/selectors';
 import { screens, colors, padding, texts, borders } from '../styles';
-import { hhMMFromDate } from '../utils/formatters';
+import { formatTime } from '../utils/formatters';
 
 export type ChatParamList = {
   Chat: {
@@ -86,7 +86,7 @@ export default function ({ route }: Props) {
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                   <Text style={[texts.small, { flexWrap: 'wrap' }]}>{message.message}</Text>
                   <Text style={[texts.tiny, { marginLeft: padding / 2, alignSelf: 'flex-end' }]}>
-                    {hhMMFromDate((message.timestamp as firebase.firestore.Timestamp).toDate())}
+                    {formatTime((message.timestamp as firebase.firestore.Timestamp).toDate())}
                   </Text>
                 </View>
               </PaddedView>

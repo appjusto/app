@@ -9,7 +9,12 @@ import HR from '../../../common/components/views/HR';
 import PaddedView from '../../../common/components/views/PaddedView';
 import { getOrderById } from '../../../common/store/order/selectors';
 import { screens, texts, padding, halfPadding, colors } from '../../../common/styles';
-import { formatDistance, formatDuration, formatCurrency } from '../../../common/utils/formatters';
+import {
+  formatDistance,
+  formatDuration,
+  formatCurrency,
+  separateWithDot,
+} from '../../../common/utils/formatters';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
 import PlaceSummary from '../../../consumer/home/orders/p2p-order/PlaceSummary';
 import { t } from '../../../strings';
@@ -41,7 +46,7 @@ export default function ({ navigation, route }: Props) {
           <PlaceSummary title={t('Entrega')} place={order.destination} />
           <View style={{ marginTop: halfPadding }}>
             <RoundedText>
-              {`${formatDistance(order.distance)} \u25CF ${formatDuration(order.duration)}`}
+              {separateWithDot(formatDistance(order.distance), formatDuration(order.duration))}
             </RoundedText>
           </View>
           <View
