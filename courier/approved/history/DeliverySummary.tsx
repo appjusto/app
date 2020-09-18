@@ -4,9 +4,9 @@ import React from 'react';
 import { View, ScrollView, Text, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
 
+import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import HR from '../../../common/components/views/HR';
-import PaddedView from '../../../common/components/views/PaddedView';
 import { getOrderById } from '../../../common/store/order/selectors';
 import { screens, texts, padding, halfPadding, colors } from '../../../common/styles';
 import {

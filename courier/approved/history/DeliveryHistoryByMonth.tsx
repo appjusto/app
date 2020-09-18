@@ -5,7 +5,7 @@ import React, { useCallback } from 'react';
 import { View, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import ConfigItem from '../../../common/components/ConfigItem';
+import ConfigItem from '../../../common/components/views/ConfigItem';
 import { getOrdersWithFilter } from '../../../common/store/order/selectors';
 import { screens } from '../../../common/styles';
 import { formatTime, formatCurrency } from '../../../common/utils/formatters';

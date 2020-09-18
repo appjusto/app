@@ -8,9 +8,9 @@ import { useDispatch } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
+import AvoidingView from '../../../common/components/containers/AvoidingView';
+import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
-import AvoidingView from '../../../common/components/views/AvoidingView';
-import PaddedView from '../../../common/components/views/PaddedView';
 import { saveCard } from '../../../common/store/consumer/actions';
 import { showToast } from '../../../common/store/ui/actions';
 import { screens, padding } from '../../../common/styles';

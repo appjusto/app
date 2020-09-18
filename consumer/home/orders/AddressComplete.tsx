@@ -19,8 +19,8 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
-import PaddedView from '../../../common/components/views/PaddedView';
 import useAxiosCancelToken from '../../../common/hooks/useAxiosCancelToken';
 import { AutoCompleteResult } from '../../../common/store/api/maps';
 import { getAddressAutocomplete } from '../../../common/store/order/actions';

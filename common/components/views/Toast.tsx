@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, useWindowDimensions, Animated } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { hideToast } from '../store/ui/actions';
-import { getToast } from '../store/ui/selectors';
-import { colors, texts } from '../styles';
+import { hideToast } from '../../store/ui/actions';
+import { getToast } from '../../store/ui/selectors';
+import { colors, texts } from '../../styles';
 
 const percentualWidth = 0.8;
 const duration = 500;

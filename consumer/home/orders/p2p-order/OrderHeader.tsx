@@ -3,7 +3,7 @@ import React from 'react';
 import { View, Dimensions, Text, Image } from 'react-native';
 
 import * as icons from '../../../../assets/icons';
-import PaddedView from '../../../../common/components/views/PaddedView';
+import PaddedView from '../../../../common/components/containers/PaddedView';
 import ShowIf from '../../../../common/components/views/ShowIf';
 import { texts } from '../../../../common/styles';
 import { t } from '../../../../strings';

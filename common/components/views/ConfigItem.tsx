@@ -1,11 +1,11 @@
 import React, { ReactNode } from 'react';
 import { TouchableOpacity, View, Text, Image } from 'react-native';
 
-import { checklistTick } from '../../assets/icons';
-import { colors, texts, padding } from '../styles';
+import { checklistTick } from '../../../assets/icons';
+import { colors, texts, padding } from '../../styles';
+import PaddedView from '../containers/PaddedView';
 import ArrowBox from './ArrowBox';
-import PaddedView from './views/PaddedView';
-import ShowIf from './views/ShowIf';
+import ShowIf from './ShowIf';
 
 type Props = {
   title: string;

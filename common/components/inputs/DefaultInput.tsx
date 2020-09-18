@@ -3,7 +3,7 @@ import { View, Text, TextInput, TextInputProps } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import { borders, texts, colors } from '../../styles';
-import PaddedView from '../views/PaddedView';
+import PaddedView from '../containers/PaddedView';
 
 export interface Props extends TextInputProps {
   title?: string;

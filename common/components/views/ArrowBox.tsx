@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Image, StyleSheet, ViewProps } from 'react-native';
 
-import { buttonArrow } from '../../assets/icons';
-import { colors, borders } from '../styles';
+import { buttonArrow } from '../../../assets/icons';
+import { colors, borders } from '../../styles';
 
 interface Props extends ViewProps {
   flipped?: boolean;

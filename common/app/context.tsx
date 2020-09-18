@@ -6,7 +6,7 @@ import React, { ReactNode } from 'react';
 import { Platform, UIManager, ToastAndroid } from 'react-native';
 import { Provider } from 'react-redux';
 
-import Toast from '../components/Toast';
+import Toast from '../components/views/Toast';
 import { createStore } from '../store';
 import Api from '../store/api/api';
 import { getExtra } from '../utils/config';

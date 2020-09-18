@@ -8,10 +8,10 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import AvoidingView from '../../../../common/components/containers/AvoidingView';
+import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../../common/components/texts/LabeledText';
-import AvoidingView from '../../../../common/components/views/AvoidingView';
-import PaddedView from '../../../../common/components/views/PaddedView';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { bankAccountSet } from '../../../../common/store/courier/validators';
 import { getUIBusy } from '../../../../common/store/ui/selectors';

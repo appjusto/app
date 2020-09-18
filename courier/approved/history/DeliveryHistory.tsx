@@ -6,9 +6,9 @@ import { View, SectionList, Text, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import * as icons from '../../../assets/icons';
-import ConfigItem from '../../../common/components/ConfigItem';
+import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
-import PaddedView from '../../../common/components/views/PaddedView';
+import ConfigItem from '../../../common/components/views/ConfigItem';
 import ShowIf from '../../../common/components/views/ShowIf';
 import {
   getYearsWithOrders,

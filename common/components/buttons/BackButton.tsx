@@ -1,7 +1,7 @@
 import React from 'react';
 import { NativeTouchEvent, NativeSyntheticEvent, TouchableOpacity } from 'react-native';
 
-import ArrowBox from '../ArrowBox';
+import ArrowBox from '../views/ArrowBox';
 
 type Props = {
   onPress: (ev: NativeSyntheticEvent<NativeTouchEvent>) => void;

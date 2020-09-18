@@ -10,10 +10,10 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../../assets/icons';
 import { AppDispatch, ApiContext } from '../../../../common/app/context';
-import ConfigItem from '../../../../common/components/ConfigItem';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
-import PaddedView from '../../../../common/components/views/PaddedView';
+import ConfigItem from '../../../../common/components/views/ConfigItem';
 import {
   getSelfieURL,
   getDocumentImageURL,
