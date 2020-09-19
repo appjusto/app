@@ -1,14 +1,15 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { View, ScrollView, Text, StyleSheet } from 'react-native';
+import { View, ScrollView, Text } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import PaddedView from '../../common/components/containers/PaddedView';
 import RoundedText from '../../common/components/texts/RoundedText';
 import HR from '../../common/components/views/HR';
+import OrderCostBreakdown from '../../common/screens/history/OrderCostBreakdown';
 import { getOrderById } from '../../common/store/order/selectors';
-import { screens, texts, padding, halfPadding, colors } from '../../common/styles';
+import { screens, texts, padding, halfPadding } from '../../common/styles';
 import {
   formatDistance,
   formatDuration,
@@ -49,60 +50,25 @@ export default function ({ navigation, route }: Props) {
               {separateWithDot(formatDistance(order.distance), formatDuration(order.duration))}
             </RoundedText>
           </View>
+        </PaddedView>
+        <HR height={padding} />
+        <PaddedView>
           <View
             style={{
-              marginTop: padding,
               flexDirection: 'row',
               justifyContent: 'space-between',
-              alignItems: 'baseline',
+              alignItems: 'center',
             }}
           >
-            <Text style={[texts.medium]}>{t('Você recebeu')}</Text>
-            <Text style={[texts.mediumToBig]}>{formatCurrency(order.fare?.courierFee ?? 0)}</Text>
+            <Text style={{ ...texts.medium, ...texts.bold }}>{t('Valor pago')}</Text>
+            <Text style={{ ...texts.mediumToBig }}>{formatCurrency(order.fare?.total ?? 0)}</Text>
           </View>
         </PaddedView>
-        <HR />
+        <HR height={padding} />
         <PaddedView>
-          <Text style={[texts.mediumToBig]}>{t('Entenda os valores')}</Text>
-          <Text style={[texts.small, { color: colors.darkGrey }]}>
-            {t('Somos transparentes do início ao fim da entrega')}
-          </Text>
-          <View style={{ marginTop: padding }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={[texts.medium]}>{t('Tarifa')}</Text>
-              <Text style={[texts.medium]}>{formatCurrency(order.fare?.total ?? 0)}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={styles.priceDetailText}>{t('Gorjeta')}</Text>
-              {/* TODO: add tip */}
-              <Text style={styles.priceDetailText}>{formatCurrency(0)}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={styles.priceDetailText}>{t('Impostos')}</Text>
-              <Text style={styles.priceDetailText}>{formatCurrency(order.fare?.taxes ?? 0)}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={styles.priceDetailText}>{t('Tarifa financeira')}</Text>
-              <Text style={styles.priceDetailText}>
-                {formatCurrency(order.fare?.financialFee ?? 0)}
-              </Text>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={styles.priceDetailText}>{t('App Justo')}</Text>
-              <Text style={styles.priceDetailText}>
-                {formatCurrency(order.fare?.platformFee ?? 0)}
-              </Text>
-            </View>
-          </View>
+          <OrderCostBreakdown order={order} />
         </PaddedView>
       </ScrollView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  priceDetailText: {
-    ...texts.medium,
-    color: colors.darkGrey,
-  },
-});

@@ -18,8 +18,9 @@ export default function ({ place, title, editStepHandler }: Props) {
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
       <View style={{ width: '60%', flex: 1 }}>
-        <Text style={{ ...texts.small, lineHeight: 18, color: colors.darkGreen }}>{title}</Text>
-        <Text style={{ ...texts.medium, lineHeight: 22 }}>{place.address?.description}</Text>
+        <Text style={{ ...texts.small, color: colors.darkGreen }}>{title}</Text>
+        <Text style={{ ...texts.medium }}>{place.address.main}</Text>
+        <Text style={{ ...texts.medium }}>{place.address.secondary}</Text>
         <ShowIf test={!isEmpty(place.additionalInfo)}>
           {() => <Text>{place.additionalInfo}</Text>}
         </ShowIf>
