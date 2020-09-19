@@ -1,5 +1,7 @@
 import { Address } from 'appjusto-types';
 
+import { ChatParamList } from '../../common/screens/Chat';
+
 export type HomeNavigatorParamList = {
   Home: undefined;
   CreateOrderP2P?: {
@@ -20,8 +22,14 @@ export type HomeNavigatorParamList = {
   ProfilePaymentMethods?: {
     returnScreen: 'CreateOrderP2P';
   };
-  OrderFeedback: {
+  OrderConfirmedFeedback: {
     orderId: string;
   };
-  History: undefined;
-};
+  OngoingOrder: {
+    orderId: string;
+    newMessage?: boolean;
+  };
+  OrderDeliveredFeedback: {
+    orderId: string;
+  };
+} & ChatParamList;

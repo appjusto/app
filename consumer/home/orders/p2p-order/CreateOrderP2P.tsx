@@ -105,7 +105,7 @@ export default function ({ navigation, route }: Props) {
       const orderId = order!.id!;
       const result = await dispatch(confirmOrder(api)(orderId, card!.id, fleetId, platformFee));
       console.log(result);
-      navigation.replace('OrderFeedback', { orderId });
+      navigation.replace('OrderConfirmedFeedback', { orderId });
     } catch (error) {
       dispatch(showToast(error.toString()));
     }

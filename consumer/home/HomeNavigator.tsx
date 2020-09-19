@@ -2,13 +2,16 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
 import BackButton from '../../common/components/buttons/BackButton';
+import Chat from '../../common/screens/Chat';
 import ProfileEdit from '../../common/screens/profile/ProfileEdit';
 import { t } from '../../strings';
 import ProfileAddCard from '../profile/payment/ProfileAddCard';
 import ProfilePaymentMethods from '../profile/payment/ProfilePaymentMethods';
 import Home from './Home';
 import AddressComplete from './orders/AddressComplete';
-import OrderFeedback from './orders/OrderFeedback';
+import OngoingOrder from './orders/OngoingOrder';
+import OrderConfirmedFeedback from './orders/OrderConfirmedFeedback';
+import OrderDeliveredFeedback from './orders/OrderDeliveredFeedback';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import { HomeNavigatorParamList } from './types';
 
@@ -58,8 +61,31 @@ export default function () {
         })}
       />
       <Stack.Screen
-        name="OrderFeedback"
-        component={OrderFeedback}
+        name="OrderConfirmedFeedback"
+        component={OrderConfirmedFeedback}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="OngoingOrder"
+        component={OngoingOrder}
+        options={({ navigation }) => ({
+          title: t('Pedido em andamento'),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
+      />
+      <Stack.Screen
+        name="Chat"
+        component={Chat}
+        options={({ navigation }) => ({
+          title: t('Conversa'),
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        })}
+      />
+      <Stack.Screen
+        name="OrderDeliveredFeedback"
+        component={OrderDeliveredFeedback}
         options={{
           headerShown: false,
         }}

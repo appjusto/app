@@ -18,10 +18,10 @@ import { LoggedParamList } from '../../types';
 import { HomeNavigatorParamList } from '../types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<HomeNavigatorParamList, 'OrderFeedback'>,
+  StackNavigationProp<HomeNavigatorParamList, 'OrderConfirmedFeedback'>,
   BottomTabNavigationProp<LoggedParamList>
 >;
-type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'OrderFeedback'>;
+type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'OrderConfirmedFeedback'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -44,11 +44,8 @@ export default ({ navigation, route }: Props) => {
     if (order.status === 'canceled') {
       navigation.popToTop();
     } else if (order.status === 'dispatching') {
-      navigation.navigate('History', {
-        screen: 'OngoingOrder',
-        params: {
-          orderId,
-        },
+      navigation.navigate('OngoingOrder', {
+        orderId,
       });
       // TODO: go to the Orders Navigator
     }

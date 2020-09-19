@@ -1,23 +1,23 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext, useCallback, useMemo, useEffect } from 'react';
+import React, { useContext, useCallback, useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
 
-import * as icons from '../../assets/icons';
-import { AppDispatch, ApiContext } from '../../common/app/context';
-import PaddedView from '../../common/components/containers/PaddedView';
-import RoundedText from '../../common/components/texts/RoundedText';
-import { getOrderById } from '../../common/store/order/selectors';
-import { getUIBusy } from '../../common/store/ui/selectors';
-import { colors, screens, texts } from '../../common/styles';
-import { t } from '../../strings';
-import OrderMap from '../home/orders/p2p-order/OrderMap';
-import { HistoryParamList } from './types';
+import * as icons from '../../../assets/icons';
+import { AppDispatch, ApiContext } from '../../../common/app/context';
+import PaddedView from '../../../common/components/containers/PaddedView';
+import RoundedText from '../../../common/components/texts/RoundedText';
+import { getOrderById } from '../../../common/store/order/selectors';
+import { getUIBusy } from '../../../common/store/ui/selectors';
+import { colors, screens, texts } from '../../../common/styles';
+import { t } from '../../../strings';
+import { HomeNavigatorParamList } from '../types';
+import OrderMap from './p2p-order/OrderMap';
 
-type ScreenNavigationProp = StackNavigationProp<HistoryParamList, 'OngoingOrder'>;
-type ScreenRoute = RouteProp<HistoryParamList, 'OngoingOrder'>;
+type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'OngoingOrder'>;
+type ScreenRoute = RouteProp<HomeNavigatorParamList, 'OngoingOrder'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -37,7 +37,7 @@ export default function ({ navigation, route }: Props) {
   // effects
   useEffect(() => {
     if (order.status === 'delivered') {
-      navigation.navigate('OrderSummary', { orderId });
+      navigation.replace('OrderDeliveredFeedback', { orderId });
     }
   }, [order]);
 
