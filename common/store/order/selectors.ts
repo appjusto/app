@@ -1,4 +1,4 @@
-import { Order, OrderStatus, Place } from 'appjusto-types';
+import { Order, OrderStatus, Place, WithId } from 'appjusto-types';
 import { first, memoize, uniq } from 'lodash';
 import { createSelector } from 'reselect';
 
@@ -36,19 +36,30 @@ export const getMonthsWithOrdersInYear = createSelector(getOrders, (orders) =>
   )
 );
 
-export const getOrdersWithFilter = createSelector(getOrders, (orders) =>
-  memoize((year: number, month?: number, status?: OrderStatus) => {
-    return orders.filter((order) => {
-      const createdOn = (order.createdOn as firebase.firestore.Timestamp).toDate();
-      if (year !== createdOn.getFullYear()) return false;
-      if (month && month !== createdOn.getMonth()) return false;
-      if (status && status !== order.status) return false;
-      return true;
-    });
-  })
-);
+export const getOrdersWithFilter = (
+  orders: WithId<Order>[],
+  year: number,
+  month?: number,
+  day?: number
+) =>
+  orders.filter((order) => {
+    const createdOn = (order.createdOn as firebase.firestore.Timestamp).toDate();
+    if (year !== createdOn.getFullYear()) return false;
+    if (month && month !== createdOn.getMonth()) return false;
+    if (day && day !== createdOn.getDate()) return false;
+    return true;
+  });
 
-export const summarizeOrders = memoize((orders: Order[]) =>
+export const getDeliveredOrders = (orders: WithId<Order>[]) =>
+  orders.filter((order) => order.status === 'delivered');
+
+export const getOrdersSince = (orders: WithId<Order>[], date: Date) =>
+  orders.filter((order) => {
+    const createdOn = (order.createdOn as firebase.firestore.Timestamp).toDate();
+    return createdOn.getTime() >= date.getTime();
+  });
+
+export const summarizeOrders = memoize((orders: WithId<Order>[]) =>
   orders.reduce(
     (result, order) => ({
       delivered: order.status === 'delivered' ? result.delivered + 1 : result.delivered,

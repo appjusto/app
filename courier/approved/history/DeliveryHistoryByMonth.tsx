@@ -6,7 +6,7 @@ import { View, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import ConfigItem from '../../../common/components/views/ConfigItem';
-import { getOrdersWithFilter } from '../../../common/store/order/selectors';
+import { getOrders, getOrdersWithFilter } from '../../../common/store/order/selectors';
 import { screens } from '../../../common/styles';
 import { formatTime, formatCurrency } from '../../../common/utils/formatters';
 import { DeliveriesNavigatorParamList } from './types';
@@ -27,7 +27,8 @@ export default function ({ navigation, route }: Props) {
   const { year, month } = route.params;
 
   // app state
-  const orders = useSelector(getOrdersWithFilter)(year, month);
+  const orders = useSelector(getOrders);
+  const filteredOrders = getOrdersWithFilter(orders, year, month);
 
   // handlers
   const orderPressHandler = useCallback((order: WithId<Order>) => {
@@ -43,7 +44,7 @@ export default function ({ navigation, route }: Props) {
     <View style={{ ...screens.configScreen }}>
       <FlatList
         style={{ flex: 1 }}
-        data={orders}
+        data={filteredOrders}
         keyExtractor={(item) => item.id!}
         renderItem={({ item }) => {
           const title = formatCurrency(item.fare!.courierFee);

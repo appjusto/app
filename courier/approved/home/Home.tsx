@@ -1,9 +1,10 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CourierStatus } from 'appjusto-types';
+import dayjs from 'dayjs';
 import Constants from 'expo-constants';
 import { nanoid } from 'nanoid/non-secure';
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useMemo } from 'react';
 import {
   StyleSheet,
   View,
@@ -25,6 +26,12 @@ import useLocationUpdates from '../../../common/hooks/useLocationUpdates';
 import useNotificationToken from '../../../common/hooks/useNotificationToken';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { getCourier } from '../../../common/store/courier/selectors';
+import {
+  getDeliveredOrders,
+  getOrders,
+  getOrdersSince,
+  summarizeOrders,
+} from '../../../common/store/order/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { updateProfile } from '../../../common/store/user/actions';
 import {
@@ -64,6 +71,17 @@ export default function ({ navigation }: Props) {
   const courier = useSelector(getCourier)!;
   const status = courier!.status;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
+  const orders = useSelector(getOrders);
+  const todaysOrdersFee = useMemo(() => {
+    const today = dayjs().startOf('d').toDate();
+    const todaysOrders = getOrdersSince(getDeliveredOrders(orders), today);
+    return summarizeOrders(todaysOrders).courierFee;
+  }, [orders]);
+  const weeksOrdersFee = useMemo(() => {
+    const startOfWeek = dayjs().isoWeekday(1).startOf('w').toDate();
+    const weeksOrders = getOrdersSince(getDeliveredOrders(orders), startOfWeek);
+    return summarizeOrders(weeksOrders).courierFee;
+  }, [orders]);
 
   // state
   const [locationKey, setLocationKey] = useState(nanoid());
@@ -211,11 +229,15 @@ export default function ({ navigation }: Props) {
                 >
                   <View>
                     <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Hoje')}</Text>
-                    <Text style={{ ...texts.medium, color: colors.black }}>R$ 00,0</Text>
+                    <Text style={{ ...texts.medium, color: colors.black }}>
+                      {formatCurrency(todaysOrdersFee)}
+                    </Text>
                   </View>
                   <View>
                     <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Semana')}</Text>
-                    <Text style={{ ...texts.medium, color: colors.black }}>R$ 00,0</Text>
+                    <Text style={{ ...texts.medium, color: colors.black }}>
+                      {formatCurrency(weeksOrdersFee)}
+                    </Text>
                   </View>
                 </View>
                 <Text style={{ marginTop: halfPadding, ...texts.small, color: colors.darkGrey }}>

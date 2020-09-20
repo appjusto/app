@@ -16,6 +16,7 @@ import {
   getMonthsWithOrdersInYear,
   getOrdersWithFilter,
   summarizeOrders,
+  getOrders,
 } from '../../../common/store/order/selectors';
 import { screens, texts, padding, halfPadding, colors } from '../../../common/styles';
 import { getMonthName, formatCurrency } from '../../../common/utils/formatters';
@@ -32,9 +33,9 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // app state
+  const orders = useSelector(getOrders);
   const yearsWithOrders = useSelector(getYearsWithOrders);
   const monthsWithOrdersInYears = useSelector(getMonthsWithOrdersInYear);
-  const ordersWithFilter = useSelector(getOrdersWithFilter);
 
   // screen state
   // data structure
@@ -49,7 +50,7 @@ export default function ({ navigation, route }: Props) {
           key: `${year}-${month}`,
           year,
           month,
-          ...summarizeOrders(ordersWithFilter(year, month)),
+          ...summarizeOrders(getOrdersWithFilter(orders, year, month)),
         })),
       };
     });
@@ -86,7 +87,7 @@ export default function ({ navigation, route }: Props) {
           const title = getMonthName(item.month);
           const subtitle =
             item.delivered +
-            t('corridas finalizadas') +
+            t(' corridas finalizadas') +
             '\n' +
             t('Total recebido: ') +
             formatCurrency(item.courierFee);
