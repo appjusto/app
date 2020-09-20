@@ -15,6 +15,7 @@ export const colors = {
   red: '#DC3545',
 };
 
+export const doublePadding = 16;
 export const padding = 16;
 export const halfPadding = padding / 2;
 

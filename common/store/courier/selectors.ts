@@ -1,11 +1,21 @@
+import { createSelector } from 'reselect';
+
 import { State } from '..';
 
 export const getCourierState = (state: State) => state.courier;
 
-export const getCourier = (state: State) => getCourierState(state).courier;
+export const getCourier = createSelector(getCourierState, (state) => state.courier);
 
-export const getCourierStatus = (state: State) => getCourier(state)?.status ?? 'unavailable';
+export const getCourierStatus = createSelector(
+  getCourier,
+  (courier) => courier?.status ?? 'unavailable'
+);
 
-export const isCourierWorking = (state: State) => getCourierStatus(state) !== 'unavailable';
+export const isCourierWorking = createSelector(
+  getCourierStatus,
+  (status) => status !== 'unavailable'
+);
 
-export const getBanks = (state: State) => getCourierState(state).banks;
+export const getCourierMode = createSelector(getCourier, (courier) => courier?.mode);
+
+export const getBanks = createSelector(getCourierState, (state) => state.banks);

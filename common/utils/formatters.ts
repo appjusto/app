@@ -1,4 +1,4 @@
-import i18n from 'i18n-js';
+import i18n, { ToCurrencyOptions } from 'i18n-js';
 import { round } from 'lodash';
 
 // general
@@ -25,5 +25,6 @@ export const formatDistance = (distance: number) => {
 
 // money and %
 
-export const formatCurrency = (value: number) => i18n.toCurrency(value / 100);
+export const formatCurrency = (value: number, options?: ToCurrencyOptions) =>
+  i18n.toCurrency(value / 100, options);
 export const formatPct = (value: number) => `${parseFloat((value * 100).toFixed(2))}%`;
