@@ -1,5 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
+import BackButton from '../../common/components/buttons/BackButton';
 
 import ArrowBox from '../../common/components/views/ArrowBox';
 import Chat from '../../common/screens/Chat';
@@ -79,7 +80,7 @@ export default function () {
         component={OrderRefused}
         options={({ navigation }) => ({
           title: t('Recusou o pedido'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+          headerLeft: () => <BackButtonutton onPress={() => navigation.goBack()} />,
         })}
       />
     </Stack.Navigator>
