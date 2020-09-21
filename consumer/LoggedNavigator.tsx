@@ -49,7 +49,10 @@ export default function () {
       <Tab.Screen
         name="Home"
         component={HomeNavigator}
-        options={{ title: t('Início'), tabBarIcon: () => <Image source={icons.home} /> }}
+        options={{
+          title: t('Início'),
+          tabBarIcon: () => <Image source={icons.home} />,
+        }}
       />
       <Tab.Screen
         name="History"

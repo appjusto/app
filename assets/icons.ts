@@ -1,3 +1,5 @@
+const iconCircle = require('./icons/Circle.png');
+const iconCircleActive = require('./icons/CircleActive.png');
 const acceptIcon = require('./icons/accept-icon.png');
 const arrowSmall = require('./icons/arrow-small.png');
 const backgroundPatternIcon = require('./icons/background-pattern.png');
@@ -61,6 +63,8 @@ export const backgroundPattern = backgroundPatternIcon;
 export const orders = iconOrders;
 export const user = iconUser;
 export const slider = dragButton;
+export const circle = iconCircle;
+export const circleActive = iconCircleActive;
 
 export default [
   accept,
@@ -94,4 +98,6 @@ export default [
   orders,
   user,
   slider,
+  circle,
+  circleActive,
 ];
