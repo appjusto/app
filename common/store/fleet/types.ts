@@ -1,7 +1,7 @@
-import { City, Fleet } from 'appjusto-types';
+import { City, Fleet, WithId } from 'appjusto-types';
 
 export interface FleetState {
   availableCities?: City[];
   allCities?: City[];
-  approvedFleets?: Fleet[];
+  approvedFleets?: WithId<Fleet>[];
 }

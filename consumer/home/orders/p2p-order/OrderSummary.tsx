@@ -1,4 +1,4 @@
-import { Card, Order, WithId, Fare } from 'appjusto-types';
+import { Card, Order, WithId, Fare, Fleet } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React, { useState, useMemo, useCallback, useContext, useEffect } from 'react';
 import {
@@ -39,6 +39,7 @@ type Props = {
   editStepHandler: (index: number) => void;
   confirmOrder: (fleetId: string, platformFee: number) => void;
   navigateToFillPaymentInfo: () => void;
+  navigateFleetDetail: (fleet: Fleet) => void;
 };
 
 export default function ({
@@ -48,6 +49,7 @@ export default function ({
   editStepHandler,
   confirmOrder,
   navigateToFillPaymentInfo,
+  navigateFleetDetail,
 }: Props) {
   // context
   const api = useContext(ApiContext);
@@ -149,14 +151,30 @@ export default function ({
                 keyExtractor={(item) => item.fleet.id!}
                 renderItem={({ item }) => {
                   return (
-                    <View style={{ width: 156, ...borders.default }}>
-                      <View style={{ backgroundColor: colors.lightGreen }}>
-                        <Text style={[texts.default]}>{item.fleet.name}</Text>
-                      </View>
-                      <View>
-                        <Text>{formatCurrency(item.total)}</Text>
-                      </View>
-                    </View>
+                    <PaddedView
+                      style={{
+                        width: 156,
+                        backgroundColor: colors.lightGreen,
+                        ...borders.default,
+                        borderWidth: 2,
+                      }}
+                    >
+                      <Text numberOfLines={2} style={[texts.default, texts.bold]}>
+                        {item.fleet.name}
+                      </Text>
+                      <Text style={[texts.small, { marginTop: padding }]}>{t('Entregadores')}</Text>
+                      <Text style={[texts.small, texts.bold]}>
+                        {item.fleet.participantsOnline} {t('ativos agora')}
+                      </Text>
+                      <Text style={[texts.mediumToBig, texts.bold, { marginTop: padding }]}>
+                        {formatCurrency(item.total)}
+                      </Text>
+                      <TouchableOpacity onPress={() => navigateFleetDetail(item.fleet)}>
+                        <View style={{ marginTop: padding }}>
+                          <RoundedText>{t('Ver detalhes')}</RoundedText>
+                        </View>
+                      </TouchableOpacity>
+                    </PaddedView>
                   );
                 }}
                 horizontal

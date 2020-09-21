@@ -1,5 +1,5 @@
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
-import { Card, Place, Order, WithId } from 'appjusto-types';
+import { Card, Place, Order, WithId, Fleet } from 'appjusto-types';
 import React, { useRef, useState } from 'react';
 import { View, NativeSyntheticEvent } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -26,6 +26,7 @@ type Props = {
   card?: Card;
   navigateToAddressComplete: (value: string, returnParam: string) => void;
   navigateToFillPaymentInfo: () => void;
+  navigateFleetDetail: (fleet: Fleet) => void;
   confirmOrder: (fleetId: string, platformFee: number) => Promise<void>;
 };
 
@@ -36,6 +37,7 @@ export default function ({
   card,
   navigateToAddressComplete,
   navigateToFillPaymentInfo,
+  navigateFleetDetail,
   confirmOrder,
 }: Props) {
   // context
@@ -183,6 +185,7 @@ export default function ({
             editStepHandler={setPage}
             confirmOrder={confirmOrder}
             navigateToFillPaymentInfo={navigateToFillPaymentInfo}
+            navigateFleetDetail={navigateFleetDetail}
           />
         )}
       </ViewPager>

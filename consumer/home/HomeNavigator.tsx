@@ -1,8 +1,9 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
-import BackButton from '../../common/components/buttons/BackButton';
+import ArrowBox from '../../common/components/views/ArrowBox';
 import Chat from '../../common/screens/Chat';
+import FleetDetail from '../../common/screens/fleet/FleetDetail';
 import ProfileEdit from '../../common/screens/profile/ProfileEdit';
 import { t } from '../../strings';
 import ProfileAddCard from '../profile/payment/ProfileAddCard';
@@ -18,77 +19,58 @@ import { HomeNavigatorParamList } from './types';
 const Stack = createStackNavigator<HomeNavigatorParamList>();
 export default function () {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={() => ({
+        headerBackImage: () => <ArrowBox flipped />,
+        headerBackTitleVisible: false,
+      })}
+    >
       <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
       <Stack.Screen
         name="CreateOrderP2P"
         component={CreateOrderP2P}
-        options={({ navigation }) => ({
-          title: t('Novo pedido'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Novo pedido') }}
       />
       <Stack.Screen
         name="AddressComplete"
         component={AddressComplete}
-        options={({ navigation }) => ({
-          title: t('Adicionar endereço'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Selecione o endereço') }}
+      />
+      <Stack.Screen
+        name="FleetDetail"
+        component={FleetDetail}
+        options={{ title: t('Detalhes da frota') }}
       />
       <Stack.Screen
         name="ProfileEdit"
         component={ProfileEdit}
-        options={({ navigation }) => ({
-          title: t('Seus dados'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Seus dados') }}
       />
       <Stack.Screen
         name="ProfileAddCard"
         component={ProfileAddCard}
-        options={({ navigation }) => ({
-          title: t('Adicionar cartão'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Adicionar cartão') }}
       />
       <Stack.Screen
         name="ProfilePaymentMethods"
         component={ProfilePaymentMethods}
-        options={({ navigation }) => ({
-          title: t('Formas de pagamento'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Formas de pagamento') }}
       />
       <Stack.Screen
         name="OrderConfirmedFeedback"
         component={OrderConfirmedFeedback}
-        options={{
-          headerShown: false,
-        }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="OngoingOrder"
         component={OngoingOrder}
-        options={({ navigation }) => ({
-          title: t('Pedido em andamento'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Pedido em andamento') }}
       />
-      <Stack.Screen
-        name="Chat"
-        component={Chat}
-        options={({ navigation }) => ({
-          title: t('Conversa'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
-      />
+      <Stack.Screen name="Chat" component={Chat} options={{ title: t('Chat') }} />
       <Stack.Screen
         name="OrderDeliveredFeedback"
         component={OrderDeliveredFeedback}
-        options={{
-          headerShown: false,
-        }}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

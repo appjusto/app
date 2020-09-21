@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Fleet } from 'appjusto-types';
+import { Fleet, WithId } from 'appjusto-types';
 import React, { useEffect, useContext, useState, useCallback } from 'react';
 import { Text, FlatList, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -34,13 +34,13 @@ export default function ({ navigation, route }: Props) {
 
   // app state
   const busy = useSelector(getUIBusy);
-  const courier = useSelector(getCourier);
+  const courier = useSelector(getCourier)!;
   const availableCities = useSelector(getAvailableCities);
-  const approvedFleets = useSelector(getApprovedFleets);
+  const approvedFleets = useSelector(getApprovedFleets) ?? [];
 
   // screen state
   // const [selectedCity, setSelectedCity] = useState<City>();
-  const [selectedFleet, setSelectedFleet] = useState<Fleet>();
+  const [selectedFleet, setSelectedFleet] = useState<WithId<Fleet>>();
 
   // effects
   // fetch available cities
@@ -58,7 +58,7 @@ export default function ({ navigation, route }: Props) {
   // }, [selectedCity]);
   // when approved fleets are fetched, select courier's
   useEffect(() => {
-    const courierFleet = approvedFleets?.find((fleet) => fleet.id === courier!.fleet?.id);
+    const courierFleet = approvedFleets?.find((fleet) => fleet.id === courier.fleet?.id);
     if (courierFleet !== undefined) {
       setSelectedFleet(courierFleet);
     }
@@ -66,8 +66,8 @@ export default function ({ navigation, route }: Props) {
 
   // handers
   const confirmFleet = useCallback(async () => {
-    // TODO: change fleet
-    await dispatch(updateProfile(api)(courier!.id!, { fleet: selectedFleet }));
+    if (!selectedFleet) return;
+    await dispatch(updateProfile(api)(courier.id, { fleet: selectedFleet }));
     navigation.goBack();
   }, [selectedFleet]);
 

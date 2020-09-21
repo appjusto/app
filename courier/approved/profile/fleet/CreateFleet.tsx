@@ -52,7 +52,7 @@ export default function ({ navigation, route }: Props) {
 
   // app state
   const busy = useSelector(getUIBusy);
-  const courier = useSelector(getCourier);
+  const courier = useSelector(getCourier)!;
 
   // screen state
   const [name, setName] = useState('');
@@ -85,7 +85,7 @@ export default function ({ navigation, route }: Props) {
         valueThreshold: 0,
         feePctOverValue: 0,
         situation: 'approved',
-        createdBy: courier?.id,
+        createdBy: courier.id,
       })
     );
     navigation.goBack();
