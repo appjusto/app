@@ -1,4 +1,4 @@
-import { Address } from 'appjusto-types';
+import { Address, Fleet } from 'appjusto-types';
 
 import { ChatParamList } from '../../common/screens/Chat';
 
@@ -14,6 +14,9 @@ export type HomeNavigatorParamList = {
     value?: string;
     returnScreen: 'CreateOrderP2P';
     returnParam: string;
+  };
+  FleetDetail: {
+    fleet: Fleet;
   };
   ProfileEdit: undefined;
   ProfileAddCard?: {

@@ -55,7 +55,7 @@ export default class FleetApi {
     return docs;
   }
 
-  async createFleet(fleet: Fleet) {
+  async createFleet(fleet: Partial<Fleet>) {
     return this.firestore.collection('fleets').add(fleet);
   }
 }

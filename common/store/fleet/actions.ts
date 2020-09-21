@@ -29,6 +29,8 @@ export const fetchApprovedFleets = (api: Api) => async (dispatch: AppDispatch) =
   dispatch({ type: BUSY, payload: false });
 };
 
-export const createFleet = (api: Api) => (fleet: Fleet) => async (dispatch: AppDispatch) => {
+export const createFleet = (api: Api) => (fleet: Partial<Fleet>) => async (
+  dispatch: AppDispatch
+) => {
   return dispatch(awaitWithFeedback(api.fleet().createFleet(fleet)));
 };

@@ -1,8 +1,8 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Place, Order, WithId } from 'appjusto-types';
+import { Place, Order, WithId, Fleet } from 'appjusto-types';
 import { isEmpty } from 'lodash';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useCallback } from 'react';
 import { View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -99,6 +99,9 @@ export default function ({ navigation, route }: Props) {
     if (!card) navigation.navigate('ProfileAddCard', { returnScreen: 'CreateOrderP2P' });
     else navigation.navigate('ProfilePaymentMethods', { returnScreen: 'CreateOrderP2P' });
   };
+  const navigateFleetDetail = useCallback((fleet: Fleet) => {
+    navigation.navigate('FleetDetail', { fleet });
+  }, []);
   // confirm order
   const confirmOrderHandler = async (fleetId: string, platformFee: number) => {
     try {
@@ -122,6 +125,7 @@ export default function ({ navigation, route }: Props) {
         card={card}
         navigateToAddressComplete={navigateToAddressComplete}
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
+        navigateFleetDetail={navigateFleetDetail}
         confirmOrder={confirmOrderHandler}
       />
     </View>

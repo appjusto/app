@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import * as icons from '../../assets/icons';
 import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
+import FeedbackView from '../../common/components/views/FeedbackView';
 import StatusBadge from '../../common/components/views/StatusBadge';
 import {
   getYearsWithOrders,
@@ -18,6 +19,7 @@ import {
 } from '../../common/store/order/selectors';
 import { screens, texts, padding, colors } from '../../common/styles';
 import { formatTime, formatDate, separateWithDot } from '../../common/utils/formatters';
+import { t } from '../../strings';
 import { HomeNavigatorParamList } from '../home/types';
 import { HistoryParamList } from './types';
 
@@ -68,6 +70,16 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   const paddingTop = Constants.statusBarHeight;
+  if (sections.length === 0) {
+    return (
+      <FeedbackView
+        header={t('Seu histórico está vazio')}
+        description={t('Você ainda não fez nenhum pedido')}
+        icon={icons.motocycle}
+        background={colors.lightGrey}
+      />
+    );
+  }
   return (
     <View style={{ ...screens.configScreen }}>
       <SectionList

@@ -141,7 +141,7 @@ export default function ({ navigation }: Props) {
                 },
               ]}
             >
-              {`${t('Olá')}, ${courier?.name ?? 'entregador'}. ${t(
+              {`${t('Olá')}, ${courier.name ?? 'entregador'}. ${t(
                 'Faça suas corridas com segurança.'
               )}`}
             </Text>
