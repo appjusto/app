@@ -1,12 +1,10 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import BackButton from '../../common/components/buttons/BackButton';
 
 import ArrowBox from '../../common/components/views/ArrowBox';
 import Chat from '../../common/screens/Chat';
 import FleetDetail from '../../common/screens/fleet/FleetDetail';
 import ProfileEdit from '../../common/screens/profile/ProfileEdit';
-import OrderRefused from '../../courier/approved/matching/OrderRefused';
 import { t } from '../../strings';
 import ProfileAddCard from '../profile/payment/ProfileAddCard';
 import ProfilePaymentMethods from '../profile/payment/ProfilePaymentMethods';
@@ -73,15 +71,6 @@ export default function () {
         name="OrderDeliveredFeedback"
         component={OrderDeliveredFeedback}
         options={{ headerShown: false }}
-      />
-      {/* just for testing */}
-      <Stack.Screen
-        name="OrderRefused"
-        component={OrderRefused}
-        options={({ navigation }) => ({
-          title: t('Recusou o pedido'),
-          headerLeft: () => <BackButtonutton onPress={() => navigation.goBack()} />,
-        })}
       />
     </Stack.Navigator>
   );

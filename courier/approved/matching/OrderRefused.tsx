@@ -12,6 +12,7 @@ type RefuseReason = 'busy' | 'low-price' | 'too-far' | 'not-safe' | 'forgot-stat
 
 export default function () {
   const [reason, setReason] = useState<RefuseReason | null>(null);
+  const [value, onChangeText] = useState<string>('');
   return (
     <PaddedView style={{ ...screens.configScreen }}>
       <Text style={{ ...texts.big, marginBottom: 24 }}>{t('Por que você recusou o pedido?')}</Text>
@@ -51,14 +52,26 @@ export default function () {
           </Text>
         </View>
       </TouchableOpacity>
-      <Text style={{ ...texts.default, marginBottom: 8, marginTop: 34 }}>
+      <Text style={{ ...texts.default, marginBottom: 8, marginTop: 24 }}>
         {t(
           'Você pode usar o espaço abaixo para detalhar mais sua recusa, dessa forma conseguiremos melhorar nossos serviços:'
         )}
       </Text>
       <TextInput
         placeholder={t('Escreva sua mensagem')}
-        style={{ width: '100%', height: 128, ...borders.default, borderColor: colors.grey }}
+        style={{
+          width: '100%',
+          height: 128,
+          ...borders.default,
+          borderColor: colors.grey,
+          backgroundColor: colors.white,
+          marginBottom: 8,
+          padding: 8,
+        }}
+        multiline
+        onChangeText={(text) => onChangeText(text)}
+        value={value}
+        textAlignVertical="top"
       />
       <View style={{ flex: 1 }} />
       <DefaultButton title={t('Enviar')} disabled={!reason} />

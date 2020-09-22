@@ -35,5 +35,4 @@ export type HomeNavigatorParamList = {
   OrderDeliveredFeedback: {
     orderId: string;
   };
-  // OrderRefused: undefined; // for testing
 } & ChatParamList;

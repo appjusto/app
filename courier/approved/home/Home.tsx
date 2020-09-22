@@ -105,6 +105,7 @@ export default function ({ navigation }: Props) {
   // location permission denied
   useEffect(() => {
     if (working && locationPermission === 'denied') {
+      navigation.navigate('PermissionDeniedFeedback');
       // removing previous token
       dispatch(updateProfile(api)(courier!.id!, { notificationToken: null }));
     }
@@ -199,7 +200,8 @@ export default function ({ navigation }: Props) {
               {`+ ${formatCurrency(courier.fleet?.additionalPerKmAfterThreshold ?? 0)} por km.`}
             </Text>
             <View style={{ flex: 1 }} />
-            <TouchableOpacity onPress={() => null}>
+            {/* the navigation function below is just for testing the screen */}
+            <TouchableOpacity onPress={() => navigation.navigate('OrderRefused')}>
               <View style={{ marginTop: padding }}>
                 <RoundedText>{t('Ver detalhes')}</RoundedText>
               </View>
