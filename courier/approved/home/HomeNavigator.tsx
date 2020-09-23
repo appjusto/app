@@ -32,7 +32,7 @@ export default function () {
       <Stack.Screen
         name="OrderCompleted"
         component={OrderCompleted}
-        options={{ title: t('Avalie a corrida') }}
+        options={{ title: t('Avalie a corrida'), headerShown: false }}
       />
     </Stack.Navigator>
   );
