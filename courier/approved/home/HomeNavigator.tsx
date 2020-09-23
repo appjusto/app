@@ -4,6 +4,7 @@ import React from 'react';
 import BackButton from '../../../common/components/buttons/BackButton';
 import ArrowBox from '../../../common/components/views/ArrowBox';
 import { t } from '../../../strings';
+import OrderCompleted from '../matching/OrderCompleted';
 import OrderRefused from '../matching/OrderRefused';
 import Home from './Home';
 import PermissionDeniedFeedback from './PermissionDeniedFeedback';
@@ -27,10 +28,12 @@ export default function () {
       <Stack.Screen
         name="PermissionDeniedFeedback"
         component={PermissionDeniedFeedback}
-        options={({ navigation }) => ({
-          title: t('Compartilhar localização'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Compartilhar localização') }}
+      />
+      <Stack.Screen
+        name="OrderCompleted"
+        component={OrderCompleted}
+        options={{ title: t('Compartilhar localização') }}
       />
     </Stack.Navigator>
   );
