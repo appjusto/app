@@ -11,14 +11,14 @@ import { createStore } from '../store';
 import Api from '../store/api/api';
 import { getExtra } from '../utils/config';
 import { defineLocationUpdatesTask } from '../utils/location';
-import * as analytics from './analytics';
+// import * as analytics from './analytics';
 
 const extra = getExtra();
 const api = new Api(extra);
 const store = createStore(extra);
 
 defineLocationUpdatesTask(store, api);
-analytics.init(extra.analytics);
+// analytics.init(extra.analytics);
 
 export const ApiContext = React.createContext<Api>(api);
 export type AppDispatch = typeof store.dispatch;

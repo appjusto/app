@@ -1,4 +1,6 @@
-import {
+import 'dotenv/config';
+
+const {
   GOOGLE_ANDROID_API_KEY,
   GOOGLE_IOS_API_KEY,
   FIREBASE_REGION,
@@ -10,7 +12,7 @@ import {
   SEGMENT_IOS_KEY,
   SENTRY_DSN,
   SENTRY_AUTH_TOKEN,
-} from 'react-native-dotenv';
+} = process.env;
 
 const createFirebaseConfig = () => {
   return {
