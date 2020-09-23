@@ -56,9 +56,6 @@
         }
       ]
     },
-    "experiments": {
-      "redesignedLogBox": true
-    },
     "hooks": {
       "postPublish": [
         {

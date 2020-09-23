@@ -1,6 +1,6 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import React from 'react';
-import { YellowBox } from 'react-native';
+import { LogBox } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import PreloadAssets from './common/app/PreloadAssets';
@@ -15,7 +15,7 @@ import CourierApp from './courier/CourierApp';
 // https://twitter.com/rickhanlonii/status/1255185060208226306
 
 if (__DEV__) {
-  YellowBox.ignoreWarnings(['Setting a timer']);
+  LogBox.ignoreLogs(['Setting a timer']);
 }
 
 const App = () => {
