@@ -83,4 +83,8 @@ export default function () {
       <DefaultButton title={t('Finalizar')} />
     </PaddedView>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> sdk39-upgrade
