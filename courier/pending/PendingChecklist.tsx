@@ -37,12 +37,17 @@ export default function ({ navigation, route }: Props) {
   const courier = useSelector(getCourier)!;
   const hasPersonalInfo = courierInfoSet(courier) ?? false;
   const hasBankAccount = bankAccountSet(courier) ?? false;
+  const hasSelectedFleet = courier.fleet !== undefined;
   const totalSteps = 4;
 
   // screen state
   const [hasImagesUris, setHasImagesUris] = useState(false);
   const submitEnabled =
-    courier.situation === 'pending' && hasPersonalInfo && hasBankAccount && hasImagesUris;
+    courier.situation === 'pending' &&
+    hasPersonalInfo &&
+    hasBankAccount &&
+    hasImagesUris &&
+    hasSelectedFleet;
   const [stepsDone, setStepsDone] = useState(0);
 
   // handlers
@@ -61,10 +66,10 @@ export default function ({ navigation, route }: Props) {
   useEffect(() => {
     navigation.addListener('focus', focusHandler);
     return () => navigation.removeListener('focus', focusHandler);
-  }, []);
+  });
 
   // handler
-  const focusHandler = useCallback(() => {
+  const focusHandler = () => {
     (async () => {
       try {
         let hasImages = hasImagesUris;
@@ -78,11 +83,12 @@ export default function ({ navigation, route }: Props) {
         if (hasPersonalInfo) totalSteps++;
         if (hasBankAccount) totalSteps++;
         if (hasImages) totalSteps++;
+        if (hasSelectedFleet) totalSteps++;
         setStepsDone(totalSteps);
         setHasImagesUris(hasImages);
       } catch (error) {}
     })();
-  }, [api, courier, hasPersonalInfo, hasBankAccount, hasImagesUris]);
+  };
 
   // UI
   return (
@@ -140,7 +146,7 @@ export default function ({ navigation, route }: Props) {
           title={t('Escolha sua frota')}
           subtitle={t('Faça parte de uma frota existente ou crie sua própria frota')}
           onPress={() => navigation.navigate('Fleet')}
-          // checked={courier!.bankAccountSet()}
+          checked={hasSelectedFleet}
         />
       </ScrollView>
     </View>

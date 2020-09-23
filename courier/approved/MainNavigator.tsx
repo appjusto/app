@@ -57,7 +57,9 @@ export default function ({ navigation }: Props) {
   // handlers
   const notificationHandler = useCallback(
     (content: Notifications.NotificationContent) => {
+      console.log('notificationHandler');
       const data = (content.data as unknown) as PushMessageData;
+      console.log(data);
       if (data.action === 'matching') {
         // should always be true as couriers should receive matching notifications only when they're available
         if (status === 'available') {
