@@ -253,12 +253,12 @@ export default function ({ navigation }: Props) {
       <PaddedView vertical={false} style={{ marginBottom: padding }} half>
         <ModalChooser />
       </PaddedView>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={{ marginTop: 8 }}
         onPress={() => navigation.navigate('OrderCompleted')}
       >
         <Text>Navegar para OrderCompleted</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </ScrollView>
   );
 }

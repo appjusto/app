@@ -120,16 +120,34 @@ export default function ({
           <View
             style={{
               flexDirection: 'row',
-              justifyContent: 'space-between',
               alignItems: 'center',
+              marginBottom: 24,
             }}
           >
-            <Text style={{ ...texts.medium, ...texts.bold }}>{t('Escolha a frota')}</Text>
-            <Text style={{ ...texts.small }}>
-              {quotes?.length ?? 0} {t('frotas ativas no momento')}
-            </Text>
+            <View
+              style={{
+                height: 24,
+                width: 4,
+                backgroundColor: colors.green,
+                borderRadius: 8,
+                marginRight: 12,
+              }}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flex: 1,
+              }}
+            >
+              <Text style={{ ...texts.medium, ...texts.bold }}>{t('Escolha a frota')}</Text>
+              <Text style={{ ...texts.small, color: colors.darkGrey }}>
+                {quotes?.length ?? 0} {t('frotas ativas agora')}
+              </Text>
+            </View>
           </View>
-          <Text style={{ ...texts.small, color: colors.darkGrey }}>
+          <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: 12 }}>
             {t(
               'Você pode escolher a frota que quiser para sua entrega. Frotas podem ter preços e características diferentes.'
             )}
@@ -147,6 +165,7 @@ export default function ({
           <ShowIf test={!isEmpty(quotes)}>
             {() => (
               <FlatList
+                showsHorizontalScrollIndicator={false}
                 data={quotes}
                 keyExtractor={(item) => item.fleet.id!}
                 renderItem={({ item }) => {
@@ -157,6 +176,7 @@ export default function ({
                         backgroundColor: colors.lightGreen,
                         ...borders.default,
                         borderWidth: 2,
+                        borderColor: colors.black,
                       }}
                     >
                       <Text numberOfLines={2} style={[texts.default, texts.bold]}>
@@ -186,6 +206,61 @@ export default function ({
         <HR height={padding} />
 
         {/* details */}
+        <PaddedView style={{ ...screens.default }}>
+          <View>
+            <Text style={{ ...texts.default }}>{t('Entenda os valores')}</Text>
+            <Text style={{ ...texts.small, color: colors.darkGrey }}>
+              {t('Somos transparentes do início ao fim da entrega')}
+            </Text>
+          </View>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 16,
+            }}
+          >
+            <Text style={{ ...texts.default, lineHeight: 21 }}>{t('Entregador')}</Text>
+            <Text style={{ ...texts.default, lineHeight: 21 }}>
+              {formatCurrency(selectedFare?.courierFee ?? 0)}
+            </Text>
+          </View>
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
+              {t('Impostos')}
+            </Text>
+            <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
+              {formatCurrency(selectedFare?.taxes ?? 0)}
+            </Text>
+          </View>
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
+              {t('Tarifa financeira')}
+            </Text>
+            <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
+              {formatCurrency(selectedFare?.financialFee ?? 0)}
+            </Text>
+          </View>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 12,
+            }}
+          >
+            <Text style={{ ...texts.default, lineHeight: 21 }}>{t('AppJusto')}</Text>
+            <Text style={{ ...texts.default, lineHeight: 21 }}>
+              {formatCurrency(selectedFare?.platformFee ?? 0)}
+            </Text>
+          </View>
+          <Text style={{ ...texts.small, lineHeight: 19, color: colors.darkGrey }}>
+            O AppJusto cobra menos para ser mais justo com todos. Você pode aumentar a sua
+            contribuição se desejar.
+          </Text>
+        </PaddedView>
+        <HR height={padding} />
         <PaddedView>
           <View
             style={{
@@ -194,62 +269,32 @@ export default function ({
               alignItems: 'center',
             }}
           >
-            <Text style={{ ...texts.medium, ...texts.bold }}>{t('Valor total a pagar')}</Text>
-            <Text style={{ ...texts.mediumToBig }}>{formatCurrency(selectedFare?.total ?? 0)}</Text>
+            <View
+              style={{
+                height: 24,
+                width: 4,
+                backgroundColor: colors.green,
+                borderRadius: 8,
+                marginRight: 12,
+              }}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flex: 1,
+              }}
+            >
+              <Text style={{ ...texts.medium, ...texts.bold }}>{t('Valor total a pagar')}</Text>
+              <Text style={{ ...texts.mediumToBig }}>
+                {formatCurrency(selectedFare?.total ?? 0)}
+              </Text>
+            </View>
           </View>
         </PaddedView>
       </View>
-
-      <View style={{ ...screens.lightGrey, paddingVertical: 24 }}>
-        <View>
-          <Text style={{ ...texts.default }}>{t('Entenda os valores')}</Text>
-          <Text style={{ ...texts.small, color: colors.darkGrey }}>
-            {t('Somos transparentes do início ao fim da entrega')}
-          </Text>
-        </View>
-        <View
-          style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: 16 }}
-        >
-          <Text style={{ ...texts.default, lineHeight: 21 }}>{t('Entregador')}</Text>
-          <Text style={{ ...texts.default, lineHeight: 21 }}>
-            {formatCurrency(selectedFare?.courierFee ?? 0)}
-          </Text>
-        </View>
-        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
-            {t('Impostos')}
-          </Text>
-          <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
-            {formatCurrency(selectedFare?.taxes ?? 0)}
-          </Text>
-        </View>
-        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
-            {t('Tarifa financeira')}
-          </Text>
-          <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
-            {formatCurrency(selectedFare?.financialFee ?? 0)}
-          </Text>
-        </View>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: 12,
-          }}
-        >
-          <Text style={{ ...texts.default, lineHeight: 21 }}>{t('AppJusto')}</Text>
-          <Text style={{ ...texts.default, lineHeight: 21 }}>
-            {formatCurrency(selectedFare?.platformFee ?? 0)}
-          </Text>
-        </View>
-        <Text style={{ ...texts.small, lineHeight: 19, color: colors.darkGrey }}>
-          O AppJusto cobra menos para ser mais justo com todos. Você pode aumentar a sua
-          contribuição se desejar.
-        </Text>
-      </View>
-
+      <HR height={padding} />
       <ShowIf test={!!card}>
         {() => (
           <TouchableOpacity onPress={() => navigateToFillPaymentInfo()}>
