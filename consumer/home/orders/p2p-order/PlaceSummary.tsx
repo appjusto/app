@@ -20,7 +20,7 @@ export default function ({ place, title, editStepHandler }: Props) {
       <View style={{ width: '60%', flex: 1 }}>
         <Text style={{ ...texts.small, color: colors.darkGreen }}>{title}</Text>
         <Text style={{ ...texts.medium }}>{place.address.main}</Text>
-        <Text style={{ ...texts.medium }}>{place.address.secondary}</Text>
+        <Text style={{ ...texts.default }}>{place.address.secondary}</Text>
         <ShowIf test={!isEmpty(place.additionalInfo)}>
           {() => <Text>{place.additionalInfo}</Text>}
         </ShowIf>

@@ -85,7 +85,7 @@ export default function ({
 
   // UI
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1, marginBottom: 24 }}>
       {/* show map if it was hidden on previous pages */}
       <ShowIf test={height < 700}>
         {() => (
@@ -124,15 +124,7 @@ export default function ({
               marginBottom: 24,
             }}
           >
-            <View
-              style={{
-                height: 24,
-                width: 4,
-                backgroundColor: colors.green,
-                borderRadius: 8,
-                marginRight: 12,
-              }}
-            />
+            <Image source={icons.greenRectangle} style={{ marginRight: 12 }} />
             <View
               style={{
                 flexDirection: 'row',
@@ -208,7 +200,10 @@ export default function ({
         {/* details */}
         <PaddedView style={{ ...screens.default }}>
           <View>
-            <Text style={{ ...texts.default }}>{t('Entenda os valores')}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+              <Image source={icons.greenRectangle} style={{ marginRight: 12 }} />
+              <Text style={{ ...texts.medium, ...texts.bold }}>{t('Entenda os valores')}</Text>
+            </View>
             <Text style={{ ...texts.small, color: colors.darkGrey }}>
               {t('Somos transparentes do início ao fim da entrega')}
             </Text>
@@ -225,6 +220,11 @@ export default function ({
             <Text style={{ ...texts.default, lineHeight: 21 }}>
               {formatCurrency(selectedFare?.courierFee ?? 0)}
             </Text>
+          </View>
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={{ ...texts.default, lineHeight: 21 }}>{t('Frota escolhida')}</Text>
+            {/* find out how to display the fleet name below */}
+            <Text style={{ ...texts.default, lineHeight: 21 }}>App Justo</Text>
           </View>
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
@@ -269,15 +269,7 @@ export default function ({
               alignItems: 'center',
             }}
           >
-            <View
-              style={{
-                height: 24,
-                width: 4,
-                backgroundColor: colors.green,
-                borderRadius: 8,
-                marginRight: 12,
-              }}
-            />
+            <Image source={icons.greenRectangle} style={{ marginRight: 12 }} />
             <View
               style={{
                 flexDirection: 'row',
@@ -298,13 +290,22 @@ export default function ({
       <ShowIf test={!!card}>
         {() => (
           <TouchableOpacity onPress={() => navigateToFillPaymentInfo()}>
-            <View>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text>{t('Forma de pagamento')}</Text>
+            <PaddedView>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: 8,
+                }}
+              >
+                <Text style={{ ...texts.medium }}>{t('Forma de pagamento')}</Text>
                 <Image style={{ width: 32, height: 32 }} source={icons.edit} />
               </View>
-              <Text>{t(`Cartão de crédito: **** ${card!.lastFourDigits}`)}</Text>
-            </View>
+              <Text style={{ ...texts.default, color: colors.darkGrey }}>
+                {t(`Cartão de crédito: **** ${card!.lastFourDigits}`)}
+              </Text>
+            </PaddedView>
           </TouchableOpacity>
         )}
       </ShowIf>
@@ -320,6 +321,7 @@ export default function ({
       </ShowIf>
 
       <DefaultButton
+        style={{ marginHorizontal: padding, marginVertical: padding }}
         title={t('Fazer pedido')}
         onPress={() => confirmOrder(selectedFare?.fleet?.id!, 100)}
         disabled={!canSubmit}
