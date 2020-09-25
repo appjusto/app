@@ -3,6 +3,7 @@ import React from 'react';
 
 import ArrowBox from '../../../common/components/views/ArrowBox';
 import { t } from '../../../strings';
+import OrderCompleted from '../matching/OrderCompleted';
 import OrderRefused from '../matching/OrderRefused';
 import Home from './Home';
 import PermissionDeniedFeedback from './PermissionDeniedFeedback';
@@ -27,6 +28,14 @@ export default function () {
         name="PermissionDeniedFeedback"
         component={PermissionDeniedFeedback}
         options={{ title: t('Compartilhar localização') }}
+<<<<<<< HEAD
+=======
+      />
+      <Stack.Screen
+        name="OrderCompleted"
+        component={OrderCompleted}
+        options={{ title: t('Avalie a corrida'), headerShown: false }}
+>>>>>>> 4991a6da8ac2835f7c4af8a06662faaca5b791c3
       />
     </Stack.Navigator>
   );

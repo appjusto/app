@@ -6,6 +6,7 @@ import * as Permissions from 'expo-permissions';
 import { isEmpty } from 'lodash';
 import React, { useState, useCallback, useContext, useEffect, useMemo } from 'react';
 import { View, Text, Image, StyleSheet, ImageURISource, Dimensions } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../../assets/icons';
@@ -21,6 +22,7 @@ import {
   uploadDocumentImage,
 } from '../../../../common/store/courier/actions';
 import { getCourier } from '../../../../common/store/courier/selectors';
+import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { colors, texts, screens, padding } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ProfileParamList } from '../types';
@@ -56,6 +58,7 @@ export default function ({ navigation }: Props) {
   const { showActionSheetWithOptions } = useActionSheet();
 
   // app state
+  const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier);
 
   // screen state
@@ -199,7 +202,7 @@ export default function ({ navigation }: Props) {
         checked={selfieCheckHandler}
       >
         {uploadingNewSelfie === UploadStatus.Uploading && (
-          <View style={{ marginBottom: 16, paddingHorizontal: 16 }}>
+          <View style={{ marginBottom: 16 }}>
             <RoundedText backgroundColor={colors.white}>{t('Enviando imagem')}</RoundedText>
           </View>
         )}
@@ -211,44 +214,51 @@ export default function ({ navigation }: Props) {
         checked={documentImageCheckHandler}
       >
         {uploadingNewDocumentImage === UploadStatus.Uploading && (
-          <View style={{ marginBottom: 16, paddingHorizontal: 16 }}>
+          <View style={{ marginBottom: 16 }}>
             <RoundedText backgroundColor={colors.white}>{t('Enviando imagem')}</RoundedText>
           </View>
         )}
       </ConfigItem>
       <View style={{ flex: 1 }} />
       <View style={styles.imagesContainer}>
-        <DocumentButton
-          title={t('Foto de rosto')}
-          onPress={() => {}}
-          hasTitle={!previousSelfie && !newSelfie}
-        >
-          <Image
-            source={newSelfie ?? previousSelfie ?? icons.selfie}
-            resizeMode="cover"
-            style={(newSelfie ?? previousSelfie) !== undefined ? styles.image : styles.icon}
-          />
-        </DocumentButton>
-        <DocumentButton
-          title={t('RG ou CNH aberta')}
-          onPress={() => {}}
-          hasTitle={!previousDocumentimage && !newDocumentImage}
-        >
-          <Image
-            source={newDocumentImage ?? previousDocumentimage ?? icons.license}
-            resizeMode="cover"
-            style={
-              (newDocumentImage ?? previousDocumentimage) !== undefined ? styles.image : styles.icon
-            }
-          />
-        </DocumentButton>
+        <TouchableOpacity onPress={() => actionSheetHandler(setNewSelfie)}>
+          <DocumentButton
+            title={t('Foto de rosto')}
+            onPress={() => {}}
+            hasTitle={!previousSelfie && !newSelfie}
+          >
+            <Image
+              source={newSelfie ?? previousSelfie ?? icons.selfie}
+              resizeMode="cover"
+              style={newSelfie || previousSelfie ? styles.image : styles.icon}
+            />
+          </DocumentButton>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => actionSheetHandler(setNewDocumentImage)}>
+          <DocumentButton
+            title={t('RG ou CNH aberta')}
+            onPress={() => {}}
+            hasTitle={!previousDocumentimage && !newDocumentImage}
+          >
+            <Image
+              source={newDocumentImage ?? previousDocumentimage ?? icons.license}
+              resizeMode="cover"
+              style={newDocumentImage || previousDocumentimage ? styles.image : styles.icon}
+            />
+          </DocumentButton>
+        </TouchableOpacity>
       </View>
       <View style={{ flex: 1 }} />
-      <View style={{ padding }}>
+      <View style={{ marginBottom: 32, paddingHorizontal: padding }}>
         <DefaultButton
           title={t('Avançar')}
           disabled={!canProceed}
           onPress={() => navigation.goBack()}
+          activityIndicator={
+            busy ||
+            uploadingNewSelfie === UploadStatus.Uploading ||
+            uploadingNewDocumentImage === UploadStatus.Uploading
+          }
         />
       </View>
     </View>
