@@ -16,6 +16,9 @@ export interface Extra {
     segmentiOSKey: string;
     sentryDNS: string;
   };
+  iugu: {
+    accountId: string;
+  };
 }
 
 export interface FirebaseConfig {

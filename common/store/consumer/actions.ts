@@ -1,6 +1,6 @@
 import Api from '../api/api';
-import { SaveCardPayload } from './types';
+import { CreatePaymentToken } from './types/payment/iugu';
 
-export const saveCard = (api: Api) => (card: SaveCardPayload) => {
+export const saveCard = (api: Api) => (card: CreatePaymentToken) => {
   return api.consumer().saveCard(card);
 };

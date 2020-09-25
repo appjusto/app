@@ -1,7 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
-import BackButton from '../../../common/components/buttons/BackButton';
 import ArrowBox from '../../../common/components/views/ArrowBox';
 import { t } from '../../../strings';
 import OrderRefused from '../matching/OrderRefused';
@@ -27,10 +26,7 @@ export default function () {
       <Stack.Screen
         name="PermissionDeniedFeedback"
         component={PermissionDeniedFeedback}
-        options={({ navigation }) => ({
-          title: t('Compartilhar localização'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Compartilhar localização') }}
       />
     </Stack.Navigator>
   );

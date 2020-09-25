@@ -12,6 +12,7 @@ const {
   SEGMENT_IOS_KEY,
   SENTRY_DSN,
   SENTRY_AUTH_TOKEN,
+  IUGU_ACCOUNT_ID,
 } = process.env;
 
 const createFirebaseConfig = () => {
@@ -83,6 +84,9 @@ export default ({ config }) => {
       googleApiKeys,
       firebase: createFirebaseConfig(),
       analytics,
+      iugu: {
+        accountId: IUGU_ACCOUNT_ID,
+      },
     },
   };
 };
