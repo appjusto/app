@@ -24,6 +24,8 @@ type Props = {
   destination: Partial<Place>;
   order?: WithId<Order>;
   card?: Card;
+  updateOrigin: (value: Partial<Place>) => void;
+  updateDestination: (value: Partial<Place>) => void;
   navigateToAddressComplete: (value: string, returnParam: string) => void;
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleet: Fleet) => void;
@@ -35,6 +37,8 @@ export default function ({
   destination,
   order,
   card,
+  updateOrigin,
+  updateDestination,
   navigateToAddressComplete,
   navigateToFillPaymentInfo,
   navigateFleetDetail,
@@ -121,14 +125,21 @@ export default function ({
 
           <DefaultInput
             style={{ marginTop: padding }}
+            value={origin.additionalInfo ?? ''}
             title={t('Complemento (se houver)')}
             placeholder={t('Apartamento, sala, loja, etc.')}
+            onChangeText={(text) => updateOrigin({ ...origin, additionalInfo: text })}
           />
 
           <DefaultInput
             style={{ marginTop: padding }}
-            title={t('Instruções para retirada')}
+            value={origin.intructions ?? ''}
+            title={t('Instruções para entrega')}
             placeholder={t('Quem irá atender o entregador, etc.')}
+            onChangeText={(text) => updateOrigin({ ...origin, intructions: text })}
+            blurOnSubmit
+            multiline
+            numberOfLines={3}
           />
 
           <View style={{ flex: 1 }} />
@@ -155,14 +166,21 @@ export default function ({
 
             <DefaultInput
               style={{ marginTop: padding }}
+              value={destination.additionalInfo ?? ''}
               title={t('Complemento (se houver)')}
               placeholder={t('Apartamento, sala, loja, etc.')}
+              onChangeText={(text) => updateDestination({ ...destination, additionalInfo: text })}
             />
 
             <DefaultInput
               style={{ marginTop: padding }}
+              value={destination.intructions ?? ''}
               title={t('Instruções para entrega')}
               placeholder={t('Quem irá atender o entregador, etc.')}
+              onChangeText={(text) => updateDestination({ ...destination, intructions: text })}
+              blurOnSubmit
+              multiline
+              numberOfLines={3}
             />
 
             <View style={{ flex: 1 }} />

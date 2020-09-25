@@ -123,6 +123,8 @@ export default function ({ navigation, route }: Props) {
         destination={destination}
         order={order}
         card={card}
+        updateOrigin={(value) => setOrigin(value)}
+        updateDestination={(value) => setDestination(value)}
         navigateToAddressComplete={navigateToAddressComplete}
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         navigateFleetDetail={navigateFleetDetail}
