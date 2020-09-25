@@ -8,6 +8,7 @@ const {
   FIREBASE_DATABASE_NAME,
   FIREBASE_MESSAGING_SENDER_ID,
   FIREBASE_APP_ID,
+  FIREBASE_EMULATOR_HOST,
   SEGMENT_ANDROID_KEY,
   SEGMENT_IOS_KEY,
   SENTRY_DSN,
@@ -26,8 +27,8 @@ const createFirebaseConfig = () => {
     appId: FIREBASE_APP_ID,
     emulator: {
       enabled: process.env.FIREBASE_EMULATOR === 'true',
-      databaseURL: `192.168.15.16:8080`,
-      functionsURL: `http://192.168.15.16:5001`,
+      databaseURL: `${FIREBASE_EMULATOR_HOST}:8080`,
+      functionsURL: `http://${FIREBASE_EMULATOR_HOST}:5001`,
     },
     // measurementId: null,
   };
