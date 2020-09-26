@@ -73,13 +73,13 @@ export const uploadProfileImages = (api: Api) => (
 };
 
 export const getSelfieURL = (api: Api) => (courierId: string) => async (dispatch: AppDispatch) => {
-  const selfiePath = `couriers/${courierId}/selfie_100x100.jpg`;
+  const selfiePath = `couriers/${courierId}/selfie_160x160.jpg`;
   return api.files().getDownloadURL(selfiePath);
 };
 
 export const getDocumentImageURL = (api: Api) => (courierId: string) => async (
   dispatch: AppDispatch
 ) => {
-  const documentImagePath = `couriers/${courierId}/document_100x100.jpg`;
+  const documentImagePath = `couriers/${courierId}/document_160x160.jpg`;
   return api.files().getDownloadURL(documentImagePath);
 };

@@ -91,7 +91,7 @@ export default function ({ navigation, route }: Props) {
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
           <PaddedView>
-            <Text style={{ ...texts.big }}>{t('Cidade de atuação')}</Text>
+            {/* <Text style={{ ...texts.big }}>{t('Cidade de atuação')}</Text>
             <Text style={{ ...texts.default, marginTop: 16, color: colors.darkGrey }}>
               {t('Escolha a cidade que você vai fazer suas entregas')}
             </Text>
@@ -106,7 +106,7 @@ export default function ({ navigation, route }: Props) {
               disabled={availableCities === undefined}
               activityIndicator={busy}
               onPress={() => navigation.navigate('CityUnavailable')}
-            />
+            /> */}
             <Text style={{ ...texts.big, marginTop: padding }}>{t('Escolha sua frota')}</Text>
             <Text style={{ ...texts.default, marginTop: padding, color: colors.darkGrey }}>
               {t(

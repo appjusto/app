@@ -2,7 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
 import { t } from '../../../strings';
-import BackButton from '../../components/buttons/BackButton';
+import ArrowBox from '../../components/views/ArrowBox';
 import SignInFeedback from './SignInFeedback';
 import Terms from './Terms';
 import WelcomeScreen from './WelcomeScreen';
@@ -11,7 +11,12 @@ import { UnloggedParamList } from './types';
 const StackNavigator = createStackNavigator<UnloggedParamList>();
 export default function () {
   return (
-    <StackNavigator.Navigator>
+    <StackNavigator.Navigator
+      screenOptions={() => ({
+        headerBackImage: () => <ArrowBox flipped />,
+        headerBackTitleVisible: false,
+      })}
+    >
       <StackNavigator.Screen
         name="WelcomeScreen"
         component={WelcomeScreen}
@@ -20,18 +25,12 @@ export default function () {
       <StackNavigator.Screen
         name="SignInFeedback"
         component={SignInFeedback}
-        options={({ navigation }) => ({
-          title: t('Verifique seu e-mail'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Verifique seu e-mail') }}
       />
       <StackNavigator.Screen
         name="Terms"
         component={Terms}
-        options={({ navigation }) => ({
-          title: t('Fique por dentro'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Fique por dentro') }}
       />
     </StackNavigator.Navigator>
   );

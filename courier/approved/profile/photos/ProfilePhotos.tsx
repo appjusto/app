@@ -6,7 +6,7 @@ import * as Permissions from 'expo-permissions';
 import { isEmpty } from 'lodash';
 import React, { useState, useCallback, useContext, useEffect, useMemo } from 'react';
 import { View, Text, Image, StyleSheet, ImageURISource, Dimensions } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../../assets/icons';
@@ -35,7 +35,7 @@ const defaultImageOptions: ImagePicker.ImagePickerOptions = {
   quality: 1,
 };
 
-const { height } = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 enum UploadStatus {
   Unstarted,
@@ -177,91 +177,93 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <View style={{ ...screens.configScreen }}>
-      <PaddedView>
-        <Text style={{ ...texts.default, color: colors.darkGrey }}>
-          {t(
-            'Precisamos da sua foto para incluir nas entregas. Se você optou por Moto e/ou Carro, vamos precisar também da foto da sua CNH; caso contrário, é só enviar a foto do seu RG.'
-          )}
-        </Text>
-      </PaddedView>
+    <ScrollView>
+      <View style={{ ...screens.configScreen }}>
+        <PaddedView>
+          <Text style={{ ...texts.default, color: colors.darkGrey }}>
+            {t(
+              'Precisamos da sua foto para incluir nas entregas. Se você optou por Moto e/ou Carro, vamos precisar também da foto da sua CNH; caso contrário, é só enviar a foto do seu RG.'
+            )}
+          </Text>
+        </PaddedView>
 
-      {/* {height > 700 && <View style={{ flex: 1 }} />} */}
-      <View
-        style={{
-          borderBottomColor: colors.grey,
-          borderStyle: 'solid',
-          borderBottomWidth: 1,
-          marginTop: 16,
-        }}
-      />
-      <ConfigItem
-        title={t('Foto do rosto')}
-        subtitle={t('Adicionar selfie')}
-        onPress={() => actionSheetHandler(setNewSelfie)}
-        checked={selfieCheckHandler}
-      >
-        {uploadingNewSelfie === UploadStatus.Uploading && (
-          <View style={{ marginBottom: 16 }}>
-            <RoundedText backgroundColor={colors.white}>{t('Enviando imagem')}</RoundedText>
-          </View>
-        )}
-      </ConfigItem>
-      <ConfigItem
-        title={t('RG ou CNH aberta')}
-        subtitle={t('Adicionar foto do documento')}
-        onPress={() => actionSheetHandler(setNewDocumentImage)}
-        checked={documentImageCheckHandler}
-      >
-        {uploadingNewDocumentImage === UploadStatus.Uploading && (
-          <View style={{ marginBottom: 16 }}>
-            <RoundedText backgroundColor={colors.white}>{t('Enviando imagem')}</RoundedText>
-          </View>
-        )}
-      </ConfigItem>
-      <View style={{ flex: 1 }} />
-      <View style={styles.imagesContainer}>
-        <TouchableOpacity onPress={() => actionSheetHandler(setNewSelfie)}>
-          <DocumentButton
-            title={t('Foto de rosto')}
-            onPress={() => {}}
-            hasTitle={!previousSelfie && !newSelfie}
-          >
-            <Image
-              source={newSelfie ?? previousSelfie ?? icons.selfie}
-              resizeMode="cover"
-              style={newSelfie || previousSelfie ? styles.image : styles.icon}
-            />
-          </DocumentButton>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => actionSheetHandler(setNewDocumentImage)}>
-          <DocumentButton
-            title={t('RG ou CNH aberta')}
-            onPress={() => {}}
-            hasTitle={!previousDocumentimage && !newDocumentImage}
-          >
-            <Image
-              source={newDocumentImage ?? previousDocumentimage ?? icons.license}
-              resizeMode="cover"
-              style={newDocumentImage || previousDocumentimage ? styles.image : styles.icon}
-            />
-          </DocumentButton>
-        </TouchableOpacity>
-      </View>
-      <View style={{ flex: 1 }} />
-      <View style={{ marginBottom: 32, paddingHorizontal: padding }}>
-        <DefaultButton
-          title={t('Avançar')}
-          disabled={!canProceed}
-          onPress={() => navigation.goBack()}
-          activityIndicator={
-            busy ||
-            uploadingNewSelfie === UploadStatus.Uploading ||
-            uploadingNewDocumentImage === UploadStatus.Uploading
-          }
+        {/* {height > 700 && <View style={{ flex: 1 }} />} */}
+        <View
+          style={{
+            borderBottomColor: colors.grey,
+            borderStyle: 'solid',
+            borderBottomWidth: 1,
+            marginTop: 16,
+          }}
         />
+        <ConfigItem
+          title={t('Foto do rosto')}
+          subtitle={t('Adicionar selfie')}
+          onPress={() => actionSheetHandler(setNewSelfie)}
+          checked={selfieCheckHandler}
+        >
+          {uploadingNewSelfie === UploadStatus.Uploading && (
+            <View style={{ marginBottom: 16 }}>
+              <RoundedText backgroundColor={colors.white}>{t('Enviando imagem')}</RoundedText>
+            </View>
+          )}
+        </ConfigItem>
+        <ConfigItem
+          title={t('RG ou CNH aberta')}
+          subtitle={t('Adicionar foto do documento')}
+          onPress={() => actionSheetHandler(setNewDocumentImage)}
+          checked={documentImageCheckHandler}
+        >
+          {uploadingNewDocumentImage === UploadStatus.Uploading && (
+            <View style={{ marginBottom: 16 }}>
+              <RoundedText backgroundColor={colors.white}>{t('Enviando imagem')}</RoundedText>
+            </View>
+          )}
+        </ConfigItem>
+        <View style={{ flex: 1 }} />
+        <View style={styles.imagesContainer}>
+          <TouchableOpacity onPress={() => actionSheetHandler(setNewSelfie)}>
+            <DocumentButton
+              title={t('Foto de rosto')}
+              onPress={() => {}}
+              hasTitle={!previousSelfie && !newSelfie}
+            >
+              <Image
+                source={newSelfie ?? previousSelfie ?? icons.selfie}
+                resizeMode="cover"
+                style={newSelfie || previousSelfie ? styles.image : styles.icon}
+              />
+            </DocumentButton>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => actionSheetHandler(setNewDocumentImage)}>
+            <DocumentButton
+              title={t('RG ou CNH aberta')}
+              onPress={() => {}}
+              hasTitle={!previousDocumentimage && !newDocumentImage}
+            >
+              <Image
+                source={newDocumentImage ?? previousDocumentimage ?? icons.license}
+                resizeMode="cover"
+                style={newDocumentImage || previousDocumentimage ? styles.image : styles.icon}
+              />
+            </DocumentButton>
+          </TouchableOpacity>
+        </View>
+        <View style={{ flex: 1 }} />
+        <View style={{ marginBottom: 32, paddingHorizontal: padding }}>
+          <DefaultButton
+            title={t('Avançar')}
+            disabled={!canProceed}
+            onPress={() => navigation.goBack()}
+            activityIndicator={
+              busy ||
+              uploadingNewSelfie === UploadStatus.Uploading ||
+              uploadingNewDocumentImage === UploadStatus.Uploading
+            }
+          />
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -281,6 +283,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: height > 700 ? 368 : 196,
     alignItems: 'center',
-    padding: 16,
+    padding: width > 360 ? 16 : 0,
   },
 });
