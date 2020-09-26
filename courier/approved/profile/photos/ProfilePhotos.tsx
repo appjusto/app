@@ -15,6 +15,7 @@ import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
+import ShowIf from '../../../../common/components/views/ShowIf';
 import {
   getSelfieURL,
   getDocumentImageURL,
@@ -251,16 +252,20 @@ export default function ({ navigation }: Props) {
         </View>
         <View style={{ flex: 1 }} />
         <View style={{ marginBottom: 32, paddingHorizontal: padding }}>
-          <DefaultButton
-            title={t('Avançar')}
-            disabled={!canProceed}
-            onPress={() => navigation.goBack()}
-            activityIndicator={
-              busy ||
-              uploadingNewSelfie === UploadStatus.Uploading ||
-              uploadingNewDocumentImage === UploadStatus.Uploading
-            }
-          />
+          <ShowIf test={!previousSelfie && !previousDocumentimage}>
+            {() => (
+              <DefaultButton
+                title={t('Avançar')}
+                disabled={!canProceed}
+                onPress={() => navigation.goBack()}
+                activityIndicator={
+                  busy ||
+                  uploadingNewSelfie === UploadStatus.Uploading ||
+                  uploadingNewDocumentImage === UploadStatus.Uploading
+                }
+              />
+            )}
+          </ShowIf>
         </View>
       </View>
     </ScrollView>

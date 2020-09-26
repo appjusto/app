@@ -3,5 +3,5 @@ export type HomeParamList = {
   OrderCompleted: undefined;
   OrderRefused: undefined;
   PermissionDeniedFeedback: undefined;
-  OrderCompleted: undefined;
+  FleetDetail: undefined;
 };
