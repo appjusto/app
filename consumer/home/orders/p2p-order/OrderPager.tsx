@@ -197,6 +197,8 @@ export default function ({
         {/* confirmation */}
         {!!order && (
           <OrderSummary
+            origin={origin}
+            destination={destination}
             order={order}
             card={card}
             waiting={busy}

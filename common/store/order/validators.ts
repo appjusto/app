@@ -10,6 +10,8 @@ export const placeValid = (place: Partial<Place> | undefined): boolean => {
   // && !isEmpty(place?.intructions);
 };
 
-export const sameAdddress = (first: Address, second: Address): boolean => {
+export const sameAdddress = (first: Address | undefined, second: Address | undefined): boolean => {
+  if (!first) return false;
+  if (!second) return false;
   return first.description === second.description;
 };

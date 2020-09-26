@@ -31,7 +31,7 @@ export default function ({ navigation, route }: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   // app state
-  const consumer = useSelector(getConsumer);
+  const consumer = useSelector(getConsumer)!;
   const getOrder = useSelector(getOrderById);
   const cardById = useSelector(getCardById);
   const lastCardId = consumer?.lastCardId;
@@ -47,39 +47,50 @@ export default function ({ navigation, route }: Props) {
   // route changes when interacting with other screens;
   useEffect(() => {
     const { orderId, origin: newOrigin, destination: newDestination, cardId } = route.params ?? {};
+    // navigation.setParams({});
     if (orderId) setOrder(getOrder(orderId)); // from 'OrderHistory'
     if (newOrigin) setOrigin({ ...origin, address: newOrigin }); // from 'AddressComplete'
     if (newDestination) setDestination({ ...destination, address: newDestination }); // from 'AddressComplete'
     if (cardId) setCard(cardById(cardId)); // from 'PaymentSelector'
   }, [route.params]);
 
-  // to handle `setOrder()` from route changes
-  // if origin/destination aren't valid but those from order's are, we suppose that we need to update origin/destination
+  // whenever order changes
+  // update origin/destination if addresses differ from order's
+  // this will be the case when user is opening a quote from 'OrderHistory'
   useEffect(() => {
-    if (!placeValid(origin) && placeValid(order?.origin)) {
-      setOrigin(order?.origin!);
+    if (!order) return;
+    if (!sameAdddress(order.origin.address, origin.address)) {
+      setOrigin(order.origin);
     }
-    if (!placeValid(destination) && placeValid(order?.destination)) {
-      setDestination(order?.destination!);
+    if (!sameAdddress(order.destination.address, destination.address)) {
+      setDestination(order.destination);
     }
   }, [order]);
 
-  // create order whenever origin or destination changes
+  // whenever origin or destination changes
+  // create or recreate order
   useEffect(() => {
-    // delete previous quote
-    if (!placeValid(origin)) return;
-    if (!placeValid(destination)) return;
+    if (!placeValid(origin) || !placeValid(destination)) {
+      // if origin or destination become invalid, delete quote
+      if (order) dispatch(deleteOrder(api)(order.id));
+      return;
+    }
+
+    // order should be created if it wasn't already or if addresses changed
     if (
       !order ||
-      !sameAdddress(origin.address!, order.origin.address!) ||
-      !sameAdddress(destination.address!, order.destination.address!)
+      !sameAdddress(origin.address, order.origin.address) ||
+      !sameAdddress(destination.address, order.destination.address)
     ) {
       (async () => {
-        const newOrder = await dispatch(createOrder(api)(origin, destination));
         // delete previous quote
         if (order) dispatch(deleteOrder(api)(order.id));
-        // set new order
-        if (newOrder) setOrder(newOrder);
+        try {
+          const newOrder = await dispatch(createOrder(api)(origin, destination));
+          if (newOrder) setOrder(newOrder);
+        } catch (error) {
+          dispatch(showToast(error.toString(), 'error'));
+        }
       })();
     }
   }, [origin, destination]);
@@ -104,13 +115,16 @@ export default function ({ navigation, route }: Props) {
   }, []);
   // confirm order
   const confirmOrderHandler = async (fleetId: string, platformFee: number) => {
+    if (!order) return;
     try {
-      const orderId = order!.id!;
-      const result = await dispatch(confirmOrder(api)(orderId, card!.id, fleetId, platformFee));
+      const orderId = order.id;
+      const result = await dispatch(
+        confirmOrder(api)(orderId, origin, destination, card!.id, fleetId, platformFee)
+      );
       console.log(result);
       navigation.replace('OrderConfirmedFeedback', { orderId });
     } catch (error) {
-      dispatch(showToast(error.toString()));
+      dispatch(showToast(error.toString(), 'error'));
     }
   };
 
