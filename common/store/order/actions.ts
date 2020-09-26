@@ -36,12 +36,16 @@ export const getOrderQuotes = (api: Api) => (orderId: string) => async (dispatch
 
 export const confirmOrder = (api: Api) => (
   orderId: string,
+  origin: Partial<Place>,
+  destination: Partial<Place>,
   cardId: string,
   fleetId: string,
   platformFee: number
 ) => (dispatch: AppDispatch) => {
   return dispatch(
-    awaitWithFeedback(api.order().confirmOrder(orderId, cardId, fleetId, platformFee))
+    awaitWithFeedback(
+      api.order().confirmOrder(orderId, origin, destination, cardId, fleetId, platformFee)
+    )
   );
 };
 

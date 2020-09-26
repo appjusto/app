@@ -43,7 +43,7 @@ export default function ({ acceptHandler, rejectHandler, disabled }: Props) {
 
   // UI
   return (
-    <View style={{ height, paddingHorizontal, ...borders.default }}>
+    <View style={{ height, paddingHorizontal }}>
       {/* track */}
       <View
         style={{

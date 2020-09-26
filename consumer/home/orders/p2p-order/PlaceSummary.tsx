@@ -9,7 +9,7 @@ import ShowIf from '../../../../common/components/views/ShowIf';
 import { texts, colors } from '../../../../common/styles';
 
 type Props = {
-  place: Place;
+  place: Partial<Place>;
   title: string;
   editStepHandler?: () => void;
 };
@@ -19,8 +19,8 @@ export default function ({ place, title, editStepHandler }: Props) {
     <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
       <View style={{ width: '60%', flex: 1 }}>
         <Text style={{ ...texts.small, color: colors.darkGreen }}>{title}</Text>
-        <Text style={{ ...texts.medium }}>{place.address.main}</Text>
-        <Text style={{ ...texts.default }}>{place.address.secondary}</Text>
+        <Text style={{ ...texts.medium }}>{place.address?.main ?? ''}</Text>
+        <Text style={{ ...texts.default }}>{place.address?.secondary ?? ''}</Text>
         <ShowIf test={!isEmpty(place.additionalInfo)}>
           {() => <Text>{place.additionalInfo}</Text>}
         </ShowIf>

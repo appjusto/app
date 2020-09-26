@@ -31,5 +31,5 @@ export default function (
       Notifications.removeNotificationSubscription(responseSubscription);
       // Notifications.removeAllNotificationListeners();
     };
-  }, []);
+  }, [handler]);
 }

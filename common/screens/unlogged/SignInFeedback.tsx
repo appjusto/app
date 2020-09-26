@@ -29,12 +29,12 @@ export default ({ navigation }: Props) => {
 
   return (
     <FeedbackView
-      header={t('Enviamos um link de confirmação para você.')}
-      description={t('Continue o acesso usando seu e-mail')}
+      header={t('Enviamos um link de confirmação para o seu e-mail.')}
+      description={t('Continue o acesso clicando no link que você recebeu.')}
       icon={motocycle}
     >
       <DefaultButton
-        title={t('Voltar')}
+        title={t('Voltar para alterar o e-mail')}
         onPress={() => navigation.goBack()}
         style={{ ...borders.default, borderColor: colors.black, backgroundColor: 'white' }}
       />

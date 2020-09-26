@@ -50,6 +50,9 @@ export const borders = StyleSheet.create({
   rounder: {
     borderRadius: 16,
   },
+  thicker: {
+    borderWidth: 2,
+  },
 });
 
 export const texts = StyleSheet.create({

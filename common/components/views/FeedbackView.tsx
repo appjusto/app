@@ -23,7 +23,11 @@ export default ({ header, description, icon, children, background }: Props) => {
             <Image source={icon} />
           </View>
           <ShowIf test={!isEmpty(description)}>
-            {() => <Text style={{ ...texts.default, color: colors.darkGrey }}>{description}</Text>}
+            {() => (
+              <Text style={{ ...texts.default, color: colors.darkGrey, textAlign: 'center' }}>
+                {description}
+              </Text>
+            )}
           </ShowIf>
         </View>
       </View>

@@ -1,4 +1,4 @@
-import { Card, Order, WithId, Fare, Fleet } from 'appjusto-types';
+import { Card, Order, WithId, Fare, Fleet, Place } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React, { useState, useMemo, useCallback, useContext, useEffect } from 'react';
 import {
@@ -33,6 +33,8 @@ import OrderMap from './OrderMap';
 import PlaceSummary from './PlaceSummary';
 
 type Props = {
+  origin: Partial<Place>;
+  destination: Partial<Place>;
   order: WithId<Order>;
   card?: Card;
   waiting: boolean;
@@ -43,6 +45,8 @@ type Props = {
 };
 
 export default function ({
+  origin,
+  destination,
   order,
   card,
   waiting,
@@ -55,7 +59,7 @@ export default function ({
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   const { height } = Dimensions.get('window');
-  const { origin, destination, distance, duration } = order;
+  const { distance, duration } = order;
 
   // app state
   const busy = useSelector(getUIBusy);

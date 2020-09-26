@@ -22,18 +22,23 @@ export default class OrderApi {
     return (await this.functions.httpsCallable('getOrderQuotes')({ orderId })).data as Fare[];
   }
 
-  async confirmOrder(orderId: string, cardId: string, fleetId: string, platformFee: number) {
-    try {
-      const result = await this.functions.httpsCallable('confirmOrder')({
-        orderId,
-        cardId,
-        fleetId,
-        platformFee,
-      });
-      return result.data;
-    } catch (error) {
-      console.log(error);
-    }
+  async confirmOrder(
+    orderId: string,
+    origin: Partial<Place>,
+    destination: Partial<Place>,
+    cardId: string,
+    fleetId: string,
+    platformFee: number
+  ) {
+    const result = await this.functions.httpsCallable('confirmOrder')({
+      orderId,
+      origin,
+      destination,
+      cardId,
+      fleetId,
+      platformFee,
+    });
+    return result.data;
   }
 
   async cancelOrder(orderId: string) {
