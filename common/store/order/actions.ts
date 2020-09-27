@@ -111,7 +111,7 @@ export const sendMessage = (api: Api) => (
   dispatch({ type: BUSY, payload: true });
   const destination: 'consumers' | 'couriers' =
     from === order.consumerId ? 'couriers' : 'consumers';
-  const to = destination === 'consumers' ? order.consumerId : order.courierId!;
+  const to = destination === 'consumers' ? order.consumerId : order.courier!.id;
   const chat: Partial<ChatMessage> = { from, to, message, destination };
   const result = await api.order().sendMessage(order.id, chat);
   dispatch({ type: BUSY, payload: false });

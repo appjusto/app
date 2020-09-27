@@ -1,24 +1,21 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext, useCallback, useEffect, useMemo } from 'react';
-import { View, Text } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
 import { distance } from 'geokit';
+import { round } from 'lodash';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { View, Text } from 'react-native';
+import { useSelector } from 'react-redux';
 
-import { AppDispatch, ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { ProfileIcon } from '../../../common/components/icons/RoundedIcon';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import HR from '../../../common/components/views/HR';
 import { getOrderById } from '../../../common/store/order/selectors';
-import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
-import { formatDistance, formatDuration, separateWithDot } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { HomeNavigatorParamList } from '../types';
 import OrderMap from './p2p-order/OrderMap';
-import { round } from 'lodash';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'OngoingOrder'>;
 type ScreenRoute = RouteProp<HomeNavigatorParamList, 'OngoingOrder'>;
@@ -30,12 +27,9 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // context
-  const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
   const { orderId } = route.params;
 
   // app state
-  const busy = useSelector(getUIBusy);
   const order = useSelector(getOrderById)(orderId)!;
   const { dispatchingState } = order;
 
@@ -67,10 +61,9 @@ export default function ({ navigation, route }: Props) {
     if (dispatchingState === 'going-pickup') {
       addressLabel = t('Retirada em');
       address = order.origin.address.main;
-      // distance({ lat: order.origin.location.latitude, lng: order.origin.location.longitude }, { lat: order.destination.location.latitude, lng: order.destination.location.longitude })
-      dispatchDetails = `${round(
+      dispatchDetails = `Distância até a retirada: ${round(
         distance(
-          { lat: order.courierLocation!.latitude, lng: order.courierLocation!.longitude },
+          { lat: order.courier!.location.latitude, lng: order.courier!.location.longitude },
           { lat: order.origin.location.latitude, lng: order.origin.location.longitude }
         ),
         2
@@ -86,9 +79,9 @@ export default function ({ navigation, route }: Props) {
     } else if (dispatchingState === 'going-destination') {
       addressLabel = t('Entrega em');
       address = order.destination.address.main;
-      dispatchDetails = `${round(
+      dispatchDetails = `Distância até a entrega: ${round(
         distance(
-          { lat: order.courierLocation!.latitude, lng: order.courierLocation!.longitude },
+          { lat: order.courier!.location.latitude, lng: order.courier!.location.longitude },
           { lat: order.destination.location.latitude, lng: order.destination.location.longitude }
         ),
         2
@@ -130,7 +123,7 @@ export default function ({ navigation, route }: Props) {
           <DefaultButton
             style={{ backgroundColor: colors.white, ...borders.default }}
             title={t('Mais informações')}
-            onPress={() => null}
+            onPress={() => navigation.navigate('CourierDetail', { courierId: order.courier!.id })}
           />
         </View>
       </PaddedView>

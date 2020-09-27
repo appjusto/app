@@ -74,7 +74,7 @@ export default class OrderApi {
       .orderBy('createdOn', 'desc')
       .where('status', 'in', ['quote', 'matching', 'dispatching', 'delivered', 'canceled']);
     if (createdBy) query = query.where('consumerId', '==', createdBy);
-    if (deliveredBy) query = query.where('courierId', '==', deliveredBy);
+    if (deliveredBy) query = query.where('courier.id', '==', deliveredBy);
 
     const unsubscribe = query.onSnapshot(
       (querySnapshot) => {

@@ -32,6 +32,9 @@ export type HomeNavigatorParamList = {
     orderId: string;
     newMessage?: boolean;
   };
+  CourierDetail: {
+    courierId: string;
+  };
   OrderDeliveredFeedback: {
     orderId: string;
   };

@@ -102,7 +102,7 @@ export default function ({ navigation }: Props) {
           source={icons.backgroundPattern}
           resizeMethod="resize"
           resizeMode="contain"
-          style={{ height: 181, width: '100%' }}
+          style={{ height: '100%', width: '100%' }}
         >
           <View style={{ paddingHorizontal: 16, flex: 1, justifyContent: 'center' }}>
             <TouchableOpacity onPress={() => navigation.navigate('History')}>

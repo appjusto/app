@@ -11,22 +11,21 @@ type Props = {
 };
 
 export default function ({ order }: Props) {
-  const { courierLocation, origin, destination, routePolyline } = order;
+  const { courier, origin, destination, routePolyline } = order;
 
   const routeCoordinates = polyline.decode(routePolyline).map((pair) => {
     return { latitude: pair[0], longitude: pair[1] };
   });
 
+  // const coordinates
+
   return (
-    <DefaultMap
-      style={{ width: '100%', height: '100%' }}
-      minZoomLevel={13}
-      maxZoomLevel={13}
-      fitToElements
-    >
-      <Marker coordinate={origin.location} icon={icons.pinPackageWhite} />
-      <Marker coordinate={destination.location} icon={icons.pinPackage} />
-      {courierLocation && <Marker coordinate={courierLocation} icon={icons.pinUser} />}
+    <DefaultMap style={{ width: '100%', height: '100%' }} fitToElements>
+      <Marker coordinate={origin.location} icon={icons.pinPackageWhite} identifier="origin" />
+      <Marker coordinate={destination.location} icon={icons.pinPackage} identifier="destination" />
+      {courier?.location && (
+        <Marker coordinate={courier.location} icon={icons.pinUser} identifier="courier" />
+      )}
       <Polyline coordinates={routeCoordinates} />
     </DefaultMap>
   );

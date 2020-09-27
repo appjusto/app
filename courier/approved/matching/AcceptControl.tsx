@@ -73,7 +73,6 @@ export default function ({ acceptHandler, rejectHandler, disabled }: Props) {
       {/* slider */}
       <Slider
         ref={sliderRef}
-        disabled={disabled}
         style={{ width: '100%', height }}
         minimumValue={0}
         maximumValue={100}
