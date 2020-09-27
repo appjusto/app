@@ -15,6 +15,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import HorizontalSelect, {
+  HorizontalSelectItem,
+} from '../../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
@@ -44,6 +47,14 @@ type Props = {
   navigateFleetDetail: (fleet: Fleet) => void;
 };
 
+const platformFeeOptions: HorizontalSelectItem[] = [
+  { id: '1', title: formatCurrency(100), data: 100 },
+  { id: '3', title: formatCurrency(300), data: 300 },
+  { id: '5', title: formatCurrency(500), data: 500 },
+  { id: '8', title: formatCurrency(800), data: 800 },
+  { id: '10', title: formatCurrency(1000), data: 1000 },
+];
+
 export default function ({
   origin,
   destination,
@@ -64,9 +75,10 @@ export default function ({
   // app state
   const busy = useSelector(getUIBusy);
 
-  // state
+  // screen state
   const [quotes, setQuotes] = useState<Fare[]>();
   const [selectedFare, setSelectedFare] = useState<Fare>();
+  const [platformFee, setPlatformFee] = useState(platformFeeOptions[0]);
   const canSubmit = useMemo(() => {
     return card !== undefined && selectedFare !== undefined && !waiting;
   }, [card, selectedFare, waiting]);
@@ -256,13 +268,18 @@ export default function ({
           >
             <Text style={{ ...texts.default, lineHeight: 21 }}>{t('AppJusto')}</Text>
             <Text style={{ ...texts.default, lineHeight: 21 }}>
-              {formatCurrency(selectedFare?.platformFee ?? 0)}
+              {formatCurrency(platformFee.data)}
             </Text>
           </View>
           <Text style={{ ...texts.small, lineHeight: 19, color: colors.darkGrey }}>
             O AppJusto cobra menos para ser mais justo com todos. Você pode aumentar a sua
             contribuição se desejar.
           </Text>
+          <HorizontalSelect
+            data={platformFeeOptions}
+            selected={platformFee}
+            onSelect={setPlatformFee}
+          />
         </PaddedView>
         <HR height={padding} />
         <PaddedView>
@@ -284,7 +301,7 @@ export default function ({
             >
               <Text style={{ ...texts.medium, ...texts.bold }}>{t('Valor total a pagar')}</Text>
               <Text style={{ ...texts.mediumToBig }}>
-                {formatCurrency(selectedFare?.total ?? 0)}
+                {formatCurrency((selectedFare?.total ?? 0) + platformFee.data)}
               </Text>
             </View>
           </View>
@@ -327,7 +344,7 @@ export default function ({
       <DefaultButton
         style={{ marginHorizontal: padding, marginVertical: padding }}
         title={t('Fazer pedido')}
-        onPress={() => confirmOrder(selectedFare?.fleet?.id!, 100)}
+        onPress={() => confirmOrder(selectedFare?.fleet?.id!, platformFee.data)}
         disabled={!canSubmit}
         activityIndicator={waiting}
       />

@@ -1,8 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
-import { View, Text, FlatList, Image, StyleSheet } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, Image } from 'react-native';
 
 import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -10,7 +9,7 @@ import HorizontalSelect, {
   HorizontalSelectItem,
 } from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import { borders, colors, screens, texts } from '../../../common/styles';
+import { colors, screens, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -44,23 +43,6 @@ export default function ({ navigation, route }: Props) {
         <Text style={{ ...texts.default, color: colors.darkGrey }}>{t('Valor recebido')}</Text>
         <Text style={{ ...texts.big, marginTop: 4 }}>{formatCurrency(fee)}</Text>
       </View>
-      {/* <View style={{ marginTop: 24 }}>
-        <Text style={{ ...texts.default, marginBottom: 16 }}>
-          {t('Tudo certo no restaurante?')}
-        </Text>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          data={dataOne}
-          renderItem={({ item }) => (
-            <TouchableOpacity key={item.key}>
-              <View style={styles.feedbackBox}>
-                <Text>{item.title}</Text>
-              </View>
-            </TouchableOpacity>
-          )}
-        />
-      </View> */}
       <View style={{ marginTop: 24 }}>
         <Text style={{ ...texts.default, marginBottom: 16 }}>{t('Tudo certo no cliente?')}</Text>
         <HorizontalSelect
