@@ -16,10 +16,10 @@ import { getUIBusy } from '../../../common/store/ui/selectors';
 import { colors, screens, texts } from '../../../common/styles';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
 import { t } from '../../../strings';
-import { DeliveriesNavigatorParamList } from './types';
+import { ApprovedParamList } from '../types';
 
-type ScreenNavigationProp = StackNavigationProp<DeliveriesNavigatorParamList, 'OngoingDelivery'>;
-type ScreenRoute = RouteProp<DeliveriesNavigatorParamList, 'OngoingDelivery'>;
+type ScreenNavigationProp = StackNavigationProp<ApprovedParamList, 'OngoingDelivery'>;
+type ScreenRoute = RouteProp<ApprovedParamList, 'OngoingDelivery'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -39,7 +39,7 @@ export default function ({ navigation, route }: Props) {
   // effects
   useEffect(() => {
     if (order.status === 'delivered') {
-      navigation.navigate('DeliverySummary', { orderId });
+      navigation.navigate('OrderCompleted', { orderId, fee: order.fare!.courierFee });
     }
   }, [order]);
 

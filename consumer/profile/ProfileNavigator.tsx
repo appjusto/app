@@ -1,7 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
-import BackButton from '../../common/components/buttons/BackButton';
 import ArrowBox from '../../common/components/views/ArrowBox';
 import ProfileEdit from '../../common/screens/profile/ProfileEdit';
 import ProfileErase from '../../common/screens/profile/ProfileErase';

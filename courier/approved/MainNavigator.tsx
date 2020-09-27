@@ -40,17 +40,7 @@ export default function ({ navigation }: Props) {
     // as the courier can only dispatch a single order at a time ongoingOrders should be always 0 or 1
     if (ongoingOrders.length > 0) {
       const [order] = ongoingOrders;
-      navigation.navigate('Main', {
-        screen: 'Deliveries',
-        initial: false,
-        params: {
-          screen: 'OngoingDelivery',
-          initial: false,
-          params: {
-            orderId: order.id,
-          },
-        },
-      });
+      navigation.navigate('OngoingDelivery', { orderId: order.id });
     }
   }, [ongoingOrders]);
 
@@ -68,17 +58,9 @@ export default function ({ navigation }: Props) {
           });
         }
       } else if (data.action === 'order-chat') {
-        navigation.navigate('Main', {
-          screen: 'Deliveries',
-          initial: false,
-          params: {
-            screen: 'OngoingDelivery',
-            initial: false,
-            params: {
-              orderId: (data as ChatPushMessageData).orderId,
-              newMessage: true,
-            },
-          },
+        navigation.navigate('OngoingDelivery', {
+          orderId: (data as ChatPushMessageData).orderId,
+          newMessage: true,
         });
       }
     },

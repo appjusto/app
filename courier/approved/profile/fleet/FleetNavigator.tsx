@@ -1,7 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
-import BackButton from '../../../../common/components/buttons/BackButton';
 import ArrowBox from '../../../../common/components/views/ArrowBox';
 import { t } from '../../../../strings';
 import ChooseFleet from './ChooseFleet';

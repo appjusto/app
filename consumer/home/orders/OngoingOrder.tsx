@@ -106,7 +106,7 @@ export default function ({ navigation, route }: Props) {
         <ProfileIcon />
         <View style={{ flex: 1, marginLeft: padding }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={[texts.medium]}>{order.courierName}</Text>
+            <Text style={[texts.medium]}>{order.courier!.name}</Text>
             <RoundedText>{dispatchDetails}</RoundedText>
           </View>
           <Text style={[texts.small, { color: colors.lightGreen }]}>{addressLabel}</Text>
