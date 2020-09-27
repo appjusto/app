@@ -2,12 +2,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
 import ArrowBox from '../../../common/components/views/ArrowBox';
+import PermissionDeniedFeedback from '../../../common/screens/PermissionDeniedFeedback';
 import FleetDetail from '../../../common/screens/fleet/FleetDetail';
 import { t } from '../../../strings';
 import OrderCompleted from '../matching/OrderCompleted';
 import OrderRefused from '../matching/OrderRefused';
 import Home from './Home';
-import PermissionDeniedFeedback from './PermissionDeniedFeedback';
 import { HomeParamList } from './types';
 
 const Stack = createStackNavigator<HomeParamList>();
@@ -28,7 +28,7 @@ export default function () {
       <Stack.Screen
         name="PermissionDeniedFeedback"
         component={PermissionDeniedFeedback}
-        options={{ title: t('Compartilhar localização') }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="OrderCompleted"

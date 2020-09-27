@@ -137,7 +137,10 @@ export default function ({ navigation }: Props) {
       if (result.cancelled) return;
       changeImage(result);
     } else {
-      alert(t('Precisamos do acesso à câmera'));
+      navigation.navigate('PermissionDeniedFeedback', {
+        title: t('Precisamos acessar sua câmera'),
+        subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
+      });
     }
   }, []);
   const pickFromGallery = useCallback(async (changeImage: ChangeImageType) => {
@@ -147,7 +150,10 @@ export default function ({ navigation }: Props) {
       if (result.cancelled) return;
       changeImage(result);
     } else {
-      alert(t('Precisamos do acesso à sua galeria'));
+      navigation.navigate('PermissionDeniedFeedback', {
+        title: t('Precisamos acessar sua galeria'),
+        subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
+      });
     }
   }, []);
 

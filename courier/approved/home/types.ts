@@ -2,6 +2,9 @@ export type HomeParamList = {
   Home: undefined;
   OrderCompleted: undefined;
   OrderRefused: undefined;
-  PermissionDeniedFeedback: undefined;
+  PermissionDeniedFeedback: {
+    title: string;
+    subtitle: string;
+  };
   FleetDetail: undefined;
 };

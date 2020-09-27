@@ -1,6 +1,6 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { CourierProfile, CourierStatus } from 'appjusto-types';
+import { CourierStatus } from 'appjusto-types';
 import dayjs from 'dayjs';
 import Constants from 'expo-constants';
 import { nanoid } from 'nanoid/non-secure';
@@ -105,7 +105,12 @@ export default function ({ navigation }: Props) {
   // location permission denied
   useEffect(() => {
     if (working && locationPermission === 'denied') {
-      navigation.navigate('PermissionDeniedFeedback');
+      navigation.navigate('PermissionDeniedFeedback', {
+        title: t('Precisamos acessar a localização do seu dispositivo'),
+        subtitle: t(
+          'Para que possamos determinar o trajeto das corridas, precisamos que você dê acesso ao AppJusto para usar a localização do seu dispositivo.'
+        ),
+      });
       // removing previous token
       dispatch(updateProfile(api)(courier!.id!, { notificationToken: null }));
     }

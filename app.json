@@ -32,7 +32,13 @@
     },
     "android": {
       "package": "br.com.appjusto",
-      "permissions": ["ACCESS_FINE_LOCATION"],
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
       "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true,
       "icon": "./assets/icon.png",
