@@ -10,11 +10,13 @@ import { AppDispatch, ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
+import ShowIf from '../../../common/components/views/ShowIf';
 import { nextDispatchingState, completeDelivery } from '../../../common/store/order/actions';
 import { getOrderById } from '../../../common/store/order/selectors';
 import { getUIBusy } from '../../../common/store/ui/selectors';
-import { colors, screens, texts } from '../../../common/styles';
+import { colors, halfPadding, screens, texts } from '../../../common/styles';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
+import PlaceSummary from '../../../consumer/home/orders/p2p-order/PlaceSummary';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 
@@ -35,6 +37,7 @@ export default function ({ navigation, route }: Props) {
   // app state
   const busy = useSelector(getUIBusy);
   const order = useSelector(getOrderById)(orderId);
+  const { dispatchingState } = order;
 
   // effects
   useEffect(() => {
@@ -54,7 +57,7 @@ export default function ({ navigation, route }: Props) {
 
   // handlers
   const nextStatepHandler = useCallback(async () => {
-    if (order.dispatchingState !== 'arrived-destination') {
+    if (dispatchingState !== 'arrived-destination') {
       dispatch(nextDispatchingState(api)(order.id));
     } else {
       dispatch(completeDelivery(api)(order.id));
@@ -67,17 +70,17 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   const nextStepLabel = useMemo(() => {
-    if (order.dispatchingState === 'going-pickup') {
+    if (dispatchingState === 'going-pickup') {
       return t('Cheguei no local de retirada');
-    } else if (order.dispatchingState === 'arrived-pickup') {
+    } else if (dispatchingState === 'arrived-pickup') {
       return t('Sai para a entrega');
-    } else if (order.dispatchingState === 'going-destination') {
+    } else if (dispatchingState === 'going-destination') {
       return t('Cheguei no local de entrega');
-    } else if (order.dispatchingState === 'arrived-destination') {
+    } else if (dispatchingState === 'arrived-destination') {
       return t('Finalizar entrega');
     }
     return '';
-  }, [order]);
+  }, [dispatchingState]);
 
   return (
     <View style={{ ...screens.default }}>
@@ -88,20 +91,31 @@ export default function ({ navigation, route }: Props) {
         <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Pedido de')}</Text>
         <Text style={[texts.medium]}>{order.consumerName}</Text>
         <TouchableOpacity onPress={openChatHandler}>
-          <RoundedText leftIcon={icons.chat}>{t('Iniciar chat')}</RoundedText>
+          <View style={{ marginTop: halfPadding }}>
+            <RoundedText leftIcon={icons.chat}>{t('Iniciar chat')}</RoundedText>
+          </View>
         </TouchableOpacity>
       </PaddedView>
       <PaddedView>
-        <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Retirada')}</Text>
-        <Text style={[texts.medium]}>{order.origin.address?.description}</Text>
-        <Text style={[texts.medium]}>{order.origin.intructions}</Text>
+        <ShowIf test={dispatchingState === 'going-pickup' || dispatchingState === 'arrived-pickup'}>
+          {() => <PlaceSummary place={order.origin} title={t('Retirada')} />}
+        </ShowIf>
+        <ShowIf
+          test={
+            dispatchingState === 'going-destination' || dispatchingState === 'arrived-destination'
+          }
+        >
+          {() => <PlaceSummary place={order.destination} title={t('Entrega')} />}
+        </ShowIf>
 
-        <DefaultButton
-          title={nextStepLabel}
-          onPress={nextStatepHandler}
-          activityIndicator={busy}
-          disabled={busy}
-        />
+        <View style={{ marginTop: halfPadding }}>
+          <DefaultButton
+            title={nextStepLabel}
+            onPress={nextStatepHandler}
+            activityIndicator={busy}
+            disabled={busy}
+          />
+        </View>
       </PaddedView>
     </View>
   );

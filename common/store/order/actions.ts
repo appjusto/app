@@ -50,10 +50,7 @@ export const confirmOrder = (api: Api) => (
 };
 
 export const cancelOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
-  dispatch({ type: BUSY, payload: true });
-  const result = await api.order().cancelOrder(orderId);
-  dispatch({ type: BUSY, payload: false });
-  return result;
+  return dispatch(awaitWithFeedback(api.order().cancelOrder(orderId)));
 };
 
 export const deleteOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
@@ -63,28 +60,19 @@ export const deleteOrder = (api: Api) => (orderId: string) => async (dispatch: A
 // couriers
 
 export const matchOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
-  dispatch({ type: BUSY, payload: true });
-  const result = await api.order().matchOrder(orderId);
-  dispatch({ type: BUSY, payload: false });
-  return result;
+  return dispatch(awaitWithFeedback(api.order().matchOrder(orderId)));
 };
 
 export const nextDispatchingState = (api: Api) => (orderId: string) => async (
   dispatch: AppDispatch
 ) => {
-  dispatch({ type: BUSY, payload: true });
-  const result = await api.order().nextDispatchingState(orderId);
-  dispatch({ type: BUSY, payload: false });
-  return result;
+  return dispatch(awaitWithFeedback(api.order().nextDispatchingState(orderId)));
 };
 
 export const completeDelivery = (api: Api) => (orderId: string) => async (
   dispatch: AppDispatch
 ) => {
-  dispatch({ type: BUSY, payload: true });
-  const result = await api.order().completeDelivery(orderId);
-  dispatch({ type: BUSY, payload: false });
-  return result;
+  return dispatch(awaitWithFeedback(api.order().completeDelivery(orderId)));
 };
 
 // both courier & consumer
