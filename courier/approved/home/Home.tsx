@@ -1,6 +1,6 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { CourierStatus } from 'appjusto-types';
+import { CourierProfile, CourierStatus } from 'appjusto-types';
 import dayjs from 'dayjs';
 import Constants from 'expo-constants';
 import { nanoid } from 'nanoid/non-secure';
@@ -200,8 +200,9 @@ export default function ({ navigation }: Props) {
               {`+ ${formatCurrency(courier.fleet?.additionalPerKmAfterThreshold ?? 0)} por km.`}
             </Text>
             <View style={{ flex: 1 }} />
-            {/* the navigation function below is just for testing the screen */}
-            <TouchableOpacity onPress={() => navigation.navigate('OrderRefused')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('FleetDetail', { fleet: courier.fleet })}
+            >
               <View style={{ marginTop: padding }}>
                 <RoundedText>{t('Ver detalhes')}</RoundedText>
               </View>

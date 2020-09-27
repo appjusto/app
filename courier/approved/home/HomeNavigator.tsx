@@ -2,6 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
 import ArrowBox from '../../../common/components/views/ArrowBox';
+import FleetDetail from '../../../common/screens/fleet/FleetDetail';
 import { t } from '../../../strings';
 import OrderCompleted from '../matching/OrderCompleted';
 import OrderRefused from '../matching/OrderRefused';
@@ -33,6 +34,11 @@ export default function () {
         name="OrderCompleted"
         component={OrderCompleted}
         options={{ title: t('Avalie a corrida'), headerShown: false }}
+      />
+      <Stack.Screen
+        name="FleetDetail"
+        component={FleetDetail}
+        options={{ title: t('Detalhes da frota') }}
       />
     </Stack.Navigator>
   );

@@ -317,7 +317,7 @@ export default function ({
       <ShowIf test={!card}>
         {() => (
           <DefaultButton
-            style={{ width: '100%' }}
+            style={{ marginHorizontal: padding }}
             title={t('Incluir forma de pagamento')}
             onPress={navigateToFillPaymentInfo}
           />
