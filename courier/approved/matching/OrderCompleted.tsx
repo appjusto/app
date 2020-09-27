@@ -1,11 +1,14 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, FlatList, Image, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
+import HorizontalSelect, {
+  HorizontalSelectItem,
+} from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { borders, colors, screens, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
@@ -21,14 +24,18 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
+  // context
   const { orderId, fee } = route.params;
 
+  // screen state
   const clientFeedbackData = [
-    { title: 'Sim, tudo certo', key: '1' },
-    { title: 'Não, longa espera', key: '2' },
-    { title: 'Não, cliente não apareceu', key: '3' },
+    { title: t('Sim, tudo certo'), id: '1' },
+    { title: t('Não, longa espera'), id: '2' },
+    { title: t('Não, cliente não apareceu'), id: '3' },
   ];
+  const [selectedClientFeedback, setSelectedClientFeedback] = useState<HorizontalSelectItem>();
 
+  // UI
   return (
     <PaddedView style={{ ...screens.default }}>
       <View style={{ paddingTop: 24, alignItems: 'center' }}>
@@ -56,17 +63,10 @@ export default function ({ navigation, route }: Props) {
       </View> */}
       <View style={{ marginTop: 24 }}>
         <Text style={{ ...texts.default, marginBottom: 16 }}>{t('Tudo certo no cliente?')}</Text>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          horizontal
+        <HorizontalSelect
           data={clientFeedbackData}
-          renderItem={({ item }) => (
-            <TouchableOpacity key={item.key}>
-              <View style={styles.feedbackBox}>
-                <Text>{item.title}</Text>
-              </View>
-            </TouchableOpacity>
-          )}
+          selected={selectedClientFeedback}
+          onSelect={setSelectedClientFeedback}
         />
       </View>
       <View style={{ flex: 1 }} />
@@ -74,15 +74,3 @@ export default function ({ navigation, route }: Props) {
     </PaddedView>
   );
 }
-
-const styles = StyleSheet.create({
-  feedbackBox: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 8,
-    ...borders.default,
-    borderRadius: 6,
-    height: 40,
-    marginRight: 4,
-  },
-});

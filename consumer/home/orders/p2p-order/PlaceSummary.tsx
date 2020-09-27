@@ -16,15 +16,15 @@ type Props = {
 
 export default function ({ place, title, editStepHandler }: Props) {
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-      <View style={{ width: '60%', flex: 1 }}>
+    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+      <View style={{ width: '60%' }}>
         <Text style={{ ...texts.small, color: colors.darkGreen }}>{title}</Text>
         <Text style={{ ...texts.medium }}>{place.address?.main ?? ''}</Text>
         <Text style={{ ...texts.default }}>{place.address?.secondary ?? ''}</Text>
         <ShowIf test={!isEmpty(place.additionalInfo)}>
-          {() => <Text>{place.additionalInfo}</Text>}
+          {() => <Text style={{ ...texts.small }}>{place.additionalInfo}</Text>}
         </ShowIf>
-        <Text>{place.intructions}</Text>
+        <Text style={{ ...texts.small }}>{place.intructions}</Text>
       </View>
       <ShowIf test={editStepHandler !== undefined}>
         {() => (
