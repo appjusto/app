@@ -3,6 +3,7 @@ import 'dotenv/config';
 const {
   GOOGLE_ANDROID_API_KEY,
   GOOGLE_IOS_API_KEY,
+  GOOGLE_MAPS_API_KEY,
   FIREBASE_REGION,
   FIREBASE_PROJECT_ID,
   FIREBASE_DATABASE_NAME,
@@ -58,7 +59,7 @@ export default ({ config }) => {
       ...ios,
       bundleIdentifier,
       config: {
-        googleMapsApiKey: GOOGLE_IOS_API_KEY,
+        googleMapsApiKey: GOOGLE_MAPS_API_KEY,
       },
     },
     android: {
@@ -66,7 +67,7 @@ export default ({ config }) => {
       package: androidPackage,
       config: {
         googleMaps: {
-          apiKey: GOOGLE_ANDROID_API_KEY,
+          apiKey: GOOGLE_MAPS_API_KEY,
         },
       },
     },

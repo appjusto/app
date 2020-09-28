@@ -11,7 +11,6 @@ import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../../common/components/texts/LabeledText';
 import { placeValid } from '../../../../common/store/order/validators';
-import { showToast } from '../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { padding } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -67,7 +66,7 @@ export default function ({
 
   const setPage = (index: number): void => {
     if (stepReady(index)) {
-      if (viewPager?.current) viewPager.current.setPage(index);
+      viewPager?.current?.setPage(index);
     }
   };
   const nextPage = (): void => setPage(step + 1);
@@ -79,18 +78,6 @@ export default function ({
     if (stepReady(nextStep)) {
       if (nextStep !== Steps.ConfirmingOrder) {
         nextPage();
-      }
-    } else {
-      if (nextStep === Steps.Destination) {
-        dispatch(showToast(t('Preencha o endereço e as instruções de retirada.')));
-      } else if (nextStep === Steps.Confirmation) {
-        if (!placeValid(destination)) {
-          dispatch(showToast(t('Preencha o endereço e as instruções de entrega.')));
-        } else if (!order) {
-          dispatch(showToast(t('Aguarde enquanto a cotação é feita.')));
-        }
-      } else if (nextStep === Steps.ConfirmingOrder) {
-        dispatch(showToast(t('É preciso definir um meio de pagamento para finalizar o pedido.')));
       }
     }
   };

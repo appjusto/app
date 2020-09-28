@@ -1,10 +1,11 @@
 import { Order } from 'appjusto-types';
 import React from 'react';
-import { View, Dimensions, Text, Image } from 'react-native';
+import { View, Text, Image } from 'react-native';
 
 import * as icons from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import ShowIf from '../../../../common/components/views/ShowIf';
+import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import { texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import OrderMap from './OrderMap';
@@ -14,10 +15,10 @@ type Props = {
 };
 
 export default function ({ order }: Props) {
-  const { height } = Dimensions.get('window');
+  const tallDevice = useTallerDevice();
 
   // TODO: what would be the best height?
-  if (height < 700) return null;
+  if (!tallDevice) return null;
 
   return (
     <View style={{ height: 160, justifyContent: 'center' }}>

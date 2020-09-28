@@ -1,15 +1,7 @@
 import { Card, Order, WithId, Fare, Fleet, Place } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React, { useState, useMemo, useCallback, useContext, useEffect } from 'react';
-import {
-  ScrollView,
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  FlatList,
-} from 'react-native';
+import { ScrollView, View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../../assets/icons';
@@ -22,6 +14,7 @@ import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
 import ShowIf from '../../../../common/components/views/ShowIf';
+import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import { getOrderQuotes } from '../../../../common/store/order/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { texts, colors, screens, padding, borders } from '../../../../common/styles';
@@ -69,8 +62,8 @@ export default function ({
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  const { height } = Dimensions.get('window');
   const { distance, duration } = order;
+  const tallDevice = useTallerDevice();
 
   // app state
   const busy = useSelector(getUIBusy);
@@ -103,7 +96,7 @@ export default function ({
   return (
     <ScrollView style={{ flex: 1, marginBottom: 24 }}>
       {/* show map if it was hidden on previous pages */}
-      <ShowIf test={height < 700}>
+      <ShowIf test={!tallDevice}>
         {() => (
           <View style={{ height: 160 }}>
             <OrderMap order={order} />

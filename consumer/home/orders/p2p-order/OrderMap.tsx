@@ -21,11 +21,9 @@ export default function ({ order }: Props) {
 
   return (
     <DefaultMap style={{ width: '100%', height: '100%' }} fitToElements>
-      <Marker coordinate={origin.location} icon={icons.pinPackageWhite} identifier="origin" />
-      <Marker coordinate={destination.location} icon={icons.pinPackage} identifier="destination" />
-      {courier?.location && (
-        <Marker coordinate={courier.location} icon={icons.pinUser} identifier="courier" />
-      )}
+      <Marker coordinate={origin.location} />
+      <Marker coordinate={destination.location} />
+      {courier?.location && <Marker coordinate={courier.location} />}
       <Polyline coordinates={routeCoordinates} />
     </DefaultMap>
   );
