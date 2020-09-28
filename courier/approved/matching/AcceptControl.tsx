@@ -79,7 +79,6 @@ export default function ({ acceptHandler, rejectHandler, disabled }: Props) {
         step={1}
         minimumTrackTintColor="#00000000"
         maximumTrackTintColor="#00000000"
-        thumbImage={icons.motocycle}
         value={50}
         onSlidingComplete={completeHandler}
       />
