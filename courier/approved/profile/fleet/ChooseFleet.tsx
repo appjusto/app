@@ -71,7 +71,7 @@ export default function ({ navigation, route }: Props) {
         {() => <ActivityIndicator size="small" color={colors.white} />}
       </ShowIf>
       <FlatList
-        data={approvedFleets?.slice(0, 5) ?? []}
+        data={approvedFleets?.slice(0, 10) ?? []}
         renderItem={({ item }) => {
           return (
             <PaddedView>

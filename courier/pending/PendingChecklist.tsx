@@ -78,13 +78,13 @@ export default function ({ navigation, route }: Props) {
           const selfieUri = await dispatch(getSelfieURL(api)(courier.id!));
           hasImages = documentImageUri !== null && selfieUri !== null;
         }
-        setHasImagesUris(hasImages);
         let totalSteps = 0;
         if (hasPersonalInfo) totalSteps++;
-        if (hasBankAccount) totalSteps++;
         if (hasImages) totalSteps++;
+        if (hasBankAccount) totalSteps++;
         if (hasSelectedFleet) totalSteps++;
         setStepsDone(totalSteps);
+        setHasImagesUris(hasImages);
       } catch (error) {}
     })();
   }, [hasImagesUris, hasPersonalInfo, hasBankAccount, hasSelectedFleet, api]);

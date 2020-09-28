@@ -111,21 +111,33 @@ export default function ({ navigation }: Props) {
   useEffect(() => {
     if (newSelfie) {
       setUploadingNewSelfie(UploadStatus.Uploading);
-      dispatch(
-        uploadSelfie(api)(courier!.id!, newSelfie.uri!, (progress: number) => {
-          if (progress === 100) setUploadingNewSelfie(UploadStatus.Done);
-        })
-      );
+      (async () => {
+        try {
+          dispatch(
+            uploadSelfie(api)(courier!.id!, newSelfie.uri!, (progress: number) => {
+              if (progress === 100) setUploadingNewSelfie(UploadStatus.Done);
+            })
+          );
+        } catch (err) {
+          console.log(err);
+        }
+      })();
     }
   }, [newSelfie]);
   useEffect(() => {
     if (newDocumentImage) {
       setUploadingNewDocumentImage(UploadStatus.Uploading);
-      dispatch(
-        uploadDocumentImage(api)(courier!.id!, newDocumentImage.uri!, (progress: number) => {
-          if (progress === 100) setUploadingNewDocumentImage(UploadStatus.Done);
-        })
-      );
+      (async () => {
+        try {
+          dispatch(
+            uploadDocumentImage(api)(courier!.id!, newDocumentImage.uri!, (progress: number) => {
+              if (progress === 100) setUploadingNewDocumentImage(UploadStatus.Done);
+            })
+          );
+        } catch (err) {
+          console.log(err);
+        }
+      })();
     }
   }, [newDocumentImage]);
 
@@ -294,6 +306,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: height > 700 ? 368 : 196,
     alignItems: 'center',
-    padding: width > 360 ? 16 : 0,
+    // padding: width > 360 ? 16 : 0,
+    padding: width <= 320 ? 0 : 16,
   },
 });
