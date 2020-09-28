@@ -1,9 +1,9 @@
-import Slider from '@react-native-community/slider';
+import Slider, { SliderProps } from '@react-native-community/slider';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React, { useState, useEffect, useContext, useRef, useMemo } from 'react';
-import { View, Text, ScrollView, TextInput, SliderProps } from 'react-native';
+import { View, Text, ScrollView, TextInput } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../../assets/icons';
@@ -35,7 +35,7 @@ function CustomSlider(props: SliderProps) {
       minimumValue={0}
       minimumTrackTintColor="#000000"
       maximumTrackTintColor="#000000"
-      {...props}
+      {...(props as any)}
     />
   );
 }
