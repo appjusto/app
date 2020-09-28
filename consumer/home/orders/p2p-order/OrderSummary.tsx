@@ -1,7 +1,16 @@
 import { Card, Order, WithId, Fare, Fleet, Place } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React, { useState, useMemo, useCallback, useContext, useEffect } from 'react';
-import { ScrollView, View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
+import {
+  ScrollView,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  TouchableHighlight,
+} from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../../assets/icons';
@@ -17,7 +26,7 @@ import ShowIf from '../../../../common/components/views/ShowIf';
 import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import { getOrderQuotes } from '../../../../common/store/order/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
-import { texts, colors, screens, padding, borders } from '../../../../common/styles';
+import { texts, colors, screens, padding, borders, halfPadding } from '../../../../common/styles';
 import {
   formatDistance,
   formatDuration,
@@ -171,31 +180,39 @@ export default function ({
                 keyExtractor={(item) => item.fleet.id!}
                 renderItem={({ item }) => {
                   return (
-                    <PaddedView
-                      style={{
-                        width: 156,
-                        backgroundColor: colors.lightGreen,
-                        ...borders.default,
-                        borderWidth: 2,
-                        borderColor: colors.black,
-                      }}
-                    >
-                      <Text numberOfLines={2} style={[texts.default, texts.bold]}>
-                        {item.fleet.name}
-                      </Text>
-                      <Text style={[texts.small, { marginTop: padding }]}>{t('Entregadores')}</Text>
-                      <Text style={[texts.small, texts.bold]}>
-                        {item.fleet.participantsOnline} {t('ativos agora')}
-                      </Text>
-                      <Text style={[texts.mediumToBig, texts.bold, { marginTop: padding }]}>
-                        {formatCurrency(item.total)}
-                      </Text>
-                      <TouchableOpacity onPress={() => navigateFleetDetail(item.fleet)}>
-                        <View style={{ marginTop: padding }}>
-                          <RoundedText>{t('Ver detalhes')}</RoundedText>
-                        </View>
-                      </TouchableOpacity>
-                    </PaddedView>
+                    <TouchableHighlight onPress={() => setSelectedFare(item)}>
+                      <PaddedView
+                        style={{
+                          width: 156,
+                          backgroundColor:
+                            selectedFare?.fleet.id === item.fleet.id
+                              ? colors.lightGreen
+                              : colors.white,
+                          ...borders.default,
+                          borderWidth: 2,
+                          borderColor: colors.black,
+                          marginRight: halfPadding,
+                        }}
+                      >
+                        <Text numberOfLines={2} style={[texts.default, texts.bold]}>
+                          {item.fleet.name}
+                        </Text>
+                        <Text style={[texts.small, { marginTop: padding }]}>
+                          {t('Entregadores')}
+                        </Text>
+                        <Text style={[texts.small, texts.bold]}>
+                          {item.fleet.participantsOnline} {t('ativos agora')}
+                        </Text>
+                        <Text style={[texts.mediumToBig, texts.bold, { marginTop: padding }]}>
+                          {formatCurrency(item.total)}
+                        </Text>
+                        <TouchableOpacity onPress={() => navigateFleetDetail(item.fleet)}>
+                          <View style={{ marginTop: padding }}>
+                            <RoundedText>{t('Ver detalhes')}</RoundedText>
+                          </View>
+                        </TouchableOpacity>
+                      </PaddedView>
+                    </TouchableHighlight>
                   );
                 }}
                 horizontal

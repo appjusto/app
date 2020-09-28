@@ -43,7 +43,7 @@ export default function ({
           )}
         </ShowIf>
         <ShowIf test={activityIndicator}>
-          {() => <ActivityIndicator size="small" color="#ffffff" />}
+          {() => <ActivityIndicator size="small" color={colors.white} />}
         </ShowIf>
       </View>
     </TouchableOpacity>

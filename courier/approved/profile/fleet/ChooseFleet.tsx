@@ -2,13 +2,14 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Fleet, WithId } from 'appjusto-types';
 import React, { useEffect, useContext, useState, useCallback } from 'react';
-import { Text, FlatList, View } from 'react-native';
+import { Text, FlatList, View, ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
+import ShowIf from '../../../../common/components/views/ShowIf';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { fetchApprovedFleets } from '../../../../common/store/fleet/actions';
 import { getAvailableCities, getApprovedFleets } from '../../../../common/store/fleet/selectors';
@@ -35,7 +36,6 @@ export default function ({ navigation, route }: Props) {
   // app state
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier)!;
-  const availableCities = useSelector(getAvailableCities);
   const approvedFleets = useSelector(getApprovedFleets) ?? [];
 
   // screen state
@@ -43,20 +43,13 @@ export default function ({ navigation, route }: Props) {
   const [selectedFleet, setSelectedFleet] = useState<WithId<Fleet>>();
 
   // effects
-  // fetch available cities
+  // once
+  // fetch fleets
   useEffect(() => {
-    //   if (availableCities === undefined) dispatch(fetchAvailableCities(api));
     dispatch(fetchApprovedFleets(api));
   }, []);
-  // when available cities are fetched, select the first one
-  // useEffect(() => {
-  //   if (availableCities) setSelectedCity(availableCities[0]);
-  // }, [availableCities]);
-  // fetch available fleets for selected city
-  // useEffect(() => {
-  //   if (selectedCity != null) dispatch(fetchApprovedFleets(api));
-  // }, [selectedCity]);
-  // when approved fleets are fetched, select courier's
+  // when fleets are fetched
+  // select courier's fleet if he has selected it already
   useEffect(() => {
     const courierFleet = approvedFleets?.find((fleet) => fleet.id === courier.fleet?.id);
     if (courierFleet !== undefined) {
@@ -64,7 +57,7 @@ export default function ({ navigation, route }: Props) {
     }
   }, [approvedFleets]);
 
-  // handers
+  // handlers
   const confirmFleet = useCallback(async () => {
     if (!selectedFleet) return;
     await dispatch(updateProfile(api)(courier.id, { fleet: selectedFleet }));
@@ -74,6 +67,9 @@ export default function ({ navigation, route }: Props) {
   // UI
   return (
     <View style={{ ...screens.configScreen }}>
+      <ShowIf test={approvedFleets.length === 0 && busy}>
+        {() => <ActivityIndicator size="small" color={colors.white} />}
+      </ShowIf>
       <FlatList
         data={approvedFleets?.slice(0, 5) ?? []}
         renderItem={({ item }) => {
@@ -91,22 +87,6 @@ export default function ({ navigation, route }: Props) {
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
           <PaddedView>
-            {/* <Text style={{ ...texts.big }}>{t('Cidade de atuação')}</Text>
-            <Text style={{ ...texts.default, marginTop: 16, color: colors.darkGrey }}>
-              {t('Escolha a cidade que você vai fazer suas entregas')}
-            </Text>
-            <DefaultInput
-              title={t('Cidades disponíveis')}
-              placeholder={t('Pesquise sua cidade')}
-              style={{ marginTop: 16 }}
-            />
-            <DefaultButton
-              style={{ marginTop: 8 }}
-              title={t('Minha cidade não está disponível')}
-              disabled={availableCities === undefined}
-              activityIndicator={busy}
-              onPress={() => navigation.navigate('CityUnavailable')}
-            /> */}
             <Text style={{ ...texts.big, marginTop: padding }}>{t('Escolha sua frota')}</Text>
             <Text style={{ ...texts.default, marginTop: padding, color: colors.darkGrey }}>
               {t(
