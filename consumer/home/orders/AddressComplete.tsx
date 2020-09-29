@@ -69,13 +69,15 @@ export default function ({ navigation, route }: Props) {
   }, [placesFromPreviousOrders, autocompletePredictions]);
   // helpers
   // using cancel token to allow canceling ongoing requests after unmounting
-  const cancelToken = useAxiosCancelToken();
+  const createCancelToken = useAxiosCancelToken();
   // debounced callback to avoid calling the maps API more often than necessary
   // TODO: what would be a better threshold than 500ms?
   const getAddress = useCallback(
     debounce<(input: string, session: string) => void>(async (input: string, session) => {
       console.log('searching', input);
-      const results = await dispatch(getAddressAutocomplete(api)(input, session, cancelToken));
+      const results = await dispatch(
+        getAddressAutocomplete(api)(input, session, createCancelToken())
+      );
       if (results) setAutoCompletePredictions(results);
     }, 500),
     []

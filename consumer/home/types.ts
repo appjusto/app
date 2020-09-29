@@ -8,7 +8,7 @@ export type HomeNavigatorParamList = {
     orderId?: string;
     origin?: Address;
     destination?: Address;
-    cardId?: string;
+    paymentMethodId?: string;
   };
   AddressComplete: {
     value?: string;

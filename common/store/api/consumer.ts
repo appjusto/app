@@ -1,7 +1,12 @@
-import firebase from 'firebase';
+import { IuguCreatePaymentTokenData } from 'appjusto-types/payment/iugu';
 import { CancelToken } from 'axios';
-import { CreatePaymentToken } from './types/payment/iugu';
+import firebase from 'firebase';
+
 import IuguApi from './payment/iugu';
+
+type SaveCardResult = {
+  paymentMethodId: string;
+};
 
 export default class ConsumerApi {
   constructor(
@@ -10,9 +15,16 @@ export default class ConsumerApi {
     private iugu: IuguApi
   ) {}
 
-  async saveCard(data: CreatePaymentToken, cancelToken: CancelToken) {
+  async saveCard(
+    data: IuguCreatePaymentTokenData,
+    cancelToken?: CancelToken
+  ): Promise<SaveCardResult> {
+    console.log('createPaymentToken...');
     const paymentToken = await this.iugu.createPaymentToken(data, cancelToken);
-    if (!paymentToken) return null;
-    return (await this.functions.httpsCallable('savePaymentToken')({ paymentToken })).data;
+    console.log(paymentToken);
+    console.log('savePaymentToken...');
+    const result = await this.functions.httpsCallable('savePaymentToken')({ paymentToken });
+    console.log(result.data);
+    return result.data;
   }
 }

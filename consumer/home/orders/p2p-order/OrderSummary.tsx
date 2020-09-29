@@ -1,4 +1,5 @@
-import { Card, Order, WithId, Fare, Fleet, Place } from 'appjusto-types';
+import { Order, WithId, Fare, Fleet, Place } from 'appjusto-types';
+import { IuguCustomerPaymentMethod } from 'appjusto-types/payment/iugu';
 import { isEmpty } from 'lodash';
 import React, { useState, useMemo, useCallback, useContext, useEffect } from 'react';
 import {
@@ -10,7 +11,6 @@ import {
   FlatList,
   TouchableHighlight,
 } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../../assets/icons';
@@ -41,7 +41,7 @@ type Props = {
   origin: Partial<Place>;
   destination: Partial<Place>;
   order: WithId<Order>;
-  card?: Card;
+  paymentMethod?: IuguCustomerPaymentMethod;
   waiting: boolean;
   editStepHandler: (index: number) => void;
   confirmOrder: (fleetId: string, platformFee: number) => void;
@@ -61,7 +61,7 @@ export default function ({
   origin,
   destination,
   order,
-  card,
+  paymentMethod,
   waiting,
   editStepHandler,
   confirmOrder,
@@ -82,8 +82,8 @@ export default function ({
   const [selectedFare, setSelectedFare] = useState<Fare>();
   const [platformFee, setPlatformFee] = useState(platformFeeOptions[0]);
   const canSubmit = useMemo(() => {
-    return card !== undefined && selectedFare !== undefined && !waiting;
-  }, [card, selectedFare, waiting]);
+    return paymentMethod !== undefined && selectedFare !== undefined && !waiting;
+  }, [paymentMethod, selectedFare, waiting]);
 
   // side effects
   useEffect(() => {
@@ -318,7 +318,7 @@ export default function ({
         </PaddedView>
       </View>
       <HR height={padding} />
-      <ShowIf test={!!card}>
+      <ShowIf test={!!paymentMethod}>
         {() => (
           <TouchableOpacity onPress={() => navigateToFillPaymentInfo()}>
             <PaddedView>
@@ -334,14 +334,14 @@ export default function ({
                 <Image style={{ width: 32, height: 32 }} source={icons.edit} />
               </View>
               <Text style={{ ...texts.default, color: colors.darkGrey }}>
-                {t(`Cartão de crédito: **** ${card!.lastFourDigits}`)}
+                {t(`Cartão de crédito: **** ${paymentMethod!.data.last_digits}`)}
               </Text>
             </PaddedView>
           </TouchableOpacity>
         )}
       </ShowIf>
 
-      <ShowIf test={!card}>
+      <ShowIf test={!paymentMethod}>
         {() => (
           <DefaultButton
             style={{ marginHorizontal: padding }}

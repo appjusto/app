@@ -11,6 +11,6 @@ export const getConsumer = createSelector(
   (consumerState) => consumerState.consumer
 );
 
-export const getCardById = createSelector(getConsumer, (consumer) =>
-  memoize((cardId: string) => consumer?.cards?.find((card) => card.id === cardId))
+export const getPaymentMethodById = createSelector(getConsumer, (consumer) =>
+  memoize((id: string) => consumer?.paymentChannel?.methods?.find((method) => method.id === id))
 );
