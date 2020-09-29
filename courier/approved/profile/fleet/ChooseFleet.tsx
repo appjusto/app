@@ -67,9 +67,6 @@ export default function ({ navigation, route }: Props) {
   // UI
   return (
     <View style={{ ...screens.configScreen }}>
-      <ShowIf test={approvedFleets.length === 0 && busy}>
-        {() => <ActivityIndicator size="small" color={colors.white} />}
-      </ShowIf>
       <FlatList
         data={approvedFleets?.slice(0, 10) ?? []}
         renderItem={({ item }) => {
@@ -86,22 +83,47 @@ export default function ({ navigation, route }: Props) {
         }}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
-          <PaddedView>
-            <Text style={{ ...texts.big, marginTop: padding }}>{t('Escolha sua frota')}</Text>
-            <Text style={{ ...texts.default, marginTop: padding, color: colors.darkGrey }}>
-              {t(
-                'Faça parte de uma frota existente ou crie sua própria frota. Frotas com mais participantes tem mais chances de corridas melhores.'
-              )}
-            </Text>
-          </PaddedView>
-        }
-        ListFooterComponent={
-          <PaddedView>
-            <DefaultButton
-              title={t('Criar uma nova frota')}
-              onPress={() => navigation.navigate('CreateFleet')}
+          <View>
+            <PaddedView>
+              <Text style={{ ...texts.big, marginTop: padding }}>{t('Escolha sua frota')}</Text>
+              <Text
+                style={{
+                  ...texts.default,
+                  marginTop: padding,
+                  color: colors.darkGrey,
+                  marginBottom: 24,
+                }}
+              >
+                {t(
+                  'Faça parte de uma frota existente ou crie sua própria frota. Frotas com mais participantes tem mais chances de corridas melhores.'
+                )}
+              </Text>
+              <DefaultButton title={t('Veja todas as frotas disponíveis')} onPress={() => {}} />
+              <DefaultButton
+                title={t('Criar uma nova frota')}
+                onPress={() => navigation.navigate('CreateFleet')}
+                style={{ marginTop: 8 }}
+              />
+            </PaddedView>
+            <View
+              style={{
+                marginTop: 40,
+                borderColor: colors.grey,
+                borderStyle: 'solid',
+                borderWidth: 1,
+              }}
             />
-          </PaddedView>
+            <Text style={{ marginTop: 24, ...texts.mediumToBig, paddingHorizontal: padding }}>
+              {t('Frotas com mais participantes: ')}
+            </Text>
+            <ShowIf test={approvedFleets.length === 0 && busy}>
+              {() => (
+                <View style={{ marginTop: 8 }}>
+                  <ActivityIndicator size="small" color={colors.white} />
+                </View>
+              )}
+            </ShowIf>
+          </View>
         }
       />
     </View>
