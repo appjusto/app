@@ -19,11 +19,12 @@ const {
 export default () => {
   const flavor = process.env.FLAVOR;
   const appId = `br.com.appjusto.${flavor}`;
+  const icon = `./assets/icon-${flavor}.png`;
   return {
     expo: {
       name: (flavor === 'consumer' && 'App Justo') || (flavor === 'courier' && 'Entregador Justo'),
       slug: `app-justo-${flavor}`,
-      icon: `./assets/icon-${flavor}.png`,
+      icon,
       scheme: 'appjusto',
       platforms: ['ios', 'android'],
       version: '1.0.0',
@@ -58,10 +59,10 @@ export default () => {
         package: appId,
         googleServicesFile: './google-services.json',
         useNextNotificationsApi: true,
-        icon: './assets/icon.png',
+        icon,
         softwareKeyboardLayoutMode: 'pan',
         adaptiveIcon: {
-          foregroundImage: './assets/icon.png',
+          foregroundImage: icon,
           backgroundColor: '#78E08F',
         },
         intentFilters: [
