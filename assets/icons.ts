@@ -1,6 +1,5 @@
 const iconCircle = require('./icons/Circle.png');
 const iconCircleActive = require('./icons/CircleActive.png');
-const iconRectangle = require('./icons/Rectangle.png');
 const acceptIcon = require('./icons/accept-icon.png');
 const arrowSmall = require('./icons/arrow-small.png');
 const backgroundPatternIcon = require('./icons/background-pattern.png');
@@ -31,7 +30,13 @@ const iconIllustration = require('./icons/illustration-intro-screen.png');
 const iconIllustrationPizza = require('./icons/illustration-pizza.png');
 const logoAppjustoBgWhite = require('./icons/logo-appjusto-bg-white.png');
 const iconOrders = require('./icons/orders.png');
+const iconRectangle = require('./icons/rectangle.png');
 const iconUser = require('./icons/user.png');
+const iconBikeSmall = require('./icons/iconBikeSmall.png');
+const iconMotocycleSmall = require('./icons/iconMotocycleSmall.png');
+const iconScooterSmall = require('./icons/iconScooterSmall.png');
+const iconCarSmall = require('./icons/iconCarSmall.png');
+const iconOnFootSmall = require('./icons/iconOnFootSmall.png');
 
 export const accept = acceptIcon;
 export const arrow = arrowSmall;
@@ -67,6 +72,11 @@ export const slider = dragButton;
 export const circle = iconCircle;
 export const circleActive = iconCircleActive;
 export const greenRectangle = iconRectangle;
+export const bikeSmall = iconBikeSmall;
+export const motoSmall = iconMotocycleSmall;
+export const scooterSmall = iconScooterSmall;
+export const carSmall = iconCarSmall;
+export const onFootSmall = iconOnFootSmall;
 
 export default [
   accept,
@@ -103,4 +113,9 @@ export default [
   circle,
   circleActive,
   greenRectangle,
+  bikeSmall,
+  motoSmall,
+  scooterSmall,
+  carSmall,
+  onFootSmall,
 ];

@@ -5,14 +5,14 @@ export default function (
   handler: (notificationContent: Notifications.NotificationContent) => void
 ) {
   // handlers
-  const notificationHandler = useCallback(
-    (notification: Notifications.Notification) => {
+  const receivedHandler = useCallback(
+    async (notification: Notifications.Notification) => {
       handler(notification.request.content);
     },
     [handler]
   );
 
-  const notificationResponseHandler = useCallback(
+  const responseReceivedHandler = useCallback(
     (response: Notifications.NotificationResponse) => {
       handler(response.notification.request.content);
     },
@@ -21,9 +21,11 @@ export default function (
 
   // side effects
   useEffect(() => {
-    const subscription = Notifications.addNotificationReceivedListener(notificationHandler);
+    // Listeners registered by this method will be called whenever a notification is received while the app is running.
+    const subscription = Notifications.addNotificationReceivedListener(receivedHandler);
+    // Listeners registered by this method will be called whenever a user interacts with a notification (eg. taps on it).
     const responseSubscription = Notifications.addNotificationResponseReceivedListener(
-      notificationResponseHandler
+      responseReceivedHandler
     );
 
     return () => {
@@ -31,5 +33,5 @@ export default function (
       Notifications.removeNotificationSubscription(responseSubscription);
       // Notifications.removeAllNotificationListeners();
     };
-  }, []);
+  }, [handler]);
 }

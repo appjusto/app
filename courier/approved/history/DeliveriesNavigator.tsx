@@ -1,20 +1,23 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
-import BackButton from '../../../common/components/buttons/BackButton';
-import Chat from '../../../common/screens/Chat';
+import ArrowBox from '../../../common/components/views/ArrowBox';
 import { getMonthName } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
+import DeliverySummary from '../matching/OngoingDelivery';
 import DeliveryHistory from './DeliveryHistory';
 import DeliveryHistoryByMonth from './DeliveryHistoryByMonth';
-import DeliverySummary from './DeliverySummary';
-import OngoingDelivery from './OngoingDelivery';
 import { DeliveriesNavigatorParamList } from './types';
 
 const Stack = createStackNavigator<DeliveriesNavigatorParamList>();
 export default function () {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={() => ({
+        headerBackImage: () => <ArrowBox flipped />,
+        headerBackTitleVisible: false,
+      })}
+    >
       <Stack.Screen
         name="DeliveryHistory"
         component={DeliveryHistory}
@@ -23,34 +26,14 @@ export default function () {
       <Stack.Screen
         name="DeliveryHistoryByMonth"
         component={DeliveryHistoryByMonth}
-        options={({ navigation, route }) => ({
+        options={({ route }) => ({
           title: `${t('Corridas em')} ${getMonthName(route.params.month)}`,
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
-      />
-      <Stack.Screen
-        name="OngoingDelivery"
-        component={OngoingDelivery}
-        options={({ navigation }) => ({
-          title: t('Corrida em andamento'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
-      />
-      <Stack.Screen
-        name="Chat"
-        component={Chat}
-        options={({ navigation }) => ({
-          title: t('Conversa'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />
       <Stack.Screen
         name="DeliverySummary"
         component={DeliverySummary}
-        options={({ navigation }) => ({
-          title: t('Corrida finalizada'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Corrida finalizada') }}
       />
     </Stack.Navigator>
   );

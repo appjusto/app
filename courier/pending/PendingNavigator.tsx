@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
-import BackButton from '../../common/components/buttons/BackButton';
+import ArrowBox from '../../common/components/views/ArrowBox';
 import ProfileEdit from '../../common/screens/profile/ProfileEdit';
 import { t } from '../../strings';
 import BankNavigator from '../approved/profile/bank/BankNavigator';
@@ -14,7 +14,12 @@ import { PendingParamList } from './types';
 const Stack = createStackNavigator<PendingParamList>();
 export default function () {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={() => ({
+        headerBackImage: () => <ArrowBox flipped />,
+        headerBackTitleVisible: false,
+      })}
+    >
       <Stack.Screen
         name="PendingChecklist"
         component={PendingChecklist}
@@ -23,42 +28,27 @@ export default function () {
       <Stack.Screen
         name="ProfileEdit"
         component={ProfileEdit}
-        options={({ navigation }) => ({
-          title: t('Seus dados'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Seus dados') }}
       />
       <Stack.Screen
         name="ProfilePhotos"
         component={ProfilePhotos}
-        options={({ navigation }) => ({
-          title: t('Fotos e documentos'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Fotos e documentos') }}
       />
       <Stack.Screen
         name="Bank"
         component={BankNavigator}
-        options={({ navigation }) => ({
-          title: t('Dados bancários'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Dados bancários') }}
       />
       <Stack.Screen
         name="Fleet"
         component={FleetNavigator}
-        options={({ navigation }) => ({
-          title: t('Escolha sua frota'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Escolha sua frota') }}
       />
       <Stack.Screen
         name="ProfileFeedback"
         component={ProfileFeedback}
-        options={({ navigation }) => ({
-          title: t('Novo cadastro'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Novo cadastro') }}
       />
     </Stack.Navigator>
   );

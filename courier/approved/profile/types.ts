@@ -7,5 +7,9 @@ export type ProfileParamList = {
   Terms: undefined;
   Bank: undefined;
   Fleet: undefined;
+  PermissionDeniedFeedback: {
+    title: string;
+    subtitle: string;
+  };
 } & ProfileEditParamList &
   ProfileEraseParamList;

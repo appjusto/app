@@ -1,73 +1,66 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, useWindowDimensions, Animated } from 'react-native';
+import { Text, Animated, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { hideToast } from '../../store/ui/actions';
 import { getToast } from '../../store/ui/selectors';
-import { colors, texts } from '../../styles';
+import { borders, colors, halfPadding, padding, texts } from '../../styles';
 
-const percentualWidth = 0.8;
-const duration = 500;
-const delay = 4000;
+// const percentualWidth = 0.8;
+const duration = 250;
+const delay = 3000;
 
 export default function () {
   // context
-  const { width, height } = useWindowDimensions();
   const dispatch = useDispatch();
 
   // state
   const { message, type, autoHide } = useSelector(getToast);
-  const [top] = useState(new Animated.Value(height));
+  const [opacity] = useState(new Animated.Value(0));
 
   // UI
   if (!message) return null;
 
-  const background = {
-    backgroundColor: type === 'success' ? colors.green : colors.yellow,
-  };
-  const size = {
-    height: 40,
-    width: width * percentualWidth,
-  };
-  const left = (width - size.width) * 0.5;
-
   if (autoHide) {
     Animated.sequence([
-      Animated.timing(top, {
+      Animated.timing(opacity, {
         useNativeDriver: false,
-        toValue: height - size.height,
+        toValue: 1,
         duration,
       }),
-      Animated.timing(top, {
+      Animated.timing(opacity, {
         useNativeDriver: false,
         delay,
-        toValue: height,
+        toValue: 0,
         duration,
       }),
     ]).start(() => dispatch(hideToast()));
   }
 
   return (
-    <Animated.View style={{ ...styles.container, ...background, ...size, left, top }}>
-      <Text style={styles.text} numberOfLines={2}>
-        {message}
-      </Text>
+    <Animated.View
+      style={{
+        position: 'absolute',
+        bottom: 90,
+        left: padding,
+        right: padding,
+        opacity,
+      }}
+    >
+      <View
+        style={{
+          ...borders.default,
+          ...borders.rounder,
+          ...borders.thicker,
+          borderColor: colors.black,
+          backgroundColor: type === 'success' ? colors.green : colors.yellow,
+          flex: 1,
+          flexWrap: 'wrap',
+          padding: halfPadding,
+        }}
+      >
+        <Text style={{ ...texts.small, flex: 1, flexWrap: 'wrap' }}>{message}</Text>
+      </View>
     </Animated.View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    position: 'absolute',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    overflow: 'hidden',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 6,
-  },
-  text: {
-    ...texts.small,
-  },
-});

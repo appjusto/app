@@ -38,7 +38,7 @@ export default function ({ route }: Props) {
   const user = useSelector(getUser)!;
   const order = useSelector(getOrderById)(orderId);
   const names = {
-    [order.courierId!]: order.courierName,
+    [order.courier!.id]: order.courier!.name,
     [order.consumerId]: order.consumerName ?? t('Cliente'),
   };
 

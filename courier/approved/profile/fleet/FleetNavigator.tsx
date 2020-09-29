@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
-import BackButton from '../../../../common/components/buttons/BackButton';
+import ArrowBox from '../../../../common/components/views/ArrowBox';
 import { t } from '../../../../strings';
 import ChooseFleet from './ChooseFleet';
 import CreateFleet from './CreateFleet';
@@ -11,15 +11,21 @@ const Stack = createStackNavigator<FleetParamList>();
 
 export default function () {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="ChooseFleet" component={ChooseFleet} />
+    <Stack.Navigator
+      screenOptions={() => ({
+        headerBackImage: () => <ArrowBox flipped />,
+        headerBackTitleVisible: false,
+      })}
+    >
+      <Stack.Screen
+        name="ChooseFleet"
+        component={ChooseFleet}
+        options={{ title: t('Escolha sua frota') }}
+      />
       <Stack.Screen
         name="CreateFleet"
         component={CreateFleet}
-        options={({ navigation }) => ({
-          title: t('Criar nova frota'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Criar nova frota') }}
       />
     </Stack.Navigator>
   );

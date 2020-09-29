@@ -36,20 +36,21 @@ export const getOrderQuotes = (api: Api) => (orderId: string) => async (dispatch
 
 export const confirmOrder = (api: Api) => (
   orderId: string,
+  origin: Partial<Place>,
+  destination: Partial<Place>,
   cardId: string,
   fleetId: string,
   platformFee: number
 ) => (dispatch: AppDispatch) => {
   return dispatch(
-    awaitWithFeedback(api.order().confirmOrder(orderId, cardId, fleetId, platformFee))
+    awaitWithFeedback(
+      api.order().confirmOrder(orderId, origin, destination, cardId, fleetId, platformFee)
+    )
   );
 };
 
 export const cancelOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
-  dispatch({ type: BUSY, payload: true });
-  const result = await api.order().cancelOrder(orderId);
-  dispatch({ type: BUSY, payload: false });
-  return result;
+  return dispatch(awaitWithFeedback(api.order().cancelOrder(orderId)));
 };
 
 export const deleteOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
@@ -59,28 +60,19 @@ export const deleteOrder = (api: Api) => (orderId: string) => async (dispatch: A
 // couriers
 
 export const matchOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
-  dispatch({ type: BUSY, payload: true });
-  const result = await api.order().matchOrder(orderId);
-  dispatch({ type: BUSY, payload: false });
-  return result;
+  return dispatch(awaitWithFeedback(api.order().matchOrder(orderId)));
 };
 
 export const nextDispatchingState = (api: Api) => (orderId: string) => async (
   dispatch: AppDispatch
 ) => {
-  dispatch({ type: BUSY, payload: true });
-  const result = await api.order().nextDispatchingState(orderId);
-  dispatch({ type: BUSY, payload: false });
-  return result;
+  return dispatch(awaitWithFeedback(api.order().nextDispatchingState(orderId)));
 };
 
 export const completeDelivery = (api: Api) => (orderId: string) => async (
   dispatch: AppDispatch
 ) => {
-  dispatch({ type: BUSY, payload: true });
-  const result = await api.order().completeDelivery(orderId);
-  dispatch({ type: BUSY, payload: false });
-  return result;
+  return dispatch(awaitWithFeedback(api.order().completeDelivery(orderId)));
 };
 
 // both courier & consumer
@@ -107,7 +99,7 @@ export const sendMessage = (api: Api) => (
   dispatch({ type: BUSY, payload: true });
   const destination: 'consumers' | 'couriers' =
     from === order.consumerId ? 'couriers' : 'consumers';
-  const to = destination === 'consumers' ? order.consumerId : order.courierId!;
+  const to = destination === 'consumers' ? order.consumerId : order.courier!.id;
   const chat: Partial<ChatMessage> = { from, to, message, destination };
   const result = await api.order().sendMessage(order.id, chat);
   dispatch({ type: BUSY, payload: false });

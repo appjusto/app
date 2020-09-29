@@ -13,13 +13,19 @@ export default React.forwardRef(({ children, fitToElements, ...props }: Props, e
   // effects
   const onMapReadyHandler = useCallback(() => {
     if (fitToElements) {
-      ref.current?.fitToElements(true);
+      ref?.current?.fitToElements(true);
     }
-  }, [ref, children, fitToElements]);
+  }, [ref, fitToElements]);
 
   // UI
   return (
-    <MapView ref={ref} provider={PROVIDER_GOOGLE} onMapReady={onMapReadyHandler} {...props}>
+    <MapView
+      ref={ref}
+      provider={PROVIDER_GOOGLE}
+      onMapReady={onMapReadyHandler}
+      onLayout={onMapReadyHandler}
+      {...props}
+    >
       {children}
     </MapView>
   );

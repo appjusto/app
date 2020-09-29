@@ -43,7 +43,7 @@ export default function ({ acceptHandler, rejectHandler, disabled }: Props) {
 
   // UI
   return (
-    <View style={{ height, paddingHorizontal, ...borders.default }}>
+    <View style={{ height, paddingHorizontal }}>
       {/* track */}
       <View
         style={{
@@ -73,14 +73,12 @@ export default function ({ acceptHandler, rejectHandler, disabled }: Props) {
       {/* slider */}
       <Slider
         ref={sliderRef}
-        disabled={disabled}
         style={{ width: '100%', height }}
         minimumValue={0}
         maximumValue={100}
         step={1}
         minimumTrackTintColor="#00000000"
         maximumTrackTintColor="#00000000"
-        thumbImage={icons.motocycle}
         value={50}
         onSlidingComplete={completeHandler}
       />

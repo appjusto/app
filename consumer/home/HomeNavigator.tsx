@@ -10,6 +10,7 @@ import ProfileAddCard from '../profile/payment/ProfileAddCard';
 import ProfilePaymentMethods from '../profile/payment/ProfilePaymentMethods';
 import Home from './Home';
 import AddressComplete from './orders/AddressComplete';
+import CourierDetail from './orders/CourierDetail';
 import OngoingOrder from './orders/OngoingOrder';
 import OrderConfirmedFeedback from './orders/OrderConfirmedFeedback';
 import OrderDeliveredFeedback from './orders/OrderDeliveredFeedback';
@@ -65,6 +66,11 @@ export default function () {
         name="OngoingOrder"
         component={OngoingOrder}
         options={{ title: t('Pedido em andamento') }}
+      />
+      <Stack.Screen
+        name="CourierDetail"
+        component={CourierDetail}
+        options={{ title: t('Sobre o entregador') }}
       />
       <Stack.Screen name="Chat" component={Chat} options={{ title: t('Chat') }} />
       <Stack.Screen

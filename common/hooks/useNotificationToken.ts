@@ -30,6 +30,15 @@ if (Platform.OS === 'android') {
       bypassDnd: true,
       lightColor: colors.lightGreen,
     });
+    Notifications.setNotificationChannelAsync('order-chat', {
+      name: t('Mensagens da entrega'),
+      importance: Notifications.AndroidImportance.HIGH,
+      enableVibrate: true,
+      vibrationPattern: [0, 250, 250, 250],
+      lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+      bypassDnd: true,
+      lightColor: colors.lightGreen,
+    });
   })();
 }
 

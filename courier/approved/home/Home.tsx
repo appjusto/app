@@ -105,7 +105,12 @@ export default function ({ navigation }: Props) {
   // location permission denied
   useEffect(() => {
     if (working && locationPermission === 'denied') {
-      navigation.navigate('PermissionDeniedFeedback');
+      navigation.navigate('PermissionDeniedFeedback', {
+        title: t('Precisamos acessar a localização do seu dispositivo'),
+        subtitle: t(
+          'Para que possamos determinar o trajeto das corridas, precisamos que você dê acesso ao AppJusto para usar a localização do seu dispositivo.'
+        ),
+      });
       // removing previous token
       dispatch(updateProfile(api)(courier!.id!, { notificationToken: null }));
     }
@@ -200,8 +205,9 @@ export default function ({ navigation }: Props) {
               {`+ ${formatCurrency(courier.fleet?.additionalPerKmAfterThreshold ?? 0)} por km.`}
             </Text>
             <View style={{ flex: 1 }} />
-            {/* the navigation function below is just for testing the screen */}
-            <TouchableOpacity onPress={() => navigation.navigate('OrderRefused')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('FleetDetail', { fleet: courier.fleet })}
+            >
               <View style={{ marginTop: padding }}>
                 <RoundedText>{t('Ver detalhes')}</RoundedText>
               </View>

@@ -35,8 +35,7 @@ function CustomSlider(props: SliderProps) {
       minimumValue={0}
       minimumTrackTintColor="#000000"
       maximumTrackTintColor="#000000"
-      thumbImage={icons.slider}
-      {...props}
+      {...(props as any)}
     />
   );
 }

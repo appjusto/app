@@ -15,7 +15,7 @@ import CourierApp from './courier/CourierApp';
 // https://twitter.com/rickhanlonii/status/1255185060208226306
 
 if (__DEV__) {
-  LogBox.ignoreLogs(['Setting a timer']);
+  LogBox.ignoreLogs(['Setting a timer', 'YellowBox has been replaced']);
 }
 
 const App = () => {

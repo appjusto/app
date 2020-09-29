@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
-import BackButton from '../../../../common/components/buttons/BackButton';
+import ArrowBox from '../../../../common/components/views/ArrowBox';
 import { t } from '../../../../strings';
 import ProfileBank from './ProfileBank';
 import SelectBank from './SelectBank';
@@ -11,15 +11,17 @@ const Stack = createStackNavigator<BankParamList>();
 
 export default function () {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={() => ({
+        headerBackImage: () => <ArrowBox flipped />,
+        headerBackTitleVisible: false,
+      })}
+    >
       <Stack.Screen name="ProfileBank" component={ProfileBank} />
       <Stack.Screen
         name="SelectBank"
         component={SelectBank}
-        options={({ navigation }) => ({
-          title: t('Escolha seu banco'),
-          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
-        })}
+        options={{ title: t('Escolha seu banco') }}
       />
     </Stack.Navigator>
   );

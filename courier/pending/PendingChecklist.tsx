@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext, useEffect, useState, useCallback } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -69,7 +69,7 @@ export default function ({ navigation, route }: Props) {
   });
 
   // handler
-  const focusHandler = () => {
+  const focusHandler = useCallback(() => {
     (async () => {
       try {
         let hasImages = hasImagesUris;
@@ -78,17 +78,16 @@ export default function ({ navigation, route }: Props) {
           const selfieUri = await dispatch(getSelfieURL(api)(courier.id!));
           hasImages = documentImageUri !== null && selfieUri !== null;
         }
-
         let totalSteps = 0;
         if (hasPersonalInfo) totalSteps++;
-        if (hasBankAccount) totalSteps++;
         if (hasImages) totalSteps++;
+        if (hasBankAccount) totalSteps++;
         if (hasSelectedFleet) totalSteps++;
         setStepsDone(totalSteps);
         setHasImagesUris(hasImages);
       } catch (error) {}
     })();
-  };
+  }, [hasImagesUris, hasPersonalInfo, hasBankAccount, hasSelectedFleet, api]);
 
   // UI
   return (

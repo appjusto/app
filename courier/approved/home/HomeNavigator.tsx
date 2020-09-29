@@ -2,11 +2,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
 import ArrowBox from '../../../common/components/views/ArrowBox';
+import PermissionDeniedFeedback from '../../../common/screens/PermissionDeniedFeedback';
+import FleetDetail from '../../../common/screens/fleet/FleetDetail';
 import { t } from '../../../strings';
 import OrderCompleted from '../matching/OrderCompleted';
 import OrderRefused from '../matching/OrderRefused';
 import Home from './Home';
-import PermissionDeniedFeedback from './PermissionDeniedFeedback';
 import { HomeParamList } from './types';
 
 const Stack = createStackNavigator<HomeParamList>();
@@ -27,15 +28,17 @@ export default function () {
       <Stack.Screen
         name="PermissionDeniedFeedback"
         component={PermissionDeniedFeedback}
-        options={{ title: t('Compartilhar localização') }}
-<<<<<<< HEAD
-=======
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="OrderCompleted"
         component={OrderCompleted}
-        options={{ title: t('Avalie a corrida'), headerShown: false }}
->>>>>>> 4991a6da8ac2835f7c4af8a06662faaca5b791c3
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="FleetDetail"
+        component={FleetDetail}
+        options={{ title: t('Detalhes da frota') }}
       />
     </Stack.Navigator>
   );

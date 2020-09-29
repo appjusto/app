@@ -32,7 +32,6 @@
     },
     "android": {
       "package": "br.com.appjusto",
-      "permissions": ["ACCESS_FINE_LOCATION"],
       "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true,
       "icon": "./assets/icon.png",
