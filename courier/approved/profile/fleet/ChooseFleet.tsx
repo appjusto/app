@@ -15,7 +15,7 @@ import { fetchApprovedFleets } from '../../../../common/store/fleet/actions';
 import { getAvailableCities, getApprovedFleets } from '../../../../common/store/fleet/selectors';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
-import { texts, screens, colors, padding } from '../../../../common/styles';
+import { texts, screens, colors, padding, borders } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import FleetCard from './FleetCard';
 import { FleetParamList } from './types';
@@ -105,7 +105,12 @@ export default function ({ navigation, route }: Props) {
               <DefaultButton
                 title={t('Criar uma nova frota')}
                 onPress={() => navigation.navigate('CreateFleet')}
-                style={{ marginTop: 8 }}
+                style={{
+                  ...borders.default,
+                  borderColor: colors.black,
+                  backgroundColor: 'white',
+                  marginTop: 8,
+                }}
               />
             </PaddedView>
             <View
