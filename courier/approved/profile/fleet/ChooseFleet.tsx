@@ -98,7 +98,10 @@ export default function ({ navigation, route }: Props) {
                   'Faça parte de uma frota existente ou crie sua própria frota. Frotas com mais participantes tem mais chances de corridas melhores.'
                 )}
               </Text>
-              <DefaultButton title={t('Veja todas as frotas disponíveis')} onPress={() => {}} />
+              <DefaultButton
+                title={t('Veja todas as frotas disponíveis')}
+                onPress={() => navigation.navigate('AllFleets')}
+              />
               <DefaultButton
                 title={t('Criar uma nova frota')}
                 onPress={() => navigation.navigate('CreateFleet')}

@@ -3,6 +3,7 @@ import React from 'react';
 
 import ArrowBox from '../../../../common/components/views/ArrowBox';
 import { t } from '../../../../strings';
+import AllFleets from './AllFleets';
 import ChooseFleet from './ChooseFleet';
 import CreateFleet from './CreateFleet';
 import { FleetParamList } from './types';
@@ -26,6 +27,11 @@ export default function () {
         name="CreateFleet"
         component={CreateFleet}
         options={{ title: t('Criar nova frota') }}
+      />
+      <Stack.Screen
+        name="AllFleets"
+        component={AllFleets}
+        options={{ title: t('Todas as frotas disponíveis') }}
       />
     </Stack.Navigator>
   );
