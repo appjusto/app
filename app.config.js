@@ -16,75 +16,116 @@ const {
   SENTRY_AUTH_TOKEN,
 } = process.env;
 
-const createFirebaseConfig = () => {
-  return {
-    apiKey: null, // it will be filled in runtime according with user's OS
-    authDomain: `${FIREBASE_PROJECT_ID}.firebaseapp.com`,
-    databaseURL: `https://${FIREBASE_DATABASE_NAME}.firebaseio.com`,
-    functionsURL: `https://${FIREBASE_REGION}-${FIREBASE_PROJECT_ID}.cloudfunctions.net`,
-    projectId: FIREBASE_PROJECT_ID,
-    storageBucket: `${FIREBASE_PROJECT_ID}.appspot.com`,
-    messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
-    appId: FIREBASE_APP_ID,
-    emulator: {
-      enabled: process.env.FIREBASE_EMULATOR === 'true',
-      databaseURL: `${FIREBASE_EMULATOR_HOST}:8080`,
-      functionsURL: `http://${FIREBASE_EMULATOR_HOST}:5001`,
-    },
-    // measurementId: null,
-  };
-};
-
-export default ({ config }) => {
-  const { slug, ios, android } = config;
+export default () => {
   const flavor = process.env.FLAVOR;
-  const googleApiKeys = {
-    android: GOOGLE_ANDROID_API_KEY,
-    ios: GOOGLE_IOS_API_KEY,
-  };
-  const name = (flavor === 'consumer' && 'Cliente') || (flavor === 'courier' && 'Entregador');
-  const bundleIdentifier = `${ios.bundleIdentifier}.${flavor}`;
-  const androidPackage = `${android.package}.${flavor}`;
-  const analytics = {
-    segmentAndroidKey: SEGMENT_ANDROID_KEY,
-    segmentiOSKey: SEGMENT_IOS_KEY,
-    sentryDNS: SENTRY_DSN,
-  };
-
+  const appId = `br.com.appjusto.${flavor}`;
   return {
-    ...config,
-    slug: `${slug}-${flavor}`,
-    name,
-    ios: {
-      ...ios,
-      bundleIdentifier,
-      config: {
-        googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    expo: {
+      name: (flavor === 'consumer' && 'App Justo') || (flavor === 'courier' && 'Entregador Justo'),
+      slug: `app-justo-${flavor}`,
+      icon: `./assets/icon-${flavor}.png`,
+      scheme: 'appjusto',
+      platforms: ['ios', 'android'],
+      version: '1.0.0',
+      orientation: 'portrait',
+      splash: {
+        image: './assets/splash.png',
+        resizeMode: 'cover',
+        backgroundColor: '#78e08f',
       },
-    },
-    android: {
-      ...android,
-      package: androidPackage,
-      config: {
-        googleMaps: {
-          apiKey: GOOGLE_MAPS_API_KEY,
+      notification: {
+        icon: './assets/notification-icon.png',
+      },
+      updates: {
+        fallbackToCacheTimeout: 0,
+      },
+      assetBundlePatterns: ['**/*'],
+      ios: {
+        bundleIdentifier: appId,
+        supportsTablet: true,
+        infoPlist: {
+          UIBackgroundModes: ['location'],
+          NSLocationWhenInUseUsageDescription: 'Saber a localização do entregador',
+          NSLocationAlwaysAndWhenInUseUsageDescription: 'Saber a localização do entregador',
+          NSLocationAlwaysUsageDescription: 'Saber a localização do entregador',
+        },
+        associatedDomains: ['applinks:deeplink.appjusto.com.br'],
+        config: {
+          googleMapsApiKey: GOOGLE_MAPS_API_KEY,
         },
       },
-    },
-    hooks: {
-      ...config.hooks,
-      postPublish: config.hooks.postPublish.map(({ file, config }) => ({
-        file,
-        config: { ...config, authToken: SENTRY_AUTH_TOKEN },
-      })),
-    },
-    extra: {
-      flavor,
-      bundleIdentifier,
-      androidPackage,
-      googleApiKeys,
-      firebase: createFirebaseConfig(),
-      analytics,
+      android: {
+        package: appId,
+        googleServicesFile: './google-services.json',
+        useNextNotificationsApi: true,
+        icon: './assets/icon.png',
+        softwareKeyboardLayoutMode: 'pan',
+        adaptiveIcon: {
+          foregroundImage: './assets/icon.png',
+          backgroundColor: '#78E08F',
+        },
+        intentFilters: [
+          {
+            action: 'VIEW',
+            autoVerify: false,
+            data: [
+              {
+                scheme: 'https',
+                host: 'deeplink.appjusto.com.br',
+                pathPrefix: `/${flavor}`,
+              },
+            ],
+            category: ['BROWSABLE', 'DEFAULT'],
+          },
+        ],
+        config: {
+          googleMaps: {
+            apiKey: GOOGLE_MAPS_API_KEY,
+          },
+        },
+      },
+      hooks: {
+        postPublish: [
+          {
+            file: 'sentry-expo/upload-sourcemaps',
+            config: {
+              organization: 'app-justo',
+              project: 'app-justo',
+              authToken: SENTRY_AUTH_TOKEN,
+            },
+          },
+        ],
+      },
+      extra: {
+        flavor,
+        bundleIdentifier: appId,
+        androidPackage: appId,
+        googleApiKeys: {
+          android: GOOGLE_ANDROID_API_KEY,
+          ios: GOOGLE_IOS_API_KEY,
+        },
+        firebase: {
+          apiKey: null, // it will be filled in runtime according with user's OS
+          authDomain: `${FIREBASE_PROJECT_ID}.firebaseapp.com`,
+          databaseURL: `https://${FIREBASE_DATABASE_NAME}.firebaseio.com`,
+          functionsURL: `https://${FIREBASE_REGION}-${FIREBASE_PROJECT_ID}.cloudfunctions.net`,
+          projectId: FIREBASE_PROJECT_ID,
+          storageBucket: `${FIREBASE_PROJECT_ID}.appspot.com`,
+          messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+          appId: FIREBASE_APP_ID,
+          emulator: {
+            enabled: process.env.FIREBASE_EMULATOR === 'true',
+            databaseURL: `${FIREBASE_EMULATOR_HOST}:8080`,
+            functionsURL: `http://${FIREBASE_EMULATOR_HOST}:5001`,
+          },
+          // measurementId: null,
+        },
+        analytics: {
+          segmentAndroidKey: SEGMENT_ANDROID_KEY,
+          segmentiOSKey: SEGMENT_IOS_KEY,
+          sentryDNS: SENTRY_DSN,
+        },
+      },
     },
   };
 };
