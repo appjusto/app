@@ -5,5 +5,6 @@ export type FleetParamList = {
     fleetId: string;
   };
   CreateFleet: undefined;
+  AllFleets: undefined;
   CityUnavailable: undefined;
 };

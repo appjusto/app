@@ -7,7 +7,7 @@ import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { borders, texts, colors, padding } from '../../../../common/styles';
-import { formatCurrency, formatDistance } from '../../../../common/utils/formatters';
+import { formatCurrency, formatDistance, formatPct } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 
 type Props = {
@@ -46,38 +46,118 @@ export default function ({ fleet, selected, onSelect, onConfirm }: Props) {
           <Text style={{ ...texts.small, marginTop: 4, color: colors.darkGreen }}>
             {fleet.participantsOnline} {t('participantes online')}
           </Text>
-          <Text style={{ ...texts.small, marginTop: 12, height: 54, color: colors.darkGrey }}>
+          <Text
+            style={{
+              ...texts.small,
+              marginTop: 12,
+              // height: 54,
+              color: colors.darkGrey,
+              marginBottom: 20,
+            }}
+          >
             {fleet.description}
           </Text>
-          <View style={{ marginTop: padding }}>
-            <RoundedText>{`${formatCurrency(fleet.minimumFee)} ${t('até')} ${formatDistance(
-              fleet.distanceThreshold
-            )} + ${formatCurrency(fleet.additionalPerKmAfterThreshold)} ${t(
-              'por km adicional'
-            )}`}</RoundedText>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 8,
+            }}
+          >
+            <Text style={{ ...texts.small }}>{t('Pagamento Mínimo')}</Text>
+            <RoundedText>{formatCurrency(fleet.minimumFee)}</RoundedText>
           </View>
-          {/* <View style={{ marginTop: padding }}>
-            <RoundedText>{`${formatPct(fleet.feePctOverValue)} ${t(
-              'para pedidos a partir de'
-            )} ${formatCurrency(fleet.valueThreshold)}`}</RoundedText>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 8,
+            }}
+          >
+            <Text style={{ ...texts.small }}>{t('Distância Inicial Mínima')}</Text>
+            <RoundedText>{formatDistance(fleet.distanceThreshold)}</RoundedText>
           </View>
-          <View style={{ marginTop: padding }}>
-            <RoundedText>{`${t('Distância máxima até a origen: ')} ${formatDistance(
-              fleet.maxDistanceToOrigin
-            )}`}</RoundedText>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 8,
+            }}
+          >
+            <Text style={{ ...texts.small }}>{t('Valor Adicional por Km rodado')}</Text>
+            <RoundedText>{formatCurrency(fleet.additionalPerKmAfterThreshold)}</RoundedText>
           </View>
-          <View style={{ marginTop: padding }}>
-            <RoundedText>{`${t('Distância máxima total: ')} ${formatDistance(
-              fleet.maxDistance
-            )}`}</RoundedText>
-          </View> */}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 8,
+            }}
+          >
+            <Text style={{ ...texts.small, color: colors.darkGrey }}>
+              {t('Distância Máxima para Entrega')}
+            </Text>
+            <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey}>
+              {formatDistance(fleet.maxDistance)}
+            </RoundedText>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 8,
+            }}
+          >
+            <Text style={{ ...texts.small, color: colors.darkGrey }}>
+              {t('Distância Máxima até a Origem')}
+            </Text>
+            <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey}>
+              {formatDistance(fleet.maxDistanceToOrigin)}
+            </RoundedText>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 8,
+            }}
+          >
+            <Text style={{ ...texts.small, color: colors.darkGrey }}>
+              {t('Porcentagem do Valor do Pedido')}
+            </Text>
+            <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey}>
+              {formatPct(fleet.feePctOverValue)}
+            </RoundedText>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 8,
+            }}
+          >
+            <Text style={{ ...texts.small, color: colors.darkGrey }}>
+              {t('Valor Mínimo para Porcentagem')}
+            </Text>
+            <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey}>
+              {formatCurrency(fleet.valueThreshold)}
+            </RoundedText>
+          </View>
         </View>
         <DefaultButton
           style={{ marginTop: padding }}
-          title={t('Confirmar')}
+          title={t('Ingressar nessa frota')}
           onPress={onConfirm}
           disabled={!selected}
           activityIndicator={busy && selected}
+          isWhite
         />
       </View>
     </TouchableWithoutFeedback>

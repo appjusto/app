@@ -19,9 +19,10 @@ export default function ({ leftIcon, color, backgroundColor: bg, children }: Pro
         flexDirection: 'row',
         alignSelf: 'flex-start',
         alignItems: 'center',
-        padding: 6,
+        paddingVertical: 4,
+        paddingHorizontal: 8,
         ...borders.default,
-        ...borders.rounder,
+        borderRadius: 32,
         borderColor: tintColor,
         backgroundColor,
       }}
