@@ -8,9 +8,10 @@ type Props = {
   leftIcon?: any;
   color?: string;
   backgroundColor?: string;
+  noBorder?: boolean;
 };
 
-export default function ({ leftIcon, color, backgroundColor: bg, children }: Props) {
+export default function ({ leftIcon, color, backgroundColor: bg, children, noBorder }: Props) {
   const tintColor = color ?? colors.black;
   const backgroundColor = bg ? bg : colors.white;
   return (
@@ -23,7 +24,7 @@ export default function ({ leftIcon, color, backgroundColor: bg, children }: Pro
         paddingHorizontal: 8,
         ...borders.default,
         borderRadius: 32,
-        borderColor: tintColor,
+        borderColor: noBorder ? colors.lightGrey : tintColor,
         backgroundColor,
       }}
     >
