@@ -26,7 +26,7 @@ export default function () {
       <Stack.Screen
         name="OngoingDelivery"
         component={OngoingDelivery}
-        options={{ headerShown: false }}
+        options={{ title: t('Corrida em andamento') }}
       />
       <Stack.Screen name="Chat" component={Chat} options={{ title: t('Conversa') }} />
       <Stack.Screen
