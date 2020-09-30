@@ -43,7 +43,7 @@ export default function () {
       <Stack.Screen
         name="Fleet"
         component={FleetNavigator}
-        options={{ title: t('Escolha sua frota') }}
+        options={{ title: t('Escolha sua frota'), headerShown: false }}
       />
       <Stack.Screen
         name="ProfileFeedback"
