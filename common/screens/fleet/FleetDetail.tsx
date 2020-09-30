@@ -1,12 +1,18 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React from 'react';
+import React, { useCallback, useContext } from 'react';
 import { ScrollView, Text, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { HomeNavigatorParamList } from '../../../consumer/home/types';
 import { t } from '../../../strings';
+import { ApiContext, AppDispatch } from '../../app/context';
+import DefaultButton from '../../components/buttons/DefaultButton';
 import PaddedView from '../../components/containers/PaddedView';
 import RoundedText from '../../components/texts/RoundedText';
+import { getCourier } from '../../store/courier/selectors';
+import { getUIBusy } from '../../store/ui/selectors';
+import { updateProfile } from '../../store/user/actions';
 import { colors, screens, texts } from '../../styles';
 import { formatCurrency, formatDistance } from '../../utils/formatters';
 
@@ -26,6 +32,18 @@ export default function ({ navigation, route }: Props) {
   const additionalPerKm = formatCurrency(fleet.additionalPerKmAfterThreshold);
   const maxDistance = formatDistance(fleet.maxDistance);
   const maxDistanceOrigin = formatDistance(fleet.maxDistanceToOrigin);
+  //context
+  const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
+  const busy = useSelector(getUIBusy);
+  //app state
+  const courier = useSelector(getCourier)!;
+  //handlers
+  const confirmFleet = useCallback(async () => {
+    if (!fleet) return;
+    await dispatch(updateProfile(api)(courier.id, { fleet: fleet }));
+    navigation.goBack();
+  }, [fleet]);
   return (
     <View style={[screens.configScreen]}>
       <ScrollView>
@@ -117,7 +135,13 @@ export default function ({ navigation, route }: Props) {
               'Distância máxima em km da posição atual até a origem do pedido que essa frota poderá percorrer. Pedidos recebidos com origem acima não serão exibidos.'
             )}
           </Text>
-          {/* <DefaultButton title={t('Escolher essa frota')} onPress={() => navigation.goBack()} /> */}
+          {/* gain simulation will go here */}
+          <DefaultButton
+            title={t('Escolher essa frota')}
+            onPress={confirmFleet}
+            style={{ marginTop: 32 }}
+            activityIndicator={busy}
+          />
         </PaddedView>
       </ScrollView>
     </View>

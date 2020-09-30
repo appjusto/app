@@ -101,7 +101,7 @@ export default function ({ fleet, selected, onSelect, onConfirm }: Props) {
             <Text style={{ ...texts.small, color: colors.darkGrey }}>
               {t('Distância Máxima para Entrega')}
             </Text>
-            <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey}>
+            <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey} noBorder>
               {formatDistance(fleet.maxDistance)}
             </RoundedText>
           </View>
@@ -116,7 +116,7 @@ export default function ({ fleet, selected, onSelect, onConfirm }: Props) {
             <Text style={{ ...texts.small, color: colors.darkGrey }}>
               {t('Distância Máxima até a Origem')}
             </Text>
-            <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey}>
+            <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey} noBorder>
               {formatDistance(fleet.maxDistanceToOrigin)}
             </RoundedText>
           </View>
@@ -131,7 +131,7 @@ export default function ({ fleet, selected, onSelect, onConfirm }: Props) {
             <Text style={{ ...texts.small, color: colors.darkGrey }}>
               {t('Porcentagem do Valor do Pedido')}
             </Text>
-            <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey}>
+            <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey} noBorder>
               {formatPct(fleet.feePctOverValue)}
             </RoundedText>
           </View>
@@ -146,7 +146,7 @@ export default function ({ fleet, selected, onSelect, onConfirm }: Props) {
             <Text style={{ ...texts.small, color: colors.darkGrey }}>
               {t('Valor Mínimo para Porcentagem')}
             </Text>
-            <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey}>
+            <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey} noBorder>
               {formatCurrency(fleet.valueThreshold)}
             </RoundedText>
           </View>

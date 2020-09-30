@@ -1,10 +1,11 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Fleet } from 'appjusto-types';
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Text, FlatList, View, ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
+import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import ShowIf from '../../../../common/components/views/ShowIf';
 import { fetchApprovedFleets } from '../../../../common/store/fleet/actions';
 import { getApprovedFleets } from '../../../../common/store/fleet/selectors';
@@ -18,7 +19,6 @@ type ScreenNavigationProp = StackNavigationProp<FleetParamList, 'AllFleets'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
-
 };
 
 export default function ({ navigation }: Props) {
@@ -28,6 +28,14 @@ export default function ({ navigation }: Props) {
   const busy = useSelector(getUIBusy);
   //app state
   const approvedFleets = useSelector(getApprovedFleets) ?? [];
+  //screen state
+  const [fleetSearch, setFleetSearch] = useState('');
+  // const filteredFleets = useMemo(() => {
+  //   if (!approvedFleets) return [];
+  //   return approvedFleets.filter(
+  //     (fleet) => fleet.name.indexOf(fleetSearch) !== -1 || fleet.id.indexOf(fleetSearch) !== -1
+  //   );
+  // }, [approvedFleets, fleetSearch]);
   // effects
   // fetch fleets
   useEffect(() => {
@@ -44,7 +52,14 @@ export default function ({ navigation }: Props) {
         data={approvedFleets?.slice(0, 10) ?? []}
         ListHeaderComponent={
           <View style={{ marginBottom: 32, paddingHorizontal: padding }}>
-            <Text>{t('Todas as frotas disponíveis: ')}</Text>
+            <DefaultInput
+              // defaultValue={initialAddress}
+              value={fleetSearch}
+              title={t('Buscar')}
+              placeholder={t('Nome da frota')}
+              onChangeText={setFleetSearch}
+              style={{ marginBottom: 32, marginTop: padding }}
+            />
             <ShowIf test={approvedFleets.length === 0 && busy}>
               {() => (
                 <View style={{ marginTop: 8 }}>
