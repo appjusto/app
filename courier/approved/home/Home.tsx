@@ -10,12 +10,14 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import ShowIf from '../../../common/components/views/ShowIf';
 import useNotificationToken from '../../../common/hooks/useNotificationToken';
 import { getCourier } from '../../../common/store/courier/selectors';
+import { getOngoingOrders } from '../../../common/store/order/selectors';
 import { updateProfile } from '../../../common/store/user/actions';
 import { padding } from '../../../common/styles';
 import { ApprovedParamList } from '../types';
 import HomeControls from './HomeControls';
 import HomeDeliveriesSummary from './HomeDeliveriesSummary';
 import ModalChooser from './ModalChooser';
+import HomeOngoingDeliveryCard from './cards/HomeOngoingDeliveryCard';
 import { HomeParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
@@ -34,6 +36,7 @@ export default function ({ navigation }: Props) {
 
   // app state
   const courier = useSelector(getCourier)!;
+  const ongoingOrders = useSelector(getOngoingOrders);
 
   // state
   const [notificationToken, notificationError] = useNotificationToken();
@@ -57,7 +60,19 @@ export default function ({ navigation }: Props) {
   return (
     <ScrollView contentContainerStyle={{ paddingTop }}>
       <HomeControls navigation={navigation} />
-      <ShowIf test>{() => <PaddedView half />}</ShowIf>
+      <ShowIf test={ongoingOrders.length > 0}>
+        {() => (
+          <PaddedView half>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('OngoingDelivery', { orderId: ongoingOrders[0].id })
+              }
+            >
+              <HomeOngoingDeliveryCard order={ongoingOrders[0]} />
+            </TouchableOpacity>
+          </PaddedView>
+        )}
+      </ShowIf>
       <PaddedView half>
         <TouchableOpacity onPress={() => navigation.navigate('Main', { screen: 'Deliveries' })}>
           <HomeDeliveriesSummary />

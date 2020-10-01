@@ -8,11 +8,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../../assets/icons';
 import { AppDispatch, ApiContext } from '../../common/app/context';
 import PaddedView from '../../common/components/containers/PaddedView';
+import ShowIf from '../../common/components/views/ShowIf';
 import { getFlavor } from '../../common/store/config/selectors';
+import { getOngoingOrders } from '../../common/store/order/selectors';
 import { observeProfile } from '../../common/store/user/actions';
 import { getUser } from '../../common/store/user/selectors';
 import { colors, texts, padding, borders } from '../../common/styles';
 import { t } from '../../strings';
+import HomeOngoingOrderCard from './cards/HomeOngoingOrderCard';
 import { HomeNavigatorParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'Home'>;
@@ -31,6 +34,7 @@ export default function ({ navigation }: Props) {
   // state
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
+  const ongoingOrders = useSelector(getOngoingOrders);
 
   // side effects
   useEffect(() => {
@@ -105,19 +109,19 @@ export default function ({ navigation }: Props) {
           style={{ height: '100%', width: '100%' }}
         >
           <View style={{ paddingHorizontal: 16, flex: 1, justifyContent: 'center' }}>
-            <TouchableOpacity onPress={() => navigation.navigate('History')}>
-              <View style={{ ...styles.history, justifyContent: 'center' }}>
-                <View style={{ height: 80, width: '20%' }}>
-                  <Image source={icons.requests} />
-                </View>
-                <View style={{ justifyContent: 'center' }}>
-                  <Text style={{ ...texts.default }}>{t('Histórico de pedidos')}</Text>
-                  <Text style={{ ...texts.small, color: colors.darkGrey }}>
-                    {t('Você ainda não fez pedidos')}
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
+            <ShowIf test={ongoingOrders.length > 0}>
+              {() => (
+                <PaddedView half>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('OngoingOrder', { orderId: ongoingOrders[0].id })
+                    }
+                  >
+                    <HomeOngoingOrderCard order={ongoingOrders[0]} />
+                  </TouchableOpacity>
+                </PaddedView>
+              )}
+            </ShowIf>
           </View>
         </ImageBackground>
       </View>
