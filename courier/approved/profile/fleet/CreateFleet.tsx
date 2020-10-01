@@ -18,6 +18,8 @@ import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { texts, screens, colors, padding } from '../../../../common/styles';
 import { formatCurrency, formatDistance, formatPct } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
+import FleetRule from './FleetRule';
+import FleetSummary from './FleetSummary';
 import { FleetParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<FleetParamList, 'CreateFleet'>;
@@ -138,46 +140,26 @@ export default function ({ navigation, route }: Props) {
             0/140 {t('caracteres')}
           </Text>
           <View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: padding,
-                justifyContent: 'space-between',
-                marginBottom: 8,
-              }}
-            >
-              <Text style={{ ...texts.medium }}>{t('Pagamento Mínimo')}</Text>
-              <RoundedText>{formatCurrency(minimumFee)}</RoundedText>
-            </View>
-            <Text style={{ ...texts.default, color: colors.darkGrey }}>
-              {t(
+            <FleetRule
+              title={t('Pagamento Mínimo')}
+              formattedValue={formatCurrency(minimumFee)}
+              description={t(
                 'Defina o valor que os entregadores dessa frota receberão ao percorrer a Distância Inicial Mínima.'
               )}
-            </Text>
+            />
             <CustomSlider
               value={minimumFee}
               maximumValue={5000}
               step={500}
               onValueChange={setMinimumFee}
             />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: padding,
-                justifyContent: 'space-between',
-                marginBottom: 8,
-              }}
-            >
-              <Text style={{ ...texts.medium }}>{t('Distância Inicial Mínima')} </Text>
-              <RoundedText>{`${formatDistance(distanceThreshold)}`}</RoundedText>
-            </View>
-            <Text style={{ ...texts.default, color: colors.darkGrey }}>
-              {t(
+            <FleetRule
+              title={t('Distância Inicial Mínima')}
+              formattedValue={formatDistance(distanceThreshold)}
+              description={t(
                 'Defina em Km a distância para o Pagamento Mínimo. Abaixo dessa distância, os entregadores dessa frota receberão o Pagamento Mínimo. Acima dessa distância, os entregadores receberão um Valor Adicional por Km Rodado.'
               )}
-            </Text>
+            />
             <CustomSlider
               value={distanceThreshold}
               minimumValue={100}
@@ -185,23 +167,13 @@ export default function ({ navigation, route }: Props) {
               step={50}
               onValueChange={setDistanceThreshold}
             />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: padding,
-                justifyContent: 'space-between',
-                marginBottom: 8,
-              }}
-            >
-              <Text style={{ ...texts.medium }}>{t('Valor Adicional por Km Rodado')}</Text>
-              <RoundedText>{`${formatCurrency(additionalPerKmAfterThreshold)}`}</RoundedText>
-            </View>
-            <Text style={{ ...texts.default, color: colors.darkGrey }}>
-              {t(
+            <FleetRule
+              title={t('Valor Adicional por Km Rodado')}
+              formattedValue={formatCurrency(additionalPerKmAfterThreshold)}
+              description={t(
                 'Defina o valor adicional que os entregadores dessa frota receberão por Km ao percorrer uma distância acima da Distância Inicial Mínima.'
               )}
-            </Text>
+            />
             <CustomSlider
               value={additionalPerKmAfterThreshold}
               minimumValue={100}
@@ -209,92 +181,52 @@ export default function ({ navigation, route }: Props) {
               step={50}
               onValueChange={setAdditionalPerKmAfterThreshold}
             />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: padding,
-                justifyContent: 'space-between',
-                marginBottom: 8,
-              }}
-            >
-              <Text style={{ ...texts.medium }}>{t('Distância Máxima para Entrega')}</Text>
-              <RoundedText>{formatDistance(maxDistance)}</RoundedText>
-            </View>
-            <Text style={{ ...texts.default, color: colors.darkGrey }}>
-              {t(
+            <FleetRule
+              title={t('Distância Máxima para Entrega')}
+              formattedValue={formatDistance(maxDistance)}
+              description={t(
                 'Defina em Km a distância máxima que os entregadores dessa frota poderão percorrer para fazer uma entrega. Pedidos recebidos com distância máxima acima da definida não serão exibidos.'
               )}
-            </Text>
+            />
             <CustomSlider
               value={maxDistance}
               maximumValue={20000}
               step={500}
               onValueChange={setMaxDistance}
             />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: padding,
-                justifyContent: 'space-between',
-                marginBottom: 8,
-              }}
-            >
-              <Text style={{ ...texts.medium }}>{t('Distância Máxima até a Origem')}</Text>
-              <RoundedText>{formatDistance(maxDistanceToOrigin)}</RoundedText>
-            </View>
-            <Text style={{ ...texts.default, color: colors.darkGrey }}>
-              {t(
+            <FleetRule
+              title={t('Distância Máxima até a Origem')}
+              formattedValue={formatDistance(maxDistanceToOrigin)}
+              description={t(
                 'Defina em Km a distância máxima da posição atual até a origem do pedido que essa frota poderá percorrer. Pedidos recebidos com origem acima da definida não serão exibidos.'
               )}
-            </Text>
+            />
             <CustomSlider
               value={maxDistanceToOrigin}
               maximumValue={20000}
               step={500}
               onValueChange={setMaxDistanceToOrigin}
             />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: padding,
-                justifyContent: 'space-between',
-                marginBottom: 8,
-              }}
-            >
-              <Text style={{ ...texts.medium }}>{t('Porcentagem do Valor do Pedido')}</Text>
-              <RoundedText>{formatPct(feePctOverValue)}</RoundedText>
-            </View>
-            <Text style={{ ...texts.default, color: colors.darkGrey }}>
-              {t(
+            <FleetRule
+              title={t('Porcentagem do Valor do Pedido')}
+              formattedValue={formatPct(feePctOverValue)}
+              description={t(
                 'Defina um percentual do valor do pedido em restaurantes que será adicionado ao pagamento dessa frota.'
               )}
-            </Text>
+            />
             <CustomSlider
               value={feePctOverValue}
               maximumValue={20000}
               step={500}
               onValueChange={setFeePcTOverValue}
             />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: padding,
-                justifyContent: 'space-between',
-                marginBottom: 8,
-              }}
-            >
-              <Text style={{ ...texts.medium }}>{t('Valor Mínimo para Porcentagem')}</Text>
-              <RoundedText>{formatCurrency(valueThreshold)}</RoundedText>
-            </View>
-            <Text style={{ ...texts.default, color: colors.darkGrey }}>
-              {t(
+            <FleetRule
+              title={t('Valor Mínimo para Porcentagem')}
+              formattedValue={formatCurrency(valueThreshold)}
+              description={t(
                 'Defina um valor mínimo do pedido em restaurantes para que se comece a cobrar a porcentagem definida acima.'
               )}
-            </Text>
+            />
             <CustomSlider
               value={valueThreshold}
               maximumValue={20000}
@@ -303,96 +235,14 @@ export default function ({ navigation, route }: Props) {
             />
           </View>
         </PaddedView>
-        <View style={{ ...screens.default }}>
-          <PaddedView>
-            <Text style={{ ...texts.default, marginBottom: 4 }}>{t('Resumo da Frota')}</Text>
-            <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: 16 }}>
-              {t('Revise as informações antes de criar essa frota')}
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: 4,
-              }}
-            >
-              <Text style={{ ...texts.default }}>{t('Pagamento Mínimo')}</Text>
-              <Text style={{ ...texts.default }}>{formatCurrency(minimumFee)}</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: 4,
-              }}
-            >
-              <Text style={{ ...texts.default }}>{t('Distância Mínima')}</Text>
-              <Text style={{ ...texts.default }}>{formatDistance(distanceThreshold)}</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: 4,
-              }}
-            >
-              <Text style={{ ...texts.default, color: colors.darkGrey }}>
-                {t('Distância Máxima para Entrega')}
-              </Text>
-              <Text style={{ ...texts.default, color: colors.darkGrey }}>
-                {formatDistance(maxDistance)}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: 4,
-              }}
-            >
-              <Text style={{ ...texts.default, color: colors.darkGrey }}>
-                {t('Distância Máxima até a Origem')}
-              </Text>
-              <Text style={{ ...texts.default, color: colors.darkGrey }}>
-                {formatDistance(maxDistanceToOrigin)}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: 4,
-              }}
-            >
-              <Text style={{ ...texts.default, color: colors.darkGrey }}>
-                {t('Porcentagem do Valor do Pedido')}
-              </Text>
-              <Text style={{ ...texts.default, color: colors.darkGrey }}>
-                {formatPct(feePctOverValue)}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: 4,
-              }}
-            >
-              <Text style={{ ...texts.default, color: colors.darkGrey }}>
-                {t('Valor Mínimo para Porcentagem')}
-              </Text>
-              <Text style={{ ...texts.default, color: colors.darkGrey }}>
-                {formatCurrency(valueThreshold)}
-              </Text>
-            </View>
-          </PaddedView>
-        </View>
+        <FleetSummary
+          minimumFee={minimumFee}
+          distanceThreshold={distanceThreshold}
+          maxDistance={maxDistance}
+          maxDistanceToOrigin={maxDistanceToOrigin}
+          feePctOverValue={feePctOverValue}
+          valueThreshold={valueThreshold}
+        />
         <PaddedView>
           {/* gains simulation should go here */}
           <DefaultButton
