@@ -8,11 +8,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
-import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import ShowIf from '../../../../../common/components/views/ShowIf';
 import { getCourier } from '../../../../../common/store/courier/selectors';
-import { fetchApprovedFleets } from '../../../../../common/store/fleet/actions';
-import { getAvailableCities, getApprovedFleets } from '../../../../../common/store/fleet/selectors';
+import { observeFleets } from '../../../../../common/store/fleet/actions';
+import { getAvailableFleets } from '../../../../../common/store/fleet/selectors';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../../common/store/user/actions';
 import { texts, screens, colors, padding, borders } from '../../../../../common/styles';
@@ -36,7 +35,7 @@ export default function ({ navigation, route }: Props) {
   // app state
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier)!;
-  const approvedFleets = useSelector(getApprovedFleets) ?? [];
+  const approvedFleets = useSelector(getAvailableFleets) ?? [];
 
   // screen state
   // const [selectedCity, setSelectedCity] = useState<City>();
@@ -44,9 +43,9 @@ export default function ({ navigation, route }: Props) {
 
   // effects
   // once
-  // fetch fleets
+  // observe fleets
   useEffect(() => {
-    dispatch(fetchApprovedFleets(api));
+    return dispatch(observeFleets(api));
   }, []);
   // when fleets are fetched
   // select courier's fleet if he has selected it already

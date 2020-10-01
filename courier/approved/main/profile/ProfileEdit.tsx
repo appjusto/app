@@ -48,8 +48,8 @@ export default function ({ navigation, route }: Props) {
   const [ddd, setDDD] = useState(courier.phone?.ddd ?? '');
   const [phoneNumber, setPhoneNumber] = useState(courier.phone?.number ?? '');
   const [cpf, setCpf] = useState(courier.cpf! ?? '');
-  const updatedCourier: CourierProfile = useMemo(
-    () => ({ ...courier, name, surname, phone: { ddd, number: phoneNumber }, cpf }),
+  const updatedCourier: Partial<CourierProfile> = useMemo(
+    () => ({ name, surname, phone: { ddd, number: phoneNumber }, cpf }),
     [name, surname, ddd, phoneNumber, cpf]
   );
   const canSubmit = useMemo(() => courierInfoSet(updatedCourier), [updatedCourier]);
@@ -67,6 +67,7 @@ export default function ({ navigation, route }: Props) {
         <ScrollView contentContainerStyle={{ flex: 1 }}>
           <DefaultInput
             title={t('Nome')}
+            placeholder={t('Digite seu nome')}
             value={name}
             returnKeyType="next"
             blurOnSubmit={false}
@@ -79,6 +80,7 @@ export default function ({ navigation, route }: Props) {
             ref={surnameRef}
             style={{ marginTop: padding }}
             title={t('Sobrenome')}
+            placeholder={t('Digite seu sobrenome')}
             value={surname}
             returnKeyType="next"
             blurOnSubmit={false}
@@ -92,7 +94,7 @@ export default function ({ navigation, route }: Props) {
             style={{ marginTop: padding }}
             title={t('CPF')}
             value={cpf}
-            placeholder={t('00000000000')}
+            placeholder={t('Seu CPF, apenas números')}
             maxLength={11}
             keyboardType="number-pad"
             returnKeyType="next"

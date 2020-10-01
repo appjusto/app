@@ -8,51 +8,26 @@ export default class FleetApi {
   ) {}
 
   // firestore
-  // fetch available cities
-  async fetchAvailableCities() {
-    const querySnapshot = await this.firestore
-      .collection('config')
-      .doc('cities')
-      .collection('available')
-      .get();
-    const docs: WithId<City>[] = [];
-    if (!querySnapshot.empty) {
-      querySnapshot.forEach((doc) => {
-        docs.push({ ...(doc.data() as City), id: doc.id });
-      });
-    }
-    return docs;
-  }
-  // fetch all cities
-  async fetchAllCities() {
-    const querySnapshot = await this.firestore
-      .collection('config')
-      .doc('cities')
-      .collection('all')
-      .get();
-    const docs: WithId<City>[] = [];
-    if (!querySnapshot.empty) {
-      querySnapshot.forEach((doc) => {
-        docs.push({ ...(doc.data() as City), id: doc.id });
-      });
-    }
-    return docs;
-  }
-
-  // fetch available fleets
-  async fetchApprovedFleets() {
-    const querySnapshot = await this.firestore
+  observeFleets(resultHandler: (orders: WithId<Fleet>[]) => void): firebase.Unsubscribe {
+    const query = this.firestore
       .collection('fleets')
       .where('situation', '==', 'approved')
-      .orderBy('participantsOnline', 'desc')
-      .get();
-    const docs: WithId<Fleet>[] = [];
-    if (!querySnapshot.empty) {
-      querySnapshot.forEach((doc) => {
-        docs.push({ ...(doc.data() as Fleet), id: doc.id });
-      });
-    }
-    return docs;
+      .orderBy('participantsOnline', 'desc');
+
+    const unsubscribe = query.onSnapshot(
+      (querySnapshot) => {
+        const docs: WithId<Fleet>[] = [];
+        querySnapshot.forEach((doc) => {
+          docs.push({ ...(doc.data() as Fleet), id: doc.id });
+        });
+        resultHandler(docs);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+    // returns the unsubscribe function
+    return unsubscribe;
   }
 
   async createFleet(fleet: Partial<Fleet>) {

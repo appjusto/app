@@ -24,6 +24,8 @@ import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
 import ShowIf from '../../../../common/components/views/ShowIf';
 import useTallerDevice from '../../../../common/hooks/useTallerDevice';
+import { observeFleets } from '../../../../common/store/fleet/actions';
+import { getAvailableFleets } from '../../../../common/store/fleet/selectors';
 import { getOrderQuotes } from '../../../../common/store/order/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { texts, colors, screens, padding, borders, halfPadding } from '../../../../common/styles';
@@ -76,9 +78,10 @@ export default function ({
 
   // app state
   const busy = useSelector(getUIBusy);
+  const availableFleets = useSelector(getAvailableFleets) ?? [];
 
-  // screen state
-  const [quotes, setQuotes] = useState<Fare[]>();
+  // state
+  const [quotes, setQuotes] = useState<Fare[]>([]);
   const [selectedFare, setSelectedFare] = useState<Fare>();
   const [platformFee, setPlatformFee] = useState(platformFeeOptions[0]);
   const canSubmit = useMemo(() => {
@@ -86,13 +89,30 @@ export default function ({
   }, [paymentMethod, selectedFare, waiting]);
 
   // side effects
+  // once
+  // observe fleets
+  useEffect(() => {
+    return dispatch(observeFleets(api));
+  }, []);
+  // whenever order changes
+  // update quotes
   useEffect(() => {
     getOrderQuotesHandler();
   }, [order]);
-
+  // whenever quotes are updated
+  // select first fare
   useEffect(() => {
-    if (!isEmpty(quotes)) setSelectedFare(quotes![0]);
+    if (!isEmpty(quotes)) {
+      setSelectedFare(quotes[0]);
+    }
   }, [quotes]);
+  const participantsOnlineByFleet: {
+    [key: string]: number;
+  } = useMemo(() => {
+    return availableFleets.reduce((acc, fleet) => {
+      return { ...acc, [fleet.id]: fleet.participantsOnline ?? 0 };
+    }, {});
+  }, [availableFleets]);
 
   // handlers
   const getOrderQuotesHandler = useCallback(async () => {
@@ -153,7 +173,7 @@ export default function ({
             >
               <Text style={{ ...texts.medium, ...texts.bold }}>{t('Escolha a frota')}</Text>
               <Text style={{ ...texts.small, color: colors.darkGrey }}>
-                {quotes?.length ?? 0} {t('frotas ativas agora')}
+                {quotes.length} {t('frotas ativas agora')}
               </Text>
             </View>
           </View>
@@ -201,7 +221,7 @@ export default function ({
                           {t('Entregadores')}
                         </Text>
                         <Text style={[texts.small, texts.bold]}>
-                          {item.fleet.participantsOnline} {t('ativos agora')}
+                          {`${participantsOnlineByFleet[item.fleet.id] ?? 0} ${t('ativos agora')}`}
                         </Text>
                         <Text style={[texts.mediumToBig, texts.bold, { marginTop: padding }]}>
                           {formatCurrency(item.total)}

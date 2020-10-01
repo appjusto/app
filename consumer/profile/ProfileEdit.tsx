@@ -45,7 +45,7 @@ export default function ({ navigation, route }: Props) {
   const [name, setName] = useState<string>(consumer.name ?? '');
   const [surname, setSurname] = useState(consumer.surname ?? '');
   const [cpf, setCpf] = useState(consumer.cpf! ?? '');
-  const updatedConsumer: ConsumerProfile = useMemo(() => ({ ...consumer, name, surname, cpf }), [
+  const updatedConsumer: Partial<ConsumerProfile> = useMemo(() => ({ name, surname, cpf }), [
     name,
     surname,
     cpf,
@@ -65,6 +65,7 @@ export default function ({ navigation, route }: Props) {
         <ScrollView contentContainerStyle={{ flex: 1 }}>
           <DefaultInput
             title={t('Nome')}
+            placeholder={t('Digite seu nome')}
             value={name}
             returnKeyType="next"
             blurOnSubmit={false}
@@ -77,6 +78,7 @@ export default function ({ navigation, route }: Props) {
             ref={surnameRef}
             style={{ marginTop: padding }}
             title={t('Sobrenome')}
+            placeholder={t('Digite seu sobrenome')}
             value={surname}
             returnKeyType="next"
             blurOnSubmit={false}
@@ -89,8 +91,8 @@ export default function ({ navigation, route }: Props) {
             ref={cpfRef}
             style={{ marginTop: padding }}
             title={t('CPF')}
+            placeholder={t('Seu CPF, apenas números')}
             value={cpf}
-            placeholder={t('00000000000')}
             maxLength={11}
             keyboardType="number-pad" // are we going to use "-" and "."?
             returnKeyType="done"

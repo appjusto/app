@@ -53,6 +53,11 @@ export default function ({ navigation }: Props) {
           onPress={() => navigation.navigate('ProfileEdit')}
         />
         <ConfigItem
+          title={t('Dados da sua empresa')}
+          subtitle={t('Preencha os dados da sua empresa ou MEI')}
+          onPress={() => navigation.navigate('ProfileCompany')}
+        />
+        <ConfigItem
           title={t('Fotos e documentos')}
           subtitle={t('Edite sua selfie e documentos enviados')}
           onPress={() => navigation.navigate('ProfilePhotos')}

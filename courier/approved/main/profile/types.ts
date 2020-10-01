@@ -3,6 +3,7 @@ import { ProfileEraseParamList } from '../../../../common/screens/profile/Profil
 export type CourierProfileParamList = {
   Profile: undefined;
   ProfileEdit: undefined;
+  ProfileCompany: undefined;
   ProfilePhotos: undefined;
   Terms: undefined;
   Bank: undefined;

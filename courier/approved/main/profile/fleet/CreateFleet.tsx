@@ -89,6 +89,7 @@ export default function ({ navigation, route }: Props) {
         feePctOverValue,
         situation: 'approved',
         createdBy: courier.id,
+        participantsOnline: 0,
       })
     );
     navigation.goBack();

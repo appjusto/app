@@ -6,6 +6,7 @@ import ProfileErase from '../../../../common/screens/profile/ProfileErase';
 import Terms from '../../../../common/screens/unlogged/Terms';
 import { t } from '../../../../strings';
 import Profile from './Profile';
+import ProfileCompany from './ProfileCompany';
 import ProfileEdit from './ProfileEdit';
 import BankNavigator from './bank/BankNavigator';
 import FleetNavigator from './fleet/FleetNavigator';
@@ -27,6 +28,11 @@ export default function () {
         name="ProfileEdit"
         component={ProfileEdit}
         options={{ title: t('Dados pessoais') }}
+      />
+      <Stack.Screen
+        name="ProfileCompany"
+        component={ProfileCompany}
+        options={{ title: t('Dados da empresa') }}
       />
       <Stack.Screen
         name="ProfilePhotos"
