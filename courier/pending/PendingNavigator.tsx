@@ -2,7 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
 import ArrowBox from '../../common/components/views/ArrowBox';
-import ProfileEdit from '../../common/screens/profile/ProfileEdit';
+import ProfileEdit from '../../consumer/profile/ProfileEdit';
 import { t } from '../../strings';
 import BankNavigator from '../approved/main/profile/bank/BankNavigator';
 import FleetNavigator from '../approved/main/profile/fleet/FleetNavigator';

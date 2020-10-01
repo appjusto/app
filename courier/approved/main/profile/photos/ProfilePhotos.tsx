@@ -26,7 +26,7 @@ import { getCourier } from '../../../../../common/store/courier/selectors';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { colors, texts, screens, padding } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
-import { ProfileParamList } from '../types';
+import { CourierProfileParamList } from '../types';
 import DocumentButton from './DocumentButton';
 
 const defaultImageOptions: ImagePicker.ImagePickerOptions = {
@@ -44,8 +44,8 @@ enum UploadStatus {
   Done,
 }
 
-type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfilePhotos'>;
-type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfilePhotos'>;
+type ScreenNavigationProp = StackNavigationProp<CourierProfileParamList, 'ProfilePhotos'>;
+type ScreenRouteProp = RouteProp<CourierProfileParamList, 'ProfilePhotos'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

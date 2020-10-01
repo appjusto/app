@@ -1,8 +1,8 @@
-import { ProfileEditParamList } from '../../../../common/screens/profile/ProfileEdit';
 import { ProfileEraseParamList } from '../../../../common/screens/profile/ProfileErase';
 
-export type ProfileParamList = {
+export type CourierProfileParamList = {
   Profile: undefined;
+  ProfileEdit: undefined;
   ProfilePhotos: undefined;
   Terms: undefined;
   Bank: undefined;
@@ -11,5 +11,4 @@ export type ProfileParamList = {
     title: string;
     subtitle: string;
   };
-} & ProfileEditParamList &
-  ProfileEraseParamList;
+} & ProfileEraseParamList;

@@ -1,4 +1,5 @@
 import { CourierProfile } from 'appjusto-types';
+import { validate } from 'gerador-validador-cpf';
 import { isEmpty } from 'lodash';
 
 export const courierInfoSet = (courier: CourierProfile | undefined): boolean => {
@@ -7,6 +8,7 @@ export const courierInfoSet = (courier: CourierProfile | undefined): boolean => 
     !isEmpty(courier.name) &&
     !isEmpty(courier.surname) &&
     !isEmpty(courier.cpf) &&
+    validate(courier.cpf!) &&
     !isEmpty(courier.phone?.ddd) &&
     !isEmpty(courier.phone?.number)
   );
