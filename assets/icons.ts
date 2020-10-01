@@ -8,6 +8,7 @@ const iconCheckboxActive = require('./icons/checkbox-active.png');
 const iconCheckboxInactive = require('./icons/checkbox-inactive.png');
 const iconChecklistTick = require('./icons/checklist-tick.png');
 const dragButton = require('./icons/drag-button.png');
+const iconRectangle = require('./icons/green-rectangle.png');
 const iconHome = require('./icons/home.png');
 const iconButtonArrow = require('./icons/icon-button-arrow.png');
 const iconCalendar = require('./icons/icon-calendar.png');
@@ -26,17 +27,18 @@ const iconRequests = require('./icons/icon-requests.png');
 const iconSelfie = require('./icons/icon-selfie.png');
 const iconTransitConclusion = require('./icons/icon-transit-conclusion.png');
 const iconTransit = require('./icons/icon-transit.png');
+const iconBikeSmall = require('./icons/iconBikeSmall.png');
+const iconCarSmall = require('./icons/iconCarSmall.png');
+const iconMotocycleSmall = require('./icons/iconMotocycleSmall.png');
+const iconOnFootSmall = require('./icons/iconOnFootSmall.png');
+const iconScooterSmall = require('./icons/iconScooterSmall.png');
 const iconIllustration = require('./icons/illustration-intro-screen.png');
 const iconIllustrationPizza = require('./icons/illustration-pizza.png');
 const logoAppjustoBgWhite = require('./icons/logo-appjusto-bg-white.png');
+const iconMinus = require('./icons/minus.png');
 const iconOrders = require('./icons/orders.png');
-const iconRectangle = require('./icons/green-rectangle.png');
+const iconPlus = require('./icons/plus.png');
 const iconUser = require('./icons/user.png');
-const iconBikeSmall = require('./icons/iconBikeSmall.png');
-const iconMotocycleSmall = require('./icons/iconMotocycleSmall.png');
-const iconScooterSmall = require('./icons/iconScooterSmall.png');
-const iconCarSmall = require('./icons/iconCarSmall.png');
-const iconOnFootSmall = require('./icons/iconOnFootSmall.png');
 
 export const accept = acceptIcon;
 export const arrow = arrowSmall;
@@ -77,6 +79,8 @@ export const motoSmall = iconMotocycleSmall;
 export const scooterSmall = iconScooterSmall;
 export const carSmall = iconCarSmall;
 export const onFootSmall = iconOnFootSmall;
+export const minus = iconMinus;
+export const plus = iconPlus;
 
 export default [
   accept,
@@ -118,4 +122,6 @@ export default [
   scooterSmall,
   carSmall,
   onFootSmall,
+  minus,
+  plus,
 ];

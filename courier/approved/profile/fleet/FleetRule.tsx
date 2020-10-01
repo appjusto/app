@@ -1,16 +1,20 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import * as icons from '../../../../assets/icons';
 import RoundedText from '../../../../common/components/texts/RoundedText';
-import { colors, padding, texts } from '../../../../common/styles';
+import { borders, colors, padding, texts } from '../../../../common/styles';
 
 type Props = {
   title: string;
-  formattedValue: string;
+  value: string;
   description: string;
+  onIncrease: () => void;
+  onDecrease: () => void;
 };
 
-export default function ({ title, formattedValue, description }: Props) {
+export default function ({ title, value, description, onIncrease, onDecrease }: Props) {
   return (
     <View>
       <View
@@ -23,9 +27,42 @@ export default function ({ title, formattedValue, description }: Props) {
         }}
       >
         <Text style={{ ...texts.medium }}>{title}</Text>
-        <RoundedText>{formattedValue}</RoundedText>
+        <RoundedText>{value}</RoundedText>
       </View>
       <Text style={{ ...texts.default, color: colors.darkGrey }}>{description}</Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+        <TouchableOpacity onPress={onDecrease}>
+          <View
+            style={{
+              ...borders.default,
+              width: 48,
+              height: 48,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: colors.white,
+              borderColor: colors.black,
+            }}
+          >
+            <Image source={icons.minus} />
+          </View>
+        </TouchableOpacity>
+        <Text style={{ ...texts.medium, marginHorizontal: 16 }}>{value}</Text>
+        <TouchableOpacity onPress={onIncrease}>
+          <View
+            style={{
+              ...borders.default,
+              width: 48,
+              height: 48,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: colors.white,
+              borderColor: colors.black,
+            }}
+          >
+            <Image source={icons.plus} />
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
