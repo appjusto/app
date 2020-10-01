@@ -12,6 +12,7 @@ import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import RoundedText from '../../../../common/components/texts/RoundedText';
+import HR from '../../../../common/components/views/HR';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { createFleet } from '../../../../common/store/fleet/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
@@ -20,6 +21,7 @@ import { formatCurrency, formatDistance, formatPct } from '../../../../common/ut
 import { t } from '../../../../strings';
 import FleetRule from './FleetRule';
 import FleetSummary from './FleetSummary';
+import GainSimulator from './GainSimulator';
 import { FleetParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<FleetParamList, 'CreateFleet'>;
@@ -243,16 +245,19 @@ export default function ({ navigation, route }: Props) {
           feePctOverValue={feePctOverValue}
           valueThreshold={valueThreshold}
         />
-        <PaddedView>
-          {/* gains simulation should go here */}
-          <DefaultButton
-            style={{ marginTop: padding * 2 }}
-            title={t('Confirmar')}
-            onPress={createFleetHandler}
-            disabled={!canSubmit || busy}
-            activityIndicator={busy}
-          />
-        </PaddedView>
+        <View>
+          <HR height={padding / 4} />
+          <GainSimulator />
+          <PaddedView>
+            <DefaultButton
+              style={{ marginTop: padding * 2 }}
+              title={t('Confirmar criação da frota')}
+              onPress={createFleetHandler}
+              disabled={!canSubmit || busy}
+              activityIndicator={busy}
+            />
+          </PaddedView>
+        </View>
       </View>
     </ScrollView>
   );

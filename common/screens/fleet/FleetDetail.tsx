@@ -5,6 +5,7 @@ import { ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { HomeNavigatorParamList } from '../../../consumer/home/types';
+import GainSimulator from '../../../courier/approved/profile/fleet/GainSimulator';
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import DefaultButton from '../../components/buttons/DefaultButton';
@@ -135,11 +136,13 @@ export default function ({ navigation, route }: Props) {
               'Distância máxima em km da posição atual até a origem do pedido que essa frota poderá percorrer. Pedidos recebidos com origem acima não serão exibidos.'
             )}
           </Text>
-          {/* gain simulation will go here */}
+        </PaddedView>
+        <GainSimulator />
+        <PaddedView>
           <DefaultButton
             title={t('Escolher essa frota')}
             onPress={confirmFleet}
-            style={{ marginTop: 32 }}
+            style={{ marginTop: 16 }}
             activityIndicator={busy}
           />
         </PaddedView>
