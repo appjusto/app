@@ -137,7 +137,7 @@ export default function ({ navigation, route }: Props) {
             )}
           </Text>
         </PaddedView>
-        <GainSimulator />
+        <GainSimulator fee={fleet.minimumFee} distance={fleet.distanceThreshold} />
         <PaddedView>
           <DefaultButton
             title={t('Escolher essa frota')}
