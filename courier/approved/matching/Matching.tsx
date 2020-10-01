@@ -1,4 +1,4 @@
-import { RouteProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect, useContext, useCallback } from 'react';
 import { Text, View, Image } from 'react-native';
@@ -12,10 +12,14 @@ import { getUIBusy } from '../../../common/store/ui/selectors';
 import { texts, screens, colors, padding } from '../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
+import { ApprovedParamList } from '../types';
 import AcceptControl from './AcceptControl';
 import { MatchingParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<MatchingParamList, 'Matching'>;
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<MatchingParamList, 'Matching'>,
+  StackNavigationProp<ApprovedParamList, 'MatchingNavigator'>
+>;
 type ScreenRouteProp = RouteProp<MatchingParamList, 'Matching'>;
 
 type Props = {
@@ -37,14 +41,19 @@ export default function ({ navigation, route }: Props) {
     try {
       // TODO: show feedback
       await dispatch(matchOrder(api)(matchRequest.orderId));
+      navigation.replace('OngoingNavigator', {
+        screen: 'OngoingDelivery',
+        params: {
+          orderId: matchRequest.orderId,
+        },
+      });
     } catch (error) {
-      navigation.navigate('MatchingError');
+      navigation.replace('MatchingError');
     }
-    // TODO: if successful, go to Delivering screen
   }, [matchRequest]);
 
   const rejectHandler = useCallback(() => {
-    navigation.navigate('MatchingRefused');
+    navigation.replace('MatchingRefused');
   }, [matchRequest]);
 
   // side effects

@@ -42,7 +42,7 @@ export default function ({ navigation, route }: Props) {
   // effects
   useEffect(() => {
     if (order.status === 'delivered') {
-      navigation.navigate('DeliveryCompleted', { orderId, fee: order.fare!.courierFee });
+      navigation.replace('DeliveryCompleted', { orderId, fee: order.fare!.courierFee });
     }
   }, [order]);
 

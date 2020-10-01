@@ -4,9 +4,9 @@ import React from 'react';
 import ArrowBox from '../../../../common/components/views/ArrowBox';
 import { getMonthName } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
-import DeliverySummary from '../../ongoing/OngoingDelivery';
 import DeliveryHistory from './DeliveryHistory';
 import DeliveryHistoryByMonth from './DeliveryHistoryByMonth';
+import DeliverySummary from './DeliverySummary';
 import { DeliveriesNavigatorParamList } from './types';
 
 const Stack = createStackNavigator<DeliveriesNavigatorParamList>();
