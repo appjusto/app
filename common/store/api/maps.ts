@@ -30,7 +30,7 @@ export default class MapsApi {
   async googlePlacesAutocomplete(
     input: string,
     sessionToken: string,
-    cancelToken: CancelToken
+    cancelToken?: CancelToken
   ): Promise<AutoCompleteResult[] | null> {
     // TODO: location & radius?
     const url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';

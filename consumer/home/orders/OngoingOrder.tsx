@@ -96,7 +96,7 @@ export default function ({ navigation, route }: Props) {
       };
     }
     return { courierWaiting, addressLabel, address, dispatchDetails };
-  }, [dispatchingState]);
+  }, [order, dispatchingState]);
   return (
     <View style={{ ...screens.default }}>
       <View style={{ flex: 1 }}>

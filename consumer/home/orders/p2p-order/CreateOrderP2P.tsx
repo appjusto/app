@@ -1,13 +1,12 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Place, Order, WithId, Fleet } from 'appjusto-types';
-import { isEmpty } from 'lodash';
 import React, { useState, useContext, useEffect, useCallback } from 'react';
 import { View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { AppDispatch, ApiContext } from '../../../../common/app/context';
-import { getConsumer, getCardById } from '../../../../common/store/consumer/selectors';
+import { getConsumer, getPaymentMethodById } from '../../../../common/store/consumer/selectors';
 import { createOrder, confirmOrder, deleteOrder } from '../../../../common/store/order/actions';
 import { getOrderById } from '../../../../common/store/order/selectors';
 import { placeValid, sameAdddress } from '../../../../common/store/order/validators';
@@ -33,25 +32,27 @@ export default function ({ navigation, route }: Props) {
   // app state
   const consumer = useSelector(getConsumer)!;
   const getOrder = useSelector(getOrderById);
-  const cardById = useSelector(getCardById);
-  const lastCardId = consumer?.lastCardId;
-  const lastCard = !isEmpty(lastCardId) ? cardById(lastCardId!) : undefined;
+  const paymentMethodById = useSelector(getPaymentMethodById);
+  const lastPaymentMethod = paymentMethodById(
+    consumer.paymentChannel?.mostRecentPaymentMethodId ?? ''
+  );
 
   // screen state
   const [origin, setOrigin] = useState<Partial<Place>>({});
   const [destination, setDestination] = useState<Partial<Place>>({});
   const [order, setOrder] = useState<WithId<Order>>();
-  const [card, setCard] = useState(lastCard);
+  const [paymentMethod, setPaymentMethod] = useState(lastPaymentMethod);
 
   // side effects
   // route changes when interacting with other screens;
   useEffect(() => {
-    const { orderId, origin: newOrigin, destination: newDestination, cardId } = route.params ?? {};
+    const { orderId, origin: newOrigin, destination: newDestination, paymentMethodId } =
+      route.params ?? {};
     // navigation.setParams({});
     if (orderId) setOrder(getOrder(orderId)); // from 'OrderHistory'
     if (newOrigin) setOrigin({ ...origin, address: newOrigin }); // from 'AddressComplete'
     if (newDestination) setDestination({ ...destination, address: newDestination }); // from 'AddressComplete'
-    if (cardId) setCard(cardById(cardId)); // from 'PaymentSelector'
+    if (paymentMethodId) setPaymentMethod(paymentMethodById(paymentMethodId)); // from 'PaymentSelector'
   }, [route.params]);
 
   // whenever order changes
@@ -107,7 +108,7 @@ export default function ({ navigation, route }: Props) {
   // navigate to ProfileEdit screen to allow user fill missing information
   const navigateToFillPaymentInfo = () => {
     // if user has no payment method, go direct to 'AddCard' screen
-    if (!card) navigation.navigate('ProfileAddCard', { returnScreen: 'CreateOrderP2P' });
+    if (!paymentMethod) navigation.navigate('ProfileAddCard', { returnScreen: 'CreateOrderP2P' });
     else navigation.navigate('ProfilePaymentMethods', { returnScreen: 'CreateOrderP2P' });
   };
   const navigateFleetDetail = useCallback((fleet: Fleet) => {
@@ -119,7 +120,7 @@ export default function ({ navigation, route }: Props) {
     try {
       const orderId = order.id;
       const result = await dispatch(
-        confirmOrder(api)(orderId, origin, destination, card!.id, fleetId, platformFee)
+        confirmOrder(api)(orderId, origin, destination, paymentMethod!.id, fleetId, platformFee)
       );
       console.log(result);
       navigation.replace('OrderConfirmedFeedback', { orderId });
@@ -136,7 +137,7 @@ export default function ({ navigation, route }: Props) {
         origin={origin}
         destination={destination}
         order={order}
-        card={card}
+        paymentMethod={paymentMethod}
         updateOrigin={(value) => setOrigin(value)}
         updateDestination={(value) => setDestination(value)}
         navigateToAddressComplete={navigateToAddressComplete}

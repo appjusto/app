@@ -1,25 +1,10 @@
-import { OrderMatchPushMessageData } from 'appjusto-types';
-
-import { ChatParamList } from '../../common/screens/Chat';
+import { NestedNavigatorParams } from '../../common/types';
+import { MainParamList } from './main/types';
+import { MatchingParamList } from './matching/types';
+import { OngoingParamList } from './ongoing/types';
 
 export type ApprovedParamList = {
-  Main: undefined;
-  Matching: {
-    matchRequest: OrderMatchPushMessageData;
-  };
-  MatchingFeedback: undefined;
-  OngoingDelivery: {
-    orderId: string;
-    newMessage?: boolean;
-  };
-  OrderCompleted: {
-    orderId: string;
-    fee: number;
-  };
-} & ChatParamList;
-
-export type MainParamList = {
-  Home: undefined;
-  Deliveries: undefined;
-  Profile: undefined;
+  MainNavigator: NestedNavigatorParams<MainParamList>;
+  MatchingNavigator: NestedNavigatorParams<MatchingParamList>;
+  OngoingNavigator: NestedNavigatorParams<OngoingParamList>;
 };

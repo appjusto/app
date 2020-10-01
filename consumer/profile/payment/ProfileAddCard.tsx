@@ -1,18 +1,20 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { validate } from 'gerador-validador-cpf';
-import { trim } from 'lodash';
-import React, { useState, useRef, useContext } from 'react';
+import { isEmpty, toNumber, trim } from 'lodash';
+import React, { useState, useRef, useContext, useMemo } from 'react';
 import { ScrollView, View, TextInput } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import AvoidingView from '../../../common/components/containers/AvoidingView';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
+import useAxiosCancelToken from '../../../common/hooks/useAxiosCancelToken';
 import { saveCard } from '../../../common/store/consumer/actions';
 import { showToast } from '../../../common/store/ui/actions';
+import { getUIBusy } from '../../../common/store/ui/selectors';
 import { screens, padding } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ProfileParamList } from '../types';
@@ -30,47 +32,61 @@ export default function ({ navigation, route }: Props) {
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   const { returnScreen } = route.params ?? {};
+  const createCancelToken = useAxiosCancelToken();
 
   // refs
   const expirationMonthRef = useRef<TextInput>(null);
   const expirationYearRef = useRef<TextInput>(null);
   const cvvRef = useRef<TextInput>(null);
   const nameRef = useRef<TextInput>(null);
+  const surnameRef = useRef<TextInput>(null);
   const cpfRef = useRef<TextInput>(null);
+
+  // app state
+  const busy = useSelector(getUIBusy);
 
   // state
   const [number, setNumber] = useState('');
-  const [expirationMonth, setExpirationMonth] = useState('');
-  const [expirationYear, setExpirationYear] = useState('');
+  const [month, setMonth] = useState('');
+  const [year, setYear] = useState('');
   const [cvv, setCVV] = useState('');
   const [name, setName] = useState('');
+  const [surname, setSurname] = useState('');
   const [cpf, setCPF] = useState('');
-  const [updating, setUpdating] = useState(false);
+  const canSubmit = useMemo(() => {
+    return (
+      !isEmpty(number) &&
+      !isEmpty(month) &&
+      !isEmpty(year) &&
+      !isEmpty(cvv) &&
+      !isEmpty(name) &&
+      !isEmpty(surname) &&
+      validate(cpf)
+    );
+  }, [number, month, year, cvv, name, surname, cpf]);
 
   // handlers
   const saveCardHandler = async () => {
-    if (updating) return;
-    // TODO: validate all card information
-    if (!validate(cpf)) {
-      dispatch(showToast(t('CPF não é válido.')));
-      return;
-    }
-    setUpdating(true);
     try {
-      const cardResult = await saveCard(api)({
-        number,
-        expirationMonth,
-        expirationYear,
-        cvv,
-        holderName: name,
-        holderDocument: cpf,
-      });
-      if (returnScreen) navigation.navigate(returnScreen, { cardId: cardResult.id });
+      const result = await dispatch(
+        saveCard(api)(
+          {
+            number,
+            month,
+            year,
+            verification_value: cvv,
+            first_name: trim(name),
+            last_name: trim(surname),
+          },
+          createCancelToken()
+        )
+      );
+      if (returnScreen)
+        navigation.navigate(returnScreen, { paymentMethodId: result.paymentMethodId });
       else navigation.pop();
     } catch (error) {
       dispatch(showToast(error.toString()));
     }
-    setUpdating(false);
   };
 
   // UI
@@ -83,11 +99,16 @@ export default function ({ navigation, route }: Props) {
               style={{ flex: 1 }}
               title={t('Número do cartão')}
               value={number}
-              placeholder={t('0000 0000 0000 0000')}
+              placeholder={t('0000000000000000')}
+              maxLength={19}
               keyboardType="number-pad"
+              textContentType="creditCardNumber"
+              autoCompleteType="cc-number"
               returnKeyType="next"
               blurOnSubmit={false}
-              onChangeText={(text) => setNumber(trim(text))}
+              onChangeText={(text) => {
+                if (!isNaN(toNumber(text))) setNumber(text);
+              }}
               onSubmitEditing={() => expirationMonthRef.current?.focus()}
             />
           </View>
@@ -96,26 +117,32 @@ export default function ({ navigation, route }: Props) {
               ref={expirationMonthRef}
               style={{ flex: 2, marginRight: padding }}
               title={t('Mês de validade')}
-              value={expirationMonth}
+              value={month}
               placeholder={t('00')}
               maxLength={2}
               keyboardType="number-pad"
               returnKeyType="next"
+              autoCompleteType="cc-exp-month"
               blurOnSubmit={false}
-              onChangeText={(text) => setExpirationMonth(trim(text))}
+              onChangeText={(text) => {
+                if (!isNaN(toNumber(text))) setMonth(text);
+              }}
               onSubmitEditing={() => expirationYearRef.current?.focus()}
             />
             <DefaultInput
               ref={expirationYearRef}
               style={{ flex: 2, marginRight: padding }}
               title={t('Ano de validade')}
-              value={expirationYear}
-              placeholder={t('00')}
-              maxLength={2}
+              value={year}
+              placeholder={t('0000')}
+              maxLength={4}
               keyboardType="number-pad"
               returnKeyType="next"
+              autoCompleteType="cc-exp-year"
               blurOnSubmit={false}
-              onChangeText={(text) => setExpirationYear(trim(text))}
+              onChangeText={(text) => {
+                if (!isNaN(toNumber(text))) setYear(text);
+              }}
               onSubmitEditing={() => cvvRef.current?.focus()}
             />
             <DefaultInput
@@ -127,24 +154,44 @@ export default function ({ navigation, route }: Props) {
               maxLength={4}
               keyboardType="number-pad"
               returnKeyType="next"
+              autoCompleteType="cc-csc"
               blurOnSubmit={false}
-              onChangeText={(text) => setCVV(trim(text))}
+              onChangeText={(text) => {
+                if (!isNaN(toNumber(text))) setCVV(text);
+              }}
               onSubmitEditing={() => nameRef.current?.focus()}
             />
           </View>
-          <DefaultInput
-            ref={nameRef}
-            style={{ marginTop: 12 }}
-            title={t('Nome do titular')}
-            value={name}
-            placeholder={t('Nome impresso no cartão')}
-            keyboardType="name-phone-pad"
-            returnKeyType="next"
-            autoCapitalize="characters"
-            blurOnSubmit={false}
-            onChangeText={(text) => setName(text)}
-            onSubmitEditing={() => cpfRef.current?.focus()}
-          />
+          <View style={{ flexDirection: 'row', marginTop: padding }}>
+            <DefaultInput
+              ref={nameRef}
+              style={{ flex: 1, marginRight: padding }}
+              title={t('Nome ')}
+              value={name}
+              placeholder={t('Conforme cartão')}
+              keyboardType="name-phone-pad"
+              returnKeyType="next"
+              textContentType="givenName"
+              autoCompleteType="name"
+              blurOnSubmit={false}
+              onChangeText={(text) => setName(text.toUpperCase())}
+              onSubmitEditing={() => surnameRef.current?.focus()}
+            />
+            <DefaultInput
+              ref={surnameRef}
+              style={{ flex: 1 }}
+              title={t('Sobrenome')}
+              value={surname}
+              placeholder={t('Conforme cartão')}
+              keyboardType="name-phone-pad"
+              textContentType="familyName"
+              autoCompleteType="name"
+              returnKeyType="next"
+              blurOnSubmit={false}
+              onChangeText={(text) => setSurname(text.toUpperCase())}
+              onSubmitEditing={() => cpfRef.current?.focus()}
+            />
+          </View>
           <DefaultInput
             ref={cpfRef}
             style={{ marginTop: padding }}
@@ -152,17 +199,20 @@ export default function ({ navigation, route }: Props) {
             value={cpf}
             placeholder={t('00000000000')}
             maxLength={11}
-            onChangeText={(text) => setCPF(trim(text))}
             keyboardType="number-pad"
             returnKeyType="done"
             blurOnSubmit
+            onChangeText={(text) => {
+              if (!isNaN(toNumber(text))) setCPF(text);
+            }}
           />
           <View style={{ flex: 1 }} />
           <DefaultButton
             style={{ marginTop: padding }}
             title={t('Salvar')}
             onPress={saveCardHandler}
-            activityIndicator={updating}
+            disabled={!canSubmit || busy}
+            activityIndicator={busy}
           />
         </AvoidingView>
       </ScrollView>

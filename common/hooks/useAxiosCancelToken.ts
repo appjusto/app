@@ -1,15 +1,19 @@
-import axios from 'axios';
+import axios, { CancelTokenSource } from 'axios';
 import { useEffect, useState } from 'react';
 
 export default function () {
   // state
-  const [cancelTokenSource] = useState(axios.CancelToken.source());
+  const [tokensSources, setTokenSources] = useState<CancelTokenSource[]>([]);
   // effects
   useEffect(() => {
     return () => {
-      cancelTokenSource.cancel();
+      tokensSources.forEach((tokensSources) => tokensSources.cancel());
     };
-  }, []);
+  }, [tokensSources]);
   // returns
-  return cancelTokenSource.token;
+  return () => {
+    const tokenSource = axios.CancelToken.source();
+    setTokenSources([...tokensSources, tokenSource]);
+    return tokenSource.token;
+  };
 }

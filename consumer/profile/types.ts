@@ -11,7 +11,7 @@ export type ProfileParamList = {
   };
   Terms: undefined;
   CreateOrderP2P: {
-    cardId: string;
+    paymentMethodId: string;
   };
 } & ProfileEditParamList &
   ProfileEraseParamList;

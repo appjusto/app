@@ -14,6 +14,7 @@ const {
   SEGMENT_IOS_KEY,
   SENTRY_DSN,
   SENTRY_AUTH_TOKEN,
+  IUGU_ACCOUNT_ID,
 } = process.env;
 
 export default () => {
@@ -125,6 +126,9 @@ export default () => {
           segmentAndroidKey: SEGMENT_ANDROID_KEY,
           segmentiOSKey: SEGMENT_IOS_KEY,
           sentryDNS: SENTRY_DSN,
+        },
+        iugu: {
+          accountId: IUGU_ACCOUNT_ID,
         },
       },
     },

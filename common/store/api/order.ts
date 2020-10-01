@@ -26,7 +26,7 @@ export default class OrderApi {
     orderId: string,
     origin: Partial<Place>,
     destination: Partial<Place>,
-    cardId: string,
+    paymentMethodId: string,
     fleetId: string,
     platformFee: number
   ) {
@@ -34,7 +34,7 @@ export default class OrderApi {
       orderId,
       origin,
       destination,
-      cardId,
+      paymentMethodId,
       fleetId,
       platformFee,
     });

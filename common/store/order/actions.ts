@@ -3,9 +3,7 @@ import { CancelToken } from 'axios';
 
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
-import { AutoCompleteResult } from '../api/maps';
 import { ObserveOrdersOptions } from '../api/order';
-import { Flavor } from '../config/types';
 import { BUSY, awaitWithFeedback } from '../ui/actions';
 
 export const ORDERS_UPDATED = 'ORDERS_UPDATED';
@@ -15,12 +13,11 @@ export const ORDER_CHAT_UPDATED = 'ORDER_CHAT_UPDATED';
 export const getAddressAutocomplete = (api: Api) => (
   input: string,
   sessionToken: string,
-  cancelToken: CancelToken
-) => async (dispatch: AppDispatch): Promise<AutoCompleteResult[] | null> => {
-  dispatch({ type: BUSY, payload: true });
-  const result = await api.maps().googlePlacesAutocomplete(input, sessionToken, cancelToken);
-  dispatch({ type: BUSY, payload: false });
-  return result;
+  cancelToken?: CancelToken
+) => async (dispatch: AppDispatch) => {
+  return dispatch(
+    awaitWithFeedback(api.maps().googlePlacesAutocomplete(input, sessionToken, cancelToken))
+  );
 };
 
 export const createOrder = (api: Api) => (
@@ -38,13 +35,13 @@ export const confirmOrder = (api: Api) => (
   orderId: string,
   origin: Partial<Place>,
   destination: Partial<Place>,
-  cardId: string,
+  paymentMethodId: string,
   fleetId: string,
   platformFee: number
 ) => (dispatch: AppDispatch) => {
   return dispatch(
     awaitWithFeedback(
-      api.order().confirmOrder(orderId, origin, destination, cardId, fleetId, platformFee)
+      api.order().confirmOrder(orderId, origin, destination, paymentMethodId, fleetId, platformFee)
     )
   );
 };

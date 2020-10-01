@@ -1,21 +1,16 @@
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
-import { BUSY } from '../ui/actions';
+import { awaitWithFeedback } from '../ui/actions';
 
 export const UPDATE_BANKS = 'UPDATE_BANKS';
 
 export const submitProfile = (api: Api) => async (dispatch: AppDispatch) => {
-  dispatch({ type: BUSY, payload: true });
-  const result = await api.courier().submitProfile();
-  dispatch({ type: BUSY, payload: false });
-  return result;
+  return dispatch(awaitWithFeedback(api.courier().submitProfile()));
 };
 
 export const fetchBanks = (api: Api) => async (dispatch: AppDispatch) => {
-  dispatch({ type: BUSY, payload: true });
-  const banks = await api.courier().fetchBanks();
+  const banks = await dispatch(awaitWithFeedback(api.courier().fetchBanks()));
   dispatch({ type: UPDATE_BANKS, payload: banks });
-  dispatch({ type: BUSY, payload: false });
 };
 
 export const uploadSelfie = (api: Api) => (

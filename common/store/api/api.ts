@@ -13,6 +13,7 @@ import FilesApi from './files';
 import FleetApi from './fleet';
 import MapsApi from './maps';
 import OrderApi from './order';
+import IuguApi from './payment/iugu';
 import ProfileApi from './profile';
 
 export default class Api {
@@ -29,6 +30,7 @@ export default class Api {
   private _order: OrderApi;
   private _maps: MapsApi;
   private _files: FilesApi;
+  private _iugu: IuguApi;
 
   constructor(extra: Extra) {
     const apiKey = Platform.select(extra.googleApiKeys);
@@ -49,11 +51,12 @@ export default class Api {
 
     const collectionName = extra.flavor === 'consumer' ? 'consumers' : 'couriers';
 
+    this._iugu = new IuguApi(extra.iugu.accountId);
     this._auth = new AuthApi(this.authentication, this.functions, extra);
     this._profile = new ProfileApi(this.firestore, this.functions, collectionName);
     this._courier = new CourierApi(this.firestore, this.functions);
     this._fleet = new FleetApi(this.firestore, this.functions);
-    this._consumer = new ConsumerApi(this.firestore, this.functions);
+    this._consumer = new ConsumerApi(this.firestore, this.functions, this._iugu);
     this._order = new OrderApi(this.firestore, this.functions);
     this._maps = new MapsApi(apiKey!);
     this._files = new FilesApi(this.storage);

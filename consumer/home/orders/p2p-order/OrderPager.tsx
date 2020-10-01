@@ -1,11 +1,11 @@
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
-import { Card, Place, Order, WithId, Fleet } from 'appjusto-types';
+import { Place, Order, WithId, Fleet } from 'appjusto-types';
+import { IuguCustomerPaymentMethod } from 'appjusto-types/payment/iugu';
 import React, { useRef, useState } from 'react';
 import { View, NativeSyntheticEvent } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
@@ -22,7 +22,7 @@ type Props = {
   origin: Partial<Place>;
   destination: Partial<Place>;
   order?: WithId<Order>;
-  card?: Card;
+  paymentMethod?: IuguCustomerPaymentMethod;
   updateOrigin: (value: Partial<Place>) => void;
   updateDestination: (value: Partial<Place>) => void;
   navigateToAddressComplete: (value: string, returnParam: string) => void;
@@ -35,7 +35,7 @@ export default function ({
   origin,
   destination,
   order,
-  card,
+  paymentMethod,
   updateOrigin,
   updateDestination,
   navigateToAddressComplete,
@@ -43,9 +43,6 @@ export default function ({
   navigateFleetDetail,
   confirmOrder,
 }: Props) {
-  // context
-  const dispatch = useDispatch<AppDispatch>();
-
   // refs
   const viewPager = useRef<ViewPager>(null);
 
@@ -60,7 +57,7 @@ export default function ({
     if (value === Steps.Origin) return true; // always enabled
     if (value === Steps.Destination) return placeValid(origin); // only if origin is known
     if (value === Steps.Confirmation) return placeValid(destination) && !!order; // only if order has been created
-    if (value === Steps.ConfirmingOrder) return !!card;
+    if (value === Steps.ConfirmingOrder) return !!paymentMethod;
     return false; // should never happen
   };
 
@@ -187,7 +184,7 @@ export default function ({
             origin={origin}
             destination={destination}
             order={order}
-            card={card}
+            paymentMethod={paymentMethod}
             waiting={busy}
             editStepHandler={setPage}
             confirmOrder={confirmOrder}
