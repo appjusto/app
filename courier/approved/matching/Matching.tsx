@@ -12,11 +12,11 @@ import { getUIBusy } from '../../../common/store/ui/selectors';
 import { texts, screens, colors, padding } from '../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
-import { ApprovedParamList } from '../types';
 import AcceptControl from './AcceptControl';
+import { MatchingParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<ApprovedParamList, 'Matching'>;
-type ScreenRouteProp = RouteProp<ApprovedParamList, 'Matching'>;
+type ScreenNavigationProp = StackNavigationProp<MatchingParamList, 'Matching'>;
+type ScreenRouteProp = RouteProp<MatchingParamList, 'Matching'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -35,16 +35,16 @@ export default function ({ navigation, route }: Props) {
   // handlers
   const acceptHandler = useCallback(async () => {
     try {
+      // TODO: show feedback
       await dispatch(matchOrder(api)(matchRequest.orderId));
     } catch (error) {
-      navigation.navigate('MatchingFeedback');
+      navigation.navigate('MatchingError');
     }
     // TODO: if successful, go to Delivering screen
   }, [matchRequest]);
 
   const rejectHandler = useCallback(() => {
-    navigation.goBack();
-    // TODO: ask why
+    navigation.navigate('MatchingRefused');
   }, [matchRequest]);
 
   // side effects

@@ -2,7 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Constants from 'expo-constants';
 import React, { useEffect, useContext } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Image, ImageBackground } from 'react-native';
+import { View, TouchableOpacity, Text, Image, ImageBackground } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../assets/icons';
@@ -128,18 +128,3 @@ export default function ({ navigation }: Props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  history: {
-    // marginHorizontal: 16,
-    height: 96,
-    width: '100%',
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: colors.lightGrey,
-    borderRadius: 8,
-    marginTop: 24,
-  },
-});

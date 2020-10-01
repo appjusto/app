@@ -4,7 +4,7 @@ import * as Linking from 'expo-linking';
 import React from 'react';
 import { Text } from 'react-native';
 
-import { HomeParamList } from '../../courier/approved/home/types';
+import { HomeParamList } from '../../courier/approved/main/home/types';
 import { t } from '../../strings';
 import DefaultButton from '../components/buttons/DefaultButton';
 import PaddedView from '../components/containers/PaddedView';
