@@ -13,6 +13,7 @@ import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { courierInfoSet } from '../../../../common/store/courier/validators';
+import { showToast } from '../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { screens, padding } from '../../../../common/styles';
@@ -56,8 +57,12 @@ export default function ({ navigation, route }: Props) {
 
   // handlers
   const updateProfileHandler = async () => {
-    await dispatch(updateProfile(api)(courier.id, updatedCourier));
-    navigation.goBack();
+    try {
+      await dispatch(updateProfile(api)(courier.id, updatedCourier));
+      navigation.goBack();
+    } catch (error) {
+      dispatch(showToast(t('Não foi possível atualizar seu perfil.')));
+    }
   };
 
   // UI
