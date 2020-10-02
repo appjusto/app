@@ -2,17 +2,18 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext, useEffect } from 'react';
+import { Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
-import { cancelOrder } from '../../../common/store/order/actions';
+import * as actions from '../../../common/store/order/actions';
 import { getOrderById } from '../../../common/store/order/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
-import { borders, colors } from '../../../common/styles';
+import { borders, colors, padding } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedParamList } from '../../types';
 import { HomeNavigatorParamList } from '../types';
@@ -47,25 +48,37 @@ export default ({ navigation, route }: Props) => {
       navigation.navigate('OngoingOrder', {
         orderId,
       });
-      // TODO: go to the Orders Navigator
     }
   }, [order]);
 
   // handlers
-  const cancelOrderHandler = async () => {
+  const cancelOrder = async () => {
     try {
-      await dispatch(cancelOrder(api)(orderId));
+      await dispatch(actions.cancelOrder(api)(orderId));
+      navigation.goBack();
     } catch (error) {
       dispatch(showToast(error.toString()));
     }
-    navigation.popToTop();
+  };
+  const cancelOrderHandler = async () => {
+    Alert.alert(t('Cancelar pedido'), t('Tem certeza que deseja cancelar o pedido?'), [
+      {
+        text: t('Cancelar'),
+        style: 'cancel',
+      },
+      {
+        text: t('Confirmar'),
+        style: 'destructive',
+        onPress: cancelOrder,
+      },
+    ]);
   };
 
   // UI
   return (
     <FeedbackView
-      header={t('Pedido em andamento')}
-      description={t('Aguarde enquanto encontramos um entregador para você...')}
+      header={t('Procurando entregadores...')}
+      description={t('A cobrança só será efetuada caso um entregador aceitar o seu pedido.')}
       icon={icons.motocycle}
     >
       <DefaultButton
@@ -73,9 +86,13 @@ export default ({ navigation, route }: Props) => {
         onPress={cancelOrderHandler}
         activityIndicator={busy}
         disabled={busy}
-        style={{ ...borders.default, borderColor: colors.black, backgroundColor: 'white' }}
+        style={{
+          ...borders.default,
+          marginBottom: padding,
+          borderColor: colors.black,
+          backgroundColor: 'white',
+        }}
       />
-
       <DefaultButton title={t('Voltar para o início')} onPress={() => navigation.popToTop()} />
     </FeedbackView>
   );
