@@ -1,3 +1,5 @@
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
@@ -8,9 +10,13 @@ import ShowIf from '../../common/components/views/ShowIf';
 import useTallerDevice from '../../common/hooks/useTallerDevice';
 import { colors, doublePadding, halfPadding, padding, texts, borders } from '../../common/styles';
 import { t } from '../../strings';
+import { LoggedParamList } from '../types';
 import { HomeNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'Home'>;
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<HomeNavigatorParamList, 'Home'>,
+  BottomTabNavigationProp<LoggedParamList>
+>;
 
 type Props = {
   navigation: ScreenNavigationProp;

@@ -1,3 +1,4 @@
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Constants from 'expo-constants';
@@ -17,17 +18,17 @@ import { observeProfile } from '../../common/store/user/actions';
 import { getUser } from '../../common/store/user/selectors';
 import { colors, texts, padding, borders, halfPadding } from '../../common/styles';
 import { t } from '../../strings';
+import { LoggedParamList } from '../types';
 import ConsumerHomeControls from './ConsumerHomeControls';
 import HomeOngoingOrderCard from './cards/HomeOngoingOrderCard';
 import { HomeNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'Home'>;
-type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'Home'>;
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<HomeNavigatorParamList, 'Home'>,
+  BottomTabNavigationProp<LoggedParamList>
+>;
 
-// type ScreenNavigationProp = CompositeNavigationProp<
-//   StackNavigationProp<HomeNavigatorParamList, 'Home'>,
-//   CompositeNavigationProp<BottomTabNavigationProp<LoggedParamList, 'History'>>
-// >;
+type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'Home'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
