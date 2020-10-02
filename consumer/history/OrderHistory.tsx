@@ -65,6 +65,10 @@ export default function ({ navigation, route }: Props) {
       navigation.navigate('OrderSummary', {
         orderId: order.id,
       });
+    } else if (order.status === 'matching') {
+      navigation.navigate('OrderConfirmedFeedback', {
+        orderId: order.id,
+      });
     }
   }, []);
 
