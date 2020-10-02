@@ -47,7 +47,7 @@ export default function () {
       }}
     >
       <Tab.Screen
-        name="Home"
+        name="HomeNavigator"
         component={HomeNavigator}
         options={{
           title: t('Início'),
@@ -55,12 +55,12 @@ export default function () {
         }}
       />
       <Tab.Screen
-        name="History"
+        name="HistoryNavigator"
         component={HistoryNavigator}
         options={{ title: t('Seus pedidos'), tabBarIcon: () => <Image source={icons.orders} /> }}
       />
       <Tab.Screen
-        name="Profile"
+        name="ProfileNavigator"
         component={ProfileNavigator}
         options={{ title: t('Sua conta'), tabBarIcon: () => <Image source={icons.user} /> }}
       />
