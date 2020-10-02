@@ -1,20 +1,24 @@
-import React, { useContext } from 'react';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React from 'react';
 import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { useDispatch } from 'react-redux';
 
-import { ApiContext, AppDispatch } from '../../common/app/context';
+import * as icons from '../../assets/icons';
 import PaddedView from '../../common/components/containers/PaddedView';
 import ShowIf from '../../common/components/views/ShowIf';
 import useTallerDevice from '../../common/hooks/useTallerDevice';
 import { colors, doublePadding, halfPadding, padding, texts, borders } from '../../common/styles';
 import { t } from '../../strings';
-import * as icons from '../../assets/icons';
+import { HomeNavigatorParamList } from './types';
+
+type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'Home'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+};
 
 const { width } = Dimensions.get('window');
-export default function () {
+export default function ({ navigation }: Props) {
   // context
-  const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
   const tallerDevice = useTallerDevice();
 
   return (
@@ -43,7 +47,7 @@ export default function () {
         }}
       >
         <View style={[styles.controlItem, { backgroundColor: colors.white }]}>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => navigation.navigate('CreateOrderP2P')}>
             <Image source={icons.consumerHomeIllustration} />
             <Text style={[texts.default, { paddingTop: 4 }]}>{t('Transporte de encomendas')}</Text>
             <Text style={[texts.small, { paddingTop: halfPadding, color: colors.darkGrey }]}>
@@ -94,15 +98,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingBottom: 12,
   },
-  // priceTag: {
-  //   borderWidth: 1,
-  //   borderStyle: 'solid',
-  //   borderColor: colors.green,
-  //   width: 74,
-  //   height: 74,
-  //   borderRadius: 37, // half of size
-  //   flexDirection: 'row',
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
 });

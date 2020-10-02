@@ -25,6 +25,7 @@ const iconPinPackage = require('./icons/icon-pin-package.png');
 const iconPinUser = require('./icons/icon-pin-user.png');
 const iconRequests = require('./icons/icon-requests.png');
 const iconSelfie = require('./icons/icon-selfie.png');
+const iconShare = require('./icons/icon-share-heart.png');
 const iconTransitConclusion = require('./icons/icon-transit-conclusion.png');
 const iconTransit = require('./icons/icon-transit.png');
 const iconBikeSmall = require('./icons/iconBikeSmall.png');
@@ -85,6 +86,7 @@ export const minus = iconMinus;
 export const plus = iconPlus;
 export const consumerHomeIllustration = illustrationConsumerHome;
 export const consumerHomePizza = illustrationRestaurant;
+export const share = iconShare;
 
 export default [
   accept,
@@ -130,4 +132,5 @@ export default [
   plus,
   consumerHomeIllustration,
   consumerHomePizza,
+  share,
 ];

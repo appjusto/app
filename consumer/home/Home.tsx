@@ -1,8 +1,8 @@
-import { RouteProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Constants from 'expo-constants';
 import React, { useEffect, useContext } from 'react';
-import { View, TouchableOpacity, Text, Image, ImageBackground } from 'react-native';
+import { View, TouchableOpacity, Text, Image, ImageBackground, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -10,18 +10,24 @@ import * as icons from '../../assets/icons';
 import { AppDispatch, ApiContext } from '../../common/app/context';
 import PaddedView from '../../common/components/containers/PaddedView';
 import ShowIf from '../../common/components/views/ShowIf';
+import useTallerDevice from '../../common/hooks/useTallerDevice';
 import { getFlavor } from '../../common/store/config/selectors';
 import { getOngoingOrders } from '../../common/store/order/selectors';
 import { observeProfile } from '../../common/store/user/actions';
 import { getUser } from '../../common/store/user/selectors';
-import { colors, texts, padding, borders } from '../../common/styles';
+import { colors, texts, padding, borders, halfPadding } from '../../common/styles';
 import { t } from '../../strings';
-import HomeOngoingOrderCard from './cards/HomeOngoingOrderCard';
 import ConsumerHomeControls from './ConsumerHomeControls';
+import HomeOngoingOrderCard from './cards/HomeOngoingOrderCard';
 import { HomeNavigatorParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'Home'>;
 type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'Home'>;
+
+// type ScreenNavigationProp = CompositeNavigationProp<
+//   StackNavigationProp<HomeNavigatorParamList, 'Home'>,
+//   CompositeNavigationProp<BottomTabNavigationProp<LoggedParamList, 'History'>>
+// >;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -32,6 +38,7 @@ export default function ({ navigation }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  const tallerDevice = useTallerDevice();
 
   // state
   const flavor = useSelector(getFlavor);
@@ -47,89 +54,81 @@ export default function ({ navigation }: Props) {
   // UI
   const paddingTop = Constants.statusBarHeight;
   return (
-    <ScrollView contentContainerStyle={{ paddingTop }}>
-      <ConsumerHomeControls />
+    <ScrollView contentContainerStyle={{ paddingTop }} style={{ backgroundColor: colors.white }}>
+      <ConsumerHomeControls navigation={navigation} />
+      <PaddedView>
+        {/* we need to make an order to check if this ShowIf is displaying correctly */}
+        <ShowIf test={ongoingOrders.length > 0}>
+          {() => (
+            <PaddedView half>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('OngoingOrder', { orderId: ongoingOrders[0].id })
+                }
+              >
+                <HomeOngoingOrderCard order={ongoingOrders[0]} />
+              </TouchableOpacity>
+            </PaddedView>
+          )}
+        </ShowIf>
+        <TouchableOpacity onPress={() => {}}>
+          <View
+            style={[
+              styles.card,
+              {
+                padding: tallerDevice ? padding : halfPadding,
+                marginBottom: tallerDevice ? padding : halfPadding,
+              },
+            ]}
+          >
+            <Image source={icons.requests} />
+            <View style={{ marginLeft: padding }}>
+              <Text style={{ ...texts.default }}>{t('Histórico de Pedidos')}</Text>
+              <Text style={{ ...texts.small, color: colors.darkGrey }}>
+                {t('Histórico de Pedidos')}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <View
+            style={[
+              styles.card,
+              {
+                padding: tallerDevice ? padding : halfPadding,
+                marginBottom: tallerDevice ? padding : halfPadding,
+              },
+            ]}
+          >
+            <Image source={icons.share} />
+            <View style={{ marginLeft: padding }}>
+              <Text style={{ ...texts.default }}>{t('Divulgue o AppJusto')}</Text>
+              <Text
+                style={{
+                  ...texts.small,
+                  color: colors.darkGrey,
+                  flexWrap: 'wrap',
+                  maxWidth: '85%',
+                }}
+                numberOfLines={2}
+              >
+                {t('Compartilhe esse movimento por uma economia mais justa.')}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </PaddedView>
     </ScrollView>
-    // <View style={{ flex: 1 }}>
-    //   <PaddedView style={{ flex: 1, paddingTop, backgroundColor: colors.green }}>
-    //     <Text style={{ ...texts.big, marginTop: padding }}>
-    //       {t('Somos um delivery aberto, transparente e consciente')}
-    //     </Text>
-    //     {/* buttons */}
-    //     <View style={{ flexDirection: 'row', marginTop: padding, justifyContent: 'space-between' }}>
-    //       <View
-    //         style={{
-    //           width: '47.5%',
-    //           paddingHorizontal: 12,
-    //           backgroundColor: 'white',
-    //           ...borders.default,
-    //           borderColor: 'white',
-    //         }}
-    //       >
-    //         <TouchableOpacity onPress={() => navigation.navigate('CreateOrderP2P')}>
-    //           <View style={{ width: '100%', height: '52%' }}>
-    //             <Image
-    //               source={icons.illustration}
-    //               style={{ width: '100%', height: '100%', paddingHorizontal: 16 }}
-    //             />
-    //           </View>
-    //           <Text style={{ marginTop: 8, ...texts.default }}>{t('Transportar Encomendas')}</Text>
-    //           <Text style={{ marginTop: 8, ...texts.small, color: colors.darkGrey }}>
-    //             {t('Para buscar e deixar pacotes')}
-    //           </Text>
-    //         </TouchableOpacity>
-    //       </View>
-    //       <View
-    //         style={{
-    //           width: '47.5%',
-    //           paddingHorizontal: 12,
-    //           backgroundColor: colors.lightGreen,
-    //           ...borders.default,
-    //           borderColor: 'white',
-    //         }}
-    //       >
-    //         <TouchableOpacity>
-    //           <View style={{ width: '100%', height: '52%' }}>
-    //             <Image
-    //               source={icons.illustrationPizza}
-    //               style={{ width: '100%', height: '100%', paddingHorizontal: 16 }}
-    //             />
-    //           </View>
-    //           <Text style={{ marginTop: 8, ...texts.default }}>
-    //             {t('Restaurantes e alimentação')}
-    //           </Text>
-    //           <Text style={{ marginTop: 8, ...texts.small }}>
-    //             {t('Seus preferidos estarão por aqui')}
-    //           </Text>
-    //         </TouchableOpacity>
-    //       </View>
-    //     </View>
-    //   </PaddedView>
-    //   {/* history */}
-    //   <View style={{ width: '100%', height: '30%' }}>
-    //     <ImageBackground
-    //       source={icons.backgroundPattern}
-    //       resizeMethod="resize"
-    //       resizeMode="contain"
-    //       style={{ height: '100%', width: '100%' }}
-    //     >
-    //       <View style={{ paddingHorizontal: 16, flex: 1, justifyContent: 'center' }}>
-    //         <ShowIf test={ongoingOrders.length > 0}>
-    //           {() => (
-    //             <PaddedView half>
-    //               <TouchableOpacity
-    //                 onPress={() =>
-    //                   navigation.navigate('OngoingOrder', { orderId: ongoingOrders[0].id })
-    //                 }
-    //               >
-    //                 <HomeOngoingOrderCard order={ongoingOrders[0]} />
-    //               </TouchableOpacity>
-    //             </PaddedView>
-    //           )}
-    //         </ShowIf>
-    //       </View>
-    //     </ImageBackground>
-    //   </View>
-    // </View>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    ...borders.default,
+    borderColor: colors.lightGrey,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    backgroundColor: colors.white,
+  },
+});
