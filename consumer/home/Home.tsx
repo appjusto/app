@@ -3,6 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import Constants from 'expo-constants';
 import React, { useEffect, useContext } from 'react';
 import { View, TouchableOpacity, Text, Image, ImageBackground } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../assets/icons';
@@ -16,6 +17,7 @@ import { getUser } from '../../common/store/user/selectors';
 import { colors, texts, padding, borders } from '../../common/styles';
 import { t } from '../../strings';
 import HomeOngoingOrderCard from './cards/HomeOngoingOrderCard';
+import ConsumerHomeControls from './ConsumerHomeControls';
 import { HomeNavigatorParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'Home'>;
@@ -45,86 +47,89 @@ export default function ({ navigation }: Props) {
   // UI
   const paddingTop = Constants.statusBarHeight;
   return (
-    <View style={{ flex: 1 }}>
-      <PaddedView style={{ flex: 1, paddingTop, backgroundColor: colors.green }}>
-        <Text style={{ ...texts.big, marginTop: padding }}>
-          {t('Somos um delivery aberto, transparente e consciente')}
-        </Text>
-        {/* buttons */}
-        <View style={{ flexDirection: 'row', marginTop: padding, justifyContent: 'space-between' }}>
-          <View
-            style={{
-              width: '47.5%',
-              paddingHorizontal: 12,
-              backgroundColor: 'white',
-              ...borders.default,
-              borderColor: 'white',
-            }}
-          >
-            <TouchableOpacity onPress={() => navigation.navigate('CreateOrderP2P')}>
-              <View style={{ width: '100%', height: '52%' }}>
-                <Image
-                  source={icons.illustration}
-                  style={{ width: '100%', height: '100%', paddingHorizontal: 16 }}
-                />
-              </View>
-              <Text style={{ marginTop: 8, ...texts.default }}>{t('Transportar Encomendas')}</Text>
-              <Text style={{ marginTop: 8, ...texts.small, color: colors.darkGrey }}>
-                {t('Para buscar e deixar pacotes')}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              width: '47.5%',
-              paddingHorizontal: 12,
-              backgroundColor: colors.lightGreen,
-              ...borders.default,
-              borderColor: 'white',
-            }}
-          >
-            <TouchableOpacity>
-              <View style={{ width: '100%', height: '52%' }}>
-                <Image
-                  source={icons.illustrationPizza}
-                  style={{ width: '100%', height: '100%', paddingHorizontal: 16 }}
-                />
-              </View>
-              <Text style={{ marginTop: 8, ...texts.default }}>
-                {t('Restaurantes e alimentação')}
-              </Text>
-              <Text style={{ marginTop: 8, ...texts.small }}>
-                {t('Seus preferidos estarão por aqui')}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </PaddedView>
-      {/* history */}
-      <View style={{ width: '100%', height: '30%' }}>
-        <ImageBackground
-          source={icons.backgroundPattern}
-          resizeMethod="resize"
-          resizeMode="contain"
-          style={{ height: '100%', width: '100%' }}
-        >
-          <View style={{ paddingHorizontal: 16, flex: 1, justifyContent: 'center' }}>
-            <ShowIf test={ongoingOrders.length > 0}>
-              {() => (
-                <PaddedView half>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('OngoingOrder', { orderId: ongoingOrders[0].id })
-                    }
-                  >
-                    <HomeOngoingOrderCard order={ongoingOrders[0]} />
-                  </TouchableOpacity>
-                </PaddedView>
-              )}
-            </ShowIf>
-          </View>
-        </ImageBackground>
-      </View>
-    </View>
+    <ScrollView contentContainerStyle={{ paddingTop }}>
+      <ConsumerHomeControls />
+    </ScrollView>
+    // <View style={{ flex: 1 }}>
+    //   <PaddedView style={{ flex: 1, paddingTop, backgroundColor: colors.green }}>
+    //     <Text style={{ ...texts.big, marginTop: padding }}>
+    //       {t('Somos um delivery aberto, transparente e consciente')}
+    //     </Text>
+    //     {/* buttons */}
+    //     <View style={{ flexDirection: 'row', marginTop: padding, justifyContent: 'space-between' }}>
+    //       <View
+    //         style={{
+    //           width: '47.5%',
+    //           paddingHorizontal: 12,
+    //           backgroundColor: 'white',
+    //           ...borders.default,
+    //           borderColor: 'white',
+    //         }}
+    //       >
+    //         <TouchableOpacity onPress={() => navigation.navigate('CreateOrderP2P')}>
+    //           <View style={{ width: '100%', height: '52%' }}>
+    //             <Image
+    //               source={icons.illustration}
+    //               style={{ width: '100%', height: '100%', paddingHorizontal: 16 }}
+    //             />
+    //           </View>
+    //           <Text style={{ marginTop: 8, ...texts.default }}>{t('Transportar Encomendas')}</Text>
+    //           <Text style={{ marginTop: 8, ...texts.small, color: colors.darkGrey }}>
+    //             {t('Para buscar e deixar pacotes')}
+    //           </Text>
+    //         </TouchableOpacity>
+    //       </View>
+    //       <View
+    //         style={{
+    //           width: '47.5%',
+    //           paddingHorizontal: 12,
+    //           backgroundColor: colors.lightGreen,
+    //           ...borders.default,
+    //           borderColor: 'white',
+    //         }}
+    //       >
+    //         <TouchableOpacity>
+    //           <View style={{ width: '100%', height: '52%' }}>
+    //             <Image
+    //               source={icons.illustrationPizza}
+    //               style={{ width: '100%', height: '100%', paddingHorizontal: 16 }}
+    //             />
+    //           </View>
+    //           <Text style={{ marginTop: 8, ...texts.default }}>
+    //             {t('Restaurantes e alimentação')}
+    //           </Text>
+    //           <Text style={{ marginTop: 8, ...texts.small }}>
+    //             {t('Seus preferidos estarão por aqui')}
+    //           </Text>
+    //         </TouchableOpacity>
+    //       </View>
+    //     </View>
+    //   </PaddedView>
+    //   {/* history */}
+    //   <View style={{ width: '100%', height: '30%' }}>
+    //     <ImageBackground
+    //       source={icons.backgroundPattern}
+    //       resizeMethod="resize"
+    //       resizeMode="contain"
+    //       style={{ height: '100%', width: '100%' }}
+    //     >
+    //       <View style={{ paddingHorizontal: 16, flex: 1, justifyContent: 'center' }}>
+    //         <ShowIf test={ongoingOrders.length > 0}>
+    //           {() => (
+    //             <PaddedView half>
+    //               <TouchableOpacity
+    //                 onPress={() =>
+    //                   navigation.navigate('OngoingOrder', { orderId: ongoingOrders[0].id })
+    //                 }
+    //               >
+    //                 <HomeOngoingOrderCard order={ongoingOrders[0]} />
+    //               </TouchableOpacity>
+    //             </PaddedView>
+    //           )}
+    //         </ShowIf>
+    //       </View>
+    //     </ImageBackground>
+    //   </View>
+    // </View>
   );
 }

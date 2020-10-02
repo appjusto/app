@@ -94,7 +94,7 @@ export default function ({ navigation, route }: Props) {
         setHasImagesUris(hasImages);
       } catch (error) {}
     })();
-  }, [hasImagesUris, hasPersonalInfo, hasBankAccount, hasSelectedFleet, api]);
+  }, [hasImagesUris, hasPersonalInfo, hasBankAccount, hasSelectedFleet, api, hasCompanyInfo]);
 
   // UI
   return (

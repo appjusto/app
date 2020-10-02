@@ -34,6 +34,8 @@ const iconOnFootSmall = require('./icons/iconOnFootSmall.png');
 const iconScooterSmall = require('./icons/iconScooterSmall.png');
 const iconIllustration = require('./icons/illustration-intro-screen.png');
 const iconIllustrationPizza = require('./icons/illustration-pizza.png');
+const illustrationRestaurant = require('./icons/illustration-small-restaurant.png');
+const illustrationConsumerHome = require('./icons/illustrationHomeConsumer.png');
 const logoAppjustoBgWhite = require('./icons/logo-appjusto-bg-white.png');
 const iconMinus = require('./icons/minus.png');
 const iconOrders = require('./icons/orders.png');
@@ -81,6 +83,8 @@ export const carSmall = iconCarSmall;
 export const onFootSmall = iconOnFootSmall;
 export const minus = iconMinus;
 export const plus = iconPlus;
+export const consumerHomeIllustration = illustrationConsumerHome;
+export const consumerHomePizza = illustrationRestaurant;
 
 export default [
   accept,
@@ -124,4 +128,6 @@ export default [
   onFootSmall,
   minus,
   plus,
+  consumerHomeIllustration,
+  consumerHomePizza,
 ];
