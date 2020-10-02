@@ -77,7 +77,7 @@ export const completeDelivery = (api: Api) => (orderId: string) => async (
 export const observeOrders = (api: Api) => (options: ObserveOrdersOptions) => (
   dispatch: AppDispatch
 ) => {
-  return api.order().observeOrders(options, (orders: Order[]): void => {
+  return api.order().observeOrders(options, (orders: WithId<Order>[]): void => {
     dispatch({ type: ORDERS_UPDATED, payload: orders });
   });
 };

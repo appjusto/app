@@ -2,11 +2,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
 import ArrowBox from '../../common/components/views/ArrowBox';
-import ProfileEdit from '../../common/screens/profile/ProfileEdit';
 import ProfileErase from '../../common/screens/profile/ProfileErase';
 import Terms from '../../common/screens/unlogged/Terms';
 import { t } from '../../strings';
 import Profile from './Profile';
+import ProfileEdit from './ProfileEdit';
 import ProfileAddCard from './payment/ProfileAddCard';
 import ProfilePaymentMethods from './payment/ProfilePaymentMethods';
 import { ProfileParamList } from './types';

@@ -1,8 +1,8 @@
-import { ProfileEditParamList } from '../../common/screens/profile/ProfileEdit';
 import { ProfileEraseParamList } from '../../common/screens/profile/ProfileErase';
 
 export type ProfileParamList = {
   Profile: undefined;
+  ProfileEdit: undefined;
   ProfilePaymentMethods?: {
     returnScreen: 'CreateOrderP2P';
   };
@@ -13,5 +13,4 @@ export type ProfileParamList = {
   CreateOrderP2P: {
     paymentMethodId: string;
   };
-} & ProfileEditParamList &
-  ProfileEraseParamList;
+} & ProfileEraseParamList;

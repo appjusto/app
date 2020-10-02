@@ -23,7 +23,7 @@ export default function ({ navigation, route }: Props) {
   const { returnScreen } = route.params ?? {};
   // app state
   const consumer = useSelector(getConsumer);
-  const cards = consumer?.cards ?? [];
+  const cards = consumer?.paymentChannel?.methods ?? [];
 
   return (
     <View style={{ ...screens.configScreen }}>
@@ -32,8 +32,8 @@ export default function ({ navigation, route }: Props) {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ConfigItem
-            title={item.lastFourDigits}
-            subtitle={`Cartão de crédito\n${item.brand}`}
+            title={item.data.last_digits}
+            subtitle={`Cartão de crédito\n${item.data.brand}`}
             onPress={() => {
               if (returnScreen) navigation.navigate(returnScreen, { paymentMethodId: item.id });
             }}
@@ -42,7 +42,7 @@ export default function ({ navigation, route }: Props) {
         ListFooterComponent={() => (
           <ConfigItem
             title={t('Adicionar novo cartão de crédito')}
-            subtitle={t('Aceitamos as bandeiras Visa, Mastercard, Amex e Elo')}
+            subtitle={t('Aceitamos as bandeiras Visa, Mastercard, Amex, Elo e Diners')}
             onPress={() => {
               if (returnScreen) navigation.navigate('ProfileAddCard', { returnScreen });
               else navigation.navigate('ProfileAddCard');

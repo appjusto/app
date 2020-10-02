@@ -7,8 +7,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import ShowIf from '../../../../../common/components/views/ShowIf';
-import { fetchApprovedFleets } from '../../../../../common/store/fleet/actions';
-import { getApprovedFleets } from '../../../../../common/store/fleet/selectors';
+import { observeFleets } from '../../../../../common/store/fleet/actions';
+import { getAvailableFleets } from '../../../../../common/store/fleet/selectors';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { screens, colors, padding } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
@@ -27,7 +27,7 @@ export default function ({ navigation }: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const busy = useSelector(getUIBusy);
   //app state
-  const approvedFleets = useSelector(getApprovedFleets) ?? [];
+  const approvedFleets = useSelector(getAvailableFleets) ?? [];
   //screen state
   const [fleetSearch, setFleetSearch] = useState('');
   // const filteredFleets = useMemo(() => {
@@ -39,7 +39,7 @@ export default function ({ navigation }: Props) {
   // effects
   // fetch fleets
   useEffect(() => {
-    dispatch(fetchApprovedFleets(api));
+    return dispatch(observeFleets(api));
   }, []);
   //handlers
   const navigateFleetDetail = useCallback((fleet: Fleet) => {

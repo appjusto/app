@@ -13,7 +13,11 @@ import {
   getSelfieURL,
 } from '../../common/store/courier/actions';
 import { getCourier } from '../../common/store/courier/selectors';
-import { courierInfoSet, bankAccountSet } from '../../common/store/courier/validators';
+import {
+  courierInfoSet,
+  bankAccountSet,
+  companyInfoSet,
+} from '../../common/store/courier/validators';
 import { getUIBusy } from '../../common/store/ui/selectors';
 import { screens, texts, colors } from '../../common/styles';
 import { t } from '../../strings';
@@ -35,16 +39,18 @@ export default function ({ navigation, route }: Props) {
   // app state
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier)!;
-  const hasPersonalInfo = courierInfoSet(courier) ?? false;
-  const hasBankAccount = bankAccountSet(courier) ?? false;
+  const hasPersonalInfo = courierInfoSet(courier);
+  const hasCompanyInfo = companyInfoSet(courier);
+  const hasBankAccount = bankAccountSet(courier);
   const hasSelectedFleet = courier.fleet !== undefined;
-  const totalSteps = 4;
+  const totalSteps = 5;
 
   // screen state
   const [hasImagesUris, setHasImagesUris] = useState(false);
   const submitEnabled =
     courier.situation === 'pending' &&
     hasPersonalInfo &&
+    hasCompanyInfo &&
     hasBankAccount &&
     hasImagesUris &&
     hasSelectedFleet;
@@ -80,6 +86,7 @@ export default function ({ navigation, route }: Props) {
         }
         let totalSteps = 0;
         if (hasPersonalInfo) totalSteps++;
+        if (hasCompanyInfo) totalSteps++;
         if (hasImages) totalSteps++;
         if (hasBankAccount) totalSteps++;
         if (hasSelectedFleet) totalSteps++;
@@ -126,8 +133,14 @@ export default function ({ navigation, route }: Props) {
         <ConfigItem
           title={t('Seus dados')}
           subtitle={t('Preencha seus dados pessoais')}
-          onPress={() => navigation.navigate('ProfileEdit', { allowPartialSave: false })}
+          onPress={() => navigation.navigate('ProfileEdit')}
           checked={courierInfoSet(courier)}
+        />
+        <ConfigItem
+          title={t('Dados da sua empresa')}
+          subtitle={t('Preencha os dados da sua empresa ou MEI')}
+          onPress={() => navigation.navigate('ProfileCompany')}
+          checked={companyInfoSet(courier)}
         />
         <ConfigItem
           title={t('Fotos e documentos')}

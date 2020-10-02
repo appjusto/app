@@ -2,8 +2,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
 import ArrowBox from '../../common/components/views/ArrowBox';
-import ProfileEdit from '../../common/screens/profile/ProfileEdit';
 import { t } from '../../strings';
+import ProfileCompany from '../approved/main/profile/ProfileCompany';
+import ProfileEdit from '../approved/main/profile/ProfileEdit';
 import BankNavigator from '../approved/main/profile/bank/BankNavigator';
 import FleetNavigator from '../approved/main/profile/fleet/FleetNavigator';
 import ProfilePhotos from '../approved/main/profile/photos/ProfilePhotos';
@@ -29,6 +30,11 @@ export default function () {
         name="ProfileEdit"
         component={ProfileEdit}
         options={{ title: t('Seus dados') }}
+      />
+      <Stack.Screen
+        name="ProfileCompany"
+        component={ProfileCompany}
+        options={{ title: t('Dados da empresa') }}
       />
       <Stack.Screen
         name="ProfilePhotos"

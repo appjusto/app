@@ -8,10 +8,10 @@ import ConfigItem from '../../../../common/components/views/ConfigItem';
 import { signOut } from '../../../../common/store/user/actions';
 import { screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import { ProfileParamList } from './types';
+import { CourierProfileParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'Profile'>;
-type ScreenRouteProp = RouteProp<ProfileParamList, 'Profile'>;
+type ScreenNavigationProp = StackNavigationProp<CourierProfileParamList, 'Profile'>;
+type ScreenRouteProp = RouteProp<CourierProfileParamList, 'Profile'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -50,7 +50,12 @@ export default function ({ navigation }: Props) {
         <ConfigItem
           title={t('Seus dados')}
           subtitle={t('Edite seus dados pessoais')}
-          onPress={() => navigation.navigate('ProfileEdit', { allowPartialSave: false })}
+          onPress={() => navigation.navigate('ProfileEdit')}
+        />
+        <ConfigItem
+          title={t('Dados da sua empresa')}
+          subtitle={t('Preencha os dados da sua empresa ou MEI')}
+          onPress={() => navigation.navigate('ProfileCompany')}
         />
         <ConfigItem
           title={t('Fotos e documentos')}

@@ -1,5 +1,6 @@
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
+import * as viacep from '../api/externals/viacep';
 import { awaitWithFeedback } from '../ui/actions';
 
 export const UPDATE_BANKS = 'UPDATE_BANKS';
@@ -12,6 +13,9 @@ export const fetchBanks = (api: Api) => async (dispatch: AppDispatch) => {
   const banks = await dispatch(awaitWithFeedback(api.courier().fetchBanks()));
   dispatch({ type: UPDATE_BANKS, payload: banks });
 };
+
+export const fetchPostalDetails = (cep: string) => async (dispatch: AppDispatch) =>
+  dispatch(awaitWithFeedback(viacep.fetchPostalDetails(cep)));
 
 export const uploadSelfie = (api: Api) => (
   courierId: string,
