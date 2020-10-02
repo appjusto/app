@@ -5,7 +5,7 @@ import { ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { HomeNavigatorParamList } from '../../../consumer/home/types';
-import GainSimulator from '../../../courier/approved/profile/fleet/GainSimulator';
+import GainSimulator from '../../../courier/approved/main/profile/fleet/GainSimulator';
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import DefaultButton from '../../components/buttons/DefaultButton';
