@@ -24,7 +24,7 @@ export default function ({ order }: Props) {
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={styles.priceDetailText}>{t('Gorjeta')}</Text>
-          <Text style={styles.priceDetailText}>{formatCurrency(order.fare?.courierTip ?? 0)}</Text>
+          <Text style={styles.priceDetailText}>{formatCurrency(order.tip?.value ?? 0)}</Text>
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={styles.priceDetailText}>{t('Impostos')}</Text>
@@ -42,7 +42,9 @@ export default function ({ order }: Props) {
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={[texts.medium]}>{t('Total')}</Text>
-          <Text style={[texts.medium]}>{formatCurrency(order.fare?.total ?? 0)}</Text>
+          <Text style={[texts.medium]}>
+            {formatCurrency((order.fare?.total ?? 0) + (order.tip?.value ?? 0))}
+          </Text>
         </View>
       </View>
     </View>

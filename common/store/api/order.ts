@@ -13,7 +13,7 @@ export default class OrderApi {
   ) {}
 
   // consumer
-  // functions
+  // callables
   async createOrder(origin: Partial<Place>, destination: Partial<Place>) {
     return (await this.functions.httpsCallable('createOrder')({ origin, destination })).data;
   }
@@ -39,6 +39,10 @@ export default class OrderApi {
       platformFee,
     });
     return result.data;
+  }
+
+  async tipCourier(orderId: string, tip: number) {
+    return (await this.functions.httpsCallable('tipCourier')({ orderId, tip })).data;
   }
 
   async cancelOrder(orderId: string) {
@@ -73,7 +77,7 @@ export default class OrderApi {
       .collection('orders')
       .orderBy('createdOn', 'desc')
       .where('status', 'in', ['quote', 'matching', 'dispatching', 'delivered', 'canceled']);
-    if (createdBy) query = query.where('consumerId', '==', createdBy);
+    if (createdBy) query = query.where('consumer.id', '==', createdBy);
     if (deliveredBy) query = query.where('courier.id', '==', deliveredBy);
 
     const unsubscribe = query.onSnapshot(

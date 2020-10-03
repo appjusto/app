@@ -35,7 +35,7 @@ export default function ({ navigation, route }: Props) {
 
   // app state
   const order = useSelector(getOrderById)(orderId);
-  const fee = (order.fare?.courierFee ?? 0) + (order.fare?.courierTip ?? 0);
+  const fee = (order.fare?.courierFee ?? 0) + (order.tip?.value ?? 0);
 
   return (
     <View style={{ ...screens.default }}>

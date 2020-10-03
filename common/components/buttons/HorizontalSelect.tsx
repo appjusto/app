@@ -13,9 +13,10 @@ type Props = {
   data: HorizontalSelectItem[];
   selected?: HorizontalSelectItem;
   onSelect: (value: HorizontalSelectItem) => void;
+  disabled?: boolean;
 };
 
-export default function ({ data, selected, onSelect }: Props) {
+export default function ({ data, selected, onSelect, disabled }: Props) {
   return (
     <FlatList
       showsHorizontalScrollIndicator={false}
@@ -23,7 +24,11 @@ export default function ({ data, selected, onSelect }: Props) {
       data={data}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
-        <TouchableWithoutFeedback onPress={() => onSelect(item)}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            if (!disabled) onSelect(item);
+          }}
+        >
           <View
             style={{
               justifyContent: 'center',
@@ -33,7 +38,12 @@ export default function ({ data, selected, onSelect }: Props) {
               borderRadius: 6,
               height: 40,
               marginRight: 4,
-              backgroundColor: item.id === selected?.id ? colors.green : colors.white,
+              backgroundColor:
+                item.id === selected?.id
+                  ? disabled
+                    ? colors.lightGrey
+                    : colors.green
+                  : colors.white,
             }}
           >
             <Text>{item.title}</Text>

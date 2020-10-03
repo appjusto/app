@@ -49,7 +49,11 @@ export default ({ navigation, route }: Props) => {
         <HR height={padding} />
         <OrderFeedbackControl orderId={orderId} />
         <HR height={padding} />
-        <TipControl courierId={order.courier!.id} courierName={order.courier!.name} />
+        <TipControl
+          orderId={order.id}
+          orderTip={order.tip?.value}
+          courierName={order.courier!.name}
+        />
         <HR height={padding} />
         <View style={{ marginTop: padding }}>
           <DefaultButton title={t('Finalizar')} onPress={() => navigation.popToTop()} />

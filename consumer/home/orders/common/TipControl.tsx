@@ -1,25 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { Text, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { ApiContext, AppDispatch } from '../../../../common/app/context';
+import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import HorizontalSelect, {
   HorizontalSelectItem,
 } from '../../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { ProfileIcon } from '../../../../common/components/icons/RoundedIcon';
 import Pill from '../../../../common/components/views/Pill';
+import { tipCourier } from '../../../../common/store/order/actions';
+import { showToast } from '../../../../common/store/ui/actions';
+import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { halfPadding, padding, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 
 type Props = {
-  courierId: string;
+  orderId: string;
+  orderTip: number;
   courierName: string;
 };
 
-export default function ({ courierId, courierName }: Props) {
+export default function ({ orderId, orderTip = 0, courierName }: Props) {
   // context
-  // const api = useContext(ApiContext);
-  // const dispatch = useDispatch<AppDispatch>();
+  const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
+  const alreadyTipped = orderTip > 0;
+
+  // app state
+  const busy = useSelector(getUIBusy);
 
   // data
   const data: HorizontalSelectItem[] = [
@@ -32,12 +43,20 @@ export default function ({ courierId, courierName }: Props) {
     { id: '15', title: formatCurrency(1500), data: 1500 },
     { id: '30', title: formatCurrency(3000), data: 3000 },
   ];
+
   // state
-  const [feedback, setFeedback] = useState(data[0]);
+  const [tip, setTip] = useState(data.find((d) => d.data === orderTip) ?? data[0]);
+
   // handlers
-  useEffect(() => {
-    // TODO: send feedback
-  }, [feedback]);
+  const tipHandler = useCallback(() => {
+    (async () => {
+      try {
+        await dispatch(tipCourier(api)(orderId, tip.data));
+      } catch (error) {
+        dispatch(showToast(t('Não foi possível enviar a gorjeta.')));
+      }
+    })();
+  }, [tip]);
   // UI
   return (
     <View>
@@ -66,7 +85,14 @@ export default function ({ courierId, courierName }: Props) {
             </Text>
           </View>
         </View>
-        <HorizontalSelect data={data} selected={feedback} onSelect={setFeedback} />
+        <HorizontalSelect disabled={orderTip > 0} data={data} selected={tip} onSelect={setTip} />
+        <DefaultButton
+          style={{ marginTop: padding }}
+          title={alreadyTipped ? t('Gorjeta enviada') : t('Enviar gorjeta')}
+          disabled={alreadyTipped || tip.data === 0 || busy}
+          activityIndicator={busy}
+          onPress={tipHandler}
+        />
       </View>
     </View>
   );

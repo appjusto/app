@@ -66,13 +66,19 @@ export default function ({ navigation, route }: Props) {
             }}
           >
             <Text style={{ ...texts.medium, ...texts.bold }}>{t('Total pago')}</Text>
-            <Text style={{ ...texts.mediumToBig }}>{formatCurrency(order.fare?.total ?? 0)}</Text>
+            <Text style={{ ...texts.mediumToBig }}>
+              {formatCurrency((order.fare?.total ?? 0) + (order.tip?.value ?? 0))}
+            </Text>
           </PaddedView>
         </View>
         <HR height={padding} />
         <OrderFeedbackControl orderId={orderId} />
         <HR height={padding} />
-        <TipControl courierId={order.courier!.id} courierName={order.courier!.name} />
+        <TipControl
+          orderId={order.id}
+          orderTip={order.tip?.value}
+          courierName={order.courier!.name}
+        />
         <HR height={padding} />
         <PaddedView>
           <OrderCostBreakdown order={order} />
