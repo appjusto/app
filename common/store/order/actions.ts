@@ -46,6 +46,12 @@ export const confirmOrder = (api: Api) => (
   );
 };
 
+export const tipCourier = (api: Api) => (orderId: string, tip: number) => async (
+  dispatch: AppDispatch
+) => {
+  return dispatch(awaitWithFeedback(api.order().tipCourier(orderId, tip)));
+};
+
 export const cancelOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
   return dispatch(awaitWithFeedback(api.order().cancelOrder(orderId)));
 };
@@ -95,8 +101,8 @@ export const sendMessage = (api: Api) => (
 ) => async (dispatch: AppDispatch) => {
   dispatch({ type: BUSY, payload: true });
   const destination: 'consumers' | 'couriers' =
-    from === order.consumerId ? 'couriers' : 'consumers';
-  const to = destination === 'consumers' ? order.consumerId : order.courier!.id;
+    from === order.consumer.id ? 'couriers' : 'consumers';
+  const to = destination === 'consumers' ? order.consumer.id : order.courier!.id;
   const chat: Partial<ChatMessage> = { from, to, message, destination };
   const result = await api.order().sendMessage(order.id, chat);
   dispatch({ type: BUSY, payload: false });

@@ -89,7 +89,7 @@ export default function ({ navigation, route }: Props) {
       </View>
       <PaddedView style={{ backgroundColor: colors.lightGrey }}>
         <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Pedido de')}</Text>
-        <Text style={[texts.medium]}>{order.consumerName}</Text>
+        <Text style={[texts.medium]}>{order.consumer.name ?? 'Cliente'}</Text>
         <TouchableOpacity onPress={openChatHandler}>
           <View style={{ marginTop: halfPadding }}>
             <RoundedText leftIcon={icons.chat}>{t('Iniciar chat')}</RoundedText>

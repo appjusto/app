@@ -4,7 +4,7 @@ import { ConsumerProfile, CourierProfile, UserProfile, WithId } from 'appjusto-t
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
 import { Flavor } from '../config/types';
-import { BUSY } from '../ui/actions';
+import { awaitWithFeedback } from '../ui/actions';
 import { DeleteAccountSurvey } from './types';
 
 export const USER_LOGGED_IN = 'USER_LOGGED_IN';
@@ -29,10 +29,7 @@ export const signInWithEmail = (api: Api) => (email: string) => async (dispatch:
   } catch (e) {
     console.error(e);
   }
-  dispatch({ type: BUSY, payload: true });
-  const result = await api.auth().sendSignInLinkToEmail(email);
-  dispatch({ type: BUSY, payload: false });
-  return result;
+  return dispatch(awaitWithFeedback(api.auth().sendSignInLinkToEmail(email)));
 };
 
 export const getSignInEmail = () => {
@@ -74,10 +71,7 @@ export const updateProfile = (api: Api) => (
   id: string,
   changes: Partial<CourierProfile> | Partial<ConsumerProfile>
 ) => async (dispatch: AppDispatch) => {
-  dispatch({ type: BUSY, payload: true });
-  const result = await api.profile().updateProfile(id, changes);
-  dispatch({ type: BUSY, payload: false });
-  return result;
+  return dispatch(awaitWithFeedback(api.profile().updateProfile(id, changes)));
 };
 
 export const updateLocation = (api: Api) => (

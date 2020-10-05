@@ -7,9 +7,10 @@ import { useSelector } from 'react-redux';
 import PaddedView from '../../common/components/containers/PaddedView';
 import RoundedText from '../../common/components/texts/RoundedText';
 import HR from '../../common/components/views/HR';
+import Pill from '../../common/components/views/Pill';
 import OrderCostBreakdown from '../../common/screens/history/OrderCostBreakdown';
 import { getOrderById } from '../../common/store/order/selectors';
-import { screens, texts, padding, halfPadding } from '../../common/styles';
+import { screens, texts, padding, halfPadding, borders } from '../../common/styles';
 import {
   formatDistance,
   formatDuration,
@@ -17,6 +18,8 @@ import {
   separateWithDot,
 } from '../../common/utils/formatters';
 import { t } from '../../strings';
+import OrderFeedbackControl from '../home/orders/common/OrderFeedbackControl';
+import TipControl from '../home/orders/common/TipControl';
 import OrderMap from '../home/orders/p2p-order/OrderMap';
 import PlaceSummary from '../home/orders/p2p-order/PlaceSummary';
 import { HistoryParamList } from './types';
@@ -38,10 +41,10 @@ export default function ({ navigation, route }: Props) {
 
   return (
     <View style={{ ...screens.default }}>
-      <View style={{ height: 160 }}>
-        <OrderMap order={order} />
-      </View>
       <ScrollView>
+        <View style={{ height: 160 }}>
+          <OrderMap order={order} />
+        </View>
         <PaddedView>
           <PlaceSummary title={t('Retirada')} place={order.origin} />
           <PlaceSummary title={t('Entrega')} place={order.destination} />
@@ -52,18 +55,30 @@ export default function ({ navigation, route }: Props) {
           </View>
         </PaddedView>
         <HR height={padding} />
-        <PaddedView>
-          <View
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Pill />
+          <PaddedView
             style={{
+              flex: 1,
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
             }}
           >
-            <Text style={{ ...texts.medium, ...texts.bold }}>{t('Valor pago')}</Text>
-            <Text style={{ ...texts.mediumToBig }}>{formatCurrency(order.fare?.total ?? 0)}</Text>
-          </View>
-        </PaddedView>
+            <Text style={{ ...texts.medium, ...texts.bold }}>{t('Total pago')}</Text>
+            <Text style={{ ...texts.mediumToBig }}>
+              {formatCurrency((order.fare?.total ?? 0) + (order.tip?.value ?? 0))}
+            </Text>
+          </PaddedView>
+        </View>
+        <HR height={padding} />
+        <OrderFeedbackControl orderId={orderId} />
+        <HR height={padding} />
+        <TipControl
+          orderId={order.id}
+          orderTip={order.tip?.value}
+          courierName={order.courier!.name}
+        />
         <HR height={padding} />
         <PaddedView>
           <OrderCostBreakdown order={order} />

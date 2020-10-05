@@ -39,7 +39,7 @@ export default function ({ route }: Props) {
   const order = useSelector(getOrderById)(orderId);
   const names = {
     [order.courier!.id]: order.courier!.name,
-    [order.consumerId]: order.consumerName ?? t('Cliente'),
+    [order.consumer!.id]: order.consumer!.name ?? t('Cliente'),
   };
 
   // screen state
