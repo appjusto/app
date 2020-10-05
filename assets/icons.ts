@@ -16,6 +16,7 @@ const iconChat = require('./icons/icon-chat.png');
 const iconConeYellow = require('./icons/icon-cone-yellow.png');
 const iconEdit = require('./icons/icon-edit.png');
 const iconErase = require('./icons/icon-erase.png');
+const iconInfo = require('./icons/icon-info.png');
 const iconLicense = require('./icons/icon-license.png');
 const iconMotocycle = require('./icons/icon-motocycle-green.png');
 const iconMotocycleWhite = require('./icons/icon-motocycle-white.png');
@@ -87,6 +88,7 @@ export const plus = iconPlus;
 export const consumerHomeIllustration = illustrationConsumerHome;
 export const consumerHomePizza = illustrationRestaurant;
 export const share = iconShare;
+export const info = iconInfo;
 
 export default [
   accept,
@@ -133,4 +135,5 @@ export default [
   consumerHomeIllustration,
   consumerHomePizza,
   share,
+  info,
 ];

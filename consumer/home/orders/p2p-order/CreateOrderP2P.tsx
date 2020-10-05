@@ -144,6 +144,7 @@ export default function ({ navigation, route }: Props) {
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         navigateFleetDetail={navigateFleetDetail}
         confirmOrder={confirmOrderHandler}
+        navigation={navigation}
       />
     </View>
   );

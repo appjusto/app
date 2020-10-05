@@ -7,7 +7,7 @@ import { texts, colors, screens } from '../../styles';
 export default function Terms() {
   return (
     <ScrollView>
-      <View style={{ ...screens.lightGrey, marginBottom: 32 }}>
+      <View style={{ ...screens.lightGrey, paddingBottom: 32 }}>
         <Text style={{ ...texts.big, marginBottom: 8, marginTop: 16 }}>
           {t('Termos de uso e política de privacidade')}
         </Text>

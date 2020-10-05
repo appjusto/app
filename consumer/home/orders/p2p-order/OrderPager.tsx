@@ -1,28 +1,35 @@
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { Place, Order, WithId, Fleet } from 'appjusto-types';
 import { IuguCustomerPaymentMethod } from 'appjusto-types/payment/iugu';
 import React, { useRef, useState } from 'react';
-import { View, NativeSyntheticEvent } from 'react-native';
+import { View, NativeSyntheticEvent, Text, Image } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 
+import * as icons from '../../../../assets/icons';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../../common/components/texts/LabeledText';
+import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import { placeValid } from '../../../../common/store/order/validators';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
-import { padding } from '../../../../common/styles';
+import { halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { HomeNavigatorParamList } from '../../types';
 import OrderStep from './OrderStep';
 import OrderSummary from './OrderSummary';
 import { Steps } from './types';
+
+type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
 
 type Props = {
   origin: Partial<Place>;
   destination: Partial<Place>;
   order?: WithId<Order>;
   paymentMethod?: IuguCustomerPaymentMethod;
+  navigation: ScreenNavigationProp;
   updateOrigin: (value: Partial<Place>) => void;
   updateDestination: (value: Partial<Place>) => void;
   navigateToAddressComplete: (value: string, returnParam: string) => void;
@@ -36,6 +43,7 @@ export default function ({
   destination,
   order,
   paymentMethod,
+  navigation,
   updateOrigin,
   updateDestination,
   navigateToAddressComplete,
@@ -45,6 +53,9 @@ export default function ({
 }: Props) {
   // refs
   const viewPager = useRef<ViewPager>(null);
+
+  //context
+  const tallerDevice = useTallerDevice();
 
   // app state
   const busy = useSelector(getUIBusy);
@@ -96,7 +107,15 @@ export default function ({
 
       <ViewPager ref={viewPager} style={{ flex: 1 }} onPageScroll={onPageScroll}>
         {/* origin */}
-        <PaddedView style={{ flex: 1, justifyContent: 'flex-end' }}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'flex-end',
+            padding,
+            paddingBottom: tallerDevice ? padding : 2,
+            paddingTop: tallerDevice ? padding : 2,
+          }}
+        >
           <TouchableWithoutFeedback
             onPress={() => {
               navigateToAddressComplete(origin.address?.description ?? '', 'origin');
@@ -108,7 +127,7 @@ export default function ({
           </TouchableWithoutFeedback>
 
           <DefaultInput
-            style={{ marginTop: padding }}
+            style={{ marginTop: tallerDevice ? padding : 4 }}
             value={origin.additionalInfo ?? ''}
             title={t('Complemento (se houver)')}
             placeholder={t('Apartamento, sala, loja, etc.')}
@@ -116,7 +135,7 @@ export default function ({
           />
 
           <DefaultInput
-            style={{ marginTop: padding }}
+            style={{ marginTop: tallerDevice ? padding : 4 }}
             value={origin.intructions ?? ''}
             title={t('Instruções para entrega')}
             placeholder={t('Quem irá atender o entregador, etc.')}
@@ -128,16 +147,34 @@ export default function ({
 
           <View style={{ flex: 1 }} />
 
+          <TouchableWithoutFeedback onPress={() => navigation.navigate('TransportableItems')}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 4 }}>
+              <Image source={icons.info} />
+              <Text style={{ ...texts.small, marginLeft: 4 }}>
+                {t('Saiba o que pode ser transportado')}
+              </Text>
+            </View>
+          </TouchableWithoutFeedback>
+
           <DefaultButton
             title={t('Confirmar local de retirada')}
             onPress={nextStepHandler}
             disabled={!stepReady(step + 1)}
+            style={{ paddingTop: tallerDevice ? 0 : halfPadding }}
           />
-        </PaddedView>
+        </View>
 
         {/* destination */}
         {placeValid(origin) && (
-          <PaddedView style={{ flex: 1, justifyContent: 'flex-end' }}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+              padding,
+              paddingBottom: tallerDevice ? padding : 2,
+              paddingTop: tallerDevice ? padding : 2,
+            }}
+          >
             <TouchableWithoutFeedback
               onPress={() => {
                 navigateToAddressComplete(destination?.address?.description ?? '', 'destination');
@@ -149,7 +186,7 @@ export default function ({
             </TouchableWithoutFeedback>
 
             <DefaultInput
-              style={{ marginTop: padding }}
+              style={{ marginTop: tallerDevice ? padding : 4 }}
               value={destination.additionalInfo ?? ''}
               title={t('Complemento (se houver)')}
               placeholder={t('Apartamento, sala, loja, etc.')}
@@ -157,7 +194,7 @@ export default function ({
             />
 
             <DefaultInput
-              style={{ marginTop: padding }}
+              style={{ marginTop: tallerDevice ? padding : 4 }}
               value={destination.intructions ?? ''}
               title={t('Instruções para entrega')}
               placeholder={t('Quem irá atender o entregador, etc.')}
@@ -169,13 +206,23 @@ export default function ({
 
             <View style={{ flex: 1 }} />
 
+            <TouchableWithoutFeedback onPress={() => navigation.navigate('TransportableItems')}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 4 }}>
+                <Image source={icons.info} />
+                <Text style={{ ...texts.small, marginLeft: 4 }}>
+                  {t('Saiba o que pode ser transportado')}
+                </Text>
+              </View>
+            </TouchableWithoutFeedback>
+
             <DefaultButton
+              style={{ paddingTop: tallerDevice ? 0 : halfPadding }}
               title={t('Confirmar local de entrega')}
               onPress={nextStepHandler}
               disabled={!stepReady(step + 1)}
               activityIndicator={step === Steps.Destination && busy}
             />
-          </PaddedView>
+          </View>
         )}
 
         {/* confirmation */}

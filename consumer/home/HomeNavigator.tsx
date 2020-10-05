@@ -15,6 +15,7 @@ import OngoingOrder from './orders/OngoingOrder';
 import OrderConfirmedFeedback from './orders/OrderConfirmedFeedback';
 import OrderDeliveredFeedback from './orders/OrderDeliveredFeedback';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
+import TransportableItems from './orders/p2p-order/TransportableItems';
 import { HomeNavigatorParamList } from './types';
 
 const Stack = createStackNavigator<HomeNavigatorParamList>();
@@ -36,6 +37,11 @@ export default function () {
         name="AddressComplete"
         component={AddressComplete}
         options={{ title: t('Selecione o endereço') }}
+      />
+      <Stack.Screen
+        name="TransportableItems"
+        component={TransportableItems}
+        options={{ title: t('Informações Gerais') }}
       />
       <Stack.Screen
         name="FleetDetail"
