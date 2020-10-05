@@ -72,7 +72,7 @@ export default function ({ navigation }: Props) {
             </PaddedView>
           )}
         </ShowIf>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => navigation.navigate('History')}>
           <View
             style={[
               styles.card,
@@ -91,6 +91,7 @@ export default function ({ navigation }: Props) {
             </View>
           </View>
         </TouchableOpacity>
+        {/* TODO: add logic to the share component below */}
         <TouchableOpacity>
           <View
             style={[
