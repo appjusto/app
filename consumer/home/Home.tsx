@@ -2,7 +2,8 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Constants from 'expo-constants';
-import React, { useEffect, useContext } from 'react';
+import * as Location from 'expo-location';
+import React, { useEffect, useContext, useState } from 'react';
 import { View, TouchableOpacity, Text, Image, ImageBackground, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
@@ -45,12 +46,34 @@ export default function ({ navigation }: Props) {
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
   const ongoingOrders = useSelector(getOngoingOrders);
+  const [location, setLocation] = useState(null);
 
   // side effects
   useEffect(() => {
     if (!user) return;
     return dispatch(observeProfile(api)(flavor, user.uid));
   }, [user]);
+
+  // request location permission
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestPermissionsAsync();
+      if (status !== 'granted') {
+        navigation.navigate('PermissionDeniedFeedback', {
+          title: t('Precisamos acessar sua localização'),
+          subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
+        });
+      }
+
+      const location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
+  //availableCouriers and availableFleets
+  //Todo: replace with real data
+  const availableCouriers = 12;
+  const availableFleets = 34;
 
   // UI
   const paddingTop = Constants.statusBarHeight;
@@ -72,7 +95,29 @@ export default function ({ navigation }: Props) {
             </PaddedView>
           )}
         </ShowIf>
-        <TouchableOpacity onPress={() => navigation.navigate('History')}>
+        {/* TODO: add logic to display available couriers and fleets */}
+        <TouchableOpacity onPress={() => {}}>
+          <View
+            style={[
+              styles.card,
+              {
+                padding: tallerDevice ? padding : halfPadding,
+                marginBottom: tallerDevice ? padding : halfPadding,
+              },
+            ]}
+          >
+            <Image source={icons.delivery} />
+            <View style={{ marginLeft: padding }}>
+              <Text style={{ ...texts.default }}>
+                {availableCouriers} {t('entregadores disponíveis')}
+              </Text>
+              <Text style={{ ...texts.small, color: colors.darkGrey }}>
+                {t(`em ${availableFleets} frotas ativas na sua região`)}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('HistoryNavigator')}>
           <View
             style={[
               styles.card,

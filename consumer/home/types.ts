@@ -39,4 +39,8 @@ export type HomeNavigatorParamList = {
     orderId: string;
   };
   TransportableItems: undefined;
+  PermissionDeniedFeedback: {
+    title: string;
+    subtitle: string;
+  };
 } & ChatParamList;

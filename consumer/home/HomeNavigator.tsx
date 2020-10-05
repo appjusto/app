@@ -17,6 +17,7 @@ import OrderDeliveredFeedback from './orders/OrderDeliveredFeedback';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import TransportableItems from './orders/p2p-order/TransportableItems';
 import { HomeNavigatorParamList } from './types';
+import PermissionDeniedFeedback from '../../common/screens/PermissionDeniedFeedback';
 
 const Stack = createStackNavigator<HomeNavigatorParamList>();
 export default function () {
@@ -62,6 +63,11 @@ export default function () {
         name="ProfilePaymentMethods"
         component={ProfilePaymentMethods}
         options={{ title: t('Formas de pagamento') }}
+      />
+      <Stack.Screen
+        name="PermissionDeniedFeedback"
+        component={PermissionDeniedFeedback}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="OrderConfirmedFeedback"

@@ -35,6 +35,7 @@ const iconMotocycleSmall = require('./icons/iconMotocycleSmall.png');
 const iconOnFootSmall = require('./icons/iconOnFootSmall.png');
 const iconScooterSmall = require('./icons/iconScooterSmall.png');
 const iconIllustration = require('./icons/illustration-intro-screen.png');
+const illustrationDelivery = require('./icons/illustration-medium-delivery-green.png');
 const iconIllustrationPizza = require('./icons/illustration-pizza.png');
 const illustrationRestaurant = require('./icons/illustration-small-restaurant.png');
 const illustrationConsumerHome = require('./icons/illustrationHomeConsumer.png');
@@ -89,6 +90,7 @@ export const consumerHomeIllustration = illustrationConsumerHome;
 export const consumerHomePizza = illustrationRestaurant;
 export const share = iconShare;
 export const info = iconInfo;
+export const delivery = illustrationDelivery;
 
 export default [
   accept,
@@ -136,4 +138,5 @@ export default [
   consumerHomePizza,
   share,
   info,
+  delivery,
 ];
