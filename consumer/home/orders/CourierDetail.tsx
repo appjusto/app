@@ -25,7 +25,9 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  const { courierId } = route.params ?? {};
+  const { courierId, fleet } = route.params ?? {};
+
+  //look for the method to get the selfie
 
   //side effects
   useEffect(() => {

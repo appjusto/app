@@ -123,7 +123,12 @@ export default function ({ navigation, route }: Props) {
           <DefaultButton
             style={{ backgroundColor: colors.white, ...borders.default }}
             title={t('Mais informações')}
-            onPress={() => navigation.navigate('CourierDetail', { courierId: order.courier!.id })}
+            onPress={() =>
+              navigation.navigate('CourierDetail', {
+                courierId: order.courier!.id,
+                fleet: order.fare!.fleet,
+              })
+            }
           />
         </View>
       </PaddedView>
