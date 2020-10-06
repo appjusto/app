@@ -25,6 +25,7 @@ import HomeOngoingOrderCard from './cards/HomeOngoingOrderCard';
 import { HomeNavigatorParamList } from './types';
 import useLastKnownLocation from '../../common/hooks/useLastKnownLocation';
 import { nanoid } from 'nanoid/non-secure';
+import { fetchTotalCouriersNearby } from '../../common/store/courier/actions';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<HomeNavigatorParamList, 'Home'>,
@@ -52,6 +53,7 @@ export default function ({ navigation }: Props) {
   // state
   const [locationKey] = useState(nanoid());
   const { lastKnownLocation, permissionResponse } = useLastKnownLocation(true, locationKey);
+  const [availableCouriers, setAvailableCouriers] = useState(0);
 
   // side effects
   useEffect(() => {
@@ -72,13 +74,11 @@ export default function ({ navigation }: Props) {
   useEffect(() => {
     console.log(lastKnownLocation);
     if (!lastKnownLocation) return;
-    // TODO: get couriers working nearby
+    (async () => {
+      const { total } = await dispatch(fetchTotalCouriersNearby(api)(lastKnownLocation.coords));
+      setAvailableCouriers(total);
+    })();
   }, [lastKnownLocation]);
-
-  //availableCouriers and availableFleets
-  //Todo: replace with real data
-  const availableCouriers = 12;
-  const availableFleets = 34;
 
   // UI
   const paddingTop = Constants.statusBarHeight;
@@ -117,7 +117,7 @@ export default function ({ navigation }: Props) {
                 {availableCouriers} {t('entregadores disponíveis')}
               </Text>
               <Text style={{ ...texts.small, color: colors.darkGrey }}>
-                {t(`em ${availableFleets} frotas ativas na sua região`)}
+                {t(`num raio de 15km`)}
               </Text>
             </View>
           </View>

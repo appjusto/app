@@ -1,5 +1,9 @@
-import { Bank, WithId } from 'appjusto-types';
+import { Bank, LatLng, WithId } from 'appjusto-types';
 import firebase from 'firebase';
+
+type FetchTotalCouriersNearbyData = {
+  total: number;
+};
 
 export default class CourierApi {
   constructor(
@@ -11,6 +15,14 @@ export default class CourierApi {
   // submit profile
   async submitProfile() {
     return this.functions.httpsCallable('submitProfile')();
+  }
+
+  async fetchTotalCouriersNearby(
+    location: LatLng,
+    distance: number = 15000
+  ): Promise<FetchTotalCouriersNearbyData> {
+    return (await this.functions.httpsCallable('fetchTotalCouriersNearby')({ location, distance }))
+      .data;
   }
 
   // firestore
