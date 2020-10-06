@@ -23,7 +23,7 @@ export default () => {
   const icon = `./assets/icon-${flavor}.png`;
   return {
     expo: {
-      name: (flavor === 'consumer' && 'App Justo') || (flavor === 'courier' && 'Entregador Justo'),
+      name: (flavor === 'consumer' && 'App Justo') || (flavor === 'courier' && 'Parceiro Justo'),
       slug: `app-justo-${flavor}`,
       icon,
       scheme: 'appjusto',

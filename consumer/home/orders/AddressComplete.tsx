@@ -77,8 +77,6 @@ export default function ({ navigation, route }: Props) {
   // TODO: what would be a better threshold than 500ms?
   const getAddress = useCallback(
     debounce<(input: string, session: string) => void>(async (input: string, session) => {
-      console.log('searching', input);
-
       const coords: LatLng | undefined = lastKnownLocation
         ? {
             latitude: lastKnownLocation.coords.latitude,
