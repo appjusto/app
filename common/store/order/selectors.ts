@@ -1,4 +1,4 @@
-import { Order, OrderStatus, Place, WithId } from 'appjusto-types';
+import { ChatMessage, Order, Place, WithId } from 'appjusto-types';
 import { first, memoize, uniq } from 'lodash';
 import { createSelector } from 'reselect';
 
@@ -86,17 +86,33 @@ export const getPlacesFromPreviousOrders = createSelector(getOrders, (orders) =>
   }, [])
 );
 
+// chat messages
+
 export const getOrderChat = createSelector(getOrderState, (orderState) =>
-  memoize((orderId: string) => {
-    const messages = orderState.chatByOrderId[orderId];
-    return messages.reduce<GroupedChatMessages[]>((groups, message) => {
-      const currentGroup = first(groups);
-      if (message.from === currentGroup?.from) {
-        currentGroup!.messages.push(message);
-        return groups;
-      }
-      // use as id for chat group the id of the first message of the group
-      return [{ id: message.id, from: message.from, messages: [message] }, ...groups];
-    }, []);
-  })
+  memoize((orderId: string) => orderState.chatByOrderId[orderId] ?? [])
 );
+
+export const groupOrderChatMessages = (messages: WithId<ChatMessage>[]) =>
+  messages.reduce<GroupedChatMessages[]>((groups, message) => {
+    const currentGroup = first(groups);
+    if (message.from === currentGroup?.from) {
+      currentGroup!.messages.push(message);
+      return groups;
+    }
+    // use as id for chat group the id of the first message of the group
+    return [{ id: message.id, from: message.from, messages: [message] }, ...groups];
+  }, []);
+
+export const getLastReadMessage = createSelector(getOrderState, (orderState) =>
+  memoize((orderId: string) => orderState.lastChatMessageReadByOrderId[orderId] ?? null)
+);
+
+export const getOrderChatUnreadCount = (
+  messages: WithId<ChatMessage>[],
+  lastMessageRead: WithId<ChatMessage>
+) => {
+  if (messages.length === 0) return 0;
+  if (!lastMessageRead) return messages.length;
+  const index = messages.findIndex((value) => value.id === lastMessageRead.id);
+  return messages.length - index - 1;
+};

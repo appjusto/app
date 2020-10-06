@@ -3,7 +3,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useMemo } from 'react';
 import { View, TouchableOpacity, Text, Image, ImageBackground, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,7 +14,12 @@ import PaddedView from '../../common/components/containers/PaddedView';
 import ShowIf from '../../common/components/views/ShowIf';
 import useTallerDevice from '../../common/hooks/useTallerDevice';
 import { getFlavor } from '../../common/store/config/selectors';
-import { getOngoingOrders } from '../../common/store/order/selectors';
+import {
+  getLastReadMessage,
+  getOngoingOrders,
+  getOrderChat,
+  getOrderChatUnreadCount,
+} from '../../common/store/order/selectors';
 import { observeProfile } from '../../common/store/user/actions';
 import { getUser } from '../../common/store/user/selectors';
 import { colors, texts, padding, borders, halfPadding } from '../../common/styles';
@@ -54,6 +59,20 @@ export default function ({ navigation }: Props) {
   const [locationKey] = useState(nanoid());
   const { lastKnownLocation, permissionResponse } = useLastKnownLocation(true, locationKey);
   const [availableCouriers, setAvailableCouriers] = useState(0);
+  const getOrderChatByOrderId = useSelector(getOrderChat);
+  const getLastReadMessageByOrderId = useSelector(getLastReadMessage);
+  const unreadCount = useMemo(() => {
+    if (ongoingOrders.length === 0) return 0;
+    // TODO: make it work for multiple simultaneous orders;
+    const [order] = ongoingOrders;
+    const messages = getOrderChatByOrderId(order.id);
+    const lastReadMessage = getLastReadMessageByOrderId(order.id);
+    return getOrderChatUnreadCount(messages, lastReadMessage);
+  }, [ongoingOrders]);
+
+  useEffect(() => {
+    console.log('unreadCount: ', unreadCount);
+  }, [unreadCount]);
 
   // side effects
   useEffect(() => {
