@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Address } from 'appjusto-types';
+import { Address, LatLng } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import debounce from 'lodash/debounce';
 import { nanoid } from 'nanoid/non-secure';
@@ -22,6 +22,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import useAxiosCancelToken from '../../../common/hooks/useAxiosCancelToken';
+import useLastKnownLocation from '../../../common/hooks/useLastKnownLocation';
 import { AutoCompleteResult } from '../../../common/store/api/maps';
 import { getAddressAutocomplete } from '../../../common/store/order/actions';
 import { getPlacesFromPreviousOrders } from '../../../common/store/order/selectors';
@@ -52,6 +53,8 @@ export default function ({ navigation, route }: Props) {
   const busy = useSelector(getUIBusy);
 
   // state
+  const [locationKey] = useState(nanoid());
+  const { lastKnownLocation } = useLastKnownLocation(true, locationKey);
   const [autocompleteSession] = useState(nanoid());
   const [searchText, setSearchText] = useState(value ?? '');
   const [autocompletePredictions, setAutoCompletePredictions] = useState<AutoCompleteResult[]>([]);
@@ -75,12 +78,19 @@ export default function ({ navigation, route }: Props) {
   const getAddress = useCallback(
     debounce<(input: string, session: string) => void>(async (input: string, session) => {
       console.log('searching', input);
+
+      const coords: LatLng | undefined = lastKnownLocation
+        ? {
+            latitude: lastKnownLocation.coords.latitude,
+            longitude: lastKnownLocation.coords.longitude,
+          }
+        : undefined;
       const results = await dispatch(
-        getAddressAutocomplete(api)(input, session, createCancelToken())
+        getAddressAutocomplete(api)(input, session, createCancelToken(), coords)
       );
       if (results) setAutoCompletePredictions(results);
     }, 500),
-    []
+    [lastKnownLocation]
   );
 
   // effects

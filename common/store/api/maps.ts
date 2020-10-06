@@ -1,3 +1,4 @@
+import { LatLng } from 'appjusto-types';
 import axios, { CancelToken } from 'axios';
 
 type GooglePlacesAddressResult = {
@@ -25,23 +26,31 @@ export type AutoCompleteResult = {
   country: string;
 };
 
+const SEARCH_RADIUS = 30 * 1000; // 30km
+
 export default class MapsApi {
   constructor(private googleMapsApiKey: string) {}
   async googlePlacesAutocomplete(
     input: string,
     sessionToken: string,
-    cancelToken?: CancelToken
+    cancelToken?: CancelToken,
+    coords?: LatLng
   ): Promise<AutoCompleteResult[] | null> {
-    // TODO: location & radius?
     const url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-    const params = {
-      key: this.googleMapsApiKey,
-      input,
-      sessionToken,
-      types: 'address',
-      components: 'country:BR', // i18n
-      language: 'pt-BR', // i18n
-    };
+    const params = Object.assign(
+      {
+        key: this.googleMapsApiKey,
+        input,
+        sessionToken,
+        // types: 'address',
+        components: 'country:BR', // i18n
+        language: 'pt-BR', // i18n
+      },
+      coords
+        ? { locationbias: `circle:${SEARCH_RADIUS}@${coords?.latitude},${coords?.longitude}` }
+        : {}
+    );
+    console.log(params);
     try {
       const response = await axios.get(url, { cancelToken, params });
       const { predictions } = response.data as GooglePlacesPredictionsResult;

@@ -48,6 +48,7 @@ export default function ({ navigation }: Props) {
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
   const ongoingOrders = useSelector(getOngoingOrders);
+
   // state
   const [locationKey] = useState(nanoid());
   const { lastKnownLocation, permissionResponse } = useLastKnownLocation(true, locationKey);

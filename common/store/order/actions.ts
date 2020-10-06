@@ -1,4 +1,4 @@
-import { Place, Order, ChatMessage, WithId, Fare } from 'appjusto-types';
+import { Place, Order, ChatMessage, WithId, Fare, LatLng } from 'appjusto-types';
 import { CancelToken } from 'axios';
 
 import { AppDispatch } from '../../app/context';
@@ -13,10 +13,11 @@ export const ORDER_CHAT_UPDATED = 'ORDER_CHAT_UPDATED';
 export const getAddressAutocomplete = (api: Api) => (
   input: string,
   sessionToken: string,
-  cancelToken?: CancelToken
+  cancelToken?: CancelToken,
+  coords?: LatLng
 ) => async (dispatch: AppDispatch) => {
   return dispatch(
-    awaitWithFeedback(api.maps().googlePlacesAutocomplete(input, sessionToken, cancelToken))
+    awaitWithFeedback(api.maps().googlePlacesAutocomplete(input, sessionToken, cancelToken, coords))
   );
 };
 
