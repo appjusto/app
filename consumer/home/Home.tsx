@@ -23,6 +23,8 @@ import { LoggedParamList } from '../types';
 import ConsumerHomeControls from './ConsumerHomeControls';
 import HomeOngoingOrderCard from './cards/HomeOngoingOrderCard';
 import { HomeNavigatorParamList } from './types';
+import useLastKnownLocation from '../../common/hooks/useLastKnownLocation';
+import { nanoid } from 'nanoid/non-secure';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<HomeNavigatorParamList, 'Home'>,
@@ -42,11 +44,13 @@ export default function ({ navigation }: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const tallerDevice = useTallerDevice();
 
-  // state
+  // app state
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
   const ongoingOrders = useSelector(getOngoingOrders);
-  const [location, setLocation] = useState(null);
+  // state
+  const [locationKey] = useState(nanoid());
+  const { lastKnownLocation, permissionResponse } = useLastKnownLocation(true, locationKey);
 
   // side effects
   useEffect(() => {
@@ -56,19 +60,19 @@ export default function ({ navigation }: Props) {
 
   // request location permission
   useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestPermissionsAsync();
-      if (status !== 'granted') {
-        navigation.navigate('PermissionDeniedFeedback', {
-          title: t('Precisamos acessar sua localização'),
-          subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
-        });
-      }
+    if (permissionResponse?.status === Location.PermissionStatus.DENIED) {
+      navigation.navigate('PermissionDeniedFeedback', {
+        title: t('Precisamos acessar sua localização'),
+        subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
+      });
+    }
+  }, [permissionResponse]);
 
-      const location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    })();
-  }, []);
+  useEffect(() => {
+    console.log(lastKnownLocation);
+    if (!lastKnownLocation) return;
+    // TODO: get couriers working nearby
+  }, [lastKnownLocation]);
 
   //availableCouriers and availableFleets
   //Todo: replace with real data
@@ -117,7 +121,9 @@ export default function ({ navigation }: Props) {
             </View>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('HistoryNavigator')}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('HistoryNavigator', { screen: 'OrderHistory' })}
+        >
           <View
             style={[
               styles.card,

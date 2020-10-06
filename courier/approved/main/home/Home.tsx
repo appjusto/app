@@ -84,7 +84,9 @@ export default function ({ navigation }: Props) {
         )}
       </ShowIf>
       <PaddedView half>
-        <TouchableOpacity onPress={() => navigation.navigate('DeliveriesNavigator')}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('DeliveriesNavigator', { screen: 'DeliveryHistory' })}
+        >
           <HomeDeliveriesSummary />
         </TouchableOpacity>
       </PaddedView>

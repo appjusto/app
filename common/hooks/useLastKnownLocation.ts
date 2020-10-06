@@ -11,15 +11,15 @@ const shouldAskPermission = (
   return response.canAskAgain;
 };
 
-export default function (enabled: boolean, key: string): Location.LocationData | undefined {
+export default function (enabled: boolean, key: string) {
   // state
   const [permissionResponse, setPermissionResponse] = useState<
     Permissions.PermissionResponse | null | undefined
   >(undefined);
-  const [lastKnownPosition, setLastKnownPosition] = useState<Location.LocationData>();
+  const [lastKnownLocation, setLastKnownLocation] = useState<Location.LocationObject | null>(null);
 
   // side effects
-  // key is used to allow restarting the process of verification
+  // key is used to allow restarting the verification process
   useEffect(() => {
     setPermissionResponse(null); // start or reset permission check process
   }, [key]);
@@ -35,11 +35,11 @@ export default function (enabled: boolean, key: string): Location.LocationData |
       }
       if (permissionResponse?.granted) {
         (async () => {
-          setLastKnownPosition(await Location.getLastKnownPositionAsync());
+          setLastKnownLocation(await Location.getLastKnownPositionAsync());
         })();
       }
     }
   }, [enabled, permissionResponse]);
 
-  return lastKnownPosition;
+  return { lastKnownLocation, permissionResponse };
 }
