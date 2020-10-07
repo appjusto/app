@@ -125,7 +125,7 @@ export default function ({ navigation, route }: Props) {
             title={t('Mais informações')}
             onPress={() =>
               navigation.navigate('CourierDetail', {
-                courierId: order.courier!.id,
+                orderId,
                 fleet: order.fare!.fleet,
               })
             }
