@@ -68,7 +68,7 @@ export default function ({ navigation }: Props) {
     const messages = getOrderChatByOrderId(order.id);
     const lastReadMessage = getLastReadMessageByOrderId(order.id);
     return getOrderChatUnreadCount(messages, lastReadMessage);
-  }, [ongoingOrders]);
+  }, [getOrderChatByOrderId]);
 
   useEffect(() => {
     console.log('unreadCount: ', unreadCount);
