@@ -14,4 +14,7 @@ export interface OrderState {
   chatByOrderId: {
     [key: string]: WithId<ChatMessage>[];
   };
+  lastChatMessageReadByOrderId: {
+    [key: string]: WithId<ChatMessage>;
+  };
 }

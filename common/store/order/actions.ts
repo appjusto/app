@@ -8,6 +8,7 @@ import { BUSY, awaitWithFeedback } from '../ui/actions';
 
 export const ORDERS_UPDATED = 'ORDERS_UPDATED';
 export const ORDER_CHAT_UPDATED = 'ORDER_CHAT_UPDATED';
+export const ORDER_CHAT_MESSAGE_READ = 'ORDER_CHAT_MESSAGE_READ';
 
 // consumers
 export const getAddressAutocomplete = (api: Api) => (
@@ -108,4 +109,10 @@ export const sendMessage = (api: Api) => (
   const result = await api.order().sendMessage(order.id, chat);
   dispatch({ type: BUSY, payload: false });
   return result;
+};
+
+export const markMessageAsRead = (orderId: string, message: WithId<ChatMessage>) => (
+  dispatch: AppDispatch
+) => {
+  dispatch({ type: ORDER_CHAT_MESSAGE_READ, payload: { orderId, message } });
 };

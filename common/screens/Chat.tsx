@@ -1,5 +1,5 @@
 import { RouteProp } from '@react-navigation/native';
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback, useContext, useMemo, useEffect } from 'react';
 import { View, FlatList, Text } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -10,8 +10,8 @@ import AvoidingView from '../components/containers/AvoidingView';
 import PaddedView from '../components/containers/PaddedView';
 import { ProfileIcon } from '../components/icons/RoundedIcon';
 import DefaultInput from '../components/inputs/DefaultInput';
-import { sendMessage } from '../store/order/actions';
-import { getOrderById, getOrderChat } from '../store/order/selectors';
+import { markMessageAsRead, sendMessage } from '../store/order/actions';
+import { getOrderById, getOrderChat, groupOrderChatMessages } from '../store/order/selectors';
 import { getUser } from '../store/user/selectors';
 import { screens, colors, padding, texts, borders } from '../styles';
 import { formatTime } from '../utils/formatters';
@@ -44,19 +44,25 @@ export default function ({ route }: Props) {
 
   // screen state
   const [inputText, setInputText] = useState('');
-  const orderChat = useSelector(getOrderChat)(orderId);
+  const messages = useSelector(getOrderChat)(orderId);
+  const groupedMessages = useMemo(() => groupOrderChatMessages(messages), [messages]);
 
   // handlers
   const sendMessageHandler = useCallback(async () => {
     dispatch(sendMessage(api)(order, user.uid, inputText.trim()));
     setInputText('');
   }, [order, inputText]);
+  useEffect(() => {
+    if (messages.length > 0) {
+      dispatch(markMessageAsRead(orderId, messages[messages.length - 1]));
+    }
+  }, [messages]);
   // UI
   return (
     <View style={[screens.default]}>
       <AvoidingView>
         <FlatList
-          data={orderChat}
+          data={groupedMessages}
           keyExtractor={(item) => item.id}
           style={{ backgroundColor: colors.darkGrey }}
           renderItem={({ item }) => (
