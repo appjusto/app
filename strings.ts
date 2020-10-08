@@ -23,6 +23,7 @@ const pt = {
   date: {
     formats: {
       default: '%d/%m/%Y',
+      monthYear: '%B, %-y',
     },
     day_names: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
     abbr_day_names: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],

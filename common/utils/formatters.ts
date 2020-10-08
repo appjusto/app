@@ -8,7 +8,8 @@ export const separateWithDot = (left: string, right: string) => `${left} \u25CF 
 
 // date & time
 
-export const formatDate = (date: Date) => i18n.l('date.formats.default', date);
+export const formatDate = (date: Date, pattern: 'default' | 'monthYear' = 'default') =>
+  i18n.l(`date.formats.${pattern}`, date);
 export const formatTime = (date: Date) => i18n.l('time.formats.default', date);
 export const getMonthName = (month: number) =>
   i18n.strftime(new Date(`2020-${padWithZero(month)}-01`), '%B');
