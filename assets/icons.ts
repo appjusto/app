@@ -7,6 +7,7 @@ const rejectIcon = require('./icons/cancel-icon.png');
 const iconCheckboxActive = require('./icons/checkbox-active.png');
 const iconCheckboxInactive = require('./icons/checkbox-inactive.png');
 const iconChecklistTick = require('./icons/checklist-tick.png');
+const iconSlideConfirm = require('./icons/drag-button-confirm.png');
 const dragButton = require('./icons/drag-button.png');
 const iconRectangle = require('./icons/green-rectangle.png');
 const iconHome = require('./icons/home.png');
@@ -91,6 +92,7 @@ export const consumerHomePizza = illustrationRestaurant;
 export const share = iconShare;
 export const info = iconInfo;
 export const delivery = illustrationDelivery;
+export const slideConfirm = iconSlideConfirm;
 
 export default [
   accept,
@@ -139,4 +141,5 @@ export default [
   share,
   info,
   delivery,
+  slideConfirm,
 ];

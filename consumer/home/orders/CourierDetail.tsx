@@ -16,6 +16,7 @@ import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { getSelfieURL } from '../../../common/store/courier/actions';
 import { getOrderById } from '../../../common/store/order/selectors';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
+import { formatDate } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { HomeNavigatorParamList } from '../types';
 import OrderFleetCard from './OrderFleetCard';
@@ -37,15 +38,20 @@ export default function ({ navigation, route }: Props) {
 
   //screen state
   const [selfie, setSelfie] = useState<ImageURISource | undefined | null>();
+  const createdOn = (order.courier!.joined as firebase.firestore.Timestamp).toDate();
 
-  //look for the method to get the selfie
 
-  // // side effects
+  // side effects
   // useEffect(() => {
   //   (async () => {
-  //     console.log(orderId);
+  //     const selfieUri = await dispatch(getSelfieURL(api)(order.courier!.id));
+  //     if (!selfieUri) setSelfie(null);
+  //     else setSelfie({ uri: selfieUri });
   //   })();
-  // }, []);
+  // }, [orderId]);
+
+  //TODO make an icon component that displays the courier selfie. it could be big -
+  // for this screen - and small - for the chat. Put the logic to get the selfie in there.
 
   const tallerDevice = useTallerDevice();
 
@@ -62,13 +68,13 @@ export default function ({ navigation, route }: Props) {
               <Text style={{ ...texts.small, color: colors.darkGrey, marginTop: 8 }}>
                 {t('No appJusto desde')}
               </Text>
-              <Text style={{ ...texts.small }}>{t('Outubro, 20')}</Text>
+              <Text style={{ ...texts.small }}>{formatDate(createdOn, 'monthYear')}</Text>
             </View>
           </View>
           <DefaultButton
             title={t('Iniciar um chat com o entregador')}
             style={{ marginBottom: 8 }}
-            onPress={() => {}}
+            onPress={() => navigation.navigate('Chat', { orderId })}
           />
           <DefaultButton
             title={t('Relatar um problema')}
@@ -90,25 +96,27 @@ export default function ({ navigation, route }: Props) {
             <Text style={{ ...texts.small, color: colors.darkGrey }}>
               {t('Entregas realizadas perfeitamente')}
             </Text>
-            <Text style={{ ...texts.medium }}>{t('000')}</Text>
+            <Text style={{ ...texts.medium }}>{order.courier?.statistics.deliveries}</Text>
           </View>
           <View style={{ marginTop: 16, alignItems: 'flex-start', paddingHorizontal: padding }}>
             <Text style={{ ...texts.small, color: colors.darkGrey }}>
               {t('Entregas canceladas')}
             </Text>
-            <Text style={{ ...texts.medium }}>{t('000')}</Text>
+            <Text style={{ ...texts.medium }}>{order.courier?.statistics.canceled}</Text>
           </View>
           <View style={{ marginTop: 16, alignItems: 'flex-start', paddingHorizontal: padding }}>
             <Text style={{ ...texts.small, color: colors.darkGrey }}>
               {t('Tempo médio das entregas')}
             </Text>
-            <Text style={{ ...texts.medium }}>{t('000')}</Text>
+            <Text style={{ ...texts.medium }}>
+              {order.courier?.statistics.avgDeliveryTime ?? 0}
+            </Text>
           </View>
           <View style={{ marginTop: 16, alignItems: 'flex-start', paddingHorizontal: padding }}>
             <Text style={{ ...texts.small, color: colors.darkGrey }}>
               {t('Média das gorjetas recebidas por entrega')}
             </Text>
-            <Text style={{ ...texts.medium }}>{t('000')}</Text>
+            <Text style={{ ...texts.medium }}>{order.courier?.statistics.avgTipReceived ?? 0}</Text>
           </View>
           <PaddedView>
             <Text style={{ ...texts.small, color: colors.darkGrey, marginVertical: 8 }}>
