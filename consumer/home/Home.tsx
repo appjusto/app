@@ -141,27 +141,31 @@ export default function ({ navigation }: Props) {
             </View>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('HistoryNavigator', { screen: 'OrderHistory' })}
-        >
-          <View
-            style={[
-              styles.card,
-              {
-                padding: tallerDevice ? padding : halfPadding,
-                marginBottom: tallerDevice ? padding : halfPadding,
-              },
-            ]}
-          >
-            <Image source={icons.requests} />
-            <View style={{ marginLeft: padding }}>
-              <Text style={{ ...texts.default }}>{t('Histórico de Pedidos')}</Text>
-              <Text style={{ ...texts.small, color: colors.darkGrey }}>
-                {t('Histórico de Pedidos')}
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity>
+        <ShowIf test={ongoingOrders.length <= 0}>
+          {() => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('HistoryNavigator', { screen: 'OrderHistory' })}
+            >
+              <View
+                style={[
+                  styles.card,
+                  {
+                    padding: tallerDevice ? padding : halfPadding,
+                    marginBottom: tallerDevice ? padding : halfPadding,
+                  },
+                ]}
+              >
+                <Image source={icons.requests} />
+                <View style={{ marginLeft: padding }}>
+                  <Text style={{ ...texts.default }}>{t('Histórico de Pedidos')}</Text>
+                  <Text style={{ ...texts.small, color: colors.darkGrey }}>
+                    {t('Histórico de Pedidos')}
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          )}
+        </ShowIf>
         {/* TODO: add logic to the share component below */}
         <TouchableOpacity>
           <View

@@ -12,6 +12,7 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import { ProfileIcon } from '../../../common/components/icons/RoundedIcon';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import HR from '../../../common/components/views/HR';
+import ShowIf from '../../../common/components/views/ShowIf';
 import useNotificationToken from '../../../common/hooks/useNotificationToken';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { getOrderById } from '../../../common/store/order/selectors';
@@ -19,6 +20,7 @@ import { updateProfile } from '../../../common/store/user/actions';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { HomeNavigatorParamList } from '../types';
+import CourierStatusHighlight from './CourierStatusHighlight';
 import OrderMap from './p2p-order/OrderMap';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'OngoingOrder'>;
@@ -121,6 +123,14 @@ export default function ({ navigation, route }: Props) {
     <View style={{ ...screens.default }}>
       <View style={{ flex: 1 }}>
         <OrderMap order={order} />
+        <ShowIf test={!!courierWaiting}>
+          {() => (
+            <CourierStatusHighlight
+              title={courierWaiting!.title}
+              subtitle={courierWaiting!.message}
+            />
+          )}
+        </ShowIf>
       </View>
       <PaddedView style={{ backgroundColor: colors.white, flexDirection: 'row' }}>
         <ProfileIcon />
@@ -143,7 +153,12 @@ export default function ({ navigation, route }: Props) {
           <DefaultButton
             style={{ backgroundColor: colors.white, ...borders.default }}
             title={t('Mais informações')}
-            onPress={() => navigation.navigate('CourierDetail', { courierId: order.courier!.id })}
+            onPress={() =>
+              navigation.navigate('CourierDetail', {
+                orderId,
+                fleet: order.fare!.fleet,
+              })
+            }
           />
         </View>
       </PaddedView>

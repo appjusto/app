@@ -145,10 +145,17 @@ export default function ({
             numberOfLines={3}
           />
 
-          <View style={{ flex: 1 }} />
+          {!tallerDevice && <View style={{ flex: 1 }} />}
 
           <TouchableWithoutFeedback onPress={() => navigation.navigate('TransportableItems')}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 4 }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingBottom: 4,
+                marginTop: tallerDevice ? halfPadding : 0,
+              }}
+            >
               <Image source={icons.info} />
               <Text style={{ ...texts.small, marginLeft: 4 }}>
                 {t('Saiba o que pode ser transportado')}
@@ -156,11 +163,13 @@ export default function ({
             </View>
           </TouchableWithoutFeedback>
 
+          <View style={{ flex: 1 }} />
+
           <DefaultButton
             title={t('Confirmar local de retirada')}
             onPress={nextStepHandler}
             disabled={!stepReady(step + 1)}
-            style={{ paddingTop: tallerDevice ? 0 : halfPadding }}
+            style={{ marginTop: tallerDevice ? 0 : halfPadding }}
           />
         </View>
 
@@ -204,10 +213,17 @@ export default function ({
               numberOfLines={3}
             />
 
-            <View style={{ flex: 1 }} />
+            {!tallerDevice && <View style={{ flex: 1 }} />}
 
             <TouchableWithoutFeedback onPress={() => navigation.navigate('TransportableItems')}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 4 }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingBottom: 4,
+                  marginTop: tallerDevice ? halfPadding : 0,
+                }}
+              >
                 <Image source={icons.info} />
                 <Text style={{ ...texts.small, marginLeft: 4 }}>
                   {t('Saiba o que pode ser transportado')}
@@ -215,8 +231,10 @@ export default function ({
               </View>
             </TouchableWithoutFeedback>
 
+            <View style={{ flex: 1 }} />
+
             <DefaultButton
-              style={{ paddingTop: tallerDevice ? 0 : halfPadding }}
+              style={{ marginTop: tallerDevice ? 0 : halfPadding }}
               title={t('Confirmar local de entrega')}
               onPress={nextStepHandler}
               disabled={!stepReady(step + 1)}

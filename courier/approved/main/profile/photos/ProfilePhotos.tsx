@@ -111,6 +111,7 @@ export default function ({ navigation }: Props) {
   useEffect(() => {
     if (newSelfie) {
       setUploadingNewSelfie(UploadStatus.Uploading);
+      console.log('Upload started');
       (async () => {
         try {
           dispatch(
@@ -127,6 +128,7 @@ export default function ({ navigation }: Props) {
   useEffect(() => {
     if (newDocumentImage) {
       setUploadingNewDocumentImage(UploadStatus.Uploading);
+      console.log('Upload started');
       (async () => {
         try {
           dispatch(

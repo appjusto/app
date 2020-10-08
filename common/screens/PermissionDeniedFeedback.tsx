@@ -8,7 +8,7 @@ import { HomeParamList } from '../../courier/approved/main/home/types';
 import { t } from '../../strings';
 import DefaultButton from '../components/buttons/DefaultButton';
 import PaddedView from '../components/containers/PaddedView';
-import { colors, borders, screens, texts } from '../styles';
+import { colors, borders, screens, texts, padding } from '../styles';
 
 type ScreenNavigationProp = StackNavigationProp<HomeParamList, 'PermissionDeniedFeedback'>;
 type ScreenRouteProp = RouteProp<HomeParamList, 'PermissionDeniedFeedback'>;
@@ -27,7 +27,7 @@ export default ({ navigation, route }: Props) => {
 
   // UI
   return (
-    <PaddedView style={{ ...screens.configScreen }}>
+    <PaddedView style={{ ...screens.configScreen, paddingTop: padding }}>
       <Text style={{ ...texts.big }}>{title}</Text>
       <Text style={{ ...texts.default, color: colors.darkGrey, marginVertical: 32 }}>
         {subtitle}
