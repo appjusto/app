@@ -11,10 +11,12 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import { ProfileIcon } from '../../../common/components/icons/RoundedIcon';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import HR from '../../../common/components/views/HR';
+import ShowIf from '../../../common/components/views/ShowIf';
 import { getOrderById } from '../../../common/store/order/selectors';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { HomeNavigatorParamList } from '../types';
+import CourierStatusHighlight from './CourierStatusHighlight';
 import OrderMap from './p2p-order/OrderMap';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'OngoingOrder'>;
@@ -101,6 +103,16 @@ export default function ({ navigation, route }: Props) {
     <View style={{ ...screens.default }}>
       <View style={{ flex: 1 }}>
         <OrderMap order={order} />
+        <ShowIf
+          test={dispatchingState === 'arrived-pickup' || dispatchingState === 'arrived-destination'}
+        >
+          {() => (
+            <CourierStatusHighlight
+              title={courierWaiting!.title}
+              subtitle={courierWaiting!.message}
+            />
+          )}
+        </ShowIf>
       </View>
       <PaddedView style={{ backgroundColor: colors.white, flexDirection: 'row' }}>
         <ProfileIcon />

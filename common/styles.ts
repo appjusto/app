@@ -13,6 +13,7 @@ export const colors = {
   yellow: '#FFBE00',
   lightRed: '#FFF8F8',
   red: '#DC3545',
+  lightYellow: '#FFE493',
 };
 
 export const doublePadding = 16;
