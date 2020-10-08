@@ -15,7 +15,7 @@ import Pill from '../../../common/components/views/Pill';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { getSelfieURL } from '../../../common/store/courier/actions';
 import { getOrderById } from '../../../common/store/order/selectors';
-import { colors, padding, screens, texts } from '../../../common/styles';
+import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { HomeNavigatorParamList } from '../types';
 import OrderFleetCard from './OrderFleetCard';
@@ -70,7 +70,11 @@ export default function ({ navigation, route }: Props) {
             style={{ marginBottom: 8 }}
             onPress={() => {}}
           />
-          <DefaultButton title={t('Relatar um problema')} isWhite onPress={() => {}} />
+          <DefaultButton
+            title={t('Relatar um problema')}
+            onPress={() => {}}
+            style={{ ...borders.default, borderColor: colors.black, backgroundColor: colors.white }}
+          />
         </PaddedView>
         <HR height={8} />
         <View style={{ paddingVertical: padding }}>

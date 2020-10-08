@@ -4,7 +4,7 @@ import { View, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import { texts, screens, colors } from '../../../../common/styles';
+import { texts, screens, colors, borders } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { HomeNavigatorParamList } from '../../types';
 
@@ -12,8 +12,8 @@ type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'Transpo
 
 export default function () {
   return (
-    <ScrollView>
-      <PaddedView style={{ ...screens.lightGrey }}>
+    <ScrollView style={{ ...screens.lightGrey }}>
+      <PaddedView>
         <View>
           <Text style={{ ...texts.big }}>{t('Saiba o que pode ser transportado')}</Text>
         </View>
