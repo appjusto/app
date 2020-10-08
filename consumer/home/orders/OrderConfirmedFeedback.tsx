@@ -45,7 +45,7 @@ export default ({ navigation, route }: Props) => {
     if (order.status === 'canceled') {
       navigation.popToTop();
     } else if (order.status === 'dispatching') {
-      navigation.navigate('OngoingOrder', {
+      navigation.replace('OngoingOrder', {
         orderId,
       });
     }

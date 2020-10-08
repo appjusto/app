@@ -20,7 +20,7 @@ const {
 export default () => {
   const flavor = process.env.FLAVOR;
   const appId = `br.com.appjusto.${flavor}`;
-  const icon = `./assets/icon-${flavor}.png`;
+  const icon = flavor === 'courier' ? `./assets/icon-courier.png` : './assets/icon.png';
   return {
     expo: {
       name: (flavor === 'consumer' && 'App Justo') || (flavor === 'courier' && 'Parceiro Justo'),
