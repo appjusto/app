@@ -18,6 +18,7 @@ import { colors, halfPadding, screens, texts } from '../../../common/styles';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
 import PlaceSummary from '../../../consumer/home/orders/p2p-order/PlaceSummary';
 import { t } from '../../../strings';
+import StatusControl from './StatusControl';
 import { OngoingParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<OngoingParamList, 'OngoingDelivery'>;
@@ -71,11 +72,11 @@ export default function ({ navigation, route }: Props) {
   // UI
   const nextStepLabel = useMemo(() => {
     if (dispatchingState === 'going-pickup') {
-      return t('Cheguei no local de retirada');
+      return t('Cheguei para Retirada');
     } else if (dispatchingState === 'arrived-pickup') {
-      return t('Sai para a entrega');
+      return t('Sai para Entrega');
     } else if (dispatchingState === 'going-destination') {
-      return t('Cheguei no local de entrega');
+      return t('Cheguei para entrega');
     } else if (dispatchingState === 'arrived-destination') {
       return t('Finalizar entrega');
     }
@@ -109,12 +110,14 @@ export default function ({ navigation, route }: Props) {
         </ShowIf>
 
         <View style={{ marginTop: halfPadding }}>
-          <DefaultButton
+          {/* Slider */}
+          <StatusControl status={nextStepLabel} nextStepHandler={nextStatepHandler} />
+          {/* <DefaultButton
             title={nextStepLabel}
             onPress={nextStatepHandler}
             activityIndicator={busy}
             disabled={busy}
-          />
+          /> */}
         </View>
       </PaddedView>
     </View>
