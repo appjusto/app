@@ -173,8 +173,9 @@ export default function ({ navigation, route }: Props) {
               returnKeyType="next"
               textContentType="givenName"
               autoCompleteType="name"
+              autoCapitalize="characters"
               blurOnSubmit={false}
-              onChangeText={(text) => setName(text.toUpperCase())}
+              onChangeText={setName}
               onSubmitEditing={() => surnameRef.current?.focus()}
             />
             <DefaultInput
@@ -186,9 +187,10 @@ export default function ({ navigation, route }: Props) {
               keyboardType="name-phone-pad"
               textContentType="familyName"
               autoCompleteType="name"
+              autoCapitalize="characters"
               returnKeyType="next"
               blurOnSubmit={false}
-              onChangeText={(text) => setSurname(text.toUpperCase())}
+              onChangeText={setSurname}
               onSubmitEditing={() => cpfRef.current?.focus()}
             />
           </View>
