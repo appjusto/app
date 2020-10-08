@@ -42,9 +42,16 @@ if (Platform.OS === 'android') {
   })();
 }
 
-export default function () {
+type ErrorType = 'permission-denied' | 'not-a-device';
+type Returntype = [string | null, boolean, boolean, ErrorType | null];
+
+export default function (currentNotificationToken?: string | null): Returntype {
   const [token, setToken] = useState<string | null>(null);
-  const [error, setError] = useState<'permission-denied' | 'not-a-device' | null>(null);
+  const [error, setError] = useState<ErrorType | null>(null);
+  const shouldDeleteToken = error !== null || token === null;
+  // cases that we need to update token:
+  // some error ocurred; token is not valid (null); token is different from what's on the backend
+  const shouldUpdateToken = !shouldDeleteToken && token !== currentNotificationToken;
 
   const askPermission = async () => {
     const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
@@ -75,5 +82,5 @@ export default function () {
     }
   }, []);
 
-  return [token, error];
+  return [token, shouldDeleteToken, shouldUpdateToken, error];
 }

@@ -2,16 +2,20 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { distance } from 'geokit';
 import { round } from 'lodash';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { View, Text } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { ProfileIcon } from '../../../common/components/icons/RoundedIcon';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import HR from '../../../common/components/views/HR';
+import useNotificationToken from '../../../common/hooks/useNotificationToken';
+import { getConsumer } from '../../../common/store/consumer/selectors';
 import { getOrderById } from '../../../common/store/order/selectors';
+import { updateProfile } from '../../../common/store/user/actions';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { HomeNavigatorParamList } from '../types';
@@ -27,25 +31,41 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // context
+  const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
   const { orderId } = route.params;
 
   // app state
+  const consumer = useSelector(getConsumer);
   const order = useSelector(getOrderById)(orderId)!;
   const { dispatchingState } = order;
 
-  // effects
-  useEffect(() => {
-    if (order.status === 'delivered') {
-      navigation.replace('OrderDeliveredFeedback', { orderId });
-    }
-  }, [order]);
+  // state
+  const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
+    consumer!.notificationToken
+  );
 
+  // side effects
+  // whenever params changes
   useEffect(() => {
     const { newMessage } = route.params ?? {};
     if (newMessage) {
       openChatHandler();
     }
   }, [route.params]);
+  // whenever notification token needs to be updated
+  useEffect(() => {
+    if (shouldDeleteToken || shouldUpdateToken) {
+      const token = shouldUpdateToken ? notificationToken : null;
+      dispatch(updateProfile(api)(consumer!.id, { notificationToken: token }));
+    }
+  }, [consumer, notificationToken, shouldDeleteToken, shouldUpdateToken]);
+  // whenever order changes
+  useEffect(() => {
+    if (order.status === 'delivered') {
+      navigation.replace('OrderDeliveredFeedback', { orderId });
+    }
+  }, [order]);
 
   // handlers
   const openChatHandler = useCallback(() => {

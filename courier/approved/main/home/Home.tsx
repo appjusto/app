@@ -44,21 +44,18 @@ export default function ({ navigation }: Props) {
   const ongoingOrders = useSelector(getOngoingOrders);
 
   // state
-  const [notificationToken, notificationError] = useNotificationToken();
+  const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
+    courier!.notificationToken
+  );
 
   // side effects
   // notification permission
   useEffect(() => {
-    // cases that we need to update token:
-    // some error ocurred; token is not valid (null); token is different from what's on the backend
-    const shouldDeleteToken = notificationError !== null || notificationToken === null;
-    const shouldUpdateToken =
-      !shouldDeleteToken && notificationToken !== courier!.notificationToken;
     if (shouldDeleteToken || shouldUpdateToken) {
       const token = shouldUpdateToken ? notificationToken : null;
       dispatch(updateProfile(api)(courier.id, { notificationToken: token }));
     }
-  }, [courier, notificationToken, notificationError]);
+  }, [courier, notificationToken, shouldDeleteToken, shouldUpdateToken]);
 
   // UI
   const paddingTop = Constants.statusBarHeight;
