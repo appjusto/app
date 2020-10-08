@@ -3,6 +3,7 @@ import React from 'react';
 
 import ArrowBox from '../../common/components/views/ArrowBox';
 import Chat from '../../common/screens/Chat';
+import PermissionDeniedFeedback from '../../common/screens/PermissionDeniedFeedback';
 import FleetDetail from '../../common/screens/fleet/FleetDetail';
 import { t } from '../../strings';
 import ProfileEdit from '../profile/ProfileEdit';
@@ -17,7 +18,6 @@ import OrderDeliveredFeedback from './orders/OrderDeliveredFeedback';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import TransportableItems from './orders/p2p-order/TransportableItems';
 import { HomeNavigatorParamList } from './types';
-import PermissionDeniedFeedback from '../../common/screens/PermissionDeniedFeedback';
 
 const Stack = createStackNavigator<HomeNavigatorParamList>();
 export default function () {
