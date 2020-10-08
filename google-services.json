@@ -26,16 +26,19 @@
       "api_key": [
         {
           "current_key": "AIzaSyD92iin1Oaf_4rG4MA_OleKWp_2YLuVcmU"
+        },
+        {
+          "current_key": "AIzaSyAZyhh-mrA8KxWCrLoRlNl0y5pPb0vydV0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "506390194883-75t4tt4ktg5ph8bqu6jjtph56k9fqdl5.apps.googleusercontent.com",
+              "client_id": "506390194883-t7ue71f7qqe1i85029to8g0rt9hdidap.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "br.com.appjusto.consumer"
+                "bundle_id": "com.appjusto.consumer"
               }
             }
           ]
@@ -62,16 +65,97 @@
       "api_key": [
         {
           "current_key": "AIzaSyD92iin1Oaf_4rG4MA_OleKWp_2YLuVcmU"
+        },
+        {
+          "current_key": "AIzaSyAZyhh-mrA8KxWCrLoRlNl0y5pPb0vydV0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "506390194883-75t4tt4ktg5ph8bqu6jjtph56k9fqdl5.apps.googleusercontent.com",
+              "client_id": "506390194883-t7ue71f7qqe1i85029to8g0rt9hdidap.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "br.com.appjusto.consumer"
+                "bundle_id": "com.appjusto.consumer"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:506390194883:android:11c163f7f16250da381076",
+        "android_client_info": {
+          "package_name": "com.appjusto.consumer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "506390194883-bmh6sgci8fpcpfbo9dttd6be9h0p6c0h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.appjusto.consumer",
+            "certificate_hash": "c04e8ad92a621d672a52a1e98c864539c0407aa7"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD92iin1Oaf_4rG4MA_OleKWp_2YLuVcmU"
+        },
+        {
+          "current_key": "AIzaSyAZyhh-mrA8KxWCrLoRlNl0y5pPb0vydV0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "506390194883-t7ue71f7qqe1i85029to8g0rt9hdidap.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.appjusto.consumer"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:506390194883:android:afc9585494122072381076",
+        "android_client_info": {
+          "package_name": "com.appjusto.courier"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "506390194883-k9b62mr017npbnevnggkqouhm33eioit.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.appjusto.courier",
+            "certificate_hash": "007a72971f91670a414386dc0bd17fa54d512142"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD92iin1Oaf_4rG4MA_OleKWp_2YLuVcmU"
+        },
+        {
+          "current_key": "AIzaSyAZyhh-mrA8KxWCrLoRlNl0y5pPb0vydV0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "506390194883-t7ue71f7qqe1i85029to8g0rt9hdidap.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.appjusto.consumer"
               }
             }
           ]
