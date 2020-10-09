@@ -10,6 +10,7 @@ import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import ShowIf from '../../../../common/components/views/ShowIf';
 import useNotificationToken from '../../../../common/hooks/useNotificationToken';
+import HomeOngoingDeliveryCard from '../../../../common/screens/home/cards/HomeOngoingDeliveryCard';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { getOngoingOrders } from '../../../../common/store/order/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
@@ -19,7 +20,6 @@ import { MainParamList } from '../types';
 import HomeControls from './HomeControls';
 import HomeDeliveriesSummary from './HomeDeliveriesSummary';
 import ModalChooser from './ModalChooser';
-import HomeOngoingDeliveryCard from './cards/HomeOngoingDeliveryCard';
 import { HomeParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<

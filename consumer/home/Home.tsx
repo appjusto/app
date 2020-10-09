@@ -3,34 +3,27 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
-import React, { useEffect, useContext, useState, useMemo } from 'react';
-import { View, TouchableOpacity, Text, Image, ImageBackground, StyleSheet } from 'react-native';
+import { nanoid } from 'nanoid/non-secure';
+import React, { useEffect, useContext, useState } from 'react';
+import { View, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../assets/icons';
 import { AppDispatch, ApiContext } from '../../common/app/context';
 import PaddedView from '../../common/components/containers/PaddedView';
-import ShowIf from '../../common/components/views/ShowIf';
+import useLastKnownLocation from '../../common/hooks/useLastKnownLocation';
 import useTallerDevice from '../../common/hooks/useTallerDevice';
+import HomeOngoingDeliveries from '../../common/screens/home/cards/HomeOngoingDeliveries';
 import { getFlavor } from '../../common/store/config/selectors';
-import {
-  getLastReadMessage,
-  getOngoingOrders,
-  getOrderChat,
-  getOrderChatUnreadCount,
-} from '../../common/store/order/selectors';
+import { fetchTotalCouriersNearby } from '../../common/store/courier/actions';
 import { observeProfile } from '../../common/store/user/actions';
 import { getUser } from '../../common/store/user/selectors';
 import { colors, texts, padding, borders, halfPadding } from '../../common/styles';
 import { t } from '../../strings';
 import { LoggedParamList } from '../types';
 import ConsumerHomeControls from './ConsumerHomeControls';
-import HomeOngoingOrderCard from './cards/HomeOngoingOrderCard';
 import { HomeNavigatorParamList } from './types';
-import useLastKnownLocation from '../../common/hooks/useLastKnownLocation';
-import { nanoid } from 'nanoid/non-secure';
-import { fetchTotalCouriersNearby } from '../../common/store/courier/actions';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<HomeNavigatorParamList, 'Home'>,
@@ -53,26 +46,11 @@ export default function ({ navigation }: Props) {
   // app state
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
-  const ongoingOrders = useSelector(getOngoingOrders);
 
   // state
   const [locationKey] = useState(nanoid());
   const { lastKnownLocation, permissionResponse } = useLastKnownLocation(true, locationKey);
   const [availableCouriers, setAvailableCouriers] = useState(0);
-  const getOrderChatByOrderId = useSelector(getOrderChat);
-  const getLastReadMessageByOrderId = useSelector(getLastReadMessage);
-  const unreadCount = useMemo(() => {
-    if (ongoingOrders.length === 0) return 0;
-    // TODO: make it work for multiple simultaneous orders;
-    const [order] = ongoingOrders;
-    const messages = getOrderChatByOrderId(order.id);
-    const lastReadMessage = getLastReadMessageByOrderId(order.id);
-    return getOrderChatUnreadCount(messages, lastReadMessage);
-  }, [getOrderChatByOrderId]);
-
-  useEffect(() => {
-    console.log('unreadCount: ', unreadCount);
-  }, [unreadCount]);
 
   // side effects
   useEffect(() => {
@@ -106,19 +84,11 @@ export default function ({ navigation }: Props) {
       <ConsumerHomeControls navigation={navigation} />
       <PaddedView>
         {/* we need to make an order to check if this ShowIf is displaying correctly */}
-        <ShowIf test={ongoingOrders.length > 0}>
-          {() => (
-            <PaddedView half>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('OngoingOrder', { orderId: ongoingOrders[0].id })
-                }
-              >
-                <HomeOngoingOrderCard order={ongoingOrders[0]} />
-              </TouchableOpacity>
-            </PaddedView>
-          )}
-        </ShowIf>
+        <HomeOngoingDeliveries
+          onSelect={(order, openChat) =>
+            navigation.navigate('OngoingOrder', { orderId: order.id, newMessage: openChat })
+          }
+        />
         {/* TODO: add logic to display available couriers and fleets */}
         <TouchableOpacity onPress={() => {}}>
           <View
@@ -141,7 +111,7 @@ export default function ({ navigation }: Props) {
             </View>
           </View>
         </TouchableOpacity>
-        <ShowIf test={ongoingOrders.length <= 0}>
+        {/* <ShowIf test={ongoingOrders.length <= 0}>
           {() => (
             <TouchableOpacity
               onPress={() => navigation.navigate('HistoryNavigator', { screen: 'OrderHistory' })}
@@ -165,7 +135,7 @@ export default function ({ navigation }: Props) {
               </View>
             </TouchableOpacity>
           )}
-        </ShowIf>
+        </ShowIf> */}
         {/* TODO: add logic to the share component below */}
         <TouchableOpacity>
           <View
