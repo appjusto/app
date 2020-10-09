@@ -52,6 +52,8 @@ export default function ({ navigation, route }: Props) {
   useEffect(() => {
     const { newMessage } = route.params ?? {};
     if (newMessage) {
+      // this may be necessary to avoid keeping this indefinitely
+      // navigation.setParams({ newMessage: false });
       openChatHandler();
     }
   }, [route.params]);

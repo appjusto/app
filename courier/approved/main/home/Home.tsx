@@ -8,11 +8,9 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import ShowIf from '../../../../common/components/views/ShowIf';
 import useNotificationToken from '../../../../common/hooks/useNotificationToken';
-import HomeOngoingDeliveryCard from '../../../../common/screens/home/cards/HomeOngoingDeliveryCard';
+import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import { getCourier } from '../../../../common/store/courier/selectors';
-import { getOngoingOrders } from '../../../../common/store/order/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { padding } from '../../../../common/styles';
 import { ApprovedParamList } from '../../types';
@@ -41,7 +39,6 @@ export default function ({ navigation }: Props) {
 
   // app state
   const courier = useSelector(getCourier)!;
-  const ongoingOrders = useSelector(getOngoingOrders);
 
   // state
   const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
@@ -62,24 +59,14 @@ export default function ({ navigation }: Props) {
   return (
     <ScrollView contentContainerStyle={{ paddingTop }}>
       <HomeControls navigation={navigation} />
-      <ShowIf test={ongoingOrders.length > 0}>
-        {() => (
-          <PaddedView half>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('OngoingNavigator', {
-                  screen: 'OngoingDelivery',
-                  params: {
-                    orderId: ongoingOrders[0].id,
-                  },
-                })
-              }
-            >
-              <HomeOngoingDeliveryCard order={ongoingOrders[0]} />
-            </TouchableOpacity>
-          </PaddedView>
-        )}
-      </ShowIf>
+      <HomeOngoingDeliveries
+        onSelect={(order, openChat) =>
+          navigation.navigate('OngoingNavigator', {
+            screen: 'OngoingDelivery',
+            params: { orderId: order.id, newMessage: openChat },
+          })
+        }
+      />
       <PaddedView half>
         <TouchableOpacity
           onPress={() => navigation.navigate('DeliveriesNavigator', { screen: 'DeliveryHistory' })}
