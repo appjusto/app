@@ -60,7 +60,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "sentry-expo": "^2.1.2"
+    "sentry-expo": "^3.0.0-rc4"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

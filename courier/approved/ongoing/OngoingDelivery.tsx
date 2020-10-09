@@ -40,21 +40,26 @@ export default function ({ navigation, route }: Props) {
   const order = useSelector(getOrderById)(orderId);
   const { dispatchingState } = order;
 
-  // effects
+  // side effects
+  // whenever params updates
+  useEffect(() => {
+    const { newMessage } = route.params ?? {};
+    console.log(route.params);
+    if (newMessage) {
+      // this may be necessary to avoid keeping this indefinitely
+      // navigation.setParams({ newMessage: false });
+      // Workaround to make sure chat is being shown; (it was not showing on Android devices during tests)
+      setTimeout(() => {
+        openChatHandler();
+      }, 100);
+    }
+  }, [route.params]);
+  // whenever order updates
   useEffect(() => {
     if (order.status === 'delivered') {
       navigation.replace('DeliveryCompleted', { orderId, fee: order.fare!.courierFee });
     }
   }, [order]);
-
-  useEffect(() => {
-    const { newMessage } = route.params ?? {};
-    if (newMessage) {
-      // this seems to be necessary to avoid keeping this indefinitely
-      navigation.setParams({ newMessage: false });
-      openChatHandler();
-    }
-  }, [route.params]);
 
   // handlers
   const nextStatepHandler = useCallback(async () => {
@@ -67,7 +72,7 @@ export default function ({ navigation, route }: Props) {
 
   const openChatHandler = useCallback(() => {
     navigation.navigate('Chat', { orderId });
-  }, [order]);
+  }, []);
 
   // UI
   const nextStepLabel = useMemo(() => {

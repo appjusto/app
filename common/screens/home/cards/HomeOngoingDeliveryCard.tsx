@@ -30,7 +30,6 @@ export default function ({ order, onSelect }: Props) {
     const messages = getOrderChatByOrderId(order.id);
     const lastReadMessage = getLastReadMessageByOrderId(order.id);
     const total = getOrderChatUnreadCount(messages, lastReadMessage);
-    console.log('unreadCount', total);
     return total;
   }, [getOrderChatByOrderId]);
 
@@ -54,8 +53,11 @@ export default function ({ order, onSelect }: Props) {
               <TouchableOpacity onPress={() => onSelect(order, true)}>
                 <View
                   style={{
+                    borderTopLeftRadius: 8,
+                    borderTopRightRadius: 8,
                     borderBottomWidth: 1,
                     borderBottomColor: colors.darkGrey,
+                    backgroundColor: colors.white,
                   }}
                 >
                   <PaddedView style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -77,6 +79,8 @@ export default function ({ order, onSelect }: Props) {
               flexDirection: 'row',
               alignItems: 'center',
               backgroundColor: colors.lightYellow,
+              borderBottomLeftRadius: 8,
+              borderBottomRightRadius: 8,
             }}
             half
           >

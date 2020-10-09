@@ -19,6 +19,6 @@ export function init(props: Props) {
     debug: true,
   });
   if (Constants.manifest.revisionId) {
-    Sentry.setRelease(Constants.manifest.revisionId!);
+    Sentry.Native.setRelease(Constants.manifest.revisionId!);
   }
 }

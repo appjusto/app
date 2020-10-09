@@ -69,7 +69,6 @@ export default function ({ navigation }: Props) {
   }, [permissionResponse]);
 
   useEffect(() => {
-    console.log(lastKnownLocation);
     if (!lastKnownLocation) return;
     (async () => {
       const { total } = await dispatch(fetchTotalCouriersNearby(api)(lastKnownLocation.coords));
@@ -83,34 +82,28 @@ export default function ({ navigation }: Props) {
     <ScrollView contentContainerStyle={{ paddingTop }} style={{ backgroundColor: colors.white }}>
       <ConsumerHomeControls navigation={navigation} />
       <PaddedView>
-        {/* we need to make an order to check if this ShowIf is displaying correctly */}
         <HomeOngoingDeliveries
           onSelect={(order, openChat) =>
             navigation.navigate('OngoingOrder', { orderId: order.id, newMessage: openChat })
           }
         />
-        {/* TODO: add logic to display available couriers and fleets */}
-        <TouchableOpacity onPress={() => {}}>
-          <View
-            style={[
-              styles.card,
-              {
-                padding: tallerDevice ? padding : halfPadding,
-                marginBottom: tallerDevice ? padding : halfPadding,
-              },
-            ]}
-          >
-            <Image source={icons.delivery} />
-            <View style={{ marginLeft: padding }}>
-              <Text style={{ ...texts.default }}>
-                {availableCouriers} {t('entregadores disponíveis')}
-              </Text>
-              <Text style={{ ...texts.small, color: colors.darkGrey }}>
-                {t(`num raio de 15km`)}
-              </Text>
-            </View>
+        <View
+          style={[
+            styles.card,
+            {
+              padding: tallerDevice ? padding : halfPadding,
+              marginBottom: tallerDevice ? padding : halfPadding,
+            },
+          ]}
+        >
+          <Image source={icons.delivery} />
+          <View style={{ marginLeft: padding }}>
+            <Text style={{ ...texts.default }}>
+              {availableCouriers} {t('entregadores disponíveis')}
+            </Text>
+            <Text style={{ ...texts.small, color: colors.darkGrey }}>{t(`num raio de 15km`)}</Text>
           </View>
-        </TouchableOpacity>
+        </View>
         {/* <ShowIf test={ongoingOrders.length <= 0}>
           {() => (
             <TouchableOpacity

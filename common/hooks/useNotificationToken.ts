@@ -64,7 +64,7 @@ export default function (currentNotificationToken?: string | null): Returntype {
       try {
         setToken((await Notifications.getExpoPushTokenAsync()).data);
       } catch (error) {
-        Sentry.captureException(error);
+        Sentry.Native.captureException(error);
         console.log('Error while calling Notifications.getExpoPushTokenAsync()');
         console.error(error);
       }
