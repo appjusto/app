@@ -31,30 +31,30 @@ export default function ({ nextStepHandler, status }: Props) {
   // const { width } = Dimensions.get('window');
 
   return (
-    <View style={{ height: 48, paddingHorizontal: padding, width: '100%' }}>
+    <View style={{ height: 48, width: '100%' }}>
       {/* track */}
       <View
         style={{
-          position: 'absolute',
+          // position: 'absolute',
           width: '100%',
           height: 48,
           // flex: 1,
           flexDirection: 'row',
-          // justifyContent: 'space-between',
-          alignItems: 'center',
+          justifyContent: 'flex-end',
+          // alignItems: 'center',
           backgroundColor: colors.lightGrey,
           // paddingHorizontal,
           ...borders.default,
-          borderRadius: 64,
+          // borderRadius: 64,
         }}
       >
-        <View style={{ alignSelf: 'flex-end' }}>
-          <Image source={icons.accept} />
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={[texts.default]}>{status}</Text>
+          <Image source={icons.accept} style={{ marginLeft: 10 }} />
         </View>
       </View>
       {/* slider */}
-      <Slider
+      {/* <Slider
         ref={sliderRef}
         style={{ width: '100%', height: 48 }}
         minimumValue={0}
@@ -65,7 +65,7 @@ export default function ({ nextStepHandler, status }: Props) {
         value={0}
         onSlidingComplete={completeHandler}
         thumbImage={icons.slideConfirm}
-      />
+      /> */}
     </View>
   );
 }
