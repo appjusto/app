@@ -5,6 +5,9 @@ export type OngoingParamList = {
     orderId: string;
     newMessage?: boolean;
   };
+  CancelOngoingDelivery: {
+    orderId: string;
+  };
   DeliveryCompleted: {
     orderId: string;
     fee: number;

@@ -1,4 +1,4 @@
-export type Flavor = 'consumer' | 'courier';
+import { Flavor } from 'appjusto-types/platform';
 
 export interface ConfigState {
   flavor: Flavor;

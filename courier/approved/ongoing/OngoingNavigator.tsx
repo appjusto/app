@@ -4,6 +4,7 @@ import React from 'react';
 import ArrowBox from '../../../common/components/views/ArrowBox';
 import Chat from '../../../common/screens/Chat';
 import { t } from '../../../strings';
+import CancelOngoingDelivery from './CancelOngoingDelivery';
 import DeliveryCompleted from './DeliveryCompleted';
 import OngoingDelivery from './OngoingDelivery';
 import { OngoingParamList } from './types';
@@ -23,6 +24,11 @@ export default function () {
         options={{ title: t('Corrida em andamento') }}
       />
       <Stack.Screen name="Chat" component={Chat} options={{ title: t('Conversa') }} />
+      <Stack.Screen
+        name="CancelOngoingDelivery"
+        component={CancelOngoingDelivery}
+        options={{ title: t('Cancelar corrida') }}
+      />
       <Stack.Screen
         name="DeliveryCompleted"
         component={DeliveryCompleted}

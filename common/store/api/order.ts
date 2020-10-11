@@ -1,4 +1,15 @@
-import { Place, Order, WithId, ChatMessage, Fare } from 'appjusto-types';
+import {
+  Place,
+  Order,
+  WithId,
+  ChatMessage,
+  Fare,
+  OrderCancellation,
+  OrderRejection,
+  OrderCancellationReason,
+  OrderRejectionReason,
+} from 'appjusto-types';
+import { OrderRejectionType } from 'appjusto-types/order';
 import firebase from 'firebase';
 
 export type ObserveOrdersOptions = {
@@ -12,8 +23,8 @@ export default class OrderApi {
     private functions: firebase.functions.Functions
   ) {}
 
-  // consumer
   // callables
+  // consumer
   async createOrder(origin: Partial<Place>, destination: Partial<Place>) {
     return (await this.functions.httpsCallable('createOrder')({ origin, destination })).data;
   }
@@ -45,8 +56,8 @@ export default class OrderApi {
     return (await this.functions.httpsCallable('tipCourier')({ orderId, tip })).data;
   }
 
-  async cancelOrder(orderId: string) {
-    return (await this.functions.httpsCallable('cancelOrder')({ orderId })).data;
+  async cancelOrder(orderId: string, cancellation: OrderCancellation) {
+    return (await this.functions.httpsCallable('cancelOrder')({ orderId, cancellation })).data;
   }
 
   async deleteOrder(orderId: string) {
@@ -58,6 +69,10 @@ export default class OrderApi {
     return (await this.functions.httpsCallable('matchOrder')({ orderId })).data;
   }
 
+  async rejectOrder(orderId: string, rejection: OrderRejection) {
+    return (await this.functions.httpsCallable('rejectOrder')({ orderId, rejection })).data;
+  }
+
   async nextDispatchingState(orderId: string) {
     return (await this.functions.httpsCallable('nextDispatchingState')({ orderId })).data;
   }
@@ -66,8 +81,8 @@ export default class OrderApi {
     return (await this.functions.httpsCallable('completeDelivery')({ orderId })).data;
   }
 
+  // firestore
   // both courier & customers
-  // observe orders
   observeOrders(
     options: ObserveOrdersOptions,
     resultHandler: (orders: WithId<Order>[]) => void
@@ -131,5 +146,36 @@ export default class OrderApi {
         ...message,
         timestamp,
       });
+  }
+
+  async fetchRejectionReasons(type: OrderRejectionType) {
+    const querySnapshot = await this.firestore
+      .collection('platform')
+      .doc('delivery')
+      .collection('rejection-reasons')
+      .where('type', '==', type)
+      .get();
+    const docs: WithId<OrderRejectionReason>[] = [];
+    if (!querySnapshot.empty) {
+      querySnapshot.forEach((doc) => {
+        docs.push({ ...(doc.data() as OrderRejectionReason), id: doc.id });
+      });
+    }
+    return docs;
+  }
+
+  async fetchCancellationReasons() {
+    const querySnapshot = await this.firestore
+      .collection('platform')
+      .doc('delivery')
+      .collection('cancellation-reasons')
+      .get();
+    const docs: WithId<OrderCancellationReason>[] = [];
+    if (!querySnapshot.empty) {
+      querySnapshot.forEach((doc) => {
+        docs.push({ ...(doc.data() as OrderCancellationReason), id: doc.id });
+      });
+    }
+    return docs;
   }
 }

@@ -1,7 +1,7 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useEffect, useContext, useCallback } from 'react';
-import { Text, View, Image } from 'react-native';
+import React, { useContext, useCallback } from 'react';
+import { Text, View, Image, ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import * as icons from '../../../assets/icons';
@@ -31,7 +31,8 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  const { matchRequest } = route.params ?? {};
+  const { matchRequest } = route.params;
+  const { orderId } = matchRequest;
 
   // app state
   const busy = useSelector(getUIBusy);
@@ -39,12 +40,11 @@ export default function ({ navigation, route }: Props) {
   // handlers
   const acceptHandler = useCallback(async () => {
     try {
-      // TODO: show feedback
-      await dispatch(matchOrder(api)(matchRequest.orderId));
+      await dispatch(matchOrder(api)(orderId));
       navigation.replace('OngoingNavigator', {
         screen: 'OngoingDelivery',
         params: {
-          orderId: matchRequest.orderId,
+          orderId,
         },
       });
     } catch (error) {
@@ -53,16 +53,16 @@ export default function ({ navigation, route }: Props) {
   }, [matchRequest]);
 
   const rejectHandler = useCallback(() => {
-    navigation.replace('MatchingRefused');
+    navigation.replace('RefuseDelivery', { orderId });
   }, [matchRequest]);
 
-  // side effects
-  useEffect(() => {
-    if (!matchRequest) navigation.goBack();
-  }, []);
-
   // UI
-  if (!matchRequest) return null;
+  if (busy)
+    return (
+      <View style={{ ...screens.default, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
 
   return (
     <PaddedView style={{ ...screens.default }}>

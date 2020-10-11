@@ -4,6 +4,8 @@ export type MatchingParamList = {
   Matching: {
     matchRequest: OrderMatchPushMessageData;
   };
-  MatchingRefused: undefined;
+  RefuseDelivery: {
+    orderId: string;
+  };
   MatchingError: undefined;
 };

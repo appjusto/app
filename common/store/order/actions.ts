@@ -1,4 +1,5 @@
 import { Place, Order, ChatMessage, WithId, Fare, LatLng } from 'appjusto-types';
+import { OrderCancellation, OrderRejection, OrderRejectionType } from 'appjusto-types/order';
 import { CancelToken } from 'axios';
 
 import { AppDispatch } from '../../app/context';
@@ -54,8 +55,15 @@ export const tipCourier = (api: Api) => (orderId: string, tip: number) => async 
   return dispatch(awaitWithFeedback(api.order().tipCourier(orderId, tip)));
 };
 
-export const cancelOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
-  return dispatch(awaitWithFeedback(api.order().cancelOrder(orderId)));
+export const fetchCancellationReasons = (api: Api) => async (dispatch: AppDispatch) => {
+  return dispatch(awaitWithFeedback(api.order().fetchCancellationReasons()));
+};
+
+export const cancelOrder = (api: Api) => (
+  orderId: string,
+  cancellation: OrderCancellation
+) => async (dispatch: AppDispatch) => {
+  return dispatch(awaitWithFeedback(api.order().cancelOrder(orderId, cancellation)));
 };
 
 export const deleteOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
@@ -66,6 +74,18 @@ export const deleteOrder = (api: Api) => (orderId: string) => async (dispatch: A
 
 export const matchOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
   return dispatch(awaitWithFeedback(api.order().matchOrder(orderId)));
+};
+
+export const fetchRejectionReasons = (api: Api) => (type: OrderRejectionType) => async (
+  dispatch: AppDispatch
+) => {
+  return dispatch(awaitWithFeedback(api.order().fetchRejectionReasons(type)));
+};
+
+export const rejectOrder = (api: Api) => (orderId: string, rejection: OrderRejection) => async (
+  dispatch: AppDispatch
+) => {
+  return dispatch(awaitWithFeedback(api.order().rejectOrder(orderId, rejection)));
 };
 
 export const nextDispatchingState = (api: Api) => (orderId: string) => async (
