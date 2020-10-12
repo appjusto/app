@@ -1,4 +1,4 @@
-import { RouteProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React, { useContext, useCallback, useMemo, useEffect } from 'react';
@@ -19,10 +19,13 @@ import { colors, halfPadding, screens, texts } from '../../../common/styles';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
 import PlaceSummary from '../../../consumer/home/orders/p2p-order/PlaceSummary';
 import { t } from '../../../strings';
-import StatusControl from './StatusControl';
+import { ApprovedParamList } from '../types';
 import { OngoingParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<OngoingParamList, 'OngoingDelivery'>;
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<OngoingParamList, 'OngoingDelivery'>,
+  StackNavigationProp<ApprovedParamList>
+>;
 type ScreenRoute = RouteProp<OngoingParamList, 'OngoingDelivery'>;
 
 type Props = {
@@ -59,6 +62,8 @@ export default function ({ navigation, route }: Props) {
   useEffect(() => {
     if (order.status === 'delivered') {
       navigation.replace('DeliveryCompleted', { orderId, fee: order.fare!.courierFee });
+    } else if (order.status === 'canceled') {
+      navigation.replace('OrderCanceled', { orderId });
     }
   }, [order]);
 

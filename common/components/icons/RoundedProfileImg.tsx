@@ -1,36 +1,41 @@
-import { OrderCourier } from 'appjusto-types/order';
-import React, { useEffect, useState } from 'react';
+import { Flavor } from 'appjusto-types';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Image, ImageURISource } from 'react-native';
 import { useDispatch } from 'react-redux';
 
 import * as icons from '../../../assets/icons';
-import { AppDispatch } from '../../app/context';
-import Api from '../../store/api/api';
+import { ApiContext, AppDispatch } from '../../app/context';
 import { getSelfieURL } from '../../store/courier/actions';
 import { colors } from '../../styles';
 
 type Props = {
+  flavor?: Flavor;
+  id?: string;
   size?: number;
-  api: Api;
-  courier: OrderCourier | undefined;
 };
 
-export default function RoundedProfileImg({ size = 64, api, courier }: Props) {
-  const [selfie, setSelfie] = useState<ImageURISource | undefined | null>();
+export default function ({ flavor = 'courier', id, size = 64 }: Props) {
+  // context
+  const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
 
-  //get selfie
-  useEffect(() => {
-    if (selfie === undefined) {
-      (async () => {
-        console.log('checking for selfie');
-        const selfieUri = await dispatch(getSelfieURL(api)(courier!.id!));
-        console.log(selfieUri);
-        setSelfie({ uri: selfieUri });
-      })();
-    }
-  }, [selfie]);
+  // state
+  const [selfie, setSelfie] = useState<ImageURISource>();
 
+  // side effects
+  // get selfie
+  useEffect(() => {
+    (async () => {
+      console.log(flavor, id);
+      if (flavor === 'courier' && !!id) {
+        console.log('checking for selfie');
+        const selfieUri = await dispatch(getSelfieURL(api)(id));
+        if (selfieUri) setSelfie({ uri: selfieUri });
+      }
+    })();
+  }, [flavor, id]);
+
+  // UI
   return (
     <View
       style={{
@@ -38,7 +43,7 @@ export default function RoundedProfileImg({ size = 64, api, courier }: Props) {
         height: size,
         justifyContent: 'center',
         alignItems: 'center',
-        // backgroundColor: colors.green,
+        backgroundColor: colors.green,
         borderWidth: 1,
         borderStyle: 'solid',
         borderColor: colors.black,
@@ -52,5 +57,3 @@ export default function RoundedProfileImg({ size = 64, api, courier }: Props) {
     </View>
   );
 }
-
-// export const ProfileIcon = () => <RoundedIcon icon={icons.user} />;

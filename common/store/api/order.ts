@@ -56,7 +56,7 @@ export default class OrderApi {
     return (await this.functions.httpsCallable('tipCourier')({ orderId, tip })).data;
   }
 
-  async cancelOrder(orderId: string, cancellation: OrderCancellation) {
+  async cancelOrder(orderId: string, cancellation?: OrderCancellation) {
     return (await this.functions.httpsCallable('cancelOrder')({ orderId, cancellation })).data;
   }
 

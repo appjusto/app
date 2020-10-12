@@ -1,4 +1,4 @@
-import { RouteProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { OrderRejectionReason, WithId } from 'appjusto-types';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
@@ -16,9 +16,13 @@ import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import { ApprovedParamList } from '../types';
 import { OngoingParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<OngoingParamList, 'CancelOngoingDelivery'>;
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<OngoingParamList, 'CancelOngoingDelivery'>,
+  StackNavigationProp<ApprovedParamList>
+>;
 type ScreenRouteProp = RouteProp<OngoingParamList, 'CancelOngoingDelivery'>;
 
 type Props = {
@@ -64,7 +68,12 @@ export default function ({ route, navigation }: Props) {
             comment: rejectionComment,
           })
         );
-        navigation.popToTop();
+        navigation.replace('MainNavigator', {
+          screen: 'HomeNavigator',
+          params: {
+            screen: 'Home',
+          },
+        });
       } catch (error) {
         dispatch(showToast(t('Não foi possível enviar o comentário')));
       }

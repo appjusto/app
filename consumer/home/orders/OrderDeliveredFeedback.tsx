@@ -51,7 +51,8 @@ export default ({ navigation, route }: Props) => {
         <HR height={padding} />
         <TipControl
           orderId={order.id}
-          orderTip={order.tip?.value}
+          orderTip={order.tip?.value ?? 0}
+          courierId={order.courier!.id}
           courierName={order.courier!.name}
         />
         <HR height={padding} />

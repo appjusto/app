@@ -44,7 +44,7 @@ export default function ({ navigation, route }: Props) {
         <PaddedView style={{ ...screens.default }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: padding }}>
             <View>
-              <RoundedProfileImg api={api} courier={order.courier} />
+              <RoundedProfileImg flavor="courier" id={order.courier!.id} />
             </View>
             <View style={{ marginLeft: tallerDevice ? 24 : 12 }}>
               <Text style={{ ...texts.medium }}>{order.courier?.name}</Text>

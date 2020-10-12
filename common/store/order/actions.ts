@@ -61,7 +61,7 @@ export const fetchCancellationReasons = (api: Api) => async (dispatch: AppDispat
 
 export const cancelOrder = (api: Api) => (
   orderId: string,
-  cancellation: OrderCancellation
+  cancellation?: OrderCancellation
 ) => async (dispatch: AppDispatch) => {
   return dispatch(awaitWithFeedback(api.order().cancelOrder(orderId, cancellation)));
 };
