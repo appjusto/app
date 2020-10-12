@@ -20,10 +20,10 @@ import TipControl from './common/TipControl';
 import PlaceSummary from './p2p-order/PlaceSummary';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<HomeNavigatorParamList, 'OrderConfirmedFeedback'>,
+  StackNavigationProp<HomeNavigatorParamList, 'OrderDeliveredFeedback'>,
   BottomTabNavigationProp<LoggedParamList>
 >;
-type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'OrderConfirmedFeedback'>;
+type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'OrderDeliveredFeedback'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

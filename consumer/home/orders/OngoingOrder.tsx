@@ -71,7 +71,7 @@ export default function ({ navigation, route }: Props) {
       navigation.replace('OrderDeliveredFeedback', { orderId });
     } else if (order.status === 'matching') {
       // happens when courier cancels the delivery
-      navigation.replace('OrderConfirmedFeedback', { orderId });
+      navigation.replace('OrderMatching', { orderId });
     }
   }, [order]);
 

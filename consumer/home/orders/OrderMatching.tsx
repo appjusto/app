@@ -19,10 +19,10 @@ import { LoggedParamList } from '../../types';
 import { HomeNavigatorParamList } from '../types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<HomeNavigatorParamList, 'OrderConfirmedFeedback'>,
+  StackNavigationProp<HomeNavigatorParamList, 'OrderMatching'>,
   BottomTabNavigationProp<LoggedParamList>
 >;
-type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'OrderConfirmedFeedback'>;
+type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'OrderMatching'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

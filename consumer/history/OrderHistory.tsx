@@ -66,7 +66,7 @@ export default function ({ navigation, route }: Props) {
         orderId: order.id,
       });
     } else if (order.status === 'matching') {
-      navigation.navigate('OrderConfirmedFeedback', {
+      navigation.navigate('OrderMatching', {
         orderId: order.id,
       });
     }

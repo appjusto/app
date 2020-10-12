@@ -26,7 +26,7 @@ export type HomeNavigatorParamList = {
   ProfilePaymentMethods?: {
     returnScreen: 'CreateOrderP2P';
   };
-  OrderConfirmedFeedback: {
+  OrderMatching: {
     orderId: string;
   };
   OngoingOrder: {

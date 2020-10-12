@@ -79,27 +79,13 @@ export default function ({ navigation, route }: Props) {
             <Text style={{ ...texts.small, color: colors.darkGrey }}>
               {t('Entregas realizadas perfeitamente')}
             </Text>
-            <Text style={{ ...texts.medium }}>{order.courier?.statistics.deliveries}</Text>
+            <Text style={{ ...texts.medium }}>{order.courier?.statistics?.deliveries ?? 0}</Text>
           </View>
           <View style={{ marginTop: 16, alignItems: 'flex-start', paddingHorizontal: padding }}>
             <Text style={{ ...texts.small, color: colors.darkGrey }}>
               {t('Entregas canceladas')}
             </Text>
-            <Text style={{ ...texts.medium }}>{order.courier?.statistics.canceled}</Text>
-          </View>
-          <View style={{ marginTop: 16, alignItems: 'flex-start', paddingHorizontal: padding }}>
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>
-              {t('Tempo médio das entregas')}
-            </Text>
-            <Text style={{ ...texts.medium }}>
-              {order.courier?.statistics.avgDeliveryTime ?? 0}
-            </Text>
-          </View>
-          <View style={{ marginTop: 16, alignItems: 'flex-start', paddingHorizontal: padding }}>
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>
-              {t('Média das gorjetas recebidas por entrega')}
-            </Text>
-            <Text style={{ ...texts.medium }}>{order.courier?.statistics.avgTipReceived ?? 0}</Text>
+            <Text style={{ ...texts.medium }}>{order.courier?.statistics?.canceled ?? 0}</Text>
           </View>
           <PaddedView>
             <Text style={{ ...texts.small, color: colors.darkGrey, marginVertical: 8 }}>

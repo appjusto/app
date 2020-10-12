@@ -13,7 +13,7 @@ import Home from './Home';
 import AddressComplete from './orders/AddressComplete';
 import CourierDetail from './orders/CourierDetail';
 import OngoingOrder from './orders/OngoingOrder';
-import OrderConfirmedFeedback from './orders/OrderConfirmedFeedback';
+import OrderMatching from './orders/OrderMatching';
 import OrderDeliveredFeedback from './orders/OrderDeliveredFeedback';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import TransportableItems from './orders/p2p-order/TransportableItems';
@@ -70,8 +70,8 @@ export default function () {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="OrderConfirmedFeedback"
-        component={OrderConfirmedFeedback}
+        name="OrderMatching"
+        component={OrderMatching}
         options={{ headerShown: false }}
       />
       <Stack.Screen
