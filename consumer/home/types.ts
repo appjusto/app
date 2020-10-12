@@ -1,6 +1,5 @@
 import { Address, Fleet, WithId } from 'appjusto-types';
 
-import { Order, OrderCourier } from '../../../types/order';
 import { ChatParamList } from '../../common/screens/Chat';
 
 export type HomeNavigatorParamList = {
@@ -36,6 +35,12 @@ export type HomeNavigatorParamList = {
   CourierDetail: {
     orderId: string;
     fleet: WithId<Fleet>;
+  };
+  ConfirmCancelOrder: {
+    orderId: string;
+  };
+  JustifyOrderCancellation: {
+    orderId: string;
   };
   OrderDeliveredFeedback: {
     orderId: string;

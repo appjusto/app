@@ -7,6 +7,7 @@ import { t } from '../../../strings';
 import CancelOngoingDelivery from './CancelOngoingDelivery';
 import DeliveryCompleted from './DeliveryCompleted';
 import OngoingDelivery from './OngoingDelivery';
+import OrderCanceled from './OrderCanceled';
 import { OngoingParamList } from './types';
 
 const Stack = createStackNavigator<OngoingParamList>();
@@ -28,6 +29,11 @@ export default function () {
         name="CancelOngoingDelivery"
         component={CancelOngoingDelivery}
         options={{ title: t('Cancelar corrida') }}
+      />
+      <Stack.Screen
+        name="OrderCanceled"
+        component={OrderCanceled}
+        options={{ title: t('Corrida cancelada') }}
       />
       <Stack.Screen
         name="DeliveryCompleted"

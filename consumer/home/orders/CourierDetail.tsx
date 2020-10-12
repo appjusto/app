@@ -59,9 +59,14 @@ export default function ({ navigation, route }: Props) {
             style={{ marginBottom: 8 }}
             onPress={() => navigation.navigate('Chat', { orderId })}
           />
-          <DefaultButton
+          {/* <DefaultButton
             title={t('Relatar um problema')}
             onPress={() => {}}
+            style={{ ...borders.default, borderColor: colors.darkGrey, backgroundColor: colors.darkGrey }}
+          /> */}
+          <DefaultButton
+            title={t('Cancelar pedido')}
+            onPress={() => navigation.navigate('ConfirmCancelOrder', { orderId })}
             style={{ ...borders.default, borderColor: colors.black, backgroundColor: colors.white }}
           />
         </PaddedView>
