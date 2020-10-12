@@ -133,13 +133,13 @@ export default function ({ navigation, route }: Props) {
 
         <View style={{ marginTop: halfPadding }}>
           {/* Slider */}
-          <StatusControl status={nextStepLabel} nextStepHandler={nextStatepHandler} />
-          {/* <DefaultButton
+          {/* <StatusControl status={nextStepLabel} nextStepHandler={nextStatepHandler} /> */}
+          <DefaultButton
             title={nextStepLabel}
             onPress={nextStatepHandler}
             activityIndicator={busy}
             disabled={busy}
-          /> */}
+          />
         </View>
       </PaddedView>
     </View>

@@ -1,19 +1,17 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext, useEffect, useState } from 'react';
-import { ImageURISource, Text, View } from 'react-native';
+import React, { useContext } from 'react';
+import { Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import * as icons from '../../../assets/icons';
-import { ApiContext, AppDispatch } from '../../../common/app/context';
+import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import RoundedIcon, { ProfileIcon } from '../../../common/components/icons/RoundedIcon';
+import RoundedProfileImg from '../../../common/components/icons/RoundedProfileImg';
 import HR from '../../../common/components/views/HR';
 import Pill from '../../../common/components/views/Pill';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
-import { getSelfieURL } from '../../../common/store/courier/actions';
 import { getOrderById } from '../../../common/store/order/selectors';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { formatDate } from '../../../common/utils/formatters';
@@ -33,25 +31,10 @@ export default function ({ navigation, route }: Props) {
   const { orderId, fleet } = route.params ?? {};
   //context
   const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
   const order = useSelector(getOrderById)(orderId)!;
 
   //screen state
-  const [selfie, setSelfie] = useState<ImageURISource | undefined | null>();
   const createdOn = (order.courier!.joined as firebase.firestore.Timestamp).toDate();
-
-
-  // side effects
-  // useEffect(() => {
-  //   (async () => {
-  //     const selfieUri = await dispatch(getSelfieURL(api)(order.courier!.id));
-  //     if (!selfieUri) setSelfie(null);
-  //     else setSelfie({ uri: selfieUri });
-  //   })();
-  // }, [orderId]);
-
-  //TODO make an icon component that displays the courier selfie. it could be big -
-  // for this screen - and small - for the chat. Put the logic to get the selfie in there.
 
   const tallerDevice = useTallerDevice();
 
@@ -61,7 +44,7 @@ export default function ({ navigation, route }: Props) {
         <PaddedView style={{ ...screens.default }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: padding }}>
             <View>
-              <RoundedIcon icon={selfie ?? icons.user} size={64} />
+              <RoundedProfileImg api={api} courier={order.courier} />
             </View>
             <View style={{ marginLeft: tallerDevice ? 24 : 12 }}>
               <Text style={{ ...texts.medium }}>{order.courier?.name}</Text>
