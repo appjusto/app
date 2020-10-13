@@ -1,5 +1,6 @@
-import { RouteProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { isEmpty } from 'lodash';
 import React, { useContext, useCallback, useMemo, useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -18,10 +19,13 @@ import { colors, halfPadding, screens, texts } from '../../../common/styles';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
 import PlaceSummary from '../../../consumer/home/orders/p2p-order/PlaceSummary';
 import { t } from '../../../strings';
-import StatusControl from './StatusControl';
+import { ApprovedParamList } from '../types';
 import { OngoingParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<OngoingParamList, 'OngoingDelivery'>;
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<OngoingParamList, 'OngoingDelivery'>,
+  StackNavigationProp<ApprovedParamList>
+>;
 type ScreenRoute = RouteProp<OngoingParamList, 'OngoingDelivery'>;
 
 type Props = {
@@ -58,10 +62,13 @@ export default function ({ navigation, route }: Props) {
   useEffect(() => {
     if (order.status === 'delivered') {
       navigation.replace('DeliveryCompleted', { orderId, fee: order.fare!.courierFee });
+    } else if (order.status === 'canceled') {
+      navigation.replace('OrderCanceled', { orderId });
     }
   }, [order]);
 
   // handlers
+  // handles delivery dispatching updates
   const nextStatepHandler = useCallback(async () => {
     if (dispatchingState !== 'arrived-destination') {
       dispatch(nextDispatchingState(api)(order.id));
@@ -69,9 +76,13 @@ export default function ({ navigation, route }: Props) {
       dispatch(completeDelivery(api)(order.id));
     }
   }, [order]);
-
+  // handles opening chat screen
   const openChatHandler = useCallback(() => {
     navigation.navigate('Chat', { orderId });
+  }, []);
+  // handles opening cancel confirmation screen
+  const cancelHandler = useCallback(() => {
+    navigation.navigate('CancelOngoingDelivery', { orderId });
   }, []);
 
   // UI
@@ -95,12 +106,23 @@ export default function ({ navigation, route }: Props) {
       </View>
       <PaddedView style={{ backgroundColor: colors.lightGrey }}>
         <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Pedido de')}</Text>
-        <Text style={[texts.medium]}>{order.consumer.name ?? 'Cliente'}</Text>
-        <TouchableOpacity onPress={openChatHandler}>
-          <View style={{ marginTop: halfPadding }}>
-            <RoundedText leftIcon={icons.chat}>{t('Iniciar chat')}</RoundedText>
-          </View>
-        </TouchableOpacity>
+        <Text style={[texts.medium]}>
+          {!isEmpty(order.consumer.name) ? order.consumer.name : t('Cliente')}
+        </Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <TouchableOpacity onPress={openChatHandler}>
+            <View style={{ marginTop: halfPadding }}>
+              <RoundedText leftIcon={icons.chat}>{t('Iniciar chat')}</RoundedText>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={cancelHandler}>
+            <View style={{ marginTop: halfPadding }}>
+              <RoundedText color={colors.red} leftIcon={icons.reject}>
+                {t('Cancelar Corrida')}
+              </RoundedText>
+            </View>
+          </TouchableOpacity>
+        </View>
       </PaddedView>
       <PaddedView>
         <ShowIf test={dispatchingState === 'going-pickup' || dispatchingState === 'arrived-pickup'}>

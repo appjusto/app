@@ -8,7 +8,7 @@ import { ApiContext, AppDispatch } from '../app/context';
 import DefaultButton from '../components/buttons/DefaultButton';
 import AvoidingView from '../components/containers/AvoidingView';
 import PaddedView from '../components/containers/PaddedView';
-import { ProfileIcon } from '../components/icons/RoundedIcon';
+import RoundedProfileImg from '../components/icons/RoundedProfileImg';
 import DefaultInput from '../components/inputs/DefaultInput';
 import { markMessageAsRead, sendMessage } from '../store/order/actions';
 import { getOrderById, getOrderChat, groupOrderChatMessages } from '../store/order/selectors';
@@ -74,7 +74,10 @@ export default function ({ route }: Props) {
               }}
             >
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <ProfileIcon />
+                <RoundedProfileImg
+                  flavor={item.from === order.courier!.id ? 'courier' : 'consumer'}
+                  id={item.from}
+                />
                 <View style={{ marginLeft: padding / 2 }}>
                   <Text style={[texts.medium]}>{names[item.from]}</Text>
                 </View>

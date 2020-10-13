@@ -4,7 +4,7 @@ import React from 'react';
 import ArrowBox from '../../../common/components/views/ArrowBox';
 import Matching from './Matching';
 import MatchingError from './MatchingError';
-import MatchingRefused from './MatchingRefused';
+import RefuseDelivery from './RefuseDelivery';
 import { MatchingParamList } from './types';
 
 const Stack = createStackNavigator<MatchingParamList>();
@@ -23,8 +23,8 @@ export default function () {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="MatchingRefused"
-        component={MatchingRefused}
+        name="RefuseDelivery"
+        component={RefuseDelivery}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

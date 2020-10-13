@@ -123,7 +123,7 @@ export default function ({ navigation, route }: Props) {
         confirmOrder(api)(orderId, origin, destination, paymentMethod!.id, fleetId, platformFee)
       );
       console.log(result);
-      navigation.replace('OrderConfirmedFeedback', { orderId });
+      navigation.replace('OrderMatching', { orderId });
     } catch (error) {
       dispatch(showToast(error.toString(), 'error'));
     }

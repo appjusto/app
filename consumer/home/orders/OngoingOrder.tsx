@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import { ProfileIcon } from '../../../common/components/icons/RoundedIcon';
+import RoundedProfileImg from '../../../common/components/icons/RoundedProfileImg';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import HR from '../../../common/components/views/HR';
 import ShowIf from '../../../common/components/views/ShowIf';
@@ -18,6 +18,7 @@ import { getConsumer } from '../../../common/store/consumer/selectors';
 import { getOrderById } from '../../../common/store/order/selectors';
 import { updateProfile } from '../../../common/store/user/actions';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
+import { formatDistance } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { HomeNavigatorParamList } from '../types';
 import CourierStatusHighlight from './CourierStatusHighlight';
@@ -68,6 +69,9 @@ export default function ({ navigation, route }: Props) {
   useEffect(() => {
     if (order.status === 'delivered') {
       navigation.replace('OrderDeliveredFeedback', { orderId });
+    } else if (order.status === 'matching') {
+      // happens when courier cancels the delivery
+      navigation.replace('OrderMatching', { orderId });
     }
   }, [order]);
 
@@ -85,13 +89,15 @@ export default function ({ navigation, route }: Props) {
     if (dispatchingState === 'going-pickup') {
       addressLabel = t('Retirada em');
       address = order.origin.address.main;
-      dispatchDetails = `Distância até a retirada: ${round(
-        distance(
-          { lat: order.courier!.location.latitude, lng: order.courier!.location.longitude },
-          { lat: order.origin.location.latitude, lng: order.origin.location.longitude }
-        ),
-        2
-      )}km`;
+      dispatchDetails = `Distância até a retirada: ${formatDistance(
+        round(
+          distance(
+            { lat: order.courier!.location.latitude, lng: order.courier!.location.longitude },
+            { lat: order.origin.location.latitude, lng: order.origin.location.longitude }
+          ),
+          2
+        ) * 1000
+      )}`;
     } else if (dispatchingState === 'arrived-pickup') {
       addressLabel = t('Retirada em');
       address = order.origin.address.main;
@@ -103,13 +109,15 @@ export default function ({ navigation, route }: Props) {
     } else if (dispatchingState === 'going-destination') {
       addressLabel = t('Entrega em');
       address = order.destination.address.main;
-      dispatchDetails = `Distância até a entrega: ${round(
-        distance(
-          { lat: order.courier!.location.latitude, lng: order.courier!.location.longitude },
-          { lat: order.destination.location.latitude, lng: order.destination.location.longitude }
-        ),
-        2
-      )}km`;
+      dispatchDetails = `Distância até a entrega: ${formatDistance(
+        round(
+          distance(
+            { lat: order.courier!.location.latitude, lng: order.courier!.location.longitude },
+            { lat: order.destination.location.latitude, lng: order.destination.location.longitude }
+          ),
+          2
+        ) * 1000
+      )}`;
     } else if (dispatchingState === 'arrived-destination') {
       addressLabel = t('Entrega em');
       address = order.destination.address.main;
@@ -135,7 +143,7 @@ export default function ({ navigation, route }: Props) {
         </ShowIf>
       </View>
       <PaddedView style={{ backgroundColor: colors.white, flexDirection: 'row' }}>
-        <ProfileIcon />
+        <RoundedProfileImg flavor="courier" id={order.courier!.id} />
         <View style={{ flex: 1, marginLeft: padding }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={[texts.medium]}>{order.courier!.name}</Text>

@@ -13,11 +13,13 @@ import Home from './Home';
 import AddressComplete from './orders/AddressComplete';
 import CourierDetail from './orders/CourierDetail';
 import OngoingOrder from './orders/OngoingOrder';
-import OrderConfirmedFeedback from './orders/OrderConfirmedFeedback';
 import OrderDeliveredFeedback from './orders/OrderDeliveredFeedback';
+import OrderMatching from './orders/OrderMatching';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import TransportableItems from './orders/p2p-order/TransportableItems';
 import { HomeNavigatorParamList } from './types';
+import ConfirmCancelOrder from './orders/ConfirmCancelOrder';
+import JustifyOrderCancellation from './orders/JustifyOrderCancellation';
 
 const Stack = createStackNavigator<HomeNavigatorParamList>();
 export default function () {
@@ -70,8 +72,8 @@ export default function () {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="OrderConfirmedFeedback"
-        component={OrderConfirmedFeedback}
+        name="OrderMatching"
+        component={OrderMatching}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -82,9 +84,19 @@ export default function () {
       <Stack.Screen
         name="CourierDetail"
         component={CourierDetail}
-        options={{ title: t('Sobre o entregador') }}
+        options={{ title: t('Mais informações') }}
       />
       <Stack.Screen name="Chat" component={Chat} options={{ title: t('Chat') }} />
+      <Stack.Screen
+        name="ConfirmCancelOrder"
+        component={ConfirmCancelOrder}
+        options={{ title: t('Cancelar pedido') }}
+      />
+      <Stack.Screen
+        name="JustifyOrderCancellation"
+        component={JustifyOrderCancellation}
+        options={{ title: t('Sua opinião') }}
+      />
       <Stack.Screen
         name="OrderDeliveredFeedback"
         component={OrderDeliveredFeedback}

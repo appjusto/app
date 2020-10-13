@@ -8,7 +8,7 @@ import HorizontalSelect, {
   HorizontalSelectItem,
 } from '../../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import { ProfileIcon } from '../../../../common/components/icons/RoundedIcon';
+import RoundedProfileImg from '../../../../common/components/icons/RoundedProfileImg';
 import Pill from '../../../../common/components/views/Pill';
 import { tipCourier } from '../../../../common/store/order/actions';
 import { showToast } from '../../../../common/store/ui/actions';
@@ -20,10 +20,11 @@ import { t } from '../../../../strings';
 type Props = {
   orderId: string;
   orderTip: number;
+  courierId: string;
   courierName: string;
 };
 
-export default function ({ orderId, orderTip = 0, courierName }: Props) {
+export default function ({ orderId, orderTip = 0, courierId, courierName }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -75,7 +76,7 @@ export default function ({ orderId, orderTip = 0, courierName }: Props) {
       </View>
       <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
         <View style={{ flexDirection: 'row', paddingBottom: padding }}>
-          <ProfileIcon />
+          <RoundedProfileImg flavor="courier" id={courierId} />
           <View style={{ marginLeft: halfPadding }}>
             <Text style={[texts.medium]}>
               {t('Gorjeta para')} {courierName}

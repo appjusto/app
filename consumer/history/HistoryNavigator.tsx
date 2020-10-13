@@ -3,7 +3,7 @@ import React from 'react';
 
 import ArrowBox from '../../common/components/views/ArrowBox';
 import { t } from '../../strings';
-import OrderConfirmedFeedback from '../home/orders/OrderConfirmedFeedback';
+import OrderMatching from '../home/orders/OrderMatching';
 import OrderHistory from './OrderHistory';
 import OrderSummary from './OrderSummary';
 import { HistoryParamList } from './types';
@@ -24,8 +24,8 @@ export default function () {
         options={{ title: t('Corrida finalizada') }}
       />
       <Stack.Screen
-        name="OrderConfirmedFeedback"
-        component={OrderConfirmedFeedback}
+        name="OrderMatching"
+        component={OrderMatching}
         options={{ title: t('Pedido em andamento') }}
       />
     </Stack.Navigator>

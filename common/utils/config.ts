@@ -1,6 +1,5 @@
+import { Flavor } from 'appjusto-types/platform';
 import Constants from 'expo-constants';
-
-import { Flavor } from '../store/config/types';
 
 export interface Extra {
   flavor: Flavor;

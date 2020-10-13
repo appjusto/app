@@ -14,6 +14,7 @@ import {
   Keyboard,
   SectionList,
   SectionListData,
+  ActivityIndicator,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -61,13 +62,15 @@ export default function ({ navigation, route }: Props) {
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const sections: SectionListData<Address>[] = useMemo(() => {
     let sections: SectionListData<Address>[] = [];
-    if (!isEmpty(autocompletePredictions)) {
-      sections = [...sections, { title: t('Resultados da busca'), data: autocompletePredictions }];
-    }
-    if (!isEmpty(placesFromPreviousOrders)) {
-      const addresses = placesFromPreviousOrders.map((value) => value.address!);
-      sections = [...sections, { title: t('Últimos endereços utilizados'), data: addresses }];
-    }
+    sections = [
+      ...sections,
+      { title: t('Resultados da busca'), data: autocompletePredictions, key: 'search-results' },
+    ];
+    const addresses = placesFromPreviousOrders.map((value) => value.address!);
+    sections = [
+      ...sections,
+      { title: t('Últimos endereços utilizados'), data: addresses, key: 'last-used-address' },
+    ];
     return sections;
   }, [placesFromPreviousOrders, autocompletePredictions]);
   // helpers
@@ -99,7 +102,10 @@ export default function ({ navigation, route }: Props) {
   // search for suggestions whenever user changes the input
   useEffect(() => {
     // TODO: what would be a better threshold than 3 characteres?
-    if (searchText.length <= 3) return;
+    if (searchText.length <= 3) {
+      setAutoCompletePredictions([]);
+      return;
+    }
     // do not search after user selects from list
     if (selectedAddress?.description === searchText) return;
     getAddress(searchText, autocompleteSession);
@@ -153,9 +159,13 @@ export default function ({ navigation, route }: Props) {
         sections={sections}
         keyExtractor={(item) => item.description}
         keyboardShouldPersistTaps="handled"
-        renderSectionHeader={({ section }) => (
-          <Text style={{ ...texts.small, color: colors.darkGrey }}>{section.title}</Text>
-        )}
+        renderSectionHeader={({ section }) => {
+          if (section.key === 'search-results' && busy)
+            return <ActivityIndicator size="small" color={colors.black} />;
+          if (section.data.length > 0)
+            return <Text style={{ ...texts.small, color: colors.darkGrey }}>{section.title}</Text>;
+          return null;
+        }}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => selectItemHandler(item)}>
             <View style={styles.item}>

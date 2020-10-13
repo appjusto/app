@@ -44,7 +44,7 @@ export default function ({ navigation, route }: Props) {
         <PaddedView style={{ ...screens.default }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: padding }}>
             <View>
-              <RoundedProfileImg api={api} courier={order.courier} />
+              <RoundedProfileImg flavor="courier" id={order.courier!.id} />
             </View>
             <View style={{ marginLeft: tallerDevice ? 24 : 12 }}>
               <Text style={{ ...texts.medium }}>{order.courier?.name}</Text>
@@ -59,9 +59,14 @@ export default function ({ navigation, route }: Props) {
             style={{ marginBottom: 8 }}
             onPress={() => navigation.navigate('Chat', { orderId })}
           />
-          <DefaultButton
+          {/* <DefaultButton
             title={t('Relatar um problema')}
             onPress={() => {}}
+            style={{ ...borders.default, borderColor: colors.darkGrey, backgroundColor: colors.darkGrey }}
+          /> */}
+          <DefaultButton
+            title={t('Cancelar pedido')}
+            onPress={() => navigation.navigate('ConfirmCancelOrder', { orderId })}
             style={{ ...borders.default, borderColor: colors.black, backgroundColor: colors.white }}
           />
         </PaddedView>
@@ -79,27 +84,13 @@ export default function ({ navigation, route }: Props) {
             <Text style={{ ...texts.small, color: colors.darkGrey }}>
               {t('Entregas realizadas perfeitamente')}
             </Text>
-            <Text style={{ ...texts.medium }}>{order.courier?.statistics.deliveries}</Text>
+            <Text style={{ ...texts.medium }}>{order.courier?.statistics?.deliveries ?? 0}</Text>
           </View>
           <View style={{ marginTop: 16, alignItems: 'flex-start', paddingHorizontal: padding }}>
             <Text style={{ ...texts.small, color: colors.darkGrey }}>
               {t('Entregas canceladas')}
             </Text>
-            <Text style={{ ...texts.medium }}>{order.courier?.statistics.canceled}</Text>
-          </View>
-          <View style={{ marginTop: 16, alignItems: 'flex-start', paddingHorizontal: padding }}>
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>
-              {t('Tempo médio das entregas')}
-            </Text>
-            <Text style={{ ...texts.medium }}>
-              {order.courier?.statistics.avgDeliveryTime ?? 0}
-            </Text>
-          </View>
-          <View style={{ marginTop: 16, alignItems: 'flex-start', paddingHorizontal: padding }}>
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>
-              {t('Média das gorjetas recebidas por entrega')}
-            </Text>
-            <Text style={{ ...texts.medium }}>{order.courier?.statistics.avgTipReceived ?? 0}</Text>
+            <Text style={{ ...texts.medium }}>{order.courier?.statistics?.canceled ?? 0}</Text>
           </View>
           <PaddedView>
             <Text style={{ ...texts.small, color: colors.darkGrey, marginVertical: 8 }}>

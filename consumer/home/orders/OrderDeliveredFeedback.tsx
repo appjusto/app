@@ -20,10 +20,10 @@ import TipControl from './common/TipControl';
 import PlaceSummary from './p2p-order/PlaceSummary';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<HomeNavigatorParamList, 'OrderConfirmedFeedback'>,
+  StackNavigationProp<HomeNavigatorParamList, 'OrderDeliveredFeedback'>,
   BottomTabNavigationProp<LoggedParamList>
 >;
-type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'OrderConfirmedFeedback'>;
+type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'OrderDeliveredFeedback'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -51,7 +51,8 @@ export default ({ navigation, route }: Props) => {
         <HR height={padding} />
         <TipControl
           orderId={order.id}
-          orderTip={order.tip?.value}
+          orderTip={order.tip?.value ?? 0}
+          courierId={order.courier!.id}
           courierName={order.courier!.name}
         />
         <HR height={padding} />
