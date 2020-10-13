@@ -36,7 +36,7 @@ export default ({ navigation }: Props) => {
       <DefaultButton
         title={t('Voltar para alterar o e-mail')}
         onPress={() => navigation.goBack()}
-        style={{ ...borders.default, borderColor: colors.black, backgroundColor: 'white' }}
+        secondary
       />
     </FeedbackView>
   );

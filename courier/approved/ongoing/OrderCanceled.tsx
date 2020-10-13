@@ -23,11 +23,7 @@ export default ({ navigation }: Props) => {
   // UI
   return (
     <FeedbackView header={t('Este pedido foi cancelado pelo cliente.')} icon={icons.coneYellow}>
-      <DefaultButton
-        title={t('Voltar para o início')}
-        onPress={popToTop}
-        style={{ ...borders.default, borderColor: colors.black, backgroundColor: 'white' }}
-      />
+      <DefaultButton title={t('Voltar para o início')} onPress={popToTop} secondary />
     </FeedbackView>
   );
 };

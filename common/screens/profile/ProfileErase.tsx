@@ -109,10 +109,10 @@ export default function ({ navigation }: Props) {
           onPress={() => navigation.goBack()}
         />
         <DefaultButton
-          disabled
           title={t('Tenho certeza, pode excluir')}
           style={{ marginBottom: 16 }}
           onPress={eraseHandler}
+          secondary
         />
       </View>
     </View>

@@ -26,11 +26,7 @@ export default ({ navigation }: Props) => {
       header={t('Esse pedido já foi aceito por outro entregador :(')}
       icon={icons.coneYellow}
     >
-      <DefaultButton
-        title={t('Voltar para o início')}
-        onPress={popToTop}
-        style={{ ...borders.default, borderColor: colors.black, backgroundColor: 'white' }}
-      />
+      <DefaultButton title={t('Voltar para o início')} onPress={popToTop} secondary />
     </FeedbackView>
   );
 };

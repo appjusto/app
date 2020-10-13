@@ -157,7 +157,7 @@ export default function ({ fleet, selected, onSelect, onConfirm }: Props) {
           onPress={onConfirm}
           disabled={!selected}
           activityIndicator={busy && selected}
-          isWhite
+          secondary
         />
       </View>
     </TouchableWithoutFeedback>

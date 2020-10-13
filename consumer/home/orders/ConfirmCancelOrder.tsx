@@ -79,13 +79,11 @@ export default ({ navigation, route }: Props) => {
         />
         <DefaultButton
           style={{
-            ...borders.default,
             marginBottom: padding,
-            borderColor: colors.black,
-            backgroundColor: 'white',
           }}
           title={t('Não cancelar')}
           onPress={() => navigation.pop()}
+          secondary
         />
       </View>
     </FeedbackView>

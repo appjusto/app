@@ -64,7 +64,7 @@ export default function ({ navigation, route }: Props) {
       const token = shouldUpdateToken ? notificationToken : null;
       dispatch(updateProfile(api)(consumer!.id, { notificationToken: token }));
     }
-  }, [consumer, notificationToken, shouldDeleteToken, shouldUpdateToken]);
+  }, [notificationToken, shouldDeleteToken, shouldUpdateToken]);
   // whenever order changes
   useEffect(() => {
     if (order.status === 'delivered') {
@@ -161,7 +161,6 @@ export default function ({ navigation, route }: Props) {
         <View style={{ flex: 1 }} />
         <View style={{ flex: 7 }}>
           <DefaultButton
-            style={{ backgroundColor: colors.white, ...borders.default }}
             title={t('Mais informações')}
             onPress={() =>
               navigation.navigate('CourierDetail', {
@@ -169,6 +168,7 @@ export default function ({ navigation, route }: Props) {
                 fleet: order.fare!.fleet,
               })
             }
+            secondary
           />
         </View>
       </PaddedView>

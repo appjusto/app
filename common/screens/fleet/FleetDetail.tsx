@@ -42,7 +42,7 @@ export default function ({ navigation, route }: Props) {
   //handlers
   const confirmFleet = useCallback(async () => {
     if (!fleet) return;
-    await dispatch(updateProfile(api)(courier.id, { fleet: fleet }));
+    await dispatch(updateProfile(api)(courier.id, { fleet }));
     navigation.goBack();
   }, [fleet]);
   return (

@@ -84,6 +84,7 @@ export default function ({ navigation, route }: Props) {
           agency,
           account,
           digit,
+          type: 'Corrente',
         },
       })
     );
