@@ -24,16 +24,17 @@ export default function () {
   const api = useContext(ApiContext);
   // app state
   const flavor = useSelector(getFlavor);
-  const user = useSelector(getUser);
+  const user = useSelector(getUser)!;
   const consumer = useSelector(getConsumer);
 
   // side effects
   // subscribe for profile changes
   useEffect(() => {
-    return dispatch(observeProfile(api)(flavor, user!.uid));
+    return dispatch(observeProfile(api)(flavor, user.uid));
   }, []);
   // subscribe for order changes
-  useObserveOrders({ createdBy: user!.uid });
+  // user can be undefined during logout
+  useObserveOrders(user?.uid ? { createdBy: user.uid } : undefined);
 
   // UI
   if (!consumer) return null;

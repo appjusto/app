@@ -16,14 +16,14 @@ export default function () {
 
   // app state
   const flavor = useSelector(getFlavor);
-  const user = useSelector(getUser);
+  const user = useSelector(getUser)!;
   const courier = useSelector(getCourier);
   const situation = courier?.situation;
 
   // side effects
   // subscribe for profile changes
   useEffect(() => {
-    return dispatch(observeProfile(api)(flavor, user!.uid));
+    return dispatch(observeProfile(api)(flavor, user.uid));
   }, []);
 
   // UI

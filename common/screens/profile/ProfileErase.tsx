@@ -2,11 +2,14 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState, useCallback, useContext } from 'react';
 import { View, Text } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { t } from '../../../strings';
-import { ApiContext } from '../../app/context';
+import { ApiContext, AppDispatch } from '../../app/context';
 import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
+import { showToast } from '../../store/ui/actions';
+import { getUIBusy } from '../../store/ui/selectors';
 import { deleteAccount } from '../../store/user/actions';
 import { DeleteAccountSurvey } from '../../store/user/types';
 import { colors, texts, screens } from '../../styles';
@@ -26,6 +29,10 @@ type Props = {
 export default function ({ navigation }: Props) {
   // context
   const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
+
+  // app state
+  const busy = useSelector(getUIBusy);
 
   // screen state
   const [survey, setSurvey] = useState<DeleteAccountSurvey>({
@@ -38,8 +45,14 @@ export default function ({ navigation }: Props) {
   });
   // handlers
   const eraseHandler = useCallback(() => {
-    deleteAccount(api)(survey);
-  }, []);
+    (async () => {
+      try {
+        await dispatch(deleteAccount(api)(survey));
+      } catch (error) {
+        dispatch(showToast(error.toString(), 'error'));
+      }
+    })();
+  }, [survey]);
 
   // UI
   return (
@@ -106,12 +119,15 @@ export default function ({ navigation }: Props) {
         <DefaultButton
           style={{ width: '100%', marginBottom: 8 }}
           title={t('Manter minha conta')}
+          disabled={busy}
           onPress={() => navigation.goBack()}
         />
         <DefaultButton
           title={t('Tenho certeza, pode excluir')}
           style={{ marginBottom: 16 }}
           onPress={eraseHandler}
+          disabled={busy}
+          activityIndicator={busy}
           secondary
         />
       </View>
