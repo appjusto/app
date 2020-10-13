@@ -41,7 +41,7 @@ export default function () {
     <Animated.View
       style={{
         position: 'absolute',
-        bottom: 90,
+        bottom: 40,
         left: padding,
         right: padding,
         opacity,
@@ -54,12 +54,14 @@ export default function () {
           ...borders.thicker,
           borderColor: colors.black,
           backgroundColor: type === 'success' ? colors.green : colors.yellow,
-          flex: 1,
+          width: '100%',
           flexWrap: 'wrap',
           padding: halfPadding,
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
-        <Text style={{ ...texts.small, flex: 1, flexWrap: 'wrap' }}>{message}</Text>
+        <Text style={{ ...texts.small, flexWrap: 'wrap' }}>{message}</Text>
       </View>
     </Animated.View>
   );

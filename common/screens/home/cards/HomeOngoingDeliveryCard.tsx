@@ -78,7 +78,7 @@ export default function ({ order, onSelect }: Props) {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              backgroundColor: colors.lightYellow,
+              backgroundColor: colors.yellow,
               borderBottomLeftRadius: 8,
               borderBottomRightRadius: 8,
             }}

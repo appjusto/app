@@ -39,6 +39,8 @@ export default function ({ navigation }: Props) {
   // handlers
   const eraseHandler = useCallback(() => {
     deleteAccount(api)(survey);
+    // console.log('conta deletada');
+    // navigation.navigate('UnloggedNavigator', { screen: 'WelcomeScreen' });
   }, []);
 
   // UI
@@ -109,7 +111,6 @@ export default function ({ navigation }: Props) {
           onPress={() => navigation.goBack()}
         />
         <DefaultButton
-          disabled
           title={t('Tenho certeza, pode excluir')}
           style={{ marginBottom: 16 }}
           onPress={eraseHandler}
