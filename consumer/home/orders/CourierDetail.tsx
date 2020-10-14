@@ -67,7 +67,7 @@ export default function ({ navigation, route }: Props) {
           <DefaultButton
             title={t('Cancelar pedido')}
             onPress={() => navigation.navigate('ConfirmCancelOrder', { orderId })}
-            style={{ ...borders.default, borderColor: colors.black, backgroundColor: colors.white }}
+            secondary
           />
         </PaddedView>
         <HR height={8} />

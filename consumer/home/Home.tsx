@@ -45,7 +45,7 @@ export default function ({ navigation }: Props) {
 
   // app state
   const flavor = useSelector(getFlavor);
-  const user = useSelector(getUser);
+  const user = useSelector(getUser)!;
 
   // state
   const [locationKey] = useState(nanoid());
@@ -54,9 +54,8 @@ export default function ({ navigation }: Props) {
 
   // side effects
   useEffect(() => {
-    if (!user) return;
     return dispatch(observeProfile(api)(flavor, user.uid));
-  }, [user]);
+  }, []);
 
   // request location permission
   useEffect(() => {

@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, ViewProps } from 'react-native';
+import { View, Text, Image, ViewProps } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import { checkboxActive, checkboxInactive } from '../../../assets/icons';
 import { texts } from '../../styles';
@@ -12,7 +13,7 @@ interface Props extends ViewProps {
 
 export default ({ onPress, text, style: externalStyle, checked = false }: Props) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableWithoutFeedback onPress={onPress}>
       <View
         style={[
           {
@@ -29,6 +30,6 @@ export default ({ onPress, text, style: externalStyle, checked = false }: Props)
         />
         <Text style={{ ...texts.small, marginLeft: 8 }}>{text}</Text>
       </View>
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
   );
 };

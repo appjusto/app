@@ -52,7 +52,7 @@ export default function ({ navigation }: Props) {
       const token = shouldUpdateToken ? notificationToken : null;
       dispatch(updateProfile(api)(courier.id, { notificationToken: token }));
     }
-  }, [courier, notificationToken, shouldDeleteToken, shouldUpdateToken]);
+  }, [notificationToken, shouldDeleteToken, shouldUpdateToken]);
 
   // UI
   const paddingTop = Constants.statusBarHeight;

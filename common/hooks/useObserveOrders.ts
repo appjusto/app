@@ -7,7 +7,7 @@ import { ObserveOrdersOptions } from '../store/api/order';
 import { observeOrders, observeOrderChat } from '../store/order/actions';
 import { getOngoingOrders } from '../store/order/selectors';
 
-export default function (options: ObserveOrdersOptions) {
+export default function (options?: ObserveOrdersOptions) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -21,8 +21,8 @@ export default function (options: ObserveOrdersOptions) {
   // side effects
   // observe all orders
   useEffect(() => {
-    return dispatch(observeOrders(api)(options));
-  }, []);
+    if (options) return dispatch(observeOrders(api)(options));
+  }, [options]);
 
   // observe chat of all ongoing orders
   useEffect(() => {

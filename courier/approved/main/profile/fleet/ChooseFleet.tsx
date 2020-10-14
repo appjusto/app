@@ -104,12 +104,7 @@ export default function ({ navigation, route }: Props) {
               <DefaultButton
                 title={t('Criar uma nova frota')}
                 onPress={() => navigation.navigate('CreateFleet')}
-                style={{
-                  ...borders.default,
-                  borderColor: colors.black,
-                  backgroundColor: 'white',
-                  marginTop: 8,
-                }}
+                secondary
               />
             </PaddedView>
             <View

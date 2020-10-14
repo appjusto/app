@@ -1,9 +1,8 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { ConsumerProfile, CourierProfile, UserProfile, WithId } from 'appjusto-types';
+import { ConsumerProfile, CourierProfile, Flavor, UserProfile, WithId } from 'appjusto-types';
 
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
-import { Flavor } from '../config/types';
 import { awaitWithFeedback } from '../ui/actions';
 import { DeleteAccountSurvey } from './types';
 
@@ -53,8 +52,11 @@ export const signOut = (api: Api) => {
   return api.auth().signOut();
 };
 
-export const deleteAccount = (api: Api) => (survey: DeleteAccountSurvey) => {
-  return api.auth().deleteAccount(survey);
+export const deleteAccount = (api: Api) => (survey: DeleteAccountSurvey) => async (
+  dispatch: AppDispatch
+) => {
+  await dispatch(awaitWithFeedback(api.auth().deleteAccount(survey)));
+  dispatch({ type: USER_LOGGED_OUT });
 };
 
 // watch for updates
