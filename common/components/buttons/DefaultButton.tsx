@@ -30,6 +30,11 @@ export default function ({
     : disabled || activityIndicator
     ? colors.grey
     : colors.green;
+  const borderColor = secondary
+    ? colors.black
+    : disabled || activityIndicator
+    ? colors.grey
+    : colors.green;
 
   return (
     <TouchableOpacity disabled={disabled} {...props}>
@@ -44,6 +49,7 @@ export default function ({
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor,
+            borderColor,
           },
           externalStyle,
         ]}
