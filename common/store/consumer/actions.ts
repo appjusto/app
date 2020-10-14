@@ -6,8 +6,9 @@ import Api from '../api/api';
 import { awaitWithFeedback } from '../ui/actions';
 
 export const saveCard = (api: Api) => (
+  cpf: string,
   tokenData: IuguCreatePaymentTokenData,
   cancelToken?: CancelToken
 ) => async (dispatch: AppDispatch) => {
-  return dispatch(awaitWithFeedback(api.consumer().saveCard(tokenData, cancelToken)));
+  return dispatch(awaitWithFeedback(api.consumer().saveCard(cpf, tokenData, cancelToken)));
 };

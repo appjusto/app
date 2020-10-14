@@ -16,6 +16,7 @@ export default class ConsumerApi {
   ) {}
 
   async saveCard(
+    cpf: string,
     data: IuguCreatePaymentTokenData,
     cancelToken?: CancelToken
   ): Promise<SaveCardResult> {
@@ -23,7 +24,7 @@ export default class ConsumerApi {
     const paymentToken = await this.iugu.createPaymentToken(data, cancelToken);
     console.log(paymentToken);
     console.log('savePaymentToken...');
-    const result = await this.functions.httpsCallable('savePaymentToken')({ paymentToken });
+    const result = await this.functions.httpsCallable('savePaymentToken')({ paymentToken, cpf });
     console.log(result.data);
     return result.data;
   }
