@@ -1,6 +1,6 @@
-import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { OrderRejectionReason, WithId } from 'appjusto-types';
+import { OrderCancellationReason, WithId } from 'appjusto-types';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { View, Text, TextInput, Image, ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -11,21 +11,15 @@ import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import { getCourier } from '../../../common/store/courier/selectors';
-import { fetchRejectionReasons, rejectOrder } from '../../../common/store/order/actions';
+import { fetchCancellationReasons, cancelOrder } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
-import { ApprovedParamList } from '../types';
-import { MatchingParamList } from './types';
+import { HomeNavigatorParamList } from '../types';
 
-// type ScreenNavigationProp = StackNavigationProp<MatchingParamList, 'RefuseDelivery'>;
-type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<MatchingParamList, 'RefuseDelivery'>,
-  StackNavigationProp<ApprovedParamList>
->;
-type ScreenRouteProp = RouteProp<MatchingParamList, 'RefuseDelivery'>;
+type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'CancelOrder'>;
+type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'CancelOrder'>;
 
 type Props = {
   route: ScreenRouteProp;
@@ -39,12 +33,11 @@ export default function ({ route, navigation }: Props) {
   const { orderId } = route.params;
 
   // app state
-  const courier = useSelector(getCourier)!;
   const busy = useSelector(getUIBusy);
 
   // state
-  const [reasons, setReasons] = useState<WithId<OrderRejectionReason>[]>([]);
-  const [selectedReason, setSelectedReason] = useState<WithId<OrderRejectionReason>>();
+  const [reasons, setReasons] = useState<WithId<OrderCancellationReason>[]>([]);
+  const [selectedReason, setSelectedReason] = useState<WithId<OrderCancellationReason>>();
   const [rejectionComment, setRejectionComment] = useState<string>('');
 
   // side effects
@@ -52,7 +45,7 @@ export default function ({ route, navigation }: Props) {
   useEffect(() => {
     (async () => {
       try {
-        setReasons(await dispatch(fetchRejectionReasons(api)('refuse')));
+        setReasons(await dispatch(fetchCancellationReasons(api)));
       } catch (error) {
         dispatch(showToast(t('Não foi possível carregar os dados.')));
       }
@@ -60,27 +53,21 @@ export default function ({ route, navigation }: Props) {
   }, []);
 
   // handlers
-  const sendRejectionHandler = useCallback(() => {
+  const cancelHandler = useCallback(() => {
     (async () => {
       try {
         await dispatch(
-          rejectOrder(api)(orderId, {
-            courierId: courier.id,
+          cancelOrder(api)(orderId, {
             reason: selectedReason!,
             comment: rejectionComment,
           })
         );
-        navigation.replace('MainNavigator', {
-          screen: 'HomeNavigator',
-          params: {
-            screen: 'Home',
-          },
-        });
+        navigation.replace('Home');
       } catch (error) {
-        dispatch(showToast(t('Não foi possível enviar o comentário')));
+        dispatch(showToast(t('Não foi possível canclar a corrida.')));
       }
     })();
-  }, [courier, selectedReason, rejectionComment]);
+  }, [selectedReason, rejectionComment]);
 
   // UI
   if (reasons.length === 0)
@@ -94,7 +81,7 @@ export default function ({ route, navigation }: Props) {
       <KeyboardAwareScrollView>
         <PaddedView>
           <Text style={{ ...texts.big, marginBottom: 24 }}>
-            {t('Por que você recusou o pedido?')}
+            {t('Por que você está cancelando o pedido?')}
           </Text>
           {reasons.map((reason) => (
             <TouchableOpacity key={reason.id} onPress={() => setSelectedReason(reason)}>
@@ -109,7 +96,7 @@ export default function ({ route, navigation }: Props) {
 
           <Text style={{ ...texts.default, marginBottom: 8, marginTop: 24 }}>
             {t(
-              'Você pode usar o espaço abaixo para detalhar mais sua recusa. Dessa forma conseguiremos melhorar nossos serviços:'
+              'Você pode usar o espaço abaixo para detalhar mais o cancelamento. Dessa forma conseguiremos melhorar nossos serviços:'
             )}
           </Text>
           <TextInput
@@ -120,7 +107,6 @@ export default function ({ route, navigation }: Props) {
               ...borders.default,
               borderColor: colors.grey,
               backgroundColor: colors.white,
-              marginBottom: 8,
               padding: 8,
             }}
             multiline
@@ -132,7 +118,7 @@ export default function ({ route, navigation }: Props) {
           <DefaultButton
             style={{ marginTop: padding }}
             title={t('Enviar')}
-            onPress={sendRejectionHandler}
+            onPress={cancelHandler}
             disabled={!selectedReason || busy}
             activityIndicator={busy}
           />
