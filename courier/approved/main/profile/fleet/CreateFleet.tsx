@@ -87,7 +87,7 @@ export default function ({ navigation, route }: Props) {
   // UI
   return (
     <ScrollView>
-      <View style={{ ...screens.configScreen }}>
+      <View style={{ ...screens.config }}>
         <PaddedView>
           <Text style={{ ...texts.big }}>{t('Criar nova frota')}</Text>
           <Text style={{ ...texts.default, color: colors.darkGrey, marginVertical: 8 }}>

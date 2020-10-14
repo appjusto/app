@@ -27,7 +27,7 @@ export default ({ navigation, route }: Props) => {
 
   // UI
   return (
-    <PaddedView style={{ ...screens.configScreen, paddingTop: padding }}>
+    <PaddedView style={{ ...screens.config, paddingTop: padding }}>
       <Text style={{ ...texts.big }}>{title}</Text>
       <Text style={{ ...texts.default, color: colors.darkGrey, marginVertical: 32 }}>
         {subtitle}

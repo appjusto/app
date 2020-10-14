@@ -1,3 +1,4 @@
+import Constants from 'expo-constants';
 import { StyleSheet } from 'react-native';
 
 export const colors = {
@@ -25,14 +26,12 @@ export const screens = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
   },
-  configScreen: {
+  config: {
     flex: 1,
     backgroundColor: colors.lightGrey,
   },
-  padded: {
-    flex: 1,
-    backgroundColor: colors.white,
-    padding,
+  headless: {
+    marginTop: Constants.statusBarHeight,
   },
   lightGrey: {
     flex: 1,

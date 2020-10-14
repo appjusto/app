@@ -3,12 +3,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { ConsumerProfile } from 'appjusto-types';
 import { trim } from 'lodash';
 import React, { useState, useContext, useRef, useMemo } from 'react';
-import { View, ScrollView, TextInput } from 'react-native';
+import { View, TextInput } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { AppDispatch, ApiContext } from '../../common/app/context';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
-import AvoidingView from '../../common/components/containers/AvoidingView';
 import PaddedView from '../../common/components/containers/PaddedView';
 import DefaultInput from '../../common/components/inputs/DefaultInput';
 import { getConsumer } from '../../common/store/consumer/selectors';
@@ -60,9 +60,9 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <PaddedView style={{ ...screens.lightGrey }}>
-      <AvoidingView>
-        <ScrollView contentContainerStyle={{ flex: 1 }}>
+    <View style={screens.config}>
+      <KeyboardAwareScrollView>
+        <PaddedView>
           <DefaultInput
             title={t('Nome')}
             placeholder={t('Digite seu nome')}
@@ -100,16 +100,15 @@ export default function ({ navigation, route }: Props) {
             onChangeText={(text) => setCpf(trim(text))}
             onSubmitEditing={() => dddRef.current?.focus()}
           />
-          <View style={{ flex: 1 }} />
           <DefaultButton
-            style={{ marginVertical: padding }}
+            style={{ marginTop: padding }}
             title={t('Atualizar')}
             onPress={updateProfileHandler}
             disabled={!canSubmit || busy}
             activityIndicator={busy}
           />
-        </ScrollView>
-      </AvoidingView>
-    </PaddedView>
+        </PaddedView>
+      </KeyboardAwareScrollView>
+    </View>
   );
 }

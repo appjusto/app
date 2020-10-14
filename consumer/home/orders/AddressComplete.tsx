@@ -143,7 +143,7 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <PaddedView style={{ ...screens.configScreen }}>
+    <PaddedView style={{ ...screens.config }}>
       <DefaultInput
         ref={searchInputRef}
         defaultValue={searchText}

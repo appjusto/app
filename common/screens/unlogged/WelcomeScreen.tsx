@@ -65,86 +65,84 @@ export default function ({ navigation, route }: Props) {
   // UI
   return (
     <View style={[screens.default]}>
-      <View style={{ flex: 1 }}>
-        <AvoidingView>
-          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-            <View style={{ paddingHorizontal: padding }}>
-              <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-                <View>
-                  <View style={{ height: 200, marginTop: 30, width: 275 }}>
-                    <Image source={illustration} />
-                  </View>
-
-                  <View style={{ height: 64, marginTop: 16, width: 152 }}>
-                    <Image style={{ height: '100%', width: '100%' }} source={logoWhite} />
-                  </View>
-
-                  <View style={{ height: 58, marginTop: 16 }}>
-                    <Text style={[texts.big]}>
-                      {t('Somos um delivery aberto, transparente e consciente.')}
-                    </Text>
-                  </View>
-
-                  <View style={{ width: '85%', height: 58, marginTop: 16 }}>
-                    <Text style={[texts.default, { color: colors.darkGrey, lineHeight: 21 }]}>
-                      {t('Digite seu e-mail para entrar ou criar sua conta.')}
-                    </Text>
-                  </View>
+      <AvoidingView>
+        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+          <View style={{ paddingHorizontal: padding }}>
+            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+              <View>
+                <View style={{ height: 200, marginTop: 30, width: 275 }}>
+                  <Image source={illustration} />
                 </View>
-              </TouchableWithoutFeedback>
 
-              <DefaultInput
-                value={email}
-                title={t('Acesse sua conta')}
-                placeholder={t('Digite seu e-mail')}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                blurOnSubmit
-                autoCapitalize="none"
-              />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginTop: height > 700 ? 32 : 16,
-                }}
-              >
-                <View>
-                  <CheckField
-                    checked={acceptedTerms}
-                    onPress={() => setAcceptTerms(!acceptedTerms)}
-                    text={t('Aceito os termos de uso do app')}
-                  />
+                <View style={{ height: 64, marginTop: 16, width: 152 }}>
+                  <Image style={{ height: '100%', width: '100%' }} source={logoWhite} />
                 </View>
-                <View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate('Terms');
-                    }}
-                  >
-                    <Text style={[texts.small, { color: colors.darkGreen, lineHeight: 18 }]}>
-                      {t('Ler os termos')}
-                    </Text>
-                  </TouchableOpacity>
+
+                <View style={{ height: 58, marginTop: 16 }}>
+                  <Text style={[texts.big]}>
+                    {t('Somos um delivery aberto, transparente e consciente.')}
+                  </Text>
+                </View>
+
+                <View style={{ width: '85%', height: 58, marginTop: 16 }}>
+                  <Text style={[texts.default, { color: colors.darkGrey, lineHeight: 21 }]}>
+                    {t('Digite seu e-mail para entrar ou criar sua conta.')}
+                  </Text>
                 </View>
               </View>
-              {/* dummy view to accomadate keyboard better */}
-              <View style={{ height: 20 }} />
-            </View>
+            </TouchableWithoutFeedback>
 
-            <View style={{ flex: 1 }} />
-            <View style={{ paddingHorizontal: 16, marginBottom: height > 700 ? 32 : 16 }}>
-              <DefaultButton
-                disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
-                title={t('Entrar')}
-                onPress={signInHandler}
-                activityIndicator={busy}
-              />
+            <DefaultInput
+              value={email}
+              title={t('Acesse sua conta')}
+              placeholder={t('Digite seu e-mail')}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              blurOnSubmit
+              autoCapitalize="none"
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginTop: height > 700 ? 32 : 16,
+              }}
+            >
+              <View>
+                <CheckField
+                  checked={acceptedTerms}
+                  onPress={() => setAcceptTerms(!acceptedTerms)}
+                  text={t('Aceito os termos de uso do app')}
+                />
+              </View>
+              <View>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('Terms');
+                  }}
+                >
+                  <Text style={[texts.small, { color: colors.darkGreen, lineHeight: 18 }]}>
+                    {t('Ler os termos')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
+            {/* dummy view to accomadate keyboard better */}
+            <View style={{ height: 20 }} />
           </View>
-        </AvoidingView>
-      </View>
+
+          <View style={{ flex: 1 }} />
+          <View style={{ paddingHorizontal: 16, marginBottom: height > 700 ? 32 : 16 }}>
+            <DefaultButton
+              disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
+              title={t('Entrar')}
+              onPress={signInHandler}
+              activityIndicator={busy}
+            />
+          </View>
+        </View>
+      </AvoidingView>
     </View>
   );
 }

@@ -30,6 +30,9 @@ export default function ({
     : disabled || activityIndicator
     ? colors.grey
     : colors.green;
+  const borderColor =
+    disabled || activityIndicator ? colors.grey : secondary ? colors.black : colors.green;
+  const color = disabled ? (secondary ? colors.grey : colors.white) : colors.black;
 
   return (
     <TouchableOpacity disabled={disabled} {...props}>
@@ -44,16 +47,13 @@ export default function ({
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor,
+            borderColor,
           },
           externalStyle,
         ]}
       >
         <ShowIf test={!activityIndicator}>
-          {() => (
-            <Text style={{ ...texts.medium, color: disabled ? colors.lightGrey : colors.black }}>
-              {title}
-            </Text>
-          )}
+          {() => <Text style={{ ...texts.medium, color }}>{title}</Text>}
         </ShowIf>
         <ShowIf test={activityIndicator}>
           {() => <ActivityIndicator size="small" color={secondary ? colors.black : colors.white} />}

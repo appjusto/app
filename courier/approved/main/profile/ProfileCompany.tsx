@@ -1,20 +1,19 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { CourierProfile } from 'appjusto-types';
 import { CourierCompany } from 'appjusto-types/courier';
 import { toNumber, trim } from 'lodash';
 import React, { useState, useContext, useRef, useMemo, useEffect } from 'react';
-import { View, ScrollView, TextInput } from 'react-native';
+import { View, TextInput } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { AppDispatch, ApiContext } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
-import AvoidingView from '../../../../common/components/containers/AvoidingView';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import { fetchPostalDetails } from '../../../../common/store/courier/actions';
 import { getCourier } from '../../../../common/store/courier/selectors';
-import { companyInfoSet, courierInfoSet } from '../../../../common/store/courier/validators';
+import { companyInfoSet } from '../../../../common/store/courier/validators';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { screens, padding } from '../../../../common/styles';
@@ -70,7 +69,7 @@ export default function ({ navigation, route }: Props) {
 
   // effects
   useEffect(() => {
-    if (cep.length === 8) {
+    if (cep.length === 8 && cepRef.current?.isFocused()) {
       (async () => {
         const result = await dispatch(fetchPostalDetails(cep));
         if (!result.error) {
@@ -91,9 +90,9 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <PaddedView style={{ ...screens.lightGrey }}>
-      <AvoidingView>
-        <ScrollView>
+    <View style={screens.config}>
+      <KeyboardAwareScrollView>
+        <PaddedView>
           <DefaultInput
             title={t('CNPJ')}
             placeholder={t('Digite o CNPJ da empresa')}
@@ -192,14 +191,14 @@ export default function ({ navigation, route }: Props) {
             />
           </View>
           <DefaultButton
-            style={{ marginVertical: padding }}
+            style={{ marginTop: padding }}
             title={t('Atualizar')}
             onPress={updateProfileHandler}
             disabled={!canSubmit || busy}
             activityIndicator={busy}
           />
-        </ScrollView>
-      </AvoidingView>
-    </PaddedView>
+        </PaddedView>
+      </KeyboardAwareScrollView>
+    </View>
   );
 }

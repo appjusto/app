@@ -8,13 +8,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
+import HR from '../../../../../common/components/views/HR';
 import ShowIf from '../../../../../common/components/views/ShowIf';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { observeFleets } from '../../../../../common/store/fleet/actions';
 import { getAvailableFleets } from '../../../../../common/store/fleet/selectors';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../../common/store/user/actions';
-import { texts, screens, colors, padding, borders } from '../../../../../common/styles';
+import { texts, screens, colors, padding } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import FleetCard from './FleetCard';
 import { FleetParamList } from './types';
@@ -65,7 +66,7 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <View style={{ ...screens.configScreen }}>
+    <View style={{ ...screens.config }}>
       <FlatList
         data={approvedFleets?.slice(0, 10) ?? []}
         renderItem={({ item }) => {
@@ -82,13 +83,11 @@ export default function ({ navigation, route }: Props) {
         }}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
-          <View>
+          <View style={{ flex: 1 }}>
             <PaddedView>
-              <Text style={{ ...texts.big, marginTop: padding }}>{t('Escolha sua frota')}</Text>
               <Text
                 style={{
                   ...texts.default,
-                  marginTop: padding,
                   color: colors.darkGrey,
                   marginBottom: 24,
                 }}
@@ -102,29 +101,25 @@ export default function ({ navigation, route }: Props) {
                 onPress={() => navigation.navigate('AllFleets')}
               />
               <DefaultButton
+                style={{ marginTop: padding }}
                 title={t('Criar uma nova frota')}
                 onPress={() => navigation.navigate('CreateFleet')}
                 secondary
               />
             </PaddedView>
-            <View
-              style={{
-                marginTop: 40,
-                borderColor: colors.grey,
-                borderStyle: 'solid',
-                borderWidth: 1,
-              }}
-            />
-            <Text style={{ marginTop: 24, ...texts.mediumToBig, paddingHorizontal: padding }}>
-              {t('Frotas com mais participantes: ')}
-            </Text>
-            <ShowIf test={approvedFleets.length === 0 && busy}>
-              {() => (
-                <View style={{ marginTop: 8 }}>
-                  <ActivityIndicator size="small" color={colors.white} />
-                </View>
-              )}
-            </ShowIf>
+            <HR color={colors.grey} />
+            <PaddedView>
+              <ShowIf test={approvedFleets.length === 0}>
+                {() => <ActivityIndicator size="large" color={colors.black} />}
+              </ShowIf>
+              <ShowIf test={approvedFleets.length > 0}>
+                {() => (
+                  <Text style={{ ...texts.mediumToBig }}>
+                    {t('Frotas com mais participantes: ')}
+                  </Text>
+                )}
+              </ShowIf>
+            </PaddedView>
           </View>
         }
       />

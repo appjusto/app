@@ -26,7 +26,7 @@ export default function ({ navigation, route }: Props) {
   const cards = consumer?.paymentChannel?.methods ?? [];
 
   return (
-    <View style={{ ...screens.configScreen }}>
+    <View style={{ ...screens.config }}>
       <FlatList
         data={cards}
         keyExtractor={(item) => item.id}

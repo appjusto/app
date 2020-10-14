@@ -46,7 +46,7 @@ export default function ({ navigation, route }: Props) {
     navigation.goBack();
   }, [fleet]);
   return (
-    <View style={[screens.configScreen]}>
+    <View style={[screens.config]}>
       <ScrollView>
         <PaddedView>
           <Text style={[texts.big]}>{fleet.name}</Text>

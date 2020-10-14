@@ -13,7 +13,7 @@ export default function ({ children, style, ...props }: Props) {
     return (
       <KeyboardAvoidingView
         style={[{ flex: 1, justifyContent: 'flex-end' }, style]}
-        behavior="padding"
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={headerHeight}
         {...props}
       >

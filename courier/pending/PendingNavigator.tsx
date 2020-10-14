@@ -24,7 +24,7 @@ export default function () {
       <Stack.Screen
         name="PendingChecklist"
         component={PendingChecklist}
-        options={{ title: t('Novo cadastro') }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ProfileEdit"

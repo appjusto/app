@@ -1,9 +1,8 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import Constants from 'expo-constants';
 import React, { useEffect, useContext } from 'react';
-import { ScrollView, TouchableOpacity } from 'react-native';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
@@ -12,7 +11,7 @@ import useNotificationToken from '../../../../common/hooks/useNotificationToken'
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
-import { padding } from '../../../../common/styles';
+import { padding, screens } from '../../../../common/styles';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
 import HomeControls from './HomeControls';
@@ -55,28 +54,31 @@ export default function ({ navigation }: Props) {
   }, [notificationToken, shouldDeleteToken, shouldUpdateToken]);
 
   // UI
-  const paddingTop = Constants.statusBarHeight;
   return (
-    <ScrollView contentContainerStyle={{ paddingTop }}>
-      <HomeControls navigation={navigation} />
-      <HomeOngoingDeliveries
-        onSelect={(order, openChat) =>
-          navigation.navigate('OngoingNavigator', {
-            screen: 'OngoingDelivery',
-            params: { orderId: order.id, newMessage: openChat },
-          })
-        }
-      />
-      <PaddedView half>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('DeliveriesNavigator', { screen: 'DeliveryHistory' })}
-        >
-          <HomeDeliveriesSummary />
-        </TouchableOpacity>
-      </PaddedView>
-      <PaddedView vertical={false} style={{ marginBottom: padding }} half>
-        <ModalChooser />
-      </PaddedView>
-    </ScrollView>
+    <View style={[screens.default, screens.headless]}>
+      <ScrollView>
+        <HomeControls navigation={navigation} />
+        <HomeOngoingDeliveries
+          onSelect={(order, openChat) =>
+            navigation.navigate('OngoingNavigator', {
+              screen: 'OngoingDelivery',
+              params: { orderId: order.id, newMessage: openChat },
+            })
+          }
+        />
+        <PaddedView half>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('DeliveriesNavigator', { screen: 'DeliveryHistory' })
+            }
+          >
+            <HomeDeliveriesSummary />
+          </TouchableOpacity>
+        </PaddedView>
+        <PaddedView vertical={false} style={{ marginBottom: padding }} half>
+          <ModalChooser />
+        </PaddedView>
+      </ScrollView>
+    </View>
   );
 }

@@ -52,7 +52,7 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <View style={{ ...screens.configScreen }}>
+    <View style={{ ...screens.config }}>
       <FlatList
         style={{ flex: 1 }}
         data={filteredOrders}
