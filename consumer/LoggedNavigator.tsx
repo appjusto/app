@@ -1,11 +1,12 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../assets/icons';
 import { AppDispatch, ApiContext } from '../common/app/context';
 import useObserveOrders from '../common/hooks/useObserveOrders';
+import { ObserveOrdersOptions } from '../common/store/api/order';
 import { getFlavor } from '../common/store/config/selectors';
 import { getConsumer } from '../common/store/consumer/selectors';
 import { observeProfile } from '../common/store/user/actions';
@@ -24,17 +25,16 @@ export default function () {
   const api = useContext(ApiContext);
   // app state
   const flavor = useSelector(getFlavor);
-  const user = useSelector(getUser)!;
+  const user = useSelector(getUser);
   const consumer = useSelector(getConsumer);
 
   // side effects
   // subscribe for profile changes
   useEffect(() => {
-    return dispatch(observeProfile(api)(flavor, user.uid));
+    return dispatch(observeProfile(api)(flavor, user!.uid));
   }, []);
   // subscribe for order changes
-  // user can be undefined during logout
-  useObserveOrders(user?.uid ? { createdBy: user.uid } : undefined);
+  useObserveOrders({ createdBy: user?.uid });
 
   // UI
   if (!consumer) return null;

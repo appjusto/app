@@ -16,7 +16,7 @@ export type HomeNavigatorParamList = {
     returnParam: string;
   };
   FleetDetail: {
-    fleet: Fleet;
+    fleet: WithId<Fleet>;
   };
   ProfileEdit: undefined;
   ProfileAddCard?: {

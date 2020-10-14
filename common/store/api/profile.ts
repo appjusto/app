@@ -44,12 +44,19 @@ export default class ProfileApi {
 
   // update profile
   updateProfile(id: string, changes: Partial<CourierProfile> | Partial<ConsumerProfile>) {
-    return this.getProfileRef(id).set(changes, { merge: true });
+    return this.getProfileRef(id).set(
+      { ...changes, updatedOn: firebase.firestore.FieldValue.serverTimestamp() } as CourierProfile,
+      { merge: true }
+    );
   }
 
   updateLocation(id: string, location: firebase.firestore.GeoPoint) {
-    return this.firestoreWithGeo.collection(this.collectionName).doc(id).update({
-      coordinates: location,
-    });
+    return this.firestoreWithGeo
+      .collection(this.collectionName)
+      .doc(id)
+      .update({
+        coordinates: location,
+        updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+      } as Partial<CourierProfile>);
   }
 }
