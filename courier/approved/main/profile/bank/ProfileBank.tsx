@@ -3,12 +3,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Bank } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React, { useRef, useState, useEffect, useContext, useMemo } from 'react';
-import { View, Text, TouchableWithoutFeedback, ScrollView, TextInput } from 'react-native';
+import { View, Text, TouchableWithoutFeedback, TextInput } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
-import AvoidingView from '../../../../../common/components/containers/AvoidingView';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../../../common/components/texts/LabeledText';
@@ -47,7 +47,6 @@ export default function ({ navigation, route }: Props) {
   }, [bank, agency, account, digit]);
 
   // refs
-  const scrollViewRef = useRef<ScrollView>(null);
   const accountRef = useRef<TextInput>(null);
   const digitRef = useRef<TextInput>(null);
 
@@ -93,11 +92,11 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <PaddedView style={{ ...screens.configScreen }}>
-      <ScrollView ref={scrollViewRef} contentContainerStyle={{ flex: 1 }}>
-        <AvoidingView>
+    <View style={screens.config}>
+      <KeyboardAwareScrollView>
+        <PaddedView>
           <Text style={{ ...texts.default, marginTop: halfPadding, color: colors.darkGrey }}>
-            {t('A conta precisa estar no seu CPF. Não serão aceitas contas de terceiros.')}
+            {t('A conta precisa estar no seu CPF ou CNPJ. Não serão aceitas contas de terceiros.')}
           </Text>
           <View style={{ marginTop: padding }}>
             {/* <DefaultInput title={t('Banco')} value={bank} onChangeText={(text) => setBank(text)} /> */}
@@ -151,15 +150,15 @@ export default function ({ navigation, route }: Props) {
               />
             </View>
           </View>
-          <View style={{ flex: 1 }} />
           <DefaultButton
+            style={{ marginTop: padding }}
             title={t('Avançar')}
             disabled={!canSubmit}
             activityIndicator={busy}
             onPress={submitBankHandler}
           />
-        </AvoidingView>
-      </ScrollView>
-    </PaddedView>
+        </PaddedView>
+      </KeyboardAwareScrollView>
+    </View>
   );
 }

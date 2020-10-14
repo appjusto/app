@@ -4,6 +4,7 @@ import { View, Text, TouchableWithoutFeedback } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { borders, texts, colors, padding } from '../../../../../common/styles';
@@ -24,13 +25,10 @@ export default function ({ fleet, selected, onSelect, onConfirm }: Props) {
   // UI
   return (
     <TouchableWithoutFeedback onPress={onSelect}>
-      <View
+      <PaddedView
         style={[
           {
             ...borders.default,
-            paddingHorizontal: 12,
-            paddingTop: 12,
-            paddingBottom: padding,
             backgroundColor: colors.white,
           },
           selected
@@ -157,9 +155,9 @@ export default function ({ fleet, selected, onSelect, onConfirm }: Props) {
           onPress={onConfirm}
           disabled={!selected}
           activityIndicator={busy && selected}
-          secondary
+          secondary={!selected}
         />
-      </View>
+      </PaddedView>
     </TouchableWithoutFeedback>
   );
 }

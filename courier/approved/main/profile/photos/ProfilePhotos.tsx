@@ -199,7 +199,7 @@ export default function ({ navigation }: Props) {
   // UI
   return (
     <ScrollView>
-      <View style={{ ...screens.configScreen }}>
+      <View style={{ ...screens.config }}>
         <PaddedView>
           <Text style={{ ...texts.default, color: colors.darkGrey }}>
             {t(

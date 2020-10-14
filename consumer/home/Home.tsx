@@ -1,7 +1,6 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useEffect, useContext, useState } from 'react';
@@ -19,7 +18,7 @@ import { getFlavor } from '../../common/store/config/selectors';
 import { fetchTotalCouriersNearby } from '../../common/store/courier/actions';
 import { observeProfile } from '../../common/store/user/actions';
 import { getUser } from '../../common/store/user/selectors';
-import { colors, texts, padding, borders, halfPadding } from '../../common/styles';
+import { colors, texts, padding, borders, halfPadding, screens } from '../../common/styles';
 import { t } from '../../strings';
 import { LoggedParamList } from '../types';
 import ConsumerHomeControls from './ConsumerHomeControls';
@@ -76,34 +75,37 @@ export default function ({ navigation }: Props) {
   }, [lastKnownLocation]);
 
   // UI
-  const paddingTop = Constants.statusBarHeight;
   return (
-    <ScrollView contentContainerStyle={{ paddingTop }} style={{ backgroundColor: colors.white }}>
-      <ConsumerHomeControls navigation={navigation} />
-      <PaddedView>
-        <HomeOngoingDeliveries
-          onSelect={(order, openChat) =>
-            navigation.navigate('OngoingOrder', { orderId: order.id, newMessage: openChat })
-          }
-        />
-        <View
-          style={[
-            styles.card,
-            {
-              padding: tallerDevice ? padding : halfPadding,
-              marginBottom: tallerDevice ? padding : halfPadding,
-            },
-          ]}
-        >
-          <Image source={icons.delivery} />
-          <View style={{ marginLeft: padding }}>
-            <Text style={{ ...texts.default }}>
-              {availableCouriers} {t('entregadores disponíveis')}
-            </Text>
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>{t(`num raio de 15km`)}</Text>
+    <View style={[screens.default, screens.headless]}>
+      {/* <StatusBar /> */}
+      <ScrollView>
+        <ConsumerHomeControls navigation={navigation} />
+        <PaddedView>
+          <HomeOngoingDeliveries
+            onSelect={(order, openChat) =>
+              navigation.navigate('OngoingOrder', { orderId: order.id, newMessage: openChat })
+            }
+          />
+          <View
+            style={[
+              styles.card,
+              {
+                padding: tallerDevice ? padding : halfPadding,
+                marginBottom: tallerDevice ? padding : halfPadding,
+              },
+            ]}
+          >
+            <Image source={icons.delivery} />
+            <View style={{ marginLeft: padding }}>
+              <Text style={{ ...texts.default }}>
+                {availableCouriers} {t('entregadores disponíveis')}
+              </Text>
+              <Text style={{ ...texts.small, color: colors.darkGrey }}>
+                {t(`num raio de 15km`)}
+              </Text>
+            </View>
           </View>
-        </View>
-        {/* <ShowIf test={ongoingOrders.length <= 0}>
+          {/* <ShowIf test={ongoingOrders.length <= 0}>
           {() => (
             <TouchableOpacity
               onPress={() => navigation.navigate('HistoryNavigator', { screen: 'OrderHistory' })}
@@ -128,36 +130,37 @@ export default function ({ navigation }: Props) {
             </TouchableOpacity>
           )}
         </ShowIf> */}
-        {/* TODO: add logic to the share component below */}
-        <TouchableOpacity>
-          <View
-            style={[
-              styles.card,
-              {
-                padding: tallerDevice ? padding : halfPadding,
-                marginBottom: tallerDevice ? padding : halfPadding,
-              },
-            ]}
-          >
-            <Image source={icons.share} />
-            <View style={{ marginLeft: padding }}>
-              <Text style={{ ...texts.default }}>{t('Divulgue o AppJusto')}</Text>
-              <Text
-                style={{
-                  ...texts.small,
-                  color: colors.darkGrey,
-                  flexWrap: 'wrap',
-                  maxWidth: '85%',
-                }}
-                numberOfLines={2}
-              >
-                {t('Compartilhe esse movimento por uma economia mais justa.')}
-              </Text>
+          {/* TODO: add logic to the share component below */}
+          <TouchableOpacity>
+            <View
+              style={[
+                styles.card,
+                {
+                  padding: tallerDevice ? padding : halfPadding,
+                  marginBottom: tallerDevice ? padding : halfPadding,
+                },
+              ]}
+            >
+              <Image source={icons.share} />
+              <View style={{ marginLeft: padding }}>
+                <Text style={{ ...texts.default }}>{t('Divulgue o AppJusto')}</Text>
+                <Text
+                  style={{
+                    ...texts.small,
+                    color: colors.darkGrey,
+                    flexWrap: 'wrap',
+                    maxWidth: '85%',
+                  }}
+                  numberOfLines={2}
+                >
+                  {t('Compartilhe esse movimento por uma economia mais justa.')}
+                </Text>
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>
-      </PaddedView>
-    </ScrollView>
+          </TouchableOpacity>
+        </PaddedView>
+      </ScrollView>
+    </View>
   );
 }
 

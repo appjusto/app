@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Text, Image } from 'react-native';
 
 import { colors, texts, screens } from '../../styles';
+import PaddedView from '../containers/PaddedView';
 import ShowIf from './ShowIf';
 
 type Props = {
@@ -15,7 +16,7 @@ type Props = {
 
 export default ({ header, description, icon, children, background }: Props) => {
   return (
-    <View style={[screens.padded, { backgroundColor: background ?? colors.white }]}>
+    <PaddedView style={screens.default}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <View style={{ alignItems: 'center' }}>
           <Text style={{ ...texts.big, textAlign: 'center' }}>{header}</Text>
@@ -32,6 +33,6 @@ export default ({ header, description, icon, children, background }: Props) => {
         </View>
       </View>
       {children}
-    </View>
+    </PaddedView>
   );
 };

@@ -82,7 +82,7 @@ export default function ({ route, navigation }: Props) {
 
   // UI
   return (
-    <PaddedView style={{ ...screens.configScreen }}>
+    <PaddedView style={{ ...screens.config }}>
       <Text style={{ ...texts.big, marginBottom: 24 }}>
         {t('Por que você quer cancelar o pedido?')}
       </Text>

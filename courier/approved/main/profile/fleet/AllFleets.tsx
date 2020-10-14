@@ -47,7 +47,7 @@ export default function ({ navigation }: Props) {
   }, []);
 
   return (
-    <View style={{ ...screens.configScreen }}>
+    <View style={{ ...screens.config }}>
       <FlatList
         data={approvedFleets?.slice(0, 10) ?? []}
         ListHeaderComponent={

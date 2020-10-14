@@ -1,10 +1,10 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import Constants from 'expo-constants';
 import React, { useContext } from 'react';
 import { View, Alert, ScrollView } from 'react-native';
 
 import { ApiContext } from '../../common/app/context';
+import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
 import { signOut } from '../../common/store/user/actions';
 import { screens } from '../../common/styles';
@@ -45,40 +45,41 @@ export default function ({ navigation }: Props) {
   };
 
   // UI
-  const paddingTop = Constants.statusBarHeight;
   return (
-    <View style={{ ...screens.configScreen, paddingTop }}>
+    <View style={[screens.config, screens.headless]}>
       <ScrollView>
-        <ConfigItem
-          title={t('Seus dados')}
-          subtitle={t('Edite seus dados pessoais')}
-          onPress={() => navigation.navigate('ProfileEdit', { allowPartialSave: true })}
-        />
-        <ConfigItem
-          title={t('Formas de pagamento')}
-          subtitle={t('Edite suas formas de pagamento')}
-          onPress={() => navigation.navigate('ProfilePaymentMethods')}
-        />
-        <ConfigItem
-          title={t('Termos de uso e política de privacidade')}
-          subtitle={t('Leia os termos de uso do AppJusto')}
-          onPress={() => navigation.navigate('Terms')}
-        />
-        <ConfigItem
-          title={t('Sair do App')}
-          subtitle={t(
-            'Desconecte-se do aplicativo. Para retornar, você precisará confirmar seu e-mail cadastrado'
-          )}
-          onPress={confirmLogout}
-        />
-        <ConfigItem
-          title={t('Excluir minha conta')}
-          subtitle={t(
-            'Todos os seus dados serão apagados do nosso sistema e você não fará mais parte do AppJusto'
-          )}
-          bottomBorder={false}
-          onPress={() => navigation.navigate('ProfileErase')}
-        />
+        <PaddedView horizontal={false}>
+          <ConfigItem
+            title={t('Seus dados')}
+            subtitle={t('Edite seus dados pessoais')}
+            onPress={() => navigation.navigate('ProfileEdit')}
+          />
+          <ConfigItem
+            title={t('Formas de pagamento')}
+            subtitle={t('Edite suas formas de pagamento')}
+            onPress={() => navigation.navigate('ProfilePaymentMethods')}
+          />
+          <ConfigItem
+            title={t('Termos de uso e política de privacidade')}
+            subtitle={t('Leia os termos de uso do AppJusto')}
+            onPress={() => navigation.navigate('Terms')}
+          />
+          <ConfigItem
+            title={t('Sair do App')}
+            subtitle={t(
+              'Desconecte-se do aplicativo. Para retornar, você precisará confirmar seu e-mail cadastrado'
+            )}
+            onPress={confirmLogout}
+          />
+          <ConfigItem
+            title={t('Excluir minha conta')}
+            subtitle={t(
+              'Todos os seus dados serão apagados do nosso sistema e você não fará mais parte do AppJusto'
+            )}
+            bottomBorder={false}
+            onPress={() => navigation.navigate('ProfileErase')}
+          />
+        </PaddedView>
       </ScrollView>
     </View>
   );

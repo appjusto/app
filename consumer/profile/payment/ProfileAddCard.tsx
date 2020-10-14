@@ -3,12 +3,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { validate } from 'gerador-validador-cpf';
 import { isEmpty, toNumber, trim } from 'lodash';
 import React, { useState, useRef, useContext, useMemo } from 'react';
-import { ScrollView, View, TextInput } from 'react-native';
+import { View, TextInput } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import AvoidingView from '../../../common/components/containers/AvoidingView';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import useAxiosCancelToken from '../../../common/hooks/useAxiosCancelToken';
@@ -91,27 +91,25 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <PaddedView style={{ ...screens.configScreen }}>
-      <ScrollView contentContainerStyle={{ flex: 1 }}>
-        <AvoidingView>
-          <View style={{ flexDirection: 'row', marginTop: padding }}>
-            <DefaultInput
-              style={{ flex: 1 }}
-              title={t('Número do cartão')}
-              value={number}
-              placeholder={t('0000000000000000')}
-              maxLength={19}
-              keyboardType="number-pad"
-              textContentType="creditCardNumber"
-              autoCompleteType="cc-number"
-              returnKeyType="next"
-              blurOnSubmit={false}
-              onChangeText={(text) => {
-                if (!isNaN(toNumber(text))) setNumber(text);
-              }}
-              onSubmitEditing={() => expirationMonthRef.current?.focus()}
-            />
-          </View>
+    <View style={screens.config}>
+      <KeyboardAwareScrollView>
+        <PaddedView>
+          <DefaultInput
+            style={{ flex: 1 }}
+            title={t('Número do cartão')}
+            value={number}
+            placeholder={t('0000000000000000')}
+            maxLength={19}
+            keyboardType="number-pad"
+            textContentType="creditCardNumber"
+            autoCompleteType="cc-number"
+            returnKeyType="next"
+            blurOnSubmit={false}
+            onChangeText={(text) => {
+              if (!isNaN(toNumber(text))) setNumber(text);
+            }}
+            onSubmitEditing={() => expirationMonthRef.current?.focus()}
+          />
           <View style={{ flexDirection: 'row', marginTop: padding }}>
             <DefaultInput
               ref={expirationMonthRef}
@@ -208,7 +206,6 @@ export default function ({ navigation, route }: Props) {
               if (!isNaN(toNumber(text))) setCPF(text);
             }}
           />
-          <View style={{ flex: 1 }} />
           <DefaultButton
             style={{ marginTop: padding }}
             title={t('Salvar')}
@@ -216,8 +213,8 @@ export default function ({ navigation, route }: Props) {
             disabled={!canSubmit || busy}
             activityIndicator={busy}
           />
-        </AvoidingView>
-      </ScrollView>
-    </PaddedView>
+        </PaddedView>
+      </KeyboardAwareScrollView>
+    </View>
   );
 }

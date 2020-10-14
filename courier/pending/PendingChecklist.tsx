@@ -1,11 +1,19 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  StatusBar,
+} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../common/app/context';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
+import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
 import {
   submitProfile,
@@ -19,7 +27,7 @@ import {
   companyInfoSet,
 } from '../../common/store/courier/validators';
 import { getUIBusy } from '../../common/store/ui/selectors';
-import { screens, texts, colors } from '../../common/styles';
+import { screens, texts, colors, padding } from '../../common/styles';
 import { t } from '../../strings';
 import { PendingParamList } from './types';
 
@@ -98,30 +106,27 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <View style={{ ...screens.configScreen }}>
+    <View style={{ ...screens.config }}>
+      <StatusBar />
       <ScrollView>
         {/* header */}
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
-            <Text style={{ ...texts.big, marginBottom: 24 }}>
-              {t('Cadastro de novo entregador')}
-            </Text>
-            <DefaultButton
-              title={t('Enviar cadastro')}
-              onPress={submitHandler}
-              disabled={!submitEnabled || busy}
-              activityIndicator={busy}
-            />
-            <Text style={[texts.default, { color: colors.darkGrey, paddingTop: 16 }]}>
-              {t(
-                'Seu cadastro passará por uma análise do nosso sistema para que você possa começar a fazer suas entregas.'
-              )}
-            </Text>
-            <Text style={{ ...texts.default, color: colors.darkGreen, paddingTop: 16 }}>
-              {stepsDone} {t('de')} {totalSteps} {t('dados preenchidos')}
-            </Text>
-          </View>
-        </TouchableWithoutFeedback>
+        <PaddedView>
+          <Text style={{ ...texts.big, marginBottom: 24 }}>{t('Cadastro de novo entregador')}</Text>
+          <DefaultButton
+            title={t('Enviar cadastro')}
+            onPress={submitHandler}
+            disabled={!submitEnabled || busy}
+            activityIndicator={busy}
+          />
+          <Text style={[texts.default, { color: colors.darkGrey, paddingTop: 16 }]}>
+            {t(
+              'Preencha os dados a seguir e envie seu cadastro. Em até um dia você poderá começar a fazer suas entregas.'
+            )}
+          </Text>
+          <Text style={{ ...texts.default, color: colors.darkGreen, paddingTop: 16 }}>
+            {stepsDone} {t('de')} {totalSteps} {t('dados preenchidos')}
+          </Text>
+        </PaddedView>
         <View
           style={{
             borderBottomColor: colors.grey,
@@ -159,6 +164,7 @@ export default function ({ navigation, route }: Props) {
           subtitle={t('Faça parte de uma frota existente ou crie sua própria frota')}
           onPress={() => navigation.navigate('Fleet')}
           checked={hasSelectedFleet}
+          bottomBorder={false}
         />
       </ScrollView>
     </View>

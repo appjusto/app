@@ -1,9 +1,10 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext, useCallback } from 'react';
-import { Alert, ScrollView, SafeAreaView } from 'react-native';
+import { Alert, ScrollView, View } from 'react-native';
 
 import { ApiContext } from '../../../../common/app/context';
+import PaddedView from '../../../../common/components/containers/PaddedView';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import { signOut } from '../../../../common/store/user/actions';
 import { screens } from '../../../../common/styles';
@@ -45,7 +46,7 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <SafeAreaView style={{ ...screens.configScreen, marginTop: 16 }}>
+    <View style={[screens.config, screens.headless]}>
       <ScrollView>
         <ConfigItem
           title={t('Seus dados')}
@@ -93,6 +94,6 @@ export default function ({ navigation }: Props) {
           onPress={() => navigation.navigate('ProfileErase')}
         />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
