@@ -3,7 +3,7 @@ import {
   IuguCreatePaymentToken,
   IuguPaymentToken,
 } from 'appjusto-types/payment/iugu';
-import axios, { CancelToken } from 'axios';
+import axios, { AxiosError, CancelToken } from 'axios';
 
 const API_ENDPOINT = 'https://api.iugu.com/v1';
 
@@ -21,7 +21,15 @@ export default class IuguApi {
       test: true, // TODO: remove
       data,
     };
-    const response = await axios.post<IuguPaymentToken>(url, payload, { cancelToken });
-    return response.data;
+    try {
+      const response = await axios.post<IuguPaymentToken>(url, payload, { cancelToken });
+      return response.data;
+    } catch (error) {
+      let message = 'Não foi possível completar a requisição.';
+      if (error.response?.data?.errors?.number) {
+        message = 'Número do cartão inválido';
+      }
+      throw new Error(message);
+    }
   }
 }
