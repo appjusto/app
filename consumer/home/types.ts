@@ -39,7 +39,7 @@ export type HomeNavigatorParamList = {
   ConfirmCancelOrder: {
     orderId: string;
   };
-  JustifyOrderCancellation: {
+  CancelOrder: {
     orderId: string;
   };
   OrderDeliveredFeedback: {

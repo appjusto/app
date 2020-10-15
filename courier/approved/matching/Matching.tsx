@@ -59,7 +59,7 @@ export default function ({ navigation, route }: Props) {
   // UI
   if (busy)
     return (
-      <View style={{ ...screens.default, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green} />
       </View>
     );

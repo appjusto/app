@@ -70,6 +70,7 @@ export default function ({ navigation, route }: Props) {
     try {
       const result = await dispatch(
         saveCard(api)(
+          cpf,
           {
             number,
             month,

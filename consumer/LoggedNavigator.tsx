@@ -1,17 +1,16 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import React, { useEffect, useContext, useState } from 'react';
-import { Image } from 'react-native';
+import React, { useEffect, useContext } from 'react';
+import { ActivityIndicator, Image, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../assets/icons';
 import { AppDispatch, ApiContext } from '../common/app/context';
 import useObserveOrders from '../common/hooks/useObserveOrders';
-import { ObserveOrdersOptions } from '../common/store/api/order';
 import { getFlavor } from '../common/store/config/selectors';
 import { getConsumer } from '../common/store/consumer/selectors';
 import { observeProfile } from '../common/store/user/actions';
 import { getUser } from '../common/store/user/selectors';
-import { colors } from '../common/styles';
+import { colors, screens } from '../common/styles';
 import { t } from '../strings';
 import HistoryNavigator from './history/HistoryNavigator';
 import HomeNavigator from './home/HomeNavigator';
@@ -37,7 +36,16 @@ export default function () {
   useObserveOrders({ createdBy: user?.uid });
 
   // UI
-  if (!consumer) return null;
+  if (consumer?.situation !== 'approved') {
+    // on the first time consumer is logged, the profile will be created by the app with the status 'pending'
+    // the indicator will be showing until the trigger change the status to 'approved'
+    // TODO: handle other cases in the future
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
+  }
   return (
     <Tab.Navigator
       tabBarOptions={{

@@ -30,6 +30,12 @@ export const screens = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.lightGrey,
   },
+  centered: {
+    flex: 1,
+    backgroundColor: colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   headless: {
     marginTop: Constants.statusBarHeight,
   },

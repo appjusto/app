@@ -11,6 +11,8 @@ import ProfileAddCard from '../profile/payment/ProfileAddCard';
 import ProfilePaymentMethods from '../profile/payment/ProfilePaymentMethods';
 import Home from './Home';
 import AddressComplete from './orders/AddressComplete';
+import CancelOrder from './orders/CancelOrder';
+import ConfirmCancelOrder from './orders/ConfirmCancelOrder';
 import CourierDetail from './orders/CourierDetail';
 import OngoingOrder from './orders/OngoingOrder';
 import OrderDeliveredFeedback from './orders/OrderDeliveredFeedback';
@@ -18,8 +20,6 @@ import OrderMatching from './orders/OrderMatching';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import TransportableItems from './orders/p2p-order/TransportableItems';
 import { HomeNavigatorParamList } from './types';
-import ConfirmCancelOrder from './orders/ConfirmCancelOrder';
-import JustifyOrderCancellation from './orders/JustifyOrderCancellation';
 
 const Stack = createStackNavigator<HomeNavigatorParamList>();
 export default function () {
@@ -93,8 +93,8 @@ export default function () {
         options={{ title: t('Cancelar pedido') }}
       />
       <Stack.Screen
-        name="JustifyOrderCancellation"
-        component={JustifyOrderCancellation}
+        name="CancelOrder"
+        component={CancelOrder}
         options={{ title: t('Sua opinião') }}
       />
       <Stack.Screen
