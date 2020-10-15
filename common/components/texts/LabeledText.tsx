@@ -21,7 +21,7 @@ export default ({ title, children, style: externalStyle, ...props }: Props) => (
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    // width: '100%',
     height: 60,
     ...borders.default,
     backgroundColor: 'white',

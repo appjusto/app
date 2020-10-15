@@ -10,6 +10,7 @@ import ProfileEdit from './ProfileEdit';
 import ProfileAddCard from './payment/ProfileAddCard';
 import ProfilePaymentMethods from './payment/ProfilePaymentMethods';
 import { ProfileParamList } from './types';
+import PaymentMethodDetail from './payment/PaymentMethodDetail';
 
 const Stack = createStackNavigator<ProfileParamList>();
 export default function () {
@@ -30,6 +31,11 @@ export default function () {
       <Stack.Screen
         name="ProfilePaymentMethods"
         component={ProfilePaymentMethods}
+        options={{ title: t('Formas de pagamento') }}
+      />
+      <Stack.Screen
+        name="PaymentMethodDetail"
+        component={PaymentMethodDetail}
         options={{ title: t('Formas de pagamento') }}
       />
       <Stack.Screen
