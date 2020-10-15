@@ -55,13 +55,16 @@ export default function () {
           borderColor: colors.black,
           backgroundColor: type === 'success' ? colors.green : colors.yellow,
           width: '100%',
-          flexWrap: 'wrap',
+          // flexWrap: 'wrap',
           padding: halfPadding,
-          alignItems: 'center',
+          // alignItems: 'center',
           justifyContent: 'center',
+          flex: 1,
         }}
       >
-        <Text style={{ ...texts.small, flexWrap: 'wrap' }}>{message}</Text>
+        <Text style={{ ...texts.small, flexWrap: 'wrap' }} numberOfLines={2}>
+          {message}
+        </Text>
       </View>
     </Animated.View>
   );
