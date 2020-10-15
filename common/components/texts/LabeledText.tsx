@@ -6,12 +6,21 @@ import { borders, texts, colors } from '../../styles';
 export interface Props extends TextInputProps {
   title: string;
   children?: React.ReactNode;
+  disabled?: boolean;
 }
 
-export default ({ title, children, style: externalStyle, ...props }: Props) => (
-  <View style={[styles.container, externalStyle]}>
+export default ({ title, children, style: externalStyle, disabled, ...props }: Props) => (
+  <View
+    style={[
+      styles.container,
+      externalStyle,
+      { borderColor: disabled ? colors.darkGrey : colors.grey },
+    ]}
+  >
     <View>
-      <Text style={styles.label}>{title}</Text>
+      <Text style={[styles.label, { color: disabled ? colors.darkGrey : colors.darkGreen }]}>
+        {title}
+      </Text>
       <Text style={styles.text} {...props}>
         {children}
       </Text>
