@@ -24,7 +24,7 @@ export default class FilesApi {
   }
 
   async upload(path: string, uri: string, progressHandler?: (progress: number) => void) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise<boolean>(async (resolve, reject) => {
       const blob = await this.blobFromUri(uri);
       const ref = this.storage.ref().child(path);
       const task = ref.put(blob);
@@ -39,7 +39,7 @@ export default class FilesApi {
         },
         () => {
           blob.close();
-          resolve();
+          resolve(true);
         }
       );
     });

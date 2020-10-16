@@ -3,25 +3,21 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-import { isEmpty } from 'lodash';
 import React, { useState, useCallback, useContext, useEffect, useMemo } from 'react';
 import { View, Text, Image, StyleSheet, ImageURISource, Dimensions } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { useDispatch, useSelector } from 'react-redux';
+import { useMutation } from 'react-query';
+import { useSelector } from 'react-redux';
 
 import * as icons from '../../../../../assets/icons';
-import { AppDispatch, ApiContext } from '../../../../../common/app/context';
+import { ApiContext } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../../../common/components/views/ConfigItem';
 import ShowIf from '../../../../../common/components/views/ShowIf';
-import {
-  getSelfieURL,
-  getDocumentImageURL,
-  uploadSelfie,
-  uploadDocumentImage,
-} from '../../../../../common/store/courier/actions';
+import useCourierDocumentImage from '../../../../../common/hooks/queries/useCourierDocumentImage';
+import useCourierSelfie from '../../../../../common/hooks/queries/useCourierSelfie';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { colors, texts, screens, padding } from '../../../../../common/styles';
@@ -38,12 +34,6 @@ const defaultImageOptions: ImagePicker.ImagePickerOptions = {
 
 const { height, width } = Dimensions.get('window');
 
-enum UploadStatus {
-  Unstarted,
-  Uploading,
-  Done,
-}
-
 type ScreenNavigationProp = StackNavigationProp<CourierProfileParamList, 'ProfilePhotos'>;
 type ScreenRouteProp = RouteProp<CourierProfileParamList, 'ProfilePhotos'>;
 
@@ -55,91 +45,62 @@ type Props = {
 export default function ({ navigation }: Props) {
   // context
   const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
   const { showActionSheetWithOptions } = useActionSheet();
 
   // app state
   const busy = useSelector(getUIBusy);
-  const courier = useSelector(getCourier);
+  const courier = useSelector(getCourier)!;
 
   // screen state
-  const [previousSelfie, setPreviousSelfie] = useState<ImageURISource | undefined | null>();
-  const [previousDocumentimage, setPreviousDocumentImage] = useState<
+  const [currentSelfie, setCurrentSelfie] = useState<ImageURISource | undefined | null>();
+  const [newSelfie, setNewSelfie] = useState<ImageURISource | undefined | null>();
+  const [currentDocumentImage, setCurrentDocumentImage] = useState<
     ImageURISource | undefined | null
   >();
-  const [newSelfie, setNewSelfie] = useState<ImageURISource | undefined | null>();
   const [newDocumentImage, setNewDocumentImage] = useState<ImageURISource | undefined | null>();
-  const [uploadingNewSelfie, setUploadingNewSelfie] = useState<UploadStatus>(
-    UploadStatus.Unstarted
-  );
-  const [uploadingNewDocumentImage, setUploadingNewDocumentImage] = useState<UploadStatus>(
-    UploadStatus.Unstarted
-  );
   type ChangeImageType = typeof setNewSelfie;
+
+  const currentSelfieQuery = useCourierSelfie(courier.id);
+  const uploadSelfie = (localUri: string) => api.courier().uploadSelfie(courier.id, localUri);
+  const [mutateSelfie, uploadingSelfieQuery] = useMutation(uploadSelfie, {
+    onSuccess: () => currentSelfieQuery.refetch(),
+  });
+  const currentDocumentImageQuery = useCourierDocumentImage(courier.id);
+  const uploadDocumentImage = (localUri: string) =>
+    api.courier().uploadDocumentImage(courier.id, localUri);
+  const [mutateDocumentImage, uploadingDocumentImageQuery] = useMutation(uploadDocumentImage, {
+    onSuccess: () => currentDocumentImageQuery.refetch(),
+  });
+
   const canProceed = useMemo(() => {
     // no reason to upload if nothing has changed
     if (!newSelfie && !newDocumentImage) return false;
-    return (newSelfie || previousSelfie) && (newDocumentImage || previousDocumentimage);
+    return (newSelfie || currentSelfie) && (newDocumentImage || currentDocumentImage);
   }, [newSelfie, newDocumentImage]);
 
-  // effects
-  // check for previously stored images
+  // side effects
+  // when current self is loaded, update state
   useEffect(() => {
-    // undefined indicates that we don't know yet if user has uploaded selfie
-    if (previousSelfie === undefined) {
-      (async () => {
-        console.log('checking for selfie');
-        const selfieUri = await dispatch(getSelfieURL(api)(courier!.id!));
-        // null means that we've checked and there's none
-        if (!selfieUri) setPreviousSelfie(null);
-        else setPreviousSelfie({ uri: selfieUri });
-      })();
+    if (currentSelfieQuery.data) {
+      setCurrentSelfie({ uri: currentSelfieQuery.data });
     }
-  }, [previousSelfie]);
-  useEffect(() => {
-    // undefined indicates that we don't know yet if user has uploaded selfie
-    if (previousDocumentimage === undefined) {
-      (async () => {
-        console.log('checking for document image');
-        const documentImageUri = await dispatch(getDocumentImageURL(api)(courier!.id!));
-        // null means that we've checked and there's none
-        if (!documentImageUri) setPreviousDocumentImage(null);
-        else setPreviousDocumentImage({ uri: documentImageUri });
-      })();
-    }
-  }, [previousDocumentimage]);
+  }, [currentSelfieQuery.data]);
+  // when user picks a new selfie, upload it
   useEffect(() => {
     if (newSelfie) {
-      setUploadingNewSelfie(UploadStatus.Uploading);
-      console.log('Upload started');
-      (async () => {
-        try {
-          dispatch(
-            uploadSelfie(api)(courier!.id!, newSelfie.uri!, (progress: number) => {
-              if (progress === 100) setUploadingNewSelfie(UploadStatus.Done);
-            })
-          );
-        } catch (err) {
-          console.log(err);
-        }
-      })();
+      mutateSelfie(newSelfie.uri);
     }
   }, [newSelfie]);
+  // when current document image is loaded, update state
+  useEffect(() => {
+    if (currentDocumentImageQuery.data) {
+      setCurrentDocumentImage({ uri: currentDocumentImageQuery.data });
+    }
+  }, [currentDocumentImageQuery.data]);
+  // when user picks a new document image, upload it
   useEffect(() => {
     if (newDocumentImage) {
-      setUploadingNewDocumentImage(UploadStatus.Uploading);
-      console.log('Upload started');
-      (async () => {
-        try {
-          dispatch(
-            uploadDocumentImage(api)(courier!.id!, newDocumentImage.uri!, (progress: number) => {
-              if (progress === 100) setUploadingNewDocumentImage(UploadStatus.Done);
-            })
-          );
-        } catch (err) {
-          console.log(err);
-        }
-      })();
+      mutateDocumentImage(newDocumentImage.uri);
     }
   }, [newDocumentImage]);
 
@@ -170,14 +131,6 @@ export default function ({ navigation }: Props) {
       });
     }
   }, []);
-
-  const selfieCheckHandler =
-    (!isEmpty(previousSelfie) && uploadingNewSelfie === UploadStatus.Unstarted) ||
-    uploadingNewSelfie === UploadStatus.Done;
-
-  const documentImageCheckHandler =
-    (!isEmpty(previousDocumentimage) && uploadingNewDocumentImage === UploadStatus.Unstarted) ||
-    uploadingNewDocumentImage === UploadStatus.Done;
 
   const actionSheetHandler = (changeImage: ChangeImageType) =>
     showActionSheetWithOptions(
@@ -221,9 +174,9 @@ export default function ({ navigation }: Props) {
           title={t('Foto do rosto')}
           subtitle={t('Adicionar selfie')}
           onPress={() => actionSheetHandler(setNewSelfie)}
-          checked={selfieCheckHandler}
+          checked={!!currentSelfieQuery.data && !uploadingSelfieQuery.isLoading}
         >
-          {uploadingNewSelfie === UploadStatus.Uploading && (
+          {uploadingSelfieQuery.isLoading && (
             <View style={{ marginBottom: 16 }}>
               <RoundedText backgroundColor={colors.white}>{t('Enviando imagem')}</RoundedText>
             </View>
@@ -233,9 +186,9 @@ export default function ({ navigation }: Props) {
           title={t('RG ou CNH aberta')}
           subtitle={t('Adicionar foto do documento')}
           onPress={() => actionSheetHandler(setNewDocumentImage)}
-          checked={documentImageCheckHandler}
+          checked={!!currentDocumentImageQuery.data && !uploadingDocumentImageQuery.isLoading}
         >
-          {uploadingNewDocumentImage === UploadStatus.Uploading && (
+          {uploadingDocumentImageQuery.isLoading && (
             <View style={{ marginBottom: 16 }}>
               <RoundedText backgroundColor={colors.white}>{t('Enviando imagem')}</RoundedText>
             </View>
@@ -247,12 +200,12 @@ export default function ({ navigation }: Props) {
             <DocumentButton
               title={t('Foto de rosto')}
               onPress={() => {}}
-              hasTitle={!previousSelfie && !newSelfie}
+              hasTitle={!currentSelfie && !newSelfie}
             >
               <Image
-                source={newSelfie ?? previousSelfie ?? icons.selfie}
+                source={newSelfie ?? currentSelfie ?? icons.selfie}
                 resizeMode="cover"
-                style={newSelfie || previousSelfie ? styles.image : styles.icon}
+                style={newSelfie || currentSelfie ? styles.image : styles.icon}
               />
             </DocumentButton>
           </TouchableOpacity>
@@ -260,28 +213,26 @@ export default function ({ navigation }: Props) {
             <DocumentButton
               title={t('RG ou CNH aberta')}
               onPress={() => {}}
-              hasTitle={!previousDocumentimage && !newDocumentImage}
+              hasTitle={!currentDocumentImage && !newDocumentImage}
             >
               <Image
-                source={newDocumentImage ?? previousDocumentimage ?? icons.license}
+                source={newDocumentImage ?? currentDocumentImage ?? icons.license}
                 resizeMode="cover"
-                style={newDocumentImage || previousDocumentimage ? styles.image : styles.icon}
+                style={newDocumentImage || currentDocumentImage ? styles.image : styles.icon}
               />
             </DocumentButton>
           </TouchableOpacity>
         </View>
         <View style={{ flex: 1 }} />
         <View style={{ marginBottom: 32, paddingHorizontal: padding }}>
-          <ShowIf test={!previousSelfie && !previousDocumentimage}>
+          <ShowIf test={!currentSelfie && !currentDocumentImage}>
             {() => (
               <DefaultButton
                 title={t('Avançar')}
                 disabled={!canProceed}
                 onPress={() => navigation.goBack()}
                 activityIndicator={
-                  busy ||
-                  uploadingNewSelfie === UploadStatus.Uploading ||
-                  uploadingNewDocumentImage === UploadStatus.Uploading
+                  busy || uploadingSelfieQuery.isLoading || uploadingDocumentImageQuery.isLoading
                 }
               />
             )}
