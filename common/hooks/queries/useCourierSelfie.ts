@@ -3,8 +3,11 @@ import { useQuery } from 'react-query';
 
 import { ApiContext } from '../../app/context';
 
-export default function (id: string) {
+export default function (id?: string) {
   const api = useContext(ApiContext);
-  const fetchSelfie = (key: string, courierId: string) => api.courier().fetchSelfie(courierId);
+  const fetchSelfie = (key: string, courierId: string) => {
+    if (courierId) return api.courier().fetchSelfie(courierId);
+    return Promise.resolve(null);
+  };
   return useQuery(['courier-selfie', id], fetchSelfie);
 }

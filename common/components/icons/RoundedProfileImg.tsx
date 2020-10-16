@@ -1,11 +1,9 @@
 import { Flavor } from 'appjusto-types';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Image, ImageURISource } from 'react-native';
-import { useDispatch } from 'react-redux';
 
 import * as icons from '../../../assets/icons';
-import { ApiContext, AppDispatch } from '../../app/context';
-import { getSelfieURL } from '../../store/courier/actions';
+import useCourierSelfie from '../../hooks/queries/useCourierSelfie';
 import { colors } from '../../styles';
 
 type Props = {
@@ -15,25 +13,17 @@ type Props = {
 };
 
 export default function ({ flavor = 'courier', id, size = 64 }: Props) {
-  // context
-  const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
-
   // state
   const [selfie, setSelfie] = useState<ImageURISource>();
+  const currentSelfieQuery = useCourierSelfie(id);
 
   // side effects
   // get selfie
   useEffect(() => {
-    (async () => {
-      console.log(flavor, id);
-      if (flavor === 'courier' && !!id) {
-        console.log('checking for selfie');
-        const selfieUri = await dispatch(getSelfieURL(api)(id));
-        if (selfieUri) setSelfie({ uri: selfieUri });
-      }
-    })();
-  }, [flavor, id]);
+    if (currentSelfieQuery.data) {
+      setSelfie({ uri: currentSelfieQuery.data });
+    }
+  }, [currentSelfieQuery.data]);
 
   // UI
   return (

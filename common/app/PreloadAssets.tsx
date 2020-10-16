@@ -1,6 +1,7 @@
+import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
-import React, { useState, ReactElement, useEffect } from 'react';
+import React, { useState, ReactElement } from 'react';
 
 import fonts from '../../assets/fonts';
 import icons from '../../assets/icons';
@@ -16,15 +17,15 @@ export default function ({ children }: Props) {
   };
   const [assetsLoaded, setAssetsLoaded] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      await preloadAssets();
-      setAssetsLoaded(true);
-    })();
-  }, []);
-
   if (!assetsLoaded) {
-    return null;
+    return (
+      <AppLoading
+        startAsync={preloadAssets}
+        onFinish={() => {
+          setAssetsLoaded(true);
+        }}
+      />
+    );
   }
 
   return children();

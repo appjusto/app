@@ -19,6 +19,7 @@ if (__DEV__) {
     'Setting a timer',
     'YellowBox has been replaced',
     'Note: Native Sentry SDK is disabled',
+    'Attempt to invoke interface method',
   ]);
 }
 
