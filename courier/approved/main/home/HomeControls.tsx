@@ -92,7 +92,7 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <PaddedView style={[{ backgroundColor: working ? colors.green : colors.yellow }]}>
+    <PaddedView style={[{ backgroundColor: working ? colors.green : colors.darkYellow }]}>
       <ShowIf test={tallerDevice}>
         {() => (
           <Text

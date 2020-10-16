@@ -36,6 +36,9 @@ export default function ({ navigation, route }: Props) {
             subtitle={`Cartão de crédito\n${item.data.brand}`}
             onPress={() => {
               if (returnScreen) navigation.navigate(returnScreen, { paymentMethodId: item.id });
+              navigation.navigate('PaymentMethodDetail', {
+                paymentData: item,
+              });
             }}
           />
         )}

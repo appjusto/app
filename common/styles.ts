@@ -11,10 +11,10 @@ export const colors = {
   lightGreen: '#B8E994',
   green: '#78E08F',
   darkGreen: '#4EA031',
-  yellow: '#FFBE00',
+  darkYellow: '#FFBE00',
   lightRed: '#FFF8F8',
   red: '#DC3545',
-  lightYellow: '#FFE493',
+  yellow: '#FFE493',
 };
 
 export const doublePadding = 16;
