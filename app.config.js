@@ -18,17 +18,18 @@ const {
 } = process.env;
 
 export default () => {
+  const version = '0.0.3';
+  const versionCode = 3;
   const flavor = process.env.FLAVOR;
   const appId = `com.appjusto.${flavor}`;
-  const icon = flavor === 'courier' ? `./assets/icon-courier.png` : './assets/icon.png';
+  const icon = (platform) => `./assets/icon-${flavor}-${platform}.png`;
   return {
     expo: {
       name: (flavor === 'consumer' && 'App Justo') || (flavor === 'courier' && 'Parceiro Justo'),
       slug: `app-justo-${flavor}`,
-      icon,
       scheme: 'appjusto',
       platforms: ['ios', 'android'],
-      version: '1.0.0',
+      version,
       orientation: 'portrait',
       splash: {
         image: './assets/splash.png',
@@ -44,6 +45,8 @@ export default () => {
       assetBundlePatterns: ['**/*'],
       ios: {
         bundleIdentifier: appId,
+        buildNumber: `${versionCode}`,
+        icon: icon('ios'),
         supportsTablet: true,
         infoPlist: {
           UIBackgroundModes: ['location'],
@@ -58,14 +61,14 @@ export default () => {
       },
       android: {
         package: appId,
+        versionCode,
+        adaptiveIcon: {
+          foregroundImage: icon('android'),
+          backgroundColor: flavor === 'consumer' ? '#78E08F' : 'FFE493',
+        },
         googleServicesFile: './google-services.json',
         useNextNotificationsApi: true,
-        icon,
         softwareKeyboardLayoutMode: 'pan',
-        adaptiveIcon: {
-          foregroundImage: icon,
-          backgroundColor: '#78E08F',
-        },
         intentFilters: [
           {
             action: 'VIEW',
