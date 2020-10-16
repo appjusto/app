@@ -156,7 +156,7 @@ export default function ({ navigation }: Props) {
         <PaddedView>
           <Text style={{ ...texts.default, color: colors.darkGrey }}>
             {t(
-              'Precisamos da sua foto para incluir nas entregas. Se você optou por Moto e/ou Carro, vamos precisar também da foto da sua CNH; caso contrário, é só enviar a foto do seu RG.'
+              'Precisamos da sua foto para incluir nas entregas. Se você for utilizar Moto e/ou Carro, vamos precisar também da foto da sua CNH; caso contrário, é só enviar a foto do seu RG.'
             )}
           </Text>
         </PaddedView>

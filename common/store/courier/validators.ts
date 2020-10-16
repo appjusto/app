@@ -7,10 +7,10 @@ export const courierInfoSet = (courier: Partial<CourierProfile> | undefined): bo
   return (
     !isEmpty(courier.name) &&
     !isEmpty(courier.surname) &&
-    !isEmpty(courier.cpf) &&
+    courier.cpf?.length === 11 &&
     validate(courier.cpf!) &&
-    !isEmpty(courier.phone?.ddd) &&
-    !isEmpty(courier.phone?.number)
+    courier.phone?.ddd.length === 2 &&
+    courier.phone?.number.length === 9
   );
 };
 

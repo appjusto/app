@@ -1,8 +1,9 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ProfileSituation } from 'appjusto-types';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { View, Text, ScrollView, StatusBar } from 'react-native';
+import { useQueryCache } from 'react-query';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../common/app/context';
@@ -35,25 +36,26 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  const queryCache = useQueryCache();
 
   // app state
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier)!;
-  const previousSelfieQuery = useCourierSelfie(courier.id);
-  const previousDocumentImageQuery = useCourierDocumentImage(courier.id);
+  const currentSelfieQuery = useCourierSelfie(courier.id);
+  const currentDocumentImageQuery = useCourierDocumentImage(courier.id);
 
   // screen state
   const situationsAllowed: ProfileSituation[] = ['pending'];
   const situationsDisallowed: ProfileSituation[] = ['blocked', 'rejected', 'submitted'];
   const hasPersonalInfo = courierInfoSet(courier);
   const hasCompanyInfo = companyInfoSet(courier);
-  const hasImages = !previousSelfieQuery.data && !previousDocumentImageQuery.data;
+  const hasImages = !!currentSelfieQuery.data && !!currentDocumentImageQuery.data;
   const hasBankAccount = bankAccountSet(courier);
   const hasSelectedFleet = courier.fleet !== undefined;
   const totalSteps = 5;
   const [stepsDone, setStepsDone] = useState(0);
   const submitEnabled =
-    situationsAllowed.indexOf(courier.situation) > -1 && stepsDone == totalSteps;
+    situationsAllowed.indexOf(courier.situation) > -1 && stepsDone === totalSteps;
 
   // handlers
   const submitHandler = async () => {
@@ -61,13 +63,14 @@ export default function ({ navigation, route }: Props) {
   };
 
   // side effects
+  // whenever situation changes
   useEffect(() => {
     if (situationsDisallowed.indexOf(courier.situation) > -1) {
-      navigation.navigate('ProfileFeedback');
+      navigation.replace('ProfileFeedback');
     }
   }, [courier.situation]);
-
-  // handler
+  // whenever state updates
+  // recalculate steps done
   useEffect(() => {
     let totalSteps = 0;
     if (hasPersonalInfo) totalSteps++;
@@ -79,11 +82,22 @@ export default function ({ navigation, route }: Props) {
   }, [
     hasPersonalInfo,
     hasBankAccount,
-    previousSelfieQuery.data,
-    previousDocumentImageQuery.data,
+    currentSelfieQuery.data,
+    currentDocumentImageQuery.data,
     hasSelectedFleet,
     hasCompanyInfo,
   ]);
+  // whenever screen is focused
+  useEffect(() => {
+    navigation.addListener('focus', focusHandler);
+    return () => navigation.removeListener('focus', focusHandler);
+  });
+
+  // handlers
+  // when focused, refetch queries to recalculate of steps done
+  const focusHandler = useCallback(() => {
+    queryCache.refetchQueries();
+  }, []);
 
   // UI
   return (
