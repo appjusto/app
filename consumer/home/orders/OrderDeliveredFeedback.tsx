@@ -1,9 +1,8 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import Constants from 'expo-constants';
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, ScrollView } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import * as icons from '../../../assets/icons';
@@ -15,9 +14,7 @@ import { padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedParamList } from '../../types';
 import { HomeNavigatorParamList } from '../types';
-import OrderFeedbackControl from './common/OrderFeedbackControl';
 import TipControl from './common/TipControl';
-import PlaceSummary from './p2p-order/PlaceSummary';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<HomeNavigatorParamList, 'OrderDeliveredFeedback'>,
@@ -36,18 +33,15 @@ export default ({ navigation, route }: Props) => {
   // app state
   const order = useSelector(getOrderById)(orderId)!;
   // UI
-  const paddingTop = Constants.statusBarHeight;
   return (
-    <View style={{ flex: 1 }}>
-      <PaddedView style={{ ...screens.default, paddingTop }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={[texts.big]}>{t('Pedido\nentregue')}</Text>
-          <Image source={icons.motocycle} />
-        </View>
-        <PlaceSummary place={order.origin} title={t('Retirada')} />
-        <PlaceSummary place={order.destination} title={t('Entrega')} />
-        <HR height={padding} />
-        <OrderFeedbackControl orderId={orderId} />
+    <View style={screens.default}>
+      <ScrollView>
+        <PaddedView>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={[texts.big]}>{t('Pedido\nentregue')}</Text>
+            <Image source={icons.motocycle} />
+          </View>
+        </PaddedView>
         <HR height={padding} />
         <TipControl
           orderId={order.id}
@@ -56,10 +50,24 @@ export default ({ navigation, route }: Props) => {
           courierName={order.courier!.name}
         />
         <HR height={padding} />
-        <View style={{ marginTop: padding }}>
+        <PaddedView>
           <DefaultButton title={t('Finalizar')} onPress={() => navigation.popToTop()} />
-        </View>
-      </PaddedView>
+          <View style={{ flexDirection: 'row' }}>
+            <DefaultButton title={t('Relatar um problema')} secondary onPress={() => null} />
+            <DefaultButton
+              style={{ marginTop: padding }}
+              title={t('Detalhes da corrida')}
+              onPress={() =>
+                navigation.navigate('HistoryNavigator', {
+                  screen: 'OrderSummary',
+                  params: { orderId },
+                })
+              }
+              secondary
+            />
+          </View>
+        </PaddedView>
+      </ScrollView>
     </View>
   );
 };
