@@ -2,8 +2,8 @@ import { Fleet, WithId } from 'appjusto-types';
 import { useContext, useMemo } from 'react';
 import { InfiniteQueryResult, useInfiniteQuery } from 'react-query';
 
-import { ApiContext } from '../app/context';
-import { FirebaseDocument } from '../store/api/types';
+import { ApiContext } from '../../app/context';
+import { documentAs, FirebaseDocument } from '../../store/api/types';
 
 export default function (
   search: string = ''
@@ -18,8 +18,7 @@ export default function (
   const fleets = useMemo(() => {
     if (!query.data) return [];
     return query.data.reduce<WithId<Fleet>[]>((fleets, group) => {
-      const items = group.map((doc) => ({ ...(doc.data() as Fleet), id: doc.id }));
-      return [...fleets, ...items];
+      return [...fleets, ...documentAs<Fleet>(group)];
     }, []);
   }, [query.data]);
 

@@ -6,8 +6,6 @@ import {
   Fare,
   OrderCancellation,
   OrderRejection,
-  OrderCancellationReason,
-  OrderRejectionReason,
 } from 'appjusto-types';
 import { OrderRejectionType } from 'appjusto-types/order';
 import firebase from 'firebase';
@@ -149,33 +147,23 @@ export default class OrderApi {
   }
 
   async fetchRejectionReasons(type: OrderRejectionType) {
-    const querySnapshot = await this.firestore
-      .collection('platform')
-      .doc('delivery')
-      .collection('rejection-reasons')
-      .where('type', '==', type)
-      .get();
-    const docs: WithId<OrderRejectionReason>[] = [];
-    if (!querySnapshot.empty) {
-      querySnapshot.forEach((doc) => {
-        docs.push({ ...(doc.data() as OrderRejectionReason), id: doc.id });
-      });
-    }
-    return docs;
+    return (
+      await this.firestore
+        .collection('platform')
+        .doc('delivery')
+        .collection('rejection-reasons')
+        .where('type', '==', type)
+        .get()
+    ).docs;
   }
 
   async fetchCancellationReasons() {
-    const querySnapshot = await this.firestore
-      .collection('platform')
-      .doc('delivery')
-      .collection('cancellation-reasons')
-      .get();
-    const docs: WithId<OrderCancellationReason>[] = [];
-    if (!querySnapshot.empty) {
-      querySnapshot.forEach((doc) => {
-        docs.push({ ...(doc.data() as OrderCancellationReason), id: doc.id });
-      });
-    }
-    return docs;
+    return (
+      await this.firestore
+        .collection('platform')
+        .doc('delivery')
+        .collection('cancellation-reasons')
+        .get()
+    ).docs;
   }
 }
