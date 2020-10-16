@@ -4,7 +4,6 @@ import React, { useContext, useCallback } from 'react';
 import { Alert, ScrollView, View } from 'react-native';
 
 import { ApiContext } from '../../../../common/app/context';
-import PaddedView from '../../../../common/components/containers/PaddedView';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import { signOut } from '../../../../common/store/user/actions';
 import { screens } from '../../../../common/styles';
@@ -66,12 +65,12 @@ export default function ({ navigation }: Props) {
         <ConfigItem
           title={t('Dados bancários')}
           subtitle={t('Edite seus dados pessoais')}
-          onPress={() => navigation.navigate('Bank')}
+          onPress={() => navigation.navigate('BankNavigator')}
         />
         <ConfigItem
           title={t('Escolha sua frota')}
           subtitle={t('Edite a frota que você faz parte')}
-          onPress={() => navigation.navigate('Fleet')}
+          onPress={() => navigation.navigate('FleetNavigator')}
         />
         <ConfigItem
           title={t('Termos de uso e política de privacidade')}
