@@ -52,14 +52,14 @@ export default class Api {
     const collectionName = extra.flavor === 'consumer' ? 'consumers' : 'couriers';
 
     this._iugu = new IuguApi(extra.iugu.accountId);
+    this._files = new FilesApi(this.storage);
     this._auth = new AuthApi(this.authentication, this.functions, extra);
     this._profile = new ProfileApi(this.firestore, this.functions, collectionName);
-    this._courier = new CourierApi(this.firestore, this.functions);
+    this._courier = new CourierApi(this.firestore, this.functions, this._files);
     this._fleet = new FleetApi(this.firestore, this.functions);
     this._consumer = new ConsumerApi(this.firestore, this.functions, this._iugu);
     this._order = new OrderApi(this.firestore, this.functions);
     this._maps = new MapsApi(apiKey!);
-    this._files = new FilesApi(this.storage);
   }
 
   auth() {

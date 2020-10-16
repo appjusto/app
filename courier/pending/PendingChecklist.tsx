@@ -1,25 +1,18 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { ProfileSituation } from 'appjusto-types';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard,
-  StatusBar,
-} from 'react-native';
+import { View, Text, ScrollView, StatusBar } from 'react-native';
+import { useQueryCache } from 'react-query';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../common/app/context';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
-import {
-  submitProfile,
-  getDocumentImageURL,
-  getSelfieURL,
-} from '../../common/store/courier/actions';
+import useCourierDocumentImage from '../../common/hooks/queries/useCourierDocumentImage';
+import useCourierSelfie from '../../common/hooks/queries/useCourierSelfie';
+import { submitProfile } from '../../common/store/courier/actions';
 import { getCourier } from '../../common/store/courier/selectors';
 import {
   courierInfoSet,
@@ -27,7 +20,7 @@ import {
   companyInfoSet,
 } from '../../common/store/courier/validators';
 import { getUIBusy } from '../../common/store/ui/selectors';
-import { screens, texts, colors, padding } from '../../common/styles';
+import { screens, texts, colors } from '../../common/styles';
 import { t } from '../../strings';
 import { PendingParamList } from './types';
 
@@ -43,26 +36,26 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  const queryCache = useQueryCache();
 
   // app state
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier)!;
+  const currentSelfieQuery = useCourierSelfie(courier.id);
+  const currentDocumentImageQuery = useCourierDocumentImage(courier.id);
+
+  // screen state
+  const situationsAllowed: ProfileSituation[] = ['pending'];
+  const situationsDisallowed: ProfileSituation[] = ['blocked', 'rejected', 'submitted'];
   const hasPersonalInfo = courierInfoSet(courier);
   const hasCompanyInfo = companyInfoSet(courier);
+  const hasImages = !!currentSelfieQuery.data && !!currentDocumentImageQuery.data;
   const hasBankAccount = bankAccountSet(courier);
   const hasSelectedFleet = courier.fleet !== undefined;
   const totalSteps = 5;
-
-  // screen state
-  const [hasImagesUris, setHasImagesUris] = useState(false);
-  const submitEnabled =
-    courier.situation === 'pending' &&
-    hasPersonalInfo &&
-    hasCompanyInfo &&
-    hasBankAccount &&
-    hasImagesUris &&
-    hasSelectedFleet;
   const [stepsDone, setStepsDone] = useState(0);
+  const submitEnabled =
+    situationsAllowed.indexOf(courier.situation) > -1 && stepsDone === totalSteps;
 
   // handlers
   const submitHandler = async () => {
@@ -70,39 +63,41 @@ export default function ({ navigation, route }: Props) {
   };
 
   // side effects
+  // whenever situation changes
   useEffect(() => {
-    const feedbackSituations = ['blocked', 'rejected', 'submitted'];
-    if (feedbackSituations.indexOf(courier.situation) > -1) {
-      navigation.navigate('ProfileFeedback');
+    if (situationsDisallowed.indexOf(courier.situation) > -1) {
+      navigation.replace('ProfileFeedback');
     }
   }, [courier.situation]);
-
+  // whenever state updates
+  // recalculate steps done
+  useEffect(() => {
+    let totalSteps = 0;
+    if (hasPersonalInfo) totalSteps++;
+    if (hasCompanyInfo) totalSteps++;
+    if (hasImages) totalSteps++;
+    if (hasBankAccount) totalSteps++;
+    if (hasSelectedFleet) totalSteps++;
+    setStepsDone(totalSteps);
+  }, [
+    hasPersonalInfo,
+    hasBankAccount,
+    currentSelfieQuery.data,
+    currentDocumentImageQuery.data,
+    hasSelectedFleet,
+    hasCompanyInfo,
+  ]);
+  // whenever screen is focused
   useEffect(() => {
     navigation.addListener('focus', focusHandler);
     return () => navigation.removeListener('focus', focusHandler);
   });
 
-  // handler
+  // handlers
+  // when focused, refetch queries to recalculate of steps done
   const focusHandler = useCallback(() => {
-    (async () => {
-      try {
-        let hasImages = hasImagesUris;
-        if (!hasImages) {
-          const documentImageUri = await dispatch(getDocumentImageURL(api)(courier.id!));
-          const selfieUri = await dispatch(getSelfieURL(api)(courier.id!));
-          hasImages = documentImageUri !== null && selfieUri !== null;
-        }
-        let totalSteps = 0;
-        if (hasPersonalInfo) totalSteps++;
-        if (hasCompanyInfo) totalSteps++;
-        if (hasImages) totalSteps++;
-        if (hasBankAccount) totalSteps++;
-        if (hasSelectedFleet) totalSteps++;
-        setStepsDone(totalSteps);
-        setHasImagesUris(hasImages);
-      } catch (error) {}
-    })();
-  }, [hasImagesUris, hasPersonalInfo, hasBankAccount, hasSelectedFleet, api, hasCompanyInfo]);
+    queryCache.refetchQueries();
+  }, []);
 
   // UI
   return (
@@ -151,18 +146,18 @@ export default function ({ navigation, route }: Props) {
           title={t('Fotos e documentos')}
           subtitle={t('Envie uma selfie e seus documentos')}
           onPress={() => navigation.navigate('ProfilePhotos')}
-          checked={hasImagesUris}
+          checked={hasImages}
         />
         <ConfigItem
           title={t('Dados bancários')}
           subtitle={t('Cadastre seu banco para recebimento')}
-          onPress={() => navigation.navigate('Bank')}
+          onPress={() => navigation.navigate('BankNavigator')}
           checked={bankAccountSet(courier)}
         />
         <ConfigItem
           title={t('Escolha sua frota')}
           subtitle={t('Faça parte de uma frota existente ou crie sua própria frota')}
-          onPress={() => navigation.navigate('Fleet')}
+          onPress={() => navigation.navigate('FleetNavigator')}
           checked={hasSelectedFleet}
           bottomBorder={false}
         />

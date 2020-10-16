@@ -1,5 +1,6 @@
 import { Bank, LatLng, WithId } from 'appjusto-types';
 import firebase from 'firebase';
+import FilesApi from './files';
 
 type FetchTotalCouriersNearbyData = {
   total: number;
@@ -8,10 +9,11 @@ type FetchTotalCouriersNearbyData = {
 export default class CourierApi {
   constructor(
     private firestore: firebase.firestore.Firestore,
-    private functions: firebase.functions.Functions
+    private functions: firebase.functions.Functions,
+    private files: FilesApi
   ) {}
 
-  // functions
+  // callables
   // submit profile
   async submitProfile() {
     return this.functions.httpsCallable('submitProfile')();
@@ -36,5 +38,25 @@ export default class CourierApi {
       });
     }
     return docs;
+  }
+
+  // storage
+  // selfie
+  uploadSelfie(id: string, localUri: string, progressHandler?: (progress: number) => void) {
+    const selfiePath = `couriers/${id}/selfie.jpg`;
+    return this.files.upload(selfiePath, localUri, progressHandler);
+  }
+  fetchSelfie(id: string) {
+    const selfiePath = `couriers/${id}/selfie_160x160.jpg`;
+    return this.files.getDownloadURL(selfiePath);
+  }
+  // document
+  uploadDocumentImage(id: string, localUri: string, progressHandler?: (progress: number) => void) {
+    const documentImagePath = `couriers/${id}/document.jpg`;
+    return this.files.upload(documentImagePath, localUri, progressHandler);
+  }
+  fetchDocumentImage(id: string) {
+    const documentImagePath = `couriers/${id}/document_160x160.jpg`;
+    return this.files.getDownloadURL(documentImagePath);
   }
 }

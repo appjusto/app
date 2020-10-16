@@ -42,12 +42,12 @@ export default function () {
         options={{ title: t('Fotos e documentos') }}
       />
       <Stack.Screen
-        name="Bank"
+        name="BankNavigator"
         component={BankNavigator}
         options={{ title: t('Dados bancários') }}
       />
       <Stack.Screen
-        name="Fleet"
+        name="FleetNavigator"
         component={FleetNavigator}
         options={{ title: t('Escolha sua frota'), headerShown: false }}
       />

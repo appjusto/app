@@ -6,8 +6,8 @@ export type CourierProfileParamList = {
   ProfileCompany: undefined;
   ProfilePhotos: undefined;
   Terms: undefined;
-  Bank: undefined;
-  Fleet: undefined;
+  BankNavigator: undefined;
+  FleetNavigator: undefined;
   PermissionDeniedFeedback: {
     title: string;
     subtitle: string;

@@ -37,13 +37,15 @@ export default function () {
       <Stack.Screen
         name="ProfilePhotos"
         component={ProfilePhotos}
-        options={{
-          title: t('Fotos & Documentos'),
-        }}
+        options={{ title: t('Fotos & Documentos') }}
       />
-      <Stack.Screen name="Fleet" component={FleetNavigator} options={{ headerShown: false }} />
       <Stack.Screen
-        name="Bank"
+        name="FleetNavigator"
+        component={FleetNavigator}
+        options={{ title: t('Escolha sua frota') }}
+      />
+      <Stack.Screen
+        name="BankNavigator"
         component={BankNavigator}
         options={{
           title: t('Dados bancários'),

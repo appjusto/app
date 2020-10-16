@@ -10,10 +10,9 @@ import DefaultButton from '../../../../../common/components/buttons/DefaultButto
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import HR from '../../../../../common/components/views/HR';
 import ShowIf from '../../../../../common/components/views/ShowIf';
+import useFleets from '../../../../../common/hooks/useFleets';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { observeFleets } from '../../../../../common/store/fleet/actions';
-import { getAvailableFleets } from '../../../../../common/store/fleet/selectors';
-import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../../common/store/user/actions';
 import { texts, screens, colors, padding } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
@@ -34,9 +33,8 @@ export default function ({ navigation, route }: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   // app state
-  const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier)!;
-  const approvedFleets = useSelector(getAvailableFleets) ?? [];
+  const [fleets, query] = useFleets();
 
   // screen state
   // const [selectedCity, setSelectedCity] = useState<City>();
@@ -51,11 +49,11 @@ export default function ({ navigation, route }: Props) {
   // when fleets are fetched
   // select courier's fleet if he has selected it already
   useEffect(() => {
-    const courierFleet = approvedFleets?.find((fleet) => fleet.id === courier.fleet?.id);
+    const courierFleet = fleets.find((fleet) => fleet.id === courier.fleet?.id);
     if (courierFleet !== undefined) {
       setSelectedFleet(courierFleet);
     }
-  }, [approvedFleets]);
+  }, [fleets]);
 
   // handlers
   const confirmFleet = useCallback(async () => {
@@ -68,7 +66,7 @@ export default function ({ navigation, route }: Props) {
   return (
     <View style={{ ...screens.config }}>
       <FlatList
-        data={approvedFleets?.slice(0, 10) ?? []}
+        data={fleets}
         renderItem={({ item }) => {
           return (
             <PaddedView>
@@ -109,10 +107,10 @@ export default function ({ navigation, route }: Props) {
             </PaddedView>
             <HR color={colors.grey} />
             <PaddedView>
-              <ShowIf test={approvedFleets.length === 0}>
+              <ShowIf test={query.isLoading}>
                 {() => <ActivityIndicator size="large" color={colors.black} />}
               </ShowIf>
-              <ShowIf test={approvedFleets.length > 0}>
+              <ShowIf test={fleets.length > 0}>
                 {() => (
                   <Text style={{ ...texts.mediumToBig }}>
                     {t('Frotas com mais participantes: ')}
@@ -122,6 +120,7 @@ export default function ({ navigation, route }: Props) {
             </PaddedView>
           </View>
         }
+        onEndReached={() => query.fetchMore()}
       />
     </View>
   );
