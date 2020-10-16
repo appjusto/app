@@ -5,13 +5,15 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { View, Text, TextInput, Image, ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import { fetchCancellationReasons, cancelOrder } from '../../../common/store/order/actions';
+import { documentAs } from '../../../common/store/api/types';
+import { cancelOrder } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
@@ -34,6 +36,8 @@ export default function ({ route, navigation }: Props) {
 
   // app state
   const busy = useSelector(getUIBusy);
+  const fetchCancellationReasons = (key: string) => api.order().fetchCancellationReasons();
+  const query = useQuery('cancellation-reasons', fetchCancellationReasons);
 
   // state
   const [reasons, setReasons] = useState<WithId<OrderCancellationReason>[]>([]);
@@ -41,16 +45,12 @@ export default function ({ route, navigation }: Props) {
   const [rejectionComment, setRejectionComment] = useState<string>('');
 
   // side effects
-  // once
+  // whenever data changes
   useEffect(() => {
-    (async () => {
-      try {
-        setReasons(await dispatch(fetchCancellationReasons(api)));
-      } catch (error) {
-        dispatch(showToast(t('Não foi possível carregar os dados.')));
-      }
-    })();
-  }, []);
+    if (query.data) {
+      setReasons(documentAs<OrderCancellationReason>(query.data));
+    }
+  }, [query.data]);
 
   // handlers
   const cancelHandler = useCallback(() => {
@@ -64,7 +64,7 @@ export default function ({ route, navigation }: Props) {
         );
         navigation.replace('Home');
       } catch (error) {
-        dispatch(showToast(t('Não foi possível canclar a corrida.')));
+        dispatch(showToast(error.toString()));
       }
     })();
   }, [selectedReason, rejectionComment]);

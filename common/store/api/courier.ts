@@ -1,5 +1,6 @@
 import { Bank, LatLng, WithId } from 'appjusto-types';
 import firebase from 'firebase';
+
 import FilesApi from './files';
 
 type FetchTotalCouriersNearbyData = {

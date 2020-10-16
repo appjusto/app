@@ -55,10 +55,6 @@ export const tipCourier = (api: Api) => (orderId: string, tip: number) => async 
   return dispatch(awaitWithFeedback(api.order().tipCourier(orderId, tip)));
 };
 
-export const fetchCancellationReasons = (api: Api) => async (dispatch: AppDispatch) => {
-  return dispatch(awaitWithFeedback(api.order().fetchCancellationReasons()));
-};
-
 export const cancelOrder = (api: Api) => (
   orderId: string,
   cancellation?: OrderCancellation
@@ -74,12 +70,6 @@ export const deleteOrder = (api: Api) => (orderId: string) => async (dispatch: A
 
 export const matchOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
   return dispatch(awaitWithFeedback(api.order().matchOrder(orderId)));
-};
-
-export const fetchRejectionReasons = (api: Api) => (type: OrderRejectionType) => async (
-  dispatch: AppDispatch
-) => {
-  return dispatch(awaitWithFeedback(api.order().fetchRejectionReasons(type)));
 };
 
 export const rejectOrder = (api: Api) => (orderId: string, rejection: OrderRejection) => async (

@@ -6,7 +6,7 @@ import { FlatList, View, ActivityIndicator } from 'react-native';
 
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import ShowIf from '../../../../../common/components/views/ShowIf';
-import useFleets from '../../../../../common/hooks/useFleets';
+import useFleets from '../../../../../common/hooks/queries/useFleets';
 import { screens, colors, padding } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import FleetItem from './FleetItem';

@@ -10,7 +10,7 @@ import DefaultButton from '../../../../../common/components/buttons/DefaultButto
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import HR from '../../../../../common/components/views/HR';
 import ShowIf from '../../../../../common/components/views/ShowIf';
-import useFleets from '../../../../../common/hooks/useFleets';
+import useFleets from '../../../../../common/hooks/queries/useFleets';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { observeFleets } from '../../../../../common/store/fleet/actions';
 import { updateProfile } from '../../../../../common/store/user/actions';
