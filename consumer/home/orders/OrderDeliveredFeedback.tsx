@@ -2,7 +2,7 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { View, Text, Image, ScrollView } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import * as icons from '../../../assets/icons';
@@ -10,7 +10,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import HR from '../../../common/components/views/HR';
 import { getOrderById } from '../../../common/store/order/selectors';
-import { padding, screens, texts } from '../../../common/styles';
+import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedParamList } from '../../types';
 import { HomeNavigatorParamList } from '../types';
@@ -35,39 +35,64 @@ export default ({ navigation, route }: Props) => {
   // UI
   return (
     <View style={screens.default}>
-      <ScrollView>
-        <PaddedView>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={[texts.big]}>{t('Pedido\nentregue')}</Text>
-            <Image source={icons.motocycle} />
-          </View>
-        </PaddedView>
-        <HR height={padding} />
-        <TipControl
-          orderId={order.id}
-          orderTip={order.tip?.value ?? 0}
-          courierId={order.courier!.id}
-          courierName={order.courier!.name}
-        />
-        <HR height={padding} />
-        <PaddedView>
-          <DefaultButton title={t('Finalizar')} onPress={() => navigation.popToTop()} />
-          <View style={{ flexDirection: 'row' }}>
-            <DefaultButton title={t('Relatar um problema')} secondary onPress={() => null} />
-            <DefaultButton
-              style={{ marginTop: padding }}
-              title={t('Detalhes da corrida')}
-              onPress={() =>
-                navigation.navigate('HistoryNavigator', {
-                  screen: 'OrderSummary',
-                  params: { orderId },
-                })
-              }
-              secondary
+      <PaddedView>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 32,
+            alignItems: 'center',
+          }}
+        >
+          <Text style={[texts.big]}>{t('Pedido\nentregue')}</Text>
+          <View style={{ height: 112, width: 160 }}>
+            <Image
+              source={icons.illustration}
+              style={{ overflow: 'hidden', height: 112, width: 160 }}
             />
           </View>
-        </PaddedView>
-      </ScrollView>
+        </View>
+      </PaddedView>
+      <HR height={padding} />
+      <TipControl
+        orderId={order.id}
+        orderTip={order.tip?.value ?? 0}
+        courierId={order.courier!.id}
+        courierName={order.courier!.name}
+      />
+      <View
+        style={{
+          borderBottomWidth: 1,
+          borderBottomColor: colors.black,
+          borderStyle: 'solid',
+          marginTop: padding,
+        }}
+      />
+      <View style={{ flex: 1 }} />
+      <PaddedView>
+        <DefaultButton title={t('Finalizar')} onPress={() => navigation.popToTop()} />
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginTop: padding,
+          }}
+        >
+          <DefaultButton title={t('Relatar um problema')} secondary onPress={() => null} />
+          <DefaultButton
+            title={t('Detalhes da corrida')}
+            onPress={() =>
+              navigation.navigate('HistoryNavigator', {
+                screen: 'OrderSummary',
+                params: { orderId },
+              })
+            }
+            secondary
+          />
+        </View>
+      </PaddedView>
+      <View style={{ flex: 1 }} />
     </View>
   );
 };

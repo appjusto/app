@@ -13,7 +13,7 @@ import Pill from '../../../../common/components/views/Pill';
 import { tipCourier } from '../../../../common/store/order/actions';
 import { showToast } from '../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
-import { halfPadding, padding, texts } from '../../../../common/styles';
+import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 
@@ -35,7 +35,7 @@ export default function ({ orderId, orderTip = 0, courierId, courierName }: Prop
 
   // data
   const data: HorizontalSelectItem[] = [
-    { id: '0', title: t('Sem gorjeta'), data: 0 },
+    { id: '0', title: t('Sem caixinha'), data: 0 },
     { id: '1', title: formatCurrency(100), data: 100 },
     { id: '3', title: formatCurrency(300), data: 300 },
     { id: '5', title: formatCurrency(500), data: 500 },
@@ -71,25 +71,23 @@ export default function ({ orderId, orderTip = 0, courierId, courierName }: Prop
             alignItems: 'center',
           }}
         >
-          <Text style={{ ...texts.medium, ...texts.bold }}>{t('Gorjeta')}</Text>
+          <Text style={{ ...texts.medium, ...texts.bold }}>{t('Caixinha')}</Text>
         </PaddedView>
       </View>
       <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
         <View style={{ flexDirection: 'row', paddingBottom: padding }}>
           <RoundedProfileImg flavor="courier" id={courierId} />
           <View style={{ marginLeft: halfPadding }}>
-            <Text style={[texts.medium]}>
-              {t('Gorjeta para')} {courierName}
-            </Text>
-            <Text style={[texts.small]}>
+            <Text style={{ ...texts.small, color: colors.darkGrey }}>
               {t('Valorize ainda mais o trabalho do seu entregador')}
             </Text>
+            <Text style={[texts.default]}>{courierName}</Text>
           </View>
         </View>
         <HorizontalSelect disabled={orderTip > 0} data={data} selected={tip} onSelect={setTip} />
         <DefaultButton
           style={{ marginTop: padding }}
-          title={alreadyTipped ? t('Gorjeta enviada') : t('Enviar gorjeta')}
+          title={alreadyTipped ? t('Caixinha enviada') : t('Enviar caixinha')}
           disabled={alreadyTipped || tip.data === 0 || busy}
           activityIndicator={busy}
           onPress={tipHandler}
