@@ -3,6 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { View, ScrollView, Text } from 'react-native';
 import { useSelector } from 'react-redux';
+import DefaultButton from '../../common/components/buttons/DefaultButton';
 
 import PaddedView from '../../common/components/containers/PaddedView';
 import RoundedText from '../../common/components/texts/RoundedText';
@@ -10,7 +11,7 @@ import HR from '../../common/components/views/HR';
 import Pill from '../../common/components/views/Pill';
 import OrderCostBreakdown from '../../common/screens/history/OrderCostBreakdown';
 import { getOrderById } from '../../common/store/order/selectors';
-import { screens, texts, padding, halfPadding, borders } from '../../common/styles';
+import { screens, texts, padding, halfPadding } from '../../common/styles';
 import {
   formatDistance,
   formatDuration,
@@ -72,17 +73,22 @@ export default function ({ navigation, route }: Props) {
           </PaddedView>
         </View>
         <HR height={padding} />
-        <OrderFeedbackControl orderId={orderId} />
-        <HR height={padding} />
         <TipControl
           orderId={order.id}
           orderTip={order.tip?.value ?? 0}
           courierId={order.courier!.id}
           courierName={order.courier!.name}
         />
+        <PaddedView>
+          <DefaultButton title={t('Avaliar o entregador')} secondary onPress={() => null} />
+        </PaddedView>
         <HR height={padding} />
         <PaddedView>
           <OrderCostBreakdown order={order} />
+        </PaddedView>
+        <HR height={padding} />
+        <PaddedView>
+          <DefaultButton title={t('Relatar um problema')} onPress={() => null} />
         </PaddedView>
       </ScrollView>
     </View>
