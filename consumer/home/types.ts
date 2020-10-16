@@ -45,6 +45,9 @@ export type HomeNavigatorParamList = {
   OrderDeliveredFeedback: {
     orderId: string;
   };
+  ReviewCourier: {
+    courierId: string | undefined;
+  };
   TransportableItems: undefined;
   PermissionDeniedFeedback: {
     title: string;

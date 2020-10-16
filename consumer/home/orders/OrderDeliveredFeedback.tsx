@@ -4,6 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import Constants from 'expo-constants';
 import React from 'react';
 import { View, Text, Image } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 
 import * as icons from '../../../assets/icons';
@@ -41,7 +42,7 @@ export default ({ navigation, route }: Props) => {
   // UI
   const paddingTop = Constants.statusBarHeight;
   return (
-    <View style={{ ...screens.default, paddingTop }}>
+    <ScrollView style={{ ...screens.default, paddingTop, paddingBottom: padding }}>
       <View
         style={{
           flexDirection: 'row',
@@ -87,15 +88,24 @@ export default ({ navigation, route }: Props) => {
           title={t('Avaliar entregador')}
           secondary
           style={{ marginBottom: padding }}
+          onPress={() => navigation.navigate('ReviewCourier', { courierId: order.courier?.id })}
         />
       </View>
       <HR height={padding} />
       <PaddedView>
         <OrderCostBreakdown order={order} />
       </PaddedView>
-      <View style={{ marginTop: padding, paddingHorizontal: padding }}>
-        <DefaultButton title={t('Finalizar')} onPress={() => navigation.popToTop()} />
-      </View>
-    </View>
+      <HR height={padding} />
+      <PaddedView>
+        {/* <DefaultButton title={t('Finalizar')} onPress={() => navigation.popToTop()} /> */}
+        <DefaultButton title={t('Refazer pedido')} onPress={() => {}} />
+        <DefaultButton
+          title={t('Relatar um problema')}
+          onPress={() => {}}
+          secondary
+          style={{ marginVertical: padding }}
+        />
+      </PaddedView>
+    </ScrollView>
   );
 };

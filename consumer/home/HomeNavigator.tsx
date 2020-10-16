@@ -18,6 +18,7 @@ import OngoingOrder from './orders/OngoingOrder';
 import OrderDeliveredFeedback from './orders/OrderDeliveredFeedback';
 import OrderMatching from './orders/OrderMatching';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
+import ReviewCourier from './orders/p2p-order/ReviewCourier';
 import TransportableItems from './orders/p2p-order/TransportableItems';
 import { HomeNavigatorParamList } from './types';
 
@@ -101,6 +102,11 @@ export default function () {
         name="OrderDeliveredFeedback"
         component={OrderDeliveredFeedback}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ReviewCourier"
+        component={ReviewCourier}
+        options={{ title: t('Avaliar entregador') }}
       />
     </Stack.Navigator>
   );
