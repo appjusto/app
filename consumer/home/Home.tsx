@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import * as Location from 'expo-location';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useEffect, useContext, useState } from 'react';
-import { View, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -13,7 +13,9 @@ import { AppDispatch, ApiContext } from '../../common/app/context';
 import PaddedView from '../../common/components/containers/PaddedView';
 import useLastKnownLocation from '../../common/hooks/useLastKnownLocation';
 import useTallerDevice from '../../common/hooks/useTallerDevice';
+import HomeCard from '../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../common/screens/home/cards/HomeOngoingDeliveries';
+import HomeShareCard from '../../common/screens/home/cards/HomeShareCard';
 import { getFlavor } from '../../common/store/config/selectors';
 import { fetchTotalCouriersNearby } from '../../common/store/courier/actions';
 import { observeProfile } from '../../common/store/user/actions';
@@ -86,91 +88,18 @@ export default function ({ navigation }: Props) {
               navigation.navigate('OngoingOrder', { orderId: order.id, newMessage: openChat })
             }
           />
-          <View
-            style={[
-              styles.card,
-              {
-                padding: tallerDevice ? padding : halfPadding,
-                marginBottom: tallerDevice ? padding : halfPadding,
-              },
-            ]}
-          >
-            <Image source={icons.delivery} />
-            <View style={{ marginLeft: padding }}>
-              <Text style={{ ...texts.default }}>
-                {availableCouriers} {t('entregadores disponíveis')}
-              </Text>
-              <Text style={{ ...texts.small, color: colors.darkGrey }}>
-                {t(`num raio de 15km`)}
-              </Text>
-            </View>
+          <View>
+            <HomeCard
+              icon={icons.delivery}
+              title={`${availableCouriers} ${t('entregadores disponíveis')}`}
+              subtitle={t(`num raio de 15km`)}
+            />
           </View>
-          {/* <ShowIf test={ongoingOrders.length <= 0}>
-          {() => (
-            <TouchableOpacity
-              onPress={() => navigation.navigate('HistoryNavigator', { screen: 'OrderHistory' })}
-            >
-              <View
-                style={[
-                  styles.card,
-                  {
-                    padding: tallerDevice ? padding : halfPadding,
-                    marginBottom: tallerDevice ? padding : halfPadding,
-                  },
-                ]}
-              >
-                <Image source={icons.requests} />
-                <View style={{ marginLeft: padding }}>
-                  <Text style={{ ...texts.default }}>{t('Histórico de Pedidos')}</Text>
-                  <Text style={{ ...texts.small, color: colors.darkGrey }}>
-                    {t('Histórico de Pedidos')}
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          )}
-        </ShowIf> */}
-          {/* TODO: add logic to the share component below */}
-          <TouchableOpacity>
-            <View
-              style={[
-                styles.card,
-                {
-                  padding: tallerDevice ? padding : halfPadding,
-                  marginBottom: tallerDevice ? padding : halfPadding,
-                },
-              ]}
-            >
-              <Image source={icons.share} />
-              <View style={{ marginLeft: padding }}>
-                <Text style={{ ...texts.default }}>{t('Divulgue o AppJusto')}</Text>
-                <Text
-                  style={{
-                    ...texts.small,
-                    color: colors.darkGrey,
-                    flexWrap: 'wrap',
-                    maxWidth: '85%',
-                  }}
-                  numberOfLines={2}
-                >
-                  {t('Compartilhe esse movimento por uma economia mais justa.')}
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
+          <View style={{ marginTop: padding }}>
+            <HomeShareCard />
+          </View>
         </PaddedView>
       </ScrollView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    ...borders.default,
-    borderColor: colors.lightGrey,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    backgroundColor: colors.white,
-  },
-});

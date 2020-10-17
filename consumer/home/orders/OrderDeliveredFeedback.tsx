@@ -3,6 +3,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { View, Text, Image } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSelector } from 'react-redux';
 
 import * as icons from '../../../assets/icons';
@@ -35,64 +36,60 @@ export default ({ navigation, route }: Props) => {
   // UI
   return (
     <View style={screens.default}>
-      <PaddedView>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: 32,
-            alignItems: 'center',
-          }}
-        >
-          <Text style={[texts.big]}>{t('Pedido\nentregue')}</Text>
-          <View style={{ height: 112, width: 160 }}>
-            <Image
-              source={icons.illustration}
-              style={{ overflow: 'hidden', height: 112, width: 160 }}
+      <KeyboardAwareScrollView>
+        {/* header */}
+        <PaddedView>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 32,
+              alignItems: 'center',
+            }}
+          >
+            <Text style={[texts.big]}>{t('Pedido\nentregue')}</Text>
+            <View style={{ height: 112, width: 160 }}>
+              <Image
+                source={icons.illustration}
+                style={{ overflow: 'hidden', height: 112, width: 160 }}
+              />
+            </View>
+          </View>
+        </PaddedView>
+        <HR height={padding} />
+        {/* tip */}
+        <TipControl
+          orderId={order.id}
+          orderTip={order.tip?.value ?? 0}
+          courierId={order.courier!.id}
+          courierName={order.courier!.name}
+        />
+        <HR />
+        {/* actions */}
+        <PaddedView>
+          <DefaultButton title={t('Finalizar')} onPress={() => navigation.popToTop()} />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginTop: padding,
+            }}
+          >
+            <DefaultButton title={t('Relatar um problema')} secondary onPress={() => null} />
+            <DefaultButton
+              title={t('Detalhes da corrida')}
+              onPress={() =>
+                navigation.navigate('HistoryNavigator', {
+                  screen: 'OrderSummary',
+                  params: { orderId },
+                })
+              }
+              secondary
             />
           </View>
-        </View>
-      </PaddedView>
-      <HR height={padding} />
-      <TipControl
-        orderId={order.id}
-        orderTip={order.tip?.value ?? 0}
-        courierId={order.courier!.id}
-        courierName={order.courier!.name}
-      />
-      <View
-        style={{
-          borderBottomWidth: 1,
-          borderBottomColor: colors.black,
-          borderStyle: 'solid',
-          marginTop: padding,
-        }}
-      />
-      <View style={{ flex: 1 }} />
-      <PaddedView>
-        <DefaultButton title={t('Finalizar')} onPress={() => navigation.popToTop()} />
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginTop: padding,
-          }}
-        >
-          <DefaultButton title={t('Relatar um problema')} secondary onPress={() => null} />
-          <DefaultButton
-            title={t('Detalhes da corrida')}
-            onPress={() =>
-              navigation.navigate('HistoryNavigator', {
-                screen: 'OrderSummary',
-                params: { orderId },
-              })
-            }
-            secondary
-          />
-        </View>
-      </PaddedView>
-      <View style={{ flex: 1 }} />
+        </PaddedView>
+      </KeyboardAwareScrollView>
     </View>
   );
 };

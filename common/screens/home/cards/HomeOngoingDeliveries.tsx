@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 
 import PaddedView from '../../../components/containers/PaddedView';
 import { getOngoingOrders } from '../../../store/order/selectors';
+import { padding } from '../../../styles';
 import HomeOngoingDeliveryCard from './HomeOngoingDeliveryCard';
 
 type Props = {
@@ -20,9 +21,9 @@ export default function ({ onSelect }: Props) {
   return (
     <View>
       {ongoingOrders.map((order) => (
-        <PaddedView key={order.id} half>
+        <View key={order.id} style={{ marginBottom: padding }}>
           <HomeOngoingDeliveryCard order={order} onSelect={onSelect} />
-        </PaddedView>
+        </View>
       ))}
     </View>
   );

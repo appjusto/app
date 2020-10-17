@@ -14,6 +14,7 @@ import {
   getOrderChatUnreadCount,
 } from '../../../store/order/selectors';
 import { borders, colors, halfPadding, padding, texts } from '../../../styles';
+import HomeCard from './HomeCard';
 
 type Props = {
   order: WithId<Order>;
@@ -95,7 +96,17 @@ export default function ({ order, onSelect }: Props) {
               >
                 <View>
                   <Text style={{ ...texts.default }}>{t('Corrida em andamento')}</Text>
-                  <Text style={{ ...texts.small, color: colors.black }}>{detail}</Text>
+                  <Text
+                    style={{
+                      ...texts.small,
+                      color: colors.darkGrey,
+                      flexWrap: 'wrap',
+                      maxWidth: '85%',
+                    }}
+                    numberOfLines={2}
+                  >
+                    {detail}
+                  </Text>
                 </View>
               </View>
             </View>
