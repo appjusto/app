@@ -64,7 +64,7 @@ export default () => {
         versionCode,
         adaptiveIcon: {
           foregroundImage: icon('android'),
-          backgroundColor: flavor === 'consumer' ? '#78E08F' : 'FFE493',
+          backgroundColor: flavor === 'consumer' ? '#78E08F' : '#FFE493',
         },
         googleServicesFile: './google-services.json',
         useNextNotificationsApi: true,
