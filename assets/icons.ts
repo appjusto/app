@@ -9,7 +9,6 @@ const iconCheckboxInactive = require('./icons/checkbox-inactive.png');
 const iconChecklistTick = require('./icons/checklist-tick.png');
 const iconSlideConfirm = require('./icons/drag-button-confirm.png');
 const dragButton = require('./icons/drag-button.png');
-const iconRectangle = require('./icons/green-rectangle.png');
 const iconHome = require('./icons/home.png');
 const iconButtonArrow = require('./icons/icon-button-arrow.png');
 const iconCalendar = require('./icons/icon-calendar.png');
@@ -79,7 +78,6 @@ export const user = iconUser;
 export const slider = dragButton;
 export const circle = iconCircle;
 export const circleActive = iconCircleActive;
-export const greenRectangle = iconRectangle;
 export const bikeSmall = iconBikeSmall;
 export const motoSmall = iconMotocycleSmall;
 export const scooterSmall = iconScooterSmall;
@@ -128,7 +126,6 @@ export default [
   slider,
   circle,
   circleActive,
-  greenRectangle,
   bikeSmall,
   motoSmall,
   scooterSmall,

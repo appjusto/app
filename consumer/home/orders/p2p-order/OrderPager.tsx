@@ -5,6 +5,7 @@ import { IuguCustomerPaymentMethod } from 'appjusto-types/payment/iugu';
 import React, { useRef, useState } from 'react';
 import { View, NativeSyntheticEvent, Text, Image } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSelector } from 'react-redux';
 
 import * as icons from '../../../../assets/icons';
@@ -15,7 +16,7 @@ import LabeledText from '../../../../common/components/texts/LabeledText';
 import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import { placeValid } from '../../../../common/store/order/validators';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
-import { halfPadding, padding, texts } from '../../../../common/styles';
+import { doublePadding, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { HomeNavigatorParamList } from '../../types';
 import OrderStep from './OrderStep';
@@ -54,7 +55,7 @@ export default function ({
   // refs
   const viewPager = useRef<ViewPager>(null);
 
-  //context
+  // context
   const tallerDevice = useTallerDevice();
 
   // app state
@@ -99,129 +100,52 @@ export default function ({
     }
   };
 
+  const verticalPadding = tallerDevice ? doublePadding : padding;
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ ...screens.default }}>
       <PaddedView>
         <OrderStep step={step} changeStepHandler={setPage} />
       </PaddedView>
 
       <ViewPager ref={viewPager} style={{ flex: 1 }} onPageScroll={onPageScroll}>
         {/* origin */}
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'flex-end',
-            padding,
-            paddingBottom: tallerDevice ? padding : 2,
-            paddingTop: tallerDevice ? padding : 2,
-          }}
-        >
-          <TouchableWithoutFeedback
-            onPress={() => {
-              navigateToAddressComplete(origin.address?.description ?? '', 'origin');
-            }}
-          >
-            <LabeledText title={t('Endereço de retirada')}>
-              {origin.address?.main ?? t('Endereço com número')}
-            </LabeledText>
-          </TouchableWithoutFeedback>
-
-          <DefaultInput
-            style={{ marginTop: tallerDevice ? padding : 4 }}
-            value={origin.additionalInfo ?? ''}
-            title={t('Complemento (se houver)')}
-            placeholder={t('Apartamento, sala, loja, etc.')}
-            onChangeText={(text) => updateOrigin({ ...origin, additionalInfo: text })}
-          />
-
-          <DefaultInput
-            style={{ marginTop: tallerDevice ? padding : 4 }}
-            value={origin.intructions ?? ''}
-            title={t('Instruções para entrega')}
-            placeholder={t('Quem irá atender o entregador, etc.')}
-            onChangeText={(text) => updateOrigin({ ...origin, intructions: text })}
-            blurOnSubmit
-            multiline
-            numberOfLines={3}
-          />
-
-          {!tallerDevice && <View style={{ flex: 1 }} />}
-
-          <TouchableWithoutFeedback onPress={() => navigation.navigate('TransportableItems')}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingBottom: 4,
-                marginTop: tallerDevice ? halfPadding : 0,
-              }}
-            >
-              <Image source={icons.info} />
-              <Text style={{ ...texts.small, marginLeft: 4 }}>
-                {t('Saiba o que pode ser transportado')}
-              </Text>
-            </View>
-          </TouchableWithoutFeedback>
-
-          <View style={{ flex: 1 }} />
-
-          <DefaultButton
-            title={t('Confirmar local de retirada')}
-            onPress={nextStepHandler}
-            disabled={!stepReady(step + 1)}
-            style={{ marginTop: tallerDevice ? 0 : halfPadding }}
-          />
-        </View>
-
-        {/* destination */}
-        {placeValid(origin) && (
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'flex-end',
-              padding,
-              paddingBottom: tallerDevice ? padding : 2,
-              paddingTop: tallerDevice ? padding : 2,
-            }}
-          >
+        <View style={{ flex: 1, paddingHorizontal: padding }}>
+          <KeyboardAwareScrollView>
             <TouchableWithoutFeedback
               onPress={() => {
-                navigateToAddressComplete(destination?.address?.description ?? '', 'destination');
+                navigateToAddressComplete(origin.address?.description ?? '', 'origin');
               }}
             >
-              <LabeledText title={t('Endereço de entrega')}>
-                {destination.address?.main ?? t('Endereço com número')}
+              <LabeledText title={t('Endereço de retirada')}>
+                {origin.address?.main ?? t('Endereço com número')}
               </LabeledText>
             </TouchableWithoutFeedback>
 
             <DefaultInput
-              style={{ marginTop: tallerDevice ? padding : 4 }}
-              value={destination.additionalInfo ?? ''}
+              style={{ marginTop: verticalPadding }}
+              value={origin.additionalInfo ?? ''}
               title={t('Complemento (se houver)')}
               placeholder={t('Apartamento, sala, loja, etc.')}
-              onChangeText={(text) => updateDestination({ ...destination, additionalInfo: text })}
+              onChangeText={(text) => updateOrigin({ ...origin, additionalInfo: text })}
             />
 
             <DefaultInput
-              style={{ marginTop: tallerDevice ? padding : 4 }}
-              value={destination.intructions ?? ''}
+              style={{ marginTop: verticalPadding }}
+              value={origin.intructions ?? ''}
               title={t('Instruções para entrega')}
               placeholder={t('Quem irá atender o entregador, etc.')}
-              onChangeText={(text) => updateDestination({ ...destination, intructions: text })}
+              onChangeText={(text) => updateOrigin({ ...origin, intructions: text })}
               blurOnSubmit
               multiline
               numberOfLines={3}
             />
-
-            {!tallerDevice && <View style={{ flex: 1 }} />}
 
             <TouchableWithoutFeedback onPress={() => navigation.navigate('TransportableItems')}>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  paddingBottom: 4,
-                  marginTop: tallerDevice ? halfPadding : 0,
+                  marginTop: verticalPadding,
                 }}
               >
                 <Image source={icons.info} />
@@ -231,15 +155,71 @@ export default function ({
               </View>
             </TouchableWithoutFeedback>
 
-            <View style={{ flex: 1 }} />
-
             <DefaultButton
-              style={{ marginTop: tallerDevice ? 0 : halfPadding }}
-              title={t('Confirmar local de entrega')}
+              style={{ marginTop: verticalPadding }}
+              title={t('Confirmar local de retirada')}
               onPress={nextStepHandler}
               disabled={!stepReady(step + 1)}
-              activityIndicator={step === Steps.Destination && busy}
             />
+          </KeyboardAwareScrollView>
+        </View>
+
+        {/* destination */}
+        {placeValid(origin) && (
+          <View style={{ flex: 1, paddingHorizontal: padding }}>
+            <KeyboardAwareScrollView>
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  navigateToAddressComplete(destination?.address?.description ?? '', 'destination');
+                }}
+              >
+                <LabeledText title={t('Endereço de entrega')}>
+                  {destination.address?.main ?? t('Endereço com número')}
+                </LabeledText>
+              </TouchableWithoutFeedback>
+
+              <DefaultInput
+                style={{ marginTop: verticalPadding }}
+                value={destination.additionalInfo ?? ''}
+                title={t('Complemento (se houver)')}
+                placeholder={t('Apartamento, sala, loja, etc.')}
+                onChangeText={(text) => updateDestination({ ...destination, additionalInfo: text })}
+              />
+
+              <DefaultInput
+                style={{ marginTop: verticalPadding }}
+                value={destination.intructions ?? ''}
+                title={t('Instruções para entrega')}
+                placeholder={t('Quem irá atender o entregador, etc.')}
+                onChangeText={(text) => updateDestination({ ...destination, intructions: text })}
+                blurOnSubmit
+                multiline
+                numberOfLines={3}
+              />
+
+              <TouchableWithoutFeedback onPress={() => navigation.navigate('TransportableItems')}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginTop: verticalPadding,
+                  }}
+                >
+                  <Image source={icons.info} />
+                  <Text style={{ ...texts.small, marginLeft: 4 }}>
+                    {t('Saiba o que pode ser transportado')}
+                  </Text>
+                </View>
+              </TouchableWithoutFeedback>
+
+              <DefaultButton
+                style={{ marginTop: verticalPadding }}
+                title={t('Confirmar local de entrega')}
+                onPress={nextStepHandler}
+                disabled={!stepReady(step + 1)}
+                activityIndicator={step === Steps.Destination && busy}
+              />
+            </KeyboardAwareScrollView>
           </View>
         )}
 

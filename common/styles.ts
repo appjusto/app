@@ -17,7 +17,7 @@ export const colors = {
   yellow: '#FFE493',
 };
 
-export const doublePadding = 16;
+export const doublePadding = 32;
 export const padding = 16;
 export const halfPadding = padding / 2;
 
