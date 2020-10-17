@@ -21,7 +21,7 @@ export default ({ title, children, style: externalStyle, disabled, ...props }: P
       <Text style={[styles.label, { color: disabled ? colors.darkGrey : colors.darkGreen }]}>
         {title}
       </Text>
-      <Text style={styles.text} {...props}>
+      <Text style={styles.text} {...props} numberOfLines={2}>
         {children}
       </Text>
     </View>
@@ -47,5 +47,6 @@ const styles = StyleSheet.create({
   text: {
     ...texts.medium,
     color: colors.darkGrey,
+    flexWrap: 'wrap',
   },
 });
