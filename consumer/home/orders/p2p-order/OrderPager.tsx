@@ -122,7 +122,7 @@ export default function ({
             }}
           >
             <LabeledText title={t('Endereço de retirada')}>
-              {origin.address?.description ?? t('Endereço com número')}
+              {origin.address?.main ?? t('Endereço com número')}
             </LabeledText>
           </TouchableWithoutFeedback>
 
@@ -190,7 +190,7 @@ export default function ({
               }}
             >
               <LabeledText title={t('Endereço de entrega')}>
-                {destination.address?.description ?? t('Endereço com número')}
+                {destination.address?.main ?? t('Endereço com número')}
               </LabeledText>
             </TouchableWithoutFeedback>
 
