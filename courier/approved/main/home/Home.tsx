@@ -58,15 +58,15 @@ export default function ({ navigation }: Props) {
     <View style={[screens.default, screens.headless]}>
       <ScrollView>
         <HomeControls navigation={navigation} />
-        <HomeOngoingDeliveries
-          onSelect={(order, openChat) =>
-            navigation.navigate('OngoingNavigator', {
-              screen: 'OngoingDelivery',
-              params: { orderId: order.id, newMessage: openChat },
-            })
-          }
-        />
-        <PaddedView half>
+        <PaddedView>
+          <HomeOngoingDeliveries
+            onSelect={(order, openChat) =>
+              navigation.navigate('OngoingNavigator', {
+                screen: 'OngoingDelivery',
+                params: { orderId: order.id, newMessage: openChat },
+              })
+            }
+          />
           <TouchableOpacity
             onPress={() =>
               navigation.navigate('DeliveriesNavigator', { screen: 'DeliveryHistory' })
@@ -74,9 +74,9 @@ export default function ({ navigation }: Props) {
           >
             <HomeDeliveriesSummary />
           </TouchableOpacity>
-        </PaddedView>
-        <PaddedView vertical={false} style={{ marginBottom: padding }} half>
-          <ModalChooser />
+          <View style={{ marginTop: padding }}>
+            <ModalChooser />
+          </View>
         </PaddedView>
       </ScrollView>
     </View>
