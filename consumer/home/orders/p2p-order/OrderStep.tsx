@@ -3,7 +3,7 @@ import { View, Image, Text, LayoutAnimation } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import * as icons from '../../../../assets/icons';
-import { colors, texts } from '../../../../common/styles';
+import { colors, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { Steps } from './types';
 
@@ -65,7 +65,7 @@ export default function ({ step, changeStepHandler }: Props) {
   if (!justifyContent) return null;
 
   return (
-    <View>
+    <View style={{ marginVertical: padding }}>
       <View
         style={{
           flexDirection: 'row',

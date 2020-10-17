@@ -43,7 +43,6 @@ export default function ({
             ...borders.default,
             paddingHorizontal: 24,
             paddingVertical: 14,
-            height: 48,
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor,

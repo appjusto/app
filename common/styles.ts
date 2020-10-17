@@ -78,13 +78,13 @@ export const texts = StyleSheet.create({
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 15,
-    lineHeight: 18,
+    lineHeight: 19,
   },
   medium: {
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 16,
-    lineHeight: 19,
+    lineHeight: 21,
   },
   mediumToBig: {
     fontFamily: 'BarlowMedium',

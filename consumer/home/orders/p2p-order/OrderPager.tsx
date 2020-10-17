@@ -103,9 +103,7 @@ export default function ({
   const verticalPadding = tallerDevice ? doublePadding : padding;
   return (
     <View style={{ ...screens.default }}>
-      <PaddedView>
-        <OrderStep step={step} changeStepHandler={setPage} />
-      </PaddedView>
+      <OrderStep step={step} changeStepHandler={setPage} />
 
       <ViewPager ref={viewPager} style={{ flex: 1 }} onPageScroll={onPageScroll}>
         {/* origin */}
@@ -156,7 +154,7 @@ export default function ({
             </TouchableWithoutFeedback>
 
             <DefaultButton
-              style={{ marginTop: verticalPadding }}
+              style={{ marginVertical: verticalPadding }}
               title={t('Confirmar local de retirada')}
               onPress={nextStepHandler}
               disabled={!stepReady(step + 1)}
@@ -213,7 +211,7 @@ export default function ({
               </TouchableWithoutFeedback>
 
               <DefaultButton
-                style={{ marginTop: verticalPadding }}
+                style={{ marginVertical: verticalPadding }}
                 title={t('Confirmar local de entrega')}
                 onPress={nextStepHandler}
                 disabled={!stepReady(step + 1)}
