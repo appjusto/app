@@ -87,7 +87,7 @@ export default function ({ orderId, orderTip = 0, courierId, courierName }: Prop
         <HorizontalSelect disabled={orderTip > 0} data={data} selected={tip} onSelect={setTip} />
         <DefaultButton
           style={{ marginTop: padding }}
-          title={alreadyTipped ? t('Caixinha enviada') : t('Enviar caixinha')}
+          title={alreadyTipped ? t('Obrigado pela caixinha!') : t('Enviar caixinha')}
           disabled={alreadyTipped || tip.data === 0 || busy}
           activityIndicator={busy}
           onPress={tipHandler}

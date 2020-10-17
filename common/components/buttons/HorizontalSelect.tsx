@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, Text, TouchableWithoutFeedback, View } from 'react-native';
 
-import { borders, colors } from '../../styles';
+import { borders, colors, texts } from '../../styles';
 
 export type HorizontalSelectItem = {
   title: string;
@@ -38,15 +38,18 @@ export default function ({ data, selected, onSelect, disabled }: Props) {
               borderRadius: 6,
               height: 40,
               marginRight: 4,
-              backgroundColor:
-                item.id === selected?.id
-                  ? disabled
-                    ? colors.lightGrey
-                    : colors.green
-                  : colors.white,
+              backgroundColor: item.id === selected?.id ? colors.lightGreen : colors.white,
+              borderColor: item.id === selected?.id ? colors.black : colors.grey,
             }}
           >
-            <Text>{item.title}</Text>
+            <Text
+              style={{
+                ...texts.default,
+                color: item.id === selected?.id ? colors.black : colors.darkGrey,
+              }}
+            >
+              {item.title}
+            </Text>
           </View>
         </TouchableWithoutFeedback>
       )}
