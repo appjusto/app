@@ -37,9 +37,10 @@ export default function () {
 
   // UI
   if (consumer?.situation !== 'approved') {
-    // on the first time consumer is logged, the profile will be created by the app with the status 'pending'
-    // the indicator will be showing until the trigger change the status to 'approved'
-    // TODO: handle other cases in the future
+    // showing the indicator until the profile is loaded
+    // the first time should take longer as the profile is created with situation === 'pending' and than
+    // updated by a trigger after automatic validation
+    // TODO: handle other situation cases in the future
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green} />

@@ -20,6 +20,7 @@ const iconInfo = require('./icons/icon-info.png');
 const iconLicense = require('./icons/icon-license.png');
 const iconMotocycle = require('./icons/icon-motocycle-green.png');
 const iconMotocycleWhite = require('./icons/icon-motocycle-white.png');
+const iconMotocycleYellow = require('./icons/icon-motocycle-yellow.png');
 const iconNavigationArrow = require('./icons/icon-navigation.png');
 const iconPinPackageWhite = require('./icons/icon-pin-package-white.png');
 const iconPinPackage = require('./icons/icon-pin-package.png');
@@ -61,6 +62,7 @@ export const erase = iconErase;
 export const license = iconLicense;
 export const motocycle = iconMotocycle;
 export const motocycleWhite = iconMotocycleWhite;
+export const motocycleYellow = iconMotocycleYellow;
 export const navigationArrow = iconNavigationArrow;
 export const pinPackageWhite = iconPinPackageWhite;
 export const pinPackage = iconPinPackage;
@@ -109,6 +111,7 @@ export default [
   license,
   motocycle,
   motocycleWhite,
+  motocycleYellow,
   navigationArrow,
   pinPackageWhite,
   pinPackage,

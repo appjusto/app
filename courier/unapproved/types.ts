@@ -1,6 +1,7 @@
 import { CourierProfileParamList } from '../approved/main/profile/types';
 
 export type PendingParamList = {
-  PendingChecklist: undefined;
-  ProfileFeedback: undefined;
+  ProfilePending: undefined;
+  ProfileSubmitted: undefined;
+  ProfileRejected: undefined;
 } & CourierProfileParamList;

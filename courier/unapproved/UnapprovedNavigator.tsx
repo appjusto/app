@@ -8,8 +8,9 @@ import ProfileEdit from '../approved/main/profile/ProfileEdit';
 import BankNavigator from '../approved/main/profile/bank/BankNavigator';
 import FleetNavigator from '../approved/main/profile/fleet/FleetNavigator';
 import ProfilePhotos from '../approved/main/profile/photos/ProfilePhotos';
-import PendingChecklist from './PendingChecklist';
-import ProfileFeedback from './ProfileFeedback';
+import ProfilePending from './ProfilePending';
+import ProfileRejected from './ProfileRejected';
+import ProfileSubmitted from './ProfileSubmitted';
 import { PendingParamList } from './types';
 
 const Stack = createStackNavigator<PendingParamList>();
@@ -22,14 +23,14 @@ export default function () {
       })}
     >
       <Stack.Screen
-        name="PendingChecklist"
-        component={PendingChecklist}
+        name="ProfilePending"
+        component={ProfilePending}
         options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ProfileEdit"
         component={ProfileEdit}
-        options={{ title: t('Seus dados') }}
+        options={{ title: t('Dados pessoais') }}
       />
       <Stack.Screen
         name="ProfileCompany"
@@ -39,7 +40,7 @@ export default function () {
       <Stack.Screen
         name="ProfilePhotos"
         component={ProfilePhotos}
-        options={{ title: t('Fotos e documentos') }}
+        options={{ title: t('Fotos & Documentos') }}
       />
       <Stack.Screen
         name="BankNavigator"
@@ -49,12 +50,17 @@ export default function () {
       <Stack.Screen
         name="FleetNavigator"
         component={FleetNavigator}
-        options={{ title: t('Escolha sua frota'), headerShown: false }}
+        options={{ title: t('Escolha sua frota') }}
       />
       <Stack.Screen
-        name="ProfileFeedback"
-        component={ProfileFeedback}
-        options={{ title: t('Novo cadastro') }}
+        name="ProfileSubmitted"
+        component={ProfileSubmitted}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ProfileRejected"
+        component={ProfileRejected}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

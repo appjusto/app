@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ProfileSituation } from 'appjusto-types';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useLayoutEffect, useState } from 'react';
 import { View, Text, ScrollView, StatusBar } from 'react-native';
 import { useQueryCache } from 'react-query';
 import { useSelector, useDispatch } from 'react-redux';
@@ -24,8 +24,8 @@ import { screens, texts, colors } from '../../common/styles';
 import { t } from '../../strings';
 import { PendingParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<PendingParamList, 'PendingChecklist'>;
-type ScreenRouteProp = RouteProp<PendingParamList, 'PendingChecklist'>;
+type ScreenNavigationProp = StackNavigationProp<PendingParamList, 'ProfilePending'>;
+type ScreenRouteProp = RouteProp<PendingParamList, 'ProfilePending'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -46,7 +46,6 @@ export default function ({ navigation, route }: Props) {
 
   // screen state
   const situationsAllowed: ProfileSituation[] = ['pending'];
-  const situationsDisallowed: ProfileSituation[] = ['blocked', 'rejected', 'submitted'];
   const hasPersonalInfo = courierInfoSet(courier);
   const hasCompanyInfo = companyInfoSet(courier);
   const hasImages = !!currentSelfieQuery.data && !!currentDocumentImageQuery.data;
@@ -64,11 +63,20 @@ export default function ({ navigation, route }: Props) {
 
   // side effects
   // whenever situation changes
-  useEffect(() => {
-    if (situationsDisallowed.indexOf(courier.situation) > -1) {
-      navigation.replace('ProfileFeedback');
+  const navigateAfterDelay = useCallback((screen: 'ProfileSubmitted' | 'ProfileRejected') => {
+    setTimeout(() => {
+      navigation.replace(screen);
+    }, 500);
+  }, []);
+  useLayoutEffect(() => {
+    console.log('ProfilePending', courier.situation);
+    if (courier.situation === 'submitted') {
+      navigateAfterDelay('ProfileSubmitted');
+    } else if (courier.situation === 'rejected') {
+      navigateAfterDelay('ProfileRejected');
     }
   }, [courier.situation]);
+
   // whenever state updates
   // recalculate steps done
   useEffect(() => {

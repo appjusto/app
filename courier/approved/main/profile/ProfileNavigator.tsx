@@ -40,16 +40,14 @@ export default function () {
         options={{ title: t('Fotos & Documentos') }}
       />
       <Stack.Screen
+        name="BankNavigator"
+        component={BankNavigator}
+        options={{ title: t('Dados bancários') }}
+      />
+      <Stack.Screen
         name="FleetNavigator"
         component={FleetNavigator}
         options={{ title: t('Escolha sua frota') }}
-      />
-      <Stack.Screen
-        name="BankNavigator"
-        component={BankNavigator}
-        options={{
-          title: t('Dados bancários'),
-        }}
       />
       <Stack.Screen name="Terms" component={Terms} options={{ title: t('Fique por dentro') }} />
       <Stack.Screen
