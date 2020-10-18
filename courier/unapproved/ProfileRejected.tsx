@@ -31,13 +31,11 @@ export default function ({ navigation }: Props) {
   const busy = useSelector(getUIBusy);
   // side effects
   useEffect(() => {
-    console.log('ProfileRejected', courier.situation);
     if (courier.situation === 'pending') navigation.replace('ProfilePending');
     else if (courier.situation === 'submitted') navigation.replace('ProfileSubmitted');
   }, [courier.situation]);
   // handlers
   const updateProfileHandler = useCallback(() => {
-    console.log('updateProfileHandler');
     (async () => {
       try {
         await dispatch(updateProfile(api)(courier.id, { situation: 'pending' }));

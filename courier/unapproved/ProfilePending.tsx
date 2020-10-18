@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ProfileSituation } from 'appjusto-types';
-import React, { useCallback, useContext, useEffect, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { View, Text, ScrollView, StatusBar } from 'react-native';
 import { useQueryCache } from 'react-query';
 import { useSelector, useDispatch } from 'react-redux';
@@ -56,24 +56,22 @@ export default function ({ navigation, route }: Props) {
   const submitEnabled =
     situationsAllowed.indexOf(courier.situation) > -1 && stepsDone === totalSteps;
 
-  // handlers
-  const submitHandler = async () => {
-    await dispatch(submitProfile(api));
-  };
-
   // side effects
-  // whenever situation changes
-  const navigateAfterDelay = useCallback((screen: 'ProfileSubmitted' | 'ProfileRejected') => {
-    setTimeout(() => {
-      navigation.replace(screen);
-    }, 500);
+  // once
+  useEffect(() => {
+    // although this screen is named 'ProfilePending', it's also the first screen of UnapprovedNavigator
+    // which means that it will be shown if courier is rejected. so, if that's the case,
+    // we navigate to ProfileRejected after a short delay to make sure it will work on all devices
+    if (courier.situation === 'rejected') {
+      setTimeout(() => {
+        navigation.replace('ProfileRejected');
+      }, 500);
+    }
   }, []);
-  useLayoutEffect(() => {
-    console.log('ProfilePending', courier.situation);
+  // whenever situation changes
+  useEffect(() => {
     if (courier.situation === 'submitted') {
-      navigateAfterDelay('ProfileSubmitted');
-    } else if (courier.situation === 'rejected') {
-      navigateAfterDelay('ProfileRejected');
+      navigation.replace('ProfileSubmitted');
     }
   }, [courier.situation]);
 
@@ -102,6 +100,9 @@ export default function ({ navigation, route }: Props) {
   });
 
   // handlers
+  const submitHandler = useCallback(() => {
+    dispatch(submitProfile(api));
+  }, []);
   // when focused, refetch queries to recalculate of steps done
   const focusHandler = useCallback(() => {
     queryCache.refetchQueries();
@@ -109,8 +110,7 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <View style={{ ...screens.config }}>
-      <StatusBar />
+    <View style={[screens.config, screens.headless]}>
       <ScrollView>
         {/* header */}
         <PaddedView>
