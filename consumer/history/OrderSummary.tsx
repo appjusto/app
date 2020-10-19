@@ -3,8 +3,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { View, ScrollView, Text } from 'react-native';
 import { useSelector } from 'react-redux';
-import DefaultButton from '../../common/components/buttons/DefaultButton';
 
+import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/containers/PaddedView';
 import RoundedText from '../../common/components/texts/RoundedText';
 import HR from '../../common/components/views/HR';
@@ -92,7 +92,10 @@ export default function ({ navigation, route }: Props) {
         </PaddedView>
         <HR height={padding} />
         <PaddedView>
-          <DefaultButton title={t('Relatar um problema')} onPress={() => null} />
+          <DefaultButton
+            title={t('Relatar um problema')}
+            onPress={() => navigation.navigate('OrderComplaint', { order: order })}
+          />
         </PaddedView>
       </ScrollView>
     </View>

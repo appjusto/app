@@ -11,7 +11,7 @@ import { texts, colors } from '../../../../common/styles';
 type Props = {
   place: Partial<Place>;
   title: string;
-  fullAdress: boolean;
+  fullAdress?: boolean;
   editStepHandler?: () => void;
 };
 

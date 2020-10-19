@@ -4,17 +4,17 @@ import React, { useState } from 'react';
 import { View, Text, Image } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-import * as icons from '../../../../assets/icons';
-import DefaultButton from '../../../../common/components/buttons/DefaultButton';
-import PaddedView from '../../../../common/components/containers/PaddedView';
-import RoundedProfileImg from '../../../../common/components/icons/RoundedProfileImg';
-import DefaultInput from '../../../../common/components/inputs/DefaultInput';
-import HR from '../../../../common/components/views/HR';
-import Pill from '../../../../common/components/views/Pill';
-import { halfPadding, screens, texts, colors, padding, borders } from '../../../../common/styles';
-import { formatDate } from '../../../../common/utils/formatters';
-import { t } from '../../../../strings';
-import { HistoryParamList } from '../../../history/types';
+import * as icons from '../../../assets/icons';
+import DefaultButton from '../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../common/components/containers/PaddedView';
+import RoundedProfileImg from '../../../common/components/icons/RoundedProfileImg';
+import DefaultInput from '../../../common/components/inputs/DefaultInput';
+import HR from '../../../common/components/views/HR';
+import Pill from '../../../common/components/views/Pill';
+import { halfPadding, screens, texts, colors, padding, borders } from '../../../common/styles';
+import { formatDate } from '../../../common/utils/formatters';
+import { t } from '../../../strings';
+import { HistoryParamList } from '../../history/types';
 
 type ScreenNavigationProp = StackNavigationProp<HistoryParamList, 'ReviewCourier'>;
 type ScreenRoute = RouteProp<HistoryParamList, 'ReviewCourier'>;
