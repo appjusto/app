@@ -1,4 +1,5 @@
 import { RouteProp } from '@react-navigation/native';
+import { ChatMessage, WithId } from 'appjusto-types';
 import React, { useState, useCallback, useContext, useMemo, useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
@@ -81,7 +82,7 @@ export default function ({ route }: Props) {
                 <Text style={[texts.medium]}>{names[item.from]}</Text>
               </View>
             </View>
-            {item.messages.map((message) => (
+            {item.messages.map((message: WithId<ChatMessage>) => (
               <PaddedView
                 key={message.id}
                 style={{
@@ -115,7 +116,7 @@ export default function ({ route }: Props) {
           multiline
           numberOfLines={3}
           onSubmitEditing={sendMessageHandler}
-          blurOnSubmit={false}
+          blurOnSubmit
         >
           <DefaultButton
             style={{ marginLeft: padding }}
