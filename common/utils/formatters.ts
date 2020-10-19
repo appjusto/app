@@ -4,7 +4,7 @@ import { round } from 'lodash';
 // general
 
 export const padWithZero = (value: number) => (value < 10 ? `0${value}` : `${value}`);
-export const separateWithDot = (left: string, right: string) => `${left} \u25CF ${right}`;
+export const separateWithDot = (left: string, right: string) => `${left}  \u25CF  ${right}`;
 
 // date & time
 
