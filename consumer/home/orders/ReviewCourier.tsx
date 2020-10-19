@@ -2,7 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
 import { View, Text, Image } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -46,81 +46,84 @@ export default function ({ route }: Props) {
   };
   return (
     <View style={{ ...screens.default }}>
-      <PaddedView style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <View>
-          <RoundedProfileImg id={courier?.id} />
-        </View>
-        <View style={{ marginLeft: 12 }}>
-          <Text style={{ ...texts.medium, marginBottom: halfPadding }}>{courier?.name}</Text>
-          <Text style={{ ...texts.small, color: colors.darkGrey }}>No appJusto desde</Text>
-          <Text style={{ ...texts.small }}>{formatDate(joinedOn, 'monthYear')}</Text>
-        </View>
-      </PaddedView>
-      <HR height={padding} />
-      <PaddedView style={{ flex: 1 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Pill />
-          <Text style={{ ...texts.medium, ...texts.bold, marginLeft: 12 }}>
-            {t('Como foi a sua experiência com o entregador?')}
+      <ScrollView>
+        <PaddedView style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View>
+            <RoundedProfileImg id={courier?.id} />
+          </View>
+          <View style={{ marginLeft: 12 }}>
+            <Text style={{ ...texts.medium, marginBottom: halfPadding }}>{courier?.name}</Text>
+            <Text style={{ ...texts.small, color: colors.darkGrey }}>No appJusto desde</Text>
+            <Text style={{ ...texts.small }}>{formatDate(joinedOn, 'monthYear')}</Text>
+          </View>
+        </PaddedView>
+        <HR height={padding} />
+        <PaddedView style={{ flex: 1 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Pill />
+            <Text style={{ ...texts.medium, ...texts.bold, marginLeft: 12 }}>
+              {t('Como foi a sua experiência com o entregador?')}
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: padding,
+              marginBottom: 24,
+            }}
+          >
+            <TouchableWithoutFeedback onPress={positiveHandler}>
+              <View
+                style={{
+                  height: 64,
+                  width: 64,
+                  ...borders.default,
+                  borderRadius: 32,
+                  borderColor: colors.green,
+                  backgroundColor: positive ? colors.green : colors.white,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Image source={icons.thumbUp} />
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={negativeHandler}>
+              <View
+                style={{
+                  height: 64,
+                  width: 64,
+                  ...borders.default,
+                  borderRadius: 32,
+                  borderColor: colors.green,
+                  marginLeft: padding,
+                  backgroundColor: negative ? colors.green : colors.white,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Image source={icons.thumbDown} />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+          <Text style={{ ...texts.medium, color: colors.darkGrey, marginBottom: halfPadding }}>
+            {t(
+              'Se preferir, descreva a sua experiência para outros clientes. Sua avaliação será anônima.'
+            )}
           </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: padding,
-            marginBottom: 24,
-          }}
-        >
-          <TouchableWithoutFeedback onPress={positiveHandler}>
-            <View
-              style={{
-                height: 64,
-                width: 64,
-                ...borders.default,
-                borderRadius: 32,
-                borderColor: colors.green,
-                backgroundColor: positive ? colors.green : colors.white,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <Image source={icons.thumbUp} />
-            </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={negativeHandler}>
-            <View
-              style={{
-                height: 64,
-                width: 64,
-                ...borders.default,
-                borderRadius: 32,
-                borderColor: colors.green,
-                marginLeft: padding,
-                backgroundColor: negative ? colors.green : colors.white,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <Image source={icons.thumbDown} />
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-        <Text style={{ ...texts.medium, color: colors.darkGrey, marginBottom: halfPadding }}>
-          {t(
-            'Se preferir, descreva a sua experiência para outros clientes. Sua avaliação será anônima.'
-          )}
-        </Text>
-        <DefaultInput
-          placeholder={t('Escreva sua mensagem')}
-          multiline
-          numberOfLines={6}
-          value={reviewComment}
-          onChangeText={setReviewComment}
-        />
-        <View style={{ flex: 1 }} />
-        <DefaultButton title={t('Enviar')} onPress={() => null} />
-      </PaddedView>
+          <DefaultInput
+            placeholder={t('Escreva sua mensagem')}
+            multiline
+            numberOfLines={6}
+            value={reviewComment}
+            onChangeText={setReviewComment}
+          />
+          <View style={{ flex: 1 }} />
+          <DefaultButton title={t('Enviar')} onPress={() => null} style={{ marginTop: padding }} />
+          <View style={{ flex: 1 }} />
+        </PaddedView>
+      </ScrollView>
     </View>
   );
 }

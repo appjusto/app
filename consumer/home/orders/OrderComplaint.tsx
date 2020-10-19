@@ -42,70 +42,78 @@ export default function ({ route, navigation }: Props) {
   const complaintHandler = () => navigation.popToTop();
 
   return (
-    <View style={{ ...screens.config }}>
-      <PaddedView>
-        <Text style={{ ...texts.mediumToBig, marginBottom: padding }}>
-          {t('Indique seu problema:')}
-        </Text>
-        <RadioButton
-          title={t('O entregador danificou o meu pedido')}
-          onPress={() => setSurvey({ ...survey, courierDamagedOrder: !survey.courierDamagedOrder })}
-          checked={survey.courierDamagedOrder}
-        />
-        <RadioButton
-          onPress={() => setSurvey({ ...survey, courierDidntDeliver: !survey.courierDidntDeliver })}
-          title={t('O entregador não fez a entrega')}
-          checked={survey.courierDidntDeliver}
-        />
-        <RadioButton
-          onPress={() =>
-            setSurvey({ ...survey, courierHasBadManners: !survey.courierHasBadManners })
-          }
-          title={t('O entregador foi mal educado')}
-          checked={survey.courierHasBadManners}
-        />
-        <RadioButton
-          onPress={() => setSurvey({ ...survey, courierLateDelivery: !survey.courierLateDelivery })}
-          title={t('O entregador demorou mais que o indicado')}
-          checked={survey.courierLateDelivery}
-        />
-        <RadioButton
-          onPress={() => setSurvey({ ...survey, didntOrderThat: !survey.didntOrderThat })}
-          title={t('Não fiz esse pedido')}
-          checked={survey.didntOrderThat}
-        />
-        <RadioButton
-          onPress={() => setSurvey({ ...survey, incorrectBilling: !survey.incorrectBilling })}
-          title={t('A cobrança foi incorreta')}
-          checked={survey.incorrectBilling}
-        />
-        <RadioButton
-          onPress={() => setSurvey({ ...survey, other: !survey.other })}
-          title={t('Outro problema')}
-          checked={survey.other}
-        />
-        <Text
-          style={{
-            ...texts.mediumToBig,
-            color: colors.darkGrey,
-            marginTop: 24,
-            marginBottom: halfPadding,
-          }}
-        >
-          {t('Você pode detalhar mais seu problema')}
-        </Text>
-        <DefaultInput
-          placeholder={t('Escreva sua mensagem')}
-          multiline
-          numberOfLines={6}
-          value={complaintComment}
-          onChangeText={setComplaintComment}
-        />
-      </PaddedView>
-      <View style={{ flex: 1 }} />
-      <PaddedView style={{ backgroundColor: colors.white }}>
-        <DefaultButton title={t('Enviar')} onPress={complaintHandler} />
-      </PaddedView>
-    </View>
+    <ScrollView style={{ ...screens.config }}>
+      <View>
+        <PaddedView>
+          <Text style={{ ...texts.mediumToBig, marginBottom: padding }}>
+            {t('Indique seu problema:')}
+          </Text>
+          <RadioButton
+            title={t('O entregador danificou o meu pedido')}
+            onPress={() =>
+              setSurvey({ ...survey, courierDamagedOrder: !survey.courierDamagedOrder })
+            }
+            checked={survey.courierDamagedOrder}
+          />
+          <RadioButton
+            onPress={() =>
+              setSurvey({ ...survey, courierDidntDeliver: !survey.courierDidntDeliver })
+            }
+            title={t('O entregador não fez a entrega')}
+            checked={survey.courierDidntDeliver}
+          />
+          <RadioButton
+            onPress={() =>
+              setSurvey({ ...survey, courierHasBadManners: !survey.courierHasBadManners })
+            }
+            title={t('O entregador foi mal educado')}
+            checked={survey.courierHasBadManners}
+          />
+          <RadioButton
+            onPress={() =>
+              setSurvey({ ...survey, courierLateDelivery: !survey.courierLateDelivery })
+            }
+            title={t('O entregador demorou mais que o indicado')}
+            checked={survey.courierLateDelivery}
+          />
+          <RadioButton
+            onPress={() => setSurvey({ ...survey, didntOrderThat: !survey.didntOrderThat })}
+            title={t('Não fiz esse pedido')}
+            checked={survey.didntOrderThat}
+          />
+          <RadioButton
+            onPress={() => setSurvey({ ...survey, incorrectBilling: !survey.incorrectBilling })}
+            title={t('A cobrança foi incorreta')}
+            checked={survey.incorrectBilling}
+          />
+          <RadioButton
+            onPress={() => setSurvey({ ...survey, other: !survey.other })}
+            title={t('Outro problema')}
+            checked={survey.other}
+          />
+          <Text
+            style={{
+              ...texts.mediumToBig,
+              color: colors.darkGrey,
+              marginTop: 24,
+              marginBottom: halfPadding,
+            }}
+          >
+            {t('Você pode detalhar mais seu problema:')}
+          </Text>
+          <DefaultInput
+            placeholder={t('Escreva sua mensagem')}
+            multiline
+            numberOfLines={6}
+            value={complaintComment}
+            onChangeText={setComplaintComment}
+          />
+        </PaddedView>
+        <View style={{ flex: 1 }} />
+        <PaddedView style={{ backgroundColor: colors.white }}>
+          <DefaultButton title={t('Enviar')} onPress={complaintHandler} />
+        </PaddedView>
+      </View>
+    </ScrollView>
   );
 }

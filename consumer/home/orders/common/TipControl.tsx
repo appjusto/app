@@ -10,6 +10,7 @@ import HorizontalSelect, {
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedProfileImg from '../../../../common/components/icons/RoundedProfileImg';
 import Pill from '../../../../common/components/views/Pill';
+import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import { tipCourier } from '../../../../common/store/order/actions';
 import { showToast } from '../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
@@ -29,6 +30,7 @@ export default function ({ orderId, orderTip = 0, courierId, courierName }: Prop
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   const alreadyTipped = orderTip > 0;
+  const tallerDevice = useTallerDevice();
 
   // app state
   const busy = useSelector(getUIBusy);
@@ -75,10 +77,13 @@ export default function ({ orderId, orderTip = 0, courierId, courierName }: Prop
         </PaddedView>
       </View>
       <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
-        <View style={{ flexDirection: 'row', paddingBottom: padding }}>
+        <View style={{ flexDirection: 'row', paddingBottom: padding, marginRight: padding }}>
           <RoundedProfileImg flavor="courier" id={courierId} />
           <View style={{ marginLeft: halfPadding }}>
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>
+            <Text
+              style={{ ...texts.small, color: colors.darkGrey, flexWrap: 'wrap' }}
+              numberOfLines={!tallerDevice ? 2 : 1}
+            >
               {t('Valorize ainda mais o trabalho do seu entregador')}
             </Text>
             <Text style={[texts.default]}>{courierName}</Text>
