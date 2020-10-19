@@ -83,7 +83,7 @@ export default function ({ navigation, route }: Props) {
           <DefaultButton
             title={t('Avaliar o entregador')}
             secondary
-            onPress={() => navigation.navigate('ReviewCourier', { courierId: order.courier!.id })}
+            onPress={() => navigation.navigate('ReviewCourier', { courier: order.courier })}
           />
         </PaddedView>
         <HR height={padding} />

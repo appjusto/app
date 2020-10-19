@@ -1,3 +1,5 @@
+import { OrderCourier } from "appjusto-types";
+
 export type HistoryParamList = {
   OrderHistory: undefined;
   OrderSummary: {
@@ -7,6 +9,6 @@ export type HistoryParamList = {
     orderId: string;
   };
   ReviewCourier: {
-    courierId: string | undefined;
+    courier: OrderCourier | undefined;
   };
 };

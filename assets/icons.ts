@@ -44,6 +44,8 @@ const logoAppjustoBgWhite = require('./icons/logo-appjusto-bg-white.png');
 const iconMinus = require('./icons/minus.png');
 const iconOrders = require('./icons/orders.png');
 const iconPlus = require('./icons/plus.png');
+const iconThumbDown = require('./icons/thumb-down-24px.png');
+const iconThumbUp = require('./icons/thumb-up-24px.png');
 const iconUser = require('./icons/user.png');
 
 export const accept = acceptIcon;
@@ -93,6 +95,8 @@ export const share = iconShare;
 export const info = iconInfo;
 export const delivery = illustrationDelivery;
 export const slideConfirm = iconSlideConfirm;
+export const thumbUp = iconThumbUp;
+export const thumbDown = iconThumbDown;
 
 export default [
   accept,
@@ -142,4 +146,6 @@ export default [
   info,
   delivery,
   slideConfirm,
+  thumbUp,
+  thumbDown,
 ];
