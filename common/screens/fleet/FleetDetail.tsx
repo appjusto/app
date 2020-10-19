@@ -11,6 +11,8 @@ import { ApiContext, AppDispatch } from '../../app/context';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import PaddedView from '../../components/containers/PaddedView';
 import RoundedText from '../../components/texts/RoundedText';
+import ShowIf from '../../components/views/ShowIf';
+import { getFlavor } from '../../store/config/selectors';
 import { getCourier } from '../../store/courier/selectors';
 import { getUIBusy } from '../../store/ui/selectors';
 import { updateProfile } from '../../store/user/actions';
@@ -39,6 +41,7 @@ export default function ({ navigation, route }: Props) {
   const busy = useSelector(getUIBusy);
   //app state
   const courier = useSelector(getCourier)!;
+  const flavor = useSelector(getFlavor);
   //handlers
   const confirmFleet = useCallback(async () => {
     if (!fleet) return;
@@ -137,7 +140,9 @@ export default function ({ navigation, route }: Props) {
             )}
           </Text>
         </PaddedView>
-        <GainSimulator fee={fleet.minimumFee} distance={fleet.distanceThreshold} />
+        <ShowIf test={flavor === 'courier'}>
+          {() => <GainSimulator fee={fleet.minimumFee} distance={fleet.distanceThreshold} />}
+        </ShowIf>
         <PaddedView>
           <DefaultButton
             title={t('Escolher essa frota')}
