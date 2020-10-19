@@ -10,3 +10,13 @@ export interface DeleteAccountSurvey {
   didntFeelSafe: boolean;
   ratherUseAnotherApp: boolean;
 }
+
+export interface OrderComplaintSurvey {
+  courierDamagedOrder: boolean;
+  courierDidntDeliver: boolean;
+  courierHasBadManners: boolean;
+  courierLateDelivery: boolean;
+  didntOrderThat: boolean;
+  incorrectBilling: boolean;
+  other: boolean;
+}
