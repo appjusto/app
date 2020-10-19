@@ -79,13 +79,13 @@ export default function ({ navigation, route }: Props) {
           courierId={order.courier!.id}
           courierName={order.courier!.name}
         />
-        <PaddedView>
+        <View style={{ paddingHorizontal: padding }}>
           <DefaultButton
             title={t('Avaliar o entregador')}
             secondary
             onPress={() => navigation.navigate('ReviewCourier', { courier: order.courier })}
           />
-        </PaddedView>
+        </View>
         <HR height={padding} />
         <PaddedView>
           <OrderCostBreakdown order={order} />

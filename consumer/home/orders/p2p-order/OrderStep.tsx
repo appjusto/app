@@ -3,7 +3,7 @@ import { View, Image, Text, LayoutAnimation } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import * as icons from '../../../../assets/icons';
-import { colors, padding, texts } from '../../../../common/styles';
+import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { Steps } from './types';
 
@@ -24,7 +24,7 @@ function Label({ text, active }: LabelProps) {
       style={{
         ...texts.medium,
         color,
-        width: labelWidth,
+        // width: labelWidth,
         textAlign: 'center',
       }}
     >
@@ -40,6 +40,7 @@ function SeparatorLine() {
         backgroundColor: colors.black,
         height: 1,
         flex: 1,
+        marginHorizontal: padding,
       }}
     />
   );
@@ -79,7 +80,7 @@ export default function ({ step, changeStepHandler }: Props) {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          marginHorizontal: padding,
         }}
       >
         <TouchableOpacity onPress={() => changeStepHandler(Steps.Origin)}>
