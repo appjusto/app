@@ -6,4 +6,7 @@ export type HistoryParamList = {
   OrderMatching: {
     orderId: string;
   };
+  ReviewCourier: {
+    courierId: string | undefined;
+  };
 };

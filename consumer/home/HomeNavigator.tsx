@@ -103,11 +103,6 @@ export default function () {
         component={OrderDeliveredFeedback}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="ReviewCourier"
-        component={ReviewCourier}
-        options={{ title: t('Avaliar entregador') }}
-      />
     </Stack.Navigator>
   );
 }

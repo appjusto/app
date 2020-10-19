@@ -4,6 +4,7 @@ import React from 'react';
 import ArrowBox from '../../common/components/views/ArrowBox';
 import { t } from '../../strings';
 import OrderMatching from '../home/orders/OrderMatching';
+import ReviewCourier from '../home/orders/p2p-order/ReviewCourier';
 import OrderHistory from './OrderHistory';
 import OrderSummary from './OrderSummary';
 import { HistoryParamList } from './types';
@@ -22,6 +23,11 @@ export default function () {
         name="OrderSummary"
         component={OrderSummary}
         options={{ title: t('Corrida finalizada') }}
+      />
+      <Stack.Screen
+        name="ReviewCourier"
+        component={ReviewCourier}
+        options={{ title: t('Avaliar entregador') }}
       />
       <Stack.Screen
         name="OrderMatching"

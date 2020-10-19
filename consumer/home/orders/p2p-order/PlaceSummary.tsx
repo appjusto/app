@@ -11,16 +11,19 @@ import { texts, colors } from '../../../../common/styles';
 type Props = {
   place: Partial<Place>;
   title: string;
+  fullAdress: boolean;
   editStepHandler?: () => void;
 };
 
-export default function ({ place, title, editStepHandler }: Props) {
+export default function ({ place, title, editStepHandler, fullAdress }: Props) {
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
       <View style={{ width: '60%' }}>
         <Text style={{ ...texts.small, color: colors.darkGreen }}>{title}</Text>
         <Text style={{ ...texts.medium }}>{place.address?.main ?? ''}</Text>
-        <Text style={{ ...texts.default }}>{place.address?.secondary ?? ''}</Text>
+        <ShowIf test={fullAdress}>
+          {() => <Text style={{ ...texts.default }}>{place.address?.secondary ?? ''}</Text>}
+        </ShowIf>
         <ShowIf test={!isEmpty(place.additionalInfo)}>
           {() => <Text style={{ ...texts.small }}>{place.additionalInfo}</Text>}
         </ShowIf>
