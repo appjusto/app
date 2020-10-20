@@ -7,7 +7,7 @@ import {
   OrderCancellation,
   OrderRejection,
 } from 'appjusto-types';
-import { ComplaintDescription, OrderRejectionType } from 'appjusto-types/order';
+import { ComplaintDescription, OrderProblemSurvey, OrderRejectionType } from 'appjusto-types/order';
 import firebase from 'firebase';
 import { OrderComplaintSurvey } from '../user/types';
 
@@ -63,9 +63,8 @@ export default class OrderApi {
     return this.firestore.collection('orders').doc(orderId).delete();
   }
 
-  async sendOrderComplaint(orderId: string, description: ComplaintDescription) {
-    return (await this.functions.httpsCallable('sendOrderComplaint')({ orderId, description }))
-      .data;
+  async sendOrderProblem(orderId: string, problem: OrderProblemSurvey) {
+    return (await this.functions.httpsCallable('sendOrderProblem')({ orderId, problem })).data;
   }
 
   // courier

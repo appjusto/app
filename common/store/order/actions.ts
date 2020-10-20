@@ -1,5 +1,5 @@
 import { Place, Order, ChatMessage, WithId, Fare, LatLng } from 'appjusto-types';
-import { ComplaintDescription, OrderCancellation, OrderRejection, OrderRejectionType } from 'appjusto-types/order';
+import { OrderCancellation, OrderRejection, OrderProblemSurvey } from 'appjusto-types/order';
 import { CancelToken } from 'axios';
 
 import { AppDispatch } from '../../app/context';
@@ -66,11 +66,11 @@ export const deleteOrder = (api: Api) => (orderId: string) => async (dispatch: A
   return await api.order().deleteOrder(orderId);
 };
 
-export const sendOrderComplaint = (api: Api) => (
+export const sendOrderProblem = (api: Api) => (
   orderId: string,
-  description: ComplaintDescription
+  problem: OrderProblemSurvey
 ) => async (dispatch: AppDispatch) => {
-  return dispatch(awaitWithFeedback(api.order().sendOrderComplaint(orderId, description)));
+  return dispatch(awaitWithFeedback(api.order().sendOrderProblem(orderId, problem)));
 };
 
 // couriers

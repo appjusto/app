@@ -1,21 +1,21 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { WithId, OrderComplaintSurvey, ComplaintDescription } from 'appjusto-types';
+import { WithId, OrderComplaintSurvey } from 'appjusto-types';
+import { OrderProblemSurvey } from 'appjusto-types/order';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
-import { ApiContext, AppDispatch } from '../../../common/app/context';
 
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import { documentAs } from '../../../common/store/api/types';
 import { getCourier } from '../../../common/store/courier/selectors';
-import { sendOrderComplaint } from '../../../common/store/order/actions';
+import { sendOrderProblem } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 // import { OrderComplaintSurvey } from '../../../common/store/user/types';
@@ -42,8 +42,8 @@ export default function ({ route, navigation }: Props) {
   const busy = useSelector(getUIBusy);
   const fetchProblems = (key: string) => api.order().fetchProblems();
   const query = useQuery('delivery-problems', fetchProblems);
-  const [problems, setProblems] = useState<WithId<OrderComplaintSurvey>[]>([]);
-  const [selectedProblem, setSelectedProblem] = useState<WithId<OrderComplaintSurvey>>();
+  const [problems, setProblems] = useState<WithId<OrderProblemSurvey>[]>([]);
+  const [selectedProblem, setSelectedProblem] = useState<WithId<OrderProblemSurvey>>();
   const [complaintComment, setComplaintComment] = useState<string>('');
 
   //handlers (needs async useCallback to register the complaint in the firestore)
@@ -51,7 +51,8 @@ export default function ({ route, navigation }: Props) {
     (async () => {
       try {
         await dispatch(
-          sendOrderComplaint(api)(order.id, {
+          sendOrderProblem(api)(order.id, {
+            title: selectedProblem?.title!,
             description: complaintComment,
           })
         );
