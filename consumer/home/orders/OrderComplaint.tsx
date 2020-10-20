@@ -1,14 +1,24 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import { WithId, OrderComplaintSurvey, ComplaintDescription } from 'appjusto-types';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { View, Text, ActivityIndicator } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useQuery } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
-import { OrderComplaintSurvey } from '../../../common/store/user/types';
+import { documentAs } from '../../../common/store/api/types';
+import { getCourier } from '../../../common/store/courier/selectors';
+import { sendOrderComplaint } from '../../../common/store/order/actions';
+import { showToast } from '../../../common/store/ui/actions';
+import { getUIBusy } from '../../../common/store/ui/selectors';
+// import { OrderComplaintSurvey } from '../../../common/store/user/types';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { HistoryParamList } from '../../history/types';
@@ -24,73 +34,65 @@ type Props = {
 export default function ({ route, navigation }: Props) {
   //context
   const { order } = route.params;
+  const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
 
-  //screen state
+  //app state
+  const courier = useSelector(getCourier)!;
+  const busy = useSelector(getUIBusy);
+  const fetchProblems = (key: string) => api.order().fetchProblems();
+  const query = useQuery('delivery-problems', fetchProblems);
+  const [problems, setProblems] = useState<WithId<OrderComplaintSurvey>[]>([]);
+  const [selectedProblem, setSelectedProblem] = useState<WithId<OrderComplaintSurvey>>();
   const [complaintComment, setComplaintComment] = useState<string>('');
-  //should it be one or another radio button or the consumer can send multiple complaints?
-  const [survey, setSurvey] = useState<OrderComplaintSurvey>({
-    courierDamagedOrder: false,
-    courierDidntDeliver: false,
-    courierHasBadManners: false,
-    courierLateDelivery: false,
-    didntOrderThat: false,
-    incorrectBilling: false,
-    other: false,
-  });
 
   //handlers (needs async useCallback to register the complaint in the firestore)
-  const complaintHandler = () => navigation.popToTop();
+  const complaintHandler = useCallback(() => {
+    (async () => {
+      try {
+        await dispatch(
+          sendOrderComplaint(api)(order.id, {
+            description: complaintComment,
+          })
+        );
+      } catch (error) {
+        dispatch(showToast(t('Não foi possível enviar o comentário')));
+      }
+      console.log(complaintComment);
+      console.log(order.id);
+      navigation.popToTop();
+    })();
+  }, [order, selectedProblem, complaintComment]);
 
+  // side effects
+  // whenever data changes
+  useEffect(() => {
+    if (query.data) {
+      setProblems(documentAs<OrderComplaintSurvey>(query.data));
+    }
+    // console.log(problems);
+  }, [query.data]);
+  if (problems.length === 0)
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
   return (
-    <ScrollView style={{ ...screens.config }}>
-      <View>
+    <KeyboardAwareScrollView style={{ ...screens.config }}>
+      <View style={{ flex: 1 }}>
         <PaddedView>
           <Text style={{ ...texts.mediumToBig, marginBottom: padding }}>
             {t('Indique seu problema:')}
           </Text>
-          <RadioButton
-            title={t('O entregador danificou o meu pedido')}
-            onPress={() =>
-              setSurvey({ ...survey, courierDamagedOrder: !survey.courierDamagedOrder })
-            }
-            checked={survey.courierDamagedOrder}
-          />
-          <RadioButton
-            onPress={() =>
-              setSurvey({ ...survey, courierDidntDeliver: !survey.courierDidntDeliver })
-            }
-            title={t('O entregador não fez a entrega')}
-            checked={survey.courierDidntDeliver}
-          />
-          <RadioButton
-            onPress={() =>
-              setSurvey({ ...survey, courierHasBadManners: !survey.courierHasBadManners })
-            }
-            title={t('O entregador foi mal educado')}
-            checked={survey.courierHasBadManners}
-          />
-          <RadioButton
-            onPress={() =>
-              setSurvey({ ...survey, courierLateDelivery: !survey.courierLateDelivery })
-            }
-            title={t('O entregador demorou mais que o indicado')}
-            checked={survey.courierLateDelivery}
-          />
-          <RadioButton
-            onPress={() => setSurvey({ ...survey, didntOrderThat: !survey.didntOrderThat })}
-            title={t('Não fiz esse pedido')}
-            checked={survey.didntOrderThat}
-          />
-          <RadioButton
-            onPress={() => setSurvey({ ...survey, incorrectBilling: !survey.incorrectBilling })}
-            title={t('A cobrança foi incorreta')}
-            checked={survey.incorrectBilling}
-          />
-          <RadioButton
-            onPress={() => setSurvey({ ...survey, other: !survey.other })}
-            title={t('Outro problema')}
-            checked={survey.other}
-          />
+          {problems.map((problem) => (
+            <RadioButton
+              key={problem.id}
+              title={problem.title}
+              onPress={() => setSelectedProblem(problem)}
+              checked={selectedProblem?.id === problem.id}
+            />
+          ))}
           <Text
             style={{
               ...texts.mediumToBig,
@@ -107,13 +109,15 @@ export default function ({ route, navigation }: Props) {
             numberOfLines={6}
             value={complaintComment}
             onChangeText={setComplaintComment}
+            textAlignVertical="top"
+            blurOnSubmit
           />
         </PaddedView>
         <View style={{ flex: 1 }} />
         <PaddedView style={{ backgroundColor: colors.white }}>
-          <DefaultButton title={t('Enviar')} onPress={complaintHandler} />
+          <DefaultButton title={t('Enviar')} onPress={complaintHandler} activityIndicator={busy} />
         </PaddedView>
       </View>
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }
