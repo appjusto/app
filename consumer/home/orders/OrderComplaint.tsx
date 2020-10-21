@@ -1,7 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { WithId, OrderComplaintSurvey } from 'appjusto-types';
-import { OrderProblemSurvey } from 'appjusto-types/order';
+import { WithId, OrderProblemReason } from 'appjusto-types';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -14,11 +13,9 @@ import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import { documentAs } from '../../../common/store/api/types';
-import { getCourier } from '../../../common/store/courier/selectors';
 import { sendOrderProblem } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
-// import { OrderComplaintSurvey } from '../../../common/store/user/types';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { HistoryParamList } from '../../history/types';
@@ -38,22 +35,22 @@ export default function ({ route, navigation }: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   //app state
-  const courier = useSelector(getCourier)!;
   const busy = useSelector(getUIBusy);
-  const fetchProblems = (key: string) => api.order().fetchProblems();
-  const query = useQuery('delivery-problems', fetchProblems);
-  const [problems, setProblems] = useState<WithId<OrderProblemSurvey>[]>([]);
-  const [selectedProblem, setSelectedProblem] = useState<WithId<OrderProblemSurvey>>();
+  const fetchProblemReasons = (key: string) => api.order().fetchProblemReasons();
+  const query = useQuery('delivery-problems', fetchProblemReasons);
+  const [problems, setProblems] = useState<WithId<OrderProblemReason>[]>([]);
+  const [selectedProblem, setSelectedProblem] = useState<WithId<OrderProblemReason>>();
   const [complaintComment, setComplaintComment] = useState<string>('');
 
   //handlers (needs async useCallback to register the complaint in the firestore)
   const complaintHandler = useCallback(() => {
+    if (!selectedProblem) return;
     (async () => {
       try {
         await dispatch(
           sendOrderProblem(api)(order.id, {
-            title: selectedProblem?.title!,
-            description: complaintComment,
+            reason: selectedProblem,
+            comment: complaintComment,
           })
         );
       } catch (error) {
@@ -69,7 +66,7 @@ export default function ({ route, navigation }: Props) {
   // whenever data changes
   useEffect(() => {
     if (query.data) {
-      setProblems(documentAs<OrderComplaintSurvey>(query.data));
+      setProblems(documentAs<OrderProblemReason>(query.data));
     }
     // console.log(problems);
   }, [query.data]);
@@ -80,8 +77,8 @@ export default function ({ route, navigation }: Props) {
       </View>
     );
   return (
-    <KeyboardAwareScrollView style={{ ...screens.config }}>
-      <View style={{ flex: 1 }}>
+    <View style={{ ...screens.config }}>
+      <KeyboardAwareScrollView style={{ flex: 1 }}>
         <PaddedView>
           <Text style={{ ...texts.mediumToBig, marginBottom: padding }}>
             {t('Indique seu problema:')}
@@ -105,6 +102,7 @@ export default function ({ route, navigation }: Props) {
             {t('Você pode detalhar mais seu problema:')}
           </Text>
           <DefaultInput
+            style={{ flex: 1 }}
             placeholder={t('Escreva sua mensagem')}
             multiline
             numberOfLines={6}
@@ -116,9 +114,14 @@ export default function ({ route, navigation }: Props) {
         </PaddedView>
         <View style={{ flex: 1 }} />
         <PaddedView style={{ backgroundColor: colors.white }}>
-          <DefaultButton title={t('Enviar')} onPress={complaintHandler} activityIndicator={busy} />
+          <DefaultButton
+            title={t('Enviar')}
+            onPress={complaintHandler}
+            activityIndicator={busy}
+            disabled={!selectedProblem || busy}
+          />
         </PaddedView>
-      </View>
-    </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
+    </View>
   );
 }

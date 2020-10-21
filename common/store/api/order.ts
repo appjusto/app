@@ -151,7 +151,7 @@ export default class OrderApi {
       });
   }
 
-  async fetchProblems() {
+  async fetchProblemReasons() {
     return (
       await this.firestore
         .collection('platform')
