@@ -62,7 +62,7 @@ export default function () {
           flex: 1,
         }}
       >
-        <Text style={{ ...texts.small, flexWrap: 'wrap' }} numberOfLines={2}>
+        <Text style={{ ...texts.small, flexWrap: 'wrap' }} numberOfLines={3}>
           {message}
         </Text>
       </View>

@@ -1,4 +1,4 @@
-import { Address, Fleet, WithId } from 'appjusto-types';
+import { Address, Fleet, Order, WithId } from 'appjusto-types';
 
 import { ChatParamList } from '../../common/screens/Chat';
 
@@ -44,6 +44,9 @@ export type HomeNavigatorParamList = {
   };
   OrderDeliveredFeedback: {
     orderId: string;
+  };
+  OrderComplaint: {
+    order: WithId<Order>;
   };
   TransportableItems: undefined;
   PermissionDeniedFeedback: {

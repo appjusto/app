@@ -79,7 +79,7 @@ export default function ({ route, navigation }: Props) {
   return (
     <View style={{ ...screens.config }}>
       <KeyboardAwareScrollView style={{ flex: 1 }}>
-        <PaddedView>
+        <PaddedView style={{ flex: 1 }}>
           <Text style={{ ...texts.mediumToBig, marginBottom: padding }}>
             {t('Indique seu problema:')}
           </Text>
@@ -113,7 +113,7 @@ export default function ({ route, navigation }: Props) {
           />
         </PaddedView>
         <View style={{ flex: 1 }} />
-        <PaddedView style={{ backgroundColor: colors.white }}>
+        <PaddedView style={{ backgroundColor: colors.white, flex: 1 }}>
           <DefaultButton
             title={t('Enviar')}
             onPress={complaintHandler}

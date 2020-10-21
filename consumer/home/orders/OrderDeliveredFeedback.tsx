@@ -11,7 +11,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import HR from '../../../common/components/views/HR';
 import { getOrderById } from '../../../common/store/order/selectors';
-import { colors, padding, screens, texts } from '../../../common/styles';
+import { padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedParamList } from '../../types';
 import { HomeNavigatorParamList } from '../types';
@@ -76,7 +76,11 @@ export default ({ navigation, route }: Props) => {
               marginTop: padding,
             }}
           >
-            <DefaultButton title={t('Relatar um problema')} secondary onPress={() => null} />
+            <DefaultButton
+              title={t('Relatar um problema')}
+              secondary
+              onPress={() => navigation.navigate('OrderComplaint', { order: order })}
+            />
             <DefaultButton
               title={t('Detalhes da corrida')}
               onPress={() =>
