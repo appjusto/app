@@ -42,7 +42,7 @@ export default function ({ route, navigation }: Props) {
   const [selectedProblem, setSelectedProblem] = useState<WithId<OrderProblemReason>>();
   const [complaintComment, setComplaintComment] = useState<string>('');
 
-  //handlers (needs async useCallback to register the complaint in the firestore)
+  //handlers
   const complaintHandler = useCallback(() => {
     if (!selectedProblem) return;
     (async () => {

@@ -7,7 +7,7 @@ import {
   OrderCancellation,
   OrderRejection,
 } from 'appjusto-types';
-import { ComplaintDescription, OrderProblemSurvey, OrderRejectionType } from 'appjusto-types/order';
+import { ComplaintDescription, OrderProblemSurvey, OrderRejectionType, ReviewCourier } from 'appjusto-types/order';
 import firebase from 'firebase';
 import { OrderComplaintSurvey } from '../user/types';
 
@@ -65,6 +65,10 @@ export default class OrderApi {
 
   async sendOrderProblem(orderId: string, problem: OrderProblemSurvey) {
     return (await this.functions.httpsCallable('sendOrderProblem')({ orderId, problem })).data;
+  }
+
+  async sendCourierReview(orderId: string, review: ReviewCourier) {
+    return (await this.functions.httpsCallable('sendCourierReview')({ orderId, review })).data;
   }
 
   // courier

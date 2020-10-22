@@ -1,16 +1,22 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useState } from 'react';
+import { ReviewCourierType } from 'appjusto-types';
+import React, { useCallback, useContext, useState } from 'react';
 import { View, Text, Image } from 'react-native';
 import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../assets/icons';
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedProfileImg from '../../../common/components/icons/RoundedProfileImg';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import HR from '../../../common/components/views/HR';
 import Pill from '../../../common/components/views/Pill';
+import { sendCourierReview } from '../../../common/store/order/actions';
+import { showToast } from '../../../common/store/ui/actions';
+import { getUIBusy } from '../../../common/store/ui/selectors';
 import { halfPadding, screens, texts, colors, padding, borders } from '../../../common/styles';
 import { formatDate } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
@@ -21,29 +27,47 @@ type ScreenRoute = RouteProp<HistoryParamList, 'ReviewCourier'>;
 
 type Props = {
   route: ScreenRoute;
+  navigation: ScreenNavigationProp;
 };
 
-export default function ({ route }: Props) {
-  // missing logic to register the reviews
-
+export default function ({ route, navigation }: Props) {
   //context
-  const { courier } = route.params;
+  const { courier, orderId } = route.params;
+  const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
+  const busy = useSelector(getUIBusy);
+
   //screen state
-  const [positive, setPositive] = useState(false);
-  const [negative, setNegative] = useState(false);
+  const [review, setReview] = useState<ReviewCourierType>();
   const joinedOn = (courier!.joined as firebase.firestore.Timestamp).toDate();
   const [reviewComment, setReviewComment] = useState<string>('');
+
   //handlers
   const positiveHandler = () => {
-    setPositive(!positive);
-    setNegative(false);
-    //logic to send the selection to firestore
+    setReview('positive');
   };
+
   const negativeHandler = () => {
-    setNegative(!negative);
-    setPositive(false);
-    //logic to send the selection to firestore
+    setReview('negative');
   };
+
+  const sendReviewCourier = useCallback(() => {
+    if (!review) return;
+    (async () => {
+      try {
+        await dispatch(
+          sendCourierReview(api)(orderId, {
+            type: review,
+            comment: reviewComment,
+          })
+        );
+      } catch (error) {
+        dispatch(showToast(t('Não foi possível enviar o comentário')));
+      }
+      navigation.goBack();
+    })();
+  }, [review, reviewComment]);
+
   return (
     <View style={{ ...screens.default }}>
       <ScrollView>
@@ -81,7 +105,7 @@ export default function ({ route }: Props) {
                   ...borders.default,
                   borderRadius: 32,
                   borderColor: colors.green,
-                  backgroundColor: positive ? colors.green : colors.white,
+                  backgroundColor: review === 'positive' ? colors.green : colors.white,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
@@ -98,7 +122,7 @@ export default function ({ route }: Props) {
                   borderRadius: 32,
                   borderColor: colors.green,
                   marginLeft: padding,
-                  backgroundColor: negative ? colors.green : colors.white,
+                  backgroundColor: review === 'negative' ? colors.green : colors.white,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
@@ -120,7 +144,12 @@ export default function ({ route }: Props) {
             onChangeText={setReviewComment}
           />
           <View style={{ flex: 1 }} />
-          <DefaultButton title={t('Enviar')} onPress={() => null} style={{ marginTop: padding }} />
+          <DefaultButton
+            title={t('Enviar')}
+            onPress={sendReviewCourier}
+            style={{ marginTop: padding }}
+            activityIndicator={busy}
+          />
           <View style={{ flex: 1 }} />
         </PaddedView>
       </ScrollView>

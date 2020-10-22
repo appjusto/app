@@ -19,7 +19,6 @@ import {
   separateWithDot,
 } from '../../common/utils/formatters';
 import { t } from '../../strings';
-import OrderFeedbackControl from '../home/orders/common/OrderFeedbackControl';
 import TipControl from '../home/orders/common/TipControl';
 import OrderMap from '../home/orders/p2p-order/OrderMap';
 import PlaceSummary from '../home/orders/p2p-order/PlaceSummary';
@@ -83,7 +82,9 @@ export default function ({ navigation, route }: Props) {
           <DefaultButton
             title={t('Avaliar o entregador')}
             secondary
-            onPress={() => navigation.navigate('ReviewCourier', { courier: order.courier })}
+            onPress={() =>
+              navigation.navigate('ReviewCourier', { courier: order.courier, orderId })
+            }
           />
         </View>
         <HR height={padding} />

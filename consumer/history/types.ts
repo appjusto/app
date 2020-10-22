@@ -10,6 +10,7 @@ export type HistoryParamList = {
   };
   ReviewCourier: {
     courier: OrderCourier | undefined;
+    orderId: string;
   };
   OrderComplaint: {
     order: WithId<Order>;
