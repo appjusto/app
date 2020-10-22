@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Bank } from 'appjusto-types';
+import { Bank, BankAccountType } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React, { useRef, useState, useEffect, useContext, useMemo } from 'react';
 import { View, Text, TouchableWithoutFeedback, TextInput } from 'react-native';
@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
+import RadioButton from '../../../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../../../common/components/texts/LabeledText';
@@ -40,6 +41,7 @@ export default function ({ navigation, route }: Props) {
   // screen state
   const [bank, setBank] = useState<null | Bank>(null);
   const [agency, setAgency] = useState<string>('');
+  const [type, setType] = useState<BankAccountType>();
   const [account, setAccount] = useState<string>('');
   const [digit, setDigit] = useState<string>('');
   const canSubmit = useMemo(() => {
@@ -63,6 +65,7 @@ export default function ({ navigation, route }: Props) {
       setAgency(bankAccount!.agency!);
       setAccount(bankAccount!.account);
       setDigit(bankAccount!.digit!);
+      setType(bankAccount!.type);
     }
   }, []);
   // update bank according with route parameters
@@ -73,7 +76,7 @@ export default function ({ navigation, route }: Props) {
 
   //handlers
   const submitBankHandler = async () => {
-    if (!bank || !agency || !account || !digit) {
+    if (!bank || !agency || !account || !digit || !type) {
       return;
     }
     await dispatch(
@@ -83,7 +86,7 @@ export default function ({ navigation, route }: Props) {
           agency,
           account,
           digit,
-          type: 'Corrente',
+          type,
         },
       })
     );
@@ -98,7 +101,27 @@ export default function ({ navigation, route }: Props) {
           <Text style={{ ...texts.default, marginTop: halfPadding, color: colors.darkGrey }}>
             {t('A conta precisa estar no seu CPF ou CNPJ. Não serão aceitas contas de terceiros.')}
           </Text>
-          <View style={{ marginTop: padding }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: halfPadding,
+            }}
+          >
+            <RadioButton
+              title={t('Conta-Corrente')}
+              onPress={() => setType('Corrente')}
+              checked={type === 'Corrente'}
+            />
+            <View style={{ marginLeft: padding }}>
+              <RadioButton
+                title={t('Poupança')}
+                onPress={() => setType('Poupança')}
+                checked={type === 'Poupança'}
+              />
+            </View>
+          </View>
+          <View style={{ marginTop: halfPadding }}>
             {/* <DefaultInput title={t('Banco')} value={bank} onChangeText={(text) => setBank(text)} /> */}
             <TouchableWithoutFeedback
               onPress={() => {

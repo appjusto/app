@@ -95,6 +95,7 @@ export default function ({ navigation, route }: Props) {
           <DefaultButton
             title={t('Relatar um problema')}
             onPress={() => navigation.navigate('OrderComplaint', { order: order })}
+            secondary
           />
         </PaddedView>
       </ScrollView>
