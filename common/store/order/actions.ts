@@ -4,6 +4,7 @@ import {
   OrderRejection,
   OrderProblemSurvey,
   ReviewCourier,
+  CourierProblemSurvey,
 } from 'appjusto-types/order';
 import { CancelToken } from 'axios';
 
@@ -106,6 +107,13 @@ export const completeDelivery = (api: Api) => (orderId: string) => async (
   dispatch: AppDispatch
 ) => {
   return dispatch(awaitWithFeedback(api.order().completeDelivery(orderId)));
+};
+
+export const sendCourierOrderProblem = (api: Api) => (
+  orderId: string,
+  problem: CourierProblemSurvey
+) => async (dispatch: AppDispatch) => {
+  return dispatch(awaitWithFeedback(api.order().sendCourierOrderProblem(orderId, problem)));
 };
 
 // both courier & consumer

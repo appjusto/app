@@ -7,7 +7,13 @@ import {
   OrderCancellation,
   OrderRejection,
 } from 'appjusto-types';
-import { ComplaintDescription, OrderProblemSurvey, OrderRejectionType, ReviewCourier } from 'appjusto-types/order';
+import {
+  ComplaintDescription,
+  CourierProblemSurvey,
+  OrderProblemSurvey,
+  OrderRejectionType,
+  ReviewCourier,
+} from 'appjusto-types/order';
 import firebase from 'firebase';
 import { OrderComplaintSurvey } from '../user/types';
 
@@ -88,6 +94,11 @@ export default class OrderApi {
     return (await this.functions.httpsCallable('completeDelivery')({ orderId })).data;
   }
 
+  async sendCourierOrderProblem(orderId: string, problem: CourierProblemSurvey) {
+    return (await this.functions.httpsCallable('sendCourierOrderProblem')({ orderId, problem }))
+      .data;
+  }
+
   // firestore
   // both courier & customers
   observeOrders(
@@ -161,6 +172,16 @@ export default class OrderApi {
         .collection('platform')
         .doc('delivery')
         .collection('delivery-problems')
+        .get()
+    ).docs;
+  }
+
+  async fetchCourierProblemReasons() {
+    return (
+      await this.firestore
+        .collection('platform')
+        .doc('delivery')
+        .collection('courier-delivery-problems')
         .get()
     ).docs;
   }

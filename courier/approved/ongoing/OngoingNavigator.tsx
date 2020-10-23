@@ -5,6 +5,7 @@ import ArrowBox from '../../../common/components/views/ArrowBox';
 import Chat from '../../../common/screens/Chat';
 import { t } from '../../../strings';
 import CancelOngoingDelivery from './CancelOngoingDelivery';
+import CourierDeliveryProblem from './CourierDeliveryProblem';
 import DeliveryCompleted from './DeliveryCompleted';
 import OngoingDelivery from './OngoingDelivery';
 import OrderCanceled from './OrderCanceled';
@@ -39,6 +40,11 @@ export default function () {
         name="DeliveryCompleted"
         component={DeliveryCompleted}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="CourierDeliveryProblem"
+        component={CourierDeliveryProblem}
+        options={{ title: t('Relatar problema') }}
       />
     </Stack.Navigator>
   );
