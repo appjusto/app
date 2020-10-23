@@ -148,6 +148,7 @@ export default function ({ route, navigation }: Props) {
             title={t('Enviar')}
             onPress={sendReviewCourier}
             style={{ marginTop: padding }}
+            disabled={!review || busy}
             activityIndicator={busy}
           />
           <View style={{ flex: 1 }} />
