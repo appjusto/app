@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { ReviewCourierType } from 'appjusto-types';
+import { ReviewCourierType, ReviewType } from 'appjusto-types';
 import React, { useCallback, useContext, useState } from 'react';
 import { View, Text, Image } from 'react-native';
 import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -38,7 +38,7 @@ export default function ({ route, navigation }: Props) {
   const busy = useSelector(getUIBusy);
 
   //screen state
-  const [review, setReview] = useState<ReviewCourierType>();
+  const [review, setReview] = useState<ReviewType>();
   const joinedOn = (courier!.joined as firebase.firestore.Timestamp).toDate();
   const [reviewComment, setReviewComment] = useState<string>('');
 

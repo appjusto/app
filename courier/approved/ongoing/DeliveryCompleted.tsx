@@ -51,6 +51,7 @@ export default function ({ navigation, route }: Props) {
           alignItems: 'center',
           justifyContent: 'center',
           marginHorizontal: padding,
+          marginTop: padding,
         }}
       >
         <DefaultButton title={t('Detalhes da corrida')} secondary onPress={() => {}} />
