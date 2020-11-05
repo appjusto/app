@@ -1,3 +1,4 @@
+import { IuguCustomerPaymentMethod } from 'appjusto-types/payment/iugu';
 import firebase from 'firebase';
 
 import { Extra } from '../../utils/config';
@@ -46,5 +47,9 @@ export default class AuthApi {
 
   deleteAccount(survey: DeleteAccountSurvey) {
     return this.functions.httpsCallable('deleteAccount')(survey);
+  }
+
+  deletePaymentMethod(paymentData: IuguCustomerPaymentMethod) {
+    return this.functions.httpsCallable('deletePaymentMethod')(paymentData);
   }
 }

@@ -1,11 +1,16 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React from 'react';
+import React, { useContext, useCallback } from 'react';
 import { View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import LabeledText from '../../../common/components/texts/LabeledText';
+import { showToast } from '../../../common/store/ui/actions';
+import { getUIBusy } from '../../../common/store/ui/selectors';
+import { deletePaymentMethod } from '../../../common/store/user/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ProfileParamList } from '../types';
@@ -21,6 +26,24 @@ type Props = {
 export default function ({ route }: Props) {
   const { paymentData } = route.params;
 
+  // context
+  const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
+
+  // app state
+  const busy = useSelector(getUIBusy);
+
+  //handlers
+  const deletePaymentMethodHandler = useCallback(() => {
+    (async () => {
+      try {
+        await dispatch(deletePaymentMethod(api)(paymentData));
+      } catch (error) {
+        dispatch(showToast(error.toString(), 'error'));
+      }
+    })();
+  }, []);
+
   return (
     <PaddedView style={{ ...screens.config, flex: 1 }}>
       <LabeledText title={t('Número do cartão')} disabled>
@@ -35,7 +58,7 @@ export default function ({ route }: Props) {
         </LabeledText>
       </View>
       <LabeledText title={t('Nome do titular')} style={{ marginTop: padding }} disabled>
-      {paymentData.data.holder_name}
+        {paymentData.data.holder_name}
       </LabeledText>
       <View style={{ flex: 1 }} />
       <DefaultButton
@@ -45,8 +68,8 @@ export default function ({ route }: Props) {
           borderColor: colors.darkGrey,
         }}
         title={t('Excluir cartão')}
-        onPress={() => {}}
-        // activityIndicator={busy}
+        onPress={deletePaymentMethodHandler}
+        activityIndicator={busy}
       />
     </PaddedView>
   );

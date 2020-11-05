@@ -16,6 +16,7 @@ const iconChat = require('./icons/icon-chat.png');
 const iconConeYellow = require('./icons/icon-cone-yellow.png');
 const iconEdit = require('./icons/icon-edit.png');
 const iconErase = require('./icons/icon-erase.png');
+const iconGoogleMaps = require('./icons/icon-gmaps-logo.png');
 const iconInfo = require('./icons/icon-info.png');
 const iconLicense = require('./icons/icon-license.png');
 const iconMotocycle = require('./icons/icon-motocycle-green.png');
@@ -30,6 +31,7 @@ const iconSelfie = require('./icons/icon-selfie.png');
 const iconShare = require('./icons/icon-share-heart.png');
 const iconTransitConclusion = require('./icons/icon-transit-conclusion.png');
 const iconTransit = require('./icons/icon-transit.png');
+const iconWaze = require('./icons/icon-waze-logo.png');
 const iconBikeSmall = require('./icons/iconBikeSmall.png');
 const iconCarSmall = require('./icons/iconCarSmall.png');
 const iconMotocycleSmall = require('./icons/iconMotocycleSmall.png');
@@ -97,6 +99,8 @@ export const delivery = illustrationDelivery;
 export const slideConfirm = iconSlideConfirm;
 export const thumbUp = iconThumbUp;
 export const thumbDown = iconThumbDown;
+export const googleMaps = iconGoogleMaps;
+export const waze = iconWaze;
 
 export default [
   accept,
@@ -148,4 +152,6 @@ export default [
   slideConfirm,
   thumbUp,
   thumbDown,
+  googleMaps,
+  waze,
 ];
