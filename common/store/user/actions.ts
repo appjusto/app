@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { ConsumerProfile, CourierProfile, Flavor, UserProfile, WithId } from 'appjusto-types';
-import { IuguCustomerPaymentMethod } from 'appjusto-types/payment/iugu';
 
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
@@ -58,13 +57,6 @@ export const deleteAccount = (api: Api) => (survey: DeleteAccountSurvey) => asyn
 ) => {
   await dispatch(awaitWithFeedback(api.auth().deleteAccount(survey)));
   dispatch({ type: USER_LOGGED_OUT });
-};
-
-export const deletePaymentMethod = (api: Api) => (paymentData: IuguCustomerPaymentMethod) => async (
-  dispatch: AppDispatch
-) => {
-  // const paymentDataId = paymentData.id;
-  await dispatch(awaitWithFeedback(api.auth().deletePaymentMethod(paymentData)));
 };
 
 // watch for updates

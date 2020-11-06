@@ -8,9 +8,10 @@ import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import LabeledText from '../../../common/components/texts/LabeledText';
+import { deletePaymentMethod } from '../../../common/store/consumer/actions';
+import { getConsumer } from '../../../common/store/consumer/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
-import { deletePaymentMethod } from '../../../common/store/user/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ProfileParamList } from '../types';
@@ -23,7 +24,7 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-export default function ({ route }: Props) {
+export default function ({ route, navigation }: Props) {
   const { paymentData } = route.params;
 
   // context
@@ -32,15 +33,17 @@ export default function ({ route }: Props) {
 
   // app state
   const busy = useSelector(getUIBusy);
+  const consumer = useSelector(getConsumer)!;
 
   //handlers
   const deletePaymentMethodHandler = useCallback(() => {
     (async () => {
       try {
-        await dispatch(deletePaymentMethod(api)(paymentData));
+        await dispatch(deletePaymentMethod(api)(consumer.id, paymentData.id));
       } catch (error) {
         dispatch(showToast(error.toString(), 'error'));
       }
+      navigation.goBack();
     })();
   }, []);
 

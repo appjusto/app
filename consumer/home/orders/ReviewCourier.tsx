@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { ReviewCourierType, ReviewType } from 'appjusto-types';
+import { ReviewType } from 'appjusto-types';
 import React, { useCallback, useContext, useState } from 'react';
 import { View, Text, Image } from 'react-native';
 import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';

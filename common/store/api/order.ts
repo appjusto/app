@@ -8,14 +8,12 @@ import {
   OrderRejection,
 } from 'appjusto-types';
 import {
-  ComplaintDescription,
   CourierProblemSurvey,
   OrderProblemSurvey,
   OrderRejectionType,
   ReviewCourier,
 } from 'appjusto-types/order';
 import firebase from 'firebase';
-import { OrderComplaintSurvey } from '../user/types';
 
 export type ObserveOrdersOptions = {
   createdBy?: string;

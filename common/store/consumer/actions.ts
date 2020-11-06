@@ -1,4 +1,5 @@
-import { IuguCreatePaymentTokenData } from 'appjusto-types/payment/iugu';
+import { ConsumerProfile, WithId } from 'appjusto-types';
+import { IuguCreatePaymentTokenData, IuguCustomerPaymentMethod } from 'appjusto-types/payment/iugu';
 import { CancelToken } from 'axios';
 
 import { AppDispatch } from '../../app/context';
@@ -11,4 +12,13 @@ export const saveCard = (api: Api) => (
   cancelToken?: CancelToken
 ) => async (dispatch: AppDispatch) => {
   return dispatch(awaitWithFeedback(api.consumer().saveCard(cpf, tokenData, cancelToken)));
+};
+
+export const deletePaymentMethod = (api: Api) => (
+  consumerId: string,
+  paymentMethodId: string
+) => async (dispatch: AppDispatch) => {
+  return dispatch(
+    awaitWithFeedback(api.consumer().deletePaymentMethod(consumerId, paymentMethodId))
+  );
 };

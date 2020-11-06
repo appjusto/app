@@ -1,3 +1,4 @@
+import { ConsumerProfile } from 'appjusto-types';
 import { IuguCreatePaymentTokenData } from 'appjusto-types/payment/iugu';
 import { CancelToken } from 'axios';
 import firebase from 'firebase';
@@ -27,5 +28,16 @@ export default class ConsumerApi {
     const result = await this.functions.httpsCallable('savePaymentToken')({ paymentToken, cpf });
     console.log(result.data);
     return result.data;
+  }
+
+  async deletePaymentMethod(consumerId: string, paymentMethodId: string) {
+    const consumerRef = this.firestore.collection('consumers').doc(consumerId);
+    const consumer = (await consumerRef.get()).data() as ConsumerProfile;
+    const methods = consumer.paymentChannel?.methods?.filter(
+      (method) => method.id !== paymentMethodId
+    );
+    await consumerRef.update({ paymentChannel: { ...consumer.paymentChannel, methods } } as Partial<
+      ConsumerProfile
+    >);
   }
 }
