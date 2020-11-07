@@ -2,7 +2,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React, { useContext, useCallback, useMemo, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -15,7 +15,7 @@ import ShowIf from '../../../common/components/views/ShowIf';
 import { nextDispatchingState, completeDelivery } from '../../../common/store/order/actions';
 import { getOrderById } from '../../../common/store/order/selectors';
 import { getUIBusy } from '../../../common/store/ui/selectors';
-import { colors, halfPadding, screens, texts } from '../../../common/styles';
+import { borders, colors, halfPadding, screens, texts } from '../../../common/styles';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
 import PlaceSummary from '../../../consumer/home/orders/p2p-order/PlaceSummary';
 import { t } from '../../../strings';
@@ -99,10 +99,58 @@ export default function ({ navigation, route }: Props) {
     return '';
   }, [dispatchingState]);
 
+  const RouteIcons = () => (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
+        position: 'absolute',
+        top: halfPadding,
+        right: halfPadding,
+      }}
+    >
+      <TouchableOpacity onPress={() => null}>
+        <View
+          style={{
+            height: 48,
+            width: 48,
+            ...borders.default,
+            borderRadius: 24,
+            borderColor: colors.lightGrey,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: colors.white,
+          }}
+        >
+          <Image source={icons.googleMaps} height={29} width={29} />
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => null}>
+        <View
+          style={{
+            height: 48,
+            width: 48,
+            ...borders.default,
+            borderRadius: 24,
+            borderColor: colors.lightGrey,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginLeft: halfPadding,
+            backgroundColor: colors.white,
+          }}
+        >
+          <Image source={icons.waze} height={32} width={29} />
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
+
   return (
     <View style={{ ...screens.default }}>
       <View style={{ flex: 1 }}>
         <OrderMap order={order!} />
+        <RouteIcons />
       </View>
       <PaddedView style={{ backgroundColor: colors.lightGrey }}>
         <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Pedido de')}</Text>
