@@ -1,5 +1,6 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import * as Linking from 'expo-linking';
 import { isEmpty } from 'lodash';
 import React, { useContext, useCallback, useMemo, useEffect } from 'react';
 import { View, Text, Image } from 'react-native';
@@ -43,6 +44,10 @@ export default function ({ navigation, route }: Props) {
   const busy = useSelector(getUIBusy);
   const order = useSelector(getOrderById)(orderId);
   const { dispatchingState } = order;
+  const originLatitude = order.origin.location.latitude;
+  const originLongitude = order.origin.location.longitude;
+  const destinationLatitude = order.destination.location.latitude;
+  const destinationLongitude = order.destination.location.longitude;
 
   // side effects
   // whenever params updates
@@ -85,6 +90,34 @@ export default function ({ navigation, route }: Props) {
     navigation.navigate('CancelOngoingDelivery', { orderId });
   }, []);
 
+  const openGoogleMapsRouteHandler = () => {
+    if (dispatchingState === 'going-pickup') {
+      Linking.openURL(
+        `https://www.google.com/maps/dir/?api=1&destination=${originLatitude},${originLongitude}&dir_action=navigate`
+      );
+    } else if (dispatchingState === 'arrived-pickup' || dispatchingState === 'going-destination') {
+      Linking.openURL(
+        `https://www.google.com/maps/dir/?api=1&destination=${destinationLatitude},${destinationLongitude}&dir_action=navigate`
+      );
+    } else if (dispatchingState === 'arrived-destination') {
+      Linking.openURL(`https://www.google.com/maps/search/?api=1`);
+    }
+  };
+
+  const openWazeRouteHandler = () => {
+    if (dispatchingState === 'going-pickup') {
+      Linking.openURL(
+        `https://www.waze.com/ul?ll=${originLatitude}%2C${originLongitude}&navigate=yes&zoom=17`
+      );
+    } else if (dispatchingState === 'arrived-pickup' || dispatchingState === 'going-destination') {
+      Linking.openURL(
+        `https://www.waze.com/ul?ll=${destinationLatitude}%2C${destinationLongitude}&navigate=yes&zoom=17`
+      );
+    } else if (dispatchingState === 'arrived-destination') {
+      Linking.openURL(`https://waze.com/ul`);
+    }
+  };
+
   // UI
   const nextStepLabel = useMemo(() => {
     if (dispatchingState === 'going-pickup') {
@@ -110,7 +143,7 @@ export default function ({ navigation, route }: Props) {
         right: halfPadding,
       }}
     >
-      <TouchableOpacity onPress={() => null}>
+      <TouchableOpacity onPress={openGoogleMapsRouteHandler}>
         <View
           style={{
             height: 48,
@@ -126,7 +159,7 @@ export default function ({ navigation, route }: Props) {
           <Image source={icons.googleMaps} height={29} width={29} />
         </View>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => null}>
+      <TouchableOpacity onPress={openWazeRouteHandler}>
         <View
           style={{
             height: 48,
