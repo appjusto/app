@@ -1,7 +1,7 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, Text, Image } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSelector } from 'react-redux';
@@ -33,6 +33,11 @@ export default ({ navigation, route }: Props) => {
   const { orderId } = route.params;
   // app state
   const order = useSelector(getOrderById)(orderId)!;
+  // handlers
+  // handles opening chat screen
+  const openChatHandler = useCallback(() => {
+    navigation.navigate('Chat', { orderId });
+  }, []);
   // UI
   return (
     <View style={screens.default}>
@@ -67,7 +72,12 @@ export default ({ navigation, route }: Props) => {
         <HR />
         {/* actions */}
         <PaddedView>
-          <DefaultButton title={t('Finalizar')} onPress={() => navigation.popToTop()} />
+          <DefaultButton title={t('Abrir chat')} secondary onPress={openChatHandler} />
+          <DefaultButton
+            title={t('Finalizar')}
+            onPress={() => navigation.popToTop()}
+            style={{ marginTop: padding }}
+          />
           <View
             style={{
               flexDirection: 'row',
@@ -79,7 +89,7 @@ export default ({ navigation, route }: Props) => {
             <DefaultButton
               title={t('Relatar um problema')}
               secondary
-              onPress={() => navigation.navigate('OrderComplaint', { order: order })}
+              onPress={() => navigation.navigate('OrderComplaint', { order })}
             />
             <DefaultButton
               title={t('Detalhes da corrida')}

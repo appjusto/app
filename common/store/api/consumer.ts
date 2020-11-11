@@ -1,4 +1,3 @@
-import { ConsumerProfile } from 'appjusto-types';
 import { IuguCreatePaymentTokenData } from 'appjusto-types/payment/iugu';
 import { CancelToken } from 'axios';
 import firebase from 'firebase';

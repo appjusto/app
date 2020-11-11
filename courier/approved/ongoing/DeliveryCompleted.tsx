@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, Image } from 'react-native';
 
 import * as icons from '../../../assets/icons';
@@ -33,7 +33,11 @@ export default function ({ navigation, route }: Props) {
     { title: t('Não, cliente não apareceu'), id: '3' },
   ];
   const [selectedClientFeedback, setSelectedClientFeedback] = useState<HorizontalSelectItem>();
-
+  // handlers
+  // handles opening chat screen
+  const openChatHandler = useCallback(() => {
+    navigation.navigate('Chat', { orderId });
+  }, []);
   // UI
   return (
     <PaddedView style={{ ...screens.default }}>
@@ -44,12 +48,17 @@ export default function ({ navigation, route }: Props) {
         <Text style={{ ...texts.big, marginTop: 4 }}>{formatCurrency(fee)}</Text>
       </View>
       <View style={{ flex: 1 }} />
-      <DefaultButton title={t('Finalizar')} onPress={() => navigation.popToTop()} />
+      <DefaultButton title={t('Abrir chat')} secondary onPress={openChatHandler} />
+      <DefaultButton
+        title={t('Finalizar')}
+        onPress={() => navigation.popToTop()}
+        style={{ marginTop: padding }}
+      />
       <View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'space-between',
           marginHorizontal: padding,
           marginTop: padding,
         }}
