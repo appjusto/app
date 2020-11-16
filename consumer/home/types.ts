@@ -28,6 +28,9 @@ export type HomeNavigatorParamList = {
   OrderMatching: {
     orderId: string;
   };
+  OrderUnmatched: {
+    orderId: string;
+  };
   OngoingOrder: {
     orderId: string;
     newMessage?: boolean;

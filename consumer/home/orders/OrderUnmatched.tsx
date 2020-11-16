@@ -31,32 +31,20 @@ export default ({ navigation, route }: Props) => {
 
   // app state
   const busy = useSelector(getUIBusy);
-  const order = useSelector(getOrderById)(orderId);
-
-  // side effects
-  useEffect(() => {
-    if (!order) return;
-    if (order.status === 'canceled') {
-      navigation.popToTop();
-    } else if (order.status === 'dispatching') {
-      navigation.replace('OngoingOrder', {
-        orderId,
-      });
-    } else if (order.status === 'unmatched') {
-      navigation.navigate('OrderUnmatched', { orderId });
-    }
-  }, [order]);
+  // const order = useSelector(getOrderById)(orderId);
 
   // UI
   return (
     <FeedbackView
-      header={t('Procurando entregadores...')}
-      description={t('A cobrança só será efetuada caso um entregador aceitar o seu pedido.')}
-      icon={icons.motocycle}
+      header={t('Sem entregadores na região :(')}
+      description={t(
+        'Infelizmente não encontramos nenhum entregador disponível. Tente novamente mais tarde.'
+      )}
+      icon={icons.coneYellow}
     >
       <DefaultButton
-        title={t('Cancelar pedido')}
-        onPress={() => navigation.navigate('ConfirmCancelOrder', { orderId })}
+        title={t('Tentar novamente')}
+        onPress={() => navigation.navigate('OrderMatching', { orderId })}
         activityIndicator={busy}
         disabled={busy}
         style={{
@@ -67,11 +55,6 @@ export default ({ navigation, route }: Props) => {
         }}
       />
       <DefaultButton title={t('Voltar para o início')} onPress={() => navigation.popToTop()} />
-      {/* testing the new screen */}
-      {/* <DefaultButton
-        title={t('Nenhum entregador')}
-        onPress={() => navigation.navigate('OrderUnmatched', { orderId })}
-      /> */}
     </FeedbackView>
   );
 };

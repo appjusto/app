@@ -107,7 +107,14 @@ export default class OrderApi {
     let query = this.firestore
       .collection('orders')
       .orderBy('createdOn', 'desc')
-      .where('status', 'in', ['quote', 'matching', 'dispatching', 'delivered', 'canceled']);
+      .where('status', 'in', [
+        'quote',
+        'matching',
+        'dispatching',
+        'delivered',
+        'unmatched',
+        'canceled',
+      ]);
     if (createdBy) query = query.where('consumer.id', '==', createdBy);
     if (deliveredBy) query = query.where('courier.id', '==', deliveredBy);
 
