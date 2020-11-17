@@ -20,11 +20,14 @@ export default function ({ onSelect }: Props) {
   if (ongoingOrders.length === 0) return null;
   return (
     <View>
-      {ongoingOrders.map((order) => (
-        <View key={order.id} style={{ marginBottom: padding }}>
-          <HomeOngoingDeliveryCard order={order} onSelect={onSelect} />
-        </View>
-      ))}
+      {ongoingOrders.map((order) => {
+        console.log(order);
+        return (
+          <View key={order.id} style={{ marginBottom: padding }}>
+            <HomeOngoingDeliveryCard order={order} onSelect={onSelect} />
+          </View>
+        );
+      })}
     </View>
   );
 }
