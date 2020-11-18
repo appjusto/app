@@ -41,6 +41,9 @@ export default function ({ navigation, route }: Props) {
   const acceptHandler = useCallback(async () => {
     try {
       await dispatch(matchOrder(api)(orderId));
+      console.log(
+        'We are navigating from the courier Matching screen to the OngoingDelivery screen'
+      );
       navigation.replace('OngoingNavigator', {
         screen: 'OngoingDelivery',
         params: {

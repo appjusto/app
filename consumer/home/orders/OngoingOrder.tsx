@@ -87,6 +87,7 @@ export default function ({ navigation, route }: Props) {
     let address = '';
     let dispatchDetails = '';
     if (dispatchingState === 'going-pickup') {
+      console.log('useMemo OngoingOrder consumer screen: dispatchingState === going-pickup');
       addressLabel = t('Retirada em');
       address = order.origin.address.main;
       dispatchDetails = `Distância até a retirada: ${formatDistance(

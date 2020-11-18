@@ -38,12 +38,16 @@ export default function ({ order, onSelect }: Props) {
   let detail = '';
   if (order.dispatchingState === 'going-pickup') {
     detail = `${t('À caminho de')} ${order.origin.address.main}`;
+    console.log('going-pickup', detail);
   } else if (order.dispatchingState === 'arrived-pickup') {
     detail = order.origin.intructions ?? 'Aguardando retirada';
+    console.log('arrived-pickup', detail);
   } else if (order.dispatchingState === 'going-destination') {
     detail = `${t('À caminho de')} ${order.destination.address.main}`;
+    console.log('going-destination', detail);
   } else if (order.dispatchingState === 'arrived-destination') {
     detail = order.destination.intructions ?? 'Aguardando entrega';
+    console.log('arrived-destination', detail);
   }
   return (
     <TouchableOpacity onPress={() => onSelect(order, false)}>

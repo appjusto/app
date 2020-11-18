@@ -88,6 +88,7 @@ export const sendCourierReview = (api: Api) => (orderId: string, review: ReviewC
 // couriers
 
 export const matchOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
+  console.log('dispatching the matchOrder action for the courier');
   return dispatch(awaitWithFeedback(api.order().matchOrder(orderId)));
 };
 
@@ -100,6 +101,7 @@ export const rejectOrder = (api: Api) => (orderId: string, rejection: OrderRejec
 export const nextDispatchingState = (api: Api) => (orderId: string) => async (
   dispatch: AppDispatch
 ) => {
+  console.log('dispatching the nextDispatchingState action for the courier');
   return dispatch(awaitWithFeedback(api.order().nextDispatchingState(orderId)));
 };
 

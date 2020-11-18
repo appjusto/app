@@ -21,7 +21,7 @@ export default function ({ onSelect }: Props) {
   return (
     <View>
       {ongoingOrders.map((order) => {
-        console.log(order);
+        console.log('HOMEONGOINGDELIVERYCARD', order);
         return (
           <View key={order.id} style={{ marginBottom: padding }}>
             <HomeOngoingDeliveryCard order={order} onSelect={onSelect} />

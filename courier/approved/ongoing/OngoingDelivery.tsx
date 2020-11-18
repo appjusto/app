@@ -13,7 +13,11 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import ShowIf from '../../../common/components/views/ShowIf';
-import { nextDispatchingState, completeDelivery } from '../../../common/store/order/actions';
+import {
+  nextDispatchingState,
+  completeDelivery,
+  confirmOrder,
+} from '../../../common/store/order/actions';
 import { getOrderById } from '../../../common/store/order/selectors';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, halfPadding, screens, texts } from '../../../common/styles';
@@ -76,6 +80,7 @@ export default function ({ navigation, route }: Props) {
   // handles delivery dispatching updates
   const nextStatepHandler = useCallback(async () => {
     if (dispatchingState !== 'arrived-destination') {
+      console.log('courier OngoingDelivery screen: dispatching nextDispatching state');
       dispatch(nextDispatchingState(api)(order.id));
     } else {
       dispatch(completeDelivery(api)(order.id));
@@ -121,6 +126,7 @@ export default function ({ navigation, route }: Props) {
   // UI
   const nextStepLabel = useMemo(() => {
     if (dispatchingState === 'going-pickup') {
+      console.log('OngoingDelivery courier: nexStepLabel == going-pickup');
       return t('Cheguei para Retirada');
     } else if (dispatchingState === 'arrived-pickup') {
       return t('Sai para Entrega');

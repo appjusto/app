@@ -22,5 +22,6 @@ export default function ({ status }: Props) {
   let backgroundColor = colors.white;
   if (status === 'matching' || status === 'dispatching') backgroundColor = colors.yellow;
   else if (status === 'canceled') backgroundColor = colors.lightRed;
+  console.log('StatusBadge', status);
   return <RoundedText backgroundColor={backgroundColor}>{getStatusLabel(status)}</RoundedText>;
 }
