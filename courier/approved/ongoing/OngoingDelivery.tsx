@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import * as Linking from 'expo-linking';
 import { isEmpty } from 'lodash';
 import React, { useContext, useCallback, useMemo, useEffect } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -13,11 +13,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import ShowIf from '../../../common/components/views/ShowIf';
-import {
-  nextDispatchingState,
-  completeDelivery,
-  confirmOrder,
-} from '../../../common/store/order/actions';
+import { nextDispatchingState, completeDelivery } from '../../../common/store/order/actions';
 import { getOrderById } from '../../../common/store/order/selectors';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, halfPadding, screens, texts } from '../../../common/styles';
@@ -48,10 +44,10 @@ export default function ({ navigation, route }: Props) {
   const busy = useSelector(getUIBusy);
   const order = useSelector(getOrderById)(orderId);
   const { dispatchingState } = order;
-  const originLatitude = order.origin.location.latitude;
-  const originLongitude = order.origin.location.longitude;
-  const destinationLatitude = order.destination.location.latitude;
-  const destinationLongitude = order.destination.location.longitude;
+  const originLatitude = order?.origin.location.latitude;
+  const originLongitude = order?.origin.location.longitude;
+  const destinationLatitude = order?.destination.location.latitude;
+  const destinationLongitude = order?.destination.location.longitude;
 
   // side effects
   // whenever params updates
@@ -184,6 +180,15 @@ export default function ({ navigation, route }: Props) {
       </TouchableOpacity>
     </View>
   );
+
+  if (!order) {
+    // showing the indicator until the order is loaded
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
+  }
 
   return (
     <View style={{ ...screens.default }}>
