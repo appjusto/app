@@ -10,7 +10,7 @@ import { getFlavor } from '../common/store/config/selectors';
 import { getConsumer } from '../common/store/consumer/selectors';
 import { observeProfile } from '../common/store/user/actions';
 import { getUser } from '../common/store/user/selectors';
-import { colors, screens } from '../common/styles';
+import { colors, halfPadding, screens, texts } from '../common/styles';
 import { t } from '../strings';
 import HistoryNavigator from './history/HistoryNavigator';
 import HomeNavigator from './home/HomeNavigator';
@@ -54,6 +54,14 @@ export default function () {
         inactiveTintColor: colors.black,
         activeBackgroundColor: colors.green,
         inactiveBackgroundColor: colors.white,
+        style: { height: 66 },
+        tabStyle: {
+          borderRadius: 32,
+          height: 40,
+          marginTop: halfPadding,
+        },
+        labelStyle: { ...texts.small, marginBottom: 4 },
+        labelPosition: 'beside-icon',
       }}
     >
       <Tab.Screen
@@ -61,18 +69,24 @@ export default function () {
         component={HomeNavigator}
         options={{
           title: t('Início'),
-          tabBarIcon: () => <Image source={icons.home} />,
+          tabBarIcon: () => <Image source={icons.home} style={{ marginBottom: 5 }} />,
         }}
       />
       <Tab.Screen
         name="HistoryNavigator"
         component={HistoryNavigator}
-        options={{ title: t('Seus pedidos'), tabBarIcon: () => <Image source={icons.orders} /> }}
+        options={{
+          title: t('Seus pedidos'),
+          tabBarIcon: () => <Image source={icons.orders} style={{ marginBottom: 5 }} />,
+        }}
       />
       <Tab.Screen
         name="ProfileNavigator"
         component={ProfileNavigator}
-        options={{ title: t('Sua conta'), tabBarIcon: () => <Image source={icons.user} /> }}
+        options={{
+          title: t('Sua conta'),
+          tabBarIcon: () => <Image source={icons.user} style={{ marginBottom: 5 }} />,
+        }}
       />
     </Tab.Navigator>
   );
