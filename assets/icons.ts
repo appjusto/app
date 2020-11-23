@@ -46,6 +46,7 @@ const logoAppjustoBgWhite = require('./icons/logo-appjusto-bg-white.png');
 const iconMinus = require('./icons/minus.png');
 const iconOrders = require('./icons/orders.png');
 const iconPlus = require('./icons/plus.png');
+const iconSearch = require('./icons/search.png');
 const iconThumbDown = require('./icons/thumb-down-24px.png');
 const iconThumbUp = require('./icons/thumb-up-24px.png');
 const iconUser = require('./icons/user.png');
@@ -101,6 +102,7 @@ export const thumbUp = iconThumbUp;
 export const thumbDown = iconThumbDown;
 export const googleMaps = iconGoogleMaps;
 export const waze = iconWaze;
+export const search = iconSearch;
 
 export default [
   accept,
@@ -154,4 +156,5 @@ export default [
   thumbDown,
   googleMaps,
   waze,
+  search,
 ];
