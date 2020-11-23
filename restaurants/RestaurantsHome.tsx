@@ -136,9 +136,11 @@ export default function ({ navigation }: Props) {
           borderRadius: 32,
         }}
       >
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Image source={icons.navigationArrow} />
-          <Text style={{ ...texts.small }}>{t('Avenida Paulista, 1000, São Paulo, SP')}</Text>
+          <Text style={{ ...texts.small, marginLeft: halfPadding }}>
+            {t('Avenida Paulista, 1000, São Paulo, SP')}
+          </Text>
         </View>
         <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Trocar')}</Text>
       </View>
