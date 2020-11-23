@@ -64,7 +64,7 @@ export default function ({ navigation }: Props) {
         <View
           style={[styles.controlItem, { backgroundColor: colors.lightGreen, flexDirection: 'row' }]}
         >
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => navigation.navigate('RestaurantsHome')}>
             <View>
               <Image source={icons.consumerHomePizza} />
               <Text style={[texts.default, { paddingTop: 4 }]}>

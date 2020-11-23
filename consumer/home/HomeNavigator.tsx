@@ -5,6 +5,7 @@ import ArrowBox from '../../common/components/views/ArrowBox';
 import Chat from '../../common/screens/Chat';
 import PermissionDeniedFeedback from '../../common/screens/PermissionDeniedFeedback';
 import FleetDetail from '../../common/screens/fleet/FleetDetail';
+import RestaurantsHome from '../../restaurants/RestaurantsHome';
 import { t } from '../../strings';
 import ProfileEdit from '../profile/ProfileEdit';
 import ProfileAddCard from '../profile/payment/ProfileAddCard';
@@ -107,6 +108,12 @@ export default function () {
         name="OrderDeliveredFeedback"
         component={OrderDeliveredFeedback}
         options={{ headerShown: false }}
+      />
+      {/* screens from the 'restaurant stack' */}
+      <Stack.Screen
+        name="RestaurantsHome"
+        component={RestaurantsHome}
+        options={{ title: t('Restaurantes e alimentação') }}
       />
     </Stack.Navigator>
   );
