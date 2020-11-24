@@ -1,6 +1,6 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Image, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -8,7 +8,7 @@ import { ApiContext, AppDispatch } from '../common/app/context';
 import Pill from '../common/components/views/Pill';
 import useTallerDevice from '../common/hooks/useTallerDevice';
 import { getUser } from '../common/store/user/selectors';
-import { borders, colors, halfPadding, padding, screens, texts } from '../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../common/styles';
 import { formatDistance, formatDuration, separateWithDot } from '../common/utils/formatters';
 import { HomeNavigatorParamList } from '../consumer/home/types';
 import { t } from '../strings';
