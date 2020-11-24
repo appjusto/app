@@ -5,9 +5,10 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../common/app/context';
+import Pill from '../common/components/views/Pill';
 import useTallerDevice from '../common/hooks/useTallerDevice';
 import { getUser } from '../common/store/user/selectors';
-import { colors, screens, texts } from '../common/styles';
+import { borders, colors, halfPadding, padding, screens, texts } from '../common/styles';
 import { formatDistance, formatDuration, separateWithDot } from '../common/utils/formatters';
 import { HomeNavigatorParamList } from '../consumer/home/types';
 import { t } from '../strings';
@@ -54,9 +55,76 @@ export default function ({ navigation }: Props) {
     </View>
   );
 
+  const SingleHeader = ({ category }) => (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: padding,
+        marginBottom: halfPadding,
+      }}
+    >
+      <Pill />
+      <Text style={{ ...texts.default, marginLeft: 12 }}>
+        {t('Categoria')}
+        {category}
+      </Text>
+    </View>
+  );
+
+  const RestaurantItem = () => (
+    <TouchableOpacity>
+      <View
+        style={{
+          borderBottomWidth: 1,
+          borderStyle: 'solid',
+          width: '100%',
+          borderColor: colors.grey,
+        }}
+      />
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          paddingLeft: padding,
+          paddingRight: halfPadding,
+          marginVertical: halfPadding,
+        }}
+      >
+        <View style={{ width: '60%' }}>
+          <Text style={{ ...texts.default }}>{t('Nome do item')}</Text>
+          <Text style={{ ...texts.small, color: colors.darkGrey }} numberOfLines={2}>
+            {t('Descrição do item que será exibida em até 2 linhas e o restante ficará...')}
+          </Text>
+          <Text style={{ ...texts.default }}>{t('R$ 00,00')}</Text>
+        </View>
+        <View>
+          <Image source={fake.itemRectangle} style={{ height: 96, width: 96, borderRadius: 8 }} />
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
   return (
     <ScrollView style={{ ...screens.default }}>
       <RestaurantCard />
+      <SingleHeader category="#1" />
+      <RestaurantItem />
+      <RestaurantItem />
+      <RestaurantItem />
+      <RestaurantItem />
+      <SingleHeader category="#2" />
+      <RestaurantItem />
+      <RestaurantItem />
+      <RestaurantItem />
+      <RestaurantItem />
+      <SingleHeader category="#3" />
+      <RestaurantItem />
+      <RestaurantItem />
+      <RestaurantItem />
+      <RestaurantItem />
     </ScrollView>
   );
 }

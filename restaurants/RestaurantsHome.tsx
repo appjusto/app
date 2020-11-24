@@ -34,7 +34,7 @@ export default function ({ navigation }: Props) {
 
   //UI
   //maybe we're going to put the components below in separate files
-  const SectionHeader = ({ title, subtitle, ...props }) => (
+  const DoubleHeader = ({ title, subtitle, ...props }) => (
     <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 24, flex: 1 }} {...props}>
       <Pill tall />
       <View style={{ marginLeft: 12 }}>
@@ -150,13 +150,13 @@ export default function ({ navigation }: Props) {
   return (
     <ScrollView style={{ ...screens.default }}>
       <LocationBar />
-      <SectionHeader title="Os mais queridos" subtitle="Os lugares mais pedidos da sua região" />
+      <DoubleHeader title="Os mais queridos" subtitle="Os lugares mais pedidos da sua região" />
       {/* vertical flatlist displaying the "most liked" restaurants here */}
-      <SectionHeader title="Buscar" subtitle="Já sabe o que quer? Então não perde tempo!" />
+      <DoubleHeader title="Buscar" subtitle="Já sabe o que quer? Então não perde tempo!" />
       <View style={{ marginTop: 24 }}>
         <RestaurantSearch />
       </View>
-      <SectionHeader title="Tá com fome de que?" subtitle="Escolha por categoria" />
+      <DoubleHeader title="Tá com fome de que?" subtitle="Escolha por categoria" />
       <PaddedView style={{ flexDirection: 'row', marginTop: halfPadding }}>
         {/* replace with a flatlist */}
         <CategoriesBox category="Pizza" image={fake.pizza} />
@@ -164,7 +164,7 @@ export default function ({ navigation }: Props) {
         <CategoriesBox category="Mexicano" image={fake.mexican} />
       </PaddedView>
       {/* replace the two sections below with a sectionlist with "open" and "closed" sections */}
-      <SectionHeader
+      <DoubleHeader
         title="Restaurantes abertos agora"
         subtitle="Valor justo para restaurantes e entregadores"
       />
@@ -176,7 +176,7 @@ export default function ({ navigation }: Props) {
         <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
       </View>
       <View style={{ marginTop: 24 }}>
-        <SectionHeader title="Fechados no momento" subtitle="Fora do horário de funcionamento" />
+        <DoubleHeader title="Fechados no momento" subtitle="Fora do horário de funcionamento" />
         <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
         <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
         <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
