@@ -55,8 +55,8 @@ export default function ({ navigation }: Props) {
     </TouchableOpacity>
   );
 
-  const RestaurantListItem = () => (
-    <TouchableOpacity>
+  const RestaurantListItem = ({ onPress }) => (
+    <TouchableOpacity onPress={onPress}>
       <View style={{ marginTop: halfPadding }}>
         <View
           style={{
@@ -170,17 +170,17 @@ export default function ({ navigation }: Props) {
       />
       {/* "OrderBy" component  here*/}
       <View style={{ marginTop: padding }}>
-        <RestaurantListItem />
-        <RestaurantListItem />
-        <RestaurantListItem />
-        <RestaurantListItem />
+        <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
+        <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
+        <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
+        <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
       </View>
       <View style={{ marginTop: 24 }}>
         <SectionHeader title="Fechados no momento" subtitle="Fora do horário de funcionamento" />
-        <RestaurantListItem />
-        <RestaurantListItem />
-        <RestaurantListItem />
-        <RestaurantListItem />
+        <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
+        <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
+        <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
+        <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
       </View>
     </ScrollView>
   );

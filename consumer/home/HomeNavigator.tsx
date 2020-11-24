@@ -5,6 +5,7 @@ import ArrowBox from '../../common/components/views/ArrowBox';
 import Chat from '../../common/screens/Chat';
 import PermissionDeniedFeedback from '../../common/screens/PermissionDeniedFeedback';
 import FleetDetail from '../../common/screens/fleet/FleetDetail';
+import RestaurantDetail from '../../restaurants/RestaurantDetail';
 import RestaurantsHome from '../../restaurants/RestaurantsHome';
 import { t } from '../../strings';
 import ProfileEdit from '../profile/ProfileEdit';
@@ -114,6 +115,11 @@ export default function () {
         name="RestaurantsHome"
         component={RestaurantsHome}
         options={{ title: t('Restaurantes e alimentação') }}
+      />
+      <Stack.Screen
+        name="RestaurantDetail"
+        component={RestaurantDetail}
+        options={{ title: t('Página do restaurante') }}
       />
     </Stack.Navigator>
   );
