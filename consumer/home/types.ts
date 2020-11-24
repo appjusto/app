@@ -58,4 +58,5 @@ export type HomeNavigatorParamList = {
   };
   RestaurantsHome: undefined;
   RestaurantDetail: undefined;
+  ItemDetail: undefined;
 } & ChatParamList;

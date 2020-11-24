@@ -22,12 +22,12 @@ type Props = {
 
 export default function ({ navigation }: Props) {
   // context
-  const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
-  const tallerDevice = useTallerDevice();
+  // const api = useContext(ApiContext);
+  // const dispatch = useDispatch<AppDispatch>();
+  // const tallerDevice = useTallerDevice();
 
   // app state
-  const user = useSelector(getUser)!;
+  // const user = useSelector(getUser)!;
 
   //UI
   const RestaurantCard = () => (
@@ -72,8 +72,8 @@ export default function ({ navigation }: Props) {
     </View>
   );
 
-  const RestaurantItem = () => (
-    <TouchableOpacity>
+  const RestaurantItem = ({ onPress }) => (
+    <TouchableOpacity onPress={onPress}>
       <View
         style={{
           borderBottomWidth: 1,
@@ -110,21 +110,22 @@ export default function ({ navigation }: Props) {
   return (
     <ScrollView style={{ ...screens.default }}>
       <RestaurantCard />
+      {/* replace all the sections with flatlists rendering <RestaurantItem /> components */}
       <SingleHeader category="#1" />
-      <RestaurantItem />
-      <RestaurantItem />
-      <RestaurantItem />
-      <RestaurantItem />
+      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
+      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
+      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
+      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
       <SingleHeader category="#2" />
-      <RestaurantItem />
-      <RestaurantItem />
-      <RestaurantItem />
-      <RestaurantItem />
+      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
+      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
+      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
+      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
       <SingleHeader category="#3" />
-      <RestaurantItem />
-      <RestaurantItem />
-      <RestaurantItem />
-      <RestaurantItem />
+      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
+      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
+      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
+      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
     </ScrollView>
   );
 }

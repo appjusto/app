@@ -6,6 +6,7 @@ const chewLogo = require('../assets/icons/chew-logo.png');
 const fakeBurger = require('../assets/icons/fake-burger.png');
 const restItemRectangle = require('../assets/icons/item-rectangle.png');
 const restaurantCard = require('../assets/icons/restaurant-card.png');
+const itemDetail = require('../assets/icons/item-detail.png');
 
 export const pizza = catPizza;
 export const oriental = catOriental;
@@ -15,5 +16,6 @@ export const burger = fakeBurger;
 export const card = restaurantCard;
 export const cardIcon = restCardIcon;
 export const itemRectangle = restItemRectangle;
+export const detail = itemDetail;
 
-export default [pizza, oriental, mexican, restLogo, burger, card, cardIcon, itemRectangle];
+export default [pizza, oriental, mexican, restLogo, burger, card, cardIcon, itemRectangle, detail];
