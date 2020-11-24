@@ -97,7 +97,10 @@ export default function ({ navigation }: Props) {
   );
 
   const RestaurantSearch = () => (
-    <TouchableWithoutFeedback onPress={() => null} style={{ marginHorizontal: 12 }}>
+    <TouchableWithoutFeedback
+      onPress={() => navigation.navigate('RestaurantSearch')}
+      style={{ marginHorizontal: 12 }}
+    >
       <View
         style={{
           height: 60,

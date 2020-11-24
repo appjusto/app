@@ -5,7 +5,9 @@ import ArrowBox from '../../common/components/views/ArrowBox';
 import Chat from '../../common/screens/Chat';
 import PermissionDeniedFeedback from '../../common/screens/PermissionDeniedFeedback';
 import FleetDetail from '../../common/screens/fleet/FleetDetail';
+import ItemDetail from '../../restaurants/ItemDetail';
 import RestaurantDetail from '../../restaurants/RestaurantDetail';
+import RestaurantSearch from '../../restaurants/RestaurantSearch';
 import RestaurantsHome from '../../restaurants/RestaurantsHome';
 import { t } from '../../strings';
 import ProfileEdit from '../profile/ProfileEdit';
@@ -23,7 +25,6 @@ import OrderUnmatched from './orders/OrderUnmatched';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import TransportableItems from './orders/p2p-order/TransportableItems';
 import { HomeNavigatorParamList } from './types';
-import ItemDetail from '../../restaurants/ItemDetail';
 
 const Stack = createStackNavigator<HomeNavigatorParamList>();
 export default function () {
@@ -126,6 +127,11 @@ export default function () {
         name="ItemDetail"
         component={ItemDetail}
         options={{ title: t('Detalhes do item') }}
+      />
+      <Stack.Screen
+        name="RestaurantSearch"
+        component={RestaurantSearch}
+        options={{ title: t('Buscar') }}
       />
     </Stack.Navigator>
   );
