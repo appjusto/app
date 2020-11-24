@@ -150,11 +150,27 @@ export default function ({ navigation }: Props) {
     </TouchableWithoutFeedback>
   );
 
+  const MostLikedItem = () => (
+    <TouchableOpacity onPress={() => null}>
+      <View style={{ marginTop: padding, paddingHorizontal: 12 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
+          <Image source={fake.whiteSquare} style={{ height: 40, width: 40, borderRadius: 8 }} />
+          <View style={{ marginLeft: halfPadding }}>
+            <Text style={{ ...texts.medium }}>{t('Nome do restaurante')}</Text>
+            <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Tipo de comida')}</Text>
+          </View>
+        </View>
+        <Image source={fake.likedImage} style={{ height: 120, width: 304, borderRadius: 8 }} />
+      </View>
+    </TouchableOpacity>
+  );
+
   return (
     <ScrollView style={{ ...screens.default }}>
       <LocationBar />
       <DoubleHeader title="Os mais queridos" subtitle="Os lugares mais pedidos da sua região" />
       {/* vertical flatlist displaying the "most liked" restaurants here */}
+      <MostLikedItem />
       <DoubleHeader title="Buscar" subtitle="Já sabe o que quer? Então não perde tempo!" />
       <View style={{ marginTop: 24 }}>
         <RestaurantSearch />
