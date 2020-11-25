@@ -6,6 +6,7 @@ import Chat from '../../common/screens/Chat';
 import PermissionDeniedFeedback from '../../common/screens/PermissionDeniedFeedback';
 import FleetDetail from '../../common/screens/fleet/FleetDetail';
 import ItemDetail from '../../restaurants/ItemDetail';
+import OrderBy from '../../restaurants/OrderBy';
 import RestaurantDetail from '../../restaurants/RestaurantDetail';
 import RestaurantSearch from '../../restaurants/RestaurantSearch';
 import RestaurantsHome from '../../restaurants/RestaurantsHome';
@@ -132,6 +133,11 @@ export default function () {
         name="RestaurantSearch"
         component={RestaurantSearch}
         options={{ title: t('Buscar') }}
+      />
+      <Stack.Screen
+        name="OrderBy"
+        component={OrderBy}
+        options={{ title: t('Filtrar resultados') }}
       />
     </Stack.Navigator>
   );

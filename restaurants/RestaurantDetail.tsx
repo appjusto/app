@@ -5,13 +5,13 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../common/app/context';
-import Pill from '../common/components/views/Pill';
 import useTallerDevice from '../common/hooks/useTallerDevice';
 import { getUser } from '../common/store/user/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../common/styles';
 import { formatDistance, formatDuration, separateWithDot } from '../common/utils/formatters';
 import { HomeNavigatorParamList } from '../consumer/home/types';
 import { t } from '../strings';
+import SingleHeader from './SingleHeader';
 import * as fake from './fakeData';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;
@@ -55,23 +55,6 @@ export default function ({ navigation }: Props) {
     </View>
   );
 
-  const SingleHeader = ({ category }) => (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: padding,
-        marginBottom: halfPadding,
-      }}
-    >
-      <Pill />
-      <Text style={{ ...texts.default, marginLeft: 12 }}>
-        {t('Categoria')}
-        {category}
-      </Text>
-    </View>
-  );
-
   const RestaurantItem = ({ onPress }) => (
     <TouchableOpacity onPress={onPress}>
       <View
@@ -111,17 +94,17 @@ export default function ({ navigation }: Props) {
     <ScrollView style={{ ...screens.default }}>
       <RestaurantCard />
       {/* replace all the sections with flatlists rendering <RestaurantItem /> components */}
-      <SingleHeader category="#1" />
+      <SingleHeader title="Categoria #1" />
       <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
       <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
       <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
       <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
-      <SingleHeader category="#2" />
+      <SingleHeader title="Categoria #2" />
       <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
       <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
       <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
       <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
-      <SingleHeader category="#3" />
+      <SingleHeader title="Categoria #3" />
       <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
       <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
       <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />

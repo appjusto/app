@@ -8,6 +8,7 @@ import * as icons from '../assets/icons';
 import { ApiContext, AppDispatch } from '../common/app/context';
 import PaddedView from '../common/components/containers/PaddedView';
 import RoundedText from '../common/components/texts/RoundedText';
+import ArrowBox from '../common/components/views/ArrowBox';
 import Pill from '../common/components/views/Pill';
 import useTallerDevice from '../common/hooks/useTallerDevice';
 import { getUser } from '../common/store/user/selectors';
@@ -165,6 +166,32 @@ export default function ({ navigation }: Props) {
     </TouchableOpacity>
   );
 
+  const OrderInput = () => (
+    <TouchableWithoutFeedback
+      onPress={() => navigation.navigate('OrderBy')}
+      style={{ marginHorizontal: 12, marginTop: padding }}
+    >
+      <View
+        style={{
+          height: 60,
+          width: '100%',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          ...borders.default,
+          borderColor: colors.black,
+          paddingHorizontal: 12,
+        }}
+      >
+        <Text style={{ ...texts.small, ...texts.bold }}>
+          {t('Ordenar por: ')}
+          <Text style={{ ...texts.small }}>{t('Adicionados recentemente')}</Text>
+        </Text>
+        <ArrowBox />
+      </View>
+    </TouchableWithoutFeedback>
+  );
+
   return (
     <ScrollView style={{ ...screens.default }}>
       <LocationBar />
@@ -188,6 +215,7 @@ export default function ({ navigation }: Props) {
         subtitle="Valor justo para restaurantes e entregadores"
       />
       {/* "OrderBy" component  here*/}
+      <OrderInput />
       <View style={{ marginTop: padding }}>
         <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
         <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
