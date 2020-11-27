@@ -4,7 +4,6 @@ import { WithId, OrderProblemReason } from 'appjusto-types';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -12,6 +11,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
+import useIssues from '../../../common/hooks/queries/useIssues';
 import { documentAs } from '../../../common/store/api/types';
 import { sendOrderProblem } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
@@ -36,8 +36,7 @@ export default function ({ route, navigation }: Props) {
 
   //app state
   const busy = useSelector(getUIBusy);
-  const fetchProblemReasons = (key: string) => api.order().fetchProblemReasons();
-  const query = useQuery('delivery-problems', fetchProblemReasons);
+  const query = useIssues('consumer-delivery-problem');
   const [problems, setProblems] = useState<WithId<OrderProblemReason>[]>([]);
   const [selectedProblem, setSelectedProblem] = useState<WithId<OrderProblemReason>>();
   const [complaintComment, setComplaintComment] = useState<string>('');

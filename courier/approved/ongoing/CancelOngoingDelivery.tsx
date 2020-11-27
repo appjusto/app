@@ -5,13 +5,13 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { View, Text, TextInput, Image, ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
+import useIssues from '../../../common/hooks/queries/useIssues';
 import { documentAs } from '../../../common/store/api/types';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { rejectOrder } from '../../../common/store/order/actions';
@@ -42,8 +42,7 @@ export default function ({ route, navigation }: Props) {
   // app state
   const courier = useSelector(getCourier)!;
   const busy = useSelector(getUIBusy);
-  const fetchRejectionReasons = (key: string) => api.order().fetchRejectionReasons('cancel');
-  const query = useQuery('rejection-reasons-cancel', fetchRejectionReasons);
+  const query = useIssues('courier-cancel');
 
   // state
   const [reasons, setReasons] = useState<WithId<OrderRejectionReason>[]>([]);
