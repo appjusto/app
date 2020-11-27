@@ -34,7 +34,6 @@ export default function ({ navigation }: Props) {
   //UI
   const QuantityCounter = () => {
     const [counter, setCounter] = useState<number>(1);
-
     return (
       <View
         style={{
@@ -81,6 +80,7 @@ export default function ({ navigation }: Props) {
       </View>
     );
   };
+
   return (
     <ScrollView style={{ ...screens.default }}>
       <View style={{ paddingHorizontal: 12 }}>

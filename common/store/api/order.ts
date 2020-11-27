@@ -12,6 +12,7 @@ import {
   OrderProblemSurvey,
   OrderRejectionType,
   ReviewCourier,
+  IssueType,
 } from 'appjusto-types/order';
 import firebase from 'firebase';
 
@@ -187,6 +188,17 @@ export default class OrderApi {
         .collection('platform')
         .doc('delivery')
         .collection('courier-delivery-problems')
+        .get()
+    ).docs;
+  }
+
+  async fetchIssues(type: IssueType) {
+    return (
+      await this.firestore
+        .collection('platform')
+        .doc('delivery')
+        .collection('issues')
+        .where('type', '==', type)
         .get()
     ).docs;
   }
