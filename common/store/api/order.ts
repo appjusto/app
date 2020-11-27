@@ -172,26 +172,6 @@ export default class OrderApi {
       });
   }
 
-  async fetchProblemReasons() {
-    return (
-      await this.firestore
-        .collection('platform')
-        .doc('delivery')
-        .collection('delivery-problems')
-        .get()
-    ).docs;
-  }
-
-  async fetchCourierProblemReasons() {
-    return (
-      await this.firestore
-        .collection('platform')
-        .doc('delivery')
-        .collection('courier-delivery-problems')
-        .get()
-    ).docs;
-  }
-
   async fetchIssues(type: IssueType) {
     return (
       await this.firestore
@@ -199,27 +179,6 @@ export default class OrderApi {
         .doc('delivery')
         .collection('issues')
         .where('type', '==', type)
-        .get()
-    ).docs;
-  }
-
-  async fetchRejectionReasons(type: OrderRejectionType) {
-    return (
-      await this.firestore
-        .collection('platform')
-        .doc('delivery')
-        .collection('rejection-reasons')
-        .where('type', '==', type)
-        .get()
-    ).docs;
-  }
-
-  async fetchCancellationReasons() {
-    return (
-      await this.firestore
-        .collection('platform')
-        .doc('delivery')
-        .collection('cancellation-reasons')
         .get()
     ).docs;
   }
