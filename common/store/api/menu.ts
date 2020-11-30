@@ -1,4 +1,4 @@
-import { Product } from 'appjusto-types';
+import { Business, Product } from 'appjusto-types';
 import firebase from 'firebase/app';
 
 import FilesApi from './files';
@@ -31,9 +31,26 @@ export default class MenuApi {
   private getStoragePath(businessId: string) {
     return `business/${businessId}/menu/default/products`;
   }
+  private getRestaurantsRef() {
+    return this.firestore.collection('business').where('type', '==', 'restaurant');
+  }
 
   // public
   // firestore
+
+  // restaurants
+
+  async getOpenRestaurants() {
+    const query = this.getRestaurantsRef().where('status', '==', 'open');
+    const docs = (await query.get()).docs;
+    return documentAs<Business>(docs);
+  }
+
+  async getClosedRestaurants() {
+    const query = this.getRestaurantsRef().where('status', '==', 'closed');
+    const docs = (await query.get()).docs;
+    return documentAs<Business>(docs);
+  }
 
   // categories
 

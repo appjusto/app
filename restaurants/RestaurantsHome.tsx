@@ -45,12 +45,12 @@ export default function ({ navigation }: Props) {
     </View>
   );
 
-  const CategoriesBox = ({ category, image }) => (
+  const CuisinesBox = ({ cuisine, image }) => (
     <TouchableOpacity onPress={() => null}>
       <View style={{ height: 96, width: 96, borderRadius: 8, marginRight: halfPadding }}>
         <Image source={image} />
         <View style={{ position: 'absolute', left: 4, bottom: 4 }}>
-          <RoundedText>{t(category)}</RoundedText>
+          <RoundedText>{t(cuisine)}</RoundedText>
         </View>
       </View>
     </TouchableOpacity>
@@ -205,9 +205,9 @@ export default function ({ navigation }: Props) {
       <DoubleHeader title="Tá com fome de que?" subtitle="Escolha por categoria" />
       <PaddedView style={{ flexDirection: 'row', marginTop: halfPadding }}>
         {/* replace with a flatlist */}
-        <CategoriesBox category="Pizza" image={fake.pizza} />
-        <CategoriesBox category="Oriental" image={fake.oriental} />
-        <CategoriesBox category="Mexicano" image={fake.mexican} />
+        <CuisinesBox cuisine="Pizza" image={fake.pizza} />
+        <CuisinesBox cuisine="Oriental" image={fake.oriental} />
+        <CuisinesBox cuisine="Mexicano" image={fake.mexican} />
       </PaddedView>
       {/* replace the two sections below with a sectionlist with "open" and "closed" sections */}
       <DoubleHeader
