@@ -110,6 +110,7 @@ export default class OrderApi {
       .orderBy('createdOn', 'desc')
       .where('status', 'in', [
         'quote',
+        'confirming',
         'matching',
         'dispatching',
         'delivered',

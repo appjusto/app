@@ -21,8 +21,9 @@ if (Platform.OS === 'android') {
     // await Notifications.deleteNotificationChannelAsync('matching');
     // const notificationChannels = await Notifications.getNotificationChannelsAsync();
     // console.log(notificationChannels);
+    // TODO: change from 'matching' to 'order-updates'
     Notifications.setNotificationChannelAsync('matching', {
-      name: t('Corridas'),
+      name: t('Atualização sobre os pedidos'),
       importance: Notifications.AndroidImportance.HIGH,
       enableVibrate: true,
       vibrationPattern: [0, 250, 250, 250],
@@ -31,7 +32,7 @@ if (Platform.OS === 'android') {
       lightColor: colors.lightGreen,
     });
     Notifications.setNotificationChannelAsync('order-chat', {
-      name: t('Mensagens da entrega'),
+      name: t('Chat durante entrega'),
       importance: Notifications.AndroidImportance.HIGH,
       enableVibrate: true,
       vibrationPattern: [0, 250, 250, 250],
