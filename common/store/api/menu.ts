@@ -7,7 +7,7 @@ import { documentAs, singleDocumentAs } from './types';
 export default class MenuApi {
   constructor(
     private firestore: firebase.firestore.Firestore,
-    private functions: firebase.functions.Functions,
+    // private functions: firebase.functions.Functions,
     private files: FilesApi
   ) {}
 

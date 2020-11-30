@@ -12,6 +12,7 @@ import CourierApi from './courier';
 import FilesApi from './files';
 import FleetApi from './fleet';
 import MapsApi from './maps';
+import MenuApi from './menu';
 import OrderApi from './order';
 import IuguApi from './payment/iugu';
 import ProfileApi from './profile';
@@ -31,6 +32,7 @@ export default class Api {
   private _maps: MapsApi;
   private _files: FilesApi;
   private _iugu: IuguApi;
+  private _menu: MenuApi;
 
   constructor(extra: Extra) {
     const apiKey = Platform.select(extra.googleApiKeys);
@@ -60,6 +62,7 @@ export default class Api {
     this._consumer = new ConsumerApi(this.firestore, this.functions, this._iugu);
     this._order = new OrderApi(this.firestore, this.functions);
     this._maps = new MapsApi(apiKey!);
+    this._menu = new MenuApi(this.firestore, this._files);
   }
 
   auth() {
@@ -92,5 +95,9 @@ export default class Api {
 
   files() {
     return this._files;
+  }
+
+  menu() {
+    return this._menu;
   }
 }
