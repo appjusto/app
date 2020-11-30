@@ -2,6 +2,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { View, Image, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { FlatList, ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../assets/icons';
@@ -32,6 +33,11 @@ export default function ({ navigation }: Props) {
 
   // app state
   const user = useSelector(getUser)!;
+  // const getOpenRestaurants = (key: string) => api.menu().getOpenRestaurants();
+  const getOpenRestaurants = (key: string) => api.menu().getOpenRestaurants();
+  const { data: openRestaurants } = useQuery('open-restaurants', getOpenRestaurants);
+  const getClosedRestaurants = (key: string) => api.menu().getClosedRestaurants();
+  const { data: closedRestaurants } = useQuery('closed-restaurants', getClosedRestaurants);
 
   //UI
   //maybe we're going to put the components below in separate files
@@ -56,7 +62,7 @@ export default function ({ navigation }: Props) {
     </TouchableOpacity>
   );
 
-  const RestaurantListItem = ({ onPress }) => (
+  const RestaurantListItem = ({ onPress, name }) => (
     <TouchableOpacity onPress={onPress}>
       <View style={{ marginTop: halfPadding }}>
         <View
@@ -76,7 +82,8 @@ export default function ({ navigation }: Props) {
           }}
         >
           <View style={{ marginTop: 12 }}>
-            <Text style={{ ...texts.default }}>{t('Nome do restaurante')}</Text>
+            <Text style={{ ...texts.default }}>{name}</Text>
+            {/* hardcoded infos below for now */}
             <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Tipo de comida')}</Text>
             <Text style={{ ...texts.small, color: colors.darkGrey }}>
               {separateWithDot(formatDistance(2000), formatDuration(1800))}
@@ -193,42 +200,64 @@ export default function ({ navigation }: Props) {
   );
 
   return (
-    <ScrollView style={{ ...screens.default }}>
-      <LocationBar />
-      <DoubleHeader title="Os mais queridos" subtitle="Os lugares mais pedidos da sua região" />
-      {/* vertical flatlist displaying the "most liked" restaurants here */}
-      <MostLikedItem />
-      <DoubleHeader title="Buscar" subtitle="Já sabe o que quer? Então não perde tempo!" />
-      <View style={{ marginTop: 24 }}>
-        <RestaurantSearch />
-      </View>
-      <DoubleHeader title="Tá com fome de que?" subtitle="Escolha por categoria" />
-      <PaddedView style={{ flexDirection: 'row', marginTop: halfPadding }}>
-        {/* replace with a flatlist */}
-        <CuisinesBox cuisine="Pizza" image={fake.pizza} />
-        <CuisinesBox cuisine="Oriental" image={fake.oriental} />
-        <CuisinesBox cuisine="Mexicano" image={fake.mexican} />
-      </PaddedView>
-      {/* replace the two sections below with a sectionlist with "open" and "closed" sections */}
-      <DoubleHeader
-        title="Restaurantes abertos agora"
-        subtitle="Valor justo para restaurantes e entregadores"
-      />
-      {/* "OrderBy" component  here*/}
-      <OrderInput />
-      <View style={{ marginTop: padding }}>
-        <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
-        <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
-        <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
-        <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
-      </View>
-      <View style={{ marginTop: 24 }}>
-        <DoubleHeader title="Fechados no momento" subtitle="Fora do horário de funcionamento" />
-        <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
-        <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
-        <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
-        <RestaurantListItem onPress={() => navigation.navigate('RestaurantDetail')} />
-      </View>
-    </ScrollView>
+    <FlatList
+      style={{ ...screens.default }}
+      ListHeaderComponent={
+        <View>
+          <LocationBar />
+          <DoubleHeader title="Os mais queridos" subtitle="Os lugares mais pedidos da sua região" />
+          {/* vertical flatlist displaying the "most liked" restaurants here */}
+          <MostLikedItem />
+          <DoubleHeader title="Buscar" subtitle="Já sabe o que quer? Então não perde tempo!" />
+          <View style={{ marginTop: 24 }}>
+            <RestaurantSearch />
+          </View>
+          <DoubleHeader title="Tá com fome de que?" subtitle="Escolha por categoria" />
+          <PaddedView style={{ flexDirection: 'row', marginTop: halfPadding }}>
+            {/* replace with a flatlist */}
+            <CuisinesBox cuisine="Pizza" image={fake.pizza} />
+            <CuisinesBox cuisine="Oriental" image={fake.oriental} />
+            <CuisinesBox cuisine="Mexicano" image={fake.mexican} />
+          </PaddedView>
+          <DoubleHeader
+            title="Restaurantes abertos agora"
+            subtitle="Valor justo para restaurantes e entregadores"
+          />
+          {/* "OrderBy" component  here*/}
+          <OrderInput />
+        </View>
+      }
+      data={openRestaurants}
+      keyExtractor={(item) => item.id!}
+      renderItem={({ item }) => (
+        <View style={{ marginTop: padding }}>
+          <RestaurantListItem
+            onPress={() => navigation.navigate('RestaurantDetail')}
+            name={item.name}
+          />
+        </View>
+      )}
+      ListFooterComponent={
+        <View style={{ marginTop: 24 }}>
+          <DoubleHeader title="Fechados no momento" subtitle="Fora do horário de funcionamento" />
+          <RestaurantListItem
+            onPress={() => navigation.navigate('RestaurantDetail')}
+            name="Restaurante Fechado"
+          />
+          <RestaurantListItem
+            onPress={() => navigation.navigate('RestaurantDetail')}
+            name="Restaurante Fechado"
+          />
+          <RestaurantListItem
+            onPress={() => navigation.navigate('RestaurantDetail')}
+            name="Restaurante Fechado"
+          />
+          <RestaurantListItem
+            onPress={() => navigation.navigate('RestaurantDetail')}
+            name="Restaurante Fechado"
+          />
+        </View>
+      }
+    />
   );
 }
