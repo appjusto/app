@@ -13,11 +13,6 @@ export default class MenuApi {
 
   // firestore
   // restaurants
-  async getRestaurants() {
-    const query = this.firestore.collection('business').where('type', '==', 'restaurant');
-    const docs = (await query.get()).docs;
-    return documentAs<Business>(docs);
-  }
 
   async getRestaurant(restaurantId: string) {
     const query = this.firestore.collection('business').doc(restaurantId);

@@ -1,12 +1,12 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext, useEffect } from 'react';
-import { View, Image, Text, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useContext } from 'react';
+import { View, Image, Text, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useDispatch, useSelector } from 'react-redux';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
 
-import { ApiContext, AppDispatch } from '../common/app/context';
-import useTallerDevice from '../common/hooks/useTallerDevice';
+import { ApiContext } from '../common/app/context';
 import { getUser } from '../common/store/user/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../common/styles';
 import { formatDistance, formatDuration, separateWithDot } from '../common/utils/formatters';
@@ -14,7 +14,6 @@ import { HomeNavigatorParamList } from '../consumer/home/types';
 import { t } from '../strings';
 import SingleHeader from './SingleHeader';
 import * as fake from './fakeData';
-import { useQuery } from 'react-query';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;
 type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'RestaurantDetail'>;
@@ -25,21 +24,16 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  const { restaurantName, restaurantId } = route.params ?? {};
+  const { restaurantId, restaurantName } = route.params ?? {};
   // context
   const api = useContext(ApiContext);
-  // const dispatch = useDispatch<AppDispatch>();
-  // const tallerDevice = useTallerDevice();
 
   // app state
   const user = useSelector(getUser)!;
 
-  // not working... why?
-  // const getCategories = (key: string, restaurantId: string) =>
-  //   api.menu().getCategories(restaurantId);
-  // const { data: categories } = useQuery('categories', getCategories);
-
-  // useEffect(() => console.log(categories));
+  const restaurantQuery = (key: string, restaurantId: string) =>
+    api.menu().getRestaurant(restaurantId);
+  const { data: restaurant } = useQuery(['restaurant', restaurantId], restaurantQuery);
 
   //UI
   const RestaurantCard = () => (
