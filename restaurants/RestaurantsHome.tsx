@@ -33,7 +33,6 @@ export default function ({ navigation }: Props) {
 
   // app state
   const user = useSelector(getUser)!;
-  // const getOpenRestaurants = (key: string) => api.menu().getOpenRestaurants();
   const getOpenRestaurants = (key: string) => api.menu().getOpenRestaurants();
   const { data: openRestaurants } = useQuery('open-restaurants', getOpenRestaurants);
   const getClosedRestaurants = (key: string) => api.menu().getClosedRestaurants();
@@ -232,7 +231,12 @@ export default function ({ navigation }: Props) {
       renderItem={({ item }) => (
         <View style={{ marginTop: padding }}>
           <RestaurantListItem
-            onPress={() => navigation.navigate('RestaurantDetail')}
+            onPress={() =>
+              navigation.navigate('RestaurantDetail', {
+                restaurantName: item.name,
+                restaurantId: item.id,
+              })
+            }
             name={item.name}
           />
         </View>

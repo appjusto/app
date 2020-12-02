@@ -57,7 +57,10 @@ export type HomeNavigatorParamList = {
     subtitle: string;
   };
   RestaurantsHome: undefined;
-  RestaurantDetail: undefined;
+  RestaurantDetail: {
+    restaurantName: string;
+    restaurantId: string;
+  };
   ItemDetail: undefined;
   RestaurantSearch: undefined;
   OrderBy: undefined;

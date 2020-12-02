@@ -1,5 +1,6 @@
+import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Image, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,21 +14,32 @@ import { HomeNavigatorParamList } from '../consumer/home/types';
 import { t } from '../strings';
 import SingleHeader from './SingleHeader';
 import * as fake from './fakeData';
+import { useQuery } from 'react-query';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;
+type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'RestaurantDetail'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 };
 
-export default function ({ navigation }: Props) {
+export default function ({ navigation, route }: Props) {
+  const { restaurantName, restaurantId } = route.params ?? {};
   // context
-  // const api = useContext(ApiContext);
+  const api = useContext(ApiContext);
   // const dispatch = useDispatch<AppDispatch>();
   // const tallerDevice = useTallerDevice();
 
   // app state
-  // const user = useSelector(getUser)!;
+  const user = useSelector(getUser)!;
+
+  // not working... why?
+  // const getCategories = (key: string, restaurantId: string) =>
+  //   api.menu().getCategories(restaurantId);
+  // const { data: categories } = useQuery('categories', getCategories);
+
+  // useEffect(() => console.log(categories));
 
   //UI
   const RestaurantCard = () => (
@@ -42,7 +54,7 @@ export default function ({ navigation }: Props) {
         }}
       >
         <View>
-          <Text style={{ ...texts.mediumToBig }}>{t('Nome do restaurante')}</Text>
+          <Text style={{ ...texts.mediumToBig }}>{restaurantName}</Text>
           <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Tipo de comida')}</Text>
           <Text style={{ ...texts.small, color: colors.darkGrey }}>
             {separateWithDot(formatDistance(2000), formatDuration(1800))}
