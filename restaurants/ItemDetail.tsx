@@ -1,14 +1,11 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext, useState } from 'react';
-import { View, Image, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Image, Text, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useDispatch, useSelector } from 'react-redux';
 
 import * as icons from '../assets/icons';
-import { ApiContext, AppDispatch } from '../common/app/context';
 import DefaultButton from '../common/components/buttons/DefaultButton';
 import DefaultInput from '../common/components/inputs/DefaultInput';
-import useTallerDevice from '../common/hooks/useTallerDevice';
 import { getUser } from '../common/store/user/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../common/styles';
 import { HomeNavigatorParamList } from '../consumer/home/types';

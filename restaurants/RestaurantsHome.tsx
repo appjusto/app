@@ -1,7 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { View, Image, Text, TouchableOpacity, Dimensions } from 'react-native';
-import { FlatList, ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { View, Image, Text, TouchableOpacity } from 'react-native';
+import { FlatList, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 

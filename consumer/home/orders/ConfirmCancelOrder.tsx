@@ -51,7 +51,7 @@ export default ({ navigation, route }: Props) => {
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <DefaultButton
           title={t('Cancelar pedido')}
-          onPress={() => navigation.replace('CancelOrder', { orderId })}
+          onPress={() => navigation.navigate('CancelOrder', { orderId })}
           activityIndicator={busy}
           disabled={busy}
         />
