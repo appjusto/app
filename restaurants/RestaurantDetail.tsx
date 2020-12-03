@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { View, Image, Text, TouchableOpacity } from 'react-native';
+import { View, Image, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
@@ -35,6 +35,12 @@ export default function ({ navigation, route }: Props) {
     api.menu().getRestaurant(restaurantId);
   const { data: restaurant } = useQuery(['restaurant', restaurantId], restaurantQuery);
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: restaurantName,
+    });
+  }, [route.params]);
+
   //UI
   const RestaurantCard = () => (
     <View style={{ marginHorizontal: 12 }}>
@@ -48,7 +54,7 @@ export default function ({ navigation, route }: Props) {
         }}
       >
         <View>
-          <Text style={{ ...texts.mediumToBig }}>{restaurantName}</Text>
+          <Text style={{ ...texts.mediumToBig }}>{restaurant?.name}</Text>
           <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Tipo de comida')}</Text>
           <Text style={{ ...texts.small, color: colors.darkGrey }}>
             {separateWithDot(formatDistance(2000), formatDuration(1800))}
@@ -95,7 +101,12 @@ export default function ({ navigation, route }: Props) {
       </View>
     </TouchableOpacity>
   );
-
+  if (!restaurant)
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
   return (
     <ScrollView style={{ ...screens.default }}>
       <RestaurantCard />
