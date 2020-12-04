@@ -14,6 +14,7 @@ import { HomeNavigatorParamList } from '../consumer/home/types';
 import { t } from '../strings';
 import SingleHeader from './SingleHeader';
 import * as fake from './fakeData';
+import useCategories from '../common/hooks/queries/useCategories';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;
 type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'RestaurantDetail'>;
@@ -30,11 +31,20 @@ export default function ({ navigation, route }: Props) {
 
   // app state
   const user = useSelector(getUser)!;
-
+  // const categories = useCategories(restaurantId);
   const restaurantQuery = (key: string, restaurantId: string) =>
     api.menu().getRestaurant(restaurantId);
   const { data: restaurant } = useQuery(['restaurant', restaurantId], restaurantQuery);
+  const categoriesQuery = (key: string, restaurantId: string) =>
+    api.menu().getCategories(restaurantId);
+  const { data: unorderedCategories } = useQuery(['categories', restaurantId], categoriesQuery);
+  // console.log(unorderedCategories);
+  const menuQuery = (key: string, restaurantId: string) =>
+    api.menu().getRestaurantMenuConfig(restaurantId);
+  const { data: menuConfig } = useQuery(['menu-config', restaurantId], menuQuery);
+  console.log(menuConfig);
 
+  // setting the restaurant name on the header as soon as the user navigates to the screen
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: restaurantName,

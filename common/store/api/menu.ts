@@ -1,4 +1,4 @@
-import { Business, Product } from 'appjusto-types';
+import { Business, Category, MenuConfig, Product } from 'appjusto-types';
 import firebase from 'firebase/app';
 
 import FilesApi from './files';
@@ -11,9 +11,20 @@ export default class MenuApi {
     private files: FilesApi
   ) {}
 
+  // private
+  // helpers
+  private getRestaurantRef(restaurantId: string) {
+    return this.firestore.collection('business').doc(restaurantId);
+  }
+  private getCategoriesRef(restaurantId: string) {
+    return this.getRestaurantRef(restaurantId).collection('categories');
+  }
+  private getMenuConfigRef(restaurantId: string) {
+    return this.getRestaurantRef(restaurantId).collection('config').doc('menu');
+  }
+
   // firestore
   // restaurants
-
   async getRestaurant(restaurantId: string) {
     const query = this.firestore.collection('business').doc(restaurantId);
     const doc = await query.get();
@@ -39,20 +50,17 @@ export default class MenuApi {
   }
 
   // categories
-
   async getCategories(restaurantId: string) {
-    const query = this.firestore.collection('business').doc(restaurantId).collection('categories');
+    const query = this.getCategoriesRef(restaurantId);
     const docs = (await query.get()).docs;
-    return documentAs<Business>(docs);
+    return documentAs<Category>(docs);
   }
-  async getCategory(restaurantId: string, categoryId: string) {
-    const query = this.firestore
-      .collection('business')
-      .doc(restaurantId)
-      .collection('categories')
-      .doc(categoryId);
+
+  // menu config
+  async getRestaurantMenuConfig(restaurantId: string) {
+    const query = this.getMenuConfigRef(restaurantId);
     const doc = await query.get();
-    return singleDocumentAs<Business>(doc);
+    return singleDocumentAs<MenuConfig>(doc);
   }
 
   //products
