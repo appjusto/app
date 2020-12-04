@@ -14,7 +14,6 @@ import { HomeNavigatorParamList } from '../consumer/home/types';
 import { t } from '../strings';
 import SingleHeader from './SingleHeader';
 import * as fake from './fakeData';
-import useCategories from '../common/hooks/queries/useCategories';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;
 type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'RestaurantDetail'>;
@@ -31,18 +30,33 @@ export default function ({ navigation, route }: Props) {
 
   // app state
   const user = useSelector(getUser)!;
-  // const categories = useCategories(restaurantId);
+
   const restaurantQuery = (key: string, restaurantId: string) =>
     api.menu().getRestaurant(restaurantId);
   const { data: restaurant } = useQuery(['restaurant', restaurantId], restaurantQuery);
+
   const categoriesQuery = (key: string, restaurantId: string) =>
     api.menu().getCategories(restaurantId);
   const { data: unorderedCategories } = useQuery(['categories', restaurantId], categoriesQuery);
-  // console.log(unorderedCategories);
+
   const menuQuery = (key: string, restaurantId: string) =>
     api.menu().getRestaurantMenuConfig(restaurantId);
   const { data: menuConfig } = useQuery(['menu-config', restaurantId], menuQuery);
-  console.log(menuConfig);
+
+  const categoriesOrder = menuConfig?.categoriesOrder;
+  // const { categoriesOrder } = menuConfig;
+  const orderedCategories = () => {
+    return unorderedCategories?.sort((a, b) =>
+      categoriesOrder?.indexOf(a.id) === -1
+        ? 1
+        : categoriesOrder.indexOf(a.id) - categoriesOrder.indexOf(b.id)
+    );
+  };
+  console.log(orderedCategories);
+
+  const productsQuery = (key: string, restaurantId: string) => api.menu().getProducts(restaurantId);
+  const { data: products } = useQuery(['products', restaurantId], productsQuery);
+  console.log(products);
 
   // setting the restaurant name on the header as soon as the user navigates to the screen
   React.useLayoutEffect(() => {
@@ -77,7 +91,37 @@ export default function ({ navigation, route }: Props) {
     </View>
   );
 
-  const RestaurantItem = ({ onPress }) => (
+  const Category = ({ name }) => {
+    return (
+      <View>
+        <SingleHeader title={name} />
+        {products && (
+          <View>
+            <RestaurantItem
+              onPress={() => navigation.navigate('ItemDetail')}
+              name={products[0].name}
+              description={products[0].description}
+              price={products[1].price}
+            />
+            <RestaurantItem
+              onPress={() => navigation.navigate('ItemDetail')}
+              name={products[1].name}
+              description={products[1].description}
+              price={products[1].price}
+            />
+            <RestaurantItem
+              onPress={() => navigation.navigate('ItemDetail')}
+              name={products[2].name}
+              description={products[2].description}
+              price={products[2].price}
+            />
+          </View>
+        )}
+      </View>
+    );
+  };
+
+  const RestaurantItem = ({ name, description, price, onPress }) => (
     <TouchableOpacity onPress={onPress}>
       <View
         style={{
@@ -99,11 +143,11 @@ export default function ({ navigation, route }: Props) {
         }}
       >
         <View style={{ width: '60%' }}>
-          <Text style={{ ...texts.default }}>{t('Nome do item')}</Text>
+          <Text style={{ ...texts.default }}>{name}</Text>
           <Text style={{ ...texts.small, color: colors.darkGrey }} numberOfLines={2}>
-            {t('Descrição do item que será exibida em até 2 linhas e o restante ficará...')}
+            {description}
           </Text>
-          <Text style={{ ...texts.default }}>{t('R$ 00,00')}</Text>
+          <Text style={{ ...texts.default }}>{price}</Text>
         </View>
         <View>
           <Image source={fake.itemRectangle} style={{ height: 96, width: 96, borderRadius: 8 }} />
@@ -121,21 +165,9 @@ export default function ({ navigation, route }: Props) {
     <ScrollView style={{ ...screens.default }}>
       <RestaurantCard />
       {/* replace all the sections with flatlists rendering <RestaurantItem /> components */}
-      <SingleHeader title="Categoria #1" />
-      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
-      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
-      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
-      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
-      <SingleHeader title="Categoria #2" />
-      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
-      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
-      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
-      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
-      <SingleHeader title="Categoria #3" />
-      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
-      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
-      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
-      <RestaurantItem onPress={() => navigation.navigate('ItemDetail')} />
+      {unorderedCategories && <Category name={unorderedCategories[0].name} />}
+      {unorderedCategories && <Category name={unorderedCategories[1].name} />}
+      {unorderedCategories && <Category name={unorderedCategories[2].name} />}
     </ScrollView>
   );
 }

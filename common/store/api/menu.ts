@@ -22,6 +22,12 @@ export default class MenuApi {
   private getMenuConfigRef(restaurantId: string) {
     return this.getRestaurantRef(restaurantId).collection('config').doc('menu');
   }
+  private getProductsRef(restaurantId: string) {
+    return this.getRestaurantRef(restaurantId).collection('products');
+  }
+  private getProductRef(restaurantId: string, productId: string) {
+    return this.getProductsRef(restaurantId).doc(productId);
+  }
 
   // firestore
   // restaurants
@@ -64,4 +70,9 @@ export default class MenuApi {
   }
 
   //products
+  async getProducts(restaurantId: string) {
+    const query = this.getProductsRef(restaurantId);
+    const docs = (await query.get()).docs;
+    return documentAs<Product>(docs);
+  }
 }
