@@ -2,11 +2,12 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { View, Image, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { FlatList } from 'react-native-gesture-handler';
 import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { ApiContext } from '../common/app/context';
+import { useOrderedMenu } from '../common/common-logic/useOrderedMenu';
 import { getUser } from '../common/store/user/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../common/styles';
 import { formatDistance, formatDuration, separateWithDot } from '../common/utils/formatters';
@@ -35,28 +36,8 @@ export default function ({ navigation, route }: Props) {
     api.menu().getRestaurant(restaurantId);
   const { data: restaurant } = useQuery(['restaurant', restaurantId], restaurantQuery);
 
-  const categoriesQuery = (key: string, restaurantId: string) =>
-    api.menu().getCategories(restaurantId);
-  const { data: unorderedCategories } = useQuery(['categories', restaurantId], categoriesQuery);
-
-  const menuQuery = (key: string, restaurantId: string) =>
-    api.menu().getRestaurantMenuConfig(restaurantId);
-  const { data: menuConfig } = useQuery(['menu-config', restaurantId], menuQuery);
-
-  const categoriesOrder = menuConfig?.categoriesOrder;
-  // const { categoriesOrder } = menuConfig;
-  const orderedCategories = () => {
-    return unorderedCategories?.sort((a, b) =>
-      categoriesOrder?.indexOf(a.id) === -1
-        ? 1
-        : categoriesOrder.indexOf(a.id) - categoriesOrder.indexOf(b.id)
-    );
-  };
-  console.log(orderedCategories);
-
-  const productsQuery = (key: string, restaurantId: string) => api.menu().getProducts(restaurantId);
-  const { data: products } = useQuery(['products', restaurantId], productsQuery);
-  console.log(products);
+  const orderedMenu = useOrderedMenu(restaurantId);
+  console.log(orderedMenu, 'MENU ORDENADO');
 
   // setting the restaurant name on the header as soon as the user navigates to the screen
   React.useLayoutEffect(() => {
@@ -90,36 +71,6 @@ export default function ({ navigation, route }: Props) {
       </View>
     </View>
   );
-
-  const Category = ({ name }) => {
-    return (
-      <View>
-        <SingleHeader title={name} />
-        {products && (
-          <View>
-            <RestaurantItem
-              onPress={() => navigation.navigate('ItemDetail')}
-              name={products[0].name}
-              description={products[0].description}
-              price={products[1].price}
-            />
-            <RestaurantItem
-              onPress={() => navigation.navigate('ItemDetail')}
-              name={products[1].name}
-              description={products[1].description}
-              price={products[1].price}
-            />
-            <RestaurantItem
-              onPress={() => navigation.navigate('ItemDetail')}
-              name={products[2].name}
-              description={products[2].description}
-              price={products[2].price}
-            />
-          </View>
-        )}
-      </View>
-    );
-  };
 
   const RestaurantItem = ({ name, description, price, onPress }) => (
     <TouchableOpacity onPress={onPress}>
@@ -162,12 +113,24 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   return (
-    <ScrollView style={{ ...screens.default }}>
-      <RestaurantCard />
-      {/* replace all the sections with flatlists rendering <RestaurantItem /> components */}
-      {unorderedCategories && <Category name={unorderedCategories[0].name} />}
-      {unorderedCategories && <Category name={unorderedCategories[1].name} />}
-      {unorderedCategories && <Category name={unorderedCategories[2].name} />}
-    </ScrollView>
+    <FlatList
+      style={{ ...screens.default }}
+      data={orderedMenu}
+      keyExtractor={(item) => item.id}
+      ListHeaderComponent={
+        <View>
+          <RestaurantCard />
+          <SingleHeader title="Categoria #1" />
+        </View>
+      }
+      renderItem={({ item, index }) => (
+        <RestaurantItem
+          name={orderedMenu[0].products[index].name}
+          description={orderedMenu[0].products[index].description}
+          price={orderedMenu[0].products[index].price}
+          onPress={() => null}
+        />
+      )}
+    />
   );
 }
