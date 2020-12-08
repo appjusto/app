@@ -1,5 +1,5 @@
 // import { getOrderedMenu } from './functions';
-import { Category, MenuConfig, Product, WithId } from 'appjusto-types';
+import { Category, MenuConfig, Product, WithId, CategoryWithProducts } from 'appjusto-types';
 import React from 'react';
 
 import { ApiContext } from '../app/context';
