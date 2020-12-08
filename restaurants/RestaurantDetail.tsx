@@ -1,16 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import {
-  View,
-  Image,
-  Text,
-  TouchableOpacity,
-  ActivityIndicator,
-  SectionList,
-  SectionListData,
-} from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { View, Image, Text, TouchableOpacity, ActivityIndicator, SectionList } from 'react-native';
 import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 
@@ -23,7 +14,6 @@ import { HomeNavigatorParamList } from '../consumer/home/types';
 import { t } from '../strings';
 import SingleHeader from './SingleHeader';
 import * as fake from './fakeData';
-import { Category } from 'appjusto-types';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;
 type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'RestaurantDetail'>;
@@ -45,32 +35,9 @@ export default function ({ navigation, route }: Props) {
     api.menu().getRestaurant(restaurantId);
   const { data: restaurant } = useQuery(['restaurant', restaurantId], restaurantQuery);
 
-  // const categoriesQuery = (key: string, restaurantId: string) =>
-  //   api.menu().getCategories(restaurantId);
-  // const { data: unorderedCategories } = useQuery(['restaurant', restaurantId], categoriesQuery);
-
-  // const menuConfigQuery = (key: string, restaurantId: string) =>
-  //   api.menu().getRestaurantMenuConfig(restaurantId);
-  // const { data: categoriesOrder } = useQuery(['restaurant', restaurantId], menuConfigQuery);
-
-  const orderedMenu = useOrderedMenu(restaurantId);
-  // console.log(orderedMenu, 'MENU ORDENADO');
+  const orderedMenu = useOrderedMenu(restaurantId); // retorna um array de objetos do tipo CategoryWithProducts
 
   const sections = [{ data: orderedMenu }];
-  // const sections = React.useMemo(() => {
-  //   return orderedMenu.map((category) => {
-  //     const orderedCategories = api
-  //       .menu()
-  //       .getOrderedCategories(unorderedCategories!, categoriesOrder);
-
-  //     return {
-  //       title: category.name,
-  //       data: orderedCategories,
-  //     };
-  //   });
-  // }, [orderedMenu]);
-
-  // console.log(sections);
 
   // setting the restaurant name on the header as soon as the user navigates to the screen
   React.useLayoutEffect(() => {
@@ -154,27 +121,22 @@ export default function ({ navigation, route }: Props) {
       ListHeaderComponent={
         <View>
           <RestaurantCard />
-          {/* <SectionList
-            keyExtractor={(item) => item.id}
-            sections={sections}
-            renderItem={({ item, index }) => <SingleHeader title={orderedMenu[index].name} />}
-          /> */}
         </View>
       }
       renderItem={({ item, index }) => {
         const category = orderedMenu[index];
-        const products = category.products;
-        // const categoriesProducts = products.map((product, index) => products[index]);
-        // console.log(products, 'PRODUTOS');
         return (
           <View>
             <SingleHeader title={category.name} />
-            <RestaurantItem
-              name={category.products[index].name}
-              description={category.products[index].description}
-              price={category.products[index].price}
-              onPress={() => navigation.navigate('ItemDetail')} //pass the "productId" as a param
-            />
+            {orderedMenu.map((category, i) => (
+              <RestaurantItem
+                key={category.products[i].id}
+                name={category.products[i].name}
+                description={category.products[i].description}
+                price={category.products[i].price}
+                onPress={() => navigation.navigate('ItemDetail')} //pass the "productId" as a param
+              />
+            ))}
           </View>
         );
       }}
