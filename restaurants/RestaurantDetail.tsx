@@ -35,7 +35,8 @@ export default function ({ navigation, route }: Props) {
     api.menu().getRestaurant(restaurantId);
   const { data: restaurant } = useQuery(['restaurant', restaurantId], restaurantQuery);
 
-  const orderedMenu = useOrderedMenu(restaurantId); // retorna um array de objetos do tipo CategoryWithProducts
+  const orderedMenu = useOrderedMenu(restaurantId);
+  console.log(orderedMenu);
 
   const sections = [{ data: orderedMenu }];
 
@@ -134,7 +135,7 @@ export default function ({ navigation, route }: Props) {
                 name={category.products[i].name}
                 description={category.products[i].description}
                 price={category.products[i].price}
-                onPress={() => navigation.navigate('ItemDetail')} //pass the "productId" as a param
+                onPress={() => navigation.navigate('ItemDetail')}
               />
             ))}
           </View>
