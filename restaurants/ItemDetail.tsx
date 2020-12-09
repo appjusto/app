@@ -21,7 +21,7 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  const { itemId } = route.params ?? {};
+  const { item } = route.params ?? {};
 
   // screen state
   const [observation, setObservation] = useState<string>('');
@@ -80,11 +80,11 @@ export default function ({ navigation, route }: Props) {
       <View style={{ paddingHorizontal: 12 }}>
         <Image source={fake.detail} style={{ width: '100%', height: 240, borderRadius: 8 }} />
         <View style={{ marginTop: padding }}>
-          <Text style={{ ...texts.mediumToBig }}>{t('Nome do item')}</Text>
+          <Text style={{ ...texts.mediumToBig }}>{item.name}</Text>
           <Text style={{ ...texts.default, color: colors.darkGrey, marginVertical: 4 }}>
-            {t('Descrição completa do item que será exibida em até na página interna do item.')}
+            {item.description}
           </Text>
-          <Text style={{ ...texts.default }}>{t('R$ 00,00')}</Text>
+          <Text style={{ ...texts.default }}>{`R$ ${item.price},00`}</Text>
         </View>
       </View>
       <View

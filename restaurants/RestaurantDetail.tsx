@@ -134,7 +134,7 @@ export default function ({ navigation, route }: Props) {
             name={item.name}
             description={item.description}
             price={item.price}
-            onPress={() => navigation.navigate('ItemDetail', { itemId: item.id })}
+            onPress={() => navigation.navigate('ItemDetail', { item })}
           />
         );
       }}
