@@ -74,20 +74,7 @@ export default function ({ navigation }: Props) {
                 {t('Peça comida de uma forma justa')}
               </Text>
             </View>
-            <View
-              style={{
-                backgroundColor: colors.white,
-                borderBottomLeftRadius: 8,
-                borderTopRightRadius: 8,
-                position: 'absolute',
-                top: -1,
-                right: -12,
-                paddingHorizontal: halfPadding,
-                paddingVertical: 4,
-              }}
-            >
-              <Text style={{ ...texts.small }}>{t('Em breve')}</Text>
-            </View>
+
           </TouchableOpacity>
         </View>
       </View>

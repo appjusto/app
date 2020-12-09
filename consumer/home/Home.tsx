@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import * as Location from 'expo-location';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useEffect, useContext, useState } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -20,7 +20,7 @@ import { getFlavor } from '../../common/store/config/selectors';
 import { fetchTotalCouriersNearby } from '../../common/store/courier/actions';
 import { observeProfile } from '../../common/store/user/actions';
 import { getUser } from '../../common/store/user/selectors';
-import { colors, texts, padding, borders, halfPadding, screens } from '../../common/styles';
+import { padding, screens } from '../../common/styles';
 import { t } from '../../strings';
 import { LoggedParamList } from '../types';
 import ConsumerHomeControls from './ConsumerHomeControls';
@@ -42,7 +42,6 @@ export default function ({ navigation }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  const tallerDevice = useTallerDevice();
 
   // app state
   const flavor = useSelector(getFlavor);

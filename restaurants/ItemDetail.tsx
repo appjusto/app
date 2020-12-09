@@ -1,30 +1,27 @@
+import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Image, Text, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import * as icons from '../assets/icons';
 import DefaultButton from '../common/components/buttons/DefaultButton';
 import DefaultInput from '../common/components/inputs/DefaultInput';
-import { getUser } from '../common/store/user/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../common/styles';
 import { HomeNavigatorParamList } from '../consumer/home/types';
 import { t } from '../strings';
 import * as fake from './fakeData';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;
+type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'ItemDetail'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 };
 
-export default function ({ navigation }: Props) {
-  // context
-  // const api = useContext(ApiContext);
-  // const dispatch = useDispatch<AppDispatch>();
-  // const tallerDevice = useTallerDevice();
-  // app state
-  // const user = useSelector(getUser)!;
+export default function ({ navigation, route }: Props) {
+  const { itemId } = route.params ?? {};
 
   // screen state
   const [observation, setObservation] = useState<string>('');
