@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux';
 import * as icons from '../assets/icons';
 import { ApiContext } from '../common/app/context';
 import PaddedView from '../common/components/containers/PaddedView';
+import FeedbackView from '../common/components/views/FeedbackView';
+import HomeShareCard from '../common/screens/home/cards/HomeShareCard';
 import { getUser } from '../common/store/user/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../common/styles';
 import { HomeNavigatorParamList } from '../consumer/home/types';
@@ -62,6 +64,21 @@ export default function ({ navigation }: Props) {
       </View>
     </TouchableWithoutFeedback>
   );
+
+  if (!openRestaurants || !closedRestaurants)
+    return (
+      <View>
+        <FeedbackView
+          header={t('Sem restaurantes na sua região')}
+          description={t(
+            'Infelizmente não encontramos nenhum restaurante cadastrado no app próximo a você. Estamos começando, mas não se preocupe: em breve seu restaurante preferido estará aqui.'
+          )}
+          icon={icons.iconSad}
+        >
+          <HomeShareCard />
+        </FeedbackView>
+      </View>
+    );
 
   return (
     <FlatList
