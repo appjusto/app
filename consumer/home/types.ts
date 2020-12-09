@@ -61,7 +61,9 @@ export type HomeNavigatorParamList = {
     restaurantName: string;
     restaurantId: string;
   };
-  ItemDetail: undefined;
+  ItemDetail: {
+    itemId: string;
+  };
   RestaurantSearch: undefined;
   OrderBy: undefined;
 } & ChatParamList;

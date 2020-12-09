@@ -36,9 +36,12 @@ export default function ({ navigation, route }: Props) {
   const { data: restaurant } = useQuery(['restaurant', restaurantId], restaurantQuery);
 
   const orderedMenu = useOrderedMenu(restaurantId);
-  console.log(orderedMenu);
+  // console.log(orderedMenu);
 
-  const sections = [{ data: orderedMenu }];
+  const sections = orderedMenu.map((category) => ({
+    title: category.name,
+    data: category.products,
+  }));
 
   // setting the restaurant name on the header as soon as the user navigates to the screen
   React.useLayoutEffect(() => {
@@ -116,7 +119,6 @@ export default function ({ navigation, route }: Props) {
   return (
     <SectionList
       style={{ ...screens.default }}
-      data={orderedMenu}
       keyExtractor={(item) => item.id}
       sections={sections}
       ListHeaderComponent={
@@ -124,21 +126,16 @@ export default function ({ navigation, route }: Props) {
           <RestaurantCard />
         </View>
       }
-      renderItem={({ item, index }) => {
-        const category = orderedMenu[index];
+      renderSectionHeader={({ section }) => <SingleHeader title={section.title} />}
+      renderItem={({ item }) => {
         return (
-          <View>
-            <SingleHeader title={category.name} />
-            {orderedMenu.map((category, i) => (
-              <RestaurantItem
-                key={category.products[i].id}
-                name={category.products[i].name}
-                description={category.products[i].description}
-                price={category.products[i].price}
-                onPress={() => navigation.navigate('ItemDetail')}
-              />
-            ))}
-          </View>
+          <RestaurantItem
+            key={item.id}
+            name={item.name}
+            description={item.description}
+            price={item.price}
+            onPress={() => navigation.navigate('ItemDetail', { itemId: item.id })}
+          />
         );
       }}
     />
