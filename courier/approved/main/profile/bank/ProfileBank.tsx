@@ -58,7 +58,6 @@ export default function ({ navigation, route }: Props) {
     if (bankAccountSet(courier)) {
       const { bankAccount } = courier!;
       const courierBank: Bank = {
-        id: bankAccount!.id!,
         name: bankAccount!.name!,
       };
       setBank(courierBank);
