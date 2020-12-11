@@ -58,6 +58,7 @@ export default class MapsApi {
         const { description, place_id: placeId, terms, structured_formatting } = prediction;
         const { main_text: main, secondary_text: secondary } = structured_formatting;
         const [neighborhood, city, state, country] = terms.map((term) => term.value);
+        // check to see what you really need from this list below
         return {
           description,
           placeId,
@@ -91,7 +92,7 @@ export default class MapsApi {
     try {
       const response = await axios.get(url, { params });
       const { data } = response;
-      const { results } = data;
+      const { results } = data ;
       const [result] = results;
       const { geometry } = result;
       const { location } = geometry;
@@ -99,6 +100,42 @@ export default class MapsApi {
         latitude: location.lat,
         longitude: location.lng,
       };
+    } catch (err) {
+      console.error(err);
+      return err;
+    }
+  }
+  async googleReverseGeocode(coords: LatLng) {
+    const lat = coords.latitude;
+    const long = coords.longitude;
+    const key = this.googleMapsApiKey;
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${key}`;
+    const params = {
+      key: this.googleMapsApiKey,
+      coords,
+      region: 'br', // i18n
+      components: 'country:BR', // i18n
+      language: 'pt-BR', // i18n
+    };
+    try {
+      const response = await axios.get(url, { params });
+      const { data } = response;
+      const { predictions } = data as GooglePlacesPredictionsResult;
+      return predictions.map((prediction) => {
+        const { description, place_id: placeId, terms, structured_formatting } = prediction;
+        const { main_text: main, secondary_text: secondary } = structured_formatting;
+        const [neighborhood, city, state, country] = terms.map((term) => term.value);
+        return {
+          description,
+          placeId,
+          main,
+          secondary,
+          neighborhood,
+          city,
+          state,
+          country,
+        };
+      });
     } catch (err) {
       console.error(err);
       return err;
