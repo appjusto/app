@@ -21,7 +21,7 @@ export default class MenuApi {
   // private
   // helpers
   private getRestaurantRef(restaurantId: string) {
-    return this.firestore.collection('business').doc(restaurantId);
+    return this.firestore.collection('businesses').doc(restaurantId);
   }
   private getCategoriesRef(restaurantId: string) {
     return this.getRestaurantRef(restaurantId).collection('categories');
@@ -39,25 +39,19 @@ export default class MenuApi {
   // firestore
   // restaurants
   async getRestaurant(restaurantId: string) {
-    const query = this.firestore.collection('business').doc(restaurantId);
+    const query = this.firestore.collection('businesses').doc(restaurantId);
     const doc = await query.get();
     return singleDocumentAs<Business>(doc);
   }
 
   async getOpenRestaurants() {
-    const query = this.firestore
-      .collection('business')
-      .where('type', '==', 'restaurant')
-      .where('status', '==', 'open');
+    const query = this.firestore.collection('businesses').where('status', '==', 'open');
     const docs = (await query.get()).docs;
     return documentAs<Business>(docs);
   }
 
   async getClosedRestaurants() {
-    const query = this.firestore
-      .collection('business')
-      .where('type', '==', 'restaurant')
-      .where('status', '==', 'closed');
+    const query = this.firestore.collection('businesses').where('status', '==', 'closed');
     const docs = (await query.get()).docs;
     return documentAs<Business>(docs);
   }
