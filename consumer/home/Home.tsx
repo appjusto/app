@@ -12,7 +12,6 @@ import * as icons from '../../assets/icons';
 import { AppDispatch, ApiContext } from '../../common/app/context';
 import PaddedView from '../../common/components/containers/PaddedView';
 import useLastKnownLocation from '../../common/hooks/useLastKnownLocation';
-import useTallerDevice from '../../common/hooks/useTallerDevice';
 import HomeCard from '../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../common/screens/home/cards/HomeShareCard';

@@ -6,7 +6,11 @@ import * as icons from '../../assets/icons';
 import { borders, colors, halfPadding, padding, texts } from '../../common/styles';
 import { t } from '../../strings';
 
-export default function () {
+type Props = {
+  address: string;
+};
+
+export default function ({ address }: Props) {
   return (
     <TouchableWithoutFeedback
       onPress={() => null}
@@ -27,9 +31,7 @@ export default function () {
       >
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Image source={icons.navigationArrow} />
-          <Text style={{ ...texts.small, marginLeft: halfPadding }}>
-            {t('Avenida Paulista, 1000, São Paulo, SP')}
-          </Text>
+          <Text style={{ ...texts.small, marginLeft: halfPadding }}>{address}</Text>
         </View>
         <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Trocar')}</Text>
       </View>

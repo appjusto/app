@@ -92,7 +92,7 @@ export default class MapsApi {
     try {
       const response = await axios.get(url, { params });
       const { data } = response;
-      const { results } = data ;
+      const { results } = data;
       const [result] = results;
       const { geometry } = result;
       const { location } = geometry;
@@ -108,11 +108,10 @@ export default class MapsApi {
   async googleReverseGeocode(coords: LatLng) {
     const lat = coords.latitude;
     const long = coords.longitude;
-    const key = this.googleMapsApiKey;
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${key}`;
+    const url = 'https://maps.googleapis.com/maps/api/geocode/json';
     const params = {
       key: this.googleMapsApiKey,
-      coords,
+      latlng: `${lat},${long}`,
       region: 'br', // i18n
       components: 'country:BR', // i18n
       language: 'pt-BR', // i18n
@@ -120,22 +119,10 @@ export default class MapsApi {
     try {
       const response = await axios.get(url, { params });
       const { data } = response;
-      const { predictions } = data as GooglePlacesPredictionsResult;
-      return predictions.map((prediction) => {
-        const { description, place_id: placeId, terms, structured_formatting } = prediction;
-        const { main_text: main, secondary_text: secondary } = structured_formatting;
-        const [neighborhood, city, state, country] = terms.map((term) => term.value);
-        return {
-          description,
-          placeId,
-          main,
-          secondary,
-          neighborhood,
-          city,
-          state,
-          country,
-        };
-      });
+      const { results } = data;
+      const [result] = results;
+      const { formatted_address } = result;
+      return formatted_address;
     } catch (err) {
       console.error(err);
       return err;
