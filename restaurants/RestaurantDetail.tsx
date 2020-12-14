@@ -9,10 +9,9 @@ import { ApiContext } from '../common/app/context';
 import { useOrderedMenu } from '../common/common-logic/useOrderedMenu';
 import { getUser } from '../common/store/user/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../common/styles';
-import { formatDistance, formatDuration, separateWithDot } from '../common/utils/formatters';
 import { HomeNavigatorParamList } from '../consumer/home/types';
-import { t } from '../strings';
 import SingleHeader from './SingleHeader';
+import RestaurantCard from './components/RestaurantCard';
 import * as fake from './fakeData';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;
@@ -50,31 +49,9 @@ export default function ({ navigation, route }: Props) {
     });
   }, [route.params]);
 
+  console.log(restaurant);
+
   //UI
-  const RestaurantCard = () => (
-    <View style={{ marginHorizontal: 12 }}>
-      <Image source={fake.card} style={{ height: 120, width: '100%', borderRadius: 8 }} />
-      <View
-        style={{
-          flexDirection: 'row',
-          marginTop: 12,
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <View>
-          <Text style={{ ...texts.mediumToBig }}>{restaurant?.name}</Text>
-          <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Tipo de comida')}</Text>
-          <Text style={{ ...texts.small, color: colors.darkGrey }}>
-            {separateWithDot(formatDistance(2000), formatDuration(1800))}
-          </Text>
-        </View>
-        <View>
-          <Image source={fake.cardIcon} />
-        </View>
-      </View>
-    </View>
-  );
 
   const RestaurantItem = ({ name, description, price, onPress }) => (
     <TouchableOpacity onPress={onPress}>
@@ -123,7 +100,11 @@ export default function ({ navigation, route }: Props) {
       sections={sections}
       ListHeaderComponent={
         <View>
-          <RestaurantCard />
+          <RestaurantCard
+            name={restaurant.name}
+            onPress={() => navigation.navigate('AboutRestaurant', { restaurant })}
+            canNavigate
+          />
         </View>
       }
       renderSectionHeader={({ section }) => <SingleHeader title={section.title} />}

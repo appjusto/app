@@ -1,4 +1,4 @@
-import { Address, Fleet, Order, Product, WithId } from 'appjusto-types';
+import { Address, Business, Fleet, Order, Product, WithId } from 'appjusto-types';
 
 import { ChatParamList } from '../../common/screens/Chat';
 
@@ -60,6 +60,9 @@ export type HomeNavigatorParamList = {
   RestaurantDetail: {
     restaurantName: string;
     restaurantId: string;
+  };
+  AboutRestaurant: {
+    restaurant: WithId<Business>;
   };
   ItemDetail: {
     item: WithId<Product>;

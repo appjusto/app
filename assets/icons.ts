@@ -13,6 +13,7 @@ const iconHome = require('./icons/home.png');
 const iconButtonArrow = require('./icons/icon-button-arrow.png');
 const iconCalendar = require('./icons/icon-calendar.png');
 const iconChat = require('./icons/icon-chat.png');
+const iconClock = require('./icons/icon-clock.png');
 const iconConeYellow = require('./icons/icon-cone-yellow.png');
 const iconEdit = require('./icons/icon-edit.png');
 const iconErase = require('./icons/icon-erase.png');
@@ -105,6 +106,7 @@ export const googleMaps = iconGoogleMaps;
 export const waze = iconWaze;
 export const search = iconSearch;
 export const iconSad = iconSadYellow;
+export const clock = iconClock;
 
 export default [
   accept,
@@ -160,4 +162,5 @@ export default [
   waze,
   search,
   iconSad,
+  clock,
 ];

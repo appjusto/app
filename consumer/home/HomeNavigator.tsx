@@ -26,6 +26,7 @@ import OrderUnmatched from './orders/OrderUnmatched';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import TransportableItems from './orders/p2p-order/TransportableItems';
 import { HomeNavigatorParamList } from './types';
+import AboutRestaurant from '../../restaurants/AboutRestaurant';
 
 const Stack = createStackNavigator<HomeNavigatorParamList>();
 export default function () {
@@ -123,6 +124,11 @@ export default function () {
         name="RestaurantDetail"
         component={RestaurantDetail}
         options={{ title: t('Página do restaurante') }}
+      />
+      <Stack.Screen
+        name="AboutRestaurant"
+        component={AboutRestaurant}
+        options={{ title: t('Saber mais') }}
       />
       <Stack.Screen
         name="ItemDetail"
