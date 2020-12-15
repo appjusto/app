@@ -45,13 +45,19 @@ export default class MenuApi {
   }
 
   async getOpenRestaurants() {
-    const query = this.firestore.collection('businesses').where('status', '==', 'open');
+    const query = this.firestore
+      .collection('businesses')
+      .where('type', '==', 'restaurant')
+      .where('status', '==', 'open');
     const docs = (await query.get()).docs;
     return documentAs<Business>(docs);
   }
 
   async getClosedRestaurants() {
-    const query = this.firestore.collection('businesses').where('status', '==', 'closed');
+    const query = this.firestore
+      .collection('businesses')
+      .where('type', '==', 'restaurant')
+      .where('status', '==', 'closed');
     const docs = (await query.get()).docs;
     return documentAs<Business>(docs);
   }

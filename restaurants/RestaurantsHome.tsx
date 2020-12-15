@@ -2,7 +2,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { add } from 'lodash';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useContext } from 'react';
-import { TouchableWithoutFeedback, View, Text, Image } from 'react-native';
+import { TouchableWithoutFeedback, View, Text, Image, ActivityIndicator } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
@@ -96,6 +96,13 @@ export default function ({ navigation }: Props) {
   //       <HomeShareCard />
   //     </FeedbackView>
   //   );
+
+  if (!openRestaurants || !closedRestaurants || !lastKnownLocation)
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
 
   return (
     <FlatList
