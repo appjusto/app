@@ -1,5 +1,4 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import { add } from 'lodash';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useContext } from 'react';
 import { TouchableWithoutFeedback, View, Text, Image, ActivityIndicator } from 'react-native';
@@ -53,7 +52,6 @@ export default function ({ navigation }: Props) {
     if (!lastKnownLocation) return;
     (async () => {
       const location = await dispatch(getReverseGeocodeAdress(api)(lastKnownLocation.coords));
-      // console.log(address);
       setAddress(location);
     })();
   }, [lastKnownLocation]);

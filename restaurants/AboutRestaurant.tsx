@@ -21,7 +21,7 @@ type Props = {
 export default function ({ route }: Props) {
   const { restaurant } = route.params ?? {};
 
-  if (!restaurant)
+  if (!restaurant || !restaurant.businessAddress)
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green} />

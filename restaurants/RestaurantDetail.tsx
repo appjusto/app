@@ -52,8 +52,13 @@ export default function ({ navigation, route }: Props) {
   console.log(restaurant);
 
   //UI
-
-  const RestaurantItem = ({ name, description, price, onPress }) => (
+  type RestItemProps = {
+    name: string;
+    description: string;
+    price: number;
+    onPress: () => void;
+  };
+  const RestaurantItem = ({ name, description, price, onPress }: RestItemProps) => (
     <TouchableOpacity onPress={onPress}>
       <View
         style={{

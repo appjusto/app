@@ -85,8 +85,6 @@ export default class MapsApi {
     const params = {
       key: this.googleMapsApiKey,
       address,
-      region: 'br', // i18n
-      components: 'country:BR', // i18n
       language: 'pt-BR', // i18n
     };
     try {
@@ -108,12 +106,12 @@ export default class MapsApi {
   async googleReverseGeocode(coords: LatLng) {
     const lat = coords.latitude;
     const long = coords.longitude;
+    // const url =
+    //   'https://maps.googleapis.com/maps/api/geocode/json?latlng=-3.7260015556995536,-38.50857025904886&key=AIzaSyDR7btJggR1VbwVh9U6F9AHBi9eZZT_Oh8';
     const url = 'https://maps.googleapis.com/maps/api/geocode/json';
     const params = {
       key: this.googleMapsApiKey,
       latlng: `${lat},${long}`,
-      region: 'br', // i18n
-      components: 'country:BR', // i18n
       language: 'pt-BR', // i18n
     };
     try {
@@ -121,8 +119,15 @@ export default class MapsApi {
       const { data } = response;
       const { results } = data;
       const [result] = results;
-      const { formatted_address } = result;
-      return formatted_address;
+      const { address_components } = result;
+      const getAddress = (type: string) =>
+        address_components.find((c) => c.types.indexOf(type) !== -1);
+      const street = getAddress('route');
+      const streetNumber = getAddress('street_number');
+      const city = getAddress('administrative_area_level_2');
+      const state = getAddress('administrative_area_level_1');
+      const formattedAddress = `${street.short_name}, ${streetNumber.short_name}, ${city.short_name}, ${state.short_name}`;
+      return formattedAddress;
     } catch (err) {
       console.error(err);
       return err;
