@@ -106,8 +106,6 @@ export default class MapsApi {
   async googleReverseGeocode(coords: LatLng) {
     const lat = coords.latitude;
     const long = coords.longitude;
-    // const url =
-    //   'https://maps.googleapis.com/maps/api/geocode/json?latlng=-3.7260015556995536,-38.50857025904886&key=AIzaSyDR7btJggR1VbwVh9U6F9AHBi9eZZT_Oh8';
     const url = 'https://maps.googleapis.com/maps/api/geocode/json';
     const params = {
       key: this.googleMapsApiKey,
