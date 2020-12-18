@@ -59,7 +59,7 @@ npm install -g turtle-cli
 FLAVOR=consumer turtle build:android -t apk --keystore-path <path-to-keystore> --keystore-alias <keystore-alias>
 ```
 
-Docs:
+# Docs:
 
 - https://docs.expo.io/distribution/turtle-cli/
 - https://docs.expo.io/distribution/building-standalone-apps/
