@@ -1,9 +1,8 @@
-import { Place, Order, ChatMessage, WithId, Fare, LatLng } from 'appjusto-types';
+import { Place, Order, ChatMessage, WithId, Fare, LatLng, Review } from 'appjusto-types';
 import {
   OrderCancellation,
   OrderRejection,
   OrderProblemSurvey,
-  ReviewCourier,
   CourierProblemSurvey,
 } from 'appjusto-types/order';
 import { CancelToken } from 'axios';
@@ -27,6 +26,12 @@ export const getAddressAutocomplete = (api: Api) => (
   return dispatch(
     awaitWithFeedback(api.maps().googlePlacesAutocomplete(input, sessionToken, cancelToken, coords))
   );
+};
+
+export const getReverseGeocodeAdress = (api: Api) => (coords: LatLng) => async (
+  dispatch: AppDispatch
+) => {
+  return dispatch(awaitWithFeedback(api.maps().googleReverseGeocode(coords)));
 };
 
 export const createOrder = (api: Api) => (
@@ -79,7 +84,7 @@ export const sendOrderProblem = (api: Api) => (
   return dispatch(awaitWithFeedback(api.order().sendOrderProblem(orderId, problem)));
 };
 
-export const sendCourierReview = (api: Api) => (orderId: string, review: ReviewCourier) => async (
+export const sendCourierReview = (api: Api) => (orderId: string, review: Review) => async (
   dispatch: AppDispatch
 ) => {
   return dispatch(awaitWithFeedback(api.order().sendCourierReview(orderId, review)));
@@ -88,7 +93,6 @@ export const sendCourierReview = (api: Api) => (orderId: string, review: ReviewC
 // couriers
 
 export const matchOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
-  console.log('dispatching the matchOrder action for the courier');
   return dispatch(awaitWithFeedback(api.order().matchOrder(orderId)));
 };
 
@@ -101,7 +105,6 @@ export const rejectOrder = (api: Api) => (orderId: string, rejection: OrderRejec
 export const nextDispatchingState = (api: Api) => (orderId: string) => async (
   dispatch: AppDispatch
 ) => {
-  console.log('dispatching the nextDispatchingState action for the courier');
   return dispatch(awaitWithFeedback(api.order().nextDispatchingState(orderId)));
 };
 

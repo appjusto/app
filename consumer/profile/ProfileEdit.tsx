@@ -35,7 +35,6 @@ export default function ({ navigation, route }: Props) {
   // refs
   const surnameRef = useRef<TextInput>(null);
   const cpfRef = useRef<TextInput>(null);
-  const dddRef = useRef<TextInput>(null);
 
   // app state
   const busy = useSelector(getUIBusy);
@@ -98,7 +97,6 @@ export default function ({ navigation, route }: Props) {
             returnKeyType="done"
             blurOnSubmit
             onChangeText={(text) => setCpf(trim(text))}
-            onSubmitEditing={() => dddRef.current?.focus()}
           />
           <DefaultButton
             style={{ marginTop: padding }}

@@ -9,7 +9,7 @@ import { AppDispatch, ApiContext } from '../../../../common/app/context';
 import { getConsumer, getPaymentMethodById } from '../../../../common/store/consumer/selectors';
 import { createOrder, confirmOrder, deleteOrder } from '../../../../common/store/order/actions';
 import { getOrderById } from '../../../../common/store/order/selectors';
-import { placeValid, sameAdddress } from '../../../../common/store/order/validators';
+import { placeValid, sameAddress } from '../../../../common/store/order/validators';
 import { showToast } from '../../../../common/store/ui/actions';
 import { screens } from '../../../../common/styles';
 import { HomeNavigatorParamList } from '../../types';
@@ -60,10 +60,10 @@ export default function ({ navigation, route }: Props) {
   // this will be the case when user is opening a quote from 'OrderHistory'
   useEffect(() => {
     if (!order) return;
-    if (!sameAdddress(order.origin.address, origin.address)) {
+    if (!sameAddress(order.origin.address, origin.address)) {
       setOrigin(order.origin);
     }
-    if (!sameAdddress(order.destination.address, destination.address)) {
+    if (!sameAddress(order.destination.address, destination.address)) {
       setDestination(order.destination);
     }
   }, [order]);
@@ -80,8 +80,8 @@ export default function ({ navigation, route }: Props) {
     // order should be created if it wasn't already or if addresses changed
     if (
       !order ||
-      !sameAdddress(origin.address, order.origin.address) ||
-      !sameAdddress(destination.address, order.destination.address)
+      !sameAddress(origin.address, order.origin.address) ||
+      !sameAddress(destination.address, order.destination.address)
     ) {
       (async () => {
         // delete previous quote

@@ -48,8 +48,4 @@ export default class AuthApi {
   deleteAccount(survey: DeleteAccountSurvey) {
     return this.functions.httpsCallable('deleteAccount')(survey);
   }
-
-  deletePaymentMethod(paymentData: IuguCustomerPaymentMethod) {
-    return this.functions.httpsCallable('deletePaymentMethod')(paymentData);
-  }
 }

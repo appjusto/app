@@ -1,13 +1,12 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 
 import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
-import { getOrderById } from '../../../common/store/order/selectors';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, padding } from '../../../common/styles';
 import { t } from '../../../strings';

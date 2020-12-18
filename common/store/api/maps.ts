@@ -58,6 +58,7 @@ export default class MapsApi {
         const { description, place_id: placeId, terms, structured_formatting } = prediction;
         const { main_text: main, secondary_text: secondary } = structured_formatting;
         const [neighborhood, city, state, country] = terms.map((term) => term.value);
+        // check to see what you really need from this list below
         return {
           description,
           placeId,
@@ -84,8 +85,6 @@ export default class MapsApi {
     const params = {
       key: this.googleMapsApiKey,
       address,
-      region: 'br', // i18n
-      components: 'country:BR', // i18n
       language: 'pt-BR', // i18n
     };
     try {
@@ -99,6 +98,34 @@ export default class MapsApi {
         latitude: location.lat,
         longitude: location.lng,
       };
+    } catch (err) {
+      console.error(err);
+      return err;
+    }
+  }
+  async googleReverseGeocode(coords: LatLng) {
+    const lat = coords.latitude;
+    const long = coords.longitude;
+    const url = 'https://maps.googleapis.com/maps/api/geocode/json';
+    const params = {
+      key: this.googleMapsApiKey,
+      latlng: `${lat},${long}`,
+      language: 'pt-BR', // i18n
+    };
+    try {
+      const response = await axios.get(url, { params });
+      const { data } = response;
+      const { results } = data;
+      const [result] = results;
+      const { address_components } = result;
+      const getAddress = (type: string) =>
+        address_components.find((c) => c.types.indexOf(type) !== -1);
+      const street = getAddress('route');
+      const streetNumber = getAddress('street_number');
+      const city = getAddress('administrative_area_level_2');
+      const state = getAddress('administrative_area_level_1');
+      const formattedAddress = `${street.short_name}, ${streetNumber.short_name}, ${city.short_name}, ${state.short_name}`;
+      return formattedAddress;
     } catch (err) {
       console.error(err);
       return err;

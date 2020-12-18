@@ -29,7 +29,6 @@ export const companyInfoSet = (courier: Partial<CourierProfile> | undefined): bo
 export const bankAccountSet = (courier: Partial<CourierProfile> | undefined): boolean => {
   if (!courier) return false;
   return (
-    !isEmpty(courier.bankAccount?.id) &&
     !isEmpty(courier.bankAccount?.name) &&
     !isEmpty(courier.bankAccount?.agency) &&
     !isEmpty(courier.bankAccount?.account) &&

@@ -3,7 +3,6 @@ import React from 'react';
 import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import PaddedView from '../../../components/containers/PaddedView';
 import { getOngoingOrders } from '../../../store/order/selectors';
 import { padding } from '../../../styles';
 import HomeOngoingDeliveryCard from './HomeOngoingDeliveryCard';
@@ -21,7 +20,6 @@ export default function ({ onSelect }: Props) {
   return (
     <View>
       {ongoingOrders.map((order) => {
-        console.log('HOMEONGOINGDELIVERYCARD', order);
         return (
           <View key={order.id} style={{ marginBottom: padding }}>
             <HomeOngoingDeliveryCard order={order} onSelect={onSelect} />
