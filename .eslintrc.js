@@ -6,6 +6,9 @@ module.exports = {
       parserOptions: {
         project: './tsconfig.json',
       },
+      rules: {
+        'import/order': 'off',
+      },
     },
   ],
 };
