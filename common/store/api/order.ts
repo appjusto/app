@@ -1,14 +1,17 @@
 import {
-  Place,
-  Order,
-  WithId,
   ChatMessage,
+  ConfirmOrderPayload,
+  CourierProblemSurvey,
+  CreateOrderPayload,
   Fare,
+  IssueType,
+  Order,
   OrderCancellation,
+  OrderProblemSurvey,
   OrderRejection,
   Review,
+  WithId,
 } from 'appjusto-types';
-import { CourierProblemSurvey, OrderProblemSurvey, IssueType } from 'appjusto-types/order';
 import firebase from 'firebase';
 
 export type ObserveOrdersOptions = {
@@ -24,30 +27,16 @@ export default class OrderApi {
 
   // callables
   // consumer
-  async createOrder(origin: Partial<Place>, destination: Partial<Place>) {
-    return (await this.functions.httpsCallable('createOrder')({ origin, destination })).data;
+  async createOrder(payload: CreateOrderPayload) {
+    return (await this.functions.httpsCallable('createOrder')(payload)).data;
   }
 
   async getOrderQuotes(orderId: string) {
     return (await this.functions.httpsCallable('getOrderQuotes')({ orderId })).data as Fare[];
   }
 
-  async confirmOrder(
-    orderId: string,
-    origin: Partial<Place>,
-    destination: Partial<Place>,
-    paymentMethodId: string,
-    fleetId: string,
-    platformFee: number
-  ) {
-    const result = await this.functions.httpsCallable('confirmOrder')({
-      orderId,
-      origin,
-      destination,
-      paymentMethodId,
-      fleetId,
-      platformFee,
-    });
+  async confirmOrder(payload: ConfirmOrderPayload) {
+    const result = await this.functions.httpsCallable('confirmOrder')(payload);
     return result.data;
   }
 

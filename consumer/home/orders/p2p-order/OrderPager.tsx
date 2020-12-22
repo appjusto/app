@@ -1,22 +1,20 @@
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Place, Order, WithId, Fleet } from 'appjusto-types';
+import { Fleet, Order, Place, WithId } from 'appjusto-types';
 import { IuguCustomerPaymentMethod } from 'appjusto-types/payment/iugu';
 import React, { useRef, useState } from 'react';
-import { View, NativeSyntheticEvent, Text, Image } from 'react-native';
+import { Image, NativeSyntheticEvent, Text, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSelector } from 'react-redux';
-
 import * as icons from '../../../../assets/icons';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
-import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../../common/components/texts/LabeledText';
 import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import { placeValid } from '../../../../common/store/order/validators';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
-import { doublePadding, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { doublePadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { HomeNavigatorParamList } from '../../types';
 import OrderStep from './OrderStep';
@@ -26,8 +24,8 @@ import { Steps } from './types';
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
 
 type Props = {
-  origin: Partial<Place>;
-  destination: Partial<Place>;
+  origin: Place;
+  destination: Place;
   order?: WithId<Order>;
   paymentMethod?: IuguCustomerPaymentMethod;
   navigation: ScreenNavigationProp;
@@ -35,7 +33,7 @@ type Props = {
   updateDestination: (value: Partial<Place>) => void;
   navigateToAddressComplete: (value: string, returnParam: string) => void;
   navigateToFillPaymentInfo: () => void;
-  navigateFleetDetail: (fleet: Fleet) => void;
+  navigateFleetDetail: (fleet: WithId<Fleet>) => void;
   confirmOrder: (fleetId: string, platformFee: number) => Promise<void>;
 };
 

@@ -1,16 +1,22 @@
-import { Place, Order, ChatMessage, WithId, Fare, LatLng, Review } from 'appjusto-types';
 import {
-  OrderCancellation,
-  OrderRejection,
-  OrderProblemSurvey,
+  ChatMessage,
+  ConfirmOrderPayload,
   CourierProblemSurvey,
-} from 'appjusto-types/order';
+  CreateOrderPayload,
+  Fare,
+  LatLng,
+  Order,
+  OrderCancellation,
+  OrderProblemSurvey,
+  OrderRejection,
+  Review,
+  WithId,
+} from 'appjusto-types';
 import { CancelToken } from 'axios';
-
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
 import { ObserveOrdersOptions } from '../api/order';
-import { BUSY, awaitWithFeedback } from '../ui/actions';
+import { awaitWithFeedback, BUSY } from '../ui/actions';
 
 export const ORDERS_UPDATED = 'ORDERS_UPDATED';
 export const ORDER_CHAT_UPDATED = 'ORDER_CHAT_UPDATED';
@@ -34,30 +40,20 @@ export const getReverseGeocodeAdress = (api: Api) => (coords: LatLng) => async (
   return dispatch(awaitWithFeedback(api.maps().googleReverseGeocode(coords)));
 };
 
-export const createOrder = (api: Api) => (
-  origin: Partial<Place>,
-  destination: Partial<Place>
-) => async (dispatch: AppDispatch) => {
-  return dispatch(awaitWithFeedback(api.order().createOrder(origin, destination)));
+export const createOrder = (api: Api) => (payload: CreateOrderPayload) => async (
+  dispatch: AppDispatch
+) => {
+  return dispatch(awaitWithFeedback(api.order().createOrder(payload)));
 };
 
 export const getOrderQuotes = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
   return dispatch(awaitWithFeedback<Fare[]>(api.order().getOrderQuotes(orderId)));
 };
 
-export const confirmOrder = (api: Api) => (
-  orderId: string,
-  origin: Partial<Place>,
-  destination: Partial<Place>,
-  paymentMethodId: string,
-  fleetId: string,
-  platformFee: number
-) => (dispatch: AppDispatch) => {
-  return dispatch(
-    awaitWithFeedback(
-      api.order().confirmOrder(orderId, origin, destination, paymentMethodId, fleetId, platformFee)
-    )
-  );
+export const confirmOrder = (api: Api) => (payload: ConfirmOrderPayload) => (
+  dispatch: AppDispatch
+) => {
+  return dispatch(awaitWithFeedback(api.order().confirmOrder(payload)));
 };
 
 export const tipCourier = (api: Api) => (orderId: string, tip: number) => async (

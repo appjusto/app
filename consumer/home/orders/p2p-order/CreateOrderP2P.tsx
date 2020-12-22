@@ -1,13 +1,12 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Place, Order, WithId, Fleet } from 'appjusto-types';
-import React, { useState, useContext, useEffect, useCallback } from 'react';
+import { Fleet, Order, Place, WithId } from 'appjusto-types';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-
-import { AppDispatch, ApiContext } from '../../../../common/app/context';
+import { useDispatch, useSelector } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import { getConsumer, getPaymentMethodById } from '../../../../common/store/consumer/selectors';
-import { createOrder, confirmOrder, deleteOrder } from '../../../../common/store/order/actions';
+import { confirmOrder, createOrder, deleteOrder } from '../../../../common/store/order/actions';
 import { getOrderById } from '../../../../common/store/order/selectors';
 import { placeValid, sameAddress } from '../../../../common/store/order/validators';
 import { showToast } from '../../../../common/store/ui/actions';
@@ -38,8 +37,8 @@ export default function ({ navigation, route }: Props) {
   );
 
   // screen state
-  const [origin, setOrigin] = useState<Partial<Place>>({});
-  const [destination, setDestination] = useState<Partial<Place>>({});
+  const [origin, setOrigin] = useState<Place>({});
+  const [destination, setDestination] = useState<Place>({});
   const [order, setOrder] = useState<WithId<Order>>();
   const [paymentMethod, setPaymentMethod] = useState(lastPaymentMethod);
 
@@ -87,7 +86,7 @@ export default function ({ navigation, route }: Props) {
         // delete previous quote
         if (order) dispatch(deleteOrder(api)(order.id));
         try {
-          const newOrder = await dispatch(createOrder(api)(origin, destination));
+          const newOrder = await dispatch(createOrder(api)({ type: 'p2p', origin, destination }));
           if (newOrder) setOrder(newOrder);
         } catch (error) {
           dispatch(showToast(error.toString(), 'error'));
@@ -111,16 +110,23 @@ export default function ({ navigation, route }: Props) {
     if (!paymentMethod) navigation.navigate('ProfileAddCard', { returnScreen: 'CreateOrderP2P' });
     else navigation.navigate('ProfilePaymentMethods', { returnScreen: 'CreateOrderP2P' });
   };
-  const navigateFleetDetail = useCallback((fleet: Fleet) => {
+  const navigateFleetDetail = useCallback((fleet: WithId<Fleet>) => {
     navigation.navigate('FleetDetail', { fleet });
   }, []);
   // confirm order
   const confirmOrderHandler = async (fleetId: string, platformFee: number) => {
-    if (!order) return;
+    if (!order || !paymentMethod) return;
     try {
       const orderId = order.id;
       const result = await dispatch(
-        confirmOrder(api)(orderId, origin, destination, paymentMethod!.id, fleetId, platformFee)
+        confirmOrder(api)({
+          orderId,
+          origin,
+          destination,
+          paymentMethodId: paymentMethod.id,
+          fleetId,
+          platformFee,
+        })
       );
       console.log(result);
       navigation.replace('OrderMatching', { orderId });

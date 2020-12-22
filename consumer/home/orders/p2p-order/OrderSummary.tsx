@@ -1,18 +1,17 @@
-import { Order, WithId, Fare, Fleet, Place } from 'appjusto-types';
+import { Fare, Fleet, Order, Place, WithId } from 'appjusto-types';
 import { IuguCustomerPaymentMethod } from 'appjusto-types/payment/iugu';
 import { isEmpty } from 'lodash';
-import React, { useState, useMemo, useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import {
-  ScrollView,
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
   FlatList,
+  Image,
+  ScrollView,
+  Text,
   TouchableHighlight,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-
 import * as icons from '../../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
@@ -29,11 +28,11 @@ import { observeFleets } from '../../../../common/store/fleet/actions';
 import { getAvailableFleets } from '../../../../common/store/fleet/selectors';
 import { getOrderQuotes } from '../../../../common/store/order/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
-import { texts, colors, screens, padding, borders, halfPadding } from '../../../../common/styles';
+import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import {
+  formatCurrency,
   formatDistance,
   formatDuration,
-  formatCurrency,
   separateWithDot,
 } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
@@ -49,7 +48,7 @@ type Props = {
   editStepHandler: (index: number) => void;
   confirmOrder: (fleetId: string, platformFee: number) => void;
   navigateToFillPaymentInfo: () => void;
-  navigateFleetDetail: (fleet: Fleet) => void;
+  navigateFleetDetail: (fleet: WithId<Fleet>) => void;
 };
 
 const platformFeeOptions: HorizontalSelectItem[] = [
