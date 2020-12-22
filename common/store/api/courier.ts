@@ -1,6 +1,5 @@
 import { Bank, LatLng, WithId } from 'appjusto-types';
 import firebase from 'firebase';
-
 import FilesApi from './files';
 
 type FetchTotalCouriersNearbyData = {
@@ -31,7 +30,11 @@ export default class CourierApi {
   // firestore
   // fetch supported banks
   async fetchBanks() {
-    const querySnapshot = await this.firestore.collection('banks').get();
+    const querySnapshot = await this.firestore
+      .collection('platform')
+      .doc('data')
+      .collection('banks')
+      .get();
     const docs: WithId<Bank>[] = [];
     if (!querySnapshot.empty) {
       querySnapshot.forEach((doc) => {

@@ -1,13 +1,11 @@
 import {
   ChatMessage,
   ConfirmOrderPayload,
-  CourierProblemSurvey,
   CreateOrderPayload,
   Fare,
   LatLng,
   Order,
-  OrderCancellation,
-  OrderProblemSurvey,
+  OrderIssue,
   OrderRejection,
   Review,
   WithId,
@@ -62,10 +60,9 @@ export const tipCourier = (api: Api) => (orderId: string, tip: number) => async 
   return dispatch(awaitWithFeedback(api.order().tipCourier(orderId, tip)));
 };
 
-export const cancelOrder = (api: Api) => (
-  orderId: string,
-  cancellation?: OrderCancellation
-) => async (dispatch: AppDispatch) => {
+export const cancelOrder = (api: Api) => (orderId: string, cancellation?: OrderIssue) => async (
+  dispatch: AppDispatch
+) => {
   return dispatch(awaitWithFeedback(api.order().cancelOrder(orderId, cancellation)));
 };
 
@@ -73,10 +70,9 @@ export const deleteOrder = (api: Api) => (orderId: string) => async (dispatch: A
   return await api.order().deleteOrder(orderId);
 };
 
-export const sendOrderProblem = (api: Api) => (
-  orderId: string,
-  problem: OrderProblemSurvey
-) => async (dispatch: AppDispatch) => {
+export const sendOrderProblem = (api: Api) => (orderId: string, problem: OrderIssue) => async (
+  dispatch: AppDispatch
+) => {
   return dispatch(awaitWithFeedback(api.order().sendOrderProblem(orderId, problem)));
 };
 
@@ -112,7 +108,7 @@ export const completeDelivery = (api: Api) => (orderId: string) => async (
 
 export const sendCourierOrderProblem = (api: Api) => (
   orderId: string,
-  problem: CourierProblemSurvey
+  problem: OrderIssue
 ) => async (dispatch: AppDispatch) => {
   return dispatch(awaitWithFeedback(api.order().sendCourierOrderProblem(orderId, problem)));
 };

@@ -1,13 +1,11 @@
 import {
   ChatMessage,
   ConfirmOrderPayload,
-  CourierProblemSurvey,
   CreateOrderPayload,
   Fare,
   IssueType,
   Order,
-  OrderCancellation,
-  OrderProblemSurvey,
+  OrderIssue,
   OrderRejection,
   Review,
   WithId,
@@ -44,7 +42,7 @@ export default class OrderApi {
     return (await this.functions.httpsCallable('tipCourier')({ orderId, tip })).data;
   }
 
-  async cancelOrder(orderId: string, cancellation?: OrderCancellation) {
+  async cancelOrder(orderId: string, cancellation?: OrderIssue) {
     return (await this.functions.httpsCallable('cancelOrder')({ orderId, cancellation })).data;
   }
 
@@ -52,7 +50,7 @@ export default class OrderApi {
     return this.firestore.collection('orders').doc(orderId).delete();
   }
 
-  async sendOrderProblem(orderId: string, problem: OrderProblemSurvey) {
+  async sendOrderProblem(orderId: string, problem: OrderIssue) {
     return (await this.functions.httpsCallable('sendOrderProblem')({ orderId, problem })).data;
   }
 
@@ -77,7 +75,7 @@ export default class OrderApi {
     return (await this.functions.httpsCallable('completeDelivery')({ orderId })).data;
   }
 
-  async sendCourierOrderProblem(orderId: string, problem: CourierProblemSurvey) {
+  async sendCourierOrderProblem(orderId: string, problem: OrderIssue) {
     return (await this.functions.httpsCallable('sendCourierOrderProblem')({ orderId, problem }))
       .data;
   }
@@ -161,7 +159,7 @@ export default class OrderApi {
     return (
       await this.firestore
         .collection('platform')
-        .doc('delivery')
+        .doc('data')
         .collection('issues')
         .where('type', '==', type)
         .get()

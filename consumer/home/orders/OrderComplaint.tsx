@@ -1,11 +1,11 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { WithId, OrderProblemReason } from 'appjusto-types';
+import { WithId } from 'appjusto-types';
+import { Issue } from 'appjusto-types/order/issues';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
@@ -37,8 +37,8 @@ export default function ({ route, navigation }: Props) {
   //app state
   const busy = useSelector(getUIBusy);
   const query = useIssues('consumer-delivery-problem');
-  const [problems, setProblems] = useState<WithId<OrderProblemReason>[]>([]);
-  const [selectedProblem, setSelectedProblem] = useState<WithId<OrderProblemReason>>();
+  const [problems, setProblems] = useState<WithId<Issue>[]>([]);
+  const [selectedProblem, setSelectedProblem] = useState<WithId<Issue>>();
   const [complaintComment, setComplaintComment] = useState<string>('');
 
   //handlers
@@ -65,7 +65,7 @@ export default function ({ route, navigation }: Props) {
   // whenever data changes
   useEffect(() => {
     if (query.data) {
-      setProblems(documentAs<OrderProblemReason>(query.data));
+      setProblems(documentAs<Issue>(query.data));
     }
     // console.log(problems);
   }, [query.data]);

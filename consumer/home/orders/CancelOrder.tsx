@@ -1,12 +1,12 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { OrderCancellationReason, WithId } from 'appjusto-types';
+import { WithId } from 'appjusto-types';
+import { Issue } from 'appjusto-types/order/issues';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { View, Text, TextInput, Image, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Image, Text, TextInput, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
-
 import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -39,15 +39,15 @@ export default function ({ route, navigation }: Props) {
   const query = useIssues('consumer-cancel');
 
   // state
-  const [reasons, setReasons] = useState<WithId<OrderCancellationReason>[]>([]);
-  const [selectedReason, setSelectedReason] = useState<WithId<OrderCancellationReason>>();
+  const [reasons, setReasons] = useState<WithId<Issue>[]>([]);
+  const [selectedReason, setSelectedReason] = useState<WithId<Issue>>();
   const [rejectionComment, setRejectionComment] = useState<string>('');
 
   // side effects
   // whenever data changes
   useEffect(() => {
     if (query.data) {
-      setReasons(documentAs<OrderCancellationReason>(query.data));
+      setReasons(documentAs<Issue>(query.data));
     }
   }, [query.data]);
 
