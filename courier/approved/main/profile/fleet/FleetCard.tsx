@@ -1,14 +1,13 @@
 import { Fleet } from 'appjusto-types';
 import React from 'react';
-import { View, Text, TouchableWithoutFeedback } from 'react-native';
+import { Text, TouchableWithoutFeedback, View } from 'react-native';
 import { useSelector } from 'react-redux';
-
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
-import { borders, texts, colors, padding } from '../../../../../common/styles';
-import { formatCurrency, formatDistance, formatPct } from '../../../../../common/utils/formatters';
+import { borders, colors, padding, texts } from '../../../../../common/styles';
+import { formatCurrency, formatDistance } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 
 type Props = {
@@ -116,36 +115,6 @@ export default function ({ fleet, selected, onSelect, onConfirm }: Props) {
             </Text>
             <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey} noBorder>
               {formatDistance(fleet.maxDistanceToOrigin)}
-            </RoundedText>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: 8,
-            }}
-          >
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>
-              {t('Porcentagem do Valor do Pedido')}
-            </Text>
-            <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey} noBorder>
-              {formatPct(fleet.feePctOverValue)}
-            </RoundedText>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: 8,
-            }}
-          >
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>
-              {t('Valor Mínimo para Porcentagem')}
-            </Text>
-            <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey} noBorder>
-              {formatCurrency(fleet.valueThreshold)}
             </RoundedText>
           </View>
         </View>

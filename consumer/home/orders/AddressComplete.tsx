@@ -1,23 +1,21 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Address, LatLng } from 'appjusto-types';
-import { isEmpty } from 'lodash';
 import debounce from 'lodash/debounce';
 import { nanoid } from 'nanoid/non-secure';
-import React, { useState, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
+  ActivityIndicator,
   Keyboard,
   SectionList,
   SectionListData,
-  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
@@ -28,7 +26,7 @@ import { AutoCompleteResult } from '../../../common/store/api/maps';
 import { getAddressAutocomplete } from '../../../common/store/order/actions';
 import { getPlacesFromPreviousOrders } from '../../../common/store/order/selectors';
 import { getUIBusy } from '../../../common/store/ui/selectors';
-import { texts, screens, colors, padding } from '../../../common/styles';
+import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { HomeNavigatorParamList } from '../types';
 

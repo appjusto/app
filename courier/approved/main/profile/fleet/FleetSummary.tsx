@@ -1,28 +1,17 @@
+import { FleetFareParams } from 'appjusto-types';
 import React from 'react';
-import { View, Text } from 'react-native';
-
+import { Text, View } from 'react-native';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { colors, screens, texts } from '../../../../../common/styles';
-import { formatCurrency, formatDistance, formatPct } from '../../../../../common/utils/formatters';
+import { formatCurrency, formatDistance } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
-
-type Props = {
-  minimumFee: number;
-  distanceThreshold: number;
-  maxDistance: number;
-  maxDistanceToOrigin: number;
-  feePctOverValue: number;
-  valueThreshold: number;
-};
 
 export default function ({
   minimumFee,
   distanceThreshold,
   maxDistance,
   maxDistanceToOrigin,
-  feePctOverValue,
-  valueThreshold,
-}: Props) {
+}: FleetFareParams) {
   return (
     <View style={{ ...screens.default }}>
       <PaddedView>
@@ -80,36 +69,6 @@ export default function ({
           </Text>
           <Text style={{ ...texts.default, color: colors.darkGrey }}>
             {formatDistance(maxDistanceToOrigin)}
-          </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: 4,
-          }}
-        >
-          <Text style={{ ...texts.default, color: colors.darkGrey }}>
-            {t('Porcentagem do Valor do Pedido')}
-          </Text>
-          <Text style={{ ...texts.default, color: colors.darkGrey }}>
-            {formatPct(feePctOverValue)}
-          </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: 4,
-          }}
-        >
-          <Text style={{ ...texts.default, color: colors.darkGrey }}>
-            {t('Valor Mínimo para Porcentagem')}
-          </Text>
-          <Text style={{ ...texts.default, color: colors.darkGrey }}>
-            {formatCurrency(valueThreshold)}
           </Text>
         </View>
       </PaddedView>

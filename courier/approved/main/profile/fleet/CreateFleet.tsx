@@ -1,10 +1,9 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
-import React, { useState, useEffect, useContext, useRef, useMemo } from 'react';
-import { View, Text, ScrollView, TextInput } from 'react-native';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { ScrollView, Text, TextInput, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
@@ -13,8 +12,8 @@ import HR from '../../../../../common/components/views/HR';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { createFleet } from '../../../../../common/store/fleet/actions';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
-import { texts, screens, colors, padding } from '../../../../../common/styles';
-import { formatCurrency, formatDistance, formatPct } from '../../../../../common/utils/formatters';
+import { colors, padding, screens, texts } from '../../../../../common/styles';
+import { formatCurrency, formatDistance } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import FleetRule from './FleetRule';
 import FleetSummary from './FleetSummary';
@@ -50,8 +49,6 @@ export default function ({ navigation, route }: Props) {
   const [additionalPerKmAfterThreshold, setAdditionalPerKmAfterThreshold] = useState(100);
   const [maxDistance, setMaxDistance] = useState(10000);
   const [maxDistanceToOrigin, setMaxDistanceToOrigin] = useState(3000);
-  const [valueThreshold, setValueThreshold] = useState(100);
-  const [feePctOverValue, setFeePcTOverValue] = useState(0);
   const canSubmit = useMemo(() => {
     return !isEmpty(name) && !isEmpty(description);
   }, [name, description]);
@@ -72,8 +69,6 @@ export default function ({ navigation, route }: Props) {
         additionalPerKmAfterThreshold,
         maxDistance,
         maxDistanceToOrigin,
-        valueThreshold,
-        feePctOverValue,
         situation: 'approved',
         createdBy: courier.id,
         participantsOnline: 0,
@@ -177,24 +172,6 @@ export default function ({ navigation, route }: Props) {
                 'Defina em Km a distância máxima da posição atual até a origem do pedido que essa frota poderá percorrer. Pedidos recebidos com origem acima da definida não serão exibidos.'
               )}
             />
-            <FleetRule
-              title={t('Porcentagem do Valor do Pedido')}
-              onIncrease={() => setFeePcTOverValue(feePctOverValue + 0.01)}
-              onDecrease={() => setFeePcTOverValue(feePctOverValue - 0.01)}
-              value={formatPct(feePctOverValue)}
-              description={t(
-                'Defina um percentual do valor do pedido em restaurantes que será adicionado ao pagamento dessa frota.'
-              )}
-            />
-            <FleetRule
-              title={t('Valor Mínimo para Porcentagem')}
-              onIncrease={() => setValueThreshold(valueThreshold + 1000)}
-              onDecrease={() => setValueThreshold(valueThreshold - 1000)}
-              value={formatCurrency(valueThreshold)}
-              description={t(
-                'Defina um valor mínimo do pedido em restaurantes para que se comece a cobrar a porcentagem definida acima.'
-              )}
-            />
           </View>
         </PaddedView>
         <FleetSummary
@@ -202,8 +179,6 @@ export default function ({ navigation, route }: Props) {
           distanceThreshold={distanceThreshold}
           maxDistance={maxDistance}
           maxDistanceToOrigin={maxDistanceToOrigin}
-          feePctOverValue={feePctOverValue}
-          valueThreshold={valueThreshold}
         />
         <View>
           <HR height={padding / 4} />
