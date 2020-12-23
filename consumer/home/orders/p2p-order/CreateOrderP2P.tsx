@@ -6,7 +6,7 @@ import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import { getConsumer, getPaymentMethodById } from '../../../../common/store/consumer/selectors';
-import { confirmOrder, createOrder, deleteOrder } from '../../../../common/store/order/actions';
+import { createOrder, deleteOrder, placeOrder } from '../../../../common/store/order/actions';
 import { getOrderById } from '../../../../common/store/order/selectors';
 import { placeValid, sameAddress } from '../../../../common/store/order/validators';
 import { showToast } from '../../../../common/store/ui/actions';
@@ -114,12 +114,12 @@ export default function ({ navigation, route }: Props) {
     navigation.navigate('FleetDetail', { fleet });
   }, []);
   // confirm order
-  const confirmOrderHandler = async (fleetId: string, platformFee: number) => {
+  const placeOrderHandler = async (fleetId: string, platformFee: number) => {
     if (!order || !paymentMethod) return;
     try {
       const orderId = order.id;
       const result = await dispatch(
-        confirmOrder(api)({
+        placeOrder(api)({
           orderId,
           origin,
           destination,
@@ -149,7 +149,7 @@ export default function ({ navigation, route }: Props) {
         navigateToAddressComplete={navigateToAddressComplete}
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         navigateFleetDetail={navigateFleetDetail}
-        confirmOrder={confirmOrderHandler}
+        placeOrder={placeOrderHandler}
         navigation={navigation}
       />
     </View>

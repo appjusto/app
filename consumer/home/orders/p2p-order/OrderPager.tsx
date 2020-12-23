@@ -34,7 +34,7 @@ type Props = {
   navigateToAddressComplete: (value: string, returnParam: string) => void;
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;
-  confirmOrder: (fleetId: string, platformFee: number) => Promise<void>;
+  placeOrder: (fleetId: string, platformFee: number) => Promise<void>;
 };
 
 export default function ({
@@ -48,7 +48,7 @@ export default function ({
   navigateToAddressComplete,
   navigateToFillPaymentInfo,
   navigateFleetDetail,
-  confirmOrder,
+  placeOrder,
 }: Props) {
   // refs
   const viewPager = useRef<ViewPager>(null);
@@ -228,7 +228,7 @@ export default function ({
             paymentMethod={paymentMethod}
             waiting={busy}
             editStepHandler={setPage}
-            confirmOrder={confirmOrder}
+            placeOrder={placeOrder}
             navigateToFillPaymentInfo={navigateToFillPaymentInfo}
             navigateFleetDetail={navigateFleetDetail}
           />

@@ -1,12 +1,12 @@
 import {
   ChatMessage,
-  ConfirmOrderPayload,
   CreateOrderPayload,
   Fare,
   LatLng,
   Order,
   OrderIssue,
   OrderRejection,
+  PlaceOrderPayload,
   Review,
   WithId,
 } from 'appjusto-types';
@@ -48,10 +48,8 @@ export const getOrderQuotes = (api: Api) => (orderId: string) => async (dispatch
   return dispatch(awaitWithFeedback<Fare[]>(api.order().getOrderQuotes(orderId)));
 };
 
-export const confirmOrder = (api: Api) => (payload: ConfirmOrderPayload) => (
-  dispatch: AppDispatch
-) => {
-  return dispatch(awaitWithFeedback(api.order().confirmOrder(payload)));
+export const placeOrder = (api: Api) => (payload: PlaceOrderPayload) => (dispatch: AppDispatch) => {
+  return dispatch(awaitWithFeedback(api.order().placeOrder(payload)));
 };
 
 export const tipCourier = (api: Api) => (orderId: string, tip: number) => async (

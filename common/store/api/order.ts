@@ -1,12 +1,12 @@
 import {
   ChatMessage,
-  ConfirmOrderPayload,
   CreateOrderPayload,
   Fare,
   IssueType,
   Order,
   OrderIssue,
   OrderRejection,
+  PlaceOrderPayload,
   Review,
   WithId,
 } from 'appjusto-types';
@@ -33,8 +33,8 @@ export default class OrderApi {
     return (await this.functions.httpsCallable('getOrderQuotes')({ orderId })).data as Fare[];
   }
 
-  async confirmOrder(payload: ConfirmOrderPayload) {
-    const result = await this.functions.httpsCallable('confirmOrder')(payload);
+  async placeOrder(payload: PlaceOrderPayload) {
+    const result = await this.functions.httpsCallable('placeOrder')(payload);
     return result.data;
   }
 

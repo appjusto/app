@@ -46,7 +46,7 @@ type Props = {
   paymentMethod?: IuguCustomerPaymentMethod;
   waiting: boolean;
   editStepHandler: (index: number) => void;
-  confirmOrder: (fleetId: string, platformFee: number) => void;
+  placeOrder: (fleetId: string, platformFee: number) => void;
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;
 };
@@ -66,7 +66,7 @@ export default function ({
   paymentMethod,
   waiting,
   editStepHandler,
-  confirmOrder,
+  placeOrder,
   navigateToFillPaymentInfo,
   navigateFleetDetail,
 }: Props) {
@@ -373,7 +373,7 @@ export default function ({
         <DefaultButton
           style={{ marginTop: padding }}
           title={t('Fazer pedido')}
-          onPress={() => confirmOrder(selectedFare?.fleet?.id!, platformFee.data)}
+          onPress={() => placeOrder(selectedFare?.fleet?.id!, platformFee.data)}
           disabled={!canSubmit}
           activityIndicator={waiting}
         />
