@@ -3,13 +3,12 @@ import {
   Category,
   MenuConfig,
   Product,
-  WithId,
   ProductsByCategory,
+  WithId,
 } from 'appjusto-types';
 import firebase from 'firebase/app';
-
 import FilesApi from './files';
-import { documentAs, singleDocumentAs } from './types';
+import { documentAs, documentsAs } from './types';
 
 export default class MenuApi {
   constructor(
@@ -41,7 +40,7 @@ export default class MenuApi {
   async getRestaurant(restaurantId: string) {
     const query = this.firestore.collection('businesses').doc(restaurantId);
     const doc = await query.get();
-    return singleDocumentAs<Business>(doc);
+    return documentAs<Business>(doc);
   }
 
   async getOpenRestaurants() {
@@ -50,7 +49,7 @@ export default class MenuApi {
       .where('type', '==', 'restaurant')
       .where('status', '==', 'open');
     const docs = (await query.get()).docs;
-    return documentAs<Business>(docs);
+    return documentsAs<Business>(docs);
   }
 
   async getClosedRestaurants() {
@@ -59,14 +58,14 @@ export default class MenuApi {
       .where('type', '==', 'restaurant')
       .where('status', '==', 'closed');
     const docs = (await query.get()).docs;
-    return documentAs<Business>(docs);
+    return documentsAs<Business>(docs);
   }
 
   // categories
   async getCategories(restaurantId: string) {
     const query = this.getCategoriesRef(restaurantId);
     const docs = (await query.get()).docs;
-    return documentAs<Category>(docs);
+    return documentsAs<Category>(docs);
   }
 
   getOrderedCategories = (categories: WithId<Category>[], order: string[]): WithId<Category>[] => {
@@ -83,7 +82,7 @@ export default class MenuApi {
   ): firebase.Unsubscribe {
     const unsubscribe = this.getCategoriesRef(restaurantId).onSnapshot(
       (querySnapshot) => {
-        resultHandler(documentAs<Category>(querySnapshot.docs));
+        resultHandler(documentsAs<Category>(querySnapshot.docs));
       },
       (error) => {
         console.error(error);
@@ -96,7 +95,7 @@ export default class MenuApi {
   async getRestaurantMenuConfig(restaurantId: string) {
     const query = this.getMenuConfigRef(restaurantId);
     const doc = await query.get();
-    return singleDocumentAs<MenuConfig>(doc);
+    return documentAs<MenuConfig>(doc);
   }
 
   observeMenuConfig(
@@ -122,7 +121,7 @@ export default class MenuApi {
   async getProducts(restaurantId: string) {
     const query = this.getProductsRef(restaurantId);
     const docs = (await query.get()).docs;
-    return documentAs<Product>(docs);
+    return documentsAs<Product>(docs);
   }
 
   observeProducts(
@@ -132,7 +131,7 @@ export default class MenuApi {
     const query = this.getProductsRef(restaurantId);
     const unsubscribe = query.onSnapshot(
       (querySnapshot) => {
-        resultHandler(documentAs<Product>(querySnapshot.docs));
+        resultHandler(documentsAs<Product>(querySnapshot.docs));
       },
       (error) => {
         console.error(error);

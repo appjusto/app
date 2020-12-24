@@ -29,8 +29,8 @@ type Props = {
   order?: WithId<Order>;
   paymentMethod?: IuguCustomerPaymentMethod;
   navigation: ScreenNavigationProp;
-  updateOrigin: (value: Partial<Place>) => void;
-  updateDestination: (value: Partial<Place>) => void;
+  updateOrigin: (value: Place) => void;
+  updateDestination: (value: Place) => void;
   navigateToAddressComplete: (value: string, returnParam: string) => void;
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;

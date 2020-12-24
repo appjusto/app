@@ -12,7 +12,7 @@ import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import useIssues from '../../../common/hooks/queries/useIssues';
-import { documentAs } from '../../../common/store/api/types';
+import { documentsAs } from '../../../common/store/api/types';
 import { sendCourierOrderProblem } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
@@ -65,7 +65,7 @@ export default function ({ navigation, route }: Props) {
   // whenever data changes
   useEffect(() => {
     if (query.data) {
-      setProblems(documentAs<Issue>(query.data));
+      setProblems(documentsAs<Issue>(query.data));
     }
     // console.log(problems);
   }, [query.data]);

@@ -6,11 +6,13 @@ import {
   Order,
   OrderIssue,
   OrderRejection,
+  OrderStatus,
   PlaceOrderPayload,
   Review,
   WithId,
 } from 'appjusto-types';
 import firebase from 'firebase';
+import { documentsAs } from './types';
 
 export type ObserveOrdersOptions = {
   createdBy?: string;
@@ -93,22 +95,19 @@ export default class OrderApi {
       .where('status', 'in', [
         'quote',
         'confirming',
-        'matching',
+        'confirmed',
+        'preparing',
+        'ready',
         'dispatching',
         'delivered',
-        'unmatched',
         'canceled',
-      ]);
+      ] as OrderStatus[]);
     if (createdBy) query = query.where('consumer.id', '==', createdBy);
     if (deliveredBy) query = query.where('courier.id', '==', deliveredBy);
 
     const unsubscribe = query.onSnapshot(
       (querySnapshot) => {
-        const docs: WithId<Order>[] = [];
-        querySnapshot.forEach((doc) => {
-          docs.push({ ...(doc.data() as Order), id: doc.id });
-        });
-        resultHandler(docs);
+        resultHandler(documentsAs<Order>(querySnapshot.docs));
       },
       (error) => {
         console.error(error);
@@ -129,11 +128,7 @@ export default class OrderApi {
       .orderBy('timestamp', 'asc')
       .onSnapshot(
         (querySnapshot) => {
-          const docs: WithId<ChatMessage>[] = [];
-          querySnapshot.forEach((doc) => {
-            docs.push({ ...(doc.data() as ChatMessage), id: doc.id });
-          });
-          resultHandler(docs);
+          resultHandler(documentsAs<ChatMessage>(querySnapshot.docs));
         },
         (error) => {
           console.error(error);
