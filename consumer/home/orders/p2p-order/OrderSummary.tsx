@@ -320,21 +320,41 @@ export default function ({
         </View>
         <HR height={padding} />
         {/* total */}
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Pill />
-          <PaddedView
+        <View style={{ paddingVertical: padding }}>
+          <View
             style={{
-              flex: 1,
               flexDirection: 'row',
-              justifyContent: 'space-between',
               alignItems: 'center',
             }}
           >
-            <Text style={{ ...texts.medium, ...texts.bold }}>{t('Valor total a pagar')}</Text>
-            <Text style={{ ...texts.mediumToBig }}>
-              {formatCurrency((selectedFare?.total ?? 0) + platformFee.data)}
-            </Text>
-          </PaddedView>
+            <Pill />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginHorizontal: 12,
+                flex: 1,
+              }}
+            >
+              <Text style={{ ...texts.medium, ...texts.bold }}>{t('Valor total a pagar')}</Text>
+              <Text style={{ ...texts.mediumToBig }}>
+                {formatCurrency((selectedFare?.total ?? 0) + platformFee.data)}
+              </Text>
+            </View>
+          </View>
+          <Text
+            style={{
+              marginTop: padding,
+              ...texts.small,
+              color: colors.darkGrey,
+              paddingHorizontal: padding,
+            }}
+          >
+            {t(
+              'Você poderá deixar uma Caixinha de gorjeta para o entregador quando o seu pedido for entregue.'
+            )}
+          </Text>
         </View>
       </View>
       <HR height={padding} />
@@ -364,8 +384,9 @@ export default function ({
         <ShowIf test={!paymentMethod}>
           {() => (
             <DefaultButton
-              title={t('Incluir forma de pagamento')}
+              title={t('Finalizar cadastro e adicionar pagamento')}
               onPress={navigateToFillPaymentInfo}
+              secondary
             />
           )}
         </ShowIf>

@@ -2,16 +2,15 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { OrderMatchPushMessageData, PushMessageData } from 'appjusto-types';
 import * as Notifications from 'expo-notifications';
-import React, { useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Image } from 'react-native';
 import { useSelector } from 'react-redux';
-
 import * as icons from '../../../assets/icons';
 import useNotification from '../../../common/hooks/useNotification';
 import useObserveOrders from '../../../common/hooks/useObserveOrders';
 import { getCourier, getCourierStatus } from '../../../common/store/courier/selectors';
 import { getOngoingOrders } from '../../../common/store/order/selectors';
-import { colors } from '../../../common/styles';
+import { colors, halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import DeliveriesNavigator from './history/DeliveriesNavigator';
@@ -96,6 +95,14 @@ export default function ({ navigation }: Props) {
         inactiveTintColor: colors.black,
         activeBackgroundColor: colors.green,
         inactiveBackgroundColor: colors.white,
+        style: { height: 60, justifyContent: 'center' },
+        tabStyle: {
+          borderRadius: 30,
+          height: 40,
+          marginTop: halfPadding,
+        },
+        labelStyle: { ...texts.small, marginBottom: 4 },
+        labelPosition: 'beside-icon',
       }}
     >
       <Tab.Screen

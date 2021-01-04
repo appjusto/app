@@ -17,7 +17,7 @@ export default function ({ leftIcon, color, backgroundColor: bg, children, noBor
     <View
       style={{
         flexDirection: 'row',
-        // alignSelf: 'flex-start',
+        alignSelf: 'flex-start',
         alignItems: 'center',
         paddingBottom: 4,
         // height: 24,

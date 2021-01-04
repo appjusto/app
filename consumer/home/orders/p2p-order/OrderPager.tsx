@@ -133,7 +133,7 @@ export default function ({
               onChangeText={(text) => updateOrigin({ ...origin, intructions: text })}
               blurOnSubmit
               multiline
-              numberOfLines={3}
+              // numberOfLines={3}
             />
 
             <TouchableWithoutFeedback onPress={() => navigation.navigate('TransportableItems')}>
@@ -141,16 +141,14 @@ export default function ({
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  marginTop: verticalPadding,
                 }}
               >
                 <Image source={icons.info} />
                 <Text style={{ ...texts.small, marginLeft: 4 }}>
-                  {t('Saiba o que pode ser transportado')}
+                  {t('O que pode ser transportado')}
                 </Text>
               </View>
             </TouchableWithoutFeedback>
-
             <DefaultButton
               style={{ marginVertical: verticalPadding }}
               title={t('Confirmar local de retirada')}
@@ -198,7 +196,6 @@ export default function ({
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
-                    marginTop: verticalPadding,
                   }}
                 >
                   <Image source={icons.info} />

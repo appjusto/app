@@ -1,10 +1,9 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import React, { useEffect, useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ActivityIndicator, Image, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-
 import * as icons from '../assets/icons';
-import { AppDispatch, ApiContext } from '../common/app/context';
+import { ApiContext, AppDispatch } from '../common/app/context';
 import useObserveOrders from '../common/hooks/useObserveOrders';
 import { getFlavor } from '../common/store/config/selectors';
 import { getConsumer } from '../common/store/consumer/selectors';
@@ -54,9 +53,9 @@ export default function () {
         inactiveTintColor: colors.black,
         activeBackgroundColor: colors.green,
         inactiveBackgroundColor: colors.white,
-        style: { height: 66 },
+        style: { height: 60, justifyContent: 'center' },
         tabStyle: {
-          borderRadius: 32,
+          borderRadius: 30,
           height: 40,
           marginTop: halfPadding,
         },
