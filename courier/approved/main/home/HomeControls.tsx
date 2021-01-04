@@ -6,15 +6,16 @@ import { nanoid } from 'nanoid/non-secure';
 import React, { useContext, useEffect, useState } from 'react';
 import { Dimensions, Image, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-
 import * as icons from '../../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import ShowIf from '../../../../common/components/views/ShowIf';
+import useLastKnownLocation from '../../../../common/hooks/useLastKnownLocation';
 import useLocationUpdates from '../../../../common/hooks/useLocationUpdates';
 import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import { getCourier } from '../../../../common/store/courier/selectors';
+import { getReverseGeocodeAdress } from '../../../../common/store/order/actions';
 import { showToast } from '../../../../common/store/ui/actions';
 import { updateProfile } from '../../../../common/store/user/actions';
 import {
@@ -25,7 +26,8 @@ import {
   padding,
   texts,
 } from '../../../../common/styles';
-import { formatCurrency } from '../../../../common/utils/formatters';
+import { formatCurrency, formatDistance } from '../../../../common/utils/formatters';
+import LocationBar from '../../../../restaurants/components/LocationBar';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
@@ -59,6 +61,8 @@ export default function ({ navigation }: Props) {
   // state
   const [locationKey, setLocationKey] = useState(nanoid());
   const locationPermission = useLocationUpdates(working, locationKey);
+  const { lastKnownLocation } = useLastKnownLocation(true, locationKey);
+  const [address, setAddress] = React.useState('');
 
   // side effects
   // location permission denied
@@ -74,6 +78,14 @@ export default function ({ navigation }: Props) {
       dispatch(updateProfile(api)(courier!.id!, { notificationToken: null }));
     }
   }, [working, locationPermission]);
+  // getting current location to display in the LocationBar
+  React.useEffect(() => {
+    if (!lastKnownLocation) return;
+    (async () => {
+      const location = await dispatch(getReverseGeocodeAdress(api)(lastKnownLocation.coords));
+      setAddress(location);
+    })();
+  }, [lastKnownLocation]);
 
   // handlers
   const toggleWorking = () => {
@@ -93,6 +105,10 @@ export default function ({ navigation }: Props) {
   // UI
   return (
     <PaddedView style={[{ backgroundColor: working ? colors.green : colors.darkYellow }]}>
+      <Text style={{ ...texts.small, alignSelf: 'center' }}>{t('Você está em:')}</Text>
+      <View style={{ marginBottom: padding, marginTop: 4 }}>
+        <LocationBar address={address} />
+      </View>
       <ShowIf test={tallerDevice}>
         {() => (
           <Text
@@ -149,23 +165,36 @@ export default function ({ navigation }: Props) {
           </View>
         </View>
         <View style={[styles.controlItem, { backgroundColor: colors.white }]}>
+          <Text
+            style={{
+              ...texts.default,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: 12,
+            }}
+          >
+            {t('Frota')} {courier.fleet?.name}
+          </Text>
           <View style={[styles.priceTag]}>
-            <Text style={[texts.small, { position: 'absolute', left: 6 }]}>{t('R$')}</Text>
+            <Text style={[texts.small]}>{t('R$')}</Text>
             <Text style={[texts.huge]}>
               {formatCurrency(courier.fleet?.minimumFee ?? 0, {
                 unit: '',
-                strip_insignificant_zeros: true,
+                strip_insignificant_zeros: false,
               })}
             </Text>
           </View>
-          <Text style={[texts.default, { marginTop: padding }]}>
-            {`+ ${formatCurrency(courier.fleet?.additionalPerKmAfterThreshold ?? 0)} por km.`}
+          <Text style={[texts.small, { marginTop: padding, color: colors.darkGrey }]}>
+            {`+ ${formatCurrency(courier.fleet?.additionalPerKmAfterThreshold ?? 0)} km/adicional`}
+          </Text>
+          <Text style={[texts.small, { color: colors.darkGrey }]}>
+            {t('Distância mínima')} {formatDistance(courier.fleet!.distanceThreshold)}
           </Text>
           <View style={{ flex: 1 }} />
           <TouchableOpacity
             onPress={() => navigation.navigate('FleetDetail', { fleet: courier.fleet })}
           >
-            <View style={{ marginTop: padding }}>
+            <View style={{ marginTop: padding, alignItems: 'center' }}>
               <RoundedText>{t('Ver detalhes')}</RoundedText>
             </View>
           </TouchableOpacity>
@@ -184,14 +213,8 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   priceTag: {
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: colors.green,
-    width: 74,
-    height: 74,
-    borderRadius: 37, // half of size
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
 });
