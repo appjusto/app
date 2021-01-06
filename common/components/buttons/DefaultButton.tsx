@@ -1,13 +1,12 @@
 import React from 'react';
 import {
-  View,
+  ActivityIndicator,
   Text,
   TouchableOpacity,
-  ActivityIndicator,
-  ViewProps,
   TouchableOpacityProps,
+  View,
+  ViewProps,
 } from 'react-native';
-
 import { borders, colors, texts } from '../../styles';
 import ShowIf from '../views/ShowIf';
 
@@ -52,7 +51,7 @@ export default function ({
         ]}
       >
         <ShowIf test={!activityIndicator}>
-          {() => <Text style={{ ...texts.medium, color }}>{title}</Text>}
+          {() => <Text style={{ ...texts.default, color }}>{title}</Text>}
         </ShowIf>
         <ShowIf test={activityIndicator}>
           {() => <ActivityIndicator size="small" color={secondary ? colors.black : colors.white} />}
