@@ -20,7 +20,7 @@
     "@react-navigation/stack": "^5.6.2",
     "@types/lodash": "^4.14.158",
     "appjusto-types": "file:../types",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "dayjs": "^1.8.36",
     "dotenv": "^8.2.0",
     "expo": "^39.0.0",
