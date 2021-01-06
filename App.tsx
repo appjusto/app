@@ -2,9 +2,8 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import React from 'react';
 import { LogBox } from 'react-native';
 import { useSelector } from 'react-redux';
-
-import PreloadAssets from './common/app/PreloadAssets';
 import { AppContext } from './common/app/context';
+import PreloadAssets from './common/app/PreloadAssets';
 import ShowIf from './common/components/views/ShowIf';
 import { getFlavor } from './common/store/config/selectors';
 import ConsumerApp from './consumer/ConsumerApp';
@@ -17,7 +16,6 @@ import CourierApp from './courier/CourierApp';
 if (__DEV__) {
   LogBox.ignoreLogs([
     'Setting a timer',
-    'YellowBox has been replaced',
     'Note: Native Sentry SDK is disabled',
     'Attempt to invoke interface method',
   ]);

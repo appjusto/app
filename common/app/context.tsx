@@ -2,10 +2,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import * as Linking from 'expo-linking';
 import React, { ReactNode } from 'react';
-import { Platform, UIManager, ToastAndroid } from 'react-native';
-import { ReactQueryCacheProvider, QueryCache } from 'react-query';
+import { Platform, ToastAndroid, UIManager } from 'react-native';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
-
 import Toast from '../components/views/Toast';
 import { createStore } from '../store';
 import Api from '../store/api/api';
@@ -16,7 +15,7 @@ import * as analytics from './analytics';
 const extra = getExtra();
 const api = new Api(extra);
 const store = createStore(extra);
-const queryCache = new QueryCache();
+const queryClient = new QueryClient();
 
 defineLocationUpdatesTask(store, api);
 analytics.init(extra.analytics);
@@ -49,12 +48,12 @@ export const AppContext = ({ children }: Props) => {
   return (
     <ApiContext.Provider value={api}>
       <Provider store={store}>
-        <ReactQueryCacheProvider queryCache={queryCache}>
+        <QueryClientProvider client={queryClient}>
           <NavigationContainer linking={linking}>
             {children}
             <Toast />
           </NavigationContainer>
-        </ReactQueryCacheProvider>
+        </QueryClientProvider>
       </Provider>
     </ApiContext.Provider>
   );
