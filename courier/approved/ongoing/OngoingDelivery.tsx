@@ -2,18 +2,17 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as Linking from 'expo-linking';
 import { isEmpty } from 'lodash';
-import React, { useContext, useCallback, useMemo, useEffect } from 'react';
-import { View, Text, Image, ActivityIndicator } from 'react-native';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useSelector, useDispatch } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../../../assets/icons';
-import { AppDispatch, ApiContext } from '../../../common/app/context';
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import ShowIf from '../../../common/components/views/ShowIf';
-import { nextDispatchingState, completeDelivery } from '../../../common/store/order/actions';
+import { completeDelivery, nextDispatchingState } from '../../../common/store/order/actions';
 import { getOrderById } from '../../../common/store/order/selectors';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, halfPadding, screens, texts } from '../../../common/styles';
@@ -43,11 +42,11 @@ export default function ({ navigation, route }: Props) {
   // app state
   const busy = useSelector(getUIBusy);
   const order = useSelector(getOrderById)(orderId);
-  const { dispatchingState } = order;
-  const originLatitude = order?.origin.location.latitude;
-  const originLongitude = order?.origin.location.longitude;
-  const destinationLatitude = order?.destination.location.latitude;
-  const destinationLongitude = order?.destination.location.longitude;
+  const dispatchingState = order?.dispatchingState;
+  const originLatitude = order?.origin.location?.latitude;
+  const originLongitude = order?.origin.location?.longitude;
+  const destinationLatitude = order?.destination.location?.latitude;
+  const destinationLongitude = order?.destination.location?.longitude;
 
   // side effects
   // whenever params updates
@@ -65,9 +64,9 @@ export default function ({ navigation, route }: Props) {
   }, [route.params]);
   // whenever order updates
   useEffect(() => {
-    if (order.status === 'delivered') {
+    if (order?.status === 'delivered') {
       navigation.replace('DeliveryCompleted', { orderId, fee: order.fare!.courierFee });
-    } else if (order.status === 'canceled') {
+    } else if (order?.status === 'canceled') {
       navigation.replace('OrderCanceled', { orderId });
     }
   }, [order]);
@@ -80,7 +79,7 @@ export default function ({ navigation, route }: Props) {
     } else {
       dispatch(completeDelivery(api)(order.id));
     }
-  }, [order]);
+  }, [order, dispatchingState]);
   // handles opening chat screen
   const openChatHandler = useCallback(() => {
     navigation.navigate('Chat', { orderId });
