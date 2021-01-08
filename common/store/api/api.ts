@@ -5,13 +5,13 @@ import 'firebase/functions';
 import { Platform } from 'react-native';
 import { Extra } from '../../utils/config';
 import AuthApi from './auth';
+import BusinessApi from './business';
 import ConsumerApi from './consumer';
 import CourierApi from './courier';
 import FilesApi from './files';
 import FirebaseRefs from './FirebaseRefs';
 import FleetApi from './fleet';
 import MapsApi from './maps';
-import MenuApi from './menu';
 import OrderApi from './order';
 import IuguApi from './payment/iugu';
 import ProfileApi from './profile';
@@ -32,7 +32,7 @@ export default class Api {
   private _maps: MapsApi;
   private _files: FilesApi;
   private _iugu: IuguApi;
-  private _menu: MenuApi;
+  private _business: BusinessApi;
 
   constructor(extra: Extra) {
     const apiKey = Platform.select(extra.googleApiKeys);
@@ -63,7 +63,7 @@ export default class Api {
     this._consumer = new ConsumerApi(this._refs, this._iugu);
     this._order = new OrderApi(this._refs);
     this._maps = new MapsApi(apiKey!);
-    this._menu = new MenuApi(this._refs);
+    this._business = new BusinessApi(this._refs);
   }
 
   auth() {
@@ -98,7 +98,7 @@ export default class Api {
     return this._files;
   }
 
-  menu() {
-    return this._menu;
+  business() {
+    return this._business;
   }
 }

@@ -1,16 +1,21 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Business, WithId } from 'appjusto-types';
-import React, { useContext } from 'react';
+import React from 'react';
 import { ActivityIndicator, Image, SectionList, Text, TouchableOpacity, View } from 'react-native';
-import { useQuery } from 'react-query';
-import { ApiContext } from '../common/app/context';
-import useMenu from '../common/hooks/queries/useMenu';
+import { useContextBusiness } from '../common/store/context/business';
+import { useContextMenu } from '../common/store/context/business/config';
 import { colors, halfPadding, padding, screens, texts } from '../common/styles';
 import { HomeNavigatorParamList } from '../consumer/home/types';
 import RestaurantCard from './components/RestaurantCard';
 import * as fake from './fakeData';
 import SingleHeader from './SingleHeader';
+
+type RestItemProps = {
+  name: string;
+  description: string;
+  price: number;
+  onPress: () => void;
+};
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;
 type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'RestaurantDetail'>;
@@ -20,41 +25,24 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-export default function ({ navigation, route }: Props) {
-  const { restaurantId, restaurantName } = route.params;
+const RestaurantDetail = React.memo(({ navigation, route }: Props) => {
   // context
-  const api = useContext(ApiContext);
+  const restaurant = useContextBusiness();
+  const menu = useContextMenu();
+  // side effects
+  // setting the restaurant name on the header as soon as the user navigates to the screen
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: restaurant?.name ?? '',
+    });
+  }, [route.params]);
 
-  // app state
-  const { data: restaurant } = useQuery<WithId<Business>, Error>(['restaurant', restaurantId], () =>
-    api.menu().fetchRestaurant(restaurantId)
-  );
-  // const { data: menu } = useQuery<CategoryWithProducts[], Error>(
-  //   ['restaurant-menu', restaurantId],
-  //   () => api.menu().fetchRestaurantMenu(restaurantId)
-  // );
-  const menu = useMenu(restaurantId);
-
+  //UI
   const sections =
     menu?.map((category) => ({
       title: category.name,
       data: category.products,
     })) ?? [];
-
-  // setting the restaurant name on the header as soon as the user navigates to the screen
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      title: restaurantName,
-    });
-  }, [route.params]);
-
-  //UI
-  type RestItemProps = {
-    name: string;
-    description: string;
-    price: number;
-    onPress: () => void;
-  };
   const RestaurantItem = ({ name, description, price, onPress }: RestItemProps) => (
     <TouchableOpacity onPress={onPress}>
       <View
@@ -123,4 +111,6 @@ export default function ({ navigation, route }: Props) {
       }}
     />
   );
-}
+});
+
+export default RestaurantDetail;
