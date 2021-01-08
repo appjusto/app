@@ -6,22 +6,22 @@ import { ActivityIndicator, Image, Text, TouchableWithoutFeedback, View } from '
 import { FlatList } from 'react-native-gesture-handler';
 import { useQuery } from 'react-query';
 import { useDispatch } from 'react-redux';
-import * as icons from '../assets/icons';
-import { ApiContext, AppDispatch } from '../common/app/context';
-import PaddedView from '../common/components/containers/PaddedView';
-import useLastKnownLocation from '../common/hooks/useLastKnownLocation';
-import { getReverseGeocodeAdress } from '../common/store/order/actions';
-import { borders, colors, halfPadding, padding, screens, texts } from '../common/styles';
-import { HomeNavigatorParamList } from '../consumer/home/types';
-import { t } from '../strings';
+import * as icons from '../../../assets/icons';
+import { ApiContext, AppDispatch } from '../../../common/app/context';
+import PaddedView from '../../../common/components/containers/PaddedView';
+import useLastKnownLocation from '../../../common/hooks/useLastKnownLocation';
+import { getReverseGeocodeAdress } from '../../../common/store/order/actions';
+import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { t } from '../../../strings';
 import CuisinesBox from './components/CuisinesBox';
 import DoubleHeader from './components/DoubleHeader';
 import LocationBar from './components/LocationBar';
 import OrderInput from './components/OrderInput';
 import RestaurantListItem from './components/RestaurantListItem';
 import * as fake from './fakeData';
+import { RestaurantsNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;
+type ScreenNavigationProp = StackNavigationProp<RestaurantsNavigatorParamList>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -125,7 +125,12 @@ export default function ({ navigation }: Props) {
             subtitle="Valor justo para restaurantes e entregadores"
           />
           {/* "OrderBy" component  here*/}
-          <OrderInput navigation={navigation} />
+          <TouchableWithoutFeedback
+            onPress={() => navigation.navigate('OrderBy')}
+            style={{ marginHorizontal: 12, marginTop: padding }}
+          >
+            <OrderInput />
+          </TouchableWithoutFeedback>
         </View>
       }
       data={openRestaurants}
@@ -134,7 +139,7 @@ export default function ({ navigation }: Props) {
         <View style={{ marginTop: padding }}>
           <RestaurantListItem
             onPress={() => {
-              navigation.navigate('RestaurantDetail', {
+              navigation.navigate('RestaurantNavigator', {
                 restaurantId: item.id,
               });
             }}

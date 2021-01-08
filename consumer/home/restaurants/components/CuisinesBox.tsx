@@ -1,10 +1,9 @@
 import React from 'react';
-import { View, Image, ImageSourcePropType } from 'react-native';
+import { Image, ImageSourcePropType, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
-import RoundedText from '../../common/components/texts/RoundedText';
-import { halfPadding } from '../../common/styles';
-import { t } from '../../strings';
+import RoundedText from '../../../../common/components/texts/RoundedText';
+import { halfPadding } from '../../../../common/styles';
+import { t } from '../../../../strings';
 
 type Props = {
   image: ImageSourcePropType;

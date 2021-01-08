@@ -4,13 +4,6 @@ import ArrowBox from '../../common/components/views/ArrowBox';
 import Chat from '../../common/screens/Chat';
 import FleetDetail from '../../common/screens/fleet/FleetDetail';
 import PermissionDeniedFeedback from '../../common/screens/PermissionDeniedFeedback';
-import { BusinessProvider } from '../../common/store/context/business';
-import AboutRestaurant from '../../restaurants/AboutRestaurant';
-import ItemDetail from '../../restaurants/ItemDetail';
-import OrderBy from '../../restaurants/OrderBy';
-import RestaurantDetail from '../../restaurants/RestaurantDetail';
-import RestaurantSearch from '../../restaurants/RestaurantSearch';
-import RestaurantsHome from '../../restaurants/RestaurantsHome';
 import { t } from '../../strings';
 import ProfileAddCard from '../profile/payment/ProfileAddCard';
 import ProfilePaymentMethods from '../profile/payment/ProfilePaymentMethods';
@@ -26,6 +19,7 @@ import OrderMatching from './orders/OrderMatching';
 import OrderUnmatched from './orders/OrderUnmatched';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import TransportableItems from './orders/p2p-order/TransportableItems';
+import RestaurantsNavigator from './restaurants/RestaurantsNavigator';
 import { HomeNavigatorParamList } from './types';
 
 const Stack = createStackNavigator<HomeNavigatorParamList>();
@@ -116,36 +110,9 @@ export default function () {
       />
       {/* screens from the 'restaurant stack' */}
       <Stack.Screen
-        name="RestaurantsHome"
-        component={RestaurantsHome}
+        name="RestaurantsNavigator"
+        component={RestaurantsNavigator}
         options={{ title: t('Restaurantes e alimentação') }}
-      />
-      <Stack.Screen name="RestaurantDetail" options={{ title: t('Página do restaurante') }}>
-        {(props) => (
-          <BusinessProvider businessId={props.route.params.restaurantId}>
-            <RestaurantDetail {...props} />
-          </BusinessProvider>
-        )}
-      </Stack.Screen>
-      <Stack.Screen
-        name="AboutRestaurant"
-        component={AboutRestaurant}
-        options={{ title: t('Saber mais') }}
-      />
-      <Stack.Screen
-        name="ItemDetail"
-        component={ItemDetail}
-        options={{ title: t('Detalhes do item') }}
-      />
-      <Stack.Screen
-        name="RestaurantSearch"
-        component={RestaurantSearch}
-        options={{ title: t('Buscar') }}
-      />
-      <Stack.Screen
-        name="OrderBy"
-        component={OrderBy}
-        options={{ title: t('Filtrar resultados') }}
       />
     </Stack.Navigator>
   );

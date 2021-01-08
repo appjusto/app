@@ -1,10 +1,13 @@
 import React from 'react';
-import { View, Image, Text } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
-import { colors, halfPadding, padding, texts } from '../../common/styles';
-import { formatDistance, formatDuration, separateWithDot } from '../../common/utils/formatters';
-import { t } from '../../strings';
+import { colors, halfPadding, padding, texts } from '../../../../common/styles';
+import {
+  formatDistance,
+  formatDuration,
+  separateWithDot,
+} from '../../../../common/utils/formatters';
+import { t } from '../../../../strings';
 import * as fake from '../fakeData';
 
 type Props = {

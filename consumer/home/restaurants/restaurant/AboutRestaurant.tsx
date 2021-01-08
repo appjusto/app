@@ -1,17 +1,17 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { View, Text, Image, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import * as icons from '../../../../assets/icons';
+import { useContextBusiness } from '../../../../common/store/context/business';
+import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { t } from '../../../../strings';
+import RestaurantCard from '../components/RestaurantCard';
+import { RestaurantNavigatorParamList } from './types';
 
-import * as icons from '../assets/icons';
-import { colors, halfPadding, padding, screens, texts } from '../common/styles';
-import { HomeNavigatorParamList } from '../consumer/home/types';
-import { t } from '../strings';
-import RestaurantCard from './components/RestaurantCard';
-
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;
-type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'AboutRestaurant'>;
+type ScreenNavigationProp = StackNavigationProp<RestaurantNavigatorParamList>;
+type ScreenRouteProp = RouteProp<RestaurantNavigatorParamList, 'AboutRestaurant'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -19,7 +19,7 @@ type Props = {
 };
 
 export default function ({ route }: Props) {
-  const { restaurant } = route.params ?? {};
+  const restaurant = useContextBusiness();
 
   if (!restaurant || !restaurant.businessAddress)
     return (
@@ -30,7 +30,7 @@ export default function ({ route }: Props) {
 
   return (
     <ScrollView style={{ ...screens.default }}>
-      <RestaurantCard name={restaurant.name} />
+      <RestaurantCard name={restaurant?.name ?? ''} />
       <View style={{ marginTop: padding, padding }}>
         <Text style={{ ...texts.default }}>{restaurant.description}</Text>
         <Text style={{ marginTop: 24, ...texts.default }}>{restaurant.description}</Text>

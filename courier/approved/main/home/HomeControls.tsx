@@ -27,7 +27,7 @@ import {
   texts,
 } from '../../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../../common/utils/formatters';
-import LocationBar from '../../../../restaurants/components/LocationBar';
+import LocationBar from '../../../../consumer/home/restaurants/components/LocationBar';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
