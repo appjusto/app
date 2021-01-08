@@ -24,10 +24,16 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   const getProductById = useContextGetProductById();
   const product = getProductById ? getProductById(route.params.productId) : undefined;
-  console.log(getProductById);
 
   // screen state
   const [observation, setObservation] = useState<string>('');
+
+  // side effects
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: product?.name ?? '',
+    });
+  }, [product]);
   //UI
   const QuantityCounter = () => {
     const [counter, setCounter] = useState<number>(1);

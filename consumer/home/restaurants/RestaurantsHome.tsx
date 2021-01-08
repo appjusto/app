@@ -139,7 +139,7 @@ export default function ({ navigation }: Props) {
         <View style={{ marginTop: padding }}>
           <RestaurantListItem
             onPress={() => {
-              navigation.navigate('RestaurantNavigator', {
+              navigation.push('RestaurantNavigator', {
                 restaurantId: item.id,
               });
             }}

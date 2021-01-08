@@ -23,7 +23,7 @@ export default function () {
         component={RestaurantsHome}
         options={{ title: t('Restaurantes e alimentação') }}
       />
-      <Stack.Screen name="RestaurantNavigator" options={{ title: t('Página do restaurante') }}>
+      <Stack.Screen name="RestaurantNavigator" options={{ headerShown: false }}>
         {(props) => (
           <BusinessProvider businessId={props.route.params.restaurantId}>
             <RestaurantNavigator {...props} />
