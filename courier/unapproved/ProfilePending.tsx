@@ -2,10 +2,9 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ProfileSituation } from 'appjusto-types';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { View, Text, ScrollView, StatusBar } from 'react-native';
-import { useQueryCache } from 'react-query';
-import { useSelector, useDispatch } from 'react-redux';
-
+import { ScrollView, Text, View } from 'react-native';
+import { useQueryClient } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../common/app/context';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/containers/PaddedView';
@@ -15,12 +14,12 @@ import useCourierSelfie from '../../common/hooks/queries/useCourierSelfie';
 import { submitProfile } from '../../common/store/courier/actions';
 import { getCourier } from '../../common/store/courier/selectors';
 import {
-  courierInfoSet,
   bankAccountSet,
   companyInfoSet,
+  courierInfoSet,
 } from '../../common/store/courier/validators';
 import { getUIBusy } from '../../common/store/ui/selectors';
-import { screens, texts, colors } from '../../common/styles';
+import { colors, screens, texts } from '../../common/styles';
 import { t } from '../../strings';
 import { PendingParamList } from './types';
 
@@ -36,7 +35,7 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  const queryCache = useQueryCache();
+  const queryClient = useQueryClient();
 
   // app state
   const busy = useSelector(getUIBusy);
@@ -105,7 +104,7 @@ export default function ({ navigation, route }: Props) {
   }, []);
   // when focused, refetch queries to recalculate of steps done
   const focusHandler = useCallback(() => {
-    queryCache.refetchQueries();
+    queryClient.refetchQueries();
   }, []);
 
   // UI

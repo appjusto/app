@@ -1,10 +1,8 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useCallback } from 'react';
-
 import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
-import { borders, colors } from '../../../common/styles';
 import { t } from '../../../strings';
 import { MatchingParamList } from './types';
 

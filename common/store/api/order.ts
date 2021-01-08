@@ -12,6 +12,7 @@ import {
   WithId,
 } from 'appjusto-types';
 import firebase from 'firebase';
+import FirebaseRefs from './FirebaseRefs';
 import { documentsAs } from './types';
 
 export type ObserveOrdersOptions = {
@@ -20,66 +21,57 @@ export type ObserveOrdersOptions = {
 };
 
 export default class OrderApi {
-  constructor(
-    private firestore: firebase.firestore.Firestore,
-    private functions: firebase.functions.Functions
-  ) {}
+  constructor(private refs: FirebaseRefs) {}
 
   // callables
   // consumer
   async createOrder(payload: CreateOrderPayload) {
-    return (await this.functions.httpsCallable('createOrder')(payload)).data;
+    return (await this.refs.getCreateOrderCallable()(payload)).data;
   }
 
   async getOrderQuotes(orderId: string) {
-    return (await this.functions.httpsCallable('getOrderQuotes')({ orderId })).data as Fare[];
+    return (await this.refs.getGetOrderQuotesCallable()({ orderId })).data as Fare[];
   }
 
   async placeOrder(payload: PlaceOrderPayload) {
-    const result = await this.functions.httpsCallable('placeOrder')(payload);
-    return result.data;
-  }
-
-  async tipCourier(orderId: string, tip: number) {
-    return (await this.functions.httpsCallable('tipCourier')({ orderId, tip })).data;
+    return (await this.refs.getPlaceOrderCallable()(payload)).data;
   }
 
   async cancelOrder(orderId: string, cancellation?: OrderIssue) {
-    return (await this.functions.httpsCallable('cancelOrder')({ orderId, cancellation })).data;
+    return (await this.refs.getCancelOrderCallable()({ orderId, cancellation })).data;
   }
 
-  async deleteOrder(orderId: string) {
-    return this.firestore.collection('orders').doc(orderId).delete();
+  async tipCourier(orderId: string, tip: number) {
+    return (await this.refs.getTipCourierCallable()({ orderId, tip })).data;
   }
 
   async sendOrderProblem(orderId: string, problem: OrderIssue) {
-    return (await this.functions.httpsCallable('sendOrderProblem')({ orderId, problem })).data;
+    return (await this.refs.getSendOrderProblemCallable()({ orderId, problem })).data;
   }
 
   async sendCourierReview(orderId: string, review: Review) {
-    return (await this.functions.httpsCallable('sendCourierReview')({ orderId, review })).data;
+    return (await this.refs.getSendCourierReviewCallable()({ orderId, review })).data;
   }
 
   // courier
   async matchOrder(orderId: string) {
-    return (await this.functions.httpsCallable('matchOrder')({ orderId })).data;
+    return (await this.refs.getMatchOrderCallable()({ orderId })).data;
   }
 
   async rejectOrder(orderId: string, rejection: OrderRejection) {
-    return (await this.functions.httpsCallable('rejectOrder')({ orderId, rejection })).data;
+    return (await this.refs.getRejectOrderCallable()({ orderId, rejection })).data;
   }
 
   async nextDispatchingState(orderId: string) {
-    return (await this.functions.httpsCallable('nextDispatchingState')({ orderId })).data;
+    return (await this.refs.getNextDispatchingStateCallable()({ orderId })).data;
   }
 
   async completeDelivery(orderId: string) {
-    return (await this.functions.httpsCallable('completeDelivery')({ orderId })).data;
+    return (await this.refs.getCompleteDeliveryCallable()({ orderId })).data;
   }
 
   async sendCourierOrderProblem(orderId: string, problem: OrderIssue) {
-    return (await this.functions.httpsCallable('sendCourierOrderProblem')({ orderId, problem }))
-      .data;
+    return (await this.refs.getSendCourierOrderProblemCallable()({ orderId, problem })).data;
   }
 
   // firestore
@@ -89,8 +81,8 @@ export default class OrderApi {
     resultHandler: (orders: WithId<Order>[]) => void
   ): firebase.Unsubscribe {
     const { createdBy, deliveredBy } = options;
-    let query = this.firestore
-      .collection('orders')
+    let query = this.refs
+      .getOrdersRef()
       .orderBy('createdOn', 'desc')
       .where('status', 'in', [
         'quote',
@@ -121,10 +113,8 @@ export default class OrderApi {
     orderId: string,
     resultHandler: (orders: WithId<ChatMessage>[]) => void
   ): firebase.Unsubscribe {
-    const unsubscribe = this.firestore
-      .collection('orders')
-      .doc(orderId)
-      .collection('chat')
+    const unsubscribe = this.refs
+      .getOrderChatRef(orderId)
       .orderBy('timestamp', 'asc')
       .onSnapshot(
         (querySnapshot) => {
@@ -140,24 +130,17 @@ export default class OrderApi {
 
   async sendMessage(orderId: string, message: Partial<ChatMessage>) {
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    return this.firestore
-      .collection('orders')
-      .doc(orderId)
-      .collection('chat')
-      .add({
-        ...message,
-        timestamp,
-      });
+    return this.refs.getOrderChatRef(orderId).add({
+      ...message,
+      timestamp,
+    });
   }
 
   async fetchIssues(type: IssueType) {
-    return (
-      await this.firestore
-        .collection('platform')
-        .doc('data')
-        .collection('issues')
-        .where('type', '==', type)
-        .get()
-    ).docs;
+    return (await this.refs.getIssuesRef().where('type', '==', type).get()).docs;
+  }
+
+  async deleteOrder(orderId: string) {
+    return this.refs.getOrderRef(orderId).delete();
   }
 }

@@ -1,19 +1,16 @@
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Business, WithId } from 'appjusto-types';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useContext } from 'react';
-import { TouchableWithoutFeedback, View, Text, Image, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Image, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useQuery } from 'react-query';
-import { useDispatch, useSelector } from 'react-redux';
-
+import { useDispatch } from 'react-redux';
 import * as icons from '../assets/icons';
 import { ApiContext, AppDispatch } from '../common/app/context';
 import PaddedView from '../common/components/containers/PaddedView';
-import FeedbackView from '../common/components/views/FeedbackView';
 import useLastKnownLocation from '../common/hooks/useLastKnownLocation';
-import HomeShareCard from '../common/screens/home/cards/HomeShareCard';
 import { getReverseGeocodeAdress } from '../common/store/order/actions';
-import { getUser } from '../common/store/user/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../common/styles';
 import { HomeNavigatorParamList } from '../consumer/home/types';
 import { t } from '../strings';
@@ -37,11 +34,13 @@ export default function ({ navigation }: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   // app state
-  const user = useSelector(getUser)!;
-  const getOpenRestaurants = (key: string) => api.menu().getOpenRestaurants();
-  const { data: openRestaurants } = useQuery('open-restaurants', getOpenRestaurants);
-  const getClosedRestaurants = (key: string) => api.menu().getClosedRestaurants();
-  const { data: closedRestaurants } = useQuery('closed-restaurants', getClosedRestaurants);
+  const { data: openRestaurants } = useQuery<WithId<Business>[], Error>('open-restaurants', () =>
+    api.menu().getOpenRestaurants()
+  );
+  const { data: closedRestaurants } = useQuery<WithId<Business>[], Error>(
+    'closed-restaurants',
+    () => api.menu().getClosedRestaurants()
+  );
 
   // state
   const [locationKey] = React.useState(nanoid());
@@ -135,35 +134,23 @@ export default function ({ navigation }: Props) {
       renderItem={({ item }) => (
         <View style={{ marginTop: padding }}>
           <RestaurantListItem
-            onPress={() =>
+            onPress={() => {
               navigation.navigate('RestaurantDetail', {
-                restaurantName: item.name,
+                restaurantName: item.name ?? '',
                 restaurantId: item.id,
-              })
-            }
-            name={item.name}
+              });
+            }}
+            name={item.name ?? ''}
           />
         </View>
       )}
       ListFooterComponent={
         <View style={{ marginTop: 24 }}>
           <DoubleHeader title="Fechados no momento" subtitle="Fora do horário de funcionamento" />
-          <RestaurantListItem
-            onPress={() => navigation.navigate('RestaurantDetail')}
-            name="Restaurante Fechado"
-          />
-          <RestaurantListItem
-            onPress={() => navigation.navigate('RestaurantDetail')}
-            name="Restaurante Fechado"
-          />
-          <RestaurantListItem
-            onPress={() => navigation.navigate('RestaurantDetail')}
-            name="Restaurante Fechado"
-          />
-          <RestaurantListItem
-            onPress={() => navigation.navigate('RestaurantDetail')}
-            name="Restaurante Fechado"
-          />
+          <RestaurantListItem onPress={() => null} name="Restaurante Fechado" />
+          <RestaurantListItem onPress={() => null} name="Restaurante Fechado" />
+          <RestaurantListItem onPress={() => null} name="Restaurante Fechado" />
+          <RestaurantListItem onPress={() => null} name="Restaurante Fechado" />
         </View>
       }
     />

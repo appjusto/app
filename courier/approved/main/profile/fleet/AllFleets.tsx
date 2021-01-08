@@ -2,12 +2,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Fleet } from 'appjusto-types';
 import { debounce } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, View, ActivityIndicator } from 'react-native';
-
+import { ActivityIndicator, FlatList, View } from 'react-native';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import ShowIf from '../../../../../common/components/views/ShowIf';
 import useFleets from '../../../../../common/hooks/queries/useFleets';
-import { screens, colors, padding } from '../../../../../common/styles';
+import { colors, padding, screens } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import FleetItem from './FleetItem';
 import { FleetParamList } from './types';
@@ -24,7 +23,7 @@ export default function ({ navigation }: Props) {
   // screen state
   const [fleetName, setFleetName] = useState('');
   const [fleetSearch, setFleetSearch] = useState('');
-  const [fleets, query] = useFleets(fleetSearch);
+  const { fleets, query } = useFleets(fleetSearch);
 
   // side effects
   const updateFleetSearch = useCallback(
@@ -76,7 +75,7 @@ export default function ({ navigation }: Props) {
             feePerKm={item.additionalPerKmAfterThreshold}
           />
         )}
-        onEndReached={() => query.fetchMore()}
+        onEndReached={() => query.fetchNextPage()}
       />
     </View>
   );

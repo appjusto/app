@@ -29,7 +29,7 @@ export default function ({ address }: Props) {
           <Image source={icons.navigationArrow} />
           <Text style={{ ...texts.small, marginLeft: halfPadding }}>{address}</Text>
         </View>
-        <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Trocar')}</Text>
+        <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Alterar')}</Text>
       </View>
     </TouchableWithoutFeedback>
   );
