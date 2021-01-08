@@ -32,6 +32,7 @@ export default function () {
       })}
     >
       <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
+      {/* TO-DO: refactor screens related to order to its own navigator */}
       <Stack.Screen
         name="CreateOrderP2P"
         component={CreateOrderP2P}
@@ -108,11 +109,12 @@ export default function () {
         component={OrderDeliveredFeedback}
         options={{ headerShown: false }}
       />
-      {/* screens from the 'restaurant stack' */}
       <Stack.Screen
         name="RestaurantsNavigator"
         component={RestaurantsNavigator}
-        options={{ title: t('Restaurantes e alimentação') }}
+        options={{
+          headerShown: false,
+        }}
       />
     </Stack.Navigator>
   );

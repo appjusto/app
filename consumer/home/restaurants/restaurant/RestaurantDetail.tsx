@@ -30,12 +30,11 @@ const RestaurantDetail = React.memo(({ navigation, route }: Props) => {
   const restaurant = useContextBusiness();
   const menu = useContextMenu();
   // side effects
-  // setting the restaurant name on the header as soon as the user navigates to the screen
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: restaurant?.name ?? '',
     });
-  }, [route.params]);
+  }, [restaurant]);
 
   //UI
   const sections =
