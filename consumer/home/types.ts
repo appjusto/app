@@ -1,5 +1,7 @@
-import { Address, Business, Fleet, Order, Product, WithId } from 'appjusto-types';
+import { Address, Fleet, Order, WithId } from 'appjusto-types';
 import { ChatParamList } from '../../common/screens/Chat';
+import { NestedNavigatorParams } from '../../common/types';
+import { RestaurantsNavigatorParamList } from './restaurants/types';
 
 export type HomeNavigatorParamList = {
   Home: undefined;
@@ -55,16 +57,5 @@ export type HomeNavigatorParamList = {
     title: string;
     subtitle: string;
   };
-  RestaurantsHome: undefined;
-  RestaurantDetail: {
-    restaurantId: string;
-  };
-  AboutRestaurant: {
-    restaurant: WithId<Business>;
-  };
-  ItemDetail: {
-    item: WithId<Product>;
-  };
-  RestaurantSearch: undefined;
-  OrderBy: undefined;
+  RestaurantsNavigator: NestedNavigatorParams<RestaurantsNavigatorParamList>;
 } & ChatParamList;

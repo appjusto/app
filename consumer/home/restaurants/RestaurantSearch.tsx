@@ -1,19 +1,11 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useCallback, useContext, useRef, useState } from 'react';
-import { View, Image, Text, TouchableOpacity, Dimensions } from 'react-native';
-import {
-  FlatList,
-  ScrollView,
-  TextInput,
-  TouchableWithoutFeedback,
-} from 'react-native-gesture-handler';
-import { useDispatch, useSelector } from 'react-redux';
-
-import * as icons from '../assets/icons';
-import { ApiContext, AppDispatch } from '../common/app/context';
-import DefaultInput from '../common/components/inputs/DefaultInput';
-import { padding, screens } from '../common/styles';
-import { HomeNavigatorParamList } from '../consumer/home/types';
+import React, { useCallback, useRef, useState } from 'react';
+import { Image, View } from 'react-native';
+import { ScrollView, TextInput } from 'react-native-gesture-handler';
+import * as icons from '../../../assets/icons';
+import DefaultInput from '../../../common/components/inputs/DefaultInput';
+import { padding, screens } from '../../../common/styles';
+import { HomeNavigatorParamList } from '../types';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;
 

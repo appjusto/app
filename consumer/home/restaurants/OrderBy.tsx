@@ -1,15 +1,13 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext, useState } from 'react';
-import { View, Image, Text, TouchableOpacity, Dimensions } from 'react-native';
-import { FlatList, ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { useDispatch, useSelector } from 'react-redux';
-
-import CheckField from '../common/components/buttons/CheckField';
-import RadioButton from '../common/components/buttons/RadioButton';
-import RoundedText from '../common/components/texts/RoundedText';
-import { colors, halfPadding, padding, screens } from '../common/styles';
-import { HomeNavigatorParamList } from '../consumer/home/types';
-import { t } from '../strings';
+import React from 'react';
+import { View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import CheckField from '../../../common/components/buttons/CheckField';
+import RadioButton from '../../../common/components/buttons/RadioButton';
+import RoundedText from '../../../common/components/texts/RoundedText';
+import { colors, halfPadding, padding, screens } from '../../../common/styles';
+import { t } from '../../../strings';
+import { HomeNavigatorParamList } from '../types';
 import SingleHeader from './SingleHeader';
 
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;

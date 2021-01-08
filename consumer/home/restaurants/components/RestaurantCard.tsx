@@ -1,10 +1,13 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
-
-import RoundedText from '../../common/components/texts/RoundedText';
-import { colors, halfPadding, texts } from '../../common/styles';
-import { formatDistance, formatDuration, separateWithDot } from '../../common/utils/formatters';
-import { t } from '../../strings';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
+import RoundedText from '../../../../common/components/texts/RoundedText';
+import { colors, halfPadding, texts } from '../../../../common/styles';
+import {
+  formatDistance,
+  formatDuration,
+  separateWithDot,
+} from '../../../../common/utils/formatters';
+import { t } from '../../../../strings';
 import * as fake from '../fakeData';
 
 type Props = {

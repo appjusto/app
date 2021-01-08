@@ -1,9 +1,9 @@
 import React from 'react';
 import { Image, Text, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import * as icons from '../../assets/icons';
-import { borders, colors, halfPadding, texts } from '../../common/styles';
-import { t } from '../../strings';
+import * as icons from '../../../../assets/icons';
+import { borders, colors, halfPadding, texts } from '../../../../common/styles';
+import { t } from '../../../../strings';
 
 type Props = {
   address: string;

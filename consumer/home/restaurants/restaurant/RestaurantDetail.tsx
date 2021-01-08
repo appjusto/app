@@ -2,13 +2,13 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, Image, SectionList, Text, TouchableOpacity, View } from 'react-native';
-import { useContextBusiness } from '../common/store/context/business';
-import { useContextMenu } from '../common/store/context/business/config';
-import { colors, halfPadding, padding, screens, texts } from '../common/styles';
-import { HomeNavigatorParamList } from '../consumer/home/types';
-import RestaurantCard from './components/RestaurantCard';
-import * as fake from './fakeData';
-import SingleHeader from './SingleHeader';
+import { useContextBusiness } from '../../../../common/store/context/business';
+import { useContextMenu } from '../../../../common/store/context/business/config';
+import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import RestaurantCard from '../components/RestaurantCard';
+import * as fake from '../fakeData';
+import SingleHeader from '../SingleHeader';
+import { RestaurantNavigatorParamList } from './types';
 
 type RestItemProps = {
   name: string;
@@ -17,8 +17,8 @@ type RestItemProps = {
   onPress: () => void;
 };
 
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;
-type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'RestaurantDetail'>;
+type ScreenNavigationProp = StackNavigationProp<RestaurantNavigatorParamList>;
+type ScreenRouteProp = RouteProp<RestaurantNavigatorParamList, 'RestaurantDetail'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -92,7 +92,7 @@ const RestaurantDetail = React.memo(({ navigation, route }: Props) => {
         <View>
           <RestaurantCard
             name={restaurant.name ?? ''}
-            onPress={() => navigation.navigate('AboutRestaurant', { restaurant })}
+            onPress={() => navigation.navigate('AboutRestaurant')}
             canNavigate
           />
         </View>
@@ -105,7 +105,7 @@ const RestaurantDetail = React.memo(({ navigation, route }: Props) => {
             name={item.name}
             description={item.description ?? ''}
             price={item.price ?? 0}
-            onPress={() => navigation.navigate('ItemDetail', { item })}
+            onPress={() => navigation.navigate('ItemDetail', { productId: item.id })}
           />
         );
       }}

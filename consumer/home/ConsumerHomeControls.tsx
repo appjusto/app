@@ -2,13 +2,12 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-
+import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import * as icons from '../../assets/icons';
 import PaddedView from '../../common/components/containers/PaddedView';
 import ShowIf from '../../common/components/views/ShowIf';
 import useTallerDevice from '../../common/hooks/useTallerDevice';
-import { colors, doublePadding, halfPadding, padding, texts, borders } from '../../common/styles';
+import { borders, colors, doublePadding, halfPadding, padding, texts } from '../../common/styles';
 import { t } from '../../strings';
 import { LoggedParamList } from '../types';
 import { HomeNavigatorParamList } from './types';
@@ -64,7 +63,11 @@ export default function ({ navigation }: Props) {
         <View
           style={[styles.controlItem, { backgroundColor: colors.lightGreen, flexDirection: 'row' }]}
         >
-          <TouchableOpacity onPress={() => navigation.navigate('RestaurantsHome')}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('RestaurantsNavigator', { screen: 'RestaurantsHome' })
+            }
+          >
             <View>
               <Image source={icons.consumerHomePizza} />
               <Text style={[texts.default, { paddingTop: 4 }]}>
@@ -74,7 +77,6 @@ export default function ({ navigation }: Props) {
                 {t('Peça comida de uma forma justa')}
               </Text>
             </View>
-
           </TouchableOpacity>
         </View>
       </View>

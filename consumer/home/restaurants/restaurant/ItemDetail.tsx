@@ -1,19 +1,20 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
-import { View, Image, Text, TouchableOpacity } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import * as icons from '../../../../assets/icons';
+import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import DefaultInput from '../../../../common/components/inputs/DefaultInput';
+import { useContextGetProductById } from '../../../../common/store/context/business/products';
+import { borders, colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { formatCurrency } from '../../../../common/utils/formatters';
+import { t } from '../../../../strings';
+import * as fake from '../fakeData';
+import { RestaurantNavigatorParamList } from './types';
 
-import * as icons from '../assets/icons';
-import DefaultButton from '../common/components/buttons/DefaultButton';
-import DefaultInput from '../common/components/inputs/DefaultInput';
-import { borders, colors, halfPadding, padding, screens, texts } from '../common/styles';
-import { HomeNavigatorParamList } from '../consumer/home/types';
-import { t } from '../strings';
-import * as fake from './fakeData';
-
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;
-type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'ItemDetail'>;
+type ScreenNavigationProp = StackNavigationProp<RestaurantNavigatorParamList>;
+type ScreenRouteProp = RouteProp<RestaurantNavigatorParamList, 'ItemDetail'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -21,7 +22,9 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  const { item } = route.params ?? {};
+  const getProductById = useContextGetProductById();
+  const product = getProductById ? getProductById(route.params.productId) : undefined;
+  console.log(getProductById);
 
   // screen state
   const [observation, setObservation] = useState<string>('');
@@ -80,11 +83,11 @@ export default function ({ navigation, route }: Props) {
       <View style={{ paddingHorizontal: 12 }}>
         <Image source={fake.detail} style={{ width: '100%', height: 240, borderRadius: 8 }} />
         <View style={{ marginTop: padding }}>
-          <Text style={{ ...texts.mediumToBig }}>{item.name}</Text>
+          <Text style={{ ...texts.mediumToBig }}>{product?.name ?? ''}</Text>
           <Text style={{ ...texts.default, color: colors.darkGrey, marginVertical: 4 }}>
-            {item.description}
+            {product?.description ?? ''}
           </Text>
-          <Text style={{ ...texts.default }}>{`R$ ${item.price},00`}</Text>
+          <Text style={{ ...texts.default }}>{formatCurrency(product?.price ?? 0)}</Text>
         </View>
       </View>
       <View
