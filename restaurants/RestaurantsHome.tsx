@@ -17,7 +17,6 @@ import { t } from '../strings';
 import CuisinesBox from './components/CuisinesBox';
 import DoubleHeader from './components/DoubleHeader';
 import LocationBar from './components/LocationBar';
-import MostLikedItem from './components/MostLikedItem';
 import OrderInput from './components/OrderInput';
 import RestaurantListItem from './components/RestaurantListItem';
 import * as fake from './fakeData';
@@ -35,11 +34,11 @@ export default function ({ navigation }: Props) {
 
   // app state
   const { data: openRestaurants } = useQuery<WithId<Business>[], Error>('open-restaurants', () =>
-    api.menu().getOpenRestaurants()
+    api.business().fetchBusinesses('open')
   );
   const { data: closedRestaurants } = useQuery<WithId<Business>[], Error>(
     'closed-restaurants',
-    () => api.menu().getClosedRestaurants()
+    () => api.business().fetchBusinesses('closed')
   );
 
   // state
@@ -107,9 +106,9 @@ export default function ({ navigation }: Props) {
       ListHeaderComponent={
         <View>
           <LocationBar address={address} />
-          <DoubleHeader title="Os mais queridos" subtitle="Os lugares mais pedidos da sua região" />
+          {/* <DoubleHeader title="Os mais queridos" subtitle="Os lugares mais pedidos da sua região" /> */}
           {/* vertical flatlist displaying the "most liked" restaurants here */}
-          <MostLikedItem />
+          {/* <MostLikedItem /> */}
           <DoubleHeader title="Buscar" subtitle="Já sabe o que quer? Então não perde tempo!" />
           <View style={{ marginTop: 24, paddingHorizontal: 12 }}>
             <RestaurantSearch />
@@ -136,7 +135,6 @@ export default function ({ navigation }: Props) {
           <RestaurantListItem
             onPress={() => {
               navigation.navigate('RestaurantDetail', {
-                restaurantName: item.name ?? '',
                 restaurantId: item.id,
               });
             }}

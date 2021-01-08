@@ -1,19 +1,20 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-
 import ArrowBox from '../../common/components/views/ArrowBox';
 import Chat from '../../common/screens/Chat';
-import PermissionDeniedFeedback from '../../common/screens/PermissionDeniedFeedback';
 import FleetDetail from '../../common/screens/fleet/FleetDetail';
+import PermissionDeniedFeedback from '../../common/screens/PermissionDeniedFeedback';
+import { BusinessProvider } from '../../common/store/context/business';
+import AboutRestaurant from '../../restaurants/AboutRestaurant';
 import ItemDetail from '../../restaurants/ItemDetail';
 import OrderBy from '../../restaurants/OrderBy';
 import RestaurantDetail from '../../restaurants/RestaurantDetail';
 import RestaurantSearch from '../../restaurants/RestaurantSearch';
 import RestaurantsHome from '../../restaurants/RestaurantsHome';
 import { t } from '../../strings';
-import ProfileEdit from '../profile/ProfileEdit';
 import ProfileAddCard from '../profile/payment/ProfileAddCard';
 import ProfilePaymentMethods from '../profile/payment/ProfilePaymentMethods';
+import ProfileEdit from '../profile/ProfileEdit';
 import Home from './Home';
 import AddressComplete from './orders/AddressComplete';
 import CancelOrder from './orders/CancelOrder';
@@ -26,7 +27,6 @@ import OrderUnmatched from './orders/OrderUnmatched';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import TransportableItems from './orders/p2p-order/TransportableItems';
 import { HomeNavigatorParamList } from './types';
-import AboutRestaurant from '../../restaurants/AboutRestaurant';
 
 const Stack = createStackNavigator<HomeNavigatorParamList>();
 export default function () {
@@ -120,11 +120,13 @@ export default function () {
         component={RestaurantsHome}
         options={{ title: t('Restaurantes e alimentação') }}
       />
-      <Stack.Screen
-        name="RestaurantDetail"
-        component={RestaurantDetail}
-        options={{ title: t('Página do restaurante') }}
-      />
+      <Stack.Screen name="RestaurantDetail" options={{ title: t('Página do restaurante') }}>
+        {(props) => (
+          <BusinessProvider businessId={props.route.params.restaurantId}>
+            <RestaurantDetail {...props} />
+          </BusinessProvider>
+        )}
+      </Stack.Screen>
       <Stack.Screen
         name="AboutRestaurant"
         component={AboutRestaurant}
