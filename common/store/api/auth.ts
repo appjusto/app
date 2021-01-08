@@ -1,15 +1,10 @@
-import { IuguCustomerPaymentMethod } from 'appjusto-types/payment/iugu';
 import firebase from 'firebase';
-
 import { Extra } from '../../utils/config';
 import { DeleteAccountSurvey } from '../user/types';
+import FirebaseRefs from './FirebaseRefs';
 
 export default class AuthApi {
-  constructor(
-    private auth: firebase.auth.Auth,
-    private functions: firebase.functions.Functions,
-    private extra: Extra
-  ) {}
+  constructor(private refs: FirebaseRefs, private auth: firebase.auth.Auth, private extra: Extra) {}
 
   observeAuthState(handler: (a: firebase.User | null) => any): firebase.Unsubscribe {
     return this.auth.onAuthStateChanged(handler);
@@ -46,6 +41,6 @@ export default class AuthApi {
   }
 
   deleteAccount(survey: DeleteAccountSurvey) {
-    return this.functions.httpsCallable('deleteAccount')(survey);
+    return this.refs.getDeleteAccountCallable()(survey);
   }
 }

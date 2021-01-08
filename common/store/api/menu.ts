@@ -1,51 +1,23 @@
 import {
   Business,
   Category,
+  CategoryWithProducts,
   MenuConfig,
   Product,
   ProductsByCategory,
   WithId,
 } from 'appjusto-types';
-import firebase from 'firebase/app';
-import FilesApi from './files';
+import FirebaseRefs from './FirebaseRefs';
 import { documentAs, documentsAs } from './types';
 
 export default class MenuApi {
-  constructor(
-    private firestore: firebase.firestore.Firestore,
-    // private functions: firebase.functions.Functions,
-    private files: FilesApi
-  ) {}
-
-  // private
-  // helpers
-  private getRestaurantRef(restaurantId: string) {
-    return this.firestore.collection('businesses').doc(restaurantId);
-  }
-  private getCategoriesRef(restaurantId: string) {
-    return this.getRestaurantRef(restaurantId).collection('categories');
-  }
-  private getMenuConfigRef(restaurantId: string) {
-    return this.getRestaurantRef(restaurantId).collection('config').doc('menu');
-  }
-  private getProductsRef(restaurantId: string) {
-    return this.getRestaurantRef(restaurantId).collection('products');
-  }
-  private getProductRef(restaurantId: string, productId: string) {
-    return this.getProductsRef(restaurantId).doc(productId);
-  }
+  constructor(private refs: FirebaseRefs) {}
 
   // firestore
-  // restaurants
-  async getRestaurant(restaurantId: string) {
-    const query = this.firestore.collection('businesses').doc(restaurantId);
-    const doc = await query.get();
-    return documentAs<Business>(doc);
-  }
-
+  // business
   async getOpenRestaurants() {
-    const query = this.firestore
-      .collection('businesses')
+    const query = this.refs
+      .getBusinessesRef()
       .where('type', '==', 'restaurant')
       .where('status', '==', 'open');
     const docs = (await query.get()).docs;
@@ -53,85 +25,54 @@ export default class MenuApi {
   }
 
   async getClosedRestaurants() {
-    const query = this.firestore
-      .collection('businesses')
+    const query = this.refs
+      .getBusinessesRef()
       .where('type', '==', 'restaurant')
       .where('status', '==', 'closed');
     const docs = (await query.get()).docs;
     return documentsAs<Business>(docs);
   }
 
-  // categories
-  async getCategories(restaurantId: string) {
-    const query = this.getCategoriesRef(restaurantId);
-    const docs = (await query.get()).docs;
-    return documentsAs<Category>(docs);
+  async fetchRestaurant(restaurantId: string) {
+    return documentAs<Business>(await this.refs.getBusinessRef(restaurantId).get());
   }
 
-  getOrderedCategories = (categories: WithId<Category>[], order: string[]): WithId<Category>[] => {
-    return categories.sort((a, b) =>
-      order.indexOf(a.id) === -1
-        ? 1 // new categories go to the end by the default
-        : order.indexOf(a.id) - order.indexOf(b.id)
+  // menu
+  async fetchRestaurantMenu(restaurantId: string) {
+    const categories = documentsAs<WithId<Category>>(
+      (await this.refs.getBusinessCategoriesRef(restaurantId).get()).docs
     );
-  };
+    const products = documentsAs<WithId<Product>>(
+      (await this.refs.getBusinessProductsRef(restaurantId).get()).docs
+    );
+    const menuConfig = documentAs<MenuConfig>(
+      await this.refs.getBusinessMenuConfigRef(restaurantId).get()
+    );
+    return this.getOrderedMenu(categories, products, menuConfig);
+  }
 
   observeCategories(
     restaurantId: string,
     resultHandler: (categories: WithId<Category>[]) => void
   ): firebase.Unsubscribe {
-    const unsubscribe = this.getCategoriesRef(restaurantId).onSnapshot(
-      (querySnapshot) => {
-        resultHandler(documentsAs<Category>(querySnapshot.docs));
+    const unsubscribe = this.refs.getBusinessCategoriesRef(restaurantId).onSnapshot(
+      (snapshot) => {
+        resultHandler(documentsAs<Category>(snapshot.docs));
       },
       (error) => {
         console.error(error);
       }
     );
     return unsubscribe;
-  }
-
-  // menu config
-  async getRestaurantMenuConfig(restaurantId: string) {
-    const query = this.getMenuConfigRef(restaurantId);
-    const doc = await query.get();
-    return documentAs<MenuConfig>(doc);
-  }
-
-  observeMenuConfig(
-    restaurantId: string,
-    resultHandler: (menuConfig: MenuConfig) => void
-  ): firebase.Unsubscribe {
-    const unsubscribe = this.getMenuConfigRef(restaurantId).onSnapshot(
-      (doc) => {
-        resultHandler({ ...(doc.data() as MenuConfig) });
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-    return unsubscribe;
-  }
-
-  async updateMenuConfig(restaurantId: string, menuConfig: MenuConfig) {
-    await this.getMenuConfigRef(restaurantId).set(menuConfig, { merge: true });
-  }
-
-  //products
-  async getProducts(restaurantId: string) {
-    const query = this.getProductsRef(restaurantId);
-    const docs = (await query.get()).docs;
-    return documentsAs<Product>(docs);
   }
 
   observeProducts(
     restaurantId: string,
     resultHandler: (products: WithId<Product>[]) => void
   ): firebase.Unsubscribe {
-    const query = this.getProductsRef(restaurantId);
-    const unsubscribe = query.onSnapshot(
-      (querySnapshot) => {
-        resultHandler(documentsAs<Product>(querySnapshot.docs));
+    const unsubscribe = this.refs.getBusinessProductsRef(restaurantId).onSnapshot(
+      (snapshot) => {
+        resultHandler(documentsAs<Product>(snapshot.docs));
       },
       (error) => {
         console.error(error);
@@ -140,15 +81,52 @@ export default class MenuApi {
     return unsubscribe;
   }
 
-  getProductsByCategoryId = (
+  observeMenuConfig(
+    restaurantId: string,
+    resultHandler: (products: WithId<MenuConfig>) => void
+  ): firebase.Unsubscribe {
+    const unsubscribe = this.refs.getBusinessMenuConfigRef(restaurantId).onSnapshot(
+      (snapshot) => {
+        resultHandler(documentAs<MenuConfig>(snapshot));
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+    return unsubscribe;
+  }
+
+  getOrderedMenu(categories: WithId<Category>[], products: WithId<Product>[], config: MenuConfig) {
+    if (categories.length === 0) return [];
+    const { categoriesOrder, productsOrderByCategoryId } = config;
+    return this.getOrderedCategories(categories, categoriesOrder).map((category) => {
+      return {
+        ...category,
+        products: this.getProductsByCategoryId(products, category.id, productsOrderByCategoryId),
+      } as CategoryWithProducts;
+    });
+  }
+
+  private getOrderedCategories(
+    categories: WithId<Category>[],
+    order: string[]
+  ): WithId<Category>[] {
+    return categories.sort((a, b) =>
+      order.indexOf(a.id) === -1
+        ? 1 // new categories go to the end by the default
+        : order.indexOf(a.id) - order.indexOf(b.id)
+    );
+  }
+
+  private getProductsByCategoryId(
     products: WithId<Product>[],
     categoryId: string,
     productsOrderByCategoryId: ProductsByCategory
-  ) => {
+  ) {
     const productsOrder = productsOrderByCategoryId[categoryId];
     if (!productsOrder) return [];
     return products
       .filter((product) => productsOrder.indexOf(product.id) !== -1) // only in this category
       .sort((a, b) => productsOrder.indexOf(a.id) - productsOrder.indexOf(b.id));
-  };
+  }
 }

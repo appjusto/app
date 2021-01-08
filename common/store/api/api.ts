@@ -2,14 +2,13 @@
 import firebase from 'firebase';
 import 'firebase/firestore';
 import 'firebase/functions';
-
 import { Platform } from 'react-native';
-
 import { Extra } from '../../utils/config';
 import AuthApi from './auth';
 import ConsumerApi from './consumer';
 import CourierApi from './courier';
 import FilesApi from './files';
+import FirebaseRefs from './FirebaseRefs';
 import FleetApi from './fleet';
 import MapsApi from './maps';
 import MenuApi from './menu';
@@ -23,6 +22,7 @@ export default class Api {
   private functions: firebase.functions.Functions;
   private storage: firebase.storage.Storage;
 
+  private _refs: FirebaseRefs;
   private _auth: AuthApi;
   private _profile: ProfileApi;
   private _courier: CourierApi;
@@ -53,16 +53,17 @@ export default class Api {
 
     const collectionName = extra.flavor === 'consumer' ? 'consumers' : 'couriers';
 
+    this._refs = new FirebaseRefs(this.functions, this.firestore);
     this._iugu = new IuguApi(extra.iugu.accountId);
     this._files = new FilesApi(this.storage);
-    this._auth = new AuthApi(this.authentication, this.functions, extra);
-    this._profile = new ProfileApi(this.firestore, this.functions, collectionName);
-    this._courier = new CourierApi(this.firestore, this.functions, this._files);
-    this._fleet = new FleetApi(this.firestore, this.functions);
-    this._consumer = new ConsumerApi(this.firestore, this.functions, this._iugu);
-    this._order = new OrderApi(this.firestore, this.functions);
+    this._auth = new AuthApi(this._refs, this.authentication, extra);
+    this._profile = new ProfileApi(this.firestore, collectionName);
+    this._courier = new CourierApi(this._refs, this._files);
+    this._fleet = new FleetApi(this._refs);
+    this._consumer = new ConsumerApi(this._refs, this._iugu);
+    this._order = new OrderApi(this._refs);
     this._maps = new MapsApi(apiKey!);
-    this._menu = new MenuApi(this.firestore, this._files);
+    this._menu = new MenuApi(this._refs);
   }
 
   auth() {

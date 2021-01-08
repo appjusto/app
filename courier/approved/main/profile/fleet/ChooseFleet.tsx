@@ -1,10 +1,9 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Fleet, WithId } from 'appjusto-types';
-import React, { useEffect, useContext, useState, useCallback } from 'react';
-import { Text, FlatList, View, ActivityIndicator } from 'react-native';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
@@ -14,7 +13,7 @@ import useFleets from '../../../../../common/hooks/queries/useFleets';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { observeFleets } from '../../../../../common/store/fleet/actions';
 import { updateProfile } from '../../../../../common/store/user/actions';
-import { texts, screens, colors, padding } from '../../../../../common/styles';
+import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import FleetCard from './FleetCard';
 import { FleetParamList } from './types';
@@ -34,7 +33,7 @@ export default function ({ navigation, route }: Props) {
 
   // app state
   const courier = useSelector(getCourier)!;
-  const [fleets, query] = useFleets();
+  const { fleets, query } = useFleets();
 
   // screen state
   // const [selectedCity, setSelectedCity] = useState<City>();
@@ -120,7 +119,7 @@ export default function ({ navigation, route }: Props) {
             </PaddedView>
           </View>
         }
-        onEndReached={() => query.fetchMore()}
+        onEndReached={() => query.fetchNextPage()}
       />
     </View>
   );
