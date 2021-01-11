@@ -1,17 +1,16 @@
-import React, { ReactNode, useRef, useCallback } from 'react';
-import { View, Text, TextInput, TextInputProps } from 'react-native';
+import React, { ReactNode, useCallback, useRef } from 'react';
+import { Text, TextInput, TextInputProps, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-
-import { borders, texts, colors } from '../../styles';
+import { borders, colors, texts } from '../../styles';
 import PaddedView from '../containers/PaddedView';
 
-export interface Props extends TextInputProps {
+export interface DefaultInputProps extends TextInputProps {
   title?: string;
   children?: ReactNode;
 }
 
 export default React.forwardRef(
-  ({ title, children, style: externalStyle, ...props }: Props, externalRef) => {
+  ({ title, children, style: externalStyle, ...props }: DefaultInputProps, externalRef) => {
     const internalRef = useRef<TextInput>(null);
     const ref = (externalRef as React.RefObject<TextInput>) || internalRef;
     const focus = useCallback(() => {
