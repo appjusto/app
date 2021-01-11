@@ -2,21 +2,28 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CourierProfile } from 'appjusto-types';
 import { trim } from 'lodash';
-import React, { useState, useContext, useRef, useMemo } from 'react';
-import { View, TextInput } from 'react-native';
+import React, { useContext, useMemo, useRef, useState } from 'react';
+import { TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useSelector, useDispatch } from 'react-redux';
-
-import { AppDispatch, ApiContext } from '../../../../common/app/context';
+import { useDispatch, useSelector } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
+import {
+  cpfFormatter,
+  cpfMask,
+  phoneFormatter,
+  phoneMask,
+} from '../../../../common/components/inputs/pattern-input/formatters';
+import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
+import PatternInput from '../../../../common/components/inputs/PatternInput';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { courierInfoSet } from '../../../../common/store/courier/validators';
 import { showToast } from '../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
-import { screens, padding } from '../../../../common/styles';
+import { padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { CourierProfileParamList } from './types';
 
@@ -46,13 +53,14 @@ export default function ({ navigation, route }: Props) {
   // state
   const [name, setName] = useState<string>(courier.name ?? '');
   const [surname, setSurname] = useState(courier.surname ?? '');
-  const [ddd, setDDD] = useState(courier.phone?.ddd ?? '');
-  const [phoneNumber, setPhoneNumber] = useState(courier.phone?.number ?? '');
+  const [phone, setPhone] = useState(courier.phone ?? '');
   const [cpf, setCpf] = useState(courier.cpf! ?? '');
-  const updatedCourier: Partial<CourierProfile> = useMemo(
-    () => ({ name, surname, phone: { ddd, number: phoneNumber }, cpf }),
-    [name, surname, ddd, phoneNumber, cpf]
-  );
+  const updatedCourier: Partial<CourierProfile> = useMemo(() => ({ name, surname, phone, cpf }), [
+    name,
+    surname,
+    phone,
+    cpf,
+  ]);
   const canSubmit = useMemo(() => courierInfoSet(updatedCourier), [updatedCourier]);
 
   // handlers
@@ -94,46 +102,37 @@ export default function ({ navigation, route }: Props) {
             keyboardType="default"
             maxLength={30}
           />
-          <DefaultInput
+          <PatternInput
             ref={cpfRef}
             style={{ marginTop: padding }}
             title={t('CPF')}
             value={cpf}
             placeholder={t('Seu CPF, apenas números')}
-            maxLength={11}
+            mask={cpfMask}
+            parser={numbersOnlyParser}
+            formatter={cpfFormatter}
             keyboardType="number-pad"
             returnKeyType="next"
             blurOnSubmit={false}
             onChangeText={(text) => setCpf(trim(text))}
-            onSubmitEditing={() => dddRef.current?.focus()}
+            onSubmitEditing={() => phoneRef.current?.focus()}
           />
-          <View style={{ flexDirection: 'row', marginTop: padding }}>
-            <DefaultInput
-              ref={dddRef}
-              style={{ flex: 1 }}
-              title={t('DDD')}
-              value={ddd}
-              placeholder={t('00')}
-              maxLength={2}
-              keyboardType="phone-pad"
-              returnKeyType="next"
-              blurOnSubmit={false}
-              onChangeText={(text) => setDDD(trim(text))}
-              onSubmitEditing={() => phoneRef.current?.focus()}
-            />
-            <DefaultInput
-              ref={phoneRef}
-              style={{ flex: 4, marginLeft: padding }}
-              title={t('Celular')}
-              value={phoneNumber}
-              placeholder={t('000000000')}
-              maxLength={9}
-              keyboardType="number-pad"
-              returnKeyType="done"
-              blurOnSubmit
-              onChangeText={(text) => setPhoneNumber(trim(text))}
-            />
-          </View>
+
+          <PatternInput
+            ref={phoneRef}
+            style={{ marginTop: padding }}
+            title={t('Celular')}
+            value={phone}
+            placeholder={t('Número do seu celular')}
+            mask={phoneMask}
+            parser={numbersOnlyParser}
+            formatter={phoneFormatter}
+            keyboardType="number-pad"
+            returnKeyType="done"
+            blurOnSubmit
+            onChangeText={(text) => setPhone(trim(text))}
+          />
+
           <DefaultButton
             style={{ marginTop: padding }}
             title={t('Atualizar')}
