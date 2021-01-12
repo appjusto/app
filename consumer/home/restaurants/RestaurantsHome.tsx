@@ -8,6 +8,9 @@ import { useQuery } from 'react-query';
 import { useDispatch } from 'react-redux';
 import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
+import HorizontalSelect, {
+  HorizontalSelectItem,
+} from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import useLastKnownLocation from '../../../common/hooks/useLastKnownLocation';
 import { getReverseGeocodeAdress } from '../../../common/store/order/actions';
@@ -46,6 +49,15 @@ export default function ({ navigation }: Props) {
   const { lastKnownLocation } = useLastKnownLocation(true, locationKey);
   const [address, setAddress] = React.useState('');
 
+  // data
+  const data: HorizontalSelectItem[] = [
+    { id: '0', title: t('Adicionados recentemente') },
+    { id: '1', title: t('Menores preços') },
+    { id: '3', title: t('Menor tempo de entrega') },
+    { id: '5', title: t('Menor distância') },
+  ];
+
+  //side-effects
   React.useEffect(() => {
     if (!lastKnownLocation) return;
     (async () => {
@@ -114,9 +126,18 @@ export default function ({ navigation }: Props) {
             subtitle="Valor justo para restaurantes e entregadores"
           />
           {/* "OrderBy" component  here*/}
-          <View style={{ marginHorizontal: 12, marginTop: padding }}>
+          <View
+            style={{
+              marginHorizontal: 12,
+              marginTop: padding,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
             {/* <OrderInput /> */}
             <FilterButton onPress={() => navigation.navigate('OrderBy')} />
+            {/* needs 'selected' logic */}
+            <HorizontalSelect data={data} onSelect={() => null} selectFilter />
           </View>
         </View>
       }
