@@ -13,7 +13,7 @@ export type HomeNavigatorParamList = {
   };
   AddressComplete: {
     value?: string;
-    returnScreen: 'CreateOrderP2P';
+    returnScreen: 'CreateOrderP2P' | 'RestaurantsHome'; // do I need to add the screen to this param list?
     returnParam: string;
   };
   FleetDetail: {

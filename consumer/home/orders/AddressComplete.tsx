@@ -43,6 +43,7 @@ export default function ({ navigation, route }: Props) {
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   const { value, returnScreen, returnParam } = route.params ?? {};
+  console.log(value);
 
   // refs
   const searchInputRef = useRef<TextInput>();

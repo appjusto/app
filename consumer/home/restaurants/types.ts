@@ -1,5 +1,7 @@
 export type RestaurantsNavigatorParamList = {
-  RestaurantsHome: undefined;
+  RestaurantsHome: {
+    address: string;
+  };
   RestaurantNavigator: {
     restaurantId: string;
   };

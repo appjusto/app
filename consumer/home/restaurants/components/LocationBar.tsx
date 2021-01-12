@@ -1,17 +1,18 @@
 import React from 'react';
 import { Image, Text, View } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as icons from '../../../../assets/icons';
 import { borders, colors, halfPadding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
 type Props = {
   address: string;
+  onPress?: () => void;
 };
 
-export default function ({ address }: Props) {
+export default function ({ address, onPress }: Props) {
   return (
-    <TouchableWithoutFeedback onPress={() => null}>
+    <TouchableOpacity onPress={onPress}>
       <View
         style={{
           ...borders.default,
@@ -31,6 +32,6 @@ export default function ({ address }: Props) {
         </View>
         <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Alterar')}</Text>
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 }
