@@ -135,7 +135,7 @@ export default function ({ navigation }: Props) {
         </View>
       )}
       ListFooterComponent={
-        <View style={{ marginTop: 24 }}>
+        <View style={{ marginTop: padding }}>
           <DoubleHeader title="Fechados no momento" subtitle="Fora do horário de funcionamento" />
           <RestaurantListItem onPress={() => null} name="Restaurante Fechado" />
           <RestaurantListItem onPress={() => null} name="Restaurante Fechado" />

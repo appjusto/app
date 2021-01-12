@@ -5,6 +5,7 @@ import { ActivityIndicator, Image, SectionList, Text, TouchableOpacity, View } f
 import { useContextBusiness } from '../../../../common/store/context/business';
 import { useContextMenu } from '../../../../common/store/context/business/config';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { formatCurrency } from '../../../../common/utils/formatters';
 import RestaurantCard from '../components/RestaurantCard';
 import * as fake from '../fakeData';
 import SingleHeader from '../SingleHeader';
@@ -65,10 +66,13 @@ const RestaurantDetail = React.memo(({ navigation, route }: Props) => {
       >
         <View style={{ width: '60%' }}>
           <Text style={{ ...texts.default }}>{name}</Text>
-          <Text style={{ ...texts.small, color: colors.darkGrey }} numberOfLines={2}>
+          <Text
+            style={{ ...texts.small, color: colors.darkGrey, marginVertical: 4 }}
+            numberOfLines={2}
+          >
             {description}
           </Text>
-          <Text style={{ ...texts.default }}>{price}</Text>
+          <Text style={{ ...texts.default }}>{formatCurrency(price)}</Text>
         </View>
         <View>
           <Image source={fake.itemRectangle} style={{ height: 96, width: 96, borderRadius: 8 }} />
