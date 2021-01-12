@@ -15,8 +15,8 @@ import { borders, colors, halfPadding, padding, screens, texts } from '../../../
 import { t } from '../../../strings';
 import CuisinesBox from './components/CuisinesBox';
 import DoubleHeader from './components/DoubleHeader';
+import FilterButton from './components/FilterButton';
 import LocationBar from './components/LocationBar';
-import OrderInput from './components/OrderInput';
 import RestaurantListItem from './components/RestaurantListItem';
 import * as fake from './fakeData';
 import { RestaurantsNavigatorParamList } from './types';
@@ -80,19 +80,6 @@ export default function ({ navigation }: Props) {
     </TouchableWithoutFeedback>
   );
 
-  // if (!openRestaurants || !closedRestaurants)
-  //   return (
-  //     <FeedbackView
-  //       header={t('Sem restaurantes na sua região')}
-  //       description={t(
-  //         'Infelizmente não encontramos nenhum restaurante cadastrado no app próximo a você. Estamos começando, mas não se preocupe: em breve seu restaurante preferido estará aqui.'
-  //       )}
-  //       icon={icons.iconSad}
-  //     >
-  //       <HomeShareCard />
-  //     </FeedbackView>
-  //   );
-
   if (!openRestaurants || !closedRestaurants || !lastKnownLocation)
     return (
       <View style={screens.centered}>
@@ -105,12 +92,14 @@ export default function ({ navigation }: Props) {
       style={{ ...screens.default }}
       ListHeaderComponent={
         <View>
-          <LocationBar address={address} />
+          <PaddedView>
+            <LocationBar address={address} />
+          </PaddedView>
           {/* <DoubleHeader title="Os mais queridos" subtitle="Os lugares mais pedidos da sua região" /> */}
           {/* vertical flatlist displaying the "most liked" restaurants here */}
           {/* <MostLikedItem /> */}
           <DoubleHeader title="Buscar" subtitle="Já sabe o que quer? Então não perde tempo!" />
-          <View style={{ marginTop: 24, paddingHorizontal: 12 }}>
+          <View style={{ marginTop: 24, paddingHorizontal: 12, marginBottom: halfPadding }}>
             <RestaurantSearch />
           </View>
           <DoubleHeader title="Tá com fome de que?" subtitle="Escolha por categoria" />
@@ -125,12 +114,10 @@ export default function ({ navigation }: Props) {
             subtitle="Valor justo para restaurantes e entregadores"
           />
           {/* "OrderBy" component  here*/}
-          <TouchableWithoutFeedback
-            onPress={() => navigation.navigate('OrderBy')}
-            style={{ marginHorizontal: 12, marginTop: padding }}
-          >
-            <OrderInput />
-          </TouchableWithoutFeedback>
+          <View style={{ marginHorizontal: 12, marginTop: padding }}>
+            {/* <OrderInput /> */}
+            <FilterButton onPress={() => navigation.navigate('OrderBy')} />
+          </View>
         </View>
       }
       data={openRestaurants}

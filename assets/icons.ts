@@ -52,6 +52,7 @@ const iconSearch = require('./icons/search.png');
 const iconThumbDown = require('./icons/thumb-down-24px.png');
 const iconThumbUp = require('./icons/thumb-up-24px.png');
 const iconUser = require('./icons/user.png');
+const iconFilter = require('./icons/filter.png');
 
 export const accept = acceptIcon;
 export const arrow = arrowSmall;
@@ -107,6 +108,7 @@ export const waze = iconWaze;
 export const search = iconSearch;
 export const iconSad = iconSadYellow;
 export const clock = iconClock;
+export const filter = iconFilter;
 
 export default [
   accept,
@@ -163,4 +165,5 @@ export default [
   search,
   iconSad,
   clock,
+  filter,
 ];
