@@ -24,13 +24,13 @@ import { Steps } from './types';
 type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
 
 type Props = {
-  origin: Place;
-  destination: Place;
+  origin: Partial<Place>;
+  destination: Partial<Place>;
   order?: WithId<Order>;
   paymentMethod?: IuguCustomerPaymentMethod;
   navigation: ScreenNavigationProp;
-  updateOrigin: (value: Place) => void;
-  updateDestination: (value: Place) => void;
+  updateOrigin: (value: Partial<Place>) => void;
+  updateDestination: (value: Partial<Place>) => void;
   navigateToAddressComplete: (value: string, returnParam: string) => void;
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;

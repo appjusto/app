@@ -37,8 +37,8 @@ export default function ({ navigation, route }: Props) {
   );
 
   // screen state
-  const [origin, setOrigin] = useState<Place>({});
-  const [destination, setDestination] = useState<Place>({});
+  const [origin, setOrigin] = useState<Partial<Place>>({});
+  const [destination, setDestination] = useState<Partial<Place>>({});
   const [order, setOrder] = useState<WithId<Order>>();
   const [paymentMethod, setPaymentMethod] = useState(lastPaymentMethod);
 
@@ -86,7 +86,13 @@ export default function ({ navigation, route }: Props) {
         // delete previous quote
         if (order) dispatch(deleteOrder(api)(order.id));
         try {
-          const newOrder = await dispatch(createOrder(api)({ type: 'p2p', origin, destination }));
+          const newOrder = await dispatch(
+            createOrder(api)({
+              type: 'p2p',
+              origin: origin as Place,
+              destination: destination as Place,
+            })
+          );
           if (newOrder) setOrder(newOrder);
         } catch (error) {
           dispatch(showToast(error.toString(), 'error'));
@@ -121,8 +127,8 @@ export default function ({ navigation, route }: Props) {
       const result = await dispatch(
         placeOrder(api)({
           orderId,
-          origin,
-          destination,
+          origin: origin as Place,
+          destination: destination as Place,
           paymentMethodId: paymentMethod.id,
           fleetId,
           platformFee,

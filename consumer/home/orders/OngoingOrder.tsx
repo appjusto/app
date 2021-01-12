@@ -3,9 +3,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { distance } from 'geokit';
 import { round } from 'lodash';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
@@ -17,7 +16,7 @@ import useNotificationToken from '../../../common/hooks/useNotificationToken';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { getOrderById } from '../../../common/store/order/selectors';
 import { updateProfile } from '../../../common/store/user/actions';
-import { borders, colors, padding, screens, texts } from '../../../common/styles';
+import { colors, padding, screens, texts } from '../../../common/styles';
 import { formatDistance } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { HomeNavigatorParamList } from '../types';
@@ -69,7 +68,7 @@ export default function ({ navigation, route }: Props) {
   useEffect(() => {
     if (order.status === 'delivered') {
       navigation.replace('OrderDeliveredFeedback', { orderId });
-    } else if (order.status === 'matching') {
+    } else if (order.dispatchingState === 'matching') {
       // happens when courier cancels the delivery
       navigation.replace('OrderMatching', { orderId });
     }
@@ -93,7 +92,7 @@ export default function ({ navigation, route }: Props) {
         round(
           distance(
             { lat: order.courier!.location.latitude, lng: order.courier!.location.longitude },
-            { lat: order.origin.location.latitude, lng: order.origin.location.longitude }
+            { lat: order.origin!.location!.latitude, lng: order.origin!.location!.longitude }
           ),
           2
         ) * 1000
@@ -113,7 +112,10 @@ export default function ({ navigation, route }: Props) {
         round(
           distance(
             { lat: order.courier!.location.latitude, lng: order.courier!.location.longitude },
-            { lat: order.destination.location.latitude, lng: order.destination.location.longitude }
+            {
+              lat: order.destination!.location!.latitude,
+              lng: order.destination!.location!.longitude,
+            }
           ),
           2
         ) * 1000
