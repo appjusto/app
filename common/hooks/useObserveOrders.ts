@@ -1,10 +1,9 @@
 import firebase from 'firebase';
-import { useEffect, useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { ApiContext, AppDispatch } from '../app/context';
 import { ObserveOrdersOptions } from '../store/api/order';
-import { observeOrders, observeOrderChat } from '../store/order/actions';
+import { observeOrderChat, observeOrders } from '../store/order/actions';
 import { getOngoingOrders } from '../store/order/selectors';
 
 export default function (options: ObserveOrdersOptions) {
@@ -31,7 +30,6 @@ export default function (options: ObserveOrdersOptions) {
       dispatch(observeOrderChat(api)(order.id))
     );
     setUnsubscribers(newUnsubscribers);
-    console.groupEnd();
   }, [ongoingOrders]);
 
   // unsubscribe

@@ -2,8 +2,11 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, Image, SectionList, Text, TouchableOpacity, View } from 'react-native';
-import { useContextBusiness } from '../../../../common/store/context/business';
-import { useContextMenu } from '../../../../common/store/context/business/config';
+import { useMenu } from '../../../../common/store/api/business/hooks/useMenu';
+import {
+  useContextBusiness,
+  useContextBusinessId,
+} from '../../../../common/store/context/business';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import RestaurantCard from '../components/RestaurantCard';
 import * as fake from '../fakeData';
@@ -28,7 +31,8 @@ type Props = {
 const RestaurantDetail = React.memo(({ navigation, route }: Props) => {
   // context
   const restaurant = useContextBusiness();
-  const menu = useContextMenu();
+  // state
+  const menu = useMenu(useContextBusinessId());
   // side effects
   React.useLayoutEffect(() => {
     navigation.setOptions({

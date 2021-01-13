@@ -6,7 +6,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import * as icons from '../../../../assets/icons';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
-import { useContextGetProductById } from '../../../../common/store/context/business/products';
+import { useProduct } from '../../../../common/store/api/business/hooks/products';
+import { useContextBusinessId } from '../../../../common/store/context/business';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
@@ -22,8 +23,7 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  const getProductById = useContextGetProductById();
-  const product = getProductById ? getProductById(route.params.productId) : undefined;
+  const product = useProduct(useContextBusinessId(), route.params.productId);
 
   // screen state
   const [observation, setObservation] = useState<string>('');

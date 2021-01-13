@@ -1,9 +1,6 @@
 import { Business, WithId } from 'appjusto-types';
 import React from 'react';
 import { useBusiness } from '../../api/business/hooks/business';
-import { CategoriesProvider } from './categories';
-import { MenuConfigProvider } from './config';
-import { ProductsProvider } from './products';
 
 interface Value {
   businessId?: string;
@@ -20,23 +17,15 @@ interface Props {
 export const BusinessProvider = ({ businessId, children }: Props) => {
   const business = useBusiness(businessId);
   const value: Value = { businessId, business };
-  return (
-    <BusinessContext.Provider value={value}>
-      <CategoriesProvider businessId={businessId}>
-        <ProductsProvider businessId={businessId}>
-          <MenuConfigProvider businessId={businessId}>{children}</MenuConfigProvider>
-        </ProductsProvider>
-      </CategoriesProvider>
-    </BusinessContext.Provider>
-  );
+  return <BusinessContext.Provider value={value}>{children}</BusinessContext.Provider>;
 };
 
 export const useContextBusiness = () => {
   const value = React.useContext(BusinessContext);
-  return value.business;
+  return value.business!;
 };
 
 export const useContextBusinessId = () => {
   const value = React.useContext(BusinessContext);
-  return value.businessId;
+  return value.businessId!;
 };

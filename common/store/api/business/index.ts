@@ -49,6 +49,18 @@ export default class BusinessApi {
     return unsubscribe;
   }
 
+  observeProduct(
+    businessId: string,
+    productId: string,
+    resultHandler: (products: WithId<Product>) => void
+  ) {
+    const unsubscribe = this.refs.getBusinessProductRef(businessId, productId).onSnapshot(
+      (snapshot) => resultHandler(documentAs<Product>(snapshot)),
+      (error) => console.error(error)
+    );
+    return unsubscribe;
+  }
+
   observeMenuConfig(businessId: string, resultHandler: (products: WithId<MenuConfig>) => void) {
     const unsubscribe = this.refs.getBusinessMenuConfigRef(businessId).onSnapshot(
       (snapshot) => resultHandler(documentAs<MenuConfig>(snapshot)),
