@@ -133,7 +133,7 @@ export default function ({ navigation }: Props) {
             <LocationBar address={address} />
           </PaddedView>
           {/* <DoubleHeader title="Os mais queridos" subtitle="Os lugares mais pedidos da sua região" /> */}
-          {/* vertical flatlist displaying the "most liked" restaurants here */}
+          {/* horizontal flatlist displaying the "most liked" restaurants here */}
           {/* <MostLikedItem /> */}
           <DoubleHeader title="Buscar" subtitle="Já sabe o que quer? Então não perde tempo!" />
           <View style={{ marginTop: 24, paddingHorizontal: 12, marginBottom: halfPadding }}>
@@ -156,7 +156,11 @@ export default function ({ navigation }: Props) {
             }}
           >
             {/* needs 'onSelectFilter' logic */}
-            <FilterSelector onSelect={() => null} onSelectFilter={() => null} data={data} />
+            <FilterSelector
+              onSelect={() => null}
+              onSelectFilter={() => navigation.navigate('OrderBy')}
+              data={data}
+            />
           </View>
         </View>
       }
@@ -165,6 +169,7 @@ export default function ({ navigation }: Props) {
         <DoubleHeader title={section.title} subtitle={section.subtitle} />
       )}
       keyExtractor={(item) => item.id!}
+      stickySectionHeadersEnabled={false}
       renderItem={({ item }) => (
         <View style={{ marginTop: padding }}>
           <RestaurantListItem
@@ -173,7 +178,9 @@ export default function ({ navigation }: Props) {
                 restaurantId: item.id,
               });
             }}
-            name={item.name ?? ''}
+            name={item.name ?? 'Nome do restaurante'}
+            cuisine={item.cuisine?.name ?? 'Tipo de comida'}
+            deliveryRange={item.deliveryRange ?? 4}
           />
         </View>
       )}
