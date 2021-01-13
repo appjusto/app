@@ -2,8 +2,14 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Business, WithId } from 'appjusto-types';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useContext } from 'react';
-import { ActivityIndicator, Image, Text, TouchableWithoutFeedback, View } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import {
+  ActivityIndicator,
+  Image,
+  SectionList,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import { useQuery } from 'react-query';
 import { useDispatch } from 'react-redux';
 import * as icons from '../../../assets/icons';
@@ -55,6 +61,27 @@ export default function ({ navigation }: Props) {
     { id: '5', title: t('Menor distância') },
   ];
 
+  // check if the type definition below is ok
+  // we have an ActivityIndicator loading while the data is not loaded on the screen,
+  // so the data can never be undefined when the list is loaded (?)
+  type Sections = {
+    title: string;
+    subtitle: string;
+    data: WithId<Business>[];
+  };
+  const sections: Sections[] = [
+    {
+      title: t('Restaurantes abertos agora'),
+      subtitle: t('Valor justo para restaurantes e entregadores'),
+      data: openRestaurants,
+    },
+    {
+      title: t('Fechados no momento'),
+      subtitle: t('Fora do horário de funcionamento'),
+      data: closedRestaurants,
+    },
+  ];
+
   //side-effects
   React.useEffect(() => {
     if (!lastKnownLocation) return;
@@ -98,7 +125,7 @@ export default function ({ navigation }: Props) {
     );
 
   return (
-    <FlatList
+    <SectionList
       style={{ ...screens.default }}
       ListHeaderComponent={
         <View>
@@ -119,10 +146,6 @@ export default function ({ navigation }: Props) {
             <CuisinesBox cuisine="Oriental" image={fake.oriental} />
             <CuisinesBox cuisine="Mexicano" image={fake.mexican} />
           </PaddedView>
-          <DoubleHeader
-            title="Restaurantes abertos agora"
-            subtitle="Valor justo para restaurantes e entregadores"
-          />
           {/* "OrderBy" component  here*/}
           <View
             style={{
@@ -137,7 +160,10 @@ export default function ({ navigation }: Props) {
           </View>
         </View>
       }
-      data={openRestaurants}
+      sections={sections}
+      renderSectionHeader={({ section }) => (
+        <DoubleHeader title={section.title} subtitle={section.subtitle} />
+      )}
       keyExtractor={(item) => item.id!}
       renderItem={({ item }) => (
         <View style={{ marginTop: padding }}>
@@ -151,15 +177,6 @@ export default function ({ navigation }: Props) {
           />
         </View>
       )}
-      ListFooterComponent={
-        <View style={{ marginTop: padding }}>
-          <DoubleHeader title="Fechados no momento" subtitle="Fora do horário de funcionamento" />
-          <RestaurantListItem onPress={() => null} name="Restaurante Fechado" />
-          <RestaurantListItem onPress={() => null} name="Restaurante Fechado" />
-          <RestaurantListItem onPress={() => null} name="Restaurante Fechado" />
-          <RestaurantListItem onPress={() => null} name="Restaurante Fechado" />
-        </View>
-      }
     />
   );
 }
