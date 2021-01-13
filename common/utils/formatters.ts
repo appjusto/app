@@ -11,8 +11,7 @@ export const separateWithDot = (left: string, right: string) => `${left}  \u25CF
 export const formatDate = (date: Date, pattern: 'default' | 'monthYear' = 'default') =>
   i18n.l(`date.formats.${pattern}`, date);
 export const formatTime = (date: Date) => i18n.l('time.formats.default', date);
-export const getMonthName = (month: number) =>
-  i18n.strftime(new Date(`2020-${padWithZero(month)}-01`), '%B');
+export const getMonthName = (month: number) => i18n.strftime(new Date(2020, month, 1), '%B');
 
 export const formatDuration = (duration: number) => {
   return `${round(duration / 60, 0)} min`;

@@ -2,14 +2,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { OrderMatchPushMessageData, PushMessageData } from 'appjusto-types';
 import * as Notifications from 'expo-notifications';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../assets/icons';
 import useNotification from '../../../common/hooks/useNotification';
-import useObserveOrders from '../../../common/hooks/useObserveOrders';
+import { OngoingOrdersStatuses } from '../../../common/store/api/order';
+import useObserveDispatchOrders from '../../../common/store/api/order/hooks/useObserveDispatchOrders';
 import { getCourier, getCourierStatus } from '../../../common/store/courier/selectors';
-import { getOngoingOrders } from '../../../common/store/order/selectors';
 import { colors, halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -29,20 +29,10 @@ export default function ({ navigation }: Props) {
   // app state
   const courier = useSelector(getCourier);
   const status = useSelector(getCourierStatus);
-  const ongoingOrders = useSelector(getOngoingOrders);
 
   // effects
-  // subscribe for order changes
-  useObserveOrders({ deliveredBy: courier!.id! });
-
-  // when a courier accept the order
-  useEffect(() => {
-    // as the courier can only dispatch a single order at a time ongoingOrders should be always 0 or 1
-    if (ongoingOrders.length > 0) {
-      const [order] = ongoingOrders;
-      // navigation.navigate('OngoingDelivery', { orderId: order.id });
-    }
-  }, [ongoingOrders]);
+  // subscribe for observing ongoing orders
+  useObserveDispatchOrders({ deliveredBy: courier!.id!, statuses: OngoingOrdersStatuses });
 
   // handlers
   const notificationHandler = useCallback(

@@ -4,21 +4,18 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Order, WithId } from 'appjusto-types';
 import Constants from 'expo-constants';
 import React, { useCallback, useMemo } from 'react';
-import { View, SectionList, Text, Image } from 'react-native';
+import { Image, SectionList, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-
 import * as icons from '../../assets/icons';
 import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
 import FeedbackView from '../../common/components/views/FeedbackView';
 import StatusBadge from '../../common/components/views/StatusBadge';
-import {
-  getYearsWithOrders,
-  getOrdersWithFilter,
-  getOrders,
-} from '../../common/store/order/selectors';
-import { screens, texts, padding, colors } from '../../common/styles';
-import { formatTime, formatDate, separateWithDot } from '../../common/utils/formatters';
+import useObserveOrders from '../../common/store/api/order/hooks/useObserveOrders';
+import { getOrdersWithFilter, getYearsWithOrders } from '../../common/store/order/selectors';
+import { getUser } from '../../common/store/user/selectors';
+import { colors, padding, screens, texts } from '../../common/styles';
+import { formatDate, formatTime, separateWithDot } from '../../common/utils/formatters';
 import { t } from '../../strings';
 import { HomeNavigatorParamList } from '../home/types';
 import { HistoryParamList } from './types';
@@ -36,13 +33,13 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // app state
-  const orders = useSelector(getOrders);
-  const yearsWithOrders = useSelector(getYearsWithOrders);
-
+  const user = useSelector(getUser);
   // screen state
-  // data structure
-  // [ { title: '2020', data: [ { monthName: 'Agosto', deliveries: 3, courierFee: 100 }] }]
+  const orders = useObserveOrders({ createdBy: user?.uid });
+  const yearsWithOrders = getYearsWithOrders(orders);
   const sections = useMemo(() => {
+    // data structure
+    // [ { title: '2020', data: [ { monthName: 'Agosto', deliveries: 3, courierFee: 100 }] }]
     return yearsWithOrders.map((year) => {
       const ordersInYear = getOrdersWithFilter(orders, year);
 

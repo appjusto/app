@@ -2,24 +2,24 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Constants from 'expo-constants';
 import React, { useMemo } from 'react';
-import { View, SectionList, Text, Image } from 'react-native';
+import { Image, SectionList, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-
 import * as icons from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
 import ShowIf from '../../../../common/components/views/ShowIf';
+import useObserveOrders from '../../../../common/store/api/order/hooks/useObserveOrders';
 import {
-  getYearsWithOrders,
   getMonthsWithOrdersInYear,
   getOrdersWithFilter,
+  getYearsWithOrders,
   summarizeOrders,
-  getOrders,
 } from '../../../../common/store/order/selectors';
-import { screens, texts, padding, halfPadding, colors } from '../../../../common/styles';
-import { getMonthName, formatCurrency } from '../../../../common/utils/formatters';
+import { getUser } from '../../../../common/store/user/selectors';
+import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { formatCurrency, getMonthName } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import { DeliveriesNavigatorParamList } from './types';
 
@@ -33,9 +33,11 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // app state
-  const orders = useSelector(getOrders);
-  const yearsWithOrders = useSelector(getYearsWithOrders);
-  const monthsWithOrdersInYears = useSelector(getMonthsWithOrdersInYear);
+  const user = useSelector(getUser);
+  // screen state
+  const orders = useObserveOrders({ deliveredBy: user?.uid });
+  const yearsWithOrders = getYearsWithOrders(orders);
+  const monthsWithOrdersInYears = getMonthsWithOrdersInYear(orders);
 
   // screen state
   // data structure

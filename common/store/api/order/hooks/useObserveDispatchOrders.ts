@@ -1,10 +1,10 @@
 import firebase from 'firebase';
 import { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ApiContext, AppDispatch } from '../app/context';
-import { ObserveOrdersOptions } from '../store/api/order';
-import { observeOrderChat, observeOrders } from '../store/order/actions';
-import { getOngoingOrders } from '../store/order/selectors';
+import { ApiContext, AppDispatch } from '../../../../app/context';
+import { observeOrderChat, observeOrders } from '../../../order/actions';
+import { getOngoingOrders, getOrders } from '../../../order/selectors';
+import { ObserveOrdersOptions } from '../types';
 
 export default function (options: ObserveOrdersOptions) {
   // context
@@ -12,7 +12,7 @@ export default function (options: ObserveOrdersOptions) {
   const dispatch = useDispatch<AppDispatch>();
 
   // app state
-  const ongoingOrders = useSelector(getOngoingOrders);
+  const orders = useSelector(getOrders);
 
   // hook state
   const [unsubscribers, setUnsubscribers] = useState<firebase.Unsubscribe[]>([]);
@@ -26,11 +26,12 @@ export default function (options: ObserveOrdersOptions) {
   // observe chat of all ongoing orders
   useEffect(() => {
     unsubscribers.forEach((unsub) => unsub());
+    const ongoingOrders = getOngoingOrders(orders);
     const newUnsubscribers = ongoingOrders.map((order) =>
       dispatch(observeOrderChat(api)(order.id))
     );
     setUnsubscribers(newUnsubscribers);
-  }, [ongoingOrders]);
+  }, [orders]);
 
   // unsubscribe
   useEffect(() => {
@@ -38,4 +39,6 @@ export default function (options: ObserveOrdersOptions) {
       unsubscribers.forEach((unsub) => unsub());
     };
   }, [unsubscribers]);
+
+  return orders;
 }

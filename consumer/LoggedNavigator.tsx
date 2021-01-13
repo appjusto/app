@@ -4,7 +4,8 @@ import { ActivityIndicator, Image, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../assets/icons';
 import { ApiContext, AppDispatch } from '../common/app/context';
-import useObserveOrders from '../common/hooks/useObserveOrders';
+import { OngoingOrdersStatuses } from '../common/store/api/order';
+import useObserveDispatchOrders from '../common/store/api/order/hooks/useObserveDispatchOrders';
 import { getFlavor } from '../common/store/config/selectors';
 import { getConsumer } from '../common/store/consumer/selectors';
 import { observeProfile } from '../common/store/user/actions';
@@ -31,8 +32,8 @@ export default function () {
   useEffect(() => {
     return dispatch(observeProfile(api)(flavor, user!.uid));
   }, []);
-  // subscribe for order changes
-  useObserveOrders({ createdBy: user?.uid });
+  // subscribe for observing ongoing orders
+  useObserveDispatchOrders({ createdBy: user?.uid, statuses: OngoingOrdersStatuses });
 
   // UI
   if (consumer?.situation !== 'approved') {

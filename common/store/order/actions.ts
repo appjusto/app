@@ -13,7 +13,7 @@ import {
 import { CancelToken } from 'axios';
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
-import { ObserveOrdersOptions } from '../api/order';
+import { ObserveOrdersOptions } from '../api/order/types';
 import { awaitWithFeedback, BUSY } from '../ui/actions';
 
 export const ORDERS_UPDATED = 'ORDERS_UPDATED';

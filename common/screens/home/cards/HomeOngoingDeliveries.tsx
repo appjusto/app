@@ -2,8 +2,7 @@ import { Order, WithId } from 'appjusto-types';
 import React from 'react';
 import { View } from 'react-native';
 import { useSelector } from 'react-redux';
-
-import { getOngoingOrders } from '../../../store/order/selectors';
+import { getOngoingOrders, getOrders } from '../../../store/order/selectors';
 import { padding } from '../../../styles';
 import HomeOngoingDeliveryCard from './HomeOngoingDeliveryCard';
 
@@ -13,7 +12,7 @@ type Props = {
 
 export default function ({ onSelect }: Props) {
   // app state
-  const ongoingOrders = useSelector(getOngoingOrders);
+  const ongoingOrders = getOngoingOrders(useSelector(getOrders));
 
   // UI
   if (ongoingOrders.length === 0) return null;

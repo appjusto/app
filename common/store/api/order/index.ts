@@ -12,13 +12,18 @@ import {
   WithId,
 } from 'appjusto-types';
 import firebase from 'firebase';
-import FirebaseRefs from './FirebaseRefs';
-import { documentsAs } from './types';
+import { isEmpty } from 'lodash';
+import FirebaseRefs from '../FirebaseRefs';
+import { documentsAs } from '../types';
+import { ObserveOrdersOptions } from './types';
 
-export type ObserveOrdersOptions = {
-  createdBy?: string;
-  deliveredBy?: string;
-};
+export const OngoingOrdersStatuses: OrderStatus[] = [
+  'confirming',
+  'confirmed',
+  'preparing',
+  'ready',
+  'dispatching',
+];
 
 export default class OrderApi {
   constructor(private refs: FirebaseRefs) {}
@@ -80,34 +85,31 @@ export default class OrderApi {
     options: ObserveOrdersOptions,
     resultHandler: (orders: WithId<Order>[]) => void
   ): firebase.Unsubscribe {
-    const { createdBy, deliveredBy } = options;
-    let query = this.refs
-      .getOrdersRef()
-      .orderBy('createdOn', 'desc')
-      .where('status', 'in', [
-        'quote',
-        'confirming',
-        'confirmed',
-        'preparing',
-        'ready',
-        'dispatching',
-        'delivered',
-        'canceled',
-      ] as OrderStatus[]);
+    const { createdBy, deliveredBy, statuses } = options;
+    let query = this.refs.getOrdersRef().orderBy('createdOn', 'desc');
+
+    if (!isEmpty(statuses)) query = query.where('status', 'in', statuses);
     if (createdBy) query = query.where('consumer.id', '==', createdBy);
     if (deliveredBy) query = query.where('courier.id', '==', deliveredBy);
 
     const unsubscribe = query.onSnapshot(
-      (querySnapshot) => {
-        resultHandler(documentsAs<Order>(querySnapshot.docs));
-      },
-      (error) => {
-        console.error(error);
-      }
+      (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
+      (error) => console.error(error)
     );
     // returns the unsubscribe function
     return unsubscribe;
   }
+  // observeOrder(
+  //   orderId: string,
+  //   resultHandler: (orders: WithId<Order>) => void
+  // ): firebase.Unsubscribe {
+  //   const unsubscribe = this.refs.getOrderRef(orderId).onSnapshot(
+  //     (snapshot) => resultHandler(documentAs<Order>(snapshot)),
+  //     (error) => console.error(error)
+  //   );
+  //   // returns the unsubscribe function
+  //   return unsubscribe;
+  // }
   // observe order's chat
   observeOrderChat(
     orderId: string,
@@ -117,12 +119,8 @@ export default class OrderApi {
       .getOrderChatRef(orderId)
       .orderBy('timestamp', 'asc')
       .onSnapshot(
-        (querySnapshot) => {
-          resultHandler(documentsAs<ChatMessage>(querySnapshot.docs));
-        },
-        (error) => {
-          console.error(error);
-        }
+        (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
+        (error) => console.error(error)
       );
     // returns the unsubscribe function
     return unsubscribe;

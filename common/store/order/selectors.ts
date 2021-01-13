@@ -1,9 +1,8 @@
 import { ChatMessage, Order, Place, WithId } from 'appjusto-types';
 import { first, memoize, uniq } from 'lodash';
 import { createSelector } from 'reselect';
-
 import { State } from '..';
-import { OrderState, GroupedChatMessages } from './types';
+import { GroupedChatMessages, OrderState } from './types';
 
 export const getOrderState = (state: State): OrderState => state.order;
 
@@ -13,28 +12,25 @@ export const getOrderById = createSelector(getOrderState, (orderState) =>
 
 export const getOrders = (state: State) => getOrderState(state).orders;
 
-export const getOngoingOrders = createSelector(getOrders, (orders) =>
-  orders.filter((order) => order.status === 'dispatching')
-);
+export const getOrderCreatedOn = (order: WithId<Order>) =>
+  (order.createdOn as firebase.firestore.Timestamp).toDate();
 
-export const getYearsWithOrders = createSelector(getOrders, (orders) =>
+export const getOngoingOrders = (orders: WithId<Order>[]) =>
+  orders.filter((o) => o.status === 'dispatching');
+
+export const getYearsWithOrders = (orders: WithId<Order>[]) =>
   uniq(
     orders.map((order) => (order.createdOn as firebase.firestore.Timestamp).toDate().getFullYear())
-  )
-);
+  );
 
-export const getMonthsWithOrdersInYear = createSelector(getOrders, (orders) =>
+export const getMonthsWithOrdersInYear = (orders: WithId<Order>[]) =>
   memoize((year: number) =>
     uniq(
       orders
-        .filter(
-          (order) =>
-            (order.createdOn as firebase.firestore.Timestamp).toDate().getFullYear() === year
-        )
-        .map((order) => (order.createdOn as firebase.firestore.Timestamp).toDate().getMonth())
+        .filter((order) => getOrderCreatedOn(order).getFullYear() === year)
+        .map((order) => getOrderCreatedOn(order).getMonth())
     )
-  )
-);
+  );
 
 export const getOrdersWithFilter = (
   orders: WithId<Order>[],

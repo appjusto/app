@@ -1,8 +1,7 @@
 import { ChatMessage, WithId } from 'appjusto-types';
 import { normalize } from 'normalizr';
 import { AnyAction } from 'redux';
-
-import { ORDERS_UPDATED, ORDER_CHAT_UPDATED, ORDER_CHAT_MESSAGE_READ } from './actions';
+import { ORDERS_UPDATED, ORDER_CHAT_MESSAGE_READ, ORDER_CHAT_UPDATED } from './actions';
 import * as schema from './schema';
 import { OrderState } from './types';
 
