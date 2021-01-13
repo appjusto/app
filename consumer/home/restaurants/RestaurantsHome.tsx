@@ -8,9 +8,7 @@ import { useQuery } from 'react-query';
 import { useDispatch } from 'react-redux';
 import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
-import HorizontalSelect, {
-  HorizontalSelectItem,
-} from '../../../common/components/buttons/HorizontalSelect';
+import { HorizontalSelectItem } from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import useLastKnownLocation from '../../../common/hooks/useLastKnownLocation';
 import { getReverseGeocodeAdress } from '../../../common/store/order/actions';
@@ -18,7 +16,7 @@ import { borders, colors, halfPadding, padding, screens, texts } from '../../../
 import { t } from '../../../strings';
 import CuisinesBox from './components/CuisinesBox';
 import DoubleHeader from './components/DoubleHeader';
-import FilterButton from './components/FilterButton';
+import FilterSelector from './components/FilterSelector';
 import LocationBar from './components/LocationBar';
 import RestaurantListItem from './components/RestaurantListItem';
 import * as fake from './fakeData';
@@ -134,10 +132,8 @@ export default function ({ navigation }: Props) {
               alignItems: 'center',
             }}
           >
-            {/* <OrderInput /> */}
-            <FilterButton onPress={() => navigation.navigate('OrderBy')} />
-            {/* needs 'selected' logic */}
-            <HorizontalSelect data={data} onSelect={() => null} selectFilter />
+            {/* needs 'onSelectFilter' logic */}
+            <FilterSelector onSelect={() => null} onSelectFilter={() => null} data={data} />
           </View>
         </View>
       }
