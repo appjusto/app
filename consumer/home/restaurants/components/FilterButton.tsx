@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as icons from '../../../../assets/icons';
-import { borders, halfPadding, texts } from '../../../../common/styles';
+import { borders, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 
 export default function ({ onPress }: Props) {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} style={{ marginRight: padding }}>
       <View
         style={{
           ...borders.default,

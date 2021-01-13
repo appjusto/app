@@ -13,43 +13,45 @@ type Props = {
 
 export default function ({ data, selected, onSelect, onSelectFilter }: Props) {
   return (
-    <FlatList
-      showsHorizontalScrollIndicator={false}
-      ListHeaderComponent={<FilterButton onPress={onSelectFilter} />}
-      horizontal
-      data={data}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <TouchableWithoutFeedback
-          onPress={() => {
-            onSelect(item);
-          }}
-        >
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: halfPadding,
-              // paddingHorizontal: halfPadding,
-              ...borders.default,
-              borderRadius: 32,
-              // height: 32,
-              marginLeft: 8,
-              backgroundColor: item.id === selected?.id ? colors.darkGreen : colors.white,
-              borderColor: colors.black,
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <FilterButton onPress={onSelectFilter} />
+      <FlatList
+        showsHorizontalScrollIndicator={false}
+        horizontal
+        data={data}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableWithoutFeedback
+            onPress={() => {
+              onSelect(item);
             }}
           >
-            <Text
+            <View
               style={{
-                ...texts.default,
-                color: colors.black,
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: 4,
+                paddingHorizontal: halfPadding,
+                ...borders.default,
+                borderRadius: 32,
+                // height: 32,
+                marginLeft: 8,
+                backgroundColor: item.id === selected?.id ? colors.darkGreen : colors.white,
+                borderColor: colors.black,
               }}
             >
-              {item.title}
-            </Text>
-          </View>
-        </TouchableWithoutFeedback>
-      )}
-    />
+              <Text
+                style={{
+                  ...texts.default,
+                  color: colors.black,
+                }}
+              >
+                {item.title}
+              </Text>
+            </View>
+          </TouchableWithoutFeedback>
+        )}
+      />
+    </View>
   );
 }
