@@ -1,3 +1,4 @@
+import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Business, WithId } from 'appjusto-types';
 import { nanoid } from 'nanoid/non-secure';
@@ -28,13 +29,17 @@ import RestaurantListItem from './components/RestaurantListItem';
 import * as fake from './fakeData';
 import { RestaurantsNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<RestaurantsNavigatorParamList>;
+type ScreenNavigationProp = StackNavigationProp<RestaurantsNavigatorParamList, 'RestaurantsHome'>;
+type ScreenRouteProp = RouteProp<RestaurantsNavigatorParamList, 'RestaurantsHome'>;
 
 type Props = {
+  route: ScreenRouteProp;
   navigation: ScreenNavigationProp;
 };
 
-export default function ({ navigation }: Props) {
+export default function ({ route, navigation }: Props) {
+  // params
+  const { address } = route.params ?? {};
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -51,7 +56,7 @@ export default function ({ navigation }: Props) {
   // state
   const [locationKey] = React.useState(nanoid());
   const { lastKnownLocation } = useLastKnownLocation(true, locationKey);
-  const [address, setAddress] = React.useState('');
+  const [addressDescription, setAddressDescription] = React.useState('');
 
   // data
   const data: HorizontalSelectItem[] = [
@@ -69,27 +74,19 @@ export default function ({ navigation }: Props) {
     subtitle: string;
     data: WithId<Business>[];
   };
-  const sections: Sections[] = [
-    {
-      title: t('Restaurantes abertos agora'),
-      subtitle: t('Valor justo para restaurantes e entregadores'),
-      data: openRestaurants,
-    },
-    {
-      title: t('Fechados no momento'),
-      subtitle: t('Fora do horário de funcionamento'),
-      data: closedRestaurants,
-    },
-  ];
 
   //side-effects
   React.useEffect(() => {
     if (!lastKnownLocation) return;
     (async () => {
       const location = await dispatch(getReverseGeocodeAdress(api)(lastKnownLocation.coords));
-      setAddress(location);
+      setAddressDescription(location);
     })();
   }, [lastKnownLocation]);
+  // whenever address changes (from AddressComplete)
+  React.useEffect(() => {
+    if (address) setAddressDescription(address.description);
+  }, [address]);
 
   //UI
   const RestaurantSearch = () => (
@@ -117,52 +114,76 @@ export default function ({ navigation }: Props) {
     </TouchableWithoutFeedback>
   );
 
-  if (!openRestaurants || !closedRestaurants || !lastKnownLocation)
+  if (!openRestaurants || !closedRestaurants || !lastKnownLocation) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green} />
       </View>
     );
+  }
+
+  const sections: Sections[] = [
+    {
+      title: t('Restaurantes abertos agora'),
+      subtitle: t('Valor justo para restaurantes e entregadores'),
+      data: openRestaurants,
+    },
+    {
+      title: t('Fechados no momento'),
+      subtitle: t('Fora do horário de funcionamento'),
+      data: closedRestaurants,
+    },
+  ];
 
   return (
     <SectionList
       style={{ ...screens.default }}
       ListHeaderComponent={
-        <View>
-          <PaddedView>
-            <LocationBar address={address} />
-          </PaddedView>
-          {/* <DoubleHeader title="Os mais queridos" subtitle="Os lugares mais pedidos da sua região" /> */}
-          {/* horizontal flatlist displaying the "most liked" restaurants here */}
-          {/* <MostLikedItem /> */}
-          <DoubleHeader title="Buscar" subtitle="Já sabe o que quer? Então não perde tempo!" />
-          <View style={{ marginTop: 24, paddingHorizontal: 12, marginBottom: halfPadding }}>
-            <RestaurantSearch />
+        <TouchableWithoutFeedback
+          onPress={() => {
+            navigation.navigate('AddressComplete', {
+              value: addressDescription,
+              returnParam: 'address',
+              returnScreen: 'RestaurantsHome',
+            });
+          }}
+        >
+          <View>
+            <PaddedView style={{ borderWidth: 4 }}>
+              <LocationBar address={addressDescription} />
+            </PaddedView>
+            {/* <DoubleHeader title="Os mais queridos" subtitle="Os lugares mais pedidos da sua região" /> */}
+            {/* horizontal flatlist displaying the "most liked" restaurants here */}
+            {/* <MostLikedItem /> */}
+            <DoubleHeader title="Buscar" subtitle="Já sabe o que quer? Então não perde tempo!" />
+            <View style={{ marginTop: 24, paddingHorizontal: 12, marginBottom: halfPadding }}>
+              <RestaurantSearch />
+            </View>
+            <DoubleHeader title="Tá com fome de que?" subtitle="Escolha por categoria" />
+            <PaddedView style={{ flexDirection: 'row', marginTop: halfPadding }}>
+              {/* replace with a flatlist */}
+              <CuisinesBox cuisine="Pizza" image={fake.pizza} />
+              <CuisinesBox cuisine="Oriental" image={fake.oriental} />
+              <CuisinesBox cuisine="Mexicano" image={fake.mexican} />
+            </PaddedView>
+            {/* "OrderBy" component  here*/}
+            <View
+              style={{
+                marginHorizontal: 12,
+                marginTop: padding,
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              {/* needs 'onSelectFilter' logic */}
+              <FilterSelector
+                onSelect={() => null}
+                onSelectFilter={() => navigation.navigate('OrderBy')}
+                data={data}
+              />
+            </View>
           </View>
-          <DoubleHeader title="Tá com fome de que?" subtitle="Escolha por categoria" />
-          <PaddedView style={{ flexDirection: 'row', marginTop: halfPadding }}>
-            {/* replace with a flatlist */}
-            <CuisinesBox cuisine="Pizza" image={fake.pizza} />
-            <CuisinesBox cuisine="Oriental" image={fake.oriental} />
-            <CuisinesBox cuisine="Mexicano" image={fake.mexican} />
-          </PaddedView>
-          {/* "OrderBy" component  here*/}
-          <View
-            style={{
-              marginHorizontal: 12,
-              marginTop: padding,
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}
-          >
-            {/* needs 'onSelectFilter' logic */}
-            <FilterSelector
-              onSelect={() => null}
-              onSelectFilter={() => navigation.navigate('OrderBy')}
-              data={data}
-            />
-          </View>
-        </View>
+        </TouchableWithoutFeedback>
       }
       sections={sections}
       renderSectionHeader={({ section }) => (

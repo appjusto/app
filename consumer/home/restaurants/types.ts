@@ -1,5 +1,14 @@
+import { Address } from 'appjusto-types';
+
 export type RestaurantsNavigatorParamList = {
-  RestaurantsHome: undefined;
+  RestaurantsHome?: {
+    address: Address;
+  };
+  AddressComplete?: {
+    value: string;
+    returnScreen: 'RestaurantsHome';
+    returnParam: string;
+  };
   RestaurantNavigator: {
     restaurantId: string;
   };

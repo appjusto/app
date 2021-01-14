@@ -39,10 +39,11 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
+  // params
+  const { value, returnScreen, returnParam } = route.params;
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  const { value, returnScreen, returnParam } = route.params ?? {};
 
   // refs
   const searchInputRef = useRef<TextInput>();
@@ -135,8 +136,8 @@ export default function ({ navigation, route }: Props) {
   // confirm button callback
   const completeHandler = useCallback(() => {
     // create a place object when user confirm without selecting from suggestion list
-    const place = selectedAddress ?? { address: searchText };
-    navigation.navigate(returnScreen, { [returnParam]: place });
+    const address = selectedAddress ?? { address: searchText };
+    navigation.navigate(returnScreen, { [returnParam]: address });
   }, [navigation, returnScreen, selectedAddress, searchText]);
 
   // UI
