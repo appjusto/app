@@ -7,40 +7,46 @@ import RadioButton from '../../../common/components/buttons/RadioButton';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import { colors, halfPadding, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
-import { HomeNavigatorParamList } from '../types';
 import SingleHeader from './SingleHeader';
+import { RestaurantsNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;
+type ScreenNavigationProp = StackNavigationProp<RestaurantsNavigatorParamList>;
 
 type Props = {
   navigation: ScreenNavigationProp;
 };
 
 export default function ({ navigation }: Props) {
-  //screen state
+  //state
   const [filterByOrder, setFilterByOrder] = React.useState<string>('');
+  const [selectedFilter, setSelectedFilter] = React.useState<string>('');
+  const navigateBackWithFilter = (title: string) => {
+    setFilterByOrder(title);
+    setSelectedFilter(title);
+    navigation.navigate('RestaurantsHome', { selectedFilter });
+  };
   const data = [
     {
       title: 'Adicionados recentemente',
-      onPress: () => setFilterByOrder('Adicionados recentemente'),
+      onPress: () => navigateBackWithFilter('Adicionados recentemente'),
       checked: filterByOrder === 'Adicionados recentemente',
       id: '0',
     },
     {
       title: 'Menores preços',
-      onPress: () => setFilterByOrder('Menores preços'),
+      onPress: () => navigateBackWithFilter('Menores preços'),
       checked: filterByOrder === 'Menores preços',
       id: '1',
     },
     {
       title: 'Menor tempo de entrega',
-      onPress: () => setFilterByOrder('Menor tempo de entrega'),
+      onPress: () => navigateBackWithFilter('Menor tempo de entrega'),
       checked: filterByOrder === 'Menor tempo de entrega',
       id: '2',
     },
     {
       title: 'Menor distância',
-      onPress: () => setFilterByOrder('Menor distância'),
+      onPress: () => navigateBackWithFilter('Menor distância'),
       checked: filterByOrder === 'Menor distância',
       id: '3',
     },

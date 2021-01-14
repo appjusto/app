@@ -101,7 +101,14 @@ export default function ({ route, navigation }: Props) {
     </TouchableWithoutFeedback>
   );
 
-  if (!openRestaurants || !closedRestaurants || !lastKnownLocation) {
+  // if (!openRestaurants || !closedRestaurants || !lastKnownLocation) {
+  //   return (
+  //     <View style={screens.centered}>
+  //       <ActivityIndicator size="large" color={colors.green} />
+  //     </View>
+  //   );
+  // }
+  if (!openRestaurants || !closedRestaurants) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green} />
