@@ -24,6 +24,7 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
+  // params
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();

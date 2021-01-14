@@ -1,9 +1,17 @@
-import { IssueType } from 'appjusto-types';
-import { useContext } from 'react';
-import { useQuery } from 'react-query';
+import { Issue, IssueType, WithId } from 'appjusto-types';
+import React, { useContext } from 'react';
 import { ApiContext } from '../../app/context';
 
 export default function (type: IssueType) {
+  // context
   const api = useContext(ApiContext);
-  return useQuery(['issues', type], () => api.order().fetchIssues(type));
+  // state
+  const [issues, setIssues] = React.useState<WithId<Issue>[]>();
+  // side effects
+  React.useEffect(() => {
+    (async () => {
+      setIssues(await api.order().fetchIssues(type));
+    })();
+  }, [type]);
+  return issues;
 }

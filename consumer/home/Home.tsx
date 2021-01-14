@@ -3,13 +3,12 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as Location from 'expo-location';
 import { nanoid } from 'nanoid/non-secure';
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
-
 import * as icons from '../../assets/icons';
-import { AppDispatch, ApiContext } from '../../common/app/context';
+import { ApiContext, AppDispatch } from '../../common/app/context';
 import PaddedView from '../../common/components/containers/PaddedView';
 import useLastKnownLocation from '../../common/hooks/useLastKnownLocation';
 import HomeCard from '../../common/screens/home/cards/HomeCard';
@@ -17,6 +16,7 @@ import HomeOngoingDeliveries from '../../common/screens/home/cards/HomeOngoingDe
 import HomeShareCard from '../../common/screens/home/cards/HomeShareCard';
 import { getFlavor } from '../../common/store/config/selectors';
 import { fetchTotalCouriersNearby } from '../../common/store/courier/actions';
+import { getOrders } from '../../common/store/order/selectors';
 import { observeProfile } from '../../common/store/user/actions';
 import { getUser } from '../../common/store/user/selectors';
 import { padding, screens } from '../../common/styles';
@@ -45,6 +45,7 @@ export default function ({ navigation }: Props) {
   // app state
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser)!;
+  const ongoingOrders = useSelector(getOrders);
 
   // state
   const [locationKey] = useState(nanoid());
@@ -82,6 +83,7 @@ export default function ({ navigation }: Props) {
         <ConsumerHomeControls navigation={navigation} />
         <PaddedView>
           <HomeOngoingDeliveries
+            orders={ongoingOrders}
             onSelect={(order, openChat) =>
               navigation.navigate('OngoingOrder', { orderId: order.id, newMessage: openChat })
             }

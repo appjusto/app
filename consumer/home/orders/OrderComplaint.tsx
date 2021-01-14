@@ -2,7 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { WithId } from 'appjusto-types';
 import { Issue } from 'appjusto-types/order/issues';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,7 +12,6 @@ import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import useIssues from '../../../common/hooks/queries/useIssues';
-import { documentsAs } from '../../../common/store/api/types';
 import { sendOrderProblem } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
@@ -29,25 +28,34 @@ type Props = {
 };
 
 export default function ({ route, navigation }: Props) {
+  const { orderId } = route.params;
+  // params
   //context
-  const { order } = route.params;
-  const api = useContext(ApiContext);
+  const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  // screen state
+  const issues = useIssues('consumer-delivery-problem');
 
   //app state
   const busy = useSelector(getUIBusy);
-  const query = useIssues('consumer-delivery-problem');
-  const [problems, setProblems] = useState<WithId<Issue>[]>([]);
-  const [selectedProblem, setSelectedProblem] = useState<WithId<Issue>>();
-  const [complaintComment, setComplaintComment] = useState<string>('');
+  const [selectedProblem, setSelectedProblem] = React.useState<WithId<Issue>>();
+  const [complaintComment, setComplaintComment] = React.useState<string>('');
 
-  //handlers
-  const complaintHandler = useCallback(() => {
+  // UI
+  if (!issues) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
+  }
+  // UI handlers
+  const complaintHandler = () => {
     if (!selectedProblem) return;
     (async () => {
       try {
         await dispatch(
-          sendOrderProblem(api)(order.id, {
+          sendOrderProblem(api)(orderId, {
             reason: selectedProblem,
             comment: complaintComment,
           })
@@ -55,26 +63,9 @@ export default function ({ route, navigation }: Props) {
       } catch (error) {
         dispatch(showToast(t('Não foi possível enviar o comentário')));
       }
-      console.log(complaintComment);
-      console.log(order.id);
       navigation.popToTop();
     })();
-  }, [order, selectedProblem, complaintComment]);
-
-  // side effects
-  // whenever data changes
-  useEffect(() => {
-    if (query.data) {
-      setProblems(documentsAs<Issue>(query.data));
-    }
-    // console.log(problems);
-  }, [query.data]);
-  if (problems.length === 0)
-    return (
-      <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
-      </View>
-    );
+  };
   return (
     <View style={{ ...screens.config }}>
       <KeyboardAwareScrollView style={{ flex: 1 }}>
@@ -82,12 +73,12 @@ export default function ({ route, navigation }: Props) {
           <Text style={{ ...texts.mediumToBig, marginBottom: padding }}>
             {t('Indique seu problema:')}
           </Text>
-          {problems.map((problem) => (
+          {issues.map((issue) => (
             <RadioButton
-              key={problem.id}
-              title={problem.title}
-              onPress={() => setSelectedProblem(problem)}
-              checked={selectedProblem?.id === problem.id}
+              key={issue.id}
+              title={issue.title}
+              onPress={() => setSelectedProblem(issue)}
+              checked={selectedProblem?.id === issue.id}
             />
           ))}
           <Text

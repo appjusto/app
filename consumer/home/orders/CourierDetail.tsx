@@ -1,19 +1,16 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext } from 'react';
-import { Text, View } from 'react-native';
+import React from 'react';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useSelector } from 'react-redux';
-
-import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedProfileImg from '../../../common/components/icons/RoundedProfileImg';
 import HR from '../../../common/components/views/HR';
 import Pill from '../../../common/components/views/Pill';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
-import { getOrderById } from '../../../common/store/order/selectors';
-import { borders, colors, padding, screens, texts } from '../../../common/styles';
+import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { colors, padding, screens, texts } from '../../../common/styles';
 import { formatDate } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { HomeNavigatorParamList } from '../types';
@@ -28,16 +25,20 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  const { orderId, fleet } = route.params ?? {};
+  // params
+  const { orderId } = route.params ?? {};
   //context
-  const api = useContext(ApiContext);
-  const order = useSelector(getOrderById)(orderId)!;
-
-  //screen state
-  const createdOn = (order.courier!.joined as firebase.firestore.Timestamp).toDate();
-
+  const { order } = useObserveOrder(orderId);
+  // UI
+  if (!order) {
+    // showing the indicator until the order is loaded
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
+  }
   const tallerDevice = useTallerDevice();
-
   return (
     <ScrollView style={{ backgroundColor: colors.white }}>
       <View>
@@ -51,7 +52,12 @@ export default function ({ navigation, route }: Props) {
               <Text style={{ ...texts.small, color: colors.darkGrey, marginTop: 8 }}>
                 {t('No appJusto desde')}
               </Text>
-              <Text style={{ ...texts.small }}>{formatDate(createdOn, 'monthYear')}</Text>
+              <Text style={{ ...texts.small }}>
+                {formatDate(
+                  (order.courier!.joined as firebase.firestore.Timestamp).toDate(),
+                  'monthYear'
+                )}
+              </Text>
             </View>
           </View>
           <DefaultButton
@@ -96,7 +102,7 @@ export default function ({ navigation, route }: Props) {
             <Text style={{ ...texts.small, color: colors.darkGrey, marginVertical: 8 }}>
               {t('Integrante da frota')}
             </Text>
-            <OrderFleetCard fleet={fleet} />
+            <OrderFleetCard fleetId={order.fare?.fleet.id} />
           </PaddedView>
         </View>
       </View>

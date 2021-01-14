@@ -3,13 +3,14 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Order, WithId } from 'appjusto-types';
 import React, { useCallback } from 'react';
-import { View, FlatList } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { useSelector } from 'react-redux';
-
 import ConfigItem from '../../../../common/components/views/ConfigItem';
-import { getOrders, getOrdersWithFilter } from '../../../../common/store/order/selectors';
+import useObserveOrders from '../../../../common/store/api/order/hooks/useObserveOrders';
+import { getOrdersWithFilter } from '../../../../common/store/order/selectors';
+import { getUser } from '../../../../common/store/user/selectors';
 import { screens } from '../../../../common/styles';
-import { formatTime, formatCurrency } from '../../../../common/utils/formatters';
+import { formatCurrency, formatTime } from '../../../../common/utils/formatters';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
 import { DeliveriesNavigatorParamList } from './types';
@@ -29,11 +30,13 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  // context
+  // params
   const { year, month } = route.params;
-
   // app state
-  const orders = useSelector(getOrders);
+  const user = useSelector(getUser);
+  // screen state
+  // TO-DO: filter by date
+  const orders = useObserveOrders({ deliveredBy: user!.uid });
   const filteredOrders = getOrdersWithFilter(orders, year, month);
 
   // handlers

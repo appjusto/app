@@ -1,16 +1,18 @@
-import { Fleet } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../common/components/texts/RoundedText';
+import useObserveFleet from '../../../common/store/api/fleet/hooks/useObserveFleet';
 import { borders, colors, padding, texts } from '../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 
 type Props = {
-  fleet: Fleet;
+  fleetId: string | undefined;
 };
 
-export default function ({ fleet }: Props) {
+export default function ({ fleetId }: Props) {
+  // UI state
+  const fleet = useObserveFleet(fleetId);
   // UI
   return (
     <View
@@ -23,9 +25,9 @@ export default function ({ fleet }: Props) {
       }}
     >
       <View>
-        <Text style={{ ...texts.default }}>{fleet.name}</Text>
+        <Text style={{ ...texts.default }}>{fleet?.name}</Text>
         <Text style={{ ...texts.small, marginTop: 4, color: colors.darkGreen }}>
-          {fleet.participantsOnline} {t('participantes online')}
+          {fleet?.participantsOnline ?? 0} {t('participantes online')}
         </Text>
         <Text
           style={{
@@ -36,7 +38,7 @@ export default function ({ fleet }: Props) {
             marginBottom: 20,
           }}
         >
-          {fleet.description}
+          {fleet?.description}
         </Text>
         <View
           style={{
@@ -47,7 +49,7 @@ export default function ({ fleet }: Props) {
           }}
         >
           <Text style={{ ...texts.small }}>{t('Pagamento Mínimo')}</Text>
-          <RoundedText>{formatCurrency(fleet.minimumFee)}</RoundedText>
+          <RoundedText>{fleet ? formatCurrency(fleet.minimumFee) : '--'}</RoundedText>
         </View>
         <View
           style={{
@@ -58,7 +60,7 @@ export default function ({ fleet }: Props) {
           }}
         >
           <Text style={{ ...texts.small }}>{t('Distância Inicial Mínima')}</Text>
-          <RoundedText>{formatDistance(fleet.distanceThreshold)}</RoundedText>
+          <RoundedText>{fleet ? formatDistance(fleet.distanceThreshold) : '--'}</RoundedText>
         </View>
         <View
           style={{
@@ -69,7 +71,9 @@ export default function ({ fleet }: Props) {
           }}
         >
           <Text style={{ ...texts.small }}>{t('Valor Adicional por Km rodado')}</Text>
-          <RoundedText>{formatCurrency(fleet.additionalPerKmAfterThreshold)}</RoundedText>
+          <RoundedText>
+            {fleet ? formatCurrency(fleet.additionalPerKmAfterThreshold) : '--'}
+          </RoundedText>
         </View>
         <View
           style={{
@@ -83,7 +87,7 @@ export default function ({ fleet }: Props) {
             {t('Distância Máxima para Entrega')}
           </Text>
           <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey} noBorder>
-            {formatDistance(fleet.maxDistance)}
+            {fleet ? formatDistance(fleet.maxDistance) : '--'}
           </RoundedText>
         </View>
         <View
@@ -98,7 +102,7 @@ export default function ({ fleet }: Props) {
             {t('Distância Máxima até a Origem')}
           </Text>
           <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey} noBorder>
-            {formatDistance(fleet.maxDistanceToOrigin)}
+            {fleet ? formatDistance(fleet.maxDistanceToOrigin) : '--'}
           </RoundedText>
         </View>
       </View>

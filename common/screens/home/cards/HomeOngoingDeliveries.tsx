@@ -1,24 +1,20 @@
 import { Order, WithId } from 'appjusto-types';
 import React from 'react';
 import { View } from 'react-native';
-import { useSelector } from 'react-redux';
-import { getOngoingOrders, getOrders } from '../../../store/order/selectors';
 import { padding } from '../../../styles';
 import HomeOngoingDeliveryCard from './HomeOngoingDeliveryCard';
 
 type Props = {
+  orders: WithId<Order>[] | undefined;
   onSelect: (order: WithId<Order>, openChat: boolean) => void;
 };
 
-export default function ({ onSelect }: Props) {
-  // app state
-  const ongoingOrders = getOngoingOrders(useSelector(getOrders));
-
+export default function ({ orders, onSelect }: Props) {
   // UI
-  if (ongoingOrders.length === 0) return null;
+  if (!orders) return null;
   return (
     <View>
-      {ongoingOrders.map((order) => {
+      {orders.map((order) => {
         return (
           <View key={order.id} style={{ marginBottom: padding }}>
             <HomeOngoingDeliveryCard order={order} onSelect={onSelect} />

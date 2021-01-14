@@ -2,8 +2,8 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { distance } from 'geokit';
 import { round } from 'lodash';
-import React, { useCallback, useContext, useEffect, useMemo } from 'react';
-import { Text, View } from 'react-native';
+import React from 'react';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -13,8 +13,8 @@ import RoundedText from '../../../common/components/texts/RoundedText';
 import HR from '../../../common/components/views/HR';
 import ShowIf from '../../../common/components/views/ShowIf';
 import useNotificationToken from '../../../common/hooks/useNotificationToken';
+import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
-import { getOrderById } from '../../../common/store/order/selectors';
 import { updateProfile } from '../../../common/store/user/actions';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { formatDistance } from '../../../common/utils/formatters';
@@ -32,55 +32,59 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
+  // params
+  const { orderId, newMessage } = route.params;
   // context
-  const api = useContext(ApiContext);
+  const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  const { orderId } = route.params;
-
   // app state
   const consumer = useSelector(getConsumer);
-  const order = useSelector(getOrderById)(orderId)!;
-  const { dispatchingState } = order;
-
-  // state
+  // screen state
+  const { order } = useObserveOrder(orderId);
   const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
     consumer!.notificationToken
   );
-
   // side effects
   // whenever params changes
-  useEffect(() => {
-    const { newMessage } = route.params ?? {};
+  // open chat if there's a new message
+  React.useEffect(() => {
+    console.log('OngoingOrder, newMessage:', newMessage);
     if (newMessage) {
-      // this may be necessary to avoid keeping this indefinitely
-      // navigation.setParams({ newMessage: false });
-      openChatHandler();
+      setTimeout(() => {
+        navigation.setParams({ newMessage: false });
+        navigation.navigate('Chat', { orderId });
+      }, 100);
     }
-  }, [route.params]);
+  }, [newMessage]);
   // whenever notification token needs to be updated
-  useEffect(() => {
+  React.useEffect(() => {
     if (shouldDeleteToken || shouldUpdateToken) {
       const token = shouldUpdateToken ? notificationToken : null;
       dispatch(updateProfile(api)(consumer!.id, { notificationToken: token }));
     }
   }, [notificationToken, shouldDeleteToken, shouldUpdateToken]);
   // whenever order changes
-  useEffect(() => {
-    if (order.status === 'delivered') {
+  // check status to navigate to other screens
+  React.useEffect(() => {
+    if (order?.status === 'delivered') {
       navigation.replace('OrderDeliveredFeedback', { orderId });
-    } else if (order.dispatchingState === 'matching') {
+    } else if (order?.dispatchingState === 'matching') {
       // happens when courier cancels the delivery
       navigation.replace('OrderMatching', { orderId });
     }
   }, [order]);
 
-  // handlers
-  const openChatHandler = useCallback(() => {
-    navigation.navigate('Chat', { orderId });
-  }, [order]);
-
   // UI
-  const { courierWaiting, addressLabel, address, dispatchDetails } = useMemo(() => {
+  if (!order) {
+    // showing the indicator until the order is loaded
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
+  }
+  const { dispatchingState } = order;
+  const { courierWaiting, addressLabel, address, dispatchDetails } = (() => {
     let courierWaiting = null;
     let addressLabel = '';
     let address = '';
@@ -130,7 +134,7 @@ export default function ({ navigation, route }: Props) {
       };
     }
     return { courierWaiting, addressLabel, address, dispatchDetails };
-  }, [order, dispatchingState]);
+  })();
   return (
     <View style={{ ...screens.default }}>
       <View style={{ flex: 1 }}>
@@ -158,7 +162,10 @@ export default function ({ navigation, route }: Props) {
       <HR />
       <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <View style={{ flex: 7 }}>
-          <DefaultButton title={t('Iniciar chat')} onPress={openChatHandler} />
+          <DefaultButton
+            title={t('Iniciar chat')}
+            onPress={() => navigation.navigate('Chat', { orderId })}
+          />
         </View>
         <View style={{ flex: 1 }} />
         <View style={{ flex: 7 }}>
@@ -167,7 +174,6 @@ export default function ({ navigation, route }: Props) {
             onPress={() =>
               navigation.navigate('CourierDetail', {
                 orderId,
-                fleet: order.fare!.fleet,
               })
             }
             secondary

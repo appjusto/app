@@ -1,9 +1,8 @@
 import { Order, WithId } from 'appjusto-types';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Image, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
-
 import * as icons from '../../../../assets/icons';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';
@@ -22,16 +21,9 @@ type Props = {
 
 export default function ({ order, onSelect }: Props) {
   // app state
-  const getOrderChatByOrderId = useSelector(getOrderChat);
-  const getLastReadMessageByOrderId = useSelector(getLastReadMessage);
-
-  // state
-  const unreadCount = useMemo(() => {
-    const messages = getOrderChatByOrderId(order.id);
-    const lastReadMessage = getLastReadMessageByOrderId(order.id);
-    const total = getOrderChatUnreadCount(messages, lastReadMessage);
-    return total;
-  }, [getOrderChatByOrderId]);
+  const messages = useSelector(getOrderChat)(order.id);
+  const lastReadMessage = useSelector(getLastReadMessage)(order.id);
+  const unreadCount = getOrderChatUnreadCount(messages, lastReadMessage);
 
   // UI
   let detail = '';

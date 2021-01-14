@@ -1,17 +1,15 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useCallback } from 'react';
-import { View, Text, Image } from 'react-native';
+import React from 'react';
+import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useSelector } from 'react-redux';
-
 import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import HR from '../../../common/components/views/HR';
-import { getOrderById } from '../../../common/store/order/selectors';
-import { padding, screens, texts } from '../../../common/styles';
+import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedParamList } from '../../types';
 import { HomeNavigatorParamList } from '../types';
@@ -29,16 +27,19 @@ type Props = {
 };
 
 export default ({ navigation, route }: Props) => {
-  // context
+  // params
   const { orderId } = route.params;
-  // app state
-  const order = useSelector(getOrderById)(orderId)!;
-  // handlers
-  // handles opening chat screen
-  const openChatHandler = useCallback(() => {
-    navigation.navigate('Chat', { orderId });
-  }, []);
+  // screen state
+  const { order } = useObserveOrder(orderId);
   // UI
+  if (!order) {
+    // showing the indicator until the order is loaded
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
+  }
   return (
     <View style={screens.default}>
       <KeyboardAwareScrollView>
@@ -72,7 +73,13 @@ export default ({ navigation, route }: Props) => {
         <HR />
         {/* actions */}
         <PaddedView>
-          <DefaultButton title={t('Abrir chat')} secondary onPress={openChatHandler} />
+          <DefaultButton
+            title={t('Abrir chat')}
+            secondary
+            onPress={() => {
+              navigation.navigate('Chat', { orderId });
+            }}
+          />
           <DefaultButton
             title={t('Finalizar')}
             onPress={() => navigation.popToTop()}
@@ -89,7 +96,7 @@ export default ({ navigation, route }: Props) => {
             <DefaultButton
               title={t('Relatar um problema')}
               secondary
-              onPress={() => navigation.navigate('OrderComplaint', { order })}
+              onPress={() => navigation.navigate('OrderComplaint', { orderId: order.id })}
             />
             <DefaultButton
               title={t('Detalhes da corrida')}

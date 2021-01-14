@@ -35,7 +35,7 @@ export default function ({ navigation, route }: Props) {
   // app state
   const user = useSelector(getUser);
   // screen state
-  const orders = useObserveOrders({ deliveredBy: user?.uid });
+  const orders = useObserveOrders({ deliveredBy: user!.uid });
   const yearsWithOrders = getYearsWithOrders(orders);
   const monthsWithOrdersInYears = getMonthsWithOrdersInYear(orders);
 

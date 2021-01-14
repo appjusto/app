@@ -1,19 +1,17 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { View, ScrollView, Text } from 'react-native';
-import { useSelector } from 'react-redux';
-
+import { ScrollView, Text, View } from 'react-native';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
 import OrderCostBreakdown from '../../../../common/screens/history/OrderCostBreakdown';
-import { getOrderById } from '../../../../common/store/order/selectors';
-import { screens, texts, padding, halfPadding } from '../../../../common/styles';
+import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
+import { halfPadding, padding, screens, texts } from '../../../../common/styles';
 import {
+  formatCurrency,
   formatDistance,
   formatDuration,
-  formatCurrency,
   separateWithDot,
 } from '../../../../common/utils/formatters';
 import OrderMap from '../../../../consumer/home/orders/p2p-order/OrderMap';
@@ -33,8 +31,10 @@ export default function ({ navigation, route }: Props) {
   // context
   const { orderId } = route.params;
 
-  // app state
-  const order = useSelector(getOrderById)(orderId);
+  // screen state
+  const { order } = useObserveOrder(orderId);
+  if (!order) return null; // TODO: return loading
+
   const fee = (order.fare?.courierFee ?? 0) + (order.tip?.value ?? 0);
 
   return (

@@ -1,7 +1,7 @@
 import { Fleet, WithId } from 'appjusto-types';
 import firebase from 'firebase';
-import FirebaseRefs from './FirebaseRefs';
-import { documentsAs, FirebaseDocument } from './types';
+import FirebaseRefs from '../FirebaseRefs';
+import { documentAs, documentsAs, FirebaseDocument } from '../types';
 
 type FetchFleetsOptions = {
   startAfter?: FirebaseDocument;
@@ -28,7 +28,17 @@ export default class FleetApi {
     // we're not converting to plain objects be cause we need the to paginate
     return (await query.get()).docs;
   }
-
+  observeFleet(
+    fleetId: string,
+    resultHandler: (orders: WithId<Fleet>) => void
+  ): firebase.Unsubscribe {
+    const unsubscribe = this.refs.getFleetRef(fleetId).onSnapshot(
+      (snapshot) => resultHandler(documentAs<Fleet>(snapshot)),
+      (error) => console.error(error)
+    );
+    // returns the unsubscribe function
+    return unsubscribe;
+  }
   observeFleets(resultHandler: (orders: WithId<Fleet>[]) => void): firebase.Unsubscribe {
     const query = this.refs
       .getFleetsRef()

@@ -1,15 +1,15 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useEffect, useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import useNotificationToken from '../../../../common/hooks/useNotificationToken';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import { getCourier } from '../../../../common/store/courier/selectors';
+import { getOrders } from '../../../../common/store/order/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { padding, screens } from '../../../../common/styles';
 import { ApprovedParamList } from '../../types';
@@ -38,6 +38,7 @@ export default function ({ navigation }: Props) {
 
   // app state
   const courier = useSelector(getCourier)!;
+  const ongoingOrders = useSelector(getOrders);
 
   // state
   const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
@@ -60,6 +61,7 @@ export default function ({ navigation }: Props) {
         <HomeControls navigation={navigation} />
         <PaddedView>
           <HomeOngoingDeliveries
+            orders={ongoingOrders}
             onSelect={(order, openChat) =>
               navigation.navigate('OngoingNavigator', {
                 screen: 'OngoingDelivery',

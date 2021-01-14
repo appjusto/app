@@ -2,7 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { WithId } from 'appjusto-types';
 import { Issue } from 'appjusto-types/order/issues';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,7 +12,6 @@ import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import useIssues from '../../../common/hooks/queries/useIssues';
-import { documentsAs } from '../../../common/store/api/types';
 import { sendCourierOrderProblem } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
@@ -29,20 +28,28 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  //context
+  // params
   const { orderId } = route.params;
-  const api = useContext(ApiContext);
+  // context
+  const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-
-  //app state
+  // app state
   const busy = useSelector(getUIBusy);
-  const query = useIssues('courier-delivery-problem');
-  const [problems, setProblems] = useState<WithId<Issue>[]>([]);
-  const [selectedProblem, setSelectedProblem] = useState<WithId<Issue>>();
-  const [complaintComment, setComplaintComment] = useState<string>('');
+  // state
+  const issues = useIssues('courier-delivery-problem');
+  const [selectedProblem, setSelectedProblem] = React.useState<WithId<Issue>>();
+  const [complaintComment, setComplaintComment] = React.useState<string>('');
 
+  // UI
+  if (!issues) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
+  }
   //handlers
-  const complaintHandler = useCallback(() => {
+  const complaintHandler = () => {
     if (!selectedProblem) return;
     (async () => {
       try {
@@ -59,23 +66,7 @@ export default function ({ navigation, route }: Props) {
       console.log(orderId);
       navigation.goBack();
     })();
-  }, [orderId, selectedProblem, complaintComment]);
-
-  // side effects
-  // whenever data changes
-  useEffect(() => {
-    if (query.data) {
-      setProblems(documentsAs<Issue>(query.data));
-    }
-    // console.log(problems);
-  }, [query.data]);
-
-  if (problems.length === 0)
-    return (
-      <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
-      </View>
-    );
+  };
   return (
     <View style={{ ...screens.config }}>
       <KeyboardAwareScrollView style={{ flex: 1 }}>
@@ -83,12 +74,12 @@ export default function ({ navigation, route }: Props) {
           <Text style={{ ...texts.mediumToBig, marginBottom: padding }}>
             {t('Indique seu problema:')}
           </Text>
-          {problems.map((problem) => (
+          {issues.map((issue) => (
             <RadioButton
-              key={problem.id}
-              title={problem.title}
-              onPress={() => setSelectedProblem(problem)}
-              checked={selectedProblem?.id === problem.id}
+              key={issue.id}
+              title={issue.title}
+              onPress={() => setSelectedProblem(issue)}
+              checked={selectedProblem?.id === issue.id}
             />
           ))}
           <Text

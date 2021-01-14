@@ -2,6 +2,7 @@ import {
   ChatMessage,
   CreateOrderPayload,
   Fare,
+  Issue,
   IssueType,
   Order,
   OrderIssue,
@@ -14,7 +15,7 @@ import {
 import firebase from 'firebase';
 import { isEmpty } from 'lodash';
 import FirebaseRefs from '../FirebaseRefs';
-import { documentsAs } from '../types';
+import { documentAs, documentsAs } from '../types';
 import { ObserveOrdersOptions } from './types';
 
 export const OngoingOrdersStatuses: OrderStatus[] = [
@@ -99,17 +100,17 @@ export default class OrderApi {
     // returns the unsubscribe function
     return unsubscribe;
   }
-  // observeOrder(
-  //   orderId: string,
-  //   resultHandler: (orders: WithId<Order>) => void
-  // ): firebase.Unsubscribe {
-  //   const unsubscribe = this.refs.getOrderRef(orderId).onSnapshot(
-  //     (snapshot) => resultHandler(documentAs<Order>(snapshot)),
-  //     (error) => console.error(error)
-  //   );
-  //   // returns the unsubscribe function
-  //   return unsubscribe;
-  // }
+  observeOrder(
+    orderId: string,
+    resultHandler: (orders: WithId<Order>) => void
+  ): firebase.Unsubscribe {
+    const unsubscribe = this.refs.getOrderRef(orderId).onSnapshot(
+      (snapshot) => resultHandler(documentAs<Order>(snapshot)),
+      (error) => console.error(error)
+    );
+    // returns the unsubscribe function
+    return unsubscribe;
+  }
   // observe order's chat
   observeOrderChat(
     orderId: string,
@@ -135,7 +136,9 @@ export default class OrderApi {
   }
 
   async fetchIssues(type: IssueType) {
-    return (await this.refs.getIssuesRef().where('type', '==', type).get()).docs;
+    const query = this.refs.getIssuesRef().where('type', '==', type);
+    const docs = (await query.get()).docs;
+    return documentsAs<Issue>(docs);
   }
 
   async deleteOrder(orderId: string) {

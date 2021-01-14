@@ -1,4 +1,4 @@
-import { Order, OrderCourier, WithId } from 'appjusto-types';
+import { OrderCourier } from 'appjusto-types';
 
 export type HistoryParamList = {
   OrderHistory: undefined;
@@ -13,6 +13,6 @@ export type HistoryParamList = {
     orderId: string;
   };
   OrderComplaint: {
-    order: WithId<Order>;
+    orderId: string;
   };
 };

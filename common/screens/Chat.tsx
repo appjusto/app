@@ -1,20 +1,20 @@
 import { RouteProp } from '@react-navigation/native';
 import { ChatMessage, WithId } from 'appjusto-types';
-import React, { useState, useCallback, useContext, useMemo, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import React from 'react';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { t } from '../../strings';
 import { ApiContext, AppDispatch } from '../app/context';
 import DefaultButton from '../components/buttons/DefaultButton';
 import PaddedView from '../components/containers/PaddedView';
 import RoundedProfileImg from '../components/icons/RoundedProfileImg';
 import DefaultInput from '../components/inputs/DefaultInput';
+import useObserveOrder from '../store/api/order/hooks/useObserveOrder';
 import { markMessageAsRead, sendMessage } from '../store/order/actions';
-import { getOrderById, getOrderChat, groupOrderChatMessages } from '../store/order/selectors';
+import { groupOrderChatMessages } from '../store/order/selectors';
 import { getUser } from '../store/user/selectors';
-import { screens, colors, padding, texts, borders } from '../styles';
+import { borders, colors, padding, screens, texts } from '../styles';
 import { formatTime } from '../utils/formatters';
 
 export type ChatParamList = {
@@ -30,35 +30,41 @@ type Props = {
 };
 
 export default function ({ route }: Props) {
-  // context
-  const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
+  // params
   const { orderId } = route.params;
-
+  // context
+  const api = React.useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
   // app state
   const user = useSelector(getUser)!;
-  const order = useSelector(getOrderById)(orderId);
+  // screen state
+  const { order, chat } = useObserveOrder(orderId);
+  const [inputText, setInputText] = React.useState('');
+  const groupedMessages = React.useMemo(() => groupOrderChatMessages(chat ?? []), [chat]);
+  // side effects
+  React.useEffect(() => {
+    if (chat && chat.length > 0) {
+      dispatch(markMessageAsRead(orderId, chat[chat.length - 1]));
+    }
+  }, [chat]);
+  // UI
+  if (!order) {
+    // showing the indicator until the order is loaded
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
+  }
+  // UI handlers
+  const sendMessageHandler = () => {
+    dispatch(sendMessage(api)(order, user.uid, inputText.trim()));
+    setInputText('');
+  };
   const names = {
     [order.courier!.id]: order.courier!.name,
     [order.consumer!.id]: order.consumer!.name ?? t('Cliente'),
   };
-
-  // screen state
-  const [inputText, setInputText] = useState('');
-  const messages = useSelector(getOrderChat)(orderId);
-  const groupedMessages = useMemo(() => groupOrderChatMessages(messages), [messages]);
-
-  // handlers
-  const sendMessageHandler = useCallback(async () => {
-    dispatch(sendMessage(api)(order, user.uid, inputText.trim()));
-    setInputText('');
-  }, [order, inputText]);
-  useEffect(() => {
-    if (messages.length > 0) {
-      dispatch(markMessageAsRead(orderId, messages[messages.length - 1]));
-    }
-  }, [messages]);
-  // UI
   return (
     <View style={[screens.default]}>
       <KeyboardAwareFlatList

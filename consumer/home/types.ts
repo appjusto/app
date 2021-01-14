@@ -1,4 +1,4 @@
-import { Address, Fleet, Order, WithId } from 'appjusto-types';
+import { Address, Fleet, WithId } from 'appjusto-types';
 import { ChatParamList } from '../../common/screens/Chat';
 import { NestedNavigatorParams } from '../../common/types';
 import { RestaurantsNavigatorParamList } from './restaurants/types';
@@ -38,7 +38,6 @@ export type HomeNavigatorParamList = {
   };
   CourierDetail: {
     orderId: string;
-    fleet: WithId<Fleet>;
   };
   ConfirmCancelOrder: {
     orderId: string;
@@ -50,7 +49,7 @@ export type HomeNavigatorParamList = {
     orderId: string;
   };
   OrderComplaint: {
-    order: WithId<Order>;
+    orderId: string;
   };
   TransportableItems: undefined;
   PermissionDeniedFeedback: {

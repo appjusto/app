@@ -1,21 +1,19 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { View, ScrollView, Text } from 'react-native';
-import { useSelector } from 'react-redux';
-
+import { ScrollView, Text, View } from 'react-native';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/containers/PaddedView';
 import RoundedText from '../../common/components/texts/RoundedText';
 import HR from '../../common/components/views/HR';
 import Pill from '../../common/components/views/Pill';
 import OrderCostBreakdown from '../../common/screens/history/OrderCostBreakdown';
-import { getOrderById } from '../../common/store/order/selectors';
-import { screens, texts, padding, halfPadding } from '../../common/styles';
+import useObserveOrder from '../../common/store/api/order/hooks/useObserveOrder';
+import { halfPadding, padding, screens, texts } from '../../common/styles';
 import {
+  formatCurrency,
   formatDistance,
   formatDuration,
-  formatCurrency,
   separateWithDot,
 } from '../../common/utils/formatters';
 import { t } from '../../strings';
@@ -36,8 +34,9 @@ export default function ({ navigation, route }: Props) {
   // context
   const { orderId } = route.params;
 
-  // app state
-  const order = useSelector(getOrderById)(orderId);
+  // screen state
+  const { order } = useObserveOrder(orderId);
+  if (!order) return null; // TO-DO: return loading
 
   return (
     <View style={{ ...screens.default }}>
@@ -95,7 +94,7 @@ export default function ({ navigation, route }: Props) {
         <PaddedView>
           <DefaultButton
             title={t('Relatar um problema')}
-            onPress={() => navigation.navigate('OrderComplaint', { order: order })}
+            onPress={() => navigation.navigate('OrderComplaint', { orderId: order.id })}
             secondary
           />
         </PaddedView>

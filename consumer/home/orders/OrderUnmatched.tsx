@@ -3,7 +3,6 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { useSelector } from 'react-redux';
-
 import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
@@ -25,12 +24,11 @@ type Props = {
 };
 
 export default ({ navigation, route }: Props) => {
-  // context
+  // params
   const { orderId } = route.params ?? {};
 
   // app state
   const busy = useSelector(getUIBusy);
-  // const order = useSelector(getOrderById)(orderId);
 
   // UI
   return (
