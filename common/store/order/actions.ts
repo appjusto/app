@@ -13,7 +13,6 @@ import {
 import { CancelToken } from 'axios';
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
-import { ObserveOrdersOptions } from '../api/order/types';
 import { awaitWithFeedback, BUSY } from '../ui/actions';
 
 export const ORDERS_UPDATED = 'ORDERS_UPDATED';
@@ -112,20 +111,6 @@ export const sendCourierOrderProblem = (api: Api) => (
 };
 
 // both courier & consumer
-
-export const observeOrders = (api: Api) => (options: ObserveOrdersOptions) => (
-  dispatch: AppDispatch
-) => {
-  return api.order().observeOrders(options, (orders: WithId<Order>[]): void => {
-    dispatch({ type: ORDERS_UPDATED, payload: orders });
-  });
-};
-
-export const observeOrderChat = (api: Api) => (orderId: string) => (dispatch: AppDispatch) => {
-  return api.order().observeOrderChat(orderId, (messages: WithId<ChatMessage>[]): void => {
-    dispatch({ type: ORDER_CHAT_UPDATED, payload: { orderId, messages } });
-  });
-};
 
 export const sendMessage = (api: Api) => (
   order: WithId<Order>,

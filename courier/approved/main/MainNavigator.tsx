@@ -7,8 +7,7 @@ import { Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../assets/icons';
 import useNotification from '../../../common/hooks/useNotification';
-import { OngoingOrdersStatuses } from '../../../common/store/api/order';
-import useObserveDispatchOrders from '../../../common/store/api/order/hooks/useObserveDispatchOrders';
+import useObserveOngoingOrders from '../../../common/store/api/order/hooks/useObserveOngoingOrders';
 import { getCourier, getCourierStatus } from '../../../common/store/courier/selectors';
 import { colors, halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -32,7 +31,7 @@ export default function ({ navigation }: Props) {
 
   // effects
   // subscribe for observing ongoing orders
-  useObserveDispatchOrders({ deliveredBy: courier!.id!, statuses: OngoingOrdersStatuses });
+  useObserveOngoingOrders({ deliveredBy: courier!.id! });
 
   // handlers
   const notificationHandler = useCallback(

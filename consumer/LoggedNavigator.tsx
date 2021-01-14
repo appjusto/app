@@ -4,8 +4,7 @@ import { ActivityIndicator, Image, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../assets/icons';
 import { ApiContext, AppDispatch } from '../common/app/context';
-import { OngoingOrdersStatuses } from '../common/store/api/order';
-import useObserveDispatchOrders from '../common/store/api/order/hooks/useObserveDispatchOrders';
+import useObserveOngoingOrders from '../common/store/api/order/hooks/useObserveOngoingOrders';
 import { getFlavor } from '../common/store/config/selectors';
 import { getConsumer } from '../common/store/consumer/selectors';
 import { observeProfile } from '../common/store/user/actions';
@@ -33,7 +32,7 @@ export default function () {
     return dispatch(observeProfile(api)(flavor, user!.uid));
   }, []);
   // subscribe for observing ongoing orders
-  useObserveDispatchOrders({ createdBy: user?.uid, statuses: OngoingOrdersStatuses });
+  useObserveOngoingOrders({ createdBy: user?.uid });
 
   // UI
   if (consumer?.situation !== 'approved') {
