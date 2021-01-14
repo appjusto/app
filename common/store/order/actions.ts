@@ -84,12 +84,6 @@ export const rejectOrder = (api: Api) => (orderId: string, rejection: OrderRejec
   return dispatch(awaitWithFeedback(api.order().rejectOrder(orderId, rejection)));
 };
 
-export const nextDispatchingState = (api: Api) => (orderId: string) => async (
-  dispatch: AppDispatch
-) => {
-  return dispatch(awaitWithFeedback(api.order().nextDispatchingState(orderId)));
-};
-
 export const completeDelivery = (api: Api) => (orderId: string) => async (
   dispatch: AppDispatch
 ) => {

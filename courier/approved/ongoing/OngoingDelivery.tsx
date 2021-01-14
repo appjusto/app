@@ -5,16 +5,14 @@ import { isEmpty } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useDispatch, useSelector } from 'react-redux';
+import { useMutation } from 'react-query';
 import * as icons from '../../../assets/icons';
-import { ApiContext, AppDispatch } from '../../../common/app/context';
+import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import ShowIf from '../../../common/components/views/ShowIf';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
-import { completeDelivery, nextDispatchingState } from '../../../common/store/order/actions';
-import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, halfPadding, screens, texts } from '../../../common/styles';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
 import PlaceSummary from '../../../consumer/home/orders/p2p-order/PlaceSummary';
@@ -39,11 +37,15 @@ export default function ({ navigation, route }: Props) {
   const { orderId, newMessage } = route.params;
   // context
   const api = React.useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
-  // app state
-  const busy = useSelector(getUIBusy);
   // screen state
   const { order } = useObserveOrder(orderId);
+  const { mutate: nextDispatchingState, isLoading: isUpdatingDispatchingState } = useMutation(() =>
+    api.order().nextDispatchingState(orderId)
+  );
+  const { mutate: completeDelivery, isLoading: isCompletingDelivery } = useMutation(() =>
+    api.order().completeDelivery(orderId)
+  );
+  const isLoading = isUpdatingDispatchingState || isCompletingDelivery;
   // side effects
   // whenever params updates
   // open chat if there's a new message
@@ -81,9 +83,9 @@ export default function ({ navigation, route }: Props) {
   // handles updating dispatchingState
   const nextStatepHandler = () => {
     if (order.dispatchingState !== 'arrived-destination') {
-      dispatch(nextDispatchingState(api)(orderId));
+      nextDispatchingState();
     } else {
-      dispatch(completeDelivery(api)(orderId));
+      completeDelivery();
     }
   };
   // handles opening chat screen
@@ -209,8 +211,8 @@ export default function ({ navigation, route }: Props) {
           <DefaultButton
             title={nextStepLabel}
             onPress={nextStatepHandler}
-            activityIndicator={busy}
-            disabled={busy}
+            activityIndicator={isLoading}
+            disabled={isLoading}
           />
         </View>
       </PaddedView>
