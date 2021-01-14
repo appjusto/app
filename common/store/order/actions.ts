@@ -30,12 +30,6 @@ export const getAddressAutocomplete = (api: Api) => (
   );
 };
 
-export const getReverseGeocodeAdress = (api: Api) => (coords: LatLng) => async (
-  dispatch: AppDispatch
-) => {
-  return dispatch(awaitWithFeedback(api.maps().googleReverseGeocode(coords)));
-};
-
 export const createOrder = (api: Api) => (payload: CreateOrderPayload) => async (
   dispatch: AppDispatch
 ) => {

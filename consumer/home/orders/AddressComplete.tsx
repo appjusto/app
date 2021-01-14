@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Address, LatLng } from 'appjusto-types';
+import { Address } from 'appjusto-types';
 import debounce from 'lodash/debounce';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
@@ -22,7 +22,7 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import useAxiosCancelToken from '../../../common/hooks/useAxiosCancelToken';
 import useLastKnownLocation from '../../../common/hooks/useLastKnownLocation';
-import { AutoCompleteResult } from '../../../common/store/api/maps';
+import { AutoCompleteResult } from '../../../common/store/api/maps/types';
 import { getAddressAutocomplete } from '../../../common/store/order/actions';
 import { getPlacesFromPreviousOrders } from '../../../common/store/order/selectors';
 import { getUIBusy } from '../../../common/store/ui/selectors';
@@ -53,8 +53,7 @@ export default function ({ navigation, route }: Props) {
   const busy = useSelector(getUIBusy);
 
   // state
-  const [locationKey] = useState(nanoid());
-  const { lastKnownLocation } = useLastKnownLocation(true, locationKey);
+  const { coords } = useLastKnownLocation();
   const [autocompleteSession] = useState(nanoid());
   const [searchText, setSearchText] = useState(value ?? '');
   const [autocompletePredictions, setAutoCompletePredictions] = useState<AutoCompleteResult[]>([]);
@@ -79,18 +78,12 @@ export default function ({ navigation, route }: Props) {
   // TODO: what would be a better threshold than 500ms?
   const getAddress = useCallback(
     debounce<(input: string, session: string) => void>(async (input: string, session) => {
-      const coords: LatLng | undefined = lastKnownLocation
-        ? {
-            latitude: lastKnownLocation.coords.latitude,
-            longitude: lastKnownLocation.coords.longitude,
-          }
-        : undefined;
       const results = await dispatch(
         getAddressAutocomplete(api)(input, session, createCancelToken(), coords)
       );
       if (results) setAutoCompletePredictions(results);
     }, 500),
-    [lastKnownLocation]
+    [coords]
   );
 
   // effects

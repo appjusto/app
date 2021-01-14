@@ -1,5 +1,3 @@
-import { Fleet } from 'appjusto-types';
-
 export type HomeParamList = {
   Home: undefined;
   PermissionDeniedFeedback: {
@@ -7,6 +5,6 @@ export type HomeParamList = {
     subtitle: string;
   };
   FleetDetail: {
-    fleet: Fleet;
+    fleetId: string;
   };
 };

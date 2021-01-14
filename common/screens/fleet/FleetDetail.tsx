@@ -1,21 +1,19 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useCallback, useContext } from 'react';
-import { ScrollView, Text, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-
+import React, { useContext } from 'react';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import { HomeNavigatorParamList } from '../../../consumer/home/types';
 import GainSimulator from '../../../courier/approved/main/profile/fleet/GainSimulator';
 import { t } from '../../../strings';
-import { ApiContext, AppDispatch } from '../../app/context';
+import { ApiContext } from '../../app/context';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import PaddedView from '../../components/containers/PaddedView';
 import RoundedText from '../../components/texts/RoundedText';
 import ShowIf from '../../components/views/ShowIf';
+import useObserveFleet from '../../store/api/fleet/hooks/useObserveFleet';
 import { getFlavor } from '../../store/config/selectors';
 import { getCourier } from '../../store/courier/selectors';
-import { getUIBusy } from '../../store/ui/selectors';
-import { updateProfile } from '../../store/user/actions';
 import { colors, screens, texts } from '../../styles';
 import { formatCurrency, formatDistance } from '../../utils/formatters';
 
@@ -28,26 +26,36 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  const { fleet } = route.params;
-  const participants = `${fleet.participantsOnline} participantes`;
+  // params
+  const { fleetId } = route.params;
+  //context
+  const api = useContext(ApiContext);
+  // app state
+  const courier = useSelector(getCourier)!;
+  const flavor = useSelector(getFlavor);
+  // state
+  const fleet = useObserveFleet(fleetId);
+  //handlers
+  // UI
+  if (!fleet) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
+  }
+  // UI handlers
+  const confirmFleet = async () => {
+    api.profile().updateProfile(courier.id, { fleet });
+    navigation.goBack();
+  };
+
+  const participants = `${fleet.participantsOnline} ${t('participantes')}`;
   const minFee = formatCurrency(fleet.minimumFee);
   const minDistance = formatDistance(fleet.distanceThreshold);
   const additionalPerKm = formatCurrency(fleet.additionalPerKmAfterThreshold);
   const maxDistance = formatDistance(fleet.maxDistance);
   const maxDistanceOrigin = formatDistance(fleet.maxDistanceToOrigin);
-  //context
-  const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
-  const busy = useSelector(getUIBusy);
-  //app state
-  const courier = useSelector(getCourier)!;
-  const flavor = useSelector(getFlavor);
-  //handlers
-  const confirmFleet = useCallback(async () => {
-    if (!fleet) return;
-    await dispatch(updateProfile(api)(courier.id, { fleet }));
-    navigation.goBack();
-  }, [fleet]);
   return (
     <View style={[screens.config]}>
       <ScrollView>
@@ -141,16 +149,23 @@ export default function ({ navigation, route }: Props) {
           </Text>
         </PaddedView>
         <ShowIf test={flavor === 'courier'}>
-          {() => <GainSimulator fee={fleet.minimumFee} distance={fleet.distanceThreshold} />}
+          {() => (
+            <>
+              <GainSimulator fee={fleet.minimumFee} distance={fleet.distanceThreshold} />
+              <PaddedView>
+                {/* TO-DO: only used when choosing fleet;
+                should be hidden when coming from home'Ver detalhes';
+                should behave differently when coming from consumer
+                 */}
+                <DefaultButton
+                  title={t('Escolher essa frota')}
+                  onPress={confirmFleet}
+                  style={{ marginTop: 16 }}
+                />
+              </PaddedView>
+            </>
+          )}
         </ShowIf>
-        <PaddedView>
-          <DefaultButton
-            title={t('Escolher essa frota')}
-            onPress={confirmFleet}
-            style={{ marginTop: 16 }}
-            activityIndicator={busy}
-          />
-        </PaddedView>
       </ScrollView>
     </View>
   );

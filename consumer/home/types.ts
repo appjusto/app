@@ -1,4 +1,4 @@
-import { Address, Fleet, WithId } from 'appjusto-types';
+import { Address } from 'appjusto-types';
 import { ChatParamList } from '../../common/screens/Chat';
 import { NestedNavigatorParams } from '../../common/types';
 import { RestaurantsNavigatorParamList } from './restaurants/types';
@@ -17,7 +17,7 @@ export type HomeNavigatorParamList = {
     returnParam: string;
   };
   FleetDetail: {
-    fleet: WithId<Fleet>;
+    fleetId: string;
   };
   ProfileEdit: undefined;
   ProfileAddCard?: {

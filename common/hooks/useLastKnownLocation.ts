@@ -1,6 +1,6 @@
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
-import { useState, useEffect } from 'react';
+import React from 'react';
 
 const shouldAskPermission = (
   response: Permissions.PermissionResponse | null | undefined
@@ -11,21 +11,32 @@ const shouldAskPermission = (
   return response.canAskAgain;
 };
 
-export default function (enabled: boolean, key: string) {
+export default function (enabled: boolean = true, key?: string) {
   // state
-  const [permissionResponse, setPermissionResponse] = useState<
+  const [permissionResponse, setPermissionResponse] = React.useState<
     Permissions.PermissionResponse | null | undefined
   >(undefined);
-  const [lastKnownLocation, setLastKnownLocation] = useState<Location.LocationObject | null>(null);
+  const [lastKnownLocation, setLastKnownLocation] = React.useState<Location.LocationObject | null>(
+    null
+  );
+  const coords = React.useMemo(
+    () =>
+      lastKnownLocation
+        ? {
+            latitude: lastKnownLocation.coords.latitude,
+            longitude: lastKnownLocation.coords.longitude,
+          }
+        : undefined,
+    [lastKnownLocation]
+  );
 
   // side effects
   // key is used to allow restarting the verification process
-  useEffect(() => {
+  React.useEffect(() => {
     setPermissionResponse(null); // start or reset permission check process
   }, [key]);
-
   // check if we should ask permission or start/stop location updates task
-  useEffect(() => {
+  React.useEffect(() => {
     if (enabled) {
       if (shouldAskPermission(permissionResponse)) {
         (async () => {
@@ -41,5 +52,5 @@ export default function (enabled: boolean, key: string) {
     }
   }, [enabled, permissionResponse]);
 
-  return { lastKnownLocation, permissionResponse };
+  return { lastKnownLocation, coords, permissionResponse };
 }

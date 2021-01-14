@@ -3,7 +3,7 @@ import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CourierStatus } from 'appjusto-types';
 import { nanoid } from 'nanoid/non-secure';
-import React, { useContext, useEffect, useState } from 'react';
+import React from 'react';
 import { Dimensions, Image, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
@@ -14,8 +14,8 @@ import ShowIf from '../../../../common/components/views/ShowIf';
 import useLastKnownLocation from '../../../../common/hooks/useLastKnownLocation';
 import useLocationUpdates from '../../../../common/hooks/useLocationUpdates';
 import useTallerDevice from '../../../../common/hooks/useTallerDevice';
+import { useReverseGeocode } from '../../../../common/store/api/maps/hooks/useReverseGeocode';
 import { getCourier } from '../../../../common/store/courier/selectors';
-import { getReverseGeocodeAdress } from '../../../../common/store/order/actions';
 import { showToast } from '../../../../common/store/ui/actions';
 import { updateProfile } from '../../../../common/store/user/actions';
 import {
@@ -49,7 +49,7 @@ const { width } = Dimensions.get('window');
 
 export default function ({ navigation }: Props) {
   // context
-  const api = useContext(ApiContext);
+  const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   const tallerDevice = useTallerDevice();
 
@@ -59,14 +59,14 @@ export default function ({ navigation }: Props) {
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
 
   // state
-  const [locationKey, setLocationKey] = useState(nanoid());
+  const [locationKey, setLocationKey] = React.useState(nanoid());
   const locationPermission = useLocationUpdates(working, locationKey);
-  const { lastKnownLocation } = useLastKnownLocation(true, locationKey);
-  const [address, setAddress] = React.useState('');
+  const { coords } = useLastKnownLocation(working, locationKey);
+  const lastKnownAddress = useReverseGeocode(coords);
 
   // side effects
   // location permission denied
-  useEffect(() => {
+  React.useEffect(() => {
     if (working && locationPermission === 'denied') {
       navigation.navigate('PermissionDeniedFeedback', {
         title: t('Precisamos acessar a localização do seu dispositivo'),
@@ -78,14 +78,6 @@ export default function ({ navigation }: Props) {
       dispatch(updateProfile(api)(courier!.id!, { notificationToken: null }));
     }
   }, [working, locationPermission]);
-  // getting current location to display in the LocationBar
-  React.useEffect(() => {
-    if (!lastKnownLocation) return;
-    (async () => {
-      const location = await dispatch(getReverseGeocodeAdress(api)(lastKnownLocation.coords));
-      setAddress(location);
-    })();
-  }, [lastKnownLocation]);
 
   // handlers
   const toggleWorking = () => {
@@ -107,7 +99,7 @@ export default function ({ navigation }: Props) {
     <PaddedView style={[{ backgroundColor: working ? colors.green : colors.darkYellow }]}>
       <Text style={{ ...texts.small, alignSelf: 'center' }}>{t('Você está em:')}</Text>
       <View style={{ marginBottom: padding, marginTop: 4 }}>
-        <LocationBar address={address} />
+        <LocationBar address={lastKnownAddress} />
       </View>
       <ShowIf test={tallerDevice}>
         {() => (
@@ -192,7 +184,7 @@ export default function ({ navigation }: Props) {
           </Text>
           <View style={{ flex: 1 }} />
           <TouchableOpacity
-            onPress={() => navigation.navigate('FleetDetail', { fleet: courier.fleet })}
+            onPress={() => navigation.navigate('FleetDetail', { fleetId: courier.fleet!.id })}
           >
             <View style={{ marginTop: padding, alignItems: 'center' }}>
               <RoundedText>{t('Ver detalhes')}</RoundedText>

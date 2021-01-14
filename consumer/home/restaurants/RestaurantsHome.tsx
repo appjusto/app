@@ -1,8 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Business, WithId } from 'appjusto-types';
-import { nanoid } from 'nanoid/non-secure';
-import React, { useContext } from 'react';
+import React from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -11,14 +10,12 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { useDispatch } from 'react-redux';
 import * as icons from '../../../assets/icons';
-import { ApiContext, AppDispatch } from '../../../common/app/context';
 import { HorizontalSelectItem } from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import useLastKnownLocation from '../../../common/hooks/useLastKnownLocation';
 import { useBusinesses } from '../../../common/store/api/business/hooks/useBusinesses';
-import { getReverseGeocodeAdress } from '../../../common/store/order/actions';
+import { useReverseGeocode } from '../../../common/store/api/maps/hooks/useReverseGeocode';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import CuisinesBox from './components/CuisinesBox';
@@ -41,16 +38,13 @@ export default function ({ route, navigation }: Props) {
   // params
   const { address } = route.params ?? {};
   // context
-  const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
-
-  // app state
-  const openRestaurants = useBusinesses({ type: 'restaurant', status: 'open' });
-  const closedRestaurants = useBusinesses({ type: 'restaurant', status: 'closed' });
 
   // state
-  const [locationKey] = React.useState(nanoid());
-  const { lastKnownLocation } = useLastKnownLocation(true, locationKey);
+  // TODO: nearby user, infinite query
+  const openRestaurants = useBusinesses({ type: 'restaurant', status: 'open' });
+  const closedRestaurants = useBusinesses({ type: 'restaurant', status: 'closed' });
+  const { coords } = useLastKnownLocation();
+  const lastKnownAddress = useReverseGeocode(coords);
   const [addressDescription, setAddressDescription] = React.useState('');
 
   // data
@@ -72,12 +66,9 @@ export default function ({ route, navigation }: Props) {
 
   //side-effects
   React.useEffect(() => {
-    if (!lastKnownLocation) return;
-    (async () => {
-      const location = await dispatch(getReverseGeocodeAdress(api)(lastKnownLocation.coords));
-      setAddressDescription(location);
-    })();
-  }, [lastKnownLocation]);
+    if (!lastKnownAddress) return;
+    setAddressDescription(lastKnownAddress);
+  }, [lastKnownAddress]);
   // whenever address changes (from AddressComplete)
   React.useEffect(() => {
     if (address) setAddressDescription(address.description);
@@ -109,7 +100,7 @@ export default function ({ route, navigation }: Props) {
     </TouchableWithoutFeedback>
   );
 
-  if (!openRestaurants || !closedRestaurants || !lastKnownLocation) {
+  if (!openRestaurants || !closedRestaurants || !lastKnownAddress) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green} />
@@ -194,8 +185,8 @@ export default function ({ route, navigation }: Props) {
                 restaurantId: item.id,
               });
             }}
-            name={item.name ?? 'Nome do restaurante'}
-            cuisine={item.cuisine?.name ?? 'Tipo de comida'}
+            name={item.name ?? t('Nome do restaurante')}
+            cuisine={item.cuisine?.name ?? t('Tipo de comida')}
             deliveryRange={item.deliveryRange ?? 4}
           />
         </View>

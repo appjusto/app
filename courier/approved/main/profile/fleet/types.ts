@@ -1,10 +1,8 @@
-import { Fleet } from 'appjusto-types';
-
 export type FleetParamList = {
   ChooseFleet: undefined;
   FleetSearch: undefined;
   FleetDetail: {
-    fleet: Fleet;
+    fleetId: string;
   };
   CreateFleet: undefined;
   AllFleets: undefined;

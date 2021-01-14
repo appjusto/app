@@ -5,7 +5,7 @@ import { borders, colors, halfPadding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
 type Props = {
-  address: string;
+  address: string | undefined;
 };
 
 export default function ({ address }: Props) {
@@ -25,7 +25,7 @@ export default function ({ address }: Props) {
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Image source={icons.navigationArrow} />
-        <Text style={{ ...texts.small, marginLeft: halfPadding }}>{address}</Text>
+        <Text style={{ ...texts.small, marginLeft: halfPadding }}>{address ?? ''}</Text>
       </View>
       <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Alterar')}</Text>
     </View>

@@ -118,7 +118,7 @@ export default function ({ navigation, route }: Props) {
     else navigation.navigate('ProfilePaymentMethods', { returnScreen: 'CreateOrderP2P' });
   };
   const navigateFleetDetail = useCallback((fleet: WithId<Fleet>) => {
-    navigation.navigate('FleetDetail', { fleet });
+    navigation.navigate('FleetDetail', { fleetId: fleet.id });
   }, []);
   // confirm order
   const placeOrderHandler = async (fleetId: string, platformFee: number) => {

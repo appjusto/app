@@ -2,7 +2,6 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as Location from 'expo-location';
-import { nanoid } from 'nanoid/non-secure';
 import React, { useContext, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -15,7 +14,6 @@ import HomeCard from '../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../common/screens/home/cards/HomeShareCard';
 import { getFlavor } from '../../common/store/config/selectors';
-import { fetchTotalCouriersNearby } from '../../common/store/courier/actions';
 import { getOrders } from '../../common/store/order/selectors';
 import { observeProfile } from '../../common/store/user/actions';
 import { getUser } from '../../common/store/user/selectors';
@@ -48,8 +46,7 @@ export default function ({ navigation }: Props) {
   const ongoingOrders = useSelector(getOrders);
 
   // state
-  const [locationKey] = useState(nanoid());
-  const { lastKnownLocation, permissionResponse } = useLastKnownLocation(true, locationKey);
+  const { coords, permissionResponse } = useLastKnownLocation();
   const [availableCouriers, setAvailableCouriers] = useState(0);
 
   // side effects
@@ -68,12 +65,12 @@ export default function ({ navigation }: Props) {
   }, [permissionResponse]);
 
   useEffect(() => {
-    if (!lastKnownLocation) return;
+    if (!coords) return;
     (async () => {
-      const { total } = await dispatch(fetchTotalCouriersNearby(api)(lastKnownLocation.coords));
+      const { total } = await api.courier().fetchTotalCouriersNearby(coords);
       setAvailableCouriers(total);
     })();
-  }, [lastKnownLocation]);
+  }, [coords]);
 
   // UI
   return (
