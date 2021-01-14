@@ -11,13 +11,13 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { useQuery } from 'react-query';
 import { useDispatch } from 'react-redux';
 import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import { HorizontalSelectItem } from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import useLastKnownLocation from '../../../common/hooks/useLastKnownLocation';
+import { useBusinesses } from '../../../common/store/api/business/hooks/useBusinesses';
 import { getReverseGeocodeAdress } from '../../../common/store/order/actions';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -45,13 +45,8 @@ export default function ({ route, navigation }: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   // app state
-  const { data: openRestaurants } = useQuery<WithId<Business>[], Error>('open-restaurants', () =>
-    api.business().fetchBusinesses('open')
-  );
-  const { data: closedRestaurants } = useQuery<WithId<Business>[], Error>(
-    'closed-restaurants',
-    () => api.business().fetchBusinesses('closed')
-  );
+  const openRestaurants = useBusinesses({ type: 'restaurant', status: 'open' });
+  const closedRestaurants = useBusinesses({ type: 'restaurant', status: 'closed' });
 
   // state
   const [locationKey] = React.useState(nanoid());

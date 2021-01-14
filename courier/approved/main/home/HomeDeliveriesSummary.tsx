@@ -2,21 +2,25 @@ import dayjs from 'dayjs';
 import React, { useMemo } from 'react';
 import { Image, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-
 import * as icons from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/containers/PaddedView';
+import useObserveOrders from '../../../../common/store/api/order/hooks/useObserveOrders';
 import {
   getDeliveredOrders,
-  getOrders,
   getOrdersSince,
   summarizeOrders,
 } from '../../../../common/store/order/selectors';
+import { getUser } from '../../../../common/store/user/selectors';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 
 export default function () {
-  const orders = useSelector(getOrders);
+  // app state
+  const user = useSelector(getUser);
+  // state
+  // TO-DO: add parameter to fetch only orders delivered on the last week
+  const orders = useObserveOrders({ deliveredBy: user?.uid, statuses: ['delivered'] });
   const todaysOrdersFee = useMemo(() => {
     const today = dayjs().startOf('d').toDate();
     const todaysOrders = getOrdersSince(getDeliveredOrders(orders), today);
