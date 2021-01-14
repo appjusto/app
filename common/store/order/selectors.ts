@@ -91,12 +91,12 @@ export const getOrderChat = createSelector(getOrderState, (orderState) =>
 export const groupOrderChatMessages = (messages: WithId<ChatMessage>[]) =>
   messages.reduce<GroupedChatMessages[]>((groups, message) => {
     const currentGroup = first(groups);
-    if (message.from === currentGroup?.from) {
+    if (message.from.id === currentGroup?.from) {
       currentGroup!.messages.push(message);
       return groups;
     }
     // use as id for chat group the id of the first message of the group
-    return [{ id: message.id, from: message.from, messages: [message] }, ...groups];
+    return [{ id: message.id, from: message.from.id, messages: [message] }, ...groups];
   }, []);
 
 export const getLastReadMessage = createSelector(getOrderState, (orderState) =>

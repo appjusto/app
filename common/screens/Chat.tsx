@@ -1,5 +1,5 @@
 import { RouteProp } from '@react-navigation/native';
-import { ChatMessage, WithId } from 'appjusto-types';
+import { ChatMessage, Flavor, WithId } from 'appjusto-types';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
@@ -11,7 +11,8 @@ import PaddedView from '../components/containers/PaddedView';
 import RoundedProfileImg from '../components/icons/RoundedProfileImg';
 import DefaultInput from '../components/inputs/DefaultInput';
 import useObserveOrder from '../store/api/order/hooks/useObserveOrder';
-import { markMessageAsRead, sendMessage } from '../store/order/actions';
+import { getFlavor } from '../store/config/selectors';
+import { markMessageAsRead } from '../store/order/actions';
 import { groupOrderChatMessages } from '../store/order/selectors';
 import { getUser } from '../store/user/selectors';
 import { borders, colors, padding, screens, texts } from '../styles';
@@ -36,9 +37,11 @@ export default function ({ route }: Props) {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // app state
+  const flavor = useSelector(getFlavor);
   const user = useSelector(getUser)!;
   // screen state
   const { order, chat } = useObserveOrder(orderId);
+
   const [inputText, setInputText] = React.useState('');
   const groupedMessages = React.useMemo(() => groupOrderChatMessages(chat ?? []), [chat]);
   // side effects
@@ -58,7 +61,15 @@ export default function ({ route }: Props) {
   }
   // UI handlers
   const sendMessageHandler = () => {
-    dispatch(sendMessage(api)(order, user.uid, inputText.trim()));
+    const to: { agent: Flavor; id: string } = {
+      agent: flavor === 'consumer' ? 'courier' : 'consumer',
+      id: user.uid === order?.consumer.id ? order?.courier?.id! : order?.consumer?.id!,
+    };
+    api.order().sendMessage(orderId, {
+      from: { agent: flavor, id: user.uid },
+      to,
+      message: inputText.trim(),
+    });
     setInputText('');
   };
   const names = {

@@ -17,7 +17,6 @@ export default function (state: OrderState = initialState, action: AnyAction): O
   switch (type) {
     case ORDERS_UPDATED: {
       const ordersById = normalize(payload, [schema.order]).entities.orders ?? {};
-      console.log(ordersById);
       return { ...state, orders: payload, ordersById };
     }
     case ORDER_CHAT_UPDATED: {

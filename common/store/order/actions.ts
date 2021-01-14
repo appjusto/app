@@ -3,7 +3,6 @@ import {
   CreateOrderPayload,
   Fare,
   LatLng,
-  Order,
   OrderIssue,
   OrderRejection,
   PlaceOrderPayload,
@@ -13,7 +12,7 @@ import {
 import { CancelToken } from 'axios';
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
-import { awaitWithFeedback, BUSY } from '../ui/actions';
+import { awaitWithFeedback } from '../ui/actions';
 
 export const ORDERS_UPDATED = 'ORDERS_UPDATED';
 export const ORDER_CHAT_UPDATED = 'ORDER_CHAT_UPDATED';
@@ -111,22 +110,6 @@ export const sendCourierOrderProblem = (api: Api) => (
 };
 
 // both courier & consumer
-
-export const sendMessage = (api: Api) => (
-  order: WithId<Order>,
-  from: string,
-  message: string
-) => async (dispatch: AppDispatch) => {
-  dispatch({ type: BUSY, payload: true });
-  const destination: 'consumers' | 'couriers' =
-    from === order.consumer.id ? 'couriers' : 'consumers';
-  const to = destination === 'consumers' ? order.consumer.id : order.courier!.id;
-  const chat: Partial<ChatMessage> = { from, to, message, destination };
-  const result = await api.order().sendMessage(order.id, chat);
-  dispatch({ type: BUSY, payload: false });
-  return result;
-};
-
 export const markMessageAsRead = (orderId: string, message: WithId<ChatMessage>) => (
   dispatch: AppDispatch
 ) => {
