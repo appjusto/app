@@ -66,15 +66,6 @@ export default function ({ route, navigation }: Props) {
     { id: '5', title: t('Menor distância') },
   ];
 
-  // check if the type definition below is ok
-  // we have an ActivityIndicator loading while the data is not loaded on the screen,
-  // so the data can never be undefined when the list is loaded (?)
-  type Sections = {
-    title: string;
-    subtitle: string;
-    data: WithId<Business>[];
-  };
-
   //side-effects
   React.useEffect(() => {
     if (!lastKnownLocation) return;
@@ -85,7 +76,8 @@ export default function ({ route, navigation }: Props) {
   }, [lastKnownLocation]);
   // whenever address changes (from AddressComplete)
   React.useEffect(() => {
-    if (address) setAddressDescription(address.description);
+    const formattedAddress = `${address?.main}, ${address?.state}, ${address?.country}`;
+    if (address) setAddressDescription(formattedAddress);
   }, [address]);
 
   //UI
@@ -122,6 +114,11 @@ export default function ({ route, navigation }: Props) {
     );
   }
 
+  type Sections = {
+    title: string;
+    subtitle: string;
+    data: WithId<Business>[];
+  };
   const sections: Sections[] = [
     {
       title: t('Restaurantes abertos agora'),
@@ -149,9 +146,7 @@ export default function ({ route, navigation }: Props) {
           }}
         >
           <View>
-            <PaddedView style={{ borderWidth: 4 }}>
-              <LocationBar address={addressDescription} />
-            </PaddedView>
+            <LocationBar address={addressDescription} />
             {/* <DoubleHeader title="Os mais queridos" subtitle="Os lugares mais pedidos da sua região" /> */}
             {/* horizontal flatlist displaying the "most liked" restaurants here */}
             {/* <MostLikedItem /> */}
