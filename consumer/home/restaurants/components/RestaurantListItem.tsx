@@ -13,9 +13,11 @@ import * as fake from '../fakeData';
 type Props = {
   onPress: () => void;
   name: string;
+  cuisine: string;
+  deliveryRange: number;
 };
 
-export default function ({ onPress, name }: Props) {
+export default function ({ onPress, name, cuisine, deliveryRange }: Props) {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={{ marginTop: halfPadding }}>
@@ -37,10 +39,9 @@ export default function ({ onPress, name }: Props) {
         >
           <View style={{ marginTop: 12 }}>
             <Text style={{ ...texts.default }}>{name}</Text>
-            {/* hardcoded infos below for now */}
-            <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Tipo de comida')}</Text>
+            <Text style={{ ...texts.small, color: colors.darkGreen }}>{t(cuisine)}</Text>
             <Text style={{ ...texts.small, color: colors.darkGrey }}>
-              {separateWithDot(formatDistance(2000), formatDuration(1800))}
+              {separateWithDot(formatDistance(deliveryRange * 1000), formatDuration(1800))}
             </Text>
           </View>
           <View

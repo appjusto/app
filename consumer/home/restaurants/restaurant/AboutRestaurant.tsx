@@ -101,7 +101,7 @@ export default function ({ route }: Props) {
             {t('CEP: ')}
             {restaurant.businessAddress.cep}
           </Text>
-          <Text style={{ ...texts.default, color: colors.darkGrey }}>
+          <Text style={{ ...texts.default, color: colors.darkGrey, marginTop: 32 }}>
             {t('CNPJ ')}
             {restaurant.cnpj}
           </Text>

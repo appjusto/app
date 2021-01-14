@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as icons from '../../../../assets/icons';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
@@ -78,11 +78,18 @@ export default function ({ navigation, route }: Props) {
           </TouchableOpacity>
         </View>
         <View style={{ marginLeft: padding }}>
-          <DefaultButton title={`${t('Adicionar')} ${counter}`} />
+          <DefaultButton title={`${t('Adicionar')} ${formatCurrency(product?.price * counter)}`} />
         </View>
       </View>
     );
   };
+
+  if (!product)
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
 
   return (
     <ScrollView style={{ ...screens.default }}>
@@ -107,7 +114,7 @@ export default function ({ navigation, route }: Props) {
         }}
       />
       <View style={{ paddingHorizontal: 12 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: halfPadding }}>
           <Image source={icons.info} />
           <Text style={{ ...texts.default, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
         </View>

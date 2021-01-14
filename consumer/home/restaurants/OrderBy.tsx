@@ -1,7 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { FlatList } from 'react-native-gesture-handler';
 import CheckField from '../../../common/components/buttons/CheckField';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import RoundedText from '../../../common/components/texts/RoundedText';
@@ -17,36 +17,65 @@ type Props = {
 };
 
 export default function ({ navigation }: Props) {
+  //screen state
+  const [filterByOrder, setFilterByOrder] = React.useState<string>('');
+  const data = [
+    {
+      title: 'Adicionados recentemente',
+      onPress: () => setFilterByOrder('Adicionados recentemente'),
+      checked: filterByOrder === 'Adicionados recentemente',
+      id: '0',
+    },
+    {
+      title: 'Menores preços',
+      onPress: () => setFilterByOrder('Menores preços'),
+      checked: filterByOrder === 'Menores preços',
+      id: '1',
+    },
+    {
+      title: 'Menor tempo de entrega',
+      onPress: () => setFilterByOrder('Menor tempo de entrega'),
+      checked: filterByOrder === 'Menor tempo de entrega',
+      id: '2',
+    },
+    {
+      title: 'Menor distância',
+      onPress: () => setFilterByOrder('Menor distância'),
+      checked: filterByOrder === 'Menor distância',
+      id: '3',
+    },
+  ];
   //UI
 
   return (
-    <ScrollView style={{ ...screens.default }}>
-      <View style={{ marginTop: padding }}>
-        <SingleHeader title="Ordernar por" />
-        <View
-          style={{
-            borderBottomWidth: 1,
-            borderStyle: 'solid',
-            width: '100%',
-            borderColor: colors.grey,
-            marginTop: halfPadding,
-            marginBottom: padding,
-          }}
-        />
-        {/* this will be a list of filters displayed in RadioButton components.
-        the data will come from firebase  */}
-        <View style={{ marginHorizontal: padding }}>
-          <RadioButton title="Adicionados recentemente" onPress={() => null} />
-          <RadioButton title="Mais antigos" onPress={() => null} />
-          <RadioButton title="Menores preços" onPress={() => null} />
-          <RadioButton title="Menor tempo de entrega" onPress={() => null} />
-          <RadioButton title="Menor distância" onPress={() => null} />
-          <RadioButton title="Listagem de A-Z" onPress={() => null} />
-          <RadioButton title="Listagem de Z-A" onPress={() => null} />
-        </View>
-      </View>
-      <View style={{ marginTop: padding }}>
-        <SingleHeader title="Categorias" />
+    <View style={{ ...screens.default }}>
+      <FlatList
+        // style={{ ...borders.default, borderWidth: 2, borderColor: 'red' }}
+        data={data}
+        ListHeaderComponent={
+          <View style={{ marginTop: padding }}>
+            <SingleHeader title={t('Ordernar por')} />
+            <View
+              style={{
+                borderBottomWidth: 1,
+                borderStyle: 'solid',
+                width: '100%',
+                borderColor: colors.grey,
+                marginTop: halfPadding,
+                marginBottom: padding,
+              }}
+            />
+          </View>
+        }
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={{ paddingHorizontal: padding, marginBottom: halfPadding }}>
+            <RadioButton title={item.title} onPress={item.onPress} checked={item.checked} />
+          </View>
+        )}
+      />
+      <View>
+        <SingleHeader title={t('Categorias')} />
         <View
           style={{
             borderBottomWidth: 1,
@@ -84,7 +113,7 @@ export default function ({ navigation }: Props) {
         </View>
       </View>
       <View style={{ marginTop: padding }}>
-        <SingleHeader title="Classificações especiais" />
+        <SingleHeader title={t('Classificações especiais')} />
         <View
           style={{
             borderBottomWidth: 1,
@@ -103,25 +132,29 @@ export default function ({ navigation }: Props) {
             onPress={() => null}
             style={{ marginBottom: halfPadding }}
           />
-          <CheckField text="Vegano" onPress={() => null} style={{ marginBottom: halfPadding }} />
+          <CheckField
+            text={t('Vegano')}
+            onPress={() => null}
+            style={{ marginBottom: halfPadding }}
+          />
           <CheckField text="Orgânico" onPress={() => null} style={{ marginBottom: halfPadding }} />
           <CheckField
-            text="Sem glúten"
+            text={t('Sem glúten')}
             onPress={() => null}
             style={{ marginBottom: halfPadding }}
           />
           <CheckField
-            text="Sem açúcar"
+            text={t('Sem açúcar')}
             onPress={() => null}
             style={{ marginBottom: halfPadding }}
           />
           <CheckField
-            text="Zero lactose"
+            text={t('Zero lactose')}
             onPress={() => null}
             style={{ marginBottom: halfPadding }}
           />
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 }

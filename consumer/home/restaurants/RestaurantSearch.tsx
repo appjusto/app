@@ -1,15 +1,20 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useCallback, useRef, useState } from 'react';
 import { Image, View } from 'react-native';
-import { ScrollView, TextInput } from 'react-native-gesture-handler';
+import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import * as icons from '../../../assets/icons';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
-import { padding, screens } from '../../../common/styles';
-import { HomeNavigatorParamList } from '../types';
+import { borders, padding, screens } from '../../../common/styles';
+import FilterButton from './components/FilterButton';
+import { RestaurantsNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;
+type ScreenNavigationProp = StackNavigationProp<RestaurantsNavigatorParamList>;
 
-export default function () {
+type Props = {
+  navigation: ScreenNavigationProp;
+};
+
+export default function ({ navigation }: Props) {
   // context
   // const api = useContext(ApiContext);
   // const dispatch = useDispatch<AppDispatch>();
@@ -41,7 +46,22 @@ export default function () {
           autoCorrect={false}
           style={{ paddingVertical: padding, paddingLeft: 12 }}
         />
-        <Image source={icons.search} style={{ position: 'absolute', right: 24, bottom: padding }} />
+        <View
+          style={{
+            ...borders.default,
+            position: 'absolute',
+            right: 24,
+            bottom: padding,
+            flex: 1,
+          }}
+        >
+          <TouchableOpacity onPress={() => null}>
+            <Image source={icons.search} />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={{ marginHorizontal: 12, marginTop: padding }}>
+        <FilterButton onPress={() => navigation.navigate('OrderBy')} />
       </View>
     </ScrollView>
   );

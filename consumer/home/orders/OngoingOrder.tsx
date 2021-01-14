@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { distance } from 'geokit';
 import { round } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -16,8 +16,8 @@ import useNotificationToken from '../../../common/hooks/useNotificationToken';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { updateProfile } from '../../../common/store/user/actions';
-import { colors, padding, screens, texts } from '../../../common/styles';
-import { formatDistance } from '../../../common/utils/formatters';
+import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { formatDistance, formatDuration, separateWithDot } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { HomeNavigatorParamList } from '../types';
 import CourierStatusHighlight from './CourierStatusHighlight';
@@ -92,15 +92,18 @@ export default function ({ navigation, route }: Props) {
     if (dispatchingState === 'going-pickup') {
       addressLabel = t('Retirada em');
       address = order.origin.address.main;
-      dispatchDetails = `Distância até a retirada: ${formatDistance(
-        round(
-          distance(
-            { lat: order.courier!.location.latitude, lng: order.courier!.location.longitude },
-            { lat: order.origin!.location!.latitude, lng: order.origin!.location!.longitude }
-          ),
-          2
-        ) * 1000
-      )}`;
+      dispatchDetails = separateWithDot(
+        formatDistance(
+          round(
+            distance(
+              { lat: order.courier!.location.latitude, lng: order.courier!.location.longitude },
+              { lat: order.origin.location!.latitude, lng: order.origin.location!.longitude }
+            ),
+            2
+          ) * 1000
+        ),
+        formatDuration(order.duration)
+      );
     } else if (dispatchingState === 'arrived-pickup') {
       addressLabel = t('Retirada em');
       address = order.origin.address.main;
@@ -155,20 +158,26 @@ export default function ({ navigation, route }: Props) {
             <Text style={[texts.medium]}>{order.courier!.name}</Text>
             <RoundedText>{dispatchDetails}</RoundedText>
           </View>
-          <Text style={[texts.small, { color: colors.lightGreen }]}>{addressLabel}</Text>
-          <Text style={[texts.small]}>{address}</Text>
+          <Text style={[texts.small, { color: colors.darkGreen }]}>{addressLabel}</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={[texts.small]}>{address}</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
+            >
+              <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Alterar rota')}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </PaddedView>
       <HR />
       <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <View style={{ flex: 7 }}>
           <DefaultButton
-            title={t('Iniciar chat')}
+            title={t('Abrir chat')}
             onPress={() => navigation.navigate('Chat', { orderId })}
           />
         </View>
-        <View style={{ flex: 1 }} />
-        <View style={{ flex: 7 }}>
+        <View style={{ flex: 7, marginLeft: halfPadding }}>
           <DefaultButton
             title={t('Mais informações')}
             onPress={() =>

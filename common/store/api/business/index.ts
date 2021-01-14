@@ -19,7 +19,7 @@ export default class BusinessApi {
     const query = this.refs
       .getBusinessesRef()
       .where('type', '==', type)
-      .where('status', '==', 'open');
+      .where('status', '==', status);
     const docs = (await query.get()).docs;
     return documentsAs<Business>(docs);
   }

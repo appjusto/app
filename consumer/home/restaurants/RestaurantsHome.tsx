@@ -2,12 +2,19 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Business, WithId } from 'appjusto-types';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useContext } from 'react';
-import { ActivityIndicator, Image, Text, TouchableWithoutFeedback, View } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import {
+  ActivityIndicator,
+  Image,
+  SectionList,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import { useQuery } from 'react-query';
 import { useDispatch } from 'react-redux';
 import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
+import { HorizontalSelectItem } from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import useLastKnownLocation from '../../../common/hooks/useLastKnownLocation';
 import { getReverseGeocodeAdress } from '../../../common/store/order/actions';
@@ -15,8 +22,8 @@ import { borders, colors, halfPadding, padding, screens, texts } from '../../../
 import { t } from '../../../strings';
 import CuisinesBox from './components/CuisinesBox';
 import DoubleHeader from './components/DoubleHeader';
+import FilterSelector from './components/FilterSelector';
 import LocationBar from './components/LocationBar';
-import OrderInput from './components/OrderInput';
 import RestaurantListItem from './components/RestaurantListItem';
 import * as fake from './fakeData';
 import { RestaurantsNavigatorParamList } from './types';
@@ -46,6 +53,36 @@ export default function ({ navigation }: Props) {
   const { lastKnownLocation } = useLastKnownLocation(true, locationKey);
   const [address, setAddress] = React.useState('');
 
+  // data
+  const data: HorizontalSelectItem[] = [
+    { id: '0', title: t('Adicionados recentemente') },
+    { id: '1', title: t('Menores preços') },
+    { id: '3', title: t('Menor tempo de entrega') },
+    { id: '5', title: t('Menor distância') },
+  ];
+
+  // check if the type definition below is ok
+  // we have an ActivityIndicator loading while the data is not loaded on the screen,
+  // so the data can never be undefined when the list is loaded (?)
+  type Sections = {
+    title: string;
+    subtitle: string;
+    data: WithId<Business>[];
+  };
+  const sections: Sections[] = [
+    {
+      title: t('Restaurantes abertos agora'),
+      subtitle: t('Valor justo para restaurantes e entregadores'),
+      data: openRestaurants,
+    },
+    {
+      title: t('Fechados no momento'),
+      subtitle: t('Fora do horário de funcionamento'),
+      data: closedRestaurants,
+    },
+  ];
+
+  //side-effects
   React.useEffect(() => {
     if (!lastKnownLocation) return;
     (async () => {
@@ -80,19 +117,6 @@ export default function ({ navigation }: Props) {
     </TouchableWithoutFeedback>
   );
 
-  // if (!openRestaurants || !closedRestaurants)
-  //   return (
-  //     <FeedbackView
-  //       header={t('Sem restaurantes na sua região')}
-  //       description={t(
-  //         'Infelizmente não encontramos nenhum restaurante cadastrado no app próximo a você. Estamos começando, mas não se preocupe: em breve seu restaurante preferido estará aqui.'
-  //       )}
-  //       icon={icons.iconSad}
-  //     >
-  //       <HomeShareCard />
-  //     </FeedbackView>
-  //   );
-
   if (!openRestaurants || !closedRestaurants || !lastKnownLocation)
     return (
       <View style={screens.centered}>
@@ -101,16 +125,18 @@ export default function ({ navigation }: Props) {
     );
 
   return (
-    <FlatList
+    <SectionList
       style={{ ...screens.default }}
       ListHeaderComponent={
         <View>
-          <LocationBar address={address} />
+          <PaddedView>
+            <LocationBar address={address} />
+          </PaddedView>
           {/* <DoubleHeader title="Os mais queridos" subtitle="Os lugares mais pedidos da sua região" /> */}
-          {/* vertical flatlist displaying the "most liked" restaurants here */}
+          {/* horizontal flatlist displaying the "most liked" restaurants here */}
           {/* <MostLikedItem /> */}
           <DoubleHeader title="Buscar" subtitle="Já sabe o que quer? Então não perde tempo!" />
-          <View style={{ marginTop: 24, paddingHorizontal: 12 }}>
+          <View style={{ marginTop: 24, paddingHorizontal: 12, marginBottom: halfPadding }}>
             <RestaurantSearch />
           </View>
           <DoubleHeader title="Tá com fome de que?" subtitle="Escolha por categoria" />
@@ -120,21 +146,30 @@ export default function ({ navigation }: Props) {
             <CuisinesBox cuisine="Oriental" image={fake.oriental} />
             <CuisinesBox cuisine="Mexicano" image={fake.mexican} />
           </PaddedView>
-          <DoubleHeader
-            title="Restaurantes abertos agora"
-            subtitle="Valor justo para restaurantes e entregadores"
-          />
           {/* "OrderBy" component  here*/}
-          <TouchableWithoutFeedback
-            onPress={() => navigation.navigate('OrderBy')}
-            style={{ marginHorizontal: 12, marginTop: padding }}
+          <View
+            style={{
+              marginHorizontal: 12,
+              marginTop: padding,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
           >
-            <OrderInput />
-          </TouchableWithoutFeedback>
+            {/* needs 'onSelectFilter' logic */}
+            <FilterSelector
+              onSelect={() => null}
+              onSelectFilter={() => navigation.navigate('OrderBy')}
+              data={data}
+            />
+          </View>
         </View>
       }
-      data={openRestaurants}
+      sections={sections}
+      renderSectionHeader={({ section }) => (
+        <DoubleHeader title={section.title} subtitle={section.subtitle} />
+      )}
       keyExtractor={(item) => item.id!}
+      stickySectionHeadersEnabled={false}
       renderItem={({ item }) => (
         <View style={{ marginTop: padding }}>
           <RestaurantListItem
@@ -143,19 +178,12 @@ export default function ({ navigation }: Props) {
                 restaurantId: item.id,
               });
             }}
-            name={item.name ?? ''}
+            name={item.name ?? 'Nome do restaurante'}
+            cuisine={item.cuisine?.name ?? 'Tipo de comida'}
+            deliveryRange={item.deliveryRange ?? 4}
           />
         </View>
       )}
-      ListFooterComponent={
-        <View style={{ marginTop: 24 }}>
-          <DoubleHeader title="Fechados no momento" subtitle="Fora do horário de funcionamento" />
-          <RestaurantListItem onPress={() => null} name="Restaurante Fechado" />
-          <RestaurantListItem onPress={() => null} name="Restaurante Fechado" />
-          <RestaurantListItem onPress={() => null} name="Restaurante Fechado" />
-          <RestaurantListItem onPress={() => null} name="Restaurante Fechado" />
-        </View>
-      }
     />
   );
 }

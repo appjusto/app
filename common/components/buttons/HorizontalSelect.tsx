@@ -1,6 +1,5 @@
 import React from 'react';
 import { FlatList, Text, TouchableWithoutFeedback, View } from 'react-native';
-
 import { borders, colors, texts } from '../../styles';
 
 export type HorizontalSelectItem = {
