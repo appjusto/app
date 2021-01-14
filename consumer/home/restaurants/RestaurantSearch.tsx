@@ -4,7 +4,7 @@ import { Image, View } from 'react-native';
 import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import * as icons from '../../../assets/icons';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
-import { borders, padding, screens } from '../../../common/styles';
+import { padding, screens } from '../../../common/styles';
 import FilterButton from './components/FilterButton';
 import { RestaurantsNavigatorParamList } from './types';
 
@@ -48,7 +48,6 @@ export default function ({ navigation }: Props) {
         />
         <View
           style={{
-            ...borders.default,
             position: 'absolute',
             right: 24,
             bottom: padding,

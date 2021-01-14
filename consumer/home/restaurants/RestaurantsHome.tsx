@@ -3,29 +3,22 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Business, WithId } from 'appjusto-types';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useContext } from 'react';
-import {
-  ActivityIndicator,
-  Image,
-  SectionList,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { ActivityIndicator, SectionList, TouchableWithoutFeedback, View } from 'react-native';
 import { useDispatch } from 'react-redux';
-import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import { HorizontalSelectItem } from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import useLastKnownLocation from '../../../common/hooks/useLastKnownLocation';
 import { useBusinesses } from '../../../common/store/api/business/hooks/useBusinesses';
 import { getReverseGeocodeAdress } from '../../../common/store/order/actions';
-import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { colors, halfPadding, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import CuisinesBox from './components/CuisinesBox';
 import DoubleHeader from './components/DoubleHeader';
 import FilterSelector from './components/FilterSelector';
 import LocationBar from './components/LocationBar';
 import RestaurantListItem from './components/RestaurantListItem';
+import RestaurantSearchBar from './components/RestaurantSearchBar';
 import * as fake from './fakeData';
 import { RestaurantsNavigatorParamList } from './types';
 
@@ -76,30 +69,6 @@ export default function ({ route, navigation }: Props) {
   }, [address]);
 
   //UI
-  const RestaurantSearch = () => (
-    <TouchableWithoutFeedback
-      onPress={() => navigation.navigate('RestaurantSearch')}
-      style={{ marginHorizontal: 12 }}
-    >
-      <View
-        style={{
-          height: 60,
-          width: '100%',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          ...borders.default,
-          borderColor: colors.black,
-          paddingHorizontal: 12,
-        }}
-      >
-        <Text style={{ ...texts.default, color: colors.darkGrey }}>
-          {t('Encontre um prato ou restaurante')}
-        </Text>
-        <Image source={icons.search} />
-      </View>
-    </TouchableWithoutFeedback>
-  );
 
   // if (!openRestaurants || !closedRestaurants || !lastKnownLocation) {
   //   return (
@@ -154,7 +123,7 @@ export default function ({ route, navigation }: Props) {
             {/* <MostLikedItem /> */}
             <DoubleHeader title="Buscar" subtitle="Já sabe o que quer? Então não perde tempo!" />
             <View style={{ marginTop: 24, paddingHorizontal: 12, marginBottom: halfPadding }}>
-              <RestaurantSearch />
+              <RestaurantSearchBar navigation={navigation} />
             </View>
             <DoubleHeader title="Tá com fome de que?" subtitle="Escolha por categoria" />
             <PaddedView style={{ flexDirection: 'row', marginTop: halfPadding }}>
