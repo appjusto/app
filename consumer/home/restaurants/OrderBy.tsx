@@ -18,36 +18,37 @@ type Props = {
 
 export default function ({ navigation }: Props) {
   //state
-  const [filterByOrder, setFilterByOrder] = React.useState<string>('');
   const [selectedFilter, setSelectedFilter] = React.useState<string>('');
-  const navigateBackWithFilter = (title: string) => {
-    setFilterByOrder(title);
-    setSelectedFilter(title);
-    navigation.navigate('RestaurantsHome', { selectedFilter });
-  };
+  const navigateBackWithFilter = React.useCallback(
+    (title: string) => {
+      setSelectedFilter(title);
+      navigation.navigate('RestaurantsHome', { selectedFilter });
+    },
+    [selectedFilter]
+  );
   const data = [
     {
       title: 'Adicionados recentemente',
       onPress: () => navigateBackWithFilter('Adicionados recentemente'),
-      checked: filterByOrder === 'Adicionados recentemente',
+      checked: selectedFilter === 'Adicionados recentemente',
       id: '0',
     },
     {
       title: 'Menores preços',
       onPress: () => navigateBackWithFilter('Menores preços'),
-      checked: filterByOrder === 'Menores preços',
+      checked: selectedFilter === 'Menores preços',
       id: '1',
     },
     {
       title: 'Menor tempo de entrega',
       onPress: () => navigateBackWithFilter('Menor tempo de entrega'),
-      checked: filterByOrder === 'Menor tempo de entrega',
+      checked: selectedFilter === 'Menor tempo de entrega',
       id: '2',
     },
     {
       title: 'Menor distância',
       onPress: () => navigateBackWithFilter('Menor distância'),
-      checked: filterByOrder === 'Menor distância',
+      checked: selectedFilter === 'Menor distância',
       id: '3',
     },
   ];
@@ -56,7 +57,6 @@ export default function ({ navigation }: Props) {
   return (
     <View style={{ ...screens.default }}>
       <FlatList
-        // style={{ ...borders.default, borderWidth: 2, borderColor: 'red' }}
         data={data}
         ListHeaderComponent={
           <View style={{ marginTop: padding }}>

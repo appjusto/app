@@ -32,7 +32,7 @@ type Props = {
 
 export default function ({ route, navigation }: Props) {
   // params
-  const { address } = route.params ?? {};
+  const { address, selectedFilter } = route.params ?? {};
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -53,6 +53,9 @@ export default function ({ route, navigation }: Props) {
     { id: '3', title: t('Menor tempo de entrega') },
     { id: '5', title: t('Menor distância') },
   ];
+  const [chosenFilter, setChosenFilter] = React.useState(
+    data.find((d) => d.title === selectedFilter) ?? data[0]
+  );
 
   //side-effects
   React.useEffect(() => {
@@ -70,20 +73,20 @@ export default function ({ route, navigation }: Props) {
 
   //UI
 
-  // if (!openRestaurants || !closedRestaurants || !lastKnownLocation) {
-  //   return (
-  //     <View style={screens.centered}>
-  //       <ActivityIndicator size="large" color={colors.green} />
-  //     </View>
-  //   );
-  // }
-  if (!openRestaurants || !closedRestaurants) {
+  if (!openRestaurants || !closedRestaurants || !lastKnownLocation) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green} />
       </View>
     );
   }
+  // if (!openRestaurants || !closedRestaurants) {
+  //   return (
+  //     <View style={screens.centered}>
+  //       <ActivityIndicator size="large" color={colors.green} />
+  //     </View>
+  //   );
+  // }
 
   type Sections = {
     title: string;
@@ -146,6 +149,7 @@ export default function ({ route, navigation }: Props) {
                 onSelect={() => null}
                 onSelectFilter={() => navigation.navigate('OrderBy')}
                 data={data}
+                selected={chosenFilter}
               />
             </View>
           </View>

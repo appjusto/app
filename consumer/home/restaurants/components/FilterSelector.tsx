@@ -36,7 +36,7 @@ export default function ({ data, selected, onSelect, onSelectFilter }: Props) {
                 borderRadius: 32,
                 // height: 32,
                 marginLeft: 8,
-                backgroundColor: item.id === selected?.id ? colors.darkGreen : colors.white,
+                backgroundColor: item.id === selected?.id ? colors.green : colors.white,
                 borderColor: colors.black,
               }}
             >
