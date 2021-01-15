@@ -3,7 +3,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Business, WithId } from 'appjusto-types';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useContext } from 'react';
-import { ActivityIndicator, SectionList, TouchableWithoutFeedback, View } from 'react-native';
+import { ActivityIndicator, SectionList, View } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import { HorizontalSelectItem } from '../../../common/components/buttons/HorizontalSelect';
@@ -20,6 +21,7 @@ import LocationBar from './components/LocationBar';
 import RestaurantListItem from './components/RestaurantListItem';
 import RestaurantSearchBar from './components/RestaurantSearchBar';
 import * as fake from './fakeData';
+import RestaurantsFeedback from './RestaurantsFeedback';
 import { RestaurantsNavigatorParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<RestaurantsNavigatorParamList, 'RestaurantsHome'>;
@@ -67,9 +69,12 @@ export default function ({ route, navigation }: Props) {
   }, [lastKnownLocation]);
   // whenever address changes (from AddressComplete)
   React.useEffect(() => {
-    const formattedAddress = `${address?.main}, ${address?.state}, ${address?.country}`;
-    if (address) setAddressDescription(formattedAddress);
+    if (address) {
+      const formattedAddress = `${address?.main}, ${address?.state}, ${address?.country}`;
+      setAddressDescription(formattedAddress);
+    }
   }, [address]);
+  // whenever the filter changes (from OrderBy)
 
   //UI
 
@@ -80,13 +85,10 @@ export default function ({ route, navigation }: Props) {
       </View>
     );
   }
-  // if (!openRestaurants || !closedRestaurants) {
-  //   return (
-  //     <View style={screens.centered}>
-  //       <ActivityIndicator size="large" color={colors.green} />
-  //     </View>
-  //   );
-  // }
+
+  if (!openRestaurants && !closedRestaurants) {
+    return <RestaurantsFeedback address={addressDescription} />;
+  }
 
   type Sections = {
     title: string;
@@ -146,8 +148,8 @@ export default function ({ route, navigation }: Props) {
             >
               {/* needs 'onSelectFilter' logic */}
               <FilterSelector
-                onSelect={() => null}
-                onSelectFilter={() => navigation.navigate('OrderBy')}
+                onSelect={() => {}}
+                onFilter={() => navigation.navigate('OrderBy')}
                 data={data}
                 selected={chosenFilter}
               />

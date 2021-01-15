@@ -1,11 +1,16 @@
 import React, { useCallback } from 'react';
 import { Share, TouchableOpacity } from 'react-native';
-
 import * as icons from '../../../../assets/icons';
 import { t } from '../../../../strings';
 import HomeCard from './HomeCard';
 
-export default function () {
+type Props = {
+  title: string;
+  subtitle: string;
+  isGrey?: boolean;
+};
+
+export default function ({ title, subtitle, isGrey }: Props) {
   const shareHandler = useCallback(() => {
     try {
       Share.share({
@@ -18,11 +23,7 @@ export default function () {
 
   return (
     <TouchableOpacity onPress={shareHandler}>
-      <HomeCard
-        icon={icons.share}
-        title={t('Divulgue o AppJusto')}
-        subtitle={t('Compartilhe esse movimento por uma economia mais justa.')}
-      />
+      <HomeCard icon={icons.share} title={t(title)} subtitle={t(subtitle)} grey={isGrey} />
     </TouchableOpacity>
   );
 }

@@ -1,13 +1,11 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-
 import { motocycle } from '../../../assets/icons';
 import { t } from '../../../strings';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import FeedbackView from '../../components/views/FeedbackView';
 import useAuth, { AuthState } from '../../hooks/useAuth';
-import { colors, borders } from '../../styles';
 import { UnloggedParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<UnloggedParamList, 'SignInFeedback'>;
