@@ -8,13 +8,13 @@ type Props = {
   data: HorizontalSelectItem[];
   selected?: HorizontalSelectItem;
   onSelect: (value: HorizontalSelectItem) => void;
-  onSelectFilter: () => void;
+  onFilter: () => void;
 };
 
-export default function ({ data, selected, onSelect, onSelectFilter }: Props) {
+export default function ({ data, selected, onSelect, onFilter }: Props) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <FilterButton onPress={onSelectFilter} />
+      <FilterButton onPress={onFilter} />
       <FlatList
         showsHorizontalScrollIndicator={false}
         horizontal
@@ -36,7 +36,7 @@ export default function ({ data, selected, onSelect, onSelectFilter }: Props) {
                 borderRadius: 32,
                 // height: 32,
                 marginLeft: 8,
-                backgroundColor: item.id === selected?.id ? colors.darkGreen : colors.white,
+                backgroundColor: item.id === selected?.id ? colors.green : colors.white,
                 borderColor: colors.black,
               }}
             >

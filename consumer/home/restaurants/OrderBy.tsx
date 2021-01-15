@@ -7,41 +7,48 @@ import RadioButton from '../../../common/components/buttons/RadioButton';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import { colors, halfPadding, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
-import { HomeNavigatorParamList } from '../types';
 import SingleHeader from './SingleHeader';
+import { RestaurantsNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList>;
+type ScreenNavigationProp = StackNavigationProp<RestaurantsNavigatorParamList>;
 
 type Props = {
   navigation: ScreenNavigationProp;
 };
 
 export default function ({ navigation }: Props) {
-  //screen state
-  const [filterByOrder, setFilterByOrder] = React.useState<string>('');
+  //state
+  const [selectedFilter, setSelectedFilter] = React.useState<string>('');
+  const navigateBackWithFilter = React.useCallback(
+    (title: string) => {
+      setSelectedFilter(title);
+      navigation.navigate('RestaurantsHome', { selectedFilter });
+    },
+    [selectedFilter]
+  );
   const data = [
     {
       title: 'Adicionados recentemente',
-      onPress: () => setFilterByOrder('Adicionados recentemente'),
-      checked: filterByOrder === 'Adicionados recentemente',
+      onPress: () => navigateBackWithFilter('Adicionados recentemente'),
+      checked: selectedFilter === 'Adicionados recentemente',
       id: '0',
     },
     {
       title: 'Menores preços',
-      onPress: () => setFilterByOrder('Menores preços'),
-      checked: filterByOrder === 'Menores preços',
+      onPress: () => navigateBackWithFilter('Menores preços'),
+      checked: selectedFilter === 'Menores preços',
       id: '1',
     },
     {
       title: 'Menor tempo de entrega',
-      onPress: () => setFilterByOrder('Menor tempo de entrega'),
-      checked: filterByOrder === 'Menor tempo de entrega',
+      onPress: () => navigateBackWithFilter('Menor tempo de entrega'),
+      checked: selectedFilter === 'Menor tempo de entrega',
       id: '2',
     },
     {
       title: 'Menor distância',
-      onPress: () => setFilterByOrder('Menor distância'),
-      checked: filterByOrder === 'Menor distância',
+      onPress: () => navigateBackWithFilter('Menor distância'),
+      checked: selectedFilter === 'Menor distância',
       id: '3',
     },
   ];
@@ -50,7 +57,6 @@ export default function ({ navigation }: Props) {
   return (
     <View style={{ ...screens.default }}>
       <FlatList
-        // style={{ ...borders.default, borderWidth: 2, borderColor: 'red' }}
         data={data}
         ListHeaderComponent={
           <View style={{ marginTop: padding }}>

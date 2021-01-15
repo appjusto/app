@@ -2,28 +2,22 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Business, WithId } from 'appjusto-types';
 import React from 'react';
-import {
-  ActivityIndicator,
-  Image,
-  SectionList,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
-import * as icons from '../../../assets/icons';
+import { ActivityIndicator, SectionList, TouchableWithoutFeedback, View } from 'react-native';
 import { HorizontalSelectItem } from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import useLastKnownLocation from '../../../common/hooks/useLastKnownLocation';
 import { useBusinesses } from '../../../common/store/api/business/hooks/useBusinesses';
 import { useReverseGeocode } from '../../../common/store/api/maps/hooks/useReverseGeocode';
-import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { colors, halfPadding, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import CuisinesBox from './components/CuisinesBox';
 import DoubleHeader from './components/DoubleHeader';
 import FilterSelector from './components/FilterSelector';
 import LocationBar from './components/LocationBar';
 import RestaurantListItem from './components/RestaurantListItem';
+import RestaurantSearchBar from './components/RestaurantSearchBar';
 import * as fake from './fakeData';
+import RestaurantsFeedback from './RestaurantsFeedback';
 import { RestaurantsNavigatorParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<RestaurantsNavigatorParamList, 'RestaurantsHome'>;
@@ -36,7 +30,7 @@ type Props = {
 
 export default function ({ route, navigation }: Props) {
   // params
-  const { address } = route.params ?? {};
+  const { address, selectedFilter } = route.params ?? {};
   // context
 
   // state
@@ -58,15 +52,9 @@ export default function ({ route, navigation }: Props) {
     { id: '3', title: t('Menor tempo de entrega') },
     { id: '5', title: t('Menor distância') },
   ];
-
-  // check if the type definition below is ok
-  // we have an ActivityIndicator loading while the data is not loaded on the screen,
-  // so the data can never be undefined when the list is loaded (?)
-  type Sections = {
-    title: string;
-    subtitle: string;
-    data: WithId<Business>[];
-  };
+  const [chosenFilter, setChosenFilter] = React.useState(
+    data.find((d) => d.title === selectedFilter) ?? data[0]
+  );
 
   //side-effects
   React.useEffect(() => {
@@ -75,34 +63,14 @@ export default function ({ route, navigation }: Props) {
   }, [lastKnownAddress]);
   // whenever address changes (from AddressComplete)
   React.useEffect(() => {
-    if (address) setAddressDescription(address.description);
+    if (address) {
+      const formattedAddress = `${address?.main}, ${address?.state}, ${address?.country}`;
+      setAddressDescription(formattedAddress);
+    }
   }, [address]);
+  // whenever the filter changes (from OrderBy)
 
   //UI
-  const RestaurantSearch = () => (
-    <TouchableWithoutFeedback
-      onPress={() => navigation.navigate('RestaurantSearch')}
-      style={{ marginHorizontal: 12 }}
-    >
-      <View
-        style={{
-          height: 60,
-          width: '100%',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          ...borders.default,
-          borderColor: colors.black,
-          paddingHorizontal: 12,
-        }}
-      >
-        <Text style={{ ...texts.default, color: colors.darkGrey }}>
-          {t('Encontre um prato ou restaurante')}
-        </Text>
-        <Image source={icons.search} />
-      </View>
-    </TouchableWithoutFeedback>
-  );
 
   if (!openRestaurants || !closedRestaurants || !lastKnownAddress) {
     return (
@@ -112,6 +80,15 @@ export default function ({ route, navigation }: Props) {
     );
   }
 
+  if (!openRestaurants && !closedRestaurants) {
+    return <RestaurantsFeedback address={addressDescription} />;
+  }
+
+  type Sections = {
+    title: string;
+    subtitle: string;
+    data: WithId<Business>[];
+  };
   const sections: Sections[] = [
     {
       title: t('Restaurantes abertos agora'),
@@ -129,51 +106,51 @@ export default function ({ route, navigation }: Props) {
     <SectionList
       style={{ ...screens.default }}
       ListHeaderComponent={
-        <TouchableWithoutFeedback
-          onPress={() => {
-            navigation.navigate('AddressComplete', {
-              value: addressDescription,
-              returnParam: 'address',
-              returnScreen: 'RestaurantsHome',
-            });
-          }}
-        >
-          <View>
-            <PaddedView style={{ borderWidth: 4 }}>
-              <LocationBar address={addressDescription} />
-            </PaddedView>
-            {/* <DoubleHeader title="Os mais queridos" subtitle="Os lugares mais pedidos da sua região" /> */}
-            {/* horizontal flatlist displaying the "most liked" restaurants here */}
-            {/* <MostLikedItem /> */}
-            <DoubleHeader title="Buscar" subtitle="Já sabe o que quer? Então não perde tempo!" />
-            <View style={{ marginTop: 24, paddingHorizontal: 12, marginBottom: halfPadding }}>
-              <RestaurantSearch />
-            </View>
-            <DoubleHeader title="Tá com fome de que?" subtitle="Escolha por categoria" />
-            <PaddedView style={{ flexDirection: 'row', marginTop: halfPadding }}>
-              {/* replace with a flatlist */}
-              <CuisinesBox cuisine="Pizza" image={fake.pizza} />
-              <CuisinesBox cuisine="Oriental" image={fake.oriental} />
-              <CuisinesBox cuisine="Mexicano" image={fake.mexican} />
-            </PaddedView>
-            {/* "OrderBy" component  here*/}
-            <View
-              style={{
-                marginHorizontal: 12,
-                marginTop: padding,
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              {/* needs 'onSelectFilter' logic */}
-              <FilterSelector
-                onSelect={() => null}
-                onSelectFilter={() => navigation.navigate('OrderBy')}
-                data={data}
-              />
-            </View>
+        <View>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              navigation.navigate('AddressComplete', {
+                value: addressDescription,
+                returnParam: 'address',
+                returnScreen: 'RestaurantsHome',
+              });
+            }}
+            style={{ marginTop: padding }}
+          >
+            <LocationBar address={addressDescription} />
+          </TouchableWithoutFeedback>
+          {/* <DoubleHeader title="Os mais queridos" subtitle="Os lugares mais pedidos da sua região" /> */}
+          {/* horizontal flatlist displaying the "most liked" restaurants here */}
+          {/* <MostLikedItem /> */}
+          <DoubleHeader title="Buscar" subtitle="Já sabe o que quer? Então não perde tempo!" />
+          <View style={{ marginTop: 24, paddingHorizontal: 12, marginBottom: halfPadding }}>
+            <RestaurantSearchBar navigation={navigation} />
           </View>
-        </TouchableWithoutFeedback>
+          <DoubleHeader title="Tá com fome de que?" subtitle="Escolha por categoria" />
+          <PaddedView style={{ flexDirection: 'row', marginTop: halfPadding }}>
+            {/* replace with a flatlist */}
+            <CuisinesBox cuisine="Pizza" image={fake.pizza} />
+            <CuisinesBox cuisine="Oriental" image={fake.oriental} />
+            <CuisinesBox cuisine="Mexicano" image={fake.mexican} />
+          </PaddedView>
+          {/* "OrderBy" component  here*/}
+          <View
+            style={{
+              marginHorizontal: 12,
+              marginTop: padding,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            {/* needs 'onSelectFilter' logic */}
+            <FilterSelector
+              onSelect={() => {}}
+              onFilter={() => navigation.navigate('OrderBy')}
+              data={data}
+              selected={chosenFilter}
+            />
+          </View>
+        </View>
       }
       sections={sections}
       renderSectionHeader={({ section }) => (

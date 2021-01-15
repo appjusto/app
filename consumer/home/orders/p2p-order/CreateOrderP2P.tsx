@@ -135,7 +135,6 @@ export default function ({ navigation, route }: Props) {
           platformFee,
         })
       );
-      console.log(result);
       navigation.replace('OrderMatching', { orderId });
     } catch (error) {
       dispatch(showToast(error.toString(), 'error'));

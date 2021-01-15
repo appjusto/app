@@ -1,24 +1,24 @@
 import React from 'react';
 import { Image, Text, View } from 'react-native';
-
 import { borders, colors, padding, texts } from '../../../styles';
 
 type Props = {
   title: string;
   subtitle: string;
   icon: any;
+  grey?: boolean;
 };
 
-export default function ({ title, subtitle, icon }: Props) {
+export default function ({ title, subtitle, icon, grey }: Props) {
   return (
     <View
       style={{
         ...borders.default,
-        borderColor: colors.lightGrey,
+        borderColor: grey ? colors.grey : colors.lightGrey,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        backgroundColor: colors.white,
+        backgroundColor: grey ? colors.lightGrey : colors.white,
         padding,
       }}
     >
