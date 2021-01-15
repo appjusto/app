@@ -8,7 +8,8 @@ import { useSelector } from 'react-redux';
 import * as icons from '../../../assets/icons';
 import useNotification from '../../../common/hooks/useNotification';
 import useObserveOngoingOrders from '../../../common/store/api/order/hooks/useObserveOngoingOrders';
-import { getCourier, getCourierStatus } from '../../../common/store/courier/selectors';
+import { getCourierStatus } from '../../../common/store/courier/selectors';
+import { getUser } from '../../../common/store/user/selectors';
 import { colors, halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -26,12 +27,13 @@ type Props = {
 const Tab = createBottomTabNavigator<MainParamList>();
 export default function ({ navigation }: Props) {
   // app state
-  const courier = useSelector(getCourier);
+  const user = useSelector(getUser);
   const status = useSelector(getCourierStatus);
 
   // effects
   // subscribe for observing ongoing orders
-  useObserveOngoingOrders({ deliveredBy: courier!.id! });
+  const options = React.useMemo(() => ({ deliveredBy: user?.uid }), [user?.uid]);
+  useObserveOngoingOrders(options);
 
   // handlers
   const notificationHandler = useCallback(

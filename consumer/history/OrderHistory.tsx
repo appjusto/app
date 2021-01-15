@@ -35,7 +35,8 @@ export default function ({ navigation, route }: Props) {
   // app state
   const user = useSelector(getUser);
   // screen state
-  const orders = useObserveOrders({ createdBy: user?.uid });
+  const options = React.useMemo(() => ({ createdBy: user?.uid }), [user?.uid]);
+  const orders = useObserveOrders(options);
   const yearsWithOrders = getYearsWithOrders(orders);
   const sections = useMemo(() => {
     // data structure

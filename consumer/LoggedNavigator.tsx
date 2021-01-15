@@ -32,7 +32,8 @@ export default function () {
     return dispatch(observeProfile(api)(flavor, user!.uid));
   }, []);
   // subscribe for observing ongoing orders
-  useObserveOngoingOrders({ createdBy: user?.uid });
+  const options = React.useMemo(() => ({ createdBy: user?.uid }), [user?.uid]);
+  useObserveOngoingOrders(options);
 
   // UI
   if (consumer?.situation !== 'approved') {

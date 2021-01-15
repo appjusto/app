@@ -41,8 +41,12 @@ export default function ({ route, navigation }: Props) {
 
   // state
   // TODO: nearby user, infinite query
-  const openRestaurants = useBusinesses({ type: 'restaurant', status: 'open' });
-  const closedRestaurants = useBusinesses({ type: 'restaurant', status: 'closed' });
+  const openRestaurants = useBusinesses(
+    React.useMemo(() => ({ type: 'restaurant', status: 'open' }), [])
+  );
+  const closedRestaurants = useBusinesses(
+    React.useMemo(() => ({ type: 'restaurant', status: 'closed' }), [])
+  );
   const { coords } = useLastKnownLocation();
   const lastKnownAddress = useReverseGeocode(coords);
   const [addressDescription, setAddressDescription] = React.useState('');

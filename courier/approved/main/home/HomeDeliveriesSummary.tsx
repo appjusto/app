@@ -1,3 +1,4 @@
+import { OrderStatus } from 'appjusto-types';
 import dayjs from 'dayjs';
 import React, { useMemo } from 'react';
 import { Image, Text, View } from 'react-native';
@@ -20,7 +21,11 @@ export default function () {
   const user = useSelector(getUser);
   // state
   // TO-DO: add parameter to fetch only orders delivered on the last week
-  const orders = useObserveOrders({ deliveredBy: user?.uid, statuses: ['delivered'] });
+  const options = React.useMemo(
+    () => ({ deliveredBy: user?.uid, statuses: ['delivered'] as OrderStatus[] }),
+    [user?.uid]
+  );
+  const orders = useObserveOrders(options);
   const todaysOrdersFee = useMemo(() => {
     const today = dayjs().startOf('d').toDate();
     const todaysOrders = getOrdersSince(getDeliveredOrders(orders), today);
