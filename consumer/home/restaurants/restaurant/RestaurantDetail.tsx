@@ -7,11 +7,13 @@ import {
   useContextBusiness,
   useContextBusinessId,
 } from '../../../../common/store/context/business';
+import { useContextActiveOrder } from '../../../../common/store/context/order';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import RestaurantCard from '../components/RestaurantCard';
 import * as fake from '../fakeData';
 import SingleHeader from '../SingleHeader';
+import { CartButton } from './CartButton';
 import { RestaurantNavigatorParamList } from './types';
 
 type RestItemProps = {
@@ -32,6 +34,7 @@ type Props = {
 const RestaurantDetail = React.memo(({ navigation, route }: Props) => {
   // context
   const restaurant = useContextBusiness();
+  const activeOrder = useContextActiveOrder();
   // state
   const menu = useMenu(useContextBusinessId());
   // side effects
@@ -91,32 +94,35 @@ const RestaurantDetail = React.memo(({ navigation, route }: Props) => {
       </View>
     );
   return (
-    <SectionList
-      style={{ ...screens.default }}
-      keyExtractor={(item) => item.id}
-      sections={sections}
-      ListHeaderComponent={
-        <View>
-          <RestaurantCard
-            name={restaurant.name ?? ''}
-            onPress={() => navigation.navigate('AboutRestaurant')}
-            canNavigate
-          />
-        </View>
-      }
-      renderSectionHeader={({ section }) => <SingleHeader title={section.title} />}
-      renderItem={({ item }) => {
-        return (
-          <RestaurantItem
-            key={item.id}
-            name={item.name}
-            description={item.description ?? ''}
-            price={item.price ?? 0}
-            onPress={() => navigation.navigate('ItemDetail', { productId: item.id })}
-          />
-        );
-      }}
-    />
+    <View style={{ ...screens.default }}>
+      <SectionList
+        style={{ flex: 1 }}
+        keyExtractor={(item) => item.id}
+        sections={sections}
+        ListHeaderComponent={
+          <View>
+            <RestaurantCard
+              name={restaurant.name ?? ''}
+              onPress={() => navigation.navigate('AboutRestaurant')}
+              canNavigate
+            />
+          </View>
+        }
+        renderSectionHeader={({ section }) => <SingleHeader title={section.title} />}
+        renderItem={({ item }) => {
+          return (
+            <RestaurantItem
+              key={item.id}
+              name={item.name}
+              description={item.description ?? ''}
+              price={item.price ?? 0}
+              onPress={() => navigation.navigate('ItemDetail', { productId: item.id })}
+            />
+          );
+        }}
+      />
+      <CartButton order={activeOrder} />
+    </View>
   );
 });
 

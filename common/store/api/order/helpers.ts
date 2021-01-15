@@ -15,6 +15,9 @@ export const addItemToOrder = (order: Order, item: OrderItem): Order => {
   };
 };
 
+export const getOrderTotal = (order: Order) =>
+  (order.items ?? []).reduce((sum, item) => sum + item.quantity * item.product.price, 0);
+
 const mergeItems = (a: OrderItem, b: OrderItem): OrderItem => ({
   ...a,
   ...b,
