@@ -1,7 +1,9 @@
 import { OrderStatus } from 'appjusto-types';
 
 export type ObserveOrdersOptions = {
-  createdBy?: string;
-  deliveredBy?: string;
+  consumerId?: string;
+  courierId?: string;
   statuses?: OrderStatus[];
+  limit?: number;
+  businessId?: string;
 };

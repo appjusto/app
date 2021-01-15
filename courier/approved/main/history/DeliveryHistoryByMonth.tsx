@@ -36,7 +36,7 @@ export default function ({ navigation, route }: Props) {
   const user = useSelector(getUser);
   // screen state
   // TO-DO: filter by date
-  const options = React.useMemo(() => ({ deliveredBy: user?.uid }), [user?.uid]);
+  const options = React.useMemo(() => ({ courierId: user?.uid }), [user?.uid]);
   const orders = useObserveOrders(options);
   const filteredOrders = getOrdersWithFilter(orders, year, month);
 

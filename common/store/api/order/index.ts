@@ -12,6 +12,7 @@ import {
   Review,
   WithId,
 } from 'appjusto-types';
+import { OrderItem } from 'appjusto-types/order/item';
 import firebase from 'firebase';
 import { isEmpty } from 'lodash';
 import FirebaseRefs from '../FirebaseRefs';
@@ -31,6 +32,26 @@ export default class OrderApi {
 
   // callables
   // consumer
+  async createFoodOrder(businessId: string, consumerId: string, items: OrderItem[] = []) {
+    const payload: Order = {
+      type: 'food',
+      status: 'quote',
+      business: {
+        id: businessId,
+      },
+      consumer: {
+        id: consumerId,
+      },
+      createdOn: firebase.firestore.FieldValue.serverTimestamp(),
+      items,
+    };
+    const order = await this.refs.getOrdersRef().add(payload);
+    return documentAs<Order>(await order.get());
+  }
+  async updateFoodOrder(orderId: string, changes: Partial<Order>) {
+    await this.refs.getOrderRef(orderId).update(changes);
+  }
+
   async createOrder(payload: CreateOrderPayload) {
     return (await this.refs.getCreateOrderCallable()(payload)).data;
   }
@@ -86,12 +107,14 @@ export default class OrderApi {
     options: ObserveOrdersOptions,
     resultHandler: (orders: WithId<Order>[]) => void
   ): firebase.Unsubscribe {
-    const { createdBy, deliveredBy, statuses } = options;
+    const { consumerId, courierId, statuses, limit, businessId } = options;
     let query = this.refs.getOrdersRef().orderBy('createdOn', 'desc');
 
     if (!isEmpty(statuses)) query = query.where('status', 'in', statuses);
-    if (createdBy) query = query.where('consumer.id', '==', createdBy);
-    if (deliveredBy) query = query.where('courier.id', '==', deliveredBy);
+    if (consumerId) query = query.where('consumer.id', '==', consumerId);
+    if (courierId) query = query.where('courier.id', '==', courierId);
+    if (limit) query = query.limit(limit);
+    if (businessId) query = query.where('business.id', '==', businessId);
 
     const unsubscribe = query.onSnapshot(
       (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),

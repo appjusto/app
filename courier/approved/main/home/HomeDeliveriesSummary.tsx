@@ -22,7 +22,7 @@ export default function () {
   // state
   // TO-DO: add parameter to fetch only orders delivered on the last week
   const options = React.useMemo(
-    () => ({ deliveredBy: user?.uid, statuses: ['delivered'] as OrderStatus[] }),
+    () => ({ courierId: user?.uid, statuses: ['delivered'] as OrderStatus[] }),
     [user?.uid]
   );
   const orders = useObserveOrders(options);

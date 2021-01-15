@@ -5,7 +5,7 @@ import ArrowBox from '../../../../common/components/views/ArrowBox';
 import { t } from '../../../../strings';
 import { RestaurantsNavigatorParamList } from '../types';
 import AboutRestaurant from './AboutRestaurant';
-import ItemDetail from './ItemDetail';
+import ItemDetail from './item/ItemDetail';
 import RestaurantDetail from './RestaurantDetail';
 import { RestaurantNavigatorParamList } from './types';
 
