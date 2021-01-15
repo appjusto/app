@@ -112,50 +112,51 @@ export default function ({ route, navigation }: Props) {
     <SectionList
       style={{ ...screens.default }}
       ListHeaderComponent={
-        <TouchableWithoutFeedback
-          onPress={() => {
-            navigation.navigate('AddressComplete', {
-              value: addressDescription,
-              returnParam: 'address',
-              returnScreen: 'RestaurantsHome',
-            });
-          }}
-        >
-          <View>
+        <View>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              navigation.navigate('AddressComplete', {
+                value: addressDescription,
+                returnParam: 'address',
+                returnScreen: 'RestaurantsHome',
+              });
+            }}
+            style={{ marginTop: padding }}
+          >
             <LocationBar address={addressDescription} />
-            {/* <DoubleHeader title="Os mais queridos" subtitle="Os lugares mais pedidos da sua região" /> */}
-            {/* horizontal flatlist displaying the "most liked" restaurants here */}
-            {/* <MostLikedItem /> */}
-            <DoubleHeader title="Buscar" subtitle="Já sabe o que quer? Então não perde tempo!" />
-            <View style={{ marginTop: 24, paddingHorizontal: 12, marginBottom: halfPadding }}>
-              <RestaurantSearchBar navigation={navigation} />
-            </View>
-            <DoubleHeader title="Tá com fome de que?" subtitle="Escolha por categoria" />
-            <PaddedView style={{ flexDirection: 'row', marginTop: halfPadding }}>
-              {/* replace with a flatlist */}
-              <CuisinesBox cuisine="Pizza" image={fake.pizza} />
-              <CuisinesBox cuisine="Oriental" image={fake.oriental} />
-              <CuisinesBox cuisine="Mexicano" image={fake.mexican} />
-            </PaddedView>
-            {/* "OrderBy" component  here*/}
-            <View
-              style={{
-                marginHorizontal: 12,
-                marginTop: padding,
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              {/* needs 'onSelectFilter' logic */}
-              <FilterSelector
-                onSelect={() => {}}
-                onFilter={() => navigation.navigate('OrderBy')}
-                data={data}
-                selected={chosenFilter}
-              />
-            </View>
+          </TouchableWithoutFeedback>
+          {/* <DoubleHeader title="Os mais queridos" subtitle="Os lugares mais pedidos da sua região" /> */}
+          {/* horizontal flatlist displaying the "most liked" restaurants here */}
+          {/* <MostLikedItem /> */}
+          <DoubleHeader title="Buscar" subtitle="Já sabe o que quer? Então não perde tempo!" />
+          <View style={{ marginTop: 24, paddingHorizontal: 12, marginBottom: halfPadding }}>
+            <RestaurantSearchBar navigation={navigation} />
           </View>
-        </TouchableWithoutFeedback>
+          <DoubleHeader title="Tá com fome de que?" subtitle="Escolha por categoria" />
+          <PaddedView style={{ flexDirection: 'row', marginTop: halfPadding }}>
+            {/* replace with a flatlist */}
+            <CuisinesBox cuisine="Pizza" image={fake.pizza} />
+            <CuisinesBox cuisine="Oriental" image={fake.oriental} />
+            <CuisinesBox cuisine="Mexicano" image={fake.mexican} />
+          </PaddedView>
+          {/* "OrderBy" component  here*/}
+          <View
+            style={{
+              marginHorizontal: 12,
+              marginTop: padding,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            {/* needs 'onSelectFilter' logic */}
+            <FilterSelector
+              onSelect={() => {}}
+              onFilter={() => navigation.navigate('OrderBy')}
+              data={data}
+              selected={chosenFilter}
+            />
+          </View>
+        </View>
       }
       sections={sections}
       renderSectionHeader={({ section }) => (
