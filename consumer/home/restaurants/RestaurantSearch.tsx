@@ -18,11 +18,6 @@ type Props = {
 };
 
 export default function ({ navigation }: Props) {
-  //state
-  const [searchText, setSearchText] = useState<string>('');
-  const [searchData, setSearchData] = useState<RestaurantListItem[]>();
-  const [resultCount, setResultCount] = useState<number>(0);
-
   type RestaurantListItem = {
     onPress: () => void;
     name: string;
@@ -54,9 +49,14 @@ export default function ({ navigation }: Props) {
       id: '2',
     },
   ];
+  //state
+  const [searchText, setSearchText] = useState<string>('');
+  const [showResults, setShowResults] = useState<boolean>(false);
+  const [resultCount, setResultCount] = useState<number>(0);
+  const [dataSource, setDataSource] = useState<RestaurantListItem[]>(data);
 
   // handlers
-  const [dataSource, setDataSource] = useState<RestaurantListItem[]>(data);
+
   const getSearchResults = (text: string) => {
     if (text) {
       const newData = dataSource.filter((item) => {
@@ -64,7 +64,8 @@ export default function ({ navigation }: Props) {
         const textData = text.toLowerCase();
         return name.indexOf(textData) > -1;
       });
-      setSearchData(newData);
+      setShowResults(true);
+      setDataSource(newData);
       setResultCount(newData.length);
     }
   };
@@ -79,6 +80,7 @@ export default function ({ navigation }: Props) {
           onChangeText={setSearchText}
           autoCorrect={false}
           style={{ paddingVertical: padding, paddingLeft: 12 }}
+          autoCapitalize="none"
         />
         <View
           style={{
@@ -102,11 +104,11 @@ export default function ({ navigation }: Props) {
         <FilterButton onPress={() => navigation.navigate('OrderBy')} />
       </View>
 
-      {searchData && (
+      {showResults && (
         <FlatList
-          data={searchData}
+          data={dataSource}
           ListHeaderComponent={
-            searchData ? <SingleHeader title={`${resultCount} resultados encontrados`} /> : null
+            showResults ? <SingleHeader title={`${resultCount} resultados encontrados`} /> : null
           }
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
