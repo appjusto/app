@@ -52,7 +52,11 @@ export default function ({ navigation, route }: Props) {
           <View
             style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
           >
-            <DefaultButton title={t('Relatar um problema')} onPress={() => {}} secondary />
+            <DefaultButton
+              title={t('Relatar um problema')}
+              onPress={() => navigation.navigate('OrderComplaint', { orderId: order.id })}
+              secondary
+            />
             <DefaultButton
               title={t('Cancelar pedido')}
               onPress={() => navigation.navigate('ConfirmCancelOrder', { orderId })}

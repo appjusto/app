@@ -6,21 +6,23 @@ import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
+import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
+import FeedbackView from '../../../common/components/views/FeedbackView';
 import useIssues from '../../../common/hooks/queries/useIssues';
 import { sendOrderProblem } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
-import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
-import { HistoryParamList } from '../../history/types';
+import { HomeNavigatorParamList } from '../types';
 
-type ScreenNavigationProp = StackNavigationProp<HistoryParamList, 'OrderComplaint'>;
-type ScreenRouteProp = RouteProp<HistoryParamList, 'OrderComplaint'>;
+type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'OrderComplaint'>;
+type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'OrderComplaint'>;
 
 type Props = {
   route: ScreenRouteProp;
@@ -40,6 +42,7 @@ export default function ({ route, navigation }: Props) {
   const busy = useSelector(getUIBusy);
   const [selectedProblem, setSelectedProblem] = React.useState<WithId<Issue>>();
   const [complaintComment, setComplaintComment] = React.useState<string>('');
+  const [problemSent, setProblemSent] = React.useState<boolean>(false);
 
   // UI
   if (!issues) {
@@ -47,6 +50,24 @@ export default function ({ route, navigation }: Props) {
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green} />
       </View>
+    );
+  }
+  if (problemSent) {
+    return (
+      <PaddedView style={{ ...screens.config }}>
+        <View style={{ flex: 1, ...borders.default }} />
+        <FeedbackView
+          header={t('Obrigado pelas informações. Iremos analisar o ocorrido.')}
+          icon={icons.motocycle}
+          background={colors.lightGrey}
+        />
+        <View style={{ flex: 1, ...borders.default }} />
+        <DefaultButton
+          title={t('Voltar para o início')}
+          onPress={() => navigation.navigate('Home')}
+          activityIndicator={busy}
+        />
+      </PaddedView>
     );
   }
   // UI handlers
@@ -60,16 +81,16 @@ export default function ({ route, navigation }: Props) {
             comment: complaintComment,
           })
         );
+        setProblemSent(true);
       } catch (error) {
         dispatch(showToast(t('Não foi possível enviar o comentário')));
       }
-      navigation.popToTop();
     })();
   };
   return (
-    <View style={{ ...screens.config }}>
+    <View style={{ ...screens.config, flex: 1 }}>
       <KeyboardAwareScrollView style={{ flex: 1 }}>
-        <PaddedView style={{ flex: 1 }}>
+        <PaddedView>
           <Text style={{ ...texts.mediumToBig, marginBottom: padding }}>
             {t('Indique seu problema:')}
           </Text>
@@ -92,7 +113,7 @@ export default function ({ route, navigation }: Props) {
             {t('Você pode detalhar mais seu problema:')}
           </Text>
           <DefaultInput
-            style={{ flex: 1 }}
+            style={{ height: 82 }}
             placeholder={t('Escreva sua mensagem')}
             multiline
             numberOfLines={6}
@@ -103,14 +124,14 @@ export default function ({ route, navigation }: Props) {
           />
         </PaddedView>
         <View style={{ flex: 1 }} />
-        <PaddedView style={{ backgroundColor: colors.white, flex: 1 }}>
+        <View style={{ backgroundColor: colors.white, padding }}>
           <DefaultButton
             title={t('Enviar')}
             onPress={complaintHandler}
             activityIndicator={busy}
             disabled={!selectedProblem || busy}
           />
-        </PaddedView>
+        </View>
       </KeyboardAwareScrollView>
     </View>
   );
