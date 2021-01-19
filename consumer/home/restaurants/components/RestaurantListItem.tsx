@@ -1,23 +1,20 @@
+import { Business, WithId } from 'appjusto-types';
 import React from 'react';
 import { Image, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import ShowIf from '../../../../common/components/views/ShowIf';
 import { colors, halfPadding, padding, texts } from '../../../../common/styles';
-import {
-  formatDistance,
-  formatDuration,
-  separateWithDot,
-} from '../../../../common/utils/formatters';
+import { formatDistance } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import * as fake from '../fakeData';
 
 type Props = {
   onPress: () => void;
-  name: string;
-  cuisine: string;
-  deliveryRange: number;
+  restaurant: WithId<Business>;
+  distance?: number;
 };
 
-export default function ({ onPress, name, cuisine, deliveryRange }: Props) {
+export default function ({ onPress, restaurant, distance }: Props) {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={{ marginTop: halfPadding }}>
@@ -38,11 +35,17 @@ export default function ({ onPress, name, cuisine, deliveryRange }: Props) {
           }}
         >
           <View style={{ marginTop: 12 }}>
-            <Text style={{ ...texts.default }}>{name}</Text>
-            <Text style={{ ...texts.small, color: colors.darkGreen }}>{t(cuisine)}</Text>
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>
-              {separateWithDot(formatDistance(deliveryRange * 1000), formatDuration(1800))}
+            <Text style={{ ...texts.default }}>{restaurant.name}</Text>
+            <Text style={{ ...texts.small, color: colors.darkGreen }}>
+              {t(restaurant.cuisine?.name ?? '')}
             </Text>
+            <ShowIf test={Boolean(distance)}>
+              {() => (
+                <Text style={{ ...texts.small, color: colors.darkGrey }}>
+                  {formatDistance(distance! * 1000)}
+                </Text>
+              )}
+            </ShowIf>
           </View>
           <View
             style={{

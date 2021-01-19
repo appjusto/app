@@ -166,9 +166,7 @@ export default function ({ route, navigation }: Props) {
                 restaurantId: item.id,
               });
             }}
-            name={item.name ?? t('Nome do restaurante')}
-            cuisine={item.cuisine?.name ?? t('Tipo de comida')}
-            deliveryRange={item.deliveryRange ?? 4}
+            restaurant={item}
           />
         </View>
       )}

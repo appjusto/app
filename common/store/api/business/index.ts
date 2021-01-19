@@ -12,9 +12,16 @@ export default class BusinessApi {
     options: ObserveBusinessOptions,
     resultHandler: (businesses: WithId<Business>[]) => void
   ) {
-    const { type, status } = options;
+    const { type = 'restaurant', status, search } = options;
     let query = this.refs.getBusinessesRef().where('type', '==', type);
     if (status) query = query.where('status', '==', status);
+    if (search) {
+      query = query
+        .where('name', '>=', search)
+        .where('name', '<=', `${search}\uf8ff`)
+        .orderBy('name', 'asc');
+    }
+    console.log(query);
     const unsubscribe = query.onSnapshot(
       (snapshot) => resultHandler(documentsAs<Business>(snapshot.docs)),
       (error) => console.error(error)

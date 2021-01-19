@@ -1,6 +1,7 @@
 import { BusinessStatus, BusinessType } from 'appjusto-types';
 
 export type ObserveBusinessOptions = {
-  type: BusinessType;
+  type?: BusinessType;
   status?: BusinessStatus;
+  search?: string;
 };

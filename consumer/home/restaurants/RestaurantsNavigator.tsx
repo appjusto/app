@@ -6,8 +6,8 @@ import { t } from '../../../strings';
 import AddressComplete from '../orders/AddressComplete';
 import OrderBy from './OrderBy';
 import RestaurantNavigator from './restaurant/RestaurantNavigator';
-import RestaurantSearch from './RestaurantSearch';
 import RestaurantsHome from './RestaurantsHome';
+import RestaurantSearch from './search/RestaurantSearch';
 import { RestaurantsNavigatorParamList } from './types';
 
 const Stack = createStackNavigator<RestaurantsNavigatorParamList>();
