@@ -81,6 +81,7 @@ export default function ({ navigation, route }: Props) {
       const results = await dispatch(
         getAddressAutocomplete(api)(input, session, createCancelToken(), coords)
       );
+      // console.log(results);
       if (results) setAutoCompletePredictions(results);
     }, 500),
     [coords]

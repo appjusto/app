@@ -4,9 +4,9 @@ import ArrowBox from '../../../common/components/views/ArrowBox';
 import { BusinessProvider } from '../../../common/store/context/business';
 import { t } from '../../../strings';
 import AddressComplete from '../orders/AddressComplete';
+import RestaurantsHome from './home/RestaurantsHome';
 import OrderBy from './OrderBy';
 import RestaurantNavigator from './restaurant/RestaurantNavigator';
-import RestaurantsHome from './RestaurantsHome';
 import RestaurantSearch from './search/RestaurantSearch';
 import { RestaurantsNavigatorParamList } from './types';
 

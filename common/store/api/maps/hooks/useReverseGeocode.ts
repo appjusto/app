@@ -9,7 +9,6 @@ export const useReverseGeocode = (location: LatLng | undefined) => {
   const [address, setAddress] = React.useState<string>();
   // side effects
   React.useEffect(() => {
-    console.log(location);
     if (!location) return;
     (async () => {
       try {

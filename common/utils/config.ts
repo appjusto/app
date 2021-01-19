@@ -18,6 +18,12 @@ export interface Extra {
   iugu: {
     accountId: string;
   };
+  algolia: AlgoliaConfig;
+}
+
+export interface AlgoliaConfig {
+  appId: string;
+  apiKey: string;
 }
 
 export interface FirebaseConfig {

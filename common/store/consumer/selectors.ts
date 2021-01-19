@@ -1,6 +1,5 @@
 import { memoize } from 'lodash';
 import { createSelector } from 'reselect';
-
 import { State } from '..';
 import { ConsumerState } from './types';
 
@@ -14,3 +13,6 @@ export const getConsumer = createSelector(
 export const getPaymentMethodById = createSelector(getConsumer, (consumer) =>
   memoize((id: string) => consumer?.paymentChannel?.methods?.find((method) => method.id === id))
 );
+
+export const getCurrentLocation = (state: State) => getConsumerState(state).currentLocation;
+export const getCurrentAddress = (state: State) => getConsumerState(state).currentAddress;
