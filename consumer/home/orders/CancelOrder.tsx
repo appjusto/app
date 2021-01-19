@@ -67,8 +67,8 @@ export default function ({ route, navigation }: Props) {
     <View style={screens.config}>
       <KeyboardAwareScrollView>
         <PaddedView>
-          <Text style={{ ...texts.big, marginBottom: 24 }}>
-            {t('Por que você está cancelando o pedido?')}
+          <Text style={{ ...texts.big, marginBottom: padding }}>
+            {t('Por que você está cancelando o seu pedido?')}
           </Text>
           {issues.map((issue) => (
             <TouchableOpacity key={issue.id} onPress={() => setSelectedReason(issue)}>
@@ -81,7 +81,7 @@ export default function ({ route, navigation }: Props) {
             </TouchableOpacity>
           ))}
 
-          <Text style={{ ...texts.default, marginBottom: 8, marginTop: 24 }}>
+          <Text style={{ ...texts.default, marginBottom: padding, marginTop: padding }}>
             {t(
               'Você pode usar o espaço abaixo para detalhar mais o cancelamento. Dessa forma conseguiremos melhorar nossos serviços:'
             )}
@@ -102,6 +102,7 @@ export default function ({ route, navigation }: Props) {
             textAlignVertical="top"
             blurOnSubmit
           />
+          <View style={{ flex: 1 }} />
           <DefaultButton
             style={{ marginTop: padding }}
             title={t('Enviar')}

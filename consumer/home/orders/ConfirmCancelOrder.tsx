@@ -9,7 +9,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getUIBusy } from '../../../common/store/ui/selectors';
-import { colors, padding, screens } from '../../../common/styles';
+import { colors, halfPadding, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedParamList } from '../../types';
 import { HomeNavigatorParamList } from '../types';
@@ -49,27 +49,41 @@ export default ({ navigation, route }: Props) => {
     ? t('Como seu pedido já está a caminho do local de entrega, você não será reembolsado.')
     : t('Como seu pedido ainda não foi pegue, você não será cobrado pelo cancelamento.');
   return (
-    <FeedbackView
-      header={t('Tem certeza que deseja cancelar o pedido?')}
-      description={description}
-      icon={icons.coneYellow}
-    >
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <DefaultButton
-          title={t('Cancelar pedido')}
-          onPress={() => navigation.navigate('CancelOrder', { orderId })}
-          activityIndicator={busy}
-          disabled={busy}
-        />
-        <DefaultButton
-          style={{
-            marginBottom: padding,
-          }}
-          title={t('Não cancelar')}
-          onPress={() => navigation.pop()}
-          secondary
-        />
+    <View style={{ ...screens.default }}>
+      <FeedbackView
+        header={t('Tem certeza que deseja cancelar?')}
+        description={description}
+        icon={icons.coneYellow}
+      />
+      <View
+        style={{
+          width: '100%',
+          borderBottomWidth: 1,
+          borderBottomColor: colors.grey,
+          marginBottom: padding,
+        }}
+      />
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginBottom: padding,
+          justifyContent: 'space-between',
+          paddingHorizontal: padding,
+        }}
+      >
+        <View style={{ flex: 7 }}>
+          <DefaultButton
+            title={t('Cancelar pedido')}
+            onPress={() => navigation.navigate('CancelOrder', { orderId })}
+            activityIndicator={busy}
+            disabled={busy}
+          />
+        </View>
+        <View style={{ marginLeft: halfPadding, flex: 7 }}>
+          <DefaultButton title={t('Não cancelar')} onPress={() => navigation.pop()} secondary />
+        </View>
       </View>
-    </FeedbackView>
+    </View>
   );
 };
