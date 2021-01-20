@@ -20,7 +20,7 @@ export default function ({ route, navigation }: Props) {
   // redux store
   const currentLocation = useSelector(getCurrentLocation);
   // state
-  const { restaurants } = useSearchRestaurants(currentLocation, '');
+  const { restaurants, isLoading, fetchNextPage } = useSearchRestaurants(currentLocation, '');
 
   // UI
   return (
@@ -28,6 +28,7 @@ export default function ({ route, navigation }: Props) {
       items={restaurants}
       ListHeaderComponent={
         <RestaurantsHomeHeader
+          isLoading={isLoading}
           onLocationPress={() => {
             navigation.navigate('AddressComplete', {
               returnParam: 'address',
@@ -44,6 +45,7 @@ export default function ({ route, navigation }: Props) {
           restaurantId,
         });
       }}
+      onEndReached={() => fetchNextPage()}
     />
   );
 }

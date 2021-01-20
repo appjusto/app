@@ -30,7 +30,6 @@ export default function ({ navigation, route }: Props) {
   // redux store
   const courier = useSelector(getCourier)!;
   // screen state
-  // const { fleets, isLoading, refetch, fetchNextPage } = useSearchFleets('');
   const { fleets, fetchNextPage } = useObserveFleets();
   const [selectedFleet, setSelectedFleet] = useState<WithId<Fleet>>();
   // side effects
@@ -46,18 +45,6 @@ export default function ({ navigation, route }: Props) {
     api.profile().updateProfile(courier.id, { fleet: selectedFleet });
     navigation.goBack();
   }, [selectedFleet]);
-  // whenever screen is focused
-  // const focusHandler = React.useCallback(() => {
-  //   console.log('focusHandler', refetch, !!fleets);
-  //   if (!refetch) return;
-  //   if (!fleets) return;
-  //   console.log('trying to refeching');
-  //   refetch();
-  // }, [refetch]);
-  // React.useEffect(() => {
-  //   navigation.addListener('focus', focusHandler);
-  //   return () => navigation.removeListener('focus', focusHandler);
-  // });
   // UI
   return (
     <View style={{ ...screens.config }}>

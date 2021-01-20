@@ -10,11 +10,14 @@ export const useSearchRestaurants = (coords: LatLng | undefined, search?: string
   // state
   const [response, setResponse] = React.useState<SearchResponse<Business>>();
   const [restaurants, setRestaurants] = React.useState<WithId<Business>[]>();
+  const [isLoading, setLoading] = React.useState(false);
   // side effects
   const debouncedSearch = React.useCallback(
     debounce<(location: LatLng, input: string, page?: number) => void>(
       async (location, input, page) => {
+        setLoading(true);
         setResponse(await api.search().searchRestaurants(location, input, page));
+        setLoading(false);
       },
       500
     ),
@@ -29,15 +32,18 @@ export const useSearchRestaurants = (coords: LatLng | undefined, search?: string
   // update results when response changes
   React.useEffect(() => {
     if (!response) return;
-    setRestaurants(response.hits.map((r) => ({ ...r, id: r.objectID } as WithId<Business>)));
+    const hits = response.hits.map((r) => ({ ...r, id: r.objectID } as WithId<Business>));
+    if (response.page === 0) setRestaurants(hits);
+    else setRestaurants([...(restaurants ?? []), ...hits]);
   }, [response]);
   // result
   const fetchNextPage = React.useCallback(() => {
     if (search === undefined) return;
     if (!coords) return;
     if (!response) return;
-    debouncedSearch(coords, search, response.page + 1);
+    const hasNextPage = response.page + 1 < response.nbPages;
+    if (hasNextPage) debouncedSearch(coords, search, response.page + 1);
   }, [search, coords, response]);
 
-  return { restaurants, fetchNextPage };
+  return { restaurants, isLoading, fetchNextPage };
 };

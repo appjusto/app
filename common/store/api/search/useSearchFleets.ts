@@ -28,9 +28,9 @@ export const useSearchFleets = (search?: string) => {
   // update results when response changes
   React.useEffect(() => {
     if (!response) return;
-    const newFleets = response.hits.map((r) => ({ ...r, id: r.objectID } as WithId<Fleet>));
-    if (response.page === 0) setFleets(newFleets);
-    else setFleets([...(fleets ?? []), ...newFleets]);
+    const hits = response.hits.map((r) => ({ ...r, id: r.objectID } as WithId<Fleet>));
+    if (response.page === 0) setFleets(hits);
+    else setFleets([...(fleets ?? []), ...hits]);
   }, [response]);
   // result
   const fetchNextPage = React.useCallback(() => {
