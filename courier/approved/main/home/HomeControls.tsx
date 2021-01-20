@@ -11,10 +11,8 @@ import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import ShowIf from '../../../../common/components/views/ShowIf';
-import useLastKnownLocation from '../../../../common/hooks/useLastKnownLocation';
 import useLocationUpdates from '../../../../common/hooks/useLocationUpdates';
 import useTallerDevice from '../../../../common/hooks/useTallerDevice';
-import { useReverseGeocode } from '../../../../common/store/api/maps/hooks/useReverseGeocode';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { updateProfile } from '../../../../common/store/user/actions';
@@ -61,8 +59,6 @@ export default function ({ navigation }: Props) {
   // state
   const [locationKey, setLocationKey] = React.useState(nanoid());
   const locationPermission = useLocationUpdates(working, locationKey);
-  const { coords } = useLastKnownLocation(working, locationKey);
-  const lastKnownAddress = useReverseGeocode(coords);
 
   // side effects
   // location permission denied
@@ -99,7 +95,7 @@ export default function ({ navigation }: Props) {
     <PaddedView style={[{ backgroundColor: working ? colors.green : colors.darkYellow }]}>
       <Text style={{ ...texts.small, alignSelf: 'center' }}>{t('Você está em:')}</Text>
       <View style={{ marginBottom: padding, marginTop: 4 }}>
-        <LocationBar address={lastKnownAddress} />
+        <LocationBar />
       </View>
       <ShowIf test={tallerDevice}>
         {() => (

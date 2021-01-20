@@ -23,6 +23,8 @@ SEGMENT_IOS_KEY=
 SENTRY_DSN=
 SENTRY_AUTH_TOKEN=
 IUGU_ACCOUNT_ID=
+ALGOLIA_APPID=
+ALGOLIA_APIKEY=
 ```
 
 # 3. Running locally
@@ -63,3 +65,8 @@ Docs:
 
 - https://docs.expo.io/distribution/turtle-cli/
 - https://docs.expo.io/distribution/building-standalone-apps/
+
+# 5. Deployment
+
+FLAVOR=consumer expo publish
+FLAVOR=courier expo publish

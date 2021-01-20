@@ -1,18 +1,16 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Business, WithId } from 'appjusto-types';
+import { debounce } from 'lodash';
 import React, { useState } from 'react';
-import { Image, View } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { Image, TextInput, View } from 'react-native';
 import * as icons from '../../../../assets/icons';
 import { ApiContext } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
+import useLastKnownLocation from '../../../../common/hooks/useLastKnownLocation';
 import { padding, screens } from '../../../../common/styles';
-import { t } from '../../../../strings';
-import FilterButton from '../components/FilterButton';
-import RestaurantListItem from '../components/RestaurantListItem';
-import SingleHeader from '../SingleHeader';
 import { RestaurantsNavigatorParamList } from '../types';
+import RestaurantList from './RestaurantList';
 
 type ScreenNavigationProp = StackNavigationProp<RestaurantsNavigatorParamList, 'RestaurantSearch'>;
 
@@ -20,24 +18,44 @@ type Props = {
   navigation: ScreenNavigationProp;
 };
 
+type SearchResult = {
+  name: string;
+  distance: number;
+};
+
 export default function ({ navigation }: Props) {
   // context
   const api = React.useContext(ApiContext);
-  //state
+  // refs
+  const searchInputRef = React.useRef<TextInput>();
+  // state
+  const { coords } = useLastKnownLocation();
   const [search, setSearch] = useState<string>('');
-  const [restaurants, setRestaurants] = React.useState<WithId<Business>[]>();
-
-  // handlers
+  const [restaurants, setRestaurants] = React.useState<WithId<Partial<Business>>[]>();
+  // side effects
+  // search
+  const debouncedSearch = React.useCallback(
+    debounce<(input: string) => void>(async (input) => {
+      setRestaurants(await api.search().searchRestaurants(coords!, input));
+    }, 500),
+    [coords]
+  );
   React.useEffect(() => {
     if (search.length === 0) return;
-    return api.business().observeBusinesses({ type: 'restaurant', search }, setRestaurants);
-  }, [search]);
+    if (!coords) return;
+    debouncedSearch(search);
+  }, [search, coords]);
+  // initial focus
+  React.useEffect(() => {
+    searchInputRef.current?.focus();
+  }, []);
 
   //UI
   return (
     <View style={{ ...screens.default }}>
       <PaddedView>
         <DefaultInput
+          ref={searchInputRef}
           defaultValue={search}
           value={search}
           onChangeText={setSearch}
@@ -56,24 +74,10 @@ export default function ({ navigation }: Props) {
           <Image source={icons.search} />
         </View>
       </PaddedView>
-      <View style={{ marginBottom: padding }}>
-        <FilterButton onPress={() => navigation.navigate('OrderBy')} />
-      </View>
-
-      {restaurants && (
-        <FlatList
-          data={restaurants}
-          ListHeaderComponent={
-            <SingleHeader title={`${restaurants.length} ${t('resultados encontrados')}`} />
-          }
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View>
-              <RestaurantListItem restaurant={item} onPress={() => null} />
-            </View>
-          )}
-        />
-      )}
+      <RestaurantList
+        items={restaurants}
+        onSelect={(restaurantId) => navigation.navigate('RestaurantNavigator', { restaurantId })}
+      />
     </View>
   );
 }

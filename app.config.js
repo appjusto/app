@@ -15,6 +15,8 @@ const {
   SENTRY_DSN,
   SENTRY_AUTH_TOKEN,
   IUGU_ACCOUNT_ID,
+  ALGOLIA_APPID,
+  ALGOLIA_APIKEY,
 } = process.env;
 
 export default () => {
@@ -23,6 +25,43 @@ export default () => {
   const flavor = process.env.FLAVOR;
   const appId = `com.appjusto.${flavor}`;
   const icon = (platform) => `./assets/icon-${flavor}-${platform}.png`;
+  const extra = {
+    flavor,
+    bundleIdentifier: appId,
+    androidPackage: appId,
+    googleApiKeys: {
+      android: GOOGLE_ANDROID_API_KEY,
+      ios: GOOGLE_IOS_API_KEY,
+    },
+    firebase: {
+      apiKey: null, // it will be filled in runtime according with user's OS
+      authDomain: `${FIREBASE_PROJECT_ID}.firebaseapp.com`,
+      databaseURL: `https://${FIREBASE_DATABASE_NAME}.firebaseio.com`,
+      functionsURL: `https://${FIREBASE_REGION}-${FIREBASE_PROJECT_ID}.cloudfunctions.net`,
+      projectId: FIREBASE_PROJECT_ID,
+      storageBucket: `${FIREBASE_PROJECT_ID}.appspot.com`,
+      messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+      appId: FIREBASE_APP_ID,
+      emulator: {
+        enabled: process.env.FIREBASE_EMULATOR === 'true',
+        databaseURL: `${FIREBASE_EMULATOR_HOST}:8080`,
+        functionsURL: `http://${FIREBASE_EMULATOR_HOST}:5001`,
+      },
+      // measurementId: null,
+    },
+    analytics: {
+      segmentAndroidKey: SEGMENT_ANDROID_KEY,
+      segmentiOSKey: SEGMENT_IOS_KEY,
+      sentryDNS: SENTRY_DSN,
+    },
+    iugu: {
+      accountId: IUGU_ACCOUNT_ID,
+    },
+    algolia: {
+      appId: ALGOLIA_APPID,
+      apiKey: ALGOLIA_APIKEY,
+    },
+  };
   return {
     expo: {
       name: (flavor === 'consumer' && 'App Justo') || (flavor === 'courier' && 'Parceiro Justo'),
@@ -101,39 +140,7 @@ export default () => {
           },
         ],
       },
-      extra: {
-        flavor,
-        bundleIdentifier: appId,
-        androidPackage: appId,
-        googleApiKeys: {
-          android: GOOGLE_ANDROID_API_KEY,
-          ios: GOOGLE_IOS_API_KEY,
-        },
-        firebase: {
-          apiKey: null, // it will be filled in runtime according with user's OS
-          authDomain: `${FIREBASE_PROJECT_ID}.firebaseapp.com`,
-          databaseURL: `https://${FIREBASE_DATABASE_NAME}.firebaseio.com`,
-          functionsURL: `https://${FIREBASE_REGION}-${FIREBASE_PROJECT_ID}.cloudfunctions.net`,
-          projectId: FIREBASE_PROJECT_ID,
-          storageBucket: `${FIREBASE_PROJECT_ID}.appspot.com`,
-          messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
-          appId: FIREBASE_APP_ID,
-          emulator: {
-            enabled: process.env.FIREBASE_EMULATOR === 'true',
-            databaseURL: `${FIREBASE_EMULATOR_HOST}:8080`,
-            functionsURL: `http://${FIREBASE_EMULATOR_HOST}:5001`,
-          },
-          // measurementId: null,
-        },
-        analytics: {
-          segmentAndroidKey: SEGMENT_ANDROID_KEY,
-          segmentiOSKey: SEGMENT_IOS_KEY,
-          sentryDNS: SENTRY_DSN,
-        },
-        iugu: {
-          accountId: IUGU_ACCOUNT_ID,
-        },
-      },
+      extra,
     },
   };
 };

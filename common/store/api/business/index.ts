@@ -21,7 +21,6 @@ export default class BusinessApi {
         .where('name', '<=', `${search}\uf8ff`)
         .orderBy('name', 'asc');
     }
-    console.log(query);
     const unsubscribe = query.onSnapshot(
       (snapshot) => resultHandler(documentsAs<Business>(snapshot.docs)),
       (error) => console.error(error)

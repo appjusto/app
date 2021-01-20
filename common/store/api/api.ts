@@ -15,6 +15,7 @@ import MapsApi from './maps';
 import OrderApi from './order';
 import IuguApi from './payment/iugu';
 import ProfileApi from './profile';
+import SearchApi from './search/SearchApi';
 
 export default class Api {
   private authentication: firebase.auth.Auth;
@@ -33,6 +34,7 @@ export default class Api {
   private _files: FilesApi;
   private _iugu: IuguApi;
   private _business: BusinessApi;
+  private _search: SearchApi;
 
   constructor(extra: Extra) {
     const apiKey = Platform.select(extra.googleApiKeys);
@@ -64,6 +66,7 @@ export default class Api {
     this._order = new OrderApi(this._refs);
     this._maps = new MapsApi(apiKey!);
     this._business = new BusinessApi(this._refs);
+    this._search = new SearchApi(extra.algolia);
   }
 
   auth() {
@@ -100,5 +103,9 @@ export default class Api {
 
   business() {
     return this._business;
+  }
+
+  search() {
+    return this._search;
   }
 }
