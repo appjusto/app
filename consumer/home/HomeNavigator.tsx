@@ -14,6 +14,7 @@ import CancelOrder from './orders/CancelOrder';
 import ConfirmCancelOrder from './orders/ConfirmCancelOrder';
 import CourierDetail from './orders/CourierDetail';
 import OngoingOrder from './orders/OngoingOrder';
+import OrderComplaint from './orders/OrderComplaint';
 import OrderDeliveredFeedback from './orders/OrderDeliveredFeedback';
 import OrderMatching from './orders/OrderMatching';
 import OrderUnmatched from './orders/OrderUnmatched';
@@ -92,6 +93,11 @@ export default function () {
         name="CourierDetail"
         component={CourierDetail}
         options={{ title: t('Mais informações') }}
+      />
+      <Stack.Screen
+        name="OrderComplaint"
+        component={OrderComplaint}
+        options={{ title: t('Relatar um problema') }}
       />
       <Stack.Screen name="Chat" component={Chat} options={{ title: t('Chat') }} />
       <Stack.Screen

@@ -7,12 +7,12 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedProfileImg from '../../../common/components/icons/RoundedProfileImg';
 import HR from '../../../common/components/views/HR';
-import Pill from '../../../common/components/views/Pill';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
-import { colors, padding, screens, texts } from '../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatDate } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
+import SingleHeader from '../restaurants/SingleHeader';
 import { HomeNavigatorParamList } from '../types';
 import OrderFleetCard from './OrderFleetCard';
 
@@ -41,70 +41,111 @@ export default function ({ navigation, route }: Props) {
   const tallerDevice = useTallerDevice();
   return (
     <ScrollView style={{ backgroundColor: colors.white }}>
-      <View>
-        <PaddedView style={{ ...screens.default }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: padding }}>
-            <View>
-              <RoundedProfileImg flavor="courier" id={order.courier!.id} />
-            </View>
-            <View style={{ marginLeft: tallerDevice ? 24 : 12 }}>
-              <Text style={{ ...texts.medium }}>{order.courier?.name}</Text>
-              <Text style={{ ...texts.small, color: colors.darkGrey, marginTop: 8 }}>
-                {t('No appJusto desde')}
-              </Text>
-              <Text style={{ ...texts.small }}>
-                {formatDate(
-                  (order.courier!.joined as firebase.firestore.Timestamp).toDate(),
-                  'monthYear'
-                )}
-              </Text>
-            </View>
-          </View>
+      <View style={{ ...screens.default, paddingBottom: halfPadding }}>
+        <SingleHeader title={t('Sobre o pedido')} />
+        <View style={{ paddingHorizontal: padding, marginTop: padding }}>
           <DefaultButton
-            title={t('Iniciar um chat com o entregador')}
+            title={t('Alterar a rota de retirada ou entrega')}
             style={{ marginBottom: 8 }}
-            onPress={() => navigation.navigate('Chat', { orderId })}
+            onPress={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
           />
-          {/* <DefaultButton
-            title={t('Relatar um problema')}
-            onPress={() => {}}
-            style={{ ...borders.default, borderColor: colors.darkGrey, backgroundColor: colors.darkGrey }}
-          /> */}
-          <DefaultButton
-            title={t('Cancelar pedido')}
-            onPress={() => navigation.navigate('ConfirmCancelOrder', { orderId })}
-            secondary
-          />
-        </PaddedView>
-        <HR height={8} />
-        <View style={{ paddingVertical: padding }}>
           <View
-            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}
+            style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
           >
-            <Pill />
-            <Text style={{ ...texts.medium, ...texts.bold, marginLeft: 12 }}>
-              {t('Mais informações')}
-            </Text>
+            <DefaultButton
+              title={t('Relatar um problema')}
+              onPress={() => navigation.navigate('OrderComplaint', { orderId: order.id })}
+              secondary
+            />
+            <DefaultButton
+              title={t('Cancelar pedido')}
+              onPress={() => navigation.navigate('ConfirmCancelOrder', { orderId })}
+              secondary
+              style={{ marginLeft: halfPadding }}
+            />
           </View>
-          <View style={{ marginTop: 12, alignItems: 'flex-start', paddingHorizontal: padding }}>
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>
-              {t('Entregas realizadas perfeitamente')}
-            </Text>
-            <Text style={{ ...texts.medium }}>{order.courier?.statistics?.deliveries ?? 0}</Text>
-          </View>
-          <View style={{ marginTop: 16, alignItems: 'flex-start', paddingHorizontal: padding }}>
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>
-              {t('Entregas canceladas')}
-            </Text>
-            <Text style={{ ...texts.medium }}>{order.courier?.statistics?.canceled ?? 0}</Text>
-          </View>
-          <PaddedView>
-            <Text style={{ ...texts.small, color: colors.darkGrey, marginVertical: 8 }}>
-              {t('Integrante da frota')}
-            </Text>
-            <OrderFleetCard fleetId={order.fare?.fleet.id} />
-          </PaddedView>
         </View>
+      </View>
+      <HR height={8} />
+      <View style={{ paddingBottom: padding }}>
+        <SingleHeader title={t('Sobre o entregador')} />
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: padding,
+            paddingHorizontal: padding,
+          }}
+        >
+          <View>
+            <RoundedProfileImg flavor="courier" id={order.courier!.id} />
+          </View>
+          <View style={{ marginLeft: tallerDevice ? 24 : 12 }}>
+            <Text style={{ ...texts.medium }}>{order.courier?.name}</Text>
+            <Text style={{ ...texts.small, color: colors.darkGrey, marginTop: 8 }}>
+              {t('No appJusto desde')}
+            </Text>
+            <Text style={{ ...texts.small }}>
+              {formatDate(
+                (order.courier!.joined as firebase.firestore.Timestamp).toDate(),
+                'monthYear'
+              )}
+            </Text>
+          </View>
+        </View>
+        <View style={{ marginTop: 12, alignItems: 'flex-start', paddingHorizontal: padding }}>
+          <Text style={{ ...texts.small, color: colors.darkGrey }}>
+            {t('Entregas realizadas perfeitamente')}
+          </Text>
+          <Text style={{ ...texts.medium }}>{order.courier?.statistics?.deliveries ?? 0}</Text>
+        </View>
+        <View style={{ marginTop: 16, alignItems: 'flex-start', paddingHorizontal: padding }}>
+          <Text style={{ ...texts.small, color: colors.darkGrey }}>{t('Entregas canceladas')}</Text>
+          <Text style={{ ...texts.medium }}>{order.courier?.statistics?.canceled ?? 0}</Text>
+        </View>
+        <SingleHeader title={t('Integrante da frota')} />
+        <PaddedView>
+          <OrderFleetCard fleetId={order.fare?.fleet.id} />
+        </PaddedView>
+      </View>
+      <View>
+        <View
+          style={{
+            width: '100%',
+            borderBottomWidth: 1,
+            borderBottomColor: colors.grey,
+            marginBottom: padding,
+          }}
+        />
+        <View
+          style={{
+            flexDirection: 'row',
+            // justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingHorizontal: padding,
+            marginBottom: 12,
+          }}
+        >
+          <View style={{ flex: 7 }}>
+            <DefaultButton
+              title={t('Abrir chat')}
+              onPress={() => navigation.navigate('Chat', { orderId })}
+            />
+          </View>
+          <View style={{ marginLeft: halfPadding, flex: 7 }}>
+            <DefaultButton title={t('Ligar')} onPress={() => null} secondary />
+          </View>
+        </View>
+        <Text
+          style={{
+            ...texts.small,
+            color: colors.darkGrey,
+            paddingHorizontal: padding,
+            marginBottom: padding,
+          }}
+        >
+          {t('Ao ligar, seu número será protegido e o entregador não verá seu telefone real.')}
+        </Text>
       </View>
     </ScrollView>
   );
