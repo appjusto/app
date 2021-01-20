@@ -46,11 +46,19 @@ export default function ({ navigation, route }: Props) {
   // side effects
   // route changes when interacting with other screens;
   useEffect(() => {
-    const { orderId, origin: newOrigin, destination: newDestination, paymentMethodId } =
-      route.params ?? {};
+    const {
+      orderId,
+      origin: newOrigin,
+      destination: newDestination,
+      paymentMethodId,
+      additionalInfo,
+    } = route.params ?? {};
     // navigation.setParams({});
     if (orderId) setOrder(getOrder(orderId)); // from 'OrderHistory'
-    if (newOrigin) setOrigin({ ...origin, address: newOrigin }); // from 'AddressComplete'
+    if (newOrigin) {
+      setOrigin({ ...origin, address: newOrigin, additionalInfo });
+      console.log(additionalInfo);
+    } // from 'AddressComplete'
     if (newDestination) setDestination({ ...destination, address: newDestination }); // from 'AddressComplete'
     if (paymentMethodId) setPaymentMethod(paymentMethodById(paymentMethodId)); // from 'PaymentSelector'
   }, [route.params]);

@@ -10,6 +10,7 @@ export type HomeNavigatorParamList = {
     origin?: Address;
     destination?: Address;
     paymentMethodId?: string;
+    additionalInfo?: string | undefined;
   };
   AddressComplete: {
     value?: string;

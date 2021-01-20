@@ -9,7 +9,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import HR from '../../../common/components/views/HR';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
-import { colors, padding, screens, texts } from '../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedParamList } from '../../types';
 import { HomeNavigatorParamList } from '../types';
@@ -74,13 +74,6 @@ export default ({ navigation, route }: Props) => {
         {/* actions */}
         <PaddedView>
           <DefaultButton
-            title={t('Abrir chat')}
-            secondary
-            onPress={() => {
-              navigation.navigate('Chat', { orderId });
-            }}
-          />
-          <DefaultButton
             title={t('Finalizar')}
             onPress={() => navigation.popToTop()}
             style={{ marginTop: padding }}
@@ -93,21 +86,25 @@ export default ({ navigation, route }: Props) => {
               marginTop: padding,
             }}
           >
-            <DefaultButton
-              title={t('Relatar um problema')}
-              secondary
-              onPress={() => navigation.navigate('OrderComplaint', { orderId: order.id })}
-            />
-            <DefaultButton
-              title={t('Detalhes da corrida')}
-              onPress={() =>
-                navigation.navigate('HistoryNavigator', {
-                  screen: 'OrderSummary',
-                  params: { orderId },
-                })
-              }
-              secondary
-            />
+            <View style={{ flex: 7 }}>
+              <DefaultButton
+                title={t('Relatar um problema')}
+                secondary
+                onPress={() => navigation.navigate('OrderComplaint', { orderId: order.id })}
+              />
+            </View>
+            <View style={{ flex: 7, marginLeft: halfPadding }}>
+              <DefaultButton
+                title={t('Detalhes da corrida')}
+                onPress={() =>
+                  navigation.navigate('HistoryNavigator', {
+                    screen: 'OrderSummary',
+                    params: { orderId },
+                  })
+                }
+                secondary
+              />
+            </View>
           </View>
         </PaddedView>
       </KeyboardAwareScrollView>
