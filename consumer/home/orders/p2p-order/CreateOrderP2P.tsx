@@ -59,7 +59,7 @@ export default function ({ navigation, route }: Props) {
       setOrigin({ ...origin, address: newOrigin, additionalInfo });
       console.log(additionalInfo);
     } // from 'AddressComplete'
-    if (newDestination) setDestination({ ...destination, address: newDestination }); // from 'AddressComplete'
+    if (newDestination) setDestination({ ...destination, address: newDestination, additionalInfo }); // from 'AddressComplete'
     if (paymentMethodId) setPaymentMethod(paymentMethodById(paymentMethodId)); // from 'PaymentSelector'
   }, [route.params]);
 

@@ -105,7 +105,7 @@ export default function ({ navigation, route }: Props) {
         </View>
         <SingleHeader title={t('Integrante da frota')} />
         <PaddedView>
-          <OrderFleetCard fleetId={order.fare?.fleet.id} />
+          <OrderFleetCard fleet={order.fare!.fleet} />
         </PaddedView>
       </View>
       <View>
