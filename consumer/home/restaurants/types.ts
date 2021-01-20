@@ -6,7 +6,7 @@ export type RestaurantsNavigatorParamList = {
     selectedFilter?: string;
   };
   AddressComplete?: {
-    value: string;
+    value?: string;
     returnScreen: 'RestaurantsHome';
     returnParam: string;
   };

@@ -17,6 +17,7 @@ const {
   IUGU_ACCOUNT_ID,
   ALGOLIA_APPID,
   ALGOLIA_APIKEY,
+  ALGOLIA_ENV,
 } = process.env;
 
 export default () => {
@@ -60,6 +61,7 @@ export default () => {
     algolia: {
       appId: ALGOLIA_APPID,
       apiKey: ALGOLIA_APIKEY,
+      env: ALGOLIA_ENV,
     },
   };
   return {

@@ -1,6 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-
 import ArrowBox from '../../../../../common/components/views/ArrowBox';
 import { t } from '../../../../../strings';
 import ProfileBank from './ProfileBank';
@@ -17,7 +16,11 @@ export default function () {
         headerBackTitleVisible: false,
       })}
     >
-      <Stack.Screen name="ProfileBank" component={ProfileBank} />
+      <Stack.Screen
+        name="ProfileBank"
+        component={ProfileBank}
+        options={{ title: t('Dados bancários') }}
+      />
       <Stack.Screen
         name="SelectBank"
         component={SelectBank}

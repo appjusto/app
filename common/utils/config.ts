@@ -24,6 +24,7 @@ export interface Extra {
 export interface AlgoliaConfig {
   appId: string;
   apiKey: string;
+  env: string;
 }
 
 export interface FirebaseConfig {

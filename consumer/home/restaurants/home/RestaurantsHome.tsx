@@ -1,12 +1,9 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Business, WithId } from 'appjusto-types';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { ApiContext, AppDispatch } from '../../../../common/app/context';
-import useLastKnownLocation from '../../../../common/hooks/useLastKnownLocation';
-import { updateCurrentAddress } from '../../../../common/store/consumer/actions';
-import { getCurrentAddress } from '../../../../common/store/consumer/selectors';
+import { useSelector } from 'react-redux';
+import { useSearchRestaurants } from '../../../../common/store/api/search/useSearchRestaurants';
+import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import RestaurantList from '../search/RestaurantList';
 import { RestaurantsNavigatorParamList } from '../types';
 import RestaurantsHomeHeader from './RestaurantsHomeHeader';
@@ -20,29 +17,10 @@ type Props = {
 };
 
 export default function ({ route, navigation }: Props) {
-  // params
-  const { address } = route.params ?? {};
-  // context
-  const api = React.useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
   // redux store
-  const currentAddress = useSelector(getCurrentAddress);
+  const currentLocation = useSelector(getCurrentLocation);
   // state
-  const [restaurants, setRestaurants] = React.useState<WithId<Business>[]>();
-  const { coords } = useLastKnownLocation();
-  // whenever address changes (from AddressComplete)
-  React.useEffect(() => {
-    if (address) {
-      dispatch(updateCurrentAddress(address.description));
-    }
-  }, [address]);
-  React.useEffect(() => {
-    if (!coords) return;
-    (async () => {
-      setRestaurants(await api.search().searchRestaurants(coords));
-      // console.log(results);
-    })();
-  }, [coords]);
+  const { restaurants } = useSearchRestaurants(currentLocation, '');
 
   // UI
   return (
@@ -52,7 +30,6 @@ export default function ({ route, navigation }: Props) {
         <RestaurantsHomeHeader
           onLocationPress={() => {
             navigation.navigate('AddressComplete', {
-              value: currentAddress!,
               returnParam: 'address',
               returnScreen: 'RestaurantsHome',
             });

@@ -92,7 +92,6 @@ export default class MapsApi {
     const { results } = data;
     const [result] = results;
     const { address_components } = result;
-    console.log(address_components);
     const getAddress = (type: string) =>
       address_components.find((c) => c.types.indexOf(type) !== -1);
     const street = getAddress('route');

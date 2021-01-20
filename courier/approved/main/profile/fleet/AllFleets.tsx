@@ -1,11 +1,9 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Fleet } from 'appjusto-types';
-import { debounce } from 'lodash';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import ShowIf from '../../../../../common/components/views/ShowIf';
-import useFleets from '../../../../../common/hooks/queries/useFleets';
+import { useSearchFleets } from '../../../../../common/store/api/search/useSearchFleets';
 import { colors, padding, screens } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import FleetItem from './FleetItem';
@@ -21,24 +19,12 @@ export default function ({ navigation }: Props) {
   // context
 
   // screen state
-  const [fleetName, setFleetName] = useState('');
   const [fleetSearch, setFleetSearch] = useState('');
-  const { fleets, query } = useFleets(fleetSearch);
-
-  // side effects
-  const updateFleetSearch = useCallback(
-    debounce((input: string) => {
-      setFleetSearch(input);
-    }, 500),
-    []
-  );
-  useEffect(() => {
-    updateFleetSearch(fleetName);
-  }, [fleetName]);
+  const { fleets, isLoading, fetchNextPage } = useSearchFleets(fleetSearch);
 
   // handlers
-  const navigateFleetDetail = useCallback((fleet: Fleet) => {
-    navigation.navigate('FleetDetail', { fleet });
+  const navigateFleetDetail = React.useCallback((fleetId) => {
+    navigation.navigate('FleetDetail', { fleetId });
   }, []);
 
   // UI
@@ -50,13 +36,13 @@ export default function ({ navigation }: Props) {
           <View style={{ marginBottom: 32, paddingHorizontal: padding }}>
             <DefaultInput
               // defaultValue={initialAddress}
-              value={fleetName}
+              value={fleetSearch}
               title={t('Buscar')}
               placeholder={t('Nome da frota')}
-              onChangeText={setFleetName}
+              onChangeText={setFleetSearch}
               style={{ marginBottom: 32, marginTop: padding }}
             />
-            <ShowIf test={fleets.length === 0 && query.isLoading}>
+            <ShowIf test={!fleets && isLoading}>
               {() => (
                 <View style={{ marginTop: 8 }}>
                   <ActivityIndicator size="small" color={colors.white} />
@@ -67,7 +53,7 @@ export default function ({ navigation }: Props) {
         }
         renderItem={({ item }) => (
           <FleetItem
-            onPress={() => navigateFleetDetail(item)}
+            onPress={() => navigateFleetDetail(item.id)}
             name={item.name}
             participants={item.participantsOnline}
             description={item.description}
@@ -75,7 +61,7 @@ export default function ({ navigation }: Props) {
             feePerKm={item.additionalPerKmAfterThreshold}
           />
         )}
-        onEndReached={() => query.fetchNextPage()}
+        onEndReached={() => fetchNextPage()}
       />
     </View>
   );

@@ -1,11 +1,8 @@
 import { AnyAction } from 'redux';
-
-import { HIDE_TOAST, SHOW_TOAST, BUSY } from './actions';
+import { BUSY, HIDE_TOAST, SHOW_TOAST } from './actions';
 import { ToastState, UIState } from './types';
 
-const initialToastState: ToastState = {
-  message: null,
-};
+const initialToastState: ToastState = {};
 
 const initialState: UIState = {
   toast: initialToastState,

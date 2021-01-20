@@ -1,8 +1,8 @@
 export type ToastType = 'success' | 'error';
 
 export interface ToastState {
-  message: string | null;
-  type: ToastType;
+  message?: string;
+  type?: ToastType;
   autoHide?: boolean;
 }
 

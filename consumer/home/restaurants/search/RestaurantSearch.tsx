@@ -1,13 +1,12 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Business, WithId } from 'appjusto-types';
-import { debounce } from 'lodash';
 import React, { useState } from 'react';
 import { Image, TextInput, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
-import { ApiContext } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
-import useLastKnownLocation from '../../../../common/hooks/useLastKnownLocation';
+import { useSearchRestaurants } from '../../../../common/store/api/search/useSearchRestaurants';
+import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import { padding, screens } from '../../../../common/styles';
 import { RestaurantsNavigatorParamList } from '../types';
 import RestaurantList from './RestaurantList';
@@ -18,33 +17,14 @@ type Props = {
   navigation: ScreenNavigationProp;
 };
 
-type SearchResult = {
-  name: string;
-  distance: number;
-};
-
 export default function ({ navigation }: Props) {
-  // context
-  const api = React.useContext(ApiContext);
   // refs
   const searchInputRef = React.useRef<TextInput>();
+  // redux store
+  const currentLocation = useSelector(getCurrentLocation);
   // state
-  const { coords } = useLastKnownLocation();
-  const [search, setSearch] = useState<string>('');
-  const [restaurants, setRestaurants] = React.useState<WithId<Partial<Business>>[]>();
-  // side effects
-  // search
-  const debouncedSearch = React.useCallback(
-    debounce<(input: string) => void>(async (input) => {
-      setRestaurants(await api.search().searchRestaurants(coords!, input));
-    }, 500),
-    [coords]
-  );
-  React.useEffect(() => {
-    if (search.length === 0) return;
-    if (!coords) return;
-    debouncedSearch(search);
-  }, [search, coords]);
+  const [search, setSearch] = useState<string>();
+  const { restaurants } = useSearchRestaurants(currentLocation, search);
   // initial focus
   React.useEffect(() => {
     searchInputRef.current?.focus();

@@ -1,16 +1,15 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-
 import ArrowBox from '../../../../common/components/views/ArrowBox';
 import ProfileErase from '../../../../common/screens/profile/ProfileErase';
 import Terms from '../../../../common/screens/unlogged/Terms';
 import { t } from '../../../../strings';
-import Profile from './Profile';
-import ProfileCompany from './ProfileCompany';
-import ProfileEdit from './ProfileEdit';
 import BankNavigator from './bank/BankNavigator';
 import FleetNavigator from './fleet/FleetNavigator';
 import ProfilePhotos from './photos/ProfilePhotos';
+import Profile from './Profile';
+import ProfileCompany from './ProfileCompany';
+import ProfileEdit from './ProfileEdit';
 import { CourierProfileParamList } from './types';
 
 const Stack = createStackNavigator<CourierProfileParamList>();
@@ -42,12 +41,12 @@ export default function () {
       <Stack.Screen
         name="BankNavigator"
         component={BankNavigator}
-        options={{ title: t('Dados bancários') }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="FleetNavigator"
         component={FleetNavigator}
-        options={{ title: t('Escolha sua frota') }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen name="Terms" component={Terms} options={{ title: t('Fique por dentro') }} />
       <Stack.Screen
