@@ -10,7 +10,7 @@ export default class SearchApi {
   constructor(config: AlgoliaConfig) {
     console.log(config);
     this.client = algoliasearch(config.appId, config.apiKey);
-    this.restaurants = this.client.initIndex('dev_BUSINESSES');
+    this.restaurants = this.client.initIndex('dev_businesses');
   }
 
   async searchRestaurants(aroundLocation: LatLng, query: string = '') {

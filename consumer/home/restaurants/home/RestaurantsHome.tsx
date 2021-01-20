@@ -28,7 +28,7 @@ export default function ({ route, navigation }: Props) {
   // redux store
   const currentAddress = useSelector(getCurrentAddress);
   // state
-  const [restaurants, setRestaurants] = React.useState<WithId<Partial<Business>>[]>();
+  const [restaurants, setRestaurants] = React.useState<WithId<Business>[]>();
   const { coords } = useLastKnownLocation();
   // whenever address changes (from AddressComplete)
   React.useEffect(() => {

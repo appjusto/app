@@ -9,7 +9,7 @@ import DoubleHeader from '../components/DoubleHeader';
 import RestaurantListItem from './RestaurantListItem';
 
 type Props = {
-  items?: WithId<Partial<Business>>[];
+  items?: WithId<Business>[];
   onSelect: (id: string) => void;
   ListHeaderComponent?: React.ComponentType<any> | React.ReactElement | null;
 };
@@ -17,7 +17,7 @@ type Props = {
 type Section = {
   title: string;
   subtitle: string;
-  data: WithId<Partial<Business>>[];
+  data: WithId<Business>[];
 };
 
 export default function ({ items, onSelect, ListHeaderComponent }: Props) {

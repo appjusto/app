@@ -65,3 +65,8 @@ Docs:
 
 - https://docs.expo.io/distribution/turtle-cli/
 - https://docs.expo.io/distribution/building-standalone-apps/
+
+# 5. Deployment
+
+FLAVOR=consumer expo publish
+FLAVOR=courier expo publish
