@@ -96,9 +96,7 @@ export default class MapsApi {
       address_components.find((c) => c.types.indexOf(type) !== -1);
     const street = getAddress('route');
     const streetNumber = getAddress('street_number');
-    const city = getAddress('administrative_area_level_2');
-    const state = getAddress('administrative_area_level_1');
-    const formattedAddress = `${street.short_name}, ${streetNumber.short_name} - ${city.short_name} - ${state.short_name}`;
+    const formattedAddress = `${street.short_name}, ${streetNumber.short_name}`;
     return formattedAddress;
   }
 }
