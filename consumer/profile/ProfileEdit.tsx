@@ -35,6 +35,7 @@ export default function ({ navigation, route }: Props) {
   const api = useContext(ApiContext);
 
   // refs
+  const nameRef = useRef<TextInput>(null);
   const surnameRef = useRef<TextInput>(null);
   const cpfRef = useRef<TextInput>(null);
 
@@ -43,6 +44,7 @@ export default function ({ navigation, route }: Props) {
   const consumer = useSelector(getConsumer)!;
 
   // state
+  const [email, setEmail] = useState<string>(consumer.email ?? '');
   const [name, setName] = useState<string>(consumer.name ?? '');
   const [surname, setSurname] = useState(consumer.surname ?? '');
   const [cpf, setCpf] = useState(consumer.cpf! ?? '');
@@ -65,6 +67,18 @@ export default function ({ navigation, route }: Props) {
       <KeyboardAwareScrollView>
         <PaddedView>
           <DefaultInput
+            title={t('E-mail')}
+            placeholder={t('Digite seu e-mail')}
+            value={email}
+            returnKeyType="next"
+            blurOnSubmit={false}
+            onChangeText={(text) => setName(text)}
+            onSubmitEditing={() => nameRef.current?.focus()}
+            keyboardType="default"
+            maxLength={30}
+          />
+          <DefaultInput
+            style={{ marginTop: padding }}
             title={t('Nome')}
             placeholder={t('Digite seu nome')}
             value={name}
