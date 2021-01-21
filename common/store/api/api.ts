@@ -6,7 +6,7 @@ import { Platform } from 'react-native';
 import { Extra } from '../../utils/config';
 import AuthApi from './auth';
 import BusinessApi from './business';
-import ConsumerApi from './consumer';
+import ConsumerApi from './business/consumer';
 import CourierApi from './courier';
 import FilesApi from './files';
 import FirebaseRefs from './FirebaseRefs';

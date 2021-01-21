@@ -1,4 +1,4 @@
-import { Address } from 'appjusto-types';
+import { Place } from 'appjusto-types';
 import { ChatParamList } from '../../common/screens/Chat';
 import { NestedNavigatorParams } from '../../common/types';
 import { RestaurantsNavigatorParamList } from './restaurants/types';
@@ -7,8 +7,8 @@ export type HomeNavigatorParamList = {
   Home: undefined;
   CreateOrderP2P?: {
     orderId?: string;
-    origin?: Address;
-    destination?: Address;
+    origin?: Place;
+    destination?: Place;
     paymentMethodId?: string;
   };
   AddressComplete: {

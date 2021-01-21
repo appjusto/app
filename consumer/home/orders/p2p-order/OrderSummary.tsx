@@ -1,4 +1,4 @@
-import { Fare, Fleet, Order, Place, WithId } from 'appjusto-types';
+import { Fare, Fleet, Order, WithId } from 'appjusto-types';
 import { IuguCustomerPaymentMethod } from 'appjusto-types/payment/iugu';
 import { isEmpty } from 'lodash';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
@@ -40,8 +40,6 @@ import OrderMap from './OrderMap';
 import PlaceSummary from './PlaceSummary';
 
 type Props = {
-  origin: Partial<Place>;
-  destination: Partial<Place>;
   order: WithId<Order>;
   paymentMethod?: IuguCustomerPaymentMethod;
   waiting: boolean;
@@ -60,8 +58,6 @@ const platformFeeOptions: HorizontalSelectItem[] = [
 ];
 
 export default function ({
-  origin,
-  destination,
   order,
   paymentMethod,
   waiting,
@@ -73,7 +69,8 @@ export default function ({
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  const { distance, duration } = order;
+  const { origin, destination } = order;
+  const { distance, duration } = order.route!;
   const tallDevice = useTallerDevice();
 
   // app state
@@ -137,12 +134,12 @@ export default function ({
         <PaddedView>
           <PlaceSummary
             title={t('Retirada')}
-            place={origin}
+            place={origin!}
             editStepHandler={() => editStepHandler(0)}
           />
           <PlaceSummary
             title={t('Entrega')}
-            place={destination}
+            place={destination!}
             editStepHandler={() => editStepHandler(1)}
           />
 

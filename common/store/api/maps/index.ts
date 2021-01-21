@@ -30,19 +30,13 @@ export default class MapsApi {
       const response = await axios.get(url, { cancelToken, params });
       const { predictions } = response.data as GooglePlacesPredictionsResult;
       return predictions.map((prediction) => {
-        const { description, place_id: placeId, terms, structured_formatting } = prediction;
+        const { description, place_id: placeId, structured_formatting } = prediction;
         const { main_text: main, secondary_text: secondary } = structured_formatting;
-        const [neighborhood, city, state, country] = terms.map((term) => term.value);
-        // check to see what you really need from this list below
         return {
           description,
           placeId,
           main,
           secondary,
-          neighborhood,
-          city,
-          state,
-          country,
         };
       });
     } catch (err) {

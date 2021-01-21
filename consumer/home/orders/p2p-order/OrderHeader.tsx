@@ -10,7 +10,7 @@ import { t } from '../../../../strings';
 import OrderMap from './OrderMap';
 
 type Props = {
-  order?: Order | null;
+  order?: Order;
 };
 
 export default function ({ order }: Props) {
@@ -26,7 +26,7 @@ export default function ({ order }: Props) {
   return (
     <View style={{ height: 160, justifyContent: 'center' }}>
       {/* when order hasn't been created yet  */}
-      <ShowIf test={!order}>
+      <ShowIf test={!order?.route}>
         {() => (
           <PaddedView
             style={{
@@ -72,7 +72,7 @@ export default function ({ order }: Props) {
         )}
       </ShowIf>
       {/* after order has been created */}
-      <ShowIf test={!!order && !canChangeRoute}>{() => <OrderMap order={order!} />}</ShowIf>
+      <OrderMap order={order} />
     </View>
   );
 }

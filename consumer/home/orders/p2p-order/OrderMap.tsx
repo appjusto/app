@@ -2,22 +2,23 @@ import polyline from '@mapbox/polyline';
 import { Order } from 'appjusto-types';
 import React from 'react';
 import { LatLng, Marker, Polyline } from 'react-native-maps';
-
-import * as icons from '../../../../assets/icons';
 import DefaultMap from '../../../../common/components/views/DefaultMap';
 
 type Props = {
-  order: Order;
+  order?: Order;
 };
 
 export default function ({ order }: Props) {
-  const { courier, origin, destination, routePolyline } = order;
+  if (!order) return null;
+  if (!order.origin?.location) return null;
+  if (!order.destination?.location) return null;
+  if (!order.route?.polyline) return null;
 
-  const routeCoordinates = polyline.decode(routePolyline).map((pair) => {
+  const { courier, origin, destination, route } = order;
+
+  const routeCoordinates = polyline.decode(route.polyline).map((pair) => {
     return { latitude: pair[0], longitude: pair[1] } as LatLng;
   });
-
-  // const coordinates
 
   return (
     <DefaultMap
@@ -25,8 +26,8 @@ export default function ({ order }: Props) {
       coordinates={routeCoordinates}
       fitToElements
     >
-      <Marker coordinate={origin.location} identifier="origin" />
-      <Marker coordinate={destination.location} identifier="destination" />
+      <Marker coordinate={origin.location!} identifier="origin" />
+      <Marker coordinate={destination.location!} identifier="destination" />
       {courier?.location && <Marker coordinate={courier.location} />}
       <Polyline coordinates={routeCoordinates} />
     </DefaultMap>

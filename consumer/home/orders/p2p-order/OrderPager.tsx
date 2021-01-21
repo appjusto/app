@@ -1,94 +1,112 @@
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { Fleet, Order, Place, WithId } from 'appjusto-types';
+import { Fleet, Order, WithId } from 'appjusto-types';
 import { IuguCustomerPaymentMethod } from 'appjusto-types/payment/iugu';
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { Image, NativeSyntheticEvent, Text, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
+import { ApiContext } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../../common/components/texts/LabeledText';
 import useTallerDevice from '../../../../common/hooks/useTallerDevice';
-import { placeValid } from '../../../../common/store/order/validators';
-import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { doublePadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import { HomeNavigatorParamList } from '../../types';
 import OrderStep from './OrderStep';
 import OrderSummary from './OrderSummary';
 import { Steps } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
-
 type Props = {
-  origin: Partial<Place>;
-  destination: Partial<Place>;
-  order?: WithId<Order>;
+  order: WithId<Order> | undefined;
   paymentMethod?: IuguCustomerPaymentMethod;
-  navigation: ScreenNavigationProp;
-  updateOrigin: (value: Partial<Place>) => void;
-  updateDestination: (value: Partial<Place>) => void;
+  isLoading: boolean;
   navigateToAddressComplete: (value: string, returnParam: string) => void;
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;
+  navigateToTransportableItems: () => void;
   placeOrder: (fleetId: string, platformFee: number) => Promise<void>;
 };
 
 export default function ({
-  origin,
-  destination,
   order,
   paymentMethod,
-  navigation,
-  updateOrigin,
-  updateDestination,
+  isLoading,
   navigateToAddressComplete,
   navigateToFillPaymentInfo,
   navigateFleetDetail,
+  navigateToTransportableItems,
   placeOrder,
 }: Props) {
-  // refs
-  const viewPager = useRef<ViewPager>(null);
-
+  // params
+  const { origin, destination } = order ?? {};
   // context
-  const tallerDevice = useTallerDevice();
-
-  // app state
-  const busy = useSelector(getUIBusy);
-
+  const api = React.useContext(ApiContext);
   // state
-  const [step, setStep] = useState(Steps.Origin);
-
+  const [step, setStep] = React.useState(Steps.Origin);
+  const [originAdditionalInfo, setOriginAdditionalInfo] = React.useState(
+    origin?.additionalInfo ?? ''
+  );
+  const [originInstructions, setOriginInstructions] = React.useState(origin?.intructions ?? '');
+  const [destinationAdditionalInfo, setDestinationAdditionalInfo] = React.useState(
+    destination?.additionalInfo ?? ''
+  );
+  const [destinationInstructions, setDestinationInstructions] = React.useState(
+    destination?.intructions ?? ''
+  );
+  // side effects
+  React.useEffect(() => {
+    if (order?.origin?.additionalInfo) setOriginAdditionalInfo(order.origin.additionalInfo);
+    if (order?.origin?.intructions) setOriginInstructions(order.origin.intructions);
+    if (order?.destination?.intructions)
+      setDestinationAdditionalInfo(order.destination.intructions);
+    if (order?.destination?.intructions) setDestinationInstructions(order.destination.intructions);
+  }, [order]);
+  // refs
+  const viewPager = React.useRef<ViewPager>(null);
   // helpers
   const stepReady = (value: Steps): boolean => {
     if (value === Steps.Origin) return true; // always enabled
-    if (value === Steps.Destination) return placeValid(origin); // only if origin is known
-    if (value === Steps.Confirmation) return placeValid(destination) && !!order; // only if order has been created
+    if (value === Steps.Destination) return Boolean(origin?.address.description); // only if origin is known
+    if (value === Steps.Confirmation) return Boolean(destination?.address.description) && !!order; // only if order has been created
     if (value === Steps.ConfirmingOrder) return !!paymentMethod;
     return false; // should never happen
   };
-
   const setPage = (index: number): void => {
     if (stepReady(index)) {
       viewPager?.current?.setPage(index);
     }
   };
   const nextPage = (): void => setPage(step + 1);
-
   // handlers
   // when user press next button
   const nextStepHandler = async (): Promise<void> => {
-    const nextStep = step + 1;
+    const nextStep: Steps = step + 1;
     if (stepReady(nextStep)) {
+      if (step === Steps.Origin) {
+        if (!origin) return;
+        api.order().updateFoodOrder(order!.id, {
+          origin: {
+            ...origin,
+            additionalInfo: originAdditionalInfo,
+            intructions: originInstructions,
+          },
+        });
+      } else if (step === Steps.Destination) {
+        if (!destination) return;
+        api.order().updateFoodOrder(order!.id, {
+          destination: {
+            ...destination,
+            additionalInfo: destinationAdditionalInfo,
+            intructions: destinationInstructions,
+          },
+        });
+      }
       if (nextStep !== Steps.ConfirmingOrder) {
         nextPage();
       }
     }
   };
-
   // change the step as user's scroll between pages
   const onPageScroll = (ev: NativeSyntheticEvent<ViewPagerOnPageScrollEventData>) => {
     const { nativeEvent } = ev;
@@ -97,7 +115,8 @@ export default function ({
       setStep(position);
     }
   };
-
+  // UI
+  const tallerDevice = useTallerDevice();
   const verticalPadding = tallerDevice ? doublePadding : padding;
   return (
     <View style={{ ...screens.default }}>
@@ -109,34 +128,36 @@ export default function ({
           <KeyboardAwareScrollView>
             <TouchableWithoutFeedback
               onPress={() => {
-                navigateToAddressComplete(origin.address?.description ?? '', 'origin');
+                navigateToAddressComplete(origin?.address?.description ?? '', 'origin');
               }}
             >
               <LabeledText title={t('Endereço de retirada')}>
-                {origin.address?.main ?? t('Endereço com número')}
+                {origin?.address?.main ?? t('Endereço com número')}
               </LabeledText>
             </TouchableWithoutFeedback>
 
             <DefaultInput
               style={{ marginTop: verticalPadding }}
-              value={origin.additionalInfo ?? ''}
+              value={originAdditionalInfo}
               title={t('Complemento (se houver)')}
               placeholder={t('Apartamento, sala, loja, etc.')}
-              onChangeText={(text) => updateOrigin({ ...origin, additionalInfo: text })}
+              onChangeText={(text) => setOriginAdditionalInfo(text)}
+              editable={Boolean(origin)}
             />
 
             <DefaultInput
               style={{ marginTop: verticalPadding }}
-              value={origin.intructions ?? ''}
+              value={originInstructions}
               title={t('Instruções para entrega')}
               placeholder={t('Quem irá atender o entregador, etc.')}
-              onChangeText={(text) => updateOrigin({ ...origin, intructions: text })}
+              onChangeText={(text) => setOriginInstructions(text)}
+              editable={Boolean(origin)}
               blurOnSubmit
               multiline
               // numberOfLines={3}
             />
 
-            <TouchableWithoutFeedback onPress={() => navigation.navigate('TransportableItems')}>
+            <TouchableWithoutFeedback onPress={navigateToTransportableItems}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -159,7 +180,7 @@ export default function ({
         </View>
 
         {/* destination */}
-        {placeValid(origin) && (
+        {Boolean(origin?.address.description) && (
           <View style={{ flex: 1, paddingHorizontal: padding }}>
             <KeyboardAwareScrollView>
               <TouchableWithoutFeedback
@@ -168,30 +189,30 @@ export default function ({
                 }}
               >
                 <LabeledText title={t('Endereço de entrega')}>
-                  {destination.address?.main ?? t('Endereço com número')}
+                  {destination?.address?.main ?? t('Endereço com número')}
                 </LabeledText>
               </TouchableWithoutFeedback>
 
               <DefaultInput
                 style={{ marginTop: verticalPadding }}
-                value={destination.additionalInfo ?? ''}
+                value={destinationAdditionalInfo}
                 title={t('Complemento (se houver)')}
                 placeholder={t('Apartamento, sala, loja, etc.')}
-                onChangeText={(text) => updateDestination({ ...destination, additionalInfo: text })}
+                onChangeText={(text) => setDestinationAdditionalInfo(text)}
               />
 
               <DefaultInput
                 style={{ marginTop: verticalPadding }}
-                value={destination.intructions ?? ''}
+                value={destinationInstructions}
                 title={t('Instruções para entrega')}
                 placeholder={t('Quem irá atender o entregador, etc.')}
-                onChangeText={(text) => updateDestination({ ...destination, intructions: text })}
+                onChangeText={(text) => setDestinationInstructions(text)}
                 blurOnSubmit
                 multiline
                 numberOfLines={3}
               />
 
-              <TouchableWithoutFeedback onPress={() => navigation.navigate('TransportableItems')}>
+              <TouchableWithoutFeedback onPress={navigateToTransportableItems}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -210,20 +231,22 @@ export default function ({
                 title={t('Confirmar local de entrega')}
                 onPress={nextStepHandler}
                 disabled={!stepReady(step + 1)}
-                activityIndicator={step === Steps.Destination && busy}
+                activityIndicator={
+                  step === Steps.Destination &&
+                  Boolean(order?.destination?.address.description) &&
+                  !order?.route
+                }
               />
             </KeyboardAwareScrollView>
           </View>
         )}
 
         {/* confirmation */}
-        {!!order && (
+        {Boolean(order?.route) && (
           <OrderSummary
-            origin={origin}
-            destination={destination}
-            order={order}
+            order={order!}
             paymentMethod={paymentMethod}
-            waiting={busy}
+            waiting={isLoading}
             editStepHandler={setPage}
             placeOrder={placeOrder}
             navigateToFillPaymentInfo={navigateToFillPaymentInfo}

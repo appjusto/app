@@ -1,5 +1,6 @@
 import {
   ChatMessage,
+  ConsumerProfile,
   CreateOrderPayload,
   Fare,
   Issue,
@@ -8,6 +9,7 @@ import {
   OrderIssue,
   OrderRejection,
   OrderStatus,
+  Place,
   PlaceOrderPayload,
   Review,
   WithId,
@@ -50,6 +52,19 @@ export default class OrderApi {
   }
   async updateFoodOrder(orderId: string, changes: Partial<Order>) {
     await this.refs.getOrderRef(orderId).update(changes);
+  }
+  async createOrderP2P(consumer: WithId<ConsumerProfile>, origin?: Place) {
+    const payload: Order = {
+      type: 'p2p',
+      status: 'quote',
+      consumer: {
+        id: consumer.id,
+        name: consumer.name ?? '',
+      },
+      origin,
+    };
+    const order = await this.refs.getOrdersRef().add(payload);
+    return documentAs<Order>(await order.get());
   }
 
   async createOrder(payload: CreateOrderPayload) {

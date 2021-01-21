@@ -2,7 +2,7 @@ import { ChatMessage, Order, WithId } from 'appjusto-types';
 import React from 'react';
 import { ApiContext } from '../../../../app/context';
 
-export default function (orderId: string) {
+export default function (orderId: string | undefined) {
   // context
   const api = React.useContext(ApiContext);
 
@@ -13,10 +13,12 @@ export default function (orderId: string) {
   // side effects
   // observe order
   React.useEffect(() => {
+    if (!orderId) return;
     return api.order().observeOrder(orderId, setOrder);
   }, [orderId]);
   // observe chat
   React.useEffect(() => {
+    if (!orderId) return;
     return api.order().observeOrderChat(orderId, setChat);
   }, [orderId]);
 

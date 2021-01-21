@@ -1,32 +1,30 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Address } from 'appjusto-types';
+import { Address, Place } from 'appjusto-types';
 import debounce from 'lodash/debounce';
 import { nanoid } from 'nanoid/non-secure';
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Keyboard,
   SectionList,
   SectionListData,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { ApiContext, AppDispatch } from '../../../common/app/context';
+import { useSelector } from 'react-redux';
+import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import useAxiosCancelToken from '../../../common/hooks/useAxiosCancelToken';
 import useLastKnownLocation from '../../../common/hooks/useLastKnownLocation';
 import { AutoCompleteResult } from '../../../common/store/api/maps/types';
-import { getAddressAutocomplete } from '../../../common/store/order/actions';
 import { getPlacesFromPreviousOrders } from '../../../common/store/order/selectors';
-import { getUIBusy } from '../../../common/store/ui/selectors';
 import { colors, padding, screens, texts } from '../../../common/styles';
+import { formatAddress } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { HomeNavigatorParamList } from '../types';
 
@@ -43,16 +41,10 @@ export default function ({ navigation, route }: Props) {
   const { value, returnScreen, returnParam } = route.params;
   // context
   const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
-
-  // refs
-  const searchInputRef = useRef<TextInput>();
-
-  // app state
+  // redux store
   const placesFromPreviousOrders = useSelector(getPlacesFromPreviousOrders);
-  const busy = useSelector(getUIBusy);
-
   // state
+  const [isLoading, setLoading] = React.useState(false);
   const { coords } = useLastKnownLocation();
   const [autocompleteSession] = useState(nanoid());
   const [searchText, setSearchText] = useState(value ?? '');
@@ -78,41 +70,43 @@ export default function ({ navigation, route }: Props) {
   // TODO: what would be a better threshold than 500ms?
   const getAddress = useCallback(
     debounce<(input: string, session: string) => void>(async (input: string, session) => {
-      const results = await dispatch(
-        getAddressAutocomplete(api)(input, session, createCancelToken(), coords)
-      );
-      // console.log(results);
+      setLoading(true);
+      const results = await api
+        .maps()
+        .googlePlacesAutocomplete(input, session, createCancelToken(), coords);
+      setLoading(false);
       if (results) setAutoCompletePredictions(results);
     }, 500),
     [coords]
   );
-
-  // effects
+  // refs
+  const searchInputRef = useRef<TextInput>();
+  // side effects
   // auto focus on input
-  useEffect(() => {
+  React.useEffect(() => {
     searchInputRef.current?.focus();
   }, []);
   // search for suggestions whenever user changes the input
-  useEffect(() => {
-    // TODO: what would be a better threshold than 3 characteres?
-    if (searchText.length <= 3) {
+  React.useEffect(() => {
+    // what would be a better threshold than 1 character?
+    if (searchText.length <= 1) {
       setAutoCompletePredictions([]);
       return;
     }
     // do not search after user selects from list
-    if (selectedAddress?.description === searchText) return;
+    if (selectedAddress && searchText === formatAddress(selectedAddress)) return;
     getAddress(searchText, autocompleteSession);
   }, [searchText, autocompleteSession]);
   // update search text when user selects a place from suggestion list
-  useEffect(() => {
+  React.useEffect(() => {
     if (selectedAddress) {
-      setSearchText(selectedAddress.description ?? '');
+      setSearchText(formatAddress(selectedAddress));
     }
   }, [selectedAddress]);
 
   // handlers
   // fires whenever use change the input text
-  const textChangeHandler = useCallback(
+  const textChangeHandler = React.useCallback(
     (text) => {
       if (text === searchText) return; // avoid searching when user selects from suggestion list
       setSearchText(text); // update source text
@@ -129,9 +123,10 @@ export default function ({ navigation, route }: Props) {
 
   // confirm button callback
   const completeHandler = useCallback(() => {
+    if (!selectedAddress) return;
     // create a place object when user confirm without selecting from suggestion list
-    const address = selectedAddress ?? { address: searchText };
-    navigation.navigate(returnScreen, { [returnParam]: address });
+    const place: Place = { address: selectedAddress };
+    navigation.navigate(returnScreen, { [returnParam]: place });
   }, [navigation, returnScreen, selectedAddress, searchText]);
 
   // UI
@@ -153,7 +148,7 @@ export default function ({ navigation, route }: Props) {
         keyExtractor={(item) => item.description}
         keyboardShouldPersistTaps="handled"
         renderSectionHeader={({ section }) => {
-          if (section.key === 'search-results' && busy)
+          if (section.key === 'search-results' && isLoading)
             return <ActivityIndicator size="small" color={colors.black} />;
           if (section.data.length > 0)
             return <Text style={{ ...texts.small, color: colors.darkGrey }}>{section.title}</Text>;
@@ -161,7 +156,13 @@ export default function ({ navigation, route }: Props) {
         }}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => selectItemHandler(item)}>
-            <View style={styles.item}>
+            <View
+              style={{
+                width: '100%',
+                height: 61,
+                justifyContent: 'center',
+              }}
+            >
               <Text style={{ ...texts.medium }}>{item.main}</Text>
               <Text style={{ ...texts.small }}>{item.secondary}</Text>
             </View>
@@ -172,17 +173,9 @@ export default function ({ navigation, route }: Props) {
       <DefaultButton
         title={t('Confirmar endereço')}
         onPress={completeHandler}
-        activityIndicator={busy}
-        disabled={busy}
+        activityIndicator={isLoading}
+        disabled={isLoading || !selectedAddress}
       />
     </PaddedView>
   );
 }
-
-const styles = StyleSheet.create({
-  item: {
-    width: '100%',
-    height: 61,
-    justifyContent: 'center',
-  },
-});

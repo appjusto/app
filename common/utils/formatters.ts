@@ -1,3 +1,4 @@
+import { Address } from 'appjusto-types';
 import i18n, { ToCurrencyOptions } from 'i18n-js';
 import { round } from 'lodash';
 
@@ -28,3 +29,7 @@ export const formatDistance = (distance: number) => {
 export const formatCurrency = (value: number, options?: ToCurrencyOptions) =>
   i18n.toCurrency(value / 100, options);
 export const formatPct = (value: number) => `${parseFloat((value * 100).toFixed(2))}%`;
+
+// address
+
+export const formatAddress = (address: Address) => `${address.main}`;

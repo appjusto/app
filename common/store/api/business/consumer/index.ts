@@ -1,7 +1,7 @@
 import { IuguCreatePaymentTokenData } from 'appjusto-types/payment/iugu';
 import { CancelToken } from 'axios';
-import FirebaseRefs from './FirebaseRefs';
-import IuguApi from './payment/iugu';
+import FirebaseRefs from '../../FirebaseRefs';
+import IuguApi from '../../payment/iugu';
 
 type SaveCardResult = {
   paymentMethodId: string;

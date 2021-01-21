@@ -17,8 +17,4 @@ export type AutoCompleteResult = {
   placeId?: string;
   main: string;
   secondary: string;
-  neighborhood: string;
-  city: string;
-  state: string;
-  country: string;
 };

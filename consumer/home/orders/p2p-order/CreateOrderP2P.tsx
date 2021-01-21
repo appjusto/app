@@ -1,14 +1,13 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Fleet, Order, Place, WithId } from 'appjusto-types';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Fleet, WithId } from 'appjusto-types';
+import React from 'react';
 import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
-import { getConsumer, getPaymentMethodById } from '../../../../common/store/consumer/selectors';
-import { createOrder, deleteOrder, placeOrder } from '../../../../common/store/order/actions';
-import { getOrderById } from '../../../../common/store/order/selectors';
-import { placeValid, sameAddress } from '../../../../common/store/order/validators';
+import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
+import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
+import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { screens } from '../../../../common/styles';
 import { HomeNavigatorParamList } from '../../types';
@@ -24,117 +23,90 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  // params
   // context
-  const api = useContext(ApiContext);
+  const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-
-  // app state
+  // redux store
   const consumer = useSelector(getConsumer)!;
-  const getOrder = useSelector(getOrderById);
-  const paymentMethodById = useSelector(getPaymentMethodById);
-  const lastPaymentMethod = paymentMethodById(
-    consumer.paymentChannel?.mostRecentPaymentMethodId ?? ''
+  const lastPaymentMethod = getPaymentMethodById(
+    consumer,
+    consumer.paymentChannel?.mostRecentPaymentMethodId
   );
-
-  // screen state
-  const [origin, setOrigin] = useState<Partial<Place>>({});
-  const [destination, setDestination] = useState<Partial<Place>>({});
-  const [order, setOrder] = useState<WithId<Order>>();
-  const [paymentMethod, setPaymentMethod] = useState(lastPaymentMethod);
+  // state
+  const [orderId, setOrderId] = React.useState<string>();
+  const { order } = useObserveOrder(orderId);
+  const [paymentMethod, setPaymentMethod] = React.useState(lastPaymentMethod);
+  const [isLoading, setLoading] = React.useState(false);
 
   // side effects
   // route changes when interacting with other screens;
-  useEffect(() => {
-    const { orderId, origin: newOrigin, destination: newDestination, paymentMethodId } =
-      route.params ?? {};
+  React.useEffect(() => {
+    console.log('CreateOrderP2P useEffect; params: ', route.params);
     // navigation.setParams({});
-    if (orderId) setOrder(getOrder(orderId)); // from 'OrderHistory'
-    if (newOrigin) setOrigin({ ...origin, address: newOrigin }); // from 'AddressComplete'
-    if (newDestination) setDestination({ ...destination, address: newDestination }); // from 'AddressComplete'
-    if (paymentMethodId) setPaymentMethod(paymentMethodById(paymentMethodId)); // from 'PaymentSelector'
+    (async () => {
+      if (route.params?.orderId) setOrderId(route.params?.orderId);
+      if (route.params?.origin) {
+        if (!order) {
+          try {
+            setLoading(true);
+            const newOrder = await api.order().createOrderP2P(consumer, route.params.origin);
+            setLoading(false);
+            setOrderId(newOrder.id);
+          } catch (error) {
+            console.error(error);
+            dispatch(showToast(error.toString(), 'error'));
+          }
+        } else if (orderId) {
+          api.order().updateFoodOrder(orderId, { origin: route.params.origin });
+        }
+      }
+      if (orderId && route.params?.destination) {
+        api.order().updateFoodOrder(orderId, { destination: route.params.destination });
+      }
+      if (route.params?.paymentMethodId)
+        setPaymentMethod(getPaymentMethodById(consumer, route.params?.paymentMethodId));
+    })();
   }, [route.params]);
 
-  // whenever order changes
-  // update origin/destination if addresses differ from order's
-  // this will be the case when user is opening a quote from 'OrderHistory'
-  useEffect(() => {
-    if (!order) return;
-    if (!sameAddress(order.origin.address, origin.address)) {
-      setOrigin(order.origin);
-    }
-    if (!sameAddress(order.destination.address, destination.address)) {
-      setDestination(order.destination);
-    }
-  }, [order]);
-
-  // whenever origin or destination changes
-  // create or recreate order
-  useEffect(() => {
-    if (!placeValid(origin) || !placeValid(destination)) {
-      // if origin or destination become invalid, delete quote
-      if (order) dispatch(deleteOrder(api)(order.id));
-      return;
-    }
-
-    // order should be created if it wasn't already or if addresses changed
-    if (
-      !order ||
-      !sameAddress(origin.address, order.origin.address) ||
-      !sameAddress(destination.address, order.destination.address)
-    ) {
-      (async () => {
-        // delete previous quote
-        if (order) dispatch(deleteOrder(api)(order.id));
-        try {
-          const newOrder = await dispatch(
-            createOrder(api)({
-              type: 'p2p',
-              origin: origin as Place,
-              destination: destination as Place,
-            })
-          );
-          if (newOrder) setOrder(newOrder);
-        } catch (error) {
-          dispatch(showToast(error.toString(), 'error'));
-        }
-      })();
-    }
-  }, [origin, destination]);
-
   // handlers
-  // navigate to 'AddressComplete' to choose type or choose an address
-  const navigateToAddressComplete = (value: string, returnParam: string) => {
-    navigation.navigate('AddressComplete', {
-      value,
-      returnScreen: 'CreateOrderP2P',
-      returnParam,
-    });
-  };
+  // navigate to 'AddressComplete' to enter address
+  const navigateToAddressComplete = React.useCallback(
+    (value: string, returnParam: string) => {
+      navigation.navigate('AddressComplete', {
+        value,
+        returnScreen: 'CreateOrderP2P',
+        returnParam,
+      });
+    },
+    [navigation]
+  );
   // navigate to ProfileEdit screen to allow user fill missing information
-  const navigateToFillPaymentInfo = () => {
+  const navigateToFillPaymentInfo = React.useCallback(() => {
     // if user has no payment method, go direct to 'AddCard' screen
     if (!paymentMethod) navigation.navigate('ProfileAddCard', { returnScreen: 'CreateOrderP2P' });
     else navigation.navigate('ProfilePaymentMethods', { returnScreen: 'CreateOrderP2P' });
-  };
-  const navigateFleetDetail = useCallback((fleet: WithId<Fleet>) => {
+  }, [navigation, paymentMethod]);
+  // navigate to fleet detail
+  const navigateFleetDetail = React.useCallback((fleet: WithId<Fleet>) => {
     navigation.navigate('FleetDetail', { fleetId: fleet.id });
   }, []);
+  // navigate to fleet detail
+  const navigateToTransportableItems = React.useCallback(() => {
+    navigation.navigate('TransportableItems');
+  }, [navigation]);
   // confirm order
   const placeOrderHandler = async (fleetId: string, platformFee: number) => {
-    if (!order || !paymentMethod) return;
+    if (!orderId) return;
+    if (!paymentMethod) return;
     try {
-      const orderId = order.id;
-      const result = await dispatch(
-        placeOrder(api)({
-          orderId,
-          origin: origin as Place,
-          destination: destination as Place,
-          paymentMethodId: paymentMethod.id,
-          fleetId,
-          platformFee,
-        })
-      );
+      setLoading(true);
+      await api.order().placeOrder({
+        orderId,
+        paymentMethodId: paymentMethod.id,
+        fleetId,
+        platformFee,
+      });
+      setLoading(false);
       navigation.replace('OrderMatching', { orderId });
     } catch (error) {
       dispatch(showToast(error.toString(), 'error'));
@@ -146,17 +118,14 @@ export default function ({ navigation, route }: Props) {
     <View style={{ ...screens.default }}>
       <OrderHeader order={order} />
       <OrderPager
-        origin={origin}
-        destination={destination}
         order={order}
+        isLoading={isLoading}
         paymentMethod={paymentMethod}
-        updateOrigin={(value) => setOrigin(value)}
-        updateDestination={(value) => setDestination(value)}
         navigateToAddressComplete={navigateToAddressComplete}
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         navigateFleetDetail={navigateFleetDetail}
+        navigateToTransportableItems={navigateToTransportableItems}
         placeOrder={placeOrderHandler}
-        navigation={navigation}
       />
     </View>
   );
