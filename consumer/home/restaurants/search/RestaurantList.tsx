@@ -10,8 +10,9 @@ import RestaurantListItem from './RestaurantListItem';
 
 type Props = {
   items?: WithId<Business>[];
-  onSelect: (id: string) => void;
   ListHeaderComponent?: React.ComponentType<any> | React.ReactElement | null;
+  onSelect: (id: string) => void;
+  onEndReached?: () => void;
 };
 
 type Section = {
@@ -20,18 +21,8 @@ type Section = {
   data: WithId<Business>[];
 };
 
-export default function ({ items, onSelect, ListHeaderComponent }: Props) {
-  // UI
-  if (!items) return null;
-  // if (!items) {
-  //   return (
-  //     <View style={screens.centered}>
-  //       <ActivityIndicator size="large" color={colors.green} />
-  //     </View>
-  //   );
-  // }
-
-  if (items.length === 0) {
+export default function ({ items, ListHeaderComponent, onSelect, onEndReached }: Props) {
+  if (items && items.length === 0) {
     return (
       <FeedbackView
         header={t('Sem restaurantes na sua região')}
@@ -43,8 +34,8 @@ export default function ({ items, onSelect, ListHeaderComponent }: Props) {
     );
   }
 
-  const open = items.filter((restaurant) => restaurant.status === 'open');
-  const closed = items.filter((restaurant) => restaurant.status === 'closed');
+  const open = (items ?? []).filter((restaurant) => restaurant.status === 'open');
+  const closed = (items ?? []).filter((restaurant) => restaurant.status === 'closed');
   const sections: Section[] = [
     {
       title: t('Restaurantes abertos agora'),
@@ -75,6 +66,7 @@ export default function ({ items, onSelect, ListHeaderComponent }: Props) {
           </TouchableOpacity>
         </View>
       )}
+      onEndReached={onEndReached}
     />
   );
 }

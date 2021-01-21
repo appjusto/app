@@ -13,11 +13,12 @@ import { t } from '../../../../../strings';
 type Props = {
   fleet: Fleet;
   selected: boolean;
+  couriersFleet: boolean;
   onSelect: () => void;
   onConfirm: () => void;
 };
 
-export default function ({ fleet, selected, onSelect, onConfirm }: Props) {
+export default function ({ fleet, selected, couriersFleet, onSelect, onConfirm }: Props) {
   // app state
   const busy = useSelector(getUIBusy);
 
@@ -120,9 +121,9 @@ export default function ({ fleet, selected, onSelect, onConfirm }: Props) {
         </View>
         <DefaultButton
           style={{ marginTop: padding }}
-          title={t('Ingressar nessa frota')}
+          title={couriersFleet ? t('Você faz parte desta frota') : t('Ingressar nessa frota')}
           onPress={onConfirm}
-          disabled={!selected}
+          disabled={couriersFleet || !selected}
           activityIndicator={busy && selected}
           secondary={!selected}
         />

@@ -24,6 +24,7 @@ export default function () {
   // geocode only currentAddress is undefined
   const lastKnownAddress = useReverseGeocode(currentAddress ? undefined : currentLocation);
   // side effects
+  // update location when both currentAddress and currentLocation are undefined
   React.useEffect(() => {
     if (!currentAddress) {
       if (!currentLocation) {
@@ -32,7 +33,12 @@ export default function () {
     }
   }, [currentLocation, currentAddress, coords]);
   React.useEffect(() => {
-    console.log('lastKnownAddress', lastKnownAddress);
+    if (currentAddress) {
+      // TODO: geocode avoiding infinite loop
+    }
+  }, [currentAddress]);
+  //
+  React.useEffect(() => {
     if (lastKnownAddress) {
       dispatch(updateCurrentAddress(lastKnownAddress));
     }

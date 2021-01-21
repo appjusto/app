@@ -1,18 +1,16 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Fleet, WithId } from 'appjusto-types';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { ApiContext, AppDispatch } from '../../../../../common/app/context';
+import { useSelector } from 'react-redux';
+import { ApiContext } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import HR from '../../../../../common/components/views/HR';
 import ShowIf from '../../../../../common/components/views/ShowIf';
-import useFleets from '../../../../../common/hooks/queries/useFleets';
+import { useObserveFleets } from '../../../../../common/store/api/fleet/hooks/useObserveFleets';
 import { getCourier } from '../../../../../common/store/courier/selectors';
-import { observeFleets } from '../../../../../common/store/fleet/actions';
-import { updateProfile } from '../../../../../common/store/user/actions';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import FleetCard from './FleetCard';
@@ -29,38 +27,24 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
-
-  // app state
+  // redux store
   const courier = useSelector(getCourier)!;
-  const { fleets, query } = useFleets();
-
   // screen state
-  // const [selectedCity, setSelectedCity] = useState<City>();
+  const { fleets, fetchNextPage } = useObserveFleets();
   const [selectedFleet, setSelectedFleet] = useState<WithId<Fleet>>();
-
-  // effects
-  // once
-  // observe fleets
-  useEffect(() => {
-    return dispatch(observeFleets(api));
-  }, []);
-  // when fleets are fetched
-  // select courier's fleet if he has selected it already
-  useEffect(() => {
+  // side effects
+  React.useEffect(() => {
+    if (!fleets) return;
     const courierFleet = fleets.find((fleet) => fleet.id === courier.fleet?.id);
-    if (courierFleet !== undefined) {
-      setSelectedFleet(courierFleet);
-    }
+    if (courierFleet) setSelectedFleet(courierFleet);
   }, [fleets]);
 
   // handlers
   const confirmFleet = useCallback(async () => {
     if (!selectedFleet) return;
-    await dispatch(updateProfile(api)(courier.id, { fleet: selectedFleet }));
+    api.profile().updateProfile(courier.id, { fleet: selectedFleet });
     navigation.goBack();
   }, [selectedFleet]);
-
   // UI
   return (
     <View style={{ ...screens.config }}>
@@ -71,7 +55,8 @@ export default function ({ navigation, route }: Props) {
             <PaddedView>
               <FleetCard
                 fleet={item}
-                selected={item === selectedFleet}
+                selected={item.id === selectedFleet?.id}
+                couriersFleet={item.id === courier.fleet?.id}
                 onSelect={() => setSelectedFleet(item)}
                 onConfirm={confirmFleet}
               />
@@ -106,10 +91,10 @@ export default function ({ navigation, route }: Props) {
             </PaddedView>
             <HR color={colors.grey} />
             <PaddedView>
-              <ShowIf test={query.isLoading}>
+              <ShowIf test={fleets === undefined}>
                 {() => <ActivityIndicator size="large" color={colors.black} />}
               </ShowIf>
-              <ShowIf test={fleets.length > 0}>
+              <ShowIf test={Boolean(fleets?.length)}>
                 {() => (
                   <Text style={{ ...texts.mediumToBig }}>
                     {t('Frotas com mais participantes: ')}
@@ -119,7 +104,7 @@ export default function ({ navigation, route }: Props) {
             </PaddedView>
           </View>
         }
-        onEndReached={() => query.fetchNextPage()}
+        onEndReached={() => fetchNextPage()}
       />
     </View>
   );

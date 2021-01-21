@@ -8,11 +8,19 @@ import LocationBar from '../components/LocationBar';
 import RestaurantSearchBar from './RestaurantSearchButton';
 
 type Props = {
+  isLoading: boolean;
   onLocationPress: () => void;
   onSearchPress: () => void;
 };
 
-export default function ({ onLocationPress, onSearchPress }: Props) {
+export default function ({ isLoading, onLocationPress, onSearchPress }: Props) {
+  // if (isLoading) {
+  //   return (
+  //     <View style={screens.centered}>
+  //       <ActivityIndicator size="large" color={colors.green} />
+  //     </View>
+  //   );
+  // }
   return (
     <View>
       <TouchableWithoutFeedback onPress={onLocationPress}>
