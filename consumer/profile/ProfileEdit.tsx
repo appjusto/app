@@ -2,20 +2,22 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ConsumerProfile } from 'appjusto-types';
 import { trim } from 'lodash';
-import React, { useState, useContext, useRef, useMemo } from 'react';
-import { View, TextInput } from 'react-native';
+import React, { useContext, useMemo, useRef, useState } from 'react';
+import { TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useSelector, useDispatch } from 'react-redux';
-
-import { AppDispatch, ApiContext } from '../../common/app/context';
+import { useDispatch, useSelector } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../common/app/context';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/containers/PaddedView';
 import DefaultInput from '../../common/components/inputs/DefaultInput';
+import { cpfFormatter, cpfMask } from '../../common/components/inputs/pattern-input/formatters';
+import { numbersOnlyParser } from '../../common/components/inputs/pattern-input/parsers';
+import PatternInput from '../../common/components/inputs/PatternInput';
 import { getConsumer } from '../../common/store/consumer/selectors';
 import { consumerInfoSet } from '../../common/store/consumer/validators';
 import { getUIBusy } from '../../common/store/ui/selectors';
 import { updateProfile } from '../../common/store/user/actions';
-import { screens, padding } from '../../common/styles';
+import { padding, screens } from '../../common/styles';
 import { t } from '../../strings';
 import { ProfileParamList } from './types';
 
@@ -86,16 +88,18 @@ export default function ({ navigation, route }: Props) {
             keyboardType="default"
             maxLength={30}
           />
-          <DefaultInput
+          <PatternInput
             ref={cpfRef}
             style={{ marginTop: padding }}
             title={t('CPF')}
-            placeholder={t('Seu CPF, apenas números')}
             value={cpf}
-            maxLength={11}
-            keyboardType="number-pad" // are we going to use "-" and "."?
+            placeholder={t('Seu CPF, apenas números')}
+            mask={cpfMask}
+            parser={numbersOnlyParser}
+            formatter={cpfFormatter}
+            keyboardType="number-pad"
             returnKeyType="done"
-            blurOnSubmit
+            blurOnSubmit={false}
             onChangeText={(text) => setCpf(trim(text))}
           />
           <DefaultButton
