@@ -15,9 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
-import HorizontalSelect, {
-  HorizontalSelectItem,
-} from '../../../../common/components/buttons/HorizontalSelect';
+import { HorizontalSelectItem } from '../../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
@@ -36,6 +34,7 @@ import {
   separateWithDot,
 } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
+import ChargesBox from '../../components/ChargesBox';
 import OrderMap from './OrderMap';
 import PlaceSummary from './PlaceSummary';
 
@@ -240,84 +239,12 @@ export default function ({
         </View>
         <HR height={padding} />
         {/* details */}
-        <View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Pill />
-            <PaddedView
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <Text style={{ ...texts.medium, ...texts.bold }}>{t('Entenda os valores')}</Text>
-            </PaddedView>
-          </View>
-          <PaddedView>
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>
-              {t('Somos transparentes do início ao fim da entrega')}
-            </Text>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginTop: 16,
-              }}
-            >
-              <Text style={{ ...texts.default, lineHeight: 21 }}>{t('Entregador')}</Text>
-              <Text style={{ ...texts.default, lineHeight: 21 }}>
-                {formatCurrency(selectedFare?.courierFee ?? 0)}
-              </Text>
-            </View>
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ ...texts.default, lineHeight: 21 }}>{t('Frota escolhida')}</Text>
-              {/* find out how to display the fleet name below */}
-              <Text style={{ ...texts.default, lineHeight: 21 }}>App Justo</Text>
-            </View>
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
-                {t('Impostos')}
-              </Text>
-              <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
-                {formatCurrency(selectedFare?.taxes ?? 0)}
-              </Text>
-            </View>
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
-                {t('Tarifa financeira')}
-              </Text>
-              <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
-                {formatCurrency(selectedFare?.financialFee ?? 0)}
-              </Text>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginTop: 12,
-              }}
-            >
-              <Text style={{ ...texts.default, lineHeight: 21 }}>{t('AppJusto')}</Text>
-              <Text style={{ ...texts.default, lineHeight: 21 }}>
-                {formatCurrency(platformFee.data)}
-              </Text>
-            </View>
-            <Text style={{ marginTop: padding, ...texts.small, color: colors.darkGrey }}>
-              O AppJusto cobra menos para ser mais justo com todos. Você pode aumentar a sua
-              contribuição se desejar.
-            </Text>
-            <View style={{ marginTop: padding }}>
-              <HorizontalSelect
-                data={platformFeeOptions}
-                selected={platformFee}
-                onSelect={setPlatformFee}
-              />
-            </View>
-          </PaddedView>
-        </View>
+        <ChargesBox
+          selectedFare={selectedFare!}
+          platformFee={platformFee}
+          platformFeeOptions={platformFeeOptions}
+          onContribution={setPlatformFee}
+        />
         <HR height={padding} />
         {/* total */}
         <View style={{ paddingVertical: padding }}>
