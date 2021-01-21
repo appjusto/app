@@ -61,7 +61,7 @@ export default function () {
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Image source={icons.navigationArrow} />
-        <View>
+        <View style={{ flexShrink: 1 }}>
           <Text style={{ ...texts.small, marginLeft: halfPadding, flexWrap: 'wrap' }}>
             {currentAddress ?? ''}
           </Text>

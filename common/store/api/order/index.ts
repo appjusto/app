@@ -1,6 +1,7 @@
 import {
   ChatMessage,
   CreateOrderPayload,
+  Cuisine,
   Fare,
   Issue,
   IssueType,
@@ -162,6 +163,12 @@ export default class OrderApi {
     const query = this.refs.getIssuesRef().where('type', '==', type);
     const docs = (await query.get()).docs;
     return documentsAs<Issue>(docs);
+  }
+
+  async fetchCuisines() {
+    const query = this.refs.getCuisinesRef();
+    const docs = (await query.get()).docs;
+    return documentsAs<Cuisine>(docs);
   }
 
   async deleteOrder(orderId: string) {

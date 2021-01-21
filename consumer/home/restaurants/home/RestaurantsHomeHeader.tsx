@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableWithoutFeedback, View } from 'react-native';
 import { halfPadding } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import CusineSelector from '../components/CusineSelector';
+import CuisineSelector from '../components/CuisineSelector';
 import DoubleHeader from '../components/DoubleHeader';
 import LocationBar from '../components/LocationBar';
 import RestaurantSearchBar from './RestaurantSearchButton';
@@ -41,7 +41,7 @@ export default function ({ isLoading, onLocationPress, onSearchPress }: Props) {
         </TouchableWithoutFeedback>
       </View>
       {/* by cuisine */}
-      <CusineSelector />
+      <CuisineSelector onSelect={() => null} />
     </View>
   );
 }
