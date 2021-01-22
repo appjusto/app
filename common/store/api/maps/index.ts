@@ -1,6 +1,5 @@
 import { Address, LatLng } from 'appjusto-types';
 import axios, { CancelToken } from 'axios';
-import { GooglePlacesPredictionsResult } from './types';
 
 const SEARCH_RADIUS = 30 * 1000; // 30km
 
@@ -28,7 +27,8 @@ export default class MapsApi {
     );
     try {
       const response = await axios.get(url, { cancelToken, params });
-      const { predictions } = response.data as GooglePlacesPredictionsResult;
+      const { data } = response;
+      const predictions = data.predictions as google.maps.places.AutocompletePrediction[];
       return predictions.map((prediction) => {
         const { description, place_id: googlePlaceId, structured_formatting } = prediction;
         const { main_text: main, secondary_text: secondary } = structured_formatting;
@@ -49,7 +49,7 @@ export default class MapsApi {
     }
   }
 
-  async googleGeocode(address: string) {
+  async googleGeocode(address: string): Promise<LatLng | null> {
     const url = 'https://maps.googleapis.com/maps/api/geocode/json';
     const params = {
       key: this.googleMapsApiKey,
@@ -69,10 +69,10 @@ export default class MapsApi {
       };
     } catch (err) {
       console.error(err);
-      return err;
+      return null;
     }
   }
-  async googleReverseGeocode(coords: LatLng) {
+  async googleReverseGeocode(coords: LatLng): Promise<Address | null> {
     const lat = coords.latitude;
     const long = coords.longitude;
     const url = 'https://maps.googleapis.com/maps/api/geocode/json';
@@ -84,13 +84,24 @@ export default class MapsApi {
     const response = await axios.get(url, { params });
     const { data } = response;
     const { results } = data;
-    const [result] = results;
+    const [result] = results as google.maps.GeocoderResult[];
     const { address_components } = result;
     const getAddress = (type: string) =>
       address_components.find((c) => c.types.indexOf(type) !== -1);
+    const country = getAddress('country');
+    const state = getAddress('administrative_area_level_1');
+    const city = getAddress('administrative_area_level_2');
+    const neighborhood = getAddress('sublocality');
     const street = getAddress('route');
     const streetNumber = getAddress('street_number');
-    const formattedAddress = `${street.short_name}, ${streetNumber.short_name}`;
-    return formattedAddress;
+    const main = `${street?.short_name}, ${streetNumber?.short_name}`;
+    const secondary = `${neighborhood?.short_name}, ${city?.short_name} - ${state?.short_name}, ${country?.long_name}`;
+    const description = `${main} - ${secondary}`;
+    return {
+      main,
+      secondary,
+      description,
+      googlePlaceId: result.place_id,
+    };
   }
 }

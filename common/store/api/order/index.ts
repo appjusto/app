@@ -131,7 +131,6 @@ export default class OrderApi {
     if (courierId) query = query.where('courier.id', '==', courierId);
     if (limit) query = query.limit(limit);
     if (businessId) query = query.where('business.id', '==', businessId);
-
     const unsubscribe = query.onSnapshot(
       (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
       (error) => console.error(error)

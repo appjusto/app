@@ -1,8 +1,13 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../../../common/app/context';
 import { useSearchRestaurants } from '../../../../common/store/api/search/useSearchRestaurants';
+import {
+  updateCurrentLocation,
+  updateCurrentPlace,
+} from '../../../../common/store/consumer/actions';
 import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import RestaurantList from '../search/RestaurantList';
 import { RestaurantsNavigatorParamList } from '../types';
@@ -17,11 +22,21 @@ type Props = {
 };
 
 export default function ({ route, navigation }: Props) {
+  // params
+  const { place } = route.params ?? {};
+  // context
+  const dispatch = useDispatch<AppDispatch>();
   // redux store
   const currentLocation = useSelector(getCurrentLocation);
   // state
   const { restaurants, isLoading, fetchNextPage } = useSearchRestaurants(currentLocation, '');
-
+  // side effects
+  React.useEffect(() => {
+    if (place) {
+      dispatch(updateCurrentLocation(undefined));
+      dispatch(updateCurrentPlace(place));
+    }
+  }, [place]);
   // UI
   return (
     <RestaurantList
@@ -31,7 +46,7 @@ export default function ({ route, navigation }: Props) {
           isLoading={isLoading}
           onLocationPress={() => {
             navigation.navigate('AddressComplete', {
-              returnParam: 'address',
+              returnParam: 'place',
               returnScreen: 'RestaurantsHome',
             });
           }}

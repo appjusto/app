@@ -19,6 +19,7 @@
     "@react-navigation/native": "^5.6.1",
     "@react-navigation/stack": "^5.6.2",
     "@types/algoliasearch": "^3.34.11",
+    "@types/googlemaps": "^3.43.2",
     "@types/lodash": "^4.14.158",
     "algoliasearch": "^4.8.3",
     "appjusto-types": "file:../types",

@@ -15,4 +15,4 @@ export const getPaymentMethodById = createSelector(getConsumer, (consumer) =>
 );
 
 export const getCurrentLocation = (state: State) => getConsumerState(state).currentLocation;
-export const getCurrentAddress = (state: State) => getConsumerState(state).currentAddress;
+export const getCurrentPlace = (state: State) => getConsumerState(state).currentPlace;
