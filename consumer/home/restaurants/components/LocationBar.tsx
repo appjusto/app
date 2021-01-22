@@ -2,48 +2,64 @@ import React from 'react';
 import { Image, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
-import { AppDispatch } from '../../../../common/app/context';
+import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import useLastKnownLocation from '../../../../common/hooks/useLastKnownLocation';
-import { useReverseGeocode } from '../../../../common/store/api/maps/hooks/useReverseGeocode';
 import {
-  updateCurrentAddress,
   updateCurrentLocation,
+  updateCurrentPlace,
 } from '../../../../common/store/consumer/actions';
-import { getCurrentAddress, getCurrentLocation } from '../../../../common/store/consumer/selectors';
+import {
+  getConsumer,
+  getCurrentLocation,
+  getCurrentPlace,
+} from '../../../../common/store/consumer/selectors';
 import { borders, colors, halfPadding, texts } from '../../../../common/styles';
+import { formatAddress } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 
 export default function () {
   // context
+  const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // redux store
+  const consumer = useSelector(getConsumer)!;
+  const currentPlace = useSelector(getCurrentPlace);
   const currentLocation = useSelector(getCurrentLocation);
-  const currentAddress = useSelector(getCurrentAddress);
   // state
   const { coords } = useLastKnownLocation();
   // geocode only currentAddress is undefined
-  const lastKnownAddress = useReverseGeocode(currentAddress ? undefined : currentLocation);
-  // side effects
-  // update location when both currentAddress and currentLocation are undefined
   React.useEffect(() => {
-    if (!currentAddress) {
+    if (currentPlace) {
+      // when address is selected using AdressComplete we need to fetch location
       if (!currentLocation) {
-        if (coords) dispatch(updateCurrentLocation(coords));
+        (async () => {
+          const latlng = await api.maps().googleGeocode(currentPlace.address.description);
+          if (latlng) dispatch(updateCurrentLocation(latlng));
+        })();
       }
+      return;
     }
-  }, [currentLocation, currentAddress, coords]);
-  React.useEffect(() => {
-    if (currentAddress) {
-      // TODO: geocode avoiding infinite loop
+    // select last used place if exists
+    const lastPlace = consumer.favoritePlaces?.find(() => true);
+    if (lastPlace) {
+      dispatch(updateCurrentPlace(lastPlace));
+      dispatch(updateCurrentLocation(lastPlace.location!));
     }
-  }, [currentAddress]);
-  //
-  React.useEffect(() => {
-    if (lastKnownAddress) {
-      dispatch(updateCurrentAddress(lastKnownAddress));
+    // select from current location
+    else if (coords) {
+      dispatch(updateCurrentLocation(coords));
+      (async () => {
+        const address = await api.maps().googleReverseGeocode(coords);
+        if (address)
+          dispatch(
+            updateCurrentPlace({
+              address,
+              location: coords,
+            })
+          );
+      })();
     }
-  }, [lastKnownAddress]);
-
+  }, [consumer, currentPlace, coords]);
   // UI
   return (
     <View
@@ -63,7 +79,7 @@ export default function () {
         <Image source={icons.navigationArrow} />
         <View style={{ flexShrink: 1 }}>
           <Text style={{ ...texts.small, marginLeft: halfPadding, flexWrap: 'wrap' }}>
-            {currentAddress ?? ''}
+            {currentPlace?.address ? formatAddress(currentPlace.address) : ''}
           </Text>
         </View>
       </View>

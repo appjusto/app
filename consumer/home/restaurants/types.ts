@@ -1,8 +1,8 @@
-import { Address } from 'appjusto-types';
+import { Place } from 'appjusto-types';
 
 export type RestaurantsNavigatorParamList = {
   RestaurantsHome?: {
-    address?: Address;
+    place?: Place;
     selectedFilter?: string;
   };
   AddressComplete?: {
