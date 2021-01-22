@@ -5,17 +5,16 @@ import React from 'react';
 import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
-import * as icons from '../../../../../assets/icons';
 import { ApiContext } from '../../../../../common/app/context';
-import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
+import GrayLine from '../../../../../common/components/views/GrayLine';
 import { useProduct } from '../../../../../common/store/api/business/hooks/products';
 import * as helpers from '../../../../../common/store/api/order/helpers';
 import { useContextBusinessId } from '../../../../../common/store/context/business';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { getUser } from '../../../../../common/store/user/selectors';
-import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
+import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
-import { t } from '../../../../../strings';
+import AddInfo from '../../components/AddInfo';
 import * as fake from '../../fakeData';
 import { RestaurantNavigatorParamList } from '../types';
 import { ItemQuantity } from './ItemQuantity';
@@ -75,7 +74,7 @@ export default function ({ navigation, route }: Props) {
   // UI
   return (
     <ScrollView style={{ ...screens.default }}>
-      <View style={{ paddingHorizontal: 12 }}>
+      <View style={{ paddingHorizontal: padding, marginBottom: 24 }}>
         <Image source={fake.detail} style={{ width: '100%', height: 240, borderRadius: 8 }} />
         <View style={{ marginTop: padding }}>
           <Text style={{ ...texts.mediumToBig }}>{product?.name ?? ''}</Text>
@@ -85,44 +84,11 @@ export default function ({ navigation, route }: Props) {
           <Text style={{ ...texts.default }}>{formatCurrency(product?.price ?? 0)}</Text>
         </View>
       </View>
-      <View
-        style={{
-          borderBottomWidth: 1,
-          borderStyle: 'solid',
-          width: '100%',
-          borderColor: colors.grey,
-          marginTop: 24,
-          marginBottom: halfPadding,
-        }}
-      />
-      <View style={{ paddingHorizontal: 12 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: halfPadding }}>
-          <Image source={icons.info} />
-          <Text style={{ ...texts.default, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
-        </View>
-        <DefaultInput
-          placeholder={t(
-            'Tem alguma observação? Por exemplo: sem molho, sem cebola, ponto da carne, etc'
-          )}
-          multiline
-          numberOfLines={6} // How much is enough?
-          value={notes}
-          onChangeText={setNotes}
-          style={{ height: 96, marginTop: halfPadding }}
-        />
-      </View>
+      <GrayLine />
+      <AddInfo value={notes} onAddInfo={setNotes} />
       {/* <View style={{ flex: 1 }} /> */}
-      <View
-        style={{
-          borderBottomWidth: 1,
-          borderStyle: 'solid',
-          width: '100%',
-          borderColor: colors.grey,
-          marginTop: 24,
-          marginBottom: halfPadding,
-        }}
-      />
-      <View style={{ paddingHorizontal: 12 }}>
+      <GrayLine />
+      <View style={{ paddingHorizontal: padding }}>
         <ItemQuantity
           onChange={changeQuantityHandler}
           getPrice={(quantity) => formatCurrency(product.price * quantity)}
