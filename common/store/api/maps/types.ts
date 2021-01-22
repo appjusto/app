@@ -11,10 +11,3 @@ export type GooglePlacesAddressResult = {
 export type GooglePlacesPredictionsResult = {
   predictions: GooglePlacesAddressResult[];
 };
-
-export type AutoCompleteResult = {
-  description: string;
-  placeId?: string;
-  main: string;
-  secondary: string;
-};

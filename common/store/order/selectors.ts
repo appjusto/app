@@ -1,4 +1,4 @@
-import { ChatMessage, Order, Place, WithId } from 'appjusto-types';
+import { ChatMessage, Order, WithId } from 'appjusto-types';
 import { first, memoize, uniq } from 'lodash';
 import { createSelector } from 'reselect';
 import { State } from '..';
@@ -67,19 +67,6 @@ export const summarizeOrders = memoize((orders: WithId<Order>[]) =>
     }),
     { delivered: 0, dispatching: 0, courierFee: 0 }
   )
-);
-
-export const getPlacesFromPreviousOrders = createSelector(getOrders, (orders) =>
-  orders.reduce<Place[]>((places, order) => {
-    let result = places;
-    const { origin, destination } = order;
-    if (!result.some((place) => place.address?.description === origin.address?.description))
-      result = [...result, origin];
-    if (!result.some((place) => place.address?.description === destination.address?.description))
-      result = [...result, destination];
-
-    return result;
-  }, [])
 );
 
 // chat messages

@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Address, Place } from 'appjusto-types';
 import debounce from 'lodash/debounce';
 import { nanoid } from 'nanoid/non-secure';
-import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
+import React from 'react';
 import {
   ActivityIndicator,
   Keyboard,
@@ -21,8 +21,7 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import useAxiosCancelToken from '../../../common/hooks/useAxiosCancelToken';
 import useLastKnownLocation from '../../../common/hooks/useLastKnownLocation';
-import { AutoCompleteResult } from '../../../common/store/api/maps/types';
-import { getPlacesFromPreviousOrders } from '../../../common/store/order/selectors';
+import { getConsumer } from '../../../common/store/consumer/selectors';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { formatAddress } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
@@ -40,35 +39,34 @@ export default function ({ navigation, route }: Props) {
   // params
   const { value, returnScreen, returnParam } = route.params;
   // context
-  const api = useContext(ApiContext);
-  // redux store
-  const placesFromPreviousOrders = useSelector(getPlacesFromPreviousOrders);
+  const api = React.useContext(ApiContext);
+  const consumer = useSelector(getConsumer)!;
   // state
   const [isLoading, setLoading] = React.useState(false);
   const { coords } = useLastKnownLocation();
-  const [autocompleteSession] = useState(nanoid());
-  const [searchText, setSearchText] = useState(value ?? '');
-  const [autocompletePredictions, setAutoCompletePredictions] = useState<AutoCompleteResult[]>([]);
-  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
-  const sections: SectionListData<Address>[] = useMemo(() => {
+  const [autocompleteSession] = React.useState(nanoid());
+  const [searchText, setSearchText] = React.useState(value ?? '');
+  const [autocompletePredictions, setAutoCompletePredictions] = React.useState<Address[]>([]);
+  const [selectedAddress, setSelectedAddress] = React.useState<Address | null>(null);
+  const sections: SectionListData<Address>[] = React.useMemo(() => {
     let sections: SectionListData<Address>[] = [];
     sections = [
       ...sections,
       { title: t('Resultados da busca'), data: autocompletePredictions, key: 'search-results' },
     ];
-    const addresses = placesFromPreviousOrders.map((value) => value.address!);
+    const addresses = (consumer.favoritePlaces ?? []).map((place) => place.address);
     sections = [
       ...sections,
       { title: t('Últimos endereços utilizados'), data: addresses, key: 'last-used-address' },
     ];
     return sections;
-  }, [placesFromPreviousOrders, autocompletePredictions]);
+  }, [autocompletePredictions]);
   // helpers
   // using cancel token to allow canceling ongoing requests after unmounting
   const createCancelToken = useAxiosCancelToken();
   // debounced callback to avoid calling the maps API more often than necessary
   // TODO: what would be a better threshold than 500ms?
-  const getAddress = useCallback(
+  const getAddress = React.useCallback(
     debounce<(input: string, session: string) => void>(async (input: string, session) => {
       setLoading(true);
       const results = await api
@@ -80,7 +78,7 @@ export default function ({ navigation, route }: Props) {
     [coords]
   );
   // refs
-  const searchInputRef = useRef<TextInput>();
+  const searchInputRef = React.useRef<TextInput>();
   // side effects
   // auto focus on input
   React.useEffect(() => {
@@ -115,14 +113,14 @@ export default function ({ navigation, route }: Props) {
     [searchText]
   );
   // when user select item from list
-  const selectItemHandler = useCallback((item: Address) => {
+  const selectItemHandler = React.useCallback((item: Address) => {
     Keyboard.dismiss();
     setSelectedAddress(item);
     setAutoCompletePredictions([]); // clearing predictions hides the modal
   }, []);
 
   // confirm button callback
-  const completeHandler = useCallback(() => {
+  const completeHandler = React.useCallback(() => {
     if (!selectedAddress) return;
     // create a place object when user confirm without selecting from suggestion list
     const place: Place = { address: selectedAddress };
