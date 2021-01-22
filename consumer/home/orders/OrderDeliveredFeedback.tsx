@@ -98,7 +98,7 @@ export default ({ navigation, route }: Props) => {
                 title={t('Detalhes da corrida')}
                 onPress={() =>
                   navigation.navigate('HistoryNavigator', {
-                    screen: 'OrderSummary',
+                    screen: 'OrderDetail',
                     params: { orderId },
                   })
                 }

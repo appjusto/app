@@ -60,7 +60,7 @@ export default function ({ navigation, route }: Props) {
         orderId: order.id,
       });
     } else if (order.status === 'delivered') {
-      navigation.navigate('OrderSummary', {
+      navigation.navigate('OrderDetail', {
         orderId: order.id,
       });
     } else if (order.status === 'confirming') {
