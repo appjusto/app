@@ -112,7 +112,7 @@ export default function ({
 
   // handlers
   const getOrderQuotesHandler = useCallback(async () => {
-    if (!order.route) return;
+    if (!order.origin?.location || order.route) return;
     (async () => {
       setQuotes([]);
       // try {
