@@ -64,8 +64,6 @@ export default function ({ navigation, route }: Props) {
         orderId: order.id,
       });
     } else if (order.status === 'confirming') {
-      // TODO: basically the same screen as 'OrderMatching' but with a different message
-    } else if (order.status === 'matching') {
       navigation.navigate('OrderMatching', {
         orderId: order.id,
       });
