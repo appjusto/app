@@ -2,7 +2,6 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Order, WithId } from 'appjusto-types';
-import Constants from 'expo-constants';
 import React, { useCallback, useMemo } from 'react';
 import { Image, SectionList, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -15,7 +14,12 @@ import useObserveOrders from '../../common/store/api/order/hooks/useObserveOrder
 import { getOrdersWithFilter, getYearsWithOrders } from '../../common/store/order/selectors';
 import { getUser } from '../../common/store/user/selectors';
 import { colors, padding, screens, texts } from '../../common/styles';
-import { formatDate, formatTime, separateWithDot } from '../../common/utils/formatters';
+import {
+  formatAddress,
+  formatDate,
+  formatTime,
+  separateWithDot,
+} from '../../common/utils/formatters';
 import { t } from '../../strings';
 import { HomeNavigatorParamList } from '../home/types';
 import { HistoryParamList } from './types';
@@ -60,12 +64,10 @@ export default function ({ navigation, route }: Props) {
         orderId: order.id,
       });
     } else if (order.status === 'delivered') {
-      navigation.navigate('OrderSummary', {
+      navigation.navigate('OrderDetail', {
         orderId: order.id,
       });
     } else if (order.status === 'confirming') {
-      // TODO: basically the same screen as 'OrderMatching' but with a different message
-    } else if (order.status === 'matching') {
       navigation.navigate('OrderMatching', {
         orderId: order.id,
       });
@@ -73,7 +75,6 @@ export default function ({ navigation, route }: Props) {
   }, []);
 
   // UI
-  const paddingTop = Constants.statusBarHeight;
   if (sections.length === 0) {
     return (
       <FeedbackView
@@ -85,11 +86,12 @@ export default function ({ navigation, route }: Props) {
     );
   }
   return (
-    <View style={{ ...screens.config }}>
+    <View style={[screens.config, screens.headless]}>
       <SectionList
-        style={{ flex: 1, paddingTop }}
+        style={{ flex: 1 }}
         sections={sections}
         keyExtractor={(item) => item.id}
+        stickySectionHeadersEnabled={false}
         renderSectionHeader={({ section }) => (
           <PaddedView
             style={{ flexDirection: 'row', borderBottomColor: colors.grey, borderBottomWidth: 1 }}
@@ -100,7 +102,8 @@ export default function ({ navigation, route }: Props) {
         )}
         renderItem={({ item }) => {
           const createdOn = (item.createdOn as firebase.firestore.Timestamp).toDate();
-          const title = item.origin.address.main;
+          const title =
+            item.type === 'food' ? item.business?.name ?? '' : formatAddress(item.origin!.address);
           const subtitle = separateWithDot(formatDate(createdOn), formatTime(createdOn));
           return (
             <ConfigItem title={title} subtitle={subtitle} onPress={() => orderSelectHandler(item)}>

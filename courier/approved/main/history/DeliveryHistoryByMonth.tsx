@@ -10,7 +10,7 @@ import useObserveOrders from '../../../../common/store/api/order/hooks/useObserv
 import { getOrdersWithFilter } from '../../../../common/store/order/selectors';
 import { getUser } from '../../../../common/store/user/selectors';
 import { screens } from '../../../../common/styles';
-import { formatCurrency, formatTime } from '../../../../common/utils/formatters';
+import { formatAddress, formatCurrency, formatTime } from '../../../../common/utils/formatters';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
 import { DeliveriesNavigatorParamList } from './types';
@@ -64,7 +64,7 @@ export default function ({ navigation, route }: Props) {
         renderItem={({ item }) => {
           const title = formatCurrency(item.fare!.courierFee);
           const subtitle =
-            item.origin.address?.description +
+            (item.origin?.address ? formatAddress(item.origin.address) : '') +
             '\n' +
             formatTime((item.createdOn as firebase.firestore.Timestamp).toDate());
           return (

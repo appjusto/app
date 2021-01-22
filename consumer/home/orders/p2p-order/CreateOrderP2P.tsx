@@ -57,10 +57,17 @@ export default function ({ navigation, route }: Props) {
             dispatch(showToast(error.toString(), 'error'));
           }
         } else if (orderId) {
+          // backend is handling this case, keep it here just while is being tested
+          // if address is the same, update only additionalInfo to avoid losing
+          // const origin: Place =
+          //   route.params.origin.address.description === order.origin?.address.description
+          //     ? { ...order.origin, additionalInfo: route.params.origin.additionalInfo }
+          //     : route.params.origin;
+          // api.order().updateFoodOrder(orderId, { origin });
           api.order().updateFoodOrder(orderId, { origin: route.params.origin });
         }
       }
-      if (orderId && route.params?.destination) {
+      if (order && orderId && route.params?.destination) {
         api.order().updateFoodOrder(orderId, { destination: route.params.destination });
       }
       if (route.params?.paymentMethodId)

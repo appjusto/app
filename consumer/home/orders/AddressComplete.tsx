@@ -118,8 +118,12 @@ export default function ({ navigation, route }: Props) {
   // when user select item from list
   const selectItemHandler = React.useCallback((item: Address) => {
     Keyboard.dismiss();
-    setSelectedAddress(item);
     setAutoCompletePredictions([]); // clearing predictions hides the modal
+    setSelectedAddress(item);
+    const favoritePlace = consumer.favoritePlaces?.find(
+      (p) => p.address.description === item.description
+    );
+    if (favoritePlace?.additionalInfo) setAdditionalInfo(favoritePlace.additionalInfo);
   }, []);
 
   // confirm button callback

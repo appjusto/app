@@ -56,11 +56,13 @@ export default function ({
   );
   // side effects
   React.useEffect(() => {
-    if (order?.origin?.additionalInfo) setOriginAdditionalInfo(order.origin.additionalInfo);
-    if (order?.origin?.intructions) setOriginInstructions(order.origin.intructions);
-    if (order?.destination?.intructions)
-      setDestinationAdditionalInfo(order.destination.intructions);
-    if (order?.destination?.intructions) setDestinationInstructions(order.destination.intructions);
+    if (order?.origin?.additionalInfo !== undefined)
+      setOriginAdditionalInfo(order.origin.additionalInfo);
+    if (order?.origin?.intructions !== undefined) setOriginInstructions(order.origin.intructions);
+    if (order?.destination?.additionalInfo !== undefined)
+      setDestinationAdditionalInfo(order.destination.additionalInfo);
+    if (order?.destination?.intructions !== undefined)
+      setDestinationInstructions(order.destination.intructions);
   }, [order]);
   // refs
   const viewPager = React.useRef<ViewPager>(null);

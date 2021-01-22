@@ -22,8 +22,8 @@ import OrderMap from '../home/orders/p2p-order/OrderMap';
 import PlaceSummary from '../home/orders/p2p-order/PlaceSummary';
 import { HistoryParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<HistoryParamList, 'OrderSummary'>;
-type ScreenRoute = RouteProp<HistoryParamList, 'OrderSummary'>;
+type ScreenNavigationProp = StackNavigationProp<HistoryParamList, 'OrderDetail'>;
+type ScreenRoute = RouteProp<HistoryParamList, 'OrderDetail'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

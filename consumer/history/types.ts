@@ -2,7 +2,7 @@ import { OrderCourier } from 'appjusto-types';
 
 export type HistoryParamList = {
   OrderHistory: undefined;
-  OrderSummary: {
+  OrderDetail: {
     orderId: string;
   };
   OrderMatching: {
