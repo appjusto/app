@@ -102,7 +102,8 @@ export default function ({ navigation, route }: Props) {
         )}
         renderItem={({ item }) => {
           const createdOn = (item.createdOn as firebase.firestore.Timestamp).toDate();
-          const title = formatAddress(item.origin!.address);
+          const title =
+            item.type === 'food' ? item.business?.name ?? '' : formatAddress(item.origin!.address);
           const subtitle = separateWithDot(formatDate(createdOn), formatTime(createdOn));
           return (
             <ConfigItem title={title} subtitle={subtitle} onPress={() => orderSelectHandler(item)}>

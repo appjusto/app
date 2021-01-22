@@ -1,7 +1,7 @@
 import {
+  Business,
   ChatMessage,
   ConsumerProfile,
-  CreateOrderPayload,
   Cuisine,
   Fare,
   Issue,
@@ -35,15 +35,21 @@ export default class OrderApi {
 
   // callables
   // consumer
-  async createFoodOrder(businessId: string, consumerId: string, items: OrderItem[] = []) {
+  async createFoodOrder(
+    business: WithId<Business>,
+    consumer: WithId<ConsumerProfile>,
+    items: OrderItem[] = []
+  ) {
     const payload: Order = {
       type: 'food',
       status: 'quote',
       business: {
-        id: businessId,
+        id: business.id,
+        name: business.name,
       },
       consumer: {
-        id: consumerId,
+        id: consumer.id,
+        name: consumer.name ?? '',
       },
       createdOn: firebase.firestore.FieldValue.serverTimestamp(),
       items,
@@ -54,7 +60,7 @@ export default class OrderApi {
   async updateFoodOrder(orderId: string, changes: Partial<Order>) {
     await this.refs.getOrderRef(orderId).update(changes);
   }
-  async createOrderP2P(consumer: WithId<ConsumerProfile>, origin?: Place) {
+  async createOrderP2P(consumer: WithId<ConsumerProfile>, origin: Place) {
     const payload: Order = {
       type: 'p2p',
       status: 'quote',
@@ -63,13 +69,10 @@ export default class OrderApi {
         name: consumer.name ?? '',
       },
       origin,
+      createdOn: firebase.firestore.FieldValue.serverTimestamp(),
     };
     const order = await this.refs.getOrdersRef().add(payload);
     return documentAs<Order>(await order.get());
-  }
-
-  async createOrder(payload: CreateOrderPayload) {
-    return (await this.refs.getCreateOrderCallable()(payload)).data;
   }
 
   async getOrderQuotes(orderId: string) {

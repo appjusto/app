@@ -10,9 +10,12 @@ import { ApiContext } from '../../../../../common/app/context';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import { useProduct } from '../../../../../common/store/api/business/hooks/products';
 import * as helpers from '../../../../../common/store/api/order/helpers';
-import { useContextBusinessId } from '../../../../../common/store/context/business';
+import { getConsumer } from '../../../../../common/store/consumer/selectors';
+import {
+  useContextBusiness,
+  useContextBusinessId,
+} from '../../../../../common/store/context/business';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
-import { getUser } from '../../../../../common/store/user/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
@@ -33,10 +36,10 @@ export default function ({ navigation, route }: Props) {
   const { productId } = route.params;
   // context
   const api = React.useContext(ApiContext);
-  const businessId = useContextBusinessId();
+  const business = useContextBusiness();
   const activeOrder = useContextActiveOrder();
   // redux store
-  const user = useSelector(getUser)!;
+  const consumer = useSelector(getConsumer)!;
   // screen state
   const product = useProduct(useContextBusinessId(), productId);
   const [notes, setNotes] = React.useState<string>('');
@@ -67,7 +70,7 @@ export default function ({ navigation, route }: Props) {
         quantity: value,
         notes,
       };
-      if (!activeOrder) api.order().createFoodOrder(businessId, user.uid, [item]);
+      if (!activeOrder) api.order().createFoodOrder(business, consumer, [item]);
       else api.order().updateFoodOrder(activeOrder.id, helpers.addItemToOrder(activeOrder, item));
       navigation.pop();
     })();
