@@ -1,11 +1,14 @@
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Fare } from 'appjusto-types';
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { HorizontalSelectItem } from '../../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import GrayLine from '../../../../common/components/views/GrayLine';
 import HR from '../../../../common/components/views/HR';
 import { colors, padding, screens, texts } from '../../../../common/styles';
+import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import PlaceSummary from '../../orders/p2p-order/PlaceSummary';
 import AddInfo from '../components/AddInfo';
@@ -14,9 +17,21 @@ import { RestaurantsNavigatorParamList } from '../types';
 
 type ScreenNavigationProp = StackNavigationProp<RestaurantsNavigatorParamList, 'CartSummary'>;
 
+const platformFeeOptions: HorizontalSelectItem[] = [
+  { id: '1', title: formatCurrency(100), data: 100 },
+  { id: '3', title: formatCurrency(300), data: 300 },
+  { id: '5', title: formatCurrency(500), data: 500 },
+  { id: '8', title: formatCurrency(800), data: 800 },
+  { id: '10', title: formatCurrency(1000), data: 1000 },
+];
+
 export default function () {
   //state
   const [info, setInfo] = React.useState<string>('');
+  const [quotes, setQuotes] = React.useState<Fare[]>([]);
+  const [platformFee, setPlatformFee] = React.useState(platformFeeOptions[0]);
+
+  // UI
   return (
     <ScrollView style={{ ...screens.default }}>
       {/* destination */}
@@ -30,12 +45,14 @@ export default function () {
       <HR height={padding} />
       {/* restaurant and items ordered */}
       <SingleHeader title="Nome do restaurante" />
-      <TouchableOpacity onPress={() => null} style={{ marginBottom: padding }}>
-        <Text style={{ ...texts.default, color: colors.darkGreen, padding }}>
-          {t('Adicionar mais itens')}
-        </Text>
-        <GrayLine />
-      </TouchableOpacity>
+      <View style={{ marginBottom: padding }}>
+        <TouchableOpacity onPress={() => null}>
+          <Text style={{ ...texts.default, color: colors.darkGreen, padding }}>
+            {t('Adicionar mais itens')}
+          </Text>
+          <GrayLine />
+        </TouchableOpacity>
+      </View>
       <AddInfo value={info} onAddInfo={setInfo} />
       <HR height={padding} />
       {/* details */}
