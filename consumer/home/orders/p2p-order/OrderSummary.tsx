@@ -112,8 +112,12 @@ export default function ({
 
   // handlers
   const getOrderQuotesHandler = useCallback(async () => {
+    if (!order.route) return;
     (async () => {
+      setQuotes([]);
+      // try {
       setQuotes((await dispatch(getOrderQuotes(api)(order.id))) ?? undefined);
+      // } catch (error) {}
     })();
   }, [order]);
 
