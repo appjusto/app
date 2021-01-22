@@ -43,6 +43,7 @@ export default function () {
       dispatch(updateCurrentAddress(lastKnownAddress));
     }
   }, [lastKnownAddress]);
+
   // UI
   return (
     <View
@@ -60,7 +61,11 @@ export default function () {
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Image source={icons.navigationArrow} />
-        <Text style={{ ...texts.small, marginLeft: halfPadding }}>{currentAddress ?? ''}</Text>
+        <View style={{ flexShrink: 1 }}>
+          <Text style={{ ...texts.small, marginLeft: halfPadding, flexWrap: 'wrap' }}>
+            {currentAddress ?? ''}
+          </Text>
+        </View>
       </View>
       <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Alterar')}</Text>
     </View>

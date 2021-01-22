@@ -2,20 +2,27 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { validate } from 'gerador-validador-cpf';
 import { isEmpty, toNumber, trim } from 'lodash';
-import React, { useState, useRef, useContext, useMemo } from 'react';
-import { View, TextInput } from 'react-native';
+import React, { useContext, useMemo, useRef, useState } from 'react';
+import { TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
+import {
+  cardFormatter,
+  cardMask,
+  cpfFormatter,
+  cpfMask,
+} from '../../../common/components/inputs/pattern-input/formatters';
+import { numbersOnlyParser } from '../../../common/components/inputs/pattern-input/parsers';
+import PatternInput from '../../../common/components/inputs/PatternInput';
 import useAxiosCancelToken from '../../../common/hooks/useAxiosCancelToken';
 import { saveCard } from '../../../common/store/consumer/actions';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
-import { screens, padding } from '../../../common/styles';
+import { padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ProfileParamList } from '../types';
 
@@ -95,12 +102,14 @@ export default function ({ navigation, route }: Props) {
     <View style={screens.config}>
       <KeyboardAwareScrollView>
         <PaddedView>
-          <DefaultInput
+          <PatternInput
             style={{ flex: 1 }}
             title={t('Número do cartão')}
             value={number}
-            placeholder={t('0000000000000000')}
-            maxLength={19}
+            placeholder={t('0000 0000 0000 0000')}
+            mask={cardMask}
+            parser={numbersOnlyParser}
+            formatter={cardFormatter}
             keyboardType="number-pad"
             textContentType="creditCardNumber"
             autoCompleteType="cc-number"
@@ -150,7 +159,7 @@ export default function ({ navigation, route }: Props) {
               title={t('CVV')}
               value={cvv}
               placeholder={t('000')}
-              maxLength={4}
+              maxLength={3}
               keyboardType="number-pad"
               returnKeyType="next"
               autoCompleteType="cc-csc"
@@ -193,13 +202,15 @@ export default function ({ navigation, route }: Props) {
               onSubmitEditing={() => cpfRef.current?.focus()}
             />
           </View>
-          <DefaultInput
+          <PatternInput
             ref={cpfRef}
             style={{ marginTop: padding }}
             title={t('CPF do titular')}
             value={cpf}
-            placeholder={t('00000000000')}
-            maxLength={11}
+            placeholder={t('Seu CPF, apenas números')}
+            mask={cpfMask}
+            parser={numbersOnlyParser}
+            formatter={cpfFormatter}
             keyboardType="number-pad"
             returnKeyType="done"
             blurOnSubmit

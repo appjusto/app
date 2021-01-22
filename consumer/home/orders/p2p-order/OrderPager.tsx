@@ -1,5 +1,5 @@
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
-import { Fleet, Order, WithId } from 'appjusto-types';
+import { Fleet, Order, Place, WithId } from 'appjusto-types';
 import { IuguCustomerPaymentMethod } from 'appjusto-types/payment/iugu';
 import React from 'react';
 import { Image, NativeSyntheticEvent, Text, View } from 'react-native';
@@ -21,7 +21,7 @@ type Props = {
   order: WithId<Order> | undefined;
   paymentMethod?: IuguCustomerPaymentMethod;
   isLoading: boolean;
-  navigateToAddressComplete: (value: string, returnParam: string) => void;
+  navigateToAddressComplete: (returnParam: string, value?: Place) => void;
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;
   navigateToTransportableItems: () => void;
@@ -128,7 +128,7 @@ export default function ({
           <KeyboardAwareScrollView>
             <TouchableWithoutFeedback
               onPress={() => {
-                navigateToAddressComplete(origin?.address?.description ?? '', 'origin');
+                navigateToAddressComplete('origin', origin);
               }}
             >
               <LabeledText title={t('Endereço de retirada')}>
@@ -185,7 +185,7 @@ export default function ({
             <KeyboardAwareScrollView>
               <TouchableWithoutFeedback
                 onPress={() => {
-                  navigateToAddressComplete(destination?.address?.description ?? '', 'destination');
+                  navigateToAddressComplete('destination', destination);
                 }}
               >
                 <LabeledText title={t('Endereço de entrega')}>

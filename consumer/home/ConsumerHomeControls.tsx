@@ -60,9 +60,7 @@ export default function ({ navigation }: Props) {
             </Text>
           </TouchableOpacity>
         </View>
-        <View
-          style={[styles.controlItem, { backgroundColor: colors.lightGreen, flexDirection: 'row' }]}
-        >
+        <View style={[styles.controlItem, { backgroundColor: colors.white, flexDirection: 'row' }]}>
           <TouchableOpacity
             onPress={() =>
               navigation.navigate('RestaurantsNavigator', { screen: 'RestaurantsHome' })

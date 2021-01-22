@@ -45,7 +45,10 @@ export default function ({ navigation, route }: Props) {
   const [isLoading, setLoading] = React.useState(false);
   const { coords } = useLastKnownLocation();
   const [autocompleteSession] = React.useState(nanoid());
-  const [searchText, setSearchText] = React.useState(value ?? '');
+  const [searchText, setSearchText] = React.useState(
+    value?.address ? formatAddress(value?.address) : ''
+  );
+  const [additionalInfo, setAdditionalInfo] = React.useState(value?.additionalInfo ?? '');
   const [autocompletePredictions, setAutoCompletePredictions] = React.useState<Address[]>([]);
   const [selectedAddress, setSelectedAddress] = React.useState<Address | null>(null);
   const sections: SectionListData<Address>[] = React.useMemo(() => {
@@ -123,9 +126,9 @@ export default function ({ navigation, route }: Props) {
   const completeHandler = React.useCallback(() => {
     if (!selectedAddress) return;
     // create a place object when user confirm without selecting from suggestion list
-    const place: Place = { address: selectedAddress };
+    const place: Place = { address: selectedAddress, additionalInfo };
     navigation.navigate(returnScreen, { [returnParam]: place });
-  }, [navigation, returnScreen, selectedAddress, searchText]);
+  }, [navigation, returnScreen, selectedAddress, searchText, additionalInfo]);
 
   // UI
   return (
@@ -137,6 +140,15 @@ export default function ({ navigation, route }: Props) {
         title={t('Endereço com número')}
         placeholder={t('Ex: Av. Paulista 1578')}
         onChangeText={textChangeHandler}
+        style={{ marginBottom: padding }}
+        autoCorrect={false}
+      />
+      <DefaultInput
+        defaultValue={additionalInfo}
+        value={additionalInfo}
+        title={t('Complemento (se houver)')}
+        placeholder={t('Apartamento, sala, loja')}
+        onChangeText={setAdditionalInfo}
         style={{ marginBottom: padding }}
         autoCorrect={false}
       />

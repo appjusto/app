@@ -12,9 +12,9 @@ export type HomeNavigatorParamList = {
     paymentMethodId?: string;
   };
   AddressComplete: {
-    value?: string;
     returnScreen: 'CreateOrderP2P';
     returnParam: string;
+    value?: Place;
   };
   FleetDetail: {
     fleetId: string;

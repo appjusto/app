@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Fleet, WithId } from 'appjusto-types';
+import { Fleet, Place, WithId } from 'appjusto-types';
 import React from 'react';
 import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -71,11 +71,11 @@ export default function ({ navigation, route }: Props) {
   // handlers
   // navigate to 'AddressComplete' to enter address
   const navigateToAddressComplete = React.useCallback(
-    (value: string, returnParam: string) => {
+    (returnParam: string, value?: Place) => {
       navigation.navigate('AddressComplete', {
-        value,
         returnScreen: 'CreateOrderP2P',
         returnParam,
+        value,
       });
     },
     [navigation]

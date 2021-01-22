@@ -1,18 +1,16 @@
+import { Fleet, WithId } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../common/components/texts/RoundedText';
-import useObserveFleet from '../../../common/store/api/fleet/hooks/useObserveFleet';
 import { borders, colors, padding, texts } from '../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 
 type Props = {
-  fleetId: string | undefined;
+  fleet: WithId<Fleet>;
 };
 
-export default function ({ fleetId }: Props) {
-  // UI state
-  const fleet = useObserveFleet(fleetId);
+export default function ({ fleet }: Props) {
   // UI
   return (
     <View

@@ -43,7 +43,6 @@ export default function ({ navigation, route }: Props) {
   // refs
   const surnameRef = useRef<TextInput>(null);
   const cpfRef = useRef<TextInput>(null);
-  const dddRef = useRef<TextInput>(null);
   const phoneRef = useRef<TextInput>(null);
 
   // app state
