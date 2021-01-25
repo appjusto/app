@@ -84,6 +84,8 @@ export default function ({
     return paymentMethod !== undefined && selectedFare !== undefined && !waiting;
   }, [paymentMethod, selectedFare, waiting]);
 
+  console.log(quotes);
+
   // side effects
   // once
   // observe fleets

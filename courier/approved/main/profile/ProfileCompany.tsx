@@ -10,6 +10,14 @@ import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
+import {
+  cepFormatter,
+  cepMask,
+  cnpjFormatter,
+  cnpjMask,
+} from '../../../../common/components/inputs/pattern-input/formatters';
+import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
+import PatternInput from '../../../../common/components/inputs/PatternInput';
 import { fetchPostalDetails } from '../../../../common/store/courier/actions';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { companyInfoSet } from '../../../../common/store/courier/validators';
@@ -92,7 +100,7 @@ export default function ({ navigation, route }: Props) {
     <View style={screens.config}>
       <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <PaddedView>
-          <DefaultInput
+          {/* <DefaultInput
             title={t('CNPJ')}
             placeholder={t('Digite o CNPJ da empresa')}
             value={cnpj}
@@ -104,6 +112,21 @@ export default function ({ navigation, route }: Props) {
             onSubmitEditing={() => nameRef.current?.focus()}
             keyboardType="decimal-pad"
             maxLength={14}
+          /> */}
+          <PatternInput
+            mask={cnpjMask}
+            parser={numbersOnlyParser}
+            formatter={cnpjFormatter}
+            title={t('CNPJ')}
+            placeholder={t('Digite o CNPJ da empresa')}
+            value={cnpj}
+            returnKeyType="next"
+            blurOnSubmit={false}
+            onChangeText={(text) => {
+              if (!isNaN(toNumber(text))) setCNPJ(text);
+            }}
+            onSubmitEditing={() => nameRef.current?.focus()}
+            keyboardType="decimal-pad"
           />
           <DefaultInput
             ref={nameRef}
@@ -118,7 +141,10 @@ export default function ({ navigation, route }: Props) {
             keyboardType="default"
             autoCapitalize="characters"
           />
-          <DefaultInput
+          <PatternInput
+            mask={cepMask}
+            parser={numbersOnlyParser}
+            formatter={cepFormatter}
             ref={cepRef}
             style={{ marginTop: padding }}
             title={t('CEP')}
@@ -129,7 +155,6 @@ export default function ({ navigation, route }: Props) {
               if (!isNaN(toNumber(text))) setCEP(text);
             }}
             keyboardType="decimal-pad"
-            maxLength={8}
           />
           <DefaultInput
             style={{ marginTop: padding }}
