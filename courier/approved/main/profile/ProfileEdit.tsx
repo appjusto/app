@@ -75,7 +75,7 @@ export default function ({ navigation, route }: Props) {
   // UI
   return (
     <View style={screens.config}>
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <PaddedView>
           <DefaultInput
             title={t('Nome')}

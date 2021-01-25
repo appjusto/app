@@ -2,11 +2,10 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Bank, BankAccountType } from 'appjusto-types';
 import { isEmpty } from 'lodash';
-import React, { useRef, useState, useEffect, useContext, useMemo } from 'react';
-import { View, Text, TouchableWithoutFeedback, TextInput } from 'react-native';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../../../common/components/buttons/RadioButton';
@@ -17,7 +16,7 @@ import { getCourier } from '../../../../../common/store/courier/selectors';
 import { bankAccountSet } from '../../../../../common/store/courier/validators';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../../common/store/user/actions';
-import { texts, screens, padding, colors, halfPadding } from '../../../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { BankParamList } from './types';
 
@@ -95,7 +94,7 @@ export default function ({ navigation, route }: Props) {
   // UI
   return (
     <View style={screens.config}>
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <PaddedView>
           <Text style={{ ...texts.default, marginTop: halfPadding, color: colors.darkGrey }}>
             {t('A conta precisa estar no seu CPF ou CNPJ. Não serão aceitas contas de terceiros.')}

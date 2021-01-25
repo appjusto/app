@@ -69,7 +69,7 @@ export default function ({ navigation, route }: Props) {
   };
   return (
     <View style={{ ...screens.config }}>
-      <KeyboardAwareScrollView style={{ flex: 1 }}>
+      <KeyboardAwareScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
         <PaddedView style={{ flex: 1 }}>
           <Text style={{ ...texts.mediumToBig, marginBottom: padding }}>
             {t('Indique seu problema:')}

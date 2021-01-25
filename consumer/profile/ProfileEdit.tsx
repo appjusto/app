@@ -64,7 +64,7 @@ export default function ({ navigation, route }: Props) {
   // UI
   return (
     <View style={screens.config}>
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <PaddedView>
           <DefaultInput
             title={t('E-mail')}
@@ -72,12 +72,13 @@ export default function ({ navigation, route }: Props) {
             value={email}
             returnKeyType="next"
             blurOnSubmit={false}
-            onChangeText={(text) => setName(text)}
+            onChangeText={(text) => setEmail(text)}
             onSubmitEditing={() => nameRef.current?.focus()}
             keyboardType="default"
             maxLength={30}
           />
           <DefaultInput
+            ref={nameRef}
             style={{ marginTop: padding }}
             title={t('Nome')}
             placeholder={t('Digite seu nome')}
