@@ -6,11 +6,13 @@ import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
+import { motocycle } from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
+import FeedbackView from '../../../common/components/views/FeedbackView';
 import useIssues from '../../../common/hooks/queries/useIssues';
 import { sendCourierOrderProblem } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
@@ -40,15 +42,8 @@ export default function ({ navigation, route }: Props) {
   const issues = useIssues('courier-delivery-problem');
   const [selectedProblem, setSelectedProblem] = React.useState<WithId<Issue>>();
   const [complaintComment, setComplaintComment] = React.useState<string>('');
+  const [issueSent, setIssueSent] = React.useState<boolean>(false);
 
-  // UI
-  if (!issues) {
-    return (
-      <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
-      </View>
-    );
-  }
   //handlers
   const complaintHandler = () => {
     if (!selectedProblem) return;
@@ -60,6 +55,7 @@ export default function ({ navigation, route }: Props) {
             comment: complaintComment,
           })
         );
+        setIssueSent(true);
       } catch (error) {
         dispatch(showToast(t('Não foi possível enviar o comentário')));
       }
@@ -68,6 +64,27 @@ export default function ({ navigation, route }: Props) {
       navigation.goBack();
     })();
   };
+  // UI
+  if (!issues) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
+  }
+  if (issueSent) {
+    return (
+      <FeedbackView
+        header={t('Aguarde enquanto estamos analisando o seu problema')}
+        description={t(
+          'Em breve entraremos em contato com você para relatar a resolução do seu problema.'
+        )}
+        icon={motocycle}
+      >
+        <DefaultButton title={t('Voltar')} onPress={() => navigation.goBack()} />
+      </FeedbackView>
+    );
+  }
   return (
     <View style={{ ...screens.config }}>
       <KeyboardAwareScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
