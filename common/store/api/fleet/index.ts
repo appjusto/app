@@ -1,7 +1,8 @@
 import { Fleet, WithId } from 'appjusto-types';
 import firebase from 'firebase';
 import FirebaseRefs from '../FirebaseRefs';
-import { documentAs, documentsAs, FirebaseDocument } from '../types';
+import { documentAs, documentsAs } from '../types';
+import { ObserveFleetOptions } from './types';
 
 export default class FleetApi {
   constructor(private refs: FirebaseRefs) {}
@@ -23,13 +24,15 @@ export default class FleetApi {
       result: WithId<Fleet>[],
       last?: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>
     ) => void,
-    startAfter?: FirebaseDocument
+    options: ObserveFleetOptions
   ): firebase.Unsubscribe {
+    const { fleetsIds, startAfter, limit = 10 } = options;
     let query = this.refs
       .getFleetsRef()
       .where('situation', '==', 'approved')
-      .orderBy('participantsOnline', 'desc')
-      .limit(1);
+      .where(firebase.firestore.FieldPath.documentId(), 'in', fleetsIds)
+      .orderBy(firebase.firestore.FieldPath.documentId())
+      .limit(limit);
     if (startAfter) query = query.startAfter(startAfter);
 
     const unsubscribe = query.onSnapshot(

@@ -13,8 +13,8 @@ import LabeledText from '../../../../common/components/texts/LabeledText';
 import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import { doublePadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import OrderSummary from '../summary/OrderSummary';
 import OrderStep from './OrderStep';
-import OrderSummary from './OrderSummary';
 import { Steps } from './types';
 
 type Props = {

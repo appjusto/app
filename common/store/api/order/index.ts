@@ -38,7 +38,8 @@ export default class OrderApi {
   async createFoodOrder(
     business: WithId<Business>,
     consumer: WithId<ConsumerProfile>,
-    items: OrderItem[] = []
+    items: OrderItem[] = [],
+    destination: Place | null = null
   ) {
     const payload: Order = {
       type: 'food',
@@ -51,6 +52,14 @@ export default class OrderApi {
         id: consumer.id,
         name: consumer.name ?? '',
       },
+      origin: {
+        address: {
+          description: `${business.businessAddress!.address}, ${
+            business.businessAddress!.number
+          } - ${business.businessAddress!.city}`,
+        },
+      },
+      destination,
       createdOn: firebase.firestore.FieldValue.serverTimestamp(),
       items,
     };

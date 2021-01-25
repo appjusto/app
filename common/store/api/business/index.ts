@@ -1,33 +1,12 @@
 import { Business, Category, MenuConfig, Product, WithId } from 'appjusto-types';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';
-import { ObserveBusinessOptions } from './types';
 
 export default class BusinessApi {
   constructor(private refs: FirebaseRefs) {}
 
   // firestore
   // business
-  observeBusinesses(
-    options: ObserveBusinessOptions,
-    resultHandler: (businesses: WithId<Business>[]) => void
-  ) {
-    const { type = 'restaurant', status, search } = options;
-    let query = this.refs.getBusinessesRef().where('type', '==', type);
-    if (status) query = query.where('status', '==', status);
-    if (search) {
-      query = query
-        .where('name', '>=', search)
-        .where('name', '<=', `${search}\uf8ff`)
-        .orderBy('name', 'asc');
-    }
-    const unsubscribe = query.onSnapshot(
-      (snapshot) => resultHandler(documentsAs<Business>(snapshot.docs)),
-      (error) => console.error(error)
-    );
-    return unsubscribe;
-  }
-
   observeBusiness(businessId: string, resultHandler: (business: WithId<Business>) => void) {
     const ref = this.refs.getBusinessRef(businessId);
     const unsubscribe = ref.onSnapshot(

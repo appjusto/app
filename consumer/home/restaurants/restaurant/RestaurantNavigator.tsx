@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import ArrowBox from '../../../../common/components/views/ArrowBox';
 import { t } from '../../../../strings';
+import CartSummary from '../cart/CartSummary';
 import { RestaurantsNavigatorParamList } from '../types';
 import AboutRestaurant from './AboutRestaurant';
 import ItemDetail from './item/ItemDetail';
@@ -39,6 +40,11 @@ export default function ({ route }: Props) {
         name="ItemDetail"
         component={ItemDetail}
         options={{ title: t('Detalhes do item') }}
+      />
+      <Stack.Screen
+        name="CartSummary"
+        component={CartSummary}
+        options={{ title: t('Sua sacola') }}
       />
     </Stack.Navigator>
   );

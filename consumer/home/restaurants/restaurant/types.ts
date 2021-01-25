@@ -4,4 +4,5 @@ export type RestaurantNavigatorParamList = {
   ItemDetail: {
     productId: string;
   };
+  CartSummary: undefined;
 };

@@ -1,7 +1,7 @@
 import { Fare, Fleet, Order, WithId } from 'appjusto-types';
 import { IuguCustomerPaymentMethod } from 'appjusto-types/payment/iugu';
 import { isEmpty } from 'lodash';
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import {
   FlatList,
   Image,
@@ -11,9 +11,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
-import { ApiContext, AppDispatch } from '../../../../common/app/context';
+import { ApiContext } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import { HorizontalSelectItem } from '../../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../../common/components/containers/PaddedView';
@@ -22,10 +21,6 @@ import HR from '../../../../common/components/views/HR';
 import Pill from '../../../../common/components/views/Pill';
 import ShowIf from '../../../../common/components/views/ShowIf';
 import useTallerDevice from '../../../../common/hooks/useTallerDevice';
-import { observeFleets } from '../../../../common/store/fleet/actions';
-import { getAvailableFleets } from '../../../../common/store/fleet/selectors';
-import { getOrderQuotes } from '../../../../common/store/order/actions';
-import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import {
   formatCurrency,
@@ -35,8 +30,8 @@ import {
 } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import ChargesBox from '../../components/ChargesBox';
-import OrderMap from './OrderMap';
-import PlaceSummary from './PlaceSummary';
+import OrderMap from '../p2p-order/OrderMap';
+import PlaceSummary from '../p2p-order/PlaceSummary';
 
 type Props = {
   order: WithId<Order>;
@@ -66,62 +61,49 @@ export default function ({
   navigateFleetDetail,
 }: Props) {
   // context
-  const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
+  const api = React.useContext(ApiContext);
   const { origin, destination } = order;
   const { distance, duration } = order.route!;
-  const tallDevice = useTallerDevice();
-
-  // app state
-  const busy = useSelector(getUIBusy);
-  const availableFleets = useSelector(getAvailableFleets) ?? [];
-
   // state
-  const [quotes, setQuotes] = useState<Fare[]>([]);
-  const [selectedFare, setSelectedFare] = useState<Fare>();
-  const [platformFee, setPlatformFee] = useState(platformFeeOptions[0]);
-  const canSubmit = useMemo(() => {
+  const [isLoading, setLoading] = React.useState(false);
+  const [quotes, setQuotes] = React.useState<Fare[]>([]);
+  const [fleets, setFleets] = React.useState<WithId<Fleet>[]>([]);
+  const [selectedFare, setSelectedFare] = React.useState<Fare>();
+  const [platformFee, setPlatformFee] = React.useState(platformFeeOptions[0]);
+  const canSubmit = React.useMemo(() => {
     return paymentMethod !== undefined && selectedFare !== undefined && !waiting;
   }, [paymentMethod, selectedFare, waiting]);
 
   // side effects
-  // once
-  // observe fleets
-  useEffect(() => {
-    return dispatch(observeFleets(api));
-  }, []);
-  // whenever order changes
+  // whenever route changes
   // update quotes
-  useEffect(() => {
+  React.useEffect(() => {
     getOrderQuotesHandler();
-  }, [order]);
+  }, [order.route?.distance]);
   // whenever quotes are updated
-  // select first fare
-  useEffect(() => {
-    if (!isEmpty(quotes)) {
-      setSelectedFare(quotes[0]);
-    }
+  // select first fare and subscribe to involved fleets updates
+  React.useEffect(() => {
+    if (!quotes || isEmpty(quotes)) return;
+    setSelectedFare(quotes[0]);
+    const fleetsIds = quotes.map((quote) => quote.fleet.id);
+    return api.fleet().observeFleets(setFleets, { fleetsIds });
   }, [quotes]);
-  const participantsOnlineByFleet: {
-    [key: string]: number;
-  } = useMemo(() => {
-    return availableFleets.reduce((acc, fleet) => {
-      return { ...acc, [fleet.id]: fleet.participantsOnline ?? 0 };
-    }, {});
-  }, [availableFleets]);
 
   // handlers
-  const getOrderQuotesHandler = useCallback(async () => {
-    if (!order.origin?.location || order.route) return;
+  const getOrderQuotesHandler = React.useCallback(async () => {
+    if (!order.origin?.location || !order.route) return;
     (async () => {
       setQuotes([]);
       // try {
-      setQuotes((await dispatch(getOrderQuotes(api)(order.id))) ?? undefined);
+      setLoading(true);
+      setQuotes(await api.order().getOrderQuotes(order.id));
+      setLoading(false);
       // } catch (error) {}
     })();
   }, [order]);
 
   // UI
+  const tallDevice = useTallerDevice();
   return (
     <ScrollView style={{ flex: 1, marginBottom: 24 }}>
       {/* show map if it was hidden on previous pages */}
@@ -167,7 +149,7 @@ export default function ({
             >
               <Text style={{ ...texts.medium, ...texts.bold }}>{t('Escolha a frota')}</Text>
               <Text style={{ ...texts.small, color: colors.darkGrey }}>
-                {quotes.length} {t('frotas ativas agora')}
+                {quotes.length} {t('frota(s) ativas agora')}
               </Text>
             </PaddedView>
           </View>
@@ -182,8 +164,8 @@ export default function ({
                 <DefaultButton
                   title={t('Click para tentar novamente')}
                   onPress={getOrderQuotesHandler}
-                  activityIndicator={busy}
-                  disabled={busy}
+                  activityIndicator={isLoading}
+                  disabled={isLoading}
                 />
               )}
             </ShowIf>
@@ -216,9 +198,10 @@ export default function ({
                             {t('Entregadores')}
                           </Text>
                           <Text style={[texts.small, texts.bold]}>
-                            {`${participantsOnlineByFleet[item.fleet.id] ?? 0} ${t(
-                              'ativos agora'
-                            )}`}
+                            {`${
+                              fleets.find((fleet) => fleet.id === item.fleet.id)
+                                ?.participantsOnline ?? 0
+                            } ${t('ativos agora')}`}
                           </Text>
                           <Text style={[texts.mediumToBig, texts.bold, { marginTop: padding }]}>
                             {formatCurrency(item.total)}

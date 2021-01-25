@@ -56,7 +56,9 @@ export default function ({ navigation }: Props) {
       </PaddedView>
       <RestaurantList
         items={restaurants}
-        onSelect={(restaurantId) => navigation.navigate('RestaurantNavigator', { restaurantId })}
+        onSelect={(restaurantId) =>
+          navigation.navigate('RestaurantNavigator', { restaurantId, screen: 'RestaurantDetail' })
+        }
       />
     </View>
   );

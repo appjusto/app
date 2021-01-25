@@ -121,7 +121,9 @@ const RestaurantDetail = React.memo(({ navigation, route }: Props) => {
           );
         }}
       />
-      <CartButton order={activeOrder} />
+      <TouchableOpacity onPress={() => navigation.navigate('CartSummary')}>
+        <CartButton order={activeOrder} />
+      </TouchableOpacity>
     </View>
   );
 });
