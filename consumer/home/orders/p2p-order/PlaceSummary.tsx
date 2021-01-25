@@ -1,12 +1,11 @@
 import { Place } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
 import * as icons from '../../../../assets/icons';
 import ShowIf from '../../../../common/components/views/ShowIf';
-import { texts, colors } from '../../../../common/styles';
+import { colors, texts } from '../../../../common/styles';
 
 type Props = {
   place: Partial<Place>;
@@ -18,7 +17,7 @@ type Props = {
 export default function ({ place, title, editStepHandler, fullAdress }: Props) {
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-      <View style={{ width: '60%' }}>
+      <View>
         <Text style={{ ...texts.small, color: colors.darkGreen }}>{title}</Text>
         <Text style={{ ...texts.medium }}>{place.address?.main ?? ''}</Text>
         <ShowIf test={fullAdress}>

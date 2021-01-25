@@ -16,6 +16,7 @@ import { sendCourierOrderProblem } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import SingleHeader from '../../../consumer/home/restaurants/SingleHeader';
 import { t } from '../../../strings';
 import { OngoingParamList } from './types';
 
@@ -71,9 +72,7 @@ export default function ({ navigation, route }: Props) {
     <View style={{ ...screens.config }}>
       <KeyboardAwareScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
         <PaddedView style={{ flex: 1 }}>
-          <Text style={{ ...texts.mediumToBig, marginBottom: padding }}>
-            {t('Indique seu problema:')}
-          </Text>
+          <Text style={{ ...texts.big, marginBottom: padding }}>{t('Qual foi seu problema?')}</Text>
           {issues.map((issue) => (
             <RadioButton
               key={issue.id}
@@ -84,7 +83,7 @@ export default function ({ navigation, route }: Props) {
           ))}
           <Text
             style={{
-              ...texts.mediumToBig,
+              ...texts.default,
               color: colors.darkGrey,
               marginTop: 24,
               marginBottom: halfPadding,
@@ -103,8 +102,8 @@ export default function ({ navigation, route }: Props) {
             blurOnSubmit
           />
         </PaddedView>
-        <View style={{ flex: 1 }} />
-        <PaddedView style={{ backgroundColor: colors.white, flex: 1 }}>
+        <View style={{ flex: 3 }} />
+        <PaddedView>
           <DefaultButton
             title={t('Enviar')}
             onPress={complaintHandler}
@@ -112,6 +111,16 @@ export default function ({ navigation, route }: Props) {
             disabled={!selectedProblem || busy}
           />
         </PaddedView>
+        <View style={{ backgroundColor: colors.white }}>
+          <SingleHeader title={t('Estou com um problema urgente')} />
+          <PaddedView>
+            <DefaultButton
+              title={t('Iniciar suport com o AppJusto')}
+              secondary
+              onPress={() => null}
+            />
+          </PaddedView>
+        </View>
       </KeyboardAwareScrollView>
     </View>
   );
