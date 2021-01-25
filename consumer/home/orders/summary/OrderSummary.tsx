@@ -2,74 +2,53 @@ import { Fare, Fleet, Order, WithId } from 'appjusto-types';
 import { IuguCustomerPaymentMethod } from 'appjusto-types/payment/iugu';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import {
-  FlatList,
-  Image,
-  ScrollView,
-  Text,
-  TouchableHighlight,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import * as icons from '../../../../assets/icons';
 import { ApiContext } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
-import { HorizontalSelectItem } from '../../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
 import Pill from '../../../../common/components/views/Pill';
 import ShowIf from '../../../../common/components/views/ShowIf';
-import useTallerDevice from '../../../../common/hooks/useTallerDevice';
-import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
-import {
-  formatCurrency,
-  formatDistance,
-  formatDuration,
-  separateWithDot,
-} from '../../../../common/utils/formatters';
+import { colors, padding, texts } from '../../../../common/styles';
+import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
-import ChargesBox from '../../components/ChargesBox';
+import AddInfo from '../../restaurants/components/AddInfo';
 import OrderMap from '../p2p-order/OrderMap';
-import PlaceSummary from '../p2p-order/PlaceSummary';
+import { Step } from '../p2p-order/types';
+import { OrderAvailableFleets } from './OrderAvailableFleets';
+import { OrderCostBreakdown } from './OrderCostBreakdown';
+import { OrderItems } from './OrderItems';
+import { OrderPlacesSummary } from './OrderPlacesSummary';
 
 type Props = {
   order: WithId<Order>;
   paymentMethod?: IuguCustomerPaymentMethod;
   waiting: boolean;
-  editStepHandler: (index: number) => void;
+  showMap: boolean;
+  onEditStep: (step: Step) => void;
   placeOrder: (fleetId: string, platformFee: number) => void;
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;
 };
 
-const platformFeeOptions: HorizontalSelectItem[] = [
-  { id: '1', title: formatCurrency(100), data: 100 },
-  { id: '3', title: formatCurrency(300), data: 300 },
-  { id: '5', title: formatCurrency(500), data: 500 },
-  { id: '8', title: formatCurrency(800), data: 800 },
-  { id: '10', title: formatCurrency(1000), data: 1000 },
-];
-
 export default function ({
   order,
   paymentMethod,
   waiting,
-  editStepHandler,
+  showMap,
+  onEditStep,
   placeOrder,
   navigateToFillPaymentInfo,
   navigateFleetDetail,
 }: Props) {
   // context
   const api = React.useContext(ApiContext);
-  const { origin, destination } = order;
-  const { distance, duration } = order.route!;
   // state
-  const [isLoading, setLoading] = React.useState(false);
-  const [quotes, setQuotes] = React.useState<Fare[]>([]);
-  const [fleets, setFleets] = React.useState<WithId<Fleet>[]>([]);
+  const [quotes, setQuotes] = React.useState<Fare[]>();
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
-  const [platformFee, setPlatformFee] = React.useState(platformFeeOptions[0]);
+  const [platformFee, setPlatformFee] = React.useState(100);
+  const [notes, setNotes] = React.useState('');
   const canSubmit = React.useMemo(() => {
     return paymentMethod !== undefined && selectedFare !== undefined && !waiting;
   }, [paymentMethod, selectedFare, waiting]);
@@ -85,29 +64,24 @@ export default function ({
   React.useEffect(() => {
     if (!quotes || isEmpty(quotes)) return;
     setSelectedFare(quotes[0]);
-    const fleetsIds = quotes.map((quote) => quote.fleet.id);
-    return api.fleet().observeFleets(setFleets, { fleetsIds });
   }, [quotes]);
 
   // handlers
   const getOrderQuotesHandler = React.useCallback(async () => {
     if (!order.origin?.location || !order.route) return;
     (async () => {
-      setQuotes([]);
+      setQuotes(undefined);
       // try {
-      setLoading(true);
       setQuotes(await api.order().getOrderQuotes(order.id));
-      setLoading(false);
       // } catch (error) {}
     })();
   }, [order]);
 
   // UI
-  const tallDevice = useTallerDevice();
   return (
     <ScrollView style={{ flex: 1, marginBottom: 24 }}>
       {/* show map if it was hidden on previous pages */}
-      <ShowIf test={!tallDevice}>
+      <ShowIf test={showMap}>
         {() => (
           <View style={{ height: 160 }}>
             <OrderMap order={order} />
@@ -115,119 +89,33 @@ export default function ({
         )}
       </ShowIf>
       <View style={{ flex: 1 }}>
-        {/* origin, destination, distance, duration */}
-        <PaddedView>
-          <PlaceSummary
-            title={t('Retirada')}
-            place={origin!}
-            editStepHandler={() => editStepHandler(0)}
-          />
-          <PlaceSummary
-            title={t('Entrega')}
-            place={destination!}
-            editStepHandler={() => editStepHandler(1)}
-          />
+        <OrderPlacesSummary order={order} onEditStep={onEditStep} />
 
-          <RoundedText>
-            {separateWithDot(formatDistance(distance), formatDuration(duration))}
-          </RoundedText>
-        </PaddedView>
+        {order.type === 'food' && (
+          <View>
+            <OrderItems order={order} />
+            <HR height={padding} />
+            <AddInfo value={notes} onAddInfo={setNotes} />
+          </View>
+        )}
 
         <HR height={padding} />
 
-        {/* choose fleet */}
-        <View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Pill />
-            <PaddedView
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <Text style={{ ...texts.medium, ...texts.bold }}>{t('Escolha a frota')}</Text>
-              <Text style={{ ...texts.small, color: colors.darkGrey }}>
-                {quotes.length} {t('frota(s) ativas agora')}
-              </Text>
-            </PaddedView>
-          </View>
-          <PaddedView>
-            <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: 12 }}>
-              {t(
-                'Você pode escolher a frota que quiser para sua entrega. Frotas podem ter preços e características diferentes.'
-              )}
-            </Text>
-            <ShowIf test={isEmpty(quotes)}>
-              {() => (
-                <DefaultButton
-                  title={t('Click para tentar novamente')}
-                  onPress={getOrderQuotesHandler}
-                  activityIndicator={isLoading}
-                  disabled={isLoading}
-                />
-              )}
-            </ShowIf>
-            <ShowIf test={!isEmpty(quotes)}>
-              {() => (
-                <FlatList
-                  showsHorizontalScrollIndicator={false}
-                  data={quotes}
-                  keyExtractor={(item) => item.fleet.id!}
-                  renderItem={({ item }) => {
-                    return (
-                      <TouchableHighlight onPress={() => setSelectedFare(item)}>
-                        <PaddedView
-                          style={{
-                            width: 156,
-                            backgroundColor:
-                              selectedFare?.fleet.id === item.fleet.id
-                                ? colors.lightGreen
-                                : colors.white,
-                            ...borders.default,
-                            borderWidth: 2,
-                            borderColor: colors.black,
-                            marginRight: halfPadding,
-                          }}
-                        >
-                          <Text numberOfLines={2} style={[texts.default, texts.bold]}>
-                            {item.fleet.name}
-                          </Text>
-                          <Text style={[texts.small, { marginTop: padding }]}>
-                            {t('Entregadores')}
-                          </Text>
-                          <Text style={[texts.small, texts.bold]}>
-                            {`${
-                              fleets.find((fleet) => fleet.id === item.fleet.id)
-                                ?.participantsOnline ?? 0
-                            } ${t('ativos agora')}`}
-                          </Text>
-                          <Text style={[texts.mediumToBig, texts.bold, { marginTop: padding }]}>
-                            {formatCurrency(item.total)}
-                          </Text>
-                          <TouchableOpacity onPress={() => navigateFleetDetail(item.fleet)}>
-                            <View style={{ marginTop: padding }}>
-                              <RoundedText>{t('Ver detalhes')}</RoundedText>
-                            </View>
-                          </TouchableOpacity>
-                        </PaddedView>
-                      </TouchableHighlight>
-                    );
-                  }}
-                  horizontal
-                />
-              )}
-            </ShowIf>
-          </PaddedView>
-        </View>
+        <OrderAvailableFleets
+          quotes={quotes}
+          selectedFare={selectedFare}
+          onFareSelect={(fare) => setSelectedFare(fare)}
+          onFleetSelect={navigateFleetDetail}
+          onRetry={getOrderQuotesHandler}
+        />
+
         <HR height={padding} />
         {/* details */}
-        <ChargesBox
+        <OrderCostBreakdown
           selectedFare={selectedFare!}
-          platformFee={platformFee}
-          platformFeeOptions={platformFeeOptions}
-          onContribution={setPlatformFee}
+          selectedPlatformFee={platformFee}
+          platformFeeOptions={[100, 300, 500, 800, 1000]}
+          onChangeFee={setPlatformFee}
         />
         <HR height={padding} />
         {/* total */}
@@ -250,7 +138,7 @@ export default function ({
             >
               <Text style={{ ...texts.medium, ...texts.bold }}>{t('Valor total a pagar')}</Text>
               <Text style={{ ...texts.mediumToBig }}>
-                {formatCurrency((selectedFare?.total ?? 0) + platformFee.data)}
+                {formatCurrency((selectedFare?.total ?? 0) + platformFee)}
               </Text>
             </View>
           </View>
@@ -285,7 +173,7 @@ export default function ({
                   <Image style={{ width: 32, height: 32 }} source={icons.edit} />
                 </View>
                 <Text style={{ ...texts.default, color: colors.darkGrey }}>
-                  {t(`Cartão de crédito: **** ${paymentMethod!.data.last_digits}`)}
+                  {`${t('Cartão de crédito')}: **** ${paymentMethod!.data.last_digits}`}
                 </Text>
               </PaddedView>
             </TouchableOpacity>
@@ -304,8 +192,8 @@ export default function ({
 
         <DefaultButton
           style={{ marginTop: padding }}
-          title={t('Fazer pedido')}
-          onPress={() => placeOrder(selectedFare?.fleet?.id!, platformFee.data)}
+          title={t('Confirmar pedido')}
+          onPress={() => placeOrder(selectedFare?.fleet?.id!, platformFee)}
           disabled={!canSubmit}
           activityIndicator={waiting}
         />

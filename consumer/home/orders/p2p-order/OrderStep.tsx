@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { View, Image, Text, LayoutAnimation } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Image, LayoutAnimation, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
 import * as icons from '../../../../assets/icons';
-import { colors, halfPadding, padding, texts } from '../../../../common/styles';
+import { colors, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import { Steps } from './types';
+import { Step } from './types';
 
 type JustifyContent = 'flex-end' | 'flex-start' | 'center';
 
@@ -47,8 +46,8 @@ function SeparatorLine() {
 }
 
 type Props = {
-  step: Steps;
-  changeStepHandler: (newStep: Steps) => void;
+  step: Step;
+  changeStepHandler: (newStep: Step) => void;
 };
 
 export default function ({ step, changeStepHandler }: Props) {
@@ -58,8 +57,8 @@ export default function ({ step, changeStepHandler }: Props) {
     if (justifyContent !== null) {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     }
-    if (step === Steps.Origin) setJustifyContent('flex-start');
-    else if (step === Steps.Destination) setJustifyContent('center');
+    if (step === Step.Origin) setJustifyContent('flex-start');
+    else if (step === Step.Destination) setJustifyContent('center');
     else setJustifyContent('flex-end');
   }, [step]);
 
@@ -83,16 +82,16 @@ export default function ({ step, changeStepHandler }: Props) {
           marginHorizontal: padding,
         }}
       >
-        <TouchableOpacity onPress={() => changeStepHandler(Steps.Origin)}>
-          <Label text={t('Retirada')} active={step === Steps.Origin} />
+        <TouchableOpacity onPress={() => changeStepHandler(Step.Origin)}>
+          <Label text={t('Retirada')} active={step === Step.Origin} />
         </TouchableOpacity>
         <SeparatorLine />
-        <TouchableOpacity onPress={() => changeStepHandler(Steps.Destination)}>
-          <Label text={t('Entrega')} active={step === Steps.Destination} />
+        <TouchableOpacity onPress={() => changeStepHandler(Step.Destination)}>
+          <Label text={t('Entrega')} active={step === Step.Destination} />
         </TouchableOpacity>
         <SeparatorLine />
-        <TouchableOpacity onPress={() => changeStepHandler(Steps.Confirmation)}>
-          <Label text={t('Confirmação')} active={step === Steps.Confirmation} />
+        <TouchableOpacity onPress={() => changeStepHandler(Step.Confirmation)}>
+          <Label text={t('Confirmação')} active={step === Step.Confirmation} />
         </TouchableOpacity>
       </View>
     </View>

@@ -15,7 +15,7 @@ import { doublePadding, padding, screens, texts } from '../../../../common/style
 import { t } from '../../../../strings';
 import OrderSummary from '../summary/OrderSummary';
 import OrderStep from './OrderStep';
-import { Steps } from './types';
+import { Step } from './types';
 
 type Props = {
   order: WithId<Order> | undefined;
@@ -43,7 +43,7 @@ export default function ({
   // context
   const api = React.useContext(ApiContext);
   // state
-  const [step, setStep] = React.useState(Steps.Origin);
+  const [step, setStep] = React.useState(Step.Origin);
   const [originAdditionalInfo, setOriginAdditionalInfo] = React.useState(
     origin?.additionalInfo ?? ''
   );
@@ -67,11 +67,11 @@ export default function ({
   // refs
   const viewPager = React.useRef<ViewPager>(null);
   // helpers
-  const stepReady = (value: Steps): boolean => {
-    if (value === Steps.Origin) return true; // always enabled
-    if (value === Steps.Destination) return Boolean(origin?.address.description); // only if origin is known
-    if (value === Steps.Confirmation) return Boolean(destination?.address.description) && !!order; // only if order has been created
-    if (value === Steps.ConfirmingOrder) return !!paymentMethod;
+  const stepReady = (value: Step): boolean => {
+    if (value === Step.Origin) return true; // always enabled
+    if (value === Step.Destination) return Boolean(origin?.address.description); // only if origin is known
+    if (value === Step.Confirmation) return Boolean(destination?.address.description) && !!order; // only if order has been created
+    if (value === Step.ConfirmingOrder) return !!paymentMethod;
     return false; // should never happen
   };
   const setPage = (index: number): void => {
@@ -83,9 +83,9 @@ export default function ({
   // handlers
   // when user press next button
   const nextStepHandler = async (): Promise<void> => {
-    const nextStep: Steps = step + 1;
+    const nextStep: Step = step + 1;
     if (stepReady(nextStep)) {
-      if (step === Steps.Origin) {
+      if (step === Step.Origin) {
         if (!origin) return;
         api.order().updateFoodOrder(order!.id, {
           origin: {
@@ -94,7 +94,7 @@ export default function ({
             intructions: originInstructions,
           },
         });
-      } else if (step === Steps.Destination) {
+      } else if (step === Step.Destination) {
         if (!destination) return;
         api.order().updateFoodOrder(order!.id, {
           destination: {
@@ -104,7 +104,7 @@ export default function ({
           },
         });
       }
-      if (nextStep !== Steps.ConfirmingOrder) {
+      if (nextStep !== Step.ConfirmingOrder) {
         nextPage();
       }
     }
@@ -118,8 +118,8 @@ export default function ({
     }
   };
   // UI
-  const tallerDevice = useTallerDevice();
-  const verticalPadding = tallerDevice ? doublePadding : padding;
+  const isDeviceTaller = useTallerDevice();
+  const verticalPadding = isDeviceTaller ? doublePadding : padding;
   return (
     <View style={{ ...screens.default }}>
       <OrderStep step={step} changeStepHandler={setPage} />
@@ -187,7 +187,7 @@ export default function ({
             <KeyboardAwareScrollView>
               <TouchableWithoutFeedback
                 onPress={() => {
-                  navigateToAddressComplete('destination', destination);
+                  navigateToAddressComplete('destination', destination ?? undefined);
                 }}
               >
                 <LabeledText title={t('Endereço de entrega')}>
@@ -234,7 +234,7 @@ export default function ({
                 onPress={nextStepHandler}
                 disabled={!stepReady(step + 1)}
                 activityIndicator={
-                  step === Steps.Destination &&
+                  step === Step.Destination &&
                   Boolean(order?.destination?.address.description) &&
                   !order?.route
                 }
@@ -249,7 +249,8 @@ export default function ({
             order={order!}
             paymentMethod={paymentMethod}
             waiting={isLoading}
-            editStepHandler={setPage}
+            showMap={!isDeviceTaller}
+            onEditStep={setPage}
             placeOrder={placeOrder}
             navigateToFillPaymentInfo={navigateToFillPaymentInfo}
             navigateFleetDetail={navigateFleetDetail}

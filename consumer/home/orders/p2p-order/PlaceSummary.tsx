@@ -1,27 +1,26 @@
 import { Place } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
 import * as icons from '../../../../assets/icons';
 import ShowIf from '../../../../common/components/views/ShowIf';
-import { texts, colors } from '../../../../common/styles';
+import { colors, texts } from '../../../../common/styles';
+import { formatAddress } from '../../../../common/utils/formatters';
 
 type Props = {
   place: Partial<Place>;
   title: string;
-  fullAdress?: boolean;
-  editStepHandler?: () => void;
+  onEdit?: () => void;
 };
 
-export default function ({ place, title, editStepHandler, fullAdress }: Props) {
+export default function ({ place, title, onEdit }: Props) {
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
       <View style={{ width: '60%' }}>
         <Text style={{ ...texts.small, color: colors.darkGreen }}>{title}</Text>
-        <Text style={{ ...texts.medium }}>{place.address?.main ?? ''}</Text>
-        <ShowIf test={fullAdress}>
+        <Text style={{ ...texts.medium }}>{formatAddress(place.address!)}</Text>
+        <ShowIf test={Boolean(place.address?.secondary)}>
           {() => <Text style={{ ...texts.default }}>{place.address?.secondary ?? ''}</Text>}
         </ShowIf>
         <ShowIf test={!isEmpty(place.additionalInfo)}>
@@ -29,10 +28,10 @@ export default function ({ place, title, editStepHandler, fullAdress }: Props) {
         </ShowIf>
         <Text style={{ ...texts.small }}>{place.intructions}</Text>
       </View>
-      <ShowIf test={editStepHandler !== undefined}>
+      <ShowIf test={Boolean(onEdit)}>
         {() => (
           <View style={{ alignSelf: 'center' }}>
-            <TouchableOpacity onPress={editStepHandler}>
+            <TouchableOpacity onPress={onEdit}>
               <Image style={{ width: 32, height: 32 }} source={icons.edit} />
             </TouchableOpacity>
           </View>

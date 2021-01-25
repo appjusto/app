@@ -1,26 +1,35 @@
 import { Fare } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
-import HorizontalSelect, {
-  HorizontalSelectItem,
-} from '../../../common/components/buttons/HorizontalSelect';
-import PaddedView from '../../../common/components/containers/PaddedView';
-import { colors, padding, screens, texts } from '../../../common/styles';
-import { formatCurrency } from '../../../common/utils/formatters';
-import { t } from '../../../strings';
-import SingleHeader from '../restaurants/SingleHeader';
+import HorizontalSelect from '../../../../common/components/buttons/HorizontalSelect';
+import PaddedView from '../../../../common/components/containers/PaddedView';
+import { colors, padding, screens, texts } from '../../../../common/styles';
+import { formatCurrency } from '../../../../common/utils/formatters';
+import { t } from '../../../../strings';
+import SingleHeader from '../../restaurants/SingleHeader';
 
 type Props = {
   selectedFare: Fare;
-  platformFee: HorizontalSelectItem;
-  platformFeeOptions: HorizontalSelectItem[];
-  onContribution: (value: HorizontalSelectItem) => void;
+  selectedPlatformFee: number;
+  platformFeeOptions: number[];
+  onChangeFee: (value: number) => void;
 };
 
-export default function ({ selectedFare, platformFee, platformFeeOptions, onContribution }: Props) {
+export const OrderCostBreakdown = ({
+  selectedFare,
+  selectedPlatformFee,
+  platformFeeOptions,
+  onChangeFee,
+}: Props) => {
+  const options = platformFeeOptions.map((value) => ({
+    id: `${value}`,
+    title: formatCurrency(value),
+    data: value,
+  }));
+  const selectedOption = options.find((option) => option.data === selectedPlatformFee);
   return (
     <View style={{ ...screens.default }}>
-      <SingleHeader title="Entenda os valores" />
+      <SingleHeader title={t('Entenda os valores')} />
       <PaddedView>
         <Text style={{ ...texts.small, color: colors.darkGrey }}>
           {t('Somos transparentes do início ao fim da entrega')}
@@ -69,21 +78,22 @@ export default function ({ selectedFare, platformFee, platformFeeOptions, onCont
         >
           <Text style={{ ...texts.default, lineHeight: 21 }}>{t('AppJusto')}</Text>
           <Text style={{ ...texts.default, lineHeight: 21 }}>
-            {formatCurrency(platformFee.data)}
+            {formatCurrency(selectedPlatformFee)}
           </Text>
         </View>
         <Text style={{ marginTop: padding, ...texts.small, color: colors.darkGrey }}>
-          O AppJusto cobra menos para ser mais justo com todos. Você pode aumentar a sua
-          contribuição se desejar.
+          {t(
+            'O AppJusto cobra menos para ser mais justo com todos. Você pode aumentar a sua contribuição se desejar.'
+          )}
         </Text>
       </PaddedView>
       <View style={{ marginVertical: padding, marginLeft: padding }}>
         <HorizontalSelect
-          data={platformFeeOptions}
-          selected={platformFee}
-          onSelect={onContribution}
+          data={options}
+          selected={selectedOption}
+          onSelect={(option) => onChangeFee(option.data)}
         />
       </View>
     </View>
   );
-}
+};

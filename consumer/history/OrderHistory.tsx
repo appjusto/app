@@ -63,6 +63,7 @@ export default function ({ navigation, route }: Props) {
       } else {
         navigation.navigate('RestaurantsNavigator', {
           screen: 'RestaurantNavigator',
+          initial: false,
           params: {
             restaurantId: order.business!.id,
             screen: 'RestaurantDetail',
