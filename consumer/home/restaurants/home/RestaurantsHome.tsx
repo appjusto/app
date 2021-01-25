@@ -58,6 +58,7 @@ export default function ({ route, navigation }: Props) {
       onSelect={(restaurantId) => {
         navigation.push('RestaurantNavigator', {
           restaurantId,
+          screen: 'RestaurantDetail',
         });
       }}
       onEndReached={() => fetchNextPage()}

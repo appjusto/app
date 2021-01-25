@@ -3,7 +3,8 @@ import React from 'react';
 import ArrowBox from '../../../common/components/views/ArrowBox';
 import { BusinessProvider } from '../../../common/store/context/business';
 import { t } from '../../../strings';
-import CartSummary from './cart/CartSummary';
+import AddressComplete from '../orders/AddressComplete';
+import RestaurantsHome from './home/RestaurantsHome';
 import OrderBy from './OrderBy';
 import RestaurantNavigator from './restaurant/RestaurantNavigator';
 import RestaurantSearch from './search/RestaurantSearch';
@@ -18,7 +19,7 @@ export default function () {
         headerBackTitleVisible: false,
       })}
     >
-      {/* <Stack.Screen
+      <Stack.Screen
         name="RestaurantsHome"
         component={RestaurantsHome}
         options={{ title: t('Restaurantes e alimentação') }}
@@ -27,12 +28,6 @@ export default function () {
         name="AddressComplete"
         component={AddressComplete}
         // options={{ title: t('Restaurantes e alimentação') }}
-      /> */}
-      {/* building the CartSummary screen */}
-      <Stack.Screen
-        name="CartSummary"
-        component={CartSummary}
-        options={{ title: t('Sua sacola') }}
       />
       <Stack.Screen name="RestaurantNavigator" options={{ headerShown: false }}>
         {(props) => (

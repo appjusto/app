@@ -58,7 +58,17 @@ export default function ({ navigation, route }: Props) {
   // handlers
   const orderSelectHandler = useCallback((order: WithId<Order>) => {
     if (order.status === 'quote') {
-      navigation.navigate('CreateOrderP2P', { orderId: order.id });
+      if (order.type === 'p2p') {
+        navigation.navigate('CreateOrderP2P', { orderId: order.id });
+      } else {
+        navigation.navigate('RestaurantsNavigator', {
+          screen: 'RestaurantNavigator',
+          params: {
+            restaurantId: order.business!.id,
+            screen: 'RestaurantDetail',
+          },
+        });
+      }
     } else if (order.status === 'dispatching') {
       navigation.navigate('OngoingOrder', {
         orderId: order.id,

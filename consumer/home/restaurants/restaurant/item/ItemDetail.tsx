@@ -10,7 +10,7 @@ import { ApiContext } from '../../../../../common/app/context';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import { useProduct } from '../../../../../common/store/api/business/hooks/products';
 import * as helpers from '../../../../../common/store/api/order/helpers';
-import { getConsumer } from '../../../../../common/store/consumer/selectors';
+import { getConsumer, getCurrentPlace } from '../../../../../common/store/consumer/selectors';
 import {
   useContextBusiness,
   useContextBusinessId,
@@ -40,6 +40,7 @@ export default function ({ navigation, route }: Props) {
   const activeOrder = useContextActiveOrder();
   // redux store
   const consumer = useSelector(getConsumer)!;
+  const currentPlace = useSelector(getCurrentPlace);
   // screen state
   const product = useProduct(useContextBusinessId(), productId);
   const [notes, setNotes] = React.useState<string>('');
@@ -70,8 +71,11 @@ export default function ({ navigation, route }: Props) {
         quantity: value,
         notes,
       };
-      if (!activeOrder) api.order().createFoodOrder(business, consumer, [item]);
-      else api.order().updateFoodOrder(activeOrder.id, helpers.addItemToOrder(activeOrder, item));
+      if (!activeOrder) {
+        api.order().createFoodOrder(business, consumer, [item], currentPlace ?? null);
+      } else {
+        api.order().updateFoodOrder(activeOrder.id, helpers.addItemToOrder(activeOrder, item));
+      }
       navigation.pop();
     })();
   };
