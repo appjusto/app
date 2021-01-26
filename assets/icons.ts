@@ -54,6 +54,7 @@ const iconThumbUp = require('./icons/thumb-up-24px.png');
 const iconUser = require('./icons/user.png');
 const iconFilter = require('./icons/filter.png');
 const iconInfoRed = require('./icons/icon-info-red.png');
+const iconCheck = require('./icons/icon-check.png');
 
 export const accept = acceptIcon;
 export const arrow = arrowSmall;
@@ -111,6 +112,7 @@ export const iconSad = iconSadYellow;
 export const clock = iconClock;
 export const filter = iconFilter;
 export const infoRed = iconInfoRed;
+export const check = iconCheck;
 
 export default [
   accept,
@@ -169,4 +171,5 @@ export default [
   clock,
   filter,
   infoRed,
+  check,
 ];

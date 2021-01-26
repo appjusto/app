@@ -20,6 +20,7 @@ import { colors, halfPadding, padding, screens, texts } from '../../../common/st
 import { formatDistance, formatDuration, separateWithDot } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { HomeNavigatorParamList } from '../types';
+import { ConfirmationCard } from './components/ConfirmationCard';
 import CourierStatusHighlight from './CourierStatusHighlight';
 import OrderMap from './p2p-order/OrderMap';
 
@@ -44,6 +45,7 @@ export default function ({ navigation, route }: Props) {
   const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
     consumer!.notificationToken
   );
+  const [confirmationCard, setConfirmationCard] = React.useState<boolean>(true);
   // side effects
   // whenever params changes
   // open chat if there's a new message
@@ -102,7 +104,7 @@ export default function ({ navigation, route }: Props) {
             2
           ) * 1000
         ),
-        formatDuration(order.duration)
+        formatDuration(order.route?.duration)
       );
     } else if (dispatchingState === 'arrived-pickup') {
       addressLabel = t('Retirada em');
@@ -150,13 +152,29 @@ export default function ({ navigation, route }: Props) {
             />
           )}
         </ShowIf>
+        <ShowIf test={confirmationCard}>
+          {() => (
+            <View
+              style={{
+                paddingHorizontal: padding,
+                bottom: halfPadding,
+                position: 'absolute',
+                width: '100%',
+              }}
+            >
+              <ConfirmationCard onPress={() => setConfirmationCard(false)} />
+            </View>
+          )}
+        </ShowIf>
       </View>
       <PaddedView style={{ backgroundColor: colors.white, flexDirection: 'row' }}>
         <RoundedProfileImg flavor="courier" id={order.courier!.id} />
         <View style={{ flex: 1, marginLeft: padding }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={[texts.medium]}>{order.courier!.name}</Text>
-            <RoundedText>{dispatchDetails}</RoundedText>
+            <RoundedText backgroundColor={colors.lightGrey} color={colors.darkGrey} noBorder>
+              {dispatchDetails}
+            </RoundedText>
           </View>
           <Text style={[texts.small, { color: colors.darkGreen }]}>{addressLabel}</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
