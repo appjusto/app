@@ -10,7 +10,7 @@ import * as icons from '../../../assets/icons';
 import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RoundedText from '../../../common/components/texts/RoundedText';
-import GrayLine from '../../../common/components/views/GrayLine';
+import HR from '../../../common/components/views/HR';
 import ShowIf from '../../../common/components/views/ShowIf';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
@@ -190,7 +190,7 @@ export default function ({ navigation, route }: Props) {
             </View>
           </TouchableOpacity>
         </View>
-        <GrayLine />
+        <HR />
       </View>
       <View style={{ paddingHorizontal: padding }}>
         <ShowIf
