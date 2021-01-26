@@ -42,7 +42,7 @@ export default ({ navigation, route }: Props) => {
   }
   return (
     <View style={screens.default}>
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         {/* header */}
         <PaddedView>
           <View

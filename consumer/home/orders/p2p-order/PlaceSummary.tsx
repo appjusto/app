@@ -17,7 +17,7 @@ type Props = {
 export default function ({ place, title, onEdit }: Props) {
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-      <View style={{ width: '60%' }}>
+      <View>
         <Text style={{ ...texts.small, color: colors.darkGreen }}>{title}</Text>
         <Text style={{ ...texts.medium }}>{formatAddress(place.address!)}</Text>
         <ShowIf test={Boolean(place.address?.secondary)}>

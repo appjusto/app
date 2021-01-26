@@ -24,7 +24,7 @@ export const cepFormatter = (value: string | undefined) => {
   return [value.slice(0, 5), value.slice(5)].join('-');
 };
 
-export const phoneMask = '(81) 99999-9999';
+export const phoneMask = '(11) 99999-9999';
 export const phoneFormatter = (value: string | undefined) => {
   let formatedNumber = '';
   if (value) {

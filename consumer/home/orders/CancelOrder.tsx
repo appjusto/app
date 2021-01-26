@@ -65,7 +65,7 @@ export default function ({ route, navigation }: Props) {
   };
   return (
     <View style={screens.config}>
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <PaddedView>
           <Text style={{ ...texts.big, marginBottom: padding }}>
             {t('Por que você está cancelando o seu pedido?')}

@@ -25,7 +25,6 @@ import {
   texts,
 } from '../../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../../common/utils/formatters';
-import LocationBar from '../../../../consumer/home/restaurants/components/LocationBar';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
@@ -93,10 +92,6 @@ export default function ({ navigation }: Props) {
   // UI
   return (
     <PaddedView style={[{ backgroundColor: working ? colors.green : colors.darkYellow }]}>
-      <Text style={{ ...texts.small, alignSelf: 'center' }}>{t('Você está em:')}</Text>
-      <View style={{ marginBottom: padding, marginTop: 4 }}>
-        <LocationBar />
-      </View>
       <ShowIf test={tallerDevice}>
         {() => (
           <Text

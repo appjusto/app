@@ -1,6 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-
 import ArrowBox from '../../../common/components/views/ArrowBox';
 import Chat from '../../../common/screens/Chat';
 import { t } from '../../../strings';
@@ -44,7 +43,7 @@ export default function () {
       <Stack.Screen
         name="CourierDeliveryProblem"
         component={CourierDeliveryProblem}
-        options={{ title: t('Relatar problema') }}
+        options={{ title: t('Tive um problema') }}
       />
     </Stack.Navigator>
   );

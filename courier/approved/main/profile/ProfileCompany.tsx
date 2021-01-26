@@ -2,21 +2,28 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CourierCompany } from 'appjusto-types/courier';
 import { toNumber, trim } from 'lodash';
-import React, { useState, useContext, useRef, useMemo, useEffect } from 'react';
-import { View, TextInput } from 'react-native';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useSelector, useDispatch } from 'react-redux';
-
-import { AppDispatch, ApiContext } from '../../../../common/app/context';
+import { useDispatch, useSelector } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
+import {
+  cepFormatter,
+  cepMask,
+  cnpjFormatter,
+  cnpjMask,
+} from '../../../../common/components/inputs/pattern-input/formatters';
+import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
+import PatternInput from '../../../../common/components/inputs/PatternInput';
 import { fetchPostalDetails } from '../../../../common/store/courier/actions';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { companyInfoSet } from '../../../../common/store/courier/validators';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
-import { screens, padding } from '../../../../common/styles';
+import { padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { CourierProfileParamList } from './types';
 
@@ -91,9 +98,9 @@ export default function ({ navigation, route }: Props) {
   // UI
   return (
     <View style={screens.config}>
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <PaddedView>
-          <DefaultInput
+          {/* <DefaultInput
             title={t('CNPJ')}
             placeholder={t('Digite o CNPJ da empresa')}
             value={cnpj}
@@ -105,6 +112,21 @@ export default function ({ navigation, route }: Props) {
             onSubmitEditing={() => nameRef.current?.focus()}
             keyboardType="decimal-pad"
             maxLength={14}
+          /> */}
+          <PatternInput
+            mask={cnpjMask}
+            parser={numbersOnlyParser}
+            formatter={cnpjFormatter}
+            title={t('CNPJ')}
+            placeholder={t('Digite o CNPJ da empresa')}
+            value={cnpj}
+            returnKeyType="next"
+            blurOnSubmit={false}
+            onChangeText={(text) => {
+              if (!isNaN(toNumber(text))) setCNPJ(text);
+            }}
+            onSubmitEditing={() => nameRef.current?.focus()}
+            keyboardType="decimal-pad"
           />
           <DefaultInput
             ref={nameRef}
@@ -119,7 +141,10 @@ export default function ({ navigation, route }: Props) {
             keyboardType="default"
             autoCapitalize="characters"
           />
-          <DefaultInput
+          <PatternInput
+            mask={cepMask}
+            parser={numbersOnlyParser}
+            formatter={cepFormatter}
             ref={cepRef}
             style={{ marginTop: padding }}
             title={t('CEP')}
@@ -130,7 +155,6 @@ export default function ({ navigation, route }: Props) {
               if (!isNaN(toNumber(text))) setCEP(text);
             }}
             keyboardType="decimal-pad"
-            maxLength={8}
           />
           <DefaultInput
             style={{ marginTop: padding }}

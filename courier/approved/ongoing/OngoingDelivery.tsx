@@ -9,11 +9,12 @@ import { useMutation } from 'react-query';
 import * as icons from '../../../assets/icons';
 import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
+import GrayLine from '../../../common/components/views/GrayLine';
 import ShowIf from '../../../common/components/views/ShowIf';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
-import { borders, colors, halfPadding, screens, texts } from '../../../common/styles';
+import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { formatDistance, formatDuration, separateWithDot } from '../../../common/utils/formatters';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
 import PlaceSummary from '../../../consumer/home/orders/p2p-order/PlaceSummary';
 import { t } from '../../../strings';
@@ -161,40 +162,64 @@ export default function ({ navigation, route }: Props) {
   );
 
   return (
-    <View style={{ ...screens.default }}>
+    <View style={{ ...screens.default, paddingBottom: padding }}>
       <View style={{ flex: 1 }}>
         <OrderMap order={order!} />
         <RouteIcons />
       </View>
-      <PaddedView style={{ backgroundColor: colors.lightGrey }}>
+      <View style={{ marginTop: padding, paddingHorizontal: padding }}>
         <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Pedido de')}</Text>
         <Text style={[texts.medium]}>
           {!isEmpty(order.consumer.name) ? order.consumer.name : t('Cliente')}
         </Text>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View
+          style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: padding }}
+        >
           <TouchableOpacity onPress={() => navigation.navigate('Chat', { orderId })}>
             <View style={{ marginTop: halfPadding }}>
               <RoundedText leftIcon={icons.chat}>{t('Iniciar chat')}</RoundedText>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate('CancelOngoingDelivery', { orderId })}
+            onPress={() => navigation.navigate('CourierDeliveryProblem', { orderId })}
           >
             <View style={{ marginTop: halfPadding }}>
-              <RoundedText color={colors.red} leftIcon={icons.reject}>
-                {t('Cancelar Corrida')}
+              <RoundedText color={colors.red} leftIcon={icons.infoRed}>
+                {t('Tive um problema')}
               </RoundedText>
             </View>
           </TouchableOpacity>
         </View>
-      </PaddedView>
-      <PaddedView>
+        <GrayLine />
+      </View>
+      <View style={{ paddingHorizontal: padding }}>
         <ShowIf
           test={
             order.dispatchingState === 'going-pickup' || order.dispatchingState === 'arrived-pickup'
           }
         >
-          {() => <PlaceSummary place={order.origin} title={t('Retirada')} />}
+          {() => (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <View>
+                <PlaceSummary place={order.origin} title={t('Retirada')} />
+                <Text style={{ ...texts.small }}>{order.destination?.address.secondary}</Text>
+              </View>
+              <View>
+                <RoundedText backgroundColor={colors.lightGrey} color={colors.darkGrey}>
+                  {separateWithDot(
+                    formatDistance(order.route?.distance),
+                    formatDuration(order.route?.duration)
+                  )}
+                </RoundedText>
+              </View>
+            </View>
+          )}
         </ShowIf>
         <ShowIf
           test={
@@ -215,7 +240,7 @@ export default function ({ navigation, route }: Props) {
             disabled={isLoading}
           />
         </View>
-      </PaddedView>
+      </View>
     </View>
   );
 }

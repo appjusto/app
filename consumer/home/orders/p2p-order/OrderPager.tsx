@@ -127,7 +127,7 @@ export default function ({
       <ViewPager ref={viewPager} style={{ flex: 1 }} onPageScroll={onPageScroll}>
         {/* origin */}
         <View style={{ flex: 1, paddingHorizontal: padding }}>
-          <KeyboardAwareScrollView>
+          <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
             <TouchableWithoutFeedback
               onPress={() => {
                 navigateToAddressComplete('origin', origin);
@@ -184,7 +184,7 @@ export default function ({
         {/* destination */}
         {Boolean(origin?.address.description) && (
           <View style={{ flex: 1, paddingHorizontal: padding }}>
-            <KeyboardAwareScrollView>
+            <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
               <TouchableWithoutFeedback
                 onPress={() => {
                   navigateToAddressComplete('destination', destination ?? undefined);

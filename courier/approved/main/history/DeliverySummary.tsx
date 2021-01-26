@@ -1,13 +1,13 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
 import OrderCostBreakdown from '../../../../common/screens/history/OrderCostBreakdown';
 import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
-import { halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import {
   formatCurrency,
   formatDistance,
@@ -33,7 +33,14 @@ export default function ({ navigation, route }: Props) {
 
   // screen state
   const { order } = useObserveOrder(orderId);
-  if (!order) return null; // TODO: return loading
+  if (!order) {
+    // showing the indicator until the order is loaded
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
+  }
 
   const fee = (order.fare?.courierFee ?? 0) + (order.tip?.value ?? 0);
 
