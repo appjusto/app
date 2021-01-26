@@ -5,7 +5,6 @@ import React from 'react';
 import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
-import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
 import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
@@ -28,18 +27,16 @@ export default function ({ navigation, route }: Props) {
   const dispatch = useDispatch<AppDispatch>();
   // redux store
   const consumer = useSelector(getConsumer)!;
-  const lastPaymentMethod = getPaymentMethodById(
-    consumer,
-    consumer.paymentChannel?.mostRecentPaymentMethodId
-  );
   // state
   const [orderId, setOrderId] = React.useState<string>();
   const { order } = useObserveOrder(orderId);
-  const [paymentMethod, setPaymentMethod] = React.useState(lastPaymentMethod);
+  const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
+    consumer.paymentChannel?.mostRecentPaymentMethodId
+  );
   const [isLoading, setLoading] = React.useState(false);
 
   // side effects
-  // route changes when interacting with other screens;
+  // whenever route changes when interacting with other screens
   React.useEffect(() => {
     console.log('CreateOrderP2P useEffect; params: ', route.params);
     // navigation.setParams({});
@@ -70,8 +67,7 @@ export default function ({ navigation, route }: Props) {
       if (order && orderId && route.params?.destination) {
         api.order().updateFoodOrder(orderId, { destination: route.params.destination });
       }
-      if (route.params?.paymentMethodId)
-        setPaymentMethod(getPaymentMethodById(consumer, route.params?.paymentMethodId));
+      if (route.params?.paymentMethodId) setSelectedPaymentMethodId(route.params?.paymentMethodId);
     })();
   }, [route.params]);
 
@@ -87,29 +83,32 @@ export default function ({ navigation, route }: Props) {
     },
     [navigation]
   );
-  // navigate to ProfileEdit screen to allow user fill missing information
+  // navigate to ProfileAddCard or ProfilePaymentMethods to add or select payment method
   const navigateToFillPaymentInfo = React.useCallback(() => {
     // if user has no payment method, go direct to 'AddCard' screen
-    if (!paymentMethod) navigation.navigate('ProfileAddCard', { returnScreen: 'CreateOrderP2P' });
-    else navigation.navigate('ProfilePaymentMethods', { returnScreen: 'CreateOrderP2P' });
-  }, [navigation, paymentMethod]);
-  // navigate to fleet detail
+    if (!selectedPaymentMethodId) {
+      navigation.navigate('ProfileAddCard', { returnScreen: 'CreateOrderP2P' });
+    } else {
+      navigation.navigate('ProfilePaymentMethods', { returnScreen: 'CreateOrderP2P' });
+    }
+  }, [navigation, selectedPaymentMethodId]);
+  // navigate to FleetDetail
   const navigateFleetDetail = React.useCallback((fleet: WithId<Fleet>) => {
     navigation.navigate('FleetDetail', { fleetId: fleet.id });
   }, []);
-  // navigate to fleet detail
+  // navigate to TransportableItems
   const navigateToTransportableItems = React.useCallback(() => {
     navigation.navigate('TransportableItems');
   }, [navigation]);
   // confirm order
   const placeOrderHandler = async (fleetId: string, platformFee: number) => {
     if (!orderId) return;
-    if (!paymentMethod) return;
+    if (!selectedPaymentMethodId) return;
     try {
       setLoading(true);
       await api.order().placeOrder({
         orderId,
-        paymentMethodId: paymentMethod.id,
+        paymentMethodId: selectedPaymentMethodId,
         fleetId,
         platformFee,
       });
@@ -127,7 +126,7 @@ export default function ({ navigation, route }: Props) {
       <OrderPager
         order={order}
         isLoading={isLoading}
-        paymentMethod={paymentMethod}
+        selectedPaymentMethodId={selectedPaymentMethodId}
         navigateToAddressComplete={navigateToAddressComplete}
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         navigateFleetDetail={navigateFleetDetail}

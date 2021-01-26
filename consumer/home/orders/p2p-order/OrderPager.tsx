@@ -1,6 +1,5 @@
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { Fleet, Order, Place, WithId } from 'appjusto-types';
-import { IuguCustomerPaymentMethod } from 'appjusto-types/payment/iugu';
 import React from 'react';
 import { Image, NativeSyntheticEvent, Text, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -13,13 +12,13 @@ import LabeledText from '../../../../common/components/texts/LabeledText';
 import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import { doublePadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import OrderSummary from '../summary/OrderSummary';
+import { OrderSummary } from '../summary/OrderSummary';
 import OrderStep from './OrderStep';
 import { Step } from './types';
 
 type Props = {
   order: WithId<Order> | undefined;
-  paymentMethod?: IuguCustomerPaymentMethod;
+  selectedPaymentMethodId?: string;
   isLoading: boolean;
   navigateToAddressComplete: (returnParam: string, value?: Place) => void;
   navigateToFillPaymentInfo: () => void;
@@ -30,7 +29,7 @@ type Props = {
 
 export default function ({
   order,
-  paymentMethod,
+  selectedPaymentMethodId,
   isLoading,
   navigateToAddressComplete,
   navigateToFillPaymentInfo,
@@ -71,7 +70,7 @@ export default function ({
     if (value === Step.Origin) return true; // always enabled
     if (value === Step.Destination) return Boolean(origin?.address.description); // only if origin is known
     if (value === Step.Confirmation) return Boolean(destination?.address.description) && !!order; // only if order has been created
-    if (value === Step.ConfirmingOrder) return !!paymentMethod;
+    if (value === Step.ConfirmingOrder) return Boolean(selectedPaymentMethodId);
     return false; // should never happen
   };
   const setPage = (index: number): void => {
@@ -247,7 +246,7 @@ export default function ({
         {Boolean(order?.route) && (
           <OrderSummary
             order={order!}
-            paymentMethod={paymentMethod}
+            selectedPaymentMethodId={selectedPaymentMethodId}
             waiting={isLoading}
             showMap={!isDeviceTaller}
             onEditStep={setPage}

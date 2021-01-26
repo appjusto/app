@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import HorizontalSelect from '../../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import { colors, padding, screens, texts } from '../../../../common/styles';
+import { colors, padding, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import SingleHeader from '../../restaurants/SingleHeader';
@@ -28,7 +28,7 @@ export const OrderCostBreakdown = ({
   }));
   const selectedOption = options.find((option) => option.data === selectedPlatformFee);
   return (
-    <View style={{ ...screens.default }}>
+    <View style={{ flex: 1 }}>
       <SingleHeader title={t('Entenda os valores')} />
       <PaddedView>
         <Text style={{ ...texts.small, color: colors.darkGrey }}>

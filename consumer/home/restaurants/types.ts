@@ -12,7 +12,6 @@ export type RestaurantsNavigatorParamList = {
     returnScreen: 'RestaurantsHome';
     returnParam: string;
   };
-  CartSummary: undefined; // while building the screen
   RestaurantNavigator: {
     restaurantId: string;
   } & NestedNavigatorParams<RestaurantNavigatorParamList>;

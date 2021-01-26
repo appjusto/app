@@ -1,24 +1,16 @@
-import { RouteProp } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import ArrowBox from '../../../../common/components/views/ArrowBox';
 import { t } from '../../../../strings';
-import CartSummary from '../cart/CartSummary';
-import { RestaurantsNavigatorParamList } from '../types';
 import AboutRestaurant from './AboutRestaurant';
 import ItemDetail from './item/ItemDetail';
+import { OrderCheckout } from './OrderCheckout';
 import RestaurantDetail from './RestaurantDetail';
 import { RestaurantNavigatorParamList } from './types';
 
 const Stack = createStackNavigator<RestaurantNavigatorParamList>();
 
-type ScreenRouteProp = RouteProp<RestaurantsNavigatorParamList, 'RestaurantNavigator'>;
-
-type Props = {
-  route: ScreenRouteProp;
-};
-
-export default function ({ route }: Props) {
+export default function () {
   return (
     <Stack.Navigator
       screenOptions={() => ({
@@ -42,8 +34,8 @@ export default function ({ route }: Props) {
         options={{ title: t('Detalhes do item') }}
       />
       <Stack.Screen
-        name="CartSummary"
-        component={CartSummary}
+        name="OrderCheckout"
+        component={OrderCheckout}
         options={{ title: t('Sua sacola') }}
       />
     </Stack.Navigator>
