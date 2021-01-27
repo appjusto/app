@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
-
+import { Image, StyleSheet, Text, View } from 'react-native';
 import * as icons from '../../../assets/icons';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
@@ -24,7 +23,7 @@ export default function ({ title, subtitle }: Props) {
             marginBottom: tallerDevice ? padding : halfPadding,
             position: 'absolute',
             bottom: halfPadding,
-            width: '95%',
+            width: '100%',
             // marginHorizontal: tallerDevice ? padding : halfPadding,
           },
         ]}

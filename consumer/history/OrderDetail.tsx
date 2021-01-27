@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/containers/PaddedView';
 import RoundedText from '../../common/components/texts/RoundedText';
@@ -9,7 +9,7 @@ import HR from '../../common/components/views/HR';
 import Pill from '../../common/components/views/Pill';
 import OrderCostBreakdown from '../../common/screens/history/OrderCostBreakdown';
 import useObserveOrder from '../../common/store/api/order/hooks/useObserveOrder';
-import { halfPadding, padding, screens, texts } from '../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../common/styles';
 import {
   formatCurrency,
   formatDistance,
@@ -36,7 +36,14 @@ export default function ({ navigation, route }: Props) {
 
   // screen state
   const { order } = useObserveOrder(orderId);
-  if (!order) return null; // TO-DO: return loading
+
+  if (!order) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
+  }
 
   return (
     <View style={{ ...screens.default }}>
@@ -49,7 +56,10 @@ export default function ({ navigation, route }: Props) {
           <PlaceSummary title={t('Entrega')} place={order.destination} />
           <View style={{ marginTop: halfPadding }}>
             <RoundedText>
-              {separateWithDot(formatDistance(order.distance), formatDuration(order.duration))}
+              {separateWithDot(
+                formatDistance(order.route.distance),
+                formatDuration(order.route.duration)
+              )}
             </RoundedText>
           </View>
         </PaddedView>
@@ -76,8 +86,9 @@ export default function ({ navigation, route }: Props) {
           orderTip={order.tip?.value ?? 0}
           courierId={order.courier!.id}
           courierName={order.courier!.name}
+          joined={order.courier?.joined}
         />
-        <View style={{ paddingHorizontal: padding }}>
+        <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
           <DefaultButton
             title={t('Avaliar o entregador')}
             secondary

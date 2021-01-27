@@ -192,7 +192,7 @@ export default function ({ navigation, route }: Props) {
         </View>
         <HR />
       </View>
-      <View style={{ paddingHorizontal: padding }}>
+      <View style={{ paddingHorizontal: padding, marginTop: padding }}>
         <ShowIf
           test={
             order.dispatchingState === 'going-pickup' || order.dispatchingState === 'arrived-pickup'
@@ -208,10 +208,9 @@ export default function ({ navigation, route }: Props) {
             >
               <View>
                 <PlaceSummary place={order.origin} title={t('Retirada')} />
-                <Text style={{ ...texts.small }}>{order.destination?.address.secondary}</Text>
               </View>
               <View>
-                <RoundedText backgroundColor={colors.lightGrey} color={colors.darkGrey}>
+                <RoundedText backgroundColor={colors.lightGrey} color={colors.darkGrey} noBorder>
                   {separateWithDot(
                     formatDistance(order.route?.distance),
                     formatDuration(order.route?.duration)

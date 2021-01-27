@@ -20,7 +20,6 @@ import { colors, halfPadding, padding, screens, texts } from '../../../common/st
 import { formatDistance, formatDuration, separateWithDot } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { HomeNavigatorParamList } from '../types';
-import { ConfirmationCard } from './components/ConfirmationCard';
 import CourierStatusHighlight from './CourierStatusHighlight';
 import OrderMap from './p2p-order/OrderMap';
 
@@ -144,15 +143,17 @@ export default function ({ navigation, route }: Props) {
     <View style={{ ...screens.default }}>
       <View style={{ flex: 1 }}>
         <OrderMap order={order} />
-        <ShowIf test={!!courierWaiting}>
-          {() => (
-            <CourierStatusHighlight
-              title={courierWaiting!.title}
-              subtitle={courierWaiting!.message}
-            />
-          )}
-        </ShowIf>
-        <ShowIf test={confirmationCard}>
+        <View style={{ paddingHorizontal: padding }}>
+          <ShowIf test={!!courierWaiting}>
+            {() => (
+              <CourierStatusHighlight
+                title={courierWaiting!.title}
+                subtitle={courierWaiting!.message}
+              />
+            )}
+          </ShowIf>
+        </View>
+        {/* <ShowIf test={confirmationCard}>
           {() => (
             <View
               style={{
@@ -165,7 +166,7 @@ export default function ({ navigation, route }: Props) {
               <ConfirmationCard onPress={() => setConfirmationCard(false)} />
             </View>
           )}
-        </ShowIf>
+        </ShowIf> */}
       </View>
       <PaddedView style={{ backgroundColor: colors.white, flexDirection: 'row' }}>
         <RoundedProfileImg flavor="courier" id={order.courier!.id} />
