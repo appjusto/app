@@ -43,12 +43,11 @@ const RestaurantDetail = React.memo(({ navigation, route }: Props) => {
       title: restaurant?.name ?? '',
     });
   }, [restaurant]);
-
-  //UI
+  // UI
   const sections =
     menu?.map((category) => ({
       title: category.name,
-      data: category.products,
+      data: category.items ?? [],
     })) ?? [];
   const RestaurantItem = ({ name, description, price, onPress }: RestItemProps) => (
     <TouchableOpacity onPress={onPress}>

@@ -1,11 +1,4 @@
-import {
-  Category,
-  CategoryWithProducts,
-  MenuConfig,
-  Product,
-  ProductsByCategory,
-  WithId,
-} from 'appjusto-types';
+import { Category, MenuConfig, Product, ProductsByCategory, WithId } from 'appjusto-types';
 
 export const getOrderedMenu = (
   categories: WithId<Category>[],
@@ -17,8 +10,8 @@ export const getOrderedMenu = (
   return getOrderedCategories(categories, categoriesOrder).map((category) => {
     return {
       ...category,
-      products: getProductsByCategoryId(products, category.id, productsOrderByCategoryId),
-    } as CategoryWithProducts;
+      items: getProductsByCategoryId(products, category.id, productsOrderByCategoryId),
+    } as Category;
   });
 };
 

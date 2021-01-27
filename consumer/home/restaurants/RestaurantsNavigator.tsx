@@ -32,7 +32,7 @@ export default function () {
       <Stack.Screen name="RestaurantNavigator" options={{ headerShown: false }}>
         {(props) => (
           <BusinessProvider businessId={props.route.params.restaurantId}>
-            <RestaurantNavigator {...props} />
+            <RestaurantNavigator />
           </BusinessProvider>
         )}
       </Stack.Screen>
