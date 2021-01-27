@@ -38,7 +38,7 @@ export default function () {
       <Stack.Screen
         name="DeliveryCompleted"
         component={DeliveryCompleted}
-        options={{ headerShown: false }}
+        options={{ title: t('Avalie a corrida') }}
       />
       <Stack.Screen
         name="CourierDeliveryProblem"

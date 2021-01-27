@@ -1,15 +1,14 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useCallback, useState } from 'react';
-import { View, Text, Image } from 'react-native';
-
+import React, { useState } from 'react';
+import { Image, Text, View } from 'react-native';
 import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import HorizontalSelect, {
   HorizontalSelectItem,
 } from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import { colors, padding, screens, texts } from '../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { OngoingParamList } from './types';
@@ -27,17 +26,16 @@ export default function ({ navigation, route }: Props) {
   const { orderId, fee } = route.params;
 
   // screen state
-  const clientFeedbackData = [
+  const clientFeedbackData: HorizontalSelectItem[] = [
     { title: t('Sim, tudo certo'), id: '1' },
     { title: t('Não, longa espera'), id: '2' },
     { title: t('Não, cliente não apareceu'), id: '3' },
   ];
-  const [selectedClientFeedback, setSelectedClientFeedback] = useState<HorizontalSelectItem>();
+  const [selectedClientFeedback, setSelectedClientFeedback] = useState<HorizontalSelectItem>(
+    clientFeedbackData[0]
+  );
   // handlers
-  // handles opening chat screen
-  const openChatHandler = useCallback(() => {
-    navigation.navigate('Chat', { orderId });
-  }, []);
+  //TODO: add a handler to send client feedback to database
   // UI
   return (
     <PaddedView style={{ ...screens.default }}>
@@ -48,28 +46,21 @@ export default function ({ navigation, route }: Props) {
         <Text style={{ ...texts.big, marginTop: 4 }}>{formatCurrency(fee)}</Text>
       </View>
       <View style={{ flex: 1 }} />
-      <DefaultButton title={t('Abrir chat')} secondary onPress={openChatHandler} />
+      <View style={{ marginBottom: 42 }}>
+        <Text style={{ ...texts.medium, marginBottom: halfPadding }}>
+          {t('Tudo certo no cliente?')}
+        </Text>
+        <HorizontalSelect
+          data={clientFeedbackData}
+          selected={selectedClientFeedback}
+          onSelect={setSelectedClientFeedback}
+        />
+      </View>
       <DefaultButton
         title={t('Finalizar')}
         onPress={() => navigation.popToTop()}
         style={{ marginTop: padding }}
       />
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginHorizontal: padding,
-          marginTop: padding,
-        }}
-      >
-        <DefaultButton title={t('Detalhes da corrida')} secondary onPress={() => {}} />
-        <DefaultButton
-          title={t('Relatar problema')}
-          secondary
-          onPress={() => navigation.navigate('CourierDeliveryProblem', { orderId })}
-        />
-      </View>
     </PaddedView>
   );
 }
