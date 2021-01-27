@@ -1,17 +1,17 @@
-import { MenuConfig } from 'appjusto-types';
+import { Product, WithId } from 'appjusto-types';
 import React from 'react';
 import { ApiContext } from '../../../../app/context';
 
-export const useMenuConfig = (businessId: string) => {
+export const useProducts = (businessId: string) => {
   // context
   const api = React.useContext(ApiContext);
   // state
-  const [menuConfig, setMenuConfig] = React.useState<MenuConfig>();
+  const [products, setProducts] = React.useState<WithId<Product>[]>([]);
   // side effects
   React.useEffect(() => {
     if (!businessId) return;
-    return api.business().observeMenuConfig(businessId, setMenuConfig);
+    return api.business().observeProducts(businessId, setProducts);
   }, [api, businessId]);
   // result
-  return menuConfig;
+  return products;
 };

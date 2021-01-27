@@ -1,4 +1,4 @@
-import { Business, Category, MenuConfig, Product, WithId } from 'appjusto-types';
+import { Business, Category, Ordering, Product, WithId } from 'appjusto-types';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';
 
@@ -45,9 +45,9 @@ export default class BusinessApi {
     return unsubscribe;
   }
 
-  observeMenuConfig(businessId: string, resultHandler: (products: WithId<MenuConfig>) => void) {
-    const unsubscribe = this.refs.getBusinessMenuConfigRef(businessId).onSnapshot(
-      (snapshot) => resultHandler(documentAs<MenuConfig>(snapshot)),
+  observeMenuOrdering(businessId: string, resultHandler: (products: WithId<Ordering>) => void) {
+    const unsubscribe = this.refs.getBusinessMenuOrderingRef(businessId).onSnapshot(
+      (snapshot) => resultHandler(documentAs<Ordering>(snapshot)),
       (error) => console.error(error)
     );
     return unsubscribe;

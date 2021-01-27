@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import * as icons from '../../../../../assets/icons';
 import { ApiContext } from '../../../../../common/app/context';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
-import { useProduct } from '../../../../../common/store/api/business/hooks/products';
+import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
 import * as helpers from '../../../../../common/store/api/order/helpers';
 import { getConsumer, getCurrentPlace } from '../../../../../common/store/consumer/selectors';
 import {
