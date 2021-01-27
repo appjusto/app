@@ -1,4 +1,12 @@
-import { Business, Category, Ordering, Product, WithId } from 'appjusto-types';
+import {
+  Business,
+  Category,
+  Complement,
+  ComplementGroup,
+  Ordering,
+  Product,
+  WithId,
+} from 'appjusto-types';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';
 
@@ -42,6 +50,34 @@ export default class BusinessApi {
       (snapshot) => resultHandler(documentAs<Product>(snapshot)),
       (error) => console.error(error)
     );
+    return unsubscribe;
+  }
+
+  observeProductComplementsGroups(
+    businessId: string,
+    productId: string,
+    resultHandler: (products: WithId<ComplementGroup>[]) => void
+  ) {
+    const unsubscribe = this.refs
+      .getBusinessProductComplementsGroupsRef(businessId, productId)
+      .onSnapshot(
+        (snapshot) => resultHandler(documentsAs<ComplementGroup>(snapshot.docs)),
+        (error) => console.error(error)
+      );
+    return unsubscribe;
+  }
+
+  observeProductComplements(
+    businessId: string,
+    productId: string,
+    resultHandler: (products: WithId<Complement>[]) => void
+  ) {
+    const unsubscribe = this.refs
+      .getBusinessProductComplementsRef(businessId, productId)
+      .onSnapshot(
+        (snapshot) => resultHandler(documentsAs<Complement>(snapshot.docs)),
+        (error) => console.error(error)
+      );
     return unsubscribe;
   }
 

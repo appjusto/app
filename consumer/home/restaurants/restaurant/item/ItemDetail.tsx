@@ -21,6 +21,7 @@ import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import * as fake from '../../fakeData';
 import { RestaurantNavigatorParamList } from '../types';
+import { ItemComplements } from './ItemComplements';
 import { ItemQuantity } from './ItemQuantity';
 
 type ScreenNavigationProp = StackNavigationProp<RestaurantNavigatorParamList>;
@@ -43,6 +44,7 @@ export default function ({ navigation, route }: Props) {
   const currentPlace = useSelector(getCurrentPlace);
   // screen state
   const product = useProduct(useContextBusinessId(), productId);
+  console.log(product);
   const [notes, setNotes] = React.useState<string>('');
   // side effects
   React.useLayoutEffect(() => {
@@ -102,6 +104,7 @@ export default function ({ navigation, route }: Props) {
           marginBottom: halfPadding,
         }}
       />
+      <ItemComplements product={product} />
       <View style={{ paddingHorizontal: 12 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: halfPadding }}>
           <Image source={icons.info} />

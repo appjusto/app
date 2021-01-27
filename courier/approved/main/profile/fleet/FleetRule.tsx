@@ -1,10 +1,9 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
-import * as icons from '../../../../../assets/icons';
+import { QuantityButton } from '../../../../../common/components/buttons/QuantityButton';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
-import { borders, colors, padding, texts } from '../../../../../common/styles';
+import { colors, padding, texts } from '../../../../../common/styles';
 
 type Props = {
   title: string;
@@ -32,35 +31,11 @@ export default function ({ title, value, description, onIncrease, onDecrease }: 
       <Text style={{ ...texts.default, color: colors.darkGrey }}>{description}</Text>
       <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
         <TouchableOpacity onPress={onDecrease}>
-          <View
-            style={{
-              ...borders.default,
-              width: 48,
-              height: 48,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: colors.white,
-              borderColor: colors.black,
-            }}
-          >
-            <Image source={icons.minus} />
-          </View>
+          <QuantityButton sign="minus" size="big" />
         </TouchableOpacity>
         <Text style={{ ...texts.medium, marginHorizontal: 16 }}>{value}</Text>
         <TouchableOpacity onPress={onIncrease}>
-          <View
-            style={{
-              ...borders.default,
-              width: 48,
-              height: 48,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: colors.white,
-              borderColor: colors.black,
-            }}
-          >
-            <Image source={icons.plus} />
-          </View>
+          <QuantityButton sign="plus" size="big" />
         </TouchableOpacity>
       </View>
     </View>

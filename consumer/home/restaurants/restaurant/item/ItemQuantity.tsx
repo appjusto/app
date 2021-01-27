@@ -1,8 +1,8 @@
 import React from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
-import * as icons from '../../../../../assets/icons';
+import { Text, TouchableOpacity, View } from 'react-native';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
-import { borders, halfPadding, padding } from '../../../../../common/styles';
+import { QuantityButton } from '../../../../../common/components/buttons/QuantityButton';
+import { halfPadding, padding } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 
 interface Props {
@@ -24,31 +24,11 @@ export const ItemQuantity = ({ getPrice, onChange }: Props) => {
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <TouchableOpacity onPress={() => setValue(value - 1)}>
-          <View
-            style={{
-              height: 48,
-              width: 48,
-              alignItems: 'center',
-              justifyContent: 'center',
-              ...borders.default,
-            }}
-          >
-            <Image source={icons.minus} />
-          </View>
+          <QuantityButton sign="minus" size="big" />
         </TouchableOpacity>
         <Text style={{ marginHorizontal: padding }}>{value}</Text>
         <TouchableOpacity onPress={() => setValue(value + 1)}>
-          <View
-            style={{
-              height: 48,
-              width: 48,
-              alignItems: 'center',
-              justifyContent: 'center',
-              ...borders.default,
-            }}
-          >
-            <Image source={icons.plus} />
-          </View>
+          <QuantityButton sign="plus" size="big" />
         </TouchableOpacity>
       </View>
       <View style={{ marginLeft: padding }}>

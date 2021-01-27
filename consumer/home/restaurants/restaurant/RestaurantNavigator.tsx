@@ -3,9 +3,9 @@ import React from 'react';
 import ArrowBox from '../../../../common/components/views/ArrowBox';
 import { t } from '../../../../strings';
 import AboutRestaurant from './AboutRestaurant';
+import RestaurantDetail from './detail/RestaurantDetail';
 import ItemDetail from './item/ItemDetail';
 import { OrderCheckout } from './OrderCheckout';
-import RestaurantDetail from './RestaurantDetail';
 import { RestaurantNavigatorParamList } from './types';
 
 const Stack = createStackNavigator<RestaurantNavigatorParamList>();

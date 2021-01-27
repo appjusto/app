@@ -53,6 +53,12 @@ export const borders = StyleSheet.create({
     borderRadius: 8,
     borderColor: colors.grey,
   },
+  squared: {
+    borderWidth: 1.5,
+    borderStyle: 'solid',
+    borderRadius: 4,
+    borderColor: colors.black,
+  },
   rounder: {
     borderRadius: 16,
   },
