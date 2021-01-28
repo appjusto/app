@@ -3,16 +3,15 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import { QuantityButton } from '../../../../../common/components/buttons/QuantityButton';
 import { halfPadding, padding } from '../../../../../common/styles';
-import { t } from '../../../../../strings';
 
 interface Props {
+  value: number;
+  title: string;
   onChange: (value: number) => void;
-  getPrice: (value: number) => string;
+  onSubmit: () => void;
 }
 
-export const ItemQuantity = ({ getPrice, onChange }: Props) => {
-  const [value, setValue] = React.useState(1);
-
+export const ItemQuantity = ({ value, title, onChange, onSubmit }: Props) => {
   return (
     <View
       style={{
@@ -23,19 +22,16 @@ export const ItemQuantity = ({ getPrice, onChange }: Props) => {
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <TouchableOpacity onPress={() => setValue(value - 1)}>
+        <TouchableOpacity onPress={() => onChange(value - 1)}>
           <QuantityButton sign="minus" size="big" />
         </TouchableOpacity>
         <Text style={{ marginHorizontal: padding }}>{value}</Text>
-        <TouchableOpacity onPress={() => setValue(value + 1)}>
+        <TouchableOpacity onPress={() => onChange(value + 1)}>
           <QuantityButton sign="plus" size="big" />
         </TouchableOpacity>
       </View>
       <View style={{ marginLeft: padding }}>
-        <DefaultButton
-          title={`${t('Adicionar')} ${getPrice(value)}`}
-          onPress={() => onChange(value)}
-        />
+        <DefaultButton title={title} onPress={onSubmit} />
       </View>
     </View>
   );

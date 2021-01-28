@@ -1,5 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Complement, WithId } from 'appjusto-types';
 import { OrderItem } from 'appjusto-types/order/item';
 import React from 'react';
 import { ActivityIndicator, Image, Text, View } from 'react-native';
@@ -44,8 +45,25 @@ export default function ({ navigation, route }: Props) {
   const currentPlace = useSelector(getCurrentPlace);
   // screen state
   const product = useProduct(useContextBusinessId(), productId);
-  console.log(product);
+  const [quantity, setQuantity] = React.useState(1);
+  const [complements, setComplements] = React.useState<WithId<Complement>[]>([]);
   const [notes, setNotes] = React.useState<string>('');
+  const orderItem = React.useMemo(() => {
+    if (!product) return undefined;
+    return {
+      product: {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+      },
+      quantity,
+      notes,
+      complements: complements.map((complement) => ({
+        complementId: complement.id,
+        price: complement.price,
+      })),
+    } as OrderItem;
+  }, [product, quantity, notes, complements]);
   // side effects
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -61,22 +79,13 @@ export default function ({ navigation, route }: Props) {
     );
   }
   // handlers
-  const changeQuantityHandler = (value: number) => {
+  const addItemToOrder = () => {
     (async () => {
-      console.log('changeQuantityHandler', activeOrder?.id);
-      const item: OrderItem = {
-        product: {
-          id: product.id,
-          name: product.name,
-          price: product.price,
-        },
-        quantity: value,
-        notes,
-      };
+      if (!orderItem) return;
       if (!activeOrder) {
-        api.order().createFoodOrder(business, consumer, [item], currentPlace ?? null);
+        api.order().createFoodOrder(business, consumer, [orderItem], currentPlace ?? null);
       } else {
-        api.order().updateFoodOrder(activeOrder.id, helpers.addItemToOrder(activeOrder, item));
+        api.order().updateFoodOrder(activeOrder.id, helpers.addItemToOrder(activeOrder, orderItem));
       }
       navigation.pop();
     })();
@@ -104,7 +113,14 @@ export default function ({ navigation, route }: Props) {
           marginBottom: halfPadding,
         }}
       />
-      <ItemComplements product={product} />
+      <ItemComplements
+        product={product}
+        selectedComplements={complements}
+        onComplementToggle={(complement, selected) => {
+          if (selected) setComplements([...complements, complement]);
+          else setComplements(complements.filter((c) => c.id !== complement.id));
+        }}
+      />
       <View style={{ paddingHorizontal: 12 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: halfPadding }}>
           <Image source={icons.info} />
@@ -132,12 +148,16 @@ export default function ({ navigation, route }: Props) {
           marginBottom: halfPadding,
         }}
       />
-      <View style={{ paddingHorizontal: 12 }}>
-        <ItemQuantity
-          onChange={changeQuantityHandler}
-          getPrice={(quantity) => formatCurrency(product.price * quantity)}
-        />
-      </View>
+      {orderItem && (
+        <View style={{ paddingHorizontal: 12 }}>
+          <ItemQuantity
+            value={quantity}
+            title={`${t('Adicionar')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
+            onChange={(value) => setQuantity(value)}
+            onSubmit={addItemToOrder}
+          />
+        </View>
+      )}
     </ScrollView>
   );
 }
