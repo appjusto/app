@@ -157,6 +157,7 @@ export default function ({ navigation, route }: Props) {
         autoCorrect={false}
       />
       <SectionList
+        stickySectionHeadersEnabled={false}
         style={{ flex: 1 }}
         sections={sections}
         keyExtractor={(item) => item.description}
