@@ -7,7 +7,7 @@ import { FlatList, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import useObserveOrders from '../../../../common/store/api/order/hooks/useObserveOrders';
-import { getOrdersWithFilter } from '../../../../common/store/order/selectors';
+import { getOrderCreatedOn, getOrdersWithFilter } from '../../../../common/store/order/selectors';
 import { getUser } from '../../../../common/store/user/selectors';
 import { screens } from '../../../../common/styles';
 import { formatAddress, formatCurrency, formatTime } from '../../../../common/utils/formatters';
@@ -62,11 +62,12 @@ export default function ({ navigation, route }: Props) {
         data={filteredOrders}
         keyExtractor={(item) => item.id!}
         renderItem={({ item }) => {
+          const createdOn = getOrderCreatedOn(item);
           const title = formatCurrency(item.fare!.courierFee);
           const subtitle =
-            (item.origin?.address ? formatAddress(item.origin.address) : '') +
-            '\n' +
-            formatTime((item.createdOn as firebase.firestore.Timestamp).toDate());
+            (item.origin?.address ? formatAddress(item.origin.address) : '') + createdOn
+              ? '\n' + formatTime(createdOn)
+              : '';
           return (
             <ConfigItem title={title} subtitle={subtitle} onPress={() => orderPressHandler(item)} />
           );

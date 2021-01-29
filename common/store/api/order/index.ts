@@ -54,6 +54,8 @@ export default class OrderApi {
       },
       origin: {
         address: {
+          main: `${business.businessAddress!.address}, ${business.businessAddress!.number}`,
+          secondary: `${business.businessAddress!.city}`,
           description: `${business.businessAddress!.address}, ${
             business.businessAddress!.number
           } - ${business.businessAddress!.city}`,

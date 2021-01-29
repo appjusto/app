@@ -13,22 +13,20 @@ export const getOrderById = createSelector(getOrderState, (orderState) =>
 export const getOrders = (state: State) => getOrderState(state).orders;
 
 export const getOrderCreatedOn = (order: WithId<Order>) =>
-  (order.createdOn as firebase.firestore.Timestamp).toDate();
+  order.createdOn ? (order.createdOn as firebase.firestore.Timestamp).toDate() : null;
 
 export const getOngoingOrders = (orders: WithId<Order>[]) =>
   orders.filter((o) => o.status === 'dispatching');
 
 export const getYearsWithOrders = (orders: WithId<Order>[]) =>
-  uniq(
-    orders.map((order) => (order.createdOn as firebase.firestore.Timestamp).toDate().getFullYear())
-  );
+  uniq(orders.map((order) => getOrderCreatedOn(order)?.getFullYear()));
 
 export const getMonthsWithOrdersInYear = (orders: WithId<Order>[]) =>
   memoize((year: number) =>
     uniq(
       orders
-        .filter((order) => getOrderCreatedOn(order).getFullYear() === year)
-        .map((order) => getOrderCreatedOn(order).getMonth())
+        .filter((order) => getOrderCreatedOn(order)?.getFullYear() === year)
+        .map((order) => getOrderCreatedOn(order)?.getMonth())
     )
   );
 
@@ -39,7 +37,8 @@ export const getOrdersWithFilter = (
   day?: number
 ) =>
   orders.filter((order) => {
-    const createdOn = (order.createdOn as firebase.firestore.Timestamp).toDate();
+    const createdOn = getOrderCreatedOn(order);
+    if (!createdOn) return false;
     if (year !== createdOn.getFullYear()) return false;
     if (month && month !== createdOn.getMonth()) return false;
     if (day && day !== createdOn.getDate()) return false;
@@ -51,8 +50,7 @@ export const getDeliveredOrders = (orders: WithId<Order>[]) =>
 
 export const getOrdersSince = (orders: WithId<Order>[], date: Date) =>
   orders.filter((order) => {
-    const createdOn = (order.createdOn as firebase.firestore.Timestamp).toDate();
-    return createdOn.getTime() >= date.getTime();
+    return (getOrderCreatedOn(order)?.getTime() ?? 0) >= date.getTime();
   });
 
 export const summarizeOrders = memoize((orders: WithId<Order>[]) =>

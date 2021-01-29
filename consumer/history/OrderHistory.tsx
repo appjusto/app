@@ -11,7 +11,11 @@ import ConfigItem from '../../common/components/views/ConfigItem';
 import FeedbackView from '../../common/components/views/FeedbackView';
 import StatusBadge from '../../common/components/views/StatusBadge';
 import useObserveOrders from '../../common/store/api/order/hooks/useObserveOrders';
-import { getOrdersWithFilter, getYearsWithOrders } from '../../common/store/order/selectors';
+import {
+  getOrderCreatedOn,
+  getOrdersWithFilter,
+  getYearsWithOrders,
+} from '../../common/store/order/selectors';
 import { getUser } from '../../common/store/user/selectors';
 import { colors, padding, screens, texts } from '../../common/styles';
 import {
@@ -112,10 +116,12 @@ export default function ({ navigation, route }: Props) {
           </PaddedView>
         )}
         renderItem={({ item }) => {
-          const createdOn = (item.createdOn as firebase.firestore.Timestamp).toDate();
+          const createdOn = getOrderCreatedOn(item);
           const title =
             item.type === 'food' ? item.business?.name ?? '' : formatAddress(item.origin!.address);
-          const subtitle = separateWithDot(formatDate(createdOn), formatTime(createdOn));
+          const subtitle = createdOn
+            ? separateWithDot(formatDate(createdOn), formatTime(createdOn))
+            : '';
           return (
             <ConfigItem title={title} subtitle={subtitle} onPress={() => orderSelectHandler(item)}>
               <StatusBadge status={item.status} />

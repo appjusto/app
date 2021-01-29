@@ -18,19 +18,27 @@ interface Props {
 
 export const OrderPlacesSummary = ({ order, onEditStep }: Props) => {
   const { origin, destination, route } = order;
-  const { distance, duration } = route!;
   return (
     <PaddedView>
-      <PlaceSummary title={t('Retirada')} place={origin!} onEdit={() => onEditStep(Step.Origin)} />
-      <PlaceSummary
-        title={t('Entrega')}
-        place={destination!}
-        onEdit={() => onEditStep(Step.Destination)}
-      />
-
-      <RoundedText>
-        {separateWithDot(formatDistance(distance), formatDuration(duration))}
-      </RoundedText>
+      {origin && (
+        <PlaceSummary
+          title={t('Retirada')}
+          place={origin!}
+          onEdit={() => onEditStep(Step.Origin)}
+        />
+      )}
+      {destination && (
+        <PlaceSummary
+          title={t('Entrega')}
+          place={destination}
+          onEdit={() => onEditStep(Step.Destination)}
+        />
+      )}
+      {route && (
+        <RoundedText>
+          {separateWithDot(formatDistance(route.distance), formatDuration(route.duration))}
+        </RoundedText>
+      )}
     </PaddedView>
   );
 };

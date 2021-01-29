@@ -1,13 +1,12 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-
 import ArrowBox from '../../common/components/views/ArrowBox';
 import { t } from '../../strings';
-import ProfileCompany from '../approved/main/profile/ProfileCompany';
-import ProfileEdit from '../approved/main/profile/ProfileEdit';
 import BankNavigator from '../approved/main/profile/bank/BankNavigator';
 import FleetNavigator from '../approved/main/profile/fleet/FleetNavigator';
 import ProfilePhotos from '../approved/main/profile/photos/ProfilePhotos';
+import ProfileCompany from '../approved/main/profile/ProfileCompany';
+import ProfileEdit from '../approved/main/profile/ProfileEdit';
 import ProfilePending from './ProfilePending';
 import ProfileRejected from './ProfileRejected';
 import ProfileSubmitted from './ProfileSubmitted';
@@ -45,12 +44,12 @@ export default function () {
       <Stack.Screen
         name="BankNavigator"
         component={BankNavigator}
-        options={{ title: t('Dados bancários') }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="FleetNavigator"
         component={FleetNavigator}
-        options={{ title: t('Escolha sua frota') }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ProfileSubmitted"
