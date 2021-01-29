@@ -1,10 +1,9 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import * as Linking from 'expo-linking';
 import { distance } from 'geokit';
 import { isEmpty, round } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, Image, Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useMutation } from 'react-query';
 import * as icons from '../../../assets/icons';
@@ -14,13 +13,13 @@ import RoundedText from '../../../common/components/texts/RoundedText';
 import HR from '../../../common/components/views/HR';
 import ShowIf from '../../../common/components/views/ShowIf';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
-import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatDistance, formatDuration, separateWithDot } from '../../../common/utils/formatters';
 import CourierStatusHighlight from '../../../consumer/home/orders/CourierStatusHighlight';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
-import { getNavigationLinkTo, NavigationApp } from './navigation';
+import { RouteIcons } from './RouteIcons';
 import { OngoingParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
@@ -89,17 +88,6 @@ export default function ({ navigation, route }: Props) {
     } else {
       completeDelivery();
     }
-  };
-  // handles opening chat screen
-  const routeHandler = (app: NavigationApp) => {
-    const dispatchingState = order?.dispatchingState;
-    let location = undefined;
-    if (dispatchingState === 'going-pickup') {
-      location = order?.origin.location;
-    } else if (dispatchingState === 'arrived-pickup' || dispatchingState === 'going-destination') {
-      location = order?.destination.location;
-    }
-    Linking.openURL(getNavigationLinkTo(app, location));
   };
   const nextStepLabel = (() => {
     const dispatchingState = order?.dispatchingState;
@@ -171,58 +159,11 @@ export default function ({ navigation, route }: Props) {
     return { courierWaiting, addressLabel, address, dispatchDetails };
   })();
 
-  const RouteIcons = () => (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        flex: 1,
-        position: 'absolute',
-        top: halfPadding,
-        right: halfPadding,
-      }}
-    >
-      <TouchableOpacity onPress={() => routeHandler('google-maps')}>
-        <View
-          style={{
-            height: 48,
-            width: 48,
-            ...borders.default,
-            borderRadius: 24,
-            borderColor: colors.lightGrey,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: colors.white,
-          }}
-        >
-          <Image source={icons.googleMaps} height={29} width={29} />
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => routeHandler('waze')}>
-        <View
-          style={{
-            height: 48,
-            width: 48,
-            ...borders.default,
-            borderRadius: 24,
-            borderColor: colors.lightGrey,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginLeft: halfPadding,
-            backgroundColor: colors.white,
-          }}
-        >
-          <Image source={icons.waze} height={32} width={29} />
-        </View>
-      </TouchableOpacity>
-    </View>
-  );
-
   return (
     <View style={{ ...screens.default, paddingBottom: padding }}>
       <View style={{ flex: 1 }}>
         <OrderMap order={order!} />
-        <RouteIcons />
+        <RouteIcons order={order} />
         <View style={{ paddingHorizontal: padding }}>
           <ShowIf test={!!courierWaiting}>
             {() => (
