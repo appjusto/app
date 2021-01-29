@@ -31,16 +31,20 @@ export default function ({ title, subtitle }: Props) {
         <View style={{ height: 64, width: 64, borderRadius: 32, backgroundColor: colors.white }}>
           <Image source={icons.motocycleWhite} />
         </View>
-        <View style={{ marginLeft: padding }}>
+        <View style={{ marginLeft: padding, flex: 1 }}>
           <Text style={{ ...texts.default }}>{title}</Text>
-          <Text
-            style={{
-              ...texts.small,
-              color: colors.darkGrey,
-            }}
-          >
-            {subtitle}
-          </Text>
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                ...texts.small,
+                color: colors.darkGrey,
+                flexWrap: 'wrap',
+              }}
+              numberOfLines={2}
+            >
+              {subtitle}
+            </Text>
+          </View>
         </View>
       </View>
     </View>

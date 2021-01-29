@@ -44,7 +44,6 @@ export default function ({ navigation, route }: Props) {
   const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
     consumer!.notificationToken
   );
-  const [confirmationCard, setConfirmationCard] = React.useState<boolean>(true);
   // side effects
   // whenever params changes
   // open chat if there's a new message
@@ -153,20 +152,6 @@ export default function ({ navigation, route }: Props) {
             )}
           </ShowIf>
         </View>
-        {/* <ShowIf test={confirmationCard}>
-          {() => (
-            <View
-              style={{
-                paddingHorizontal: padding,
-                bottom: halfPadding,
-                position: 'absolute',
-                width: '100%',
-              }}
-            >
-              <ConfirmationCard onPress={() => setConfirmationCard(false)} />
-            </View>
-          )}
-        </ShowIf> */}
       </View>
       <PaddedView style={{ backgroundColor: colors.white, flexDirection: 'row' }}>
         <RoundedProfileImg flavor="courier" id={order.courier!.id} />

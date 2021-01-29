@@ -1,7 +1,8 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as Linking from 'expo-linking';
-import { isEmpty } from 'lodash';
+import { distance } from 'geokit';
+import { isEmpty, round } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -15,8 +16,8 @@ import ShowIf from '../../../common/components/views/ShowIf';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatDistance, formatDuration, separateWithDot } from '../../../common/utils/formatters';
+import CourierStatusHighlight from '../../../consumer/home/orders/CourierStatusHighlight';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
-import PlaceSummary from '../../../consumer/home/orders/p2p-order/PlaceSummary';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import { getNavigationLinkTo, NavigationApp } from './navigation';
@@ -105,13 +106,69 @@ export default function ({ navigation, route }: Props) {
     if (dispatchingState === 'going-pickup') {
       return t('Cheguei para Retirada');
     } else if (dispatchingState === 'arrived-pickup') {
-      return t('Sai para Entrega');
+      return t('Saí para Entrega');
     } else if (dispatchingState === 'going-destination') {
       return t('Cheguei para entrega');
     } else if (dispatchingState === 'arrived-destination') {
       return t('Finalizar entrega');
     }
     return '';
+  })();
+  //updates components whenever the dispatchingState changes
+  const { dispatchingState } = order;
+  const { courierWaiting, addressLabel, address, dispatchDetails } = (() => {
+    let courierWaiting = null;
+    let addressLabel = '';
+    let address = '';
+    let dispatchDetails = '';
+    if (dispatchingState === 'going-pickup') {
+      addressLabel = t('Retirada em');
+      address = order.origin.address.main;
+      dispatchDetails = separateWithDot(
+        formatDistance(
+          round(
+            distance(
+              { lat: order.courier!.location.latitude, lng: order.courier!.location.longitude },
+              { lat: order.origin.location!.latitude, lng: order.origin.location!.longitude }
+            ),
+            2
+          ) * 1000
+        ),
+        formatDuration(order.route?.duration)
+      );
+    } else if (dispatchingState === 'arrived-pickup') {
+      addressLabel = t('Retirada em');
+      address = order.origin.address.main;
+      dispatchDetails = t('Chegou no local');
+      courierWaiting = {
+        title: t('Aguardando para retirada'),
+        message: t('Confirme sua saída somente após receber o pedido'),
+      };
+    } else if (dispatchingState === 'going-destination') {
+      addressLabel = t('Entrega em');
+      address = order.destination.address.main;
+      dispatchDetails = `Distância até a entrega: ${formatDistance(
+        round(
+          distance(
+            { lat: order.courier!.location.latitude, lng: order.courier!.location.longitude },
+            {
+              lat: order.destination!.location!.latitude,
+              lng: order.destination!.location!.longitude,
+            }
+          ),
+          2
+        ) * 1000
+      )}`;
+    } else if (dispatchingState === 'arrived-destination') {
+      addressLabel = t('Entrega em');
+      address = order.destination.address.main;
+      dispatchDetails = t('Chegou no local');
+      courierWaiting = {
+        title: t('Aguardando para entrega'),
+        message: t('Finalize o pedido somente após realizar a entrega'),
+      };
+    }
+    return { courierWaiting, addressLabel, address, dispatchDetails };
   })();
 
   const RouteIcons = () => (
@@ -166,6 +223,16 @@ export default function ({ navigation, route }: Props) {
       <View style={{ flex: 1 }}>
         <OrderMap order={order!} />
         <RouteIcons />
+        <View style={{ paddingHorizontal: padding }}>
+          <ShowIf test={!!courierWaiting}>
+            {() => (
+              <CourierStatusHighlight
+                title={courierWaiting!.title}
+                subtitle={courierWaiting!.message}
+              />
+            )}
+          </ShowIf>
+        </View>
       </View>
       <View style={{ marginTop: padding, paddingHorizontal: padding }}>
         <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Pedido de')}</Text>
@@ -192,53 +259,34 @@ export default function ({ navigation, route }: Props) {
         </View>
         <HR />
       </View>
-      <View style={{ paddingHorizontal: padding, marginTop: padding }}>
-        <ShowIf
-          test={
-            order.dispatchingState === 'going-pickup' || order.dispatchingState === 'arrived-pickup'
-          }
-        >
-          {() => (
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <View>
-                <PlaceSummary place={order.origin} title={t('Retirada')} />
-              </View>
-              <View>
-                <RoundedText backgroundColor={colors.lightGrey} color={colors.darkGrey} noBorder>
-                  {separateWithDot(
-                    formatDistance(order.route?.distance),
-                    formatDuration(order.route?.duration)
-                  )}
-                </RoundedText>
-              </View>
-            </View>
-          )}
-        </ShowIf>
-        <ShowIf
-          test={
-            order.dispatchingState === 'going-destination' ||
-            order.dispatchingState === 'arrived-destination'
-          }
-        >
-          {() => <PlaceSummary place={order.destination} title={t('Entrega')} />}
-        </ShowIf>
-
-        <View style={{ marginTop: halfPadding }}>
-          {/* Slider */}
-          {/* <StatusControl status={nextStepLabel} nextStepHandler={nextStatepHandler} /> */}
-          <DefaultButton
-            title={nextStepLabel}
-            onPress={nextStatepHandler}
-            activityIndicator={isLoading}
-            disabled={isLoading}
-          />
+      <View
+        style={{
+          paddingHorizontal: padding,
+          flexDirection: 'row',
+          marginTop: padding,
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <View>
+          <Text style={[texts.small, { color: colors.darkGreen }]}>{addressLabel}</Text>
+          <Text style={[texts.small]}>{address}</Text>
         </View>
+        <View>
+          <RoundedText backgroundColor={colors.lightGrey} color={colors.darkGrey} noBorder>
+            {dispatchDetails}
+          </RoundedText>
+        </View>
+      </View>
+      <View style={{ marginTop: padding, paddingHorizontal: padding }}>
+        {/* Slider */}
+        {/* <StatusControl status={nextStepLabel} nextStepHandler={nextStatepHandler} /> */}
+        <DefaultButton
+          title={nextStepLabel}
+          onPress={nextStatepHandler}
+          activityIndicator={isLoading}
+          disabled={isLoading}
+        />
       </View>
     </View>
   );
