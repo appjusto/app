@@ -56,7 +56,7 @@ export const OrderCostBreakdown = ({
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={{ ...texts.default, lineHeight: 21 }}>{t('Frota escolhida')}</Text>
             {/* find out how to display the fleet name below */}
-            <Text style={{ ...texts.default, lineHeight: 21 }}>App Justo</Text>
+            <Text style={{ ...texts.default, lineHeight: 21 }}>{selectedFare.fleet.name}</Text>
           </View>
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>

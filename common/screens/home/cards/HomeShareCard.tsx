@@ -15,7 +15,7 @@ export default function ({ title, subtitle, isGrey }: Props) {
     try {
       Share.share({
         message: `O AppJusto é um app de entregas open-source que cobra menos dos restaurantes e dá autonomia aos entregadores. Faça parte desse movimento! Saiba mais em: https://appjusto.com.br`,
-        title: 'App Justo',
+        title: 'AppJusto',
         url: `https://appjusto.com.br`,
       });
     } catch (error) {}

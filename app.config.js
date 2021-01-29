@@ -21,8 +21,8 @@ const {
 } = process.env;
 
 export default () => {
-  const version = '0.0.4';
-  const versionCode = 4;
+  const version = '0.0.5';
+  const versionCode = 5;
   const flavor = process.env.FLAVOR;
   const appId = `com.appjusto.${flavor}`;
   const icon = (platform) => `./assets/icon-${flavor}-${platform}.png`;
@@ -66,7 +66,7 @@ export default () => {
   };
   return {
     expo: {
-      name: (flavor === 'consumer' && 'App Justo') || (flavor === 'courier' && 'Parceiro Justo'),
+      name: (flavor === 'consumer' && 'AppJusto') || (flavor === 'courier' && 'Parceiro Justo'),
       slug: `app-justo-${flavor}`,
       scheme: 'appjusto',
       platforms: ['ios', 'android'],

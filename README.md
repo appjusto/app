@@ -42,7 +42,12 @@ xcrun simctl openurl booted "exp://<local-ip-address>:19000/--/?link=<link>"
 adb shell am start -a "android.intent.action.VIEW" -d "exp://<local-ip-address>:19000/--/?link=<link>"
 ```
 
-# 4. Building locally
+# 4. Publishing
+
+FLAVOR=consumer expo publish
+FLAVOR=courier expo publish
+
+# 5. Building locally
 
 ```bash
 # fetch keys
@@ -67,7 +72,10 @@ Docs:
 - https://docs.expo.io/distribution/turtle-cli/
 - https://docs.expo.io/distribution/building-standalone-apps/
 
-# 5. Deployment
+# 6. Building on expo
 
-FLAVOR=consumer expo publish
-FLAVOR=courier expo publish
+Edit `app.config.js` and update version and versionCode and run:
+
+```bash
+FLAVOR=consumer expo build:ios -t archive
+```

@@ -1,7 +1,6 @@
 import { Order } from 'appjusto-types';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-
 import { t } from '../../../strings';
 import { colors, padding, texts } from '../../styles';
 import { formatCurrency } from '../../utils/formatters';
@@ -37,7 +36,7 @@ export default function ({ order }: Props) {
           </Text>
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={styles.priceDetailText}>{t('App Justo')}</Text>
+          <Text style={styles.priceDetailText}>{t('AppJusto')}</Text>
           <Text style={styles.priceDetailText}>{formatCurrency(order.fare?.platformFee ?? 0)}</Text>
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
