@@ -2,14 +2,17 @@ import { Fare, Fleet, Order, WithId } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { ScrollView, View } from 'react-native';
-import { ApiContext } from '../../../../common/app/context';
+import { useDispatch } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import HR from '../../../../common/components/views/HR';
+import { getOrderTotal } from '../../../../common/store/api/order/helpers';
+import { showToast } from '../../../../common/store/ui/actions';
 import { padding } from '../../../../common/styles';
 import AddInfo from '../../restaurants/components/AddInfo';
 import OrderMap from '../p2p-order/OrderMap';
 import { Step } from '../p2p-order/types';
+import { OrderCostBreakdown } from './breakdown/OrderCostBreakdown';
 import { OrderAvailableFleets } from './OrderAvailableFleets';
-import { OrderCostBreakdown } from './OrderCostBreakdown';
 import { OrderItems } from './OrderItems';
 import { OrderPayment } from './OrderPayment';
 import { OrderPlacesSummary } from './OrderPlacesSummary';
@@ -38,6 +41,7 @@ export const OrderSummary = ({
 }: Props) => {
   // context
   const api = React.useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
   // state
   const [quotes, setQuotes] = React.useState<Fare[]>();
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
@@ -64,9 +68,11 @@ export const OrderSummary = ({
     if (!order.origin?.location || !order.route) return;
     (async () => {
       setQuotes(undefined);
-      // try {
-      setQuotes(await api.order().getOrderQuotes(order.id));
-      // } catch (error) {}
+      try {
+        setQuotes(await api.order().getOrderQuotes(order.id));
+      } catch (error) {
+        dispatch(showToast(error));
+      }
     })();
   }, [order]);
 
@@ -81,7 +87,7 @@ export const OrderSummary = ({
 
       <OrderPlacesSummary order={order} onEditStep={onEditStep} />
 
-      {order.type === 'food' && (
+      {!isEmpty(order.items) && (
         <View>
           <HR height={padding} />
           <OrderItems order={order} />
@@ -103,6 +109,7 @@ export const OrderSummary = ({
       <HR height={padding} />
 
       <OrderCostBreakdown
+        order={order}
         selectedFare={selectedFare!}
         selectedPlatformFee={platformFee}
         platformFeeOptions={[100, 300, 500, 800, 1000]}
@@ -111,7 +118,7 @@ export const OrderSummary = ({
 
       <HR height={padding} />
 
-      <OrderTotal total={(selectedFare?.total ?? 0) + platformFee} />
+      <OrderTotal total={getOrderTotal(order) + (selectedFare?.total ?? 0) + platformFee} />
 
       <HR height={padding} />
 

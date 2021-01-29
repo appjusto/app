@@ -1,9 +1,19 @@
 import { Order } from 'appjusto-types';
 import { OrderItem } from 'appjusto-types/order/item';
+import { isEmpty } from 'lodash';
 
 export const addItemToOrder = (order: Order, item: OrderItem): Order => {
   if (!order?.items) return { ...order, items: [{ ...item }] };
-  const index = order.items.findIndex((i) => i.product.id === item.product.id);
+  // searching for items for the same product that could be merged into one item
+  const index = order.items.findIndex(
+    (i) =>
+      i.product.id === item.product.id &&
+      // items with complement or notes are always added separatedly
+      isEmpty(i.complements) &&
+      isEmpty(item.complements) &&
+      isEmpty(i.notes) &&
+      isEmpty(item.notes)
+  );
   if (index === -1) return { ...order, items: [...order.items, item] };
   return {
     ...order,
