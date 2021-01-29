@@ -7,7 +7,7 @@ import {
   View,
   ViewProps,
 } from 'react-native';
-import { borders, colors, texts } from '../../styles';
+import { borders, colors, padding, texts } from '../../styles';
 import ShowIf from '../views/ShowIf';
 
 export interface DefaultButtonProps extends TouchableOpacityProps, ViewProps {
@@ -40,7 +40,7 @@ export default function ({
           {
             flexDirection: 'row',
             ...borders.default,
-            paddingHorizontal: 24,
+            paddingHorizontal: padding,
             paddingVertical: 14,
             justifyContent: 'center',
             alignItems: 'center',

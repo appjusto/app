@@ -163,6 +163,7 @@ export default function ({
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
+                  marginTop: padding,
                 }}
               >
                 <Image source={icons.info} />
@@ -218,6 +219,7 @@ export default function ({
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
+                    marginTop: padding,
                   }}
                 >
                   <Image source={icons.info} />

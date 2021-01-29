@@ -15,7 +15,7 @@ import { getFlavor } from '../store/config/selectors';
 import { markMessageAsRead } from '../store/order/actions';
 import { groupOrderChatMessages } from '../store/order/selectors';
 import { getUser } from '../store/user/selectors';
-import { borders, colors, padding, screens, texts } from '../styles';
+import { borders, colors, halfPadding, padding, screens, texts } from '../styles';
 import { formatTime } from '../utils/formatters';
 
 export type ChatParamList = {
@@ -79,9 +79,10 @@ export default function ({ route }: Props) {
   return (
     <View style={[screens.default]}>
       <KeyboardAwareFlatList
+        keyboardShouldPersistTaps="always"
         data={groupedMessages}
         keyExtractor={(item) => item.id}
-        style={{ backgroundColor: colors.darkGrey }}
+        style={{ backgroundColor: colors.grey }}
         renderItem={({ item }) => (
           <PaddedView
             style={{
@@ -110,9 +111,9 @@ export default function ({ route }: Props) {
                 }}
                 padding={12}
               >
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
                   <Text style={[texts.small, { flexWrap: 'wrap' }]}>{message.message}</Text>
-                  <Text style={[texts.tiny, { marginLeft: padding / 2, alignSelf: 'flex-end' }]}>
+                  <Text style={[texts.tiny, { marginLeft: halfPadding, alignSelf: 'flex-end' }]}>
                     {message.timestamp
                       ? formatTime((message.timestamp as firebase.firestore.Timestamp).toDate())
                       : ''}

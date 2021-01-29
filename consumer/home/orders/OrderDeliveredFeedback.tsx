@@ -9,7 +9,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import HR from '../../../common/components/views/HR';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
-import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedParamList } from '../../types';
 import { HomeNavigatorParamList } from '../types';
@@ -33,7 +33,6 @@ export default ({ navigation, route }: Props) => {
   const { order } = useObserveOrder(orderId);
   // UI
   if (!order) {
-    // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green} />
@@ -69,10 +68,11 @@ export default ({ navigation, route }: Props) => {
           orderTip={order.tip?.value ?? 0}
           courierId={order.courier!.id}
           courierName={order.courier!.name}
+          joined={order.courier?.joined}
         />
         <HR />
         {/* actions */}
-        <PaddedView>
+        <View style={{ paddingHorizontal: padding }}>
           <DefaultButton
             title={t('Finalizar')}
             onPress={() => navigation.popToTop()}
@@ -86,27 +86,23 @@ export default ({ navigation, route }: Props) => {
               marginTop: padding,
             }}
           >
-            <View style={{ flex: 7 }}>
-              <DefaultButton
-                title={t('Relatar um problema')}
-                secondary
-                onPress={() => navigation.navigate('OrderComplaint', { orderId: order.id })}
-              />
-            </View>
-            <View style={{ flex: 7, marginLeft: halfPadding }}>
-              <DefaultButton
-                title={t('Detalhes da corrida')}
-                onPress={() =>
-                  navigation.navigate('HistoryNavigator', {
-                    screen: 'OrderDetail',
-                    params: { orderId },
-                  })
-                }
-                secondary
-              />
-            </View>
+            <DefaultButton
+              title={t('Relatar um problema')}
+              secondary
+              onPress={() => navigation.navigate('OrderComplaint', { orderId: order.id })}
+            />
+            <DefaultButton
+              title={t('Detalhes da corrida')}
+              onPress={() =>
+                navigation.navigate('HistoryNavigator', {
+                  screen: 'OrderDetail',
+                  params: { orderId },
+                })
+              }
+              secondary
+            />
           </View>
-        </PaddedView>
+        </View>
       </KeyboardAwareScrollView>
     </View>
   );

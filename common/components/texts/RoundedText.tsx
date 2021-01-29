@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image, Text, View } from 'react-native';
-import { borders, colors, texts } from '../../styles';
+import { borders, colors, halfPadding, texts } from '../../styles';
 
 type Props = {
   children: string;
@@ -19,9 +19,8 @@ export default function ({ leftIcon, color, backgroundColor: bg, children, noBor
         flexDirection: 'row',
         alignSelf: 'flex-start',
         alignItems: 'center',
-        paddingBottom: 4,
-        // height: 24,
-        paddingHorizontal: 8,
+        paddingVertical: 4,
+        paddingHorizontal: halfPadding,
         ...borders.default,
         borderRadius: 32,
         borderColor: noBorder ? colors.lightGrey : tintColor,

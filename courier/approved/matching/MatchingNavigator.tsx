@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-
 import ArrowBox from '../../../common/components/views/ArrowBox';
+import { t } from '../../../strings';
 import Matching from './Matching';
 import MatchingError from './MatchingError';
 import RefuseDelivery from './RefuseDelivery';
@@ -25,7 +25,7 @@ export default function () {
       <Stack.Screen
         name="RefuseDelivery"
         component={RefuseDelivery}
-        options={{ headerShown: false }}
+        options={{ title: t('Recusou o pedido') }}
       />
     </Stack.Navigator>
   );

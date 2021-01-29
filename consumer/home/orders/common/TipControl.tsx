@@ -1,21 +1,18 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import HorizontalSelect, {
   HorizontalSelectItem,
 } from '../../../../common/components/buttons/HorizontalSelect';
-import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedProfileImg from '../../../../common/components/icons/RoundedProfileImg';
-import Pill from '../../../../common/components/views/Pill';
 import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import { tipCourier } from '../../../../common/store/order/actions';
 import { showToast } from '../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { colors, halfPadding, padding, texts } from '../../../../common/styles';
-import { formatCurrency } from '../../../../common/utils/formatters';
+import { formatCurrency, formatDate } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 
 type Props = {
@@ -23,9 +20,10 @@ type Props = {
   orderTip: number;
   courierId: string;
   courierName: string;
+  joined: firebase.firestore.FieldValue;
 };
 
-export default function ({ orderId, orderTip = 0, courierId, courierName }: Props) {
+export default function ({ orderId, orderTip = 0, courierId, courierName, joined }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -62,31 +60,22 @@ export default function ({ orderId, orderTip = 0, courierId, courierName }: Prop
   }, [tip]);
   // UI
   return (
-    <View>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Pill />
-        <PaddedView
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Text style={{ ...texts.medium, ...texts.bold }}>{t('Caixinha')}</Text>
-        </PaddedView>
+    <View style={{ paddingHorizontal: padding, paddingTop: padding }}>
+      <View>
+        <Text style={{ ...texts.medium, ...texts.bold }}>{t('Caixinha')}</Text>
+        <Text style={{ ...texts.small, color: colors.darkGrey, flexWrap: 'wrap' }}>
+          {t('Valorize ainda mais o trabalho do seu entregador')}
+        </Text>
       </View>
-      <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
-        <View style={{ flexDirection: 'row', paddingBottom: padding, marginRight: padding }}>
+      <View style={{ paddingBottom: padding }}>
+        <View style={{ flexDirection: 'row', paddingBottom: padding, marginTop: 24 }}>
           <RoundedProfileImg flavor="courier" id={courierId} />
           <View style={{ marginLeft: halfPadding }}>
-            <Text
-              style={{ ...texts.small, color: colors.darkGrey, flexWrap: 'wrap' }}
-              numberOfLines={!tallerDevice ? 2 : 1}
-            >
-              {t('Valorize ainda mais o trabalho do seu entregador')}
-            </Text>
             <Text style={[texts.default]}>{courierName}</Text>
+            <Text style={{ ...texts.small, color: colors.darkGrey }}>{t('No appJusto desde')}</Text>
+            <Text style={{ ...texts.small }}>
+              {formatDate((joined as firebase.firestore.Timestamp).toDate(), 'monthYear')}
+            </Text>
           </View>
         </View>
         <HorizontalSelect disabled={orderTip > 0} data={data} selected={tip} onSelect={setTip} />

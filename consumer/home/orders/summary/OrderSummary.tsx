@@ -2,11 +2,12 @@ import { Fare, Fleet, Order, WithId } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { ScrollView, View } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import HR from '../../../../common/components/views/HR';
 import { getOrderTotal } from '../../../../common/store/api/order/helpers';
 import { showToast } from '../../../../common/store/ui/actions';
+import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { padding } from '../../../../common/styles';
 import AddInfo from '../../restaurants/components/AddInfo';
 import OrderMap from '../p2p-order/OrderMap';
@@ -43,6 +44,7 @@ export const OrderSummary = ({
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // state
+  const busy = useSelector(getUIBusy);
   const [quotes, setQuotes] = React.useState<Fare[]>();
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
   const [platformFee, setPlatformFee] = React.useState(100);
@@ -127,6 +129,7 @@ export const OrderSummary = ({
         onEditPaymentMethod={navigateToFillPaymentInfo}
         isSubmitEnabled={canSubmit}
         onSubmit={() => placeOrder(selectedFare?.fleet?.id!, platformFee)}
+        activityIndicator={busy}
       />
     </ScrollView>
   );

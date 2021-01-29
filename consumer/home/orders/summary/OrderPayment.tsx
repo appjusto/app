@@ -14,6 +14,7 @@ interface Props {
   isSubmitEnabled: boolean;
   onEditPaymentMethod: () => void;
   onSubmit: () => void;
+  activityIndicator: boolean;
 }
 
 export const OrderPayment = ({
@@ -21,6 +22,7 @@ export const OrderPayment = ({
   isSubmitEnabled,
   onEditPaymentMethod,
   onSubmit,
+  activityIndicator,
 }: Props) => {
   const consumer = useSelector(getConsumer)!;
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
@@ -59,6 +61,7 @@ export const OrderPayment = ({
         title={t('Confirmar pedido')}
         onPress={onSubmit}
         disabled={!isSubmitEnabled}
+        activityIndicator={activityIndicator}
       />
     </PaddedView>
   );

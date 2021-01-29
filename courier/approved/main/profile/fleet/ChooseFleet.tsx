@@ -9,7 +9,7 @@ import DefaultButton from '../../../../../common/components/buttons/DefaultButto
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import HR from '../../../../../common/components/views/HR';
 import ShowIf from '../../../../../common/components/views/ShowIf';
-import { useObserveFleets } from '../../../../../common/store/api/fleet/hooks/useObserveFleets';
+import { useSearchFleets } from '../../../../../common/store/api/search/useSearchFleets';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
@@ -30,7 +30,8 @@ export default function ({ navigation, route }: Props) {
   // redux store
   const courier = useSelector(getCourier)!;
   // screen state
-  const { fleets, fetchNextPage } = useObserveFleets();
+  const [availableFleets] = useState('');
+  const { fleets, fetchNextPage } = useSearchFleets(availableFleets);
   const [selectedFleet, setSelectedFleet] = useState<WithId<Fleet>>();
   // side effects
   React.useEffect(() => {
@@ -38,6 +39,7 @@ export default function ({ navigation, route }: Props) {
     const courierFleet = fleets.find((fleet) => fleet.id === courier.fleet?.id);
     if (courierFleet) setSelectedFleet(courierFleet);
   }, [fleets]);
+  console.log(fleets);
 
   // handlers
   const confirmFleet = useCallback(async () => {

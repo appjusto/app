@@ -46,23 +46,27 @@ export default function ({ navigation, route }: Props) {
         <View style={{ paddingHorizontal: padding, marginTop: padding }}>
           <DefaultButton
             title={t('Alterar a rota de retirada ou entrega')}
-            style={{ marginBottom: 8 }}
+            style={{ marginBottom: 8, flex: 2 }}
             onPress={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
           />
           <View
             style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
           >
-            <DefaultButton
-              title={t('Relatar um problema')}
-              onPress={() => navigation.navigate('OrderComplaint', { orderId: order.id })}
-              secondary
-            />
-            <DefaultButton
-              title={t('Cancelar pedido')}
-              onPress={() => navigation.navigate('ConfirmCancelOrder', { orderId })}
-              secondary
-              style={{ marginLeft: halfPadding }}
-            />
+            <View style={{ flex: 7 }}>
+              <DefaultButton
+                title={t('Relatar um problema')}
+                onPress={() => navigation.navigate('OrderComplaint', { orderId: order.id })}
+                secondary
+              />
+            </View>
+            <View style={{ flex: 7 }}>
+              <DefaultButton
+                title={t('Cancelar pedido')}
+                onPress={() => navigation.navigate('ConfirmCancelOrder', { orderId })}
+                secondary
+                style={{ marginLeft: halfPadding }}
+              />
+            </View>
           </View>
         </View>
       </View>

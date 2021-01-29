@@ -102,7 +102,7 @@ export default function ({ navigation, route }: Props) {
             2
           ) * 1000
         ),
-        formatDuration(order.duration)
+        formatDuration(order.route?.duration)
       );
     } else if (dispatchingState === 'arrived-pickup') {
       addressLabel = t('Retirada em');
@@ -142,21 +142,25 @@ export default function ({ navigation, route }: Props) {
     <View style={{ ...screens.default }}>
       <View style={{ flex: 1 }}>
         <OrderMap order={order} />
-        <ShowIf test={!!courierWaiting}>
-          {() => (
-            <CourierStatusHighlight
-              title={courierWaiting!.title}
-              subtitle={courierWaiting!.message}
-            />
-          )}
-        </ShowIf>
+        <View style={{ paddingHorizontal: padding }}>
+          <ShowIf test={!!courierWaiting}>
+            {() => (
+              <CourierStatusHighlight
+                title={courierWaiting!.title}
+                subtitle={courierWaiting!.message}
+              />
+            )}
+          </ShowIf>
+        </View>
       </View>
       <PaddedView style={{ backgroundColor: colors.white, flexDirection: 'row' }}>
         <RoundedProfileImg flavor="courier" id={order.courier!.id} />
         <View style={{ flex: 1, marginLeft: padding }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={[texts.medium]}>{order.courier!.name}</Text>
-            <RoundedText>{dispatchDetails}</RoundedText>
+            <RoundedText backgroundColor={colors.lightGrey} color={colors.darkGrey} noBorder>
+              {dispatchDetails}
+            </RoundedText>
           </View>
           <Text style={[texts.small, { color: colors.darkGreen }]}>{addressLabel}</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

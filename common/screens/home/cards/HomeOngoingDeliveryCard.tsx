@@ -12,7 +12,8 @@ import {
   getOrderChat,
   getOrderChatUnreadCount,
 } from '../../../store/order/selectors';
-import { borders, colors, halfPadding, padding, texts } from '../../../styles';
+import { borders, colors, padding, texts } from '../../../styles';
+import { MessagesCard } from './MessagesCard';
 
 type Props = {
   order: WithId<Order>;
@@ -41,30 +42,7 @@ export default function ({ order, onSelect }: Props) {
       <View style={{ ...borders.default }}>
         <View>
           <ShowIf test={unreadCount > 0}>
-            {() => (
-              <TouchableOpacity onPress={() => onSelect(order, true)}>
-                <View
-                  style={{
-                    borderTopLeftRadius: 8,
-                    borderTopRightRadius: 8,
-                    borderBottomWidth: 1,
-                    borderBottomColor: colors.darkGrey,
-                    backgroundColor: colors.white,
-                  }}
-                >
-                  <PaddedView style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Image source={icons.chat} />
-                    <Text style={{ ...texts.small, marginLeft: halfPadding }}>
-                      {t('Você tem')} {unreadCount} {t('novas mensagens.')}
-                    </Text>
-                    <View style={{ flex: 1 }} />
-                    <Text style={{ ...texts.small, ...texts.bold, color: colors.darkGreen }}>
-                      {t('Abrir chat')}
-                    </Text>
-                  </PaddedView>
-                </View>
-              </TouchableOpacity>
-            )}
+            {() => <MessagesCard unreadCount={unreadCount} onPress={() => onSelect(order, true)} />}
           </ShowIf>
           <PaddedView
             style={{

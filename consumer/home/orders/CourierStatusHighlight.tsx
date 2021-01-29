@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
-
+import { Image, StyleSheet, Text, View } from 'react-native';
 import * as icons from '../../../assets/icons';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
@@ -24,7 +23,7 @@ export default function ({ title, subtitle }: Props) {
             marginBottom: tallerDevice ? padding : halfPadding,
             position: 'absolute',
             bottom: halfPadding,
-            width: '95%',
+            width: '100%',
             // marginHorizontal: tallerDevice ? padding : halfPadding,
           },
         ]}
@@ -32,16 +31,20 @@ export default function ({ title, subtitle }: Props) {
         <View style={{ height: 64, width: 64, borderRadius: 32, backgroundColor: colors.white }}>
           <Image source={icons.motocycleWhite} />
         </View>
-        <View style={{ marginLeft: padding }}>
+        <View style={{ marginLeft: padding, flex: 1 }}>
           <Text style={{ ...texts.default }}>{title}</Text>
-          <Text
-            style={{
-              ...texts.small,
-              color: colors.darkGrey,
-            }}
-          >
-            {subtitle}
-          </Text>
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                ...texts.small,
+                color: colors.darkGrey,
+                flexWrap: 'wrap',
+              }}
+              numberOfLines={2}
+            >
+              {subtitle}
+            </Text>
+          </View>
         </View>
       </View>
     </View>
