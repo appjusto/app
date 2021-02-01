@@ -1,8 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { View, Alert, ScrollView } from 'react-native';
-
+import { Alert, ScrollView, View } from 'react-native';
 import { ApiContext } from '../../common/app/context';
 import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
@@ -46,7 +45,7 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <View style={[screens.config, screens.headless]}>
+    <View style={{ ...screens.config }}>
       <ScrollView>
         <PaddedView horizontal={false}>
           <ConfigItem

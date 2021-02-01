@@ -31,7 +31,7 @@ export default function ({ isLoading, onLocationPress, onSearchPress }: Props) {
       {/* search */}
       <DoubleHeader
         title={t('Buscar')}
-        subtitle={t('Já sabe o que quer? Então não perde tempo!')}
+        subtitle={t('Então vai direto no seu prato ou restaurante preferido')}
       />
       <View style={{ marginTop: 24, paddingHorizontal: 12, marginBottom: halfPadding }}>
         <TouchableWithoutFeedback onPress={onSearchPress}>
