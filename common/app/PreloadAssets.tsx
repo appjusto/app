@@ -1,8 +1,7 @@
-import { AppLoading } from 'expo';
+import AppLoading from 'expo-app-loading';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
-import React, { useState, ReactElement } from 'react';
-
+import React, { ReactElement, useState } from 'react';
 import fonts from '../../assets/fonts';
 import icons from '../../assets/icons';
 
@@ -24,6 +23,7 @@ export default function ({ children }: Props) {
         onFinish={() => {
           setAssetsLoaded(true);
         }}
+        onError={console.warn}
       />
     );
   }
