@@ -2,7 +2,6 @@ import { Fare, Order } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Text, View } from 'react-native';
-import HorizontalSelect from '../../../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { getOrderTotal } from '../../../../../common/store/api/order/helpers';
 import { colors, padding, texts } from '../../../../../common/styles';
@@ -12,25 +11,10 @@ import SingleHeader from '../../../restaurants/SingleHeader';
 
 type Props = {
   order: Order;
-  selectedFare: Fare;
-  selectedPlatformFee: number;
-  platformFeeOptions: number[];
-  onChangeFee: (value: number) => void;
+  selectedFare: Fare | undefined;
 };
 
-export const OrderCostBreakdown = ({
-  order,
-  selectedFare,
-  selectedPlatformFee,
-  platformFeeOptions,
-  onChangeFee,
-}: Props) => {
-  const options = platformFeeOptions.map((value) => ({
-    id: `${value}`,
-    title: formatCurrency(value),
-    data: value,
-  }));
-  const selectedOption = options.find((option) => option.data === selectedPlatformFee);
+export const OrderCostBreakdown = ({ order, selectedFare }: Props) => {
   return (
     <View style={{ flex: 1 }}>
       <SingleHeader title={t('Entenda os valores')} />
@@ -50,57 +34,50 @@ export const OrderCostBreakdown = ({
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={{ ...texts.default, lineHeight: 21 }}>{t('Entregador')}</Text>
             <Text style={{ ...texts.default, lineHeight: 21 }}>
-              {formatCurrency(selectedFare?.courierFee ?? 0)}
+              {formatCurrency(selectedFare?.consumer.courierFee ?? 0)}
             </Text>
           </View>
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={{ ...texts.default, lineHeight: 21 }}>{t('Frota escolhida')}</Text>
-            {/* find out how to display the fleet name below */}
             <Text style={{ ...texts.default, lineHeight: 21 }}>{selectedFare?.fleet.name}</Text>
           </View>
-          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
-              {t('Impostos')}
-            </Text>
-            <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
-              {formatCurrency(selectedFare?.taxes ?? 0)}
-            </Text>
-          </View>
-          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
-              {t('Tarifa financeira')}
-            </Text>
-            <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
-              {formatCurrency(selectedFare?.financialFee ?? 0)}
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: 12,
-          }}
-        >
-          <Text style={{ ...texts.default, lineHeight: 21 }}>{t('AppJusto')}</Text>
-          <Text style={{ ...texts.default, lineHeight: 21 }}>
-            {formatCurrency(selectedPlatformFee)}
-          </Text>
-        </View>
-        <Text style={{ marginTop: padding, ...texts.small, color: colors.darkGrey }}>
-          {t(
-            'O AppJusto cobra menos para ser mais justo com todos. Você pode aumentar a sua contribuição se desejar.'
+          {(selectedFare?.consumer.taxes ?? 0) !== 0 && (
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
+                {t('Impostos')}
+              </Text>
+              <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
+                {formatCurrency(selectedFare!.consumer.taxes ?? 0)}
+              </Text>
+            </View>
           )}
-        </Text>
+          {(selectedFare?.consumer.financialFee ?? 0) !== 0 && (
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
+                {t('Tarifa financeira')}
+              </Text>
+              <Text style={{ ...texts.default, lineHeight: 21, color: colors.darkGrey }}>
+                {formatCurrency(selectedFare!.consumer.financialFee ?? 0)}
+              </Text>
+            </View>
+          )}
+        </View>
+        {(selectedFare?.consumer.platformFee ?? 0) !== 0 && (
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 12,
+            }}
+          >
+            <Text style={{ ...texts.default, lineHeight: 21 }}>{t('AppJusto')}</Text>
+            <Text style={{ ...texts.default, lineHeight: 21 }}>
+              {formatCurrency(selectedFare!.consumer.platformFee)}
+            </Text>
+          </View>
+        )}
       </PaddedView>
-      <View style={{ marginVertical: padding, marginLeft: padding }}>
-        <HorizontalSelect
-          data={options}
-          selected={selectedOption}
-          onSelect={(option) => onChangeFee(option.data)}
-        />
-      </View>
     </View>
   );
 };

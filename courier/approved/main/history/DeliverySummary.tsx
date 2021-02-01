@@ -5,7 +5,6 @@ import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
-import OrderCostBreakdown from '../../../../common/screens/history/OrderCostBreakdown';
 import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import {
@@ -16,6 +15,7 @@ import {
 } from '../../../../common/utils/formatters';
 import OrderMap from '../../../../consumer/home/orders/p2p-order/OrderMap';
 import PlaceSummary from '../../../../consumer/home/orders/p2p-order/PlaceSummary';
+import { OrderCostBreakdown } from '../../../../consumer/home/orders/summary/breakdown/OrderCostBreakdown';
 import { t } from '../../../../strings';
 import { DeliveriesNavigatorParamList } from './types';
 
@@ -42,7 +42,7 @@ export default function ({ navigation, route }: Props) {
     );
   }
 
-  const fee = (order.fare?.courierFee ?? 0) + (order.tip?.value ?? 0);
+  const fee = (order.fare?.consumer.courierFee ?? 0) + (order.tip?.value ?? 0);
 
   return (
     <View style={{ ...screens.default }}>
@@ -55,7 +55,10 @@ export default function ({ navigation, route }: Props) {
           <PlaceSummary title={t('Entrega')} place={order.destination} />
           <View style={{ marginTop: halfPadding }}>
             <RoundedText>
-              {separateWithDot(formatDistance(order.distance), formatDuration(order.duration))}
+              {separateWithDot(
+                formatDistance(order.route?.distance ?? 0),
+                formatDuration(order.route?.duration ?? 0)
+              )}
             </RoundedText>
           </View>
         </PaddedView>
@@ -74,7 +77,7 @@ export default function ({ navigation, route }: Props) {
         </PaddedView>
         <HR height={padding} />
         <PaddedView>
-          <OrderCostBreakdown order={order} />
+          <OrderCostBreakdown order={order} selectedFare={order.fare} />
         </PaddedView>
       </ScrollView>
     </View>
