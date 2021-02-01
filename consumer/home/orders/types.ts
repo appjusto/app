@@ -24,10 +24,6 @@ export type OrderNavigatorParamList = {
   ProfilePaymentMethods?: {
     returnScreen: 'CreateOrderP2P';
   };
-  PermissionDeniedFeedback: {
-    title: string;
-    subtitle: string;
-  };
   OrderMatching: {
     orderId: string;
   };
@@ -53,4 +49,5 @@ export type OrderNavigatorParamList = {
   OrderDeliveredFeedback: {
     orderId: string;
   };
+  Home: undefined;
 } & ChatParamList;

@@ -3,11 +3,11 @@ import React from 'react';
 import ArrowBox from '../../../../common/components/views/ArrowBox';
 import Chat from '../../../../common/screens/Chat';
 import FleetDetail from '../../../../common/screens/fleet/FleetDetail';
-import PermissionDeniedFeedback from '../../../../common/screens/PermissionDeniedFeedback';
 import { t } from '../../../../strings';
 import ProfileAddCard from '../../../profile/payment/ProfileAddCard';
 import ProfilePaymentMethods from '../../../profile/payment/ProfilePaymentMethods';
 import ProfileEdit from '../../../profile/ProfileEdit';
+import Home from '../../Home';
 import AddressComplete from '../AddressComplete';
 import CancelOrder from '../CancelOrder';
 import ConfirmCancelOrder from '../ConfirmCancelOrder';
@@ -70,11 +70,6 @@ export const OrderNavigator = () => {
         options={{ title: t('Formas de pagamento') }}
       />
       <Stack.Screen
-        name="PermissionDeniedFeedback"
-        component={PermissionDeniedFeedback}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
         name="OrderMatching"
         component={OrderMatching}
         options={{ headerShown: false }}
@@ -84,19 +79,16 @@ export const OrderNavigator = () => {
         component={OrderUnmatched}
         options={{ headerShown: false }}
       />
-      {/* done */}
       <Stack.Screen
         name="OngoingOrder"
         component={OngoingOrder}
         options={{ title: t('Pedido em andamento') }}
       />
-      {/* done */}
       <Stack.Screen
         name="CourierDetail"
         component={CourierDetail}
         options={{ title: t('Mais informações') }}
       />
-      {/* done */}
       <Stack.Screen
         name="OrderComplaint"
         component={OrderComplaint}
@@ -118,6 +110,7 @@ export const OrderNavigator = () => {
         component={OrderDeliveredFeedback}
         options={{ headerShown: false }}
       />
+      <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };

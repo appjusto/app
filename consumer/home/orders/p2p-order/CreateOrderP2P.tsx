@@ -9,12 +9,12 @@ import useObserveOrder from '../../../../common/store/api/order/hooks/useObserve
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { screens } from '../../../../common/styles';
-import { HomeNavigatorParamList } from '../../types';
+import { OrderNavigatorParamList } from '../types';
 import OrderHeader from './OrderHeader';
 import OrderPager from './OrderPager';
 
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
-type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'CreateOrderP2P'>;
+type ScreenNavigationProp = StackNavigationProp<OrderNavigatorParamList, 'CreateOrderP2P'>;
+type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'CreateOrderP2P'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

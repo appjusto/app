@@ -1,14 +1,13 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import { texts, screens, colors, borders } from '../../../../common/styles';
+import { colors, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import { HomeNavigatorParamList } from '../../types';
+import { OrderNavigatorParamList } from '../types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'TransportableItems'>;
+type ScreenNavigationProp = StackNavigationProp<OrderNavigatorParamList, 'TransportableItems'>;
 
 export default function () {
   return (
