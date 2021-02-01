@@ -8,6 +8,7 @@ import {
   IssueType,
   Order,
   OrderIssue,
+  OrderItem,
   OrderRejection,
   OrderStatus,
   Place,
@@ -15,7 +16,6 @@ import {
   Review,
   WithId,
 } from 'appjusto-types';
-import { OrderItem } from 'appjusto-types/order/item';
 import firebase from 'firebase';
 import { isEmpty } from 'lodash';
 import FirebaseRefs from '../FirebaseRefs';
