@@ -1,8 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext, useCallback } from 'react';
+import React from 'react';
 import { Alert, ScrollView, View } from 'react-native';
-
 import { ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import { signOut } from '../../../../common/store/user/actions';
@@ -20,10 +19,10 @@ type Props = {
 
 export default function ({ navigation }: Props) {
   // context
-  const api = useContext(ApiContext);
+  const api = React.useContext(ApiContext);
 
   // handlers
-  const confirmLogout = useCallback(() => {
+  const confirmLogout = React.useCallback(() => {
     Alert.alert(
       t('Sair da conta'),
       t(
@@ -45,7 +44,7 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <View style={[screens.config, screens.headless]}>
+    <View style={[screens.config]}>
       <ScrollView>
         <ConfigItem
           title={t('Seus dados')}

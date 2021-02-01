@@ -101,7 +101,7 @@ export default function ({ navigation, route }: Props) {
     );
   }
   return (
-    <View style={[screens.config, screens.headless]}>
+    <View style={[screens.config]}>
       <SectionList
         style={{ flex: 1 }}
         sections={sections}
