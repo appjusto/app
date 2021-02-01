@@ -1,16 +1,15 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-
 import ArrowBox from '../../common/components/views/ArrowBox';
 import ProfileErase from '../../common/screens/profile/ProfileErase';
 import Terms from '../../common/screens/unlogged/Terms';
 import { t } from '../../strings';
-import Profile from './Profile';
-import ProfileEdit from './ProfileEdit';
+import PaymentMethodDetail from './payment/PaymentMethodDetail';
 import ProfileAddCard from './payment/ProfileAddCard';
 import ProfilePaymentMethods from './payment/ProfilePaymentMethods';
+import Profile from './Profile';
+import ProfileEdit from './ProfileEdit';
 import { ProfileParamList } from './types';
-import PaymentMethodDetail from './payment/PaymentMethodDetail';
 
 const Stack = createStackNavigator<ProfileParamList>();
 export default function () {
@@ -22,7 +21,7 @@ export default function () {
         headerBackTitleVisible: false,
       })}
     >
-      <Stack.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
+      <Stack.Screen name="Profile" component={Profile} options={{ title: t('Sua conta') }} />
       <Stack.Screen
         name="ProfileEdit"
         component={ProfileEdit}

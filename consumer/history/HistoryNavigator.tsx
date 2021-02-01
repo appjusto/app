@@ -18,7 +18,11 @@ export default function () {
         headerBackTitleVisible: false,
       })}
     >
-      <Stack.Screen name="OrderHistory" component={OrderHistory} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="OrderHistory"
+        component={OrderHistory}
+        options={{ title: t('Seus pedidos') }}
+      />
       <Stack.Screen
         name="OrderDetail"
         component={OrderDetail}

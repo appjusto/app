@@ -19,7 +19,7 @@ export default function () {
       }}
     >
       <Text style={{ ...texts.default, color: colors.darkGrey }}>
-        {t('Encontre um prato ou restaurante')}
+        {t('Buscar por prato ou restaurante')}
       </Text>
       <Image source={icons.search} />
     </View>

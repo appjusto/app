@@ -19,10 +19,10 @@ import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
-import { HomeNavigatorParamList } from '../types';
+import { OrderNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'OrderComplaint'>;
-type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'OrderComplaint'>;
+type ScreenNavigationProp = StackNavigationProp<OrderNavigatorParamList, 'OrderComplaint'>;
+type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'OrderComplaint'>;
 
 type Props = {
   route: ScreenRouteProp;

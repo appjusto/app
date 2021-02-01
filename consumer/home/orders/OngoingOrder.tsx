@@ -19,12 +19,12 @@ import { updateProfile } from '../../../common/store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatDistance, formatDuration, separateWithDot } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
-import { HomeNavigatorParamList } from '../types';
 import CourierStatusHighlight from './CourierStatusHighlight';
 import OrderMap from './p2p-order/OrderMap';
+import { OrderNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'OngoingOrder'>;
-type ScreenRoute = RouteProp<HomeNavigatorParamList, 'OngoingOrder'>;
+type ScreenNavigationProp = StackNavigationProp<OrderNavigatorParamList, 'OngoingOrder'>;
+type ScreenRoute = RouteProp<OrderNavigatorParamList, 'OngoingOrder'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
