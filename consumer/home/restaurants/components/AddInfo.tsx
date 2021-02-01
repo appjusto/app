@@ -1,6 +1,6 @@
+import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { Image, Text, View } from 'react-native';
-import * as icons from '../../../../assets/icons';
+import { Text, View } from 'react-native';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import { halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -14,7 +14,7 @@ export default function ({ value, onAddInfo }: Props) {
   return (
     <View style={{ paddingHorizontal: padding, marginBottom: padding }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: halfPadding }}>
-        <Image source={icons.info} />
+        <Feather name="info" size={14} />
         <Text style={{ ...texts.default, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
       </View>
       <DefaultInput

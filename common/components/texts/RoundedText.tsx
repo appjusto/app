@@ -1,10 +1,10 @@
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { borders, colors, halfPadding, texts } from '../../styles';
 
 type Props = {
   children: string;
-  leftIcon?: any;
+  leftIcon?: React.ReactNode;
   color?: string;
   backgroundColor?: string;
   noBorder?: boolean;
@@ -27,7 +27,7 @@ export default function ({ leftIcon, color, backgroundColor: bg, children, noBor
         backgroundColor,
       }}
     >
-      {leftIcon && <Image source={leftIcon} style={{ tintColor, marginRight: 6 }} />}
+      {leftIcon}
       <Text style={[texts.small, { color: tintColor }]}>{children}</Text>
     </View>
   );

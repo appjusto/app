@@ -1,3 +1,4 @@
+import { Feather } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Complement, WithId } from 'appjusto-types';
@@ -6,7 +7,6 @@ import React from 'react';
 import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
-import * as icons from '../../../../../assets/icons';
 import { ApiContext } from '../../../../../common/app/context';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
@@ -123,7 +123,7 @@ export default function ({ navigation, route }: Props) {
       />
       <View style={{ paddingHorizontal: 12 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: halfPadding }}>
-          <Image source={icons.info} />
+          <Feather name="info" size={14} />
           <Text style={{ ...texts.default, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
         </View>
         <DefaultInput

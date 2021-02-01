@@ -1,7 +1,7 @@
+import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { check } from '../../../../assets/icons';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
@@ -23,7 +23,7 @@ export const ConfirmationCard = ({ onPress }: Props) => {
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Image source={check} />
+        <Feather name="check" size={16} />
         <Text style={[{ ...texts.small }, { ...texts.bold, marginLeft: padding }]}>
           {t('Código de confirmação')}
         </Text>

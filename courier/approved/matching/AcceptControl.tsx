@@ -1,9 +1,8 @@
+import { Feather } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 import React, { useCallback, useRef } from 'react';
-import { View, Image, Text, ViewProps, Dimensions } from 'react-native';
-
-import * as icons from '../../../assets/icons';
-import { colors, texts, padding, borders } from '../../../common/styles';
+import { Dimensions, Text, View, ViewProps } from 'react-native';
+import { borders, colors, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
 interface Props extends ViewProps {
@@ -62,11 +61,11 @@ export default function ({ acceptHandler, rejectHandler, disabled }: Props) {
         }}
       >
         <View style={{ alignItems: 'center' }}>
-          <Image source={icons.reject} />
+          <Feather name="x" size={20} color={colors.darkGrey} />
           <Text style={[texts.default, { color: colors.darkGrey }]}>{t('Recusar')}</Text>
         </View>
         <View style={{ alignItems: 'center' }}>
-          <Image source={icons.accept} />
+          <Feather name="check-circle" size={20} color={colors.black} />
           <Text style={[texts.default]}>{t('Aceitar')}</Text>
         </View>
       </View>

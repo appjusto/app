@@ -1,12 +1,11 @@
+import { Feather } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ReviewType } from 'appjusto-types';
 import React, { useCallback, useContext, useState } from 'react';
-import { View, Text, Image } from 'react-native';
+import { Text, View } from 'react-native';
 import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
-
-import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
@@ -17,7 +16,7 @@ import Pill from '../../../common/components/views/Pill';
 import { sendCourierReview } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
-import { halfPadding, screens, texts, colors, padding, borders } from '../../../common/styles';
+import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatDate } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { HistoryParamList } from '../../history/types';
@@ -110,7 +109,7 @@ export default function ({ route, navigation }: Props) {
                   alignItems: 'center',
                 }}
               >
-                <Image source={icons.thumbUp} />
+                <Feather name="thumbs-up" size={24} />
               </View>
             </TouchableWithoutFeedback>
             <TouchableWithoutFeedback onPress={negativeHandler}>
@@ -127,7 +126,7 @@ export default function ({ route, navigation }: Props) {
                   alignItems: 'center',
                 }}
               >
-                <Image source={icons.thumbDown} />
+                <Feather name="thumbs-down" size={24} />
               </View>
             </TouchableWithoutFeedback>
           </View>

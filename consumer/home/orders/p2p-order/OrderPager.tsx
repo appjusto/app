@@ -1,10 +1,10 @@
+import { Feather } from '@expo/vector-icons';
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { Fleet, Order, Place, WithId } from 'appjusto-types';
 import React from 'react';
-import { Image, NativeSyntheticEvent, Text, View } from 'react-native';
+import { NativeSyntheticEvent, Text, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import * as icons from '../../../../assets/icons';
 import { ApiContext } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
@@ -166,7 +166,7 @@ export default function ({
                   marginTop: padding,
                 }}
               >
-                <Image source={icons.info} />
+                <Feather name="info" size={14} />
                 <Text style={{ ...texts.small, marginLeft: 4 }}>
                   {t('O que pode ser transportado')}
                 </Text>
@@ -222,7 +222,7 @@ export default function ({
                     marginTop: padding,
                   }}
                 >
-                  <Image source={icons.info} />
+                  <Feather name="info" size={14} />
                   <Text style={{ ...texts.small, marginLeft: 4 }}>
                     {t('Saiba o que pode ser transportado')}
                   </Text>

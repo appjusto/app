@@ -1,12 +1,12 @@
+import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import * as icons from '../../../../assets/icons';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
-import { colors, padding, texts } from '../../../../common/styles';
+import { borders, colors, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
 interface Props {
@@ -39,7 +39,11 @@ export const OrderPayment = ({
               }}
             >
               <Text style={{ ...texts.medium }}>{t('Forma de pagamento')}</Text>
-              <Image style={{ width: 32, height: 32 }} source={icons.edit} />
+              <Feather
+                name="edit-3"
+                size={12}
+                style={{ ...borders.default, borderColor: colors.lightGrey, padding: 8 }}
+              />
             </View>
             <Text style={{ ...texts.default, color: colors.darkGrey }}>
               {`${t('Cartão de crédito')}: **** ${selectedPaymentMethod!.data.last_digits}`}

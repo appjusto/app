@@ -1,6 +1,6 @@
+import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { Image, View } from 'react-native';
-import * as icons from '../../../assets/icons';
+import { View } from 'react-native';
 import { borders, colors } from '../../styles';
 
 interface Props {
@@ -24,11 +24,7 @@ export const QuantityButton = ({ sign, size = 'small', selected = false }: Props
         borderColor: colors.black,
       }}
     >
-      <Image
-        source={sign === 'plus' ? icons.plus : icons.minus}
-        width={dimension / 2}
-        height={dimension / 2}
-      />
+      <Feather name={sign} size={dimension / 2} />
     </View>
   );
 };

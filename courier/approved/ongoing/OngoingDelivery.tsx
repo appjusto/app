@@ -1,3 +1,4 @@
+import { Feather } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { distance } from 'geokit';
@@ -6,7 +7,6 @@ import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useMutation } from 'react-query';
-import * as icons from '../../../assets/icons';
 import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RoundedText from '../../../common/components/texts/RoundedText';
@@ -185,14 +185,23 @@ export default function ({ navigation, route }: Props) {
         >
           <TouchableOpacity onPress={() => navigation.navigate('Chat', { orderId })}>
             <View style={{ marginTop: halfPadding }}>
-              <RoundedText leftIcon={icons.chat}>{t('Iniciar chat')}</RoundedText>
+              <RoundedText
+                leftIcon={<Feather name="message-circle" size={12} style={{ marginRight: 6 }} />}
+              >
+                {t('Iniciar chat')}
+              </RoundedText>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigation.navigate('CourierDeliveryProblem', { orderId })}
           >
             <View style={{ marginTop: halfPadding }}>
-              <RoundedText color={colors.red} leftIcon={icons.infoRed}>
+              <RoundedText
+                color={colors.red}
+                leftIcon={
+                  <Feather name="info" size={12} color={colors.red} style={{ marginRight: 6 }} />
+                }
+              >
                 {t('Tive um problema')}
               </RoundedText>
             </View>

@@ -1,7 +1,7 @@
+import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import * as icons from '../../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import useLastKnownLocation from '../../../../common/hooks/useLastKnownLocation';
 import {
@@ -76,7 +76,7 @@ export default function () {
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Image source={icons.navigationArrow} />
+        <Feather name="navigation" size={10} />
         <View style={{ flexShrink: 1 }}>
           <Text style={{ ...texts.small, marginLeft: halfPadding, flexWrap: 'wrap' }}>
             {currentPlace?.address ? formatAddress(currentPlace.address) : ''}

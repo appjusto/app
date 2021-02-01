@@ -1,10 +1,8 @@
+import { Feather } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 import React, { useCallback, useRef } from 'react';
-import { View, Text, Image, ViewProps, Dimensions } from 'react-native';
-
-import * as icons from '../../../assets/icons';
-import { borders, colors, padding, texts } from '../../../common/styles';
-import { t } from '../../../strings';
+import { Text, View, ViewProps } from 'react-native';
+import { borders, colors, texts } from '../../../common/styles';
 
 interface Props extends ViewProps {
   nextStepHandler: () => void;
@@ -50,7 +48,7 @@ export default function ({ nextStepHandler, status }: Props) {
       >
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={[texts.default]}>{status}</Text>
-          <Image source={icons.accept} style={{ marginLeft: 10 }} />
+          <Feather name="check-circle" size={20} color={colors.black} style={{ marginLeft: 10 }} />
         </View>
       </View>
       {/* slider */}

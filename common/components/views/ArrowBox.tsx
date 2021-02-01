@@ -1,8 +1,7 @@
+import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { View, Image, StyleSheet, ViewProps } from 'react-native';
-
-import { buttonArrow } from '../../../assets/icons';
-import { colors, borders } from '../../styles';
+import { StyleSheet, View, ViewProps } from 'react-native';
+import { borders, colors } from '../../styles';
 
 interface Props extends ViewProps {
   flipped?: boolean;
@@ -11,7 +10,7 @@ interface Props extends ViewProps {
 export default function ({ flipped, ...props }: Props) {
   return (
     <View style={styles.container} {...props}>
-      <Image source={buttonArrow} style={flipped ? { transform: [{ scaleX: -1 }] } : null} />
+      <Feather name="arrow-right" style={flipped ? { transform: [{ scaleX: -1 }] } : null} />
     </View>
   );
 }

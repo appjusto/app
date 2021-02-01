@@ -1,11 +1,11 @@
+import { Feather } from '@expo/vector-icons';
 import { Place } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import * as icons from '../../../../assets/icons';
 import ShowIf from '../../../../common/components/views/ShowIf';
-import { colors, texts } from '../../../../common/styles';
+import { borders, colors, texts } from '../../../../common/styles';
 import { formatAddress } from '../../../../common/utils/formatters';
 
 type Props = {
@@ -32,7 +32,11 @@ export default function ({ place, title, onEdit }: Props) {
         {() => (
           <View style={{ alignSelf: 'center' }}>
             <TouchableOpacity onPress={onEdit}>
-              <Image style={{ width: 32, height: 32 }} source={icons.edit} />
+              <Feather
+                name="edit-3"
+                size={12}
+                style={{ ...borders.default, borderColor: colors.lightGrey, padding: 8 }}
+              />
             </TouchableOpacity>
           </View>
         )}

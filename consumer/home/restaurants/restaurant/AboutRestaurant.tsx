@@ -1,9 +1,9 @@
+import { Feather } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Image, Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import * as icons from '../../../../assets/icons';
 import { useContextBusiness } from '../../../../common/store/context/business';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -43,7 +43,7 @@ export default function ({ route }: Props) {
       <View style={{ width: '100%', height: padding, backgroundColor: colors.lightGrey }} />
       <View style={{ marginTop: padding, paddingHorizontal: padding, paddingBottom: padding }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Image source={icons.clock} />
+          <Feather name="clock" size={14} />
           <Text style={{ ...texts.default, marginLeft: halfPadding }}>
             {t('Horário de entrega')}
           </Text>
@@ -79,7 +79,7 @@ export default function ({ route }: Props) {
       <View style={{ width: '100%', height: padding, backgroundColor: colors.lightGrey }} />
       <View style={{ marginTop: padding, paddingHorizontal: padding, paddingBottom: padding }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Image source={icons.info} />
+          <Feather name="info" size={14} />
           <Text style={{ ...texts.default, marginLeft: halfPadding }}>
             {t('Outras informações')}
           </Text>
