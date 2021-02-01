@@ -13,11 +13,11 @@ import { colors, halfPadding, padding, screens, texts } from '../../../common/st
 import { formatDate } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import SingleHeader from '../restaurants/SingleHeader';
-import { HomeNavigatorParamList } from '../types';
 import OrderFleetCard from './OrderFleetCard';
+import { OrderNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'CourierDetail'>;
-type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'CourierDetail'>;
+type ScreenNavigationProp = StackNavigationProp<OrderNavigatorParamList, 'CourierDetail'>;
+type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'CourierDetail'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

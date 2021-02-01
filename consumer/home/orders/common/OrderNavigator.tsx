@@ -84,16 +84,19 @@ export const OrderNavigator = () => {
         component={OrderUnmatched}
         options={{ headerShown: false }}
       />
+      {/* done */}
       <Stack.Screen
         name="OngoingOrder"
         component={OngoingOrder}
         options={{ title: t('Pedido em andamento') }}
       />
+      {/* done */}
       <Stack.Screen
         name="CourierDetail"
         component={CourierDetail}
         options={{ title: t('Mais informações') }}
       />
+      {/* done */}
       <Stack.Screen
         name="OrderComplaint"
         component={OrderComplaint}
