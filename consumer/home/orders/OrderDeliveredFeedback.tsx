@@ -75,7 +75,7 @@ export default ({ navigation, route }: Props) => {
         <View style={{ paddingHorizontal: padding }}>
           <DefaultButton
             title={t('Finalizar')}
-            onPress={() => navigation.popToTop()}
+            onPress={() => navigation.navigate('Home')}
             style={{ marginTop: padding }}
           />
           <View

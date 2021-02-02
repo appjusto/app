@@ -13,6 +13,7 @@ import RoundedText from '../../../common/components/texts/RoundedText';
 import HR from '../../../common/components/views/HR';
 import ShowIf from '../../../common/components/views/ShowIf';
 import useNotificationToken from '../../../common/hooks/useNotificationToken';
+import { MessagesCard } from '../../../common/screens/home/cards/MessagesCard';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { updateProfile } from '../../../common/store/user/actions';
@@ -67,10 +68,10 @@ export default function ({ navigation, route }: Props) {
   // check status to navigate to other screens
   React.useEffect(() => {
     if (order?.status === 'delivered') {
-      navigation.replace('OrderDeliveredFeedback', { orderId });
+      navigation.navigate('OrderDeliveredFeedback', { orderId });
     } else if (order?.dispatchingState === 'matching') {
       // happens when courier cancels the delivery
-      navigation.replace('OrderMatching', { orderId });
+      navigation.navigate('OrderMatching', { orderId });
     }
   }, [order]);
 
@@ -143,6 +144,9 @@ export default function ({ navigation, route }: Props) {
       <View style={{ flex: 1 }}>
         <OrderMap order={order} />
         <View style={{ paddingHorizontal: padding }}>
+          <ShowIf>
+            {() => <MessagesCard unreadCount={unreadCount} onPress={() => onSelect(order, true)} />}
+          </ShowIf>
           <ShowIf test={!!courierWaiting}>
             {() => (
               <CourierStatusHighlight
