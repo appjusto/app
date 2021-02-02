@@ -1,6 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import ArrowBox from '../../common/components/views/ArrowBox';
+import Chat from '../../common/screens/Chat';
 import PermissionDeniedFeedback from '../../common/screens/PermissionDeniedFeedback';
 import { t } from '../../strings';
 import Home from './Home';
@@ -30,6 +31,7 @@ export default function () {
         component={OngoingOrder}
         options={{ title: t('Pedido em andamento') }}
       />
+      <Stack.Screen name="Chat" component={Chat} options={{ title: t('Chat') }} />
       <Stack.Screen
         name="PermissionDeniedFeedback"
         component={PermissionDeniedFeedback}

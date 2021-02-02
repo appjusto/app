@@ -19,7 +19,6 @@ import { updateProfile } from '../../../common/store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatDistance, formatDuration, separateWithDot } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
-import { ConfirmationCard } from './components/ConfirmationCard';
 import CourierStatusHighlight from './CourierStatusHighlight';
 import OrderMap from './p2p-order/OrderMap';
 import { OrderNavigatorParamList } from './types';
@@ -41,7 +40,6 @@ export default function ({ navigation, route }: Props) {
   // app state
   const consumer = useSelector(getConsumer);
   // screen state
-  const [showCode, setShowCode] = React.useState<boolean>(true);
   const { order } = useObserveOrder(orderId);
   const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
     consumer!.notificationToken
@@ -106,7 +104,6 @@ export default function ({ navigation, route }: Props) {
         ),
         formatDuration(order.route?.duration)
       );
-      setShowCode(false);
     } else if (dispatchingState === 'arrived-pickup') {
       addressLabel = t('Retirada em');
       address = order.origin.address.main;
@@ -153,11 +150,6 @@ export default function ({ navigation, route }: Props) {
                 subtitle={courierWaiting!.message}
               />
             )}
-          </ShowIf>
-        </View>
-        <View style={{ paddingHorizontal: padding }}>
-          <ShowIf test={showCode}>
-            {() => <ConfirmationCard onPress={() => setShowCode(false)} />}
           </ShowIf>
         </View>
       </View>
