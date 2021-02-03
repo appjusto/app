@@ -16,6 +16,11 @@ import useNotificationToken from '../../../common/hooks/useNotificationToken';
 import { MessagesCard } from '../../../common/screens/home/cards/MessagesCard';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
+import {
+  getLastReadMessage,
+  getOrderChat,
+  getOrderChatUnreadCount,
+} from '../../../common/store/order/selectors';
 import { updateProfile } from '../../../common/store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatDistance, formatDuration, separateWithDot } from '../../../common/utils/formatters';
@@ -42,9 +47,13 @@ export default function ({ navigation, route }: Props) {
   const consumer = useSelector(getConsumer);
   // screen state
   const { order } = useObserveOrder(orderId);
+  const messages = useSelector(getOrderChat)(orderId);
+  const lastReadMessage = useSelector(getLastReadMessage)(orderId);
+  const unreadCount = getOrderChatUnreadCount(messages, lastReadMessage);
   const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
     consumer!.notificationToken
   );
+
   // side effects
   // whenever params changes
   // open chat if there's a new message
@@ -144,9 +153,24 @@ export default function ({ navigation, route }: Props) {
       <View style={{ flex: 1 }}>
         <OrderMap order={order} />
         <View style={{ paddingHorizontal: padding }}>
-          <ShowIf>
-            {() => <MessagesCard unreadCount={unreadCount} onPress={() => onSelect(order, true)} />}
-          </ShowIf>
+          <View
+            style={{
+              position: 'absolute',
+              width: '100%',
+              marginBottom: padding,
+              bottom: 96,
+              alignSelf: 'center',
+            }}
+          >
+            <ShowIf test={unreadCount > 0}>
+              {() => (
+                <MessagesCard
+                  unreadCount={unreadCount}
+                  onPress={() => navigation.navigate('Chat', { orderId })}
+                />
+              )}
+            </ShowIf>
+          </View>
           <ShowIf test={!!courierWaiting}>
             {() => (
               <CourierStatusHighlight
