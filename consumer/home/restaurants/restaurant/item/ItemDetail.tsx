@@ -59,6 +59,7 @@ export default function ({ navigation, route }: Props) {
       quantity,
       notes,
       complements: complements.map((complement) => ({
+        name: complement.name,
         complementId: complement.id,
         price: complement.price,
       })),
