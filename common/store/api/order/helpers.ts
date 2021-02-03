@@ -1,6 +1,8 @@
-import { Order } from 'appjusto-types';
+import { Complement, ComplementGroup, Order, Product, WithId } from 'appjusto-types';
 import { OrderItem } from 'appjusto-types/order/item';
-import { isEmpty } from 'lodash';
+import { intersection, isEmpty } from 'lodash';
+
+// items
 
 export const addItemToOrder = (order: Order, item: OrderItem): Order => {
   if (!order?.items) return { ...order, items: [{ ...item }] };
@@ -25,6 +27,38 @@ export const addItemToOrder = (order: Order, item: OrderItem): Order => {
   };
 };
 
+const mergeItems = (a: OrderItem, b: OrderItem): OrderItem => ({
+  ...a,
+  ...b,
+  quantity: a.quantity + b.quantity,
+});
+
+// complements
+
+export const totalComplementsInGroup = (
+  group: ComplementGroup,
+  complements: WithId<Complement>[]
+) =>
+  intersection(
+    complements.map(
+      (c) => c.id,
+      (group.items ?? []).map((c) => c.id)
+    )
+  ).length;
+
+export const canAddComplement = (group: ComplementGroup, complements: WithId<Complement>[]) =>
+  totalComplementsInGroup(group, complements) < group.maximum;
+
+export const hasSatisfiedGroup = (group: ComplementGroup, complements: WithId<Complement>[]) => {
+  const total = totalComplementsInGroup(group, complements);
+  return total >= group.minimum && total <= group.maximum;
+};
+
+export const hasSatisfiedAllGroups = (product: Product, complements: WithId<Complement>[]) =>
+  product.complementsGroups?.every((group) => hasSatisfiedGroup(group, complements)) ?? true;
+
+// total
+
 export const getItemTotal = (item: OrderItem) => {
   const complemementsTotal = (item.complements ?? []).reduce(
     (total, complement) => total + complement.price,
@@ -35,9 +69,3 @@ export const getItemTotal = (item: OrderItem) => {
 
 export const getOrderTotal = (order: Order) =>
   (order.items ?? []).reduce((sum, item) => sum + getItemTotal(item), 0);
-
-const mergeItems = (a: OrderItem, b: OrderItem): OrderItem => ({
-  ...a,
-  ...b,
-  quantity: a.quantity + b.quantity,
-});

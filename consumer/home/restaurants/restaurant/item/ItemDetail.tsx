@@ -64,6 +64,10 @@ export default function ({ navigation, route }: Props) {
       })),
     } as OrderItem;
   }, [product, quantity, notes, complements]);
+  const canAddItemToOrder = React.useMemo(() => {
+    if (!product) return false;
+    return helpers.hasSatisfiedAllGroups(product, complements);
+  }, [product, complements]);
   // side effects
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -116,9 +120,11 @@ export default function ({ navigation, route }: Props) {
       <ItemComplements
         product={product}
         selectedComplements={complements}
-        onComplementToggle={(complement, selected) => {
-          if (selected) setComplements([...complements, complement]);
-          else setComplements(complements.filter((c) => c.id !== complement.id));
+        onComplementToggle={(group, complement, selected) => {
+          if (!selected || helpers.canAddComplement(group, complements)) {
+            if (selected) setComplements([...complements, complement]);
+            else setComplements(complements.filter((c) => c.id !== complement.id));
+          }
         }}
       />
       <View style={{ paddingHorizontal: 12 }}>
@@ -153,6 +159,7 @@ export default function ({ navigation, route }: Props) {
           <ItemQuantity
             value={quantity}
             title={`${t('Adicionar')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
+            disabled={!canAddItemToOrder}
             onChange={(value) => setQuantity(value)}
             onSubmit={addItemToOrder}
           />
