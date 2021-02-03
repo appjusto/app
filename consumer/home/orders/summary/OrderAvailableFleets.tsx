@@ -35,10 +35,8 @@ export const OrderAvailableFleets = ({
   React.useEffect(() => {
     if (!quotes || isEmpty(quotes)) return;
     const fleetsIds = quotes.map((quote) => quote.fleet.id);
-    console.log(fleetsIds);
     return api.fleet().observeFleets(setFleets, { fleetsIds });
   }, [quotes]);
-  console.log(fleets);
   // UI
   const isLoading = quotes === undefined;
   return (

@@ -24,6 +24,8 @@ type Props = {
   waiting: boolean;
   showMap: boolean;
   onEditStep: (step: Step) => void;
+  onEditItemPress?: (productId: string, itemId: string) => void;
+  onAddItemsPress?: () => void;
   placeOrder: (fleetId: string, platformFee: number) => void;
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;
@@ -35,6 +37,8 @@ export const OrderSummary = ({
   waiting,
   showMap,
   onEditStep,
+  onEditItemPress,
+  onAddItemsPress,
   placeOrder,
   navigateToFillPaymentInfo,
   navigateFleetDetail,
@@ -90,7 +94,11 @@ export const OrderSummary = ({
       {!isEmpty(order.items) && (
         <View>
           <HR height={padding} />
-          <OrderItems order={order} />
+          <OrderItems
+            order={order}
+            onEditItemPress={onEditItemPress!}
+            onAddItemsPress={onAddItemsPress!}
+          />
           <HR height={padding} />
           <AddInfo value={notes} onAddInfo={setNotes} />
         </View>

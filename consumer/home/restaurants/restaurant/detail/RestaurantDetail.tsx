@@ -1,4 +1,3 @@
-import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, SectionList, TouchableOpacity, View } from 'react-native';
@@ -15,22 +14,15 @@ import { CartButton } from '../CartButton';
 import { RestaurantNavigatorParamList } from '../types';
 import { ProductListItem } from './ProductListItem';
 
-type RestItemProps = {
-  name: string;
-  description: string;
-  price: number;
-  onPress: () => void;
-};
-
 type ScreenNavigationProp = StackNavigationProp<RestaurantNavigatorParamList>;
-type ScreenRouteProp = RouteProp<RestaurantNavigatorParamList, 'RestaurantDetail'>;
+// type ScreenRouteProp = RouteProp<RestaurantNavigatorParamList, 'RestaurantDetail'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
-  route: ScreenRouteProp;
+  // route: ScreenRouteProp;
 };
 
-const RestaurantDetail = React.memo(({ navigation, route }: Props) => {
+const RestaurantDetail = React.memo(({ navigation }: Props) => {
   // context
   const restaurant = useContextBusiness();
   const activeOrder = useContextActiveOrder();

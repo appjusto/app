@@ -27,11 +27,29 @@ export const addItemToOrder = (order: Order, item: OrderItem): Order => {
   };
 };
 
+export const updateItem = (order: Order, item: OrderItem): Order => {
+  if (!order.items) return order;
+  const index = order.items?.findIndex((i) => i.id === item.id);
+  if (index === -1) return order;
+  return {
+    ...order,
+    items: [...order.items.slice(0, index), item, ...order.items.slice(index + 1)],
+  };
+};
+
 const mergeItems = (a: OrderItem, b: OrderItem): OrderItem => ({
   ...a,
   ...b,
   quantity: a.quantity + b.quantity,
 });
+
+export const getItemTotal = (item: OrderItem) => {
+  const complemementsTotal = (item.complements ?? []).reduce(
+    (total, complement) => total + complement.price,
+    0
+  );
+  return item.quantity * (item.product.price + complemementsTotal);
+};
 
 // complements
 
@@ -58,14 +76,6 @@ export const hasSatisfiedAllGroups = (product: Product, complements: WithId<Comp
   product.complementsGroups?.every((group) => hasSatisfiedGroup(group, complements)) ?? true;
 
 // total
-
-export const getItemTotal = (item: OrderItem) => {
-  const complemementsTotal = (item.complements ?? []).reduce(
-    (total, complement) => total + complement.price,
-    0
-  );
-  return item.quantity * (item.product.price + complemementsTotal);
-};
 
 export const getOrderTotal = (order: Order) =>
   (order.items ?? []).reduce((sum, item) => sum + getItemTotal(item), 0);
