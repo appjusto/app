@@ -3,6 +3,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Complement, WithId } from 'appjusto-types';
 import { OrderItem } from 'appjusto-types/order/item';
+import { nanoid } from 'nanoid/non-secure';
 import React from 'react';
 import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -35,7 +36,7 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // params
-  const { productId } = route.params;
+  const { productId, itemId } = route.params;
   // context
   const api = React.useContext(ApiContext);
   const business = useContextBusiness();
@@ -51,6 +52,7 @@ export default function ({ navigation, route }: Props) {
   const orderItem = React.useMemo(() => {
     if (!product) return undefined;
     return {
+      id: itemId ?? nanoid(),
       product: {
         id: product.id,
         name: product.name,
@@ -59,17 +61,46 @@ export default function ({ navigation, route }: Props) {
       quantity,
       notes,
       complements: complements.map((complement) => ({
+        name: complement.name,
         complementId: complement.id,
         price: complement.price,
       })),
     } as OrderItem;
-  }, [product, quantity, notes, complements]);
+  }, [product, itemId, quantity, notes, complements]);
+  const canAddItemToOrder = React.useMemo(() => {
+    if (!product) return false;
+    return helpers.hasSatisfiedAllGroups(product, complements);
+  }, [product, complements]);
   // side effects
+  // when product is loaded
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: product?.name ?? '',
     });
   }, [product]);
+  // when editing order item
+  React.useEffect(() => {
+    if (!itemId) return;
+    if (!activeOrder) return;
+    if (!product) return;
+    const item = activeOrder.items?.find((i) => i.id === itemId);
+    if (!item) return;
+    // get ids of added complements
+    const complementsIds = item.complements?.map((complement) => complement.complementId) ?? [];
+    // get complements from product using ids
+    const itemComplements = (product.complementsGroups ?? []).reduce<WithId<Complement>[]>(
+      (result, group) => {
+        return [
+          ...result,
+          ...(group.items ?? []).filter((c) => complementsIds.indexOf(c.id) !== -1),
+        ];
+      },
+      []
+    );
+    setComplements(itemComplements);
+    setQuantity(item.quantity);
+    setNotes(item.notes ?? '');
+  }, [itemId, activeOrder, product]);
   // UI
   if (!product) {
     return (
@@ -85,7 +116,10 @@ export default function ({ navigation, route }: Props) {
       if (!activeOrder) {
         api.order().createFoodOrder(business, consumer, [orderItem], currentPlace ?? null);
       } else {
-        api.order().updateFoodOrder(activeOrder.id, helpers.addItemToOrder(activeOrder, orderItem));
+        const updatedOrder = !itemId
+          ? helpers.addItemToOrder(activeOrder, orderItem)
+          : helpers.updateItem(activeOrder, orderItem);
+        api.order().updateFoodOrder(activeOrder.id, updatedOrder);
       }
       navigation.pop();
     })();
@@ -116,9 +150,11 @@ export default function ({ navigation, route }: Props) {
       <ItemComplements
         product={product}
         selectedComplements={complements}
-        onComplementToggle={(complement, selected) => {
-          if (selected) setComplements([...complements, complement]);
-          else setComplements(complements.filter((c) => c.id !== complement.id));
+        onComplementToggle={(group, complement, selected) => {
+          if (!selected || helpers.canAddComplement(group, complements)) {
+            if (selected) setComplements([...complements, complement]);
+            else setComplements(complements.filter((c) => c.id !== complement.id));
+          }
         }}
       />
       <View style={{ paddingHorizontal: 12 }}>
@@ -148,16 +184,17 @@ export default function ({ navigation, route }: Props) {
           marginBottom: halfPadding,
         }}
       />
-      {orderItem && (
-        <View style={{ paddingHorizontal: 12 }}>
-          <ItemQuantity
-            value={quantity}
-            title={`${t('Adicionar')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
-            onChange={(value) => setQuantity(value)}
-            onSubmit={addItemToOrder}
-          />
-        </View>
-      )}
+      <View style={{ paddingHorizontal: 12 }}>
+        <ItemQuantity
+          value={quantity}
+          title={`${itemId ? t('Atualizar') : t('Adicionar')} ${formatCurrency(
+            helpers.getItemTotal(orderItem!)
+          )}`}
+          disabled={!canAddItemToOrder}
+          onChange={(value) => setQuantity(value)}
+          onSubmit={addItemToOrder}
+        />
+      </View>
     </ScrollView>
   );
 }

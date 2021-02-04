@@ -7,11 +7,20 @@ import { halfPadding, padding } from '../../../../../common/styles';
 interface Props {
   value: number;
   title: string;
+  disabled: boolean;
+  minimum?: number;
   onChange: (value: number) => void;
   onSubmit: () => void;
 }
 
-export const ItemQuantity = ({ value, title, onChange, onSubmit }: Props) => {
+export const ItemQuantity = ({
+  value,
+  title,
+  disabled,
+  minimum = 1,
+  onChange,
+  onSubmit,
+}: Props) => {
   return (
     <View
       style={{
@@ -22,7 +31,11 @@ export const ItemQuantity = ({ value, title, onChange, onSubmit }: Props) => {
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <TouchableOpacity onPress={() => onChange(value - 1)}>
+        <TouchableOpacity
+          onPress={() => {
+            if (value - 1 >= minimum) onChange(value - 1);
+          }}
+        >
           <QuantityButton sign="minus" size="big" />
         </TouchableOpacity>
         <Text style={{ marginHorizontal: padding }}>{value}</Text>
@@ -31,7 +44,7 @@ export const ItemQuantity = ({ value, title, onChange, onSubmit }: Props) => {
         </TouchableOpacity>
       </View>
       <View style={{ marginLeft: padding }}>
-        <DefaultButton title={title} onPress={onSubmit} />
+        <DefaultButton disabled={disabled} title={title} onPress={onSubmit} />
       </View>
     </View>
   );

@@ -5,6 +5,7 @@ export type RestaurantNavigatorParamList = {
   AboutRestaurant: undefined;
   ItemDetail: {
     productId: string;
+    itemId?: string;
   };
   OrderCheckout?: {
     destination?: Place;

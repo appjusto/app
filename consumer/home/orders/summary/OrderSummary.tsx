@@ -5,7 +5,6 @@ import { ScrollView, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import HR from '../../../../common/components/views/HR';
-import { getOrderTotal } from '../../../../common/store/api/order/helpers';
 import { showToast } from '../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { padding } from '../../../../common/styles';
@@ -25,6 +24,8 @@ type Props = {
   waiting: boolean;
   showMap: boolean;
   onEditStep: (step: Step) => void;
+  onEditItemPress?: (productId: string, itemId: string) => void;
+  onAddItemsPress?: () => void;
   placeOrder: (fleetId: string, platformFee: number) => void;
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;
@@ -36,6 +37,8 @@ export const OrderSummary = ({
   waiting,
   showMap,
   onEditStep,
+  onEditItemPress,
+  onAddItemsPress,
   placeOrder,
   navigateToFillPaymentInfo,
   navigateFleetDetail,
@@ -47,7 +50,6 @@ export const OrderSummary = ({
   const busy = useSelector(getUIBusy);
   const [quotes, setQuotes] = React.useState<Fare[]>();
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
-  const [platformFee, setPlatformFee] = React.useState(100);
   const [notes, setNotes] = React.useState('');
   const canSubmit = React.useMemo(() => {
     return selectedPaymentMethodId !== undefined && selectedFare !== undefined && !waiting;
@@ -92,7 +94,11 @@ export const OrderSummary = ({
       {!isEmpty(order.items) && (
         <View>
           <HR height={padding} />
-          <OrderItems order={order} />
+          <OrderItems
+            order={order}
+            onEditItemPress={onEditItemPress!}
+            onAddItemsPress={onAddItemsPress!}
+          />
           <HR height={padding} />
           <AddInfo value={notes} onAddInfo={setNotes} />
         </View>
@@ -110,17 +116,11 @@ export const OrderSummary = ({
 
       <HR height={padding} />
 
-      <OrderCostBreakdown
-        order={order}
-        selectedFare={selectedFare!}
-        selectedPlatformFee={platformFee}
-        platformFeeOptions={[100, 300, 500, 800, 1000]}
-        onChangeFee={setPlatformFee}
-      />
+      <OrderCostBreakdown order={order} selectedFare={selectedFare!} />
 
       <HR height={padding} />
 
-      <OrderTotal total={getOrderTotal(order) + (selectedFare?.total ?? 0) + platformFee} />
+      <OrderTotal total={selectedFare?.consumer.total ?? 0} />
 
       <HR height={padding} />
 
@@ -128,7 +128,7 @@ export const OrderSummary = ({
         selectedPaymentMethodId={selectedPaymentMethodId}
         onEditPaymentMethod={navigateToFillPaymentInfo}
         isSubmitEnabled={canSubmit}
-        onSubmit={() => placeOrder(selectedFare?.fleet?.id!, platformFee)}
+        onSubmit={() => placeOrder(selectedFare?.fleet?.id!, 100)}
         activityIndicator={busy}
       />
     </ScrollView>

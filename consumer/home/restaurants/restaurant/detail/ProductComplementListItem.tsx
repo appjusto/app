@@ -10,12 +10,17 @@ import * as fake from '../../fakeData';
 interface Props {
   complement: Complement;
   selected: boolean;
+  disabled: boolean;
   onToggle: (selected: boolean) => void;
 }
 
-export const ProductComplementListItem = ({ complement, selected, onToggle }: Props) => {
+export const ProductComplementListItem = ({ complement, selected, disabled, onToggle }: Props) => {
   return (
-    <TouchableWithoutFeedback onPress={() => onToggle(!selected)}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        if (!disabled) onToggle(!selected);
+      }}
+    >
       <View
         style={{
           flexDirection: 'row',
@@ -29,7 +34,12 @@ export const ProductComplementListItem = ({ complement, selected, onToggle }: Pr
         }}
       >
         <View>
-          <QuantityButton sign={selected ? 'minus' : 'plus'} size="small" selected={selected} />
+          <QuantityButton
+            sign={selected ? 'minus' : 'plus'}
+            size="small"
+            selected={selected}
+            disabled={disabled}
+          />
         </View>
         <View style={{ flex: 1, paddingHorizontal: padding }}>
           <Text style={{ ...texts.default }}>{complement.name}</Text>

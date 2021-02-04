@@ -10,6 +10,7 @@ export const useProduct = (businessId: string, productId: string): WithId<Produc
   const [product, setProduct] = React.useState<WithId<Product>>();
   const [groups, setGroups] = React.useState<WithId<ComplementGroup>[]>();
   const [complements, setComplements] = React.useState<WithId<Complement>[]>();
+  const [productWithComplements, setProductWithComplements] = React.useState<WithId<Product>>();
   // side effects
   // product
   React.useEffect(() => {
@@ -17,16 +18,26 @@ export const useProduct = (businessId: string, productId: string): WithId<Produc
   }, [api, businessId, productId]);
   // complement groups
   React.useEffect(() => {
-    return api.business().observeProductComplementsGroups(businessId, productId, setGroups);
-  }, [api, businessId, productId]);
+    if (!product) return;
+    if (!product.complementsEnabled) return;
+    return api.business().observeProductComplementsGroups(businessId, product.id, setGroups);
+  }, [api, businessId, product]);
   // complements
   React.useEffect(() => {
-    return api.business().observeProductComplements(businessId, productId, setComplements);
-  }, [api, businessId, productId]);
+    if (!product) return;
+    if (!product.complementsEnabled) return;
+    return api.business().observeProductComplements(businessId, product.id, setComplements);
+  }, [api, businessId, product]);
+  React.useEffect(() => {
+    if (!product) return;
+    if (!product.complementsEnabled) return;
+    if (!groups) return;
+    if (!complements) return;
+    setProductWithComplements({
+      ...product,
+      complementsGroups: getSorted(groups, complements, product.complementsOrder),
+    });
+  }, [product, groups, complements]);
   // result
-  if (!product || !product.complementsEnabled || !groups || !complements) return product;
-  return {
-    ...product,
-    complementsGroups: getSorted(groups, complements, product.complementsOrder),
-  };
+  return productWithComplements ?? product;
 };

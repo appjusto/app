@@ -7,7 +7,6 @@ import PaddedView from '../../common/components/containers/PaddedView';
 import RoundedText from '../../common/components/texts/RoundedText';
 import HR from '../../common/components/views/HR';
 import Pill from '../../common/components/views/Pill';
-import OrderCostBreakdown from '../../common/screens/history/OrderCostBreakdown';
 import useObserveOrder from '../../common/store/api/order/hooks/useObserveOrder';
 import { colors, halfPadding, padding, screens, texts } from '../../common/styles';
 import {
@@ -20,6 +19,7 @@ import { t } from '../../strings';
 import TipControl from '../home/orders/common/TipControl';
 import OrderMap from '../home/orders/p2p-order/OrderMap';
 import PlaceSummary from '../home/orders/p2p-order/PlaceSummary';
+import { OrderCostBreakdown } from '../home/orders/summary/breakdown/OrderCostBreakdown';
 import { HistoryParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<HistoryParamList, 'OrderDetail'>;
@@ -57,8 +57,8 @@ export default function ({ navigation, route }: Props) {
           <View style={{ marginTop: halfPadding }}>
             <RoundedText>
               {separateWithDot(
-                formatDistance(order.route.distance),
-                formatDuration(order.route.duration)
+                formatDistance(order.route?.distance ?? 0),
+                formatDuration(order.route?.duration ?? 0)
               )}
             </RoundedText>
           </View>
@@ -76,7 +76,7 @@ export default function ({ navigation, route }: Props) {
           >
             <Text style={{ ...texts.medium, ...texts.bold }}>{t('Total pago')}</Text>
             <Text style={{ ...texts.mediumToBig }}>
-              {formatCurrency((order.fare?.total ?? 0) + (order.tip?.value ?? 0))}
+              {formatCurrency((order.fare?.consumer.total ?? 0) + (order.tip?.value ?? 0))}
             </Text>
           </PaddedView>
         </View>
@@ -99,7 +99,7 @@ export default function ({ navigation, route }: Props) {
         </View>
         <HR height={padding} />
         <PaddedView>
-          <OrderCostBreakdown order={order} />
+          <OrderCostBreakdown order={order} selectedFare={order.fare} />
         </PaddedView>
         <HR height={padding} />
         <PaddedView>

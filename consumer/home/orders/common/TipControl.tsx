@@ -7,7 +7,6 @@ import HorizontalSelect, {
   HorizontalSelectItem,
 } from '../../../../common/components/buttons/HorizontalSelect';
 import RoundedProfileImg from '../../../../common/components/icons/RoundedProfileImg';
-import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import { tipCourier } from '../../../../common/store/order/actions';
 import { showToast } from '../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
@@ -20,7 +19,7 @@ type Props = {
   orderTip: number;
   courierId: string;
   courierName: string;
-  joined: firebase.firestore.FieldValue;
+  joined?: firebase.firestore.FieldValue;
 };
 
 export default function ({ orderId, orderTip = 0, courierId, courierName, joined }: Props) {
@@ -28,7 +27,6 @@ export default function ({ orderId, orderTip = 0, courierId, courierName, joined
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   const alreadyTipped = orderTip > 0;
-  const tallerDevice = useTallerDevice();
 
   // app state
   const busy = useSelector(getUIBusy);
@@ -70,13 +68,17 @@ export default function ({ orderId, orderTip = 0, courierId, courierName, joined
       <View style={{ paddingBottom: padding }}>
         <View style={{ flexDirection: 'row', paddingBottom: padding, marginTop: 24 }}>
           <RoundedProfileImg flavor="courier" id={courierId} />
-          <View style={{ marginLeft: halfPadding }}>
-            <Text style={[texts.default]}>{courierName}</Text>
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>{t('No appJusto desde')}</Text>
-            <Text style={{ ...texts.small }}>
-              {formatDate((joined as firebase.firestore.Timestamp).toDate(), 'monthYear')}
-            </Text>
-          </View>
+          {joined && (
+            <View style={{ marginLeft: halfPadding }}>
+              <Text style={[texts.default]}>{courierName}</Text>
+              <Text style={{ ...texts.small, color: colors.darkGrey }}>
+                {t('No appJusto desde')}
+              </Text>
+              <Text style={{ ...texts.small }}>
+                {formatDate((joined as firebase.firestore.Timestamp).toDate(), 'monthYear')}
+              </Text>
+            </View>
+          )}
         </View>
         <HorizontalSelect disabled={orderTip > 0} data={data} selected={tip} onSelect={setTip} />
         <DefaultButton

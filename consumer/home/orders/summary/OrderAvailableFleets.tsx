@@ -106,7 +106,7 @@ export const OrderAvailableFleets = ({
                         } ${t('ativos agora')}`}
                       </Text>
                       <Text style={[texts.mediumToBig, texts.bold, { marginTop: padding }]}>
-                        {formatCurrency(item.total)}
+                        {formatCurrency(item.consumer.courierFee)}
                       </Text>
                       <TouchableOpacity onPress={() => onFleetSelect(item.fleet)}>
                         <View style={{ marginTop: padding }}>

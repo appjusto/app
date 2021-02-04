@@ -7,9 +7,15 @@ interface Props {
   sign: 'plus' | 'minus';
   size?: 'small' | 'big';
   selected?: boolean;
+  disabled?: boolean;
 }
 
-export const QuantityButton = ({ sign, size = 'small', selected = false }: Props) => {
+export const QuantityButton = ({
+  sign,
+  size = 'small',
+  selected = false,
+  disabled = false,
+}: Props) => {
   const dimension = size === 'small' ? 24 : 48;
   const border = size === 'small' ? borders.squared : borders.default;
   return (
@@ -21,10 +27,10 @@ export const QuantityButton = ({ sign, size = 'small', selected = false }: Props
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: selected ? colors.green : colors.white,
-        borderColor: colors.black,
+        borderColor: disabled ? colors.grey : colors.black,
       }}
     >
-      <Feather name={sign} size={dimension / 2} />
+      <Feather name={sign} size={dimension / 2} color={disabled ? colors.grey : colors.black} />
     </View>
   );
 };
