@@ -164,7 +164,8 @@ export default function ({ navigation, route }: Props) {
 
   return (
     <ScrollView style={{ ...screens.default, paddingBottom: padding }}>
-      <View style={{ flex: 1 }}>
+      {/* had to set a fixed height in the view below because the map was not showing */}
+      <View style={{ flex: 1, height: 360 }}>
         <OrderMap order={order!} />
         <RouteIcons order={order} />
         <View style={{ paddingHorizontal: padding }}>
@@ -234,36 +235,45 @@ export default function ({ navigation, route }: Props) {
       <View style={{ marginTop: padding, paddingHorizontal: padding }}>
         {/* Slider */}
         {/* <StatusControl status={nextStepLabel} nextStepHandler={nextStatepHandler} /> */}
-        <DefaultButton
-          title={nextStepLabel}
-          onPress={nextStatepHandler}
-          activityIndicator={isLoading}
-          disabled={isLoading}
-          style={{ marginBottom: padding }}
-        />
+        {dispatchingState !== 'arrived-destination' && (
+          <DefaultButton
+            title={nextStepLabel}
+            onPress={nextStatepHandler}
+            activityIndicator={isLoading}
+            disabled={isLoading}
+            style={{ marginBottom: padding }}
+          />
+        )}
       </View>
-
-      <View>
-        <HR height={padding} />
-        <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>
-          <SingleHeader title={t('Código de confirmação')} />
-          <View style={{ paddingHorizontal: padding }}>
-            <Text style={{ ...texts.default, marginBottom: padding }}>
-              {t('Digite os 3 primeiros números do CPF do cliente que realizou o pedido:')}
-            </Text>
-            <CodeInput />
-            <DefaultButton
-              title={t('Confirmar entrega')}
-              onPress={() => null}
-              style={{ marginTop: padding }}
-            />
+      {dispatchingState === 'arrived-destination' && (
+        <View>
+          <HR height={padding} />
+          <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>
+            <SingleHeader title={t('Código de confirmação')} />
+            <View style={{ paddingHorizontal: padding }}>
+              <Text style={{ ...texts.default, marginBottom: padding }}>
+                {t('Digite os 3 primeiros números do CPF do cliente que realizou o pedido:')}
+              </Text>
+              <CodeInput />
+              <DefaultButton
+                title={nextStepLabel}
+                onPress={nextStatepHandler}
+                activityIndicator={isLoading}
+                disabled={isLoading}
+                style={{ marginTop: padding }}
+              />
+            </View>
           </View>
+          <HR height={padding} />
+          <PaddedView>
+            <DefaultButton
+              secondary
+              title={t('Confirmar entrega sem código')}
+              onPress={() => null}
+            />
+          </PaddedView>
         </View>
-        <HR height={padding} />
-        <PaddedView>
-          <DefaultButton secondary title={t('Confirmar entrega sem código')} onPress={() => null} />
-        </PaddedView>
-      </View>
+      )}
     </ScrollView>
   );
 }

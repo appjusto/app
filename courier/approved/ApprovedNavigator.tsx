@@ -1,6 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-
 import ArrowBox from '../../common/components/views/ArrowBox';
 import MainNavigator from './main/MainNavigator';
 import MatchingNavigator from './matching/MatchingNavigator';
@@ -11,7 +10,6 @@ const Stack = createStackNavigator<ApprovedParamList>();
 export default function () {
   return (
     <Stack.Navigator
-      mode="modal"
       screenOptions={() => ({
         headerBackImage: () => <ArrowBox flipped />,
         headerBackTitleVisible: false,
