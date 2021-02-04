@@ -77,5 +77,17 @@ Docs:
 Edit `app.config.js` and update version and versionCode and run:
 
 ```bash
+# consumer ios
 FLAVOR=consumer expo build:ios -t archive
+# consumer android apk
+FLAVOR=consumer expo build:android -t apk
+# consumer android app-bundle
+FLAVOR=consumer expo build:android -t app-bundle
+
+# courier ios
+FLAVOR=courier expo build:ios -t archive
+# courier android apk
+FLAVOR=courier expo build:android -t apk
+# courier android app-bundle
+FLAVOR=courier expo build:android -t app-bundle
 ```
