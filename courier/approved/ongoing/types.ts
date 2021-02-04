@@ -18,4 +18,5 @@ export type OngoingParamList = {
   CourierDeliveryProblem: {
     orderId: string;
   };
+  NoCodeDelivery: undefined;
 } & ChatParamList;

@@ -16,57 +16,54 @@ export const CodeInput = ({ ...props }: TextInputProps) => {
         height: 60,
       }}
     >
-      <View
-        style={{
-          ...borders.default,
-          width: '30%',
-          height: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <TextInput
-          style={{ ...texts.default, fontSize: 36 }}
-          value="0"
-          keyboardType="number-pad"
-          returnKeyType="next"
-          {...props}
-        />
-      </View>
-      <View
-        style={{
-          ...borders.default,
-          width: '30%',
-          height: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <TextInput
-          style={{ ...texts.default, fontSize: 36 }}
-          value="0"
-          keyboardType="number-pad"
-          returnKeyType="next"
-          {...props}
-        />
-      </View>
-      <View
-        style={{
-          ...borders.default,
-          width: '30%',
-          height: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <TextInput
-          style={{ ...texts.default, fontSize: 36 }}
-          value="0"
-          keyboardType="number-pad"
-          returnKeyType="done"
-          {...props}
-        />
-      </View>
+      <TextInput
+        maxLength={1}
+        keyboardType="number-pad"
+        returnKeyType="next"
+        {...props}
+        style={[
+          { ...texts.default, fontSize: 36 },
+          {
+            ...borders.default,
+            width: '30%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+        ]}
+      />
+      <TextInput
+        maxLength={1}
+        keyboardType="number-pad"
+        returnKeyType="next"
+        {...props}
+        style={[
+          { ...texts.default, fontSize: 36 },
+          {
+            ...borders.default,
+            width: '30%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+        ]}
+      />
+      <TextInput
+        maxLength={1}
+        keyboardType="number-pad"
+        returnKeyType="done"
+        {...props}
+        style={[
+          { ...texts.default, fontSize: 36 },
+          {
+            ...borders.default,
+            width: '30%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+        ]}
+      />
     </View>
   );
 };

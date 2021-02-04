@@ -5,7 +5,8 @@ import { distance } from 'geokit';
 import { isEmpty, round } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useMutation } from 'react-query';
 import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -163,7 +164,7 @@ export default function ({ navigation, route }: Props) {
   })();
 
   return (
-    <ScrollView style={{ ...screens.default, paddingBottom: padding }}>
+    <KeyboardAwareScrollView style={{ ...screens.default, paddingBottom: padding }}>
       {/* had to set a fixed height in the view below because the map was not showing */}
       <View style={{ flex: 1, height: 360 }}>
         <OrderMap order={order!} />
@@ -269,11 +270,11 @@ export default function ({ navigation, route }: Props) {
             <DefaultButton
               secondary
               title={t('Confirmar entrega sem código')}
-              onPress={() => null}
+              onPress={() => navigation.navigate('NoCodeDelivery')}
             />
           </PaddedView>
         </View>
       )}
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }
