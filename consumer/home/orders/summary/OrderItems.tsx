@@ -30,9 +30,10 @@ export const OrderItems = ({ order, onEditItemPress, onAddItemsPress }: Props) =
                 </Text>
               </View>
               {item.complements?.map((complement) => (
-                <Text style={{ ...texts.small, color: colors.grey }}>{`${
-                  complement.name
-                } ${formatCurrency(complement.price)}`}</Text>
+                <Text
+                  key={complement.complementId}
+                  style={{ ...texts.small, color: colors.grey }}
+                >{`${complement.name} ${formatCurrency(complement.price)}`}</Text>
               ))}
             </View>
             <HR />
