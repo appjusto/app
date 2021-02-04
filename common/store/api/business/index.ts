@@ -7,13 +7,18 @@ import {
   Product,
   WithId,
 } from 'appjusto-types';
+import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';
 
 export default class BusinessApi {
-  constructor(private refs: FirebaseRefs) {}
+  constructor(private refs: FirebaseRefs, private files: FilesApi) {}
 
   // firestore
+  // platform
+  fetchCuisineImageURI(imagePath: string) {
+    return this.files.getDownloadURL(imagePath);
+  }
   // business
   observeBusiness(businessId: string, resultHandler: (business: WithId<Business>) => void) {
     const ref = this.refs.getBusinessRef(businessId);
@@ -22,6 +27,14 @@ export default class BusinessApi {
       (error) => console.error(error)
     );
     return unsubscribe;
+  }
+
+  fetchBusinessLogoURI(businessId: string) {
+    return this.files.getDownloadURL(this.refs.getBusinessLogoStoragePath(businessId));
+  }
+
+  fetchBusinessCoverImageURI(businessId: string) {
+    return this.files.getDownloadURL(this.refs.getBusinessCoverStoragePath(businessId));
   }
 
   // menu
@@ -87,5 +100,15 @@ export default class BusinessApi {
       (error) => console.error(error)
     );
     return unsubscribe;
+  }
+
+  fetchProductImageURI(businessId: string, productId: string) {
+    return this.files.getDownloadURL(this.refs.getProductImageStoragePath(businessId, productId));
+  }
+
+  fetchProductComplementImageURI(businessId: string, complementId: string) {
+    return this.files.getDownloadURL(
+      this.refs.getComplementImageStoragePath(businessId, complementId)
+    );
   }
 }

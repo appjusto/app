@@ -1,9 +1,8 @@
 import { Flavor } from 'appjusto-types';
 import React, { useEffect, useState } from 'react';
-import { View, Image, ImageURISource } from 'react-native';
-
+import { Image, ImageURISource, View } from 'react-native';
 import * as icons from '../../../assets/icons';
-import useCourierSelfie from '../../hooks/queries/useCourierSelfie';
+import useCourierSelfie from '../../store/api/courier/hooks/useCourierSelfie';
 import { colors } from '../../styles';
 
 type Props = {

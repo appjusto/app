@@ -1,6 +1,6 @@
 import { Issue, IssueType, WithId } from 'appjusto-types';
 import React, { useContext } from 'react';
-import { ApiContext } from '../../app/context';
+import { ApiContext } from '../../../../app/context';
 
 export default function (type: IssueType) {
   // context

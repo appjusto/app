@@ -1,20 +1,27 @@
-import { Complement } from 'appjusto-types';
+import { Complement, WithId } from 'appjusto-types';
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { QuantityButton } from '../../../../../common/components/buttons/QuantityButton';
+import { useProductComplementImageURI } from '../../../../../common/store/api/business/hooks/useProductComplementImageURI';
+import { useContextBusinessId } from '../../../../../common/store/context/business';
 import { colors, padding, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
-import * as fake from '../../fakeData';
+import { ListItemImage } from '../../components/ListItemImage';
 
 interface Props {
-  complement: Complement;
+  complement: WithId<Complement>;
   selected: boolean;
   disabled: boolean;
   onToggle: (selected: boolean) => void;
 }
 
 export const ProductComplementListItem = ({ complement, selected, disabled, onToggle }: Props) => {
+  // context
+  const businessId = useContextBusinessId();
+  // state
+  const { data: imageURI } = useProductComplementImageURI(businessId, complement.id);
+  // UI
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -52,10 +59,7 @@ export const ProductComplementListItem = ({ complement, selected, disabled, onTo
           <Text style={{ ...texts.default, marginTop: 4 }}>{formatCurrency(complement.price)}</Text>
         </View>
         <View>
-          <Image
-            source={complement.imageExists ? fake.itemRectangle : fake.itemRectangle}
-            style={{ height: 96, width: 96, borderRadius: 8 }}
-          />
+          <ListItemImage uri={imageURI} size={96} />
         </View>
       </View>
     </TouchableWithoutFeedback>

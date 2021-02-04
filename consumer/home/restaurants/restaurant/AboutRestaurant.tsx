@@ -30,7 +30,7 @@ export default function ({ route }: Props) {
 
   return (
     <ScrollView style={{ ...screens.default }}>
-      <RestaurantCard name={restaurant?.name ?? ''} />
+      <RestaurantCard restaurant={restaurant} />
       <View style={{ marginTop: padding, padding }}>
         <Text style={{ ...texts.default }}>{restaurant.description}</Text>
         <Text style={{ marginTop: 24, ...texts.default }}>{restaurant.description}</Text>

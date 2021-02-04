@@ -1,15 +1,22 @@
-import { Product } from 'appjusto-types';
+import { Product, WithId } from 'appjusto-types';
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
+import { useContextBusinessId } from '../../../../../common/store/context/business';
 import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
-import * as fake from '../../fakeData';
+import { ListItemImage } from '../../components/ListItemImage';
 
 interface Props {
-  product: Product;
+  product: WithId<Product>;
 }
 
 export const ProductListItem = ({ product }: Props) => {
+  // context
+  const businessId = useContextBusinessId();
+  // state
+  const { data: imageURI } = useProductImageURI(businessId, product.id);
+  // UI
   return (
     <View
       style={{
@@ -41,10 +48,7 @@ export const ProductListItem = ({ product }: Props) => {
           <Text style={{ ...texts.default }}>{formatCurrency(product.price)}</Text>
         </View>
         <View>
-          <Image
-            source={product.imageExists ? fake.itemRectangle : fake.itemRectangle}
-            style={{ height: 96, width: 96, borderRadius: 8 }}
-          />
+          <ListItemImage uri={imageURI} size={96} />
         </View>
       </View>
     </View>

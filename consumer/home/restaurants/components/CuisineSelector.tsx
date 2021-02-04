@@ -1,9 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
-import useCuisines from '../../../../common/hooks/queries/useCuisines';
+import useCuisines from '../../../../common/store/api/order/hooks/useCuisines';
 import { halfPadding, padding } from '../../../../common/styles';
-import * as fake from '../fakeData';
 import CuisinesBox from './CuisinesBox';
 import DoubleHeader from './DoubleHeader';
 
@@ -24,7 +23,7 @@ export default function ({ onSelect }: Props) {
           keyExtractor={(item) => item.name} // add an id to the Cuisine?
           renderItem={({ item }) => (
             <TouchableOpacity onPress={onSelect} style={{ marginRight: halfPadding }}>
-              <CuisinesBox cuisine={item.name} image={fake.pizza} />
+              <CuisinesBox cuisine={item} />
             </TouchableOpacity>
           )}
         />

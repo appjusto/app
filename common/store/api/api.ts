@@ -65,7 +65,7 @@ export default class Api {
     this._consumer = new ConsumerApi(this._refs, this._iugu);
     this._order = new OrderApi(this._refs);
     this._maps = new MapsApi(apiKey!);
-    this._business = new BusinessApi(this._refs);
+    this._business = new BusinessApi(this._refs, this._files);
     this._search = new SearchApi(extra.algolia);
   }
 

@@ -40,6 +40,7 @@ const iconOrders = require('./icons/orders.png');
 const iconSearch = require('./icons/search.png');
 const iconUser = require('./icons/user.png');
 const iconFilter = require('./icons/filter.png');
+const restCardIcon = require('./icons/card-icon.png');
 
 export const arrow = arrowSmall;
 export const checkboxActive = iconCheckboxActive;
@@ -83,6 +84,7 @@ export const waze = iconWaze;
 export const search = iconSearch;
 export const iconSad = iconSadYellow;
 export const filter = iconFilter;
+export const cardIcon = restCardIcon;
 
 export default [
   arrow,
@@ -91,6 +93,7 @@ export default [
   checklistTick,
   home,
   calendar,
+  cardIcon,
   coneYellow,
   license,
   motocycle,

@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../../common/app/context';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
+import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
 import * as helpers from '../../../../../common/store/api/order/helpers';
 import { getConsumer, getCurrentPlace } from '../../../../../common/store/consumer/selectors';
 import {
@@ -21,7 +22,6 @@ import { useContextActiveOrder } from '../../../../../common/store/context/order
 import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
-import * as fake from '../../fakeData';
 import { RestaurantNavigatorParamList } from '../types';
 import { ItemComplements } from './ItemComplements';
 import { ItemQuantity } from './ItemQuantity';
@@ -46,6 +46,7 @@ export default function ({ navigation, route }: Props) {
   const currentPlace = useSelector(getCurrentPlace);
   // screen state
   const product = useProduct(useContextBusinessId(), productId);
+  const { data: imageURI } = useProductImageURI(business.id, productId);
   const [quantity, setQuantity] = React.useState(1);
   const [complements, setComplements] = React.useState<WithId<Complement>[]>([]);
   const [notes, setNotes] = React.useState<string>('');
@@ -128,7 +129,9 @@ export default function ({ navigation, route }: Props) {
   return (
     <ScrollView style={{ ...screens.default }}>
       <View style={{ paddingHorizontal: 12 }}>
-        <Image source={fake.detail} style={{ width: '100%', height: 240, borderRadius: 8 }} />
+        <View style={{ width: '100%', height: 240, borderRadius: 8 }}>
+          {imageURI && <Image source={{ uri: imageURI }} style={{ width: '100%', height: 240 }} />}
+        </View>
         <View style={{ marginTop: padding }}>
           <Text style={{ ...texts.mediumToBig }}>{product?.name ?? ''}</Text>
           <Text style={{ ...texts.default, color: colors.darkGrey, marginVertical: 4 }}>

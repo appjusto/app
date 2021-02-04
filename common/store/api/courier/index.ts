@@ -1,7 +1,7 @@
 import { Bank, LatLng } from 'appjusto-types';
-import FilesApi from './files';
-import FirebaseRefs from './FirebaseRefs';
-import { documentsAs } from './types';
+import FilesApi from '../files';
+import FirebaseRefs from '../FirebaseRefs';
+import { documentsAs } from '../types';
 
 type FetchTotalCouriersNearbyData = {
   total: number;

@@ -55,7 +55,7 @@ const RestaurantDetail = React.memo(({ navigation }: Props) => {
         ListHeaderComponent={
           <View>
             <RestaurantCard
-              name={restaurant.name ?? ''}
+              restaurant={restaurant}
               onPress={() => navigation.navigate('AboutRestaurant')}
               canNavigate
             />

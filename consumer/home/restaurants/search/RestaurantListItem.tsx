@@ -1,11 +1,12 @@
 import { Business, WithId } from 'appjusto-types';
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import ShowIf from '../../../../common/components/views/ShowIf';
+import { useBusinessLogoURI } from '../../../../common/store/api/business/hooks/useBusinessLogoURI';
 import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { formatDistance } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
-import * as fake from '../fakeData';
+import { ListItemImage } from '../components/ListItemImage';
 
 type Props = {
   restaurant: WithId<Partial<Business>>;
@@ -13,6 +14,7 @@ type Props = {
 };
 
 export default function ({ restaurant, distance }: Props) {
+  const { data: logo } = useBusinessLogoURI(restaurant.id);
   return (
     <View style={{ marginTop: halfPadding }}>
       <View
@@ -51,8 +53,7 @@ export default function ({ restaurant, distance }: Props) {
             justifyContent: 'space-between',
           }}
         >
-          <Image source={fake.restLogo} height={64} width={64} />
-          <Image source={fake.burger} height={80} width={64} style={{ borderRadius: 8 }} />
+          <ListItemImage uri={logo} />
         </View>
       </View>
     </View>

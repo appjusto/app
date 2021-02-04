@@ -9,8 +9,8 @@ import { ApiContext, AppDispatch } from '../../common/app/context';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
-import useCourierDocumentImage from '../../common/hooks/queries/useCourierDocumentImage';
-import useCourierSelfie from '../../common/hooks/queries/useCourierSelfie';
+import useCourierDocumentImage from '../../common/store/api/courier/hooks/useCourierDocumentImage';
+import useCourierSelfie from '../../common/store/api/courier/hooks/useCourierSelfie';
 import { submitProfile } from '../../common/store/courier/actions';
 import { getCourier } from '../../common/store/courier/selectors';
 import {

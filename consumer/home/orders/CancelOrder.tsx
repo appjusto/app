@@ -11,7 +11,7 @@ import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import useIssues from '../../../common/hooks/queries/useIssues';
+import useIssues from '../../../common/store/api/order/hooks/useIssues';
 import { cancelOrder } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
