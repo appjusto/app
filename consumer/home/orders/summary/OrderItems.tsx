@@ -25,15 +25,24 @@ export const OrderItems = ({ order, onEditItemPress, onAddItemsPress }: Props) =
               <Text style={[texts.default]}>{item.product.name}</Text>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={{ ...texts.small, color: colors.green }}>{`${item.quantity}x `}</Text>
-                <Text style={{ ...texts.small, color: colors.grey }}>
+                <Text style={{ ...texts.small, color: colors.darkGrey }}>
                   {formatCurrency(item.product.price)}
                 </Text>
               </View>
               {item.complements?.map((complement) => (
-                <Text
-                  key={complement.complementId}
-                  style={{ ...texts.small, color: colors.grey }}
-                >{`${complement.name} ${formatCurrency(complement.price)}`}</Text>
+                <View key={complement.complementId}>
+                  <Text
+                    style={{ ...texts.small, color: colors.darkGrey }}
+                  >{`+ ${complement.name}`}</Text>
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text
+                      style={{ ...texts.small, color: colors.green }}
+                    >{`${item.quantity}x `}</Text>
+                    <Text style={{ ...texts.small, color: colors.darkGrey }}>
+                      {formatCurrency(complement.price)}
+                    </Text>
+                  </View>
+                </View>
               ))}
             </View>
             <HR />

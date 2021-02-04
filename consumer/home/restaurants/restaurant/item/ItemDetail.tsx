@@ -119,7 +119,9 @@ export default function ({ navigation, route }: Props) {
       } else {
         const updatedOrder = !itemId
           ? helpers.addItemToOrder(activeOrder, orderItem)
-          : helpers.updateItem(activeOrder, orderItem);
+          : quantity > 0
+          ? helpers.updateItem(activeOrder, orderItem)
+          : helpers.removeItem(activeOrder, orderItem);
         api.order().updateFoodOrder(activeOrder.id, updatedOrder);
       }
       navigation.pop();
@@ -190,9 +192,8 @@ export default function ({ navigation, route }: Props) {
       <View style={{ paddingHorizontal: 12 }}>
         <ItemQuantity
           value={quantity}
-          title={`${itemId ? t('Atualizar') : t('Adicionar')} ${formatCurrency(
-            helpers.getItemTotal(orderItem!)
-          )}`}
+          minimum={itemId ? 0 : 1}
+          title={`${t('Total')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
           disabled={!canAddItemToOrder}
           onChange={(value) => setQuantity(value)}
           onSubmit={addItemToOrder}

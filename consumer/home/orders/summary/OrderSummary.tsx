@@ -55,11 +55,11 @@ export const OrderSummary = ({
     return selectedPaymentMethodId !== undefined && selectedFare !== undefined && !waiting;
   }, [selectedPaymentMethodId, selectedFare, waiting]);
   // side effects
-  // whenever route changes
+  // whenever order changes
   // update quotes
   React.useEffect(() => {
     getOrderQuotesHandler();
-  }, [order.route?.distance]);
+  }, [order]);
   // whenever quotes are updated
   // select first fare and subscribe to involved fleets updates
   React.useEffect(() => {
