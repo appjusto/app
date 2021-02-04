@@ -29,6 +29,11 @@ export const OrderItems = ({ order, onEditItemPress, onAddItemsPress }: Props) =
                   {formatCurrency(item.product.price)}
                 </Text>
               </View>
+              {item.complements?.map((complement) => (
+                <Text style={{ ...texts.small, color: colors.grey }}>{`${
+                  complement.name
+                } ${formatCurrency(complement.price)}`}</Text>
+              ))}
             </View>
             <HR />
           </TouchableOpacity>

@@ -187,7 +187,9 @@ export default function ({ navigation, route }: Props) {
       <View style={{ paddingHorizontal: 12 }}>
         <ItemQuantity
           value={quantity}
-          title={`${t('Adicionar')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
+          title={`${itemId ? t('Atualizar') : t('Adicionar')} ${formatCurrency(
+            helpers.getItemTotal(orderItem!)
+          )}`}
           disabled={!canAddItemToOrder}
           onChange={(value) => setQuantity(value)}
           onSubmit={addItemToOrder}

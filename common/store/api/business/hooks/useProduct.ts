@@ -39,5 +39,5 @@ export const useProduct = (businessId: string, productId: string): WithId<Produc
     });
   }, [product, groups, complements]);
   // result
-  return productWithComplements;
+  return productWithComplements ?? product;
 };
