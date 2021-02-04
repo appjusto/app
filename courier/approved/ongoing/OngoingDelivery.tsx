@@ -5,10 +5,11 @@ import { distance } from 'geokit';
 import { isEmpty, round } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useMutation } from 'react-query';
 import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import HR from '../../../common/components/views/HR';
 import ShowIf from '../../../common/components/views/ShowIf';
@@ -17,8 +18,10 @@ import { colors, halfPadding, padding, screens, texts } from '../../../common/st
 import { formatDistance, formatDuration, separateWithDot } from '../../../common/utils/formatters';
 import CourierStatusHighlight from '../../../consumer/home/orders/CourierStatusHighlight';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
+import SingleHeader from '../../../consumer/home/restaurants/SingleHeader';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
+import { CodeInput } from './CodeInput';
 import { RouteIcons } from './RouteIcons';
 import { OngoingParamList } from './types';
 
@@ -160,7 +163,7 @@ export default function ({ navigation, route }: Props) {
   })();
 
   return (
-    <View style={{ ...screens.default, paddingBottom: padding }}>
+    <ScrollView style={{ ...screens.default, paddingBottom: padding }}>
       <View style={{ flex: 1 }}>
         <OrderMap order={order!} />
         <RouteIcons order={order} />
@@ -236,8 +239,31 @@ export default function ({ navigation, route }: Props) {
           onPress={nextStatepHandler}
           activityIndicator={isLoading}
           disabled={isLoading}
+          style={{ marginBottom: padding }}
         />
       </View>
-    </View>
+
+      <View>
+        <HR height={padding} />
+        <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>
+          <SingleHeader title={t('Código de confirmação')} />
+          <View style={{ paddingHorizontal: padding }}>
+            <Text style={{ ...texts.default, marginBottom: padding }}>
+              {t('Digite os 3 primeiros números do CPF do cliente que realizou o pedido:')}
+            </Text>
+            <CodeInput />
+            <DefaultButton
+              title={t('Confirmar entrega')}
+              onPress={() => null}
+              style={{ marginTop: padding }}
+            />
+          </View>
+        </View>
+        <HR height={padding} />
+        <PaddedView>
+          <DefaultButton secondary title={t('Confirmar entrega sem código')} onPress={() => null} />
+        </PaddedView>
+      </View>
+    </ScrollView>
   );
 }
