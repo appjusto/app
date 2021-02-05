@@ -23,7 +23,7 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // context
-  const { orderId, fee } = route.params;
+  const { fee } = route.params;
 
   // screen state
   const clientFeedbackData: HorizontalSelectItem[] = [

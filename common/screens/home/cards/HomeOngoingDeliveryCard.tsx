@@ -28,14 +28,16 @@ export default function ({ order, onSelect }: Props) {
 
   // UI
   let detail = '';
-  if (order.dispatchingState === 'going-pickup') {
-    detail = `${t('À caminho de')} ${order.origin.address.main}`;
-  } else if (order.dispatchingState === 'arrived-pickup') {
-    detail = order.origin.intructions ?? 'Aguardando retirada';
-  } else if (order.dispatchingState === 'going-destination') {
-    detail = `${t('À caminho de')} ${order.destination.address.main}`;
-  } else if (order.dispatchingState === 'arrived-destination') {
-    detail = order.destination.intructions ?? 'Aguardando entrega';
+  if (order.origin && order.destination) {
+    if (order.dispatchingState === 'going-pickup') {
+      detail = `${t('À caminho de')} ${order.origin.address.main}`;
+    } else if (order.dispatchingState === 'arrived-pickup') {
+      detail = order.origin.intructions ?? 'Aguardando retirada';
+    } else if (order.dispatchingState === 'going-destination') {
+      detail = `${t('À caminho de')} ${order.destination.address.main}`;
+    } else if (order.dispatchingState === 'arrived-destination') {
+      detail = order.destination.intructions ?? 'Aguardando entrega';
+    }
   }
   return (
     <TouchableOpacity onPress={() => onSelect(order, false)}>
