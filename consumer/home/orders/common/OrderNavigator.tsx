@@ -23,9 +23,6 @@ import { OrderNavigatorParamList } from '../types';
 
 const Stack = createStackNavigator<OrderNavigatorParamList>();
 
-// ir em cada uma delas e mudar o ParamList type
-// ver quem navega para cada uma delas e ver se é preciso alterar a funçao de navegacao
-
 export const OrderNavigator = () => {
   return (
     <Stack.Navigator
