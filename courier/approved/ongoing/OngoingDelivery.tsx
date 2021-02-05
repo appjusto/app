@@ -39,9 +39,10 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // params
-  const { orderId, newMessage } = route.params;
+  const { orderId, newMessage, noCode } = route.params;
   // context
   const api = React.useContext(ApiContext);
+
   // screen state
   const { order } = useObserveOrder(orderId);
   const { mutate: nextDispatchingState, isLoading: isUpdatingDispatchingState } = useMutation(() =>
@@ -73,6 +74,15 @@ export default function ({ navigation, route }: Props) {
       navigation.replace('OrderCanceled', { orderId });
     }
   }, [order]);
+
+  //when there's a "no code" delivery
+  React.useEffect(() => {
+    if (noCode) {
+      setTimeout(() => {
+        completeDelivery();
+      }, 100);
+    }
+  }, [noCode]);
 
   // UI
   if (!order) {

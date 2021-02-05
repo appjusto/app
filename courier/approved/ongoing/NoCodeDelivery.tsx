@@ -48,7 +48,10 @@ export const NoCodeDelivery = ({ navigation }: Props) => {
         ))}
       </View>
       <View style={{ flex: 1 }} />
-      <DefaultButton title={t('Confirmar entrega')} onPress={() => navigation.goBack()} />
+      <DefaultButton
+        title={t('Confirmar entrega')}
+        onPress={() => navigation.navigate('OngoingDelivery', { noCode: true })}
+      />
     </PaddedView>
   );
 };
