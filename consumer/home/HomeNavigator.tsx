@@ -6,7 +6,6 @@ import PermissionDeniedFeedback from '../../common/screens/PermissionDeniedFeedb
 import { t } from '../../strings';
 import Home from './Home';
 import { OrderNavigator } from './orders/common/OrderNavigator';
-import OngoingOrder from './orders/OngoingOrder';
 import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import RestaurantsNavigator from './restaurants/RestaurantsNavigator';
 import { HomeNavigatorParamList } from './types';
@@ -25,11 +24,6 @@ export default function () {
         name="CreateOrderP2P"
         component={CreateOrderP2P}
         options={{ title: t('Novo pedido') }}
-      />
-      <Stack.Screen
-        name="OngoingOrder"
-        component={OngoingOrder}
-        options={{ title: t('Pedido em andamento') }}
       />
       <Stack.Screen name="Chat" component={Chat} options={{ title: t('Chat') }} />
       <Stack.Screen
