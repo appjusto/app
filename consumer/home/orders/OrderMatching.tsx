@@ -12,13 +12,13 @@ import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedParamList } from '../../types';
-import { HomeNavigatorParamList } from '../types';
+import { OrderNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<HomeNavigatorParamList, 'OrderMatching'>,
+  StackNavigationProp<OrderNavigatorParamList, 'OrderMatching'>,
   BottomTabNavigationProp<LoggedParamList>
 >;
-type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'OrderMatching'>;
+type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'OrderMatching'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

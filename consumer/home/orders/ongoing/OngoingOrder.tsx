@@ -9,10 +9,16 @@ import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedProfileImg from '../../../../common/components/icons/RoundedProfileImg';
 import HR from '../../../../common/components/views/HR';
 import useNotificationToken from '../../../../common/hooks/useNotificationToken';
+import { MessagesCard } from '../../../../common/screens/home/cards/MessagesCard';
 import CourierStatusHighlight from '../../../../common/screens/orders/ongoing/CourierStatusHighlight';
 import { courierNextPlace } from '../../../../common/store/api/order/helpers';
 import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
+import {
+  getLastReadMessage,
+  getOrderChat,
+  getOrderChatUnreadCount,
+} from '../../../../common/store/order/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -37,9 +43,13 @@ export default function ({ navigation, route }: Props) {
   const consumer = useSelector(getConsumer);
   // screen state
   const { order } = useObserveOrder(orderId);
+  const messages = useSelector(getOrderChat)(orderId);
+  const lastReadMessage = useSelector(getLastReadMessage)(orderId);
+  const unreadCount = getOrderChatUnreadCount(messages, lastReadMessage);
   const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
     consumer!.notificationToken
   );
+
   // side effects
   // whenever params changes
   // open chat if there's a new message
@@ -62,10 +72,10 @@ export default function ({ navigation, route }: Props) {
   // check status to navigate to other screens
   React.useEffect(() => {
     if (order?.status === 'delivered') {
-      navigation.replace('OrderDeliveredFeedback', { orderId });
+      navigation.navigate('OrderDeliveredFeedback', { orderId });
     } else if (order?.dispatchingState === 'matching') {
       // happens when courier cancels the delivery
-      navigation.replace('OrderMatching', { orderId });
+      navigation.navigate('OrderMatching', { orderId });
     }
   }, [order]);
 
@@ -96,6 +106,24 @@ export default function ({ navigation, route }: Props) {
       <View style={{ flex: 1 }}>
         <OrderMap order={order} />
         <CourierStatusHighlight dispatchingState={dispatchingState} />
+        <View style={{ paddingHorizontal: padding }}>
+          <View
+            style={{
+              position: 'absolute',
+              width: '100%',
+              marginBottom: padding,
+              bottom: 96,
+              alignSelf: 'center',
+            }}
+          >
+            {unreadCount > 0 && (
+              <MessagesCard
+                unreadCount={unreadCount}
+                onPress={() => navigation.navigate('Chat', { orderId })}
+              />
+            )}
+          </View>
+        </View>
       </View>
       <PaddedView style={{ backgroundColor: colors.white, flexDirection: 'row' }}>
         <RoundedProfileImg flavor="courier" id={order.courier!.id} />

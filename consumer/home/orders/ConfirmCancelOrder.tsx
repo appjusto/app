@@ -12,13 +12,13 @@ import { getUIBusy } from '../../../common/store/ui/selectors';
 import { colors, halfPadding, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedParamList } from '../../types';
-import { HomeNavigatorParamList } from '../types';
+import { OrderNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<HomeNavigatorParamList, 'ConfirmCancelOrder'>,
+  StackNavigationProp<OrderNavigatorParamList, 'ConfirmCancelOrder'>,
   BottomTabNavigationProp<LoggedParamList>
 >;
-type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'ConfirmCancelOrder'>;
+type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'ConfirmCancelOrder'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

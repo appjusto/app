@@ -52,7 +52,9 @@ export default function ({ navigation }: Props) {
         }}
       >
         <View style={[styles.controlItem, { backgroundColor: colors.white }]}>
-          <TouchableOpacity onPress={() => navigation.navigate('CreateOrderP2P')}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('OrderNavigator', { screen: 'CreateOrderP2P' })}
+          >
             <Image source={icons.consumerHomeIllustration} />
             <Text style={[texts.default, { paddingTop: 4 }]}>{t('Transporte de encomendas')}</Text>
             <Text style={[texts.small, { paddingTop: halfPadding, color: colors.darkGrey }]}>

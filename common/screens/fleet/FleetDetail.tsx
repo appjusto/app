@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { HomeNavigatorParamList } from '../../../consumer/home/types';
+import { OrderNavigatorParamList } from '../../../consumer/home/orders/types';
 import GainSimulator from '../../../courier/approved/main/profile/fleet/GainSimulator';
 import { t } from '../../../strings';
 import { ApiContext } from '../../app/context';
@@ -17,8 +17,8 @@ import { getCourier } from '../../store/courier/selectors';
 import { colors, screens, texts } from '../../styles';
 import { formatCurrency, formatDistance } from '../../utils/formatters';
 
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'FleetDetail'>;
-type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'FleetDetail'>;
+type ScreenNavigationProp = StackNavigationProp<OrderNavigatorParamList, 'FleetDetail'>;
+type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'FleetDetail'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

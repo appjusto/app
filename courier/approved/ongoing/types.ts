@@ -4,6 +4,7 @@ export type OngoingParamList = {
   OngoingDelivery: {
     orderId: string;
     newMessage?: boolean;
+    noCode?: boolean;
   };
   DeliveryCompleted: {
     orderId: string;
@@ -18,4 +19,5 @@ export type OngoingParamList = {
   CourierDeliveryProblem: {
     orderId: string;
   };
+  NoCodeDelivery: undefined;
 } & ChatParamList;

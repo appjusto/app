@@ -17,10 +17,10 @@ import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
-import { HomeNavigatorParamList } from '../types';
+import { OrderNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'CancelOrder'>;
-type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'CancelOrder'>;
+type ScreenNavigationProp = StackNavigationProp<OrderNavigatorParamList, 'CancelOrder'>;
+type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'CancelOrder'>;
 
 type Props = {
   route: ScreenRouteProp;

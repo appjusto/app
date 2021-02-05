@@ -6,6 +6,7 @@ import { t } from '../../../strings';
 import CancelOngoingDelivery from './CancelOngoingDelivery';
 import CourierDeliveryProblem from './CourierDeliveryProblem';
 import DeliveryCompleted from './DeliveryCompleted';
+import { NoCodeDelivery } from './NoCodeDelivery';
 import OngoingDelivery from './OngoingDelivery';
 import OrderCanceled from './OrderCanceled';
 import { OngoingParamList } from './types';
@@ -39,6 +40,11 @@ export default function () {
         name="DeliveryCompleted"
         component={DeliveryCompleted}
         options={{ title: t('Avalie a corrida') }}
+      />
+      <Stack.Screen
+        name="NoCodeDelivery"
+        component={NoCodeDelivery}
+        options={{ title: t('Confirmar entrega sem código') }}
       />
       <Stack.Screen
         name="CourierDeliveryProblem"

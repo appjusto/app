@@ -5,9 +5,11 @@ import { isEmpty } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useMutation } from 'react-query';
 import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import HR from '../../../common/components/views/HR';
 import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/CourierDistanceBadge';
@@ -16,8 +18,10 @@ import { courierNextPlace } from '../../../common/store/api/order/helpers';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
+import SingleHeader from '../../../consumer/home/restaurants/SingleHeader';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
+import { CodeInput } from './CodeInput';
 import { RouteIcons } from './RouteIcons';
 import { OngoingParamList } from './types';
 
@@ -34,9 +38,10 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // params
-  const { orderId, newMessage } = route.params;
+  const { orderId, newMessage, noCode } = route.params;
   // context
   const api = React.useContext(ApiContext);
+
   // screen state
   const { order } = useObserveOrder(orderId);
   const { mutate: nextDispatchingState, isLoading: isUpdatingDispatchingState } = useMutation(() =>
@@ -68,6 +73,15 @@ export default function ({ navigation, route }: Props) {
       navigation.replace('OrderCanceled', { orderId });
     }
   }, [order]);
+
+  //when there's a "no code" delivery
+  React.useEffect(() => {
+    if (noCode) {
+      setTimeout(() => {
+        completeDelivery();
+      }, 100);
+    }
+  }, [noCode]);
 
   // UI
   if (!order) {
@@ -116,8 +130,9 @@ export default function ({ navigation, route }: Props) {
   })();
 
   return (
-    <View style={{ ...screens.default, paddingBottom: padding }}>
-      <View style={{ flex: 1 }}>
+    <KeyboardAwareScrollView style={{ ...screens.default, paddingBottom: padding }}>
+      {/* had to set a fixed height in the view below because the map was not showing */}
+      <View style={{ flex: 1, height: 360 }}>
         <OrderMap order={order!} />
         <RouteIcons order={order} />
         <CourierStatusHighlight dispatchingState={dispatchingState} />
@@ -176,13 +191,45 @@ export default function ({ navigation, route }: Props) {
       <View style={{ marginTop: padding, paddingHorizontal: padding }}>
         {/* Slider */}
         {/* <StatusControl status={nextStepLabel} nextStepHandler={nextStatepHandler} /> */}
-        <DefaultButton
-          title={nextStepLabel}
-          onPress={nextStatepHandler}
-          activityIndicator={isLoading}
-          disabled={isLoading}
-        />
+        {dispatchingState !== 'arrived-destination' && (
+          <DefaultButton
+            title={nextStepLabel}
+            onPress={nextStatepHandler}
+            activityIndicator={isLoading}
+            disabled={isLoading}
+            style={{ marginBottom: padding }}
+          />
+        )}
       </View>
-    </View>
+      {dispatchingState === 'arrived-destination' && (
+        <View>
+          <HR height={padding} />
+          <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>
+            <SingleHeader title={t('Código de confirmação')} />
+            <View style={{ paddingHorizontal: padding }}>
+              <Text style={{ ...texts.default, marginBottom: padding }}>
+                {t('Digite os 3 primeiros números do CPF do cliente que realizou o pedido:')}
+              </Text>
+              <CodeInput />
+              <DefaultButton
+                title={nextStepLabel}
+                onPress={nextStatepHandler}
+                activityIndicator={isLoading}
+                disabled={isLoading}
+                style={{ marginTop: padding }}
+              />
+            </View>
+          </View>
+          <HR height={padding} />
+          <PaddedView>
+            <DefaultButton
+              secondary
+              title={t('Confirmar entrega sem código')}
+              onPress={() => navigation.navigate('NoCodeDelivery')}
+            />
+          </PaddedView>
+        </View>
+      )}
+    </KeyboardAwareScrollView>
   );
 }

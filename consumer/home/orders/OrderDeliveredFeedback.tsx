@@ -12,14 +12,14 @@ import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrd
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedParamList } from '../../types';
-import { HomeNavigatorParamList } from '../types';
 import TipControl from './common/TipControl';
+import { OrderNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<HomeNavigatorParamList, 'OrderDeliveredFeedback'>,
+  StackNavigationProp<OrderNavigatorParamList, 'OrderDeliveredFeedback'>,
   BottomTabNavigationProp<LoggedParamList>
 >;
-type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'OrderDeliveredFeedback'>;
+type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'OrderDeliveredFeedback'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -75,7 +75,7 @@ export default ({ navigation, route }: Props) => {
         <View style={{ paddingHorizontal: padding }}>
           <DefaultButton
             title={t('Finalizar')}
-            onPress={() => navigation.popToTop()}
+            onPress={() => navigation.navigate('Home')}
             style={{ marginTop: padding }}
           />
           <View

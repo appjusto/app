@@ -4,7 +4,7 @@ import { Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';
-import { colors, halfPadding, texts } from '../../../styles';
+import { borders, colors, halfPadding, texts } from '../../../styles';
 
 interface Props {
   unreadCount: number;
@@ -16,10 +16,8 @@ export const MessagesCard = ({ unreadCount, onPress }: Props) => {
     <TouchableOpacity onPress={onPress}>
       <View
         style={{
-          borderTopLeftRadius: 8,
-          borderTopRightRadius: 8,
-          borderBottomWidth: 1,
-          borderBottomColor: colors.darkGrey,
+          ...borders.default,
+          borderColor: colors.black,
           backgroundColor: colors.white,
         }}
       >

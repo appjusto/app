@@ -5,18 +5,15 @@ import * as Location from 'expo-location';
 import React, { useContext, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import * as icons from '../../assets/icons';
-import { ApiContext, AppDispatch } from '../../common/app/context';
+import { ApiContext } from '../../common/app/context';
 import PaddedView from '../../common/components/containers/PaddedView';
 import useLastKnownLocation from '../../common/hooks/useLastKnownLocation';
 import HomeCard from '../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../common/screens/home/cards/HomeShareCard';
-import { getFlavor } from '../../common/store/config/selectors';
 import { getOrders } from '../../common/store/order/selectors';
-import { observeProfile } from '../../common/store/user/actions';
-import { getUser } from '../../common/store/user/selectors';
 import { padding, screens } from '../../common/styles';
 import { t } from '../../strings';
 import { LoggedParamList } from '../types';
@@ -38,11 +35,8 @@ type Props = {
 export default function ({ navigation }: Props) {
   // context
   const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
 
   // app state
-  const flavor = useSelector(getFlavor);
-  const user = useSelector(getUser)!;
   const ongoingOrders = useSelector(getOrders);
 
   // state
@@ -50,10 +44,6 @@ export default function ({ navigation }: Props) {
   const [availableCouriers, setAvailableCouriers] = useState(0);
 
   // side effects
-  useEffect(() => {
-    return dispatch(observeProfile(api)(flavor, user.uid));
-  }, []);
-
   // request location permission
   useEffect(() => {
     if (permissionResponse?.status === Location.PermissionStatus.DENIED) {

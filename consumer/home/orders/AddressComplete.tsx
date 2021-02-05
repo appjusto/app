@@ -25,10 +25,10 @@ import { getConsumer } from '../../../common/store/consumer/selectors';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { formatAddress } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
-import { HomeNavigatorParamList } from '../types';
+import { OrderNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<HomeNavigatorParamList, 'AddressComplete'>;
-type ScreenRouteProp = RouteProp<HomeNavigatorParamList, 'AddressComplete'>;
+type ScreenNavigationProp = StackNavigationProp<OrderNavigatorParamList, 'AddressComplete'>;
+type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'AddressComplete'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
