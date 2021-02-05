@@ -14,7 +14,7 @@ import CancelOrder from './orders/CancelOrder';
 import { OrderNavigator } from './orders/common/OrderNavigator';
 import ConfirmCancelOrder from './orders/ConfirmCancelOrder';
 import CourierDetail from './orders/CourierDetail';
-import OngoingOrder from './orders/OngoingOrder';
+import OngoingOrder from './orders/ongoing/OngoingOrder';
 import OrderComplaint from './orders/OrderComplaint';
 import OrderDeliveredFeedback from './orders/OrderDeliveredFeedback';
 import OrderMatching from './orders/OrderMatching';

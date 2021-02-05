@@ -1,8 +1,7 @@
 import { Feather } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { distance } from 'geokit';
-import { isEmpty, round } from 'lodash';
+import { isEmpty } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -11,11 +10,11 @@ import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import HR from '../../../common/components/views/HR';
-import ShowIf from '../../../common/components/views/ShowIf';
+import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/CourierDistanceBadge';
+import CourierStatusHighlight from '../../../common/screens/orders/ongoing/CourierStatusHighlight';
+import { courierNextPlace } from '../../../common/store/api/order/helpers';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
-import { formatDistance, formatDuration, separateWithDot } from '../../../common/utils/formatters';
-import CourierStatusHighlight from '../../../consumer/home/orders/CourierStatusHighlight';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -102,61 +101,18 @@ export default function ({ navigation, route }: Props) {
     }
     return '';
   })();
-  //updates components whenever the dispatchingState changes
+  const nextPlace = courierNextPlace(order);
   const { dispatchingState } = order;
-  const { courierWaiting, addressLabel, address, dispatchDetails } = (() => {
-    let courierWaiting = null;
-    let addressLabel = '';
-    let address = '';
-    let dispatchDetails = '';
-    if (dispatchingState === 'going-pickup') {
-      addressLabel = t('Retirada em');
-      address = order.origin.address.main;
-      dispatchDetails = separateWithDot(
-        formatDistance(
-          round(
-            distance(
-              { lat: order.courier!.location.latitude, lng: order.courier!.location.longitude },
-              { lat: order.origin.location!.latitude, lng: order.origin.location!.longitude }
-            ),
-            2
-          ) * 1000
-        ),
-        formatDuration(order.route?.duration)
-      );
-    } else if (dispatchingState === 'arrived-pickup') {
-      addressLabel = t('Retirada em');
-      address = order.origin.address.main;
-      dispatchDetails = t('Chegou no local');
-      courierWaiting = {
-        title: t('Aguardando para retirada'),
-        message: t('Confirme sua saída somente após receber o pedido'),
-      };
-    } else if (dispatchingState === 'going-destination') {
-      addressLabel = t('Entrega em');
-      address = order.destination.address.main;
-      dispatchDetails = `Distância até a entrega: ${formatDistance(
-        round(
-          distance(
-            { lat: order.courier!.location.latitude, lng: order.courier!.location.longitude },
-            {
-              lat: order.destination!.location!.latitude,
-              lng: order.destination!.location!.longitude,
-            }
-          ),
-          2
-        ) * 1000
-      )}`;
-    } else if (dispatchingState === 'arrived-destination') {
-      addressLabel = t('Entrega em');
-      address = order.destination.address.main;
-      dispatchDetails = t('Chegou no local');
-      courierWaiting = {
-        title: t('Aguardando para entrega'),
-        message: t('Finalize o pedido somente após realizar a entrega'),
-      };
+  const addressLabel = (() => {
+    if (dispatchingState === 'going-pickup' || dispatchingState === 'going-destination') {
+      return t('Retirada em');
+    } else if (
+      dispatchingState === 'arrived-pickup' ||
+      dispatchingState === 'arrived-destination'
+    ) {
+      return t('Entrega em');
     }
-    return { courierWaiting, addressLabel, address, dispatchDetails };
+    return '';
   })();
 
   return (
@@ -164,16 +120,7 @@ export default function ({ navigation, route }: Props) {
       <View style={{ flex: 1 }}>
         <OrderMap order={order!} />
         <RouteIcons order={order} />
-        <View style={{ paddingHorizontal: padding }}>
-          <ShowIf test={!!courierWaiting}>
-            {() => (
-              <CourierStatusHighlight
-                title={courierWaiting!.title}
-                subtitle={courierWaiting!.message}
-              />
-            )}
-          </ShowIf>
-        </View>
+        <CourierStatusHighlight dispatchingState={dispatchingState} />
       </View>
       <View style={{ marginTop: padding, paddingHorizontal: padding }}>
         <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Pedido de')}</Text>
@@ -220,12 +167,10 @@ export default function ({ navigation, route }: Props) {
       >
         <View>
           <Text style={[texts.small, { color: colors.darkGreen }]}>{addressLabel}</Text>
-          <Text style={[texts.small]}>{address}</Text>
+          <Text style={[texts.small]}>{nextPlace?.address.main}</Text>
         </View>
         <View>
-          <RoundedText backgroundColor={colors.lightGrey} color={colors.darkGrey} noBorder>
-            {dispatchDetails}
-          </RoundedText>
+          <CourierDistanceBadge order={order} />
         </View>
       </View>
       <View style={{ marginTop: padding, paddingHorizontal: padding }}>

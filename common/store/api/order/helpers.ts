@@ -1,6 +1,7 @@
 import { Complement, ComplementGroup, Order, Product, WithId } from 'appjusto-types';
 import { OrderItem } from 'appjusto-types/order/item';
-import { intersection, isEmpty } from 'lodash';
+import { distance } from 'geokit';
+import { intersection, isEmpty, round } from 'lodash';
 
 // items
 
@@ -89,3 +90,28 @@ export const hasSatisfiedAllGroups = (product: Product, complements: WithId<Comp
 
 export const getOrderTotal = (order: Order) =>
   (order.items ?? []).reduce((sum, item) => sum + getItemTotal(item), 0);
+
+// location
+
+export const courierNextPlace = (order: Order) => {
+  const { dispatchingState, origin, destination } = order;
+  if (dispatchingState === 'going-pickup') return origin;
+  else if (dispatchingState === 'going-destination') return destination;
+  return null;
+};
+
+export const courierDistanceFromNextPlace = (order: Order) => {
+  const { courier } = order;
+  if (!courier?.location) return 0;
+  const nextPlace = courierNextPlace(order);
+  if (!nextPlace?.location) return 0;
+  return (
+    round(
+      distance(
+        { lat: courier.location.latitude, lng: courier.location.longitude },
+        { lat: nextPlace.location.latitude, lng: nextPlace.location.longitude }
+      ),
+      2
+    ) * 1000
+  );
+};

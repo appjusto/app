@@ -12,7 +12,7 @@ import AddressComplete from '../AddressComplete';
 import CancelOrder from '../CancelOrder';
 import ConfirmCancelOrder from '../ConfirmCancelOrder';
 import CourierDetail from '../CourierDetail';
-import OngoingOrder from '../OngoingOrder';
+import OngoingOrder from '../ongoing/OngoingOrder';
 import OrderComplaint from '../OrderComplaint';
 import OrderDeliveredFeedback from '../OrderDeliveredFeedback';
 import OrderMatching from '../OrderMatching';
