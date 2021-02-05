@@ -12,10 +12,6 @@ export type HomeNavigatorParamList = {
     destination?: Place;
     paymentMethodId?: string;
   };
-  OngoingOrder: {
-    orderId: string;
-    newMessage?: boolean;
-  };
   PermissionDeniedFeedback: {
     title: string;
     subtitle: string;
