@@ -10,6 +10,7 @@ import RoundedProfileImg from '../../../../common/components/icons/RoundedProfil
 import HR from '../../../../common/components/views/HR';
 import useNotificationToken from '../../../../common/hooks/useNotificationToken';
 import { MessagesCard } from '../../../../common/screens/home/cards/MessagesCard';
+import { CourierDistanceBadge } from '../../../../common/screens/orders/ongoing/CourierDistanceBadge';
 import CourierStatusHighlight from '../../../../common/screens/orders/ongoing/CourierStatusHighlight';
 import { courierNextPlace } from '../../../../common/store/api/order/helpers';
 import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
@@ -132,8 +133,11 @@ export default function ({ navigation, route }: Props) {
             <Text style={[texts.medium]}>{order.courier!.name}</Text>
           </View>
           <Text style={[texts.small, { color: colors.darkGreen }]}>{addressLabel}</Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={[texts.small]}>{nextPlace?.address.main ?? ''}</Text>
+          <Text style={[texts.small]}>{nextPlace?.address.main ?? ''}</Text>
+        </View>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View>
+            <CourierDistanceBadge order={order} />
             <TouchableOpacity
               onPress={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
             >
