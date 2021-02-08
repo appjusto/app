@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import { ActivityIndicator, Image, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../assets/icons';
@@ -20,21 +20,19 @@ const Tab = createBottomTabNavigator<LoggedParamList>();
 export default function () {
   // context
   const dispatch = useDispatch<AppDispatch>();
-  const api = useContext(ApiContext);
-  // app state
+  const api = React.useContext(ApiContext);
+  // redux store
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
   const consumer = useSelector(getConsumer);
-
   // side effects
   // subscribe for profile changes
-  useEffect(() => {
+  React.useEffect(() => {
     return dispatch(observeProfile(api)(flavor, user!.uid));
   }, []);
   // subscribe for observing ongoing orders
   const options = React.useMemo(() => ({ consumerId: user?.uid }), [user?.uid]);
   useObserveOngoingOrders(options);
-
   // UI
   if (consumer?.situation !== 'approved') {
     // showing the indicator until the profile is loaded

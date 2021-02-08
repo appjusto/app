@@ -12,6 +12,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import HR from '../../../common/components/views/HR';
+import { MessagesCard } from '../../../common/screens/home/cards/MessagesCard';
 import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/CourierDistanceBadge';
 import CourierStatusHighlight from '../../../common/screens/orders/ongoing/CourierStatusHighlight';
 import { courierNextPlace } from '../../../common/store/api/order/helpers';
@@ -136,6 +137,21 @@ export default function ({ navigation, route }: Props) {
         <OrderMap order={order!} />
         <RouteIcons order={order} />
         <CourierStatusHighlight dispatchingState={dispatchingState} />
+        <View style={{ paddingHorizontal: padding }}>
+          <View
+            style={{
+              width: '100%',
+              marginBottom: padding,
+              top: -64,
+              alignSelf: 'center',
+            }}
+          >
+            <MessagesCard
+              orderId={orderId}
+              onPress={() => navigation.navigate('Chat', { orderId })}
+            />
+          </View>
+        </View>
       </View>
       <View style={{ marginTop: padding, paddingHorizontal: padding }}>
         <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Pedido de')}</Text>

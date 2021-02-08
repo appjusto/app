@@ -1,15 +1,11 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext, useCallback } from 'react';
-import { Text, View, Image, ActivityIndicator } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-
+import React from 'react';
+import { ActivityIndicator, Image, Text, View } from 'react-native';
 import * as icons from '../../../assets/icons';
-import { ApiContext, AppDispatch } from '../../../common/app/context';
+import { ApiContext } from '../../../common/app/context';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import { matchOrder } from '../../../common/store/order/actions';
-import { getUIBusy } from '../../../common/store/ui/selectors';
-import { texts, screens, colors, padding } from '../../../common/styles';
+import { colors, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -28,19 +24,25 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  // context
-  const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
+  // params
   const { matchRequest } = route.params;
   const { orderId } = matchRequest;
-
-  // app state
-  const busy = useSelector(getUIBusy);
-
-  // handlers
-  const acceptHandler = useCallback(async () => {
+  // context
+  const api = React.useContext(ApiContext);
+  // screen state
+  const [isLoading, setLoading] = React.useState(false);
+  // UI
+  if (isLoading)
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
+  // UI handlers
+  const acceptHandler = async () => {
     try {
-      await dispatch(matchOrder(api)(orderId));
+      setLoading(true);
+      await api.order().matchOrder(orderId);
 
       navigation.replace('OngoingNavigator', {
         screen: 'OngoingDelivery',
@@ -51,19 +53,11 @@ export default function ({ navigation, route }: Props) {
     } catch (error) {
       navigation.replace('MatchingError');
     }
-  }, [matchRequest]);
+  };
 
-  const rejectHandler = useCallback(() => {
+  const rejectHandler = () => {
     navigation.replace('RefuseDelivery', { orderId });
-  }, [matchRequest]);
-
-  // UI
-  if (busy)
-    return (
-      <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
-      </View>
-    );
+  };
 
   return (
     <View style={[screens.default, screens.headless]}>
@@ -155,7 +149,7 @@ export default function ({ navigation, route }: Props) {
         <AcceptControl
           acceptHandler={acceptHandler}
           rejectHandler={rejectHandler}
-          disabled={busy}
+          disabled={isLoading}
         />
       </PaddedView>
     </View>

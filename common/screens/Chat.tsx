@@ -1,18 +1,18 @@
 import { RouteProp } from '@react-navigation/native';
-import { ChatMessage, Flavor, WithId } from 'appjusto-types';
+import { ChatMessage, Flavor, PushMessage, WithId } from 'appjusto-types';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
-import { useDispatch, useSelector } from 'react-redux';
+import { useQueryClient } from 'react-query';
+import { useSelector } from 'react-redux';
 import { t } from '../../strings';
-import { ApiContext, AppDispatch } from '../app/context';
+import { ApiContext } from '../app/context';
 import DefaultButton from '../components/buttons/DefaultButton';
 import PaddedView from '../components/containers/PaddedView';
 import RoundedProfileImg from '../components/icons/RoundedProfileImg';
 import DefaultInput from '../components/inputs/DefaultInput';
 import useObserveOrder from '../store/api/order/hooks/useObserveOrder';
 import { getFlavor } from '../store/config/selectors';
-import { markMessageAsRead } from '../store/order/actions';
 import { groupOrderChatMessages } from '../store/order/selectors';
 import { getUser } from '../store/user/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../styles';
@@ -35,7 +35,7 @@ export default function ({ route }: Props) {
   const { orderId } = route.params;
   // context
   const api = React.useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
+  const queryClient = useQueryClient();
   // app state
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser)!;
@@ -46,10 +46,13 @@ export default function ({ route }: Props) {
   const groupedMessages = React.useMemo(() => groupOrderChatMessages(chat ?? []), [chat]);
   // side effects
   React.useEffect(() => {
-    if (chat && chat.length > 0) {
-      dispatch(markMessageAsRead(orderId, chat[chat.length - 1]));
-    }
-  }, [chat]);
+    queryClient.setQueryData(
+      ['notifications', 'order-chat'],
+      (notifications: PushMessage[] | undefined) =>
+        (notifications ?? []).map((n) => (n.data.orderId === orderId ? { ...n, read: true } : n))
+    );
+  }, [chat, orderId]);
+
   // UI
   if (!order) {
     // showing the indicator until the order is loaded

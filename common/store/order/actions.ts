@@ -1,11 +1,9 @@
-import { ChatMessage, Fare, OrderIssue, OrderRejection, Review, WithId } from 'appjusto-types';
+import { Fare, OrderIssue, Review } from 'appjusto-types';
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
 import { awaitWithFeedback } from '../ui/actions';
 
 export const ORDERS_UPDATED = 'ORDERS_UPDATED';
-export const ORDER_CHAT_UPDATED = 'ORDER_CHAT_UPDATED';
-export const ORDER_CHAT_MESSAGE_READ = 'ORDER_CHAT_MESSAGE_READ';
 
 // consumers
 
@@ -39,16 +37,6 @@ export const sendCourierReview = (api: Api) => (orderId: string, review: Review)
 
 // couriers
 
-export const matchOrder = (api: Api) => (orderId: string) => async (dispatch: AppDispatch) => {
-  return dispatch(awaitWithFeedback(api.order().matchOrder(orderId)));
-};
-
-export const rejectOrder = (api: Api) => (orderId: string, rejection: OrderRejection) => async (
-  dispatch: AppDispatch
-) => {
-  return dispatch(awaitWithFeedback(api.order().rejectOrder(orderId, rejection)));
-};
-
 export const completeDelivery = (api: Api) => (orderId: string) => async (
   dispatch: AppDispatch
 ) => {
@@ -60,11 +48,4 @@ export const sendCourierOrderProblem = (api: Api) => (
   problem: OrderIssue
 ) => async (dispatch: AppDispatch) => {
   return dispatch(awaitWithFeedback(api.order().sendCourierOrderProblem(orderId, problem)));
-};
-
-// both courier & consumer
-export const markMessageAsRead = (orderId: string, message: WithId<ChatMessage>) => (
-  dispatch: AppDispatch
-) => {
-  dispatch({ type: ORDER_CHAT_MESSAGE_READ, payload: { orderId, message } });
 };

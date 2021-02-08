@@ -4,7 +4,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { OngoingOrdersStatuses } from '..';
 import { ApiContext, AppDispatch } from '../../../../app/context';
-import { ORDERS_UPDATED, ORDER_CHAT_UPDATED } from '../../../order/actions';
+import { ORDERS_UPDATED } from '../../../order/actions';
 import { ObserveOrdersOptions } from '../types';
 
 export default function (options: ObserveOrdersOptions) {
@@ -32,16 +32,4 @@ export default function (options: ObserveOrdersOptions) {
       setIds(ordersIds);
     }
   }, [orders]);
-  // whenever ids change
-  // subscribe to chat
-  React.useEffect(() => {
-    const unsubscribers = ids.map((id) =>
-      api
-        .order()
-        .observeOrderChat(id, (messages) =>
-          dispatch({ type: ORDER_CHAT_UPDATED, payload: { orderId: id, messages } })
-        )
-    );
-    return () => unsubscribers.forEach((unsub) => unsub());
-  }, [ids]);
 }

@@ -1,23 +1,36 @@
 import { Feather } from '@expo/vector-icons';
+import { PushMessage } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useQuery } from 'react-query';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';
 import { borders, colors, halfPadding, texts } from '../../../styles';
 
 interface Props {
-  unreadCount: number;
+  orderId: string;
+  variant?: 'standalone' | 'coupled';
   onPress: () => void;
 }
 
-export const MessagesCard = ({ unreadCount, onPress }: Props) => {
+export const MessagesCard = ({ orderId, variant = 'standalone', onPress }: Props) => {
+  const chatQuery = useQuery<PushMessage[]>(['notifications', 'order-chat'], () => []);
+  const unreadCount = (chatQuery.data ?? []).filter((m) => m.data.orderId === orderId && !m.read)
+    .length;
+  if (unreadCount === 0) return null;
   return (
     <TouchableOpacity onPress={onPress}>
       <View
         style={{
-          ...borders.default,
-          borderColor: colors.black,
+          ...(variant === 'standalone'
+            ? borders.default
+            : {
+                borderBottomColor: colors.darkGrey,
+                borderBottomWidth: 1,
+                borderTopLeftRadius: 8,
+                borderTopRightRadius: 8,
+              }),
           backgroundColor: colors.white,
         }}
       >

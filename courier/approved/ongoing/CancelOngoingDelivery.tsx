@@ -13,9 +13,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import useIssues from '../../../common/store/api/order/hooks/useIssues';
 import { getCourier } from '../../../common/store/courier/selectors';
-import { rejectOrder } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
-import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -40,11 +38,11 @@ export default function ({ route, navigation }: Props) {
   const dispatch = useDispatch<AppDispatch>();
   // app state
   const courier = useSelector(getCourier)!;
-  const busy = useSelector(getUIBusy);
   // state
   const issues = useIssues('courier-cancel');
   const [selectedReason, setSelectedReason] = useState<WithId<Issue>>();
   const [rejectionComment, setRejectionComment] = useState<string>('');
+  const [isLoading, setLoading] = React.useState(false);
   // UI
   if (!issues) {
     return (
@@ -57,13 +55,12 @@ export default function ({ route, navigation }: Props) {
   const sendRejectionHandler = () => {
     (async () => {
       try {
-        await dispatch(
-          rejectOrder(api)(orderId, {
-            courierId: courier.id,
-            reason: selectedReason!,
-            comment: rejectionComment,
-          })
-        );
+        setLoading(true);
+        await api.order().rejectOrder(orderId, {
+          courierId: courier.id,
+          reason: selectedReason!,
+          comment: rejectionComment,
+        });
         navigation.replace('MainNavigator', {
           screen: 'HomeNavigator',
           params: {
@@ -71,6 +68,7 @@ export default function ({ route, navigation }: Props) {
           },
         });
       } catch (error) {
+        setLoading(false);
         dispatch(showToast(error.toString()));
       }
     })();
@@ -119,8 +117,8 @@ export default function ({ route, navigation }: Props) {
             style={{ marginTop: padding }}
             title={t('Enviar')}
             onPress={sendRejectionHandler}
-            disabled={!selectedReason || busy}
-            activityIndicator={busy}
+            disabled={!selectedReason || isLoading}
+            activityIndicator={isLoading}
           />
         </PaddedView>
       </KeyboardAwareScrollView>
