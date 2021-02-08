@@ -61,7 +61,7 @@ export default function ({ navigation, route }: Props) {
 
   return (
     <View style={[screens.default, screens.headless]}>
-      <PaddedView>
+      <PaddedView style={{ flex: 1 }}>
         {/* header */}
         <View style={{ marginTop: padding, alignItems: 'center' }}>
           <Text style={[texts.big, { color: colors.darkGreen }]}>

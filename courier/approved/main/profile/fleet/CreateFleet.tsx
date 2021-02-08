@@ -90,6 +90,7 @@ export default function ({ navigation, route }: Props) {
           </Text>
           <DefaultInput
             ref={nameRef}
+            style={{ marginBottom: 4 }}
             title={t('Nome')}
             placeholder={t('Nome da frota em até 36 caracteres')}
             value={name}
@@ -98,8 +99,6 @@ export default function ({ navigation, route }: Props) {
             maxLength={36}
             onChangeText={setName}
             onSubmitEditing={() => descriptionRef.current?.focus()}
-            keyboardType="default"
-            style={{ marginBottom: 4 }}
           />
           {/* add logic to the counter below */}
           <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: padding }}>
@@ -107,16 +106,15 @@ export default function ({ navigation, route }: Props) {
           </Text>
           <DefaultInput
             ref={descriptionRef}
+            style={{ marginBottom: 4 }}
             title={t('Descrição')}
             placeholder={t('Descreva sua frota em até 140 caracteres')}
             value={description}
-            returnKeyType="next"
-            blurOnSubmit={false}
             maxLength={140}
             numberOfLines={3}
+            returnKeyType="done"
+            blurOnSubmit
             onChangeText={setDescription}
-            keyboardType="default"
-            style={{ marginBottom: 4 }}
           />
           {/* add logic to the counter below */}
           <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: padding }}>

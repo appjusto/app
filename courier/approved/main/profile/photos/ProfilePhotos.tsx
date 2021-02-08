@@ -176,7 +176,6 @@ export default function ({ navigation }: Props) {
             borderBottomColor: colors.grey,
             borderStyle: 'solid',
             borderBottomWidth: 1,
-            marginTop: 16,
           }}
         />
         <ConfigItem
