@@ -1,8 +1,13 @@
 import { Business, WithId } from 'appjusto-types';
 import React from 'react';
 import { SectionList, TouchableOpacity, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
+import { distanceBetweenLatLng } from '../../../../common/store/api/helpers';
+import useCuisines from '../../../../common/store/api/order/hooks/useCuisines';
+// import { distanceBetweenLatLng } from '../../../../common/store/api/helpers';
+import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import { padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import DoubleHeader from '../components/DoubleHeader';
@@ -22,6 +27,11 @@ type Section = {
 };
 
 export default function ({ items, ListHeaderComponent, onSelect, onEndReached }: Props) {
+  // redux store
+  const location = useSelector(getCurrentLocation);
+  // state
+  const cuisines = useCuisines();
+  const findCuisineById = (id?: string) => cuisines?.find((c) => c.id === id);
   if (items && items.length === 0) {
     return (
       <FeedbackView
@@ -62,7 +72,15 @@ export default function ({ items, ListHeaderComponent, onSelect, onEndReached }:
       renderItem={({ item }) => (
         <View style={{ marginTop: padding }}>
           <TouchableOpacity onPress={() => onSelect(item.id)}>
-            <RestaurantListItem restaurant={item} />
+            <RestaurantListItem
+              restaurant={item}
+              cuisine={findCuisineById(item.cuisine?.id)?.name}
+              distance={
+                location && item.businessAddress?.latlng
+                  ? distanceBetweenLatLng(location, item.businessAddress.latlng)
+                  : undefined
+              }
+            />
           </TouchableOpacity>
         </View>
       )}

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Image, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import * as icons from '../../../../assets/icons';
-import { borders, halfPadding, padding, texts } from '../../../../common/styles';
-import { t } from '../../../../strings';
+import * as icons from '../../../../../assets/icons';
+import { borders, halfPadding, padding, texts } from '../../../../../common/styles';
+import { t } from '../../../../../strings';
 
 type Props = {
   onPress: () => void;
