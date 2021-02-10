@@ -13,7 +13,7 @@ import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import FeedbackView from '../../../common/components/views/FeedbackView';
-import useIssues from '../../../common/store/api/order/hooks/useIssues';
+import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { sendCourierOrderProblem } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';

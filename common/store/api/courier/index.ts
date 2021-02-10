@@ -1,7 +1,6 @@
-import { Bank, LatLng } from 'appjusto-types';
+import { LatLng } from 'appjusto-types';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
-import { documentsAs } from '../types';
 
 type FetchTotalCouriersNearbyData = {
   total: number;
@@ -21,13 +20,6 @@ export default class CourierApi {
     distance: number = 15000
   ): Promise<FetchTotalCouriersNearbyData> {
     return (await this.refs.getFetchTotalCouriersNearbyCallable()({ location, distance })).data;
-  }
-
-  // firestore
-  // fetch supported banks
-  async fetchBanks() {
-    const querySnapshot = await this.refs.getBanksRef().get();
-    return documentsAs<Bank>(querySnapshot.docs);
   }
 
   // storage

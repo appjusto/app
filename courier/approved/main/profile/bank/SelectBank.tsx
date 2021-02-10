@@ -1,18 +1,13 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Bank } from 'appjusto-types';
-import React, { useState, useCallback, useEffect, useContext, useMemo } from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-
-import { ApiContext, AppDispatch } from '../../../../../common/app/context';
+import React, { useCallback, useMemo, useState } from 'react';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
-import { fetchBanks } from '../../../../../common/store/courier/actions';
-import { getBanks } from '../../../../../common/store/courier/selectors';
-import { getUIBusy } from '../../../../../common/store/ui/selectors';
-import { texts, screens, padding } from '../../../../../common/styles';
+import useBanks from '../../../../../common/store/api/platform/hooks/useBanks';
+import { padding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { BankParamList } from './types';
 
@@ -25,16 +20,9 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  // context
-  const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
-
-  // app state
-  const busy = useSelector(getUIBusy);
-  const banks = useSelector(getBanks);
-
   // screen state
-  const [bank, setBank] = useState<null | Bank>(null);
+  const banks = useBanks();
+  const [selectedBank, setSelectedBank] = useState<null | Bank>(null);
   const [bankSearch, setBankSearch] = useState('');
   const filteredBanks = useMemo(() => {
     if (!banks) return [];
@@ -43,19 +31,11 @@ export default function ({ navigation, route }: Props) {
     );
   }, [banks, bankSearch]);
 
-  // effects
-  useEffect(() => {
-    // fetch banks if not fetched previously
-    if (banks === undefined) {
-      dispatch(fetchBanks(api));
-    }
-  }, [banks]);
-
   // handlers
   const selectBankHandler = useCallback(() => {
-    if (!bank) return;
-    navigation.navigate('ProfileBank', { bank });
-  }, [bank]);
+    if (!selectedBank) return;
+    navigation.navigate('ProfileBank', { bank: selectedBank });
+  }, [selectedBank]);
   // UI
   return (
     <PaddedView style={{ ...screens.lightGrey }}>
@@ -73,7 +53,7 @@ export default function ({ navigation, route }: Props) {
           return (
             <TouchableOpacity
               onPress={() => {
-                setBank(item);
+                setSelectedBank(item);
                 setBankSearch(item.name);
               }}
             >
@@ -94,8 +74,8 @@ export default function ({ navigation, route }: Props) {
       <DefaultButton
         style={{ marginTop: padding }}
         title={t('Confirmar banco')}
-        disabled={!bank}
-        activityIndicator={busy}
+        disabled={!selectedBank}
+        activityIndicator={!banks}
         onPress={selectBankHandler}
       />
     </PaddedView>

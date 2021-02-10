@@ -2,7 +2,7 @@ import { Cuisine } from 'appjusto-types';
 import React from 'react';
 import { View } from 'react-native';
 import RoundedText from '../../../../common/components/texts/RoundedText';
-import { useCuisineImageURI } from '../../../../common/store/api/order/hooks/useCuisineImageURI';
+import { useCuisineImageURI } from '../../../../common/store/api/platform/hooks/useCuisineImageURI';
 import { halfPadding } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ListItemImage } from './ListItemImage';

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
 import { distanceBetweenLatLng } from '../../../../common/store/api/helpers';
-import useCuisines from '../../../../common/store/api/order/hooks/useCuisines';
+import useCuisines from '../../../../common/store/api/platform/hooks/useCuisines';
 // import { distanceBetweenLatLng } from '../../../../common/store/api/helpers';
 import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import { padding, screens } from '../../../../common/styles';

@@ -1,13 +1,11 @@
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 import firebase from 'firebase';
-
 import { t } from '../../strings';
 import { AppStore } from '../app/context';
 import Api from '../store/api/api';
 import { getConsumer } from '../store/consumer/selectors';
 import { getCourier } from '../store/courier/selectors';
-import { updateLocation } from '../store/user/actions';
 
 const TASK_FETCH_LOCATION = 'TASK_FETCH_LOCATION';
 
@@ -49,7 +47,7 @@ const locationTaskExecutor = (store: AppStore, api: Api): TaskManager.TaskManage
 
   const state = store.getState();
   const profile = getCourier(state) ?? getConsumer(state);
-  if (profile?.id) store.dispatch(updateLocation(api)(profile.id, coordinates));
+  if (profile?.id) api.profile().updateLocation(profile.id, coordinates);
 };
 
 export const defineLocationUpdatesTask = (store: AppStore, api: Api) => {

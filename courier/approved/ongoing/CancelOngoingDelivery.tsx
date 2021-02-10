@@ -11,7 +11,7 @@ import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import useIssues from '../../../common/store/api/order/hooks/useIssues';
+import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';

@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { ConsumerProfile, CourierProfile, Flavor, UserProfile, WithId } from 'appjusto-types';
-
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
 import { awaitWithFeedback } from '../ui/actions';
@@ -74,11 +73,4 @@ export const updateProfile = (api: Api) => (
   changes: Partial<CourierProfile> | Partial<ConsumerProfile>
 ) => async (dispatch: AppDispatch) => {
   return dispatch(awaitWithFeedback(api.profile().updateProfile(id, changes)));
-};
-
-export const updateLocation = (api: Api) => (
-  id: string,
-  location: firebase.firestore.GeoPoint
-) => async (dispatch: AppDispatch) => {
-  api.profile().updateLocation(id, location);
 };
