@@ -1,29 +1,29 @@
 import { CourierMode } from 'appjusto-types/courier';
-import React, { useCallback, useContext } from 'react';
+import React, { useContext } from 'react';
 import { Text, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
-import { ApiContext, AppDispatch } from '../../../../common/app/context';
+import { ApiContext } from '../../../../common/app/context';
 import IconButton from '../../../../common/components/buttons/IconButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { getCourier } from '../../../../common/store/courier/selectors';
-import { updateProfile } from '../../../../common/store/user/actions';
 import { borders, colors, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
 export default function () {
   // context
   const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
-
-  // app state
+  // redux store
   const courier = useSelector(getCourier)!;
   const { mode } = courier;
-
-  // handlers
-  const modeChangeHandler = useCallback((value: CourierMode) => {
-    dispatch(updateProfile(api)(courier.id, { mode: value }));
+  // side effects
+  React.useEffect(() => {
+    if (!mode) api.profile().updateProfile(courier.id, { mode: 'motocycle' });
   }, []);
+  // UI handlers
+  const modeChangeHandler = (value: CourierMode) => {
+    api.profile().updateProfile(courier.id, { mode: value });
+  };
 
   // UI
   return (
