@@ -37,12 +37,6 @@ export const sendCourierReview = (api: Api) => (orderId: string, review: Review)
 
 // couriers
 
-export const completeDelivery = (api: Api) => (orderId: string) => async (
-  dispatch: AppDispatch
-) => {
-  return dispatch(awaitWithFeedback(api.order().completeDelivery(orderId)));
-};
-
 export const sendCourierOrderProblem = (api: Api) => (
   orderId: string,
   problem: OrderIssue

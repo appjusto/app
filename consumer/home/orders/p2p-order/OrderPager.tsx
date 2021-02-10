@@ -86,7 +86,7 @@ export default function ({
     if (stepReady(nextStep)) {
       if (step === Step.Origin) {
         if (!origin) return;
-        api.order().updateFoodOrder(order!.id, {
+        api.order().updateOrder(order!.id, {
           origin: {
             ...origin,
             additionalInfo: originAdditionalInfo,
@@ -95,7 +95,7 @@ export default function ({
         });
       } else if (step === Step.Destination) {
         if (!destination) return;
-        api.order().updateFoodOrder(order!.id, {
+        api.order().updateOrder(order!.id, {
           destination: {
             ...destination,
             additionalInfo: destinationAdditionalInfo,

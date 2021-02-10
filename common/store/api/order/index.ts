@@ -65,9 +65,6 @@ export default class OrderApi {
     const order = await this.refs.getOrdersRef().add(payload);
     return documentAs<Order>(await order.get());
   }
-  async updateFoodOrder(orderId: string, changes: Partial<Order>) {
-    await this.refs.getOrderRef(orderId).update(changes);
-  }
   async createOrderP2P(consumer: WithId<ConsumerProfile>, origin: Place) {
     const payload: Order = {
       type: 'p2p',
@@ -81,6 +78,10 @@ export default class OrderApi {
     };
     const order = await this.refs.getOrdersRef().add(payload);
     return documentAs<Order>(await order.get());
+  }
+
+  async updateOrder(orderId: string, changes: Partial<Order>) {
+    await this.refs.getOrderRef(orderId).update(changes);
   }
 
   async getOrderQuotes(orderId: string) {
@@ -118,10 +119,6 @@ export default class OrderApi {
 
   async nextDispatchingState(orderId: string) {
     return (await this.refs.getNextDispatchingStateCallable()({ orderId })).data;
-  }
-
-  async completeDelivery(orderId: string) {
-    return (await this.refs.getCompleteDeliveryCallable()({ orderId })).data;
   }
 
   async sendCourierOrderProblem(orderId: string, problem: OrderIssue) {

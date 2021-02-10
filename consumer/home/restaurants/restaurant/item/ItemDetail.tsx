@@ -122,7 +122,7 @@ export default function ({ navigation, route }: Props) {
           : quantity > 0
           ? helpers.updateItem(activeOrder, orderItem)
           : helpers.removeItem(activeOrder, orderItem);
-        api.order().updateFoodOrder(activeOrder.id, updatedOrder);
+        api.order().updateOrder(activeOrder.id, updatedOrder);
       }
       navigation.pop();
     })();

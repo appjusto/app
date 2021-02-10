@@ -49,7 +49,7 @@ export default function ({ navigation, route }: Props) {
     api.order().nextDispatchingState(orderId)
   );
   const { mutate: completeDelivery, isLoading: isCompletingDelivery } = useMutation(() =>
-    api.order().completeDelivery(orderId)
+    api.order().updateOrder(orderId, { status: 'delivered' })
   );
   const isLoading = isUpdatingDispatchingState || isCompletingDelivery;
   // side effects
