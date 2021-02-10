@@ -1,16 +1,15 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { ApiContext, AppDispatch } from '../../../../../common/app/context';
+import { useSelector } from 'react-redux';
+import { ApiContext } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import HR from '../../../../../common/components/views/HR';
 import { getCourier } from '../../../../../common/store/courier/selectors';
-import { createFleet } from '../../../../../common/store/fleet/actions';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../../../common/utils/formatters';
@@ -30,50 +29,44 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // context
-  const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
-
-  // refs
-  const nameRef = useRef<TextInput>(null);
-  const descriptionRef = useRef<TextInput>(null);
-
-  // app state
+  const api = React.useContext(ApiContext);
+  // redux store
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier)!;
-
   // screen state
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [distanceThreshold, setDistanceThreshold] = useState(1000);
-  const [minimumFee, setMinimumFee] = useState(300);
-  const [additionalPerKmAfterThreshold, setAdditionalPerKmAfterThreshold] = useState(100);
-  const [maxDistance, setMaxDistance] = useState(10000);
-  const [maxDistanceToOrigin, setMaxDistanceToOrigin] = useState(3000);
-  const canSubmit = useMemo(() => {
+  const [name, setName] = React.useState('');
+  const [description, setDescription] = React.useState('');
+  const [distanceThreshold, setDistanceThreshold] = React.useState(1000);
+  const [minimumFee, setMinimumFee] = React.useState(300);
+  const [additionalPerKmAfterThreshold, setAdditionalPerKmAfterThreshold] = React.useState(100);
+  const [maxDistance, setMaxDistance] = React.useState(10000);
+  const [maxDistanceToOrigin, setMaxDistanceToOrigin] = React.useState(3000);
+  const canSubmit = React.useMemo(() => {
     return !isEmpty(name) && !isEmpty(description);
   }, [name, description]);
+  // refs
+  const nameRef = React.useRef<TextInput>(null);
+  const descriptionRef = React.useRef<TextInput>(null);
 
   // effects
-  useEffect(() => {
+  React.useEffect(() => {
     nameRef.current?.focus();
   }, []);
 
   // handlers
   const createFleetHandler = async () => {
-    await dispatch(
-      createFleet(api)({
-        name,
-        description,
-        distanceThreshold,
-        minimumFee,
-        additionalPerKmAfterThreshold,
-        maxDistance,
-        maxDistanceToOrigin,
-        situation: 'approved',
-        createdBy: courier.id,
-        participantsOnline: 0,
-      })
-    );
+    api.fleet().createFleet({
+      name,
+      description,
+      distanceThreshold,
+      minimumFee,
+      additionalPerKmAfterThreshold,
+      maxDistance,
+      maxDistanceToOrigin,
+      situation: 'approved',
+      createdBy: courier.id,
+      participantsOnline: 0,
+    });
     navigation.goBack();
   };
 
@@ -177,6 +170,7 @@ export default function ({ navigation, route }: Props) {
           distanceThreshold={distanceThreshold}
           maxDistance={maxDistance}
           maxDistanceToOrigin={maxDistanceToOrigin}
+          additionalPerKmAfterThreshold={additionalPerKmAfterThreshold}
         />
         <View>
           <HR height={padding / 4} />
