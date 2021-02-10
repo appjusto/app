@@ -1,12 +1,11 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
-import { ActivityIndicator, FlatList, View } from 'react-native';
+import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
-import ShowIf from '../../../../../common/components/views/ShowIf';
 import { useSearchFleets } from '../../../../../common/store/api/search/useSearchFleets';
-import { colors, padding, screens } from '../../../../../common/styles';
+import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
-import FleetItem from './FleetItem';
+import { CourierFleetCard } from './components/CourierFleetCard';
 import { FleetParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<FleetParamList, 'AllFleets'>;
@@ -20,7 +19,7 @@ export default function ({ navigation }: Props) {
 
   // screen state
   const [fleetSearch, setFleetSearch] = useState('');
-  const { fleets, isLoading, fetchNextPage } = useSearchFleets(fleetSearch);
+  const { fleets, fetchNextPage } = useSearchFleets(fleetSearch);
 
   // handlers
   const navigateFleetDetail = React.useCallback((fleetId) => {
@@ -28,38 +27,46 @@ export default function ({ navigation }: Props) {
   }, []);
 
   // UI
+  if (!fleets) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
+  }
   return (
     <View style={{ ...screens.config }}>
       <FlatList
         data={fleets}
         ListHeaderComponent={
-          <View style={{ marginBottom: 32, paddingHorizontal: padding }}>
+          <View style={{ marginBottom: 32, paddingHorizontal: padding, paddingTop: padding }}>
+            <Text style={{ ...texts.big }}>{t('Escolha sua frota')}</Text>
+            <Text
+              style={{
+                ...texts.default,
+                color: colors.darkGrey,
+              }}
+            >
+              {t(
+                'Você pode escolhar a frota que deseja fazer parte. Frotas com mais participantes tem mais chances de corridas melhores.'
+              )}
+            </Text>
             <DefaultInput
-              // defaultValue={initialAddress}
               value={fleetSearch}
               title={t('Buscar')}
               placeholder={t('Nome da frota')}
               onChangeText={setFleetSearch}
-              style={{ marginBottom: 32, marginTop: padding }}
+              style={{ marginBottom: 24, marginTop: padding }}
             />
-            <ShowIf test={!fleets && isLoading}>
-              {() => (
-                <View style={{ marginTop: 8 }}>
-                  <ActivityIndicator size="small" color={colors.white} />
-                </View>
-              )}
-            </ShowIf>
+            <Text style={{ ...texts.default }}>
+              {fleets.length} {t('frotas disponíveis')}
+            </Text>
           </View>
         }
         renderItem={({ item }) => (
-          <FleetItem
-            onPress={() => navigateFleetDetail(item.id)}
-            name={item.name}
-            participants={item.participantsOnline}
-            description={item.description}
-            minimumFee={item.minimumFee}
-            feePerKm={item.additionalPerKmAfterThreshold}
-          />
+          <View style={{ paddingHorizontal: padding, marginBottom: padding }}>
+            <CourierFleetCard fleet={item} listItem onPress={() => navigateFleetDetail(item.id)} />
+          </View>
         )}
         onEndReached={() => fetchNextPage()}
       />

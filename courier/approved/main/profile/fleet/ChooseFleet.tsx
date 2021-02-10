@@ -1,10 +1,9 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext } from 'react';
+import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
-import { ApiContext } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { getCourier } from '../../../../../common/store/courier/selectors';
@@ -22,23 +21,8 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  // params
-  // const { fleetId } = route.params;
-  // context
-  const api = useContext(ApiContext);
   // redux store
   const courier = useSelector(getCourier)!;
-  // screen state
-  // const [availableFleets] = useState('');
-  // const { fleets, fetchNextPage } = useSearchFleets(availableFleets);
-  // const [selectedFleet, setSelectedFleet] = useState<WithId<Fleet>>();
-  // side effects
-  // React.useEffect(() => {
-  //   if (!fleets) return;
-  //   const courierFleet = fleets.find((fleet) => fleet.id === courier.fleet?.id);
-  //   if (courierFleet) setSelectedFleet(courierFleet);
-  // }, [fleets]);
-  // console.log(fleets);
 
   // handlers
   // const confirmFleet = useCallback(async () => {

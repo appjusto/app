@@ -1,6 +1,7 @@
 import { Fleet } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
+import DefaultButton from '../../../../../../common/components/buttons/DefaultButton';
 import RoundedText from '../../../../../../common/components/texts/RoundedText';
 import { borders, colors, halfPadding, padding, texts } from '../../../../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../../../../common/utils/formatters';
@@ -8,9 +9,11 @@ import { t } from '../../../../../../strings';
 
 type Props = {
   fleet: Fleet;
+  listItem?: boolean;
+  onPress?: () => void;
 };
 
-export const CourierFleetCard = ({ fleet }: Props) => {
+export const CourierFleetCard = ({ fleet, listItem, onPress }: Props) => {
   return (
     <View
       style={{
@@ -87,7 +90,6 @@ export const CourierFleetCard = ({ fleet }: Props) => {
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginBottom: 8,
         }}
       >
         <Text style={{ ...texts.small, color: colors.darkGrey }}>
@@ -97,6 +99,14 @@ export const CourierFleetCard = ({ fleet }: Props) => {
           {formatDistance(fleet.maxDistanceToOrigin)}
         </RoundedText>
       </View>
+      {listItem && (
+        <DefaultButton
+          title={t('Detalhes da frota')}
+          secondary
+          style={{ marginTop: padding }}
+          onPress={onPress}
+        />
+      )}
     </View>
   );
 };
