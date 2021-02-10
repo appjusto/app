@@ -1,5 +1,7 @@
 export type FleetParamList = {
-  ChooseFleet: undefined;
+  ChooseFleet: {
+    fleetId?: string;
+  };
   FleetSearch: undefined;
   FleetDetail: {
     fleetId: string;

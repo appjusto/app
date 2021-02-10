@@ -49,7 +49,6 @@ export default function ({ navigation, route }: Props) {
   const hasCompanyInfo = companyInfoSet(courier);
   const hasImages = !!currentSelfieQuery.data && !!currentDocumentImageQuery.data;
   const hasBankAccount = bankAccountSet(courier);
-  const hasSelectedFleet = courier.fleet !== undefined;
   const totalSteps = 5;
   const [stepsDone, setStepsDone] = useState(0);
   const submitEnabled =
@@ -82,14 +81,12 @@ export default function ({ navigation, route }: Props) {
     if (hasCompanyInfo) totalSteps++;
     if (hasImages) totalSteps++;
     if (hasBankAccount) totalSteps++;
-    if (hasSelectedFleet) totalSteps++;
     setStepsDone(totalSteps);
   }, [
     hasPersonalInfo,
     hasBankAccount,
     currentSelfieQuery.data,
     currentDocumentImageQuery.data,
-    hasSelectedFleet,
     hasCompanyInfo,
   ]);
   // whenever screen is focused
@@ -160,13 +157,6 @@ export default function ({ navigation, route }: Props) {
           subtitle={t('Cadastre seu banco para recebimento')}
           onPress={() => navigation.navigate('BankNavigator')}
           checked={bankAccountSet(courier)}
-        />
-        <ConfigItem
-          title={t('Escolha sua frota')}
-          subtitle={t('Faça parte de uma frota existente ou crie sua própria frota')}
-          onPress={() => navigation.navigate('FleetNavigator')}
-          checked={hasSelectedFleet}
-          bottomBorder={false}
         />
       </ScrollView>
     </View>

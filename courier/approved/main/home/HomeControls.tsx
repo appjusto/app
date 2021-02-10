@@ -175,10 +175,16 @@ export default function ({ navigation }: Props) {
           </Text>
           <View style={{ flex: 1 }} />
           <TouchableOpacity
-            onPress={() => navigation.navigate('FleetDetail', { fleetId: courier.fleet!.id })}
+            onPress={() =>
+              navigation.navigate('FleetNavigator', {
+                screen: 'ChooseFleet',
+                fleetId: courier.fleet!.id,
+              })
+            }
+            // onPress={() => navigation.navigate('FleetDetail', { fleetId: courier.fleet!.id })}
           >
             <View style={{ marginTop: padding, alignItems: 'center' }}>
-              <RoundedText>{t('Ver detalhes')}</RoundedText>
+              <RoundedText>{t('Mudar de frota')}</RoundedText>
             </View>
           </TouchableOpacity>
         </View>

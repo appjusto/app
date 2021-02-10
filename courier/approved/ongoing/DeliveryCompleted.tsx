@@ -29,7 +29,6 @@ export default function ({ navigation, route }: Props) {
   const clientFeedbackData: HorizontalSelectItem[] = [
     { title: t('Sim, tudo certo'), id: '1' },
     { title: t('Não, longa espera'), id: '2' },
-    { title: t('Não, cliente não apareceu'), id: '3' },
   ];
   const [selectedClientFeedback, setSelectedClientFeedback] = useState<HorizontalSelectItem>(
     clientFeedbackData[0]

@@ -14,6 +14,7 @@ import { updateProfile } from '../../../../common/store/user/actions';
 import { padding, screens } from '../../../../common/styles';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
+import { DemandCard } from './components/DemandCard';
 import HomeControls from './HomeControls';
 import HomeDeliveriesSummary from './HomeDeliveriesSummary';
 import ModalChooser from './ModalChooser';
@@ -78,6 +79,11 @@ export default function ({ navigation }: Props) {
           </TouchableOpacity>
           <View style={{ marginTop: padding }}>
             <ModalChooser />
+          </View>
+          <View style={{ marginTop: padding }}>
+            <View>
+              <DemandCard />
+            </View>
           </View>
         </PaddedView>
       </ScrollView>
