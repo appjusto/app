@@ -2,12 +2,11 @@ import { CourierMode } from 'appjusto-types/courier';
 import React, { useCallback, useContext } from 'react';
 import { Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-
 import * as icons from '../../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import IconButton from '../../../../common/components/buttons/IconButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import { getCourier, getCourierMode } from '../../../../common/store/courier/selectors';
+import { getCourier } from '../../../../common/store/courier/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { borders, colors, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -19,7 +18,7 @@ export default function () {
 
   // app state
   const courier = useSelector(getCourier)!;
-  const mode = useSelector(getCourierMode);
+  const { mode } = courier;
 
   // handlers
   const modeChangeHandler = useCallback((value: CourierMode) => {
@@ -41,8 +40,8 @@ export default function () {
         />
         <IconButton
           title={t('Bicicleta')}
-          active={mode === 'bicycle'}
-          onPress={() => modeChangeHandler('bicycle')}
+          active={mode === 'bicycling'}
+          onPress={() => modeChangeHandler('bicycling')}
           icon={icons.bikeSmall}
         />
         <IconButton
