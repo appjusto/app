@@ -1,4 +1,4 @@
-import { Fare, OrderIssue, Review } from 'appjusto-types';
+import { Fare, OrderIssue } from 'appjusto-types';
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
 import { awaitWithFeedback } from '../ui/actions';
@@ -21,25 +21,4 @@ export const cancelOrder = (api: Api) => (orderId: string, cancellation?: OrderI
   dispatch: AppDispatch
 ) => {
   return dispatch(awaitWithFeedback(api.order().cancelOrder(orderId, cancellation)));
-};
-
-export const sendOrderProblem = (api: Api) => (orderId: string, problem: OrderIssue) => async (
-  dispatch: AppDispatch
-) => {
-  return dispatch(awaitWithFeedback(api.order().sendOrderProblem(orderId, problem)));
-};
-
-export const sendCourierReview = (api: Api) => (orderId: string, review: Review) => async (
-  dispatch: AppDispatch
-) => {
-  return dispatch(awaitWithFeedback(api.order().sendCourierReview(orderId, review)));
-};
-
-// couriers
-
-export const sendCourierOrderProblem = (api: Api) => (
-  orderId: string,
-  problem: OrderIssue
-) => async (dispatch: AppDispatch) => {
-  return dispatch(awaitWithFeedback(api.order().sendCourierOrderProblem(orderId, problem)));
 };

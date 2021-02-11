@@ -11,6 +11,7 @@ import useObserveOrder from '../../common/store/api/order/hooks/useObserveOrder'
 import { colors, halfPadding, padding, screens, texts } from '../../common/styles';
 import {
   formatCurrency,
+  formatDate,
   formatDistance,
   formatDuration,
   separateWithDot,
@@ -93,7 +94,15 @@ export default function ({ navigation, route }: Props) {
             title={t('Avaliar o entregador')}
             secondary
             onPress={() =>
-              navigation.navigate('ReviewCourier', { courier: order.courier, orderId })
+              navigation.navigate('ReviewCourier', {
+                courierId: order.courier!.id,
+                courierName: order.courier!.name,
+                courierJoined: formatDate(
+                  (order.courier?.joined as firebase.firestore.Timestamp).toDate(),
+                  'monthYear'
+                ),
+                orderId,
+              })
             }
           />
         </View>

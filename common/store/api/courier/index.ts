@@ -1,4 +1,5 @@
-import { LatLng } from 'appjusto-types';
+import { LatLng, Review } from 'appjusto-types';
+import firebase from 'firebase';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
 
@@ -14,14 +15,18 @@ export default class CourierApi {
   async submitProfile() {
     return this.refs.getSubmitProfileCallable()();
   }
-
   async fetchTotalCouriersNearby(
     location: LatLng,
     distance: number = 15000
   ): Promise<FetchTotalCouriersNearbyData> {
     return (await this.refs.getFetchTotalCouriersNearbyCallable()({ location, distance })).data;
   }
-
+  // firestore
+  async addReview(courierId: string, review: Review) {
+    await this.refs
+      .getCourierReviewsRef(courierId)
+      .add({ ...review, createdOn: firebase.firestore.FieldValue.serverTimestamp() } as Review);
+  }
   // storage
   // selfie
   uploadSelfie(id: string, localUri: string, progressHandler?: (progress: number) => void) {

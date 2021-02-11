@@ -2,7 +2,7 @@ import { Feather } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ReviewType } from 'appjusto-types';
-import React, { useCallback, useContext, useState } from 'react';
+import React from 'react';
 import { Text, View } from 'react-native';
 import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,11 +13,9 @@ import RoundedProfileImg from '../../../common/components/icons/RoundedProfileIm
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import HR from '../../../common/components/views/HR';
 import Pill from '../../../common/components/views/Pill';
-import { sendCourierReview } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
-import { formatDate } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { HistoryParamList } from '../../history/types';
 
@@ -31,53 +29,43 @@ type Props = {
 
 export default function ({ route, navigation }: Props) {
   //context
-  const { courier, orderId } = route.params;
-  const api = useContext(ApiContext);
+  const { courierId, courierName, courierJoined, orderId } = route.params;
+  const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   const busy = useSelector(getUIBusy);
 
   //screen state
-  const [review, setReview] = useState<ReviewType>();
-  const joinedOn = (courier!.joined as firebase.firestore.Timestamp).toDate();
-  const [reviewComment, setReviewComment] = useState<string>('');
+  const [reviewType, setReviewType] = React.useState<ReviewType>();
+  const [reviewComment, setReviewComment] = React.useState('');
 
-  //handlers
-  const positiveHandler = () => {
-    setReview('positive');
-  };
-
-  const negativeHandler = () => {
-    setReview('negative');
-  };
-
-  const sendReviewCourier = useCallback(() => {
-    if (!review) return;
+  // UI handlers
+  const sendReviewCourier = () => {
+    if (!reviewType) return;
     (async () => {
       try {
-        await dispatch(
-          sendCourierReview(api)(orderId, {
-            type: review,
-            comment: reviewComment,
-          })
-        );
+        await api.courier().addReview(courierId, {
+          type: reviewType,
+          comment: reviewComment,
+          orderId,
+        });
       } catch (error) {
         dispatch(showToast(t('Não foi possível enviar o comentário')));
       }
       navigation.goBack();
     })();
-  }, [review, reviewComment]);
+  };
 
   return (
     <View style={{ ...screens.default }}>
       <ScrollView>
         <PaddedView style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View>
-            <RoundedProfileImg id={courier?.id} />
+            <RoundedProfileImg id={courierId} />
           </View>
           <View style={{ marginLeft: 12 }}>
-            <Text style={{ ...texts.medium, marginBottom: halfPadding }}>{courier?.name}</Text>
+            <Text style={{ ...texts.medium, marginBottom: halfPadding }}>{courierName}</Text>
             <Text style={{ ...texts.small, color: colors.darkGrey }}>No appJusto desde</Text>
-            <Text style={{ ...texts.small }}>{formatDate(joinedOn, 'monthYear')}</Text>
+            <Text style={{ ...texts.small }}>{courierJoined}</Text>
           </View>
         </PaddedView>
         <HR height={padding} />
@@ -96,7 +84,7 @@ export default function ({ route, navigation }: Props) {
               marginBottom: 24,
             }}
           >
-            <TouchableWithoutFeedback onPress={positiveHandler}>
+            <TouchableWithoutFeedback onPress={() => setReviewType('positive')}>
               <View
                 style={{
                   height: 64,
@@ -104,7 +92,7 @@ export default function ({ route, navigation }: Props) {
                   ...borders.default,
                   borderRadius: 32,
                   borderColor: colors.green,
-                  backgroundColor: review === 'positive' ? colors.green : colors.white,
+                  backgroundColor: reviewType === 'positive' ? colors.green : colors.white,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
@@ -112,7 +100,7 @@ export default function ({ route, navigation }: Props) {
                 <Feather name="thumbs-up" size={24} />
               </View>
             </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={negativeHandler}>
+            <TouchableWithoutFeedback onPress={() => setReviewType('negative')}>
               <View
                 style={{
                   height: 64,
@@ -121,7 +109,7 @@ export default function ({ route, navigation }: Props) {
                   borderRadius: 32,
                   borderColor: colors.green,
                   marginLeft: padding,
-                  backgroundColor: review === 'negative' ? colors.green : colors.white,
+                  backgroundColor: reviewType === 'negative' ? colors.green : colors.white,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
@@ -147,7 +135,7 @@ export default function ({ route, navigation }: Props) {
             title={t('Enviar')}
             onPress={sendReviewCourier}
             style={{ marginTop: padding }}
-            disabled={!review || busy}
+            disabled={!reviewType || busy}
             activityIndicator={busy}
           />
           <View style={{ flex: 1 }} />

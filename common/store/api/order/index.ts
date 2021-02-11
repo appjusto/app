@@ -10,7 +10,6 @@ import {
   OrderStatus,
   Place,
   PlaceOrderPayload,
-  Review,
   WithId,
 } from 'appjusto-types';
 import firebase from 'firebase';
@@ -100,14 +99,6 @@ export default class OrderApi {
     return (await this.refs.getTipCourierCallable()({ orderId, tip })).data;
   }
 
-  async sendOrderProblem(orderId: string, problem: OrderIssue) {
-    return (await this.refs.getSendOrderProblemCallable()({ orderId, problem })).data;
-  }
-
-  async sendCourierReview(orderId: string, review: Review) {
-    return (await this.refs.getSendCourierReviewCallable()({ orderId, review })).data;
-  }
-
   // courier
   async matchOrder(orderId: string) {
     return (await this.refs.getMatchOrderCallable()({ orderId })).data;
@@ -123,10 +114,6 @@ export default class OrderApi {
 
   async completeDelivery(orderId: string, handshakeResponse?: string) {
     return (await this.refs.getCompleteDeliveryCallable()({ orderId, handshakeResponse })).data;
-  }
-
-  async sendCourierOrderProblem(orderId: string, problem: OrderIssue) {
-    return (await this.refs.getSendCourierOrderProblemCallable()({ orderId, problem })).data;
   }
 
   // firestore
@@ -183,6 +170,13 @@ export default class OrderApi {
       ...message,
       timestamp,
     });
+  }
+
+  async createIssue(orderId: string, issue: OrderIssue) {
+    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    await this.refs
+      .getOrderIssuesRef(orderId)
+      .add({ ...issue, createdOn: timestamp } as OrderIssue);
   }
 
   async deleteOrder(orderId: string) {

@@ -5,7 +5,7 @@ import { Issue } from 'appjusto-types/order/issues';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { motocycle } from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -14,9 +14,7 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
-import { sendCourierOrderProblem } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
-import { getUIBusy } from '../../../common/store/ui/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import SingleHeader from '../../../consumer/home/restaurants/SingleHeader';
 import { t } from '../../../strings';
@@ -36,32 +34,27 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  // app state
-  const busy = useSelector(getUIBusy);
   // state
   const issues = useIssues('courier-delivery-problem');
-  const [selectedProblem, setSelectedProblem] = React.useState<WithId<Issue>>();
-  const [complaintComment, setComplaintComment] = React.useState<string>('');
-  const [issueSent, setIssueSent] = React.useState<boolean>(false);
-
-  //handlers
+  const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
+  const [comment, setComment] = React.useState('');
+  const [isLoading, setLoading] = React.useState(false);
+  const [isSent, setSent] = React.useState(false);
+  // UI handlers
   const complaintHandler = () => {
-    if (!selectedProblem) return;
+    if (!selectedIssue) return;
     (async () => {
       try {
-        await dispatch(
-          sendCourierOrderProblem(api)(orderId, {
-            reason: selectedProblem,
-            comment: complaintComment,
-          })
-        );
-        setIssueSent(true);
+        setLoading(true);
+        await api.order().createIssue(orderId, {
+          issue: selectedIssue,
+          comment,
+        });
+        setLoading(false);
+        setSent(true);
       } catch (error) {
-        dispatch(showToast(t('Não foi possível enviar o comentário')));
+        dispatch(showToast(t('Não foi possível enviar a reclamação. Tente novamente.')));
       }
-      console.log(complaintComment);
-      console.log(orderId);
-      navigation.goBack();
     })();
   };
   // UI
@@ -72,7 +65,7 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
-  if (issueSent) {
+  if (isSent) {
     return (
       <FeedbackView
         header={t('Aguarde enquanto estamos analisando o seu problema')}
@@ -94,8 +87,8 @@ export default function ({ navigation, route }: Props) {
             <RadioButton
               key={issue.id}
               title={issue.title}
-              onPress={() => setSelectedProblem(issue)}
-              checked={selectedProblem?.id === issue.id}
+              onPress={() => setSelectedIssue(issue)}
+              checked={selectedIssue?.id === issue.id}
             />
           ))}
           <Text
@@ -113,8 +106,8 @@ export default function ({ navigation, route }: Props) {
             placeholder={t('Escreva sua mensagem')}
             multiline
             numberOfLines={6}
-            value={complaintComment}
-            onChangeText={setComplaintComment}
+            value={comment}
+            onChangeText={setComment}
             textAlignVertical="top"
             blurOnSubmit
           />
@@ -124,8 +117,8 @@ export default function ({ navigation, route }: Props) {
           <DefaultButton
             title={t('Enviar')}
             onPress={complaintHandler}
-            activityIndicator={busy}
-            disabled={!selectedProblem || busy}
+            activityIndicator={isLoading}
+            disabled={!selectedIssue || isLoading}
           />
         </PaddedView>
         <View style={{ backgroundColor: colors.white }}>
