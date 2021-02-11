@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, Text, TouchableWithoutFeedback, View } from 'react-native';
-import { HorizontalSelectItem } from '../../../../common/components/buttons/HorizontalSelect';
-import { borders, colors, halfPadding, texts } from '../../../../common/styles';
+import { HorizontalSelectItem } from '../../../../../common/components/buttons/HorizontalSelect';
+import { borders, colors, halfPadding, texts } from '../../../../../common/styles';
 import FilterButton from './FilterButton';
 
 type Props = {

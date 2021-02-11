@@ -15,11 +15,6 @@ import CourierStatusHighlight from '../../../../common/screens/orders/ongoing/Co
 import { courierNextPlace } from '../../../../common/store/api/order/helpers';
 import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
-import {
-  getLastReadMessage,
-  getOrderChat,
-  getOrderChatUnreadCount,
-} from '../../../../common/store/order/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -44,9 +39,6 @@ export default function ({ navigation, route }: Props) {
   const consumer = useSelector(getConsumer);
   // screen state
   const { order } = useObserveOrder(orderId);
-  const messages = useSelector(getOrderChat)(orderId);
-  const lastReadMessage = useSelector(getLastReadMessage)(orderId);
-  const unreadCount = getOrderChatUnreadCount(messages, lastReadMessage);
   const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
     consumer!.notificationToken
   );
@@ -110,19 +102,16 @@ export default function ({ navigation, route }: Props) {
         <View style={{ paddingHorizontal: padding }}>
           <View
             style={{
-              position: 'absolute',
               width: '100%',
               marginBottom: padding,
-              bottom: 96,
+              top: -64,
               alignSelf: 'center',
             }}
           >
-            {unreadCount > 0 && (
-              <MessagesCard
-                unreadCount={unreadCount}
-                onPress={() => navigation.navigate('Chat', { orderId })}
-              />
-            )}
+            <MessagesCard
+              orderId={orderId}
+              onPress={() => navigation.navigate('Chat', { orderId })}
+            />
           </View>
         </View>
       </View>

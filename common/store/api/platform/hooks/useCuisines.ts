@@ -10,7 +10,7 @@ export default function () {
   // side effects
   React.useEffect(() => {
     (async () => {
-      setCuisines(await api.order().fetchCuisines());
+      setCuisines(await api.platform().fetchCuisines());
     })();
   }, []);
   return cuisines;

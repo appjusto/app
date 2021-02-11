@@ -1,19 +1,17 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { ApiContext, AppDispatch } from '../../../../../common/app/context';
+import { useSelector } from 'react-redux';
+import { ApiContext } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import HR from '../../../../../common/components/views/HR';
 import { getCourier } from '../../../../../common/store/courier/selectors';
-import { createFleet } from '../../../../../common/store/fleet/actions';
-import { showToast } from '../../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
-import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
+import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import FleetRule from './FleetRule';
@@ -31,65 +29,61 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // context
-  const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
-
-  // refs
-  const nameRef = useRef<TextInput>(null);
-  const descriptionRef = useRef<TextInput>(null);
-
-  // app state
+  const api = React.useContext(ApiContext);
+  // redux store
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier)!;
-
   // screen state
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [distanceThreshold, setDistanceThreshold] = useState(1000);
-  const [minimumFee, setMinimumFee] = useState(300);
-  const [additionalPerKmAfterThreshold, setAdditionalPerKmAfterThreshold] = useState(100);
-  const [maxDistance, setMaxDistance] = useState(10000);
-  const [maxDistanceToOrigin, setMaxDistanceToOrigin] = useState(3000);
-  const canSubmit = useMemo(() => {
+  const [name, setName] = React.useState('');
+  const [description, setDescription] = React.useState('');
+  const [distanceThreshold, setDistanceThreshold] = React.useState(1000);
+  const [minimumFee, setMinimumFee] = React.useState(300);
+  const [additionalPerKmAfterThreshold, setAdditionalPerKmAfterThreshold] = React.useState(100);
+  const [maxDistance, setMaxDistance] = React.useState(10000);
+  const [maxDistanceToOrigin, setMaxDistanceToOrigin] = React.useState(3000);
+  const canSubmit = React.useMemo(() => {
     return !isEmpty(name) && !isEmpty(description);
   }, [name, description]);
+  // refs
+  const nameRef = React.useRef<TextInput>(null);
+  const descriptionRef = React.useRef<TextInput>(null);
 
   // effects
-  useEffect(() => {
+  React.useEffect(() => {
     nameRef.current?.focus();
   }, []);
 
   // handlers
   const createFleetHandler = async () => {
-    await dispatch(
-      createFleet(api)({
-        name,
-        description,
-        distanceThreshold,
-        minimumFee,
-        additionalPerKmAfterThreshold,
-        maxDistance,
-        maxDistanceToOrigin,
-        situation: 'approved',
-        createdBy: courier.id,
-        participantsOnline: 0,
-      })
-    );
-    dispatch(showToast(t('Frota criada com sucesso!')));
+    api.fleet().createFleet({
+      name,
+      description,
+      distanceThreshold,
+      minimumFee,
+      additionalPerKmAfterThreshold,
+      maxDistance,
+      maxDistanceToOrigin,
+      situation: 'approved',
+      createdBy: courier.id,
+      participantsOnline: 0,
+    });
     navigation.goBack();
   };
+
+  // replace all the sliders with the new counter
 
   // UI
   return (
     <ScrollView>
       <View style={{ ...screens.config }}>
-        <PaddedView style={{ marginBottom: halfPadding }}>
+        <PaddedView>
           <Text style={{ ...texts.big }}>{t('Criar nova frota')}</Text>
           <Text style={{ ...texts.default, color: colors.darkGrey, marginVertical: 8 }}>
             {t('Preencha as informações da sua frota')}
           </Text>
           <DefaultInput
             ref={nameRef}
+            style={{ marginBottom: 4 }}
             title={t('Nome')}
             placeholder={t('Nome da frota em até 36 caracteres')}
             value={name}
@@ -98,27 +92,26 @@ export default function ({ navigation, route }: Props) {
             maxLength={36}
             onChangeText={setName}
             onSubmitEditing={() => descriptionRef.current?.focus()}
-            keyboardType="default"
-            style={{ marginBottom: 4 }}
           />
+          {/* add logic to the counter below */}
           <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: padding }}>
-            {name.length}/36 {t('caracteres')}
+            0/36 {t('caracteres')}
           </Text>
           <DefaultInput
             ref={descriptionRef}
+            style={{ marginBottom: 4 }}
             title={t('Descrição')}
             placeholder={t('Descreva sua frota em até 140 caracteres')}
             value={description}
-            returnKeyType="next"
-            blurOnSubmit={false}
             maxLength={140}
             numberOfLines={3}
+            returnKeyType="done"
+            blurOnSubmit
             onChangeText={setDescription}
-            keyboardType="default"
-            style={{ marginBottom: 4, height: 126 }}
           />
+          {/* add logic to the counter below */}
           <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: padding }}>
-            {description.length}/140 {t('caracteres')}
+            0/140 {t('caracteres')}
           </Text>
           <View>
             <FleetRule
@@ -177,9 +170,10 @@ export default function ({ navigation, route }: Props) {
           distanceThreshold={distanceThreshold}
           maxDistance={maxDistance}
           maxDistanceToOrigin={maxDistanceToOrigin}
+          additionalPerKmAfterThreshold={additionalPerKmAfterThreshold}
         />
         <View>
-          <HR height={padding / 2} />
+          <HR height={padding / 4} />
           <GainSimulator fee={minimumFee} distance={distanceThreshold} />
           <PaddedView>
             <DefaultButton

@@ -1,7 +1,7 @@
 import { Complement, ComplementGroup, Order, Product, WithId } from 'appjusto-types';
 import { OrderItem } from 'appjusto-types/order/item';
-import { distance } from 'geokit';
-import { intersection, isEmpty, round } from 'lodash';
+import { intersection, isEmpty } from 'lodash';
+import { distanceBetweenLatLng } from '../helpers';
 
 // items
 
@@ -105,13 +105,5 @@ export const courierDistanceFromNextPlace = (order: Order) => {
   if (!courier?.location) return 0;
   const nextPlace = courierNextPlace(order);
   if (!nextPlace?.location) return 0;
-  return (
-    round(
-      distance(
-        { lat: courier.location.latitude, lng: courier.location.longitude },
-        { lat: nextPlace.location.latitude, lng: nextPlace.location.longitude }
-      ),
-      2
-    ) * 1000
-  );
+  return distanceBetweenLatLng(courier.location, nextPlace.location);
 };

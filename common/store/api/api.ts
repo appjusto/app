@@ -14,6 +14,7 @@ import FleetApi from './fleet';
 import MapsApi from './maps';
 import OrderApi from './order';
 import IuguApi from './payment/iugu';
+import PlatformApi from './platform';
 import ProfileApi from './profile';
 import SearchApi from './search/SearchApi';
 
@@ -25,6 +26,7 @@ export default class Api {
 
   private _refs: FirebaseRefs;
   private _auth: AuthApi;
+  private _platform: PlatformApi;
   private _profile: ProfileApi;
   private _courier: CourierApi;
   private _fleet: FleetApi;
@@ -59,6 +61,7 @@ export default class Api {
     this._iugu = new IuguApi(extra.iugu.accountId);
     this._files = new FilesApi(this.storage);
     this._auth = new AuthApi(this._refs, this.authentication, extra);
+    this._platform = new PlatformApi(this._refs, this._files);
     this._profile = new ProfileApi(this.firestore, collectionName);
     this._courier = new CourierApi(this._refs, this._files);
     this._fleet = new FleetApi(this._refs);
@@ -71,6 +74,10 @@ export default class Api {
 
   auth() {
     return this._auth;
+  }
+
+  platform() {
+    return this._platform;
   }
 
   profile() {

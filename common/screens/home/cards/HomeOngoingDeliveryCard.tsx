@@ -2,16 +2,9 @@ import { Order, WithId } from 'appjusto-types';
 import React from 'react';
 import { Image, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';
-import ShowIf from '../../../components/views/ShowIf';
-import {
-  getLastReadMessage,
-  getOrderChat,
-  getOrderChatUnreadCount,
-} from '../../../store/order/selectors';
 import { borders, colors, padding, texts } from '../../../styles';
 import { MessagesCard } from './MessagesCard';
 
@@ -21,15 +14,16 @@ type Props = {
 };
 
 export default function ({ order, onSelect }: Props) {
-  // app state
-  const messages = useSelector(getOrderChat)(order.id);
-  const lastReadMessage = useSelector(getLastReadMessage)(order.id);
-  const unreadCount = getOrderChatUnreadCount(messages, lastReadMessage);
-
   // UI
+  const title =
+    order.dispatchingState === 'matching'
+      ? t('Procurando entregadores próximos à')
+      : t('Corrida em andamento');
   let detail = '';
   if (order.origin && order.destination) {
-    if (order.dispatchingState === 'going-pickup') {
+    if (order.dispatchingState === 'matching') {
+      detail = `${order.origin.address.main}`;
+    } else if (order.dispatchingState === 'going-pickup') {
       detail = `${t('À caminho de')} ${order.origin.address.main}`;
     } else if (order.dispatchingState === 'arrived-pickup') {
       detail = order.origin.intructions ?? 'Aguardando retirada';
@@ -41,18 +35,19 @@ export default function ({ order, onSelect }: Props) {
   }
   return (
     <TouchableOpacity onPress={() => onSelect(order, false)}>
-      <View style={{ ...borders.default }}>
+      <View
+        style={{ ...borders.default, borderColor: colors.black, backgroundColor: colors.yellow }}
+      >
         <View>
-          <ShowIf test={unreadCount > 0}>
-            {() => <MessagesCard unreadCount={unreadCount} onPress={() => onSelect(order, true)} />}
-          </ShowIf>
+          <MessagesCard
+            orderId={order.id}
+            variant="coupled"
+            onPress={() => onSelect(order, true)}
+          />
           <PaddedView
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              backgroundColor: colors.yellow,
-              borderBottomLeftRadius: 8,
-              borderBottomRightRadius: 8,
             }}
             half
           >
@@ -66,7 +61,7 @@ export default function ({ order, onSelect }: Props) {
                 }}
               >
                 <View>
-                  <Text style={{ ...texts.default }}>{t('Corrida em andamento')}</Text>
+                  <Text style={{ ...texts.default }}>{title}</Text>
                   <Text
                     style={{
                       ...texts.small,

@@ -2,10 +2,10 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { validate } from 'gerador-validador-cpf';
 import { isEmpty, toNumber, trim } from 'lodash';
-import React, { useContext, useMemo, useRef, useState } from 'react';
+import React from 'react';
 import { TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
@@ -19,9 +19,7 @@ import {
 import { numbersOnlyParser } from '../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../common/components/inputs/PatternInput';
 import useAxiosCancelToken from '../../../common/hooks/useAxiosCancelToken';
-import { saveCard } from '../../../common/store/consumer/actions';
 import { showToast } from '../../../common/store/ui/actions';
-import { getUIBusy } from '../../../common/store/ui/selectors';
 import { padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ProfileParamList } from '../types';
@@ -35,32 +33,28 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  // context
-  const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
+  // params
   const { returnScreen } = route.params ?? {};
-  const createCancelToken = useAxiosCancelToken();
-
+  // context
+  const api = React.useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
   // refs
-  const expirationMonthRef = useRef<TextInput>(null);
-  const expirationYearRef = useRef<TextInput>(null);
-  const cvvRef = useRef<TextInput>(null);
-  const nameRef = useRef<TextInput>(null);
-  const surnameRef = useRef<TextInput>(null);
-  const cpfRef = useRef<TextInput>(null);
-
-  // app state
-  const busy = useSelector(getUIBusy);
-
+  const expirationMonthRef = React.useRef<TextInput>(null);
+  const expirationYearRef = React.useRef<TextInput>(null);
+  const cvvRef = React.useRef<TextInput>(null);
+  const nameRef = React.useRef<TextInput>(null);
+  const surnameRef = React.useRef<TextInput>(null);
+  const cpfRef = React.useRef<TextInput>(null);
   // state
-  const [number, setNumber] = useState('');
-  const [month, setMonth] = useState('');
-  const [year, setYear] = useState('');
-  const [cvv, setCVV] = useState('');
-  const [name, setName] = useState('');
-  const [surname, setSurname] = useState('');
-  const [cpf, setCPF] = useState('');
-  const canSubmit = useMemo(() => {
+  const [number, setNumber] = React.useState('');
+  const [month, setMonth] = React.useState('');
+  const [year, setYear] = React.useState('');
+  const [cvv, setCVV] = React.useState('');
+  const [name, setName] = React.useState('');
+  const [surname, setSurname] = React.useState('');
+  const [cpf, setCPF] = React.useState('');
+  const [isLoading, setLoading] = React.useState(false);
+  const canSubmit = React.useMemo(() => {
     return (
       !isEmpty(number) &&
       !isEmpty(month) &&
@@ -71,24 +65,24 @@ export default function ({ navigation, route }: Props) {
       validate(cpf)
     );
   }, [number, month, year, cvv, name, surname, cpf]);
-
-  // handlers
+  // UI handlers
+  const createCancelToken = useAxiosCancelToken();
   const saveCardHandler = async () => {
     try {
-      const result = await dispatch(
-        saveCard(api)(
-          cpf,
-          {
-            number,
-            month,
-            year,
-            verification_value: cvv,
-            first_name: trim(name),
-            last_name: trim(surname),
-          },
-          createCancelToken()
-        )
+      setLoading(true);
+      const result = await api.consumer().saveCard(
+        cpf,
+        {
+          number,
+          month,
+          year,
+          verification_value: cvv,
+          first_name: trim(name),
+          last_name: trim(surname),
+        },
+        createCancelToken()
       );
+      setLoading(false);
       if (returnScreen)
         navigation.navigate(returnScreen, { paymentMethodId: result.paymentMethodId });
       else navigation.pop();
@@ -222,8 +216,8 @@ export default function ({ navigation, route }: Props) {
             style={{ marginTop: padding }}
             title={t('Salvar')}
             onPress={saveCardHandler}
-            disabled={!canSubmit || busy}
-            activityIndicator={busy}
+            disabled={!canSubmit || isLoading}
+            activityIndicator={isLoading}
           />
         </PaddedView>
       </KeyboardAwareScrollView>

@@ -21,7 +21,8 @@ export const formatDuration = (duration: number) => {
 // distance
 export const formatDistance = (distance: number) => {
   if (distance < 1000) return `${distance}m`;
-  return `${round(distance / 1000, 2)}km`;
+  if (distance > 1000 * 10) return `${round(distance / 1000, 0)}km`;
+  return `${round(distance / 1000, 1)}km`;
 };
 
 // money and %

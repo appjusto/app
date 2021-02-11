@@ -1,17 +1,17 @@
-import { Issue, IssueType, WithId } from 'appjusto-types';
+import { Bank, WithId } from 'appjusto-types';
 import React, { useContext } from 'react';
 import { ApiContext } from '../../../../app/context';
 
-export default function (type: IssueType) {
+export default function () {
   // context
   const api = useContext(ApiContext);
   // state
-  const [issues, setIssues] = React.useState<WithId<Issue>[]>();
+  const [issues, setIssues] = React.useState<WithId<Bank>[]>();
   // side effects
   React.useEffect(() => {
     (async () => {
-      setIssues(await api.order().fetchIssues(type));
+      setIssues(await api.platform().fetchBanks());
     })();
-  }, [type]);
+  }, []);
   return issues;
 }

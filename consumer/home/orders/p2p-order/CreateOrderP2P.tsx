@@ -60,12 +60,12 @@ export default function ({ navigation, route }: Props) {
           //   route.params.origin.address.description === order.origin?.address.description
           //     ? { ...order.origin, additionalInfo: route.params.origin.additionalInfo }
           //     : route.params.origin;
-          // api.order().updateFoodOrder(orderId, { origin });
-          api.order().updateFoodOrder(orderId, { origin: route.params.origin });
+          // api.order().updateOrder(orderId, { origin });
+          api.order().updateOrder(orderId, { origin: route.params.origin });
         }
       }
       if (order && orderId && route.params?.destination) {
-        api.order().updateFoodOrder(orderId, { destination: route.params.destination });
+        api.order().updateOrder(orderId, { destination: route.params.destination });
       }
       if (route.params?.paymentMethodId) setSelectedPaymentMethodId(route.params?.paymentMethodId);
     })();

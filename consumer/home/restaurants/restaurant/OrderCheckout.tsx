@@ -37,7 +37,7 @@ export const OrderCheckout = ({ navigation, route }: Props) => {
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
     if (order && route.params?.destination) {
-      api.order().updateFoodOrder(order.id, { destination: route.params.destination });
+      api.order().updateOrder(order.id, { destination: route.params.destination });
     }
     if (route.params?.paymentMethodId) setSelectedPaymentMethodId(route.params?.paymentMethodId);
   }, [route.params]);

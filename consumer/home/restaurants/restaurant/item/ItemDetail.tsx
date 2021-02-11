@@ -122,7 +122,7 @@ export default function ({ navigation, route }: Props) {
           : quantity > 0
           ? helpers.updateItem(activeOrder, orderItem)
           : helpers.removeItem(activeOrder, orderItem);
-        api.order().updateFoodOrder(activeOrder.id, updatedOrder);
+        api.order().updateOrder(activeOrder.id, updatedOrder);
       }
       navigation.pop();
     })();
@@ -193,7 +193,7 @@ export default function ({ navigation, route }: Props) {
         <ItemQuantity
           value={quantity}
           minimum={itemId ? 0 : 1}
-          title={`${t('Total')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
+          title={formatCurrency(helpers.getItemTotal(orderItem!))}
           disabled={!canAddItemToOrder}
           onChange={(value) => setQuantity(value)}
           onSubmit={addItemToOrder}

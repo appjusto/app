@@ -15,10 +15,6 @@ export default class BusinessApi {
   constructor(private refs: FirebaseRefs, private files: FilesApi) {}
 
   // firestore
-  // platform
-  fetchCuisineImageURI(imagePath: string) {
-    return this.files.getDownloadURL(imagePath);
-  }
   // business
   observeBusiness(businessId: string, resultHandler: (business: WithId<Business>) => void) {
     const ref = this.refs.getBusinessRef(businessId);

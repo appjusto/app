@@ -2,10 +2,7 @@ import {
   Business,
   ChatMessage,
   ConsumerProfile,
-  Cuisine,
   Fare,
-  Issue,
-  IssueType,
   Order,
   OrderIssue,
   OrderItem,
@@ -68,9 +65,6 @@ export default class OrderApi {
     const order = await this.refs.getOrdersRef().add(payload);
     return documentAs<Order>(await order.get());
   }
-  async updateFoodOrder(orderId: string, changes: Partial<Order>) {
-    await this.refs.getOrderRef(orderId).update(changes);
-  }
   async createOrderP2P(consumer: WithId<ConsumerProfile>, origin: Place) {
     const payload: Order = {
       type: 'p2p',
@@ -84,6 +78,10 @@ export default class OrderApi {
     };
     const order = await this.refs.getOrdersRef().add(payload);
     return documentAs<Order>(await order.get());
+  }
+
+  async updateOrder(orderId: string, changes: Partial<Order>) {
+    await this.refs.getOrderRef(orderId).update(changes);
   }
 
   async getOrderQuotes(orderId: string) {
@@ -121,10 +119,6 @@ export default class OrderApi {
 
   async nextDispatchingState(orderId: string) {
     return (await this.refs.getNextDispatchingStateCallable()({ orderId })).data;
-  }
-
-  async completeDelivery(orderId: string) {
-    return (await this.refs.getCompleteDeliveryCallable()({ orderId })).data;
   }
 
   async sendCourierOrderProblem(orderId: string, problem: OrderIssue) {
@@ -185,18 +179,6 @@ export default class OrderApi {
       ...message,
       timestamp,
     });
-  }
-
-  async fetchIssues(type: IssueType) {
-    const query = this.refs.getIssuesRef().where('type', '==', type);
-    const docs = (await query.get()).docs;
-    return documentsAs<Issue>(docs);
-  }
-
-  async fetchCuisines() {
-    const query = this.refs.getCuisinesRef();
-    const docs = (await query.get()).docs;
-    return documentsAs<Cuisine>(docs);
   }
 
   async deleteOrder(orderId: string) {

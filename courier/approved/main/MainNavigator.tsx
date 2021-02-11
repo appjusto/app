@@ -1,14 +1,12 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { OrderMatchPushMessageData, PushMessageData } from 'appjusto-types';
-import * as Notifications from 'expo-notifications';
-import React, { useCallback } from 'react';
+import { ChatPushMessageData, OrderMatchPushMessageData, PushMessage } from 'appjusto-types';
+import React from 'react';
 import { Image } from 'react-native';
+import { useQuery, useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../assets/icons';
-import useNotification from '../../../common/hooks/useNotification';
 import useObserveOngoingOrders from '../../../common/store/api/order/hooks/useObserveOngoingOrders';
-import { getCourierStatus } from '../../../common/store/courier/selectors';
 import { getUser } from '../../../common/store/user/selectors';
 import { colors, halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -26,58 +24,55 @@ type Props = {
 
 const Tab = createBottomTabNavigator<MainParamList>();
 export default function ({ navigation }: Props) {
-  // app state
+  // redux store
   const user = useSelector(getUser);
-  const status = useSelector(getCourierStatus);
+  // context
+  const queryCache = useQueryClient();
+  const matchingQuery = useQuery<PushMessage[]>(['notifications', 'matching'], () => []);
+  const chatQuery = useQuery<PushMessage[]>(['notifications', 'order-chat'], () => []);
 
   // effects
   // subscribe for observing ongoing orders
   const options = React.useMemo(() => ({ courierId: user?.uid }), [user?.uid]);
   useObserveOngoingOrders(options);
+  React.useEffect(() => {
+    // console.log("MainNavigator ['notifications', 'matching']");
+    if (!matchingQuery.data || matchingQuery.data.length === 0) return;
+    const [notification] = matchingQuery.data;
+    // console.log(notification);
+    if (notification) {
+      const data = notification.data as OrderMatchPushMessageData;
+      navigation.navigate('MatchingNavigator', {
+        screen: 'Matching',
+        params: {
+          matchRequest: data,
+        },
+      });
+      // remove from cache
+      queryCache.setQueryData(
+        ['notifications', 'matching'],
+        (notifications: PushMessage[] | undefined) =>
+          (notifications ?? []).filter((item) => item.id !== notification.id)
+      );
+    }
+  }, [matchingQuery.data]);
 
-  // handlers
-  const notificationHandler = useCallback(
-    (content: Notifications.NotificationContent) => {
-      console.log('notificationHandler');
-      const data = (content.data as unknown) as PushMessageData;
-      console.log(data);
-      if (data.action === 'matching') {
-        // should always be true as couriers should receive matching notifications only when they're available
-        if (status === 'available') {
-          navigation.navigate('MatchingNavigator', {
-            screen: 'Matching',
-            params: {
-              matchRequest: data as OrderMatchPushMessageData,
-            },
-          });
-        }
-      } else if (data.action === 'order-chat') {
-        // navigation.navigate('OngoingDelivery', {
-        //   orderId: (data as ChatPushMessageData).orderId,
-        //   newMessage: true,
-        // });
-      }
-    },
-    [navigation, status]
-  );
-  useNotification(notificationHandler);
-
-  // test only
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     navigation.navigate('Matching', {
-  //       matchRequest: {
-  //         orderId: '12',
-  //         courierFee: '10',
-  //         originAddress: 'Shopping Iguatemi - Edson Queiroz, Fortaleza - CE, 60810-350, Brasil',
-  //         destinationAddress:
-  //           'Rua Canuto de Aguiar, 500 - Meireles, Fortaleza - CE, 60160-120, Brasil',
-  //         distanceToOrigin: 2,
-  //         totalDistance: 10,
-  //       },
-  //     });
-  //   }, 50);
-  // }, []);
+  React.useEffect(() => {
+    // console.log("MainNavigator ['notifications', 'order-chat']");
+    if (!chatQuery.data || chatQuery.data.length === 0) return;
+    const [notification] = chatQuery.data;
+    // console.log(notification);
+    if (notification.clicked) {
+      const data = notification.data as ChatPushMessageData;
+      navigation.navigate('OngoingNavigator', {
+        screen: 'OngoingDelivery',
+        params: {
+          orderId: data.orderId,
+          newMessage: true,
+        },
+      });
+    }
+  }, [chatQuery.data]);
 
   return (
     <Tab.Navigator
