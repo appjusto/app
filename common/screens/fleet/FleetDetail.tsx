@@ -3,8 +3,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { OrderNavigatorParamList } from '../../../consumer/home/orders/types';
 import GainSimulator from '../../../courier/approved/main/profile/fleet/GainSimulator';
+import { FleetParamList } from '../../../courier/approved/main/profile/fleet/types';
 import { t } from '../../../strings';
 import { ApiContext } from '../../app/context';
 import DefaultButton from '../../components/buttons/DefaultButton';
@@ -17,8 +17,8 @@ import { getCourier } from '../../store/courier/selectors';
 import { colors, screens, texts } from '../../styles';
 import { formatCurrency, formatDistance } from '../../utils/formatters';
 
-type ScreenNavigationProp = StackNavigationProp<OrderNavigatorParamList, 'FleetDetail'>;
-type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'FleetDetail'>;
+type ScreenNavigationProp = StackNavigationProp<FleetParamList, 'FleetDetail'>;
+type ScreenRouteProp = RouteProp<FleetParamList, 'FleetDetail'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -47,11 +47,8 @@ export default function ({ navigation, route }: Props) {
   // UI handlers
   const confirmFleet = async () => {
     api.profile().updateProfile(courier.id, { fleet });
-    navigation.goBack();
+    navigation.navigate('ChooseFleet', { fleetId: fleet.id });
   };
-
-  console.log(fleet);
-  // courier.fleet.id
 
   const participants = `${fleet.participantsOnline} ${t('participantes')}`;
   const minFee = formatCurrency(fleet.minimumFee);
@@ -161,7 +158,7 @@ export default function ({ navigation, route }: Props) {
                 should be hidden when coming from home'Ver detalhes';
                 should behave differently when coming from consumer
                  */}
-                {flavor === 'courier' && courier.fleet!.id !== fleet.id && (
+                {courier.fleet!.id !== fleet.id && (
                   <DefaultButton
                     title={t('Ingressar nessa frota')}
                     onPress={confirmFleet}
