@@ -84,11 +84,12 @@ export default function ({ navigation, route }: Props) {
   const nextPlace = courierNextPlace(order);
   const { dispatchingState } = order;
   const addressLabel = (() => {
-    if (dispatchingState === 'going-pickup' || dispatchingState === 'going-destination') {
+    if (dispatchingState === 'going-pickup') {
       return t('Retirada em');
     } else if (
       dispatchingState === 'arrived-pickup' ||
-      dispatchingState === 'arrived-destination'
+      dispatchingState === 'arrived-destination' ||
+      dispatchingState === 'going-destination'
     ) {
       return t('Entrega em');
     }
@@ -129,8 +130,9 @@ export default function ({ navigation, route }: Props) {
             <CourierDistanceBadge order={order} />
             <TouchableOpacity
               onPress={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
+              style={{ marginTop: 12 }}
             >
-              <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Alterar rota')}</Text>
+              <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Alterar')}</Text>
             </TouchableOpacity>
           </View>
         </View>

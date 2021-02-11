@@ -90,6 +90,7 @@ export default ({ navigation, route }: Props) => {
               title={t('Relatar um problema')}
               secondary
               onPress={() => navigation.navigate('OrderComplaint', { orderId: order.id })}
+              style={{ flex: 7 }}
             />
             <DefaultButton
               title={t('Detalhes da corrida')}
@@ -100,6 +101,7 @@ export default ({ navigation, route }: Props) => {
                 })
               }
               secondary
+              style={{ flex: 7 }}
             />
           </View>
         </View>

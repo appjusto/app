@@ -120,11 +120,12 @@ export default function ({ navigation, route }: Props) {
   const nextPlace = courierNextPlace(order);
   const { dispatchingState } = order;
   const addressLabel = (() => {
-    if (dispatchingState === 'going-pickup' || dispatchingState === 'going-destination') {
+    if (dispatchingState === 'going-pickup') {
       return t('Retirada em');
     } else if (
       dispatchingState === 'arrived-pickup' ||
-      dispatchingState === 'arrived-destination'
+      dispatchingState === 'arrived-destination' ||
+      dispatchingState === 'going-destination'
     ) {
       return t('Entrega em');
     }
