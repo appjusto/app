@@ -121,6 +121,10 @@ export default class OrderApi {
     return (await this.refs.getNextDispatchingStateCallable()({ orderId })).data;
   }
 
+  async completeDelivery(orderId: string, handshakeResponse?: string) {
+    return (await this.refs.getCompleteDeliveryCallable()({ orderId, handshakeResponse })).data;
+  }
+
   async sendCourierOrderProblem(orderId: string, problem: OrderIssue) {
     return (await this.refs.getSendCourierOrderProblemCallable()({ orderId, problem })).data;
   }
