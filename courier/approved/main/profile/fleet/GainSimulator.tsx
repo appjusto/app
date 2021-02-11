@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-
+import { Text, View } from 'react-native';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { colors, screens, texts } from '../../../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../../../common/utils/formatters';
@@ -38,7 +37,7 @@ export default function ({ fee, distance }: Props) {
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Text style={{ ...texts.default, color: colors.darkGrey }}>
-            {formatDistance(distance)}
+            {t('Até')} {formatDistance(distance)}
           </Text>
           <Text style={{ ...texts.default }}>{formatCurrency(fee)}</Text>
         </View>
@@ -46,7 +45,7 @@ export default function ({ fee, distance }: Props) {
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Text style={{ ...texts.default, color: colors.darkGrey }}>
-            {formatDistance(distance + 2000)}
+            {t('De')} {formatDistance(distance)} {t('até')} {formatDistance(distance + 2000)}
           </Text>
           <Text style={{ ...texts.default }}>{formatCurrency(fee * 1.66)}</Text>
         </View>
@@ -54,7 +53,7 @@ export default function ({ fee, distance }: Props) {
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Text style={{ ...texts.default, color: colors.darkGrey }}>
-            {formatDistance(distance + 4000)}
+            {t('De')} {formatDistance(distance + 2000)} {t('até')} {formatDistance(distance + 4000)}
           </Text>
           <Text style={{ ...texts.default }}>{formatCurrency(fee * 2.33)}</Text>
         </View>
@@ -62,7 +61,7 @@ export default function ({ fee, distance }: Props) {
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Text style={{ ...texts.default, color: colors.darkGrey }}>
-            {formatDistance(distance + 6000)}
+            {t('De')} {formatDistance(distance + 4000)} {t('até')} {formatDistance(distance + 6000)}
           </Text>
           <Text style={{ ...texts.default }}>{formatCurrency(fee * 3)}</Text>
         </View>
@@ -70,7 +69,7 @@ export default function ({ fee, distance }: Props) {
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Text style={{ ...texts.default, color: colors.darkGrey }}>
-            {formatDistance(distance + 8000)}
+            {t('De')} {formatDistance(distance + 6000)} {t('até')} {formatDistance(distance + 8000)}
           </Text>
           <Text style={{ ...texts.default }}>{formatCurrency(fee * 3.66)}</Text>
         </View>
@@ -78,6 +77,7 @@ export default function ({ fee, distance }: Props) {
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Text style={{ ...texts.default, color: colors.darkGrey }}>
+            {t('De')} {formatDistance(distance + 8000)} {t('até')}{' '}
             {formatDistance(distance + 10000)}
           </Text>
           <Text style={{ ...texts.default }}>{formatCurrency(fee * 4.33)}</Text>
@@ -86,6 +86,7 @@ export default function ({ fee, distance }: Props) {
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Text style={{ ...texts.default, color: colors.darkGrey }}>
+            {t('De')} {formatDistance(distance + 10000)} {t('até')}{' '}
             {formatDistance(distance + 12000)}
           </Text>
           <Text style={{ ...texts.default }}>{formatCurrency(fee * 5)}</Text>

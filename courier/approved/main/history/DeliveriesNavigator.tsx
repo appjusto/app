@@ -1,6 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-
 import ArrowBox from '../../../../common/components/views/ArrowBox';
 import { getMonthName } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
@@ -21,7 +20,7 @@ export default function () {
       <Stack.Screen
         name="DeliveryHistory"
         component={DeliveryHistory}
-        options={{ headerShown: false }}
+        options={{ title: t('Suas corridas') }}
       />
       <Stack.Screen
         name="DeliveryHistoryByMonth"

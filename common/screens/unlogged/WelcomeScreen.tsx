@@ -1,28 +1,28 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import {
-  View,
-  Text,
-  Image,
-  TouchableWithoutFeedback,
-  Keyboard,
-  TouchableOpacity,
   Dimensions,
+  Image,
+  Keyboard,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { logoWhite, illustration } from '../../../assets/icons';
+import { illustration, logoWhite, motoIntro } from '../../../assets/icons';
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import AvoidingView from '../../components/containers/AvoidingView';
 import DefaultInput from '../../components/inputs/DefaultInput';
+import { getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
 import { signInWithEmail } from '../../store/user/actions';
-import { colors, texts, padding, screens } from '../../styles';
+import { colors, padding, screens, texts } from '../../styles';
 import { validateEmail } from '../../utils/validators';
 import { UnloggedParamList } from './types';
 
@@ -42,6 +42,7 @@ export default function ({ navigation, route }: Props) {
 
   // app state
   const busy = useSelector(getUIBusy);
+  const flavor = useSelector(getFlavor);
 
   // state
   const [email, setEmail] = useState('');
@@ -62,6 +63,11 @@ export default function ({ navigation, route }: Props) {
     navigation.navigate('SignInFeedback', { email });
   }, [acceptedTerms, email]);
 
+  const welcomeMessage =
+    flavor === 'consumer'
+      ? t('Somos um delivery aberto, transparente e consciente.')
+      : t('Ganhe mais e tenha mais controle do seu tempo.');
+
   // UI
   return (
     <View style={[screens.default]}>
@@ -71,7 +77,7 @@ export default function ({ navigation, route }: Props) {
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
               <View>
                 <View style={{ height: 200, marginTop: 30, width: 275 }}>
-                  <Image source={illustration} />
+                  <Image source={flavor === 'consumer' ? illustration : motoIntro} />
                 </View>
 
                 <View style={{ height: 64, marginTop: 16, width: 152 }}>
@@ -79,9 +85,7 @@ export default function ({ navigation, route }: Props) {
                 </View>
 
                 <View style={{ height: 58, marginTop: 16 }}>
-                  <Text style={[texts.big]}>
-                    {t('Somos um delivery aberto, transparente e consciente.')}
-                  </Text>
+                  <Text style={[texts.big]}>{welcomeMessage}</Text>
                 </View>
 
                 <View style={{ width: '85%', height: 58, marginTop: 16 }}>

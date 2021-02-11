@@ -22,7 +22,7 @@ export default function () {
         headerBackTitleVisible: false,
       })}
     >
-      <Stack.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
+      <Stack.Screen name="Profile" component={Profile} options={{ title: t('Sua conta') }} />
       <Stack.Screen
         name="ProfileEdit"
         component={ProfileEdit}

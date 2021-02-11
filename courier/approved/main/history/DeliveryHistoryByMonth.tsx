@@ -10,7 +10,12 @@ import useObserveOrders from '../../../../common/store/api/order/hooks/useObserv
 import { getOrderCreatedOn, getOrdersWithFilter } from '../../../../common/store/order/selectors';
 import { getUser } from '../../../../common/store/user/selectors';
 import { screens } from '../../../../common/styles';
-import { formatAddress, formatCurrency, formatTime } from '../../../../common/utils/formatters';
+import {
+  formatCurrency,
+  formatDate,
+  formatTime,
+  separateWithDot,
+} from '../../../../common/utils/formatters';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
 import { DeliveriesNavigatorParamList } from './types';
@@ -54,6 +59,8 @@ export default function ({ navigation, route }: Props) {
     }
   }, []);
 
+  // console.log(filteredOrders);
+
   // UI
   return (
     <View style={{ ...screens.config }}>
@@ -63,11 +70,11 @@ export default function ({ navigation, route }: Props) {
         keyExtractor={(item) => item.id!}
         renderItem={({ item }) => {
           const createdOn = getOrderCreatedOn(item);
-          const title = formatCurrency(item.fare!.courierFee);
-          const subtitle =
-            (item.origin?.address ? formatAddress(item.origin.address) : '') + createdOn
-              ? '\n' + formatTime(createdOn)
-              : '';
+          const title = formatCurrency(item.fare!.consumer.courierFee);
+          const subtitle = `Pedido ${item.code}\n${separateWithDot(
+            formatDate(createdOn),
+            formatTime(createdOn)
+          )}`;
           return (
             <ConfigItem title={title} subtitle={subtitle} onPress={() => orderPressHandler(item)} />
           );

@@ -50,12 +50,16 @@ export default function ({ navigation, route }: Props) {
     navigation.goBack();
   };
 
+  console.log(fleet);
+  // courier.fleet.id
+
   const participants = `${fleet.participantsOnline} ${t('participantes')}`;
   const minFee = formatCurrency(fleet.minimumFee);
   const minDistance = formatDistance(fleet.distanceThreshold);
   const additionalPerKm = formatCurrency(fleet.additionalPerKmAfterThreshold);
   const maxDistance = formatDistance(fleet.maxDistance);
   const maxDistanceOrigin = formatDistance(fleet.maxDistanceToOrigin);
+
   return (
     <View style={[screens.config]}>
       <ScrollView>
@@ -157,11 +161,13 @@ export default function ({ navigation, route }: Props) {
                 should be hidden when coming from home'Ver detalhes';
                 should behave differently when coming from consumer
                  */}
-                <DefaultButton
-                  title={t('Escolher essa frota')}
-                  onPress={confirmFleet}
-                  style={{ marginTop: 16 }}
-                />
+                {flavor === 'courier' && courier.fleet!.id !== fleet.id && (
+                  <DefaultButton
+                    title={t('Ingressar nessa frota')}
+                    onPress={confirmFleet}
+                    style={{ marginTop: 16 }}
+                  />
+                )}
               </PaddedView>
             </>
           )}

@@ -32,6 +32,7 @@ const iconOnFootSmall = require('./icons/iconOnFootSmall.png');
 const iconScooterSmall = require('./icons/iconScooterSmall.png');
 const iconIllustration = require('./icons/illustration-intro-screen.png');
 const illustrationDelivery = require('./icons/illustration-medium-delivery-green.png');
+const illustrationMotoIntro = require('./icons/illustration-motocycle-intro.png');
 const iconIllustrationPizza = require('./icons/illustration-pizza.png');
 const illustrationRestaurant = require('./icons/illustration-small-restaurant.png');
 const illustrationConsumerHome = require('./icons/illustrationHomeConsumer.png');
@@ -85,6 +86,7 @@ export const search = iconSearch;
 export const iconSad = iconSadYellow;
 export const filter = iconFilter;
 export const cardIcon = restCardIcon;
+export const motoIntro = illustrationMotoIntro;
 
 export default [
   arrow,
@@ -130,4 +132,5 @@ export default [
   search,
   iconSad,
   filter,
+  motoIntro,
 ];
