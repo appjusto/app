@@ -1,17 +1,27 @@
 import React from 'react';
 import { FlatList, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import { HorizontalSelectItem } from '../../../../../common/components/buttons/HorizontalSelect';
+import {
+  getProductSearchParameters,
+  getRestaurantsSearchParams,
+} from '../../../../../common/store/consumer/selectors';
 import { borders, colors, halfPadding, texts } from '../../../../../common/styles';
 import FilterButton from './FilterButton';
 
 type Props = {
   data: HorizontalSelectItem[];
   selected?: HorizontalSelectItem;
-  onSelect: (value: HorizontalSelectItem) => void;
+  onFilterChange: (value: HorizontalSelectItem) => void;
   onFilter: () => void;
 };
 
-export default function ({ data, selected, onSelect, onFilter }: Props) {
+export default function ({ data, selected, onFilterChange: onSelect, onFilter }: Props) {
+  // redux store
+  const restaurantsSearchParams = useSelector(getRestaurantsSearchParams);
+  const productSearchParameters = useSelector(getProductSearchParameters);
+  console.log('restaurantsSearchParams', restaurantsSearchParams);
+  console.log('productSearchParameters', productSearchParameters);
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <FilterButton onPress={onFilter} />

@@ -8,6 +8,7 @@ import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import { useSearchRestaurants } from '../../../../common/store/api/search/useSearchRestaurants';
 import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import { padding, screens } from '../../../../common/styles';
+import FilterSelector from '../components/filter/FilterSelector';
 import { RestaurantsNavigatorParamList } from '../types';
 import RestaurantList from './RestaurantList';
 
@@ -54,6 +55,11 @@ export default function ({ navigation }: Props) {
           <Image source={icons.search} />
         </View>
       </PaddedView>
+      <FilterSelector
+        data={[{ title: 'Restaurants', id: 'restaurants' }]}
+        onFilterChange={() => null}
+        onFilter={() => null}
+      />
       <RestaurantList
         items={restaurants}
         onSelect={(restaurantId) =>

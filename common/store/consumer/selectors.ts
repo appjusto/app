@@ -11,3 +11,7 @@ export const getConsumer = createSelector(
 
 export const getCurrentLocation = (state: State) => getConsumerState(state).currentLocation;
 export const getCurrentPlace = (state: State) => getConsumerState(state).currentPlace;
+export const getRestaurantsSearchParams = (state: State) =>
+  getConsumerState(state).restaurantsSearchParams;
+export const getProductSearchParameters = (state: State) =>
+  getConsumerState(state).productSearchParameters;
