@@ -50,6 +50,9 @@ export default function ({ navigation, route }: Props) {
     navigation.goBack();
   };
 
+  console.log(fleet);
+  // courier.fleet.id
+
   const participants = `${fleet.participantsOnline} ${t('participantes')}`;
   const minFee = formatCurrency(fleet.minimumFee);
   const minDistance = formatDistance(fleet.distanceThreshold);
@@ -158,7 +161,7 @@ export default function ({ navigation, route }: Props) {
                 should be hidden when coming from home'Ver detalhes';
                 should behave differently when coming from consumer
                  */}
-                {flavor === 'courier' && (
+                {flavor === 'courier' && courier.fleet!.id !== fleet.id && (
                   <DefaultButton
                     title={t('Ingressar nessa frota')}
                     onPress={confirmFleet}
