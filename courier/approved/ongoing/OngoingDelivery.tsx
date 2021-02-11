@@ -22,7 +22,7 @@ import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
 import SingleHeader from '../../../consumer/home/restaurants/SingleHeader';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
-import { CodeInput } from './CodeInput';
+import { CodeInput } from './code-input/CodeInput';
 import { RouteIcons } from './RouteIcons';
 import { OngoingParamList } from './types';
 
@@ -49,8 +49,9 @@ export default function ({ navigation, route }: Props) {
     api.order().nextDispatchingState(orderId)
   );
   const { mutate: completeDelivery, isLoading: isCompletingDelivery } = useMutation(() =>
-    api.order().updateOrder(orderId, { status: 'delivered' })
+    api.order().completeDelivery(orderId, code)
   );
+  const [code, setCode] = React.useState('');
   const isLoading = isUpdatingDispatchingState || isCompletingDelivery;
   // side effects
   // whenever params updates
@@ -224,14 +225,14 @@ export default function ({ navigation, route }: Props) {
             <SingleHeader title={t('Código de confirmação')} />
             <View style={{ paddingHorizontal: padding }}>
               <Text style={{ ...texts.default, marginBottom: padding }}>
-                {t('Digite os 3 primeiros números do CPF do cliente que realizou o pedido:')}
+                {t('Digite o código de confirmação fornecido pelo cliente:')}
               </Text>
-              <CodeInput />
+              <CodeInput value={code} onChange={setCode} />
               <DefaultButton
                 title={nextStepLabel}
                 onPress={nextStatepHandler}
                 activityIndicator={isLoading}
-                disabled={isLoading}
+                disabled={isLoading || code.length < 3}
                 style={{ marginTop: padding }}
               />
             </View>
