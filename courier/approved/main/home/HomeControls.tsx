@@ -111,82 +111,87 @@ export default function ({ navigation }: Props) {
       </ShowIf>
 
       {/* controls */}
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginBottom: tallerDevice ? doublePadding : halfPadding,
-        }}
-      >
-        <View style={styles.controlItem}>
-          <Image source={icons.motocycleWhite} width={64} height={64} />
-          <Text style={[texts.default, { paddingTop: 4 }]}>
-            {working ? t('Disponível para corridas') : t('Indisponível para corridas')}
-          </Text>
-          <Text style={[texts.small, { paddingTop: halfPadding }]}>
-            {t('Mantenha ativado para aceitar corridas.')}
-          </Text>
-          <View
-            style={{
-              ...borders.default,
-              backgroundColor: colors.white,
-              marginTop: padding,
-              borderColor: colors.black,
-              borderWidth: 2,
-              borderRadius: 32,
-              alignSelf: 'flex-start',
-            }}
-          >
-            <Switch
-              style={{ alignSelf: 'flex-start' }}
-              trackColor={{ false: colors.white, true: colors.white }}
-              thumbColor={working ? colors.green : colors.black}
-              ios_backgroundColor={colors.white}
-              onValueChange={toggleWorking}
-              value={working}
-            />
-          </View>
-        </View>
-        <View style={[styles.controlItem, { backgroundColor: colors.white }]}>
-          <Text
-            style={{
-              ...texts.default,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: 12,
-            }}
-          >
-            {t('Frota')} {courier.fleet?.name}
-          </Text>
-          <View style={[styles.priceTag]}>
-            <Text style={[texts.small]}>{t('R$')}</Text>
-            <Text style={[texts.huge]}>
-              {formatCurrency(courier.fleet?.minimumFee ?? 0, {
-                unit: '',
-                strip_insignificant_zeros: false,
-              })}
+      <View>
+        <Text style={{ marginBottom: 4, marginTop: halfPadding }}>ID: #{courier.code}</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: tallerDevice ? doublePadding : halfPadding,
+          }}
+        >
+          <View style={styles.controlItem}>
+            <Image source={icons.motocycleWhite} width={64} height={64} />
+            <Text style={[texts.default, { paddingTop: 4 }]}>
+              {working ? t('Disponível para corridas') : t('Indisponível para corridas')}
             </Text>
-          </View>
-          <Text style={[texts.small, { marginTop: padding, color: colors.darkGrey }]}>
-            {`+ ${formatCurrency(courier.fleet?.additionalPerKmAfterThreshold ?? 0)} km/adicional`}
-          </Text>
-          <Text style={[texts.small, { color: colors.darkGrey }]}>
-            {t('Distância mínima')} {formatDistance(courier.fleet!.distanceThreshold)}
-          </Text>
-          <View style={{ flex: 1 }} />
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('FleetNavigator', {
-                screen: 'ChooseFleet',
-                fleetId: courier.fleet!.id,
-              })
-            }
-            // onPress={() => navigation.navigate('FleetDetail', { fleetId: courier.fleet!.id })}
-          >
-            <View style={{ marginTop: padding, alignItems: 'center' }}>
-              <RoundedText>{t('Mudar de frota')}</RoundedText>
+            <Text style={[texts.small, { paddingTop: halfPadding }]}>
+              {t('Mantenha ativado para aceitar corridas.')}
+            </Text>
+            <View
+              style={{
+                ...borders.default,
+                backgroundColor: colors.white,
+                marginTop: padding,
+                borderColor: colors.black,
+                borderWidth: 2,
+                borderRadius: 32,
+                alignSelf: 'flex-start',
+              }}
+            >
+              <Switch
+                style={{ alignSelf: 'flex-start' }}
+                trackColor={{ false: colors.white, true: colors.white }}
+                thumbColor={working ? colors.green : colors.black}
+                ios_backgroundColor={colors.white}
+                onValueChange={toggleWorking}
+                value={working}
+              />
             </View>
-          </TouchableOpacity>
+          </View>
+          <View style={[styles.controlItem, { backgroundColor: colors.white }]}>
+            <Text
+              style={{
+                ...texts.default,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: 12,
+              }}
+            >
+              {t('Frota')} {courier.fleet?.name}
+            </Text>
+            <View style={[styles.priceTag]}>
+              <Text style={[texts.small]}>{t('R$')}</Text>
+              <Text style={[texts.huge]}>
+                {formatCurrency(courier.fleet?.minimumFee ?? 0, {
+                  unit: '',
+                  strip_insignificant_zeros: false,
+                })}
+              </Text>
+            </View>
+            <Text style={[texts.small, { marginTop: padding, color: colors.darkGrey }]}>
+              {`+ ${formatCurrency(
+                courier.fleet?.additionalPerKmAfterThreshold ?? 0
+              )} km/adicional`}
+            </Text>
+            <Text style={[texts.small, { color: colors.darkGrey }]}>
+              {t('Distância mínima')} {formatDistance(courier.fleet!.distanceThreshold)}
+            </Text>
+            <View style={{ flex: 1 }} />
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('FleetNavigator', {
+                  screen: 'ChooseFleet',
+                  fleetId: courier.fleet!.id,
+                })
+              }
+              // onPress={() => navigation.navigate('FleetDetail', { fleetId: courier.fleet!.id })}
+            >
+              <View style={{ marginTop: padding, alignItems: 'center' }}>
+                <RoundedText>{t('Mudar de frota')}</RoundedText>
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </PaddedView>

@@ -11,8 +11,9 @@ import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import HR from '../../../../../common/components/views/HR';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { createFleet } from '../../../../../common/store/fleet/actions';
+import { showToast } from '../../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
-import { colors, padding, screens, texts } from '../../../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import FleetRule from './FleetRule';
@@ -74,16 +75,15 @@ export default function ({ navigation, route }: Props) {
         participantsOnline: 0,
       })
     );
+    dispatch(showToast(t('Frota criada com sucesso!')));
     navigation.goBack();
   };
-
-  // replace all the sliders with the new counter
 
   // UI
   return (
     <ScrollView>
       <View style={{ ...screens.config }}>
-        <PaddedView>
+        <PaddedView style={{ marginBottom: halfPadding }}>
           <Text style={{ ...texts.big }}>{t('Criar nova frota')}</Text>
           <Text style={{ ...texts.default, color: colors.darkGrey, marginVertical: 8 }}>
             {t('Preencha as informações da sua frota')}
@@ -101,9 +101,8 @@ export default function ({ navigation, route }: Props) {
             keyboardType="default"
             style={{ marginBottom: 4 }}
           />
-          {/* add logic to the counter below */}
           <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: padding }}>
-            0/36 {t('caracteres')}
+            {name.length}/36 {t('caracteres')}
           </Text>
           <DefaultInput
             ref={descriptionRef}
@@ -116,11 +115,10 @@ export default function ({ navigation, route }: Props) {
             numberOfLines={3}
             onChangeText={setDescription}
             keyboardType="default"
-            style={{ marginBottom: 4 }}
+            style={{ marginBottom: 4, height: 126 }}
           />
-          {/* add logic to the counter below */}
           <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: padding }}>
-            0/140 {t('caracteres')}
+            {description.length}/140 {t('caracteres')}
           </Text>
           <View>
             <FleetRule
@@ -181,7 +179,7 @@ export default function ({ navigation, route }: Props) {
           maxDistanceToOrigin={maxDistanceToOrigin}
         />
         <View>
-          <HR height={padding / 4} />
+          <HR height={padding / 2} />
           <GainSimulator fee={minimumFee} distance={distanceThreshold} />
           <PaddedView>
             <DefaultButton
