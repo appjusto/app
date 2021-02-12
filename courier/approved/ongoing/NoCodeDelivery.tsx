@@ -1,12 +1,17 @@
-import { CompositeNavigationProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Issue, WithId } from 'appjusto-types';
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Text, View } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { motocycle } from '../../../assets/icons';
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import { padding, screens, texts } from '../../../common/styles';
+import useIssues from '../../../common/store/api/platform/hooks/useIssues';
+import { showToast } from '../../../common/store/ui/actions';
+import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import { OngoingParamList } from './types';
@@ -15,22 +20,47 @@ type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<OngoingParamList, 'NoCodeDelivery'>,
   StackNavigationProp<ApprovedParamList>
 >;
+type ScreenRoute = RouteProp<OngoingParamList, 'NoCodeDelivery'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
+  route: ScreenRoute;
 };
 
-export const NoCodeDelivery = ({ navigation }: Props) => {
-  const reasons = [
-    { title: t('Entregue na portaria'), id: '1' },
-    { title: t('Entregue para outra pessoa'), id: '2' },
-    { title: t('Cliente não sabia informar o código'), id: '3' },
-    { title: t('Cliente não quis informar o código'), id: '4' },
-  ];
-
-  // screen state
-  const [selectedReason, setSelectedReason] = React.useState();
-
+export const NoCodeDelivery = ({ navigation, route }: Props) => {
+  // params
+  const { orderId } = route.params;
+  // context
+  const api = React.useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
+  // state
+  const issues = useIssues('no-code-delivery');
+  const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
+  const [isLoading, setLoading] = React.useState(false);
+  // UI
+  if (!issues) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green} />
+      </View>
+    );
+  }
+  // UI handlers
+  const confirmHandler = () => {
+    if (!selectedIssue) return;
+    (async () => {
+      try {
+        setLoading(true);
+        await api.order().createIssue(orderId, {
+          issue: selectedIssue,
+        });
+        setLoading(false);
+        navigation.navigate('OngoingDelivery', { orderId, completeWithoutConfirmation: true });
+      } catch (error) {
+        dispatch(showToast(error.toSring()));
+      }
+    })();
+  };
   return (
     <PaddedView style={{ ...screens.config }}>
       <View style={{ height: 114, width: 114, marginTop: 80, marginBottom: padding }}>
@@ -38,19 +68,21 @@ export const NoCodeDelivery = ({ navigation }: Props) => {
       </View>
       <Text style={{ ...texts.big }}>{t('Escolha o motivo da confirmação sem código:')}</Text>
       <View style={{ marginTop: padding }}>
-        {reasons.map((reason) => (
+        {issues?.map((issue) => (
           <RadioButton
-            key={reason.id}
-            title={reason.title}
-            onPress={() => setSelectedReason(reason)}
-            checked={selectedReason?.id === reason.id}
+            key={issue.id}
+            title={issue.title}
+            onPress={() => setSelectedIssue(issue)}
+            checked={selectedIssue?.id === issue.id}
           />
         ))}
       </View>
       <View style={{ flex: 1 }} />
       <DefaultButton
         title={t('Confirmar entrega')}
-        onPress={() => navigation.navigate('OngoingDelivery', { noCode: true })}
+        onPress={confirmHandler}
+        disabled={isLoading}
+        activityIndicator={isLoading}
       />
     </PaddedView>
   );

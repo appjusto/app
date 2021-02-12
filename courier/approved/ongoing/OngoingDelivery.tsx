@@ -6,8 +6,8 @@ import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useMutation } from 'react-query';
-import { ApiContext } from '../../../common/app/context';
+import { useDispatch } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
@@ -17,6 +17,7 @@ import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/Cou
 import CourierStatusHighlight from '../../../common/screens/orders/ongoing/CourierStatusHighlight';
 import { courierNextPlace } from '../../../common/store/api/order/helpers';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { showToast } from '../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
 import SingleHeader from '../../../consumer/home/restaurants/SingleHeader';
@@ -39,25 +40,18 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // params
-  const { orderId, newMessage, noCode } = route.params;
+  const { orderId, newMessage, completeWithoutConfirmation } = route.params;
   // context
   const api = React.useContext(ApiContext);
-
+  const dispatch = useDispatch<AppDispatch>();
   // screen state
   const { order } = useObserveOrder(orderId);
-  const { mutate: nextDispatchingState, isLoading: isUpdatingDispatchingState } = useMutation(() =>
-    api.order().nextDispatchingState(orderId)
-  );
-  const { mutate: completeDelivery, isLoading: isCompletingDelivery } = useMutation(() =>
-    api.order().completeDelivery(orderId, code)
-  );
   const [code, setCode] = React.useState('');
-  const isLoading = isUpdatingDispatchingState || isCompletingDelivery;
+  const [isLoading, setLoading] = React.useState(false);
   // side effects
   // whenever params updates
   // open chat if there's a new message
   React.useEffect(() => {
-    console.log('OngoingDelivery, newMessage:', newMessage);
     if (newMessage) {
       // workaround to make sure chat is being shown; (it was not showing on Android devices during tests)
       setTimeout(() => {
@@ -66,6 +60,18 @@ export default function ({ navigation, route }: Props) {
       }, 100);
     }
   }, [newMessage]);
+  React.useEffect(() => {
+    if (!completeWithoutConfirmation) return;
+    (async () => {
+      setLoading(true);
+      try {
+        await api.order().completeDelivery(orderId, code);
+      } catch (error) {
+        dispatch(showToast(error.toSring()));
+      }
+      setLoading(false);
+    })();
+  }, [completeWithoutConfirmation]);
   // whenever order updates
   // check status to navigate to other screens
   React.useEffect(() => {
@@ -75,15 +81,6 @@ export default function ({ navigation, route }: Props) {
       navigation.replace('OrderCanceled', { orderId });
     }
   }, [order]);
-
-  //when there's a "no code" delivery
-  React.useEffect(() => {
-    if (noCode) {
-      setTimeout(() => {
-        completeDelivery();
-      }, 100);
-    }
-  }, [noCode]);
 
   // UI
   if (!order) {
@@ -98,11 +95,19 @@ export default function ({ navigation, route }: Props) {
   // UI handlers
   // handles updating dispatchingState
   const nextStatepHandler = () => {
-    if (order.dispatchingState !== 'arrived-destination') {
-      nextDispatchingState();
-    } else {
-      completeDelivery();
-    }
+    (async () => {
+      setLoading(true);
+      try {
+        if (order.dispatchingState !== 'arrived-destination') {
+          await api.order().nextDispatchingState(orderId);
+        } else {
+          await api.order().completeDelivery(orderId, code);
+        }
+      } catch (error) {
+        dispatch(showToast(error.toSring()));
+      }
+      setLoading(false);
+    })();
   };
   const nextStepLabel = (() => {
     const dispatchingState = order?.dispatchingState;
@@ -243,7 +248,7 @@ export default function ({ navigation, route }: Props) {
             <DefaultButton
               secondary
               title={t('Confirmar entrega sem código')}
-              onPress={() => navigation.navigate('NoCodeDelivery')}
+              onPress={() => navigation.navigate('NoCodeDelivery', { orderId })}
             />
           </PaddedView>
         </View>

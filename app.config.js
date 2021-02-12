@@ -21,11 +21,24 @@ const {
 } = process.env;
 
 export default () => {
-  const version = '0.1.0';
-  const versionCode = 7;
+  const version = '0.2.0';
+  const versionCode = 8;
   const flavor = process.env.FLAVOR;
   const appId = `com.appjusto.${flavor}`;
   const icon = (platform) => `./assets/icon-${flavor}-${platform}.png`;
+  const permissions = {
+    consumer: undefined,
+    courier: [
+      'ACCESS_FINE_LOCATION',
+      'ACCESS_COARSE_LOCATION',
+      'ACCESS_BACKGROUND_LOCATION',
+      'CAMERA',
+      'READ_EXTERNAL_STORAGE',
+      'WRITE_EXTERNAL_STORAGE',
+      'VIBRATE',
+      'RECORD_AUDIO',
+    ],
+  };
   const extra = {
     flavor,
     bundleIdentifier: appId,
@@ -110,6 +123,7 @@ export default () => {
         googleServicesFile: './google-services.json',
         useNextNotificationsApi: true,
         softwareKeyboardLayoutMode: 'pan',
+        permissions: permissions[flavor],
         intentFilters: [
           {
             action: 'VIEW',
