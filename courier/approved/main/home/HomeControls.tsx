@@ -66,7 +66,7 @@ export default function ({ navigation }: Props) {
       navigation.navigate('PermissionDeniedFeedback', {
         title: t('Precisamos acessar a localização do seu dispositivo'),
         subtitle: t(
-          'Para que possamos determinar o trajeto das corridas, precisamos que você dê acesso ao AppJusto para usar a localização do seu dispositivo.'
+          'Para que possamos determinar o trajeto com precisão, precisamos que você dê acesso ao AppJusto para usar sua localização.'
         ),
       });
       // removing previous token

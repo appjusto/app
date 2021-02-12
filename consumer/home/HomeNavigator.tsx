@@ -56,7 +56,7 @@ export default function ({ navigation }: Props) {
       <Stack.Screen
         name="PermissionDeniedFeedback"
         component={PermissionDeniedFeedback}
-        options={{ headerShown: false }}
+        options={{ title: t('Compartilhar sua localização') }}
       />
       <Stack.Screen
         name="OrderNavigator"

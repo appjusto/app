@@ -49,7 +49,9 @@ export default function ({ navigation }: Props) {
     if (permissionResponse?.status === Location.PermissionStatus.DENIED) {
       navigation.navigate('PermissionDeniedFeedback', {
         title: t('Precisamos acessar sua localização'),
-        subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
+        subtitle: t(
+          'Para que possamos determinar o trajeto com precisão, precisamos que você dê acesso ao AppJusto para usar sua localização.'
+        ),
       });
     }
   }, [permissionResponse]);
