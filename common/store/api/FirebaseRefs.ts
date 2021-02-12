@@ -19,15 +19,11 @@ export default class FirebaseRefs {
   getPlaceOrderCallable = () => this.functions.httpsCallable('placeOrder');
   getCancelOrderCallable = () => this.functions.httpsCallable('cancelOrder');
   getTipCourierCallable = () => this.functions.httpsCallable('tipCourier');
-  getSendOrderProblemCallable = () => this.functions.httpsCallable('sendOrderProblem');
-  getSendCourierReviewCallable = () => this.functions.httpsCallable('sendCourierReview');
   // courier
   getMatchOrderCallable = () => this.functions.httpsCallable('matchOrder');
   getRejectOrderCallable = () => this.functions.httpsCallable('rejectOrder');
   getNextDispatchingStateCallable = () => this.functions.httpsCallable('nextDispatchingState');
   getCompleteDeliveryCallable = () => this.functions.httpsCallable('completeDelivery');
-  getSendCourierOrderProblemCallable = () =>
-    this.functions.httpsCallable('sendCourierOrderProblem');
 
   // firestore
   // platform
@@ -81,6 +77,7 @@ export default class FirebaseRefs {
   getOrdersRef = () => this.firestore.collection('orders');
   getOrderRef = (id: string) => this.getOrdersRef().doc(id);
   getOrderChatRef = (id: string) => this.getOrdersRef().doc(id).collection('chat');
+  getOrderIssuesRef = (id: string) => this.getOrdersRef().doc(id).collection('issues');
 
   // consumers
   getConsumersRef = () => this.firestore.collection('consumers');
@@ -89,6 +86,7 @@ export default class FirebaseRefs {
   // couriers
   getCouriersRef = () => this.firestore.collection('couriers');
   getCourierRef = (id: string) => this.getCouriersRef().doc(id);
+  getCourierReviewsRef = (id: string) => this.getCourierRef(id).collection('reviews');
 
   // fleets
   getFleetsRef = () => this.firestore.collection('fleets');

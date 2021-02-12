@@ -5,7 +5,7 @@ import { Issue } from 'appjusto-types/order/issues';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -14,9 +14,7 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
-import { sendOrderProblem } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
-import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { OrderNavigatorParamList } from './types';
@@ -30,20 +28,17 @@ type Props = {
 };
 
 export default function ({ route, navigation }: Props) {
-  const { orderId } = route.params;
   // params
-  //context
+  const { orderId } = route.params;
+  // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  // screen state
+  // state
   const issues = useIssues('consumer-delivery-problem');
-
-  //app state
-  const busy = useSelector(getUIBusy);
-  const [selectedProblem, setSelectedProblem] = React.useState<WithId<Issue>>();
-  const [complaintComment, setComplaintComment] = React.useState<string>('');
-  const [problemSent, setProblemSent] = React.useState<boolean>(false);
-
+  const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
+  const [comment, setComment] = React.useState('');
+  const [isLoading, setLoading] = React.useState(false);
+  const [isSent, setSent] = React.useState(false);
   // UI
   if (!issues) {
     return (
@@ -52,7 +47,7 @@ export default function ({ route, navigation }: Props) {
       </View>
     );
   }
-  if (problemSent) {
+  if (isSent) {
     return (
       <PaddedView style={{ ...screens.config }}>
         <View style={{ flex: 1, ...borders.default }} />
@@ -65,28 +60,28 @@ export default function ({ route, navigation }: Props) {
         <DefaultButton
           title={t('Voltar para o início')}
           onPress={() => navigation.navigate('Home')}
-          activityIndicator={busy}
         />
       </PaddedView>
     );
   }
   // UI handlers
   const complaintHandler = () => {
-    if (!selectedProblem) return;
+    if (!selectedIssue) return;
     (async () => {
       try {
-        await dispatch(
-          sendOrderProblem(api)(orderId, {
-            reason: selectedProblem,
-            comment: complaintComment,
-          })
-        );
-        setProblemSent(true);
+        setLoading(true);
+        await api.order().createIssue(orderId, {
+          issue: selectedIssue,
+          comment,
+        });
+        setLoading(false);
+        setSent(true);
       } catch (error) {
-        dispatch(showToast(t('Não foi possível enviar o comentário')));
+        dispatch(showToast(t('Não foi possível enviar a reclamação. Tente novamente.')));
       }
     })();
   };
+  // UI
   return (
     <View style={{ ...screens.config, flex: 1 }}>
       <KeyboardAwareScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
@@ -98,8 +93,8 @@ export default function ({ route, navigation }: Props) {
             <RadioButton
               key={issue.id}
               title={issue.title}
-              onPress={() => setSelectedProblem(issue)}
-              checked={selectedProblem?.id === issue.id}
+              onPress={() => setSelectedIssue(issue)}
+              checked={selectedIssue?.id === issue.id}
             />
           ))}
           <Text
@@ -117,8 +112,8 @@ export default function ({ route, navigation }: Props) {
             placeholder={t('Escreva sua mensagem')}
             multiline
             numberOfLines={6}
-            value={complaintComment}
-            onChangeText={setComplaintComment}
+            value={comment}
+            onChangeText={setComment}
             textAlignVertical="top"
             blurOnSubmit
           />
@@ -128,8 +123,8 @@ export default function ({ route, navigation }: Props) {
           <DefaultButton
             title={t('Enviar')}
             onPress={complaintHandler}
-            activityIndicator={busy}
-            disabled={!selectedProblem || busy}
+            activityIndicator={isLoading}
+            disabled={!selectedIssue || isLoading}
           />
         </View>
       </KeyboardAwareScrollView>
