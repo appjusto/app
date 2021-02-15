@@ -15,9 +15,9 @@ export const RouteIcons = ({ order }: Props) => {
     const dispatchingState = order?.dispatchingState;
     let location = undefined;
     if (dispatchingState === 'going-pickup') {
-      location = order?.origin.location;
+      location = order.origin?.location;
     } else if (dispatchingState === 'arrived-pickup' || dispatchingState === 'going-destination') {
-      location = order?.destination.location;
+      location = order.destination?.location;
     }
     Linking.openURL(getNavigationLinkTo(app, location));
   };

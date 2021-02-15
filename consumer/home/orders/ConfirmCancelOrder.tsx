@@ -42,9 +42,8 @@ export default ({ navigation, route }: Props) => {
     );
   }
   const cancellationCharge =
-    order.status === 'dispatching' &&
-    (order.dispatchingState === 'going-destination' ||
-      order.dispatchingState === 'arrived-destination');
+    order.dispatchingState === 'going-destination' ||
+    order.dispatchingState === 'arrived-destination';
   const description = cancellationCharge
     ? t('Como seu pedido já está a caminho do local de entrega, você não será reembolsado.')
     : t('Como seu pedido ainda não foi pegue, você não será cobrado pelo cancelamento.');

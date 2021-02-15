@@ -1,28 +1,36 @@
-import { OrderStatus } from 'appjusto-types';
+import { DispatchingState, Order, OrderStatus } from 'appjusto-types';
 import React from 'react';
 import { t } from '../../../strings';
+import { isOrderOngoing } from '../../store/order/selectors';
 import { colors } from '../../styles';
 import RoundedText from '../texts/RoundedText';
 
-const getStatusLabel = (status: OrderStatus) => {
+const getStatusLabel = (status: OrderStatus, dispatchingState: DispatchingState) => {
   if (status === 'quote') return t('Cotação');
   if (status === 'confirming') return t('Confirmando...');
   if (status === 'confirmed') return t('Confirmado');
-  if (status === 'ready') return t('Aguardando entregador');
   if (status === 'preparing') return t('Preparando');
-  if (status === 'dispatching') return t('Saiu para entrega');
   if (status === 'delivered') return t('Entregue');
   if (status === 'canceled') return t('Cancelado');
-  return '';
+  // status must be ready at this point
+  if (dispatchingState === 'going-destination') return t('Saiu para entrega');
+  if (dispatchingState === 'arrived-destination') return t('Chegou no destino');
+  // possible dispatchingState here: 'idle' 'matching', 'going-pickup', 'arrived-pickup', 'unmatched'
+  return t('Aguardando entregador');
 };
 
 type Props = {
-  status: OrderStatus;
+  order: Order;
 };
 
-export default function ({ status }: Props) {
+export default function ({ order }: Props) {
+  const { status, dispatchingState } = order;
   let backgroundColor = colors.white;
-  if (status === 'confirming' || status === 'dispatching') backgroundColor = colors.yellow;
+  if (isOrderOngoing(order)) backgroundColor = colors.yellow;
   else if (status === 'canceled') backgroundColor = colors.lightRed;
-  return <RoundedText backgroundColor={backgroundColor}>{getStatusLabel(status)}</RoundedText>;
+  return (
+    <RoundedText backgroundColor={backgroundColor}>
+      {getStatusLabel(status, dispatchingState)}
+    </RoundedText>
+  );
 }

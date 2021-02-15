@@ -8,6 +8,7 @@ import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { isOrderOngoing } from '../../../common/store/order/selectors';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -35,13 +36,14 @@ export default ({ navigation, route }: Props) => {
 
   // side effects
   React.useEffect(() => {
-    if (order?.status === 'canceled') {
+    if (!order) return;
+    if (order.status === 'canceled') {
       navigation.popToTop();
-    } else if (order?.status === 'dispatching') {
+    } else if (isOrderOngoing(order)) {
       navigation.replace('OngoingOrder', {
         orderId,
       });
-    } else if (order?.dispatchingState === 'unmatched') {
+    } else if (order.dispatchingState === 'unmatched') {
       navigation.navigate('OrderUnmatched', { orderId });
     }
   }, [order]);

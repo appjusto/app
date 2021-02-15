@@ -7,7 +7,6 @@ import {
   OrderIssue,
   OrderItem,
   OrderRejection,
-  OrderStatus,
   Place,
   PlaceOrderPayload,
   WithId,
@@ -17,14 +16,6 @@ import { isEmpty } from 'lodash';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';
 import { ObserveOrdersOptions } from './types';
-
-export const OngoingOrdersStatuses: OrderStatus[] = [
-  'confirming',
-  'confirmed',
-  'preparing',
-  'ready',
-  'dispatching',
-];
 
 export default class OrderApi {
   constructor(private refs: FirebaseRefs) {}

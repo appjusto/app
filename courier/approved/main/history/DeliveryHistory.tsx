@@ -105,7 +105,7 @@ export default function ({ navigation, route }: Props) {
                 })
               }
             >
-              <ShowIf test={item.dispatching > 0}>
+              <ShowIf test={item.ongoing > 0}>
                 {() => (
                   <View style={{ marginTop: halfPadding }}>
                     <RoundedText backgroundColor={colors.yellow}>

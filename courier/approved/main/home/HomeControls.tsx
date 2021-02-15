@@ -180,9 +180,14 @@ export default function ({ navigation }: Props) {
             <View style={{ flex: 1 }} />
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate('FleetNavigator', {
-                  screen: 'ChooseFleet',
-                  fleetId: courier.fleet!.id,
+                navigation.navigate('ProfileNavigator', {
+                  screen: 'FleetNavigator',
+                  params: {
+                    screen: 'ChooseFleet',
+                    params: {
+                      fleetId: courier.fleet!.id,
+                    },
+                  },
                 })
               }
               // onPress={() => navigation.navigate('FleetDetail', { fleetId: courier.fleet!.id })}

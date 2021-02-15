@@ -2,9 +2,9 @@ import { Order, WithId } from 'appjusto-types';
 import { difference } from 'lodash';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { OngoingOrdersStatuses } from '..';
 import { ApiContext, AppDispatch } from '../../../../app/context';
 import { ORDERS_UPDATED } from '../../../order/actions';
+import { OngoingOrdersStatuses } from '../../../order/selectors';
 import { ObserveOrdersOptions } from '../types';
 
 export default function (options: ObserveOrdersOptions) {

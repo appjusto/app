@@ -1,4 +1,4 @@
-import { ChatMessage, Order, WithId } from 'appjusto-types';
+import { ChatMessage, Order, OrderStatus, WithId } from 'appjusto-types';
 import { first, memoize, uniq } from 'lodash';
 import { createSelector } from 'reselect';
 import { State } from '..';
@@ -13,20 +13,17 @@ export const getOrderById = createSelector(getOrderState, (orderState) =>
 export const getOrders = (state: State) => getOrderState(state).orders;
 
 export const getOrderCreatedOn = (order: WithId<Order>) =>
-  order.createdOn ? (order.createdOn as firebase.firestore.Timestamp).toDate() : null;
-
-export const getOngoingOrders = (orders: WithId<Order>[]) =>
-  orders.filter((o) => o.status === 'dispatching');
+  order.createdOn ? (order.createdOn as firebase.firestore.Timestamp).toDate() : new Date();
 
 export const getYearsWithOrders = (orders: WithId<Order>[]) =>
-  uniq(orders.map((order) => getOrderCreatedOn(order)?.getFullYear()));
+  uniq(orders.map((order) => getOrderCreatedOn(order).getFullYear()));
 
 export const getMonthsWithOrdersInYear = (orders: WithId<Order>[]) =>
   memoize((year: number) =>
     uniq(
       orders
-        .filter((order) => getOrderCreatedOn(order)?.getFullYear() === year)
-        .map((order) => getOrderCreatedOn(order)?.getMonth())
+        .filter((order) => getOrderCreatedOn(order).getFullYear() === year)
+        .map((order) => getOrderCreatedOn(order).getMonth())
     )
   );
 
@@ -53,17 +50,26 @@ export const getOrdersSince = (orders: WithId<Order>[], date: Date) =>
     return (getOrderCreatedOn(order)?.getTime() ?? 0) >= date.getTime();
   });
 
+export const OngoingOrdersStatuses: OrderStatus[] = [
+  'confirming',
+  'confirmed',
+  'preparing',
+  'ready',
+];
+
+export const isOrderOngoing = (order: Order) => OngoingOrdersStatuses.indexOf(order.status) !== -1;
+
 export const summarizeOrders = memoize((orders: WithId<Order>[]) =>
   orders.reduce(
     (result, order) => ({
       delivered: order.status === 'delivered' ? result.delivered + 1 : result.delivered,
-      dispatching: order.status === 'dispatching' ? result.dispatching + 1 : result.dispatching,
+      ongoing: isOrderOngoing(order) ? result.ongoing + 1 : result.ongoing,
       courierFee:
         order.status === 'delivered'
           ? result.courierFee + (order.fare?.consumer.courierFee ?? 0) + (order.tip?.value ?? 0)
           : result.courierFee,
     }),
-    { delivered: 0, dispatching: 0, courierFee: 0 }
+    { delivered: 0, ongoing: 0, courierFee: 0 }
   )
 );
 

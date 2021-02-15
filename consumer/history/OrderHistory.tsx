@@ -15,6 +15,7 @@ import {
   getOrderCreatedOn,
   getOrdersWithFilter,
   getYearsWithOrders,
+  isOrderOngoing,
 } from '../../common/store/order/selectors';
 import { getUser } from '../../common/store/user/selectors';
 import { colors, padding, screens, texts } from '../../common/styles';
@@ -61,9 +62,11 @@ export default function ({ navigation, route }: Props) {
 
   // handlers
   const orderSelectHandler = useCallback((order: WithId<Order>) => {
-    if (order.status === 'quote') {
-      if (order.type === 'p2p') {
-        navigation.navigate('CreateOrderP2P', { orderId: order.id });
+    const orderId = order.id;
+    const { type, status } = order;
+    if (status === 'quote') {
+      if (type === 'p2p') {
+        navigation.navigate('CreateOrderP2P', { orderId });
       } else {
         navigation.navigate('RestaurantsNavigator', {
           screen: 'RestaurantNavigator',
@@ -74,17 +77,20 @@ export default function ({ navigation, route }: Props) {
           },
         });
       }
-    } else if (order.status === 'dispatching') {
-      navigation.navigate('OngoingOrder', {
-        orderId: order.id,
-      });
-    } else if (order.status === 'delivered') {
-      navigation.navigate('OrderDetail', {
-        orderId: order.id,
-      });
-    } else if (order.status === 'confirming') {
+    } else if (status === 'confirming') {
       navigation.navigate('OrderMatching', {
-        orderId: order.id,
+        orderId,
+      });
+    } else if (isOrderOngoing(order)) {
+      navigation.navigate('OrderNavigator', {
+        screen: 'OngoingOrder',
+        params: {
+          orderId,
+        },
+      });
+    } else if (status === 'delivered') {
+      navigation.navigate('OrderDetail', {
+        orderId,
       });
     }
   }, []);
@@ -124,7 +130,7 @@ export default function ({ navigation, route }: Props) {
             : '';
           return (
             <ConfigItem title={title} subtitle={subtitle} onPress={() => orderSelectHandler(item)}>
-              <StatusBadge status={item.status} />
+              <StatusBadge order={item} />
             </ConfigItem>
           );
         }}
