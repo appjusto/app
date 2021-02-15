@@ -64,7 +64,7 @@ export default function ({ navigation }: Props) {
           <HomeOngoingDeliveries
             orders={ongoingOrders}
             onSelect={(order, openChat) =>
-              navigation.navigate('OngoingNavigator', {
+              navigation.navigate('OngoingDeliveryNavigator', {
                 screen: 'OngoingDelivery',
                 params: { orderId: order.id, newMessage: openChat },
               })

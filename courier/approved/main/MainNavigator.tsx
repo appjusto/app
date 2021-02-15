@@ -64,7 +64,7 @@ export default function ({ navigation }: Props) {
     // console.log(notification);
     if (notification.clicked) {
       const data = notification.data as ChatPushMessageData;
-      navigation.navigate('OngoingNavigator', {
+      navigation.navigate('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: {
           orderId: data.orderId,

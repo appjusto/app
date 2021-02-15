@@ -52,7 +52,7 @@ export default function ({ navigation, route }: Props) {
   // handlers
   const orderPressHandler = useCallback((order: WithId<Order>) => {
     if (isOrderOngoing(order)) {
-      navigation.navigate('OngoingNavigator', {
+      navigation.navigate('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: {
           orderId: order.id!,

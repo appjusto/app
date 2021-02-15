@@ -44,7 +44,7 @@ export default function ({ navigation, route }: Props) {
       setLoading(true);
       await api.order().matchOrder(orderId);
 
-      navigation.replace('OngoingNavigator', {
+      navigation.replace('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: {
           orderId,
