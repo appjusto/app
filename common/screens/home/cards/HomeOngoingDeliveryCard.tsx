@@ -52,7 +52,11 @@ export default function ({ order, onSelect }: Props) {
             }}
             half
           >
-            {order.type === 'food' ? <IconRequest /> : <Image source={icons.motocycleWhite} />}
+            {order.type === 'food' ? (
+              <IconRequest width={64} height={80} />
+            ) : (
+              <Image source={icons.motocycleWhite} />
+            )}
             <View style={{ marginLeft: padding }}>
               <View
                 style={{

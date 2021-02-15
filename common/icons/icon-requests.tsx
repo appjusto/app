@@ -2,8 +2,17 @@ import * as React from 'react';
 import Svg, { Circle, G, Mask, Path, Rect, SvgProps } from 'react-native-svg';
 
 export const IconRequest = (props: SvgProps) => {
+  const originalWidth = 116;
+  const originalHeight = 145;
+  const { width = originalWidth, height = originalHeight } = props;
   return (
-    <Svg width={116} height={145} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <Svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox={`0 0 ${originalWidth} ${originalHeight}`}
+      width={width}
+      height={height}
+    >
       <Circle cx={58} cy={87} r={57.5} fill="#fff" stroke="#78E08F" />
       <Mask id="prefix__a" maskUnits="userSpaceOnUse" x={0} y={0} width={116} height={145}>
         <Path
