@@ -18,7 +18,6 @@ const iconMotocycleYellow = require('./icons/icon-motocycle-yellow.png');
 const iconPinPackageWhite = require('./icons/icon-pin-package-white.png');
 const iconPinPackage = require('./icons/icon-pin-package.png');
 const iconPinUser = require('./icons/icon-pin-user.png');
-const iconRequests = require('./icons/icon-requests.png');
 const iconSadYellow = require('./icons/icon-sad-yellow.png');
 const iconSelfie = require('./icons/icon-selfie.png');
 const iconShare = require('./icons/icon-share-heart.png');
@@ -57,7 +56,6 @@ export const motocycleYellow = iconMotocycleYellow;
 export const pinPackageWhite = iconPinPackageWhite;
 export const pinPackage = iconPinPackage;
 export const pinUser = iconPinUser;
-export const requests = iconRequests;
 export const selfie = iconSelfie;
 export const transit = iconTransit;
 export const transitConclusion = iconTransitConclusion;
@@ -104,7 +102,6 @@ export default [
   pinPackageWhite,
   pinPackage,
   pinUser,
-  requests,
   selfie,
   transit,
   transitConclusion,

@@ -51,8 +51,7 @@ export default function ({ navigation, route }: Props) {
   const hasBankAccount = bankAccountSet(courier);
   const totalSteps = 4;
   const [stepsDone, setStepsDone] = React.useState(0);
-  const submitEnabled =
-    situationsAllowed.indexOf(courier.situation) > -1 && stepsDone === totalSteps;
+  const submitEnabled = situationsAllowed.includes(courier.situation) && stepsDone === totalSteps;
 
   // side effects
   // once

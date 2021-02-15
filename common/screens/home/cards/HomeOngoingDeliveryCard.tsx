@@ -5,6 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as icons from '../../../../assets/icons';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';
+import { IconRequest } from '../../../icons/icon-requests';
 import { borders, colors, padding, texts } from '../../../styles';
 import { MessagesCard } from './MessagesCard';
 
@@ -51,7 +52,7 @@ export default function ({ order, onSelect }: Props) {
             }}
             half
           >
-            <Image source={order.type === 'food' ? icons.requests : icons.motocycleWhite} />
+            {order.type === 'food' ? <IconRequest /> : <Image source={icons.motocycleWhite} />}
             <View style={{ marginLeft: padding }}>
               <View
                 style={{

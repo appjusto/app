@@ -20,6 +20,7 @@ import { colors, halfPadding, padding, screens, texts } from '../../../../common
 import { t } from '../../../../strings';
 import OrderMap from '../p2p-order/OrderMap';
 import { OrderNavigatorParamList } from '../types';
+import { OngoingOrderStatus } from './OngoingOrderStatus';
 
 type ScreenNavigationProp = StackNavigationProp<OrderNavigatorParamList, 'OngoingOrder'>;
 type ScreenRoute = RouteProp<OrderNavigatorParamList, 'OngoingOrder'>;
@@ -64,23 +65,24 @@ export default function ({ navigation, route }: Props) {
   // whenever order changes
   // check status to navigate to other screens
   React.useEffect(() => {
-    if (order?.status === 'delivered') {
+    if (!order) return;
+    if (order.status === 'delivered') {
       navigation.navigate('OrderDeliveredFeedback', { orderId });
-    } else if (order?.dispatchingState === 'matching') {
-      // happens when courier cancels the delivery
-      navigation.navigate('OrderMatching', { orderId });
+    } else if (order.dispatchingState === 'no-match') {
+      navigation.navigate('OrderNoMatch', { orderId });
     }
   }, [order]);
 
   // UI
+  // showing the indicator until the order is loaded
   if (!order) {
-    // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green} />
       </View>
     );
   }
+  // ongoing UI
   const nextPlace = courierNextPlace(order);
   const { dispatchingState } = order;
   const addressLabel = (() => {
@@ -98,6 +100,7 @@ export default function ({ navigation, route }: Props) {
   return (
     <View style={{ ...screens.default }}>
       <View style={{ flex: 1 }}>
+        <OngoingOrderStatus order={order} />
         <OrderMap order={order} />
         <CourierStatusHighlight dispatchingState={dispatchingState} />
         <View style={{ paddingHorizontal: padding }}>

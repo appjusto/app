@@ -113,7 +113,7 @@ export default function ({ navigation, route }: Props) {
         platformFee,
       });
       setLoading(false);
-      navigation.replace('OrderMatching', { orderId });
+      navigation.replace('OrderConfirming', { orderId });
     } catch (error) {
       dispatch(showToast(error.toString(), 'error'));
     }

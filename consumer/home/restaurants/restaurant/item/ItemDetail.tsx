@@ -91,10 +91,7 @@ export default function ({ navigation, route }: Props) {
     // get complements from product using ids
     const itemComplements = (product.complementsGroups ?? []).reduce<WithId<Complement>[]>(
       (result, group) => {
-        return [
-          ...result,
-          ...(group.items ?? []).filter((c) => complementsIds.indexOf(c.id) !== -1),
-        ];
+        return [...result, ...(group.items ?? []).filter((c) => complementsIds.includes(c.id))];
       },
       []
     );

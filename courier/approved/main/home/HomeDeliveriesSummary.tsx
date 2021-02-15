@@ -1,10 +1,10 @@
 import { OrderStatus } from 'appjusto-types';
 import dayjs from 'dayjs';
 import React, { useMemo } from 'react';
-import { Image, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import * as icons from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/containers/PaddedView';
+import { IconRequest } from '../../../../common/icons/icon-requests';
 import useObserveOrders from '../../../../common/store/api/order/hooks/useObserveOrders';
 import {
   getDeliveredOrders,
@@ -47,7 +47,7 @@ export default function () {
       half
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Image source={icons.requests} />
+        <IconRequest />
         <View style={{ marginLeft: padding }}>
           <View
             style={{

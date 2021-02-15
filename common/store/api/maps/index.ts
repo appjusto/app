@@ -86,8 +86,7 @@ export default class MapsApi {
     const { results } = data;
     const [result] = results as google.maps.GeocoderResult[];
     const { address_components } = result;
-    const getAddress = (type: string) =>
-      address_components.find((c) => c.types.indexOf(type) !== -1);
+    const getAddress = (type: string) => address_components.find((c) => c.types.includes(type));
     const country = getAddress('country');
     const state = getAddress('administrative_area_level_1');
     const city = getAddress('administrative_area_level_2');

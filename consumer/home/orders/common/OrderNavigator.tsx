@@ -14,9 +14,9 @@ import ConfirmCancelOrder from '../ConfirmCancelOrder';
 import CourierDetail from '../CourierDetail';
 import OngoingOrder from '../ongoing/OngoingOrder';
 import OrderComplaint from '../OrderComplaint';
+import OrderConfirming from '../OrderConfirming';
 import OrderDeliveredFeedback from '../OrderDeliveredFeedback';
-import OrderMatching from '../OrderMatching';
-import OrderUnmatched from '../OrderUnmatched';
+import OrderNoMatch from '../OrderNoMatch';
 import CreateOrderP2P from '../p2p-order/CreateOrderP2P';
 import TransportableItems from '../p2p-order/TransportableItems';
 import { OrderNavigatorParamList } from '../types';
@@ -67,15 +67,11 @@ export const OrderNavigator = () => {
         options={{ title: t('Formas de pagamento') }}
       />
       <Stack.Screen
-        name="OrderMatching"
-        component={OrderMatching}
+        name="OrderConfirming"
+        component={OrderConfirming}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="OrderUnmatched"
-        component={OrderUnmatched}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="OrderNoMatch" component={OrderNoMatch} options={{ headerShown: false }} />
       <Stack.Screen
         name="OngoingOrder"
         component={OngoingOrder}

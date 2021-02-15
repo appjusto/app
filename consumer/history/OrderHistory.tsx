@@ -78,7 +78,7 @@ export default function ({ navigation, route }: Props) {
         });
       }
     } else if (status === 'confirming') {
-      navigation.navigate('OrderMatching', {
+      navigation.navigate('OrderConfirming', {
         orderId,
       });
     } else if (isOrderOngoing(order)) {

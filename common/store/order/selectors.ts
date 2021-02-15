@@ -57,7 +57,7 @@ export const OngoingOrdersStatuses: OrderStatus[] = [
   'ready',
 ];
 
-export const isOrderOngoing = (order: Order) => OngoingOrdersStatuses.indexOf(order.status) !== -1;
+export const isOrderOngoing = (order: Order) => OngoingOrdersStatuses.includes(order.status);
 
 export const summarizeOrders = memoize((orders: WithId<Order>[]) =>
   orders.reduce(
