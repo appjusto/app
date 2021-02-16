@@ -2,6 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import ArrowBox from '../../../../common/components/views/ArrowBox';
 import { t } from '../../../../strings';
+import AddressComplete from '../../orders/AddressComplete';
 import AboutRestaurant from './AboutRestaurant';
 import RestaurantDetail from './detail/RestaurantDetail';
 import ItemDetail from './item/ItemDetail';
@@ -37,6 +38,11 @@ export default function () {
         name="OrderCheckout"
         component={OrderCheckout}
         options={{ title: t('Sua sacola') }}
+      />
+      <Stack.Screen
+        name="OrderDestination"
+        component={AddressComplete}
+        options={{ title: t('Endereço de entrega') }}
       />
     </Stack.Navigator>
   );

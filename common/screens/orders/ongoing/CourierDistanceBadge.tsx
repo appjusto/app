@@ -11,8 +11,8 @@ interface Props {
 }
 
 export const CourierDistanceBadge = ({ order }: Props) => {
-  const { dispatchingState, route } = order;
-  if (!route) return null;
+  const { route, courier, dispatchingState } = order;
+  if (!route || !courier) return null;
   const distance = helpers.courierDistanceFromNextPlace(order);
   let text = '';
   if (dispatchingState === 'going-pickup' || dispatchingState === 'going-destination') {

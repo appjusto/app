@@ -11,7 +11,7 @@ export type RestaurantNavigatorParamList = {
     destination?: Place;
     paymentMethodId?: string;
   };
-  AddressComplete: {
+  OrderDestination: {
     returnScreen: 'OrderCheckout';
     returnParam: string;
     value?: Place | null;

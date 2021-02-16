@@ -1,4 +1,4 @@
-import { RouteProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Fleet, WithId } from 'appjusto-types';
 import React from 'react';
@@ -11,9 +11,17 @@ import { useContextActiveOrder } from '../../../../common/store/context/order';
 import { showToast } from '../../../../common/store/ui/actions';
 import { colors, screens } from '../../../../common/styles';
 import { OrderSummary } from '../../orders/summary/OrderSummary';
+import { HomeNavigatorParamList } from '../../types';
+import { RestaurantsNavigatorParamList } from '../types';
 import { RestaurantNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<RestaurantNavigatorParamList, 'OrderCheckout'>;
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<RestaurantNavigatorParamList, 'OrderCheckout'>,
+  CompositeNavigationProp<
+    StackNavigationProp<RestaurantsNavigatorParamList, 'RestaurantNavigator'>,
+    StackNavigationProp<HomeNavigatorParamList, 'Home'>
+  >
+>;
 type ScreenRouteProp = RouteProp<RestaurantNavigatorParamList, 'OrderCheckout'>;
 
 type Props = {
@@ -54,7 +62,12 @@ export const OrderCheckout = ({ navigation, route }: Props) => {
         platformFee,
       });
       setLoading(false);
-      // navigation.replace('OrderMatching', { orderId });
+      navigation.replace('OrderNavigator', {
+        screen: 'OrderConfirming',
+        params: {
+          orderId: order.id,
+        },
+      });
     } catch (error) {
       dispatch(showToast(error.toString(), 'error'));
     }
@@ -88,10 +101,10 @@ export const OrderCheckout = ({ navigation, route }: Props) => {
         waiting={isLoading}
         showMap={false}
         onEditStep={() => {
-          navigation.navigate('AddressComplete', {
+          navigation.navigate('OrderDestination', {
             returnScreen: 'OrderCheckout',
             returnParam: 'destination',
-            value: order.destination,
+            value: order.destination ?? null,
           });
         }}
         onEditItemPress={(productId, itemId) =>

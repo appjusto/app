@@ -7,7 +7,6 @@ import { t } from '../../../../strings';
 import ProfileAddCard from '../../../profile/payment/ProfileAddCard';
 import ProfilePaymentMethods from '../../../profile/payment/ProfilePaymentMethods';
 import ProfileEdit from '../../../profile/ProfileEdit';
-import Home from '../../Home';
 import AddressComplete from '../AddressComplete';
 import CancelOrder from '../CancelOrder';
 import ConfirmCancelOrder from '../ConfirmCancelOrder';
@@ -103,7 +102,6 @@ export const OrderNavigator = () => {
         component={OrderDeliveredFeedback}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };

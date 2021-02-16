@@ -6,6 +6,7 @@ import React, { useCallback } from 'react';
 import { FlatList, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
+import StatusBadge from '../../../../common/components/views/StatusBadge';
 import useObserveOrders from '../../../../common/store/api/order/hooks/useObserveOrders';
 import {
   getOrderCreatedOn,
@@ -80,7 +81,9 @@ export default function ({ navigation, route }: Props) {
             formatTime(createdOn)
           )}`;
           return (
-            <ConfigItem title={title} subtitle={subtitle} onPress={() => orderPressHandler(item)} />
+            <ConfigItem title={title} subtitle={subtitle} onPress={() => orderPressHandler(item)}>
+              <StatusBadge order={item} />
+            </ConfigItem>
           );
         }}
       />

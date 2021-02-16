@@ -120,10 +120,10 @@ export default function ({ navigation, route }: Props) {
         </View>
       </View>
       <PaddedView style={{ backgroundColor: colors.white, flexDirection: 'row' }}>
-        <RoundedProfileImg flavor="courier" id={order.courier!.id} />
+        <RoundedProfileImg flavor="courier" id={order.courier?.id} />
         <View style={{ flex: 1, marginLeft: padding }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={[texts.medium]}>{order.courier!.name}</Text>
+            <Text style={[texts.medium]}>{order.courier?.name}</Text>
           </View>
           <Text style={[texts.small, { color: colors.darkGreen }]}>{addressLabel}</Text>
           <Text style={[texts.small]}>{nextPlace?.address.main ?? ''}</Text>
