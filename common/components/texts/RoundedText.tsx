@@ -23,6 +23,7 @@ export default function ({
     <View
       style={[
         {
+          alignSelf: 'flex-start',
           paddingVertical: 4,
           paddingHorizontal: halfPadding,
           ...borders.default,
@@ -34,7 +35,7 @@ export default function ({
       ]}
       {...props}
     >
-      <Text style={[texts.small, { color: tintColor }]}>{children}</Text>
+      <Text style={[texts.small, { textAlign: 'center', color: tintColor }]}>{children}</Text>
     </View>
   );
 }

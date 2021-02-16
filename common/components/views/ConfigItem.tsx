@@ -64,9 +64,7 @@ export default function ({
           </View>
         </PaddedView>
         {children && (
-          <View style={{ flexDirection: 'row' }}>
-            <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>{children}</View>
-          </View>
+          <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>{children}</View>
         )}
       </View>
     </TouchableOpacity>
