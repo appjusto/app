@@ -1,9 +1,3 @@
-const iconCircle = require('./icons/Circle.png');
-const iconCircleActive = require('./icons/CircleActive.png');
-const arrowSmall = require('./icons/arrow-small.png');
-const backgroundPatternIcon = require('./icons/background-pattern.png');
-const iconCheckboxActive = require('./icons/checkbox-active.png');
-const iconCheckboxInactive = require('./icons/checkbox-inactive.png');
 const iconChecklistTick = require('./icons/checklist-tick.png');
 const iconSlideConfirm = require('./icons/drag-button-confirm.png');
 const dragButton = require('./icons/drag-button.png');
@@ -42,9 +36,6 @@ const iconUser = require('./icons/user.png');
 const iconFilter = require('./icons/filter.png');
 const restCardIcon = require('./icons/card-icon.png');
 
-export const arrow = arrowSmall;
-export const checkboxActive = iconCheckboxActive;
-export const checkboxInactive = iconCheckboxInactive;
 export const checklistTick = iconChecklistTick;
 export const home = iconHome;
 export const calendar = iconCalendar;
@@ -62,12 +53,9 @@ export const transitConclusion = iconTransitConclusion;
 export const illustration = iconIllustration;
 export const illustrationPizza = iconIllustrationPizza;
 export const logoWhite = logoAppjustoBgWhite;
-export const backgroundPattern = backgroundPatternIcon;
 export const orders = iconOrders;
 export const user = iconUser;
 export const slider = dragButton;
-export const circle = iconCircle;
-export const circleActive = iconCircleActive;
 export const bikeSmall = iconBikeSmall;
 export const motoSmall = iconMotocycleSmall;
 export const scooterSmall = iconScooterSmall;
@@ -87,9 +75,6 @@ export const cardIcon = restCardIcon;
 export const motoIntro = illustrationMotoIntro;
 
 export default [
-  arrow,
-  checkboxActive,
-  checkboxInactive,
   checklistTick,
   home,
   calendar,
@@ -108,12 +93,9 @@ export default [
   illustration,
   illustrationPizza,
   logoWhite,
-  backgroundPattern,
   orders,
   user,
   slider,
-  circle,
-  circleActive,
   bikeSmall,
   motoSmall,
   scooterSmall,

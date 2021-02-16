@@ -3,13 +3,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { WithId } from 'appjusto-types';
 import { Issue } from 'appjusto-types/order/issues';
 import React from 'react';
-import { ActivityIndicator, Image, Text, TextInput, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ActivityIndicator, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
-import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
+import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { getCourier } from '../../../common/store/courier/selectors';
@@ -82,16 +81,13 @@ export default function ({ route, navigation }: Props) {
             {t('Por que você recusou o pedido?')}
           </Text>
           {issues.map((issue) => (
-            <TouchableOpacity key={issue.id} onPress={() => setSelectedReason(issue)}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-                <Image
-                  source={selectedReason?.id === issue.id ? icons.circleActive : icons.circle}
-                />
-                <Text style={{ ...texts.xs, marginLeft: 12 }}>{issue.title}</Text>
-              </View>
-            </TouchableOpacity>
+            <RadioButton
+              key={issue.id}
+              title={issue.title}
+              checked={selectedReason?.id === issue.id}
+              onPress={() => setSelectedReason(issue)}
+            />
           ))}
-
           <Text style={{ ...texts.sm, marginBottom: 8, marginTop: 24 }}>
             {t(
               'Você pode usar o espaço abaixo para detalhar mais sua recusa. Dessa forma conseguiremos melhorar nossos serviços:'
