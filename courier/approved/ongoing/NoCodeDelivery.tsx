@@ -41,7 +41,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
   if (!issues) {
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
@@ -66,7 +66,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
       <View style={{ height: 114, width: 114, marginTop: 80, marginBottom: padding }}>
         <Image source={motocycle} />
       </View>
-      <Text style={{ ...texts.big }}>{t('Escolha o motivo da confirmação sem código:')}</Text>
+      <Text style={{ ...texts.xxl }}>{t('Escolha o motivo da confirmação sem código:')}</Text>
       <View style={{ marginTop: padding }}>
         {issues?.map((issue) => (
           <RadioButton

@@ -23,7 +23,7 @@ export default function ({ onPress }: Props) {
         }}
       >
         <Image source={icons.filter} style={{ marginRight: halfPadding }} />
-        <Text style={[{ ...texts.small }, { ...texts.bold }]}>{t('Filtrar')}</Text>
+        <Text style={[{ ...texts.xs }, { ...texts.bold }]}>{t('Filtrar')}</Text>
       </View>
     </TouchableOpacity>
   );

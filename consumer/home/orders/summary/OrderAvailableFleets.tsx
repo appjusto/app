@@ -51,14 +51,14 @@ export const OrderAvailableFleets = ({
             alignItems: 'center',
           }}
         >
-          <Text style={{ ...texts.medium, ...texts.bold }}>{t('Escolha a frota')}</Text>
-          <Text style={{ ...texts.small, color: colors.darkGrey }}>
+          <Text style={{ ...texts.md, ...texts.bold }}>{t('Escolha a frota')}</Text>
+          <Text style={{ ...texts.xs, color: colors.grey700 }}>
             {quotes?.length ?? 0} {t('frota(s) ativas agora')}
           </Text>
         </PaddedView>
       </View>
       <PaddedView>
-        <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: 12 }}>
+        <Text style={{ ...texts.xs, color: colors.grey700, marginBottom: 12 }}>
           {t(
             'Você pode escolher a frota que quiser para sua entrega. Frotas podem ter preços e características diferentes.'
           )}
@@ -86,26 +86,24 @@ export const OrderAvailableFleets = ({
                       style={{
                         width: 156,
                         backgroundColor:
-                          selectedFare?.fleet.id === item.fleet.id
-                            ? colors.lightGreen
-                            : colors.white,
+                          selectedFare?.fleet.id === item.fleet.id ? colors.green100 : colors.white,
                         ...borders.default,
                         borderWidth: 2,
                         borderColor: colors.black,
                         marginRight: halfPadding,
                       }}
                     >
-                      <Text numberOfLines={2} style={[texts.default, texts.bold]}>
+                      <Text numberOfLines={2} style={[texts.sm, texts.bold]}>
                         {item.fleet.name}
                       </Text>
-                      <Text style={[texts.small, { marginTop: padding }]}>{t('Entregadores')}</Text>
-                      <Text style={[texts.small, texts.bold]}>
+                      <Text style={[texts.xs, { marginTop: padding }]}>{t('Entregadores')}</Text>
+                      <Text style={[texts.xs, texts.bold]}>
                         {`${
                           fleets.find((fleet) => fleet.id === item.fleet.id)?.participantsOnline ??
                           0
                         } ${t('ativos agora')}`}
                       </Text>
-                      <Text style={[texts.mediumToBig, texts.bold, { marginTop: padding }]}>
+                      <Text style={[texts.xl, texts.bold, { marginTop: padding }]}>
                         {formatCurrency(item.consumer.courierFee)}
                       </Text>
                       <TouchableOpacity onPress={() => onFleetSelect(item.fleet)}>

@@ -21,13 +21,13 @@ export const CartButton = ({ order }: Props) => {
           justifyContent: 'space-between',
           paddingHorizontal: 8,
           paddingVertical: 12,
-          backgroundColor: colors.green,
+          backgroundColor: colors.green500,
           borderRadius: 8,
         }}
       >
         <RoundedText>{`${order.items?.length ?? 0} ${t('itens')}`}</RoundedText>
-        <Text style={{ ...texts.default }}>{t('Ver sacola')}</Text>
-        <Text style={{ ...texts.default }}>{formatCurrency(getOrderTotal(order))}</Text>
+        <Text style={{ ...texts.sm }}>{t('Ver sacola')}</Text>
+        <Text style={{ ...texts.sm }}>{formatCurrency(getOrderTotal(order))}</Text>
       </View>
     </View>
   );

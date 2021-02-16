@@ -18,7 +18,7 @@ export default function () {
         borderColor: colors.black,
       }}
     >
-      <Text style={{ ...texts.default, color: colors.darkGrey }}>
+      <Text style={{ ...texts.sm, color: colors.grey700 }}>
         {t('Buscar por prato ou restaurante')}
       </Text>
       <Image source={icons.search} />

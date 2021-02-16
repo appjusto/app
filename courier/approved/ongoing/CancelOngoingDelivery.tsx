@@ -47,7 +47,7 @@ export default function ({ route, navigation }: Props) {
   if (!issues) {
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
@@ -77,7 +77,7 @@ export default function ({ route, navigation }: Props) {
     <View style={screens.config}>
       <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <PaddedView>
-          <Text style={{ ...texts.big, marginBottom: 24 }}>
+          <Text style={{ ...texts.xxl, marginBottom: 24 }}>
             {t('Por que você quer cancelar o pedido?')}
           </Text>
           {issues.map((issue) => (
@@ -86,12 +86,12 @@ export default function ({ route, navigation }: Props) {
                 <Image
                   source={selectedReason?.id === issue.id ? icons.circleActive : icons.circle}
                 />
-                <Text style={{ ...texts.small, marginLeft: 12 }}>{issue.title}</Text>
+                <Text style={{ ...texts.xs, marginLeft: 12 }}>{issue.title}</Text>
               </View>
             </TouchableOpacity>
           ))}
 
-          <Text style={{ ...texts.default, marginBottom: 8, marginTop: 24 }}>
+          <Text style={{ ...texts.sm, marginBottom: 8, marginTop: 24 }}>
             {t(
               'Você pode usar o espaço abaixo para detalhar seus motivos. Dessa forma conseguiremos melhorar nossos serviços:'
             )}
@@ -102,7 +102,7 @@ export default function ({ route, navigation }: Props) {
               width: '100%',
               height: 128,
               ...borders.default,
-              borderColor: colors.grey,
+              borderColor: colors.grey500,
               backgroundColor: colors.white,
               marginBottom: 8,
               padding: 8,

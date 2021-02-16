@@ -44,9 +44,9 @@ export default function ({ restaurant, onPress, canNavigate }: Props) {
           }}
         >
           <View>
-            <Text style={{ ...texts.mediumToBig }}>{restaurant.name}</Text>
-            <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Tipo de comida')}</Text>
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>
+            <Text style={{ ...texts.xl }}>{restaurant.name}</Text>
+            <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Tipo de comida')}</Text>
+            <Text style={{ ...texts.xs, color: colors.grey700 }}>
               {separateWithDot(formatDistance(2000), formatDuration(1800))}
             </Text>
           </View>

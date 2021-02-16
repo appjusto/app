@@ -40,14 +40,14 @@ export default function ({ nextStepHandler, status }: Props) {
           flexDirection: 'row',
           justifyContent: 'flex-end',
           // alignItems: 'center',
-          backgroundColor: colors.lightGrey,
+          backgroundColor: colors.grey50,
           // paddingHorizontal,
           ...borders.default,
           // borderRadius: 64,
         }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={[texts.default]}>{status}</Text>
+          <Text style={[texts.sm]}>{status}</Text>
           <Feather name="check-circle" size={20} color={colors.black} style={{ marginLeft: 10 }} />
         </View>
       </View>

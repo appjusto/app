@@ -65,7 +65,7 @@ export default function () {
     <View
       style={{
         ...borders.default,
-        backgroundColor: colors.lightGrey,
+        backgroundColor: colors.grey50,
         width: '100%',
         height: 42,
         flexDirection: 'row',
@@ -78,12 +78,12 @@ export default function () {
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Feather name="navigation" size={10} />
         <View style={{ flexShrink: 1 }}>
-          <Text style={{ ...texts.small, marginLeft: halfPadding, flexWrap: 'wrap' }}>
+          <Text style={{ ...texts.xs, marginLeft: halfPadding, flexWrap: 'wrap' }}>
             {currentPlace?.address ? formatAddress(currentPlace.address) : ''}
           </Text>
         </View>
       </View>
-      <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Alterar')}</Text>
+      <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Alterar')}</Text>
     </View>
   );
 }

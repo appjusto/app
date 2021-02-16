@@ -49,7 +49,7 @@ export default ({ navigation, route }: Props) => {
     // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }

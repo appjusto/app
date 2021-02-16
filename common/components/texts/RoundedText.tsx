@@ -33,7 +33,7 @@ export default function ({
             paddingHorizontal: halfPadding,
             ...borders.default,
             borderRadius: 32,
-            borderColor: noBorder ? colors.lightGrey : tintColor,
+            borderColor: noBorder ? colors.grey50 : tintColor,
             backgroundColor,
           },
           style,
@@ -41,7 +41,7 @@ export default function ({
         {...props}
       >
         {leftIcon}
-        <Text style={[texts.small, { textAlign: 'center', color: tintColor }]}>{children}</Text>
+        <Text style={[texts.xs, { textAlign: 'center', color: tintColor }]}>{children}</Text>
       </View>
     </View>
   );

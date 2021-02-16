@@ -29,7 +29,7 @@ export default function ({
         style={[
           bottomBorder
             ? {
-                borderBottomColor: colors.grey,
+                borderBottomColor: colors.grey500,
                 borderStyle: 'solid',
                 borderBottomWidth: 1,
               }
@@ -47,12 +47,12 @@ export default function ({
               <ShowIf test={checked ?? false}>
                 {() => <Image source={checklistTick} style={{ marginRight: 8 }} />}
               </ShowIf>
-              <Text style={{ ...texts.default }}>{title}</Text>
+              <Text style={{ ...texts.sm }}>{title}</Text>
             </View>
             <Text
               style={{
-                ...texts.default,
-                color: colors.darkGrey,
+                ...texts.sm,
+                color: colors.grey700,
                 flexWrap: 'wrap',
               }}
             >

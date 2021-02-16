@@ -41,7 +41,7 @@ export default function () {
     // TODO: handle other situation cases in the future
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
@@ -50,7 +50,7 @@ export default function () {
       tabBarOptions={{
         activeTintColor: colors.black,
         inactiveTintColor: colors.black,
-        activeBackgroundColor: colors.green,
+        activeBackgroundColor: colors.green500,
         inactiveBackgroundColor: colors.white,
         style: { height: 60, justifyContent: 'center' },
         tabStyle: {
@@ -58,7 +58,7 @@ export default function () {
           height: 40,
           marginTop: halfPadding,
         },
-        labelStyle: { ...texts.small, marginBottom: 4 },
+        labelStyle: { ...texts.xs, marginBottom: 4 },
         labelPosition: 'beside-icon',
       }}
     >

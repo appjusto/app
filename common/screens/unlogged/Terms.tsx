@@ -1,17 +1,16 @@
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
-
+import { ScrollView, Text, View } from 'react-native';
 import { t } from '../../../strings';
-import { texts, colors, screens } from '../../styles';
+import { colors, screens, texts } from '../../styles';
 
 export default function Terms() {
   return (
     <ScrollView>
       <View style={{ ...screens.lightGrey, paddingBottom: 32 }}>
-        <Text style={{ ...texts.big, marginBottom: 8, marginTop: 16 }}>
+        <Text style={{ ...texts.xxl, marginBottom: 8, marginTop: 16 }}>
           {t('Termos de uso e política de privacidade')}
         </Text>
-        <Text style={{ ...texts.default, marginTop: 16, color: colors.darkGrey }}>
+        <Text style={{ ...texts.sm, marginTop: 16, color: colors.grey700 }}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. In eu pulvinar justo. Ut in purus
           ipsum. Nulla molestie massa nec nunc pretium vehicula quis non magna. Nullam ac finibus
           leo. Nam ullamcorper nibh hendrerit dignissim fermentum. Integer nec lorem sollicitudin,
@@ -22,7 +21,7 @@ export default function Terms() {
           elit. In eu pulvinar justo. Ut in purus ipsum. Nulla molestie massa nec nunc pretium
           vehicula quis non magna. Nullam ac finibus leo. Nam ullamcorper nibh hendrerit dignissim
         </Text>
-        <Text style={{ ...texts.default, marginTop: 16, color: colors.darkGrey }}>
+        <Text style={{ ...texts.sm, marginTop: 16, color: colors.grey700 }}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. In eu pulvinar justo. Ut in purus
           ipsum. Nulla molestie massa nec nunc pretium vehicula quis non magna. Nullam ac finibus
           leo. Nam ullamcorper nibh hendrerit dignissim fermentum. Integer nec lorem sollicitudin,
@@ -33,7 +32,7 @@ export default function Terms() {
           elit. In eu pulvinar justo. Ut in purus ipsum. Nulla molestie massa nec nunc pretium
           vehicula quis non magna. Nullam ac finibus leo. Nam ullamcorper nibh hendrerit dignissim
         </Text>
-        <Text style={{ ...texts.default, marginTop: 16, color: colors.darkGrey }}>
+        <Text style={{ ...texts.sm, marginTop: 16, color: colors.grey700 }}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. In eu pulvinar justo. Ut in purus
           ipsum. Nulla molestie massa nec nunc pretium vehicula quis non magna. Nullam ac finibus
           leo. Nam ullamcorper nibh hendrerit dignissim fermentum. Integer nec lorem sollicitudin,

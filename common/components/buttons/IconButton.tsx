@@ -1,6 +1,5 @@
 import React from 'react';
-import { Text, TouchableWithoutFeedback, View, Image } from 'react-native';
-
+import { Image, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { borders, colors, texts } from '../../styles';
 
 type Props = {
@@ -18,9 +17,9 @@ export default function ({ title, icon, active = false, onPress }: Props) {
           style={{
             width: 48,
             height: 48,
-            backgroundColor: active ? colors.green : colors.lightGrey,
+            backgroundColor: active ? colors.green500 : colors.grey50,
             ...borders.default,
-            borderColor: active ? colors.green : colors.lightGrey,
+            borderColor: active ? colors.green500 : colors.grey50,
             justifyContent: 'center',
             alignItems: 'center',
           }}
@@ -28,7 +27,7 @@ export default function ({ title, icon, active = false, onPress }: Props) {
           <Image source={icon} />
         </View>
       </TouchableWithoutFeedback>
-      <Text style={[texts.small, { color: active ? colors.black : colors.darkGrey }]}>{title}</Text>
+      <Text style={[texts.xs, { color: active ? colors.black : colors.grey700 }]}>{title}</Text>
     </View>
   );
 }

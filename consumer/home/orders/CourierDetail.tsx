@@ -34,7 +34,7 @@ export default function ({ navigation, route }: Props) {
     // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
@@ -85,11 +85,11 @@ export default function ({ navigation, route }: Props) {
             <RoundedProfileImg flavor="courier" id={order.courier!.id} />
           </View>
           <View style={{ marginLeft: tallerDevice ? 24 : 12 }}>
-            <Text style={{ ...texts.medium }}>{order.courier?.name}</Text>
-            <Text style={{ ...texts.small, color: colors.darkGrey, marginTop: 8 }}>
+            <Text style={{ ...texts.md }}>{order.courier?.name}</Text>
+            <Text style={{ ...texts.xs, color: colors.grey700, marginTop: 8 }}>
               {t('No appJusto desde')}
             </Text>
-            <Text style={{ ...texts.small }}>
+            <Text style={{ ...texts.xs }}>
               {formatDate(
                 (order.courier!.joined as firebase.firestore.Timestamp).toDate(),
                 'monthYear'
@@ -98,14 +98,14 @@ export default function ({ navigation, route }: Props) {
           </View>
         </View>
         <View style={{ marginTop: 12, alignItems: 'flex-start', paddingHorizontal: padding }}>
-          <Text style={{ ...texts.small, color: colors.darkGrey }}>
+          <Text style={{ ...texts.xs, color: colors.grey700 }}>
             {t('Entregas realizadas perfeitamente')}
           </Text>
-          <Text style={{ ...texts.medium }}>{order.courier?.statistics?.deliveries ?? 0}</Text>
+          <Text style={{ ...texts.md }}>{order.courier?.statistics?.deliveries ?? 0}</Text>
         </View>
         <View style={{ marginTop: 16, alignItems: 'flex-start', paddingHorizontal: padding }}>
-          <Text style={{ ...texts.small, color: colors.darkGrey }}>{t('Entregas canceladas')}</Text>
-          <Text style={{ ...texts.medium }}>{order.courier?.statistics?.canceled ?? 0}</Text>
+          <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Entregas canceladas')}</Text>
+          <Text style={{ ...texts.md }}>{order.courier?.statistics?.canceled ?? 0}</Text>
         </View>
         <SingleHeader title={t('Integrante da frota')} />
         <PaddedView>
@@ -117,7 +117,7 @@ export default function ({ navigation, route }: Props) {
           style={{
             width: '100%',
             borderBottomWidth: 1,
-            borderBottomColor: colors.grey,
+            borderBottomColor: colors.grey500,
             marginBottom: padding,
           }}
         />
@@ -142,8 +142,8 @@ export default function ({ navigation, route }: Props) {
         </View>
         <Text
           style={{
-            ...texts.small,
-            color: colors.darkGrey,
+            ...texts.xs,
+            color: colors.grey700,
             paddingHorizontal: padding,
             marginBottom: padding,
           }}

@@ -54,19 +54,19 @@ export default function ({ acceptHandler, rejectHandler, disabled }: Props) {
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          backgroundColor: colors.lightGrey,
+          backgroundColor: colors.grey50,
           paddingHorizontal,
           ...borders.default,
           borderRadius: 64,
         }}
       >
         <View style={{ alignItems: 'center' }}>
-          <Feather name="x" size={20} color={colors.darkGrey} />
-          <Text style={[texts.default, { color: colors.darkGrey }]}>{t('Recusar')}</Text>
+          <Feather name="x" size={20} color={colors.grey700} />
+          <Text style={[texts.sm, { color: colors.grey700 }]}>{t('Recusar')}</Text>
         </View>
         <View style={{ alignItems: 'center' }}>
           <Feather name="check-circle" size={20} color={colors.black} />
-          <Text style={[texts.default]}>{t('Aceitar')}</Text>
+          <Text style={[texts.sm]}>{t('Aceitar')}</Text>
         </View>
       </View>
       {/* slider */}

@@ -25,15 +25,15 @@ export default function ({ title, value, description, onIncrease, onDecrease }: 
           marginBottom: 8,
         }}
       >
-        <Text style={{ ...texts.medium }}>{title}</Text>
+        <Text style={{ ...texts.md }}>{title}</Text>
         <RoundedText>{value}</RoundedText>
       </View>
-      <Text style={{ ...texts.default, color: colors.darkGrey }}>{description}</Text>
+      <Text style={{ ...texts.sm, color: colors.grey700 }}>{description}</Text>
       <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
         <TouchableOpacity onPress={onDecrease}>
           <QuantityButton sign="minus" size="big" />
         </TouchableOpacity>
-        <Text style={{ ...texts.medium, marginHorizontal: 16 }}>{value}</Text>
+        <Text style={{ ...texts.md, marginHorizontal: 16 }}>{value}</Text>
         <TouchableOpacity onPress={onIncrease}>
           <QuantityButton sign="plus" size="big" />
         </TouchableOpacity>

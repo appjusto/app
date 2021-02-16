@@ -172,7 +172,7 @@ export default function ({
                 }}
               >
                 <Feather name="info" size={14} />
-                <Text style={{ ...texts.small, marginLeft: 4 }}>
+                <Text style={{ ...texts.xs, marginLeft: 4 }}>
                   {t('O que pode ser transportado')}
                 </Text>
               </View>
@@ -228,7 +228,7 @@ export default function ({
                   }}
                 >
                   <Feather name="info" size={14} />
-                  <Text style={{ ...texts.small, marginLeft: 4 }}>
+                  <Text style={{ ...texts.xs, marginLeft: 4 }}>
                     {t('Saiba o que pode ser transportado')}
                   </Text>
                 </View>

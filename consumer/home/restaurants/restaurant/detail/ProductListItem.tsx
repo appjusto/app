@@ -23,7 +23,7 @@ export const ProductListItem = ({ product }: Props) => {
         borderBottomWidth: 1,
         borderStyle: 'solid',
         width: '100%',
-        borderColor: colors.grey,
+        borderColor: colors.grey500,
       }}
     >
       <View
@@ -38,14 +38,11 @@ export const ProductListItem = ({ product }: Props) => {
         }}
       >
         <View style={{ width: '60%' }}>
-          <Text style={{ ...texts.default }}>{product.name}</Text>
-          <Text
-            style={{ ...texts.small, color: colors.darkGrey, marginVertical: 4 }}
-            numberOfLines={2}
-          >
+          <Text style={{ ...texts.sm }}>{product.name}</Text>
+          <Text style={{ ...texts.xs, color: colors.grey700, marginVertical: 4 }} numberOfLines={2}>
             {product.description}
           </Text>
-          <Text style={{ ...texts.default }}>{formatCurrency(product.price)}</Text>
+          <Text style={{ ...texts.sm }}>{formatCurrency(product.price)}</Text>
         </View>
         <View>
           <ListItemImage uri={imageURI} size={96} />

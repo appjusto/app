@@ -10,12 +10,12 @@ export const DemandCard = () => {
       style={{
         ...borders.default,
         flex: 1,
-        borderColor: colors.lightGrey,
+        borderColor: colors.grey50,
         paddingHorizontal: 12,
         paddingVertical: padding,
       }}
     >
-      <Text style={{ ...texts.medium }}>{t('Como está a demanda agora:')}</Text>
+      <Text style={{ ...texts.md }}>{t('Como está a demanda agora:')}</Text>
       <View
         style={{
           flexDirection: 'row',
@@ -31,14 +31,12 @@ export const DemandCard = () => {
             paddingVertical: padding,
             alignItems: 'center',
             width: '33%',
-            borderColor: colors.lightGrey,
+            borderColor: colors.grey50,
           }}
         >
-          <MaterialIcons name="insert-emoticon" size={24} color={colors.green} />
-          <Text style={{ ...texts.big, marginVertical: padding }}>{t('000')}</Text>
-          <Text style={{ ...texts.small, color: colors.darkGrey }}>
-            {t('Pedidos na última hora')}
-          </Text>
+          <MaterialIcons name="insert-emoticon" size={24} color={colors.green500} />
+          <Text style={{ ...texts.xxl, marginVertical: padding }}>{t('000')}</Text>
+          <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Pedidos na última hora')}</Text>
         </View>
         <View
           style={{
@@ -47,12 +45,12 @@ export const DemandCard = () => {
             paddingVertical: padding,
             alignItems: 'center',
             width: '33%',
-            borderColor: colors.lightGrey,
+            borderColor: colors.grey50,
           }}
         >
-          <MaterialIcons name="motorcycle" size={24} color={colors.green} />
-          <Text style={{ ...texts.big, marginVertical: padding }}>{t('000')}</Text>
-          <Text style={{ ...texts.small, color: colors.darkGrey }}>{t('Entregadores ativos')}</Text>
+          <MaterialIcons name="motorcycle" size={24} color={colors.green500} />
+          <Text style={{ ...texts.xxl, marginVertical: padding }}>{t('000')}</Text>
+          <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Entregadores ativos')}</Text>
         </View>
         <View
           style={{
@@ -61,14 +59,12 @@ export const DemandCard = () => {
             paddingVertical: padding,
             alignItems: 'center',
             width: '33%',
-            borderColor: colors.lightGrey,
+            borderColor: colors.grey50,
           }}
         >
-          <MaterialIcons name="local-dining" size={24} color={colors.green} />
-          <Text style={{ ...texts.big, marginVertical: padding }}>{t('000')}</Text>
-          <Text style={{ ...texts.small, color: colors.darkGrey }}>
-            {t('Restaurantes abertos')}
-          </Text>
+          <MaterialIcons name="local-dining" size={24} color={colors.green500} />
+          <Text style={{ ...texts.xxl, marginVertical: padding }}>{t('000')}</Text>
+          <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Restaurantes abertos')}</Text>
         </View>
       </View>
     </View>

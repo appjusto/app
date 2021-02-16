@@ -41,7 +41,7 @@ export default function () {
     <PaddedView
       style={{
         ...borders.default,
-        borderColor: colors.lightGrey,
+        borderColor: colors.grey50,
         backgroundColor: colors.white,
       }}
       half
@@ -57,19 +57,19 @@ export default function () {
             }}
           >
             <View>
-              <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Hoje')}</Text>
-              <Text style={{ ...texts.medium, color: colors.black }}>
+              <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Hoje')}</Text>
+              <Text style={{ ...texts.md, color: colors.black }}>
                 {formatCurrency(todaysOrdersFee)}
               </Text>
             </View>
             <View>
-              <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Semana')}</Text>
-              <Text style={{ ...texts.medium, color: colors.black }}>
+              <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Semana')}</Text>
+              <Text style={{ ...texts.md, color: colors.black }}>
                 {formatCurrency(weeksOrdersFee)}
               </Text>
             </View>
           </View>
-          <Text style={{ marginTop: halfPadding, ...texts.small, color: colors.darkGrey }}>
+          <Text style={{ marginTop: halfPadding, ...texts.xs, color: colors.grey700 }}>
             {t('Veja todos os seus ganhos')}
           </Text>
         </View>

@@ -27,11 +27,11 @@ export default function ({
   const backgroundColor = secondary
     ? colors.white
     : disabled || activityIndicator
-    ? colors.grey
-    : colors.green;
+    ? colors.grey500
+    : colors.green500;
   const borderColor =
-    disabled || activityIndicator ? colors.grey : secondary ? colors.black : colors.green;
-  const color = disabled ? (secondary ? colors.grey : colors.white) : colors.black;
+    disabled || activityIndicator ? colors.grey500 : secondary ? colors.black : colors.green500;
+  const color = disabled ? (secondary ? colors.grey500 : colors.white) : colors.black;
 
   return (
     <TouchableOpacity disabled={disabled} {...props}>
@@ -51,7 +51,7 @@ export default function ({
         ]}
       >
         <ShowIf test={!activityIndicator}>
-          {() => <Text style={{ ...texts.default, color }}>{title}</Text>}
+          {() => <Text style={{ ...texts.sm, color }}>{title}</Text>}
         </ShowIf>
         <ShowIf test={activityIndicator}>
           {() => <ActivityIndicator size="small" color={secondary ? colors.black : colors.white} />}

@@ -11,7 +11,7 @@ export const StepControlItem = React.forwardRef<View, Props>(
   ({ children, active = false, style, ...props }: Props, ref) => {
     return (
       <View ref={ref} style={[null, style]} {...props}>
-        <Text style={[texts.medium, !active && { color: colors.grey }]}>{children}</Text>
+        <Text style={[texts.md, !active && { color: colors.grey500 }]}>{children}</Text>
       </View>
     );
   }

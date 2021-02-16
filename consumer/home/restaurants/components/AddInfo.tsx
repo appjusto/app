@@ -15,7 +15,7 @@ export default function ({ value, onAddInfo }: Props) {
     <View style={{ paddingHorizontal: padding, marginBottom: padding }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: halfPadding }}>
         <Feather name="info" size={14} />
-        <Text style={{ ...texts.default, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
+        <Text style={{ ...texts.sm, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
       </View>
       <DefaultInput
         placeholder={t(

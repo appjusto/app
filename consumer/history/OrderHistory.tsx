@@ -102,7 +102,7 @@ export default function ({ navigation, route }: Props) {
         header={t('Seu histórico está vazio')}
         description={t('Você ainda não fez nenhum pedido')}
         icon={icons.motocycle}
-        background={colors.lightGrey}
+        background={colors.grey50}
       />
     );
   }
@@ -115,10 +115,14 @@ export default function ({ navigation, route }: Props) {
         stickySectionHeadersEnabled={false}
         renderSectionHeader={({ section }) => (
           <PaddedView
-            style={{ flexDirection: 'row', borderBottomColor: colors.grey, borderBottomWidth: 1 }}
+            style={{
+              flexDirection: 'row',
+              borderBottomColor: colors.grey500,
+              borderBottomWidth: 1,
+            }}
           >
             <Image source={icons.calendar} />
-            <Text style={{ ...texts.medium, marginLeft: padding }}>{section.title}</Text>
+            <Text style={{ ...texts.md, marginLeft: padding }}>{section.title}</Text>
           </PaddedView>
         )}
         renderItem={({ item }) => {

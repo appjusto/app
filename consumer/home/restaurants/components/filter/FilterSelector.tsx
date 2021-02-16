@@ -36,13 +36,13 @@ export default function ({ data, selected, onSelect, onFilter }: Props) {
                 borderRadius: 32,
                 // height: 32,
                 marginLeft: 8,
-                backgroundColor: item.id === selected?.id ? colors.green : colors.white,
+                backgroundColor: item.id === selected?.id ? colors.green500 : colors.white,
                 borderColor: colors.black,
               }}
             >
               <Text
                 style={{
-                  ...texts.default,
+                  ...texts.sm,
                   color: colors.black,
                 }}
               >

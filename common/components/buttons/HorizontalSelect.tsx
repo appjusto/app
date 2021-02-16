@@ -37,14 +37,14 @@ export default function ({ data, selected, onSelect, disabled }: Props) {
               borderRadius: 6,
               height: 40,
               marginRight: 4,
-              backgroundColor: item.id === selected?.id ? colors.lightGreen : colors.white,
-              borderColor: item.id === selected?.id ? colors.black : colors.grey,
+              backgroundColor: item.id === selected?.id ? colors.green100 : colors.white,
+              borderColor: item.id === selected?.id ? colors.black : colors.grey500,
             }}
           >
             <Text
               style={{
-                ...texts.default,
-                color: item.id === selected?.id ? colors.black : colors.darkGrey,
+                ...texts.sm,
+                color: item.id === selected?.id ? colors.black : colors.grey700,
               }}
             >
               {item.title}

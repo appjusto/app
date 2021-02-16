@@ -22,7 +22,7 @@ export const CourierDistanceBadge = ({ order }: Props) => {
     text = t('Entregador no local');
   }
   return (
-    <RoundedText backgroundColor={colors.lightGrey} color={colors.darkGrey} noBorder>
+    <RoundedText backgroundColor={colors.grey50} color={colors.grey700} noBorder>
       {text}
     </RoundedText>
   );

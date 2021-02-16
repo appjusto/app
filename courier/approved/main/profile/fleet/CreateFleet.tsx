@@ -78,8 +78,8 @@ export default function ({ navigation, route }: Props) {
     <ScrollView>
       <View style={{ ...screens.config }}>
         <PaddedView>
-          <Text style={{ ...texts.big }}>{t('Criar nova frota')}</Text>
-          <Text style={{ ...texts.default, color: colors.darkGrey, marginVertical: 8 }}>
+          <Text style={{ ...texts.xxl }}>{t('Criar nova frota')}</Text>
+          <Text style={{ ...texts.sm, color: colors.grey700, marginVertical: 8 }}>
             {t('Preencha as informações da sua frota')}
           </Text>
           <DefaultInput
@@ -94,7 +94,7 @@ export default function ({ navigation, route }: Props) {
             onChangeText={setName}
             onSubmitEditing={() => descriptionRef.current?.focus()}
           />
-          <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: padding }}>
+          <Text style={{ ...texts.xs, color: colors.grey700, marginBottom: padding }}>
             {name.length}/36 {t('caracteres')}
           </Text>
           <DefaultInput
@@ -109,7 +109,7 @@ export default function ({ navigation, route }: Props) {
             blurOnSubmit
             onChangeText={setDescription}
           />
-          <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: padding }}>
+          <Text style={{ ...texts.xs, color: colors.grey700, marginBottom: padding }}>
             {description.length}/140 {t('caracteres')}
           </Text>
           <View>

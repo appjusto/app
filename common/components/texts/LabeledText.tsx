@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInputProps } from 'react-native';
-
-import { borders, texts, colors } from '../../styles';
+import { StyleSheet, Text, TextInputProps, View } from 'react-native';
+import { borders, colors, texts } from '../../styles';
 
 export interface Props extends TextInputProps {
   title: string;
@@ -14,11 +13,11 @@ export default ({ title, children, style: externalStyle, disabled, ...props }: P
     style={[
       styles.container,
       externalStyle,
-      { borderColor: disabled ? colors.darkGrey : colors.grey },
+      { borderColor: disabled ? colors.grey700 : colors.grey500 },
     ]}
   >
     <View>
-      <Text style={[styles.label, { color: disabled ? colors.darkGrey : colors.darkGreen }]}>
+      <Text style={[styles.label, { color: disabled ? colors.grey700 : colors.green600 }]}>
         {title}
       </Text>
       <Text style={styles.text} {...props} numberOfLines={2}>
@@ -40,13 +39,13 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   label: {
-    ...texts.small,
-    color: colors.darkGreen,
+    ...texts.xs,
+    color: colors.green600,
     paddingVertical: 2,
   },
   text: {
-    ...texts.medium,
-    color: colors.darkGrey,
+    ...texts.md,
+    color: colors.grey700,
     flexWrap: 'wrap',
   },
 });

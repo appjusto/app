@@ -35,7 +35,7 @@ export default function ({ navigation, route }: Props) {
   if (isLoading)
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   // UI handlers
@@ -64,10 +64,10 @@ export default function ({ navigation, route }: Props) {
       <PaddedView style={{ flex: 1 }}>
         {/* header */}
         <View style={{ marginTop: padding, alignItems: 'center' }}>
-          <Text style={[texts.big, { color: colors.darkGreen }]}>
+          <Text style={[texts.xxl, { color: colors.green600 }]}>
             {t('Nova corrida para você!')}
           </Text>
-          <Text style={[texts.huge]}>{formatCurrency(matchRequest.courierFee)}</Text>
+          <Text style={[texts.xxxxl]}>{formatCurrency(matchRequest.courierFee)}</Text>
         </View>
         <View style={{ flex: 1 }} />
         {/* body */}
@@ -75,7 +75,7 @@ export default function ({ navigation, route }: Props) {
           {/* distance to origin */}
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image source={icons.transit} style={{ width: 32, height: 32, marginRight: padding }} />
-            <Text style={[texts.medium]}>
+            <Text style={[texts.md]}>
               {formatDistance(matchRequest.distanceToOrigin)} {t('até a retirada')}
             </Text>
           </View>
@@ -94,9 +94,9 @@ export default function ({ navigation, route }: Props) {
               style={{ width: 34, height: 44, marginRight: padding }}
             />
             <View style={{ flex: 1 }}>
-              <Text style={[texts.default, { color: colors.darkGreen }]}>{t('Retirada')}</Text>
+              <Text style={[texts.sm, { color: colors.green600 }]}>{t('Retirada')}</Text>
               <View style={{ flexDirection: 'row' }}>
-                <Text style={[texts.medium, { flexWrap: 'wrap' }]} numberOfLines={3}>
+                <Text style={[texts.md, { flexWrap: 'wrap' }]} numberOfLines={3}>
                   {matchRequest.originAddress}
                 </Text>
               </View>
@@ -117,9 +117,9 @@ export default function ({ navigation, route }: Props) {
               style={{ width: 34, height: 44, marginRight: padding }}
             />
             <View style={{ flex: 1 }}>
-              <Text style={[texts.default, { color: colors.darkGreen }]}>{t('Entrega')}</Text>
+              <Text style={[texts.sm, { color: colors.green600 }]}>{t('Entrega')}</Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                <Text style={[texts.medium, { flexWrap: 'wrap' }]} numberOfLines={3}>
+                <Text style={[texts.md, { flexWrap: 'wrap' }]} numberOfLines={3}>
                   {matchRequest.destinationAddress}
                 </Text>
               </View>
@@ -139,7 +139,7 @@ export default function ({ navigation, route }: Props) {
               source={icons.transitConclusion}
               style={{ width: 32, height: 32, marginRight: padding }}
             />
-            <Text style={[texts.medium]}>
+            <Text style={[texts.md]}>
               {formatDistance(matchRequest.totalDistance)} {t('no percurso total')}
             </Text>
           </View>

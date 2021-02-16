@@ -37,7 +37,7 @@ export default function ({ navigation, route }: Props) {
     // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
@@ -71,8 +71,8 @@ export default function ({ navigation, route }: Props) {
               alignItems: 'center',
             }}
           >
-            <Text style={{ ...texts.medium, ...texts.bold }}>{t('Valor recebido')}</Text>
-            <Text style={{ ...texts.mediumToBig }}>{formatCurrency(fee)}</Text>
+            <Text style={{ ...texts.md, ...texts.bold }}>{t('Valor recebido')}</Text>
+            <Text style={{ ...texts.xl }}>{formatCurrency(fee)}</Text>
           </View>
         </PaddedView>
         <HR height={padding} />

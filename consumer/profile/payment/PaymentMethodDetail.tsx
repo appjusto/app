@@ -63,8 +63,8 @@ export default function ({ route, navigation }: Props) {
       <DefaultButton
         style={{
           marginTop: padding,
-          backgroundColor: colors.darkGrey,
-          borderColor: colors.darkGrey,
+          backgroundColor: colors.grey700,
+          borderColor: colors.grey700,
         }}
         title={t('Excluir cartão')}
         onPress={deletePaymentMethodHandler}

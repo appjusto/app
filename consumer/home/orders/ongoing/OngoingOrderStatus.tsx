@@ -27,10 +27,8 @@ export const OngoingOrderStatus = ({ order }: Props) => {
   return (
     <View style={{ padding, alignItems: 'center' }}>
       <IconRequest />
-      <Text style={{ marginTop: padding, ...texts.mediumToBig }}>{header}</Text>
-      <Text style={{ ...texts.medium, color: colors.darkGrey, textAlign: 'center' }}>
-        {description}
-      </Text>
+      <Text style={{ marginTop: padding, ...texts.xl }}>{header}</Text>
+      <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>{description}</Text>
       {order.destination?.estimatedTimeOfArrival && (
         <RoundedText style={{ marginTop: padding }}>{`${t('Previsão de entrega: ')} ${formatTime(
           order.destination.estimatedTimeOfArrival

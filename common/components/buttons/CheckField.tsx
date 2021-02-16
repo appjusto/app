@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, Image, ViewProps } from 'react-native';
+import { Image, Text, View, ViewProps } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-
 import { checkboxActive, checkboxInactive } from '../../../assets/icons';
 import { texts } from '../../styles';
 
@@ -28,7 +27,7 @@ export default ({ onPress, text, style: externalStyle, checked = false }: Props)
           source={checked ? checkboxActive : checkboxInactive}
           style={{ height: 24, width: 24 }}
         />
-        <Text style={{ ...texts.small, marginLeft: 8 }}>{text}</Text>
+        <Text style={{ ...texts.xs, marginLeft: 8 }}>{text}</Text>
       </View>
     </TouchableWithoutFeedback>
   );

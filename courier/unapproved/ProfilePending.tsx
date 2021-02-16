@@ -109,25 +109,25 @@ export default function ({ navigation, route }: Props) {
       <ScrollView>
         {/* header */}
         <PaddedView>
-          <Text style={{ ...texts.big, marginBottom: 24 }}>{t('Cadastro de novo entregador')}</Text>
+          <Text style={{ ...texts.xxl, marginBottom: 24 }}>{t('Cadastro de novo entregador')}</Text>
           <DefaultButton
             title={t('Enviar cadastro')}
             onPress={submitHandler}
             disabled={!submitEnabled || busy}
             activityIndicator={busy}
           />
-          <Text style={[texts.default, { color: colors.darkGrey, paddingTop: 16 }]}>
+          <Text style={[texts.sm, { color: colors.grey700, paddingTop: 16 }]}>
             {t(
               'Preencha os dados a seguir e envie seu cadastro. Em até um dia você poderá começar a fazer suas entregas.'
             )}
           </Text>
-          <Text style={{ ...texts.default, color: colors.darkGreen, paddingTop: 16 }}>
+          <Text style={{ ...texts.sm, color: colors.green600, paddingTop: 16 }}>
             {stepsDone} {t('de')} {totalSteps} {t('dados preenchidos')}
           </Text>
         </PaddedView>
         <View
           style={{
-            borderBottomColor: colors.grey,
+            borderBottomColor: colors.grey500,
             borderStyle: 'solid',
             borderBottomWidth: 1,
             // marginTop: 16,

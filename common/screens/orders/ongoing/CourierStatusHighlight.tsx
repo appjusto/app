@@ -58,12 +58,12 @@ export default function ({ dispatchingState }: Props) {
             <Image source={icons.motocycleWhite} />
           </View>
           <View style={{ marginLeft: padding, flex: 1 }}>
-            <Text style={{ ...texts.default }}>{title}</Text>
+            <Text style={{ ...texts.sm }}>{title}</Text>
             <View style={{ flex: 1 }}>
               <Text
                 style={{
-                  ...texts.small,
-                  color: colors.darkGrey,
+                  ...texts.xs,
+                  color: colors.grey700,
                   flexWrap: 'wrap',
                 }}
                 numberOfLines={2}

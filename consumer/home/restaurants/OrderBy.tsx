@@ -66,7 +66,7 @@ export default function ({ navigation }: Props) {
                 borderBottomWidth: 1,
                 borderStyle: 'solid',
                 width: '100%',
-                borderColor: colors.grey,
+                borderColor: colors.grey500,
                 marginTop: halfPadding,
                 marginBottom: padding,
               }}
@@ -87,7 +87,7 @@ export default function ({ navigation }: Props) {
             borderBottomWidth: 1,
             borderStyle: 'solid',
             width: '100%',
-            borderColor: colors.grey,
+            borderColor: colors.grey500,
             marginTop: halfPadding,
             marginBottom: padding,
           }}
@@ -125,7 +125,7 @@ export default function ({ navigation }: Props) {
             borderBottomWidth: 1,
             borderStyle: 'solid',
             width: '100%',
-            borderColor: colors.grey,
+            borderColor: colors.grey500,
             marginTop: halfPadding,
             marginBottom: padding,
           }}

@@ -11,8 +11,8 @@ export default function () {
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
           <View style={{ height: 40, width: 40, borderRadius: 8, backgroundColor: colors.white }} />
           <View style={{ marginLeft: halfPadding }}>
-            <Text style={{ ...texts.medium }}>{t('Nome do restaurante')}</Text>
-            <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Tipo de comida')}</Text>
+            <Text style={{ ...texts.md }}>{t('Nome do restaurante')}</Text>
+            <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Tipo de comida')}</Text>
           </View>
         </View>
         {/* TODO: add image */}

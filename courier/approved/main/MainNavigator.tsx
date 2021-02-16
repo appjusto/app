@@ -79,7 +79,7 @@ export default function ({ navigation }: Props) {
       tabBarOptions={{
         activeTintColor: colors.black,
         inactiveTintColor: colors.black,
-        activeBackgroundColor: colors.green,
+        activeBackgroundColor: colors.green500,
         inactiveBackgroundColor: colors.white,
         style: { height: 60, justifyContent: 'center' },
         tabStyle: {
@@ -87,7 +87,7 @@ export default function ({ navigation }: Props) {
           height: 40,
           marginTop: halfPadding,
         },
-        labelStyle: { ...texts.small, marginBottom: 4 },
+        labelStyle: { ...texts.xs, marginBottom: 4 },
         labelPosition: 'beside-icon',
       }}
     >

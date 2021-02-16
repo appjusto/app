@@ -40,13 +40,13 @@ export default function ({ navigation, route }: Props) {
     <PaddedView style={{ ...screens.default }}>
       <View style={{ marginTop: 24, alignItems: 'center' }}>
         <Image source={icons.motocycle} />
-        <Text style={{ ...texts.big, marginVertical: 16 }}>{t('Corrida finalizada!')}</Text>
-        <Text style={{ ...texts.default, color: colors.darkGrey }}>{t('Valor recebido')}</Text>
-        <Text style={{ ...texts.big, marginTop: 4 }}>{formatCurrency(fee)}</Text>
+        <Text style={{ ...texts.xxl, marginVertical: 16 }}>{t('Corrida finalizada!')}</Text>
+        <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Valor recebido')}</Text>
+        <Text style={{ ...texts.xxl, marginTop: 4 }}>{formatCurrency(fee)}</Text>
       </View>
       <View style={{ flex: 1 }} />
       <View style={{ marginBottom: 42 }}>
-        <Text style={{ ...texts.medium, marginBottom: halfPadding }}>
+        <Text style={{ ...texts.md, marginBottom: halfPadding }}>
           {t('Tudo certo no cliente?')}
         </Text>
         <HorizontalSelect

@@ -61,7 +61,7 @@ export default function ({ navigation, route }: Props) {
   if (!issues) {
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
@@ -82,7 +82,7 @@ export default function ({ navigation, route }: Props) {
     <View style={{ ...screens.config }}>
       <KeyboardAwareScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
         <PaddedView style={{ flex: 1 }}>
-          <Text style={{ ...texts.big, marginBottom: padding }}>{t('Qual foi seu problema?')}</Text>
+          <Text style={{ ...texts.xxl, marginBottom: padding }}>{t('Qual foi seu problema?')}</Text>
           {issues.map((issue) => (
             <RadioButton
               key={issue.id}
@@ -93,8 +93,8 @@ export default function ({ navigation, route }: Props) {
           ))}
           <Text
             style={{
-              ...texts.default,
-              color: colors.darkGrey,
+              ...texts.sm,
+              color: colors.grey700,
               marginTop: 24,
               marginBottom: halfPadding,
             }}

@@ -87,7 +87,7 @@ export default function ({ navigation, route }: Props) {
     // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
@@ -163,8 +163,8 @@ export default function ({ navigation, route }: Props) {
         </View>
       </View>
       <View style={{ marginTop: padding, paddingHorizontal: padding }}>
-        <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Pedido de')}</Text>
-        <Text style={[texts.medium]}>
+        <Text style={[texts.xs, { color: colors.green600 }]}>{t('Pedido de')}</Text>
+        <Text style={[texts.md]}>
           {!isEmpty(order.consumer.name) ? order.consumer.name : t('Cliente')}
         </Text>
         <View
@@ -206,8 +206,8 @@ export default function ({ navigation, route }: Props) {
         }}
       >
         <View>
-          <Text style={[texts.small, { color: colors.darkGreen }]}>{addressLabel}</Text>
-          <Text style={[texts.small]}>{nextPlace?.address.main}</Text>
+          <Text style={[texts.xs, { color: colors.green600 }]}>{addressLabel}</Text>
+          <Text style={[texts.xs]}>{nextPlace?.address.main}</Text>
         </View>
         <View>
           <CourierDistanceBadge order={order} />
@@ -232,7 +232,7 @@ export default function ({ navigation, route }: Props) {
           <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>
             <SingleHeader title={t('Código de confirmação')} />
             <View style={{ paddingHorizontal: padding }}>
-              <Text style={{ ...texts.default, marginBottom: padding }}>
+              <Text style={{ ...texts.sm, marginBottom: padding }}>
                 {t('Digite o código de confirmação fornecido pelo cliente:')}
               </Text>
               <CodeInput value={code} onChange={setCode} />

@@ -47,7 +47,7 @@ export const StepControl = ({ labels, activeIndex = 0, onChange, style, ...props
                 style={{
                   width: 32,
                   height: 1,
-                  backgroundColor: activeIndex === i ? colors.black : colors.grey,
+                  backgroundColor: activeIndex === i ? colors.black : colors.grey500,
                 }}
               />
             )}

@@ -64,7 +64,7 @@ export default function ({ navigation, route }: Props) {
                   height: 60,
                 }}
               >
-                <Text style={{ ...texts.medium }}>{`${item.name} - ${item.id}`}</Text>
+                <Text style={{ ...texts.md }}>{`${item.name} - ${item.id}`}</Text>
               </View>
             </TouchableOpacity>
           );

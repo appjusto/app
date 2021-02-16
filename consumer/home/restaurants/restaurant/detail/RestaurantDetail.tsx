@@ -43,7 +43,7 @@ const RestaurantDetail = React.memo(({ navigation }: Props) => {
   if (!restaurant)
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   return (

@@ -63,16 +63,16 @@ export default function ({ route, navigation }: Props) {
             <RoundedProfileImg id={courierId} />
           </View>
           <View style={{ marginLeft: 12 }}>
-            <Text style={{ ...texts.medium, marginBottom: halfPadding }}>{courierName}</Text>
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>No appJusto desde</Text>
-            <Text style={{ ...texts.small }}>{courierJoined}</Text>
+            <Text style={{ ...texts.md, marginBottom: halfPadding }}>{courierName}</Text>
+            <Text style={{ ...texts.xs, color: colors.grey700 }}>No appJusto desde</Text>
+            <Text style={{ ...texts.xs }}>{courierJoined}</Text>
           </View>
         </PaddedView>
         <HR height={padding} />
         <PaddedView style={{ flex: 1 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Pill />
-            <Text style={{ ...texts.medium, ...texts.bold, marginLeft: 12 }}>
+            <Text style={{ ...texts.md, ...texts.bold, marginLeft: 12 }}>
               {t('Como foi a sua experiência com o entregador?')}
             </Text>
           </View>
@@ -91,8 +91,8 @@ export default function ({ route, navigation }: Props) {
                   width: 64,
                   ...borders.default,
                   borderRadius: 32,
-                  borderColor: colors.green,
-                  backgroundColor: reviewType === 'positive' ? colors.green : colors.white,
+                  borderColor: colors.green500,
+                  backgroundColor: reviewType === 'positive' ? colors.green500 : colors.white,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
@@ -107,9 +107,9 @@ export default function ({ route, navigation }: Props) {
                   width: 64,
                   ...borders.default,
                   borderRadius: 32,
-                  borderColor: colors.green,
+                  borderColor: colors.green500,
                   marginLeft: padding,
-                  backgroundColor: reviewType === 'negative' ? colors.green : colors.white,
+                  backgroundColor: reviewType === 'negative' ? colors.green500 : colors.white,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
@@ -118,7 +118,7 @@ export default function ({ route, navigation }: Props) {
               </View>
             </TouchableWithoutFeedback>
           </View>
-          <Text style={{ ...texts.medium, color: colors.darkGrey, marginBottom: halfPadding }}>
+          <Text style={{ ...texts.md, color: colors.grey700, marginBottom: halfPadding }}>
             {t(
               'Se preferir, descreva a sua experiência para outros clientes. Sua avaliação será anônima.'
             )}

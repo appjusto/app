@@ -38,14 +38,14 @@ export const OrderPayment = ({
                 alignItems: 'center',
               }}
             >
-              <Text style={{ ...texts.medium }}>{t('Forma de pagamento')}</Text>
+              <Text style={{ ...texts.md }}>{t('Forma de pagamento')}</Text>
               <Feather
                 name="edit-3"
                 size={12}
-                style={{ ...borders.default, borderColor: colors.lightGrey, padding: 8 }}
+                style={{ ...borders.default, borderColor: colors.grey50, padding: 8 }}
               />
             </View>
-            <Text style={{ ...texts.default, color: colors.darkGrey }}>
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>
               {`${t('Cartão de crédito')}: **** ${selectedPaymentMethod!.data.last_digits}`}
             </Text>
           </PaddedView>

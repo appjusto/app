@@ -38,8 +38,8 @@ export default React.forwardRef(
             <TouchableWithoutFeedback onPress={focus}>
               <Text
                 style={{
-                  ...texts.small,
-                  color: colors.darkGreen,
+                  ...texts.xs,
+                  color: colors.green600,
                   width: '100%',
                 }}
               >
@@ -50,8 +50,8 @@ export default React.forwardRef(
           <TextInput
             ref={ref}
             style={{
-              ...texts.medium,
-              color: colors.darkGrey,
+              ...texts.md,
+              color: colors.grey700,
 
               width: '100%',
             }}

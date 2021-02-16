@@ -17,15 +17,15 @@ export default function ({ place, title, onEdit }: Props) {
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
       <View>
-        <Text style={{ ...texts.small, color: colors.darkGreen }}>{title}</Text>
-        <Text style={{ ...texts.medium }}>{formatAddress(place.address!)}</Text>
+        <Text style={{ ...texts.xs, color: colors.green600 }}>{title}</Text>
+        <Text style={{ ...texts.md }}>{formatAddress(place.address!)}</Text>
         {place.address?.secondary && (
-          <Text style={{ ...texts.default }}>{place.address?.secondary ?? ''}</Text>
+          <Text style={{ ...texts.sm }}>{place.address?.secondary ?? ''}</Text>
         )}
         {!isEmpty(place.additionalInfo) && (
-          <Text style={{ ...texts.small }}>{place.additionalInfo}</Text>
+          <Text style={{ ...texts.xs }}>{place.additionalInfo}</Text>
         )}
-        <Text style={{ ...texts.small }}>{place.intructions}</Text>
+        <Text style={{ ...texts.xs }}>{place.intructions}</Text>
       </View>
       {onEdit && (
         <View style={{ alignSelf: 'center' }}>
@@ -33,7 +33,7 @@ export default function ({ place, title, onEdit }: Props) {
             <Feather
               name="edit-3"
               size={12}
-              style={{ ...borders.default, borderColor: colors.lightGrey, padding: 8 }}
+              style={{ ...borders.default, borderColor: colors.grey50, padding: 8 }}
             />
           </TouchableOpacity>
         </View>

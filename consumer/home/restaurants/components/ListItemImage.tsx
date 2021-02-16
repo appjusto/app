@@ -13,7 +13,7 @@ export const ListItemImage = ({ uri, size = 80 }: Props) => {
       style={{
         width: size,
         height: size,
-        backgroundColor: colors.lightGrey,
+        backgroundColor: colors.grey50,
         ...borders.default,
         borderColor: colors.white,
       }}

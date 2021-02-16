@@ -78,7 +78,7 @@ export default function ({ navigation, route }: Props) {
   if (!order) {
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
@@ -123,10 +123,10 @@ export default function ({ navigation, route }: Props) {
         <RoundedProfileImg flavor="courier" id={order.courier?.id} />
         <View style={{ flex: 1, marginLeft: padding }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={[texts.medium]}>{order.courier?.name}</Text>
+            <Text style={[texts.md]}>{order.courier?.name}</Text>
           </View>
-          <Text style={[texts.small, { color: colors.darkGreen }]}>{addressLabel}</Text>
-          <Text style={[texts.small]}>{nextPlace?.address.main ?? ''}</Text>
+          <Text style={[texts.xs, { color: colors.green600 }]}>{addressLabel}</Text>
+          <Text style={[texts.xs]}>{nextPlace?.address.main ?? ''}</Text>
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View>
@@ -135,7 +135,7 @@ export default function ({ navigation, route }: Props) {
               onPress={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
               style={{ marginTop: 12 }}
             >
-              <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Alterar')}</Text>
+              <Text style={[texts.xs, { color: colors.green600 }]}>{t('Alterar')}</Text>
             </TouchableOpacity>
           </View>
         </View>

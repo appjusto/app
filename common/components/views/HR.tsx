@@ -1,6 +1,5 @@
 import React from 'react';
 import { View } from 'react-native';
-
 import { colors } from '../../styles';
 
 type Props = {
@@ -9,5 +8,5 @@ type Props = {
 };
 
 export default function ({ color, height }: Props) {
-  return <View style={{ backgroundColor: color ?? colors.lightGrey, height: height ?? 1 }} />;
+  return <View style={{ backgroundColor: color ?? colors.grey50, height: height ?? 1 }} />;
 }

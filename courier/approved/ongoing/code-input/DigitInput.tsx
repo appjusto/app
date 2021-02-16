@@ -16,7 +16,7 @@ export const DigitInput = React.forwardRef(
           ref={externalRef ? (externalRef as React.RefObject<TextInput>) : null}
           style={[
             {
-              ...texts.default,
+              ...texts.sm,
               fontSize: 36,
               lineHeight: 36,
               textAlign: 'center',

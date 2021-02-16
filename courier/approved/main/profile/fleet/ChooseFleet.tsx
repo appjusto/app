@@ -28,7 +28,7 @@ export default function ({ navigation, route }: Props) {
   if (!courier.fleet) {
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
@@ -37,11 +37,11 @@ export default function ({ navigation, route }: Props) {
     <ScrollView style={{ ...screens.config }}>
       <View style={{ flex: 1 }}>
         <PaddedView>
-          <Text style={{ ...texts.big, marginBottom: padding }}>{t('Sua frota atual')}</Text>
+          <Text style={{ ...texts.xxl, marginBottom: padding }}>{t('Sua frota atual')}</Text>
           <Text
             style={{
-              ...texts.default,
-              color: colors.darkGrey,
+              ...texts.sm,
+              color: colors.grey700,
               marginBottom: 24,
             }}
           >

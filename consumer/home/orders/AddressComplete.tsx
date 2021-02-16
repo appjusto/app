@@ -166,7 +166,7 @@ export default function ({ navigation, route }: Props) {
           if (section.key === 'search-results' && isLoading)
             return <ActivityIndicator size="small" color={colors.black} />;
           if (section.data.length > 0)
-            return <Text style={{ ...texts.small, color: colors.darkGrey }}>{section.title}</Text>;
+            return <Text style={{ ...texts.xs, color: colors.grey700 }}>{section.title}</Text>;
           return null;
         }}
         renderItem={({ item }) => (
@@ -178,8 +178,8 @@ export default function ({ navigation, route }: Props) {
                 justifyContent: 'center',
               }}
             >
-              <Text style={{ ...texts.medium }}>{item.main}</Text>
-              <Text style={{ ...texts.small }}>{item.secondary}</Text>
+              <Text style={{ ...texts.md }}>{item.main}</Text>
+              <Text style={{ ...texts.xs }}>{item.secondary}</Text>
             </View>
           </TouchableOpacity>
         )}

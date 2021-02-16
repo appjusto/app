@@ -66,11 +66,11 @@ export default function ({ order, onSelect }: Props) {
                 }}
               >
                 <View>
-                  <Text style={{ ...texts.default }}>{title}</Text>
+                  <Text style={{ ...texts.sm }}>{title}</Text>
                   <Text
                     style={{
-                      ...texts.small,
-                      color: colors.darkGrey,
+                      ...texts.xs,
+                      color: colors.grey700,
                       flexWrap: 'wrap',
                       maxWidth: '85%',
                     }}
