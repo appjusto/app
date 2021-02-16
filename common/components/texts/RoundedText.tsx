@@ -6,6 +6,7 @@ interface Props extends TextProps {
   children: string;
   color?: string;
   backgroundColor?: string;
+  leftIcon?: React.ReactNode;
   noBorder?: boolean;
 }
 
@@ -13,6 +14,7 @@ export default function ({
   color,
   backgroundColor: bg,
   children,
+  leftIcon,
   noBorder,
   style,
   ...props
@@ -24,6 +26,8 @@ export default function ({
       <View
         style={[
           {
+            flexDirection: 'row',
+            alignItems: 'center',
             alignSelf: 'flex-start',
             paddingVertical: 4,
             paddingHorizontal: halfPadding,
@@ -36,6 +40,7 @@ export default function ({
         ]}
         {...props}
       >
+        {leftIcon}
         <Text style={[texts.small, { textAlign: 'center', color: tintColor }]}>{children}</Text>
       </View>
     </View>
