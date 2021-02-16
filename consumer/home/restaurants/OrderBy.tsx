@@ -1,7 +1,6 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { View } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, View } from 'react-native';
 import CheckField from '../../../common/components/buttons/CheckField';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import RoundedText from '../../../common/components/texts/RoundedText';

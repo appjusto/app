@@ -1,6 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { FlatList, TouchableOpacity, View } from 'react-native';
 import useCuisines from '../../../../common/store/api/platform/hooks/useCuisines';
 import { halfPadding, padding } from '../../../../common/styles';
 import CuisinesBox from './CuisinesBox';

@@ -1,7 +1,6 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Text, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, Text, View } from 'react-native';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { colors, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';

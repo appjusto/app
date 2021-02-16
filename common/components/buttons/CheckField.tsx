@@ -1,6 +1,5 @@
 import React from 'react';
-import { Text, View, ViewProps } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { Text, TouchableWithoutFeedback, View, ViewProps } from 'react-native';
 import { colors, halfPadding, texts } from '../../styles';
 
 interface Props extends ViewProps {

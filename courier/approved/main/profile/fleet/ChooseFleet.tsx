@@ -1,8 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';

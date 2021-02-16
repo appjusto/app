@@ -1,7 +1,6 @@
 import { Order, WithId } from 'appjusto-types';
 import React from 'react';
-import { Image, Linking, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Image, Linking, TouchableOpacity, View } from 'react-native';
 import * as icons from '../../../assets/icons';
 import { borders, colors, halfPadding } from '../../../common/styles';
 import { getNavigationLinkTo, NavigationApp } from './navigation';

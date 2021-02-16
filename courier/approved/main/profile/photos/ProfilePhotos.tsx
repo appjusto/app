@@ -4,8 +4,16 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import React from 'react';
-import { Dimensions, Image, ImageURISource, StyleSheet, Text, View } from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import {
+  Dimensions,
+  Image,
+  ImageURISource,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../../assets/icons';

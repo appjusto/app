@@ -1,8 +1,7 @@
 import { Feather } from '@expo/vector-icons';
 import { PushMessage } from 'appjusto-types';
 import React from 'react';
-import { Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { useQuery } from 'react-query';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';

@@ -1,7 +1,6 @@
 import { Complement, WithId } from 'appjusto-types';
 import React from 'react';
-import { Text, View } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { Text, TouchableWithoutFeedback, View } from 'react-native';
 import { QuantityButton } from '../../../../../common/components/buttons/QuantityButton';
 import { useProductComplementImageURI } from '../../../../../common/store/api/business/hooks/useProductComplementImageURI';
 import { useContextBusinessId } from '../../../../../common/store/context/business';

@@ -1,7 +1,6 @@
 import { Order, WithId } from 'appjusto-types';
 import React from 'react';
-import { Image, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import * as icons from '../../../../assets/icons';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';

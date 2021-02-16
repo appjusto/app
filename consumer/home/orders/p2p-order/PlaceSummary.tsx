@@ -2,8 +2,7 @@ import { Feather } from '@expo/vector-icons';
 import { Place } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { borders, colors, texts } from '../../../../common/styles';
 import { formatAddress } from '../../../../common/utils/formatters';
 

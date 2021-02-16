@@ -1,6 +1,5 @@
 import React, { ReactNode, useCallback, useRef } from 'react';
-import { Text, TextInput, TextInputProps, View } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { Text, TextInput, TextInputProps, TouchableWithoutFeedback, View } from 'react-native';
 import { borders, colors, texts } from '../../styles';
 import PaddedView from '../containers/PaddedView';
 

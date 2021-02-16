@@ -1,6 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { QuantityButton } from '../../../../../common/components/buttons/QuantityButton';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
 import { colors, padding, texts } from '../../../../../common/styles';
