@@ -10,7 +10,6 @@ import { t } from '../../strings';
 import { LoggedParamList } from '../types';
 import Home from './Home';
 import { OrderNavigator } from './orders/common/OrderNavigator';
-import CreateOrderP2P from './orders/p2p-order/CreateOrderP2P';
 import RestaurantsNavigator from './restaurants/RestaurantsNavigator';
 import { HomeNavigatorParamList } from './types';
 
@@ -47,11 +46,6 @@ export default function ({ navigation }: Props) {
       })}
     >
       <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
-      <Stack.Screen
-        name="CreateOrderP2P"
-        component={CreateOrderP2P}
-        options={{ title: t('Novo pedido') }}
-      />
       <Stack.Screen name="Chat" component={Chat} options={{ title: t('Chat') }} />
       <Stack.Screen
         name="PermissionDeniedFeedback"
