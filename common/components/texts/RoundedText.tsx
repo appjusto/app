@@ -20,22 +20,24 @@ export default function ({
   const tintColor = color ?? colors.black;
   const backgroundColor = bg ? bg : colors.white;
   return (
-    <View
-      style={[
-        {
-          alignSelf: 'flex-start',
-          paddingVertical: 4,
-          paddingHorizontal: halfPadding,
-          ...borders.default,
-          borderRadius: 32,
-          borderColor: noBorder ? colors.lightGrey : tintColor,
-          backgroundColor,
-        },
-        style,
-      ]}
-      {...props}
-    >
-      <Text style={[texts.small, { textAlign: 'center', color: tintColor }]}>{children}</Text>
+    <View>
+      <View
+        style={[
+          {
+            alignSelf: 'flex-start',
+            paddingVertical: 4,
+            paddingHorizontal: halfPadding,
+            ...borders.default,
+            borderRadius: 32,
+            borderColor: noBorder ? colors.lightGrey : tintColor,
+            backgroundColor,
+          },
+          style,
+        ]}
+        {...props}
+      >
+        <Text style={[texts.small, { textAlign: 'center', color: tintColor }]}>{children}</Text>
+      </View>
     </View>
   );
 }
