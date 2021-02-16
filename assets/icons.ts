@@ -33,7 +33,6 @@ const logoAppjustoBgWhite = require('./icons/logo-appjusto-bg-white.png');
 const iconOrders = require('./icons/orders.png');
 const iconSearch = require('./icons/search.png');
 const iconUser = require('./icons/user.png');
-const iconFilter = require('./icons/filter.png');
 const restCardIcon = require('./icons/card-icon.png');
 
 export const checklistTick = iconChecklistTick;
@@ -70,7 +69,6 @@ export const googleMaps = iconGoogleMaps;
 export const waze = iconWaze;
 export const search = iconSearch;
 export const iconSad = iconSadYellow;
-export const filter = iconFilter;
 export const cardIcon = restCardIcon;
 export const motoIntro = illustrationMotoIntro;
 
@@ -110,6 +108,5 @@ export default [
   waze,
   search,
   iconSad,
-  filter,
   motoIntro,
 ];

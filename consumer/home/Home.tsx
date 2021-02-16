@@ -8,6 +8,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import * as icons from '../../assets/icons';
 import { ApiContext } from '../../common/app/context';
+import RadioButton from '../../common/components/buttons/RadioButton';
 import PaddedView from '../../common/components/containers/PaddedView';
 import useLastKnownLocation from '../../common/hooks/useLastKnownLocation';
 import HomeCard from '../../common/screens/home/cards/HomeCard';
@@ -71,6 +72,8 @@ export default function ({ navigation }: Props) {
       {/* <StatusBar /> */}
       <ScrollView>
         <ConsumerHomeControls navigation={navigation} />
+        <RadioButton title="AA" onPress={() => null} />
+        <RadioButton title="AA" checked onPress={() => null} />
         <PaddedView>
           <HomeOngoingDeliveries
             orders={ongoingOrders}
