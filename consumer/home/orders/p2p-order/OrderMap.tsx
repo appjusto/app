@@ -21,11 +21,7 @@ export default function ({ order }: Props) {
   });
 
   return (
-    <DefaultMap
-      style={{ width: '100%', height: '100%' }}
-      coordinates={routeCoordinates}
-      fitToElements
-    >
+    <DefaultMap style={{ flex: 1, width: '100%' }} coordinates={routeCoordinates} fitToElements>
       <Marker coordinate={origin.location!} identifier="origin" />
       <Marker coordinate={destination.location!} identifier="destination" />
       {courier?.location && <Marker coordinate={courier.location} />}

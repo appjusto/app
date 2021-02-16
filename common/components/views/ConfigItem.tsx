@@ -1,8 +1,7 @@
 import React, { ReactNode } from 'react';
-import { TouchableOpacity, View, Text, Image } from 'react-native';
-
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { checklistTick } from '../../../assets/icons';
-import { colors, texts, padding } from '../../styles';
+import { colors, padding, texts } from '../../styles';
 import PaddedView from '../containers/PaddedView';
 import ArrowBox from './ArrowBox';
 import ShowIf from './ShowIf';
@@ -65,7 +64,9 @@ export default function ({
           </View>
         </PaddedView>
         {children && (
-          <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>{children}</View>
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>{children}</View>
+          </View>
         )}
       </View>
     </TouchableOpacity>

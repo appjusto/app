@@ -7,13 +7,13 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { ApiContext } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import { StepControl } from '../../../../common/components/controls/step-control/StepControl';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../../common/components/texts/LabeledText';
 import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import { doublePadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { OrderSummary } from '../summary/OrderSummary';
-import OrderStep from './OrderStep';
 import { Step } from './types';
 
 type Props = {
@@ -121,7 +121,12 @@ export default function ({
   const verticalPadding = isDeviceTaller ? doublePadding : padding;
   return (
     <View style={{ ...screens.default }}>
-      <OrderStep step={step} changeStepHandler={setPage} />
+      <StepControl
+        style={{ padding }}
+        labels={[t('Retirada'), t('Entrega'), t('Confirmação')]}
+        activeIndex={step}
+        onChange={setPage}
+      />
 
       <ViewPager ref={viewPager} style={{ flex: 1 }} onPageScroll={onPageScroll}>
         {/* origin */}
