@@ -109,6 +109,9 @@ export default function ({ navigation, route }: Props) {
       setLoading(false);
     })();
   };
+  const { type, dispatchingState, status } = order;
+  const nextStepDisabled =
+    isLoading || (type === 'food' && dispatchingState === 'arrived-pickup' && status !== 'ready');
   const nextStepLabel = (() => {
     const dispatchingState = order?.dispatchingState;
     if (dispatchingState === 'going-pickup') {
@@ -123,7 +126,6 @@ export default function ({ navigation, route }: Props) {
     return '';
   })();
   const nextPlace = courierNextPlace(order);
-  const { dispatchingState } = order;
   const addressLabel = (() => {
     if (dispatchingState === 'going-pickup') {
       return t('Retirada em');
@@ -219,7 +221,7 @@ export default function ({ navigation, route }: Props) {
             title={nextStepLabel}
             onPress={nextStatepHandler}
             activityIndicator={isLoading}
-            disabled={isLoading}
+            disabled={nextStepDisabled}
             style={{ marginBottom: padding }}
           />
         )}
