@@ -66,7 +66,7 @@ export default function ({ navigation, route }: Props) {
     const { type, status } = order;
     if (status === 'quote') {
       if (type === 'p2p') {
-        navigation.navigate('CreateOrderP2P', { orderId });
+        navigation.navigate('OrderNavigator', { screen: 'CreateOrderP2P', params: { orderId } });
       } else {
         navigation.navigate('RestaurantsNavigator', {
           screen: 'RestaurantNavigator',
