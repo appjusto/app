@@ -3,9 +3,9 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
+import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { isOrderOngoing } from '../../../common/store/order/selectors';
 import { borders, colors, padding, screens } from '../../../common/styles';
@@ -61,7 +61,7 @@ export default ({ navigation, route }: Props) => {
     <FeedbackView
       header={t('Pedido em andamento')}
       description={description}
-      icon={icons.motocycle}
+      icon={<IconMotocycle />}
     >
       <DefaultButton
         title={t('Cancelar pedido')}

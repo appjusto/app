@@ -6,13 +6,13 @@ import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
-import { motocycle } from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import FeedbackView from '../../../common/components/views/FeedbackView';
+import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
@@ -72,7 +72,7 @@ export default function ({ navigation, route }: Props) {
         description={t(
           'Em breve entraremos em contato com você para relatar a resolução do seu problema.'
         )}
-        icon={motocycle}
+        icon={<IconMotocycle />}
       >
         <DefaultButton title={t('Voltar')} onPress={() => navigation.goBack()} />
       </FeedbackView>

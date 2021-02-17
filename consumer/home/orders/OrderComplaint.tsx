@@ -6,13 +6,13 @@ import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
-import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import FeedbackView from '../../../common/components/views/FeedbackView';
+import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { showToast } from '../../../common/store/ui/actions';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
@@ -53,7 +53,7 @@ export default function ({ route, navigation }: Props) {
         <View style={{ flex: 1, ...borders.default }} />
         <FeedbackView
           header={t('Obrigado pelas informações. Iremos analisar o ocorrido.')}
-          icon={icons.motocycle}
+          icon={<IconMotocycle />}
           background={colors.grey50}
         />
         <View style={{ flex: 1, ...borders.default }} />

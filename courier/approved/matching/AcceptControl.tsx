@@ -1,12 +1,12 @@
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { Animated, Dimensions, Image, Text, View, ViewProps } from 'react-native';
+import { Animated, Dimensions, Text, View, ViewProps } from 'react-native';
 import {
   GestureEvent,
   PanGestureHandler,
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
-import * as icons from '../../../assets/icons';
+import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import { borders, colors, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
@@ -86,7 +86,7 @@ export default function ({ acceptHandler, rejectHandler, style, ...props }: Prop
               transform: [{ translateX }],
             }}
           >
-            <Image source={icons.motocycle} />
+            <IconMotocycle flipped />
           </Animated.View>
         </PanGestureHandler>
       </View>

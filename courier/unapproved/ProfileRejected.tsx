@@ -1,8 +1,8 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useCallback, useContext, useEffect } from 'react';
+import { Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-
 import * as icons from '../../assets/icons';
 import { ApiContext, AppDispatch } from '../../common/app/context';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
@@ -49,7 +49,7 @@ export default function ({ navigation }: Props) {
     <FeedbackView
       header={t('Seu cadastro foi recusado :(')}
       description={courier.profileIssues?.join('\n') ?? 'Entre em contato com nosso suporte.'}
-      icon={icons.coneYellow}
+      icon={<Image source={icons.coneYellow} />}
     >
       <DefaultButton
         title={t('Editar cadastro')}

@@ -10,6 +10,7 @@ import RoundedText from '../../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
 import ShowIf from '../../../../common/components/views/ShowIf';
+import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
 import useObserveOrders from '../../../../common/store/api/order/hooks/useObserveOrders';
 import {
   getMonthsWithOrdersInYear,
@@ -66,7 +67,7 @@ export default function ({ navigation, route }: Props) {
       <FeedbackView
         header={t('Seu histórico está vazio')}
         description={t('Você ainda não fez nenhuma corrida')}
-        icon={icons.motocycle}
+        icon={<IconMotocycle />}
         background={colors.grey50}
       />
     );

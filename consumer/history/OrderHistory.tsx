@@ -10,6 +10,7 @@ import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
 import FeedbackView from '../../common/components/views/FeedbackView';
 import StatusBadge from '../../common/components/views/StatusBadge';
+import { IconMotocycle } from '../../common/icons/icon-motocycle';
 import useObserveOrders from '../../common/store/api/order/hooks/useObserveOrders';
 import {
   getOrderCreatedOn,
@@ -101,7 +102,7 @@ export default function ({ navigation, route }: Props) {
       <FeedbackView
         header={t('Seu histórico está vazio')}
         description={t('Você ainda não fez nenhum pedido')}
-        icon={icons.motocycle}
+        icon={<IconMotocycle />}
         background={colors.grey50}
       />
     );

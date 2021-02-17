@@ -2,7 +2,7 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Image, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -52,7 +52,7 @@ export default ({ navigation, route }: Props) => {
       <FeedbackView
         header={t('Tem certeza que deseja cancelar?')}
         description={description}
-        icon={icons.coneYellow}
+        icon={<Image source={icons.coneYellow} />}
       />
       <View
         style={{
