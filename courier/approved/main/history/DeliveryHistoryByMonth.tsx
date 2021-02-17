@@ -7,7 +7,7 @@ import { FlatList, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import StatusBadge from '../../../../common/components/views/StatusBadge';
-import useObserveOrders from '../../../../common/store/api/order/hooks/useObserveOrders';
+import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
 import {
   getOrderCreatedOn,
   getOrdersWithFilter,

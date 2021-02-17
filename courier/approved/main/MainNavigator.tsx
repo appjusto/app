@@ -6,7 +6,7 @@ import { Image } from 'react-native';
 import { useQuery, useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../assets/icons';
-import useObserveOngoingOrders from '../../../common/store/api/order/hooks/useObserveOngoingOrders';
+import { useObserveOngoingOrders } from '../../../common/store/api/order/hooks/useObserveOngoingOrders';
 import { getUser } from '../../../common/store/user/selectors';
 import { colors, halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
