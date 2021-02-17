@@ -50,6 +50,8 @@ export default class FleetApi {
   }
 
   async createFleet(fleet: Partial<Fleet>) {
-    return this.refs.getFleetsRef().add(fleet);
+    const doc = this.refs.getFleetsRef().doc();
+    await doc.set(fleet);
+    return doc;
   }
 }

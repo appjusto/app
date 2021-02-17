@@ -2,7 +2,7 @@ import { Ordering, WithId } from 'appjusto-types';
 
 const ordered = <T extends object>(items: WithId<T>[], order: string[]): WithId<T>[] => {
   return items
-    .filter((i) => order.indexOf(i.id) !== -1) // filtering out first
+    .filter((i) => order.includes(i.id)) // filtering out first
     .sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
 };
 

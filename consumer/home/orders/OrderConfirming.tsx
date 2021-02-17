@@ -3,22 +3,21 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { useSelector } from 'react-redux';
-import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
+import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
-import { getUIBusy } from '../../../common/store/ui/selectors';
+import { isOrderOngoing } from '../../../common/store/order/selectors';
 import { borders, colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedParamList } from '../../types';
 import { OrderNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<OrderNavigatorParamList, 'OrderMatching'>,
+  StackNavigationProp<OrderNavigatorParamList, 'OrderConfirming'>,
   BottomTabNavigationProp<LoggedParamList>
 >;
-type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'OrderMatching'>;
+type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'OrderConfirming'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -28,21 +27,20 @@ type Props = {
 export default ({ navigation, route }: Props) => {
   // params
   const { orderId } = route.params;
-  // app state
-  const busy = useSelector(getUIBusy);
   // screen state
   const { order } = useObserveOrder(orderId);
 
   // side effects
   React.useEffect(() => {
-    if (order?.status === 'canceled') {
+    if (!order) return;
+    if (order.status === 'canceled') {
       navigation.popToTop();
-    } else if (order?.status === 'dispatching') {
+    } else if (isOrderOngoing(order)) {
       navigation.replace('OngoingOrder', {
         orderId,
       });
-    } else if (order?.dispatchingState === 'unmatched') {
-      navigation.navigate('OrderUnmatched', { orderId });
+    } else if (order.dispatchingState === 'no-match') {
+      navigation.navigate('OrderNoMatch', { orderId });
     }
   }, [order]);
 
@@ -51,21 +49,23 @@ export default ({ navigation, route }: Props) => {
     // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
+  const description =
+    order.type === 'food'
+      ? t('Aguarde enquanto o restaurante confirma seu pedido...')
+      : t('A cobrança só será efetuada caso um entregador aceitar o seu pedido.');
   return (
     <FeedbackView
-      header={t('Procurando entregadores...')}
-      description={t('A cobrança só será efetuada caso um entregador aceitar o seu pedido.')}
-      icon={icons.motocycle}
+      header={t('Pedido em andamento')}
+      description={description}
+      icon={<IconMotocycle />}
     >
       <DefaultButton
         title={t('Cancelar pedido')}
         onPress={() => navigation.navigate('ConfirmCancelOrder', { orderId })}
-        activityIndicator={busy}
-        disabled={busy}
         style={{
           ...borders.default,
           marginBottom: padding,
@@ -74,11 +74,6 @@ export default ({ navigation, route }: Props) => {
         }}
       />
       <DefaultButton title={t('Voltar para o início')} onPress={() => navigation.popToTop()} />
-      {/* testing the new screen */}
-      {/* <DefaultButton
-        title={t('Nenhum entregador')}
-        onPress={() => navigation.navigate('OrderUnmatched', { orderId })}
-      /> */}
     </FeedbackView>
   );
 };

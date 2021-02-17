@@ -2,9 +2,8 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as Location from 'expo-location';
-import React, { useContext, useEffect, useState } from 'react';
-import { View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import React from 'react';
+import { ScrollView, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../assets/icons';
 import { ApiContext } from '../../common/app/context';
@@ -34,34 +33,37 @@ type Props = {
 
 export default function ({ navigation }: Props) {
   // context
-  const api = useContext(ApiContext);
-
-  // app state
+  const api = React.useContext(ApiContext);
+  // redux store
   const ongoingOrders = useSelector(getOrders);
-
   // state
   const { coords, permissionResponse } = useLastKnownLocation();
-  const [availableCouriers, setAvailableCouriers] = useState(0);
-
+  const [availableCouriers, setAvailableCouriers] = React.useState(0);
   // side effects
   // request location permission
-  useEffect(() => {
+  React.useEffect(() => {
     if (permissionResponse?.status === Location.PermissionStatus.DENIED) {
       navigation.navigate('PermissionDeniedFeedback', {
         title: t('Precisamos acessar sua localização'),
-        subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
+        subtitle: t(
+          'Para que possamos determinar o trajeto com precisão, precisamos que você dê acesso ao AppJusto para usar sua localização.'
+        ),
       });
     }
   }, [permissionResponse]);
-
-  useEffect(() => {
+  // fetch total couriers
+  const fetchTotalCouriersNearby = async () => {
     if (!coords) return;
-    (async () => {
-      const { total } = await api.courier().fetchTotalCouriersNearby(coords);
-      setAvailableCouriers(total);
-    })();
+    const { total } = await api.courier().fetchTotalCouriersNearby(coords);
+    setAvailableCouriers(total);
+  };
+  React.useEffect(() => {
+    navigation.addListener('focus', fetchTotalCouriersNearby);
+    return () => navigation.removeListener('focus', fetchTotalCouriersNearby);
+  });
+  React.useEffect(() => {
+    fetchTotalCouriersNearby();
   }, [coords]);
-
   // UI
   return (
     <View style={[screens.default, screens.headless]}>

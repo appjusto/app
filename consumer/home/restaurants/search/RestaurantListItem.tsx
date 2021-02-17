@@ -24,7 +24,7 @@ export default function ({ restaurant, cuisine, distance }: Props) {
           borderBottomWidth: 1,
           borderStyle: 'solid',
           width: '100%',
-          borderColor: colors.grey,
+          borderColor: colors.grey500,
         }}
       />
       <View
@@ -36,15 +36,13 @@ export default function ({ restaurant, cuisine, distance }: Props) {
         }}
       >
         <View style={{ marginTop: 12 }}>
-          <Text style={{ ...texts.default }}>{restaurant.name}</Text>
-          <Text style={{ ...texts.small, color: colors.darkGreen }}>{t(cuisine ?? '')}</Text>
+          <Text style={{ ...texts.sm }}>{restaurant.name}</Text>
+          <Text style={{ ...texts.xs, color: colors.green600 }}>{t(cuisine ?? '')}</Text>
           {distance && !outOfRange && (
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>
-              {formatDistance(distance)}
-            </Text>
+            <Text style={{ ...texts.xs, color: colors.grey700 }}>{formatDistance(distance)}</Text>
           )}
           {distance && outOfRange && (
-            <RoundedText backgroundColor={colors.lightGrey} color={colors.darkGrey} noBorder>
+            <RoundedText backgroundColor={colors.grey50} color={colors.grey700} noBorder>
               {`${t('Raio de entrega: ')} ${formatDistance(restaurant.deliveryRange! * 1000)}`}
             </RoundedText>
           )}

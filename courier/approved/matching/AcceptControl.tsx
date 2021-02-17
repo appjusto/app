@@ -1,86 +1,100 @@
 import { Feather } from '@expo/vector-icons';
-import Slider from '@react-native-community/slider';
-import React, { useCallback, useRef } from 'react';
-import { Dimensions, Text, View, ViewProps } from 'react-native';
+import React from 'react';
+import { Animated, Dimensions, LayoutAnimation, Text, View, ViewProps } from 'react-native';
+import {
+  GestureEvent,
+  PanGestureHandler,
+  PanGestureHandlerEventPayload,
+} from 'react-native-gesture-handler';
+import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import { borders, colors, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
 interface Props extends ViewProps {
-  acceptHandler: () => void;
-  rejectHandler: () => void;
-  disabled: boolean;
+  onAccept: () => void;
+  onReject: () => void;
 }
 
-export default function ({ acceptHandler, rejectHandler, disabled }: Props) {
-  // refs
-  const sliderRef = useRef<Slider>(null);
-  // helpers
-  const updateSliderValue = (value: number) => sliderRef.current?.setNativeProps({ value });
-  // handlers
-  const completeHandler = useCallback((value) => {
-    if (value <= 10) {
-      updateSliderValue(0);
-      rejectHandler();
-    } else if (value >= 90) {
-      updateSliderValue(100);
-      acceptHandler();
+const { width } = Dimensions.get('window');
+const trackHeight = 88;
+const thumbSize = 114;
+const center = (width - thumbSize) * 0.5;
+const marginHorizontal = 0;
+const leftmost = (center - marginHorizontal) * -1;
+const rightmost = center - marginHorizontal - 30;
+const threshold = 30;
+
+export const AcceptControl = ({ onAccept, onReject, style, ...props }: Props) => {
+  // state
+  const [translateX, setTranslateX] = React.useState(0);
+  const [accepted, setAccepted] = React.useState(false);
+  const [rejected, setRejected] = React.useState(false);
+  // UI handlers
+  const onGestureEvent = (event: GestureEvent<PanGestureHandlerEventPayload>) => {
+    if (accepted || rejected) return;
+    const { translationX } = event.nativeEvent;
+    if (translationX >= leftmost && translationX <= rightmost) setTranslateX(translationX);
+  };
+  const onGestureEnded = () => {
+    const shouldReject = translateX < 0 && translateX - leftmost < threshold;
+    const shouldAccept = translateX > 0 && rightmost - translateX < threshold;
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    if (shouldReject) {
+      setRejected(true);
+      setTranslateX(leftmost);
+      onReject();
+    } else if (shouldAccept) {
+      setAccepted(true);
+      setTranslateX(rightmost);
+      onAccept();
     } else {
-      updateSliderValue(50);
+      setTranslateX(0);
     }
-  }, []);
-
-  // couldn't get track to stick with "width: '100%'", probably because its absolute positioning;
-  // using device's width instead
-  const { width } = Dimensions.get('window');
-  const paddingHorizontal = padding * 2;
-  // height of the component is based on the thumb height
-  // delta is how much the thumb is taller than the track
-  const height = 88;
-  const delta = 14;
-  const trackHeight = height - delta;
-  const top = delta / 2;
-
+  };
   // UI
   return (
-    <View style={{ height, paddingHorizontal }}>
+    <View style={[null, style]} {...props}>
       {/* track */}
-      <View
-        style={{
-          position: 'absolute',
-          top,
-          width: width - paddingHorizontal,
-          height: trackHeight,
-          // flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          backgroundColor: colors.lightGrey,
-          paddingHorizontal,
-          ...borders.default,
-          borderRadius: 64,
-        }}
-      >
-        <View style={{ alignItems: 'center' }}>
-          <Feather name="x" size={20} color={colors.darkGrey} />
-          <Text style={[texts.default, { color: colors.darkGrey }]}>{t('Recusar')}</Text>
+      <View style={{}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            height: trackHeight,
+            paddingHorizontal: padding * 2,
+            marginHorizontal,
+            backgroundColor: colors.grey50,
+            ...borders.default,
+            borderRadius: 64,
+          }}
+        >
+          <View style={{ alignItems: 'center' }}>
+            <Feather name="x" size={20} color={colors.grey700} />
+            <Text style={[texts.sm, { color: colors.grey700 }]}>{t('Recusar')}</Text>
+          </View>
+          <View style={{ alignItems: 'center' }}>
+            <Feather name="check-circle" size={20} color={colors.black} />
+            <Text style={[texts.sm]}>{t('Aceitar')}</Text>
+          </View>
         </View>
-        <View style={{ alignItems: 'center' }}>
-          <Feather name="check-circle" size={20} color={colors.black} />
-          <Text style={[texts.default]}>{t('Aceitar')}</Text>
-        </View>
+        {/* thumb */}
+        <PanGestureHandler onGestureEvent={onGestureEvent} onEnded={onGestureEnded}>
+          <Animated.View
+            style={{
+              position: 'absolute',
+              top: -12,
+              left: center,
+              transform: [{ translateX }],
+            }}
+          >
+            <IconMotocycle
+              circleColor={rejected ? colors.yellow : colors.green500}
+              flipped={!rejected}
+            />
+          </Animated.View>
+        </PanGestureHandler>
       </View>
-      {/* slider */}
-      <Slider
-        ref={sliderRef}
-        style={{ width: '100%', height }}
-        minimumValue={0}
-        maximumValue={100}
-        step={1}
-        minimumTrackTintColor="#00000000"
-        maximumTrackTintColor="#00000000"
-        value={50}
-        onSlidingComplete={completeHandler}
-      />
     </View>
   );
-}
+};

@@ -1,7 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, View, ButtonProps, Text } from 'react-native';
-
-import { padding, colors, borders } from '../../../../../common/styles';
+import { ButtonProps, Text, TouchableOpacity, View } from 'react-native';
+import { borders, colors, padding } from '../../../../../common/styles';
 
 interface Props extends ButtonProps {
   children: React.ReactNode;
@@ -14,7 +13,7 @@ export default function ({ children, title, onPress, hasTitle }: Props) {
         style={{
           width: 160,
           height: 160,
-          backgroundColor: colors.lightGrey,
+          backgroundColor: colors.grey50,
           ...borders.default,
           borderColor: colors.white,
           // padding,

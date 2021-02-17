@@ -60,8 +60,8 @@ export default function ({ orderId, orderTip = 0, courierId, courierName, joined
   return (
     <View style={{ paddingHorizontal: padding, paddingTop: padding }}>
       <View>
-        <Text style={{ ...texts.medium, ...texts.bold }}>{t('Caixinha')}</Text>
-        <Text style={{ ...texts.small, color: colors.darkGrey, flexWrap: 'wrap' }}>
+        <Text style={{ ...texts.md, ...texts.bold }}>{t('Caixinha')}</Text>
+        <Text style={{ ...texts.xs, color: colors.grey700, flexWrap: 'wrap' }}>
           {t('Valorize ainda mais o trabalho do seu entregador')}
         </Text>
       </View>
@@ -70,11 +70,9 @@ export default function ({ orderId, orderTip = 0, courierId, courierName, joined
           <RoundedProfileImg flavor="courier" id={courierId} />
           {joined && (
             <View style={{ marginLeft: halfPadding }}>
-              <Text style={[texts.default]}>{courierName}</Text>
-              <Text style={{ ...texts.small, color: colors.darkGrey }}>
-                {t('No appJusto desde')}
-              </Text>
-              <Text style={{ ...texts.small }}>
+              <Text style={[texts.sm]}>{courierName}</Text>
+              <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('No appJusto desde')}</Text>
+              <Text style={{ ...texts.xs }}>
                 {formatDate((joined as firebase.firestore.Timestamp).toDate(), 'monthYear')}
               </Text>
             </View>

@@ -96,7 +96,7 @@ export default function ({ navigation, route }: Props) {
     <View style={screens.config}>
       <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <PaddedView>
-          <Text style={{ ...texts.default, marginTop: halfPadding, color: colors.darkGrey }}>
+          <Text style={{ ...texts.sm, marginTop: halfPadding, color: colors.grey700 }}>
             {t('A conta precisa estar no seu CPF ou CNPJ. Não serão aceitas contas de terceiros.')}
           </Text>
           <View

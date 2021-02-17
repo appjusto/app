@@ -1,6 +1,5 @@
 import React from 'react';
-import { TextInputProps, View } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import { TextInput, TextInputProps, View } from 'react-native';
 import { borders, texts } from '../../../../common/styles';
 
 interface Props extends TextInputProps {
@@ -16,7 +15,7 @@ export const DigitInput = React.forwardRef(
           ref={externalRef ? (externalRef as React.RefObject<TextInput>) : null}
           style={[
             {
-              ...texts.default,
+              ...texts.sm,
               fontSize: 36,
               lineHeight: 36,
               textAlign: 'center',

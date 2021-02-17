@@ -27,12 +27,12 @@ export default function ({ navigation }: Props) {
   const tallerDevice = useTallerDevice();
 
   return (
-    <PaddedView style={{ backgroundColor: colors.green }}>
+    <PaddedView style={{ backgroundColor: colors.green500 }}>
       <ShowIf test={tallerDevice}>
         {() => (
           <Text
             style={[
-              texts.big,
+              texts.xxl,
               {
                 paddingBottom: tallerDevice ? doublePadding : padding,
                 marginTop: tallerDevice ? doublePadding : 0,
@@ -56,8 +56,8 @@ export default function ({ navigation }: Props) {
             onPress={() => navigation.navigate('OrderNavigator', { screen: 'CreateOrderP2P' })}
           >
             <Image source={icons.consumerHomeIllustration} />
-            <Text style={[texts.default, { paddingTop: 4 }]}>{t('Transporte de encomendas')}</Text>
-            <Text style={[texts.small, { paddingTop: halfPadding, color: colors.darkGrey }]}>
+            <Text style={[texts.sm, { paddingTop: 4 }]}>{t('Transporte de encomendas')}</Text>
+            <Text style={[texts.xs, { paddingTop: halfPadding, color: colors.grey700 }]}>
               {t('Para buscar e deixar pacotes')}
             </Text>
           </TouchableOpacity>
@@ -70,10 +70,8 @@ export default function ({ navigation }: Props) {
           >
             <View>
               <Image source={icons.consumerHomePizza} />
-              <Text style={[texts.default, { paddingTop: 4 }]}>
-                {t('Restaurantes e alimentação')}
-              </Text>
-              <Text style={[texts.small, { paddingTop: halfPadding, color: colors.darkGrey }]}>
+              <Text style={[texts.sm, { paddingTop: 4 }]}>{t('Restaurantes e alimentação')}</Text>
+              <Text style={[texts.xs, { paddingTop: halfPadding, color: colors.grey700 }]}>
                 {t('Peça comida de uma forma justa')}
               </Text>
             </View>

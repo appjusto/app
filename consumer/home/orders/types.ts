@@ -24,10 +24,10 @@ export type OrderNavigatorParamList = {
   ProfilePaymentMethods?: {
     returnScreen: 'CreateOrderP2P';
   };
-  OrderMatching: {
+  OrderConfirming: {
     orderId: string;
   };
-  OrderUnmatched: {
+  OrderNoMatch: {
     orderId: string;
   };
   OngoingOrder: {

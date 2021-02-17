@@ -6,8 +6,13 @@ import React, { useCallback } from 'react';
 import { FlatList, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
-import useObserveOrders from '../../../../common/store/api/order/hooks/useObserveOrders';
-import { getOrderCreatedOn, getOrdersWithFilter } from '../../../../common/store/order/selectors';
+import StatusBadge from '../../../../common/components/views/StatusBadge';
+import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
+import {
+  getOrderCreatedOn,
+  getOrdersWithFilter,
+  isOrderOngoing,
+} from '../../../../common/store/order/selectors';
 import { getUser } from '../../../../common/store/user/selectors';
 import { screens } from '../../../../common/styles';
 import {
@@ -47,8 +52,8 @@ export default function ({ navigation, route }: Props) {
 
   // handlers
   const orderPressHandler = useCallback((order: WithId<Order>) => {
-    if (order.status === 'dispatching') {
-      navigation.navigate('OngoingNavigator', {
+    if (isOrderOngoing(order)) {
+      navigation.navigate('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: {
           orderId: order.id!,
@@ -76,7 +81,9 @@ export default function ({ navigation, route }: Props) {
             formatTime(createdOn)
           )}`;
           return (
-            <ConfigItem title={title} subtitle={subtitle} onPress={() => orderPressHandler(item)} />
+            <ConfigItem title={title} subtitle={subtitle} onPress={() => orderPressHandler(item)}>
+              <StatusBadge order={item} />
+            </ConfigItem>
           );
         }}
       />

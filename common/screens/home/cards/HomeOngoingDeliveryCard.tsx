@@ -1,10 +1,10 @@
 import { Order, WithId } from 'appjusto-types';
 import React from 'react';
-import { Image, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import * as icons from '../../../../assets/icons';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';
+import { IconMotocycleCentered } from '../../../icons/icon-motocycle-centered';
+import { IconRequest } from '../../../icons/icon-requests';
 import { borders, colors, padding, texts } from '../../../styles';
 import { MessagesCard } from './MessagesCard';
 
@@ -51,7 +51,11 @@ export default function ({ order, onSelect }: Props) {
             }}
             half
           >
-            <Image source={icons.requests} />
+            {order.type === 'food' ? (
+              <IconRequest width={64} height={80} />
+            ) : (
+              <IconMotocycleCentered />
+            )}
             <View style={{ marginLeft: padding }}>
               <View
                 style={{
@@ -61,11 +65,11 @@ export default function ({ order, onSelect }: Props) {
                 }}
               >
                 <View>
-                  <Text style={{ ...texts.default }}>{title}</Text>
+                  <Text style={{ ...texts.sm }}>{title}</Text>
                   <Text
                     style={{
-                      ...texts.small,
-                      color: colors.darkGrey,
+                      ...texts.xs,
+                      color: colors.grey700,
                       flexWrap: 'wrap',
                       maxWidth: '85%',
                     }}

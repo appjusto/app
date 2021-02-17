@@ -32,7 +32,7 @@ export default function ({ flavor = 'courier', id, size = 64 }: Props) {
         height: size,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colors.green,
+        backgroundColor: colors.green500,
         borderWidth: 1,
         borderStyle: 'solid',
         borderColor: colors.black,

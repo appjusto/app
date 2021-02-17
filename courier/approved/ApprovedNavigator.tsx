@@ -3,7 +3,7 @@ import React from 'react';
 import ArrowBox from '../../common/components/views/ArrowBox';
 import MainNavigator from './main/MainNavigator';
 import MatchingNavigator from './matching/MatchingNavigator';
-import OngoingNavigator from './ongoing/OngoingNavigator';
+import OngoingDeliveryNavigator from './ongoing/OngoingDeliveryNavigator';
 import { ApprovedParamList } from './types';
 
 const Stack = createStackNavigator<ApprovedParamList>();
@@ -26,8 +26,8 @@ export default function () {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="OngoingNavigator"
-        component={OngoingNavigator}
+        name="OngoingDeliveryNavigator"
+        component={OngoingDeliveryNavigator}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

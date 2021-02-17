@@ -4,7 +4,7 @@ import { ActivityIndicator, Image, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../assets/icons';
 import { ApiContext, AppDispatch } from '../common/app/context';
-import useObserveOngoingOrders from '../common/store/api/order/hooks/useObserveOngoingOrders';
+import { useObserveOngoingOrders } from '../common/store/api/order/hooks/useObserveOngoingOrders';
 import { getFlavor } from '../common/store/config/selectors';
 import { getConsumer } from '../common/store/consumer/selectors';
 import { observeProfile } from '../common/store/user/actions';
@@ -41,7 +41,7 @@ export default function () {
     // TODO: handle other situation cases in the future
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
@@ -50,7 +50,7 @@ export default function () {
       tabBarOptions={{
         activeTintColor: colors.black,
         inactiveTintColor: colors.black,
-        activeBackgroundColor: colors.green,
+        activeBackgroundColor: colors.green500,
         inactiveBackgroundColor: colors.white,
         style: { height: 60, justifyContent: 'center' },
         tabStyle: {
@@ -58,7 +58,7 @@ export default function () {
           height: 40,
           marginTop: halfPadding,
         },
-        labelStyle: { ...texts.small, marginBottom: 4 },
+        labelStyle: { ...texts.xs, marginBottom: 4 },
         labelPosition: 'beside-icon',
       }}
     >

@@ -1,9 +1,8 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useState, useCallback, useContext } from 'react';
-import { View, Text } from 'react-native';
+import React, { useCallback, useContext, useState } from 'react';
+import { Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import CheckField from '../../components/buttons/CheckField';
@@ -12,7 +11,7 @@ import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
 import { deleteAccount } from '../../store/user/actions';
 import { DeleteAccountSurvey } from '../../store/user/types';
-import { colors, texts, screens } from '../../styles';
+import { colors, screens, texts } from '../../styles';
 
 export type ProfileEraseParamList = {
   ProfileErase: undefined;
@@ -57,15 +56,15 @@ export default function ({ navigation }: Props) {
   // UI
   return (
     <View style={{ ...screens.lightGrey }}>
-      <Text style={{ ...texts.big, marginTop: 16 }}>
+      <Text style={{ ...texts.xxl, marginTop: 16 }}>
         {t('Tem certeza que deseja excluir sua conta?')}
       </Text>
-      <Text style={{ ...texts.default, marginTop: 16, color: colors.darkGrey }}>
+      <Text style={{ ...texts.sm, marginTop: 16, color: colors.grey700 }}>
         {t(
           'Todos os seus dados serão apagados do nosso sistema, juntamente com seu histórico de pedidos, e você terá que criar um novo cadastro para usar o AppJusto.'
         )}
       </Text>
-      <Text style={{ ...texts.default, marginTop: 16, color: colors.darkGrey }}>
+      <Text style={{ ...texts.sm, marginTop: 16, color: colors.grey700 }}>
         {t('Se você estiver certo disso, pode contar pra gente por que está excluindo sua conta?')}
       </Text>
       <View style={{ marginTop: 24, flex: 1 }}>

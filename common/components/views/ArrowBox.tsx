@@ -10,7 +10,7 @@ interface Props extends ViewProps {
 export default function ({ flipped, ...props }: Props) {
   return (
     <View style={styles.container} {...props}>
-      <Feather name="arrow-right" style={flipped ? { transform: [{ scaleX: -1 }] } : null} />
+      {flipped ? <Feather name="arrow-left" /> : <Feather name="arrow-right" />}
     </View>
   );
 }
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     width: 32,
     backgroundColor: colors.white,
     ...borders.default,
-    borderColor: colors.lightGrey,
+    borderColor: colors.grey50,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -78,7 +78,7 @@ i18n.missingTranslation = () => null; // removes missing translation message
 
 export const translations = ['pt']; // Object.keys(i18n.translations);
 const deviceLocale = Localization.locale.substr(0, 2); // to strip out country codes (pt-BR -> pt)
-const isDeviceLocaleSupported = translations.indexOf(deviceLocale) > -1;
+const isDeviceLocaleSupported = translations.includes(deviceLocale);
 
 i18n.locale = isDeviceLocaleSupported ? deviceLocale : i18n.defaultLocale;
 

@@ -10,7 +10,8 @@ import RoundedText from '../../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
 import ShowIf from '../../../../common/components/views/ShowIf';
-import useObserveOrders from '../../../../common/store/api/order/hooks/useObserveOrders';
+import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
+import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
 import {
   getMonthsWithOrdersInYear,
   getOrdersWithFilter,
@@ -66,8 +67,8 @@ export default function ({ navigation, route }: Props) {
       <FeedbackView
         header={t('Seu histórico está vazio')}
         description={t('Você ainda não fez nenhuma corrida')}
-        icon={icons.motocycle}
-        background={colors.lightGrey}
+        icon={<IconMotocycle />}
+        background={colors.grey50}
       />
     );
   }
@@ -80,10 +81,14 @@ export default function ({ navigation, route }: Props) {
         keyExtractor={(item) => item.key}
         renderSectionHeader={({ section }) => (
           <PaddedView
-            style={{ flexDirection: 'row', borderBottomColor: colors.grey, borderBottomWidth: 1 }}
+            style={{
+              flexDirection: 'row',
+              borderBottomColor: colors.grey500,
+              borderBottomWidth: 1,
+            }}
           >
             <Image source={icons.calendar} />
-            <Text style={{ ...texts.medium, marginLeft: padding }}>{section.title}</Text>
+            <Text style={{ ...texts.md, marginLeft: padding }}>{section.title}</Text>
           </PaddedView>
         )}
         renderItem={({ item }) => {
@@ -105,7 +110,7 @@ export default function ({ navigation, route }: Props) {
                 })
               }
             >
-              <ShowIf test={item.dispatching > 0}>
+              <ShowIf test={item.ongoing > 0}>
                 {() => (
                   <View style={{ marginTop: halfPadding }}>
                     <RoundedText backgroundColor={colors.yellow}>

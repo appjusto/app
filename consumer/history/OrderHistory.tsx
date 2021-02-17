@@ -10,11 +10,13 @@ import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
 import FeedbackView from '../../common/components/views/FeedbackView';
 import StatusBadge from '../../common/components/views/StatusBadge';
-import useObserveOrders from '../../common/store/api/order/hooks/useObserveOrders';
+import { IconMotocycle } from '../../common/icons/icon-motocycle';
+import { useObserveOrders } from '../../common/store/api/order/hooks/useObserveOrders';
 import {
   getOrderCreatedOn,
   getOrdersWithFilter,
   getYearsWithOrders,
+  isOrderOngoing,
 } from '../../common/store/order/selectors';
 import { getUser } from '../../common/store/user/selectors';
 import { colors, padding, screens, texts } from '../../common/styles';
@@ -61,9 +63,11 @@ export default function ({ navigation, route }: Props) {
 
   // handlers
   const orderSelectHandler = useCallback((order: WithId<Order>) => {
-    if (order.status === 'quote') {
-      if (order.type === 'p2p') {
-        navigation.navigate('CreateOrderP2P', { orderId: order.id });
+    const orderId = order.id;
+    const { type, status } = order;
+    if (status === 'quote') {
+      if (type === 'p2p') {
+        navigation.navigate('OrderNavigator', { screen: 'CreateOrderP2P', params: { orderId } });
       } else {
         navigation.navigate('RestaurantsNavigator', {
           screen: 'RestaurantNavigator',
@@ -74,17 +78,20 @@ export default function ({ navigation, route }: Props) {
           },
         });
       }
-    } else if (order.status === 'dispatching') {
-      navigation.navigate('OngoingOrder', {
-        orderId: order.id,
+    } else if (status === 'confirming') {
+      navigation.navigate('OrderConfirming', {
+        orderId,
       });
-    } else if (order.status === 'delivered') {
+    } else if (isOrderOngoing(order)) {
+      navigation.navigate('OrderNavigator', {
+        screen: 'OngoingOrder',
+        params: {
+          orderId,
+        },
+      });
+    } else if (status === 'delivered') {
       navigation.navigate('OrderDetail', {
-        orderId: order.id,
-      });
-    } else if (order.status === 'confirming') {
-      navigation.navigate('OrderMatching', {
-        orderId: order.id,
+        orderId,
       });
     }
   }, []);
@@ -95,8 +102,8 @@ export default function ({ navigation, route }: Props) {
       <FeedbackView
         header={t('Seu histórico está vazio')}
         description={t('Você ainda não fez nenhum pedido')}
-        icon={icons.motocycle}
-        background={colors.lightGrey}
+        icon={<IconMotocycle />}
+        background={colors.grey50}
       />
     );
   }
@@ -109,10 +116,14 @@ export default function ({ navigation, route }: Props) {
         stickySectionHeadersEnabled={false}
         renderSectionHeader={({ section }) => (
           <PaddedView
-            style={{ flexDirection: 'row', borderBottomColor: colors.grey, borderBottomWidth: 1 }}
+            style={{
+              flexDirection: 'row',
+              borderBottomColor: colors.grey500,
+              borderBottomWidth: 1,
+            }}
           >
             <Image source={icons.calendar} />
-            <Text style={{ ...texts.medium, marginLeft: padding }}>{section.title}</Text>
+            <Text style={{ ...texts.md, marginLeft: padding }}>{section.title}</Text>
           </PaddedView>
         )}
         renderItem={({ item }) => {
@@ -124,7 +135,7 @@ export default function ({ navigation, route }: Props) {
             : '';
           return (
             <ConfigItem title={title} subtitle={subtitle} onPress={() => orderSelectHandler(item)}>
-              <StatusBadge status={item.status} />
+              <StatusBadge order={item} />
             </ConfigItem>
           );
         }}

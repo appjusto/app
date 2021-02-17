@@ -4,8 +4,16 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import React from 'react';
-import { Dimensions, Image, ImageURISource, StyleSheet, Text, View } from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import {
+  Dimensions,
+  Image,
+  ImageURISource,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../../assets/icons';
@@ -163,7 +171,7 @@ export default function ({ navigation }: Props) {
     <ScrollView>
       <View style={{ ...screens.config }}>
         <PaddedView>
-          <Text style={{ ...texts.default, color: colors.darkGrey }}>
+          <Text style={{ ...texts.sm, color: colors.grey700 }}>
             {t(
               'Precisamos da sua foto para incluir nas entregas. Se você for utilizar Moto e/ou Carro, vamos precisar também da foto da sua CNH; caso contrário, é só enviar a foto do seu RG.'
             )}
@@ -173,7 +181,7 @@ export default function ({ navigation }: Props) {
         {/* {height > 700 && <View style={{ flex: 1 }} />} */}
         <View
           style={{
-            borderBottomColor: colors.grey,
+            borderBottomColor: colors.grey500,
             borderStyle: 'solid',
             borderBottomWidth: 1,
           }}

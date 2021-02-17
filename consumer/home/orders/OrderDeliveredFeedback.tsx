@@ -35,7 +35,7 @@ export default ({ navigation, route }: Props) => {
   if (!order) {
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
@@ -52,7 +52,7 @@ export default ({ navigation, route }: Props) => {
               alignItems: 'center',
             }}
           >
-            <Text style={[texts.big]}>{t('Pedido\nentregue')}</Text>
+            <Text style={[texts.xxl]}>{t('Pedido\nentregue')}</Text>
             <View style={{ height: 112, width: 160 }}>
               <Image
                 source={icons.illustration}
@@ -90,6 +90,7 @@ export default ({ navigation, route }: Props) => {
               title={t('Relatar um problema')}
               secondary
               onPress={() => navigation.navigate('OrderComplaint', { orderId: order.id })}
+              style={{ flex: 7 }}
             />
             <DefaultButton
               title={t('Detalhes da corrida')}
@@ -100,6 +101,7 @@ export default ({ navigation, route }: Props) => {
                 })
               }
               secondary
+              style={{ flex: 7 }}
             />
           </View>
         </View>

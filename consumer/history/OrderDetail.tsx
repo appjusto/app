@@ -41,7 +41,7 @@ export default function ({ navigation, route }: Props) {
   if (!order) {
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
@@ -75,8 +75,8 @@ export default function ({ navigation, route }: Props) {
               alignItems: 'center',
             }}
           >
-            <Text style={{ ...texts.medium, ...texts.bold }}>{t('Total pago')}</Text>
-            <Text style={{ ...texts.mediumToBig }}>
+            <Text style={{ ...texts.md, ...texts.bold }}>{t('Total pago')}</Text>
+            <Text style={{ ...texts.xl }}>
               {formatCurrency((order.fare?.consumer.total ?? 0) + (order.tip?.value ?? 0))}
             </Text>
           </PaddedView>

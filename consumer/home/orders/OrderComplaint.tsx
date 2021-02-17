@@ -6,13 +6,13 @@ import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
-import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import FeedbackView from '../../../common/components/views/FeedbackView';
+import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { showToast } from '../../../common/store/ui/actions';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
@@ -43,7 +43,7 @@ export default function ({ route, navigation }: Props) {
   if (!issues) {
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
@@ -53,8 +53,8 @@ export default function ({ route, navigation }: Props) {
         <View style={{ flex: 1, ...borders.default }} />
         <FeedbackView
           header={t('Obrigado pelas informações. Iremos analisar o ocorrido.')}
-          icon={icons.motocycle}
-          background={colors.lightGrey}
+          icon={<IconMotocycle />}
+          background={colors.grey50}
         />
         <View style={{ flex: 1, ...borders.default }} />
         <DefaultButton
@@ -86,9 +86,7 @@ export default function ({ route, navigation }: Props) {
     <View style={{ ...screens.config, flex: 1 }}>
       <KeyboardAwareScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
         <PaddedView>
-          <Text style={{ ...texts.mediumToBig, marginBottom: padding }}>
-            {t('Indique seu problema:')}
-          </Text>
+          <Text style={{ ...texts.xl, marginBottom: padding }}>{t('Indique seu problema:')}</Text>
           {issues.map((issue) => (
             <RadioButton
               key={issue.id}
@@ -99,8 +97,8 @@ export default function ({ route, navigation }: Props) {
           ))}
           <Text
             style={{
-              ...texts.mediumToBig,
-              color: colors.darkGrey,
+              ...texts.xl,
+              color: colors.grey700,
               marginTop: 24,
               marginBottom: halfPadding,
             }}

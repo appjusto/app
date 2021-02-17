@@ -58,7 +58,7 @@ export default function ({ route }: Props) {
     // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
@@ -85,12 +85,12 @@ export default function ({ route }: Props) {
         keyboardShouldPersistTaps="always"
         data={groupedMessages}
         keyExtractor={(item) => item.id}
-        style={{ backgroundColor: colors.grey }}
+        style={{ backgroundColor: colors.grey500 }}
         renderItem={({ item }) => (
           <PaddedView
             style={{
-              backgroundColor: colors.lightGrey,
-              borderTopColor: colors.grey,
+              backgroundColor: colors.grey50,
+              borderTopColor: colors.grey500,
               borderTopWidth: 1,
             }}
           >
@@ -100,7 +100,7 @@ export default function ({ route }: Props) {
                 id={item.from}
               />
               <View style={{ marginLeft: padding / 2 }}>
-                <Text style={[texts.medium]}>{names[item.from]}</Text>
+                <Text style={[texts.md]}>{names[item.from]}</Text>
               </View>
             </View>
             {item.messages.map((message: WithId<ChatMessage>) => (
@@ -115,8 +115,8 @@ export default function ({ route }: Props) {
                 padding={12}
               >
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
-                  <Text style={[texts.small, { flexWrap: 'wrap' }]}>{message.message}</Text>
-                  <Text style={[texts.tiny, { marginLeft: halfPadding, alignSelf: 'flex-end' }]}>
+                  <Text style={[texts.xs, { flexWrap: 'wrap' }]}>{message.message}</Text>
+                  <Text style={[texts.xxs, { marginLeft: halfPadding, alignSelf: 'flex-end' }]}>
                     {message.timestamp
                       ? formatTime((message.timestamp as firebase.firestore.Timestamp).toDate())
                       : ''}

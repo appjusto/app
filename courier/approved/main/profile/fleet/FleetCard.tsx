@@ -34,22 +34,22 @@ export default function ({ fleet, selected, couriersFleet, onSelect, onConfirm }
           selected
             ? {
                 borderWidth: 2,
-                borderColor: colors.green,
+                borderColor: colors.green500,
               }
             : null,
         ]}
       >
         <View>
-          <Text style={{ ...texts.default }}>{fleet.name}</Text>
-          <Text style={{ ...texts.small, marginTop: 4, color: colors.darkGreen }}>
+          <Text style={{ ...texts.sm }}>{fleet.name}</Text>
+          <Text style={{ ...texts.xs, marginTop: 4, color: colors.green600 }}>
             {fleet.participantsOnline} {t('participantes online')}
           </Text>
           <Text
             style={{
-              ...texts.small,
+              ...texts.xs,
               marginTop: 12,
               // height: 54,
-              color: colors.darkGrey,
+              color: colors.grey700,
               marginBottom: 20,
             }}
           >
@@ -63,7 +63,7 @@ export default function ({ fleet, selected, couriersFleet, onSelect, onConfirm }
               marginBottom: 8,
             }}
           >
-            <Text style={{ ...texts.small }}>{t('Pagamento Mínimo')}</Text>
+            <Text style={{ ...texts.xs }}>{t('Pagamento Mínimo')}</Text>
             <RoundedText>{formatCurrency(fleet.minimumFee)}</RoundedText>
           </View>
           <View
@@ -74,7 +74,7 @@ export default function ({ fleet, selected, couriersFleet, onSelect, onConfirm }
               marginBottom: 8,
             }}
           >
-            <Text style={{ ...texts.small }}>{t('Distância Inicial Mínima')}</Text>
+            <Text style={{ ...texts.xs }}>{t('Distância Inicial Mínima')}</Text>
             <RoundedText>{formatDistance(fleet.distanceThreshold)}</RoundedText>
           </View>
           <View
@@ -85,7 +85,7 @@ export default function ({ fleet, selected, couriersFleet, onSelect, onConfirm }
               marginBottom: 8,
             }}
           >
-            <Text style={{ ...texts.small }}>{t('Valor Adicional por Km rodado')}</Text>
+            <Text style={{ ...texts.xs }}>{t('Valor Adicional por Km rodado')}</Text>
             <RoundedText>{formatCurrency(fleet.additionalPerKmAfterThreshold)}</RoundedText>
           </View>
           <View
@@ -96,10 +96,10 @@ export default function ({ fleet, selected, couriersFleet, onSelect, onConfirm }
               marginBottom: 8,
             }}
           >
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>
+            <Text style={{ ...texts.xs, color: colors.grey700 }}>
               {t('Distância Máxima para Entrega')}
             </Text>
-            <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey} noBorder>
+            <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>
               {formatDistance(fleet.maxDistance)}
             </RoundedText>
           </View>
@@ -111,10 +111,10 @@ export default function ({ fleet, selected, couriersFleet, onSelect, onConfirm }
               marginBottom: 8,
             }}
           >
-            <Text style={{ ...texts.small, color: colors.darkGrey }}>
+            <Text style={{ ...texts.xs, color: colors.grey700 }}>
               {t('Distância Máxima até a Origem')}
             </Text>
-            <RoundedText color={colors.darkGrey} backgroundColor={colors.lightGrey} noBorder>
+            <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>
               {formatDistance(fleet.maxDistanceToOrigin)}
             </RoundedText>
           </View>

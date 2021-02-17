@@ -19,7 +19,7 @@ export default function ({ title }: Props) {
       }}
     >
       <Pill />
-      <Text style={{ ...texts.medium, ...texts.bold, marginLeft: 12 }}>{t(title)}</Text>
+      <Text style={{ ...texts.md, ...texts.bold, marginLeft: 12 }}>{t(title)}</Text>
     </View>
   );
 }

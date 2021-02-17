@@ -1,7 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { borders, halfPadding, padding, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 
@@ -22,8 +21,8 @@ export default function ({ onPress }: Props) {
           width: 80,
         }}
       >
-        <MaterialIcons name="filter-list" size={12} style={{ marginRight: halfPadding }} />
-        <Text style={[{ ...texts.small }, { ...texts.bold }]}>{t('Filtrar')}</Text>
+        <MaterialIcons name="filter-list" size={16} />
+        <Text style={{ ...texts.xs, ...texts.bold, marginLeft: halfPadding }}>{t('Filtrar')}</Text>
       </View>
     </TouchableOpacity>
   );

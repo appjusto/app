@@ -3,12 +3,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import * as Linking from 'expo-linking';
 import React from 'react';
 import { Text } from 'react-native';
-
 import { HomeParamList } from '../../courier/approved/main/home/types';
 import { t } from '../../strings';
 import DefaultButton from '../components/buttons/DefaultButton';
 import PaddedView from '../components/containers/PaddedView';
-import { colors, borders, screens, texts, padding } from '../styles';
+import { borders, colors, padding, screens, texts } from '../styles';
 
 type ScreenNavigationProp = StackNavigationProp<HomeParamList, 'PermissionDeniedFeedback'>;
 type ScreenRouteProp = RouteProp<HomeParamList, 'PermissionDeniedFeedback'>;
@@ -28,10 +27,8 @@ export default ({ navigation, route }: Props) => {
   // UI
   return (
     <PaddedView style={{ ...screens.config, paddingTop: padding }}>
-      <Text style={{ ...texts.big }}>{title}</Text>
-      <Text style={{ ...texts.default, color: colors.darkGrey, marginVertical: 32 }}>
-        {subtitle}
-      </Text>
+      <Text style={{ ...texts.xxl }}>{title}</Text>
+      <Text style={{ ...texts.sm, color: colors.grey700, marginVertical: 32 }}>{subtitle}</Text>
       <DefaultButton
         title={t('Acessar configurações do dispositivo')}
         onPress={openSettings}

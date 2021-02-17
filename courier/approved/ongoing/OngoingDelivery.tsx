@@ -3,11 +3,10 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useMutation } from 'react-query';
-import { ApiContext } from '../../../common/app/context';
+import { useDispatch } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
@@ -17,6 +16,7 @@ import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/Cou
 import CourierStatusHighlight from '../../../common/screens/orders/ongoing/CourierStatusHighlight';
 import { courierNextPlace } from '../../../common/store/api/order/helpers';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { showToast } from '../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
 import SingleHeader from '../../../consumer/home/restaurants/SingleHeader';
@@ -24,6 +24,7 @@ import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import { CodeInput } from './code-input/CodeInput';
 import { RouteIcons } from './RouteIcons';
+import { StatusControl } from './StatusControl';
 import { OngoingParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
@@ -39,25 +40,18 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // params
-  const { orderId, newMessage, noCode } = route.params;
+  const { orderId, newMessage, completeWithoutConfirmation } = route.params;
   // context
   const api = React.useContext(ApiContext);
-
+  const dispatch = useDispatch<AppDispatch>();
   // screen state
   const { order } = useObserveOrder(orderId);
-  const { mutate: nextDispatchingState, isLoading: isUpdatingDispatchingState } = useMutation(() =>
-    api.order().nextDispatchingState(orderId)
-  );
-  const { mutate: completeDelivery, isLoading: isCompletingDelivery } = useMutation(() =>
-    api.order().completeDelivery(orderId, code)
-  );
   const [code, setCode] = React.useState('');
-  const isLoading = isUpdatingDispatchingState || isCompletingDelivery;
+  const [isLoading, setLoading] = React.useState(false);
   // side effects
   // whenever params updates
   // open chat if there's a new message
   React.useEffect(() => {
-    console.log('OngoingDelivery, newMessage:', newMessage);
     if (newMessage) {
       // workaround to make sure chat is being shown; (it was not showing on Android devices during tests)
       setTimeout(() => {
@@ -66,6 +60,18 @@ export default function ({ navigation, route }: Props) {
       }, 100);
     }
   }, [newMessage]);
+  React.useEffect(() => {
+    if (!completeWithoutConfirmation) return;
+    (async () => {
+      setLoading(true);
+      try {
+        await api.order().completeDelivery(orderId, code);
+      } catch (error) {
+        dispatch(showToast(error.toSring()));
+      }
+      setLoading(false);
+    })();
+  }, [completeWithoutConfirmation]);
   // whenever order updates
   // check status to navigate to other screens
   React.useEffect(() => {
@@ -76,21 +82,12 @@ export default function ({ navigation, route }: Props) {
     }
   }, [order]);
 
-  //when there's a "no code" delivery
-  React.useEffect(() => {
-    if (noCode) {
-      setTimeout(() => {
-        completeDelivery();
-      }, 100);
-    }
-  }, [noCode]);
-
   // UI
   if (!order) {
     // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
@@ -98,12 +95,23 @@ export default function ({ navigation, route }: Props) {
   // UI handlers
   // handles updating dispatchingState
   const nextStatepHandler = () => {
-    if (order.dispatchingState !== 'arrived-destination') {
-      nextDispatchingState();
-    } else {
-      completeDelivery();
-    }
+    (async () => {
+      setLoading(true);
+      try {
+        if (order.dispatchingState !== 'arrived-destination') {
+          await api.order().nextDispatchingState(orderId);
+        } else {
+          await api.order().completeDelivery(orderId, code);
+        }
+      } catch (error) {
+        dispatch(showToast(error.toSring()));
+      }
+      setLoading(false);
+    })();
   };
+  const { type, dispatchingState, status } = order;
+  const nextStepDisabled =
+    isLoading || (type === 'food' && dispatchingState === 'arrived-pickup' && status !== 'ready');
   const nextStepLabel = (() => {
     const dispatchingState = order?.dispatchingState;
     if (dispatchingState === 'going-pickup') {
@@ -118,13 +126,13 @@ export default function ({ navigation, route }: Props) {
     return '';
   })();
   const nextPlace = courierNextPlace(order);
-  const { dispatchingState } = order;
   const addressLabel = (() => {
-    if (dispatchingState === 'going-pickup' || dispatchingState === 'going-destination') {
+    if (dispatchingState === 'going-pickup') {
       return t('Retirada em');
     } else if (
       dispatchingState === 'arrived-pickup' ||
-      dispatchingState === 'arrived-destination'
+      dispatchingState === 'arrived-destination' ||
+      dispatchingState === 'going-destination'
     ) {
       return t('Entrega em');
     }
@@ -155,8 +163,8 @@ export default function ({ navigation, route }: Props) {
         </View>
       </View>
       <View style={{ marginTop: padding, paddingHorizontal: padding }}>
-        <Text style={[texts.small, { color: colors.darkGreen }]}>{t('Pedido de')}</Text>
-        <Text style={[texts.medium]}>
+        <Text style={[texts.xs, { color: colors.green600 }]}>{t('Pedido de')}</Text>
+        <Text style={[texts.md]}>
           {!isEmpty(order.consumer.name) ? order.consumer.name : t('Cliente')}
         </Text>
         <View
@@ -198,33 +206,33 @@ export default function ({ navigation, route }: Props) {
         }}
       >
         <View>
-          <Text style={[texts.small, { color: colors.darkGreen }]}>{addressLabel}</Text>
-          <Text style={[texts.small]}>{nextPlace?.address.main}</Text>
+          <Text style={[texts.xs, { color: colors.green600 }]}>{addressLabel}</Text>
+          <Text style={[texts.xs]}>{nextPlace?.address.main}</Text>
         </View>
         <View>
           <CourierDistanceBadge order={order} />
         </View>
       </View>
-      <View style={{ marginTop: padding, paddingHorizontal: padding }}>
-        {/* Slider */}
-        {/* <StatusControl status={nextStepLabel} nextStepHandler={nextStatepHandler} /> */}
-        {dispatchingState !== 'arrived-destination' && (
-          <DefaultButton
-            title={nextStepLabel}
-            onPress={nextStatepHandler}
-            activityIndicator={isLoading}
-            disabled={isLoading}
+      {/* Slider */}
+      {dispatchingState !== 'arrived-destination' && (
+        <View style={{ marginTop: padding, paddingHorizontal: padding }}>
+          <StatusControl
+            key={dispatchingState}
             style={{ marginBottom: padding }}
+            text={nextStepLabel}
+            disabled={nextStepDisabled}
+            isLoading={isLoading}
+            onConfirm={nextStatepHandler}
           />
-        )}
-      </View>
+        </View>
+      )}
       {dispatchingState === 'arrived-destination' && (
         <View>
           <HR height={padding} />
           <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>
             <SingleHeader title={t('Código de confirmação')} />
             <View style={{ paddingHorizontal: padding }}>
-              <Text style={{ ...texts.default, marginBottom: padding }}>
+              <Text style={{ ...texts.sm, marginBottom: padding }}>
                 {t('Digite o código de confirmação fornecido pelo cliente:')}
               </Text>
               <CodeInput value={code} onChange={setCode} />
@@ -242,7 +250,7 @@ export default function ({ navigation, route }: Props) {
             <DefaultButton
               secondary
               title={t('Confirmar entrega sem código')}
-              onPress={() => navigation.navigate('NoCodeDelivery')}
+              onPress={() => navigation.navigate('NoCodeDelivery', { orderId })}
             />
           </PaddedView>
         </View>

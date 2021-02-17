@@ -3,13 +3,14 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
-import { useSelector } from 'react-redux';
-import { ApiContext } from '../../../../../common/app/context';
+import { useDispatch, useSelector } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import HR from '../../../../../common/components/views/HR';
 import { getCourier } from '../../../../../common/store/courier/selectors';
+import { showToast } from '../../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../../../common/utils/formatters';
@@ -30,6 +31,7 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const api = React.useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
   // redux store
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier)!;
@@ -55,7 +57,7 @@ export default function ({ navigation, route }: Props) {
 
   // handlers
   const createFleetHandler = async () => {
-    api.fleet().createFleet({
+    const fleet = await api.fleet().createFleet({
       name,
       description,
       distanceThreshold,
@@ -67,18 +69,17 @@ export default function ({ navigation, route }: Props) {
       createdBy: courier.id,
       participantsOnline: 0,
     });
-    navigation.goBack();
+    dispatch(showToast(t('Frota criada com sucesso!')));
+    navigation.replace('FleetDetail', { fleetId: fleet.id });
   };
-
-  // replace all the sliders with the new counter
 
   // UI
   return (
     <ScrollView>
       <View style={{ ...screens.config }}>
         <PaddedView>
-          <Text style={{ ...texts.big }}>{t('Criar nova frota')}</Text>
-          <Text style={{ ...texts.default, color: colors.darkGrey, marginVertical: 8 }}>
+          <Text style={{ ...texts.xxl }}>{t('Criar nova frota')}</Text>
+          <Text style={{ ...texts.sm, color: colors.grey700, marginVertical: 8 }}>
             {t('Preencha as informações da sua frota')}
           </Text>
           <DefaultInput
@@ -93,13 +94,12 @@ export default function ({ navigation, route }: Props) {
             onChangeText={setName}
             onSubmitEditing={() => descriptionRef.current?.focus()}
           />
-          {/* add logic to the counter below */}
-          <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: padding }}>
-            0/36 {t('caracteres')}
+          <Text style={{ ...texts.xs, color: colors.grey700, marginBottom: padding }}>
+            {name.length}/36 {t('caracteres')}
           </Text>
           <DefaultInput
             ref={descriptionRef}
-            style={{ marginBottom: 4 }}
+            style={{ marginBottom: 4, height: 126 }}
             title={t('Descrição')}
             placeholder={t('Descreva sua frota em até 140 caracteres')}
             value={description}
@@ -109,9 +109,8 @@ export default function ({ navigation, route }: Props) {
             blurOnSubmit
             onChangeText={setDescription}
           />
-          {/* add logic to the counter below */}
-          <Text style={{ ...texts.small, color: colors.darkGrey, marginBottom: padding }}>
-            0/140 {t('caracteres')}
+          <Text style={{ ...texts.xs, color: colors.grey700, marginBottom: padding }}>
+            {description.length}/140 {t('caracteres')}
           </Text>
           <View>
             <FleetRule
@@ -173,7 +172,7 @@ export default function ({ navigation, route }: Props) {
           additionalPerKmAfterThreshold={additionalPerKmAfterThreshold}
         />
         <View>
-          <HR height={padding / 4} />
+          <HR height={padding / 2} />
           <GainSimulator fee={minimumFee} distance={distanceThreshold} />
           <PaddedView>
             <DefaultButton

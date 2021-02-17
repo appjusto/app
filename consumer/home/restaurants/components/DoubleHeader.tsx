@@ -14,8 +14,8 @@ export default function ({ title, subtitle, ...props }: Props) {
     <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 24, flex: 1 }} {...props}>
       <Pill tall />
       <View style={{ marginLeft: 12 }}>
-        <Text style={{ ...texts.mediumToBig, color: colors.black }}>{t(title)}</Text>
-        <Text style={{ ...texts.small, color: colors.darkGrey }}>{t(subtitle)}</Text>
+        <Text style={{ ...texts.xl, color: colors.black }}>{t(title)}</Text>
+        <Text style={{ ...texts.xs, color: colors.grey700 }}>{t(subtitle)}</Text>
       </View>
     </View>
   );

@@ -7,11 +7,19 @@ import { round } from 'lodash';
 export const padWithZero = (value: number) => (value < 10 ? `0${value}` : `${value}`);
 export const separateWithDot = (left: string, right: string) => `${left}  \u25CF  ${right}`;
 
-// date & time
+const dateInput = (value: Date | firebase.firestore.FieldValue) =>
+  value.constructor.name === 'Date'
+    ? (value as Date)
+    : (value as firebase.firestore.Timestamp).toDate();
 
-export const formatDate = (date: Date, pattern: 'default' | 'monthYear' = 'default') =>
-  i18n.l(`date.formats.${pattern}`, date);
-export const formatTime = (date: Date) => i18n.l('time.formats.default', date);
+// date & time
+export const formatDate = (
+  date: Date | firebase.firestore.FieldValue,
+  pattern: 'default' | 'monthYear' = 'default'
+) => i18n.l(`date.formats.${pattern}`, dateInput(date));
+
+export const formatTime = (date: Date | firebase.firestore.FieldValue) =>
+  i18n.l('time.formats.default', dateInput(date));
 export const getMonthName = (month: number) => i18n.strftime(new Date(2020, month, 1), '%B');
 
 export const formatDuration = (duration: number) => {

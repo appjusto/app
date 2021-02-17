@@ -85,11 +85,11 @@ export default function ({ navigation, route }: Props) {
                 </View>
 
                 <View style={{ height: 58, marginTop: 16 }}>
-                  <Text style={[texts.big]}>{welcomeMessage}</Text>
+                  <Text style={[texts.xxl]}>{welcomeMessage}</Text>
                 </View>
 
                 <View style={{ width: '85%', height: 58, marginTop: 16 }}>
-                  <Text style={[texts.default, { color: colors.darkGrey, lineHeight: 21 }]}>
+                  <Text style={[texts.sm, { color: colors.grey700, lineHeight: 21 }]}>
                     {t('Digite seu e-mail para entrar ou criar sua conta.')}
                   </Text>
                 </View>
@@ -126,7 +126,7 @@ export default function ({ navigation, route }: Props) {
                     navigation.navigate('Terms');
                   }}
                 >
-                  <Text style={[texts.small, { color: colors.darkGreen, lineHeight: 18 }]}>
+                  <Text style={[texts.xs, { color: colors.green600, lineHeight: 18 }]}>
                     {t('Ler os termos')}
                   </Text>
                 </TouchableOpacity>

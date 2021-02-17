@@ -1,8 +1,7 @@
 import React, { ReactNode } from 'react';
-import { TouchableOpacity, View, Text, Image } from 'react-native';
-
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { checklistTick } from '../../../assets/icons';
-import { colors, texts, padding } from '../../styles';
+import { colors, padding, texts } from '../../styles';
 import PaddedView from '../containers/PaddedView';
 import ArrowBox from './ArrowBox';
 import ShowIf from './ShowIf';
@@ -30,7 +29,7 @@ export default function ({
         style={[
           bottomBorder
             ? {
-                borderBottomColor: colors.grey,
+                borderBottomColor: colors.grey500,
                 borderStyle: 'solid',
                 borderBottomWidth: 1,
               }
@@ -48,12 +47,12 @@ export default function ({
               <ShowIf test={checked ?? false}>
                 {() => <Image source={checklistTick} style={{ marginRight: 8 }} />}
               </ShowIf>
-              <Text style={{ ...texts.default }}>{title}</Text>
+              <Text style={{ ...texts.sm }}>{title}</Text>
             </View>
             <Text
               style={{
-                ...texts.default,
-                color: colors.darkGrey,
+                ...texts.sm,
+                color: colors.grey700,
                 flexWrap: 'wrap',
               }}
             >

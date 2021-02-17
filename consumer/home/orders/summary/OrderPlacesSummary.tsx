@@ -24,7 +24,7 @@ export const OrderPlacesSummary = ({ order, onEditStep }: Props) => {
         <PlaceSummary
           title={t('Retirada')}
           place={origin!}
-          onEdit={() => onEditStep(Step.Origin)}
+          onEdit={order.type === 'p2p' ? () => onEditStep(Step.Origin) : undefined}
         />
       )}
       {destination && (

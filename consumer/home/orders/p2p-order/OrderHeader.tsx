@@ -1,10 +1,10 @@
 import { Order } from 'appjusto-types';
 import React from 'react';
-import { Image, Text, View } from 'react-native';
-import * as icons from '../../../../assets/icons';
+import { Text, View } from 'react-native';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import ShowIf from '../../../../common/components/views/ShowIf';
 import useTallerDevice from '../../../../common/hooks/useTallerDevice';
+import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
 import { colors, halfPadding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import OrderMap from './OrderMap';
@@ -36,8 +36,8 @@ export default function ({ order }: Props) {
             }}
             vertical={false}
           >
-            <Text style={{ ...texts.big }}>{t('Detalhes do\nPedido')}</Text>
-            <Image source={icons.motocycle} style={{ width: 114, height: 114 }} />
+            <Text style={{ ...texts.xxl }}>{t('Detalhes do\nPedido')}</Text>
+            <IconMotocycle />
           </PaddedView>
         )}
       </ShowIf>
@@ -54,10 +54,10 @@ export default function ({ order }: Props) {
             vertical={false}
           >
             <View style={{ flex: 3 }}>
-              <Text style={{ ...texts.big, marginBottom: halfPadding }}>{t('Alterar rota')}</Text>
-              <Text style={{ ...texts.small, color: colors.red }} numberOfLines={4}>
+              <Text style={{ ...texts.xxl, marginBottom: halfPadding }}>{t('Alterar rota')}</Text>
+              <Text style={{ ...texts.xs, color: colors.red }} numberOfLines={4}>
                 {t('Importante: ')}
-                <Text style={{ color: colors.darkGrey }}>
+                <Text style={{ color: colors.grey700 }}>
                   {t(
                     'alterar locais após o pedido já ter sido confirmado pode resultar em cobranças adicionais'
                   )}
@@ -66,7 +66,7 @@ export default function ({ order }: Props) {
             </View>
             <View style={{ flex: 1 }} />
             <View style={{ flex: 2 }}>
-              <Image source={icons.motocycle} style={{ width: 114, height: 114 }} />
+              <IconMotocycle />
             </View>
           </PaddedView>
         )}

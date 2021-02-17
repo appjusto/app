@@ -1,17 +1,14 @@
 import React from 'react';
-import { View, Text, Image, ViewProps } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-
-import { checkboxActive, checkboxInactive } from '../../../assets/icons';
-import { texts } from '../../styles';
+import { Text, TouchableWithoutFeedback, View, ViewProps } from 'react-native';
+import { colors, halfPadding, texts } from '../../styles';
 
 interface Props extends ViewProps {
-  onPress: () => void;
   text: string;
   checked?: boolean;
+  onPress: () => void;
 }
 
-export default ({ onPress, text, style: externalStyle, checked = false }: Props) => {
+export default ({ text, checked = false, style, onPress }: Props) => {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View
@@ -19,16 +16,18 @@ export default ({ onPress, text, style: externalStyle, checked = false }: Props)
           {
             flexDirection: 'row',
             alignItems: 'center',
-            height: 24,
           },
-          externalStyle,
+          style,
         ]}
       >
-        <Image
-          source={checked ? checkboxActive : checkboxInactive}
-          style={{ height: 24, width: 24 }}
-        />
-        <Text style={{ ...texts.small, marginLeft: 8 }}>{text}</Text>
+        <View style={{ borderWidth: 2, borderRadius: 4, padding: 2, width: 24, height: 24 }}>
+          {checked && (
+            <View
+              style={{ backgroundColor: colors.green500, borderRadius: 4, width: 16, height: 16 }}
+            />
+          )}
+        </View>
+        <Text style={{ ...texts.xs, marginLeft: halfPadding }}>{text}</Text>
       </View>
     </TouchableWithoutFeedback>
   );

@@ -1,6 +1,6 @@
 import { Business, WithId } from 'appjusto-types';
 import React from 'react';
-import { SectionList, TouchableOpacity, View } from 'react-native';
+import { Image, SectionList, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
@@ -39,7 +39,7 @@ export default function ({ items, ListHeaderComponent, onSelect, onEndReached }:
         description={t(
           'Não encontramos nenhum resultado para a sua busca. Refaça a pesquisa ou utilize filtros diferentes.'
         )}
-        icon={icons.coneYellow}
+        icon={<Image source={icons.coneYellow} />}
       />
     );
   }

@@ -1,7 +1,6 @@
 import { Complement, WithId } from 'appjusto-types';
 import React from 'react';
-import { Text, View } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { Text, TouchableWithoutFeedback, View } from 'react-native';
 import { QuantityButton } from '../../../../../common/components/buttons/QuantityButton';
 import { useProductComplementImageURI } from '../../../../../common/store/api/business/hooks/useProductComplementImageURI';
 import { useContextBusinessId } from '../../../../../common/store/context/business';
@@ -37,7 +36,7 @@ export const ProductComplementListItem = ({ complement, selected, disabled, onTo
           alignItems: 'center',
           borderBottomWidth: 1,
           borderStyle: 'solid',
-          borderColor: colors.lightGrey,
+          borderColor: colors.grey50,
         }}
       >
         <View>
@@ -49,14 +48,14 @@ export const ProductComplementListItem = ({ complement, selected, disabled, onTo
           />
         </View>
         <View style={{ flex: 1, paddingHorizontal: padding }}>
-          <Text style={{ ...texts.default }}>{complement.name}</Text>
+          <Text style={{ ...texts.sm }}>{complement.name}</Text>
           <Text
-            style={{ ...texts.default, color: colors.darkGrey, marginTop: 4, flexWrap: 'wrap' }}
+            style={{ ...texts.sm, color: colors.grey700, marginTop: 4, flexWrap: 'wrap' }}
             numberOfLines={2}
           >
             {complement.description}
           </Text>
-          <Text style={{ ...texts.default, marginTop: 4 }}>{formatCurrency(complement.price)}</Text>
+          <Text style={{ ...texts.sm, marginTop: 4 }}>{formatCurrency(complement.price)}</Text>
         </View>
         <View>
           <ListItemImage uri={imageURI} size={96} />

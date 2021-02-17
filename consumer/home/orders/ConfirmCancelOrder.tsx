@@ -2,7 +2,7 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Image, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -37,14 +37,13 @@ export default ({ navigation, route }: Props) => {
     // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
   const cancellationCharge =
-    order.status === 'dispatching' &&
-    (order.dispatchingState === 'going-destination' ||
-      order.dispatchingState === 'arrived-destination');
+    order.dispatchingState === 'going-destination' ||
+    order.dispatchingState === 'arrived-destination';
   const description = cancellationCharge
     ? t('Como seu pedido já está a caminho do local de entrega, você não será reembolsado.')
     : t('Como seu pedido ainda não foi pegue, você não será cobrado pelo cancelamento.');
@@ -53,13 +52,13 @@ export default ({ navigation, route }: Props) => {
       <FeedbackView
         header={t('Tem certeza que deseja cancelar?')}
         description={description}
-        icon={icons.coneYellow}
+        icon={<Image source={icons.coneYellow} />}
       />
       <View
         style={{
           width: '100%',
           borderBottomWidth: 1,
-          borderBottomColor: colors.grey,
+          borderBottomColor: colors.grey500,
           marginBottom: padding,
         }}
       />

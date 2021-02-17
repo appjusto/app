@@ -14,21 +14,21 @@ export default function ({ title, subtitle, icon, grey }: Props) {
     <View
       style={{
         ...borders.default,
-        borderColor: grey ? colors.grey : colors.lightGrey,
+        borderColor: grey ? colors.grey500 : colors.grey50,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        backgroundColor: grey ? colors.lightGrey : colors.white,
+        backgroundColor: grey ? colors.grey50 : colors.white,
         padding,
       }}
     >
       <Image source={icon} />
       <View style={{ marginLeft: padding }}>
-        <Text style={{ ...texts.default }}>{title}</Text>
+        <Text style={{ ...texts.sm }}>{title}</Text>
         <Text
           style={{
-            ...texts.small,
-            color: colors.darkGrey,
+            ...texts.xs,
+            color: colors.grey700,
             flexWrap: 'wrap',
             maxWidth: '85%',
           }}

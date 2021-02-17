@@ -6,7 +6,7 @@ import { Image } from 'react-native';
 import { useQuery, useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../assets/icons';
-import useObserveOngoingOrders from '../../../common/store/api/order/hooks/useObserveOngoingOrders';
+import { useObserveOngoingOrders } from '../../../common/store/api/order/hooks/useObserveOngoingOrders';
 import { getUser } from '../../../common/store/user/selectors';
 import { colors, halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -64,7 +64,7 @@ export default function ({ navigation }: Props) {
     // console.log(notification);
     if (notification.clicked) {
       const data = notification.data as ChatPushMessageData;
-      navigation.navigate('OngoingNavigator', {
+      navigation.navigate('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: {
           orderId: data.orderId,
@@ -79,7 +79,7 @@ export default function ({ navigation }: Props) {
       tabBarOptions={{
         activeTintColor: colors.black,
         inactiveTintColor: colors.black,
-        activeBackgroundColor: colors.green,
+        activeBackgroundColor: colors.green500,
         inactiveBackgroundColor: colors.white,
         style: { height: 60, justifyContent: 'center' },
         tabStyle: {
@@ -87,7 +87,7 @@ export default function ({ navigation }: Props) {
           height: 40,
           marginTop: halfPadding,
         },
-        labelStyle: { ...texts.small, marginBottom: 4 },
+        labelStyle: { ...texts.xs, marginBottom: 4 },
         labelPosition: 'beside-icon',
       }}
     >

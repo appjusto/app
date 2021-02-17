@@ -22,23 +22,23 @@ export const OrderItems = ({ order, onEditItemPress, onAddItemsPress }: Props) =
         <View key={item.id}>
           <TouchableOpacity onPress={() => onEditItemPress(item.product.id, item.id)}>
             <View style={{ paddingHorizontal: padding, paddingVertical: 12 }}>
-              <Text style={[texts.default]}>{item.product.name}</Text>
+              <Text style={[texts.sm]}>{item.product.name}</Text>
               <View style={{ flexDirection: 'row' }}>
-                <Text style={{ ...texts.small, color: colors.green }}>{`${item.quantity}x `}</Text>
-                <Text style={{ ...texts.small, color: colors.darkGrey }}>
+                <Text style={{ ...texts.xs, color: colors.green500 }}>{`${item.quantity}x `}</Text>
+                <Text style={{ ...texts.xs, color: colors.grey700 }}>
                   {formatCurrency(item.product.price)}
                 </Text>
               </View>
               {item.complements?.map((complement) => (
                 <View key={complement.complementId}>
                   <Text
-                    style={{ ...texts.small, color: colors.darkGrey }}
+                    style={{ ...texts.xs, color: colors.grey700 }}
                   >{`+ ${complement.name}`}</Text>
                   <View style={{ flexDirection: 'row' }}>
                     <Text
-                      style={{ ...texts.small, color: colors.green }}
+                      style={{ ...texts.xs, color: colors.green500 }}
                     >{`${item.quantity}x `}</Text>
-                    <Text style={{ ...texts.small, color: colors.darkGrey }}>
+                    <Text style={{ ...texts.xs, color: colors.grey700 }}>
                       {formatCurrency(complement.price)}
                     </Text>
                   </View>
@@ -53,10 +53,10 @@ export const OrderItems = ({ order, onEditItemPress, onAddItemsPress }: Props) =
         <TouchableOpacity onPress={onAddItemsPress}>
           <Text
             style={{
-              ...texts.default,
+              ...texts.sm,
               paddingHorizontal: padding,
               paddingVertical: 12,
-              color: colors.darkGreen,
+              color: colors.green600,
             }}
           >
             {t('+ Adicionar mais itens')}

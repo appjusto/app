@@ -1,11 +1,11 @@
 import { OrderStatus } from 'appjusto-types';
 import dayjs from 'dayjs';
 import React, { useMemo } from 'react';
-import { Image, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import * as icons from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import useObserveOrders from '../../../../common/store/api/order/hooks/useObserveOrders';
+import { IconRequest } from '../../../../common/icons/icon-requests';
+import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
 import {
   getDeliveredOrders,
   getOrdersSince,
@@ -41,13 +41,13 @@ export default function () {
     <PaddedView
       style={{
         ...borders.default,
-        borderColor: colors.lightGrey,
+        borderColor: colors.grey50,
         backgroundColor: colors.white,
       }}
       half
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Image source={icons.requests} />
+        <IconRequest />
         <View style={{ marginLeft: padding }}>
           <View
             style={{
@@ -57,19 +57,19 @@ export default function () {
             }}
           >
             <View>
-              <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Hoje')}</Text>
-              <Text style={{ ...texts.medium, color: colors.black }}>
+              <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Hoje')}</Text>
+              <Text style={{ ...texts.md, color: colors.black }}>
                 {formatCurrency(todaysOrdersFee)}
               </Text>
             </View>
             <View>
-              <Text style={{ ...texts.small, color: colors.darkGreen }}>{t('Semana')}</Text>
-              <Text style={{ ...texts.medium, color: colors.black }}>
+              <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Semana')}</Text>
+              <Text style={{ ...texts.md, color: colors.black }}>
                 {formatCurrency(weeksOrdersFee)}
               </Text>
             </View>
           </View>
-          <Text style={{ marginTop: halfPadding, ...texts.small, color: colors.darkGrey }}>
+          <Text style={{ marginTop: halfPadding, ...texts.xs, color: colors.grey700 }}>
             {t('Veja todos os seus ganhos')}
           </Text>
         </View>

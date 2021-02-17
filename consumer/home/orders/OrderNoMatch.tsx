@@ -2,6 +2,7 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
+import { Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -13,10 +14,10 @@ import { LoggedParamList } from '../../types';
 import { OrderNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<OrderNavigatorParamList, 'OrderMatching'>,
+  StackNavigationProp<OrderNavigatorParamList, 'OrderNoMatch'>,
   BottomTabNavigationProp<LoggedParamList>
 >;
-type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'OrderMatching'>;
+type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'OrderNoMatch'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -25,7 +26,7 @@ type Props = {
 
 export default ({ navigation, route }: Props) => {
   // params
-  const { orderId } = route.params ?? {};
+  // const { orderId } = route.params ?? {};
 
   // app state
   const busy = useSelector(getUIBusy);
@@ -37,11 +38,12 @@ export default ({ navigation, route }: Props) => {
       description={t(
         'Infelizmente não encontramos nenhum entregador disponível. Tente novamente mais tarde.'
       )}
-      icon={icons.coneYellow}
+      icon={<Image source={icons.coneYellow} />}
     >
+      {/* TODO: start matching again */}
       <DefaultButton
         title={t('Tentar novamente')}
-        onPress={() => navigation.navigate('OrderMatching', { orderId })}
+        onPress={() => null}
         activityIndicator={busy}
         disabled={busy}
         style={{

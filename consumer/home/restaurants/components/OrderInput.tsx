@@ -18,9 +18,9 @@ export default function () {
         paddingHorizontal: 12,
       }}
     >
-      <Text style={{ ...texts.small, ...texts.bold }}>
+      <Text style={{ ...texts.xs, ...texts.bold }}>
         {t('Ordenar por: ')}
-        <Text style={{ ...texts.small }}>{t('Adicionados recentemente')}</Text>
+        <Text style={{ ...texts.xs }}>{t('Adicionados recentemente')}</Text>
       </Text>
       <ArrowBox />
     </View>

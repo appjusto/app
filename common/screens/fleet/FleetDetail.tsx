@@ -3,8 +3,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { OrderNavigatorParamList } from '../../../consumer/home/orders/types';
 import GainSimulator from '../../../courier/approved/main/profile/fleet/GainSimulator';
+import { FleetParamList } from '../../../courier/approved/main/profile/fleet/types';
 import { t } from '../../../strings';
 import { ApiContext } from '../../app/context';
 import DefaultButton from '../../components/buttons/DefaultButton';
@@ -17,8 +17,8 @@ import { getCourier } from '../../store/courier/selectors';
 import { colors, screens, texts } from '../../styles';
 import { formatCurrency, formatDistance } from '../../utils/formatters';
 
-type ScreenNavigationProp = StackNavigationProp<OrderNavigatorParamList, 'FleetDetail'>;
-type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'FleetDetail'>;
+type ScreenNavigationProp = StackNavigationProp<FleetParamList, 'FleetDetail'>;
+type ScreenRouteProp = RouteProp<FleetParamList, 'FleetDetail'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -40,18 +40,15 @@ export default function ({ navigation, route }: Props) {
   if (!fleet) {
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
   // UI handlers
   const confirmFleet = async () => {
     api.profile().updateProfile(courier.id, { fleet });
-    navigation.goBack();
+    navigation.navigate('ChooseFleet', { fleetId: fleet.id });
   };
-
-  console.log(fleet);
-  // courier.fleet.id
 
   const participants = `${fleet.participantsOnline} ${t('participantes')}`;
   const minFee = formatCurrency(fleet.minimumFee);
@@ -64,11 +61,9 @@ export default function ({ navigation, route }: Props) {
     <View style={[screens.config]}>
       <ScrollView>
         <PaddedView>
-          <Text style={[texts.big]}>{fleet.name}</Text>
-          <Text style={{ ...texts.small, color: colors.darkGreen, marginTop: 8 }}>
-            {participants}
-          </Text>
-          <Text style={{ ...texts.small, color: colors.darkGrey, marginTop: 8 }}>
+          <Text style={[texts.xxl]}>{fleet.name}</Text>
+          <Text style={{ ...texts.xs, color: colors.green600, marginTop: 8 }}>{participants}</Text>
+          <Text style={{ ...texts.xs, color: colors.grey700, marginTop: 8 }}>
             {fleet.description}
           </Text>
           <View
@@ -79,10 +74,10 @@ export default function ({ navigation, route }: Props) {
               alignItems: 'center',
             }}
           >
-            <Text style={{ ...texts.medium }}>{t('Pagamento Mínimo')}</Text>
+            <Text style={{ ...texts.md }}>{t('Pagamento Mínimo')}</Text>
             <RoundedText>{minFee}</RoundedText>
           </View>
-          <Text style={{ ...texts.default, color: colors.darkGrey, marginTop: 8 }}>
+          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
             {t(
               'Valor que os entregadores dessa frota receberão ao percorrer a Distância Inicial Mínima.'
             )}
@@ -95,10 +90,10 @@ export default function ({ navigation, route }: Props) {
               alignItems: 'center',
             }}
           >
-            <Text style={{ ...texts.medium }}>{t('Distância Inicial Mínima')}</Text>
+            <Text style={{ ...texts.md }}>{t('Distância Inicial Mínima')}</Text>
             <RoundedText>{minDistance}</RoundedText>
           </View>
-          <Text style={{ ...texts.default, color: colors.darkGrey, marginTop: 8 }}>
+          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
             {t(
               'Distância para o Pagamento Mínimo. Abaixo dessa distância, os entregadores dessa frota receberão o Pagamento Mínimo. Acima dessa distância, os entregadores receberão um Valor Adicional por Km Rodado.'
             )}
@@ -111,10 +106,10 @@ export default function ({ navigation, route }: Props) {
               alignItems: 'center',
             }}
           >
-            <Text style={{ ...texts.medium }}>{t('Valor Adicional por Km Rodado')}</Text>
+            <Text style={{ ...texts.md }}>{t('Valor Adicional por Km Rodado')}</Text>
             <RoundedText>{additionalPerKm}</RoundedText>
           </View>
-          <Text style={{ ...texts.default, color: colors.darkGrey, marginTop: 8 }}>
+          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
             {t(
               'Valor adicional por Km que os entregadores dessa frota receberão ao percorrer uma distância acima da Distância Inicial Mínima.'
             )}
@@ -127,10 +122,10 @@ export default function ({ navigation, route }: Props) {
               alignItems: 'center',
             }}
           >
-            <Text style={{ ...texts.medium }}>{t('Distância Máxima para Entrega')}</Text>
+            <Text style={{ ...texts.md }}>{t('Distância Máxima para Entrega')}</Text>
             <RoundedText>{maxDistance}</RoundedText>
           </View>
-          <Text style={{ ...texts.default, color: colors.darkGrey, marginTop: 8 }}>
+          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
             {t(
               'Distância máxima em Km que os entregadores dessa frota poderão percorrer para fazer uma entrega. Pedidos recebidos com distância máxima acima não serão exibidos.'
             )}
@@ -143,10 +138,10 @@ export default function ({ navigation, route }: Props) {
               alignItems: 'center',
             }}
           >
-            <Text style={{ ...texts.medium }}>{t('Distância Máxima até a Origem')}</Text>
+            <Text style={{ ...texts.md }}>{t('Distância Máxima até a Origem')}</Text>
             <RoundedText>{maxDistanceOrigin}</RoundedText>
           </View>
-          <Text style={{ ...texts.default, color: colors.darkGrey, marginTop: 8 }}>
+          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
             {t(
               'Distância máxima em km da posição atual até a origem do pedido que essa frota poderá percorrer. Pedidos recebidos com origem acima não serão exibidos.'
             )}
@@ -161,7 +156,7 @@ export default function ({ navigation, route }: Props) {
                 should be hidden when coming from home'Ver detalhes';
                 should behave differently when coming from consumer
                  */}
-                {flavor === 'courier' && courier.fleet!.id !== fleet.id && (
+                {courier.fleet!.id !== fleet.id && (
                   <DefaultButton
                     title={t('Ingressar nessa frota')}
                     onPress={confirmFleet}

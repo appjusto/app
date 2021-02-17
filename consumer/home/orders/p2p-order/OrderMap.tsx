@@ -3,6 +3,9 @@ import { Order } from 'appjusto-types';
 import React from 'react';
 import { LatLng, Marker, Polyline } from 'react-native-maps';
 import DefaultMap from '../../../../common/components/views/DefaultMap';
+import { IconMapCourier } from '../../../../common/icons/icon-mapCourier';
+import { IconMapDestination } from '../../../../common/icons/icon-mapDestination';
+import { IconMapOrigin } from '../../../../common/icons/icon-mapOrigin';
 
 type Props = {
   order?: Order;
@@ -21,14 +24,18 @@ export default function ({ order }: Props) {
   });
 
   return (
-    <DefaultMap
-      style={{ width: '100%', height: '100%' }}
-      coordinates={routeCoordinates}
-      fitToElements
-    >
-      <Marker coordinate={origin.location!} identifier="origin" />
-      <Marker coordinate={destination.location!} identifier="destination" />
-      {courier?.location && <Marker coordinate={courier.location} />}
+    <DefaultMap style={{ flex: 1, width: '100%' }} coordinates={routeCoordinates} fitToElements>
+      <Marker coordinate={origin.location!} identifier="origin">
+        <IconMapOrigin />
+      </Marker>
+      <Marker coordinate={destination.location!} identifier="destination">
+        <IconMapDestination />
+      </Marker>
+      {courier?.location && (
+        <Marker coordinate={courier.location}>
+          <IconMapCourier />
+        </Marker>
+      )}
       <Polyline coordinates={routeCoordinates} />
     </DefaultMap>
   );

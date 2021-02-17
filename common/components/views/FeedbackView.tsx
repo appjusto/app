@@ -1,14 +1,13 @@
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { View, Text, Image } from 'react-native';
-
-import { colors, texts, screens } from '../../styles';
+import { Text, View } from 'react-native';
+import { colors, screens, texts } from '../../styles';
 import PaddedView from '../containers/PaddedView';
 import ShowIf from './ShowIf';
 
 type Props = {
   header: string;
-  icon: any;
+  icon: React.ReactNode;
   description?: string;
   children?: React.ReactNode | React.ReactNode[];
   background?: string;
@@ -19,13 +18,11 @@ export default ({ header, description, icon, children, background }: Props) => {
     <PaddedView style={screens.default}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <View style={{ alignItems: 'center' }}>
-          <Text style={{ ...texts.big, textAlign: 'center' }}>{header}</Text>
-          <View style={{ height: 114, width: 114, marginTop: 22, marginBottom: 16 }}>
-            <Image source={icon} />
-          </View>
+          <Text style={{ ...texts.xxl, textAlign: 'center' }}>{header}</Text>
+          <View style={{ height: 114, width: 114, marginTop: 22, marginBottom: 16 }}>{icon}</View>
           <ShowIf test={!isEmpty(description)}>
             {() => (
-              <Text style={{ ...texts.default, color: colors.darkGrey, textAlign: 'center' }}>
+              <Text style={{ ...texts.sm, color: colors.grey700, textAlign: 'center' }}>
                 {description}
               </Text>
             )}

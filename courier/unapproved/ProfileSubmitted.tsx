@@ -2,10 +2,10 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-
-import * as icons from '../../assets/icons';
 import FeedbackView from '../../common/components/views/FeedbackView';
+import { IconMotocycle } from '../../common/icons/icon-motocycle';
 import { getCourier } from '../../common/store/courier/selectors';
+import { colors } from '../../common/styles';
 import { t } from '../../strings';
 import { PendingParamList } from './types';
 
@@ -31,7 +31,7 @@ export default function ({ navigation }: Props) {
       description={t(
         'Estamos analisando seus dados. Em breve você poderá começar a fazer suas entregas. Aguarde sua conta ser aprovada para continuar.'
       )}
-      icon={icons.motocycleYellow}
+      icon={<IconMotocycle circleColor={colors.yellow} />}
     />
   );
 }

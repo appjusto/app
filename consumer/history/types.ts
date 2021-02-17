@@ -3,7 +3,7 @@ export type HistoryParamList = {
   OrderDetail: {
     orderId: string;
   };
-  OrderMatching: {
+  OrderConfirming: {
     orderId: string;
   };
   ReviewCourier: {

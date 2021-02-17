@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-
 import HorizontalSelect, {
   HorizontalSelectItem,
 } from '../../../../common/components/buttons/HorizontalSelect';
@@ -48,7 +47,7 @@ export default function ({ orderId }: Props) {
             alignItems: 'center',
           }}
         >
-          <Text style={{ ...texts.medium, ...texts.bold }}>
+          <Text style={{ ...texts.md, ...texts.bold }}>
             {t('Seu pedido foi entregue corretamente?')}
           </Text>
         </PaddedView>

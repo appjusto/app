@@ -28,15 +28,15 @@ export const OrderTotal = ({ total }: Props) => {
             flex: 1,
           }}
         >
-          <Text style={{ ...texts.medium, ...texts.bold }}>{t('Valor total a pagar')}</Text>
-          <Text style={{ ...texts.mediumToBig }}>{formatCurrency(total)}</Text>
+          <Text style={{ ...texts.md, ...texts.bold }}>{t('Valor total a pagar')}</Text>
+          <Text style={{ ...texts.xl }}>{formatCurrency(total)}</Text>
         </View>
       </View>
       <Text
         style={{
           marginTop: padding,
-          ...texts.small,
-          color: colors.darkGrey,
+          ...texts.xs,
+          color: colors.grey700,
           paddingHorizontal: padding,
         }}
       >

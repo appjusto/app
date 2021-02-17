@@ -28,9 +28,9 @@ export default function () {
   // UI
   return (
     <PaddedView
-      style={{ ...borders.default, backgroundColor: colors.white, borderColor: colors.lightGrey }}
+      style={{ ...borders.default, backgroundColor: colors.white, borderColor: colors.grey50 }}
     >
-      <Text style={texts.medium}>{t('Método de entrega de hoje: ')}</Text>
+      <Text style={texts.md}>{t('Método de entrega de hoje: ')}</Text>
       <View style={{ marginTop: padding, flexDirection: 'row', justifyContent: 'space-between' }}>
         <IconButton
           title={t('Moto')}

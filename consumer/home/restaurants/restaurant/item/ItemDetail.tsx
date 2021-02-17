@@ -5,8 +5,7 @@ import { Complement, WithId } from 'appjusto-types';
 import { OrderItem } from 'appjusto-types/order/item';
 import { nanoid } from 'nanoid/non-secure';
 import React from 'react';
-import { ActivityIndicator, Image, Text, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../../common/app/context';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
@@ -91,10 +90,7 @@ export default function ({ navigation, route }: Props) {
     // get complements from product using ids
     const itemComplements = (product.complementsGroups ?? []).reduce<WithId<Complement>[]>(
       (result, group) => {
-        return [
-          ...result,
-          ...(group.items ?? []).filter((c) => complementsIds.indexOf(c.id) !== -1),
-        ];
+        return [...result, ...(group.items ?? []).filter((c) => complementsIds.includes(c.id))];
       },
       []
     );
@@ -106,7 +102,7 @@ export default function ({ navigation, route }: Props) {
   if (!product) {
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
@@ -135,11 +131,11 @@ export default function ({ navigation, route }: Props) {
           {imageURI && <Image source={{ uri: imageURI }} style={{ width: '100%', height: 240 }} />}
         </View>
         <View style={{ marginTop: padding }}>
-          <Text style={{ ...texts.mediumToBig }}>{product?.name ?? ''}</Text>
-          <Text style={{ ...texts.default, color: colors.darkGrey, marginVertical: 4 }}>
+          <Text style={{ ...texts.xl }}>{product?.name ?? ''}</Text>
+          <Text style={{ ...texts.sm, color: colors.grey700, marginVertical: 4 }}>
             {product?.description ?? ''}
           </Text>
-          <Text style={{ ...texts.default }}>{formatCurrency(product?.price ?? 0)}</Text>
+          <Text style={{ ...texts.sm }}>{formatCurrency(product?.price ?? 0)}</Text>
         </View>
       </View>
       <View
@@ -147,7 +143,7 @@ export default function ({ navigation, route }: Props) {
           borderBottomWidth: 1,
           borderStyle: 'solid',
           width: '100%',
-          borderColor: colors.grey,
+          borderColor: colors.grey500,
           marginTop: 24,
           marginBottom: halfPadding,
         }}
@@ -165,7 +161,7 @@ export default function ({ navigation, route }: Props) {
       <View style={{ paddingHorizontal: 12 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: halfPadding }}>
           <Feather name="info" size={14} />
-          <Text style={{ ...texts.default, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
+          <Text style={{ ...texts.sm, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
         </View>
         <DefaultInput
           placeholder={t(
@@ -184,7 +180,7 @@ export default function ({ navigation, route }: Props) {
           borderBottomWidth: 1,
           borderStyle: 'solid',
           width: '100%',
-          borderColor: colors.grey,
+          borderColor: colors.grey500,
           marginTop: 24,
           marginBottom: halfPadding,
         }}

@@ -1,8 +1,7 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { AppDispatch, ApiContext } from '../common/app/context';
+import { ApiContext, AppDispatch } from '../common/app/context';
 import { getFlavor } from '../common/store/config/selectors';
 import { getCourier } from '../common/store/courier/selectors';
 import { observeProfile } from '../common/store/user/actions';
@@ -33,7 +32,7 @@ export default function () {
     // showing the indicator until the profile is loaded
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   } else if (situation === 'approved') {

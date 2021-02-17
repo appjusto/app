@@ -1,10 +1,9 @@
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 import * as Sentry from 'sentry-expo';
-
 import { t } from '../../strings';
 import { colors } from '../styles';
 
@@ -29,7 +28,7 @@ if (Platform.OS === 'android') {
       vibrationPattern: [0, 250, 250, 250],
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
       bypassDnd: true,
-      lightColor: colors.lightGreen,
+      lightColor: colors.green100,
     });
     Notifications.setNotificationChannelAsync('order-chat', {
       name: t('Chat durante entrega'),
@@ -38,7 +37,7 @@ if (Platform.OS === 'android') {
       vibrationPattern: [0, 250, 250, 250],
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
       bypassDnd: true,
-      lightColor: colors.lightGreen,
+      lightColor: colors.green100,
     });
   })();
 }

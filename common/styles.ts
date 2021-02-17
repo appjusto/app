@@ -3,18 +3,18 @@ import { StyleSheet } from 'react-native';
 
 export const colors = {
   white: '#FFFFFF',
-  lightGrey: '#F2F6EA',
-  grey: '#C8D7CB',
-  darkGrey: '#697667',
+  grey50: '#F2F6EA',
+  grey500: '#C8D7CB',
+  grey700: '#697667',
   black: '#000000',
-  ultraLightGreen: '#F2FFE8',
-  lightGreen: '#B8E994',
-  green: '#78E08F',
-  darkGreen: '#4EA031',
+  green50: '#F2FFE8',
+  green100: '#B8E994',
+  green500: '#78E08F',
+  green600: '#4EA031',
+  yellow: '#FFE493',
   darkYellow: '#FFBE00',
   lightRed: '#FFF8F8',
   red: '#DC3545',
-  yellow: '#FFE493',
 };
 
 export const doublePadding = 32;
@@ -28,7 +28,7 @@ export const screens = StyleSheet.create({
   },
   config: {
     flex: 1,
-    backgroundColor: colors.lightGrey,
+    backgroundColor: colors.grey50,
   },
   centered: {
     flex: 1,
@@ -41,7 +41,7 @@ export const screens = StyleSheet.create({
   },
   lightGrey: {
     flex: 1,
-    backgroundColor: colors.lightGrey,
+    backgroundColor: colors.grey50,
     paddingHorizontal: padding,
   },
 });
@@ -51,7 +51,7 @@ export const borders = StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'solid',
     borderRadius: 8,
-    borderColor: colors.grey,
+    borderColor: colors.grey500,
   },
   squared: {
     borderWidth: 1.5,
@@ -68,43 +68,43 @@ export const borders = StyleSheet.create({
 });
 
 export const texts = StyleSheet.create({
-  tiny: {
+  xxs: {
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 11,
     lineHeight: 13,
   },
-  small: {
+  xs: {
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 13,
     lineHeight: 18,
   },
-  default: {
+  sm: {
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 15,
-    lineHeight: 19,
+    // lineHeight: 21,
   },
-  medium: {
+  md: {
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 16,
-    lineHeight: 21,
+    lineHeight: 22,
   },
-  mediumToBig: {
+  xl: {
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 20,
     lineHeight: 26,
   },
-  big: {
+  xxl: {
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 24,
-    lineHeight: 29,
+    lineHeight: 30,
   },
-  huge: {
+  xxxxl: {
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 40,

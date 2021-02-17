@@ -4,15 +4,15 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { CourierStatus } from 'appjusto-types';
 import { nanoid } from 'nanoid/non-secure';
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import * as icons from '../../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import ShowIf from '../../../../common/components/views/ShowIf';
 import useLocationUpdates from '../../../../common/hooks/useLocationUpdates';
 import useTallerDevice from '../../../../common/hooks/useTallerDevice';
+import { IconMotocycleCentered } from '../../../../common/icons/icon-motocycle-centered';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { updateProfile } from '../../../../common/store/user/actions';
@@ -66,7 +66,7 @@ export default function ({ navigation }: Props) {
       navigation.navigate('PermissionDeniedFeedback', {
         title: t('Precisamos acessar a localização do seu dispositivo'),
         subtitle: t(
-          'Para que possamos determinar o trajeto das corridas, precisamos que você dê acesso ao AppJusto para usar a localização do seu dispositivo.'
+          'Para que possamos determinar o trajeto com precisão, precisamos que você dê acesso ao AppJusto para usar sua localização.'
         ),
       });
       // removing previous token
@@ -91,12 +91,12 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <PaddedView style={[{ backgroundColor: working ? colors.green : colors.darkYellow }]}>
+    <PaddedView style={[{ backgroundColor: working ? colors.green500 : colors.darkYellow }]}>
       <ShowIf test={tallerDevice}>
         {() => (
           <Text
             style={[
-              texts.big,
+              texts.xxl,
               {
                 paddingBottom: tallerDevice ? doublePadding : padding,
                 marginTop: tallerDevice ? doublePadding : 0,
@@ -121,11 +121,11 @@ export default function ({ navigation }: Props) {
           }}
         >
           <View style={styles.controlItem}>
-            <Image source={icons.motocycleWhite} width={64} height={64} />
-            <Text style={[texts.default, { paddingTop: 4 }]}>
+            <IconMotocycleCentered />
+            <Text style={[texts.sm, { paddingTop: 4 }]}>
               {working ? t('Disponível para corridas') : t('Indisponível para corridas')}
             </Text>
-            <Text style={[texts.small, { paddingTop: halfPadding }]}>
+            <Text style={[texts.xs, { paddingTop: halfPadding }]}>
               {t('Mantenha ativado para aceitar corridas.')}
             </Text>
             <View
@@ -142,7 +142,7 @@ export default function ({ navigation }: Props) {
               <Switch
                 style={{ alignSelf: 'flex-start' }}
                 trackColor={{ false: colors.white, true: colors.white }}
-                thumbColor={working ? colors.green : colors.black}
+                thumbColor={working ? colors.green500 : colors.black}
                 ios_backgroundColor={colors.white}
                 onValueChange={toggleWorking}
                 value={working}
@@ -152,7 +152,7 @@ export default function ({ navigation }: Props) {
           <View style={[styles.controlItem, { backgroundColor: colors.white }]}>
             <Text
               style={{
-                ...texts.default,
+                ...texts.sm,
                 justifyContent: 'center',
                 alignItems: 'center',
                 marginBottom: 12,
@@ -161,28 +161,33 @@ export default function ({ navigation }: Props) {
               {t('Frota')} {courier.fleet?.name}
             </Text>
             <View style={[styles.priceTag]}>
-              <Text style={[texts.small]}>{t('R$')}</Text>
-              <Text style={[texts.huge]}>
+              <Text style={[texts.xs]}>{t('R$')}</Text>
+              <Text style={[texts.xxxxl]}>
                 {formatCurrency(courier.fleet?.minimumFee ?? 0, {
                   unit: '',
                   strip_insignificant_zeros: false,
                 })}
               </Text>
             </View>
-            <Text style={[texts.small, { marginTop: padding, color: colors.darkGrey }]}>
+            <Text style={[texts.xs, { marginTop: padding, color: colors.grey700 }]}>
               {`+ ${formatCurrency(
                 courier.fleet?.additionalPerKmAfterThreshold ?? 0
               )} km/adicional`}
             </Text>
-            <Text style={[texts.small, { color: colors.darkGrey }]}>
+            <Text style={[texts.xs, { color: colors.grey700 }]}>
               {t('Distância mínima')} {formatDistance(courier.fleet!.distanceThreshold)}
             </Text>
             <View style={{ flex: 1 }} />
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate('FleetNavigator', {
-                  screen: 'ChooseFleet',
-                  fleetId: courier.fleet!.id,
+                navigation.navigate('ProfileNavigator', {
+                  screen: 'FleetNavigator',
+                  params: {
+                    screen: 'ChooseFleet',
+                    params: {
+                      fleetId: courier.fleet!.id,
+                    },
+                  },
                 })
               }
               // onPress={() => navigation.navigate('FleetDetail', { fleetId: courier.fleet!.id })}

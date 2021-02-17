@@ -1,7 +1,6 @@
 import { Order, WithId } from 'appjusto-types';
 import React from 'react';
-import { Image, Linking, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Image, Linking, TouchableOpacity, View } from 'react-native';
 import * as icons from '../../../assets/icons';
 import { borders, colors, halfPadding } from '../../../common/styles';
 import { getNavigationLinkTo, NavigationApp } from './navigation';
@@ -15,9 +14,9 @@ export const RouteIcons = ({ order }: Props) => {
     const dispatchingState = order?.dispatchingState;
     let location = undefined;
     if (dispatchingState === 'going-pickup') {
-      location = order?.origin.location;
+      location = order.origin?.location;
     } else if (dispatchingState === 'arrived-pickup' || dispatchingState === 'going-destination') {
-      location = order?.destination.location;
+      location = order.destination?.location;
     }
     Linking.openURL(getNavigationLinkTo(app, location));
   };
@@ -39,7 +38,7 @@ export const RouteIcons = ({ order }: Props) => {
             width: 48,
             ...borders.default,
             borderRadius: 24,
-            borderColor: colors.lightGrey,
+            borderColor: colors.grey50,
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: colors.white,
@@ -55,7 +54,7 @@ export const RouteIcons = ({ order }: Props) => {
             width: 48,
             ...borders.default,
             borderRadius: 24,
-            borderColor: colors.lightGrey,
+            borderColor: colors.grey50,
             justifyContent: 'center',
             alignItems: 'center',
             marginLeft: halfPadding,

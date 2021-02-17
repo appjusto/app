@@ -30,7 +30,7 @@ export default function ({ navigation }: Props) {
   if (!fleets) {
     return (
       <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
@@ -40,11 +40,11 @@ export default function ({ navigation }: Props) {
         data={fleets}
         ListHeaderComponent={
           <View style={{ marginBottom: 32, paddingHorizontal: padding, paddingTop: padding }}>
-            <Text style={{ ...texts.big }}>{t('Escolha sua frota')}</Text>
+            <Text style={{ ...texts.xxl }}>{t('Escolha sua frota')}</Text>
             <Text
               style={{
-                ...texts.default,
-                color: colors.darkGrey,
+                ...texts.sm,
+                color: colors.grey700,
               }}
             >
               {t(
@@ -58,7 +58,7 @@ export default function ({ navigation }: Props) {
               onChangeText={setFleetSearch}
               style={{ marginBottom: 24, marginTop: padding }}
             />
-            <Text style={{ ...texts.default }}>
+            <Text style={{ ...texts.sm }}>
               {fleets.length} {t('frotas disponíveis')}
             </Text>
           </View>

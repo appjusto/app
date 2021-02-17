@@ -6,5 +6,5 @@ import { OngoingParamList } from './ongoing/types';
 export type ApprovedParamList = {
   MainNavigator: NestedNavigatorParams<MainParamList>;
   MatchingNavigator: NestedNavigatorParams<MatchingParamList>;
-  OngoingNavigator: NestedNavigatorParams<OngoingParamList>;
+  OngoingDeliveryNavigator: NestedNavigatorParams<OngoingParamList>;
 };

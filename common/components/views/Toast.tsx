@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Text, Animated, View } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-
+import { Animated, Text, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { hideToast } from '../../store/ui/actions';
 import { getToast } from '../../store/ui/selectors';
 import { borders, colors, halfPadding, padding, texts } from '../../styles';
@@ -53,7 +52,7 @@ export default function () {
           ...borders.rounder,
           ...borders.thicker,
           borderColor: colors.black,
-          backgroundColor: type === 'success' ? colors.green : colors.yellow,
+          backgroundColor: type === 'success' ? colors.green500 : colors.yellow,
           width: '100%',
           // flexWrap: 'wrap',
           padding: halfPadding,
@@ -62,7 +61,7 @@ export default function () {
           flex: 1,
         }}
       >
-        <Text style={{ ...texts.small, flexWrap: 'wrap' }} numberOfLines={3}>
+        <Text style={{ ...texts.xs, flexWrap: 'wrap' }} numberOfLines={3}>
           {message}
         </Text>
       </View>

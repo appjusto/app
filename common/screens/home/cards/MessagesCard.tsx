@@ -1,8 +1,7 @@
 import { Feather } from '@expo/vector-icons';
 import { PushMessage } from 'appjusto-types';
 import React from 'react';
-import { Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { useQuery } from 'react-query';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';
@@ -26,7 +25,7 @@ export const MessagesCard = ({ orderId, variant = 'standalone', onPress }: Props
           ...(variant === 'standalone'
             ? borders.default
             : {
-                borderBottomColor: colors.darkGrey,
+                borderBottomColor: colors.grey700,
                 borderBottomWidth: 1,
                 borderTopLeftRadius: 8,
                 borderTopRightRadius: 8,
@@ -36,11 +35,11 @@ export const MessagesCard = ({ orderId, variant = 'standalone', onPress }: Props
       >
         <PaddedView style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Feather name="message-circle" size={18} />
-          <Text style={{ ...texts.small, marginLeft: halfPadding }}>
+          <Text style={{ ...texts.xs, marginLeft: halfPadding }}>
             {t('Você tem')} {unreadCount} {t('novas mensagens.')}
           </Text>
           <View style={{ flex: 1 }} />
-          <Text style={{ ...texts.small, ...texts.bold, color: colors.darkGreen }}>
+          <Text style={{ ...texts.xs, ...texts.bold, color: colors.green600 }}>
             {t('Abrir chat')}
           </Text>
         </PaddedView>

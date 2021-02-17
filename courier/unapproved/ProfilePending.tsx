@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ProfileSituation } from 'appjusto-types';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,7 +33,7 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // context
-  const api = useContext(ApiContext);
+  const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   const queryClient = useQueryClient();
 
@@ -49,14 +49,13 @@ export default function ({ navigation, route }: Props) {
   const hasCompanyInfo = companyInfoSet(courier);
   const hasImages = !!currentSelfieQuery.data && !!currentDocumentImageQuery.data;
   const hasBankAccount = bankAccountSet(courier);
-  const totalSteps = 5;
-  const [stepsDone, setStepsDone] = useState(0);
-  const submitEnabled =
-    situationsAllowed.indexOf(courier.situation) > -1 && stepsDone === totalSteps;
+  const totalSteps = 4;
+  const [stepsDone, setStepsDone] = React.useState(0);
+  const submitEnabled = situationsAllowed.includes(courier.situation) && stepsDone === totalSteps;
 
   // side effects
   // once
-  useEffect(() => {
+  React.useEffect(() => {
     // although this screen is named 'ProfilePending', it's also the first screen of UnapprovedNavigator
     // which means that it will be shown if courier is rejected. so, if that's the case,
     // we navigate to ProfileRejected after a short delay to make sure it will work on all devices
@@ -67,7 +66,7 @@ export default function ({ navigation, route }: Props) {
     }
   }, []);
   // whenever situation changes
-  useEffect(() => {
+  React.useEffect(() => {
     if (courier.situation === 'submitted') {
       navigation.replace('ProfileSubmitted');
     }
@@ -75,7 +74,7 @@ export default function ({ navigation, route }: Props) {
 
   // whenever state updates
   // recalculate steps done
-  useEffect(() => {
+  React.useEffect(() => {
     let totalSteps = 0;
     if (hasPersonalInfo) totalSteps++;
     if (hasCompanyInfo) totalSteps++;
@@ -90,17 +89,17 @@ export default function ({ navigation, route }: Props) {
     hasCompanyInfo,
   ]);
   // whenever screen is focused
-  useEffect(() => {
+  React.useEffect(() => {
     navigation.addListener('focus', focusHandler);
     return () => navigation.removeListener('focus', focusHandler);
   });
 
   // handlers
-  const submitHandler = useCallback(() => {
+  const submitHandler = React.useCallback(() => {
     dispatch(submitProfile(api));
   }, []);
   // when focused, refetch queries to recalculate of steps done
-  const focusHandler = useCallback(() => {
+  const focusHandler = React.useCallback(() => {
     queryClient.refetchQueries();
   }, []);
 
@@ -110,25 +109,25 @@ export default function ({ navigation, route }: Props) {
       <ScrollView>
         {/* header */}
         <PaddedView>
-          <Text style={{ ...texts.big, marginBottom: 24 }}>{t('Cadastro de novo entregador')}</Text>
+          <Text style={{ ...texts.xxl, marginBottom: 24 }}>{t('Cadastro de novo entregador')}</Text>
           <DefaultButton
             title={t('Enviar cadastro')}
             onPress={submitHandler}
             disabled={!submitEnabled || busy}
             activityIndicator={busy}
           />
-          <Text style={[texts.default, { color: colors.darkGrey, paddingTop: 16 }]}>
+          <Text style={[texts.sm, { color: colors.grey700, paddingTop: 16 }]}>
             {t(
               'Preencha os dados a seguir e envie seu cadastro. Em até um dia você poderá começar a fazer suas entregas.'
             )}
           </Text>
-          <Text style={{ ...texts.default, color: colors.darkGreen, paddingTop: 16 }}>
+          <Text style={{ ...texts.sm, color: colors.green600, paddingTop: 16 }}>
             {stepsDone} {t('de')} {totalSteps} {t('dados preenchidos')}
           </Text>
         </PaddedView>
         <View
           style={{
-            borderBottomColor: colors.grey,
+            borderBottomColor: colors.grey500,
             borderStyle: 'solid',
             borderBottomWidth: 1,
             // marginTop: 16,

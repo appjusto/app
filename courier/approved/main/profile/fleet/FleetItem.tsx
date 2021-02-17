@@ -1,8 +1,7 @@
-import React, { ReactNode } from 'react';
-import { TouchableOpacity, View, Text, Image } from 'react-native';
-
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import ArrowBox from '../../../../../common/components/views/ArrowBox';
-import { texts, borders, colors, padding } from '../../../../../common/styles';
+import { borders, colors, padding, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 
@@ -39,15 +38,15 @@ export default function ({
             flex: 1,
           }}
         >
-          <Text style={{ ...texts.default }}>{name}</Text>
-          <Text style={{ ...texts.small, marginTop: 4, color: colors.darkGreen }}>
+          <Text style={{ ...texts.sm }}>{name}</Text>
+          <Text style={{ ...texts.xs, marginTop: 4, color: colors.green600 }}>
             {participants} {t('participantes online')}
           </Text>
           <Text
             style={{
-              ...texts.small,
+              ...texts.xs,
               marginTop: 8,
-              color: colors.darkGrey,
+              color: colors.grey700,
             }}
           >
             {description}
@@ -72,7 +71,7 @@ export default function ({
       </View>
       <View
         style={{
-          borderColor: colors.grey,
+          borderColor: colors.grey500,
           borderStyle: 'solid',
           borderWidth: 1,
           marginVertical: padding,
