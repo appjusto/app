@@ -24,6 +24,7 @@ import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import { CodeInput } from './code-input/CodeInput';
 import { RouteIcons } from './RouteIcons';
+import { StatusControl } from './StatusControl';
 import { OngoingParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
@@ -212,19 +213,19 @@ export default function ({ navigation, route }: Props) {
           <CourierDistanceBadge order={order} />
         </View>
       </View>
-      <View style={{ marginTop: padding, paddingHorizontal: padding }}>
-        {/* Slider */}
-        {/* <StatusControl status={nextStepLabel} nextStepHandler={nextStatepHandler} /> */}
-        {dispatchingState !== 'arrived-destination' && (
-          <DefaultButton
-            title={nextStepLabel}
-            onPress={nextStatepHandler}
-            activityIndicator={isLoading}
-            disabled={nextStepDisabled}
+      {/* Slider */}
+      {dispatchingState !== 'arrived-destination' && (
+        <View style={{ marginTop: padding, paddingHorizontal: padding }}>
+          <StatusControl
+            key={dispatchingState}
             style={{ marginBottom: padding }}
+            text={nextStepLabel}
+            disabled={nextStepDisabled}
+            isLoading={isLoading}
+            onConfirm={nextStatepHandler}
           />
-        )}
-      </View>
+        </View>
+      )}
       {dispatchingState === 'arrived-destination' && (
         <View>
           <HR height={padding} />

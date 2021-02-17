@@ -56,12 +56,7 @@ export const StepControl = ({ labels, activeIndex = 0, onChange, style, ...props
               activeOpacity={onChange ? 0.2 : 1}
               onLayout={(ev) => onMeasure(i, ev.nativeEvent.layout)}
             >
-              <StepControlItem
-                active={activeIndex === i}
-                // onLayout={(ev) => onMeasure(i, ev.nativeEvent.layout)}
-              >
-                {label}
-              </StepControlItem>
+              <StepControlItem active={activeIndex === i}>{label}</StepControlItem>
             </TouchableOpacity>
           </React.Fragment>
         ))}

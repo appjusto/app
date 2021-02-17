@@ -1,6 +1,6 @@
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { Animated, Dimensions, Text, View, ViewProps } from 'react-native';
+import { Animated, Dimensions, LayoutAnimation, Text, View, ViewProps } from 'react-native';
 import {
   GestureEvent,
   PanGestureHandler,
@@ -11,40 +11,42 @@ import { borders, colors, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
 interface Props extends ViewProps {
-  acceptHandler: () => void;
-  rejectHandler: () => void;
+  onAccept: () => void;
+  onReject: () => void;
 }
 
 const { width } = Dimensions.get('window');
 const trackHeight = 88;
 const thumbSize = 114;
 const center = (width - thumbSize) * 0.5;
-const marginHorizontal = padding * 2;
+const marginHorizontal = 0;
 const leftmost = (center - marginHorizontal) * -1;
-const rightmost = center - marginHorizontal;
+const rightmost = center - marginHorizontal - 30;
 const threshold = 30;
 
-export default function ({ acceptHandler, rejectHandler, style, ...props }: Props) {
+export const AcceptControl = ({ onAccept, onReject, style, ...props }: Props) => {
   // state
   const [translateX, setTranslateX] = React.useState(0);
-  const [disabled, setDisabled] = React.useState(false);
+  const [accepted, setAccepted] = React.useState(false);
+  const [rejected, setRejected] = React.useState(false);
   // UI handlers
   const onGestureEvent = (event: GestureEvent<PanGestureHandlerEventPayload>) => {
-    if (disabled) return;
+    if (accepted || rejected) return;
     const { translationX } = event.nativeEvent;
     if (translationX >= leftmost && translationX <= rightmost) setTranslateX(translationX);
   };
   const onGestureEnded = () => {
-    const rejected = translateX < 0 && translateX - leftmost < threshold;
-    const accepted = translateX > 0 && rightmost - translateX < threshold;
-    if (rejected) {
-      setDisabled(true);
+    const shouldReject = translateX < 0 && translateX - leftmost < threshold;
+    const shouldAccept = translateX > 0 && rightmost - translateX < threshold;
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    if (shouldReject) {
+      setRejected(true);
       setTranslateX(leftmost);
-      rejectHandler();
-    } else if (accepted) {
-      setDisabled(true);
+      onReject();
+    } else if (shouldAccept) {
+      setAccepted(true);
       setTranslateX(rightmost);
-      acceptHandler();
+      onAccept();
     } else {
       setTranslateX(0);
     }
@@ -86,10 +88,13 @@ export default function ({ acceptHandler, rejectHandler, style, ...props }: Prop
               transform: [{ translateX }],
             }}
           >
-            <IconMotocycle flipped />
+            <IconMotocycle
+              circleColor={rejected ? colors.yellow : colors.green500}
+              flipped={!rejected}
+            />
           </Animated.View>
         </PanGestureHandler>
       </View>
     </View>
   );
-}
+};

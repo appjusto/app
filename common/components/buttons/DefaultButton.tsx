@@ -8,20 +8,21 @@ import {
   ViewProps,
 } from 'react-native';
 import { borders, colors, padding, texts } from '../../styles';
-import ShowIf from '../views/ShowIf';
 
 export interface DefaultButtonProps extends TouchableOpacityProps, ViewProps {
   title: string;
   activityIndicator?: boolean;
+  icon?: React.ReactNode;
   secondary?: boolean;
 }
 
 export default function ({
   title,
-  disabled,
-  style: externalStyle,
-  secondary = false,
   activityIndicator = false,
+  icon,
+  secondary = false,
+  disabled,
+  style,
   ...props
 }: DefaultButtonProps) {
   const backgroundColor = secondary
@@ -47,15 +48,18 @@ export default function ({
             backgroundColor,
             borderColor,
           },
-          externalStyle,
+          style,
         ]}
       >
-        <ShowIf test={!activityIndicator}>
-          {() => <Text style={{ ...texts.sm, color }}>{title}</Text>}
-        </ShowIf>
-        <ShowIf test={activityIndicator}>
-          {() => <ActivityIndicator size="small" color={secondary ? colors.black : colors.white} />}
-        </ShowIf>
+        {!activityIndicator && (
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ ...texts.sm, color }}>{title}</Text>
+            {icon}
+          </View>
+        )}
+        {activityIndicator && (
+          <ActivityIndicator size="small" color={secondary ? colors.black : colors.white} />
+        )}
       </View>
     </TouchableOpacity>
   );

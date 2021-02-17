@@ -84,7 +84,7 @@ export const texts = StyleSheet.create({
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 15,
-    lineHeight: 21,
+    // lineHeight: 21,
   },
   md: {
     fontFamily: 'BarlowMedium',

@@ -1,69 +1,96 @@
 import { Feather } from '@expo/vector-icons';
-import Slider from '@react-native-community/slider';
-import React, { useCallback, useRef } from 'react';
-import { Text, View, ViewProps } from 'react-native';
-import { borders, colors, texts } from '../../../common/styles';
+import React from 'react';
+import { Animated, Dimensions, LayoutAnimation, Text, View, ViewProps } from 'react-native';
+import {
+  GestureEvent,
+  PanGestureHandler,
+  PanGestureHandlerEventPayload,
+} from 'react-native-gesture-handler';
+import DefaultButton from '../../../common/components/buttons/DefaultButton';
+import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
+import { t } from '../../../strings';
 
 interface Props extends ViewProps {
-  nextStepHandler: () => void;
-  status: string;
+  text: string;
+  disabled?: boolean;
+  isLoading?: boolean;
+  onConfirm: () => void;
 }
 
-export default function ({ nextStepHandler, status }: Props) {
-  // refs
-  const sliderRef = useRef<Slider>(null);
-  // helpers
-  const updateSliderValue = (value: number) => sliderRef.current?.setNativeProps({ value });
-  // handlers
-  const completeHandler = useCallback((value) => {
-    if (value <= 10) {
-      updateSliderValue(0);
-    } else if (value >= 90) {
-      updateSliderValue(100);
-      nextStepHandler();
+const { width } = Dimensions.get('window');
+const trackHeight = 48;
+const thumbWidth = 126;
+const marginHorizontal = 0;
+const leftmost = 0;
+const rightmost = width - thumbWidth - 30;
+const threshold = 30;
+
+export const StatusControl = ({
+  text,
+  disabled,
+  isLoading = false,
+  onConfirm,
+  style,
+  ...props
+}: Props) => {
+  // state
+  const [translateX, setTranslateX] = React.useState(0);
+  const [confirmed, setConfirmed] = React.useState(false);
+  // UI handlers
+  const onGestureEvent = (event: GestureEvent<PanGestureHandlerEventPayload>) => {
+    if (disabled || confirmed) return;
+    const { translationX } = event.nativeEvent;
+    if (translationX >= leftmost && translationX <= rightmost) setTranslateX(translationX);
+  };
+  const onGestureEnded = () => {
+    const shouldConfirm = translateX > 0 && rightmost - translateX < threshold;
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    if (shouldConfirm) {
+      setConfirmed(true);
+      setTranslateX(rightmost);
+      onConfirm();
     } else {
-      updateSliderValue(50);
+      setTranslateX(0);
     }
-  }, []);
-
-  // const { width } = Dimensions.get('window');
-
+  };
+  // UI
   return (
-    <View style={{ height: 48, width: '100%' }}>
-      {/* track */}
-      <View
-        style={{
-          // position: 'absolute',
-          width: '100%',
-          height: 48,
-          // flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'flex-end',
-          // alignItems: 'center',
-          backgroundColor: colors.grey50,
-          // paddingHorizontal,
-          ...borders.default,
-          // borderRadius: 64,
-        }}
-      >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={[texts.sm]}>{status}</Text>
+    <View style={[null, style]} {...props}>
+      <View>
+        {/* track */}
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            height: trackHeight,
+            paddingHorizontal: padding * 2,
+            marginHorizontal,
+            backgroundColor: colors.grey50,
+            ...borders.default,
+          }}
+        >
+          <Text style={[texts.sm]}>{text}</Text>
           <Feather name="check-circle" size={20} color={colors.black} style={{ marginLeft: 10 }} />
         </View>
+        {/* thumb */}
+        <PanGestureHandler onGestureEvent={onGestureEvent} onEnded={onGestureEnded}>
+          <Animated.View
+            style={{
+              position: 'absolute',
+              left: leftmost,
+              transform: [{ translateX }],
+            }}
+          >
+            <DefaultButton
+              title={t('Arrastar')}
+              style={{ width: thumbWidth, height: trackHeight }}
+              activityIndicator={isLoading}
+              icon={<Feather name="arrow-right" size={14} style={{ marginLeft: halfPadding }} />}
+            />
+          </Animated.View>
+        </PanGestureHandler>
       </View>
-      {/* slider */}
-      {/* <Slider
-        ref={sliderRef}
-        style={{ width: '100%', height: 48 }}
-        minimumValue={0}
-        maximumValue={100}
-        step={1}
-        minimumTrackTintColor="#00000000"
-        maximumTrackTintColor="#00000000"
-        value={0}
-        onSlidingComplete={completeHandler}
-        thumbImage={icons.slideConfirm}
-      /> */}
     </View>
   );
-}
+};

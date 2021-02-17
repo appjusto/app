@@ -9,7 +9,7 @@ import { colors, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
-import AcceptControl from './AcceptControl';
+import { AcceptControl } from './AcceptControl';
 import { MatchingParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
@@ -43,7 +43,6 @@ export default function ({ navigation, route }: Props) {
     try {
       setLoading(true);
       await api.order().matchOrder(orderId);
-
       navigation.replace('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: {
@@ -54,11 +53,10 @@ export default function ({ navigation, route }: Props) {
       navigation.replace('MatchingError');
     }
   };
-
   const rejectHandler = () => {
     navigation.replace('RefuseDelivery', { orderId });
   };
-
+  // UI
   return (
     <View style={[screens.default, screens.headless]}>
       <PaddedView style={{ flex: 1 }}>
@@ -147,9 +145,9 @@ export default function ({ navigation, route }: Props) {
         <View style={{ flex: 1 }} />
         {/* accept / reject control */}
         <AcceptControl
-          acceptHandler={acceptHandler}
-          rejectHandler={rejectHandler}
-          disabled={isLoading}
+          onAccept={acceptHandler}
+          onReject={rejectHandler}
+          style={{ marginBottom: padding * 4 }}
         />
       </PaddedView>
     </View>
