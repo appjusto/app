@@ -21,8 +21,8 @@ const {
 } = process.env;
 
 export default () => {
-  const version = '0.2.0';
-  const versionCode = 8;
+  const version = '0.3.0';
+  const versionCode = 9;
   const flavor = process.env.FLAVOR;
   const appId = `com.appjusto.${flavor}`;
   const icon = (platform) => `./assets/icon-${flavor}-${platform}.png`;
