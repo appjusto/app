@@ -19,7 +19,7 @@ interface Props extends ViewProps {
 
 const { width } = Dimensions.get('window');
 const trackHeight = 48;
-const thumbWidth = 126;
+const thumbWidth = 104;
 const marginHorizontal = 0;
 const leftmost = 0;
 const rightmost = width - thumbWidth - 30;
@@ -64,10 +64,11 @@ export const StatusControl = ({
             justifyContent: 'flex-end',
             alignItems: 'center',
             height: trackHeight,
-            paddingHorizontal: padding * 2,
+            paddingHorizontal: padding,
             marginHorizontal,
             backgroundColor: colors.grey50,
             ...borders.default,
+            borderColor: colors.grey50,
           }}
         >
           <Text style={[texts.sm]}>{text}</Text>
