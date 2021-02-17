@@ -1,11 +1,11 @@
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { borders, colors, padding, texts } from '../../../styles';
 
 type Props = {
   title: string;
   subtitle: string;
-  icon: any;
+  icon: React.ReactNode;
   grey?: boolean;
 };
 
@@ -22,7 +22,7 @@ export default function ({ title, subtitle, icon, grey }: Props) {
         padding,
       }}
     >
-      <Image source={icon} />
+      {icon}
       <View style={{ marginLeft: padding }}>
         <Text style={{ ...texts.sm }}>{title}</Text>
         <Text
