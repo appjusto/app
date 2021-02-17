@@ -1,10 +1,10 @@
 import { DispatchingState } from 'appjusto-types';
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import * as icons from '../../../../assets/icons';
 import { t } from '../../../../strings';
 import useTallerDevice from '../../../hooks/useTallerDevice';
+import { IconMotocycleCentered } from '../../../icons/icon-motocycle-centered';
 import { getFlavor } from '../../../store/config/selectors';
 import { borders, colors, halfPadding, padding, texts } from '../../../styles';
 
@@ -54,9 +54,7 @@ export default function ({ dispatchingState }: Props) {
             },
           ]}
         >
-          <View style={{ height: 64, width: 64, borderRadius: 32, backgroundColor: colors.white }}>
-            <Image source={icons.motocycleWhite} />
-          </View>
+          <IconMotocycleCentered />
           <View style={{ marginLeft: padding, flex: 1 }}>
             <Text style={{ ...texts.sm }}>{title}</Text>
             <View style={{ flex: 1 }}>

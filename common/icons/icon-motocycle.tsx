@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Svg, { Circle, Color, Path, SvgProps } from 'react-native-svg';
+import { colors } from '../styles';
 
 interface Props extends SvgProps {
   circleColor?: Color;
@@ -7,18 +8,22 @@ interface Props extends SvgProps {
 }
 
 export const IconMotocycle = ({
-  circleColor = '#78E08F',
+  circleColor = colors.green500,
   style,
   flipped = false,
   ...props
 }: Props) => {
+  const originalWidth = 115;
+  const originalHeight = 114;
+  const { width = originalWidth, height = originalHeight } = props;
   return (
     <Svg
-      width={115}
-      height={114}
-      fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      fill="none"
       style={[style, flipped ? { transform: [{ scaleX: -1 }] } : null]}
+      viewBox={`0 0 ${originalWidth} ${originalHeight}`}
+      width={width}
+      height={height}
       {...props}
     >
       <Circle cx={57} cy={57} r={57} fill={circleColor} />

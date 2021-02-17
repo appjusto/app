@@ -1,9 +1,9 @@
 import { Order, WithId } from 'appjusto-types';
 import React from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
-import * as icons from '../../../../assets/icons';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';
+import { IconMotocycleCentered } from '../../../icons/icon-motocycle-centered';
 import { IconRequest } from '../../../icons/icon-requests';
 import { borders, colors, padding, texts } from '../../../styles';
 import { MessagesCard } from './MessagesCard';
@@ -54,7 +54,7 @@ export default function ({ order, onSelect }: Props) {
             {order.type === 'food' ? (
               <IconRequest width={64} height={80} />
             ) : (
-              <Image source={icons.motocycleWhite} />
+              <IconMotocycleCentered />
             )}
             <View style={{ marginLeft: padding }}>
               <View

@@ -6,7 +6,6 @@ const iconCalendar = require('./icons/icon-calendar.png');
 const iconConeYellow = require('./icons/icon-cone-yellow.png');
 const iconGoogleMaps = require('./icons/icon-gmaps-logo.png');
 const iconLicense = require('./icons/icon-license.png');
-const iconMotocycleWhite = require('./icons/icon-motocycle-white.png');
 const iconPinPackageWhite = require('./icons/icon-pin-package-white.png');
 const iconPinPackage = require('./icons/icon-pin-package.png');
 const iconPinUser = require('./icons/icon-pin-user.png');
@@ -38,7 +37,6 @@ export const home = iconHome;
 export const calendar = iconCalendar;
 export const coneYellow = iconConeYellow;
 export const license = iconLicense;
-export const motocycleWhite = iconMotocycleWhite;
 export const pinPackageWhite = iconPinPackageWhite;
 export const pinPackage = iconPinPackage;
 export const pinUser = iconPinUser;
@@ -75,7 +73,6 @@ export default [
   cardIcon,
   coneYellow,
   license,
-  motocycleWhite,
   pinPackageWhite,
   pinPackage,
   pinUser,
