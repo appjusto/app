@@ -36,7 +36,7 @@ export default function ({ navigation, route }: Props) {
     <ScrollView style={{ ...screens.config }}>
       <View style={{ flex: 1 }}>
         <PaddedView>
-          <Text style={{ ...texts.xxl, marginBottom: padding }}>{t('Sua frota atual')}</Text>
+          <Text style={{ ...texts.x2l, marginBottom: padding }}>{t('Sua frota atual')}</Text>
           <Text
             style={{
               ...texts.sm,

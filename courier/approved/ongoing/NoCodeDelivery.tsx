@@ -66,7 +66,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
       <View style={{ height: 114, width: 114, marginTop: 80, marginBottom: padding }}>
         <Image source={motocycle} />
       </View>
-      <Text style={{ ...texts.xxl }}>{t('Escolha o motivo da confirmação sem código:')}</Text>
+      <Text style={{ ...texts.x2l }}>{t('Escolha o motivo da confirmação sem código:')}</Text>
       <View style={{ marginTop: padding }}>
         {issues?.map((issue) => (
           <RadioButton

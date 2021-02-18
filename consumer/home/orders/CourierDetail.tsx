@@ -4,14 +4,12 @@ import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import RoundedProfileImg from '../../../common/components/icons/RoundedProfileImg';
 import HR from '../../../common/components/views/HR';
-import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
-import { formatDate } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import SingleHeader from '../restaurants/SingleHeader';
+import { AboutCourier } from './components/AboutCourier';
 import OrderFleetCard from './OrderFleetCard';
 import { OrderNavigatorParamList } from './types';
 
@@ -37,12 +35,12 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
-  const tallerDevice = useTallerDevice();
+
   return (
     <ScrollView style={{ backgroundColor: colors.white }}>
       <View style={{ ...screens.default, paddingBottom: halfPadding }}>
         <SingleHeader title={t('Sobre o pedido')} />
-        <View style={{ paddingHorizontal: padding, marginTop: padding }}>
+        <View style={{ paddingHorizontal: padding, marginTop: padding, marginBottom: halfPadding }}>
           <DefaultButton
             title={t('Alterar a rota de retirada ou entrega')}
             style={{ marginBottom: 8, flex: 2 }}
@@ -69,43 +67,9 @@ export default function ({ navigation, route }: Props) {
           </View>
         </View>
       </View>
-      <HR height={8} />
+      <HR height={padding} />
       <View style={{ paddingBottom: padding }}>
-        <SingleHeader title={t('Sobre o entregador')} />
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginBottom: padding,
-            paddingHorizontal: padding,
-          }}
-        >
-          <View>
-            <RoundedProfileImg flavor="courier" id={order.courier!.id} />
-          </View>
-          <View style={{ marginLeft: tallerDevice ? 24 : 12 }}>
-            <Text style={{ ...texts.md }}>{order.courier?.name}</Text>
-            <Text style={{ ...texts.xs, color: colors.grey700, marginTop: 8 }}>
-              {t('No appJusto desde')}
-            </Text>
-            <Text style={{ ...texts.xs }}>
-              {formatDate(
-                (order.courier!.joined as firebase.firestore.Timestamp).toDate(),
-                'monthYear'
-              )}
-            </Text>
-          </View>
-        </View>
-        <View style={{ marginTop: 12, alignItems: 'flex-start', paddingHorizontal: padding }}>
-          <Text style={{ ...texts.xs, color: colors.grey700 }}>
-            {t('Entregas realizadas perfeitamente')}
-          </Text>
-          <Text style={{ ...texts.md }}>{order.courier?.statistics?.deliveries ?? 0}</Text>
-        </View>
-        <View style={{ marginTop: 16, alignItems: 'flex-start', paddingHorizontal: padding }}>
-          <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Entregas canceladas')}</Text>
-          <Text style={{ ...texts.md }}>{order.courier?.statistics?.canceled ?? 0}</Text>
-        </View>
+        <AboutCourier order={order} />
         <SingleHeader title={t('Integrante da frota')} />
         <PaddedView>
           <OrderFleetCard fleet={order.fare!.fleet} />

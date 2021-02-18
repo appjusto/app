@@ -56,7 +56,7 @@ export default function ({ navigation }: Props) {
   // UI
   return (
     <View style={{ ...screens.lightGrey }}>
-      <Text style={{ ...texts.xxl, marginTop: 16 }}>
+      <Text style={{ ...texts.x2l, marginTop: 16 }}>
         {t('Tem certeza que deseja excluir sua conta?')}
       </Text>
       <Text style={{ ...texts.sm, marginTop: 16, color: colors.grey700 }}>

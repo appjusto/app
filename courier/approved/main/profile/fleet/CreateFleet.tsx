@@ -78,7 +78,7 @@ export default function ({ navigation, route }: Props) {
     <ScrollView>
       <View style={{ ...screens.config }}>
         <PaddedView>
-          <Text style={{ ...texts.xxl }}>{t('Criar nova frota')}</Text>
+          <Text style={{ ...texts.x2l }}>{t('Criar nova frota')}</Text>
           <Text style={{ ...texts.sm, color: colors.grey700, marginVertical: 8 }}>
             {t('Preencha as informações da sua frota')}
           </Text>

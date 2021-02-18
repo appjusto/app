@@ -115,11 +115,16 @@ export default function ({ route }: Props) {
                 padding={12}
               >
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
-                  <Text style={[texts.xs, { flexWrap: 'wrap' }]}>{message.message}</Text>
-                  <Text style={[texts.xxs, { marginLeft: halfPadding, alignSelf: 'flex-end' }]}>
-                    {message.timestamp
-                      ? formatTime((message.timestamp as firebase.firestore.Timestamp).toDate())
-                      : ''}
+                  <Text style={{ ...texts.sm, flexWrap: 'wrap' }}>{message.message}</Text>
+                  <Text
+                    style={{
+                      ...texts.xs,
+                      color: colors.grey700,
+                      marginLeft: halfPadding,
+                      alignSelf: 'flex-end',
+                    }}
+                  >
+                    {message.timestamp ? formatTime(message.timestamp) : ''}
                   </Text>
                 </View>
               </PaddedView>

@@ -27,7 +27,7 @@ export default ({ navigation, route }: Props) => {
   // UI
   return (
     <PaddedView style={{ ...screens.config, paddingTop: padding }}>
-      <Text style={{ ...texts.xxl }}>{title}</Text>
+      <Text style={{ ...texts.x2l }}>{title}</Text>
       <Text style={{ ...texts.sm, color: colors.grey700, marginVertical: 32 }}>{subtitle}</Text>
       <DefaultButton
         title={t('Acessar configurações do dispositivo')}

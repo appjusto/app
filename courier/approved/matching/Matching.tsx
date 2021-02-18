@@ -62,10 +62,10 @@ export default function ({ navigation, route }: Props) {
       <PaddedView style={{ flex: 1 }}>
         {/* header */}
         <View style={{ marginTop: padding, alignItems: 'center' }}>
-          <Text style={[texts.xxl, { color: colors.green600 }]}>
+          <Text style={[texts.x2l, { color: colors.green600 }]}>
             {t('Nova corrida para você!')}
           </Text>
-          <Text style={[texts.xxxxl]}>{formatCurrency(matchRequest.courierFee)}</Text>
+          <Text style={[texts.x40l]}>{formatCurrency(matchRequest.courierFee)}</Text>
         </View>
         <View style={{ flex: 1 }} />
         {/* body */}

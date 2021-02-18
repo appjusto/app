@@ -7,7 +7,7 @@ export default function Terms() {
   return (
     <ScrollView>
       <View style={{ ...screens.lightGrey, paddingBottom: 32 }}>
-        <Text style={{ ...texts.xxl, marginBottom: 8, marginTop: 16 }}>
+        <Text style={{ ...texts.x2l, marginBottom: 8, marginTop: 16 }}>
           {t('Termos de uso e política de privacidade')}
         </Text>
         <Text style={{ ...texts.sm, marginTop: 16, color: colors.grey700 }}>

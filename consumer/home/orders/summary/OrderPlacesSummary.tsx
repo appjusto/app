@@ -36,7 +36,10 @@ export const OrderPlacesSummary = ({ order, onEditStep }: Props) => {
       )}
       {route && (
         <RoundedText>
-          {separateWithDot(formatDistance(route.distance), formatDuration(route.duration))}
+          {separateWithDot(
+            formatDistance(route.distance),
+            `${t('Estimativa: ')}${formatDuration(route.duration)}`
+          )}
         </RoundedText>
       )}
     </PaddedView>
