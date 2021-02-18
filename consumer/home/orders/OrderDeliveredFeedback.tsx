@@ -54,24 +54,22 @@ export default ({ navigation, route }: Props) => {
   }
 
   //handler
-  const finishHandler = () => {
-    (async () => {
-      setLoading(true);
-      try {
-        if (reviewType) {
-          await api.courier().addReview(order.courier!.id, {
-            type: reviewType,
-            comment,
-            orderId,
-          });
-        }
-        if (tip > 0) await api.order().tipCourier(order.id, tip);
-        navigation.navigate('Home');
-      } catch (error) {
-        dispatch(showToast(t('Não foi possível enviar o comentário')));
+  const finishHandler = async () => {
+    setLoading(true);
+    try {
+      if (reviewType) {
+        await api.courier().addReview(order.courier!.id, {
+          type: reviewType,
+          comment,
+          orderId,
+        });
       }
-      setLoading(false);
-    })();
+      if (tip > 0) await api.order().tipCourier(order.id, tip);
+      navigation.navigate('Home');
+    } catch (error) {
+      dispatch(showToast(t('Não foi possível enviar o comentário')));
+    }
+    setLoading(false);
   };
   // UI
   return (
