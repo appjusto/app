@@ -34,10 +34,10 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const { orderId } = route.params;
-
   // screen state
   const { order } = useObserveOrder(orderId);
-
+  const [tip, setTip] = React.useState(0);
+  // UI
   if (!order) {
     return (
       <View style={screens.centered}>
@@ -45,7 +45,6 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
-
   return (
     <View style={{ ...screens.default }}>
       <ScrollView>
@@ -82,13 +81,7 @@ export default function ({ navigation, route }: Props) {
           </PaddedView>
         </View>
         <HR height={padding} />
-        <TipControl
-          orderId={order.id}
-          orderTip={order.tip?.value ?? 0}
-          courierId={order.courier!.id}
-          courierName={order.courier!.name}
-          joined={order.courier?.joined}
-        />
+        <TipControl order={order} tip={tip} onChange={(value) => setTip(value)} />
         <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
           <DefaultButton
             title={t('Avaliar o entregador')}

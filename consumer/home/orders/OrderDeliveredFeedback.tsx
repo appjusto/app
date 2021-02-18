@@ -5,6 +5,7 @@ import React from 'react';
 import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as icons from '../../../assets/icons';
+import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import HR from '../../../common/components/views/HR';
@@ -29,8 +30,18 @@ type Props = {
 export default ({ navigation, route }: Props) => {
   // params
   const { orderId } = route.params;
+  // context
+  const api = React.useContext(ApiContext);
   // screen state
   const { order } = useObserveOrder(orderId);
+  const [tip, setTip] = React.useState(0);
+  const [isLoading, setLoading] = React.useState(false);
+  // UI handlers
+  const tipHandler = async () => {
+    setLoading(true);
+    await api.order().tipCourier(order!.id, tip);
+    setLoading(false);
+  };
   // UI
   if (!order) {
     return (
@@ -64,11 +75,10 @@ export default ({ navigation, route }: Props) => {
         <HR height={padding} />
         {/* tip */}
         <TipControl
-          orderId={order.id}
-          orderTip={order.tip?.value ?? 0}
-          courierId={order.courier!.id}
-          courierName={order.courier!.name}
-          joined={order.courier?.joined}
+          order={order}
+          tip={tip}
+          onChange={(value) => setTip(value)}
+          onConfirm={() => tipHandler}
         />
         <HR />
         {/* actions */}

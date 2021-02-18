@@ -1,61 +1,38 @@
-import React, { useCallback, useContext, useState } from 'react';
+import { Order } from 'appjusto-types';
+import React from 'react';
 import { Text, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import HorizontalSelect, {
   HorizontalSelectItem,
 } from '../../../../common/components/buttons/HorizontalSelect';
 import RoundedProfileImg from '../../../../common/components/icons/RoundedProfileImg';
-import { tipCourier } from '../../../../common/store/order/actions';
-import { showToast } from '../../../../common/store/ui/actions';
-import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { formatCurrency, formatDate } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 
 type Props = {
-  orderId: string;
-  orderTip: number;
-  courierId: string;
-  courierName: string;
-  joined?: firebase.firestore.FieldValue;
+  order: Order;
+  tip: number;
+  isLoading?: boolean;
+  onChange: (value: number) => void;
+  onConfirm?: () => void;
 };
 
-export default function ({ orderId, orderTip = 0, courierId, courierName, joined }: Props) {
-  // context
-  const api = useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
-  const alreadyTipped = orderTip > 0;
+const data: HorizontalSelectItem[] = [
+  { id: '0', title: t('Sem caixinha'), data: 0 },
+  { id: '1', title: formatCurrency(100), data: 100 },
+  { id: '3', title: formatCurrency(300), data: 300 },
+  { id: '5', title: formatCurrency(500), data: 500 },
+  { id: '8', title: formatCurrency(800), data: 800 },
+  { id: '10', title: formatCurrency(1000), data: 1000 },
+  { id: '15', title: formatCurrency(1500), data: 1500 },
+  { id: '30', title: formatCurrency(3000), data: 3000 },
+];
 
-  // app state
-  const busy = useSelector(getUIBusy);
-
-  // data
-  const data: HorizontalSelectItem[] = [
-    { id: '0', title: t('Sem caixinha'), data: 0 },
-    { id: '1', title: formatCurrency(100), data: 100 },
-    { id: '3', title: formatCurrency(300), data: 300 },
-    { id: '5', title: formatCurrency(500), data: 500 },
-    { id: '8', title: formatCurrency(800), data: 800 },
-    { id: '10', title: formatCurrency(1000), data: 1000 },
-    { id: '15', title: formatCurrency(1500), data: 1500 },
-    { id: '30', title: formatCurrency(3000), data: 3000 },
-  ];
-
+export default function ({ order, tip, isLoading = false, onChange, onConfirm }: Props) {
+  const alreadyTipped = Boolean(order.tip?.value);
   // state
-  const [tip, setTip] = useState(data.find((d) => d.data === orderTip) ?? data[0]);
-
-  // handlers
-  const tipHandler = useCallback(() => {
-    (async () => {
-      try {
-        await dispatch(tipCourier(api)(orderId, tip.data));
-      } catch (error) {
-        dispatch(showToast(t('Não foi possível enviar a gorjeta.')));
-      }
-    })();
-  }, [tip]);
+  const selectedtip = data.find((d) => d.data === tip) ?? data[0];
   // UI
   return (
     <View style={{ paddingHorizontal: padding, paddingTop: padding }}>
@@ -67,25 +44,30 @@ export default function ({ orderId, orderTip = 0, courierId, courierName, joined
       </View>
       <View style={{ paddingBottom: padding }}>
         <View style={{ flexDirection: 'row', paddingBottom: padding, marginTop: 24 }}>
-          <RoundedProfileImg flavor="courier" id={courierId} />
-          {joined && (
+          <RoundedProfileImg flavor="courier" id={order.courier?.id} />
+          {order.courier?.joined && (
             <View style={{ marginLeft: halfPadding }}>
-              <Text style={[texts.sm]}>{courierName}</Text>
+              <Text style={[texts.sm]}>{order.courier?.name}</Text>
               <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('No appJusto desde')}</Text>
-              <Text style={{ ...texts.xs }}>
-                {formatDate((joined as firebase.firestore.Timestamp).toDate(), 'monthYear')}
-              </Text>
+              <Text style={{ ...texts.xs }}>{formatDate(order.courier?.joined, 'monthYear')}</Text>
             </View>
           )}
         </View>
-        <HorizontalSelect disabled={orderTip > 0} data={data} selected={tip} onSelect={setTip} />
-        <DefaultButton
-          style={{ marginTop: padding }}
-          title={alreadyTipped ? t('Obrigado pela caixinha!') : t('Enviar caixinha')}
-          disabled={alreadyTipped || tip.data === 0 || busy}
-          activityIndicator={busy}
-          onPress={tipHandler}
+        <HorizontalSelect
+          disabled={alreadyTipped}
+          data={data}
+          selected={selectedtip}
+          onSelect={(tip) => onChange(tip.data)}
         />
+        {onConfirm && (
+          <DefaultButton
+            style={{ marginTop: padding }}
+            title={alreadyTipped ? t('Obrigado pela caixinha!') : t('Enviar caixinha')}
+            disabled={alreadyTipped || selectedtip.data === 0 || isLoading}
+            activityIndicator={isLoading}
+            onPress={() => onConfirm()}
+          />
+        )}
       </View>
     </View>
   );
