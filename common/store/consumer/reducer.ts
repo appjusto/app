@@ -12,7 +12,10 @@ import {
 import { ConsumerState, SearchParam } from './types';
 
 const initialState: ConsumerState = {
-  restaurantsSearchParams: [{ type: 'order', kind: 'restaurant', value: 'distance' }],
+  restaurantsSearchParams: [
+    { type: 'order', kind: 'restaurant', value: 'distance' },
+    { kind: 'restaurant', type: 'category', value: 'Mexicano' },
+  ],
   productSearchParameters: [{ type: 'order', kind: 'product', value: 'distance' }],
 };
 

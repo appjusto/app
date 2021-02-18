@@ -6,7 +6,10 @@ import * as icons from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import { useSearchRestaurants } from '../../../../common/store/api/search/useSearchRestaurants';
-import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
+import {
+  getCurrentLocation,
+  getRestaurantsSearchParams,
+} from '../../../../common/store/consumer/selectors';
 import { padding, screens } from '../../../../common/styles';
 import FilterSelector from '../components/filter/FilterSelector';
 import { RestaurantsNavigatorParamList } from '../types';
@@ -23,9 +26,10 @@ export default function ({ navigation }: Props) {
   const searchInputRef = React.useRef<TextInput>();
   // redux store
   const currentLocation = useSelector(getCurrentLocation);
+  const filters = useSelector(getRestaurantsSearchParams);
   // state
   const [search, setSearch] = useState<string>();
-  const { restaurants } = useSearchRestaurants(currentLocation, search);
+  const { restaurants } = useSearchRestaurants(currentLocation, search, filters);
   // initial focus
   React.useEffect(() => {
     searchInputRef.current?.focus();

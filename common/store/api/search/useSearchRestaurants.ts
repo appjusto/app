@@ -3,8 +3,13 @@ import { Business, LatLng, WithId } from 'appjusto-types';
 import { debounce } from 'lodash';
 import React from 'react';
 import { ApiContext } from '../../../app/context';
+import { SearchParam } from '../../consumer/types';
 
-export const useSearchRestaurants = (coords: LatLng | undefined, search?: string) => {
+export const useSearchRestaurants = (
+  coords: LatLng | undefined,
+  name?: string,
+  filters?: SearchParam[]
+) => {
   // context
   const api = React.useContext(ApiContext);
   // state
@@ -12,23 +17,29 @@ export const useSearchRestaurants = (coords: LatLng | undefined, search?: string
   const [restaurants, setRestaurants] = React.useState<WithId<Business>[]>();
   const [isLoading, setLoading] = React.useState(false);
   // side effects
+  const search = async (
+    location: LatLng,
+    input: string,
+    filters?: SearchParam[],
+    page?: number
+  ) => {
+    setLoading(true);
+    setResponse(await api.search().searchRestaurants(location, input, filters, page));
+    setLoading(false);
+  };
   const debouncedSearch = React.useCallback(
-    debounce<(location: LatLng, input: string, page?: number) => void>(
-      async (location, input, page) => {
-        setLoading(true);
-        setResponse(await api.search().searchRestaurants(location, input, page));
-        setLoading(false);
-      },
+    debounce<(location: LatLng, input: string, filters?: SearchParam[], page?: number) => void>(
+      search,
       500
     ),
     []
   );
   // debounce search when search input changes
   React.useEffect(() => {
-    if (search === undefined) return;
+    if (name === undefined) return;
     if (!coords) return;
-    debouncedSearch(coords, search);
-  }, [search, coords]);
+    debouncedSearch(coords, name, filters);
+  }, [coords, name, filters]);
   // update results when response changes
   React.useEffect(() => {
     if (!response) return;
@@ -38,12 +49,12 @@ export const useSearchRestaurants = (coords: LatLng | undefined, search?: string
   }, [response]);
   // result
   const fetchNextPage = React.useCallback(() => {
-    if (search === undefined) return;
+    if (name === undefined) return;
     if (!coords) return;
     if (!response) return;
     const hasNextPage = response.page + 1 < response.nbPages;
-    if (hasNextPage) debouncedSearch(coords, search, response.page + 1);
-  }, [search, coords, response]);
+    if (hasNextPage) debouncedSearch(coords, name, filters, response.page + 1);
+  }, [name, coords, response]);
 
   return { restaurants, isLoading, fetchNextPage };
 };
