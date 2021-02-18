@@ -34,15 +34,16 @@ type Props = {
 
 export default ({ navigation, route }: Props) => {
   // params
-  // const { orderId } = route.params;
-  const orderId = '0UJDXO8iVszWCTguPCtm';
-  //context
+  const { orderId } = route.params;
+  // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // screen state
   const { order } = useObserveOrder(orderId);
   const [comment, setComment] = React.useState('');
   const [reviewType, setReviewType] = React.useState<ReviewType>();
+  const [tip, setTip] = React.useState(0);
+  const [isLoading, setLoading] = React.useState(false);
 
   if (!order) {
     return (
@@ -53,21 +54,30 @@ export default ({ navigation, route }: Props) => {
   }
 
   //handler
-  //add handler to send tip and review when clicking "Finalizar"
   const finishHandler = () => {
-    if (!reviewType) return;
-    (async () => {
-      try {
-        await api.courier().addReview(order.courier?.id, {
-          type: reviewType,
-          comment,
-          orderId,
-        });
-      } catch (error) {
-        dispatch(showToast(t('Não foi possível enviar o comentário')));
-      }
-      navigation.navigate('Home');
-    })();
+    if (reviewType) {
+      (async () => {
+        setLoading(true);
+        try {
+          await api.courier().addReview(order.courier?.id, {
+            type: reviewType,
+            comment,
+            orderId,
+          });
+        } catch (error) {
+          dispatch(showToast(t('Não foi possível enviar o comentário')));
+        }
+        setLoading(false);
+      })();
+    }
+    if (tip > 0) {
+      (async () => {
+        setLoading(true);
+        await api.order().tipCourier(order!.id, tip);
+        setLoading(false);
+      })();
+    }
+    navigation.navigate('Home');
   };
   // UI
   return (
@@ -94,13 +104,7 @@ export default ({ navigation, route }: Props) => {
         </PaddedView>
         <HR height={padding} />
         {/* tip */}
-        <TipControl
-          orderId={order.id}
-          orderTip={order.tip?.value ?? 0}
-          courierId={order.courier!.id}
-          courierName={order.courier!.name}
-          joined={order.courier?.joined}
-        />
+        <TipControl order={order} tip={tip} onChange={(value) => setTip(value)} />
         <View
           style={{
             flexDirection: 'row',
@@ -154,7 +158,7 @@ export default ({ navigation, route }: Props) => {
         <View style={{ paddingHorizontal: padding }}>
           <DefaultButton
             title={t('Finalizar')}
-            onPress={() => navigation.navigate('Home')}
+            onPress={finishHandler}
             style={{ marginTop: padding }}
           />
           <View
