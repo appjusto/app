@@ -40,7 +40,7 @@ export default function ({ navigation }: Props) {
         data={fleets}
         ListHeaderComponent={
           <View style={{ marginBottom: 32, paddingHorizontal: padding, paddingTop: padding }}>
-            <Text style={{ ...texts.xxl }}>{t('Escolha sua frota')}</Text>
+            <Text style={{ ...texts.x2l }}>{t('Escolha sua frota')}</Text>
             <Text
               style={{
                 ...texts.sm,

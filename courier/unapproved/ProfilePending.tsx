@@ -109,7 +109,7 @@ export default function ({ navigation, route }: Props) {
       <ScrollView>
         {/* header */}
         <PaddedView>
-          <Text style={{ ...texts.xxl, marginBottom: 24 }}>{t('Cadastro de novo entregador')}</Text>
+          <Text style={{ ...texts.x2l, marginBottom: 24 }}>{t('Cadastro de novo entregador')}</Text>
           <DefaultButton
             title={t('Enviar cadastro')}
             onPress={submitHandler}

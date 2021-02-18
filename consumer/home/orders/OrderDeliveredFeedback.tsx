@@ -63,7 +63,7 @@ export default ({ navigation, route }: Props) => {
               alignItems: 'center',
             }}
           >
-            <Text style={[texts.xxl]}>{t('Pedido\nentregue')}</Text>
+            <Text style={[texts.x2l]}>{t('Pedido\nentregue')}</Text>
             <View style={{ height: 112, width: 160 }}>
               <Image
                 source={icons.illustration}

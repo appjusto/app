@@ -82,7 +82,7 @@ export default function ({ navigation, route }: Props) {
     <View style={{ ...screens.config }}>
       <KeyboardAwareScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
         <PaddedView style={{ flex: 1 }}>
-          <Text style={{ ...texts.xxl, marginBottom: padding }}>{t('Qual foi seu problema?')}</Text>
+          <Text style={{ ...texts.x2l, marginBottom: padding }}>{t('Qual foi seu problema?')}</Text>
           {issues.map((issue) => (
             <RadioButton
               key={issue.id}

@@ -13,7 +13,7 @@ export default function () {
     <ScrollView style={{ ...screens.lightGrey }}>
       <PaddedView>
         <View>
-          <Text style={{ ...texts.xxl }}>{t('Saiba o que pode ser transportado')}</Text>
+          <Text style={{ ...texts.x2l }}>{t('Saiba o que pode ser transportado')}</Text>
         </View>
         <View style={{ marginTop: 24 }}>
           <Text style={{ ...texts.sm, color: colors.grey700 }}>

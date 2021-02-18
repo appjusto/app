@@ -96,7 +96,7 @@ export default function ({ navigation }: Props) {
         {() => (
           <Text
             style={[
-              texts.xxl,
+              texts.x2l,
               {
                 paddingBottom: tallerDevice ? doublePadding : padding,
                 marginTop: tallerDevice ? doublePadding : 0,
@@ -162,7 +162,7 @@ export default function ({ navigation }: Props) {
             </Text>
             <View style={[styles.priceTag]}>
               <Text style={[texts.xs]}>{t('R$')}</Text>
-              <Text style={[texts.xxxxl]}>
+              <Text style={[texts.x40l]}>
                 {formatCurrency(courier.fleet?.minimumFee ?? 0, {
                   unit: '',
                   strip_insignificant_zeros: false,
