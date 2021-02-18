@@ -83,6 +83,7 @@ export const ReviewBox = ({ comment, onComment, selectReview }: Props) => {
         )}
       </Text>
       <DefaultInput
+        editable={review === 'positive' || review === 'negative'}
         placeholder={t('Escreva sua mensagem')}
         multiline
         numberOfLines={6}
