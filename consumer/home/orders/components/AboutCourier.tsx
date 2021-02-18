@@ -62,7 +62,7 @@ export const AboutCourier = ({ order }: Props) => {
           paddingHorizontal: padding,
         }}
       >
-        <MaterialIcons name="cancel" size={24} />
+        <MaterialIcons name="highlight-remove" size={24} />
         <View style={{ alignItems: 'flex-start', paddingHorizontal: padding }}>
           <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Entregas canceladas')}</Text>
           <Text style={{ ...texts.md }}>{order.courier?.statistics?.canceled ?? 0}</Text>

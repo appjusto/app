@@ -33,7 +33,7 @@ export default function ({ orderId, orderTip = 0, courierId, courierName, joined
 
   // data
   const data: HorizontalSelectItem[] = [
-    { id: '0', title: t('Sem caixinha'), data: 0 },
+    { id: '0', title: t('Sem gorjeta'), data: 0 },
     { id: '1', title: formatCurrency(100), data: 100 },
     { id: '3', title: formatCurrency(300), data: 300 },
     { id: '5', title: formatCurrency(500), data: 500 },
@@ -60,8 +60,8 @@ export default function ({ orderId, orderTip = 0, courierId, courierName, joined
   return (
     <View style={{ paddingHorizontal: padding, paddingTop: padding }}>
       <View>
-        <Text style={{ ...texts.md, ...texts.bold }}>{t('Caixinha')}</Text>
-        <Text style={{ ...texts.xs, color: colors.grey700, flexWrap: 'wrap' }}>
+        <Text style={{ ...texts.xl, ...texts.bold }}>{t('Caixinha')}</Text>
+        <Text style={{ ...texts.md, color: colors.grey700, flexWrap: 'wrap' }}>
           {t('Valorize ainda mais o trabalho do seu entregador')}
         </Text>
       </View>
@@ -70,7 +70,7 @@ export default function ({ orderId, orderTip = 0, courierId, courierName, joined
           <RoundedProfileImg flavor="courier" id={courierId} />
           {joined && (
             <View style={{ marginLeft: halfPadding }}>
-              <Text style={[texts.sm]}>{courierName}</Text>
+              <Text style={[texts.md]}>{courierName}</Text>
               <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('No appJusto desde')}</Text>
               <Text style={{ ...texts.xs }}>
                 {formatDate((joined as firebase.firestore.Timestamp).toDate(), 'monthYear')}
