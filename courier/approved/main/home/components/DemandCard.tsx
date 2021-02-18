@@ -35,7 +35,7 @@ export const DemandCard = () => {
           }}
         >
           <MaterialIcons name="insert-emoticon" size={24} color={colors.green500} />
-          <Text style={{ ...texts.xxl, marginVertical: padding }}>{t('000')}</Text>
+          <Text style={{ ...texts.x2l, marginVertical: padding }}>{t('000')}</Text>
           <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Pedidos na última hora')}</Text>
         </View>
         <View
@@ -49,7 +49,7 @@ export const DemandCard = () => {
           }}
         >
           <MaterialIcons name="motorcycle" size={24} color={colors.green500} />
-          <Text style={{ ...texts.xxl, marginVertical: padding }}>{t('000')}</Text>
+          <Text style={{ ...texts.x2l, marginVertical: padding }}>{t('000')}</Text>
           <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Entregadores ativos')}</Text>
         </View>
         <View
@@ -63,7 +63,7 @@ export const DemandCard = () => {
           }}
         >
           <MaterialIcons name="local-dining" size={24} color={colors.green500} />
-          <Text style={{ ...texts.xxl, marginVertical: padding }}>{t('000')}</Text>
+          <Text style={{ ...texts.x2l, marginVertical: padding }}>{t('000')}</Text>
           <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Restaurantes abertos')}</Text>
         </View>
       </View>

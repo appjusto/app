@@ -50,7 +50,12 @@ export const getOrdersSince = (orders: WithId<Order>[], date: Date) =>
     return (getOrderCreatedOn(order)?.getTime() ?? 0) >= date.getTime();
   });
 
-export const OngoingOrdersStatuses: OrderStatus[] = ['confirmed', 'preparing', 'ready'];
+export const OngoingOrdersStatuses: OrderStatus[] = [
+  'confirmed',
+  'preparing',
+  'ready',
+  'dispatching',
+];
 
 export const isOrderOngoing = (order: Order) => OngoingOrdersStatuses.includes(order.status);
 

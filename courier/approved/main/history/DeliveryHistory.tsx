@@ -11,7 +11,7 @@ import ConfigItem from '../../../../common/components/views/ConfigItem';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
 import ShowIf from '../../../../common/components/views/ShowIf';
 import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
-import useObserveOrders from '../../../../common/store/api/order/hooks/useObserveOrders';
+import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
 import {
   getMonthsWithOrdersInYear,
   getOrdersWithFilter,

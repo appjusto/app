@@ -5,7 +5,7 @@ import { Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { IconRequest } from '../../../../common/icons/icon-requests';
-import useObserveOrders from '../../../../common/store/api/order/hooks/useObserveOrders';
+import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
 import {
   getDeliveredOrders,
   getOrdersSince,

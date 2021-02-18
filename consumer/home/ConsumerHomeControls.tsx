@@ -32,7 +32,7 @@ export default function ({ navigation }: Props) {
         {() => (
           <Text
             style={[
-              texts.xxl,
+              texts.x2l,
               {
                 paddingBottom: tallerDevice ? doublePadding : padding,
                 marginTop: tallerDevice ? doublePadding : 0,

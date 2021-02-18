@@ -68,47 +68,60 @@ export const borders = StyleSheet.create({
 });
 
 export const texts = StyleSheet.create({
-  xxs: {
-    fontFamily: 'BarlowMedium',
-    color: colors.black,
-    fontSize: 11,
-    lineHeight: 13,
-  },
   xs: {
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 13,
-    lineHeight: 18,
   },
   sm: {
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 15,
-    // lineHeight: 21,
   },
   md: {
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 16,
-    lineHeight: 22,
+  },
+  lg: {
+    fontFamily: 'BarlowMedium',
+    color: colors.black,
+    fontSize: 18,
   },
   xl: {
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 20,
-    lineHeight: 26,
   },
-  xxl: {
+  x2l: {
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 24,
-    lineHeight: 30,
   },
-  xxxxl: {
+  x3l: {
+    fontFamily: 'BarlowMedium',
+    color: colors.black,
+    fontSize: 28,
+  },
+  x4l: {
+    fontFamily: 'BarlowMedium',
+    color: colors.black,
+    fontSize: 36,
+  },
+  x40l: {
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 40,
-    lineHeight: 48,
+  },
+  x5l: {
+    fontFamily: 'BarlowMedium',
+    color: colors.black,
+    fontSize: 48,
+  },
+  x6l: {
+    fontFamily: 'BarlowMedium',
+    color: colors.black,
+    fontSize: 64,
   },
   bold: {
     fontFamily: 'BarlowBold',

@@ -61,7 +61,7 @@ export default function ({ navigation, route }: Props) {
     <View style={[screens.config]}>
       <ScrollView>
         <PaddedView>
-          <Text style={[texts.xxl]}>{fleet.name}</Text>
+          <Text style={[texts.x2l]}>{fleet.name}</Text>
           <Text style={{ ...texts.xs, color: colors.green600, marginTop: 8 }}>{participants}</Text>
           <Text style={{ ...texts.xs, color: colors.grey700, marginTop: 8 }}>
             {fleet.description}

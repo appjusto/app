@@ -34,7 +34,6 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const { orderId } = route.params;
-
   // screen state
   const { order } = useObserveOrder(orderId);
   const [tip, setTip] = React.useState(0);
@@ -49,7 +48,6 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
-
   return (
     <View style={{ ...screens.default }}>
       <ScrollView>

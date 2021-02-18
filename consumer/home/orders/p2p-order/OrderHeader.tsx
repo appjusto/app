@@ -36,7 +36,7 @@ export default function ({ order }: Props) {
             }}
             vertical={false}
           >
-            <Text style={{ ...texts.xxl }}>{t('Detalhes do\nPedido')}</Text>
+            <Text style={{ ...texts.x2l }}>{t('Detalhes do\nPedido')}</Text>
             <IconMotocycle />
           </PaddedView>
         )}
@@ -54,7 +54,7 @@ export default function ({ order }: Props) {
             vertical={false}
           >
             <View style={{ flex: 3 }}>
-              <Text style={{ ...texts.xxl, marginBottom: halfPadding }}>{t('Alterar rota')}</Text>
+              <Text style={{ ...texts.x2l, marginBottom: halfPadding }}>{t('Alterar rota')}</Text>
               <Text style={{ ...texts.xs, color: colors.red }} numberOfLines={4}>
                 {t('Importante: ')}
                 <Text style={{ color: colors.grey700 }}>

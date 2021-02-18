@@ -1,7 +1,7 @@
 import { Order, WithId } from 'appjusto-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import useObserveOrders from '../api/order/hooks/useObserveOrders';
+import { useObserveOrders } from '../api/order/hooks/useObserveOrders';
 import { getUser } from '../user/selectors';
 
 interface Props {

@@ -4,7 +4,7 @@ import { ActivityIndicator, Image, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../assets/icons';
 import { ApiContext, AppDispatch } from '../common/app/context';
-import useObserveOngoingOrders from '../common/store/api/order/hooks/useObserveOngoingOrders';
+import { useObserveOngoingOrders } from '../common/store/api/order/hooks/useObserveOngoingOrders';
 import { getFlavor } from '../common/store/config/selectors';
 import { getConsumer } from '../common/store/consumer/selectors';
 import { observeProfile } from '../common/store/user/actions';

@@ -12,7 +12,7 @@ const getStatusLabel = (status: OrderStatus, dispatchingState: DispatchingState)
   if (status === 'preparing') return t('Preparando');
   if (status === 'delivered') return t('Entregue');
   if (status === 'canceled') return t('Cancelado');
-  // status must be ready at this point
+  // status must be ready or dispatching at this point
   if (dispatchingState === 'going-destination') return t('Saiu para entrega');
   if (dispatchingState === 'arrived-destination') return t('Chegou no destino');
   // possible dispatchingState here: 'idle' 'matching', 'going-pickup', 'arrived-pickup', 'unmatched'

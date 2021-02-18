@@ -85,7 +85,7 @@ export default function ({ navigation, route }: Props) {
                 </View>
 
                 <View style={{ height: 58, marginTop: 16 }}>
-                  <Text style={[texts.xxl]}>{welcomeMessage}</Text>
+                  <Text style={[texts.x2l]}>{welcomeMessage}</Text>
                 </View>
 
                 <View style={{ width: '85%', height: 58, marginTop: 16 }}>

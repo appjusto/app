@@ -1,5 +1,4 @@
 const iconChecklistTick = require('./icons/checklist-tick.png');
-const iconSlideConfirm = require('./icons/drag-button-confirm.png');
 const dragButton = require('./icons/drag-button.png');
 const iconHome = require('./icons/home.png');
 const iconCalendar = require('./icons/icon-calendar.png');
@@ -58,7 +57,6 @@ export const consumerHomeIllustration = illustrationConsumerHome;
 export const consumerHomePizza = illustrationRestaurant;
 export const share = iconShare;
 export const delivery = illustrationDelivery;
-export const slideConfirm = iconSlideConfirm;
 export const googleMaps = iconGoogleMaps;
 export const waze = iconWaze;
 export const search = iconSearch;
@@ -94,7 +92,6 @@ export default [
   consumerHomePizza,
   share,
   delivery,
-  slideConfirm,
   googleMaps,
   waze,
   search,
