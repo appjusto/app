@@ -41,9 +41,8 @@ export default function ({ navigation, route }: Props) {
   // screen state
   const { order } = useObserveOrder(orderId);
   const [tip, setTip] = React.useState();
-  const [comment, setComment] = React.useState('');
+  const [reviewComment, setReviewComment] = React.useState('');
   const [reviewType, setReviewType] = React.useState<ReviewType>();
-
   const review = useCourierReview(orderId, order?.courier?.id);
   console.log(review);
   console.log(orderId);
@@ -113,9 +112,11 @@ export default function ({ navigation, route }: Props) {
         <HR height={padding} />
         <View>
           <ReviewBox
-            comment={comment}
-            onComment={(value) => setComment(value)}
-            selectReview={(type) => setReviewType(type)}
+            comment={review?.comment ?? reviewComment}
+            review={review?.type ?? reviewType}
+            disabled={!!review}
+            onCommentChange={review ? undefined : (value) => setReviewComment(value)}
+            onReviewChange={(type) => setReviewType(type)}
           />
         </View>
         <HR height={padding} />

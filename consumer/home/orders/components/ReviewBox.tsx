@@ -11,12 +11,19 @@ import { t } from '../../../../strings';
 
 type Props = {
   comment: string;
-  onComment: (value: string) => void;
-  selectReview: (type: ReviewType) => void;
+  review?: ReviewType;
+  disabled?: boolean;
+  onCommentChange?: (value: string) => void;
+  onReviewChange?: (type: ReviewType) => void;
 };
 
-export const ReviewBox = ({ comment, onComment, selectReview }: Props) => {
-  const [review, setReview] = React.useState('');
+export const ReviewBox = ({
+  comment,
+  review,
+  disabled,
+  onCommentChange,
+  onReviewChange,
+}: Props) => {
   return (
     <PaddedView style={{ flex: 1 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -35,8 +42,7 @@ export const ReviewBox = ({ comment, onComment, selectReview }: Props) => {
       >
         <TouchableWithoutFeedback
           onPress={() => {
-            selectReview('positive');
-            setReview('positive');
+            if (onReviewChange) onReviewChange('positive');
           }}
         >
           <View
@@ -56,8 +62,7 @@ export const ReviewBox = ({ comment, onComment, selectReview }: Props) => {
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback
           onPress={() => {
-            selectReview('negative');
-            setReview('negative');
+            if (onReviewChange) onReviewChange('negative');
           }}
         >
           <View
@@ -83,12 +88,12 @@ export const ReviewBox = ({ comment, onComment, selectReview }: Props) => {
         )}
       </Text>
       <DefaultInput
-        editable={review === 'positive' || review === 'negative'}
+        editable={!disabled}
         placeholder={t('Escreva sua mensagem')}
         multiline
         numberOfLines={6}
         value={comment}
-        onChangeText={onComment}
+        onChangeText={onCommentChange}
         style={{ height: 80 }}
       />
     </PaddedView>
