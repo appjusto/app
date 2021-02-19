@@ -2,12 +2,7 @@ import { Review } from 'appjusto-types';
 import React from 'react';
 import { ApiContext } from '../../../../app/context';
 
-type Props = {
-  orderId: string;
-  courierId?: string;
-};
-
-export const useCourierReview = ({ orderId, courierId }: Props) => {
+export const useCourierReview = (orderId: string, courierId?: string) => {
   // context
   const api = React.useContext(ApiContext);
   // state
