@@ -3,7 +3,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { ReviewType } from 'appjusto-types';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
-import { ApiContext } from '../../common/app/context';
+import { useDispatch } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../common/app/context';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/containers/PaddedView';
 import RoundedText from '../../common/components/texts/RoundedText';
@@ -11,6 +12,7 @@ import HR from '../../common/components/views/HR';
 import Pill from '../../common/components/views/Pill';
 import { useCourierReview } from '../../common/store/api/courier/hooks/useCourierReview';
 import useObserveOrder from '../../common/store/api/order/hooks/useObserveOrder';
+import { showToast } from '../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../common/styles';
 import {
   formatCurrency,
@@ -38,14 +40,14 @@ export default function ({ navigation, route }: Props) {
   // context
   const { orderId } = route.params;
   const api = React.useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
   // screen state
   const { order } = useObserveOrder(orderId);
   const [tip, setTip] = React.useState();
   const [reviewComment, setReviewComment] = React.useState('');
   const [reviewType, setReviewType] = React.useState<ReviewType>();
   const review = useCourierReview(orderId, order?.courier?.id);
-  console.log(review);
-  console.log(orderId);
+  const [isLoading, setLoading] = React.useState(false);
 
   if (!order) {
     return (
@@ -54,6 +56,18 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
+
+  // handlers
+  const tipHandler = async () => {
+    setLoading(true);
+    try {
+      if (tip > 0) await api.order().tipCourier(order.id, tip);
+    } catch (error) {
+      dispatch(showToast(t('Não foi possível enviar a caixinha')));
+    }
+    setLoading(false);
+    console.log(tip);
+  };
 
   return (
     <View style={{ ...screens.default }}>
@@ -91,7 +105,21 @@ export default function ({ navigation, route }: Props) {
           </PaddedView>
         </View>
         <HR height={padding} />
-        <TipControl order={order} tip={tip} onChange={(value) => setTip(value)} />
+        {order.tip?.value! > 0 ? (
+          <View>
+            <TipControl order={order} tip={tip} onChange={(value) => setTip(value)} />
+          </View>
+        ) : (
+          <View>
+            <TipControl
+              order={order}
+              tip={tip}
+              onChange={(value) => setTip(value)}
+              onConfirm={tipHandler}
+            />
+          </View>
+        )}
+
         <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
           {/* <DefaultButton
             title={t('Avaliar o entregador')}
@@ -116,7 +144,7 @@ export default function ({ navigation, route }: Props) {
             review={review?.type ?? reviewType}
             disabled={!!review}
             onCommentChange={review ? undefined : (value) => setReviewComment(value)}
-            onReviewChange={(type) => setReviewType(type)}
+            onReviewChange={review ? undefined : (type) => setReviewType(type)}
           />
         </View>
         <HR height={padding} />
