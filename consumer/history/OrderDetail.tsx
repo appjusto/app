@@ -22,7 +22,6 @@ import {
 } from '../../common/utils/formatters';
 import { t } from '../../strings';
 import TipControl from '../home/orders/common/TipControl';
-import { ReviewBox } from '../home/orders/components/ReviewBox';
 import OrderMap from '../home/orders/p2p-order/OrderMap';
 import PlaceSummary from '../home/orders/p2p-order/PlaceSummary';
 import { OrderCostBreakdown } from '../home/orders/summary/breakdown/OrderCostBreakdown';
@@ -62,11 +61,11 @@ export default function ({ navigation, route }: Props) {
     setLoading(true);
     try {
       if (tip > 0) await api.order().tipCourier(order.id, tip);
+      dispatch(showToast(t('Caixinha enviada!')));
     } catch (error) {
       dispatch(showToast(t('Não foi possível enviar a caixinha')));
     }
     setLoading(false);
-    console.log(tip);
   };
 
   return (
@@ -119,34 +118,6 @@ export default function ({ navigation, route }: Props) {
             />
           </View>
         )}
-
-        <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
-          {/* <DefaultButton
-            title={t('Avaliar o entregador')}
-            secondary
-            onPress={() =>
-              navigation.navigate('ReviewCourier', {
-                courierId: order.courier!.id,
-                courierName: order.courier!.name,
-                courierJoined: formatDate(
-                  (order.courier?.joined as firebase.firestore.Timestamp).toDate(),
-                  'monthYear'
-                ),
-                orderId,
-              })
-            }
-          /> */}
-        </View>
-        <HR height={padding} />
-        <View>
-          <ReviewBox
-            comment={review?.comment ?? reviewComment}
-            review={review?.type ?? reviewType}
-            disabled={!!review}
-            onCommentChange={review ? undefined : (value) => setReviewComment(value)}
-            onReviewChange={review ? undefined : (type) => setReviewType(type)}
-          />
-        </View>
         <HR height={padding} />
         <PaddedView>
           <OrderCostBreakdown order={order} selectedFare={order.fare} />
