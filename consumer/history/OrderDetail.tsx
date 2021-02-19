@@ -1,23 +1,26 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { ReviewType } from 'appjusto-types';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import { ApiContext } from '../../common/app/context';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/containers/PaddedView';
 import RoundedText from '../../common/components/texts/RoundedText';
 import HR from '../../common/components/views/HR';
 import Pill from '../../common/components/views/Pill';
+import { useCourierReview } from '../../common/store/api/courier/hooks/useCourierReview';
 import useObserveOrder from '../../common/store/api/order/hooks/useObserveOrder';
 import { colors, halfPadding, padding, screens, texts } from '../../common/styles';
 import {
   formatCurrency,
-  formatDate,
   formatDistance,
   formatDuration,
   separateWithDot,
 } from '../../common/utils/formatters';
 import { t } from '../../strings';
 import TipControl from '../home/orders/common/TipControl';
+import { ReviewBox } from '../home/orders/components/ReviewBox';
 import OrderMap from '../home/orders/p2p-order/OrderMap';
 import PlaceSummary from '../home/orders/p2p-order/PlaceSummary';
 import { OrderCostBreakdown } from '../home/orders/summary/breakdown/OrderCostBreakdown';
@@ -34,13 +37,17 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const { orderId } = route.params;
+  const api = React.useContext(ApiContext);
   // screen state
   const { order } = useObserveOrder(orderId);
-  const [tip, setTip] = React.useState(0);
+  const [tip, setTip] = React.useState();
+  const [comment, setComment] = React.useState('');
+  const [reviewType, setReviewType] = React.useState<ReviewType>();
 
-  // add a ReviewBox and a single handler for review and tip ("Finalizar" button)
+  const review = useCourierReview(orderId, order?.courier?.id);
+  console.log(review);
+  console.log(orderId);
 
-  // UI
   if (!order) {
     return (
       <View style={screens.centered}>
@@ -48,6 +55,7 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
+
   return (
     <View style={{ ...screens.default }}>
       <ScrollView>
@@ -86,7 +94,7 @@ export default function ({ navigation, route }: Props) {
         <HR height={padding} />
         <TipControl order={order} tip={tip} onChange={(value) => setTip(value)} />
         <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
-          <DefaultButton
+          {/* <DefaultButton
             title={t('Avaliar o entregador')}
             secondary
             onPress={() =>
@@ -100,6 +108,14 @@ export default function ({ navigation, route }: Props) {
                 orderId,
               })
             }
+          /> */}
+        </View>
+        <HR height={padding} />
+        <View>
+          <ReviewBox
+            comment={comment}
+            onComment={(value) => setComment(value)}
+            selectReview={(type) => setReviewType(type)}
           />
         </View>
         <HR height={padding} />

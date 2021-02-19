@@ -31,7 +31,8 @@ const data: HorizontalSelectItem[] = [
 
 export default function ({ order, tip, isLoading = false, onChange, onConfirm }: Props) {
   const alreadyTipped = Boolean(order.tip?.value);
-  const selectedtip = data.find((d) => d.data === tip) ?? data[0];
+  const selectedtip =
+    data.find((item) => item.data === order.tip?.value || item.data === tip) ?? data[0];
   // UI
   return (
     <View style={{ paddingHorizontal: padding, paddingTop: padding }}>
