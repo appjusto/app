@@ -13,6 +13,6 @@ export const useCourierReview = (orderId: string, courierId?: string) => {
     (async () => {
       setReview(await api.courier().fetchReview(courierId, orderId));
     })();
-  }, []);
+  }, [api, orderId, courierId]);
   return review;
 };
