@@ -65,7 +65,8 @@ export default ({ navigation, route }: Props) => {
       if (tip > 0) await api.order().tipCourier(order.id, tip);
       navigation.navigate('Home');
     } catch (error) {
-      dispatch(showToast(t('Não foi possível enviar o comentário')));
+      // find a better error message
+      dispatch(showToast(t('Não foi possível enviar a avaliação e/ou caixinha')));
     }
     setLoading(false);
   };
@@ -138,7 +139,7 @@ export default ({ navigation, route }: Props) => {
           </View>
         </View>
         <HR height={padding} />
-        <ReviewBox selectReview={(type) => setReviewType(type)} />
+        <ReviewBox onReviewChange={(type) => setReviewType(type)} />
         <HR />
         {/* actions */}
         <View style={{ paddingHorizontal: padding }}>

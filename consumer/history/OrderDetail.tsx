@@ -22,6 +22,7 @@ import {
 } from '../../common/utils/formatters';
 import { t } from '../../strings';
 import TipControl from '../home/orders/common/TipControl';
+import { ReviewBox } from '../home/orders/components/ReviewBox';
 import OrderMap from '../home/orders/p2p-order/OrderMap';
 import PlaceSummary from '../home/orders/p2p-order/PlaceSummary';
 import { OrderCostBreakdown } from '../home/orders/summary/breakdown/OrderCostBreakdown';
@@ -43,7 +44,6 @@ export default function ({ navigation, route }: Props) {
   // screen state
   const { order } = useObserveOrder(orderId);
   const [tip, setTip] = React.useState();
-  const [reviewComment, setReviewComment] = React.useState('');
   const [reviewType, setReviewType] = React.useState<ReviewType>();
   const review = useCourierReview(orderId, order?.courier?.id);
   const [isLoading, setLoading] = React.useState(false);
@@ -64,6 +64,23 @@ export default function ({ navigation, route }: Props) {
       dispatch(showToast(t('Caixinha enviada!')));
     } catch (error) {
       dispatch(showToast(t('Não foi possível enviar a caixinha')));
+    }
+    setLoading(false);
+  };
+  const finishHandler = async () => {
+    setLoading(true);
+    try {
+      if (reviewType) {
+        await api.courier().addReview(order.courier!.id, {
+          type: reviewType,
+          orderId,
+        });
+      }
+      if (tip > 0) await api.order().tipCourier(order.id, tip);
+      navigation.navigate('Home');
+    } catch (error) {
+      // find a better error message
+      dispatch(showToast(t('Não foi possível enviar a avaliação e/ou caixinha')));
     }
     setLoading(false);
   };
@@ -104,6 +121,8 @@ export default function ({ navigation, route }: Props) {
           </PaddedView>
         </View>
         <HR height={padding} />
+        <ReviewBox review={review?.type} onReviewChange={(type) => setReviewType(type)} />
+        <HR height={padding} />
         {order.tip?.value! > 0 ? (
           <View>
             <TipControl order={order} tip={tip} onChange={(value) => setTip(value)} />
@@ -124,6 +143,11 @@ export default function ({ navigation, route }: Props) {
         </PaddedView>
         <HR height={padding} />
         <PaddedView>
+          <DefaultButton
+            title={t('Finalizar')}
+            onPress={finishHandler}
+            style={{ marginBottom: padding }}
+          />
           <DefaultButton
             title={t('Relatar um problema')}
             onPress={() => navigation.navigate('OrderComplaint', { orderId: order.id })}

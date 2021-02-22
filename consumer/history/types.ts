@@ -15,4 +15,5 @@ export type HistoryParamList = {
   OrderComplaint: {
     orderId: string;
   };
+  Home: undefined;
 };
