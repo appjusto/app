@@ -40,7 +40,6 @@ export default ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   // screen state
   const { order } = useObserveOrder(orderId);
-  const [comment, setComment] = React.useState('');
   const [reviewType, setReviewType] = React.useState<ReviewType>();
   const [tip, setTip] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
@@ -60,7 +59,6 @@ export default ({ navigation, route }: Props) => {
       if (reviewType) {
         await api.courier().addReview(order.courier!.id, {
           type: reviewType,
-          comment,
           orderId,
         });
       }
@@ -140,11 +138,7 @@ export default ({ navigation, route }: Props) => {
           </View>
         </View>
         <HR height={padding} />
-        <ReviewBox
-          comment={comment}
-          onComment={(value) => setComment(value)}
-          selectReview={(type) => setReviewType(type)}
-        />
+        <ReviewBox selectReview={(type) => setReviewType(type)} />
         <HR />
         {/* actions */}
         <View style={{ paddingHorizontal: padding }}>
