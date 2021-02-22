@@ -2,6 +2,7 @@ import { LatLng, Review } from 'appjusto-types';
 import firebase from 'firebase';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
+import { documentsAs } from '../types';
 
 type FetchTotalCouriersNearbyData = {
   total: number;
@@ -26,6 +27,14 @@ export default class CourierApi {
     await this.refs
       .getCourierReviewsRef(courierId)
       .add({ ...review, createdOn: firebase.firestore.FieldValue.serverTimestamp() } as Review);
+  }
+  async fetchReview(courierId: string, orderId: string) {
+    const query = this.refs
+      .getCourierReviewsRef(courierId)
+      .where('orderId', '==', orderId)
+      .limit(1);
+    const docs = (await query.get()).docs;
+    return documentsAs<Review>(docs).find(() => true);
   }
   // storage
   // selfie
