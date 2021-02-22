@@ -2,6 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
@@ -98,7 +99,7 @@ export default function ({ navigation, route }: Props) {
     return '';
   })();
   return (
-    <View style={{ ...screens.default }}>
+    <ScrollView contentContainerStyle={{ ...screens.default }}>
       <View style={{ flex: 1 }}>
         <OngoingOrderStatus order={order} />
         <OrderMap order={order} />
@@ -160,6 +161,6 @@ export default function ({ navigation, route }: Props) {
           />
         </View>
       </PaddedView>
-    </View>
+    </ScrollView>
   );
 }
