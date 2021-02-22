@@ -140,9 +140,8 @@ export default function ({ navigation, route }: Props) {
   })();
 
   return (
-    <KeyboardAwareScrollView style={{ ...screens.default, paddingBottom: padding }}>
-      {/* had to set a fixed height in the view below because the map was not showing */}
-      <View style={{ flex: 1, height: 360 }}>
+    <KeyboardAwareScrollView contentContainerStyle={{ ...screens.default, paddingBottom: padding }}>
+      <View style={{ flex: 1 }}>
         <OrderMap order={order!} />
         <RouteIcons order={order} />
         <CourierStatusHighlight dispatchingState={dispatchingState} />
