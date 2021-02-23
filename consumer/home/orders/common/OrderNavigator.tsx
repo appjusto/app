@@ -3,6 +3,7 @@ import React from 'react';
 import ArrowBox from '../../../../common/components/views/ArrowBox';
 import Chat from '../../../../common/screens/Chat';
 import FleetDetail from '../../../../common/screens/fleet/FleetDetail';
+import { SendIssuesScreen } from '../../../../common/screens/SendIssuesScreen';
 import { t } from '../../../../strings';
 import ProfileAddCard from '../../../profile/payment/ProfileAddCard';
 import ProfilePaymentMethods from '../../../profile/payment/ProfilePaymentMethods';
@@ -80,6 +81,12 @@ export const OrderNavigator = () => {
         name="CourierDetail"
         component={CourierDetail}
         options={{ title: t('Mais informações') }}
+      />
+      {/* TODO :add dynamic title */}
+      <Stack.Screen
+        name="SendIssuesScreen"
+        component={SendIssuesScreen}
+        options={{ title: t('Indique seu problema') }}
       />
       <Stack.Screen
         name="OrderComplaint"

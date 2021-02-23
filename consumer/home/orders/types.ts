@@ -1,4 +1,4 @@
-import { Place } from 'appjusto-types';
+import { IssueType, Place } from 'appjusto-types';
 import { ChatParamList } from '../../../common/screens/Chat';
 
 export type OrderNavigatorParamList = {
@@ -50,4 +50,8 @@ export type OrderNavigatorParamList = {
     orderId: string;
   };
   Home: undefined;
+  SendIssuesScreen: {
+    issueType: IssueType;
+    orderId: string;
+  };
 } & ChatParamList;

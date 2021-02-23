@@ -52,7 +52,12 @@ export default function ({ navigation, route }: Props) {
             <View style={{ flex: 7 }}>
               <DefaultButton
                 title={t('Relatar um problema')}
-                onPress={() => navigation.navigate('OrderComplaint', { orderId: order.id })}
+                onPress={() =>
+                  navigation.navigate('SendIssuesScreen', {
+                    orderId: order.id,
+                    issueType: 'consumer-delivery-problem',
+                  })
+                }
                 secondary
               />
             </View>
