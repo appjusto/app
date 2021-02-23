@@ -3,7 +3,7 @@ import React from 'react';
 import ArrowBox from '../../../../common/components/views/ArrowBox';
 import Chat from '../../../../common/screens/Chat';
 import FleetDetail from '../../../../common/screens/fleet/FleetDetail';
-import { SendIssuesScreen } from '../../../../common/screens/SendIssuesScreen';
+import { ReportIssue } from '../../../../common/screens/ReportIssue';
 import { t } from '../../../../strings';
 import ProfileAddCard from '../../../profile/payment/ProfileAddCard';
 import ProfilePaymentMethods from '../../../profile/payment/ProfilePaymentMethods';
@@ -13,7 +13,6 @@ import CancelOrder from '../CancelOrder';
 import ConfirmCancelOrder from '../ConfirmCancelOrder';
 import CourierDetail from '../CourierDetail';
 import OngoingOrder from '../ongoing/OngoingOrder';
-import OrderComplaint from '../OrderComplaint';
 import OrderConfirming from '../OrderConfirming';
 import OrderDeliveredFeedback from '../OrderDeliveredFeedback';
 import OrderNoMatch from '../OrderNoMatch';
@@ -82,15 +81,9 @@ export const OrderNavigator = () => {
         component={CourierDetail}
         options={{ title: t('Mais informações') }}
       />
-      {/* TODO :add dynamic title */}
       <Stack.Screen
-        name="SendIssuesScreen"
-        component={SendIssuesScreen}
-        options={{ title: t('Indique seu problema') }}
-      />
-      <Stack.Screen
-        name="OrderComplaint"
-        component={OrderComplaint}
+        name="ReportIssueOngoingOrder"
+        component={ReportIssue}
         options={{ title: t('Relatar um problema') }}
       />
       <Stack.Screen name="Chat" component={Chat} options={{ title: t('Chat') }} />

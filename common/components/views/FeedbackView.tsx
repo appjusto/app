@@ -15,7 +15,7 @@ type Props = {
 
 export default ({ header, description, icon, children, background }: Props) => {
   return (
-    <PaddedView style={screens.default}>
+    <PaddedView style={[screens.default, { backgroundColor: background }]}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <View style={{ alignItems: 'center' }}>
           <Text style={{ ...texts.x2l, textAlign: 'center' }}>{header}</Text>

@@ -1,8 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import ArrowBox from '../../common/components/views/ArrowBox';
+import { ReportIssue } from '../../common/screens/ReportIssue';
 import { t } from '../../strings';
-import OrderComplaint from '../home/orders/OrderComplaint';
 import OrderConfirming from '../home/orders/OrderConfirming';
 import ReviewCourier from '../home/orders/ReviewCourier';
 import OrderDetail from './OrderDetail';
@@ -39,8 +39,8 @@ export default function () {
         options={{ title: t('Avaliar entregador') }}
       />
       <Stack.Screen
-        name="OrderComplaint"
-        component={OrderComplaint}
+        name="ReportIssueViaHistory"
+        component={ReportIssue}
         options={{ title: t('Relatar um problema') }}
       />
     </Stack.Navigator>

@@ -37,7 +37,8 @@ export type OrderNavigatorParamList = {
   CourierDetail: {
     orderId: string;
   };
-  OrderComplaint: {
+  ReportIssueOngoingOrder: {
+    issueType: IssueType;
     orderId: string;
   };
   ConfirmCancelOrder: {
@@ -50,8 +51,4 @@ export type OrderNavigatorParamList = {
     orderId: string;
   };
   Home: undefined;
-  SendIssuesScreen: {
-    issueType: IssueType;
-    orderId: string;
-  };
 } & ChatParamList;

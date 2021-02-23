@@ -1,11 +1,9 @@
 import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { Issue, WithId } from 'appjusto-types';
+import { Issue, IssueType, WithId } from 'appjusto-types';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
-import { OrderNavigatorParamList } from '../../consumer/home/orders/types';
 import { t } from '../../strings';
 import { ApiContext, AppDispatch } from '../app/context';
 import DefaultButton from '../components/buttons/DefaultButton';
@@ -16,17 +14,24 @@ import FeedbackView from '../components/views/FeedbackView';
 import { IconMotocycle } from '../icons/icon-motocycle';
 import useIssues from '../store/api/platform/hooks/useIssues';
 import { showToast } from '../store/ui/actions';
-import { borders, colors, halfPadding, padding, screens, texts } from '../styles';
+import { colors, halfPadding, padding, screens, texts } from '../styles';
 
-type ScreenNavigationProp = StackNavigationProp<OrderNavigatorParamList, 'SendIssuesScreen'>;
-type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'SendIssuesScreen'>;
+export type IssuesParamList = {
+  ReportIssue: {
+    issueType: IssueType;
+    orderId: string;
+  };
+};
+
+// type ScreenNavigationProp = StackNavigationProp<OrderNavigatorParamList, 'SendIssuesScreen'>;
+type ScreenRouteProp = RouteProp<IssuesParamList, 'ReportIssue'>;
 
 type Props = {
-  navigation: ScreenNavigationProp;
+  // navigation: ScreenNavigationProp;
   route: ScreenRouteProp;
 };
 
-export const SendIssuesScreen = ({ route, navigation }: Props) => {
+export const ReportIssue = ({ route, navigation }: Props) => {
   // params
   const { orderId, issueType } = route.params;
   // context
@@ -88,20 +93,17 @@ export const SendIssuesScreen = ({ route, navigation }: Props) => {
   // add right header and description for each case
   if (issueSent) {
     return (
-      <PaddedView style={{ ...screens.config }}>
-        <View style={{ flex: 1, ...borders.default }} />
-        <FeedbackView
-          header={headerTitle}
-          icon={<IconMotocycle />}
-          background={colors.grey50}
-          description={feedbackDescription}
-        />
-        <View style={{ flex: 1, ...borders.default }} />
+      <FeedbackView
+        header={headerTitle}
+        icon={<IconMotocycle />}
+        background={colors.grey50}
+        description={feedbackDescription}
+      >
         <DefaultButton
           title={t('Voltar para o início')}
           onPress={() => navigation.navigate('Home')}
         />
-      </PaddedView>
+      </FeedbackView>
     );
   }
   return (

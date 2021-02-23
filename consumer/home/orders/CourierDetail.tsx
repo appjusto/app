@@ -53,7 +53,7 @@ export default function ({ navigation, route }: Props) {
               <DefaultButton
                 title={t('Relatar um problema')}
                 onPress={() =>
-                  navigation.navigate('SendIssuesScreen', {
+                  navigation.navigate('ReportIssueOngoingOrder', {
                     orderId: order.id,
                     issueType: 'consumer-delivery-problem',
                   })

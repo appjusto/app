@@ -150,7 +150,12 @@ export default function ({ navigation, route }: Props) {
           />
           <DefaultButton
             title={t('Relatar um problema')}
-            onPress={() => navigation.navigate('OrderComplaint', { orderId: order.id })}
+            onPress={() =>
+              navigation.navigate('ReportIssueViaHistory', {
+                orderId: order.id,
+                issueType: 'consumer-delivery-problem',
+              })
+            }
             secondary
           />
         </PaddedView>
