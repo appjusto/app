@@ -1,11 +1,13 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
 import { Image, TextInput, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
+import { AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import { useSearchRestaurants } from '../../../../common/store/api/search/useSearchRestaurants';
+import { updateSearchKind } from '../../../../common/store/consumer/actions';
 import {
   getCurrentLocation,
   getRestaurantsSearchParams,
@@ -22,13 +24,15 @@ type Props = {
 };
 
 export default function ({ navigation }: Props) {
+  // redux
+  const dispatch = useDispatch<AppDispatch>();
   // refs
   const searchInputRef = React.useRef<TextInput>();
   // redux store
   const currentLocation = useSelector(getCurrentLocation);
   const filters = useSelector(getRestaurantsSearchParams);
   // state
-  const [search, setSearch] = useState<string>();
+  const [search, setSearch] = useState<string>('');
   const { restaurants } = useSearchRestaurants(currentLocation, search, filters);
   // initial focus
   React.useEffect(() => {
@@ -60,9 +64,8 @@ export default function ({ navigation }: Props) {
         </View>
       </PaddedView>
       <FilterSelector
-        data={[{ title: 'Restaurants', id: 'restaurants' }]}
-        onFilterChange={() => null}
-        onFilter={() => null}
+        onFilterChange={(value) => dispatch(updateSearchKind(value))}
+        onFilterOpen={() => null}
       />
       <RestaurantList
         items={restaurants}

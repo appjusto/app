@@ -6,12 +6,19 @@ export interface ConsumerState {
   currentLocation?: LatLng;
   restaurantsSearchParams: SearchParam[];
   productSearchParameters: SearchParam[];
+  searchKind: SearchKind;
 }
+
+export type SearchKind = {
+  type: 'kind';
+  value: 'restaurant' | 'product';
+  title?: string;
+};
 
 export type SearchOrder = {
   type: 'order';
   kind: 'restaurant' | 'product';
-  value: 'distance' | 'price' | 'preparation-time';
+  value: 'distance' | 'price' | 'preparation-time' | 'popularity';
 };
 
 export type SearchCategory = {

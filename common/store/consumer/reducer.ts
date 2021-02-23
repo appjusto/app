@@ -8,13 +8,15 @@ import {
   REMOVE_RESTAURANT_SEARCH_PARAM,
   UPDATE_CURRENT_LOCATION,
   UPDATE_CURRENT_PLACE,
+  UPDATE_SEARCH_KIND,
 } from './actions';
 import { ConsumerState, SearchParam } from './types';
 
 const initialState: ConsumerState = {
+  searchKind: { type: 'kind', value: 'restaurant' },
   restaurantsSearchParams: [
-    { type: 'order', kind: 'restaurant', value: 'distance' },
-    { kind: 'restaurant', type: 'category', value: 'Mexicano' },
+    { type: 'order', kind: 'restaurant', value: 'preparation-time' },
+    // { type: 'category', kind: 'restaurant', value: 'Japonês' },
   ],
   productSearchParameters: [{ type: 'order', kind: 'product', value: 'distance' }],
 };
@@ -34,6 +36,9 @@ export default function (state: ConsumerState = initialState, action: AnyAction)
     }
     case UPDATE_CURRENT_PLACE: {
       return { ...state, currentPlace: action.payload };
+    }
+    case UPDATE_SEARCH_KIND: {
+      return { ...state, searchKind: action.payload };
     }
     case ADD_PRODUCT_SEARCH_PARAM:
     case ADD_RESTAURANT_SEARCH_PARAM: {

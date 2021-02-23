@@ -1,39 +1,38 @@
 import React from 'react';
 import { FlatList, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { HorizontalSelectItem } from '../../../../../common/components/buttons/HorizontalSelect';
-import {
-  getProductSearchParameters,
-  getRestaurantsSearchParams,
-} from '../../../../../common/store/consumer/selectors';
+import { getSearchKind } from '../../../../../common/store/consumer/selectors';
+import { SearchKind } from '../../../../../common/store/consumer/types';
 import { borders, colors, halfPadding, texts } from '../../../../../common/styles';
+import { t } from '../../../../../strings';
 import FilterButton from './FilterButton';
 
+const data: SearchKind[] = [
+  { type: 'kind', value: 'restaurant', title: t('Restaurantes') },
+  { type: 'kind', value: 'product', title: t('Pratos') },
+];
+
 type Props = {
-  data: HorizontalSelectItem[];
-  selected?: HorizontalSelectItem;
-  onFilterChange: (value: HorizontalSelectItem) => void;
-  onFilter: () => void;
+  onFilterChange: (value: SearchKind) => void;
+  onFilterOpen: () => void;
 };
 
-export default function ({ data, selected, onFilterChange: onSelect, onFilter }: Props) {
+export default function ({ onFilterChange, onFilterOpen }: Props) {
   // redux store
-  const restaurantsSearchParams = useSelector(getRestaurantsSearchParams);
-  const productSearchParameters = useSelector(getProductSearchParameters);
-  console.log('restaurantsSearchParams', restaurantsSearchParams);
-  console.log('productSearchParameters', productSearchParameters);
+  const selectedSearchKing = useSelector(getSearchKind);
+  console.log('selectedSearchKing', selectedSearchKing);
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <FilterButton onPress={onFilter} />
+      <FilterButton onPress={onFilterOpen} />
       <FlatList
         showsHorizontalScrollIndicator={false}
         horizontal
         data={data}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.value}
         renderItem={({ item }) => (
           <TouchableWithoutFeedback
             onPress={() => {
-              onSelect(item);
+              onFilterChange(item);
             }}
           >
             <View
@@ -46,7 +45,8 @@ export default function ({ data, selected, onFilterChange: onSelect, onFilter }:
                 borderRadius: 32,
                 // height: 32,
                 marginLeft: 8,
-                backgroundColor: item.id === selected?.id ? colors.green500 : colors.white,
+                backgroundColor:
+                  item.value === selectedSearchKing?.value ? colors.green500 : colors.white,
                 borderColor: colors.black,
               }}
             >

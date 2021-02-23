@@ -1,9 +1,10 @@
 import { LatLng, Place } from 'appjusto-types';
 import { AppDispatch } from '../../app/context';
-import { SearchParam } from './types';
+import { SearchKind, SearchParam } from './types';
 
 export const UPDATE_CURRENT_LOCATION = 'UPDATE_CURRENT_LOCATION';
 export const UPDATE_CURRENT_PLACE = 'UPDATE_CURRENT_PLACE';
+export const UPDATE_SEARCH_KIND = 'UPDATE_SEARCH_KIND';
 export const ADD_RESTAURANT_SEARCH_PARAM = 'ADD_RESTAURANT_SEARCH_PARAM';
 export const ADD_PRODUCT_SEARCH_PARAM = 'ADD_PRODUCT_SEARCH_PARAM';
 export const REMOVE_RESTAURANT_SEARCH_PARAM = 'REMOVE_RESTAURANT_SEARCH_PARAM';
@@ -15,6 +16,10 @@ export const updateCurrentLocation = (location: LatLng | undefined) => (dispatch
 
 export const updateCurrentPlace = (place: Place) => (dispatch: AppDispatch) => {
   dispatch({ type: UPDATE_CURRENT_PLACE, payload: place });
+};
+
+export const updateSearchKind = (kind: SearchKind) => (dispatch: AppDispatch) => {
+  dispatch({ type: UPDATE_SEARCH_KIND, payload: kind });
 };
 
 export const addRestaurantSearchParam = (param: SearchParam) => (dispatch: AppDispatch) => {

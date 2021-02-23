@@ -39,7 +39,7 @@ export const useSearchRestaurants = (
     if (name === undefined) return;
     if (!coords) return;
     debouncedSearch(coords, name, filters);
-  }, [coords, name, filters]);
+  }, [coords, name, filters, debouncedSearch]);
   // update results when response changes
   React.useEffect(() => {
     if (!response) return;
