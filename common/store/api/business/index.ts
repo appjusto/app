@@ -98,8 +98,10 @@ export default class BusinessApi {
     return unsubscribe;
   }
 
-  fetchProductImageURI(businessId: string, productId: string) {
-    return this.files.getDownloadURL(this.refs.getProductImageStoragePath(businessId, productId));
+  fetchProductImageURI(businessId: string, productId: string, size: string = '288x288') {
+    return this.files.getDownloadURL(
+      this.refs.getProductImageStoragePath(businessId, productId, size)
+    );
   }
 
   fetchProductComplementImageURI(businessId: string, complementId: string) {

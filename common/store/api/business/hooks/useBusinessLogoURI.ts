@@ -5,6 +5,6 @@ import { ApiContext } from '../../../../app/context';
 export const useBusinessLogoURI = (businessId?: string) => {
   const api = useContext(ApiContext);
   return useQuery(['business', 'logo', businessId], () =>
-    businessId ? api.business().fetchBusinessCoverImageURI(businessId) : Promise.resolve(null)
+    businessId ? api.business().fetchBusinessLogoURI(businessId) : Promise.resolve(null)
   );
 };

@@ -45,7 +45,7 @@ export default function ({ navigation, route }: Props) {
   const currentPlace = useSelector(getCurrentPlace);
   // screen state
   const product = useProduct(useContextBusinessId(), productId);
-  const { data: imageURI } = useProductImageURI(business.id, productId);
+  const { data: imageURI } = useProductImageURI(business.id, productId, '1008x720');
   const [quantity, setQuantity] = React.useState(1);
   const [complements, setComplements] = React.useState<WithId<Complement>[]>([]);
   const [notes, setNotes] = React.useState<string>('');
