@@ -2,9 +2,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import ArrowBox from '../../../common/components/views/ArrowBox';
 import Chat from '../../../common/screens/Chat';
+import { ReportIssue } from '../../../common/screens/ReportIssue';
 import { t } from '../../../strings';
 import CancelOngoingDelivery from './CancelOngoingDelivery';
-import CourierDeliveryProblem from './CourierDeliveryProblem';
 import DeliveryCompleted from './DeliveryCompleted';
 import { NoCodeDelivery } from './NoCodeDelivery';
 import OngoingDelivery from './OngoingDelivery';
@@ -47,8 +47,8 @@ export default function () {
         options={{ title: t('Confirmar entrega sem código') }}
       />
       <Stack.Screen
-        name="CourierDeliveryProblem"
-        component={CourierDeliveryProblem}
+        name="ReportIssueCourierDeliveryProblem"
+        component={ReportIssue}
         options={{ title: t('Tive um problema') }}
       />
     </Stack.Navigator>

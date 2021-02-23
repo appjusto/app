@@ -179,7 +179,12 @@ export default function ({ navigation, route }: Props) {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate('CourierDeliveryProblem', { orderId })}
+            onPress={() =>
+              navigation.navigate('ReportIssueCourierDeliveryProblem', {
+                orderId,
+                issueType: 'courier-delivery-problem',
+              })
+            }
           >
             <View style={{ marginTop: halfPadding }}>
               <RoundedText

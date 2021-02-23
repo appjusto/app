@@ -47,6 +47,9 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   const toastMessage = (() => {
     if (issueType === 'consumer-delivery-problem') {
       return t('Não foi possível enviar a reclamação. Tente novamente.');
+    }
+    if (issueType === 'courier-delivery-problem') {
+      return t('Não foi possível enviar a reclamação. Tente novamente.');
     } else {
       return '';
     }
@@ -54,6 +57,9 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   const headerTitle = (() => {
     if (issueType === 'consumer-delivery-problem') {
       return t('Obrigado pelas informações. Iremos analisar o ocorrido.');
+    }
+    if (issueType === 'courier-delivery-problem') {
+      return t('Aguarde enquanto estamos analisando o seu problema.');
     } else {
       return '';
     }
@@ -61,8 +67,11 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   const feedbackDescription = (() => {
     if (issueType === 'consumer-delivery-problem') {
       return undefined;
+    }
+    if (issueType === 'courier-delivery-problem') {
+      return t('Em breve entraremos em contato com você para relatar a resolução do seu problema.');
     } else {
-      return '';
+      return undefined;
     }
   })();
   // handlers
@@ -151,6 +160,18 @@ export const ReportIssue = ({ route, navigation }: Props) => {
           disabled={!selectedIssue || isLoading}
         />
       </PaddedView>
+      {/* {issueType === 'courier-delivery-problem' && (
+        <View style={{ backgroundColor: colors.white }}>
+          <SingleHeader title={t('Estou com um problema urgente')} />
+          <PaddedView>
+            <DefaultButton
+              title={t('Iniciar suport com o AppJusto')}
+              secondary
+              onPress={() => null}
+            />
+          </PaddedView>
+        </View>
+      )} */}
     </KeyboardAwareScrollView>
   );
 };
