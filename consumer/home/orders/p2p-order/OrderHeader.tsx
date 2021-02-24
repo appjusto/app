@@ -72,7 +72,7 @@ export default function ({ order }: Props) {
         )}
       </ShowIf>
       {/* after order has been created */}
-      <OrderMap order={order} />
+      <OrderMap order={order} ratio={360 / 160} />
     </View>
   );
 }

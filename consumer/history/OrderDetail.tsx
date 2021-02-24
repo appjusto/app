@@ -88,9 +88,7 @@ export default function ({ navigation, route }: Props) {
   return (
     <View style={{ ...screens.default }}>
       <ScrollView>
-        <View style={{ height: 160 }}>
-          <OrderMap order={order} />
-        </View>
+        <OrderMap order={order} ratio={360 / 160} />
         <PaddedView>
           <PlaceSummary title={t('Retirada')} place={order.origin} />
           <PlaceSummary title={t('Entrega')} place={order.destination} />

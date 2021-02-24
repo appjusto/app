@@ -85,7 +85,7 @@ export const OrderSummary = ({
     <ScrollView style={{ flex: 1, marginBottom: 24 }}>
       {showMap && (
         <View style={{ height: 160 }}>
-          <OrderMap order={order} />
+          <OrderMap order={order} ratio={360 / 160} />
         </View>
       )}
 

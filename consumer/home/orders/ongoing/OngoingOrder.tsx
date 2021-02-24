@@ -102,7 +102,7 @@ export default function ({ navigation, route }: Props) {
     <ScrollView contentContainerStyle={{ ...screens.default }}>
       <View style={{ flex: 1 }}>
         <OngoingOrderStatus order={order} />
-        <OrderMap order={order} />
+        <OrderMap order={order} ratio={1.2} />
         <CourierStatusHighlight dispatchingState={dispatchingState} />
         <View style={{ paddingHorizontal: padding }}>
           <View

@@ -142,9 +142,7 @@ export default function ({ navigation, route }: Props) {
   return (
     <View style={{ ...screens.default, paddingBottom: padding }}>
       <KeyboardAwareScrollView>
-        <View style={{ height: 316 }}>
-          <OrderMap order={order!} />
-        </View>
+        <OrderMap order={order!} ratio={360 / 316} />
         <RouteIcons order={order} />
         <CourierStatusHighlight dispatchingState={dispatchingState} />
         <View style={{ marginTop: padding, paddingHorizontal: padding }}>
