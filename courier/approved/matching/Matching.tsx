@@ -54,7 +54,7 @@ export default function ({ navigation, route }: Props) {
     }
   };
   const rejectHandler = () => {
-    navigation.replace('RefuseDelivery', { orderId });
+    navigation.replace('RefuseDelivery', { orderId, issueType: 'courier-refuse' });
   };
   // UI
   return (

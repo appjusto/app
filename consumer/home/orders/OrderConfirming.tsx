@@ -62,6 +62,7 @@ export default ({ navigation, route }: Props) => {
       header={t('Pedido em andamento')}
       description={description}
       icon={<IconMotocycle />}
+      background={colors.white}
     >
       <DefaultButton
         title={t('Cancelar pedido')}
