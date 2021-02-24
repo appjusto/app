@@ -3,7 +3,8 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -11,7 +12,6 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import HR from '../../../common/components/views/HR';
-import { MessagesCard } from '../../../common/screens/home/cards/MessagesCard';
 import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/CourierDistanceBadge';
 import CourierStatusHighlight from '../../../common/screens/orders/ongoing/CourierStatusHighlight';
 import { courierNextPlace } from '../../../common/store/api/order/helpers';
@@ -140,125 +140,112 @@ export default function ({ navigation, route }: Props) {
   })();
 
   return (
-    <KeyboardAwareScrollView contentContainerStyle={{ ...screens.default, paddingBottom: padding }}>
-      <View style={{ flex: 1 }}>
-        <OrderMap order={order!} />
+    <View style={{ ...screens.default, paddingBottom: padding }}>
+      <KeyboardAwareScrollView>
+        <View style={{ height: 316 }}>
+          <OrderMap order={order!} />
+        </View>
         <RouteIcons order={order} />
         <CourierStatusHighlight dispatchingState={dispatchingState} />
-        <View style={{ paddingHorizontal: padding }}>
-          <View
-            style={{
-              width: '100%',
-              marginBottom: padding,
-              top: -64,
-              alignSelf: 'center',
-            }}
-          >
-            <MessagesCard
-              orderId={orderId}
-              onPress={() => navigation.navigate('Chat', { orderId })}
-            />
-          </View>
-        </View>
-      </View>
-      <View style={{ marginTop: padding, paddingHorizontal: padding }}>
-        <Text style={[texts.xs, { color: colors.green600 }]}>{t('Pedido de')}</Text>
-        <Text style={[texts.md]}>
-          {!isEmpty(order.consumer.name) ? order.consumer.name : t('Cliente')}
-        </Text>
-        <View
-          style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: padding }}
-        >
-          <TouchableOpacity onPress={() => navigation.navigate('Chat', { orderId })}>
-            <View style={{ marginTop: halfPadding }}>
-              <RoundedText
-                leftIcon={<Feather name="message-circle" size={12} style={{ marginRight: 6 }} />}
-              >
-                {t('Iniciar chat')}
-              </RoundedText>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('ReportIssueCourierDeliveryProblem', {
-                orderId,
-                issueType: 'courier-delivery-problem',
-              })
-            }
-          >
-            <View style={{ marginTop: halfPadding }}>
-              <RoundedText
-                color={colors.red}
-                leftIcon={
-                  <Feather name="info" size={12} color={colors.red} style={{ marginRight: 6 }} />
-                }
-              >
-                {t('Tive um problema')}
-              </RoundedText>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <HR />
-      </View>
-      <View
-        style={{
-          paddingHorizontal: padding,
-          flexDirection: 'row',
-          marginTop: padding,
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <View>
-          <Text style={[texts.xs, { color: colors.green600 }]}>{addressLabel}</Text>
-          <Text style={[texts.xs]}>{nextPlace?.address.main}</Text>
-        </View>
-        <View>
-          <CourierDistanceBadge order={order} />
-        </View>
-      </View>
-      {/* Slider */}
-      {dispatchingState !== 'arrived-destination' && (
         <View style={{ marginTop: padding, paddingHorizontal: padding }}>
-          <StatusControl
-            key={dispatchingState}
-            style={{ marginBottom: padding }}
-            text={nextStepLabel}
-            disabled={nextStepDisabled}
-            isLoading={isLoading}
-            onConfirm={nextStatepHandler}
-          />
-        </View>
-      )}
-      {dispatchingState === 'arrived-destination' && (
-        <View>
-          <HR height={padding} />
-          <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>
-            <SingleHeader title={t('Código de confirmação')} />
-            <View style={{ paddingHorizontal: padding }}>
-              <Text style={{ ...texts.sm, marginBottom: padding }}>
-                {t('Digite o código de confirmação fornecido pelo cliente:')}
-              </Text>
-              <CodeInput value={code} onChange={setCode} />
-              <DefaultButton
-                title={nextStepLabel}
-                onPress={nextStatepHandler}
-                activityIndicator={isLoading}
-                disabled={isLoading || code.length < 3}
-                style={{ marginTop: padding }}
-              />
-            </View>
+          <Text style={[texts.xs, { color: colors.green600 }]}>{t('Pedido de')}</Text>
+          <Text style={[texts.md]}>
+            {!isEmpty(order.consumer.name) ? order.consumer.name : t('Cliente')}
+          </Text>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: padding }}
+          >
+            <TouchableOpacity onPress={() => navigation.navigate('Chat', { orderId })}>
+              <View style={{ marginTop: halfPadding }}>
+                <RoundedText
+                  leftIcon={<Feather name="message-circle" size={12} style={{ marginRight: 6 }} />}
+                >
+                  {t('Iniciar chat')}
+                </RoundedText>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('ReportIssueCourierDeliveryProblem', {
+                  orderId,
+                  issueType: 'courier-delivery-problem',
+                })
+              }
+            >
+              <View style={{ marginTop: halfPadding }}>
+                <RoundedText
+                  color={colors.red}
+                  leftIcon={
+                    <Feather name="info" size={12} color={colors.red} style={{ marginRight: 6 }} />
+                  }
+                >
+                  {t('Tive um problema')}
+                </RoundedText>
+              </View>
+            </TouchableOpacity>
           </View>
-          <HR height={padding} />
-          <PaddedView>
-            <DefaultButton
-              secondary
-              title={t('Confirmar entrega sem código')}
-              onPress={() => navigation.navigate('NoCodeDelivery', { orderId })}
-            />
-          </PaddedView>
+          <HR />
         </View>
-      )}
-    </KeyboardAwareScrollView>
+        <View
+          style={{
+            paddingHorizontal: padding,
+            flexDirection: 'row',
+            marginTop: padding,
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <View style={{ marginBottom: padding }}>
+            <Text style={[texts.xs, { color: colors.green600 }]}>{addressLabel}</Text>
+            <Text style={[texts.xs]}>{nextPlace?.address.main}</Text>
+          </View>
+          <View>
+            <CourierDistanceBadge order={order} />
+          </View>
+        </View>
+        {/* Slider */}
+        {dispatchingState !== 'arrived-destination' && (
+          <View style={{ marginTop: padding, paddingHorizontal: padding }}>
+            <StatusControl
+              key={dispatchingState}
+              style={{ marginBottom: padding }}
+              text={nextStepLabel}
+              disabled={nextStepDisabled}
+              isLoading={isLoading}
+              onConfirm={nextStatepHandler}
+            />
+          </View>
+        )}
+        {dispatchingState === 'arrived-destination' && (
+          <View>
+            <HR height={padding} />
+            <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>
+              <SingleHeader title={t('Código de confirmação')} />
+              <View style={{ paddingHorizontal: padding }}>
+                <Text style={{ ...texts.sm, marginBottom: padding }}>
+                  {t('Digite o código de confirmação fornecido pelo cliente:')}
+                </Text>
+                <CodeInput value={code} onChange={setCode} />
+                <DefaultButton
+                  title={nextStepLabel}
+                  onPress={nextStatepHandler}
+                  activityIndicator={isLoading}
+                  disabled={isLoading || code.length < 3}
+                  style={{ marginTop: padding }}
+                />
+              </View>
+            </View>
+            <HR height={padding} />
+            <PaddedView>
+              <DefaultButton
+                secondary
+                title={t('Confirmar entrega sem código')}
+                onPress={() => navigation.navigate('NoCodeDelivery', { orderId })}
+              />
+            </PaddedView>
+          </View>
+        )}
+      </KeyboardAwareScrollView>
+    </View>
   );
 }
