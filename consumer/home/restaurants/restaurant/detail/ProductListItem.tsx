@@ -1,4 +1,4 @@
-import { Product, WithId } from 'appjusto-types';
+import { ProductAlgolia } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
@@ -8,10 +8,11 @@ import { formatCurrency } from '../../../../../common/utils/formatters';
 import { ListItemImage } from '../../components/ListItemImage';
 
 interface Props {
-  product: WithId<Product>;
+  product: ProductAlgolia;
+  showRestaurantName?: boolean;
 }
 
-export const ProductListItem = ({ product }: Props) => {
+export const ProductListItem = ({ product, showRestaurantName }: Props) => {
   // context
   const businessId = useContextBusinessId();
   // state
@@ -43,6 +44,9 @@ export const ProductListItem = ({ product }: Props) => {
             {product.description}
           </Text>
           <Text style={{ ...texts.sm }}>{formatCurrency(product.price)}</Text>
+          {showRestaurantName && product.business?.name && (
+            <Text style={{ ...texts.xs, color: colors.green600 }}>{product.business.name}</Text>
+          )}
         </View>
         <View>
           <ListItemImage uri={imageURI} size={96} />

@@ -4,33 +4,14 @@ export interface ConsumerState {
   consumer?: WithId<ConsumerProfile>;
   currentPlace?: Place;
   currentLocation?: LatLng;
-  restaurantsSearchParams: SearchParam[];
-  productSearchParameters: SearchParam[];
   searchKind: SearchKind;
+  searchOrder: SearchOrder;
+  searchFilters: SearchFilter[];
 }
 
-export type SearchKind = {
-  type: 'kind';
-  value: 'restaurant' | 'product';
-  title?: string;
-};
-
-export type SearchOrder = {
-  type: 'order';
-  kind: 'restaurant' | 'product';
-  value: 'distance' | 'price' | 'preparation-time' | 'popularity';
-};
-
-export type SearchCategory = {
-  type: 'category';
-  kind: 'restaurant';
+export type SearchKind = 'restaurant' | 'product';
+export type SearchOrder = 'distance' | 'price' | 'preparation-time' | 'popularity';
+export type SearchFilter = {
+  type: 'category' | 'classification';
   value: string;
 };
-export type SearchRestaurant = SearchOrder | SearchCategory;
-export type SearchClassification = {
-  type: 'classification';
-  kind: 'product';
-  value: string;
-};
-export type SearchProduct = SearchOrder | SearchClassification;
-export type SearchParam = SearchRestaurant | SearchProduct;

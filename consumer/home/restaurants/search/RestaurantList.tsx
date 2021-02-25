@@ -1,4 +1,4 @@
-import { Business, WithId } from 'appjusto-types';
+import { BusinessAlgolia } from 'appjusto-types';
 import React from 'react';
 import { Image, SectionList, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -14,7 +14,7 @@ import DoubleHeader from '../components/DoubleHeader';
 import RestaurantListItem from './RestaurantListItem';
 
 type Props = {
-  items?: WithId<Business>[];
+  items?: BusinessAlgolia[];
   ListHeaderComponent?: React.ComponentType<any> | React.ReactElement | null;
   onSelect: (id: string) => void;
   onEndReached?: () => void;
@@ -23,7 +23,7 @@ type Props = {
 type Section = {
   title: string;
   subtitle: string;
-  data: WithId<Business>[];
+  data: BusinessAlgolia[];
 };
 
 export default function ({ items, ListHeaderComponent, onSelect, onEndReached }: Props) {
@@ -67,11 +67,11 @@ export default function ({ items, ListHeaderComponent, onSelect, onEndReached }:
       renderSectionHeader={({ section }) => (
         <DoubleHeader title={section.title} subtitle={section.subtitle} />
       )}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.objectID}
       stickySectionHeadersEnabled={false}
       renderItem={({ item }) => (
         <View style={{ marginTop: padding }}>
-          <TouchableOpacity onPress={() => onSelect(item.id)}>
+          <TouchableOpacity onPress={() => onSelect(item.objectID)}>
             <RestaurantListItem
               restaurant={item}
               cuisine={findCuisineById(item.cuisine?.id)?.name}

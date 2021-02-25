@@ -1,3 +1,4 @@
+import { Cuisine, WithId } from 'appjusto-types';
 import React from 'react';
 import { TouchableWithoutFeedback, View } from 'react-native';
 import { halfPadding } from '../../../../common/styles';
@@ -11,9 +12,10 @@ type Props = {
   isLoading: boolean;
   onLocationPress: () => void;
   onSearchPress: () => void;
+  onCuisineSelect: (cuisine: WithId<Cuisine>) => void;
 };
 
-export default function ({ isLoading, onLocationPress, onSearchPress }: Props) {
+export default function ({ isLoading, onLocationPress, onSearchPress, onCuisineSelect }: Props) {
   // if (isLoading) {
   //   return (
   //     <View style={screens.centered}>
@@ -41,7 +43,7 @@ export default function ({ isLoading, onLocationPress, onSearchPress }: Props) {
         </TouchableWithoutFeedback>
       </View>
       {/* by cuisine */}
-      <CuisineSelector onSelect={() => null} />
+      <CuisineSelector onSelect={(cuisine) => onCuisineSelect(cuisine)} />
     </View>
   );
 }

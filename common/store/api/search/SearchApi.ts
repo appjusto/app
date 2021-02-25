@@ -1,79 +1,69 @@
 import algoliasearch, { SearchClient, SearchIndex } from 'algoliasearch/lite';
-import { Business, Fleet, Product } from 'appjusto-types';
+import { Fleet } from 'appjusto-types';
 import { LatLng } from 'react-native-maps';
 import { AlgoliaConfig } from '../../../utils/config';
-import { SearchParam } from '../../consumer/types';
+import { SearchFilter, SearchKind, SearchOrder } from '../../consumer/types';
 
 export default class SearchApi {
   private client: SearchClient;
-  private fleets: SearchIndex;
   private restaurants: SearchIndex;
+  private restaurantsByPrice: SearchIndex;
+  private restaurantsByPreparationTime: SearchIndex;
+  private restaurantsByTotalOrders: SearchIndex;
   private products: SearchIndex;
+  private fleets: SearchIndex;
 
   constructor(config: AlgoliaConfig) {
     this.client = algoliasearch(config.appId, config.apiKey);
-    this.fleets = this.client.initIndex(`${config.env}_fleets`);
     this.restaurants = this.client.initIndex(`${config.env}_businesses`);
+    this.restaurantsByPrice = this.client.initIndex(`${config.env}_businesses_price_asc`);
+    this.restaurantsByPreparationTime = this.client.initIndex(
+      `${config.env}_business_preparation_time_asc`
+    );
+    this.restaurantsByTotalOrders = this.client.initIndex(
+      `${config.env}_businesses_totalOrders_desc`
+    );
     this.products = this.client.initIndex(`${config.env}_products`);
+    this.fleets = this.client.initIndex(`${config.env}_fleets`);
   }
 
-  private createFilters(filters?: SearchParam[]) {
+  private createFilters(filters?: SearchFilter[]) {
     return filters
-      ?.reduce<string[]>((result, param) => {
-        if (param.kind === 'restaurant') {
-          if (param.type === 'category') {
-            return [...result, `cuisine.name: ${param.value}`];
-          } else if (param.type === 'order') {
-            if (param.value === 'price') {
-              return [...result, 'statistics.averageTicketPrice > 0'];
-            } else if (param.value === 'preparation-time') {
-              return [...result, 'statistics.averagePreparationTime > 0'];
-            } else if (param.value === 'popularity') {
-              return [...result, 'statistics.totalOrders > 0'];
-            }
-          }
-        } else if (param.kind === 'product') {
-          if (param.type === 'order') {
-            if (param.value === 'price') {
-              return [...result, `price > 0`];
-            } else if (param.value === 'popularity') {
-              return [...result, `statistics.totalSold > 0`];
-            }
-          } else if (param.type === 'classification') {
-            return [...result, `classification: ${param.value}`];
-          }
+      ?.reduce<string[]>((result, filter) => {
+        if (filter.type === 'category') {
+          return [...result, `cuisine.name: ${filter.value}`];
+        } else if (filter.type === 'classification') {
+          return [...result, `classification: ${filter.value}`];
         }
         return result;
       }, [])
-      .join(' AND ');
+      .join(' OR ');
   }
 
-  searchRestaurants(
-    aroundLocation: LatLng,
-    query: string = '',
-    filters?: SearchParam[],
-    page?: number
-  ) {
-    console.log('searchRestaurants');
-    console.log(filters);
-    console.log(this.createFilters(filters));
-    return this.restaurants.search<Business>(query, {
-      aroundLatLng: `${aroundLocation.latitude}, ${aroundLocation.longitude}`,
-      page,
-      filters: this.createFilters(filters),
-    });
+  private getSearchIndex(kind: SearchKind, order: SearchOrder) {
+    if (kind === 'restaurant') {
+      if (order === 'distance') return this.restaurants;
+      else if (order === 'price') return this.restaurantsByPrice;
+      else if (order === 'preparation-time') return this.restaurantsByPreparationTime;
+      else if (order === 'popularity') return this.restaurantsByTotalOrders;
+    } else if (kind === 'product') {
+      return this.products;
+    }
   }
 
-  searchProducts(
+  search<T>(
+    kind: SearchKind,
+    order: SearchOrder,
+    filters: SearchFilter[],
     aroundLocation: LatLng,
     query: string = '',
-    filters?: SearchParam[],
     page?: number
   ) {
-    console.log('searchProducts');
-    console.log(filters);
+    console.log('search', kind, order);
     console.log(this.createFilters(filters));
-    return this.products.search<Product>(query, {
+    const index = this.getSearchIndex(kind, order);
+    if (!index) throw new Error('Invalid index');
+    return index.search<T>(query, {
       aroundLatLng: `${aroundLocation.latitude}, ${aroundLocation.longitude}`,
       page,
       filters: this.createFilters(filters),
