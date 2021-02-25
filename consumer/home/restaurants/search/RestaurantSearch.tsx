@@ -1,7 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { BusinessAlgolia, ProductAlgolia } from 'appjusto-types';
 import React, { useState } from 'react';
-import { FlatList, Image, TextInput, View } from 'react-native';
+import { FlatList, Image, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/containers/PaddedView';
@@ -94,7 +94,22 @@ export default function ({ navigation }: Props) {
         <FlatList
           data={products}
           keyExtractor={(item) => item.objectID}
-          renderItem={({ item }) => <ProductListItem product={item} showRestaurantName />}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('RestaurantNavigator', {
+                  initial: false,
+                  screen: 'ItemDetail',
+                  restaurantId: item.business.id,
+                  params: {
+                    productId: item.objectID,
+                  },
+                });
+              }}
+            >
+              <ProductListItem product={item} showRestaurantName />
+            </TouchableOpacity>
+          )}
         />
       )}
     </View>

@@ -18,6 +18,7 @@ export default function () {
         headerBackImage: () => <ArrowBox flipped />,
         headerBackTitleVisible: false,
       })}
+      initialRouteName="RestaurantDetail"
     >
       <Stack.Screen
         name="RestaurantDetail"

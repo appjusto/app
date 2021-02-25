@@ -1,21 +1,31 @@
-import { ProductAlgolia } from 'appjusto-types';
+import { Product, ProductAlgolia, WithId } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
+import {
+  useContextBusiness,
+  useContextBusinessId,
+} from '../../../../../common/store/context/business';
 import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { ListItemImage } from '../../components/ListItemImage';
 
 interface Props {
-  product: ProductAlgolia;
+  product: ProductAlgolia | WithId<Product>;
   showRestaurantName?: boolean;
 }
 
+const isAlgoliaProduct = (product: ProductAlgolia | WithId<Product>): product is ProductAlgolia => {
+  return (product as ProductAlgolia).objectID !== undefined;
+};
+
 export const ProductListItem = ({ product, showRestaurantName }: Props) => {
-  // context
-  const businessId = product.business.id;
   // state
-  const { data: imageURI } = useProductImageURI(businessId, product.objectID);
+  const businessId = useContextBusinessId();
+  const business = useContextBusiness();
+  const productId = isAlgoliaProduct(product) ? product.objectID : product.id;
+  const businessName = isAlgoliaProduct(product) ? product.business.name : business?.name;
+  const { data: imageURI } = useProductImageURI(businessId, productId);
   // UI
   return (
     <View
@@ -43,8 +53,8 @@ export const ProductListItem = ({ product, showRestaurantName }: Props) => {
             {product.description}
           </Text>
           <Text style={{ ...texts.sm }}>{formatCurrency(product.price)}</Text>
-          {showRestaurantName && product.business?.name && (
-            <Text style={{ ...texts.xs, color: colors.green600 }}>{product.business.name}</Text>
+          {showRestaurantName && businessName && (
+            <Text style={{ ...texts.xs, color: colors.green600 }}>{businessName}</Text>
           )}
         </View>
         <View>
