@@ -141,10 +141,22 @@ export default function ({ navigation, route }: Props) {
 
   return (
     <View style={{ ...screens.default, paddingBottom: padding }}>
-      <KeyboardAwareScrollView>
-        <OrderMap order={order!} ratio={360 / 316} />
-        <RouteIcons order={order} />
-        <CourierStatusHighlight dispatchingState={dispatchingState} />
+      <KeyboardAwareScrollView extraHeight={padding}>
+        <View>
+          <OrderMap order={order!} ratio={360 / 316} />
+          <RouteIcons order={order} />
+          <CourierStatusHighlight dispatchingState={dispatchingState} />
+          {/* <View
+          style={{
+            top: -32,
+          }}
+        >
+          <MessagesCard
+            orderId={orderId}
+            onPress={() => navigation.navigate('Chat', { orderId })}
+          />
+        </View> */}
+        </View>
         <View style={{ marginTop: padding, paddingHorizontal: padding }}>
           <Text style={[texts.xs, { color: colors.green600 }]}>{t('Pedido de')}</Text>
           <Text style={[texts.md]}>

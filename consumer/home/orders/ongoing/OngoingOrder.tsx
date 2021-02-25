@@ -99,68 +99,72 @@ export default function ({ navigation, route }: Props) {
     return '';
   })();
   return (
-    <ScrollView contentContainerStyle={{ ...screens.default }}>
-      <View style={{ flex: 1 }}>
-        <OngoingOrderStatus order={order} />
-        <OrderMap order={order} ratio={1.2} />
-        <CourierStatusHighlight dispatchingState={dispatchingState} />
-        <View style={{ paddingHorizontal: padding }}>
-          <View
-            style={{
-              width: '100%',
-              marginBottom: padding,
-              top: -64,
-              alignSelf: 'center',
-            }}
-          >
-            <MessagesCard
-              orderId={orderId}
+    <View style={{ ...screens.default, paddingBottom: padding }}>
+      <ScrollView>
+        <View>
+          <OngoingOrderStatus order={order} />
+          <OrderMap order={order} ratio={1.2} />
+          <View style={{ marginBottom: padding }}>
+            <CourierStatusHighlight dispatchingState={dispatchingState} />
+          </View>
+          <View style={{ paddingHorizontal: padding }}>
+            <View
+              style={{
+                width: '100%',
+                marginBottom: padding,
+                top: -64,
+                alignSelf: 'center',
+              }}
+            >
+              <MessagesCard
+                orderId={orderId}
+                onPress={() => navigation.navigate('Chat', { orderId })}
+              />
+            </View>
+          </View>
+        </View>
+        <PaddedView style={{ backgroundColor: colors.white, flexDirection: 'row' }}>
+          <RoundedProfileImg flavor="courier" id={order.courier?.id} />
+          <View style={{ flex: 1, marginLeft: padding }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={[texts.md]}>{order.courier?.name}</Text>
+            </View>
+            <Text style={[texts.xs, { color: colors.green600 }]}>{addressLabel}</Text>
+            <Text style={[texts.xs]}>{nextPlace?.address.main ?? ''}</Text>
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View>
+              <CourierDistanceBadge order={order} />
+              <TouchableOpacity
+                onPress={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
+                style={{ marginTop: 12 }}
+              >
+                <Text style={[texts.xs, { color: colors.green600 }]}>{t('Alterar')}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </PaddedView>
+        <HR />
+        <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={{ flex: 7 }}>
+            <DefaultButton
+              title={t('Abrir chat')}
               onPress={() => navigation.navigate('Chat', { orderId })}
             />
           </View>
-        </View>
-      </View>
-      <PaddedView style={{ backgroundColor: colors.white, flexDirection: 'row' }}>
-        <RoundedProfileImg flavor="courier" id={order.courier?.id} />
-        <View style={{ flex: 1, marginLeft: padding }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={[texts.md]}>{order.courier?.name}</Text>
+          <View style={{ flex: 7, marginLeft: halfPadding }}>
+            <DefaultButton
+              title={t('Mais informações')}
+              onPress={() =>
+                navigation.navigate('CourierDetail', {
+                  orderId,
+                })
+              }
+              secondary
+            />
           </View>
-          <Text style={[texts.xs, { color: colors.green600 }]}>{addressLabel}</Text>
-          <Text style={[texts.xs]}>{nextPlace?.address.main ?? ''}</Text>
-        </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <View>
-            <CourierDistanceBadge order={order} />
-            <TouchableOpacity
-              onPress={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
-              style={{ marginTop: 12 }}
-            >
-              <Text style={[texts.xs, { color: colors.green600 }]}>{t('Alterar')}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </PaddedView>
-      <HR />
-      <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <View style={{ flex: 7 }}>
-          <DefaultButton
-            title={t('Abrir chat')}
-            onPress={() => navigation.navigate('Chat', { orderId })}
-          />
-        </View>
-        <View style={{ flex: 7, marginLeft: halfPadding }}>
-          <DefaultButton
-            title={t('Mais informações')}
-            onPress={() =>
-              navigation.navigate('CourierDetail', {
-                orderId,
-              })
-            }
-            secondary
-          />
-        </View>
-      </PaddedView>
-    </ScrollView>
+        </PaddedView>
+      </ScrollView>
+    </View>
   );
 }
