@@ -1,5 +1,5 @@
 import { SearchResponse } from '@algolia/client-search';
-import { LatLng, WithId } from 'appjusto-types';
+import { LatLng } from 'appjusto-types';
 import { debounce } from 'lodash';
 import React from 'react';
 import { ApiContext } from '../../../app/context';
@@ -17,7 +17,7 @@ export const useSearch = <T extends object>(
   const api = React.useContext(ApiContext);
   // state
   const [response, setResponse] = React.useState<SearchResponse<T>>();
-  const [results, setResults] = React.useState<WithId<T>[]>();
+  const [results, setResults] = React.useState<T[]>();
   const [isLoading, setLoading] = React.useState(false);
   // helpers
   const search = React.useCallback(
@@ -49,7 +49,7 @@ export const useSearch = <T extends object>(
   // update results when response changes
   React.useEffect(() => {
     if (!response) return;
-    const hits = response.hits.map((r) => ({ ...r, id: r.objectID } as WithId<T>));
+    const hits = response.hits;
     if (response.page === 0) setResults(hits);
     else setResults([...(results ?? []), ...hits]);
     // eslint-disable-next-line react-hooks/exhaustive-deps

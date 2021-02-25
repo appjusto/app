@@ -1,8 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { BusinessAlgolia, ProductAlgolia } from 'appjusto-types';
 import React, { useState } from 'react';
-import { Image, TextInput, View } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, Image, TextInput, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/containers/PaddedView';
@@ -94,7 +93,7 @@ export default function ({ navigation }: Props) {
       {kind === 'product' && (
         <FlatList
           data={products}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.objectID}
           renderItem={({ item }) => <ProductListItem product={item} showRestaurantName />}
         />
       )}

@@ -26,8 +26,8 @@ type Props = {
 export default function ({ onFilterOpen }: Props) {
   // redux store
   const dispatch = useDispatch<AppDispatch>();
-  const selectedSearchKing = useSelector(getSearchKind);
-
+  const selectedSearchKind = useSelector(getSearchKind);
+  // UI
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <FilterButton onPress={onFilterOpen} />
@@ -52,7 +52,7 @@ export default function ({ onFilterOpen }: Props) {
                 borderRadius: 32,
                 // height: 32,
                 marginLeft: 8,
-                backgroundColor: item.kind === selectedSearchKing ? colors.green500 : colors.white,
+                backgroundColor: item.kind === selectedSearchKind ? colors.green500 : colors.white,
                 borderColor: colors.black,
               }}
             >

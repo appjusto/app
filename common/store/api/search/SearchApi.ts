@@ -31,7 +31,7 @@ export default class SearchApi {
     return filters
       ?.reduce<string[]>((result, filter) => {
         if (filter.type === 'category') {
-          return [...result, `cuisine.name: ${filter.value}`];
+          return [...result, `cuisine.id: ${filter.value}`];
         } else if (filter.type === 'classification') {
           return [...result, `classification: ${filter.value}`];
         }
@@ -59,8 +59,6 @@ export default class SearchApi {
     query: string = '',
     page?: number
   ) {
-    console.log('search', kind, order);
-    console.log(this.createFilters(filters));
     const index = this.getSearchIndex(kind, order);
     if (!index) throw new Error('Invalid index');
     return index.search<T>(query, {

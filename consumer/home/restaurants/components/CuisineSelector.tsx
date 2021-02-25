@@ -8,14 +8,15 @@ import CuisinesBox from './CuisinesBox';
 import DoubleHeader from './DoubleHeader';
 
 type Props = {
-  onSelect: (cuisine: WithId<Cuisine>) => void;
+  selectedCuisineId?: string;
+  onSelect: (cuisine: WithId<Cuisine> | null) => void;
 };
 
-export default function ({ onSelect }: Props) {
+export default function ({ selectedCuisineId, onSelect }: Props) {
   const cuisines = useCuisines();
   return (
     <View>
-      <DoubleHeader title={t('Tá com fome de que?')} subtitle={t('Escolha por categoria')} />
+      <DoubleHeader title={t('Tá com fome de quê?')} subtitle={t('Escolha por categoria')} />
       <View style={{ paddingVertical: padding, paddingLeft: padding }}>
         <FlatList
           showsHorizontalScrollIndicator={false}
@@ -23,8 +24,11 @@ export default function ({ onSelect }: Props) {
           data={cuisines}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => onSelect(item)} style={{ marginRight: halfPadding }}>
-              <CuisinesBox cuisine={item} />
+            <TouchableOpacity
+              onPress={() => (selectedCuisineId === item.id ? onSelect(null) : onSelect(item))}
+              style={{ marginRight: halfPadding }}
+            >
+              <CuisinesBox cuisine={item} selected={selectedCuisineId === item.id} />
             </TouchableOpacity>
           )}
         />

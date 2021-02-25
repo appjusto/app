@@ -54,6 +54,7 @@ export default function ({ route, navigation }: Props) {
       ListHeaderComponent={
         <RestaurantsHomeHeader
           isLoading={isLoading}
+          selectedCuisineId={filters.find(() => true)?.value}
           onLocationPress={() => {
             navigation.navigate('AddressComplete', {
               returnParam: 'place',
@@ -64,7 +65,7 @@ export default function ({ route, navigation }: Props) {
             navigation.navigate('RestaurantSearch');
           }}
           onCuisineSelect={(cuisine) => {
-            setFilters([{ type: 'category', value: cuisine.name }]);
+            setFilters(cuisine ? [{ type: 'category', value: cuisine.id }] : []);
           }}
         />
       }

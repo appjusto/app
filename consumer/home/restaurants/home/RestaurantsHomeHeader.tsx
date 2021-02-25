@@ -10,19 +10,18 @@ import RestaurantSearchBar from './RestaurantSearchButton';
 
 type Props = {
   isLoading: boolean;
+  selectedCuisineId?: string;
   onLocationPress: () => void;
   onSearchPress: () => void;
-  onCuisineSelect: (cuisine: WithId<Cuisine>) => void;
+  onCuisineSelect: (cuisine: WithId<Cuisine> | null) => void;
 };
 
-export default function ({ isLoading, onLocationPress, onSearchPress, onCuisineSelect }: Props) {
-  // if (isLoading) {
-  //   return (
-  //     <View style={screens.centered}>
-  //       <ActivityIndicator size="large" color={colors.green} />
-  //     </View>
-  //   );
-  // }
+export default function ({
+  selectedCuisineId,
+  onLocationPress,
+  onSearchPress,
+  onCuisineSelect,
+}: Props) {
   return (
     <View>
       <TouchableWithoutFeedback onPress={onLocationPress}>
@@ -32,7 +31,7 @@ export default function ({ isLoading, onLocationPress, onSearchPress, onCuisineS
       </TouchableWithoutFeedback>
       {/* search */}
       <DoubleHeader
-        title={t('Buscar')}
+        title={t('Já sabe o que quer?')}
         subtitle={t('Então vai direto no seu prato ou restaurante preferido')}
       />
       <View style={{ marginTop: 24, paddingHorizontal: 12, marginBottom: halfPadding }}>
@@ -43,7 +42,10 @@ export default function ({ isLoading, onLocationPress, onSearchPress, onCuisineS
         </TouchableWithoutFeedback>
       </View>
       {/* by cuisine */}
-      <CuisineSelector onSelect={(cuisine) => onCuisineSelect(cuisine)} />
+      <CuisineSelector
+        selectedCuisineId={selectedCuisineId}
+        onSelect={(cuisine) => onCuisineSelect(cuisine)}
+      />
     </View>
   );
 }
