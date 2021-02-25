@@ -67,7 +67,8 @@ export default function ({ navigation, route }: Props) {
     }
     setLoading(false);
   };
-  const finishHandler = async () => {
+
+  const reviewHandler = async () => {
     setLoading(true);
     try {
       if (reviewType) {
@@ -76,11 +77,8 @@ export default function ({ navigation, route }: Props) {
           orderId,
         });
       }
-      if (tip > 0) await api.order().tipCourier(order.id, tip);
-      navigation.navigate('Home');
     } catch (error) {
-      // find a better error message
-      dispatch(showToast(t('Não foi possível enviar a avaliação e/ou caixinha')));
+      dispatch(showToast(t('Não foi possível enviar a avaliação')));
     }
     setLoading(false);
   };
@@ -119,7 +117,19 @@ export default function ({ navigation, route }: Props) {
           </PaddedView>
         </View>
         <HR height={padding} />
-        <ReviewBox review={review?.type} onReviewChange={(type) => setReviewType(type)} />
+        <ReviewBox
+          review={review?.type ?? reviewType}
+          onReviewChange={(type) => setReviewType(type)}
+        />
+        {!review?.type && (
+          <DefaultButton
+            title={review?.type ? t('Avaliação enviada') : t('Avaliar entregador')}
+            onPress={reviewHandler}
+            style={{ margin: padding }}
+            activityIndicator={isLoading}
+            disabled={isLoading}
+          />
+        )}
         <HR height={padding} />
         {order.tip?.value! > 0 ? (
           <View>
@@ -141,11 +151,6 @@ export default function ({ navigation, route }: Props) {
         </PaddedView>
         <HR height={padding} />
         <PaddedView>
-          <DefaultButton
-            title={t('Finalizar')}
-            onPress={finishHandler}
-            style={{ marginBottom: padding }}
-          />
           <DefaultButton
             title={t('Relatar um problema')}
             onPress={() =>
