@@ -10,6 +10,8 @@ import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
+import FeedbackView from '../../../common/components/views/FeedbackView';
+import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { cancelOrder } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
@@ -38,6 +40,7 @@ export default function ({ route, navigation }: Props) {
   const issues = useIssues('consumer-cancel');
   const [selectedReason, setSelectedReason] = React.useState<WithId<Issue>>();
   const [rejectionComment, setRejectionComment] = React.useState<string>('');
+  const [issueSent, setIssueSent] = React.useState(false);
   // UI
   if (!issues) {
     return (
@@ -46,68 +49,84 @@ export default function ({ route, navigation }: Props) {
       </View>
     );
   }
+  if (issueSent) {
+    return (
+      <FeedbackView
+        header={t('Obrigado pelas informações. Seu pedido foi cancelado.')}
+        description={t('Você pode ver as informações desse pedido no seu Histórico de Pedidos.')}
+        icon={<IconMotocycle />}
+      >
+        <DefaultButton
+          title={t('Voltar para alterar o e-mail')}
+          onPress={() => navigation.navigate('Home')}
+          secondary
+        />
+      </FeedbackView>
+    );
+  }
   // handlers
   const cancelHandler = () => {
     (async () => {
       try {
         await dispatch(
           cancelOrder(api)(orderId, {
-            reason: selectedReason!,
+            issue: selectedReason!,
             comment: rejectionComment,
           })
         );
-        navigation.replace('Home');
+        setIssueSent(true);
       } catch (error) {
         dispatch(showToast(error.toString()));
       }
     })();
   };
   return (
-    <View style={screens.config}>
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
-        <PaddedView>
-          <Text style={{ ...texts.x2l, marginBottom: padding }}>
-            {t('Por que você está cancelando o seu pedido?')}
-          </Text>
-          {issues.map((issue) => (
-            <RadioButton
-              key={issue.id}
-              title={issue.title}
-              checked={selectedReason?.id === issue.id}
-              onPress={() => setSelectedReason(issue)}
-            />
-          ))}
-          <Text style={{ ...texts.sm, marginBottom: padding, marginTop: padding }}>
-            {t(
-              'Você pode usar o espaço abaixo para detalhar mais o cancelamento. Dessa forma conseguiremos melhorar nossos serviços:'
-            )}
-          </Text>
-          <TextInput
-            placeholder={t('Escreva sua mensagem')}
-            style={{
-              width: '100%',
-              height: 128,
-              ...borders.default,
-              borderColor: colors.grey500,
-              backgroundColor: colors.white,
-              padding: 8,
-            }}
-            multiline
-            onChangeText={setRejectionComment}
-            value={rejectionComment}
-            textAlignVertical="top"
-            blurOnSubmit
+    <KeyboardAwareScrollView
+      keyboardShouldPersistTaps="always"
+      contentContainerStyle={{ ...screens.config }}
+    >
+      <PaddedView>
+        <Text style={{ ...texts.x2l, marginBottom: padding }}>
+          {t('Por que você está cancelando o seu pedido?')}
+        </Text>
+        {issues.map((issue) => (
+          <RadioButton
+            key={issue.id}
+            title={issue.title}
+            checked={selectedReason?.id === issue.id}
+            onPress={() => setSelectedReason(issue)}
           />
-          <View style={{ flex: 1 }} />
-          <DefaultButton
-            style={{ marginTop: padding }}
-            title={t('Enviar')}
-            onPress={cancelHandler}
-            disabled={!selectedReason || busy}
-            activityIndicator={busy}
-          />
-        </PaddedView>
-      </KeyboardAwareScrollView>
-    </View>
+        ))}
+        <Text style={{ ...texts.sm, marginBottom: padding, marginTop: padding }}>
+          {t(
+            'Você pode usar o espaço abaixo para detalhar mais o cancelamento. Dessa forma conseguiremos melhorar nossos serviços:'
+          )}
+        </Text>
+        <TextInput
+          placeholder={t('Escreva sua mensagem')}
+          style={{
+            width: '100%',
+            height: 128,
+            ...borders.default,
+            borderColor: colors.grey500,
+            backgroundColor: colors.white,
+            padding: 8,
+          }}
+          multiline
+          onChangeText={setRejectionComment}
+          value={rejectionComment}
+          textAlignVertical="top"
+          blurOnSubmit
+        />
+        <View style={{ flex: 1 }} />
+        <DefaultButton
+          style={{ marginTop: padding }}
+          title={t('Enviar')}
+          onPress={cancelHandler}
+          disabled={!selectedReason || busy}
+          activityIndicator={busy}
+        />
+      </PaddedView>
+    </KeyboardAwareScrollView>
   );
 }

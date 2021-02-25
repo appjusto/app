@@ -10,7 +10,7 @@ import { borders, colors, halfPadding, padding, texts } from '../../../../common
 import { t } from '../../../../strings';
 
 type Props = {
-  comment: string;
+  comment?: string;
   review?: ReviewType;
   disabled?: boolean;
   onCommentChange?: (value: string) => void;
@@ -37,7 +37,6 @@ export const ReviewBox = ({
           flexDirection: 'row',
           alignItems: 'center',
           marginTop: padding,
-          marginBottom: 24,
         }}
       >
         <TouchableWithoutFeedback
@@ -82,20 +81,24 @@ export const ReviewBox = ({
           </View>
         </TouchableWithoutFeedback>
       </View>
-      <Text style={{ ...texts.md, color: colors.grey700, marginBottom: halfPadding }}>
-        {t(
-          'Se preferir, descreva a sua experiência para outros clientes. Sua avaliação será anônima.'
-        )}
-      </Text>
-      <DefaultInput
-        editable={!disabled}
-        placeholder={t('Escreva sua mensagem')}
-        multiline
-        numberOfLines={6}
-        value={comment}
-        onChangeText={onCommentChange}
-        style={{ height: 80 }}
-      />
+      {comment && (
+        <View>
+          <Text style={{ ...texts.md, color: colors.grey700, marginBottom: halfPadding }}>
+            {t(
+              'Se preferir, descreva a sua experiência para outros clientes. Sua avaliação será anônima.'
+            )}
+          </Text>
+          <DefaultInput
+            editable={!disabled}
+            placeholder={t('Escreva sua mensagem')}
+            multiline
+            numberOfLines={6}
+            value={comment}
+            onChangeText={onCommentChange}
+            style={{ height: 80 }}
+          />
+        </View>
+      )}
     </PaddedView>
   );
 };

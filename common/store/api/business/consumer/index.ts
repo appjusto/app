@@ -20,7 +20,7 @@ export default class ConsumerApi {
     return result.data;
   }
 
-  async deletePaymentMethod(consumerId: string, paymentMethodId: string) {
-    return (await this.refs.getDeletePaymentMethodCallable()({ consumerId, paymentMethodId })).data;
+  async deletePaymentMethod(paymentMethodId: string) {
+    return (await this.refs.getDeletePaymentMethodCallable()({ paymentMethodId })).data;
   }
 }

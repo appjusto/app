@@ -41,12 +41,15 @@ export default ({ navigation, route }: Props) => {
       </View>
     );
   }
+
   const cancellationCharge =
-    order.dispatchingState === 'going-destination' ||
-    order.dispatchingState === 'arrived-destination';
+    order.type === 'food'
+      ? order.status === 'confirmed'
+      : order.dispatchingState === 'going-destination' ||
+        order.dispatchingState === 'arrived-destination';
   const description = cancellationCharge
-    ? t('Como seu pedido já está a caminho do local de entrega, você não será reembolsado.')
-    : t('Como seu pedido ainda não foi pegue, você não será cobrado pelo cancelamento.');
+    ? t('Seu pedido já foi iniciado e algumas taxas podem ser cobradas.')
+    : t('Como seu pedido ainda não foi retirado, você não será cobrado pelo cancelamento.');
   return (
     <View style={{ ...screens.default }}>
       <FeedbackView

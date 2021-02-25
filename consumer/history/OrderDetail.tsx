@@ -44,7 +44,6 @@ export default function ({ navigation, route }: Props) {
   // screen state
   const { order } = useObserveOrder(orderId);
   const [tip, setTip] = React.useState();
-  const [reviewComment, setReviewComment] = React.useState('');
   const [reviewType, setReviewType] = React.useState<ReviewType>();
   const review = useCourierReview(orderId, order?.courier?.id);
   const [isLoading, setLoading] = React.useState(false);
@@ -62,19 +61,34 @@ export default function ({ navigation, route }: Props) {
     setLoading(true);
     try {
       if (tip > 0) await api.order().tipCourier(order.id, tip);
+      dispatch(showToast(t('Caixinha enviada!')));
     } catch (error) {
       dispatch(showToast(t('Não foi possível enviar a caixinha')));
     }
     setLoading(false);
-    console.log(tip);
+  };
+  const finishHandler = async () => {
+    setLoading(true);
+    try {
+      if (reviewType) {
+        await api.courier().addReview(order.courier!.id, {
+          type: reviewType,
+          orderId,
+        });
+      }
+      if (tip > 0) await api.order().tipCourier(order.id, tip);
+      navigation.navigate('Home');
+    } catch (error) {
+      // find a better error message
+      dispatch(showToast(t('Não foi possível enviar a avaliação e/ou caixinha')));
+    }
+    setLoading(false);
   };
 
   return (
     <View style={{ ...screens.default }}>
       <ScrollView>
-        <View style={{ height: 160 }}>
-          <OrderMap order={order} />
-        </View>
+        <OrderMap order={order} ratio={360 / 160} />
         <PaddedView>
           <PlaceSummary title={t('Retirada')} place={order.origin} />
           <PlaceSummary title={t('Entrega')} place={order.destination} />
@@ -105,6 +119,8 @@ export default function ({ navigation, route }: Props) {
           </PaddedView>
         </View>
         <HR height={padding} />
+        <ReviewBox review={review?.type} onReviewChange={(type) => setReviewType(type)} />
+        <HR height={padding} />
         {order.tip?.value! > 0 ? (
           <View>
             <TipControl order={order} tip={tip} onChange={(value) => setTip(value)} />
@@ -119,34 +135,6 @@ export default function ({ navigation, route }: Props) {
             />
           </View>
         )}
-
-        <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
-          {/* <DefaultButton
-            title={t('Avaliar o entregador')}
-            secondary
-            onPress={() =>
-              navigation.navigate('ReviewCourier', {
-                courierId: order.courier!.id,
-                courierName: order.courier!.name,
-                courierJoined: formatDate(
-                  (order.courier?.joined as firebase.firestore.Timestamp).toDate(),
-                  'monthYear'
-                ),
-                orderId,
-              })
-            }
-          /> */}
-        </View>
-        <HR height={padding} />
-        <View>
-          <ReviewBox
-            comment={review?.comment ?? reviewComment}
-            review={review?.type ?? reviewType}
-            disabled={!!review}
-            onCommentChange={review ? undefined : (value) => setReviewComment(value)}
-            onReviewChange={review ? undefined : (type) => setReviewType(type)}
-          />
-        </View>
         <HR height={padding} />
         <PaddedView>
           <OrderCostBreakdown order={order} selectedFare={order.fare} />
@@ -154,8 +142,18 @@ export default function ({ navigation, route }: Props) {
         <HR height={padding} />
         <PaddedView>
           <DefaultButton
+            title={t('Finalizar')}
+            onPress={finishHandler}
+            style={{ marginBottom: padding }}
+          />
+          <DefaultButton
             title={t('Relatar um problema')}
-            onPress={() => navigation.navigate('OrderComplaint', { orderId: order.id })}
+            onPress={() =>
+              navigation.navigate('ReportIssueViaHistory', {
+                orderId: order.id,
+                issueType: 'consumer-delivery-problem',
+              })
+            }
             secondary
           />
         </PaddedView>

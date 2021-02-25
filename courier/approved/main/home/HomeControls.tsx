@@ -190,7 +190,6 @@ export default function ({ navigation }: Props) {
                   },
                 })
               }
-              // onPress={() => navigation.navigate('FleetDetail', { fleetId: courier.fleet!.id })}
             >
               <View style={{ marginTop: padding, alignItems: 'center' }}>
                 <RoundedText>{t('Mudar de frota')}</RoundedText>

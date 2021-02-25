@@ -1,6 +1,7 @@
 import polyline from '@mapbox/polyline';
 import { Order } from 'appjusto-types';
 import React from 'react';
+import { Dimensions, View } from 'react-native';
 import { LatLng, Marker, Polyline } from 'react-native-maps';
 import DefaultMap from '../../../../common/components/views/DefaultMap';
 import { IconMapCourier } from '../../../../common/icons/icon-mapCourier';
@@ -9,13 +10,16 @@ import { IconMapOrigin } from '../../../../common/icons/icon-mapOrigin';
 
 type Props = {
   order?: Order;
+  ratio: number;
 };
 
-export default function ({ order }: Props) {
+export default function ({ order, ratio }: Props) {
   if (!order) return null;
   if (!order.origin?.location) return null;
   if (!order.destination?.location) return null;
   if (!order.route?.polyline) return null;
+
+  const { width } = Dimensions.get('window');
 
   const { courier, origin, destination, route } = order;
 
@@ -24,19 +28,21 @@ export default function ({ order }: Props) {
   });
 
   return (
-    <DefaultMap style={{ flex: 1, width: '100%' }} coordinates={routeCoordinates} fitToElements>
-      <Marker coordinate={origin.location!} identifier="origin">
-        <IconMapOrigin />
-      </Marker>
-      <Marker coordinate={destination.location!} identifier="destination">
-        <IconMapDestination />
-      </Marker>
-      {courier?.location && (
-        <Marker coordinate={courier.location}>
-          <IconMapCourier />
+    <View style={{ width, height: width / ratio }}>
+      <DefaultMap coordinates={routeCoordinates} fitToElements style={{ flex: 1 }}>
+        <Marker coordinate={origin.location!} identifier="origin">
+          <IconMapOrigin />
         </Marker>
-      )}
-      <Polyline coordinates={routeCoordinates} />
-    </DefaultMap>
+        <Marker coordinate={destination.location!} identifier="destination">
+          <IconMapDestination />
+        </Marker>
+        {courier?.location && (
+          <Marker coordinate={courier.location}>
+            <IconMapCourier />
+          </Marker>
+        )}
+        <Polyline coordinates={routeCoordinates} />
+      </DefaultMap>
+    </View>
   );
 }

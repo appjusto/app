@@ -1,3 +1,5 @@
+import { IssueType } from 'appjusto-types';
+
 export type HistoryParamList = {
   OrderHistory: undefined;
   OrderDetail: {
@@ -12,7 +14,9 @@ export type HistoryParamList = {
     courierJoined: string;
     orderId: string;
   };
-  OrderComplaint: {
+  ReportIssueViaHistory: {
+    issueType: IssueType;
     orderId: string;
   };
+  Home: undefined;
 };

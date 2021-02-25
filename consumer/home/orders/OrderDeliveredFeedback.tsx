@@ -40,7 +40,6 @@ export default ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   // screen state
   const { order } = useObserveOrder(orderId);
-  const [comment, setComment] = React.useState('');
   const [reviewType, setReviewType] = React.useState<ReviewType>();
   const [tip, setTip] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
@@ -60,14 +59,14 @@ export default ({ navigation, route }: Props) => {
       if (reviewType) {
         await api.courier().addReview(order.courier!.id, {
           type: reviewType,
-          comment,
           orderId,
         });
       }
       if (tip > 0) await api.order().tipCourier(order.id, tip);
       navigation.navigate('Home');
     } catch (error) {
-      dispatch(showToast(t('Não foi possível enviar o comentário')));
+      // find a better error message
+      dispatch(showToast(t('Não foi possível enviar a avaliação e/ou caixinha')));
     }
     setLoading(false);
   };
@@ -140,11 +139,7 @@ export default ({ navigation, route }: Props) => {
           </View>
         </View>
         <HR height={padding} />
-        <ReviewBox
-          comment={comment}
-          onComment={(value) => setComment(value)}
-          selectReview={(type) => setReviewType(type)}
-        />
+        <ReviewBox onReviewChange={(type) => setReviewType(type)} />
         <HR />
         {/* actions */}
         <View style={{ paddingHorizontal: padding }}>
@@ -165,7 +160,12 @@ export default ({ navigation, route }: Props) => {
               <DefaultButton
                 title={t('Relatar um problema')}
                 secondary
-                onPress={() => navigation.navigate('OrderComplaint', { orderId: order.id })}
+                onPress={() =>
+                  navigation.navigate('ReportIssueOngoingOrder', {
+                    orderId: order.id,
+                    issueType: 'consumer-delivery-problem',
+                  })
+                }
               />
             </View>
             <View style={{ width: '49%' }}>

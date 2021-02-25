@@ -1,4 +1,4 @@
-import { Place } from 'appjusto-types';
+import { IssueType, Place } from 'appjusto-types';
 import { ChatParamList } from '../../../common/screens/Chat';
 
 export type OrderNavigatorParamList = {
@@ -37,7 +37,8 @@ export type OrderNavigatorParamList = {
   CourierDetail: {
     orderId: string;
   };
-  OrderComplaint: {
+  ReportIssueOngoingOrder: {
+    issueType: IssueType;
     orderId: string;
   };
   ConfirmCancelOrder: {

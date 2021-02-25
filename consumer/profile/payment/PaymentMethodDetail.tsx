@@ -35,7 +35,7 @@ export default function ({ route, navigation }: Props) {
   const deletePaymentMethodHandler = async () => {
     try {
       setLoading(true);
-      await api.consumer().deletePaymentMethod(consumer.id, paymentData.id);
+      await api.consumer().deletePaymentMethod(paymentData.id);
       setLoading(false);
     } catch (error) {
       dispatch(showToast(error.toString(), 'error'));
