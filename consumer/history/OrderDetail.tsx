@@ -121,15 +121,13 @@ export default function ({ navigation, route }: Props) {
           review={review?.type ?? reviewType}
           onReviewChange={(type) => setReviewType(type)}
         />
-        {!review?.type && (
-          <DefaultButton
-            title={review?.type ? t('Avaliação enviada') : t('Avaliar entregador')}
-            onPress={reviewHandler}
-            style={{ margin: padding }}
-            activityIndicator={isLoading}
-            disabled={isLoading}
-          />
-        )}
+        <DefaultButton
+          title={review?.type ? t('Avaliação enviada') : t('Avaliar entregador')}
+          onPress={reviewHandler}
+          style={{ margin: padding }}
+          activityIndicator={isLoading}
+          disabled={isLoading || !!review?.type}
+        />
         <HR height={padding} />
         {order.tip?.value! > 0 ? (
           <View>
