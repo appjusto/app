@@ -104,26 +104,31 @@ export default function ({ navigation, route }: Props) {
         <View>
           <OngoingOrderStatus order={order} />
           <OrderMap order={order} ratio={1.2} />
-          <View style={{ marginBottom: padding }}>
+          <View>
             <CourierStatusHighlight dispatchingState={dispatchingState} />
           </View>
-          <View style={{ paddingHorizontal: padding }}>
-            <View
-              style={{
-                width: '100%',
-                marginBottom: padding,
-                top: -64,
-                alignSelf: 'center',
-              }}
-            >
-              <MessagesCard
-                orderId={orderId}
-                onPress={() => navigation.navigate('Chat', { orderId })}
-              />
-            </View>
+          <View
+            style={{
+              width: '100%',
+              top: -176,
+              alignSelf: 'center',
+              paddingHorizontal: padding,
+            }}
+          >
+            <MessagesCard
+              orderId={orderId}
+              onPress={() => navigation.navigate('Chat', { orderId })}
+            />
           </View>
         </View>
-        <PaddedView style={{ backgroundColor: colors.white, flexDirection: 'row' }}>
+        <View
+          style={{
+            backgroundColor: colors.white,
+            flexDirection: 'row',
+            paddingHorizontal: padding,
+            paddingTop: padding,
+          }}
+        >
           <RoundedProfileImg flavor="courier" id={order.courier?.id} />
           <View style={{ flex: 1, marginLeft: padding }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -143,7 +148,7 @@ export default function ({ navigation, route }: Props) {
               </TouchableOpacity>
             </View>
           </View>
-        </PaddedView>
+        </View>
         <HR />
         <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View style={{ flex: 7 }}>
