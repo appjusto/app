@@ -38,6 +38,7 @@ export default class FirebaseRefs {
   getBanksRef = () => this.getPlatformDatasRef().collection('banks');
   getIssuesRef = () => this.getPlatformDatasRef().collection('issues');
   getCuisinesRef = () => this.getPlatformDatasRef().collection('cuisines');
+  getClassificationsRef = () => this.getPlatformDatasRef().collection('classifications');
 
   // businesses
   getBusinessesRef = () => this.firestore.collection('businesses');

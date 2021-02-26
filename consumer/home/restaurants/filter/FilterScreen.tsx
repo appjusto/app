@@ -1,13 +1,30 @@
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Classification, Cuisine, WithId } from 'appjusto-types';
 import React from 'react';
-import { FlatList, View } from 'react-native';
+import { ScrollView, TouchableWithoutFeedback, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import CheckField from '../../../../common/components/buttons/CheckField';
 import RadioButton from '../../../../common/components/buttons/RadioButton';
+import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
+import HR from '../../../../common/components/views/HR';
+import useCuisines from '../../../../common/store/api/platform/hooks/useCuisines';
+import { useFoodClassifications } from '../../../../common/store/api/platform/hooks/useFoodClassifications';
+import {
+  getSearchFilters,
+  getSearchKind,
+  getSearchOrder,
+} from '../../../../common/store/consumer/selectors';
+import { SearchOrder } from '../../../../common/store/consumer/types';
 import { colors, halfPadding, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import SingleHeader from '../SingleHeader';
 import { RestaurantsNavigatorParamList } from '../types';
+
+type OrderByItem = {
+  title: string;
+  value: SearchOrder;
+};
 
 type ScreenNavigationProp = StackNavigationProp<RestaurantsNavigatorParamList>;
 
@@ -15,151 +32,118 @@ type Props = {
   navigation: ScreenNavigationProp;
 };
 
-export default function ({ navigation }: Props) {
-  //state
-  const [selectedFilter, setSelectedFilter] = React.useState<string>('');
-  const navigateBackWithFilter = React.useCallback(
-    (title: string) => {
-      setSelectedFilter(title);
-      navigation.navigate('RestaurantsHome', { selectedFilter });
-    },
-    [selectedFilter]
-  );
-  const data = [
-    {
-      title: 'Adicionados recentemente',
-      onPress: () => navigateBackWithFilter('Adicionados recentemente'),
-      checked: selectedFilter === 'Adicionados recentemente',
-      id: '0',
-    },
-    {
-      title: 'Menores preços',
-      onPress: () => navigateBackWithFilter('Menores preços'),
-      checked: selectedFilter === 'Menores preços',
-      id: '1',
-    },
-    {
-      title: 'Menor tempo de entrega',
-      onPress: () => navigateBackWithFilter('Menor tempo de entrega'),
-      checked: selectedFilter === 'Menor tempo de entrega',
-      id: '2',
-    },
-    {
-      title: 'Menor distância',
-      onPress: () => navigateBackWithFilter('Menor distância'),
-      checked: selectedFilter === 'Menor distância',
-      id: '3',
-    },
-  ];
-  //UI
+const orderByOptions: OrderByItem[] = [
+  {
+    title: t('Menor distância'),
+    value: 'distance',
+  },
+  {
+    title: t('Menor preço'),
+    value: 'price',
+  },
+  {
+    title: t('Menor tempo de preparo'),
+    value: 'preparation-time',
+  },
+  {
+    title: t('Popularidade'),
+    value: 'popularity',
+  },
+];
 
+export default function ({ navigation }: Props) {
+  // redux
+  const kind = useSelector(getSearchKind);
+  const order = useSelector(getSearchOrder);
+  const filters = useSelector(getSearchFilters);
+  // state
+  const cuisines = useCuisines();
+  const classifications = useFoodClassifications();
+  const [selectedOrder, setSelectedOrder] = React.useState(order);
+  const [selectedCuisines, setSelectedCuisines] = React.useState<WithId<Cuisine>[]>([]);
+  const [selectedClassifications, setSelectedClassifications] = React.useState<
+    WithId<Classification>[]
+  >([]);
+  // UI
   return (
-    <View style={{ ...screens.default }}>
-      <FlatList
-        data={data}
-        ListHeaderComponent={
-          <View style={{ marginTop: padding }}>
-            <SingleHeader title={t('Ordernar por')} />
-            <View
-              style={{
-                borderBottomWidth: 1,
-                borderStyle: 'solid',
-                width: '100%',
-                borderColor: colors.grey500,
-                marginTop: halfPadding,
-                marginBottom: padding,
-              }}
-            />
-          </View>
-        }
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={{ paddingHorizontal: padding, marginBottom: halfPadding }}>
-            <RadioButton title={item.title} onPress={item.onPress} checked={item.checked} />
-          </View>
-        )}
-      />
+    <ScrollView style={{ ...screens.default }}>
+      {/* order by */}
       <View>
-        <SingleHeader title={t('Categorias')} />
-        <View
-          style={{
-            borderBottomWidth: 1,
-            borderStyle: 'solid',
-            width: '100%',
-            borderColor: colors.grey500,
-            marginTop: halfPadding,
-            marginBottom: padding,
-          }}
-        />
-        {/* this will be a list of categories. the data will come from firebase  
-        TODO: make a touchable/interactive RoundedText component*/}
-        <View style={{ marginHorizontal: padding }}>
-          <View
-            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
-          >
-            <RoundedText>{t('Categoria')}</RoundedText>
-            <RoundedText>{t('Categoria')}</RoundedText>
-            <RoundedText>{t('Categoria')}</RoundedText>
-            <RoundedText>{t('Categoria')}</RoundedText>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginTop: halfPadding,
-            }}
-          >
-            <RoundedText>{t('Categoria')}</RoundedText>
-            <RoundedText>{t('Categoria')}</RoundedText>
-            <RoundedText>{t('Categoria')}</RoundedText>
-            <RoundedText>{t('Categoria')}</RoundedText>
-          </View>
-        </View>
+        <SingleHeader title={t('Ordernar por')} />
+        <HR height={1} style={{ paddingTop: halfPadding }} />
+        <PaddedView>
+          {orderByOptions.map((item) => (
+            <View key={item.value} style={{ marginTop: halfPadding }}>
+              <RadioButton
+                title={item.title}
+                onPress={() => setSelectedOrder(item.value)}
+                checked={item.value === selectedOrder}
+              />
+            </View>
+          ))}
+        </PaddedView>
       </View>
-      <View style={{ marginTop: padding }}>
-        <SingleHeader title={t('Classificações especiais')} />
-        <View
-          style={{
-            borderBottomWidth: 1,
-            borderStyle: 'solid',
-            width: '100%',
-            borderColor: colors.grey500,
-            marginTop: halfPadding,
-            marginBottom: padding,
-          }}
-        />
-        {/* this will be a list of items displayed in Checkfield components.
-        the data will come from firebase  */}
-        <View style={{ marginHorizontal: padding }}>
-          <CheckField
-            text="Vegetariano"
-            onPress={() => null}
-            style={{ marginBottom: halfPadding }}
-          />
-          <CheckField
-            text={t('Vegano')}
-            onPress={() => null}
-            style={{ marginBottom: halfPadding }}
-          />
-          <CheckField text="Orgânico" onPress={() => null} style={{ marginBottom: halfPadding }} />
-          <CheckField
-            text={t('Sem glúten')}
-            onPress={() => null}
-            style={{ marginBottom: halfPadding }}
-          />
-          <CheckField
-            text={t('Sem açúcar')}
-            onPress={() => null}
-            style={{ marginBottom: halfPadding }}
-          />
-          <CheckField
-            text={t('Zero lactose')}
-            onPress={() => null}
-            style={{ marginBottom: halfPadding }}
-          />
+      {/* restaurants */}
+      {kind === 'restaurant' && cuisines && (
+        <View>
+          <SingleHeader title={t('Categorias')} />
+          <HR height={1} style={{ paddingTop: halfPadding }} />
+          <PaddedView style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+            {cuisines.map((cuisine) => {
+              const selected =
+                selectedCuisines.find((item) => item.id === cuisine.id) !== undefined;
+              return (
+                <TouchableWithoutFeedback
+                  key={cuisine.id}
+                  onPress={() => {
+                    if (!selected) setSelectedCuisines([...selectedCuisines, cuisine]);
+                    else
+                      setSelectedCuisines(
+                        selectedCuisines.filter((item) => item.id !== cuisine.id)
+                      );
+                  }}
+                >
+                  <RoundedText
+                    backgroundColor={selected ? colors.green500 : colors.white}
+                    style={{ marginRight: padding, marginBottom: 12 }}
+                  >
+                    {cuisine.name}
+                  </RoundedText>
+                </TouchableWithoutFeedback>
+              );
+            })}
+          </PaddedView>
         </View>
-      </View>
-    </View>
+      )}
+      {/* product */}
+      {kind === 'product' && classifications && (
+        <View>
+          <SingleHeader title={t('Classificações especiais')} />
+          <HR height={1} style={{ paddingTop: halfPadding }} />
+          <PaddedView>
+            {classifications?.map((classification) => {
+              const selected =
+                selectedClassifications.find((item) => item.id === classification.id) !== undefined;
+              return (
+                <View key={classification.id} style={{ marginTop: halfPadding }}>
+                  <CheckField
+                    text={classification.name}
+                    onPress={() => {
+                      if (!selected)
+                        setSelectedClassifications([...selectedClassifications, classification]);
+                      else
+                        setSelectedClassifications(
+                          selectedClassifications.filter((item) => item.id !== classification.id)
+                        );
+                    }}
+                    checked={selected}
+                  />
+                </View>
+              );
+            })}
+          </PaddedView>
+        </View>
+      )}
+    </ScrollView>
   );
 }

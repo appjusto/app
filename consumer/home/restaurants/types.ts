@@ -5,7 +5,6 @@ import { RestaurantNavigatorParamList } from './restaurant/types';
 export type RestaurantsNavigatorParamList = {
   RestaurantsHome?: {
     place?: Place;
-    selectedFilter?: string;
   };
   AddressComplete?: {
     value?: string;

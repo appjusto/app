@@ -13,7 +13,7 @@ import {
   getSearchKind,
   getSearchOrder,
 } from '../../../../common/store/consumer/selectors';
-import { padding, screens } from '../../../../common/styles';
+import { colors, padding, screens } from '../../../../common/styles';
 import FilterSelector from '../components/filter/FilterSelector';
 import { ProductListItem } from '../restaurant/detail/ProductListItem';
 import { RestaurantsNavigatorParamList } from '../types';
@@ -62,7 +62,7 @@ export default function ({ navigation }: Props) {
     <View style={{ ...screens.default }}>
       <PaddedView>
         <DefaultInput
-          style={{ paddingVertical: padding, paddingLeft: 12 }}
+          style={{ paddingVertical: padding, paddingLeft: 12, borderColor: colors.black }}
           ref={searchInputRef}
           defaultValue={search}
           value={search}
@@ -81,10 +81,9 @@ export default function ({ navigation }: Props) {
           <Image source={icons.search} />
         </View>
       </PaddedView>
-      <FilterSelector
-        style={{ paddingLeft: 12 }}
-        onFilterOpen={() => navigation.navigate('FilterScreen')}
-      />
+      <PaddedView vertical={false}>
+        <FilterSelector onFilterOpen={() => navigation.navigate('FilterScreen')} />
+      </PaddedView>
       {kind === 'restaurant' && (
         <RestaurantList
           items={restaurants}

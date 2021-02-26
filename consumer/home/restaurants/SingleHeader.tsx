@@ -2,7 +2,6 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import Pill from '../../../common/components/views/Pill';
 import { halfPadding, padding, texts } from '../../../common/styles';
-import { t } from '../../../strings';
 
 type Props = {
   title: string;
@@ -19,7 +18,7 @@ export default function ({ title }: Props) {
       }}
     >
       <Pill />
-      <Text style={{ ...texts.md, ...texts.bold, marginLeft: 12 }}>{t(title)}</Text>
+      <Text style={{ ...texts.md, ...texts.bold, marginLeft: 12 }}>{title}</Text>
     </View>
   );
 }

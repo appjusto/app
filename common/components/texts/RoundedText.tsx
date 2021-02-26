@@ -20,7 +20,6 @@ export default function ({
   ...props
 }: Props) {
   const tintColor = color ?? colors.black;
-  const backgroundColor = bg ? bg : colors.white;
   return (
     <View>
       <View
@@ -34,7 +33,7 @@ export default function ({
             ...borders.default,
             borderRadius: 32,
             borderColor: noBorder ? colors.grey50 : tintColor,
-            backgroundColor,
+            backgroundColor: bg ?? colors.white,
           },
           style,
         ]}

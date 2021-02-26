@@ -1,4 +1,4 @@
-import { Bank, Cuisine, Issue, IssueType } from 'appjusto-types';
+import { Bank, Classification, Cuisine, Issue, IssueType } from 'appjusto-types';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentsAs } from '../types';
@@ -22,6 +22,12 @@ export default class PlatformApi {
     const query = this.refs.getCuisinesRef();
     const docs = (await query.get()).docs;
     return documentsAs<Cuisine>(docs);
+  }
+
+  async fetchFoodClassifications() {
+    const query = this.refs.getClassificationsRef();
+    const docs = (await query.get()).docs;
+    return documentsAs<Classification>(docs);
   }
   // storage
   fetchCuisineImageURI(imagePath: string) {
