@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const CartButton = ({ order }: Props) => {
-  if (!order) return null;
+  if (!order?.items?.length) return null;
   return (
     <View style={{ paddingHorizontal: 12, paddingVertical: halfPadding }}>
       <View

@@ -47,7 +47,11 @@ export const OrderCheckout = ({ navigation, route }: Props) => {
       api.order().updateOrder(order.id, { destination: route.params.destination });
     }
     if (route.params?.paymentMethodId) setSelectedPaymentMethodId(route.params?.paymentMethodId);
-  }, [route.params]);
+  }, [api, order, route.params]);
+  // check if order is empty to pop this screen
+  React.useEffect(() => {
+    if (order?.items?.length === 0) navigation.pop();
+  }, [order, navigation]);
   // handlers
   const placeOrderHandler = async (fleetId: string, platformFee: number) => {
     if (!order) return;
@@ -81,9 +85,12 @@ export const OrderCheckout = ({ navigation, route }: Props) => {
     }
   }, [navigation, selectedPaymentMethodId]);
   // navigate to FleetDetail
-  const navigateFleetDetail = React.useCallback((fleet: WithId<Fleet>) => {
-    navigation.navigate('FleetDetail', { fleetId: fleet.id });
-  }, []);
+  const navigateFleetDetail = React.useCallback(
+    (fleet: WithId<Fleet>) => {
+      navigation.navigate('FleetDetail', { fleetId: fleet.id });
+    },
+    [navigation]
+  );
   // UI
   if (!order) {
     return (
