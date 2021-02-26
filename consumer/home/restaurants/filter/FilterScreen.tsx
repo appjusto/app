@@ -1,13 +1,13 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { FlatList, View } from 'react-native';
-import CheckField from '../../../common/components/buttons/CheckField';
-import RadioButton from '../../../common/components/buttons/RadioButton';
-import RoundedText from '../../../common/components/texts/RoundedText';
-import { colors, halfPadding, padding, screens } from '../../../common/styles';
-import { t } from '../../../strings';
-import SingleHeader from './SingleHeader';
-import { RestaurantsNavigatorParamList } from './types';
+import CheckField from '../../../../common/components/buttons/CheckField';
+import RadioButton from '../../../../common/components/buttons/RadioButton';
+import RoundedText from '../../../../common/components/texts/RoundedText';
+import { colors, halfPadding, padding, screens } from '../../../../common/styles';
+import { t } from '../../../../strings';
+import SingleHeader from '../SingleHeader';
+import { RestaurantsNavigatorParamList } from '../types';
 
 type ScreenNavigationProp = StackNavigationProp<RestaurantsNavigatorParamList>;
 

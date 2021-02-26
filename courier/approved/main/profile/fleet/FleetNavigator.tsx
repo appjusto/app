@@ -1,8 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-
-import ArrowBox from '../../../../../common/components/views/ArrowBox';
 import FleetDetail from '../../../../../common/screens/fleet/FleetDetail';
+import { defaultScreenOptions } from '../../../../../common/screens/options';
 import { t } from '../../../../../strings';
 import AllFleets from './AllFleets';
 import ChooseFleet from './ChooseFleet';
@@ -13,12 +12,7 @@ const Stack = createStackNavigator<FleetParamList>();
 
 export default function () {
   return (
-    <Stack.Navigator
-      screenOptions={() => ({
-        headerBackImage: () => <ArrowBox flipped />,
-        headerBackTitleVisible: false,
-      })}
-    >
+    <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen
         name="ChooseFleet"
         component={ChooseFleet}

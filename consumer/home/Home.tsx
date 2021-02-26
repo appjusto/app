@@ -5,15 +5,15 @@ import * as Location from 'expo-location';
 import React from 'react';
 import { ScrollView, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import * as icons from '../../assets/icons';
 import { ApiContext } from '../../common/app/context';
 import PaddedView from '../../common/components/containers/PaddedView';
 import useLastKnownLocation from '../../common/hooks/useLastKnownLocation';
+import { IconMotocycle } from '../../common/icons/icon-motocycle';
 import HomeCard from '../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../common/screens/home/cards/HomeShareCard';
 import { getOrders } from '../../common/store/order/selectors';
-import { padding, screens } from '../../common/styles';
+import { colors, padding, screens } from '../../common/styles';
 import { t } from '../../strings';
 import { LoggedParamList } from '../types';
 import ConsumerHomeControls from './ConsumerHomeControls';
@@ -85,7 +85,7 @@ export default function ({ navigation }: Props) {
           />
           <View>
             <HomeCard
-              icon={icons.delivery}
+              icon={<IconMotocycle circleColor={colors.grey50} width={64} height={64} />}
               title={`${availableCouriers} ${t('entregadores disponíveis')}`}
               subtitle={t(`num raio de 15km`)}
             />

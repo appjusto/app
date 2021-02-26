@@ -1,4 +1,4 @@
-import { Business, WithId } from 'appjusto-types';
+import { BusinessAlgolia } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../../common/components/texts/RoundedText';
@@ -9,13 +9,13 @@ import { t } from '../../../../strings';
 import { ListItemImage } from '../components/ListItemImage';
 
 type Props = {
-  restaurant: WithId<Partial<Business>>;
+  restaurant: BusinessAlgolia;
   cuisine: string | undefined;
   distance: number | undefined;
 };
 
 export default function ({ restaurant, cuisine, distance }: Props) {
-  const { data: logo } = useBusinessLogoURI(restaurant.id);
+  const { data: logo } = useBusinessLogoURI(restaurant.objectID);
   const outOfRange = (restaurant.deliveryRange ?? 0) * 1000 < (distance ?? 0);
   return (
     <View style={{ marginTop: halfPadding }}>

@@ -1,9 +1,13 @@
 import { Business, WithId } from 'appjusto-types';
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import { useBusinessCoverImageURI } from '../../../../common/store/api/business/hooks/useBusinessCoverImageURI';
+import { distanceBetweenLatLng } from '../../../../common/store/api/helpers';
+import useCuisines from '../../../../common/store/api/platform/hooks/useCuisines';
+import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import { colors, halfPadding, texts } from '../../../../common/styles';
 import {
   formatDistance,
@@ -18,8 +22,19 @@ type Props = {
   canNavigate?: boolean;
 };
 
-export default function ({ restaurant, onPress, canNavigate }: Props) {
+export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) => {
+  // redux
+  const location = useSelector(getCurrentLocation);
+  // state
+  const cuisines = useCuisines();
+  const cuisine = cuisines?.find((c) => c.id === restaurant.cuisine?.id);
+  const averagePreparationTime = restaurant.statistics?.averagePreparationTime ?? 0;
   const { data: coverURI } = useBusinessCoverImageURI(restaurant.id);
+  const distance =
+    location && restaurant.businessAddress?.latlng
+      ? distanceBetweenLatLng(location, restaurant.businessAddress.latlng)
+      : 0;
+  // UI
   return (
     <View style={{ marginHorizontal: 12 }}>
       <TouchableOpacity onPress={onPress}>
@@ -45,9 +60,9 @@ export default function ({ restaurant, onPress, canNavigate }: Props) {
         >
           <View>
             <Text style={{ ...texts.xl }}>{restaurant.name}</Text>
-            <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Tipo de comida')}</Text>
+            <Text style={{ ...texts.xs, color: colors.green600 }}>{cuisine?.name}</Text>
             <Text style={{ ...texts.xs, color: colors.grey700 }}>
-              {separateWithDot(formatDistance(2000), formatDuration(1800))}
+              {separateWithDot(formatDistance(distance), formatDuration(averagePreparationTime))}
             </Text>
           </View>
           <View>
@@ -57,4 +72,4 @@ export default function ({ restaurant, onPress, canNavigate }: Props) {
       </TouchableOpacity>
     </View>
   );
-}
+};

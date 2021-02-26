@@ -68,6 +68,11 @@ export const borders = StyleSheet.create({
 });
 
 export const texts = StyleSheet.create({
+  x2s: {
+    fontFamily: 'BarlowMedium',
+    color: colors.black,
+    fontSize: 11,
+  },
   xs: {
     fontFamily: 'BarlowMedium',
     color: colors.black,

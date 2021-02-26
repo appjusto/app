@@ -12,6 +12,6 @@ export default function () {
     (async () => {
       setCuisines(await api.platform().fetchCuisines());
     })();
-  }, []);
+  }, [api]);
   return cuisines;
 }

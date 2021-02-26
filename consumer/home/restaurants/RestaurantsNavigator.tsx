@@ -1,11 +1,11 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import ArrowBox from '../../../common/components/views/ArrowBox';
+import { defaultScreenOptions } from '../../../common/screens/options';
 import { BusinessProvider } from '../../../common/store/context/business';
 import { t } from '../../../strings';
 import AddressComplete from '../orders/AddressComplete';
+import FilterScreen from './filter/FilterScreen';
 import RestaurantsHome from './home/RestaurantsHome';
-import OrderBy from './OrderBy';
 import RestaurantNavigator from './restaurant/RestaurantNavigator';
 import RestaurantSearch from './search/RestaurantSearch';
 import { RestaurantsNavigatorParamList } from './types';
@@ -13,12 +13,7 @@ import { RestaurantsNavigatorParamList } from './types';
 const Stack = createStackNavigator<RestaurantsNavigatorParamList>();
 export default function () {
   return (
-    <Stack.Navigator
-      screenOptions={() => ({
-        headerBackImage: () => <ArrowBox flipped />,
-        headerBackTitleVisible: false,
-      })}
-    >
+    <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen
         name="RestaurantsHome"
         component={RestaurantsHome}
@@ -42,8 +37,8 @@ export default function () {
         options={{ title: t('Buscar') }}
       />
       <Stack.Screen
-        name="OrderBy"
-        component={OrderBy}
+        name="FilterScreen"
+        component={FilterScreen}
         options={{ title: t('Filtrar resultados') }}
       />
     </Stack.Navigator>

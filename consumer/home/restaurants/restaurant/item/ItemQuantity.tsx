@@ -1,10 +1,10 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View, ViewProps } from 'react-native';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import { QuantityButton } from '../../../../../common/components/buttons/QuantityButton';
-import { halfPadding, padding } from '../../../../../common/styles';
+import { padding } from '../../../../../common/styles';
 
-interface Props {
+interface Props extends ViewProps {
   value: number;
   title: string;
   disabled: boolean;
@@ -18,17 +18,20 @@ export const ItemQuantity = ({
   title,
   disabled,
   minimum = 1,
+  style,
   onChange,
   onSubmit,
 }: Props) => {
   return (
     <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: halfPadding,
-        justifyContent: 'space-between',
-      }}
+      style={[
+        {
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        },
+        style,
+      ]}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <TouchableOpacity

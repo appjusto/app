@@ -1,13 +1,21 @@
 import { StackNavigationProp } from '@react-navigation/stack';
+import { BusinessAlgolia, ProductAlgolia } from 'appjusto-types';
 import React, { useState } from 'react';
-import { Image, TextInput, View } from 'react-native';
+import { FlatList, Image, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
-import { useSearchRestaurants } from '../../../../common/store/api/search/useSearchRestaurants';
-import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
+import { useSearch } from '../../../../common/store/api/search/useSearch';
+import {
+  getCurrentLocation,
+  getSearchFilters,
+  getSearchKind,
+  getSearchOrder,
+} from '../../../../common/store/consumer/selectors';
 import { padding, screens } from '../../../../common/styles';
+import FilterSelector from '../components/filter/FilterSelector';
+import { ProductListItem } from '../restaurant/detail/ProductListItem';
 import { RestaurantsNavigatorParamList } from '../types';
 import RestaurantList from './RestaurantList';
 
@@ -22,9 +30,28 @@ export default function ({ navigation }: Props) {
   const searchInputRef = React.useRef<TextInput>();
   // redux store
   const currentLocation = useSelector(getCurrentLocation);
+  // redux
+  const kind = useSelector(getSearchKind);
+  const order = useSelector(getSearchOrder);
+  const filters = useSelector(getSearchFilters);
   // state
-  const [search, setSearch] = useState<string>();
-  const { restaurants } = useSearchRestaurants(currentLocation, search);
+  const [search, setSearch] = useState<string>('');
+  const { results: restaurants } = useSearch<BusinessAlgolia>(
+    kind === 'restaurant',
+    kind,
+    order,
+    filters,
+    currentLocation,
+    search
+  );
+  const { results: products } = useSearch<ProductAlgolia>(
+    kind === 'product',
+    kind,
+    order,
+    filters,
+    currentLocation,
+    search
+  );
   // initial focus
   React.useEffect(() => {
     searchInputRef.current?.focus();
@@ -35,12 +62,12 @@ export default function ({ navigation }: Props) {
     <View style={{ ...screens.default }}>
       <PaddedView>
         <DefaultInput
+          style={{ paddingVertical: padding, paddingLeft: 12 }}
           ref={searchInputRef}
           defaultValue={search}
           value={search}
           onChangeText={setSearch}
           autoCorrect={false}
-          style={{ paddingVertical: padding, paddingLeft: 12 }}
           autoCapitalize="none"
         />
         <View
@@ -54,12 +81,40 @@ export default function ({ navigation }: Props) {
           <Image source={icons.search} />
         </View>
       </PaddedView>
-      <RestaurantList
-        items={restaurants}
-        onSelect={(restaurantId) =>
-          navigation.navigate('RestaurantNavigator', { restaurantId, screen: 'RestaurantDetail' })
-        }
+      <FilterSelector
+        style={{ paddingLeft: 12 }}
+        onFilterOpen={() => navigation.navigate('FilterScreen')}
       />
+      {kind === 'restaurant' && (
+        <RestaurantList
+          items={restaurants}
+          onSelect={(restaurantId) =>
+            navigation.navigate('RestaurantNavigator', { restaurantId, screen: 'RestaurantDetail' })
+          }
+        />
+      )}
+      {kind === 'product' && (
+        <FlatList
+          data={products}
+          keyExtractor={(item) => item.objectID}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('RestaurantNavigator', {
+                  initial: false,
+                  screen: 'ItemDetail',
+                  restaurantId: item.business.id,
+                  params: {
+                    productId: item.objectID,
+                  },
+                });
+              }}
+            >
+              <ProductListItem product={item} showRestaurantName />
+            </TouchableOpacity>
+          )}
+        />
+      )}
     </View>
   );
 }

@@ -1,10 +1,20 @@
 import { ConsumerProfile, WithId } from 'appjusto-types';
 import { AnyAction } from 'redux';
 import { CONSUMER_PROFILE_UPDATED, USER_LOGGED_OUT } from '../user/actions';
-import { UPDATE_CURRENT_LOCATION, UPDATE_CURRENT_PLACE } from './actions';
+import {
+  UPDATE_CURRENT_LOCATION,
+  UPDATE_CURRENT_PLACE,
+  UPDATE_SEARCH_FILTERS,
+  UPDATE_SEARCH_KIND,
+  UPDATE_SEARCH_ORDER,
+} from './actions';
 import { ConsumerState } from './types';
 
-const initialState: ConsumerState = {};
+const initialState: ConsumerState = {
+  searchKind: 'restaurant',
+  searchOrder: 'distance',
+  searchFilters: [],
+};
 
 export default function (state: ConsumerState = initialState, action: AnyAction): ConsumerState {
   const { type, payload } = action;
@@ -21,6 +31,15 @@ export default function (state: ConsumerState = initialState, action: AnyAction)
     }
     case UPDATE_CURRENT_PLACE: {
       return { ...state, currentPlace: action.payload };
+    }
+    case UPDATE_SEARCH_KIND: {
+      return { ...state, searchKind: action.payload };
+    }
+    case UPDATE_SEARCH_ORDER: {
+      return { ...state, searchOrder: action.payload };
+    }
+    case UPDATE_SEARCH_FILTERS: {
+      return { ...state, searchFilters: action.payload };
     }
     default:
       return state;

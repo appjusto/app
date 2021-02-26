@@ -8,7 +8,7 @@ import {
 } from '../../../../../common/store/context/business';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { colors, screens } from '../../../../../common/styles';
-import RestaurantCard from '../../components/RestaurantCard';
+import { RestaurantHeader } from '../../components/RestaurantHeader';
 import SingleHeader from '../../SingleHeader';
 import { CartButton } from '../CartButton';
 import { RestaurantNavigatorParamList } from '../types';
@@ -33,7 +33,7 @@ const RestaurantDetail = React.memo(({ navigation }: Props) => {
     navigation.setOptions({
       title: restaurant?.name ?? '',
     });
-  }, [restaurant]);
+  }, [navigation, restaurant]);
   // UI
   const sections =
     menu?.map((category) => ({
@@ -54,7 +54,7 @@ const RestaurantDetail = React.memo(({ navigation }: Props) => {
         sections={sections}
         ListHeaderComponent={
           <View>
-            <RestaurantCard
+            <RestaurantHeader
               restaurant={restaurant}
               onPress={() => navigation.navigate('AboutRestaurant')}
               canNavigate

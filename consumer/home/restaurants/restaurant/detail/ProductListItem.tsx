@@ -1,21 +1,31 @@
-import { Product, WithId } from 'appjusto-types';
+import { Product, ProductAlgolia, WithId } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
-import { useContextBusinessId } from '../../../../../common/store/context/business';
+import {
+  useContextBusiness,
+  useContextBusinessId,
+} from '../../../../../common/store/context/business';
 import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { ListItemImage } from '../../components/ListItemImage';
 
 interface Props {
-  product: WithId<Product>;
+  product: ProductAlgolia | WithId<Product>;
+  showRestaurantName?: boolean;
 }
 
-export const ProductListItem = ({ product }: Props) => {
-  // context
-  const businessId = useContextBusinessId();
+const isAlgoliaProduct = (product: ProductAlgolia | WithId<Product>): product is ProductAlgolia => {
+  return (product as ProductAlgolia).objectID !== undefined;
+};
+
+export const ProductListItem = ({ product, showRestaurantName }: Props) => {
   // state
-  const { data: imageURI } = useProductImageURI(businessId, product.id);
+  const businessId = useContextBusinessId();
+  const business = useContextBusiness();
+  const productId = isAlgoliaProduct(product) ? product.objectID : product.id;
+  const businessName = isAlgoliaProduct(product) ? product.business.name : business?.name;
+  const { data: imageURI } = useProductImageURI(businessId, productId);
   // UI
   return (
     <View
@@ -43,6 +53,9 @@ export const ProductListItem = ({ product }: Props) => {
             {product.description}
           </Text>
           <Text style={{ ...texts.sm }}>{formatCurrency(product.price)}</Text>
+          {showRestaurantName && businessName && (
+            <Text style={{ ...texts.xs, color: colors.green600 }}>{businessName}</Text>
+          )}
         </View>
         <View>
           <ListItemImage uri={imageURI} size={96} />

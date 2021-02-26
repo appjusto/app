@@ -1,22 +1,16 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-
 import { t } from '../../../strings';
-import ArrowBox from '../../components/views/ArrowBox';
+import { defaultScreenOptions } from '../options';
 import SignInFeedback from './SignInFeedback';
 import Terms from './Terms';
-import WelcomeScreen from './WelcomeScreen';
 import { UnloggedParamList } from './types';
+import WelcomeScreen from './WelcomeScreen';
 
 const StackNavigator = createStackNavigator<UnloggedParamList>();
 export default function () {
   return (
-    <StackNavigator.Navigator
-      screenOptions={() => ({
-        headerBackImage: () => <ArrowBox flipped />,
-        headerBackTitleVisible: false,
-      })}
-    >
+    <StackNavigator.Navigator screenOptions={defaultScreenOptions}>
       <StackNavigator.Screen
         name="WelcomeScreen"
         component={WelcomeScreen}

@@ -1,29 +1,45 @@
 import React from 'react';
-import { FlatList, Text, TouchableWithoutFeedback, View } from 'react-native';
-import { HorizontalSelectItem } from '../../../../../common/components/buttons/HorizontalSelect';
+import { FlatList, Text, TouchableWithoutFeedback, View, ViewProps } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../../../../common/app/context';
+import { updateSearchKind } from '../../../../../common/store/consumer/actions';
+import { getSearchKind } from '../../../../../common/store/consumer/selectors';
+import { SearchKind } from '../../../../../common/store/consumer/types';
 import { borders, colors, halfPadding, texts } from '../../../../../common/styles';
+import { t } from '../../../../../strings';
 import FilterButton from './FilterButton';
 
-type Props = {
-  data: HorizontalSelectItem[];
-  selected?: HorizontalSelectItem;
-  onSelect: (value: HorizontalSelectItem) => void;
-  onFilter: () => void;
+type Item = {
+  kind: SearchKind;
+  title: string;
 };
 
-export default function ({ data, selected, onSelect, onFilter }: Props) {
+const data: Item[] = [
+  { kind: 'restaurant', title: t('Restaurantes') },
+  { kind: 'product', title: t('Pratos') },
+];
+
+interface Props extends ViewProps {
+  onFilterOpen: () => void;
+}
+
+export default function ({ style, onFilterOpen }: Props) {
+  // redux store
+  const dispatch = useDispatch<AppDispatch>();
+  const selectedSearchKind = useSelector(getSearchKind);
+  // UI
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <FilterButton onPress={onFilter} />
+    <View style={[{ flexDirection: 'row', alignItems: 'center' }, style]}>
+      <FilterButton onPress={onFilterOpen} />
       <FlatList
         showsHorizontalScrollIndicator={false}
         horizontal
         data={data}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.kind}
         renderItem={({ item }) => (
           <TouchableWithoutFeedback
             onPress={() => {
-              onSelect(item);
+              dispatch(updateSearchKind(item.kind));
             }}
           >
             <View
@@ -36,7 +52,7 @@ export default function ({ data, selected, onSelect, onFilter }: Props) {
                 borderRadius: 32,
                 // height: 32,
                 marginLeft: 8,
-                backgroundColor: item.id === selected?.id ? colors.green500 : colors.white,
+                backgroundColor: item.kind === selectedSearchKind ? colors.green500 : colors.white,
                 borderColor: colors.black,
               }}
             >
