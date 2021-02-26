@@ -1,8 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import ArrowBox from '../../../../common/components/views/ArrowBox';
 import Chat from '../../../../common/screens/Chat';
 import FleetDetail from '../../../../common/screens/fleet/FleetDetail';
+import { defaultScreenOptions } from '../../../../common/screens/options';
 import { ReportIssue } from '../../../../common/screens/ReportIssue';
 import { t } from '../../../../strings';
 import ProfileAddCard from '../../../profile/payment/ProfileAddCard';
@@ -24,12 +24,7 @@ const Stack = createStackNavigator<OrderNavigatorParamList>();
 
 export const OrderNavigator = () => {
   return (
-    <Stack.Navigator
-      screenOptions={() => ({
-        headerBackImage: () => <ArrowBox flipped />,
-        headerBackTitleVisible: false,
-      })}
-    >
+    <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen
         name="CreateOrderP2P"
         component={CreateOrderP2P}

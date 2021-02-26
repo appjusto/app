@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import ArrowBox from '../../../../common/components/views/ArrowBox';
+import { defaultScreenOptions } from '../../../../common/screens/options';
 import { t } from '../../../../strings';
 import AddressComplete from '../../orders/AddressComplete';
 import AboutRestaurant from './AboutRestaurant';
@@ -13,13 +13,7 @@ const Stack = createStackNavigator<RestaurantNavigatorParamList>();
 
 export default function () {
   return (
-    <Stack.Navigator
-      screenOptions={() => ({
-        headerBackImage: () => <ArrowBox flipped />,
-        headerBackTitleVisible: false,
-      })}
-      initialRouteName="RestaurantDetail"
-    >
+    <Stack.Navigator screenOptions={defaultScreenOptions} initialRouteName="RestaurantDetail">
       <Stack.Screen
         name="RestaurantDetail"
         component={RestaurantDetail}

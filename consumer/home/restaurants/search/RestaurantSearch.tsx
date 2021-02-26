@@ -62,12 +62,12 @@ export default function ({ navigation }: Props) {
     <View style={{ ...screens.default }}>
       <PaddedView>
         <DefaultInput
+          style={{ paddingVertical: padding, paddingLeft: 12 }}
           ref={searchInputRef}
           defaultValue={search}
           value={search}
           onChangeText={setSearch}
           autoCorrect={false}
-          style={{ paddingVertical: padding, paddingLeft: 12 }}
           autoCapitalize="none"
         />
         <View
@@ -81,7 +81,10 @@ export default function ({ navigation }: Props) {
           <Image source={icons.search} />
         </View>
       </PaddedView>
-      <FilterSelector onFilterOpen={() => null} />
+      <FilterSelector
+        style={{ paddingLeft: 12 }}
+        onFilterOpen={() => navigation.navigate('FilterScreen')}
+      />
       {kind === 'restaurant' && (
         <RestaurantList
           items={restaurants}

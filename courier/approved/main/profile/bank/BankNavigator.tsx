@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import ArrowBox from '../../../../../common/components/views/ArrowBox';
+import { defaultScreenOptions } from '../../../../../common/screens/options';
 import { t } from '../../../../../strings';
 import ProfileBank from './ProfileBank';
 import SelectBank from './SelectBank';
@@ -10,12 +10,7 @@ const Stack = createStackNavigator<BankParamList>();
 
 export default function () {
   return (
-    <Stack.Navigator
-      screenOptions={() => ({
-        headerBackImage: () => <ArrowBox flipped />,
-        headerBackTitleVisible: false,
-      })}
-    >
+    <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen
         name="ProfileBank"
         component={ProfileBank}

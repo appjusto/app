@@ -3,8 +3,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { PushMessage } from 'appjusto-types';
 import React from 'react';
 import { useQuery } from 'react-query';
-import ArrowBox from '../../common/components/views/ArrowBox';
 import Chat from '../../common/screens/Chat';
+import { defaultScreenOptions } from '../../common/screens/options';
 import PermissionDeniedFeedback from '../../common/screens/PermissionDeniedFeedback';
 import { t } from '../../strings';
 import { LoggedParamList } from '../types';
@@ -39,12 +39,7 @@ export default function ({ navigation }: Props) {
     }
   }, [chatQuery.data]);
   return (
-    <Stack.Navigator
-      screenOptions={() => ({
-        headerBackImage: () => <ArrowBox flipped />,
-        headerBackTitleVisible: false,
-      })}
-    >
+    <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
       <Stack.Screen name="Chat" component={Chat} options={{ title: t('Chat') }} />
       <Stack.Screen

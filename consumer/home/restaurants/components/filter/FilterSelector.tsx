@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { FlatList, Text, TouchableWithoutFeedback, View, ViewProps } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../../../../common/app/context';
 import { updateSearchKind } from '../../../../../common/store/consumer/actions';
@@ -19,17 +19,17 @@ const data: Item[] = [
   { kind: 'product', title: t('Pratos') },
 ];
 
-type Props = {
+interface Props extends ViewProps {
   onFilterOpen: () => void;
-};
+}
 
-export default function ({ onFilterOpen }: Props) {
+export default function ({ style, onFilterOpen }: Props) {
   // redux store
   const dispatch = useDispatch<AppDispatch>();
   const selectedSearchKind = useSelector(getSearchKind);
   // UI
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+    <View style={[{ flexDirection: 'row', alignItems: 'center' }, style]}>
       <FilterButton onPress={onFilterOpen} />
       <FlatList
         showsHorizontalScrollIndicator={false}

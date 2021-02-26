@@ -16,5 +16,5 @@ export type RestaurantsNavigatorParamList = {
     restaurantId: string;
   } & NestedNavigatorParams<RestaurantNavigatorParamList>;
   RestaurantSearch: undefined;
-  OrderBy: undefined;
+  FilterScreen: undefined;
 };

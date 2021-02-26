@@ -9,7 +9,7 @@ export interface DefaultInputProps extends TextInputProps {
 }
 
 export default React.forwardRef(
-  ({ title, children, style: externalStyle, ...props }: DefaultInputProps, externalRef) => {
+  ({ title, children, style, ...props }: DefaultInputProps, externalRef) => {
     const internalRef = useRef<TextInput>(null);
     const ref = (externalRef as React.RefObject<TextInput>) || internalRef;
     const focus = useCallback(() => {
@@ -17,7 +17,7 @@ export default React.forwardRef(
       // if (!ref.current.isFocused()) {
       ref.current.focus();
       // }
-    }, [ref.current]);
+    }, [ref]);
     return (
       <PaddedView
         half
@@ -29,7 +29,7 @@ export default React.forwardRef(
             justifyContent: 'space-between',
             alignItems: 'center',
           },
-          externalStyle,
+          style,
         ]}
       >
         <View style={{ flex: 1 }}>
