@@ -42,9 +42,11 @@ export default function ({ restaurant, cuisine, distance }: Props) {
             <Text style={{ ...texts.xs, color: colors.grey700 }}>{formatDistance(distance)}</Text>
           )}
           {distance && outOfRange && (
-            <RoundedText backgroundColor={colors.grey50} color={colors.grey700} noBorder>
-              {`${t('Raio de entrega: ')} ${formatDistance(restaurant.deliveryRange!)}`}
-            </RoundedText>
+            <View style={{ marginTop: halfPadding }}>
+              <RoundedText backgroundColor={colors.grey50} color={colors.grey700} noBorder>
+                {`${t('Raio de entrega: ')} ${formatDistance(restaurant.deliveryRange!)}`}
+              </RoundedText>
+            </View>
           )}
         </View>
         <View

@@ -1,8 +1,8 @@
 import { RouteProp } from '@react-navigation/native';
 import { ChatMessage, Flavor, PushMessage, WithId } from 'appjusto-types';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
-import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, Text, View } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 import { useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import { t } from '../../strings';
@@ -80,9 +80,12 @@ export default function ({ route }: Props) {
     [order.consumer!.id]: order.consumer!.name ?? t('Cliente'),
   };
   return (
-    <View style={[screens.default]}>
-      <KeyboardAwareFlatList
-        keyboardShouldPersistTaps="always"
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={[screens.default]}
+    >
+      <FlatList
+        keyboardShouldPersistTaps="never"
         data={groupedMessages}
         keyExtractor={(item) => item.id}
         style={{ backgroundColor: colors.grey500 }}
@@ -152,6 +155,6 @@ export default function ({ route }: Props) {
           />
         </DefaultInput>
       </PaddedView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }

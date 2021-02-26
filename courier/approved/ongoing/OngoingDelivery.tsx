@@ -12,6 +12,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import HR from '../../../common/components/views/HR';
+import { MessagesCard } from '../../../common/screens/home/cards/MessagesCard';
 import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/CourierDistanceBadge';
 import CourierStatusHighlight from '../../../common/screens/orders/ongoing/CourierStatusHighlight';
 import { courierNextPlace } from '../../../common/store/api/order/helpers';
@@ -141,10 +142,27 @@ export default function ({ navigation, route }: Props) {
 
   return (
     <View style={{ ...screens.default, paddingBottom: padding }}>
-      <KeyboardAwareScrollView>
-        <OrderMap order={order!} ratio={360 / 316} />
-        <RouteIcons order={order} />
-        <CourierStatusHighlight dispatchingState={dispatchingState} />
+      <KeyboardAwareScrollView extraHeight={padding}>
+        <View>
+          <OrderMap order={order!} ratio={360 / 316} />
+          <RouteIcons order={order} />
+          <View>
+            <CourierStatusHighlight dispatchingState={dispatchingState} />
+          </View>
+          <View
+            style={{
+              width: '100%',
+              top: -176,
+              alignSelf: 'center',
+              paddingHorizontal: padding,
+            }}
+          >
+            <MessagesCard
+              orderId={orderId}
+              onPress={() => navigation.navigate('Chat', { orderId })}
+            />
+          </View>
+        </View>
         <View style={{ marginTop: padding, paddingHorizontal: padding }}>
           <Text style={[texts.xs, { color: colors.green600 }]}>{t('Pedido de')}</Text>
           <Text style={[texts.md]}>

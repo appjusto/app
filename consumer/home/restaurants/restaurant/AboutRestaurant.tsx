@@ -35,7 +35,7 @@ export default function ({ route }: Props) {
         <Text style={{ ...texts.sm }}>{restaurant.description}</Text>
         <Text style={{ marginTop: 24, ...texts.sm }}>{restaurant.description}</Text>
         <Text style={{ marginTop: padding, ...texts.sm, color: colors.grey700 }}>
-          {t('Valor mínimo de pedido')}
+          {t('Valor mínimo de pedido ')}
           {formatCurrency(restaurant.minimumOrder ?? 0)}
         </Text>
       </View>
