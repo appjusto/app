@@ -3,8 +3,10 @@ import React from 'react';
 import { View } from 'react-native';
 import HR from '../../../../../common/components/views/HR';
 import * as helpers from '../../../../../common/store/api/order/helpers';
+import { halfPadding, padding } from '../../../../../common/styles';
 import SingleHeader from '../../SingleHeader';
 import { ProductComplementListItem } from '../detail/ProductComplementListItem';
+import { ItemComplementRequiredLabel } from './ItemComplementRequiredLabel';
 
 interface Props {
   product: WithId<Product>;
@@ -23,7 +25,12 @@ export const ItemComplements = ({ product, selectedComplements, onComplementTogg
       {product.complementsGroups?.map((group) => (
         <View key={group.id}>
           <SingleHeader title={group.name} />
-          <HR />
+          <ItemComplementRequiredLabel
+            style={{ marginLeft: padding }}
+            group={group}
+            totalSelected={selectedComplements.length}
+          />
+          <HR style={{ marginTop: halfPadding }} />
           {group.items?.map((complement) => {
             const selected = Boolean(selectedComplements.find((c) => c.id === complement.id));
             return (

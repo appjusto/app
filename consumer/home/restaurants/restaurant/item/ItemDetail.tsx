@@ -9,6 +9,7 @@ import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../../common/app/context';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
+import HR from '../../../../../common/components/views/HR';
 import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
 import * as helpers from '../../../../../common/store/api/order/helpers';
@@ -18,7 +19,14 @@ import {
   useContextBusinessId,
 } from '../../../../../common/store/context/business';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
-import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
+import {
+  borders,
+  colors,
+  halfPadding,
+  padding,
+  screens,
+  texts,
+} from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import { RestaurantNavigatorParamList } from '../types';
@@ -78,7 +86,7 @@ export default function ({ navigation, route }: Props) {
     navigation.setOptions({
       title: product?.name ?? '',
     });
-  }, [product]);
+  }, [navigation, product]);
   // when editing order item
   React.useEffect(() => {
     if (!itemId) return;
@@ -139,16 +147,7 @@ export default function ({ navigation, route }: Props) {
           <Text style={{ ...texts.sm }}>{formatCurrency(product?.price ?? 0)}</Text>
         </View>
       </View>
-      <View
-        style={{
-          borderBottomWidth: 1,
-          borderStyle: 'solid',
-          width: '100%',
-          borderColor: colors.grey500,
-          marginTop: 24,
-          marginBottom: halfPadding,
-        }}
-      />
+
       <ItemComplements
         product={product}
         selectedComplements={complements}
@@ -159,43 +158,57 @@ export default function ({ navigation, route }: Props) {
           }
         }}
       />
-      <View style={{ paddingHorizontal: 12 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: halfPadding }}>
-          <Feather name="info" size={14} />
-          <Text style={{ ...texts.sm, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
+      {business.status === 'open' && (
+        <View style={{ marginTop: 26 }}>
+          <HR />
+          <View style={{ padding: 12 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Feather name="info" size={14} />
+              <Text style={{ ...texts.sm, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
+            </View>
+            <DefaultInput
+              style={{ height: 96, marginTop: halfPadding }}
+              placeholder={t(
+                'Tem alguma observação? Por exemplo: sem molho, sem cebola, ponto da carne, etc'
+              )}
+              multiline
+              numberOfLines={6}
+              value={notes}
+              onChangeText={setNotes}
+            />
+          </View>
+          <HR />
+          <View style={{ paddingHorizontal: 12 }}>
+            <ItemQuantity
+              style={{ marginVertical: padding }}
+              value={quantity}
+              minimum={itemId ? 0 : 1}
+              title={formatCurrency(helpers.getItemTotal(orderItem!))}
+              disabled={!canAddItemToOrder}
+              onChange={(value) => setQuantity(value)}
+              onSubmit={addItemToOrder}
+            />
+          </View>
         </View>
-        <DefaultInput
-          placeholder={t(
-            'Tem alguma observação? Por exemplo: sem molho, sem cebola, ponto da carne, etc'
-          )}
-          multiline
-          numberOfLines={6} // How much is enough?
-          value={notes}
-          onChangeText={setNotes}
-          style={{ height: 96, marginTop: halfPadding }}
-        />
-      </View>
-      {/* <View style={{ flex: 1 }} /> */}
-      <View
-        style={{
-          borderBottomWidth: 1,
-          borderStyle: 'solid',
-          width: '100%',
-          borderColor: colors.grey500,
-          marginTop: 24,
-          marginBottom: halfPadding,
-        }}
-      />
-      <View style={{ paddingHorizontal: 12 }}>
-        <ItemQuantity
-          value={quantity}
-          minimum={itemId ? 0 : 1}
-          title={formatCurrency(helpers.getItemTotal(orderItem!))}
-          disabled={!canAddItemToOrder}
-          onChange={(value) => setQuantity(value)}
-          onSubmit={addItemToOrder}
-        />
-      </View>
+      )}
+      {business.status === 'closed' && (
+        <View
+          style={{
+            margin: padding,
+            padding: 25,
+            alignItems: 'center',
+            backgroundColor: colors.grey50,
+            ...borders.default,
+          }}
+        >
+          <Feather name="clock" size={26} />
+          <Text style={texts.sm}>{t('Desculpe, estamos fechados agora')}</Text>
+          <Text style={{ ...texts.xs, color: colors.grey700 }}>
+            {t('Abriremos {amanhã, dia da semana} às')}
+          </Text>
+          <Text style={texts.x2l}>{t('00:00')}</Text>
+        </View>
+      )}
     </ScrollView>
   );
 }
