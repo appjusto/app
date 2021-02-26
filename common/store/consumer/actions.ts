@@ -24,6 +24,6 @@ export const updateSearchOrder = (order: SearchOrder) => (dispatch: AppDispatch)
   dispatch({ type: UPDATE_SEARCH_ORDER, payload: order });
 };
 
-export const updateSearchFilters = (params: SearchFilter[]) => (dispatch: AppDispatch) => {
-  dispatch({ type: UPDATE_SEARCH_FILTERS, payload: params });
+export const updateSearchFilters = (filters: SearchFilter[]) => (dispatch: AppDispatch) => {
+  dispatch({ type: UPDATE_SEARCH_FILTERS, payload: filters });
 };

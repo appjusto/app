@@ -1,8 +1,8 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Classification, Cuisine, WithId } from 'appjusto-types';
 import React from 'react';
 import { ScrollView, TouchableWithoutFeedback, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../../../common/app/context';
 import CheckField from '../../../../common/components/buttons/CheckField';
 import RadioButton from '../../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
@@ -10,6 +10,7 @@ import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
 import useCuisines from '../../../../common/store/api/platform/hooks/useCuisines';
 import { useFoodClassifications } from '../../../../common/store/api/platform/hooks/useFoodClassifications';
+import { updateSearchFilters, updateSearchOrder } from '../../../../common/store/consumer/actions';
 import {
   getSearchFilters,
   getSearchKind,
@@ -53,17 +54,15 @@ const orderByOptions: OrderByItem[] = [
 
 export default function ({ navigation }: Props) {
   // redux
+  const dispatch = useDispatch<AppDispatch>();
   const kind = useSelector(getSearchKind);
   const order = useSelector(getSearchOrder);
   const filters = useSelector(getSearchFilters);
   // state
   const cuisines = useCuisines();
   const classifications = useFoodClassifications();
-  const [selectedOrder, setSelectedOrder] = React.useState(order);
-  const [selectedCuisines, setSelectedCuisines] = React.useState<WithId<Cuisine>[]>([]);
-  const [selectedClassifications, setSelectedClassifications] = React.useState<
-    WithId<Classification>[]
-  >([]);
+  const selectedCuisines = filters.filter((f) => f.type === 'cuisine');
+  const selectedClassifications = filters.filter((f) => f.type === 'classification');
   // UI
   return (
     <ScrollView style={{ ...screens.default }}>
@@ -76,8 +75,8 @@ export default function ({ navigation }: Props) {
             <View key={item.value} style={{ marginTop: halfPadding }}>
               <RadioButton
                 title={item.title}
-                onPress={() => setSelectedOrder(item.value)}
-                checked={item.value === selectedOrder}
+                onPress={() => dispatch(updateSearchOrder(item.value))}
+                checked={item.value === order}
               />
             </View>
           ))}
@@ -91,15 +90,18 @@ export default function ({ navigation }: Props) {
           <PaddedView style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             {cuisines.map((cuisine) => {
               const selected =
-                selectedCuisines.find((item) => item.id === cuisine.id) !== undefined;
+                selectedCuisines.find((item) => item.value === cuisine.id) !== undefined;
               return (
                 <TouchableWithoutFeedback
                   key={cuisine.id}
                   onPress={() => {
-                    if (!selected) setSelectedCuisines([...selectedCuisines, cuisine]);
+                    if (!selected)
+                      dispatch(
+                        updateSearchFilters([...filters, { type: 'cuisine', value: cuisine.id }])
+                      );
                     else
-                      setSelectedCuisines(
-                        selectedCuisines.filter((item) => item.id !== cuisine.id)
+                      dispatch(
+                        updateSearchFilters(filters.filter((item) => item.value !== cuisine.id))
                       );
                   }}
                 >
@@ -123,17 +125,25 @@ export default function ({ navigation }: Props) {
           <PaddedView>
             {classifications?.map((classification) => {
               const selected =
-                selectedClassifications.find((item) => item.id === classification.id) !== undefined;
+                selectedClassifications.find((item) => item.value === classification.id) !==
+                undefined;
               return (
                 <View key={classification.id} style={{ marginTop: halfPadding }}>
                   <CheckField
                     text={classification.name}
                     onPress={() => {
                       if (!selected)
-                        setSelectedClassifications([...selectedClassifications, classification]);
+                        dispatch(
+                          updateSearchFilters([
+                            ...filters,
+                            { type: 'classification', value: classification.id },
+                          ])
+                        );
                       else
-                        setSelectedClassifications(
-                          selectedClassifications.filter((item) => item.id !== classification.id)
+                        dispatch(
+                          updateSearchFilters(
+                            filters.filter((item) => item.value !== classification.id)
+                          )
                         );
                     }}
                     checked={selected}

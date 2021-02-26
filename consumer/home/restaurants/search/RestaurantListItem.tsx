@@ -16,7 +16,7 @@ type Props = {
 
 export default function ({ restaurant, cuisine, distance }: Props) {
   const { data: logo } = useBusinessLogoURI(restaurant.objectID);
-  const outOfRange = (restaurant.deliveryRange ?? 0) * 1000 < (distance ?? 0);
+  const outOfRange = (restaurant.deliveryRange ?? 0) < (distance ?? 0);
   return (
     <View style={{ marginTop: halfPadding }}>
       <View
@@ -43,7 +43,7 @@ export default function ({ restaurant, cuisine, distance }: Props) {
           )}
           {distance && outOfRange && (
             <RoundedText backgroundColor={colors.grey50} color={colors.grey700} noBorder>
-              {`${t('Raio de entrega: ')} ${formatDistance(restaurant.deliveryRange! * 1000)}`}
+              {`${t('Raio de entrega: ')} ${formatDistance(restaurant.deliveryRange!)}`}
             </RoundedText>
           )}
         </View>

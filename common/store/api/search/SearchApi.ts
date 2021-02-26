@@ -11,6 +11,8 @@ export default class SearchApi {
   private restaurantsByPreparationTime: SearchIndex;
   private restaurantsByTotalOrders: SearchIndex;
   private products: SearchIndex;
+  private productsByPrice: SearchIndex;
+  private productsByTotalSold: SearchIndex;
   private fleets: SearchIndex;
 
   constructor(config: AlgoliaConfig) {
@@ -18,19 +20,21 @@ export default class SearchApi {
     this.restaurants = this.client.initIndex(`${config.env}_businesses`);
     this.restaurantsByPrice = this.client.initIndex(`${config.env}_businesses_price_asc`);
     this.restaurantsByPreparationTime = this.client.initIndex(
-      `${config.env}_business_preparation_time_asc`
+      `${config.env}_businesses_preparation_time_asc`
     );
     this.restaurantsByTotalOrders = this.client.initIndex(
       `${config.env}_businesses_totalOrders_desc`
     );
     this.products = this.client.initIndex(`${config.env}_products`);
+    this.productsByPrice = this.client.initIndex(`${config.env}_products_price_asc`);
+    this.productsByTotalSold = this.client.initIndex(`${config.env}_products_totalSold_desc`);
     this.fleets = this.client.initIndex(`${config.env}_fleets`);
   }
 
   private createFilters(filters?: SearchFilter[]) {
     return filters
       ?.reduce<string[]>((result, filter) => {
-        if (filter.type === 'category') {
+        if (filter.type === 'cuisine') {
           return [...result, `cuisine.id: ${filter.value}`];
         } else if (filter.type === 'classification') {
           return [...result, `classification: ${filter.value}`];
@@ -47,6 +51,9 @@ export default class SearchApi {
       else if (order === 'preparation-time') return this.restaurantsByPreparationTime;
       else if (order === 'popularity') return this.restaurantsByTotalOrders;
     } else if (kind === 'product') {
+      if (order === 'distance') return this.products;
+      else if (order === 'price') return this.productsByPrice;
+      else if (order === 'popularity') return this.productsByTotalSold;
       return this.products;
     }
   }
