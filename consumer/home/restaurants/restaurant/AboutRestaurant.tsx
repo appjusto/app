@@ -5,8 +5,9 @@ import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useContextBusiness } from '../../../../common/store/context/business';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
-import RestaurantCard from '../components/RestaurantCard';
+import { RestaurantHeader } from '../components/RestaurantHeader';
 import { RestaurantNavigatorParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<RestaurantNavigatorParamList>;
@@ -29,14 +30,13 @@ export default function ({ route }: Props) {
 
   return (
     <ScrollView style={{ ...screens.default }}>
-      <RestaurantCard restaurant={restaurant} />
+      <RestaurantHeader restaurant={restaurant} />
       <View style={{ marginTop: padding, padding }}>
         <Text style={{ ...texts.sm }}>{restaurant.description}</Text>
         <Text style={{ marginTop: 24, ...texts.sm }}>{restaurant.description}</Text>
         <Text style={{ marginTop: padding, ...texts.sm, color: colors.grey700 }}>
-          {t('Valor mínimo de pedido R$')}
-          {restaurant.minimumOrder}
-          {t(',00')}
+          {t('Valor mínimo de pedido')}
+          {formatCurrency(restaurant.minimumOrder ?? 0)}
         </Text>
       </View>
       <View style={{ width: '100%', height: padding, backgroundColor: colors.grey50 }} />

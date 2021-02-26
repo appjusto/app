@@ -27,7 +27,7 @@ type Section = {
 };
 
 export default function ({ items, ListHeaderComponent, onSelect, onEndReached }: Props) {
-  // redux store
+  // redux
   const location = useSelector(getCurrentLocation);
   // state
   const cuisines = useCuisines();
