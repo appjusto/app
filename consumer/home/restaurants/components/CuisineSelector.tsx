@@ -25,10 +25,10 @@ export default function ({ selectedCuisineId, onSelect }: Props) {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => (selectedCuisineId === item.id ? onSelect(null) : onSelect(item))}
+              onPress={() => (selectedCuisineId === item.name ? onSelect(null) : onSelect(item))}
               style={{ marginRight: halfPadding }}
             >
-              <CuisinesBox cuisine={item} selected={selectedCuisineId === item.id} />
+              <CuisinesBox cuisine={item} selected={selectedCuisineId === item.name} />
             </TouchableOpacity>
           )}
         />

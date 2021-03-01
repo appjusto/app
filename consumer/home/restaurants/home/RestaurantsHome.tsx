@@ -65,7 +65,7 @@ export default function ({ route, navigation }: Props) {
             navigation.navigate('RestaurantSearch');
           }}
           onCuisineSelect={(cuisine) => {
-            setFilters(cuisine ? [{ type: 'category', value: cuisine.id }] : []);
+            setFilters(cuisine ? [{ type: 'cuisine', value: cuisine.name }] : []);
           }}
         />
       }
