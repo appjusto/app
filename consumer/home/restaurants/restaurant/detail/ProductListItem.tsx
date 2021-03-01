@@ -30,7 +30,7 @@ export const ProductListItem = ({ product, showRestaurantName }: Props) => {
   return (
     <View
       style={{
-        borderBottomWidth: 1,
+        borderTopWidth: 1,
         borderStyle: 'solid',
         width: '100%',
         borderColor: colors.grey500,
@@ -58,7 +58,7 @@ export const ProductListItem = ({ product, showRestaurantName }: Props) => {
           )}
         </View>
         <View>
-          <ListItemImage uri={imageURI} size={96} />
+          <ListItemImage uri={imageURI} />
         </View>
       </View>
     </View>

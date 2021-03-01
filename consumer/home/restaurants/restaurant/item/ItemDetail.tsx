@@ -136,8 +136,15 @@ export default function ({ navigation, route }: Props) {
   return (
     <ScrollView style={{ ...screens.default }}>
       <View style={{ paddingHorizontal: 12 }}>
-        <View style={{ width: '100%', height: 240, borderRadius: 8 }}>
-          {imageURI && <Image source={{ uri: imageURI }} style={{ width: '100%', height: 240 }} />}
+        <View style={{ width: '100%', height: 240, overflow: 'hidden' }}>
+          {imageURI && (
+            <Image
+              source={{ uri: imageURI }}
+              style={{ width: '100%', height: 240 }}
+              borderRadius={8}
+              resizeMode="cover"
+            />
+          )}
         </View>
         <View style={{ marginTop: padding }}>
           <Text style={{ ...texts.xl }}>{product?.name ?? ''}</Text>
@@ -183,7 +190,7 @@ export default function ({ navigation, route }: Props) {
               style={{ marginVertical: padding }}
               value={quantity}
               minimum={itemId ? 0 : 1}
-              title={formatCurrency(helpers.getItemTotal(orderItem!))}
+              title={`${t('Adicionar')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
               disabled={!canAddItemToOrder}
               onChange={(value) => setQuantity(value)}
               onSubmit={addItemToOrder}

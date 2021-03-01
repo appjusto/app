@@ -41,7 +41,12 @@ export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) =>
         <View>
           <View style={{ height: 120, width: '100%', borderRadius: 8 }}>
             {coverURI && (
-              <Image source={{ uri: coverURI }} style={{ height: 120, width: '100%' }} />
+              <Image
+                source={{ uri: coverURI }}
+                style={{ height: 120, width: '100%' }}
+                borderRadius={8}
+                resizeMode="cover"
+              />
             )}
           </View>
           {canNavigate && (
