@@ -74,7 +74,9 @@ export default ({ navigation, route }: Props) => {
           backgroundColor: 'white',
         }}
       />
-      <DefaultButton title={t('Voltar para o início')} onPress={() => navigation.popToTop()} />
+      {order.type === 'p2p' && (
+        <DefaultButton title={t('Voltar para o início')} onPress={() => navigation.popToTop()} />
+      )}
     </FeedbackView>
   );
 };

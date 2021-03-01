@@ -88,8 +88,9 @@ export const OrderSummary = ({
           <OrderMap order={order} ratio={360 / 160} />
         </View>
       )}
-
-      <OrderPlacesSummary order={order} onEditStep={onEditStep} />
+      <View style={{ marginTop: padding }}>
+        <OrderPlacesSummary order={order} onEditStep={onEditStep} />
+      </View>
 
       {!isEmpty(order.items) && (
         <View>
@@ -99,7 +100,6 @@ export const OrderSummary = ({
             onEditItemPress={onEditItemPress!}
             onAddItemsPress={onAddItemsPress!}
           />
-          <HR height={padding} />
           <AddInfo value={notes} onAddInfo={setNotes} />
         </View>
       )}
