@@ -35,7 +35,7 @@ export default class SearchApi {
     return filters
       ?.reduce<string[]>((result, filter) => {
         if (filter.type === 'cuisine') {
-          return [...result, `cuisine.id: ${filter.value}`];
+          return [...result, `cuisine: ${filter.value}`];
         } else if (filter.type === 'classification') {
           return [...result, `classification: ${filter.value}`];
         }

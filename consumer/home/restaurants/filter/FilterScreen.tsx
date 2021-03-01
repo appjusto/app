@@ -97,11 +97,11 @@ export default function ({ navigation }: Props) {
                   onPress={() => {
                     if (!selected)
                       dispatch(
-                        updateSearchFilters([...filters, { type: 'cuisine', value: cuisine.id }])
+                        updateSearchFilters([...filters, { type: 'cuisine', value: cuisine.name }])
                       );
                     else
                       dispatch(
-                        updateSearchFilters(filters.filter((item) => item.value !== cuisine.id))
+                        updateSearchFilters(filters.filter((item) => item.value !== cuisine.name))
                       );
                   }}
                 >
