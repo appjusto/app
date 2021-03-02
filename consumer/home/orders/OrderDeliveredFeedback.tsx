@@ -18,6 +18,7 @@ import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedParamList } from '../../types';
 import TipControl from './common/TipControl';
+import { DeliveredItems } from './components/DeliveredItems';
 import { ReviewBox } from './components/ReviewBox';
 import { OrderNavigatorParamList } from './types';
 
@@ -94,6 +95,12 @@ export default ({ navigation, route }: Props) => {
           </View>
         </PaddedView>
         <HR height={padding} />
+        {order.type === 'food' && (
+          <View>
+            <DeliveredItems order={order} />
+            <HR height={padding} />
+          </View>
+        )}
         {/* tip */}
         <TipControl order={order} tip={tip} onChange={(value) => setTip(value)} />
         <View
