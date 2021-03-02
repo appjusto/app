@@ -101,16 +101,16 @@ export default function ({ navigation, route }: Props) {
     navigation.navigate('TransportableItems');
   }, [navigation]);
   // confirm order
-  const placeOrderHandler = async (fleetId: string, platformFee: number) => {
+  const placeOrderHandler = async (fleetId: string) => {
     if (!orderId) return;
     if (!selectedPaymentMethodId) return;
     try {
       setLoading(true);
       await api.order().placeOrder({
         orderId,
+        payableWith: 'credit_card',
         paymentMethodId: selectedPaymentMethodId,
         fleetId,
-        platformFee,
       });
       setLoading(false);
       navigation.replace('OrderConfirming', { orderId });
