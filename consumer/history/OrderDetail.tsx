@@ -22,6 +22,7 @@ import {
 } from '../../common/utils/formatters';
 import { t } from '../../strings';
 import TipControl from '../home/orders/common/TipControl';
+import { DeliveredItems } from '../home/orders/components/DeliveredItems';
 import { ReviewBox } from '../home/orders/components/ReviewBox';
 import OrderMap from '../home/orders/p2p-order/OrderMap';
 import PlaceSummary from '../home/orders/p2p-order/PlaceSummary';
@@ -100,6 +101,12 @@ export default function ({ navigation, route }: Props) {
           </View>
         </PaddedView>
         <HR height={padding} />
+        {order.type === 'food' && (
+          <View>
+            <DeliveredItems order={order} />
+            <HR height={padding} />
+          </View>
+        )}
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Pill />
           <PaddedView
@@ -116,6 +123,10 @@ export default function ({ navigation, route }: Props) {
             </Text>
           </PaddedView>
         </View>
+        <HR height={padding} />
+        <PaddedView>
+          <OrderCostBreakdown order={order} selectedFare={order.fare} />
+        </PaddedView>
         <HR height={padding} />
         <ReviewBox
           review={review?.type ?? reviewType}
@@ -143,10 +154,6 @@ export default function ({ navigation, route }: Props) {
             />
           </View>
         )}
-        <HR height={padding} />
-        <PaddedView>
-          <OrderCostBreakdown order={order} selectedFare={order.fare} />
-        </PaddedView>
         <HR height={padding} />
         <PaddedView>
           <DefaultButton
