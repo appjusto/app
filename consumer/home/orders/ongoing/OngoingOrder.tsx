@@ -1,25 +1,24 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import RoundedProfileImg from '../../../../common/components/icons/RoundedProfileImg';
 import HR from '../../../../common/components/views/HR';
 import useNotificationToken from '../../../../common/hooks/useNotificationToken';
 import { MessagesCard } from '../../../../common/screens/home/cards/MessagesCard';
-import { CourierDistanceBadge } from '../../../../common/screens/orders/ongoing/CourierDistanceBadge';
 import CourierStatusHighlight from '../../../../common/screens/orders/ongoing/CourierStatusHighlight';
 import { courierNextPlace } from '../../../../common/store/api/order/helpers';
 import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
-import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { colors, halfPadding, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { DeliveredItems } from '../components/DeliveredItems';
+import { DeliveryInfo } from '../components/DeliveryInfo';
 import OrderMap from '../p2p-order/OrderMap';
 import { OrderNavigatorParamList } from '../types';
 import { OngoingOrderStatus } from './OngoingOrderStatus';
@@ -85,6 +84,12 @@ export default function ({ navigation, route }: Props) {
     );
   }
   // ongoing UI
+  const beforeDispatching =
+    order.status === 'quote' ||
+    order.status === 'confirming' ||
+    order.status === 'confirmed' ||
+    order.status === 'preparing' ||
+    order.status === 'ready';
   const nextPlace = courierNextPlace(order);
   const { dispatchingState } = order;
   const addressLabel = (() => {
@@ -104,10 +109,8 @@ export default function ({ navigation, route }: Props) {
       <ScrollView>
         <View>
           <OngoingOrderStatus order={order} />
-          <OrderMap order={order} ratio={1.2} />
-          <View>
-            <CourierStatusHighlight dispatchingState={dispatchingState} />
-          </View>
+          <OrderMap order={order} ratio={order.type === 'food' ? 1.2 : 0.8} />
+          <CourierStatusHighlight dispatchingState={dispatchingState} />
           <View
             style={{
               width: '100%',
@@ -122,34 +125,12 @@ export default function ({ navigation, route }: Props) {
             />
           </View>
         </View>
-        <View
-          style={{
-            backgroundColor: colors.white,
-            flexDirection: 'row',
-            paddingHorizontal: padding,
-            paddingTop: padding,
-          }}
-        >
-          <RoundedProfileImg flavor="courier" id={order.courier?.id} />
-          <View style={{ flex: 1, marginLeft: padding }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={[texts.md]}>{order.courier?.name}</Text>
-            </View>
-            <Text style={[texts.xs, { color: colors.green600 }]}>{addressLabel}</Text>
-            <Text style={[texts.xs]}>{nextPlace?.address.main ?? ''}</Text>
-          </View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <View>
-              <CourierDistanceBadge order={order} />
-              <TouchableOpacity
-                onPress={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
-                style={{ marginTop: 12 }}
-              >
-                <Text style={[texts.xs, { color: colors.green600 }]}>{t('Alterar')}</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+        <DeliveryInfo
+          order={order}
+          addressLabel={addressLabel}
+          nextPlace={nextPlace}
+          onChangeRoute={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
+        />
         <HR />
         <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View style={{ flex: 7 }}>
