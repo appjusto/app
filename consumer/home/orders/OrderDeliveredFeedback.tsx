@@ -12,6 +12,7 @@ import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import HR from '../../../common/components/views/HR';
+import { useCourierReview } from '../../../common/store/api/courier/hooks/useCourierReview';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens, texts } from '../../../common/styles';
@@ -42,6 +43,7 @@ export default ({ navigation, route }: Props) => {
   // screen state
   const { order } = useObserveOrder(orderId);
   const [reviewType, setReviewType] = React.useState<ReviewType>();
+  const review = useCourierReview(orderId, order?.courier?.id);
   const [tip, setTip] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
 
@@ -146,7 +148,10 @@ export default ({ navigation, route }: Props) => {
           </View>
         </View>
         <HR height={padding} />
-        <ReviewBox onReviewChange={(type) => setReviewType(type)} />
+        <ReviewBox
+          onReviewChange={(type) => setReviewType(type)}
+          review={review?.type ?? reviewType}
+        />
         <HR />
         {/* actions */}
         <View style={{ paddingHorizontal: padding }}>

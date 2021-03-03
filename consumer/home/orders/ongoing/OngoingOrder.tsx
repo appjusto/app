@@ -1,8 +1,8 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ActivityIndicator, Text, View } from 'react-native';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
@@ -13,7 +13,7 @@ import { courierNextPlace } from '../../../../common/store/api/order/helpers';
 import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
-import { colors, halfPadding, padding, screens } from '../../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { DeliveredItems } from '../components/DeliveredItems';
 import { DeliveryInfo } from '../components/DeliveryInfo';
@@ -140,35 +140,59 @@ export default function ({ navigation, route }: Props) {
         ) : (
           <View>
             <OngoingOrderStatus order={order} />
-            {order.status === 'dispatching' && (
+            {order.status === 'dispatching' ? (
               <View>
-                <OrderMap order={order} ratio={1.2} />
-                <StatusAndMessages
-                  dispatchingState={dispatchingState}
-                  orderId={orderId}
-                  onMessageReceived={() => navigation.navigate('Chat', { orderId })}
+                <View>
+                  <OrderMap order={order} ratio={1.2} />
+                  <StatusAndMessages
+                    dispatchingState={dispatchingState}
+                    orderId={orderId}
+                    onMessageReceived={() => navigation.navigate('Chat', { orderId })}
+                  />
+                </View>
+                <DeliveryInfo
+                  order={order}
+                  addressLabel={addressLabel}
+                  nextPlace={nextPlace}
+                  onChangeRoute={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
                 />
+                <HR height={padding} />
+                <DeliveredItems order={order} />
+              </View>
+            ) : (
+              <View>
+                <HR height={padding} />
+                <DeliveredItems order={order} />
+                <HR height={padding} />
+                <PaddedView
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <View>
+                    <Text style={[texts.xs, { color: colors.green600 }]}>{t('Entregar em')}</Text>
+                    <Text style={[texts.xs]}>{order.destination?.address.main ?? ''}</Text>
+                    <Text style={{ ...texts.xs, color: colors.grey700 }}>
+                      {order.destination?.additionalInfo ?? ''}
+                    </Text>
+                  </View>
+                  <TouchableOpacity onPress={() => null}>
+                    <Text style={[texts.xs, { color: colors.green600 }]}>{t('Alterar')}</Text>
+                  </TouchableOpacity>
+                </PaddedView>
+                <HR height={padding} />
+                <PaddedView style={{ justifyContent: 'space-between' }}>
+                  <View style={{ flex: 7 }}>
+                    <DefaultButton title={t('Cancelar pedido')} onPress={() => null} secondary />
+                  </View>
+                  <View style={{ flex: 7, marginLeft: halfPadding }}>
+                    <DefaultButton title={t('Abrir chat com o restaurante')} onPress={() => null} />
+                  </View>
+                </PaddedView>
               </View>
             )}
-            <DeliveryInfo
-              order={order}
-              addressLabel={addressLabel}
-              nextPlace={nextPlace}
-              onChangeRoute={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
-            />
-            <HR />
-            <PaddedView style={{ justifyContent: 'space-between' }}>
-              <View style={{ flex: 7 }}>
-                <DefaultButton title={t('Cancelar pedido')} onPress={() => null} secondary />
-              </View>
-              <View style={{ flex: 7, marginLeft: halfPadding }}>
-                <DefaultButton title={t('Abrir chat com o restaurante')} onPress={() => null} />
-              </View>
-            </PaddedView>
-            <View>
-              <HR height={padding} />
-              <DeliveredItems order={order} />
-            </View>
           </View>
         )}
       </ScrollView>
