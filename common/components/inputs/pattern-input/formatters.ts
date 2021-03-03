@@ -17,12 +17,14 @@ export const cnpjFormatter = (value: string = '') => {
   }, '');
 };
 
-export const cepMask = '00000-000';
-export const cepFormatter = (value: string | undefined) => {
+export const hyphenFormatter = (hyphenLocation: number) => (value: string | undefined) => {
   if (!value) return '';
-  if (value.length <= 5) return value;
-  return [value.slice(0, 5), value.slice(5)].join('-');
+  if (value.length <= hyphenLocation) return value;
+  return [value.slice(0, hyphenLocation), value.slice(hyphenLocation)].join('-');
 };
+
+export const cepMask = '00000-000';
+export const cepFormatter = hyphenFormatter(5);
 
 export const phoneMask = '(11) 99999-9999';
 export const phoneFormatter = (value: string | undefined) => {

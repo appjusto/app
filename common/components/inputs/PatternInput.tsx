@@ -3,7 +3,7 @@ import { NativeSyntheticEvent, TextInputFocusEventData } from 'react-native';
 import DefaultInput, { DefaultInputProps } from './DefaultInput';
 
 export interface PatternInputProps extends DefaultInputProps {
-  parser: (value: string) => string;
+  parser?: (value: string) => string;
   formatter?: (value: string | undefined) => string;
   // onValueChange: (value: string) => void;
   mask?: string;
@@ -30,8 +30,7 @@ export default React.forwardRef(
     const formattedValue = value ? (formatter ? formatter(String(value)) : value) : value;
     // handlers
     const onChangeHandler = (text: string) => {
-      // onValueChange(parser(text));
-      if (onChangeText) onChangeText(parser(text));
+      if (onChangeText) onChangeText(parser ? parser(text) : text);
     };
     const onFocusHandler = (ev: NativeSyntheticEvent<TextInputFocusEventData>) => {
       if (mask) setPlaceholder(mask);
