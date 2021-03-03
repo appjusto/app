@@ -154,7 +154,7 @@ export default function ({ navigation, route }: Props) {
         <ConfigItem
           title={t('Dados bancários')}
           subtitle={t('Cadastre seu banco para recebimento')}
-          onPress={() => navigation.navigate('BankNavigator')}
+          onPress={() => navigation.navigate('BankNavigator', { screen: 'ProfileBank' })}
           checked={bankAccountSet(courier)}
         />
       </ScrollView>

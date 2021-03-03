@@ -40,7 +40,7 @@ export default function ({ navigation, route }: Props) {
   // screen state
   const [bank, setBank] = useState<null | Bank>(null);
   const [agency, setAgency] = useState<string>('');
-  const [type, setType] = useState<BankAccountType>();
+  const [type, setType] = useState<BankAccountType>('Corrente');
   const [account, setAccount] = useState<string>('');
   const [digit, setDigit] = useState<string>('');
   const canSubmit = useMemo(() => {
