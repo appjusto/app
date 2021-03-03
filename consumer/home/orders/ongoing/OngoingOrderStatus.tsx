@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const OngoingOrderStatus = ({ order }: Props) => {
-  // if (order.type === 'p2p') return null;
+  if (order.type === 'p2p') return null;
   let header = t('Pedido confirmado!');
   let description = t('O restaurante já está com seu pedido e em breve iniciará o preparo.');
   if (order.status === 'preparing') {
@@ -23,17 +23,24 @@ export const OngoingOrderStatus = ({ order }: Props) => {
   } else if (order.status === 'ready') {
     header = t('Pronto para entrega');
     description = t('Estamos aguardando o entregador pegar o seu pedido e levá-lo até você.');
+  } else if (order.status === 'dispatching') {
+    header = t('Saiu para entrega');
+    description = t('Já pode se preparar! O entregador saiu e está levando o pedido até você. ');
+  } else if (order.dispatchingState === 'arrived-destination') {
+    header = t('Entregador chegou no local');
+    description = t('Aguardando o cliente para retirada.');
   }
   return (
     <View style={{ padding, alignItems: 'center' }}>
       <IconRequest />
       <Text style={{ marginTop: padding, ...texts.xl }}>{header}</Text>
       <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>{description}</Text>
-      {order.destination?.estimatedTimeOfArrival && (
-        <RoundedText style={{ marginTop: padding }}>{`${t('Previsão de entrega: ')} ${formatTime(
-          order.destination.estimatedTimeOfArrival
-        )}`}</RoundedText>
-      )}
+      {order.destination?.estimatedTimeOfArrival &&
+        order.dispatchingState !== 'arrived-destination' && (
+          <RoundedText style={{ marginTop: padding }}>{`${t('Previsão de entrega: ')} ${formatTime(
+            order.destination.estimatedTimeOfArrival
+          )}`}</RoundedText>
+        )}
     </View>
   );
 };
