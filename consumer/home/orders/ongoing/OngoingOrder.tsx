@@ -9,8 +9,6 @@ import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import HR from '../../../../common/components/views/HR';
 import useNotificationToken from '../../../../common/hooks/useNotificationToken';
-import { MessagesCard } from '../../../../common/screens/home/cards/MessagesCard';
-import CourierStatusHighlight from '../../../../common/screens/orders/ongoing/CourierStatusHighlight';
 import { courierNextPlace } from '../../../../common/store/api/order/helpers';
 import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
@@ -19,6 +17,7 @@ import { colors, halfPadding, padding, screens } from '../../../../common/styles
 import { t } from '../../../../strings';
 import { DeliveredItems } from '../components/DeliveredItems';
 import { DeliveryInfo } from '../components/DeliveryInfo';
+import { StatusAndMessages } from '../components/StatusAndMessages';
 import OrderMap from '../p2p-order/OrderMap';
 import { OrderNavigatorParamList } from '../types';
 import { OngoingOrderStatus } from './OngoingOrderStatus';
@@ -84,12 +83,6 @@ export default function ({ navigation, route }: Props) {
     );
   }
   // ongoing UI
-  const beforeDispatching =
-    order.status === 'quote' ||
-    order.status === 'confirming' ||
-    order.status === 'confirmed' ||
-    order.status === 'preparing' ||
-    order.status === 'ready';
   const nextPlace = courierNextPlace(order);
   const { dispatchingState } = order;
   const addressLabel = (() => {
@@ -107,54 +100,75 @@ export default function ({ navigation, route }: Props) {
   return (
     <View style={{ ...screens.default, paddingBottom: padding }}>
       <ScrollView>
-        <View>
-          <OngoingOrderStatus order={order} />
-          <OrderMap order={order} ratio={order.type === 'food' ? 1.2 : 0.8} />
-          <CourierStatusHighlight dispatchingState={dispatchingState} />
-          <View
-            style={{
-              width: '100%',
-              top: -176,
-              alignSelf: 'center',
-              paddingHorizontal: padding,
-            }}
-          >
-            <MessagesCard
-              orderId={orderId}
-              onPress={() => navigation.navigate('Chat', { orderId })}
-            />
-          </View>
-        </View>
-        <DeliveryInfo
-          order={order}
-          addressLabel={addressLabel}
-          nextPlace={nextPlace}
-          onChangeRoute={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
-        />
-        <HR />
-        <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <View style={{ flex: 7 }}>
-            <DefaultButton
-              title={t('Abrir chat')}
-              onPress={() => navigation.navigate('Chat', { orderId })}
-            />
-          </View>
-          <View style={{ flex: 7, marginLeft: halfPadding }}>
-            <DefaultButton
-              title={t('Mais informações')}
-              onPress={() =>
-                navigation.navigate('CourierDetail', {
-                  orderId,
-                })
-              }
-              secondary
-            />
-          </View>
-        </PaddedView>
-        {order.type === 'food' && (
+        {order.type === 'p2p' ? (
           <View>
-            <HR height={padding} />
-            <DeliveredItems order={order} />
+            <View>
+              <OrderMap order={order} ratio={0.8} />
+              <StatusAndMessages
+                dispatchingState={dispatchingState}
+                orderId={orderId}
+                onMessageReceived={() => navigation.navigate('Chat', { orderId })}
+              />
+            </View>
+            <DeliveryInfo
+              order={order}
+              addressLabel={addressLabel}
+              nextPlace={nextPlace}
+              onChangeRoute={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
+            />
+            <HR />
+            <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <View style={{ flex: 7 }}>
+                <DefaultButton
+                  title={t('Abrir chat')}
+                  onPress={() => navigation.navigate('Chat', { orderId })}
+                />
+              </View>
+              <View style={{ flex: 7, marginLeft: halfPadding }}>
+                <DefaultButton
+                  title={t('Mais informações')}
+                  onPress={() =>
+                    navigation.navigate('CourierDetail', {
+                      orderId,
+                    })
+                  }
+                  secondary
+                />
+              </View>
+            </PaddedView>
+          </View>
+        ) : (
+          <View>
+            <OngoingOrderStatus order={order} />
+            {order.status === 'dispatching' && (
+              <View>
+                <OrderMap order={order} ratio={1.2} />
+                <StatusAndMessages
+                  dispatchingState={dispatchingState}
+                  orderId={orderId}
+                  onMessageReceived={() => navigation.navigate('Chat', { orderId })}
+                />
+              </View>
+            )}
+            <DeliveryInfo
+              order={order}
+              addressLabel={addressLabel}
+              nextPlace={nextPlace}
+              onChangeRoute={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
+            />
+            <HR />
+            <PaddedView style={{ justifyContent: 'space-between' }}>
+              <View style={{ flex: 7 }}>
+                <DefaultButton title={t('Cancelar pedido')} onPress={() => null} secondary />
+              </View>
+              <View style={{ flex: 7, marginLeft: halfPadding }}>
+                <DefaultButton title={t('Abrir chat com o restaurante')} onPress={() => null} />
+              </View>
+            </PaddedView>
+            <View>
+              <HR height={padding} />
+              <DeliveredItems order={order} />
+            </View>
           </View>
         )}
       </ScrollView>

@@ -35,11 +35,7 @@ export const DeliveryInfo = ({ order, addressLabel, nextPlace, onChangeRoute }: 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <View>
           <CourierDistanceBadge order={order} />
-          <TouchableOpacity
-            onPress={onChangeRoute}
-            // onPress={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
-            style={{ marginTop: 12 }}
-          >
+          <TouchableOpacity onPress={onChangeRoute} style={{ marginTop: 12 }}>
             <Text style={[texts.xs, { color: colors.green600 }]}>{t('Alterar')}</Text>
           </TouchableOpacity>
         </View>
