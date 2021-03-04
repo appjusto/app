@@ -204,7 +204,11 @@ export default function ({ navigation, route }: Props) {
                 </PaddedView>
                 <HR height={padding} />
                 <PaddedView>
-                  <DefaultButton title={t('Cancelar pedido')} onPress={() => null} secondary />
+                  <DefaultButton
+                    title={t('Cancelar pedido')}
+                    onPress={() => navigation.navigate('ConfirmCancelOrder', { orderId })}
+                    secondary
+                  />
                 </PaddedView>
                 <HR />
                 <PaddedView>
