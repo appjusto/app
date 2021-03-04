@@ -1,27 +1,23 @@
-import { Feather } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { isEmpty } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import RoundedText from '../../../common/components/texts/RoundedText';
 import HR from '../../../common/components/views/HR';
-import { MessagesCard } from '../../../common/screens/home/cards/MessagesCard';
 import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/CourierDistanceBadge';
-import CourierStatusHighlight from '../../../common/screens/orders/ongoing/CourierStatusHighlight';
 import { courierNextPlace } from '../../../common/store/api/order/helpers';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { StatusAndMessages } from '../../../consumer/home/orders/components/StatusAndMessages';
 import OrderMap from '../../../consumer/home/orders/p2p-order/OrderMap';
 import SingleHeader from '../../../consumer/home/restaurants/SingleHeader';
 import { t } from '../../../strings';
+import { CourierDeliveryInfo } from '../components/CourierDeliveryInfo';
 import { ApprovedParamList } from '../types';
 import { CodeInput } from './code-input/CodeInput';
 import { RouteIcons } from './RouteIcons';
@@ -147,59 +143,24 @@ export default function ({ navigation, route }: Props) {
           <OrderMap order={order!} ratio={360 / 316} />
           <RouteIcons order={order} />
           <View>
-            <CourierStatusHighlight dispatchingState={dispatchingState} />
-          </View>
-          <View
-            style={{
-              width: '100%',
-              top: -176,
-              alignSelf: 'center',
-              paddingHorizontal: padding,
-            }}
-          >
-            <MessagesCard
+            <StatusAndMessages
+              dispatchingState={dispatchingState}
               orderId={orderId}
-              onPress={() => navigation.navigate('Chat', { orderId })}
+              onMessageReceived={() => navigation.navigate('Chat', { orderId })}
             />
           </View>
         </View>
         <View style={{ marginTop: padding, paddingHorizontal: padding }}>
-          <Text style={[texts.xs, { color: colors.green600 }]}>{t('Pedido de')}</Text>
-          <Text style={[texts.md]}>
-            {!isEmpty(order.consumer.name) ? order.consumer.name : t('Cliente')}
-          </Text>
-          <View
-            style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: padding }}
-          >
-            <TouchableOpacity onPress={() => navigation.navigate('Chat', { orderId })}>
-              <View style={{ marginTop: halfPadding }}>
-                <RoundedText
-                  leftIcon={<Feather name="message-circle" size={12} style={{ marginRight: 6 }} />}
-                >
-                  {t('Iniciar chat')}
-                </RoundedText>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('ReportIssueCourierDeliveryProblem', {
-                  orderId,
-                  issueType: 'courier-delivery-problem',
-                })
-              }
-            >
-              <View style={{ marginTop: halfPadding }}>
-                <RoundedText
-                  color={colors.red}
-                  leftIcon={
-                    <Feather name="info" size={12} color={colors.red} style={{ marginRight: 6 }} />
-                  }
-                >
-                  {t('Tive um problema')}
-                </RoundedText>
-              </View>
-            </TouchableOpacity>
-          </View>
+          <CourierDeliveryInfo
+            order={order}
+            onChat={() => navigation.navigate('Chat', { orderId })}
+            onProblem={() =>
+              navigation.navigate('ReportIssueCourierDeliveryProblem', {
+                orderId,
+                issueType: 'courier-delivery-problem',
+              })
+            }
+          />
           <HR />
         </View>
         <View
