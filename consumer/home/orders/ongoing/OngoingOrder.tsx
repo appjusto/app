@@ -156,6 +156,26 @@ export default function ({ navigation, route }: Props) {
                   nextPlace={nextPlace}
                   onChangeRoute={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
                 />
+                <HR />
+                <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <View style={{ flex: 7 }}>
+                    <DefaultButton
+                      title={t('Abrir chat')}
+                      onPress={() => navigation.navigate('Chat', { orderId })}
+                    />
+                  </View>
+                  <View style={{ flex: 7, marginLeft: halfPadding }}>
+                    <DefaultButton
+                      title={t('Mais informações')}
+                      onPress={() =>
+                        navigation.navigate('CourierDetail', {
+                          orderId,
+                        })
+                      }
+                      secondary
+                    />
+                  </View>
+                </PaddedView>
                 <HR height={padding} />
                 <DeliveredItems order={order} />
               </View>
@@ -183,13 +203,12 @@ export default function ({ navigation, route }: Props) {
                   </TouchableOpacity>
                 </PaddedView>
                 <HR height={padding} />
-                <PaddedView style={{ justifyContent: 'space-between' }}>
-                  <View style={{ flex: 7 }}>
-                    <DefaultButton title={t('Cancelar pedido')} onPress={() => null} secondary />
-                  </View>
-                  <View style={{ flex: 7, marginLeft: halfPadding }}>
-                    <DefaultButton title={t('Abrir chat com o restaurante')} onPress={() => null} />
-                  </View>
+                <PaddedView>
+                  <DefaultButton title={t('Cancelar pedido')} onPress={() => null} secondary />
+                </PaddedView>
+                <HR />
+                <PaddedView>
+                  <DefaultButton title={t('Abrir chat com o restaurante')} onPress={() => null} />
                 </PaddedView>
               </View>
             )}
