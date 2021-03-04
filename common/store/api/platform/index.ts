@@ -8,7 +8,7 @@ export default class PlatformApi {
 
   // firestore
   async fetchBanks() {
-    const querySnapshot = await this.refs.getBanksRef().get();
+    const querySnapshot = await this.refs.getBanksRef().orderBy('order', 'asc').get();
     return documentsAs<Bank>(querySnapshot.docs);
   }
 

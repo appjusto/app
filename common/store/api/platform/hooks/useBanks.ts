@@ -12,6 +12,6 @@ export default function () {
     (async () => {
       setIssues(await api.platform().fetchBanks());
     })();
-  }, []);
+  }, [api]);
   return issues;
 }

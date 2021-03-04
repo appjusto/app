@@ -1,15 +1,18 @@
 export const numbersOnlyParser = (value: string) => value.replace(/[^0-9]/g, '');
 
-export const numbersAndLettersParser = (mask: string) => {
+export const numbersAndLettersParser = (mask: string, padWithZeros?: boolean) => {
   const regexp = (char: string): RegExp => {
     if (char === '9' || char === '0') return /\d/;
     if (char === 'D') return /\w/;
-    if (char === '-') return /-/;
-    throw new Error('Unexpected character in mask.');
+    throw new Error(`Unexpected character in mask: ${char}`);
   };
   return (value: string) =>
-    mask.split('').reduce((result, letter, i) => {
-      if (value.charAt(i).match(regexp(letter))) return result + value.charAt(i);
-      return result;
-    }, '');
+    mask.split('').reduce(
+      (result, letter, i, arr) => {
+        const regex = letter === '-' ? regexp(arr[i + 1]) : regexp(letter);
+        if (value.charAt(i).match(regex)) return result + value.charAt(i);
+        return result;
+      },
+      padWithZeros ? '0'.repeat(mask.length - value.length - (mask.match(/-/g) ?? []).length) : ''
+    );
 };

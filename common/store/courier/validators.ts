@@ -30,7 +30,6 @@ export const bankAccountSet = (courier: Partial<CourierProfile> | undefined): bo
   return (
     !isEmpty(courier.bankAccount?.name) &&
     !isEmpty(courier.bankAccount?.agency) &&
-    !isEmpty(courier.bankAccount?.account) &&
-    !isEmpty(courier.bankAccount?.digit)
+    !isEmpty(courier.bankAccount?.account)
   );
 };
