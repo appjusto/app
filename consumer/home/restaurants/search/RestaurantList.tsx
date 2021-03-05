@@ -8,7 +8,7 @@ import { distanceBetweenLatLng } from '../../../../common/store/api/helpers';
 import useCuisines from '../../../../common/store/api/platform/hooks/useCuisines';
 // import { distanceBetweenLatLng } from '../../../../common/store/api/helpers';
 import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
-import { colors, padding, screens } from '../../../../common/styles';
+import { colors, halfPadding, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import DoubleHeader from '../components/DoubleHeader';
 import RestaurantListItem from './RestaurantListItem';
@@ -79,11 +79,11 @@ export default function ({ items, ListHeaderComponent, onSelect, onEndReached }:
       sections={sections}
       keyExtractor={(item) => item.objectID}
       renderItem={({ item }) => (
-        <View style={{ marginTop: padding }}>
+        <View style={{ marginTop: halfPadding }}>
           <TouchableOpacity onPress={() => onSelect(item.objectID)}>
             <RestaurantListItem
               restaurant={item}
-              cuisine={findCuisineById(item.cuisine?.id)?.name}
+              cuisine={findCuisineById(item.cuisine)?.name}
               distance={
                 location && item.businessAddress?.latlng
                   ? distanceBetweenLatLng(location, item.businessAddress.latlng)

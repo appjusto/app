@@ -58,7 +58,7 @@ export const ProductListItem = ({ product, showRestaurantName }: Props) => {
           )}
         </View>
         <View>
-          <ListItemImage uri={imageURI} />
+          <ListItemImage uri={imageURI} height={80} width={80} />
         </View>
       </View>
     </View>

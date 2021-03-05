@@ -2,6 +2,7 @@ import { BusinessAlgolia } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../../common/components/texts/RoundedText';
+import HR from '../../../../common/components/views/HR';
 import { useBusinessLogoURI } from '../../../../common/store/api/business/hooks/useBusinessLogoURI';
 import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { formatDistance } from '../../../../common/utils/formatters';
@@ -18,24 +19,18 @@ export default function ({ restaurant, cuisine, distance }: Props) {
   const { data: logo } = useBusinessLogoURI(restaurant.objectID);
   const outOfRange = (restaurant.deliveryRange ?? 0) < (distance ?? 0);
   return (
-    <View style={{ marginTop: halfPadding }}>
-      <View
-        style={{
-          borderBottomWidth: 1,
-          borderStyle: 'solid',
-          width: '100%',
-          borderColor: colors.grey500,
-        }}
-      />
+    <View style={{ justifyContent: 'center' }}>
+      <HR />
       <View
         style={{
           flexDirection: 'row',
-          marginHorizontal: padding,
-          marginTop: halfPadding,
+          marginLeft: padding,
+          marginRight: 4,
           justifyContent: 'space-between',
+          paddingTop: halfPadding,
         }}
       >
-        <View style={{ marginTop: 12 }}>
+        <View style={{ justifyContent: 'center' }}>
           <Text style={{ ...texts.sm }}>{restaurant.name}</Text>
           <Text style={{ ...texts.xs, color: colors.green600 }}>{t(cuisine ?? '')}</Text>
           {distance && !outOfRange && (
@@ -56,7 +51,7 @@ export default function ({ restaurant, cuisine, distance }: Props) {
             justifyContent: 'space-between',
           }}
         >
-          <ListItemImage uri={logo} />
+          <ListItemImage uri={logo} height={80} width={64} />
         </View>
       </View>
     </View>

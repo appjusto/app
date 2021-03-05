@@ -4,15 +4,16 @@ import { borders, colors } from '../../../../common/styles';
 
 interface Props {
   uri: string | undefined | null;
-  size?: number;
+  height: number;
+  width: number;
 }
 
-export const ListItemImage = ({ uri, size = 80 }: Props) => {
+export const ListItemImage = ({ uri, height, width }: Props) => {
   return (
     <View
       style={{
-        width: size,
-        height: size,
+        width,
+        height,
         backgroundColor: colors.grey50,
         ...borders.default,
         borderColor: colors.white,
@@ -24,7 +25,7 @@ export const ListItemImage = ({ uri, size = 80 }: Props) => {
           source={{
             uri,
           }}
-          style={{ width: size, height: size }}
+          style={{ width, height }}
           borderRadius={8}
           resizeMode="cover"
         />
