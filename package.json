@@ -12,6 +12,8 @@
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.8.0",
     "@expo/vector-icons": "^12.0.0",
+    "@fnando/cnpj": "^1.0.2",
+    "@fnando/cpf": "^1.0.2",
     "@mapbox/polyline": "^1.1.1",
     "@react-native-community/async-storage": "~1.12.0",
     "@react-native-community/masked-view": "0.1.10",
@@ -48,7 +50,6 @@
     "firebase": "7.9.0",
     "geofirestore": "^4.2.1",
     "geokit": "^1.1.0",
-    "gerador-validador-cpf": "^5.0.0-beta.0",
     "i18n-js": "^3.7.1",
     "lodash": "^4.17.19",
     "nanoid": "^3.1.10",

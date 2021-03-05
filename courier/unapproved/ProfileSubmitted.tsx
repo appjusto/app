@@ -1,7 +1,8 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
+import { ApiContext } from '../../common/app/context';
 import FeedbackView from '../../common/components/views/FeedbackView';
 import { IconMotocycle } from '../../common/icons/icon-motocycle';
 import { getCourier } from '../../common/store/courier/selectors';
@@ -18,12 +19,24 @@ type Props = {
 };
 
 export default function ({ navigation }: Props) {
-  // state
+  // context
+  const api = React.useContext(ApiContext);
+  // redux
   const courier = useSelector(getCourier)!;
   // side effects
-  useEffect(() => {
-    if (courier.situation === 'pending') navigation.replace('ProfilePending');
-  }, [courier.situation]);
+  React.useEffect(() => {
+    if (courier.situation === 'submitted') {
+      api.courier().verifyProfile();
+    } else if (courier.situation === 'pending') {
+      setTimeout(() => {
+        navigation.replace('ProfilePending');
+      }, 100);
+    } else if (courier.situation === 'rejected') {
+      setTimeout(() => {
+        navigation.replace('ProfileRejected');
+      }, 100);
+    }
+  }, [courier, navigation, api]);
   // UI
   return (
     <FeedbackView

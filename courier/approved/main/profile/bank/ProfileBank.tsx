@@ -2,7 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Bank, BankAccountType } from 'appjusto-types';
 import { isEmpty } from 'lodash';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React from 'react';
 import { Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,8 +10,11 @@ import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
-import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
+import { hyphenFormatter } from '../../../../../common/components/inputs/pattern-input/formatters';
+import { numbersAndLettersParser } from '../../../../../common/components/inputs/pattern-input/parsers';
+import PatternInput from '../../../../../common/components/inputs/PatternInput';
 import LabeledText from '../../../../../common/components/texts/LabeledText';
+import useBanks from '../../../../../common/store/api/platform/hooks/useBanks';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { bankAccountSet } from '../../../../../common/store/courier/validators';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
@@ -31,60 +34,64 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const dispatch = useDispatch<AppDispatch>();
-  const api = useContext(ApiContext);
-
-  // app state
+  const api = React.useContext(ApiContext);
+  // redux
   const busy = useSelector(getUIBusy);
-  const courier = useSelector(getCourier);
-
+  const courier = useSelector(getCourier)!;
   // screen state
-  const [bank, setBank] = useState<null | Bank>(null);
-  const [agency, setAgency] = useState<string>('');
-  const [type, setType] = useState<BankAccountType>();
-  const [account, setAccount] = useState<string>('');
-  const [digit, setDigit] = useState<string>('');
-  const canSubmit = useMemo(() => {
-    return bank != null && !isEmpty(agency) && !isEmpty(account) && !isEmpty(digit);
-  }, [bank, agency, account, digit]);
-
+  const banks = useBanks();
+  const [type, setType] = React.useState<BankAccountType>('Corrente');
+  const [selectedBank, setSelectedBank] = React.useState<Bank>();
+  const [agency, setAgency] = React.useState('');
+  const [account, setAccount] = React.useState('');
+  const canSubmit = selectedBank && !isEmpty(agency) && !isEmpty(account);
   // refs
-  const accountRef = useRef<TextInput>(null);
-  const digitRef = useRef<TextInput>(null);
-
+  const accountRef = React.useRef<TextInput>(null);
   // side effects
   // checking initial bank information
-  useEffect(() => {
-    if (bankAccountSet(courier)) {
-      const { bankAccount } = courier!;
-      const courierBank: Bank = {
-        name: bankAccount!.name!,
-      };
-      setBank(courierBank);
-      setAgency(bankAccount!.agency!);
-      setAccount(bankAccount!.account);
-      setDigit(bankAccount!.digit!);
-      setType(bankAccount!.type);
+  React.useEffect(() => {
+    const { bankAccount } = courier;
+    if (bankAccount && bankAccountSet(bankAccount)) {
+      const bank = banks?.find((b) => b.name === bankAccount?.name);
+      if (bank) {
+        setSelectedBank(bank);
+        setType(bankAccount!.type);
+        setAgency(bankAccount!.agency!);
+        setAccount(bankAccount!.account);
+      }
     }
-  }, []);
-  // update bank according with route parameters
-  useEffect(() => {
+  }, [banks, courier]);
+  React.useEffect(() => {
     const { bank } = route.params ?? {};
-    if (bank) setBank(bank);
+    if (bank) setSelectedBank(bank);
   }, [route.params]);
-
+  // helpers
+  const agencyParser = selectedBank?.agencyPattern
+    ? numbersAndLettersParser(selectedBank?.agencyPattern)
+    : undefined;
+  const agencyFormatter = selectedBank?.agencyPattern
+    ? hyphenFormatter(selectedBank?.agencyPattern.indexOf('-'))
+    : undefined;
+  const accountParser = selectedBank?.accountPattern
+    ? numbersAndLettersParser(selectedBank?.accountPattern)
+    : undefined;
+  const accountFormatter = selectedBank?.accountPattern
+    ? hyphenFormatter(selectedBank?.accountPattern.indexOf('-'))
+    : undefined;
   //handlers
   const submitBankHandler = async () => {
-    if (!bank || !agency || !account || !digit || !type) {
+    if (!selectedBank || !agency || !account || !type) {
       return;
     }
     await dispatch(
       updateProfile(api)(courier!.id!, {
         bankAccount: {
-          ...bank,
-          agency,
-          account,
-          digit,
           type,
+          name: selectedBank.name,
+          agency,
+          agencyFormatted: agencyFormatter!(agency),
+          account,
+          accountFormatted: accountFormatter!(account),
         },
       })
     );
@@ -128,46 +135,68 @@ export default function ({ navigation, route }: Props) {
             >
               <View>
                 <LabeledText style={{ marginTop: padding }} title={t('Banco')}>
-                  {bank?.name ?? t('Nome do seu banco')}
+                  {selectedBank?.name ?? t('Escolha seu banco')}
                 </LabeledText>
               </View>
             </TouchableWithoutFeedback>
-            <DefaultInput
+            <PatternInput
+              key={selectedBank?.name}
               style={{ marginTop: 16 }}
               title={t('Agência')}
-              placeholder={t('Número da agência sem o dígito')}
+              placeholder={
+                (selectedBank?.agencyPattern.indexOf('D') ?? -1) > -1
+                  ? t('Número da agência com o dígito')
+                  : t('Número da agência')
+              }
               value={agency}
-              onChangeText={(text) => setAgency(text)}
+              mask={selectedBank?.agencyPattern}
+              parser={agencyParser}
+              formatter={agencyFormatter}
+              editable={!!selectedBank}
               keyboardType="number-pad"
               returnKeyType="next"
-              maxLength={5}
               blurOnSubmit={false}
-              onSubmitEditing={() => accountRef.current?.focus()}
+              onChangeText={(text) => setAgency(text)}
+              onBlur={() => {
+                if (agency.length > 0) {
+                  const paddedAgency = numbersAndLettersParser(
+                    selectedBank!.agencyPattern,
+                    true
+                  )(agency);
+                  setAgency(paddedAgency);
+                }
+                accountRef.current?.focus();
+              }}
             />
             <View style={{ marginTop: 16, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <DefaultInput
+              <PatternInput
+                key={selectedBank?.name}
                 ref={accountRef}
                 style={{ flex: 7 }}
                 title={t('Conta')}
-                placeholder={t('Número sem o dígito')}
+                placeholder={
+                  (selectedBank?.accountPattern.indexOf('D') ?? -1) > -1
+                    ? t('Número da conta com o dígito')
+                    : t('Número da conta')
+                }
                 value={account}
-                onChangeText={(text) => setAccount(text)}
+                mask={selectedBank?.accountPattern}
+                parser={accountParser}
+                formatter={accountFormatter}
+                editable={!!selectedBank}
                 keyboardType="number-pad"
-                returnKeyType="next"
-                maxLength={20}
-                blurOnSubmit={false}
-                onSubmitEditing={() => digitRef.current?.focus()}
-              />
-              <DefaultInput
-                ref={digitRef}
-                style={{ flex: 3, marginLeft: halfPadding }}
-                title={t('Dígito')}
-                value={digit}
-                onChangeText={(text) => setDigit(text)}
-                keyboardType="default"
-                maxLength={1}
                 returnKeyType="done"
                 blurOnSubmit
+                onChangeText={(text) => setAccount(text)}
+                onBlur={() => {
+                  if (account.length > 0) {
+                    const paddedAccount = numbersAndLettersParser(
+                      selectedBank!.accountPattern,
+                      true
+                    )(account);
+                    setAccount(paddedAccount);
+                  }
+                }}
               />
             </View>
           </View>

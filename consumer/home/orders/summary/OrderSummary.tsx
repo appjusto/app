@@ -26,7 +26,7 @@ type Props = {
   onEditStep: (step: Step) => void;
   onEditItemPress?: (productId: string, itemId: string) => void;
   onAddItemsPress?: () => void;
-  placeOrder: (fleetId: string, platformFee: number) => void;
+  placeOrder: (fleetId: string) => void;
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;
 };
@@ -128,7 +128,7 @@ export const OrderSummary = ({
         selectedPaymentMethodId={selectedPaymentMethodId}
         onEditPaymentMethod={navigateToFillPaymentInfo}
         isSubmitEnabled={canSubmit}
-        onSubmit={() => placeOrder(selectedFare?.fleet?.id!, 100)}
+        onSubmit={() => placeOrder(selectedFare?.fleet?.id!)}
         activityIndicator={busy}
       />
     </ScrollView>

@@ -8,6 +8,7 @@ export default class FirebaseRefs {
 
   // functions
   getSubmitProfileCallable = () => this.functions.httpsCallable('submitProfile');
+  getVerifyProfileCallable = () => this.functions.httpsCallable('verifyProfile');
   getDeleteAccountCallable = () => this.functions.httpsCallable('deleteAccount');
   // consumer
   getFetchTotalCouriersNearbyCallable = () =>

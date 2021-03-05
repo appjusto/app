@@ -23,7 +23,7 @@ type Props = {
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;
   navigateToTransportableItems: () => void;
-  placeOrder: (fleetId: string, platformFee: number) => Promise<void>;
+  placeOrder: (fleetId: string) => Promise<void>;
 };
 
 export default function ({

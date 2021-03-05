@@ -2,7 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ProfileSituation } from 'appjusto-types';
 import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../common/app/context';
@@ -46,31 +46,28 @@ export default function ({ navigation, route }: Props) {
   // screen state
   const situationsAllowed: ProfileSituation[] = ['pending'];
   const hasPersonalInfo = courierInfoSet(courier);
-  const hasCompanyInfo = companyInfoSet(courier);
+  const hasCompanyInfo = courier.company && companyInfoSet(courier.company);
   const hasImages = !!currentSelfieQuery.data && !!currentDocumentImageQuery.data;
-  const hasBankAccount = bankAccountSet(courier);
+  const hasBankAccount = courier.bankAccount && bankAccountSet(courier.bankAccount);
   const totalSteps = 4;
   const [stepsDone, setStepsDone] = React.useState(0);
   const submitEnabled = situationsAllowed.includes(courier.situation) && stepsDone === totalSteps;
-
   // side effects
   // once
   React.useEffect(() => {
     // although this screen is named 'ProfilePending', it's also the first screen of UnapprovedNavigator
     // which means that it will be shown if courier is rejected. so, if that's the case,
     // we navigate to ProfileRejected after a short delay to make sure it will work on all devices
-    if (courier.situation === 'rejected') {
+    if (courier.situation === 'submitted') {
+      setTimeout(() => {
+        navigation.replace('ProfileSubmitted');
+      }, 100);
+    } else if (courier.situation === 'rejected') {
       setTimeout(() => {
         navigation.replace('ProfileRejected');
-      }, 500);
+      }, 100);
     }
-  }, []);
-  // whenever situation changes
-  React.useEffect(() => {
-    if (courier.situation === 'submitted') {
-      navigation.replace('ProfileSubmitted');
-    }
-  }, [courier.situation]);
+  }, [courier, navigation]);
 
   // whenever state updates
   // recalculate steps done
@@ -81,13 +78,7 @@ export default function ({ navigation, route }: Props) {
     if (hasImages) totalSteps++;
     if (hasBankAccount) totalSteps++;
     setStepsDone(totalSteps);
-  }, [
-    hasPersonalInfo,
-    hasBankAccount,
-    currentSelfieQuery.data,
-    currentDocumentImageQuery.data,
-    hasCompanyInfo,
-  ]);
+  }, [hasPersonalInfo, hasCompanyInfo, hasImages, hasBankAccount, setStepsDone]);
   // whenever screen is focused
   React.useEffect(() => {
     navigation.addListener('focus', focusHandler);
@@ -97,11 +88,11 @@ export default function ({ navigation, route }: Props) {
   // handlers
   const submitHandler = React.useCallback(() => {
     dispatch(submitProfile(api));
-  }, []);
+  }, [api, dispatch]);
   // when focused, refetch queries to recalculate of steps done
   const focusHandler = React.useCallback(() => {
     queryClient.refetchQueries();
-  }, []);
+  }, [queryClient]);
 
   // UI
   return (
@@ -116,11 +107,13 @@ export default function ({ navigation, route }: Props) {
             disabled={!submitEnabled || busy}
             activityIndicator={busy}
           />
-          <Text style={[texts.sm, { color: colors.grey700, paddingTop: 16 }]}>
-            {t(
-              'Preencha os dados a seguir e envie seu cadastro. Em até um dia você poderá começar a fazer suas entregas.'
-            )}
-          </Text>
+          <Pressable delayLongPress={3000} onLongPress={() => navigation.navigate('ProfileErase')}>
+            <Text style={[texts.sm, { color: colors.grey700, paddingTop: 16 }]}>
+              {t(
+                'Preencha os dados a seguir e envie seu cadastro. Em até um dia você poderá começar a fazer suas entregas.'
+              )}
+            </Text>
+          </Pressable>
           <Text style={{ ...texts.sm, color: colors.green600, paddingTop: 16 }}>
             {stepsDone} {t('de')} {totalSteps} {t('dados preenchidos')}
           </Text>
@@ -143,7 +136,7 @@ export default function ({ navigation, route }: Props) {
           title={t('Dados da sua empresa')}
           subtitle={t('Preencha os dados da sua empresa ou MEI')}
           onPress={() => navigation.navigate('ProfileCompany')}
-          checked={companyInfoSet(courier)}
+          checked={courier.company && companyInfoSet(courier.company)}
         />
         <ConfigItem
           title={t('Fotos e documentos')}
@@ -154,8 +147,8 @@ export default function ({ navigation, route }: Props) {
         <ConfigItem
           title={t('Dados bancários')}
           subtitle={t('Cadastre seu banco para recebimento')}
-          onPress={() => navigation.navigate('BankNavigator')}
-          checked={bankAccountSet(courier)}
+          onPress={() => navigation.navigate('BankNavigator', { screen: 'ProfileBank' })}
+          checked={courier.bankAccount && bankAccountSet(courier.bankAccount)}
         />
       </ScrollView>
     </View>

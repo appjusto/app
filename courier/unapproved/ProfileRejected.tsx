@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useCallback, useContext, useEffect } from 'react';
+import React from 'react';
 import { Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../../assets/icons';
@@ -24,18 +24,18 @@ type Props = {
 
 export default function ({ navigation }: Props) {
   // context
-  const api = useContext(ApiContext);
+  const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // app state
   const courier = useSelector(getCourier)!;
   const busy = useSelector(getUIBusy);
   // side effects
-  useEffect(() => {
+  React.useEffect(() => {
     if (courier.situation === 'pending') navigation.replace('ProfilePending');
     else if (courier.situation === 'submitted') navigation.replace('ProfileSubmitted');
-  }, [courier.situation]);
+  }, [courier.situation, navigation]);
   // handlers
-  const updateProfileHandler = useCallback(() => {
+  const updateProfileHandler = () => {
     (async () => {
       try {
         await dispatch(updateProfile(api)(courier.id, { situation: 'pending' }));
@@ -43,7 +43,7 @@ export default function ({ navigation }: Props) {
         dispatch(showToast(error.toSring()));
       }
     })();
-  }, []);
+  };
   // UI
   return (
     <FeedbackView

@@ -1,6 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { defaultScreenOptions } from '../../common/screens/options';
+import ProfileErase from '../../common/screens/profile/ProfileErase';
 import { t } from '../../strings';
 import BankNavigator from '../approved/main/profile/bank/BankNavigator';
 import FleetNavigator from '../approved/main/profile/fleet/FleetNavigator';
@@ -55,6 +56,11 @@ export default function () {
         name="ProfileRejected"
         component={ProfileRejected}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ProfileErase"
+        component={ProfileErase}
+        options={{ headerShown: true, title: t('Cancelar cadastro') }}
       />
     </Stack.Navigator>
   );
