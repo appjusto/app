@@ -35,51 +35,63 @@ export default function ({ navigation, route }: Props) {
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
-
   // redux
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier)!;
-
   // screen state
   const banks = useBanks();
   const [type, setType] = React.useState<BankAccountType>('Corrente');
-  const [bank, setBank] = React.useState<Bank>();
+  const [selectedBank, setSelectedBank] = React.useState<Bank>();
   const [agency, setAgency] = React.useState('');
   const [account, setAccount] = React.useState('');
-  const canSubmit = bank && !isEmpty(agency) && !isEmpty(account);
-
+  const canSubmit = selectedBank && !isEmpty(agency) && !isEmpty(account);
   // refs
   const accountRef = React.useRef<TextInput>(null);
-
   // side effects
   // checking initial bank information
   React.useEffect(() => {
     if (bankAccountSet(courier)) {
       const { bankAccount } = courier;
-      setBank(banks?.find((b) => b.name === bankAccount?.name));
-      setType(bankAccount!.type);
-      setAgency(bankAccount!.agency!);
-      setAccount(bankAccount!.account);
+      const bank = banks?.find((b) => b.name === bankAccount?.name);
+      if (bank) {
+        setSelectedBank(bank);
+        setType(bankAccount!.type);
+        setAgency(bankAccount!.agency!);
+        setAccount(bankAccount!.account);
+      }
     }
   }, [banks, courier]);
-  // update bank according with route parameters
   React.useEffect(() => {
     const { bank } = route.params ?? {};
-    if (bank) setBank(bank);
+    if (bank) setSelectedBank(bank);
   }, [route.params]);
-
+  // helpers
+  const agencyParser = selectedBank?.agencyPattern
+    ? numbersAndLettersParser(selectedBank?.agencyPattern)
+    : undefined;
+  const agencyFormatter = selectedBank?.agencyPattern
+    ? hyphenFormatter(selectedBank?.agencyPattern.indexOf('-'))
+    : undefined;
+  const accountParser = selectedBank?.accountPattern
+    ? numbersAndLettersParser(selectedBank?.accountPattern)
+    : undefined;
+  const accountFormatter = selectedBank?.accountPattern
+    ? hyphenFormatter(selectedBank?.accountPattern.indexOf('-'))
+    : undefined;
   //handlers
   const submitBankHandler = async () => {
-    if (!bank || !agency || !account || !type) {
+    if (!selectedBank || !agency || !account || !type) {
       return;
     }
     await dispatch(
       updateProfile(api)(courier!.id!, {
         bankAccount: {
-          ...bank,
-          agency,
-          account,
           type,
+          name: selectedBank.name,
+          agency,
+          agencyFormatted: agencyFormatter!(agency),
+          account,
+          accountFormatted: accountFormatter!(account),
         },
       })
     );
@@ -123,35 +135,34 @@ export default function ({ navigation, route }: Props) {
             >
               <View>
                 <LabeledText style={{ marginTop: padding }} title={t('Banco')}>
-                  {bank?.name ?? t('Escolha seu banco')}
+                  {selectedBank?.name ?? t('Escolha seu banco')}
                 </LabeledText>
               </View>
             </TouchableWithoutFeedback>
             <PatternInput
-              key={bank?.name}
+              key={selectedBank?.name}
               style={{ marginTop: 16 }}
               title={t('Agência')}
               placeholder={
-                (bank?.agencyPattern.indexOf('D') ?? -1) > -1
+                (selectedBank?.agencyPattern.indexOf('D') ?? -1) > -1
                   ? t('Número da agência com o dígito')
                   : t('Número da agência')
               }
               value={agency}
-              mask={bank?.agencyPattern}
-              parser={
-                bank?.agencyPattern ? numbersAndLettersParser(bank?.agencyPattern) : undefined
-              }
-              formatter={
-                bank?.agencyPattern ? hyphenFormatter(bank?.agencyPattern.indexOf('-')) : undefined
-              }
-              editable={!!bank}
+              mask={selectedBank?.agencyPattern}
+              parser={agencyParser}
+              formatter={agencyFormatter}
+              editable={!!selectedBank}
               keyboardType="number-pad"
               returnKeyType="next"
               blurOnSubmit={false}
               onChangeText={(text) => setAgency(text)}
               onBlur={() => {
                 if (agency.length > 0) {
-                  const paddedAgency = numbersAndLettersParser(bank!.agencyPattern, true)(agency);
+                  const paddedAgency = numbersAndLettersParser(
+                    selectedBank!.agencyPattern,
+                    true
+                  )(agency);
                   setAgency(paddedAgency);
                 }
                 accountRef.current?.focus();
@@ -159,26 +170,20 @@ export default function ({ navigation, route }: Props) {
             />
             <View style={{ marginTop: 16, flexDirection: 'row', justifyContent: 'space-between' }}>
               <PatternInput
-                key={bank?.name}
+                key={selectedBank?.name}
                 ref={accountRef}
                 style={{ flex: 7 }}
                 title={t('Conta')}
                 placeholder={
-                  (bank?.accountPattern.indexOf('D') ?? -1) > -1
+                  (selectedBank?.accountPattern.indexOf('D') ?? -1) > -1
                     ? t('Número da conta com o dígito')
                     : t('Número da conta')
                 }
                 value={account}
-                mask={bank?.accountPattern}
-                parser={
-                  bank?.accountPattern ? numbersAndLettersParser(bank?.accountPattern) : undefined
-                }
-                formatter={
-                  bank?.accountPattern
-                    ? hyphenFormatter(bank?.accountPattern.indexOf('-'))
-                    : undefined
-                }
-                editable={!!bank}
+                mask={selectedBank?.accountPattern}
+                parser={accountParser}
+                formatter={accountFormatter}
+                editable={!!selectedBank}
                 keyboardType="number-pad"
                 returnKeyType="done"
                 blurOnSubmit
@@ -186,7 +191,7 @@ export default function ({ navigation, route }: Props) {
                 onBlur={() => {
                   if (account.length > 0) {
                     const paddedAccount = numbersAndLettersParser(
-                      bank!.accountPattern,
+                      selectedBank!.accountPattern,
                       true
                     )(account);
                     setAccount(paddedAccount);
