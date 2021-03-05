@@ -16,6 +16,9 @@ export default class CourierApi {
   async submitProfile() {
     return this.refs.getSubmitProfileCallable()();
   }
+  async verifyProfile() {
+    return this.refs.getVerifyProfileCallable()();
+  }
   async fetchTotalCouriersNearby(
     location: LatLng,
     distance: number = 15000

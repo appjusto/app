@@ -62,7 +62,7 @@ export default class Api {
     this._files = new FilesApi(this.storage);
     this._auth = new AuthApi(this._refs, this.authentication, extra);
     this._platform = new PlatformApi(this._refs, this._files);
-    this._profile = new ProfileApi(this.firestore, collectionName);
+    this._profile = new ProfileApi(this.firestore, this._auth, collectionName);
     this._courier = new CourierApi(this._refs, this._files);
     this._fleet = new FleetApi(this._refs);
     this._consumer = new ConsumerApi(this._refs, this._iugu);

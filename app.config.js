@@ -21,8 +21,8 @@ const {
 } = process.env;
 
 export default () => {
-  const version = '0.6.0';
-  const versionCode = 11;
+  const version = '0.7.0';
+  const versionCode = 12;
   const flavor = process.env.FLAVOR;
   const appId = `com.appjusto.${flavor}`;
   const icon = (platform) => `./assets/icon-${flavor}-${platform}.png`;
@@ -76,6 +76,7 @@ export default () => {
       apiKey: ALGOLIA_APIKEY,
       env: ALGOLIA_ENV,
     },
+    testing: true,
   };
   return {
     expo: {

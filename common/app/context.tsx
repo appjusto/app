@@ -42,8 +42,8 @@ export const AppContext = ({ children }: Props) => {
   }
 
   // debug only
-  if (Platform.OS === 'android') {
-    ToastAndroid.show(Constants.manifest.revisionId ?? '', ToastAndroid.LONG);
+  if (Platform.OS === 'android' && extra.testing) {
+    ToastAndroid.show('Testing mode ' + Constants.manifest.revisionId ?? '', ToastAndroid.LONG);
   }
 
   // UI

@@ -53,16 +53,16 @@ export const OrderCheckout = ({ navigation, route }: Props) => {
     if (order?.items?.length === 0) navigation.pop();
   }, [order, navigation]);
   // handlers
-  const placeOrderHandler = async (fleetId: string, platformFee: number) => {
+  const placeOrderHandler = async (fleetId: string) => {
     if (!order) return;
     if (!selectedPaymentMethodId) return;
     try {
       setLoading(true);
       await api.order().placeOrder({
         orderId: order.id,
+        payableWith: 'credit_card',
         paymentMethodId: selectedPaymentMethodId,
         fleetId,
-        platformFee,
       });
       setLoading(false);
       navigation.replace('OrderNavigator', {

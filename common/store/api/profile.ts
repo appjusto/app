@@ -1,11 +1,16 @@
 import { ConsumerProfile, CourierProfile, UserProfile, WithId } from 'appjusto-types';
 import firebase from 'firebase';
 import * as geofirestore from 'geofirestore';
+import AuthApi from './auth';
 import { documentAs } from './types';
 
 export default class ProfileApi {
   private firestoreWithGeo: geofirestore.GeoFirestore;
-  constructor(private firestore: firebase.firestore.Firestore, private collectionName: string) {
+  constructor(
+    private firestore: firebase.firestore.Firestore,
+    private auth: AuthApi,
+    private collectionName: string
+  ) {
     this.firestoreWithGeo = geofirestore.initializeApp(this.firestore);
   }
 
@@ -16,6 +21,7 @@ export default class ProfileApi {
   private async createProfile(id: string) {
     await this.getProfileRef(id).set({
       situation: 'pending',
+      email: this.auth.getEmail(),
     } as UserProfile);
   }
 

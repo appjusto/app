@@ -37,6 +37,7 @@ export default class OrderApi {
       },
       consumer: {
         id: consumer.id,
+        email: consumer.email ?? '',
         name: consumer.name ?? '',
       },
       origin: {
@@ -61,6 +62,7 @@ export default class OrderApi {
       status: 'quote',
       consumer: {
         id: consumer.id,
+        email: consumer.email ?? '',
         name: consumer.name ?? '',
       },
       origin,
