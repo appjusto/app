@@ -19,6 +19,7 @@ export interface Extra {
     accountId: string;
   };
   algolia: AlgoliaConfig;
+  testing: boolean;
 }
 
 export interface AlgoliaConfig {

@@ -1,9 +1,10 @@
+import * as cpfutils from '@fnando/cpf';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CourierProfile } from 'appjusto-types';
 import { trim } from 'lodash';
-import React, { useContext, useMemo, useRef, useState } from 'react';
-import { TextInput, View } from 'react-native';
+import React from 'react';
+import { Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
@@ -23,7 +24,7 @@ import { courierInfoSet } from '../../../../common/store/courier/validators';
 import { showToast } from '../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
-import { padding, screens } from '../../../../common/styles';
+import { colors, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { CourierProfileParamList } from './types';
 
@@ -38,30 +39,23 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const dispatch = useDispatch<AppDispatch>();
-  const api = useContext(ApiContext);
-
-  // refs
-  const surnameRef = useRef<TextInput>(null);
-  const cpfRef = useRef<TextInput>(null);
-  const phoneRef = useRef<TextInput>(null);
-
-  // app state
+  const api = React.useContext(ApiContext);
+  // redux
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier)!;
-
   // state
-  const [name, setName] = useState<string>(courier.name ?? '');
-  const [surname, setSurname] = useState(courier.surname ?? '');
-  const [phone, setPhone] = useState(courier.phone ?? '');
-  const [cpf, setCpf] = useState(courier.cpf! ?? '');
-  const updatedCourier: Partial<CourierProfile> = useMemo(() => ({ name, surname, phone, cpf }), [
-    name,
-    surname,
-    phone,
-    cpf,
-  ]);
-  const canSubmit = useMemo(() => courierInfoSet(updatedCourier), [updatedCourier]);
-
+  const [name, setName] = React.useState<string>(courier.name ?? '');
+  const [surname, setSurname] = React.useState(courier.surname ?? '');
+  const [phone, setPhone] = React.useState(courier.phone ?? '');
+  const [cpf, setCpf] = React.useState(courier.cpf! ?? '');
+  const [focusedField, setFocusedField] = React.useState<string>();
+  // helpers
+  const updatedCourier: Partial<CourierProfile> = { name, surname, phone, cpf };
+  const canSubmit = courierInfoSet(updatedCourier);
+  // refs
+  const surnameRef = React.useRef<TextInput>(null);
+  const cpfRef = React.useRef<TextInput>(null);
+  const phoneRef = React.useRef<TextInput>(null);
   // handlers
   const updateProfileHandler = async () => {
     try {
@@ -71,7 +65,6 @@ export default function ({ navigation, route }: Props) {
       dispatch(showToast(t('Não foi possível atualizar seu perfil.')));
     }
   };
-
   // UI
   return (
     <View style={screens.config}>
@@ -113,6 +106,8 @@ export default function ({ navigation, route }: Props) {
             keyboardType="number-pad"
             returnKeyType="next"
             blurOnSubmit={false}
+            onFocus={() => setFocusedField('cpf')}
+            onBlur={() => setFocusedField(undefined)}
             onChangeText={(text) => setCpf(trim(text))}
             onSubmitEditing={() => phoneRef.current?.focus()}
           />
@@ -131,7 +126,11 @@ export default function ({ navigation, route }: Props) {
             blurOnSubmit
             onChangeText={(text) => setPhone(trim(text))}
           />
-
+          {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
+            <Text style={{ ...texts.sm, ...texts.bold, color: colors.grey700, marginTop: padding }}>
+              {t('O CPF digitado não é válido.')}
+            </Text>
+          )}
           <DefaultButton
             style={{ marginTop: padding }}
             title={t('Atualizar')}

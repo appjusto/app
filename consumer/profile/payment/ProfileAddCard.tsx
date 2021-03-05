@@ -1,9 +1,9 @@
+import * as cpfutils from '@fnando/cpf';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { validate } from 'gerador-validador-cpf';
 import { isEmpty, toNumber, trim } from 'lodash';
 import React from 'react';
-import { TextInput, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -20,7 +20,7 @@ import { numbersOnlyParser } from '../../../common/components/inputs/pattern-inp
 import PatternInput from '../../../common/components/inputs/PatternInput';
 import useAxiosCancelToken from '../../../common/hooks/useAxiosCancelToken';
 import { showToast } from '../../../common/store/ui/actions';
-import { padding, screens } from '../../../common/styles';
+import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ProfileParamList } from '../types';
 
@@ -38,13 +38,6 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  // refs
-  const expirationMonthRef = React.useRef<TextInput>(null);
-  const expirationYearRef = React.useRef<TextInput>(null);
-  const cvvRef = React.useRef<TextInput>(null);
-  const nameRef = React.useRef<TextInput>(null);
-  const surnameRef = React.useRef<TextInput>(null);
-  const cpfRef = React.useRef<TextInput>(null);
   // state
   const [number, setNumber] = React.useState('');
   const [month, setMonth] = React.useState('');
@@ -53,18 +46,16 @@ export default function ({ navigation, route }: Props) {
   const [name, setName] = React.useState('');
   const [surname, setSurname] = React.useState('');
   const [cpf, setCPF] = React.useState('');
+  const [focusedField, setFocusedField] = React.useState<string>();
   const [isLoading, setLoading] = React.useState(false);
-  const canSubmit = React.useMemo(() => {
-    return (
-      !isEmpty(number) &&
-      !isEmpty(month) &&
-      !isEmpty(year) &&
-      !isEmpty(cvv) &&
-      !isEmpty(name) &&
-      !isEmpty(surname) &&
-      validate(cpf)
-    );
-  }, [number, month, year, cvv, name, surname, cpf]);
+  const canSubmit =
+    !isEmpty(number) &&
+    !isEmpty(month) &&
+    !isEmpty(year) &&
+    !isEmpty(cvv) &&
+    !isEmpty(name) &&
+    !isEmpty(surname) &&
+    cpfutils.isValid(cpf);
   // UI handlers
   const createCancelToken = useAxiosCancelToken();
   const saveCardHandler = async () => {
@@ -90,7 +81,13 @@ export default function ({ navigation, route }: Props) {
       dispatch(showToast(error.toString()));
     }
   };
-
+  // refs
+  const expirationMonthRef = React.useRef<TextInput>(null);
+  const expirationYearRef = React.useRef<TextInput>(null);
+  const cvvRef = React.useRef<TextInput>(null);
+  const nameRef = React.useRef<TextInput>(null);
+  const surnameRef = React.useRef<TextInput>(null);
+  const cpfRef = React.useRef<TextInput>(null);
   // UI
   return (
     <View style={screens.config}>
@@ -208,10 +205,17 @@ export default function ({ navigation, route }: Props) {
             keyboardType="number-pad"
             returnKeyType="done"
             blurOnSubmit
+            onFocus={() => setFocusedField('cpf')}
+            onBlur={() => setFocusedField(undefined)}
             onChangeText={(text) => {
               if (!isNaN(toNumber(text))) setCPF(text);
             }}
           />
+          {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
+            <Text style={{ ...texts.sm, ...texts.bold, color: colors.grey700, marginTop: padding }}>
+              {t('O CPF digitado não é válido.')}
+            </Text>
+          )}
           <DefaultButton
             style={{ marginTop: padding }}
             title={t('Salvar')}

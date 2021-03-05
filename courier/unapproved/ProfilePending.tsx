@@ -46,9 +46,9 @@ export default function ({ navigation, route }: Props) {
   // screen state
   const situationsAllowed: ProfileSituation[] = ['pending'];
   const hasPersonalInfo = courierInfoSet(courier);
-  const hasCompanyInfo = companyInfoSet(courier);
+  const hasCompanyInfo = courier.company && companyInfoSet(courier.company);
   const hasImages = !!currentSelfieQuery.data && !!currentDocumentImageQuery.data;
-  const hasBankAccount = bankAccountSet(courier);
+  const hasBankAccount = courier.bankAccount && bankAccountSet(courier.bankAccount);
   const totalSteps = 4;
   const [stepsDone, setStepsDone] = React.useState(0);
   const submitEnabled = situationsAllowed.includes(courier.situation) && stepsDone === totalSteps;
@@ -136,7 +136,7 @@ export default function ({ navigation, route }: Props) {
           title={t('Dados da sua empresa')}
           subtitle={t('Preencha os dados da sua empresa ou MEI')}
           onPress={() => navigation.navigate('ProfileCompany')}
-          checked={companyInfoSet(courier)}
+          checked={courier.company && companyInfoSet(courier.company)}
         />
         <ConfigItem
           title={t('Fotos e documentos')}
@@ -148,7 +148,7 @@ export default function ({ navigation, route }: Props) {
           title={t('Dados bancários')}
           subtitle={t('Cadastre seu banco para recebimento')}
           onPress={() => navigation.navigate('BankNavigator', { screen: 'ProfileBank' })}
-          checked={bankAccountSet(courier)}
+          checked={courier.bankAccount && bankAccountSet(courier.bankAccount)}
         />
       </ScrollView>
     </View>

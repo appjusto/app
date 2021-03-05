@@ -76,6 +76,7 @@ export default () => {
       apiKey: ALGOLIA_APIKEY,
       env: ALGOLIA_ENV,
     },
+    testing: true,
   };
   return {
     expo: {

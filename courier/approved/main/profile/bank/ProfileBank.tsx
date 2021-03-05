@@ -50,8 +50,8 @@ export default function ({ navigation, route }: Props) {
   // side effects
   // checking initial bank information
   React.useEffect(() => {
-    if (bankAccountSet(courier)) {
-      const { bankAccount } = courier;
+    const { bankAccount } = courier;
+    if (bankAccount && bankAccountSet(bankAccount)) {
       const bank = banks?.find((b) => b.name === bankAccount?.name);
       if (bank) {
         setSelectedBank(bank);

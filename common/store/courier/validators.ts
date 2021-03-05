@@ -1,5 +1,6 @@
-import { CourierProfile } from 'appjusto-types';
-import { validate } from 'gerador-validador-cpf';
+import * as cnpjutils from '@fnando/cnpj';
+import * as cpfutils from '@fnando/cpf';
+import { BankAccount, CourierCompany, CourierProfile } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 
 export const courierInfoSet = (courier: Partial<CourierProfile> | undefined): boolean => {
@@ -7,29 +8,26 @@ export const courierInfoSet = (courier: Partial<CourierProfile> | undefined): bo
   return (
     !isEmpty(courier.name) &&
     !isEmpty(courier.surname) &&
-    courier.cpf?.length === 11 &&
-    validate(courier.cpf!) &&
+    cpfutils.isValid(courier.cpf!) &&
     courier.phone?.length === 11
   );
 };
 
-export const companyInfoSet = (courier: Partial<CourierProfile> | undefined): boolean => {
-  if (!courier) return false;
+export const companyInfoSet = (company: CourierCompany): boolean => {
+  if (!company) return false;
   return (
-    !isEmpty(courier.company?.cnpj) &&
-    !isEmpty(courier.company?.name) &&
-    !isEmpty(courier.company?.cep) &&
-    !isEmpty(courier.company?.address) &&
-    !isEmpty(courier.company?.city) &&
-    !isEmpty(courier.company?.state)
+    !isEmpty(company.cnpj) &&
+    cnpjutils.isValid(company.cnpj) &&
+    !isEmpty(company.name) &&
+    !isEmpty(company.cep) &&
+    !isEmpty(company.address) &&
+    !isEmpty(company.city) &&
+    !isEmpty(company.state)
   );
 };
 
-export const bankAccountSet = (courier: Partial<CourierProfile> | undefined): boolean => {
-  if (!courier) return false;
+export const bankAccountSet = (bankAccount: BankAccount): boolean => {
   return (
-    !isEmpty(courier.bankAccount?.name) &&
-    !isEmpty(courier.bankAccount?.agency) &&
-    !isEmpty(courier.bankAccount?.account)
+    !isEmpty(bankAccount.name) && !isEmpty(bankAccount.agency) && !isEmpty(bankAccount.account)
   );
 };

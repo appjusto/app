@@ -1,9 +1,10 @@
+import * as cnpjutils from '@fnando/cnpj';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CourierCompany } from 'appjusto-types/courier';
 import { toNumber, trim } from 'lodash';
-import React, { useEffect, useMemo } from 'react';
-import { TextInput, View } from 'react-native';
+import React from 'react';
+import { Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../common/app/context';
@@ -19,9 +20,10 @@ import {
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
 import * as viacep from '../../../../common/store/api/externals/viacep';
+import { getExtra } from '../../../../common/store/config/selectors';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { companyInfoSet } from '../../../../common/store/courier/validators';
-import { padding, screens } from '../../../../common/styles';
+import { colors, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { CourierProfileParamList } from './types';
 
@@ -38,8 +40,11 @@ export default function ({ navigation, route }: Props) {
   const api = React.useContext(ApiContext);
   // redux store
   const courier = useSelector(getCourier)!;
+  const testing = useSelector(getExtra).testing;
   // state
-  const [cnpj, setCNPJ] = React.useState(courier.company?.cnpj ?? '');
+  const [cnpj, setCNPJ] = React.useState(
+    courier.company?.cnpj ?? (testing ? cnpjutils.generate() : '')
+  );
   const [name, setName] = React.useState(courier.company?.name ?? '');
   const [cep, setCEP] = React.useState<string>(courier.company?.cep ?? '');
   const [address, setAddress] = React.useState(courier.company?.address ?? '');
@@ -47,28 +52,26 @@ export default function ({ navigation, route }: Props) {
   const [additional, setAdditional] = React.useState(courier.company?.additional ?? '');
   const [city, setCity] = React.useState(courier.company?.city ?? '');
   const [state, setState] = React.useState(courier.company?.state ?? '');
+  const [focusedField, setFocusedField] = React.useState<string>();
   const [isLoading, setLoading] = React.useState(false);
-  const company: CourierCompany = useMemo(
-    () => ({
-      cnpj,
-      name: trim(name),
-      cep,
-      address: trim(address),
-      number,
-      city,
-      state,
-      additional: trim(additional),
-    }),
-    [cnpj, name, cep, address, number, city, state, additional]
-  );
-  const canSubmit = useMemo(() => companyInfoSet({ company }), [company]);
+  const company: CourierCompany = {
+    cnpj,
+    name: trim(name),
+    cep,
+    address: trim(address),
+    number,
+    city,
+    state,
+    additional: trim(additional),
+  };
+  const canSubmit = companyInfoSet(company);
   // refs
   const nameRef = React.useRef<TextInput>(null);
   const cepRef = React.useRef<TextInput>(null);
   const numberRef = React.useRef<TextInput>(null);
   const additionalRef = React.useRef<TextInput>(null);
   // effects
-  useEffect(() => {
+  React.useEffect(() => {
     if (cep.length === 8 && cepRef.current?.isFocused()) {
       (async () => {
         setLoading(true);
@@ -104,13 +107,15 @@ export default function ({ navigation, route }: Props) {
             title={t('CNPJ')}
             placeholder={t('Digite o CNPJ da empresa')}
             value={cnpj}
+            keyboardType="decimal-pad"
             returnKeyType="next"
             blurOnSubmit={false}
+            onFocus={() => setFocusedField('cnpj')}
+            onBlur={() => setFocusedField(undefined)}
             onChangeText={(text) => {
               if (!isNaN(toNumber(text))) setCNPJ(text);
             }}
             onSubmitEditing={() => nameRef.current?.focus()}
-            keyboardType="decimal-pad"
           />
           <DefaultInput
             ref={nameRef}
@@ -198,6 +203,11 @@ export default function ({ navigation, route }: Props) {
               keyboardType="default"
             />
           </View>
+          {cnpj.length > 0 && !cnpjutils.isValid(cnpj) && focusedField !== 'cnpj' && (
+            <Text style={{ ...texts.sm, ...texts.bold, color: colors.grey700, marginTop: padding }}>
+              {t('O CNPJ digitado não é válido.')}
+            </Text>
+          )}
           <DefaultButton
             style={{ marginTop: padding }}
             title={t('Atualizar')}
