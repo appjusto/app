@@ -19,6 +19,7 @@ import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { DeliveredItems } from '../components/DeliveredItems';
 import OrderMap from '../p2p-order/OrderMap';
 import { OrderNavigatorParamList } from '../types';
 import { OngoingOrderStatus } from './OngoingOrderStatus';
@@ -169,6 +170,12 @@ export default function ({ navigation, route }: Props) {
             />
           </View>
         </PaddedView>
+        {order.type === 'food' && (
+          <View>
+            <HR height={padding} />
+            <DeliveredItems order={order} />
+          </View>
+        )}
       </ScrollView>
     </View>
   );

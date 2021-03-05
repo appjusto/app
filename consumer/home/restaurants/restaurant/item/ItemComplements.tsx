@@ -28,7 +28,7 @@ export const ItemComplements = ({ product, selectedComplements, onComplementTogg
           <ItemComplementRequiredLabel
             style={{ marginLeft: padding }}
             group={group}
-            totalSelected={selectedComplements.length}
+            totalSelected={helpers.totalComplementsInGroup(group, selectedComplements)}
           />
           <HR style={{ marginTop: halfPadding }} />
           {group.items?.map((complement) => {

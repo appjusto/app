@@ -22,7 +22,7 @@ export const OrderPlacesSummary = ({ order, onEditStep }: Props) => {
     <PaddedView>
       {origin && (
         <PlaceSummary
-          title={t('Retirada')}
+          title={order.type === 'p2p' ? t('Retirada') : t('Restaurante')}
           place={origin!}
           onEdit={order.type === 'p2p' ? () => onEditStep(Step.Origin) : undefined}
         />

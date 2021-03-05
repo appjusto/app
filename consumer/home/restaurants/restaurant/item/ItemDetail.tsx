@@ -135,7 +135,7 @@ export default function ({ navigation, route }: Props) {
   // UI
   return (
     <ScrollView style={{ ...screens.default }}>
-      <View style={{ paddingHorizontal: 12 }}>
+      <View style={{ paddingHorizontal: padding, marginBottom: halfPadding }}>
         <View style={{ width: '100%', height: 240, overflow: 'hidden' }}>
           {imageURI && (
             <Image

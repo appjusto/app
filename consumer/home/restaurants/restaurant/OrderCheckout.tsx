@@ -105,7 +105,7 @@ export const OrderCheckout = ({ navigation, route }: Props) => {
         order={order}
         selectedPaymentMethodId={selectedPaymentMethodId}
         waiting={isLoading}
-        showMap={false}
+        showMap
         onEditStep={() => {
           navigation.navigate('OrderDestination', {
             returnScreen: 'OrderCheckout',

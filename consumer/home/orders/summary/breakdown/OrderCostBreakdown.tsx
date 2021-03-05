@@ -25,7 +25,7 @@ export const OrderCostBreakdown = ({ order, selectedFare }: Props) => {
         <View style={{ marginTop: padding }}>
           {!isEmpty(order.items) && (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('Items do pedido')}</Text>
+              <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('Itens do pedido')}</Text>
               <Text style={{ ...texts.sm, lineHeight: 21 }}>
                 {formatCurrency(getOrderTotal(order))}
               </Text>

@@ -69,10 +69,8 @@ export const totalComplementsInGroup = (
   complements: WithId<Complement>[]
 ) =>
   intersection(
-    complements.map(
-      (c) => c.id,
-      (group.items ?? []).map((c) => c.id)
-    )
+    complements.map((c) => c.id),
+    (group.items ?? []).map((c) => c.id)
   ).length;
 
 export const canAddComplement = (group: ComplementGroup, complements: WithId<Complement>[]) =>
