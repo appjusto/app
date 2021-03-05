@@ -2,6 +2,7 @@ import { Order } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../../common/components/texts/RoundedText';
+import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
 import { IconRequest } from '../../../../common/icons/icon-requests';
 import { colors, padding, texts } from '../../../../common/styles';
 import { formatTime } from '../../../../common/utils/formatters';
@@ -26,13 +27,19 @@ export const OngoingOrderStatus = ({ order }: Props) => {
   } else if (order.status === 'dispatching') {
     header = t('Saiu para entrega');
     description = t('Já pode se preparar! O entregador saiu e está levando o pedido até você. ');
-  } else if (order.dispatchingState === 'arrived-destination') {
+  }
+  if (order.status === 'dispatching' && order.dispatchingState === 'arrived-destination') {
     header = t('Entregador chegou no local');
     description = t('Aguardando o cliente para retirada.');
   }
   return (
     <View style={{ padding, alignItems: 'center' }}>
-      <IconRequest />
+      {order.status === 'dispatching' && order.dispatchingState === 'arrived-destination' ? (
+        <IconMotocycle />
+      ) : (
+        <IconRequest />
+      )}
+
       <Text style={{ marginTop: padding, ...texts.xl }}>{header}</Text>
       <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>{description}</Text>
       {order.destination?.estimatedTimeOfArrival &&
