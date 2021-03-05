@@ -103,7 +103,7 @@ export default function ({ navigation, route }: Props) {
     <View style={{ ...screens.default, paddingBottom: padding }}>
       <ScrollView>
         <View>
-          <OngoingOrderStatus order={order} />
+          {order.type === 'food' && <OngoingOrderStatus order={order} />}
           <OrderMap order={order} ratio={1.2} />
           <View>
             <CourierStatusHighlight dispatchingState={dispatchingState} />

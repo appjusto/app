@@ -157,6 +157,7 @@ export default function ({ navigation, route }: Props) {
               returnKeyType="next"
               blurOnSubmit={false}
               onChangeText={(text) => setAgency(text)}
+              onSubmitEditing={() => accountRef.current?.focus()}
               onBlur={() => {
                 if (agency.length > 0) {
                   const paddedAgency = numbersAndLettersParser(
