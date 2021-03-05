@@ -2,7 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ProfileSituation } from 'appjusto-types';
 import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../common/app/context';
@@ -107,11 +107,13 @@ export default function ({ navigation, route }: Props) {
             disabled={!submitEnabled || busy}
             activityIndicator={busy}
           />
-          <Text style={[texts.sm, { color: colors.grey700, paddingTop: 16 }]}>
-            {t(
-              'Preencha os dados a seguir e envie seu cadastro. Em até um dia você poderá começar a fazer suas entregas.'
-            )}
-          </Text>
+          <Pressable delayLongPress={3000} onLongPress={() => navigation.navigate('ProfileErase')}>
+            <Text style={[texts.sm, { color: colors.grey700, paddingTop: 16 }]}>
+              {t(
+                'Preencha os dados a seguir e envie seu cadastro. Em até um dia você poderá começar a fazer suas entregas.'
+              )}
+            </Text>
+          </Pressable>
           <Text style={{ ...texts.sm, color: colors.green600, paddingTop: 16 }}>
             {stepsDone} {t('de')} {totalSteps} {t('dados preenchidos')}
           </Text>
