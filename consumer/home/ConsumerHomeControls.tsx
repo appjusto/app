@@ -51,17 +51,6 @@ export default function ({ navigation }: Props) {
           marginBottom: tallerDevice ? doublePadding : halfPadding,
         }}
       >
-        <View style={[styles.controlItem, { backgroundColor: colors.white }]}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('OrderNavigator', { screen: 'CreateOrderP2P' })}
-          >
-            <Image source={icons.consumerHomeIllustration} />
-            <Text style={[texts.sm, { paddingTop: 4 }]}>{t('Transporte de encomendas')}</Text>
-            <Text style={[texts.xs, { paddingTop: halfPadding, color: colors.grey700 }]}>
-              {t('Para buscar e deixar pacotes')}
-            </Text>
-          </TouchableOpacity>
-        </View>
         <View style={[styles.controlItem, { backgroundColor: colors.white, flexDirection: 'row' }]}>
           <TouchableOpacity
             onPress={() =>
@@ -75,6 +64,17 @@ export default function ({ navigation }: Props) {
                 {t('Peça comida de uma forma justa')}
               </Text>
             </View>
+          </TouchableOpacity>
+        </View>
+        <View style={[styles.controlItem, { backgroundColor: colors.white }]}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('OrderNavigator', { screen: 'CreateOrderP2P' })}
+          >
+            <Image source={icons.consumerHomeIllustration} />
+            <Text style={[texts.sm, { paddingTop: 4 }]}>{t('Transporte de encomendas')}</Text>
+            <Text style={[texts.xs, { paddingTop: halfPadding, color: colors.grey700 }]}>
+              {t('Para buscar e deixar pacotes')}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
