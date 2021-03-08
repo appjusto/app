@@ -1,4 +1,5 @@
 import { IssueType, Place } from 'appjusto-types';
+import { IuguCustomerPaymentMethod } from 'appjusto-types/payment/iugu';
 import { ChatParamList } from '../../../common/screens/Chat';
 
 export type OrderNavigatorParamList = {
@@ -23,6 +24,9 @@ export type OrderNavigatorParamList = {
   };
   ProfilePaymentMethods?: {
     returnScreen: 'CreateOrderP2P';
+  };
+  PaymentMethodDetail: {
+    paymentData: IuguCustomerPaymentMethod;
   };
   OrderConfirming: {
     orderId: string;

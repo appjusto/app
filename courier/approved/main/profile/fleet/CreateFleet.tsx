@@ -173,7 +173,11 @@ export default function ({ navigation, route }: Props) {
         />
         <View>
           <HR height={padding / 2} />
-          <GainSimulator fee={minimumFee} distance={distanceThreshold} />
+          <GainSimulator
+            fee={minimumFee}
+            distance={distanceThreshold}
+            additional={additionalPerKmAfterThreshold}
+          />
           <PaddedView>
             <DefaultButton
               style={{ marginTop: padding * 2 }}

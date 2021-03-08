@@ -150,7 +150,11 @@ export default function ({ navigation, route }: Props) {
         <ShowIf test={flavor === 'courier'}>
           {() => (
             <>
-              <GainSimulator fee={fleet.minimumFee} distance={fleet.distanceThreshold} />
+              <GainSimulator
+                fee={fleet.minimumFee}
+                distance={fleet.distanceThreshold}
+                additional={fleet.additionalPerKmAfterThreshold}
+              />
               <PaddedView>
                 {/* TO-DO: only used when choosing fleet;
                 should be hidden when coming from home'Ver detalhes';
