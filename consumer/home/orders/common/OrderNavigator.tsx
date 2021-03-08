@@ -5,7 +5,6 @@ import FleetDetail from '../../../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { ReportIssue } from '../../../../common/screens/ReportIssue';
 import { t } from '../../../../strings';
-import PaymentMethodDetail from '../../../profile/payment/PaymentMethodDetail';
 import ProfileAddCard from '../../../profile/payment/ProfileAddCard';
 import ProfilePaymentMethods from '../../../profile/payment/ProfilePaymentMethods';
 import ProfileEdit from '../../../profile/ProfileEdit';
@@ -59,11 +58,6 @@ export const OrderNavigator = () => {
       <Stack.Screen
         name="ProfilePaymentMethods"
         component={ProfilePaymentMethods}
-        options={{ title: t('Formas de pagamento') }}
-      />
-      <Stack.Screen
-        name="PaymentMethodDetail"
-        component={PaymentMethodDetail}
         options={{ title: t('Formas de pagamento') }}
       />
       <Stack.Screen
