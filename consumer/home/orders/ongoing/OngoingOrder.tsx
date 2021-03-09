@@ -102,7 +102,7 @@ export default function ({ navigation, route }: Props) {
       {order.type === 'p2p' ? (
         <View>
           <View>
-            <OrderMap order={order} ratio={1.5} />
+            <OrderMap order={order} ratio={1.2} />
             <StatusAndMessages
               dispatchingState={dispatchingState}
               orderId={orderId}
@@ -113,7 +113,8 @@ export default function ({ navigation, route }: Props) {
             order={order}
             addressLabel={addressLabel}
             nextPlace={nextPlace}
-            onChangeRoute={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
+            onChangeRoute={() => navigation.navigate('CourierDetail', { orderId: order.id })}
+            // onChangeRoute={() => navigation.navigate('CreateOrderP2P', { orderId: order.id })}
           />
           <HR />
           <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -125,15 +126,37 @@ export default function ({ navigation, route }: Props) {
             </View>
             <View style={{ flex: 7, marginLeft: halfPadding }}>
               <DefaultButton
-                title={t('Mais informações')}
-                onPress={() =>
-                  navigation.navigate('CourierDetail', {
-                    orderId,
-                  })
-                }
+                title={t('Alterar rota')}
+                onPress={() => null}
+                // onPress={() =>
+                //   navigation.navigate('CourierDetail', {
+                //     orderId,
+                //   })
+                // }
                 secondary
               />
             </View>
+          </PaddedView>
+          <HR height={padding} />
+          <PaddedView>
+            <DefaultButton
+              title={t('Relatar problema')}
+              onPress={() =>
+                navigation.navigate('ReportIssueOngoingOrder', {
+                  orderId: order.id,
+                  issueType: 'consumer-delivery-problem',
+                })
+              }
+              secondary
+            />
+          </PaddedView>
+          <HR />
+          <PaddedView>
+            <DefaultButton
+              title={t('Cancelar pedido')}
+              onPress={() => navigation.navigate('ConfirmCancelOrder', { orderId })}
+              secondary
+            />
           </PaddedView>
         </View>
       ) : (
