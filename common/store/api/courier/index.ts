@@ -13,9 +13,6 @@ export default class CourierApi {
 
   // callables
   // submit profile
-  async submitProfile() {
-    return this.refs.getSubmitProfileCallable()();
-  }
   async verifyProfile() {
     return this.refs.getVerifyProfileCallable()();
   }

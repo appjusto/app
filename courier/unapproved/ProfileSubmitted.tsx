@@ -26,7 +26,7 @@ export default function ({ navigation }: Props) {
   // side effects
   React.useEffect(() => {
     if (courier.situation === 'submitted') {
-      api.courier().verifyProfile();
+      // api.courier().verifyProfile();
     } else if (courier.situation === 'pending') {
       setTimeout(() => {
         navigation.replace('ProfilePending');
