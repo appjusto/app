@@ -1,13 +1,13 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { t } from '../../../strings';
-import FeedbackView from '../../components/views/FeedbackView';
+import PaddedView from '../../components/containers/PaddedView';
 import useAuth, { AuthState } from '../../hooks/useAuth';
 import { IconMotocycle } from '../../icons/icon-motocycle';
-import { colors, texts } from '../../styles';
+import { colors, padding, screens, texts } from '../../styles';
 import { UnloggedParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<UnloggedParamList, 'SignInFeedback'>;
@@ -28,17 +28,25 @@ export default ({ navigation }: Props) => {
   }
 
   return (
-    <FeedbackView
-      header={t('Enviamos um link de confirmação para o seu e-mail.')}
-      description={t('Continue o acesso clicando no link que você recebeu.')}
-      icon={<IconMotocycle />}
-      background={colors.white}
-    >
-      <TouchableOpacity onPress={() => navigation.goBack()} style={{ alignItems: 'center' }}>
-        <Text style={{ ...texts.xs, color: colors.green600 }}>
-          {t('Preencher o e-mail novamente')}
-        </Text>
-      </TouchableOpacity>
-    </FeedbackView>
+    <PaddedView style={screens.default}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ alignItems: 'center' }}>
+          <Text style={{ ...texts.x2l, textAlign: 'center' }}>
+            {t('Enviamos um link de confirmação para o seu e-mail.')}
+          </Text>
+          <View style={{ height: 114, width: 114, marginTop: 22, marginBottom: 16 }}>
+            <IconMotocycle />
+          </View>
+          <Text style={{ ...texts.sm, color: colors.grey700, textAlign: 'center' }}>
+            {t('Continue o acesso clicando no link que você recebeu.')}
+          </Text>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={{ alignItems: 'center' }}>
+            <Text style={{ marginTop: padding, ...texts.xs, color: colors.green600 }}>
+              {t('Preencher o e-mail novamente')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </PaddedView>
   );
 };
