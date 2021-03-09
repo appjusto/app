@@ -224,6 +224,7 @@ export default function ({ navigation, route }: Props) {
                   issueType: 'consumer-delivery-problem',
                 })
               }
+              secondary
             />
           </PaddedView>
           <HR />
@@ -231,6 +232,7 @@ export default function ({ navigation, route }: Props) {
             <DefaultButton
               title={t('Cancelar pedido')}
               onPress={() => navigation.navigate('ConfirmCancelOrder', { orderId })}
+              secondary
             />
           </PaddedView>
         </ScrollView>

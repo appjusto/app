@@ -45,7 +45,7 @@ export default ({ navigation, route }: Props) => {
   const [reviewType, setReviewType] = React.useState<ReviewType>();
   const review = useCourierReview(orderId, order?.courier?.id);
   const [tip, setTip] = React.useState(0);
-  const [isLoading, setLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   if (!order) {
     return (
@@ -57,7 +57,7 @@ export default ({ navigation, route }: Props) => {
 
   //handler
   const finishHandler = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       if (reviewType) {
         await api.courier().addReview(order.courier!.id, {
@@ -71,7 +71,7 @@ export default ({ navigation, route }: Props) => {
       // find a better error message
       dispatch(showToast(t('Não foi possível enviar a avaliação e/ou caixinha')));
     }
-    setLoading(false);
+    setIsLoading(false);
   };
   // UI
   return (
@@ -159,6 +159,7 @@ export default ({ navigation, route }: Props) => {
             title={t('Finalizar')}
             onPress={finishHandler}
             style={{ marginTop: padding }}
+            activityIndicator={isLoading}
           />
           <View
             style={{
