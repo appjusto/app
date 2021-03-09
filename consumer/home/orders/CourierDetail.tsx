@@ -4,7 +4,6 @@ import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import HR from '../../../common/components/views/HR';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -38,7 +37,7 @@ export default function ({ navigation, route }: Props) {
 
   return (
     <ScrollView style={{ backgroundColor: colors.white }}>
-      <View style={{ ...screens.default, paddingBottom: halfPadding }}>
+      {/* <View style={{ ...screens.default, paddingBottom: halfPadding }}>
         <SingleHeader title={t('Sobre o pedido')} />
         <View style={{ paddingHorizontal: padding, marginTop: padding, marginBottom: halfPadding }}>
           <DefaultButton
@@ -71,8 +70,8 @@ export default function ({ navigation, route }: Props) {
             </View>
           </View>
         </View>
-      </View>
-      <HR height={padding} />
+      </View> */}
+      {/* <HR height={padding} /> */}
       <View style={{ paddingBottom: padding }}>
         <AboutCourier order={order} />
         <SingleHeader title={t('Integrante da frota')} />

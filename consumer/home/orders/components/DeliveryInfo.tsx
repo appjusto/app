@@ -36,7 +36,7 @@ export const DeliveryInfo = ({ order, addressLabel, nextPlace, onChangeRoute }: 
         <View>
           <CourierDistanceBadge order={order} />
           <TouchableOpacity onPress={onChangeRoute} style={{ marginTop: 12 }}>
-            <Text style={[texts.xs, { color: colors.green600 }]}>{t('Alterar')}</Text>
+            <Text style={[texts.xs, { color: colors.green600 }]}>{t('Mais informações')}</Text>
           </TouchableOpacity>
         </View>
       </View>
