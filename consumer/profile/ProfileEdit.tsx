@@ -75,7 +75,7 @@ export default function ({ navigation, route }: Props) {
             onChangeText={(text) => setEmail(text)}
             onSubmitEditing={() => nameRef.current?.focus()}
             keyboardType="default"
-            maxLength={30}
+            editable={false}
           />
           <DefaultInput
             ref={nameRef}

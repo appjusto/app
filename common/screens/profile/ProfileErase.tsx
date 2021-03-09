@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { t } from '../../../strings';
@@ -43,15 +43,13 @@ export default function ({ navigation }: Props) {
     ratherUseAnotherApp: false,
   });
   // handlers
-  const eraseHandler = useCallback(() => {
-    (async () => {
-      try {
-        await dispatch(deleteAccount(api)(survey));
-      } catch (error) {
-        dispatch(showToast(error.toString(), 'error'));
-      }
-    })();
-  }, [survey]);
+  const eraseHandler = async () => {
+    try {
+      await dispatch(deleteAccount(api)(survey));
+    } catch (error) {
+      dispatch(showToast(error.toString(), 'error'));
+    }
+  };
 
   // UI
   return (

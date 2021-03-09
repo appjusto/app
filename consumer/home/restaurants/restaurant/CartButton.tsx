@@ -19,6 +19,7 @@ export const CartButton = ({ order }: Props) => {
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
+          alignItems: 'center',
           paddingHorizontal: 8,
           paddingVertical: 12,
           backgroundColor: colors.green500,

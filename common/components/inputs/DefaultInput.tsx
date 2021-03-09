@@ -9,7 +9,7 @@ export interface DefaultInputProps extends TextInputProps {
 }
 
 export default React.forwardRef(
-  ({ title, children, style, ...props }: DefaultInputProps, externalRef) => {
+  ({ title, children, editable = true, style, ...props }: DefaultInputProps, externalRef) => {
     const internalRef = useRef<TextInput>(null);
     const ref = (externalRef as React.RefObject<TextInput>) || internalRef;
     const focus = useCallback(() => {
@@ -50,10 +50,10 @@ export default React.forwardRef(
             ref={ref}
             style={{
               ...texts.md,
-              color: colors.grey700,
-
+              color: editable ? colors.grey700 : colors.grey500,
               width: '100%',
             }}
+            editable={editable}
             {...props}
           />
         </View>
