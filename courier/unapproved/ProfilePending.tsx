@@ -11,14 +11,15 @@ import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
 import useCourierDocumentImage from '../../common/store/api/courier/hooks/useCourierDocumentImage';
 import useCourierSelfie from '../../common/store/api/courier/hooks/useCourierSelfie';
-import { submitProfile } from '../../common/store/courier/actions';
 import { getCourier } from '../../common/store/courier/selectors';
 import {
   bankAccountSet,
   companyInfoSet,
   courierInfoSet,
 } from '../../common/store/courier/validators';
+import { showToast } from '../../common/store/ui/actions';
 import { getUIBusy } from '../../common/store/ui/selectors';
+import { updateProfile } from '../../common/store/user/actions';
 import { colors, screens, texts } from '../../common/styles';
 import { t } from '../../strings';
 import { PendingParamList } from './types';
@@ -86,9 +87,15 @@ export default function ({ navigation, route }: Props) {
   });
 
   // handlers
-  const submitHandler = React.useCallback(() => {
-    dispatch(submitProfile(api));
-  }, [api, dispatch]);
+  const updateProfileHandler = () => {
+    (async () => {
+      try {
+        await dispatch(updateProfile(api)(courier.id, { situation: 'submitted' }));
+      } catch (error) {
+        dispatch(showToast(error.toSring()));
+      }
+    })();
+  };
   // when focused, refetch queries to recalculate of steps done
   const focusHandler = React.useCallback(() => {
     queryClient.refetchQueries();
@@ -103,7 +110,7 @@ export default function ({ navigation, route }: Props) {
           <Text style={{ ...texts.x2l, marginBottom: 24 }}>{t('Cadastro de novo entregador')}</Text>
           <DefaultButton
             title={t('Enviar cadastro')}
-            onPress={submitHandler}
+            onPress={updateProfileHandler}
             disabled={!submitEnabled || busy}
             activityIndicator={busy}
           />
