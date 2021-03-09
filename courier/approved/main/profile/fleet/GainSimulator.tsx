@@ -8,11 +8,10 @@ import { t } from '../../../../../strings';
 type Props = {
   fee: number;
   distance: number;
+  additional: number;
 };
 
-//MATH NEEDS TO BE CORRECTED (FEES)
-
-export default function ({ fee, distance }: Props) {
+export default function ({ fee, distance, additional }: Props) {
   return (
     <View style={{ ...screens.default }}>
       <PaddedView>
@@ -45,51 +44,61 @@ export default function ({ fee, distance }: Props) {
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Text style={{ ...texts.sm, color: colors.grey700 }}>
-            {t('De')} {formatDistance(distance)} {t('até')} {formatDistance(distance + 2000)}
+            {t('De')} {formatDistance(distance)} {t('a')} {formatDistance(distance + 2000)}
           </Text>
-          <Text style={{ ...texts.sm }}>{formatCurrency(fee * 1.66)}</Text>
+          <Text style={{ ...texts.sm }}>
+            {t('Até')} {formatCurrency(fee + 2 * additional)}
+          </Text>
         </View>
         <View
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Text style={{ ...texts.sm, color: colors.grey700 }}>
-            {t('De')} {formatDistance(distance + 2000)} {t('até')} {formatDistance(distance + 4000)}
+            {t('De')} {formatDistance(distance + 2000)} {t('a')} {formatDistance(distance + 4000)}
           </Text>
-          <Text style={{ ...texts.sm }}>{formatCurrency(fee * 2.33)}</Text>
+          <Text style={{ ...texts.sm }}>
+            {t('Até')} {formatCurrency(fee + 4 * additional)}
+          </Text>
         </View>
         <View
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Text style={{ ...texts.sm, color: colors.grey700 }}>
-            {t('De')} {formatDistance(distance + 4000)} {t('até')} {formatDistance(distance + 6000)}
+            {t('De')} {formatDistance(distance + 4000)} {t('a')} {formatDistance(distance + 6000)}
           </Text>
-          <Text style={{ ...texts.sm }}>{formatCurrency(fee * 3)}</Text>
+          <Text style={{ ...texts.sm }}>
+            {t('Até')} {formatCurrency(fee + 6 * additional)}
+          </Text>
         </View>
         <View
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Text style={{ ...texts.sm, color: colors.grey700 }}>
-            {t('De')} {formatDistance(distance + 6000)} {t('até')} {formatDistance(distance + 8000)}
+            {t('De')} {formatDistance(distance + 6000)} {t('a')} {formatDistance(distance + 8000)}
           </Text>
-          <Text style={{ ...texts.sm }}>{formatCurrency(fee * 3.66)}</Text>
+          <Text style={{ ...texts.sm }}>
+            {t('Até')} {formatCurrency(fee + 8 * additional)}
+          </Text>
         </View>
         <View
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Text style={{ ...texts.sm, color: colors.grey700 }}>
-            {t('De')} {formatDistance(distance + 8000)} {t('até')}{' '}
-            {formatDistance(distance + 10000)}
+            {t('De')} {formatDistance(distance + 8000)} {t('a')} {formatDistance(distance + 10000)}
           </Text>
-          <Text style={{ ...texts.sm }}>{formatCurrency(fee * 4.33)}</Text>
+          <Text style={{ ...texts.sm }}>
+            {t('Até')} {formatCurrency(fee + 10 * additional)}
+          </Text>
         </View>
         <View
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Text style={{ ...texts.sm, color: colors.grey700 }}>
-            {t('De')} {formatDistance(distance + 10000)} {t('até')}{' '}
-            {formatDistance(distance + 12000)}
+            {t('De')} {formatDistance(distance + 10000)} {t('a')} {formatDistance(distance + 12000)}
           </Text>
-          <Text style={{ ...texts.sm }}>{formatCurrency(fee * 5)}</Text>
+          <Text style={{ ...texts.sm }}>
+            {t('Até')} {formatCurrency(fee + 12 * additional)}
+          </Text>
         </View>
       </PaddedView>
     </View>

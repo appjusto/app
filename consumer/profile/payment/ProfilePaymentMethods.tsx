@@ -1,9 +1,8 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { View, FlatList } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { useSelector } from 'react-redux';
-
 import ConfigItem from '../../../common/components/views/ConfigItem';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { screens } from '../../../common/styles';
@@ -36,9 +35,11 @@ export default function ({ navigation, route }: Props) {
             subtitle={`Cartão de crédito\n${item.data.brand}`}
             onPress={() => {
               if (returnScreen) navigation.navigate(returnScreen, { paymentMethodId: item.id });
-              navigation.navigate('PaymentMethodDetail', {
-                paymentData: item,
-              });
+              else {
+                navigation.navigate('PaymentMethodDetail', {
+                  paymentData: item,
+                });
+              }
             }}
           />
         )}

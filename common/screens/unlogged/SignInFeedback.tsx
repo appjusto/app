@@ -1,12 +1,13 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
+import { Text } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { t } from '../../../strings';
-import DefaultButton from '../../components/buttons/DefaultButton';
 import FeedbackView from '../../components/views/FeedbackView';
 import useAuth, { AuthState } from '../../hooks/useAuth';
 import { IconMotocycle } from '../../icons/icon-motocycle';
-import { colors } from '../../styles';
+import { colors, texts } from '../../styles';
 import { UnloggedParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<UnloggedParamList, 'SignInFeedback'>;
@@ -33,11 +34,11 @@ export default ({ navigation }: Props) => {
       icon={<IconMotocycle />}
       background={colors.white}
     >
-      <DefaultButton
-        title={t('Voltar para alterar o e-mail')}
-        onPress={() => navigation.goBack()}
-        secondary
-      />
+      <TouchableOpacity onPress={() => navigation.goBack()} style={{ alignItems: 'center' }}>
+        <Text style={{ ...texts.xs, color: colors.green600 }}>
+          {t('Preencher o e-mail novamente')}
+        </Text>
+      </TouchableOpacity>
     </FeedbackView>
   );
 };
