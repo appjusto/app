@@ -69,8 +69,9 @@ export default function ({ navigation }: Props) {
           onStartOrderPress={(type) => {
             if (type === 'p2p') {
               navigation.navigate('P2POrderNavigator', { screen: 'CreateOrderP2P' });
+            } else {
+              navigation.navigate('FoodOrderNavigator', { screen: 'FoodOrderHome' });
             }
-            // navigation.navigate('OrderNavigator', { screen: 'CreateOrderP2P' })
           }}
         />
         <PaddedView>

@@ -43,6 +43,7 @@ type Props = {
 export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   // context
   const { orderId } = route.params;
+  console.log(orderId);
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // screen state

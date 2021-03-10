@@ -12,6 +12,7 @@ import { getUser } from '../../common/store/user/selectors';
 import { colors, screens } from '../../common/styles';
 import PermissionDeniedFeedback from './common/PermissionDeniedFeedback';
 import { DeliveredOrderNavigator } from './delivered/DeliveredOrderNavigator';
+import { FoodOrderNavigator } from './food/FoodOrderNavigator';
 import { MainNavigator } from './main/MainNavigator';
 import ProfileNavigator from './main/profile/ProfileNavigator';
 import { OngoingOrderNavigator } from './ongoing/OngoingOrderNavigator';
@@ -52,18 +53,13 @@ export const LoggedNavigator = () => {
     <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen name="MainNavigator" component={MainNavigator} options={{ title: 'Inicial' }} />
       <Stack.Screen
-        name="PermissionDeniedFeedback"
-        component={PermissionDeniedFeedback}
-        options={{ title: 'Compartilhar sua localização' }}
-      />
-      <Stack.Screen
-        name="DeliveredOrderNavigator"
-        component={DeliveredOrderNavigator}
+        name="P2POrderNavigator"
+        component={P2POrderNavigator}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="P2POrderNavigator"
-        component={P2POrderNavigator}
+        name="FoodOrderNavigator"
+        component={FoodOrderNavigator}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -72,9 +68,19 @@ export const LoggedNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name="DeliveredOrderNavigator"
+        component={DeliveredOrderNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name="ProfileNavigator"
         component={ProfileNavigator}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PermissionDeniedFeedback"
+        component={PermissionDeniedFeedback}
+        options={{ title: 'Compartilhar sua localização' }}
       />
     </Stack.Navigator>
   );
