@@ -1,4 +1,5 @@
 import { Place } from 'appjusto-types';
+import { AddressCompleteParamList } from '../common/AddressComplete';
 
 export type P2POrderNavigatorParamList = {
   CreateOrderP2P?: {
@@ -6,11 +7,6 @@ export type P2POrderNavigatorParamList = {
     origin?: Place;
     destination?: Place;
     paymentMethodId?: string;
-  };
-  AddressComplete: {
-    returnScreen: 'CreateOrderP2P';
-    returnParam: string;
-    value?: Place;
   };
   TransportableItems: undefined;
   ProfileAddCard: {
@@ -22,6 +18,5 @@ export type P2POrderNavigatorParamList = {
   FleetDetail: {
     fleetId: string;
   };
-  // Home: undefined;
-};
+} & AddressCompleteParamList;
 // } & ChatParamList;

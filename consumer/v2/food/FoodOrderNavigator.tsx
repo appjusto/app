@@ -4,9 +4,9 @@ import { defaultScreenOptions } from '../../../common/screens/options';
 import { BusinessProvider } from '../../../common/store/context/business';
 import { t } from '../../../strings';
 import AddressComplete from '../../home/orders/AddressComplete';
-import FilterScreen from '../../home/restaurants/filter/FilterScreen';
-import RestaurantNavigator from '../../home/restaurants/restaurant/RestaurantNavigator';
-import { FoodOrderHome } from './FoodOrderHome';
+import { FoodOrderHome } from './home/FoodOrderHome';
+import RestaurantNavigator from './restaurant/RestaurantNavigator';
+import { FilterScreen } from './search/filter/FilterScreen';
 import RestaurantSearch from './search/RestaurantSearch';
 import { FoodOrderNavigatorParamList } from './types';
 

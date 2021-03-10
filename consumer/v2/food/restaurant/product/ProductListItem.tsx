@@ -1,14 +1,14 @@
 import { Product, ProductAlgolia, WithId } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { useProductImageURI } from '../../../../common/store/api/business/hooks/useProductImageURI';
+import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
 import {
   useContextBusiness,
   useContextBusinessId,
-} from '../../../../common/store/context/business';
-import { colors, halfPadding, padding, texts } from '../../../../common/styles';
-import { formatCurrency } from '../../../../common/utils/formatters';
-import { ListItemImage } from './ListItemImage';
+} from '../../../../../common/store/context/business';
+import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
+import { formatCurrency } from '../../../../../common/utils/formatters';
+import { ListItemImage } from '../list/ListItemImage';
 
 interface Props {
   product: ProductAlgolia | WithId<Product>;

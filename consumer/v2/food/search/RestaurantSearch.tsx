@@ -14,10 +14,10 @@ import {
   getSearchOrder,
 } from '../../../../common/store/consumer/selectors';
 import { colors, padding, screens } from '../../../../common/styles';
+import RestaurantList from '../restaurant/list/RestaurantList';
+import { ProductListItem } from '../restaurant/product/ProductListItem';
 import { FoodOrderNavigatorParamList } from '../types';
 import FilterSelector from './FilterSelector';
-import { ProductListItem } from './ProductListItem';
-import RestaurantList from './RestaurantList';
 
 type ScreenNavigationProp = StackNavigationProp<FoodOrderNavigatorParamList, 'RestaurantSearch'>;
 

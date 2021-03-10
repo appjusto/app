@@ -2,12 +2,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { t } from '../../../../strings';
-import AddressComplete from '../../../home/orders/AddressComplete';
-import AboutRestaurant from '../../../home/restaurants/restaurant/AboutRestaurant';
-import RestaurantDetail from '../../../home/restaurants/restaurant/detail/RestaurantDetail';
-import ItemDetail from '../../../home/restaurants/restaurant/item/ItemDetail';
-import { OrderCheckout } from '../../../home/restaurants/restaurant/OrderCheckout';
-import { RestaurantNavigatorParamList } from '../../../home/restaurants/restaurant/types';
+import { AddressComplete } from '../../common/AddressComplete';
+import { AboutRestaurant } from './AboutRestaurant';
+import { FoodOrderCheckout } from './checkout/FoodOrderCheckout';
+import { ItemDetail } from './product/ItemDetail';
+import { RestaurantDetail } from './RestaurantDetail';
+import { RestaurantNavigatorParamList } from './types';
 
 const Stack = createStackNavigator<RestaurantNavigatorParamList>();
 
@@ -30,8 +30,8 @@ export default function () {
         options={{ title: t('Detalhes do item') }}
       />
       <Stack.Screen
-        name="OrderCheckout"
-        component={OrderCheckout}
+        name="FoodOrderCheckout"
+        component={FoodOrderCheckout}
         options={{ title: t('Sua sacola') }}
       />
       <Stack.Screen

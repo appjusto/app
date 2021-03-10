@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image, View } from 'react-native';
-import { borders, colors } from '../../../../common/styles';
+import { borders, colors } from '../../../../../common/styles';
 
 interface Props {
   uri: string | undefined | null;

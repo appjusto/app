@@ -1,12 +1,12 @@
 import { BusinessAlgolia } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
-import RoundedText from '../../../../common/components/texts/RoundedText';
-import HR from '../../../../common/components/views/HR';
-import { useBusinessLogoURI } from '../../../../common/store/api/business/hooks/useBusinessLogoURI';
-import { colors, halfPadding, padding, texts } from '../../../../common/styles';
-import { formatDistance } from '../../../../common/utils/formatters';
-import { t } from '../../../../strings';
+import RoundedText from '../../../../../common/components/texts/RoundedText';
+import HR from '../../../../../common/components/views/HR';
+import { useBusinessLogoURI } from '../../../../../common/store/api/business/hooks/useBusinessLogoURI';
+import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
+import { formatDistance } from '../../../../../common/utils/formatters';
+import { t } from '../../../../../strings';
 import { ListItemImage } from './ListItemImage';
 
 type Props = {

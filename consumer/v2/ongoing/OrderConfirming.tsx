@@ -38,7 +38,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
         orderId,
       });
     } else if (order.dispatchingState === 'no-match') {
-      navigation.navigate('OrderNoMatch', { orderId });
+      navigation.navigate('OngoingOrderNoMatch', { orderId });
     }
   }, [order]);
   // UI

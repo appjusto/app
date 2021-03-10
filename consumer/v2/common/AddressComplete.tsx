@@ -25,19 +25,22 @@ import { getConsumer } from '../../../common/store/consumer/selectors';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { formatAddress } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
+import { FoodOrderNavigatorParamList } from '../food/types';
 import { P2POrderNavigatorParamList } from '../p2p/types';
 
-type ScreenNavigationProp = StackNavigationProp<P2POrderNavigatorParamList, 'AddressComplete'>;
-type ScreenRouteProp = RouteProp<
-  {
-    AddressComplete: {
-      returnScreen: 'CreateOrderP2P';
-      returnParam: string;
-      value?: Place;
-    };
-  },
+export type AddressCompleteParamList = {
+  AddressComplete: {
+    returnScreen: 'CreateOrderP2P' | 'FoodOrderHome';
+    returnParam: string;
+    value?: Place;
+  };
+};
+
+type ScreenNavigationProp = StackNavigationProp<
+  P2POrderNavigatorParamList & FoodOrderNavigatorParamList,
   'AddressComplete'
 >;
+type ScreenRouteProp = RouteProp<AddressCompleteParamList, 'AddressComplete'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

@@ -3,15 +3,18 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { BusinessAlgolia } from 'appjusto-types';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../../../common/app/context';
-import { useSearch } from '../../../common/store/api/search/useSearch';
-import { updateCurrentLocation, updateCurrentPlace } from '../../../common/store/consumer/actions';
-import { getCurrentLocation } from '../../../common/store/consumer/selectors';
-import { SearchFilter } from '../../../common/store/consumer/types';
-import RestaurantsHomeHeader from '../../home/restaurants/home/RestaurantsHomeHeader';
-import RestaurantList from '../../home/restaurants/search/RestaurantList';
-import { LoggedNavigatorParamList } from '../types';
-import { FoodOrderNavigatorParamList } from './types';
+import { AppDispatch } from '../../../../common/app/context';
+import { useSearch } from '../../../../common/store/api/search/useSearch';
+import {
+  updateCurrentLocation,
+  updateCurrentPlace,
+} from '../../../../common/store/consumer/actions';
+import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
+import { SearchFilter } from '../../../../common/store/consumer/types';
+import RestaurantsHomeHeader from '../../../home/restaurants/home/RestaurantsHomeHeader';
+import { LoggedNavigatorParamList } from '../../types';
+import RestaurantList from '../restaurant/list/RestaurantList';
+import { FoodOrderNavigatorParamList } from '../types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<FoodOrderNavigatorParamList, 'FoodOrderHome'>,
