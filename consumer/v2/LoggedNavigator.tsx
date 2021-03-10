@@ -10,6 +10,7 @@ import { getConsumer } from '../../common/store/consumer/selectors';
 import { observeProfile } from '../../common/store/user/actions';
 import { getUser } from '../../common/store/user/selectors';
 import { colors, screens } from '../../common/styles';
+import PermissionDeniedFeedback from './common/PermissionDeniedFeedback';
 import { DeliveredOrderNavigator } from './delivered/DeliveredOrderNavigator';
 import { MainNavigator } from './main/MainNavigator';
 import ProfileNavigator from './main/profile/ProfileNavigator';
@@ -50,6 +51,11 @@ export const LoggedNavigator = () => {
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen name="MainNavigator" component={MainNavigator} options={{ title: 'Inicial' }} />
+      <Stack.Screen
+        name="PermissionDeniedFeedback"
+        component={PermissionDeniedFeedback}
+        options={{ title: 'Compartilhar sua localização' }}
+      />
       <Stack.Screen
         name="DeliveredOrderNavigator"
         component={DeliveredOrderNavigator}

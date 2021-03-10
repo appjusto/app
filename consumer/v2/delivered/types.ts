@@ -1,11 +1,7 @@
-import { IssueType } from 'appjusto-types';
+import { ReportIssueParamList } from '../common/ReportIssue';
 
 export type DeliveredOrderNavigatorParamList = {
   DeliveredOrderDetail: {
     orderId: string;
   };
-  ReportIssue: {
-    orderId: string;
-    issueType: IssueType;
-  };
-};
+} & ReportIssueParamList;

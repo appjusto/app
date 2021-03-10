@@ -1,4 +1,4 @@
-import { IssueType } from 'appjusto-types';
+import { ReportIssueParamList } from '../common/ReportIssue';
 
 export type OngoingOrderNavigatorParamList = {
   OngoingOrderConfirming: {
@@ -23,11 +23,7 @@ export type OngoingOrderNavigatorParamList = {
   OngoingOrderFeedback: {
     orderId: string;
   };
-  ReportIssue: {
-    orderId: string;
-    issueType: IssueType;
-  };
   OngoingOrderChat: {
     orderId: string;
   };
-};
+} & ReportIssueParamList;

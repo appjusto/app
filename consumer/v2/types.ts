@@ -12,4 +12,8 @@ export type LoggedNavigatorParamList = {
   OngoingOrderNavigator: NestedNavigatorParams<OngoingOrderNavigatorParamList>;
   DeliveredOrderNavigator: NestedNavigatorParams<DeliveredOrderNavigatorParamList>;
   ProfileNavigator: NestedNavigatorParams<ProfileParamList>;
+  PermissionDeniedFeedback: {
+    title: string;
+    subtitle: string;
+  };
 };

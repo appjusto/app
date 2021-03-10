@@ -1,4 +1,4 @@
-import { RouteProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Issue, IssueType, WithId } from 'appjusto-types';
 import React from 'react';
@@ -19,20 +19,23 @@ import { colors, halfPadding, padding, screens, texts } from '../../../common/st
 import { t } from '../../../strings';
 import { DeliveredOrderNavigatorParamList } from '../delivered/types';
 import { OngoingOrderNavigatorParamList } from '../ongoing/types';
+import { LoggedNavigatorParamList } from '../types';
 
-type ScreenNavigationProp = StackNavigationProp<
-  OngoingOrderNavigatorParamList & DeliveredOrderNavigatorParamList,
-  'ReportIssue'
+export type ReportIssueParamList = {
+  ReportIssue: {
+    issueType: IssueType;
+    orderId: string;
+  };
+};
+
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<
+    OngoingOrderNavigatorParamList & DeliveredOrderNavigatorParamList,
+    'ReportIssue'
+  >,
+  StackNavigationProp<LoggedNavigatorParamList>
 >;
-type ScreenRouteProp = RouteProp<
-  {
-    ReportIssue: {
-      issueType: IssueType;
-      orderId: string;
-    };
-  },
-  'ReportIssue'
->;
+type ScreenRouteProp = RouteProp<ReportIssueParamList, 'ReportIssue'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -114,7 +117,7 @@ export const ReportIssue = ({ navigation, route }: Props) => {
             issue: selectedIssue,
             comment,
           });
-          navigation.popToTop();
+          navigation.navigate('MainNavigator', { screen: 'Home' });
         } catch (error) {
           dispatch(showToast(t('Não foi possível enviar o comentário')));
         }
@@ -153,7 +156,10 @@ export const ReportIssue = ({ navigation, route }: Props) => {
         background={colors.grey50}
         description={feedbackDescription}
       >
-        <DefaultButton title={t('Voltar para o início')} onPress={() => navigation.popToTop()} />
+        <DefaultButton
+          title={t('Voltar para o início')}
+          onPress={() => navigation.navigate('MainNavigator', { screen: 'Home' })}
+        />
       </FeedbackView>
     );
   }
