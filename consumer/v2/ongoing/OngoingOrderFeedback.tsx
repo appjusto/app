@@ -65,7 +65,7 @@ export default ({ navigation, route }: Props) => {
         });
       }
       if (tip > 0) await api.order().tipCourier(order.id, tip);
-      navigation.popToTop();
+      navigation.navigate('MainNavigator', { screen: 'Home' });
     } catch (error) {
       // find a better error message
       dispatch(showToast(t('Não foi possível enviar a avaliação e/ou caixinha')));
