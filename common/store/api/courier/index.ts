@@ -36,6 +36,11 @@ export default class CourierApi {
     const docs = (await query.get()).docs;
     return documentsAs<Review>(docs).find(() => true);
   }
+  async fetchAllReviews(courierId: string) {
+    const query = this.refs.getCourierReviewsRef(courierId);
+    const docs = (await query.get()).docs;
+    return documentsAs<Review>(docs);
+  }
   // storage
   // selfie
   uploadSelfie(id: string, localUri: string, progressHandler?: (progress: number) => void) {
