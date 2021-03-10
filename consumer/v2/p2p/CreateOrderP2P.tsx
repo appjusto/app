@@ -42,7 +42,6 @@ export default function ({ navigation, route }: Props) {
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
     console.log('CreateOrderP2P useEffect; params: ', route.params);
-    // navigation.setParams({});
     (async () => {
       if (route.params?.orderId) setOrderId(route.params?.orderId);
       if (route.params?.origin) {
@@ -72,9 +71,8 @@ export default function ({ navigation, route }: Props) {
       }
       if (route.params?.paymentMethodId) setSelectedPaymentMethodId(route.params?.paymentMethodId);
       // clearing params
-      navigation.setParams({});
     })();
-  }, [api, consumer, dispatch, navigation, order, orderId, route.params]);
+  }, [route.params]);
 
   // handlers
   // navigate to 'AddressComplete' to enter address
