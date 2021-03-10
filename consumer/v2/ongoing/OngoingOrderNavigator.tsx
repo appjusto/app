@@ -1,5 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
+import Chat from '../../../common/screens/Chat';
 import { defaultScreenOptions } from '../../../common/screens/options';
 import { t } from '../../../strings';
 import { ReportIssue } from '../common/ReportIssue';
@@ -7,6 +8,7 @@ import OngoingOrder from './OngoingOrder';
 import { OngoingOrderCanceled } from './OngoingOrderCanceled';
 import { OngoingOrderConfirmCancel } from './OngoingOrderConfirmCancel';
 import { OngoingOrderCourierDetail } from './OngoingOrderCourierDetail';
+import OngoingOrderFeedback from './OngoingOrderFeedback';
 import { OrderConfirming } from './OrderConfirming';
 import { OrderNoMatch } from './OrderNoMatch';
 import { OngoingOrderNavigatorParamList } from './types';
@@ -47,22 +49,16 @@ export const OngoingOrderNavigator = () => {
         options={{ title: t('Mais informações') }}
       />
       <Stack.Screen
-        name="OngoingOrderReportIssue"
+        name="ReportIssue"
         component={ReportIssue}
         options={{ title: t('Relatar um problema') }}
       />
-      {/* <Stack.Screen
-        name="DeliveredOrderFeedback"
-        component={DeliveredOrderFeedback}
-        options={{ title: 'Detalhe do pedido' }}
-      /> */}
-      {/*
-      <Stack.Screen name="Chat" component={Chat} options={{ title: t('Chat') }} />
       <Stack.Screen
-        name="OrderDeliveredFeedback"
-        component={OrderDeliveredFeedback}
+        name="OngoingOrderFeedback"
+        component={OngoingOrderFeedback}
         options={{ headerShown: false }}
-      /> */}
+      />
+      <Stack.Screen name="OngoingOrderChat" component={Chat} options={{ title: t('Chat') }} />
     </Stack.Navigator>
   );
 };

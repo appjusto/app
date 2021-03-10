@@ -4,10 +4,7 @@ export type DeliveredOrderNavigatorParamList = {
   DeliveredOrderDetail: {
     orderId: string;
   };
-  DeliveredOrderFeedback: {
-    orderId: string;
-  };
-  DeliveredOrderReportIssue: {
+  ReportIssue: {
     orderId: string;
     issueType: IssueType;
   };

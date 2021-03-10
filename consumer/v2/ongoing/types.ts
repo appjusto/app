@@ -20,12 +20,14 @@ export type OngoingOrderNavigatorParamList = {
   OngoingOrderCourierDetail: {
     orderId: string;
   };
-  OngoingOrderReportIssue: {
-    orderId: string;
-    issueType: IssueType;
-  };
   OngoingOrderFeedback: {
     orderId: string;
   };
+  ReportIssue: {
+    orderId: string;
+    issueType: IssueType;
+  };
+  OngoingOrderChat: {
+    orderId: string;
+  };
 };
-// } & ChatParamList;

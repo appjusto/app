@@ -45,29 +45,6 @@ export const P2POrderNavigator = () => {
         component={FleetDetail}
         options={{ title: t('Detalhes da frota') }}
       />
-      {/*
-      <Stack.Screen
-        name="ProfileEdit"
-        component={ProfileEdit}
-        options={{ title: t('Seus dados') }}
-      />
-      
-      <Stack.Screen
-        name="CourierDetail"
-        component={CourierDetail}
-        options={{ title: t('Mais informações') }}
-      />
-      <Stack.Screen
-        name="ReportIssueOngoingOrder"
-        component={ReportIssue}
-        options={{ title: t('Relatar um problema') }}
-      />
-      <Stack.Screen name="Chat" component={Chat} options={{ title: t('Chat') }} />
-      <Stack.Screen
-        name="OrderDeliveredFeedback"
-        component={OrderDeliveredFeedback}
-        options={{ headerShown: false }}
-      /> */}
     </Stack.Navigator>
   );
 };

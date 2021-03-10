@@ -1,4 +1,5 @@
 import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { Issue, IssueType, WithId } from 'appjusto-types';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
@@ -16,23 +17,29 @@ import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import { DeliveredOrderNavigatorParamList } from '../delivered/types';
+import { OngoingOrderNavigatorParamList } from '../ongoing/types';
 
-export type IssuesParamList = {
-  ReportIssue: {
-    issueType: IssueType;
-    orderId: string;
-  };
-};
-
-// type ScreenNavigationProp = StackNavigationProp<OrderNavigatorParamList, 'SendIssuesScreen'>;
-type ScreenRouteProp = RouteProp<IssuesParamList, 'ReportIssue'>;
+type ScreenNavigationProp = StackNavigationProp<
+  OngoingOrderNavigatorParamList & DeliveredOrderNavigatorParamList,
+  'ReportIssue'
+>;
+type ScreenRouteProp = RouteProp<
+  {
+    ReportIssue: {
+      issueType: IssueType;
+      orderId: string;
+    };
+  },
+  'ReportIssue'
+>;
 
 type Props = {
-  // navigation: ScreenNavigationProp;
+  navigation: ScreenNavigationProp;
   route: ScreenRouteProp;
 };
 
-export const ReportIssue = ({ route, navigation }: Props) => {
+export const ReportIssue = ({ navigation, route }: Props) => {
   // params
   const { orderId, issueType } = route.params;
   // context
@@ -100,18 +107,18 @@ export const ReportIssue = ({ route, navigation }: Props) => {
     if (!selectedIssue) return;
     if (issueType === 'courier-refuse') {
       (async () => {
+        setLoading(true);
         try {
-          setLoading(true);
           await api.order().rejectOrder(orderId, {
             courierId: courier.id,
             issue: selectedIssue,
             comment,
           });
-          navigation.navigate('Home');
+          navigation.popToTop();
         } catch (error) {
-          setLoading(false);
           dispatch(showToast(t('Não foi possível enviar o comentário')));
         }
+        setLoading(false);
       })();
     } else {
       (async () => {
@@ -146,10 +153,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
         background={colors.grey50}
         description={feedbackDescription}
       >
-        <DefaultButton
-          title={t('Voltar para o início')}
-          onPress={() => navigation.navigate('Home')}
-        />
+        <DefaultButton title={t('Voltar para o início')} onPress={() => navigation.popToTop()} />
       </FeedbackView>
     );
   }

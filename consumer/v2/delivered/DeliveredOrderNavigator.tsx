@@ -4,7 +4,6 @@ import { defaultScreenOptions } from '../../../common/screens/options';
 import { t } from '../../../strings';
 import { ReportIssue } from '../common/ReportIssue';
 import { DeliveredOrderDetail } from './DeliveredOrderDetail';
-import DeliveredOrderFeedback from './DeliveredOrderFeedback';
 import { DeliveredOrderNavigatorParamList } from './types';
 
 const Stack = createStackNavigator<DeliveredOrderNavigatorParamList>();
@@ -18,12 +17,7 @@ export const DeliveredOrderNavigator = () => {
         options={{ title: 'Detalhe do pedido' }}
       />
       <Stack.Screen
-        name="DeliveredOrderFeedback"
-        component={DeliveredOrderFeedback}
-        options={{ title: 'Detalhe do pedido' }}
-      />
-      <Stack.Screen
-        name="DeliveredOrderReportIssue"
+        name="ReportIssue"
         component={ReportIssue}
         options={{ title: t('Relatar um problema') }}
       />

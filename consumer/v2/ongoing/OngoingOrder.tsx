@@ -55,7 +55,7 @@ export default function ({ navigation, route }: Props) {
     if (newMessage) {
       setTimeout(() => {
         navigation.setParams({ newMessage: false });
-        navigation.navigate('Chat', { orderId });
+        navigation.navigate('OngoingOrderChat', { orderId });
       }, 100);
     }
   }, [navigation, newMessage, orderId]);
@@ -71,7 +71,7 @@ export default function ({ navigation, route }: Props) {
   React.useEffect(() => {
     if (!order) return;
     if (order.status === 'delivered') {
-      navigation.navigate('OrderDeliveredFeedback', { orderId });
+      navigation.navigate('OngoingOrderFeedback', { orderId });
     } else if (order.dispatchingState === 'no-match') {
       navigation.navigate('OngoingOrderNoMatch', { orderId });
     }
@@ -86,6 +86,8 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
+  // handlers
+  const openChatHandler = () => navigation.navigate('OngoingOrderChat', { orderId });
   // ongoing UI
   const nextPlace = courierNextPlace(order);
   const { dispatchingState } = order;
@@ -111,7 +113,7 @@ export default function ({ navigation, route }: Props) {
               <StatusAndMessages
                 dispatchingState={dispatchingState}
                 orderId={orderId}
-                onMessageReceived={() => navigation.navigate('Chat', { orderId })}
+                onMessageReceived={openChatHandler}
               />
             </View>
             <DeliveryInfo
@@ -128,16 +130,13 @@ export default function ({ navigation, route }: Props) {
             <HR />
             <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <View style={{ flex: 7 }}>
-                <DefaultButton
-                  title={t('Abrir chat')}
-                  onPress={() => navigation.navigate('Chat', { orderId })}
-                />
+                <DefaultButton title={t('Abrir chat')} onPress={openChatHandler} />
               </View>
               <View style={{ flex: 7, marginLeft: halfPadding }}>
                 <DefaultButton
                   title={t('Mais informações')}
                   onPress={() =>
-                    navigation.navigate('CourierDetail', {
+                    navigation.navigate('OngoingOrderCourierDetail', {
                       orderId,
                     })
                   }
@@ -156,7 +155,7 @@ export default function ({ navigation, route }: Props) {
                   <StatusAndMessages
                     dispatchingState={dispatchingState}
                     orderId={orderId}
-                    onMessageReceived={() => navigation.navigate('Chat', { orderId })}
+                    onMessageReceived={openChatHandler}
                   />
                 </View>
                 <DeliveryInfo
@@ -173,16 +172,13 @@ export default function ({ navigation, route }: Props) {
                 <HR />
                 <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   <View style={{ flex: 7 }}>
-                    <DefaultButton
-                      title={t('Abrir chat')}
-                      onPress={() => navigation.navigate('Chat', { orderId })}
-                    />
+                    <DefaultButton title={t('Abrir chat')} onPress={openChatHandler} />
                   </View>
                   <View style={{ flex: 7, marginLeft: halfPadding }}>
                     <DefaultButton
                       title={t('Mais informações')}
                       onPress={() =>
-                        navigation.navigate('CourierDetail', {
+                        navigation.navigate('OngoingOrderCourierDetail', {
                           orderId,
                         })
                       }
@@ -220,7 +216,7 @@ export default function ({ navigation, route }: Props) {
                 <PaddedView>
                   <DefaultButton
                     title={t('Cancelar pedido')}
-                    onPress={() => navigation.navigate('ConfirmCancelOrder', { orderId })}
+                    onPress={() => navigation.navigate('OngoingOrderConfirmCancel', { orderId })}
                     secondary
                   />
                 </PaddedView>

@@ -1,5 +1,5 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import { RouteProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ReviewType } from 'appjusto-types';
 import React from 'react';
@@ -19,13 +19,14 @@ import { t } from '../../../strings';
 import TipControl from '../../home/orders/common/TipControl';
 import { DeliveredItems } from '../../home/orders/components/DeliveredItems';
 import { ReviewBox } from '../../home/orders/components/ReviewBox';
-import { DeliveredOrderNavigatorParamList } from './types';
+import { LoggedNavigatorParamList } from '../types';
+import { OngoingOrderNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<
-  DeliveredOrderNavigatorParamList,
-  'DeliveredOrderFeedback'
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<OngoingOrderNavigatorParamList, 'OngoingOrderFeedback'>,
+  StackNavigationProp<LoggedNavigatorParamList>
 >;
-type ScreenRouteProp = RouteProp<DeliveredOrderNavigatorParamList, 'DeliveredOrderFeedback'>;
+type ScreenRouteProp = RouteProp<OngoingOrderNavigatorParamList, 'OngoingOrderFeedback'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -173,7 +174,7 @@ export default ({ navigation, route }: Props) => {
                 title={t('Relatar um problema')}
                 secondary
                 onPress={() =>
-                  navigation.navigate('ReportIssueOngoingOrder', {
+                  navigation.navigate('ReportIssue', {
                     orderId: order.id,
                     issueType: 'consumer-delivery-problem',
                   })
@@ -184,8 +185,11 @@ export default ({ navigation, route }: Props) => {
               <DefaultButton
                 title={t('Detalhes da corrida')}
                 onPress={() =>
-                  navigation.navigate('OrderDeliveredDetail', {
-                    orderId,
+                  navigation.navigate('DeliveredOrderNavigator', {
+                    screen: 'DeliveredOrderDetail',
+                    params: {
+                      orderId,
+                    },
                   })
                 }
                 secondary

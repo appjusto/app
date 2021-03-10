@@ -93,8 +93,11 @@ export default function ({ navigation, route }: Props) {
         },
       });
     } else if (status === 'delivered') {
-      navigation.navigate('OrderDeliveredDetail', {
-        orderId,
+      navigation.navigate('DeliveredOrderNavigator', {
+        screen: 'DeliveredOrderDetail',
+        params: {
+          orderId,
+        },
       });
     }
   };

@@ -27,9 +27,17 @@ import { formatAddress } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { P2POrderNavigatorParamList } from '../p2p/types';
 
-type P2PNavigatorProp = StackNavigationProp<P2POrderNavigatorParamList, 'AddressComplete'>;
-type ScreenNavigationProp = P2PNavigatorProp;
-type ScreenRouteProp = RouteProp<P2POrderNavigatorParamList, 'AddressComplete'>;
+type ScreenNavigationProp = StackNavigationProp<P2POrderNavigatorParamList, 'AddressComplete'>;
+type ScreenRouteProp = RouteProp<
+  {
+    AddressComplete: {
+      returnScreen: 'CreateOrderP2P';
+      returnParam: string;
+      value?: Place;
+    };
+  },
+  'AddressComplete'
+>;
 
 type Props = {
   navigation: ScreenNavigationProp;

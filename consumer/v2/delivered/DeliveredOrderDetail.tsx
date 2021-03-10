@@ -162,7 +162,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
           <DefaultButton
             title={t('Relatar um problema')}
             onPress={() =>
-              navigation.navigate('ReportIssueViaHistory', {
+              navigation.navigate('ReportIssue', {
                 orderId: order.id,
                 issueType: 'consumer-delivery-problem',
               })
