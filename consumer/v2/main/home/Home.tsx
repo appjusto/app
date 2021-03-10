@@ -15,9 +15,9 @@ import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { getOrders } from '../../../../common/store/order/selectors';
 import { colors, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import ConsumerHomeControls from '../../../home/ConsumerHomeControls';
 import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
+import { HomeControls } from './controls/HomeControls';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<MainNavigatorParamList, 'Home'>,
@@ -65,7 +65,14 @@ export default function ({ navigation }: Props) {
     <View style={[screens.default]}>
       {/* <StatusBar /> */}
       <ScrollView>
-        <ConsumerHomeControls navigation={navigation} />
+        <HomeControls
+          onStartOrderPress={(type) => {
+            if (type === 'p2p') {
+              navigation.navigate('P2POrderNavigator', { screen: 'CreateOrderP2P' });
+            }
+            // navigation.navigate('OrderNavigator', { screen: 'CreateOrderP2P' })
+          }}
+        />
         <PaddedView>
           <HomeOngoingDeliveries
             orders={ongoingOrders}

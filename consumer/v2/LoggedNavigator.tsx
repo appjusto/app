@@ -12,6 +12,8 @@ import { getUser } from '../../common/store/user/selectors';
 import { colors, screens } from '../../common/styles';
 import { MainNavigator } from './main/MainNavigator';
 import ProfileNavigator from './main/profile/ProfileNavigator';
+import { OngoingOrderNavigator } from './ongoing/OngoingOrderNavigator';
+import { P2POrderNavigator } from './p2p/P2POrderNavigator';
 import { LoggedNavigatorParamList } from './types';
 
 const Stack = createStackNavigator<LoggedNavigatorParamList>();
@@ -47,7 +49,16 @@ export const LoggedNavigator = () => {
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen name="MainNavigator" component={MainNavigator} options={{ title: 'Inicial' }} />
-      {/* <Stack.Screen name="" */}
+      <Stack.Screen
+        name="P2POrderNavigator"
+        component={P2POrderNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="OngoingOrderNavigator"
+        component={OngoingOrderNavigator}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="ProfileNavigator"
         component={ProfileNavigator}

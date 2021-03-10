@@ -14,9 +14,6 @@ const Tab = createBottomTabNavigator<MainNavigatorParamList>();
 export const MainNavigator = () => {
   return (
     <Tab.Navigator
-      screenOptions={{
-        title: 'B',
-      }}
       tabBarOptions={{
         activeTintColor: colors.black,
         inactiveTintColor: colors.black,
