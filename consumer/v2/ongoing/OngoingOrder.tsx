@@ -73,7 +73,7 @@ export default function ({ navigation, route }: Props) {
     if (order.status === 'delivered') {
       navigation.navigate('OrderDeliveredFeedback', { orderId });
     } else if (order.dispatchingState === 'no-match') {
-      navigation.navigate('OrderNoMatch', { orderId });
+      navigation.navigate('OngoingOrderNoMatch', { orderId });
     }
   }, [order]);
 

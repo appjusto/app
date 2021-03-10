@@ -1,7 +1,8 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { RouteProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { Order, WithId } from 'appjusto-types';
-import React, { useCallback, useMemo } from 'react';
+import React from 'react';
 import { Image, SectionList, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
@@ -26,9 +27,13 @@ import {
   separateWithDot,
 } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
+import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
 
-type ScreenNavigationProp = BottomTabNavigationProp<MainNavigatorParamList, 'OrderHistory'>;
+type ScreenNavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<MainNavigatorParamList, 'OrderHistory'>,
+  StackNavigationProp<LoggedNavigatorParamList>
+>;
 type ScreenRouteProp = RouteProp<MainNavigatorParamList, 'OrderHistory'>;
 
 type Props = {
@@ -43,7 +48,7 @@ export default function ({ navigation, route }: Props) {
   const options = React.useMemo(() => ({ consumerId: user?.uid }), [user?.uid]);
   const orders = useObserveOrders(options);
   const yearsWithOrders = getYearsWithOrders(orders);
-  const sections = useMemo(() => {
+  const sections = React.useMemo(() => {
     // data structure
     // [ { title: '2020', data: [ { monthName: 'Agosto', deliveries: 3, courierFee: 100 }] }]
     return yearsWithOrders.map((year) => {
@@ -54,17 +59,17 @@ export default function ({ navigation, route }: Props) {
         data: ordersInYear,
       };
     });
-  }, [yearsWithOrders]);
+  }, [orders, yearsWithOrders]);
 
   // handlers
-  const orderSelectHandler = useCallback((order: WithId<Order>) => {
+  const orderSelectHandler = (order: WithId<Order>) => {
     const orderId = order.id;
     const { type, status } = order;
     if (status === 'quote') {
       if (type === 'p2p') {
-        navigation.navigate('OrderNavigator', { screen: 'CreateOrderP2P', params: { orderId } });
+        navigation.navigate('P2POrderNavigator', { screen: 'CreateOrderP2P', params: { orderId } });
       } else {
-        navigation.navigate('RestaurantsNavigator', {
+        navigation.navigate('FoodOrderNavigator', {
           screen: 'RestaurantNavigator',
           initial: false,
           params: {
@@ -74,22 +79,25 @@ export default function ({ navigation, route }: Props) {
         });
       }
     } else if (status === 'confirming') {
-      navigation.navigate('OrderConfirming', {
-        orderId,
+      navigation.navigate('OngoingOrderNavigator', {
+        screen: 'OngoingOrderConfirming',
+        params: {
+          orderId,
+        },
       });
     } else if (isOrderOngoing(order)) {
-      navigation.navigate('OrderNavigator', {
+      navigation.navigate('OngoingOrderNavigator', {
         screen: 'OngoingOrder',
         params: {
           orderId,
         },
       });
     } else if (status === 'delivered') {
-      navigation.navigate('OrderDetail', {
+      navigation.navigate('OrderDeliveredDetail', {
         orderId,
       });
     }
-  }, []);
+  };
 
   // UI
   if (sections.length === 0) {

@@ -1,30 +1,31 @@
+import { IssueType } from 'appjusto-types';
+
 export type OngoingOrderNavigatorParamList = {
-  OrderConfirming: {
+  OngoingOrderConfirming: {
     orderId: string;
   };
-  OrderNoMatch: {
+  OngoingOrderNoMatch: {
     orderId: string;
   };
   OngoingOrder: {
     orderId: string;
     newMessage?: boolean;
   };
-  // CourierDetail: {
-  //   orderId: string;
-  // };
-  // ReportIssueOngoingOrder: {
-  //   issueType: IssueType;
-  //   orderId: string;
-  // };
-  // ConfirmCancelOrder: {
-  //   orderId: string;
-  // };
-  // CancelOrder: {
-  //   orderId: string;
-  // };
-  // OrderDeliveredFeedback: {
-  //   orderId: string;
-  // };
-  // // Home: undefined;
+  OngoingOrderConfirmCancel: {
+    orderId: string;
+  };
+  OngoingOrderCanceled: {
+    orderId: string;
+  };
+  OngoingOrderCourierDetail: {
+    orderId: string;
+  };
+  OngoingOrderReportIssue: {
+    orderId: string;
+    issueType: IssueType;
+  };
+  OngoingOrderFeedback: {
+    orderId: string;
+  };
 };
 // } & ChatParamList;

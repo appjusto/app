@@ -9,15 +9,14 @@ import FeedbackView from '../../../common/components/views/FeedbackView';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, padding } from '../../../common/styles';
 import { t } from '../../../strings';
-import { OrderNavigatorParamList } from '../../home/orders/types';
 import { LoggedNavigatorParamList } from '../types';
 import { OngoingOrderNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<OngoingOrderNavigatorParamList, 'OrderNoMatch'>,
+  StackNavigationProp<OngoingOrderNavigatorParamList, 'OngoingOrderNoMatch'>,
   StackNavigationProp<LoggedNavigatorParamList>
 >;
-type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'OrderNoMatch'>;
+type ScreenRouteProp = RouteProp<OngoingOrderNavigatorParamList, 'OngoingOrderNoMatch'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

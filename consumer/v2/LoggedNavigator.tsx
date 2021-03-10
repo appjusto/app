@@ -10,6 +10,7 @@ import { getConsumer } from '../../common/store/consumer/selectors';
 import { observeProfile } from '../../common/store/user/actions';
 import { getUser } from '../../common/store/user/selectors';
 import { colors, screens } from '../../common/styles';
+import { DeliveredOrderNavigator } from './delivered/DeliveredOrderNavigator';
 import { MainNavigator } from './main/MainNavigator';
 import ProfileNavigator from './main/profile/ProfileNavigator';
 import { OngoingOrderNavigator } from './ongoing/OngoingOrderNavigator';
@@ -49,6 +50,11 @@ export const LoggedNavigator = () => {
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen name="MainNavigator" component={MainNavigator} options={{ title: 'Inicial' }} />
+      <Stack.Screen
+        name="DeliveredOrderNavigator"
+        component={DeliveredOrderNavigator}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="P2POrderNavigator"
         component={P2POrderNavigator}

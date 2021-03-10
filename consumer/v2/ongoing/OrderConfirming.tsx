@@ -9,15 +9,14 @@ import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrd
 import { isOrderOngoing } from '../../../common/store/order/selectors';
 import { borders, colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
-import { OrderNavigatorParamList } from '../../home/orders/types';
 import { LoggedNavigatorParamList } from '../types';
 import { OngoingOrderNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<OngoingOrderNavigatorParamList, 'OrderConfirming'>,
+  StackNavigationProp<OngoingOrderNavigatorParamList, 'OngoingOrderConfirming'>,
   StackNavigationProp<LoggedNavigatorParamList>
 >;
-type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'OrderConfirming'>;
+type ScreenRouteProp = RouteProp<OngoingOrderNavigatorParamList, 'OngoingOrderConfirming'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -64,7 +63,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
     >
       <DefaultButton
         title={t('Cancelar pedido')}
-        onPress={() => navigation.navigate('ConfirmCancelOrder', { orderId })}
+        onPress={() => navigation.navigate('OngoingOrderConfirmCancel', { orderId })}
         style={{
           ...borders.default,
           marginBottom: padding,

@@ -1,4 +1,4 @@
-import { RouteProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Fleet, Place, WithId } from 'appjusto-types';
 import React from 'react';
@@ -9,11 +9,15 @@ import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrd
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { screens } from '../../../common/styles';
+import { LoggedNavigatorParamList } from '../types';
 import { P2POrderHeader } from './P2POrderHeader';
 import P2POrderPager from './P2POrderPager';
 import { P2POrderNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<P2POrderNavigatorParamList, 'CreateOrderP2P'>;
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<P2POrderNavigatorParamList, 'CreateOrderP2P'>,
+  StackNavigationProp<LoggedNavigatorParamList>
+>;
 type ScreenRouteProp = RouteProp<P2POrderNavigatorParamList, 'CreateOrderP2P'>;
 
 type Props = {
@@ -67,8 +71,10 @@ export default function ({ navigation, route }: Props) {
         api.order().updateOrder(orderId, { destination: route.params.destination });
       }
       if (route.params?.paymentMethodId) setSelectedPaymentMethodId(route.params?.paymentMethodId);
+      // clearing params
+      navigation.setParams({});
     })();
-  }, [route.params]);
+  }, [api, consumer, dispatch, navigation, order, orderId, route.params]);
 
   // handlers
   // navigate to 'AddressComplete' to enter address
@@ -92,9 +98,12 @@ export default function ({ navigation, route }: Props) {
     }
   }, [navigation, selectedPaymentMethodId]);
   // navigate to FleetDetail
-  const navigateFleetDetail = React.useCallback((fleet: WithId<Fleet>) => {
-    navigation.navigate('FleetDetail', { fleetId: fleet.id });
-  }, []);
+  const navigateFleetDetail = React.useCallback(
+    (fleet: WithId<Fleet>) => {
+      navigation.navigate('FleetDetail', { fleetId: fleet.id });
+    },
+    [navigation]
+  );
   // navigate to TransportableItems
   const navigateToTransportableItems = React.useCallback(() => {
     navigation.navigate('TransportableItems');
@@ -112,7 +121,10 @@ export default function ({ navigation, route }: Props) {
         fleetId,
       });
       setLoading(false);
-      navigation.replace('OrderConfirming', { orderId });
+      navigation.replace('OngoingOrderNavigator', {
+        screen: 'OngoingOrderConfirming',
+        params: { orderId },
+      });
     } catch (error) {
       dispatch(showToast(error.toString(), 'error'));
     }
