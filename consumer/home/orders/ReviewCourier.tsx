@@ -33,7 +33,7 @@ export default function ({ route, navigation }: Props) {
 
   //screen state
   const [reviewType, setReviewType] = React.useState<ReviewType>();
-  const [comment, setComment] = React.useState();
+  const [comment, setComment] = React.useState('');
 
   // UI handlers
   const sendReviewCourier = () => {
@@ -70,7 +70,7 @@ export default function ({ route, navigation }: Props) {
           review={reviewType}
           onReviewChange={(type) => setReviewType(type)}
           comment={comment}
-          onCommentChange={() => setComment(comment)}
+          onCommentChange={(value) => setComment(value)}
         />
         <View style={{ flex: 1 }} />
         <DefaultButton

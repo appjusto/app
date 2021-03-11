@@ -43,7 +43,7 @@ export default ({ navigation, route }: Props) => {
   const { order } = useObserveOrder(orderId);
   const [reviewType, setReviewType] = React.useState<ReviewType>();
   const review = useCourierReview(orderId, order?.courier?.id);
-  const [comment, setComment] = React.useState();
+  const [comment, setComment] = React.useState('');
   const [tip, setTip] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
 
@@ -153,7 +153,7 @@ export default ({ navigation, route }: Props) => {
           onReviewChange={(type) => setReviewType(type)}
           review={review?.type ?? reviewType}
           comment={comment}
-          onCommentChange={() => setComment(comment)}
+          onCommentChange={(value) => setComment(value)}
         />
         <HR />
         {/* actions */}

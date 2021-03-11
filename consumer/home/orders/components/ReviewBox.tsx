@@ -81,24 +81,22 @@ export const ReviewBox = ({
           </View>
         </TouchableWithoutFeedback>
       </View>
-      {comment && (
-        <View>
-          <Text style={{ ...texts.md, color: colors.grey700, marginBottom: halfPadding }}>
-            {t(
-              'Se preferir, descreva a sua experiência para outros clientes. Sua avaliação será anônima.'
-            )}
-          </Text>
-          <DefaultInput
-            editable={!disabled}
-            placeholder={t('Escreva sua mensagem')}
-            multiline
-            numberOfLines={6}
-            value={comment}
-            onChangeText={onCommentChange}
-            style={{ height: 80 }}
-          />
-        </View>
-      )}
+      <View>
+        <Text style={{ ...texts.md, color: colors.grey700, marginBottom: halfPadding }}>
+          {t(
+            'Se preferir, descreva a sua experiência para outros clientes. Sua avaliação será anônima.'
+          )}
+        </Text>
+        <DefaultInput
+          editable={!disabled}
+          placeholder={t('Escreva sua mensagem')}
+          multiline
+          numberOfLines={6}
+          value={comment}
+          onChangeText={onCommentChange}
+          style={{ height: 80 }}
+        />
+      </View>
     </PaddedView>
   );
 };

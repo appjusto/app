@@ -49,7 +49,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const { order } = useObserveOrder(orderId);
   const [tip, setTip] = React.useState(0);
   const [reviewType, setReviewType] = React.useState<ReviewType>();
-  const [comment, setComment] = React.useState();
+  const [comment, setComment] = React.useState('');
   const review = useCourierReview(orderId, order?.courier?.id);
   const [isLoading, setLoading] = React.useState(false);
 
@@ -137,7 +137,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
           review={review?.type ?? reviewType}
           onReviewChange={(type) => setReviewType(type)}
           comment={comment}
-          onCommentChange={() => setComment(comment)}
+          onCommentChange={(value) => setComment(value)}
         />
         <DefaultButton
           title={review?.type ? t('Avaliação enviada') : t('Avaliar entregador')}
