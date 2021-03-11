@@ -1,16 +1,16 @@
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Text, View } from 'react-native';
-import DefaultInput from '../../../../common/components/inputs/DefaultInput';
-import { halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import DefaultInput from '../../../components/inputs/DefaultInput';
+import { halfPadding, padding, texts } from '../../../styles';
 
 type Props = {
   value: string;
   onAddInfo: (text: string) => void;
 };
 
-export default function ({ value, onAddInfo }: Props) {
+export const OrderAdditionalInfo = ({ value, onAddInfo }: Props) => {
   return (
     <View style={{ paddingHorizontal: padding, marginBottom: padding }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: halfPadding }}>
@@ -29,4 +29,4 @@ export default function ({ value, onAddInfo }: Props) {
       />
     </View>
   );
-}
+};

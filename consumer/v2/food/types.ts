@@ -1,7 +1,7 @@
 import { Place } from 'appjusto-types';
 import { NestedNavigatorParams } from '../../../common/types';
-import { RestaurantNavigatorParamList } from '../../home/restaurants/restaurant/types';
 import { AddressCompleteParamList } from '../common/AddressComplete';
+import { RestaurantNavigatorParamList } from './restaurant/types';
 
 export type FoodOrderNavigatorParamList = {
   FoodOrderHome?: {

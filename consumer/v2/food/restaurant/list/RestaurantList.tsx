@@ -11,7 +11,7 @@ import useCuisines from '../../../../../common/store/api/platform/hooks/useCuisi
 import { getCurrentLocation } from '../../../../../common/store/consumer/selectors';
 import { colors, halfPadding, padding, screens } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
-import RestaurantListItem from '../../../../home/restaurants/search/RestaurantListItem';
+import { RestaurantListItem } from './RestaurantListItem';
 
 type Props = {
   items?: BusinessAlgolia[];

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Image, View } from 'react-native';
-import * as icons from '../../../assets/icons';
-import FeedbackView from '../../../common/components/views/FeedbackView';
-import HomeShareCard from '../../../common/screens/home/cards/HomeShareCard';
-import { t } from '../../../strings';
+import * as icons from '../../../../assets/icons';
+import FeedbackView from '../../../../common/components/views/FeedbackView';
+import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
+import { t } from '../../../../strings';
 
 export default function () {
   return (

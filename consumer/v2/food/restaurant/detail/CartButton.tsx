@@ -1,11 +1,11 @@
 import { Order, WithId } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
-import RoundedText from '../../../../common/components/texts/RoundedText';
-import { getOrderTotal } from '../../../../common/store/api/order/helpers';
-import { colors, halfPadding, texts } from '../../../../common/styles';
-import { formatCurrency } from '../../../../common/utils/formatters';
-import { t } from '../../../../strings';
+import RoundedText from '../../../../../common/components/texts/RoundedText';
+import { getOrderTotal } from '../../../../../common/store/api/order/helpers';
+import { colors, halfPadding, texts } from '../../../../../common/styles';
+import { formatCurrency } from '../../../../../common/utils/formatters';
+import { t } from '../../../../../strings';
 
 interface Props {
   order: WithId<Order> | undefined;

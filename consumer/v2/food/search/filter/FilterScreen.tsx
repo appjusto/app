@@ -23,14 +23,14 @@ import {
 import { SearchOrder } from '../../../../../common/store/consumer/types';
 import { colors, halfPadding, padding, screens } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
-import { RestaurantsNavigatorParamList } from '../../../../home/restaurants/types';
+import { FoodOrderNavigatorParamList } from '../../types';
 
 type OrderByItem = {
   title: string;
   value: SearchOrder;
 };
 
-type ScreenNavigationProp = StackNavigationProp<RestaurantsNavigatorParamList>;
+type ScreenNavigationProp = StackNavigationProp<FoodOrderNavigatorParamList, 'FilterScreen'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

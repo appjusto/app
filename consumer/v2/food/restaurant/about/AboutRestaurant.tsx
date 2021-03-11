@@ -3,11 +3,11 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
-import { useContextBusiness } from '../../../../common/store/context/business';
-import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
-import { formatCurrency } from '../../../../common/utils/formatters';
-import { t } from '../../../../strings';
-import { RestaurantHeader } from '../../../home/restaurants/components/RestaurantHeader';
+import { useContextBusiness } from '../../../../../common/store/context/business';
+import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
+import { formatCurrency } from '../../../../../common/utils/formatters';
+import { t } from '../../../../../strings';
+import { RestaurantHeader } from '../../../../home/restaurants/components/RestaurantHeader';
 import { RestaurantNavigatorParamList } from '../../../home/restaurants/restaurant/types';
 
 type ScreenNavigationProp = StackNavigationProp<RestaurantNavigatorParamList>;

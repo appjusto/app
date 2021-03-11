@@ -10,13 +10,13 @@ import { OrderItems } from '../../../../consumer/home/orders/summary/OrderItems'
 import { OrderPayment } from '../../../../consumer/home/orders/summary/OrderPayment';
 import { OrderPlacesSummary } from '../../../../consumer/home/orders/summary/OrderPlacesSummary';
 import { OrderTotal } from '../../../../consumer/home/orders/summary/OrderTotal';
-import AddInfo from '../../../../consumer/home/restaurants/components/AddInfo';
 import { ApiContext, AppDispatch } from '../../../app/context';
 import HR from '../../../components/views/HR';
 import { showToast } from '../../../store/ui/actions';
 import { getUIBusy } from '../../../store/ui/selectors';
 import { padding } from '../../../styles';
 import OrderMap from '../OrderMap';
+import { OrderAdditionalInfo } from './OrderAdditionaInfo';
 
 type Props = {
   order: WithId<Order>;
@@ -50,7 +50,7 @@ export const OrderSummary = ({
   const busy = useSelector(getUIBusy);
   const [quotes, setQuotes] = React.useState<Fare[]>();
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
-  const [notes, setNotes] = React.useState('');
+  const [additionalInfo, setAdditionalInfo] = React.useState('');
   const canSubmit = React.useMemo(() => {
     return selectedPaymentMethodId !== undefined && selectedFare !== undefined && !waiting;
   }, [selectedPaymentMethodId, selectedFare, waiting]);
@@ -100,7 +100,7 @@ export const OrderSummary = ({
             onEditItemPress={onEditItemPress!}
             onAddItemsPress={onAddItemsPress!}
           />
-          <AddInfo value={notes} onAddInfo={setNotes} />
+          <OrderAdditionalInfo value={additionalInfo} onAddInfo={setAdditionalInfo} />
         </View>
       )}
 

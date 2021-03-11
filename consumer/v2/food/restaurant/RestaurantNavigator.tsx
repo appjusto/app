@@ -3,10 +3,10 @@ import React from 'react';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { t } from '../../../../strings';
 import { AddressComplete } from '../../common/AddressComplete';
-import { AboutRestaurant } from './AboutRestaurant';
+import { AboutRestaurant } from './about/AboutRestaurant';
 import { FoodOrderCheckout } from './checkout/FoodOrderCheckout';
+import { RestaurantDetail } from './detail/RestaurantDetail';
 import { ItemDetail } from './product/ItemDetail';
-import { RestaurantDetail } from './RestaurantDetail';
 import { RestaurantNavigatorParamList } from './types';
 
 const Stack = createStackNavigator<RestaurantNavigatorParamList>();
