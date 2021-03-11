@@ -12,7 +12,7 @@ type Props = {
   onSelect: (cuisine: WithId<Cuisine> | null) => void;
 };
 
-export default function ({ selectedCuisineId, onSelect }: Props) {
+export const CuisineSelector = ({ selectedCuisineId, onSelect }: Props) => {
   const cuisines = useCuisines();
   return (
     <View>
@@ -35,4 +35,4 @@ export default function ({ selectedCuisineId, onSelect }: Props) {
       </View>
     </View>
   );
-}
+};

@@ -9,6 +9,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import HR from '../../../common/components/views/HR';
 import useNotificationToken from '../../../common/hooks/useNotificationToken';
+import { StatusAndMessages } from '../../../common/screens/orders/ongoing/StatusAndMessages';
 import OrderMap from '../../../common/screens/orders/OrderMap';
 import { courierNextPlace } from '../../../common/store/api/order/helpers';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
@@ -16,11 +17,9 @@ import { getConsumer } from '../../../common/store/consumer/selectors';
 import { updateProfile } from '../../../common/store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
-import { DeliveredItems } from '../../home/orders/components/DeliveredItems';
-import { DeliveryInfo } from '../../home/orders/components/DeliveryInfo';
-import { StatusAndMessages } from '../../home/orders/components/StatusAndMessages';
-import { OrderNavigatorParamList } from '../../home/orders/types';
+import { DeliveredItems } from '../common/DeliveredItems';
 import { LoggedNavigatorParamList } from '../types';
+import { DeliveryInfo } from './DeliveryInfo';
 import { OngoingOrderStatus } from './OngoingOrderStatus';
 import { OngoingOrderNavigatorParamList } from './types';
 
@@ -28,7 +27,7 @@ type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<OngoingOrderNavigatorParamList, 'OngoingOrder'>,
   StackNavigationProp<LoggedNavigatorParamList>
 >;
-type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'OngoingOrder'>;
+type ScreenRouteProp = RouteProp<OngoingOrderNavigatorParamList, 'OngoingOrder'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

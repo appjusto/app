@@ -7,7 +7,7 @@ import { getSearchKind } from '../../../../common/store/consumer/selectors';
 import { SearchKind } from '../../../../common/store/consumer/types';
 import { borders, colors, halfPadding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import FilterButton from '../../../home/restaurants/components/filter/FilterButton';
+import { FilterButton } from './FilterButton';
 
 type Item = {
   kind: SearchKind;
@@ -23,7 +23,7 @@ interface Props extends ViewProps {
   onFilterOpen: () => void;
 }
 
-export default function ({ style, onFilterOpen }: Props) {
+export const FilterSelector = ({ style, onFilterOpen }: Props) => {
   // redux store
   const dispatch = useDispatch<AppDispatch>();
   const selectedSearchKind = useSelector(getSearchKind);
@@ -70,4 +70,4 @@ export default function ({ style, onFilterOpen }: Props) {
       />
     </View>
   );
-}
+};

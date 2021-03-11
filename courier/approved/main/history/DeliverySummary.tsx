@@ -15,7 +15,7 @@ import {
   formatDuration,
   separateWithDot,
 } from '../../../../common/utils/formatters';
-import { OrderCostBreakdown } from '../../../../consumer/home/orders/summary/breakdown/OrderCostBreakdown';
+import { OrderCostBreakdown } from '../../../../consumer/v2/common/breakdown/OrderCostBreakdown';
 import { t } from '../../../../strings';
 import { DeliveriesNavigatorParamList } from './types';
 

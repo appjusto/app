@@ -1,9 +1,9 @@
 import { DispatchingState } from 'appjusto-types';
 import React from 'react';
 import { View } from 'react-native';
-import { MessagesCard } from '../../../../common/screens/home/cards/MessagesCard';
-import CourierStatusHighlight from '../../../../common/screens/orders/ongoing/CourierStatusHighlight';
-import { padding } from '../../../../common/styles';
+import { padding } from '../../../styles';
+import { MessagesCard } from '../../home/cards/MessagesCard';
+import CourierStatusHighlight from './CourierStatusHighlight';
 
 type Props = {
   dispatchingState: DispatchingState;

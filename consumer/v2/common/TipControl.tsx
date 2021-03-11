@@ -1,14 +1,14 @@
 import { Order } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
-import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import HorizontalSelect, {
   HorizontalSelectItem,
-} from '../../../../common/components/buttons/HorizontalSelect';
-import RoundedProfileImg from '../../../../common/components/icons/RoundedProfileImg';
-import { colors, halfPadding, padding, texts } from '../../../../common/styles';
-import { formatCurrency, formatDate } from '../../../../common/utils/formatters';
-import { t } from '../../../../strings';
+} from '../../../common/components/buttons/HorizontalSelect';
+import RoundedProfileImg from '../../../common/components/icons/RoundedProfileImg';
+import { colors, halfPadding, padding, texts } from '../../../common/styles';
+import { formatCurrency, formatDate } from '../../../common/utils/formatters';
+import { t } from '../../../strings';
 
 type Props = {
   order: Order;

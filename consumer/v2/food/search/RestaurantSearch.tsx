@@ -17,7 +17,7 @@ import { colors, padding, screens } from '../../../../common/styles';
 import RestaurantList from '../restaurant/list/RestaurantList';
 import { ProductListItem } from '../restaurant/product/ProductListItem';
 import { FoodOrderNavigatorParamList } from '../types';
-import FilterSelector from './FilterSelector';
+import { FilterSelector } from './FilterSelector';
 
 type ScreenNavigationProp = StackNavigationProp<FoodOrderNavigatorParamList, 'RestaurantSearch'>;
 

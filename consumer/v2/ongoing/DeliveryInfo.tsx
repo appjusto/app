@@ -2,10 +2,10 @@ import { Order, Place, WithId } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import RoundedProfileImg from '../../../../common/components/icons/RoundedProfileImg';
-import { CourierDistanceBadge } from '../../../../common/screens/orders/ongoing/CourierDistanceBadge';
-import { colors, padding, texts } from '../../../../common/styles';
-import { t } from '../../../../strings';
+import RoundedProfileImg from '../../../common/components/icons/RoundedProfileImg';
+import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/CourierDistanceBadge';
+import { colors, padding, texts } from '../../../common/styles';
+import { t } from '../../../strings';
 
 type Props = {
   order: WithId<Order>;

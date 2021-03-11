@@ -10,10 +10,10 @@ import { StepControl } from '../../../common/components/controls/step-control/St
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../common/components/texts/LabeledText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
-import { OrderSummary } from '../../../common/screens/orders/summary/OrderSummary';
 import { doublePadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
-import { Step } from '../../home/orders/p2p-order/types';
+import { OrderSummary } from '../common/order-summary/OrderSummary';
+import { Step } from './types';
 
 type Props = {
   order: WithId<Order> | undefined;

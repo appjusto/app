@@ -9,7 +9,7 @@ import {
 } from '../../../../../common/store/context/business';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { colors, screens } from '../../../../../common/styles';
-import { RestaurantHeader } from '../../../../home/restaurants/components/RestaurantHeader';
+import { RestaurantHeader } from '../../common/RestaurantHeader';
 import { ProductListItem } from '../product/ProductListItem';
 import { RestaurantNavigatorParamList } from '../types';
 import { CartButton } from './CartButton';

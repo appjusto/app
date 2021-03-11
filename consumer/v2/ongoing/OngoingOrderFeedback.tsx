@@ -16,9 +16,9 @@ import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrd
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
-import TipControl from '../../home/orders/common/TipControl';
-import { DeliveredItems } from '../../home/orders/components/DeliveredItems';
-import { ReviewBox } from '../../home/orders/components/ReviewBox';
+import { DeliveredItems } from '../common/DeliveredItems';
+import { ReviewBox } from '../common/review/ReviewBox';
+import TipControl from '../common/TipControl';
 import { LoggedNavigatorParamList } from '../types';
 import { OngoingOrderNavigatorParamList } from './types';
 

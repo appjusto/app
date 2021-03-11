@@ -27,7 +27,7 @@ export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) =>
   const location = useSelector(getCurrentLocation);
   // state
   const cuisines = useCuisines();
-  const cuisine = cuisines?.find((c) => c.id === restaurant.cuisine?.id);
+  const cuisine = cuisines?.find((c) => c.name === restaurant.cuisine);
   const averagePreparationTime = restaurant.statistics?.averagePreparationTime ?? 0;
   const { data: coverURI } = useBusinessCoverImageURI(restaurant.id);
   const distance =

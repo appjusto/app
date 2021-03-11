@@ -23,10 +23,10 @@ import {
   separateWithDot,
 } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
-import TipControl from '../../home/orders/common/TipControl';
-import { DeliveredItems } from '../../home/orders/components/DeliveredItems';
-import { ReviewBox } from '../../home/orders/components/ReviewBox';
-import { OrderCostBreakdown } from '../../home/orders/summary/breakdown/OrderCostBreakdown';
+import { OrderCostBreakdown } from '../common/breakdown/OrderCostBreakdown';
+import { DeliveredItems } from '../common/DeliveredItems';
+import { ReviewBox } from '../common/review/ReviewBox';
+import TipControl from '../common/TipControl';
 import { DeliveredOrderNavigatorParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<

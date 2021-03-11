@@ -9,7 +9,7 @@ import {
   separateWithDot,
 } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
-import { Step } from '../p2p-order/types';
+import { Step } from '../../p2p/types';
 
 interface Props {
   order: Order;

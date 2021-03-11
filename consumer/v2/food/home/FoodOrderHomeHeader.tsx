@@ -1,12 +1,12 @@
 import { Cuisine, WithId } from 'appjusto-types';
 import React from 'react';
-import { TouchableWithoutFeedback, View } from 'react-native';
+import { Image, Text, TouchableWithoutFeedback, View } from 'react-native';
+import * as icons from '../../../../assets/icons';
 import DoubleHeader from '../../../../common/components/texts/DoubleHeader';
-import { halfPadding } from '../../../../common/styles';
+import { borders, colors, halfPadding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import LocationBar from '../../../home/restaurants/components/LocationBar';
-import RestaurantSearchBar from '../../../home/restaurants/home/RestaurantSearchButton';
-import CuisineSelector from './CuisineSelector';
+import { CuisineSelector } from './CuisineSelector';
+import { LocationBar } from './LocationBar';
 
 type Props = {
   isLoading: boolean;
@@ -37,7 +37,23 @@ export const FoodOrderHomeHeader = ({
       <View style={{ marginTop: 24, paddingHorizontal: 12, marginBottom: halfPadding }}>
         <TouchableWithoutFeedback onPress={onSearchPress}>
           <View>
-            <RestaurantSearchBar />
+            <View
+              style={{
+                height: 60,
+                width: '100%',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: 12,
+                ...borders.default,
+                borderColor: colors.black,
+              }}
+            >
+              <Text style={{ ...texts.sm, color: colors.grey700 }}>
+                {t('Buscar por prato ou restaurante')}
+              </Text>
+              <Image source={icons.search} />
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </View>

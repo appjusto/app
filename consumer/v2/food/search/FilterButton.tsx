@@ -1,14 +1,14 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { borders, halfPadding, padding, texts } from '../../../../../common/styles';
-import { t } from '../../../../../strings';
+import { borders, halfPadding, padding, texts } from '../../../../common/styles';
+import { t } from '../../../../strings';
 
 type Props = {
   onPress: () => void;
 };
 
-export default function ({ onPress }: Props) {
+export const FilterButton = ({ onPress }: Props) => {
   return (
     <TouchableOpacity onPress={onPress} style={{ marginRight: padding }}>
       <View
@@ -26,4 +26,4 @@ export default function ({ onPress }: Props) {
       </View>
     </TouchableOpacity>
   );
-}
+};

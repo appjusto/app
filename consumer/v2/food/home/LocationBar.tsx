@@ -17,7 +17,7 @@ import { borders, colors, halfPadding, texts } from '../../../../common/styles';
 import { formatAddress } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 
-export default function () {
+export const LocationBar = () => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -86,4 +86,4 @@ export default function () {
       <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Alterar')}</Text>
     </View>
   );
-}
+};

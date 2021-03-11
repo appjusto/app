@@ -1,10 +1,10 @@
 import { Order, WithId } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
-import SingleHeader from '../../../../common/components/texts/SingleHeader';
-import HR from '../../../../common/components/views/HR';
-import { colors, padding, texts } from '../../../../common/styles';
-import { formatCurrency } from '../../../../common/utils/formatters';
+import SingleHeader from '../../../common/components/texts/SingleHeader';
+import HR from '../../../common/components/views/HR';
+import { colors, padding, texts } from '../../../common/styles';
+import { formatCurrency } from '../../../common/utils/formatters';
 
 interface Props {
   order: WithId<Order>;

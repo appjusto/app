@@ -20,3 +20,10 @@ export type P2POrderNavigatorParamList = {
   };
 } & AddressCompleteParamList;
 // } & ChatParamList;
+
+export enum Step {
+  Origin = 0,
+  Destination,
+  Confirmation,
+  ConfirmingOrder,
+}
