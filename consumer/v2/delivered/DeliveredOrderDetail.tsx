@@ -91,7 +91,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
 
   return (
     <View style={{ ...screens.default }}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <OrderMap order={order} ratio={360 / 160} />
         <PaddedView>
           <PlaceSummary title={t('Retirada')} place={order.origin!} />
@@ -144,7 +144,8 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
           onPress={reviewHandler}
           style={{ margin: padding }}
           activityIndicator={isLoading}
-          disabled={isLoading || !!review?.type}
+          // disabled={isLoading || !!review?.type} doesn't work
+          disabled={isLoading || review?.type} // wrong type, but works
         />
         <HR height={padding} />
         {order.tip?.value! > 0 ? (
