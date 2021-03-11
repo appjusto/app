@@ -127,12 +127,11 @@ export default function ({ navigation, route }: Props) {
             <View style={{ flex: 7, marginLeft: halfPadding }}>
               <DefaultButton
                 title={t('Alterar rota')}
-                onPress={() => null}
-                // onPress={() =>
-                //   navigation.navigate('CourierDetail', {
-                //     orderId,
-                //   })
-                // }
+                onPress={() =>
+                  navigation.navigate('CreateOrderP2P', {
+                    orderId,
+                  })
+                }
                 secondary
               />
             </View>
@@ -191,12 +190,11 @@ export default function ({ navigation, route }: Props) {
                 <View style={{ flex: 7, marginLeft: halfPadding }}>
                   <DefaultButton
                     title={t('Alterar rota')}
-                    onPress={() => null}
-                    // onPress={() =>
-                    //   navigation.navigate('CourierDetail', {
-                    //     orderId,
-                    //   })
-                    // }
+                    onPress={() =>
+                      navigation.navigate('CreateOrderP2P', {
+                        orderId,
+                      })
+                    }
                     secondary
                   />
                 </View>
