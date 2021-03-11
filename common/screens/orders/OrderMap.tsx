@@ -3,10 +3,10 @@ import { Order } from 'appjusto-types';
 import React from 'react';
 import { Dimensions, View } from 'react-native';
 import { LatLng, Marker, Polyline } from 'react-native-maps';
-import DefaultMap from '../../../common/components/views/DefaultMap';
-import { IconMapCourier } from '../../../common/icons/icon-mapCourier';
-import { IconMapDestination } from '../../../common/icons/icon-mapDestination';
-import { IconMapOrigin } from '../../../common/icons/icon-mapOrigin';
+import DefaultMap from '../../components/views/DefaultMap';
+import { IconMapCourier } from '../../icons/icon-mapCourier';
+import { IconMapDestination } from '../../icons/icon-mapDestination';
+import { IconMapOrigin } from '../../icons/icon-mapOrigin';
 
 type Props = {
   order?: Order;

@@ -2,17 +2,17 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
-import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import PaddedView from '../../../common/components/containers/PaddedView';
-import HR from '../../../common/components/views/HR';
-import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
-import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
-import { t } from '../../../strings';
-import { AboutCourier } from '../../home/orders/components/AboutCourier';
-import OrderFleetCard from '../../home/orders/OrderFleetCard';
-import SingleHeader from '../../home/restaurants/SingleHeader';
-import { LoggedNavigatorParamList } from '../types';
-import { OngoingOrderNavigatorParamList } from './types';
+import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../../common/components/containers/PaddedView';
+import SingleHeader from '../../../../common/components/texts/SingleHeader';
+import HR from '../../../../common/components/views/HR';
+import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
+import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { t } from '../../../../strings';
+import { LoggedNavigatorParamList } from '../../types';
+import { OngoingOrderNavigatorParamList } from '../types';
+import { OrderCourierSummary } from './OrderCourierSummary';
+import { OrderFleetSummary } from './OrderFleetSummary';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<OngoingOrderNavigatorParamList, 'OngoingOrderCourierDetail'>,
@@ -83,10 +83,10 @@ export const OngoingOrderCourierDetail = ({ navigation, route }: Props) => {
       </View>
       <HR height={padding} />
       <View style={{ paddingBottom: padding }}>
-        <AboutCourier order={order} />
+        <OrderCourierSummary courier={order.courier!} />
         <SingleHeader title={t('Integrante da frota')} />
         <PaddedView>
-          <OrderFleetCard fleet={order.fare!.fleet} />
+          <OrderFleetSummary fleetId={order.fare!.fleet.id} />
         </PaddedView>
       </View>
       <View>

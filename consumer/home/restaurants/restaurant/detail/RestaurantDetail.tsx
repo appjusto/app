@@ -1,6 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, SectionList, TouchableOpacity, View } from 'react-native';
+import SingleHeader from '../../../../../common/components/texts/SingleHeader';
 import { useMenu } from '../../../../../common/store/api/business/hooks/useMenu';
 import {
   useContextBusiness,
@@ -9,7 +10,6 @@ import {
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { colors, screens } from '../../../../../common/styles';
 import { RestaurantHeader } from '../../components/RestaurantHeader';
-import SingleHeader from '../../SingleHeader';
 import { CartButton } from '../CartButton';
 import { RestaurantNavigatorParamList } from '../types';
 import { ProductListItem } from './ProductListItem';

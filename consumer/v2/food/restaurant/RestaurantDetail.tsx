@@ -1,6 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, SectionList, TouchableOpacity, View } from 'react-native';
+import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { useMenu } from '../../../../common/store/api/business/hooks/useMenu';
 import {
   useContextBusiness,
@@ -12,7 +13,6 @@ import { RestaurantHeader } from '../../../home/restaurants/components/Restauran
 import { CartButton } from '../../../home/restaurants/restaurant/CartButton';
 import { ProductListItem } from '../../../home/restaurants/restaurant/detail/ProductListItem';
 import { RestaurantNavigatorParamList } from '../../../home/restaurants/restaurant/types';
-import SingleHeader from '../../../home/restaurants/SingleHeader';
 
 type ScreenNavigationProp = StackNavigationProp<RestaurantNavigatorParamList>;
 // type ScreenRouteProp = RouteProp<RestaurantNavigatorParamList, 'RestaurantDetail'>;

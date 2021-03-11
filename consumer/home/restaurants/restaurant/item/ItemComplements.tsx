@@ -1,10 +1,10 @@
 import { Complement, ComplementGroup, Product, WithId } from 'appjusto-types';
 import React from 'react';
 import { View } from 'react-native';
+import SingleHeader from '../../../../../common/components/texts/SingleHeader';
 import HR from '../../../../../common/components/views/HR';
 import * as helpers from '../../../../../common/store/api/order/helpers';
 import { halfPadding, padding } from '../../../../../common/styles';
-import SingleHeader from '../../SingleHeader';
 import { ProductComplementListItem } from '../detail/ProductComplementListItem';
 import { ItemComplementRequiredLabel } from './ItemComplementRequiredLabel';
 

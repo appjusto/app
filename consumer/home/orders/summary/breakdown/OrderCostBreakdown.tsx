@@ -3,11 +3,11 @@ import { isEmpty } from 'lodash';
 import React from 'react';
 import { Text, View } from 'react-native';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
+import SingleHeader from '../../../../../common/components/texts/SingleHeader';
 import { getOrderTotal } from '../../../../../common/store/api/order/helpers';
 import { colors, padding, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
-import SingleHeader from '../../../restaurants/SingleHeader';
 
 type Props = {
   order: Order;

@@ -5,6 +5,7 @@ import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
+import OrderMap from '../../../../common/screens/orders/OrderMap';
 import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import {
@@ -13,7 +14,6 @@ import {
   formatDuration,
   separateWithDot,
 } from '../../../../common/utils/formatters';
-import OrderMap from '../../../../consumer/home/orders/p2p-order/OrderMap';
 import PlaceSummary from '../../../../consumer/home/orders/p2p-order/PlaceSummary';
 import { OrderCostBreakdown } from '../../../../consumer/home/orders/summary/breakdown/OrderCostBreakdown';
 import { t } from '../../../../strings';

@@ -3,7 +3,7 @@ import React from 'react';
 import { defaultScreenOptions } from '../../../common/screens/options';
 import { BusinessProvider } from '../../../common/store/context/business';
 import { t } from '../../../strings';
-import AddressComplete from '../../home/orders/AddressComplete';
+import { AddressComplete } from '../common/AddressComplete';
 import { FoodOrderHome } from './home/FoodOrderHome';
 import RestaurantNavigator from './restaurant/RestaurantNavigator';
 import { FilterScreen } from './search/filter/FilterScreen';

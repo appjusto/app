@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import Pill from '../../../common/components/views/Pill';
-import { halfPadding, padding, texts } from '../../../common/styles';
+import { halfPadding, padding, texts } from '../../styles';
+import Pill from '../views/Pill';
 
 type Props = {
   title: string;

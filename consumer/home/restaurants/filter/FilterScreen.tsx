@@ -7,6 +7,7 @@ import CheckField from '../../../../common/components/buttons/CheckField';
 import RadioButton from '../../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
+import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import HR from '../../../../common/components/views/HR';
 import useCuisines from '../../../../common/store/api/platform/hooks/useCuisines';
 import { useFoodClassifications } from '../../../../common/store/api/platform/hooks/useFoodClassifications';
@@ -19,7 +20,6 @@ import {
 import { SearchOrder } from '../../../../common/store/consumer/types';
 import { colors, halfPadding, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import SingleHeader from '../SingleHeader';
 import { RestaurantsNavigatorParamList } from '../types';
 
 type OrderByItem = {
