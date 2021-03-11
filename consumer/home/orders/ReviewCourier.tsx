@@ -33,6 +33,7 @@ export default function ({ route, navigation }: Props) {
 
   //screen state
   const [reviewType, setReviewType] = React.useState<ReviewType>();
+  const [comment, setComment] = React.useState();
 
   // UI handlers
   const sendReviewCourier = () => {
@@ -42,6 +43,7 @@ export default function ({ route, navigation }: Props) {
         await api.courier().addReview(courierId, {
           type: reviewType,
           orderId,
+          comment,
         });
       } catch (error) {
         dispatch(showToast(t('Não foi possível enviar o comentário')));
@@ -64,7 +66,12 @@ export default function ({ route, navigation }: Props) {
           </View>
         </PaddedView>
         <HR height={padding} />
-        <ReviewBox selectReview={(type) => setReviewType(type)} />
+        <ReviewBox
+          review={reviewType}
+          onReviewChange={(type) => setReviewType(type)}
+          comment={comment}
+          onCommentChange={() => setComment(comment)}
+        />
         <View style={{ flex: 1 }} />
         <DefaultButton
           title={t('Enviar')}

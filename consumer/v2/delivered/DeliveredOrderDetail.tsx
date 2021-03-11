@@ -49,6 +49,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const { order } = useObserveOrder(orderId);
   const [tip, setTip] = React.useState(0);
   const [reviewType, setReviewType] = React.useState<ReviewType>();
+  const [comment, setComment] = React.useState();
   const review = useCourierReview(orderId, order?.courier?.id);
   const [isLoading, setLoading] = React.useState(false);
 
@@ -79,6 +80,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
         await api.courier().addReview(order.courier!.id, {
           type: reviewType,
           orderId,
+          comment,
         });
       }
     } catch (error) {
@@ -134,6 +136,8 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
         <ReviewBox
           review={review?.type ?? reviewType}
           onReviewChange={(type) => setReviewType(type)}
+          comment={comment}
+          onCommentChange={() => setComment(comment)}
         />
         <DefaultButton
           title={review?.type ? t('Avaliação enviada') : t('Avaliar entregador')}

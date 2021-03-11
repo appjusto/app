@@ -43,6 +43,7 @@ export default ({ navigation, route }: Props) => {
   // screen state
   const { order } = useObserveOrder(orderId);
   const [reviewType, setReviewType] = React.useState<ReviewType>();
+  const [comment, setComment] = React.useState();
   const review = useCourierReview(orderId, order?.courier?.id);
   const [tip, setTip] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -63,6 +64,7 @@ export default ({ navigation, route }: Props) => {
         await api.courier().addReview(order.courier!.id, {
           type: reviewType,
           orderId,
+          comment,
         });
       }
       if (tip > 0) await api.order().tipCourier(order.id, tip);
@@ -151,6 +153,8 @@ export default ({ navigation, route }: Props) => {
         <ReviewBox
           onReviewChange={(type) => setReviewType(type)}
           review={review?.type ?? reviewType}
+          comment={comment}
+          onCommentChange={() => setComment(comment)}
         />
         <HR />
         {/* actions */}
