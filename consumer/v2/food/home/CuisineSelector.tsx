@@ -1,11 +1,11 @@
 import { Cuisine, WithId } from 'appjusto-types';
 import React from 'react';
 import { FlatList, TouchableOpacity, View } from 'react-native';
+import DoubleHeader from '../../../../common/components/texts/DoubleHeader';
 import useCuisines from '../../../../common/store/api/platform/hooks/useCuisines';
 import { halfPadding, padding } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import CuisinesBox from './CuisinesBox';
-import DoubleHeader from './DoubleHeader';
 
 type Props = {
   selectedCuisineId?: string;

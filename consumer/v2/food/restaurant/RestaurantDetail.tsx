@@ -11,8 +11,8 @@ import { useContextActiveOrder } from '../../../../common/store/context/order';
 import { colors, screens } from '../../../../common/styles';
 import { RestaurantHeader } from '../../../home/restaurants/components/RestaurantHeader';
 import { CartButton } from '../../../home/restaurants/restaurant/CartButton';
-import { ProductListItem } from '../../../home/restaurants/restaurant/detail/ProductListItem';
-import { RestaurantNavigatorParamList } from '../../../home/restaurants/restaurant/types';
+import { ProductListItem } from './product/ProductListItem';
+import { RestaurantNavigatorParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<RestaurantNavigatorParamList>;
 // type ScreenRouteProp = RouteProp<RestaurantNavigatorParamList, 'RestaurantDetail'>;
@@ -72,7 +72,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
           );
         }}
       />
-      <TouchableOpacity onPress={() => navigation.navigate('OrderCheckout')}>
+      <TouchableOpacity onPress={() => navigation.navigate('FoodOrderCheckout')}>
         <CartButton order={activeOrder} />
       </TouchableOpacity>
     </View>

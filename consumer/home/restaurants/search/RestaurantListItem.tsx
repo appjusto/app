@@ -7,7 +7,7 @@ import { useBusinessLogoURI } from '../../../../common/store/api/business/hooks/
 import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { formatDistance } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
-import { ListItemImage } from '../components/ListItemImage';
+import { ListItemImage } from '../../../v2/food/common/ListItemImage';
 
 type Props = {
   restaurant: BusinessAlgolia;

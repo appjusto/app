@@ -19,9 +19,9 @@ import { t } from '../../../strings';
 import { DeliveredItems } from '../../home/orders/components/DeliveredItems';
 import { DeliveryInfo } from '../../home/orders/components/DeliveryInfo';
 import { StatusAndMessages } from '../../home/orders/components/StatusAndMessages';
-import { OngoingOrderStatus } from '../../home/orders/ongoing/OngoingOrderStatus';
 import { OrderNavigatorParamList } from '../../home/orders/types';
 import { LoggedNavigatorParamList } from '../types';
+import { OngoingOrderStatus } from './OngoingOrderStatus';
 import { OngoingOrderNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<

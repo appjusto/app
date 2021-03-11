@@ -3,8 +3,8 @@ import { Place } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { borders, colors, texts } from '../../../../common/styles';
-import { formatAddress } from '../../../../common/utils/formatters';
+import { borders, colors, texts } from '../../../styles';
+import { formatAddress } from '../../../utils/formatters';
 
 type Props = {
   place: Partial<Place>;

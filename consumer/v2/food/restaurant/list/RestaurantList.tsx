@@ -3,6 +3,7 @@ import React from 'react';
 import { ActivityIndicator, Image, SectionList, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../../assets/icons';
+import DoubleHeader from '../../../../../common/components/texts/DoubleHeader';
 import FeedbackView from '../../../../../common/components/views/FeedbackView';
 import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 import useCuisines from '../../../../../common/store/api/platform/hooks/useCuisines';
@@ -10,7 +11,6 @@ import useCuisines from '../../../../../common/store/api/platform/hooks/useCuisi
 import { getCurrentLocation } from '../../../../../common/store/consumer/selectors';
 import { colors, halfPadding, padding, screens } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
-import DoubleHeader from '../../../../home/restaurants/components/DoubleHeader';
 import RestaurantListItem from '../../../../home/restaurants/search/RestaurantListItem';
 
 type Props = {

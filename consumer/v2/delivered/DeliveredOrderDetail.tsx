@@ -11,6 +11,7 @@ import RoundedText from '../../../common/components/texts/RoundedText';
 import HR from '../../../common/components/views/HR';
 import Pill from '../../../common/components/views/Pill';
 import OrderMap from '../../../common/screens/orders/OrderMap';
+import PlaceSummary from '../../../common/screens/orders/summary/PlaceSummary';
 import { useCourierReview } from '../../../common/store/api/courier/hooks/useCourierReview';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { showToast } from '../../../common/store/ui/actions';
@@ -25,7 +26,6 @@ import { t } from '../../../strings';
 import TipControl from '../../home/orders/common/TipControl';
 import { DeliveredItems } from '../../home/orders/components/DeliveredItems';
 import { ReviewBox } from '../../home/orders/components/ReviewBox';
-import PlaceSummary from '../../home/orders/p2p-order/PlaceSummary';
 import { OrderCostBreakdown } from '../../home/orders/summary/breakdown/OrderCostBreakdown';
 import { DeliveredOrderNavigatorParamList } from './types';
 

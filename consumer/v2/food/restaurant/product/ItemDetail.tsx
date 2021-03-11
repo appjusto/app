@@ -29,9 +29,9 @@ import {
 } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
-import { ItemComplements } from '../../../../home/restaurants/restaurant/item/ItemComplements';
-import { ItemQuantity } from '../../../../home/restaurants/restaurant/item/ItemQuantity';
-import { RestaurantNavigatorParamList } from '../../../../home/restaurants/restaurant/types';
+import { RestaurantNavigatorParamList } from '../types';
+import { ItemComplements } from './ItemComplements';
+import { ItemQuantity } from './ItemQuantity';
 
 type ScreenNavigationProp = StackNavigationProp<RestaurantNavigatorParamList>;
 type ScreenRouteProp = RouteProp<RestaurantNavigatorParamList, 'ItemDetail'>;

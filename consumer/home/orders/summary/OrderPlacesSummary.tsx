@@ -2,13 +2,13 @@ import { Order } from 'appjusto-types';
 import React from 'react';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
+import PlaceSummary from '../../../../common/screens/orders/summary/PlaceSummary';
 import {
   formatDistance,
   formatDuration,
   separateWithDot,
 } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
-import PlaceSummary from '../p2p-order/PlaceSummary';
 import { Step } from '../p2p-order/types';
 
 interface Props {

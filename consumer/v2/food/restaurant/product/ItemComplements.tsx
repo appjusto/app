@@ -5,8 +5,8 @@ import SingleHeader from '../../../../../common/components/texts/SingleHeader';
 import HR from '../../../../../common/components/views/HR';
 import * as helpers from '../../../../../common/store/api/order/helpers';
 import { halfPadding, padding } from '../../../../../common/styles';
-import { ProductComplementListItem } from '../detail/ProductComplementListItem';
 import { ItemComplementRequiredLabel } from './ItemComplementRequiredLabel';
+import { ProductComplementListItem } from './ProductComplementListItem';
 
 interface Props {
   product: WithId<Product>;

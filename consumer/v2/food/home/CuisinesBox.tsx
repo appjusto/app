@@ -5,7 +5,7 @@ import RoundedText from '../../../../common/components/texts/RoundedText';
 import { useCuisineImageURI } from '../../../../common/store/api/platform/hooks/useCuisineImageURI';
 import { colors, halfPadding } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import { ListItemImage } from './ListItemImage';
+import { ListItemImage } from '../common/ListItemImage';
 
 type Props = {
   cuisine: Cuisine;

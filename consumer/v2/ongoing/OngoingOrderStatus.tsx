@@ -1,12 +1,12 @@
 import { Order } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
-import RoundedText from '../../../../common/components/texts/RoundedText';
-import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
-import { IconRequest } from '../../../../common/icons/icon-requests';
-import { colors, padding, texts } from '../../../../common/styles';
-import { formatTime } from '../../../../common/utils/formatters';
-import { t } from '../../../../strings';
+import RoundedText from '../../../common/components/texts/RoundedText';
+import { IconMotocycle } from '../../../common/icons/icon-motocycle';
+import { IconRequest } from '../../../common/icons/icon-requests';
+import { colors, padding, texts } from '../../../common/styles';
+import { formatTime } from '../../../common/utils/formatters';
+import { t } from '../../../strings';
 
 interface Props {
   order: Order;

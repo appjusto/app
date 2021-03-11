@@ -1,8 +1,8 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import Pill from '../../../../common/components/views/Pill';
-import { colors, texts } from '../../../../common/styles';
-import { t } from '../../../../strings';
+import { t } from '../../../strings';
+import { colors, texts } from '../../styles';
+import Pill from '../views/Pill';
 
 type Props = {
   title: string;

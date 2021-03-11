@@ -6,6 +6,7 @@ import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
 import OrderMap from '../../../../common/screens/orders/OrderMap';
+import PlaceSummary from '../../../../common/screens/orders/summary/PlaceSummary';
 import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import {
@@ -14,7 +15,6 @@ import {
   formatDuration,
   separateWithDot,
 } from '../../../../common/utils/formatters';
-import PlaceSummary from '../../../../consumer/home/orders/p2p-order/PlaceSummary';
 import { OrderCostBreakdown } from '../../../../consumer/home/orders/summary/breakdown/OrderCostBreakdown';
 import { t } from '../../../../strings';
 import { DeliveriesNavigatorParamList } from './types';

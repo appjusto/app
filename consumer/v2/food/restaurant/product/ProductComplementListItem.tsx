@@ -6,7 +6,7 @@ import { useProductComplementImageURI } from '../../../../../common/store/api/bu
 import { useContextBusinessId } from '../../../../../common/store/context/business';
 import { colors, padding, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
-import { ListItemImage } from '../../components/ListItemImage';
+import { ListItemImage } from '../../common/ListItemImage';
 
 interface Props {
   complement: WithId<Complement>;

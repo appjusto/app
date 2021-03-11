@@ -1,12 +1,12 @@
 import { Cuisine, WithId } from 'appjusto-types';
 import React from 'react';
 import { TouchableWithoutFeedback, View } from 'react-native';
+import DoubleHeader from '../../../../common/components/texts/DoubleHeader';
 import { halfPadding } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import CuisineSelector from '../components/CuisineSelector';
-import DoubleHeader from '../components/DoubleHeader';
-import LocationBar from '../components/LocationBar';
-import RestaurantSearchBar from './RestaurantSearchButton';
+import LocationBar from '../../../home/restaurants/components/LocationBar';
+import RestaurantSearchBar from '../../../home/restaurants/home/RestaurantSearchButton';
+import CuisineSelector from './CuisineSelector';
 
 type Props = {
   isLoading: boolean;
@@ -16,12 +16,12 @@ type Props = {
   onCuisineSelect: (cuisine: WithId<Cuisine> | null) => void;
 };
 
-export default function ({
+export const FoodOrderHomeHeader = ({
   selectedCuisineId,
   onLocationPress,
   onSearchPress,
   onCuisineSelect,
-}: Props) {
+}: Props) => {
   return (
     <View>
       <TouchableWithoutFeedback onPress={onLocationPress}>
@@ -48,4 +48,4 @@ export default function ({
       />
     </View>
   );
-}
+};

@@ -11,10 +11,10 @@ import {
 } from '../../../../common/store/consumer/actions';
 import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import { SearchFilter } from '../../../../common/store/consumer/types';
-import RestaurantsHomeHeader from '../../../home/restaurants/home/RestaurantsHomeHeader';
 import { LoggedNavigatorParamList } from '../../types';
 import RestaurantList from '../restaurant/list/RestaurantList';
 import { FoodOrderNavigatorParamList } from '../types';
+import { FoodOrderHomeHeader } from './FoodOrderHomeHeader';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<FoodOrderNavigatorParamList, 'FoodOrderHome'>,
@@ -56,7 +56,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     <RestaurantList
       items={restaurants}
       ListHeaderComponent={
-        <RestaurantsHomeHeader
+        <FoodOrderHomeHeader
           isLoading={isLoading}
           selectedCuisineId={filters.find(() => true)?.value}
           onLocationPress={() => {
