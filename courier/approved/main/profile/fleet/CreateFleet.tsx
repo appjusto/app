@@ -15,13 +15,13 @@ import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
+import { CourierProfileParamList } from '../types';
 import FleetRule from './FleetRule';
 import FleetSummary from './FleetSummary';
 import GainSimulator from './GainSimulator';
-import { FleetNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<FleetNavigatorParamList, 'CreateFleet'>;
-type ScreenRouteProp = RouteProp<FleetNavigatorParamList, 'CreateFleet'>;
+type ScreenNavigationProp = StackNavigationProp<CourierProfileParamList, 'CreateFleet'>;
+type ScreenRouteProp = RouteProp<CourierProfileParamList, 'CreateFleet'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

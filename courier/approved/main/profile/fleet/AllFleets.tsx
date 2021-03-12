@@ -5,10 +5,10 @@ import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import { useSearchFleets } from '../../../../../common/store/api/search/useSearchFleets';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
+import { CourierProfileParamList } from '../types';
 import { CourierFleetCard } from './components/CourierFleetCard';
-import { FleetNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<FleetNavigatorParamList, 'AllFleets'>;
+type ScreenNavigationProp = StackNavigationProp<CourierProfileParamList, 'AllFleets'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

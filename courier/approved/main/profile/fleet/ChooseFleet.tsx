@@ -8,11 +8,11 @@ import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
+import { CourierProfileParamList } from '../types';
 import { CourierFleetCard } from './components/CourierFleetCard';
-import { FleetNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<FleetNavigatorParamList, 'ChooseFleet'>;
-type ScreenRouteProp = RouteProp<FleetNavigatorParamList, 'ChooseFleet'>;
+type ScreenNavigationProp = StackNavigationProp<CourierProfileParamList, 'ChooseFleet'>;
+type ScreenRouteProp = RouteProp<CourierProfileParamList, 'ChooseFleet'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
