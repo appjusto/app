@@ -3,7 +3,8 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Order, WithId } from 'appjusto-types';
 import React from 'react';
-import { Image, SectionList, Text, View } from 'react-native';
+import { Image, SectionList, Text } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/containers/PaddedView';
@@ -114,7 +115,7 @@ export default function ({ navigation, route }: Props) {
     );
   }
   return (
-    <View style={[screens.config]}>
+    <SafeAreaView style={[screens.config]}>
       <SectionList
         style={{ flex: 1 }}
         sections={sections}
@@ -146,6 +147,6 @@ export default function ({ navigation, route }: Props) {
           );
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 }

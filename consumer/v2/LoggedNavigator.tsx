@@ -50,7 +50,11 @@ export const LoggedNavigator = () => {
   }
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
-      <Stack.Screen name="MainNavigator" component={MainNavigator} options={{ title: 'Inicial' }} />
+      <Stack.Screen
+        name="MainNavigator"
+        component={MainNavigator}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="PermissionDeniedFeedback"
         component={PermissionDeniedFeedback}

@@ -4,6 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import * as Location from 'expo-location';
 import React from 'react';
 import { ScrollView, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
@@ -62,7 +63,7 @@ export default function ({ navigation }: Props) {
   }, [coords]);
   // UI
   return (
-    <View style={[screens.default]}>
+    <SafeAreaView style={[screens.default]}>
       {/* <StatusBar /> */}
       <ScrollView>
         <HomeControls
@@ -101,6 +102,6 @@ export default function ({ navigation }: Props) {
           </View>
         </PaddedView>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

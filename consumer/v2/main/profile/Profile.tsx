@@ -2,7 +2,8 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { Alert, ScrollView, View } from 'react-native';
+import { Alert, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ApiContext } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
@@ -51,7 +52,7 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <View style={{ ...screens.config }}>
+    <SafeAreaView style={{ ...screens.config }}>
       <ScrollView>
         <PaddedView horizontal={false}>
           <ConfigItem
@@ -88,6 +89,6 @@ export default function ({ navigation }: Props) {
           />
         </PaddedView>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
