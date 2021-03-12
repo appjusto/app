@@ -181,12 +181,9 @@ export default function ({ navigation }: Props) {
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('ProfileNavigator', {
-                  screen: 'FleetNavigator',
+                  screen: 'ChooseFleet',
                   params: {
-                    screen: 'ChooseFleet',
-                    params: {
-                      fleetId: courier.fleet!.id,
-                    },
+                    fleetId: courier.fleet!.id,
                   },
                 })
               }

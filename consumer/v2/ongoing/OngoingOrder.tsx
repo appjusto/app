@@ -2,8 +2,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -104,7 +103,7 @@ export default function ({ navigation, route }: Props) {
     return '';
   })();
   return (
-    <View style={{ ...screens.default, paddingBottom: padding }}>
+    <View style={{ ...screens.default, paddingBottom: 32 }}>
       {order.type === 'p2p' ? (
         <View>
           <View>
@@ -143,7 +142,7 @@ export default function ({ navigation, route }: Props) {
           </PaddedView>
         </View>
       ) : (
-        <KeyboardAwareScrollView>
+        <ScrollView>
           <OngoingOrderStatus order={order} />
           {order.status === 'dispatching' ? (
             <View>
@@ -173,10 +172,13 @@ export default function ({ navigation, route }: Props) {
                 </View>
                 <View style={{ flex: 7, marginLeft: halfPadding }}>
                   <DefaultButton
-                    title={t('Mais informações')}
+                    title={t('Alterar rota')}
                     onPress={() =>
-                      navigation.navigate('OngoingOrderCourierDetail', {
-                        orderId,
+                      navigation.navigate('P2POrderNavigator', {
+                        screen: 'CreateOrderP2P',
+                        params: {
+                          orderId,
+                        },
                       })
                     }
                     secondary
@@ -223,7 +225,7 @@ export default function ({ navigation, route }: Props) {
               </PaddedView>
             </View>
           )}
-        </KeyboardAwareScrollView>
+        </ScrollView>
       )}
     </View>
   );

@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { ReviewType } from 'appjusto-types';
 import React from 'react';
 import { ActivityIndicator, Image, Text, View } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 import * as icons from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -77,7 +77,7 @@ export default ({ navigation, route }: Props) => {
   // UI
   return (
     <View style={{ ...screens.default, paddingBottom: padding }}>
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+      <ScrollView keyboardShouldPersistTaps="always">
         {/* header */}
         <PaddedView>
           <View
@@ -201,7 +201,7 @@ export default ({ navigation, route }: Props) => {
             </View>
           </View>
         </View>
-      </KeyboardAwareScrollView>
+      </ScrollView>
     </View>
   );
 };
