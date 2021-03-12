@@ -76,7 +76,7 @@ export default ({ navigation, route }: Props) => {
   };
   // UI
   return (
-    <View style={screens.default}>
+    <View style={{ ...screens.default, paddingBottom: padding }}>
       <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         {/* header */}
         <PaddedView>

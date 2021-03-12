@@ -119,12 +119,7 @@ export default function ({ navigation, route }: Props) {
             order={order}
             addressLabel={addressLabel}
             nextPlace={nextPlace}
-            onChangeRoute={() =>
-              navigation.navigate('P2POrderNavigator', {
-                screen: 'CreateOrderP2P',
-                params: { orderId: order.id },
-              })
-            }
+            onChangeRoute={() => navigation.navigate('OngoingOrderCourierDetail', { orderId })}
           />
           <HR />
           <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
