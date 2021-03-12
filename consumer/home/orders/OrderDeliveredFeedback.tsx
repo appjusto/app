@@ -1,4 +1,5 @@
 import { MaterialIcons } from '@expo/vector-icons';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ReviewType } from 'appjusto-types';
@@ -16,17 +17,17 @@ import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrd
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
-import { DeliveredItems } from '../common/DeliveredItems';
-import { ReviewBox } from '../common/review/ReviewBox';
-import TipControl from '../common/TipControl';
-import { LoggedNavigatorParamList } from '../types';
-import { OngoingOrderNavigatorParamList } from './types';
+import { LoggedParamList } from '../../types';
+import TipControl from './common/TipControl';
+import { DeliveredItems } from './components/DeliveredItems';
+import { ReviewBox } from './components/ReviewBox';
+import { OrderNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<OngoingOrderNavigatorParamList, 'OngoingOrderFeedback'>,
-  StackNavigationProp<LoggedNavigatorParamList>
+  StackNavigationProp<OrderNavigatorParamList, 'OrderDeliveredFeedback'>,
+  BottomTabNavigationProp<LoggedParamList>
 >;
-type ScreenRouteProp = RouteProp<OngoingOrderNavigatorParamList, 'OngoingOrderFeedback'>;
+type ScreenRouteProp = RouteProp<OrderNavigatorParamList, 'OrderDeliveredFeedback'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -42,10 +43,10 @@ export default ({ navigation, route }: Props) => {
   // screen state
   const { order } = useObserveOrder(orderId);
   const [reviewType, setReviewType] = React.useState<ReviewType>();
-  const review = useCourierReview(orderId, order?.courier?.id);
   const [comment, setComment] = React.useState('');
+  const review = useCourierReview(orderId, order?.courier?.id);
   const [tip, setTip] = React.useState(0);
-  const [isLoading, setLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   if (!order) {
     return (
@@ -57,7 +58,7 @@ export default ({ navigation, route }: Props) => {
 
   //handler
   const finishHandler = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       if (reviewType) {
         await api.courier().addReview(order.courier!.id, {
@@ -67,12 +68,12 @@ export default ({ navigation, route }: Props) => {
         });
       }
       if (tip > 0) await api.order().tipCourier(order.id, tip);
-      navigation.navigate('MainNavigator', { screen: 'Home' });
+      navigation.navigate('Home');
     } catch (error) {
       // find a better error message
       dispatch(showToast(t('Não foi possível enviar a avaliação e/ou caixinha')));
     }
-    setLoading(false);
+    setIsLoading(false);
   };
   // UI
   return (
@@ -161,9 +162,8 @@ export default ({ navigation, route }: Props) => {
           <DefaultButton
             title={t('Finalizar')}
             onPress={finishHandler}
-            activityIndicator={isLoading}
-            disabled={isLoading}
             style={{ marginTop: padding }}
+            activityIndicator={isLoading}
           />
           <View
             style={{
@@ -178,7 +178,7 @@ export default ({ navigation, route }: Props) => {
                 title={t('Relatar um problema')}
                 secondary
                 onPress={() =>
-                  navigation.navigate('ReportIssue', {
+                  navigation.navigate('ReportIssueOngoingOrder', {
                     orderId: order.id,
                     issueType: 'consumer-delivery-problem',
                   })
@@ -189,11 +189,9 @@ export default ({ navigation, route }: Props) => {
               <DefaultButton
                 title={t('Detalhes da corrida')}
                 onPress={() =>
-                  navigation.navigate('DeliveredOrderNavigator', {
-                    screen: 'DeliveredOrderDetail',
-                    params: {
-                      orderId,
-                    },
+                  navigation.navigate('HistoryNavigator', {
+                    screen: 'OrderDetail',
+                    params: { orderId },
                   })
                 }
                 secondary

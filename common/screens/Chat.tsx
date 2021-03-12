@@ -64,6 +64,7 @@ export default function ({ route }: Props) {
   }
   // UI handlers
   const sendMessageHandler = () => {
+    if (!inputText) return;
     const to: { agent: Flavor; id: string } = {
       agent: flavor === 'consumer' ? 'courier' : 'consumer',
       id: user.uid === order?.consumer.id ? order?.courier?.id! : order?.consumer?.id!,
