@@ -43,6 +43,7 @@ export default ({ navigation, route }: Props) => {
   const { order } = useObserveOrder(orderId);
   const [reviewType, setReviewType] = React.useState<ReviewType>();
   const review = useCourierReview(orderId, order?.courier?.id);
+  const [comment, setComment] = React.useState('');
   const [tip, setTip] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
 
@@ -62,10 +63,11 @@ export default ({ navigation, route }: Props) => {
         await api.courier().addReview(order.courier!.id, {
           type: reviewType,
           orderId,
+          comment,
         });
       }
       if (tip > 0) await api.order().tipCourier(order.id, tip);
-      navigation.popToTop();
+      navigation.navigate('MainNavigator', { screen: 'Home' });
     } catch (error) {
       // find a better error message
       dispatch(showToast(t('Não foi possível enviar a avaliação e/ou caixinha')));
@@ -150,6 +152,8 @@ export default ({ navigation, route }: Props) => {
         <ReviewBox
           onReviewChange={(type) => setReviewType(type)}
           review={review?.type ?? reviewType}
+          comment={comment}
+          onCommentChange={(value) => setComment(value)}
         />
         <HR />
         {/* actions */}

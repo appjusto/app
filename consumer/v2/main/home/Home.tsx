@@ -39,7 +39,7 @@ export default function ({ navigation }: Props) {
   // request location permission
   React.useEffect(() => {
     if (permissionResponse?.status === Location.PermissionStatus.DENIED) {
-      navigation.navigate('PermissionDeniedFeedback', {
+      navigation.navigate('PermissionDenied', {
         title: t('Precisamos acessar sua localização'),
         subtitle: t(
           'Para que possamos determinar o trajeto com precisão, precisamos que você dê acesso ao AppJusto para usar sua localização.'
