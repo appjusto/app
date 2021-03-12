@@ -1,9 +1,12 @@
 import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { Issue, IssueType, WithId } from 'appjusto-types';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
+import { DeliveredOrderNavigatorParamList } from '../../consumer/v2/delivered/types';
+import { OngoingOrderNavigatorParamList } from '../../consumer/v2/ongoing/types';
 import { t } from '../../strings';
 import { ApiContext, AppDispatch } from '../app/context';
 import DefaultButton from '../components/buttons/DefaultButton';
@@ -24,11 +27,16 @@ export type IssuesParamList = {
   };
 };
 
-// type ScreenNavigationProp = StackNavigationProp<OrderNavigatorParamList, 'SendIssuesScreen'>;
+type ScreenNavigationProp = StackNavigationProp<
+  DeliveredOrderNavigatorParamList &
+    OngoingOrderNavigatorParamList &
+    OngoingOrderNavigatorParamList,
+  'ReportIssue'
+>;
 type ScreenRouteProp = RouteProp<IssuesParamList, 'ReportIssue'>;
 
 type Props = {
-  // navigation: ScreenNavigationProp;
+  navigation: ScreenNavigationProp;
   route: ScreenRouteProp;
 };
 
@@ -107,7 +115,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
             issue: selectedIssue,
             comment,
           });
-          navigation.navigate('Home');
+          navigation.popToTop();
         } catch (error) {
           setLoading(false);
           dispatch(showToast(t('Não foi possível enviar o comentário')));
@@ -146,10 +154,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
         background={colors.grey50}
         description={feedbackDescription}
       >
-        <DefaultButton
-          title={t('Voltar para o início')}
-          onPress={() => navigation.navigate('Home')}
-        />
+        <DefaultButton title={t('Voltar para o início')} onPress={() => navigation.popToTop()} />
       </FeedbackView>
     );
   }

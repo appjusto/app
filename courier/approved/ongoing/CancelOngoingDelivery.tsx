@@ -16,13 +16,13 @@ import { showToast } from '../../../common/store/ui/actions';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
-import { OngoingParamList } from './types';
+import { OngoingOrderNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<OngoingParamList, 'CancelOngoingDelivery'>,
+  StackNavigationProp<OngoingOrderNavigatorParamList, 'CancelOngoingDelivery'>,
   StackNavigationProp<ApprovedParamList>
 >;
-type ScreenRouteProp = RouteProp<OngoingParamList, 'CancelOngoingDelivery'>;
+type ScreenRouteProp = RouteProp<OngoingOrderNavigatorParamList, 'CancelOngoingDelivery'>;
 
 type Props = {
   route: ScreenRouteProp;
