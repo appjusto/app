@@ -5,9 +5,9 @@ import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { t } from '../../../strings';
-import { OngoingOrderNavigatorParamList } from './types';
+import { OngoingDeliveryNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<OngoingOrderNavigatorParamList, 'OrderCanceled'>;
+type ScreenNavigationProp = StackNavigationProp<OngoingDeliveryNavigatorParamList, 'OrderCanceled'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

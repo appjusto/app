@@ -1,8 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { defaultScreenOptions } from '../../../common/screens/options';
+import { ReportIssue } from '../../../common/screens/ReportIssue';
 import { t } from '../../../strings';
-import { ReportIssue } from '../common/ReportIssue';
 import { DeliveredOrderDetail } from './DeliveredOrderDetail';
 import { DeliveredOrderNavigatorParamList } from './types';
 

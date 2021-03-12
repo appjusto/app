@@ -22,13 +22,13 @@ import { ApprovedParamList } from '../types';
 import { CodeInput } from './code-input/CodeInput';
 import { RouteIcons } from './RouteIcons';
 import { StatusControl } from './StatusControl';
-import { OngoingOrderNavigatorParamList } from './types';
+import { OngoingDeliveryNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<OngoingOrderNavigatorParamList, 'OngoingDelivery'>,
+  StackNavigationProp<OngoingDeliveryNavigatorParamList, 'OngoingDelivery'>,
   StackNavigationProp<ApprovedParamList>
 >;
-type ScreenRoute = RouteProp<OngoingOrderNavigatorParamList, 'OngoingDelivery'>;
+type ScreenRoute = RouteProp<OngoingDeliveryNavigatorParamList, 'OngoingDelivery'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

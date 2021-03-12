@@ -1,4 +1,4 @@
-import { ReportIssueParamList } from '../common/ReportIssue';
+import { ReportIssueParamList } from '../../../common/screens/ReportIssue';
 
 export type DeliveredOrderNavigatorParamList = {
   DeliveredOrderDetail: {

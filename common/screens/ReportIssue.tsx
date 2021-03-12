@@ -20,7 +20,7 @@ import { getCourier } from '../store/courier/selectors';
 import { showToast } from '../store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../styles';
 
-export type IssuesParamList = {
+export type ReportIssueParamList = {
   ReportIssue: {
     issueType: IssueType;
     orderId: string;
@@ -28,12 +28,10 @@ export type IssuesParamList = {
 };
 
 type ScreenNavigationProp = StackNavigationProp<
-  DeliveredOrderNavigatorParamList &
-    OngoingOrderNavigatorParamList &
-    OngoingOrderNavigatorParamList,
+  DeliveredOrderNavigatorParamList & OngoingOrderNavigatorParamList & OngoingDeliveryN,
   'ReportIssue'
 >;
-type ScreenRouteProp = RouteProp<IssuesParamList, 'ReportIssue'>;
+type ScreenRouteProp = RouteProp<ReportIssueParamList, 'ReportIssue'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -115,7 +113,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
             issue: selectedIssue,
             comment,
           });
-          navigation.popToTop();
+          navigation.pop();
         } catch (error) {
           setLoading(false);
           dispatch(showToast(t('Não foi possível enviar o comentário')));
@@ -154,7 +152,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
         background={colors.grey50}
         description={feedbackDescription}
       >
-        <DefaultButton title={t('Voltar para o início')} onPress={() => navigation.popToTop()} />
+        <DefaultButton title={t('Voltar para o início')} onPress={() => navigation.pop()} />
       </FeedbackView>
     );
   }

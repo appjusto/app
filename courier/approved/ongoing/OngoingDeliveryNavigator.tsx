@@ -9,9 +9,9 @@ import DeliveryCompleted from './DeliveryCompleted';
 import { NoCodeDelivery } from './NoCodeDelivery';
 import OngoingDelivery from './OngoingDelivery';
 import OrderCanceled from './OrderCanceled';
-import { OngoingOrderNavigatorParamList } from './types';
+import { OngoingDeliveryNavigatorParamList } from './types';
 
-const Stack = createStackNavigator<OngoingOrderNavigatorParamList>();
+const Stack = createStackNavigator<OngoingDeliveryNavigatorParamList>();
 export default function () {
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>

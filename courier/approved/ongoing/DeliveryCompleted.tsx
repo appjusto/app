@@ -11,13 +11,13 @@ import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
-import { OngoingOrderNavigatorParamList } from './types';
+import { OngoingDeliveryNavigatorParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<
-  OngoingOrderNavigatorParamList,
+  OngoingDeliveryNavigatorParamList,
   'DeliveryCompleted'
 >;
-type ScreenRoute = RouteProp<OngoingOrderNavigatorParamList, 'DeliveryCompleted'>;
+type ScreenRoute = RouteProp<OngoingDeliveryNavigatorParamList, 'DeliveryCompleted'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

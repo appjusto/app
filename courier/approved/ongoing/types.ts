@@ -1,7 +1,7 @@
 import { ChatParamList } from '../../../common/screens/Chat';
-import { ReportIssueParamList } from '../../../consumer/v2/common/ReportIssue';
+import { ReportIssueParamList } from '../../../common/screens/ReportIssue';
 
-export type OngoingOrderNavigatorParamList = {
+export type OngoingDeliveryNavigatorParamList = {
   OngoingDelivery: {
     orderId: string;
     newMessage?: boolean;
