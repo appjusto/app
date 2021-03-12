@@ -1,3 +1,4 @@
+import { PermissionDeniedParamList } from '../../common/screens/PermissionDenied';
 import { NestedNavigatorParams } from '../../common/types';
 import { ProfileParamList } from '../profile/types';
 import { DeliveredOrderNavigatorParamList } from './delivered/types';
@@ -13,8 +14,4 @@ export type LoggedNavigatorParamList = {
   OngoingOrderNavigator: NestedNavigatorParams<OngoingOrderNavigatorParamList>;
   DeliveredOrderNavigator: NestedNavigatorParams<DeliveredOrderNavigatorParamList>;
   ProfileNavigator: NestedNavigatorParams<ProfileParamList>;
-  PermissionDeniedFeedback: {
-    title: string;
-    subtitle: string;
-  };
-};
+} & PermissionDeniedParamList;

@@ -8,10 +8,10 @@ import { IconMotocycle } from '../../common/icons/icon-motocycle';
 import { getCourier } from '../../common/store/courier/selectors';
 import { colors } from '../../common/styles';
 import { t } from '../../strings';
-import { PendingParamList } from './types';
+import { UnapprovedParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<PendingParamList, 'ProfileSubmitted'>;
-type ScreenRouteProp = RouteProp<PendingParamList, 'ProfileSubmitted'>;
+type ScreenNavigationProp = StackNavigationProp<UnapprovedParamList, 'ProfileSubmitted'>;
+type ScreenRouteProp = RouteProp<UnapprovedParamList, 'ProfileSubmitted'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

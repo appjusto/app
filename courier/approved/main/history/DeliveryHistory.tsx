@@ -1,5 +1,5 @@
-import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
+import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import Constants from 'expo-constants';
 import React, { useMemo } from 'react';
 import { Image, SectionList, Text, View } from 'react-native';
@@ -22,16 +22,21 @@ import { getUser } from '../../../../common/store/user/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { formatCurrency, getMonthName } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
-import { DeliveriesNavigatorParamList } from './types';
+import { ApprovedParamList } from '../../types';
+import { MainParamList } from '../types';
 
-type ScreenNavigationProp = StackNavigationProp<DeliveriesNavigatorParamList, 'DeliveryHistory'>;
-type ScreenRoute = RouteProp<DeliveriesNavigatorParamList, 'DeliveryHistory'>;
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<MainParamList, 'DeliveryHistory'>,
+  StackNavigationProp<ApprovedParamList>
+>;
+type ScreenRoute = RouteProp<MainParamList, 'DeliveryHistory'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
   route: ScreenRoute;
 };
 
+const Stack = createStackNavigator();
 export default function ({ navigation, route }: Props) {
   // app state
   const user = useSelector(getUser);
@@ -74,55 +79,66 @@ export default function ({ navigation, route }: Props) {
   }
 
   return (
-    <View style={{ ...screens.config }}>
-      <SectionList
-        style={{ flex: 1, paddingTop }}
-        sections={sections}
-        keyExtractor={(item) => item.key}
-        renderSectionHeader={({ section }) => (
-          <PaddedView
-            style={{
-              flexDirection: 'row',
-              borderBottomColor: colors.grey500,
-              borderBottomWidth: 1,
-            }}
-          >
-            <Image source={icons.calendar} />
-            <Text style={{ ...texts.md, marginLeft: padding }}>{section.title}</Text>
-          </PaddedView>
+    <Stack.Navigator>
+      <Stack.Screen
+        name="DeliveryHistory"
+        options={{ title: 'Suas corridas' }}
+        children={() => (
+          <View style={{ ...screens.config }}>
+            <SectionList
+              style={{ flex: 1 }}
+              sections={sections}
+              keyExtractor={(item) => item.key}
+              renderSectionHeader={({ section }) => (
+                <PaddedView
+                  style={{
+                    flexDirection: 'row',
+                    borderBottomColor: colors.grey500,
+                    borderBottomWidth: 1,
+                  }}
+                >
+                  <Image source={icons.calendar} />
+                  <Text style={{ ...texts.md, marginLeft: padding }}>{section.title}</Text>
+                </PaddedView>
+              )}
+              renderItem={({ item }) => {
+                const title = getMonthName(item.month);
+                const subtitle =
+                  item.delivered +
+                  t(' corridas finalizadas') +
+                  '\n' +
+                  t('Total recebido: ') +
+                  formatCurrency(item.courierFee);
+                return (
+                  <ConfigItem
+                    title={title}
+                    subtitle={subtitle}
+                    onPress={() =>
+                      navigation.navigate('DeliveriesNavigator', {
+                        screen: 'DeliveryHistoryByMonth',
+                        params: {
+                          year: item.year,
+                          month: item.month,
+                        },
+                      })
+                    }
+                  >
+                    <ShowIf test={item.ongoing > 0}>
+                      {() => (
+                        <View style={{ marginTop: halfPadding }}>
+                          <RoundedText backgroundColor={colors.yellow}>
+                            {t('Corrida em andamento')}
+                          </RoundedText>
+                        </View>
+                      )}
+                    </ShowIf>
+                  </ConfigItem>
+                );
+              }}
+            />
+          </View>
         )}
-        renderItem={({ item }) => {
-          const title = getMonthName(item.month);
-          const subtitle =
-            item.delivered +
-            t(' corridas finalizadas') +
-            '\n' +
-            t('Total recebido: ') +
-            formatCurrency(item.courierFee);
-          return (
-            <ConfigItem
-              title={title}
-              subtitle={subtitle}
-              onPress={() =>
-                navigation.navigate('DeliveryHistoryByMonth', {
-                  year: item.year,
-                  month: item.month,
-                })
-              }
-            >
-              <ShowIf test={item.ongoing > 0}>
-                {() => (
-                  <View style={{ marginTop: halfPadding }}>
-                    <RoundedText backgroundColor={colors.yellow}>
-                      {t('Corrida em andamento')}
-                    </RoundedText>
-                  </View>
-                )}
-              </ShowIf>
-            </ConfigItem>
-          );
-        }}
       />
-    </View>
+    </Stack.Navigator>
   );
 }

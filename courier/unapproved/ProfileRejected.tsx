@@ -12,10 +12,10 @@ import { showToast } from '../../common/store/ui/actions';
 import { getUIBusy } from '../../common/store/ui/selectors';
 import { updateProfile } from '../../common/store/user/actions';
 import { t } from '../../strings';
-import { PendingParamList } from './types';
+import { UnapprovedParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<PendingParamList, 'ProfileRejected'>;
-type ScreenRouteProp = RouteProp<PendingParamList, 'ProfileRejected'>;
+type ScreenNavigationProp = StackNavigationProp<UnapprovedParamList, 'ProfileRejected'>;
+type ScreenRouteProp = RouteProp<UnapprovedParamList, 'ProfileRejected'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

@@ -18,10 +18,10 @@ import { t } from '../../../../../strings';
 import FleetRule from './FleetRule';
 import FleetSummary from './FleetSummary';
 import GainSimulator from './GainSimulator';
-import { FleetParamList } from './types';
+import { FleetNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<FleetParamList, 'CreateFleet'>;
-type ScreenRouteProp = RouteProp<FleetParamList, 'CreateFleet'>;
+type ScreenNavigationProp = StackNavigationProp<FleetNavigatorParamList, 'CreateFleet'>;
+type ScreenRouteProp = RouteProp<FleetNavigatorParamList, 'CreateFleet'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

@@ -1,19 +1,24 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
+import FleetDetail from '../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../common/screens/options';
+import { PermissionDenied } from '../../common/screens/PermissionDenied';
 import ProfileErase from '../../common/screens/profile/ProfileErase';
 import { t } from '../../strings';
-import BankNavigator from '../approved/main/profile/bank/BankNavigator';
-import FleetNavigator from '../approved/main/profile/fleet/FleetNavigator';
+import ProfileBank from '../approved/main/profile/bank/ProfileBank';
+import SelectBank from '../approved/main/profile/bank/SelectBank';
+import AllFleets from '../approved/main/profile/fleet/AllFleets';
+import ChooseFleet from '../approved/main/profile/fleet/ChooseFleet';
+import CreateFleet from '../approved/main/profile/fleet/CreateFleet';
 import ProfilePhotos from '../approved/main/profile/photos/ProfilePhotos';
 import ProfileCompany from '../approved/main/profile/ProfileCompany';
 import ProfileEdit from '../approved/main/profile/ProfileEdit';
 import ProfilePending from './ProfilePending';
 import ProfileRejected from './ProfileRejected';
 import ProfileSubmitted from './ProfileSubmitted';
-import { PendingParamList } from './types';
+import { UnapprovedParamList } from './types';
 
-const Stack = createStackNavigator<PendingParamList>();
+const Stack = createStackNavigator<UnapprovedParamList>();
 export default function () {
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
@@ -38,14 +43,34 @@ export default function () {
         options={{ title: t('Fotos & Documentos') }}
       />
       <Stack.Screen
-        name="BankNavigator"
-        component={BankNavigator}
-        options={{ headerShown: false }}
+        name="ProfileBank"
+        component={ProfileBank}
+        options={{ title: t('Dados bancários') }}
       />
       <Stack.Screen
-        name="FleetNavigator"
-        component={FleetNavigator}
-        options={{ headerShown: false }}
+        name="SelectBank"
+        component={SelectBank}
+        options={{ title: t('Escolha seu banco') }}
+      />
+      <Stack.Screen
+        name="ChooseFleet"
+        component={ChooseFleet}
+        options={{ title: t('Escolha sua frota') }}
+      />
+      <Stack.Screen
+        name="CreateFleet"
+        component={CreateFleet}
+        options={{ title: t('Criar nova frota') }}
+      />
+      <Stack.Screen
+        name="AllFleets"
+        component={AllFleets}
+        options={{ title: t('Todas as frotas disponíveis') }}
+      />
+      <Stack.Screen
+        name="FleetDetail"
+        component={FleetDetail}
+        options={{ title: t('Detalhes da frota') }}
       />
       <Stack.Screen
         name="ProfileSubmitted"
@@ -61,6 +86,11 @@ export default function () {
         name="ProfileErase"
         component={ProfileErase}
         options={{ headerShown: true, title: t('Cancelar cadastro') }}
+      />
+      <Stack.Screen
+        name="PermissionDenied"
+        component={PermissionDenied}
+        options={{ title: t('Compartilhar sua localização') }}
       />
     </Stack.Navigator>
   );

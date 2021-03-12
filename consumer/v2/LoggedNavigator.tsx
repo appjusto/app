@@ -4,13 +4,14 @@ import { ActivityIndicator, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../common/app/context';
 import { defaultScreenOptions } from '../../common/screens/options';
+import { PermissionDenied } from '../../common/screens/PermissionDenied';
 import { useObserveOngoingOrders } from '../../common/store/api/order/hooks/useObserveOngoingOrders';
 import { getFlavor } from '../../common/store/config/selectors';
 import { getConsumer } from '../../common/store/consumer/selectors';
 import { observeProfile } from '../../common/store/user/actions';
 import { getUser } from '../../common/store/user/selectors';
 import { colors, screens } from '../../common/styles';
-import PermissionDeniedFeedback from './common/PermissionDeniedFeedback';
+import { t } from '../../strings';
 import { DeliveredOrderNavigator } from './delivered/DeliveredOrderNavigator';
 import { FoodOrderNavigator } from './food/FoodOrderNavigator';
 import { MainNavigator } from './main/MainNavigator';
@@ -78,9 +79,9 @@ export const LoggedNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="PermissionDeniedFeedback"
-        component={PermissionDeniedFeedback}
-        options={{ title: 'Compartilhar sua localização' }}
+        name="PermissionDenied"
+        component={PermissionDenied}
+        options={{ title: t('Compartilhar sua localização') }}
       />
     </Stack.Navigator>
   );

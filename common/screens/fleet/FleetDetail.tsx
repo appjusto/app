@@ -4,7 +4,7 @@ import React, { useContext } from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import GainSimulator from '../../../courier/approved/main/profile/fleet/GainSimulator';
-import { FleetParamList } from '../../../courier/approved/main/profile/fleet/types';
+import { FleetNavigatorParamList } from '../../../courier/approved/main/profile/fleet/types';
 import { t } from '../../../strings';
 import { ApiContext } from '../../app/context';
 import DefaultButton from '../../components/buttons/DefaultButton';
@@ -17,8 +17,8 @@ import { getCourier } from '../../store/courier/selectors';
 import { colors, screens, texts } from '../../styles';
 import { formatCurrency, formatDistance } from '../../utils/formatters';
 
-type ScreenNavigationProp = StackNavigationProp<FleetParamList, 'FleetDetail'>;
-type ScreenRouteProp = RouteProp<FleetParamList, 'FleetDetail'>;
+type ScreenNavigationProp = StackNavigationProp<FleetNavigatorParamList, 'FleetDetail'>;
+type ScreenRouteProp = RouteProp<FleetNavigatorParamList, 'FleetDetail'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

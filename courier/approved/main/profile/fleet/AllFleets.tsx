@@ -6,9 +6,9 @@ import { useSearchFleets } from '../../../../../common/store/api/search/useSearc
 import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { CourierFleetCard } from './components/CourierFleetCard';
-import { FleetParamList } from './types';
+import { FleetNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<FleetParamList, 'AllFleets'>;
+type ScreenNavigationProp = StackNavigationProp<FleetNavigatorParamList, 'AllFleets'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

@@ -1,7 +1,11 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { defaultScreenOptions } from '../../common/screens/options';
+import { PermissionDenied } from '../../common/screens/PermissionDenied';
+import { t } from '../../strings';
+import DeliveriesNavigator from './main/history/DeliveriesNavigator';
 import MainNavigator from './main/MainNavigator';
+import ProfileNavigator from './main/profile/ProfileNavigator';
 import MatchingNavigator from './matching/MatchingNavigator';
 import OngoingDeliveryNavigator from './ongoing/OngoingDeliveryNavigator';
 import { ApprovedParamList } from './types';
@@ -24,6 +28,21 @@ export default function () {
         name="OngoingDeliveryNavigator"
         component={OngoingDeliveryNavigator}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DeliveriesNavigator"
+        component={DeliveriesNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ProfileNavigator"
+        component={ProfileNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PermissionDenied"
+        component={PermissionDenied}
+        options={{ title: t('Compartilhar sua localização') }}
       />
     </Stack.Navigator>
   );

@@ -14,13 +14,13 @@ import { getCourier } from '../../../common/store/courier/selectors';
 import { colors, screens, texts } from '../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../common/utils/formatters';
 import GainSimulator from '../../../courier/approved/main/profile/fleet/GainSimulator';
-import { FleetParamList } from '../../../courier/approved/main/profile/fleet/types';
+import { FleetNavigatorParamList } from '../../../courier/approved/main/profile/fleet/types';
 import { t } from '../../../strings';
 import { P2POrderNavigatorParamList } from '../p2p/types';
 
 type P2PNavigatorProp = StackNavigationProp<P2POrderNavigatorParamList, 'FleetDetail'>;
 type ScreenNavigationProp = P2PNavigatorProp;
-type ScreenRouteProp = RouteProp<FleetParamList, 'FleetDetail'>;
+type ScreenRouteProp = RouteProp<FleetNavigatorParamList, 'FleetDetail'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

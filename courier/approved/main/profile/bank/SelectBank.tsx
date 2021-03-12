@@ -7,10 +7,10 @@ import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import useBanks from '../../../../../common/store/api/platform/hooks/useBanks';
 import { screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
-import { BankParamList } from './types';
+import { CourierProfileParamList } from '../types';
 
-type ScreenNavigationProp = StackNavigationProp<BankParamList, 'SelectBank'>;
-type ScreenRouteProp = RouteProp<BankParamList, 'SelectBank'>;
+type ScreenNavigationProp = StackNavigationProp<CourierProfileParamList, 'SelectBank'>;
+type ScreenRouteProp = RouteProp<CourierProfileParamList, 'SelectBank'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

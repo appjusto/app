@@ -11,9 +11,9 @@ import { getUser } from '../../../common/store/user/selectors';
 import { colors, halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
-import DeliveriesNavigator from './history/DeliveriesNavigator';
-import HomeNavigator from './home/HomeNavigator';
-import ProfileNavigator from './profile/ProfileNavigator';
+import DeliveryHistory from './history/DeliveryHistory';
+import Home from './home/Home';
+import Profile from './profile/Profile';
 import { MainParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<ApprovedParamList, 'MainNavigator'>;
@@ -92,18 +92,18 @@ export default function ({ navigation }: Props) {
       }}
     >
       <Tab.Screen
-        name="HomeNavigator"
-        component={HomeNavigator}
+        name="Home"
+        component={Home}
         options={{ title: t('Início'), tabBarIcon: () => <Image source={icons.home} /> }}
       />
       <Tab.Screen
-        name="DeliveriesNavigator"
-        component={DeliveriesNavigator}
+        name="DeliveryHistory"
+        component={DeliveryHistory}
         options={{ title: t('Suas corridas'), tabBarIcon: () => <Image source={icons.orders} /> }}
       />
       <Tab.Screen
-        name="ProfileNavigator"
-        component={ProfileNavigator}
+        name="Profile"
+        component={Profile}
         options={{ title: t('Sua conta'), tabBarIcon: () => <Image source={icons.user} /> }}
       />
     </Tab.Navigator>

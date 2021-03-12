@@ -22,10 +22,10 @@ import { getUIBusy } from '../../common/store/ui/selectors';
 import { updateProfile } from '../../common/store/user/actions';
 import { colors, screens, texts } from '../../common/styles';
 import { t } from '../../strings';
-import { PendingParamList } from './types';
+import { UnapprovedParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<PendingParamList, 'ProfilePending'>;
-type ScreenRouteProp = RouteProp<PendingParamList, 'ProfilePending'>;
+type ScreenNavigationProp = StackNavigationProp<UnapprovedParamList, 'ProfilePending'>;
+type ScreenRouteProp = RouteProp<UnapprovedParamList, 'ProfilePending'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

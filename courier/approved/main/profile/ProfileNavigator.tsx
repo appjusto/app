@@ -3,11 +3,14 @@ import React from 'react';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import ProfileErase from '../../../../common/screens/profile/ProfileErase';
 import Terms from '../../../../common/screens/unlogged/Terms';
+import FleetDetail from '../../../../consumer/v2/common/FleetDetail';
 import { t } from '../../../../strings';
-import BankNavigator from './bank/BankNavigator';
-import FleetNavigator from './fleet/FleetNavigator';
+import ProfileBank from './bank/ProfileBank';
+import SelectBank from './bank/SelectBank';
+import AllFleets from './fleet/AllFleets';
+import ChooseFleet from './fleet/ChooseFleet';
+import CreateFleet from './fleet/CreateFleet';
 import ProfilePhotos from './photos/ProfilePhotos';
-import Profile from './Profile';
 import ProfileCompany from './ProfileCompany';
 import ProfileEdit from './ProfileEdit';
 import { CourierProfileParamList } from './types';
@@ -15,8 +18,7 @@ import { CourierProfileParamList } from './types';
 const Stack = createStackNavigator<CourierProfileParamList>();
 export default function () {
   return (
-    <Stack.Navigator initialRouteName="Profile" screenOptions={defaultScreenOptions}>
-      <Stack.Screen name="Profile" component={Profile} options={{ title: t('Sua conta') }} />
+    <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen
         name="ProfileEdit"
         component={ProfileEdit}
@@ -33,14 +35,34 @@ export default function () {
         options={{ title: t('Fotos & Documentos') }}
       />
       <Stack.Screen
-        name="BankNavigator"
-        component={BankNavigator}
-        options={{ headerShown: false }}
+        name="ProfileBank"
+        component={ProfileBank}
+        options={{ title: t('Dados bancários') }}
       />
       <Stack.Screen
-        name="FleetNavigator"
-        component={FleetNavigator}
-        options={{ headerShown: false }}
+        name="SelectBank"
+        component={SelectBank}
+        options={{ title: t('Escolha seu banco') }}
+      />
+      <Stack.Screen
+        name="ChooseFleet"
+        component={ChooseFleet}
+        options={{ title: t('Escolha sua frota') }}
+      />
+      <Stack.Screen
+        name="CreateFleet"
+        component={CreateFleet}
+        options={{ title: t('Criar nova frota') }}
+      />
+      <Stack.Screen
+        name="AllFleets"
+        component={AllFleets}
+        options={{ title: t('Todas as frotas disponíveis') }}
+      />
+      <Stack.Screen
+        name="FleetDetail"
+        component={FleetDetail}
+        options={{ title: t('Detalhes da frota') }}
       />
       <Stack.Screen name="Terms" component={Terms} options={{ title: t('Fique por dentro') }} />
       <Stack.Screen

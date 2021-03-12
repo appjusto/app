@@ -9,10 +9,10 @@ import { getCourier } from '../../../../../common/store/courier/selectors';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { CourierFleetCard } from './components/CourierFleetCard';
-import { FleetParamList } from './types';
+import { FleetNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<FleetParamList, 'ChooseFleet'>;
-type ScreenRouteProp = RouteProp<FleetParamList, 'ChooseFleet'>;
+type ScreenNavigationProp = StackNavigationProp<FleetNavigatorParamList, 'ChooseFleet'>;
+type ScreenRouteProp = RouteProp<FleetNavigatorParamList, 'ChooseFleet'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
