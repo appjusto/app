@@ -1,6 +1,6 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import { Order, WithId } from 'appjusto-types';
 import React from 'react';
 import { Image, SectionList, Text, View } from 'react-native';
@@ -41,6 +41,7 @@ type Props = {
   route: ScreenRouteProp;
 };
 
+const Stack = createStackNavigator();
 export default function ({ navigation, route }: Props) {
   // app state
   const user = useSelector(getUser);
@@ -114,38 +115,52 @@ export default function ({ navigation, route }: Props) {
     );
   }
   return (
-    <View style={[screens.config]}>
-      <SectionList
-        style={{ flex: 1 }}
-        sections={sections}
-        keyExtractor={(item) => item.id}
-        stickySectionHeadersEnabled={false}
-        renderSectionHeader={({ section }) => (
-          <PaddedView
-            style={{
-              flexDirection: 'row',
-              borderBottomColor: colors.grey500,
-              borderBottomWidth: 1,
-            }}
-          >
-            <Image source={icons.calendar} />
-            <Text style={{ ...texts.md, marginLeft: padding }}>{section.title}</Text>
-          </PaddedView>
+    <Stack.Navigator>
+      <Stack.Screen
+        name="OrderHistory"
+        options={{ title: 'Seus pedidos' }}
+        children={() => (
+          <View style={[screens.config]}>
+            <SectionList
+              style={{ flex: 1 }}
+              sections={sections}
+              keyExtractor={(item) => item.id}
+              stickySectionHeadersEnabled={false}
+              renderSectionHeader={({ section }) => (
+                <PaddedView
+                  style={{
+                    flexDirection: 'row',
+                    borderBottomColor: colors.grey500,
+                    borderBottomWidth: 1,
+                  }}
+                >
+                  <Image source={icons.calendar} />
+                  <Text style={{ ...texts.md, marginLeft: padding }}>{section.title}</Text>
+                </PaddedView>
+              )}
+              renderItem={({ item }) => {
+                const createdOn = getOrderCreatedOn(item);
+                const title =
+                  item.type === 'food'
+                    ? item.business?.name ?? ''
+                    : formatAddress(item.origin!.address);
+                const subtitle = createdOn
+                  ? separateWithDot(formatDate(createdOn), formatTime(createdOn))
+                  : '';
+                return (
+                  <ConfigItem
+                    title={title}
+                    subtitle={subtitle}
+                    onPress={() => orderSelectHandler(item)}
+                  >
+                    <StatusBadge order={item} />
+                  </ConfigItem>
+                );
+              }}
+            />
+          </View>
         )}
-        renderItem={({ item }) => {
-          const createdOn = getOrderCreatedOn(item);
-          const title =
-            item.type === 'food' ? item.business?.name ?? '' : formatAddress(item.origin!.address);
-          const subtitle = createdOn
-            ? separateWithDot(formatDate(createdOn), formatTime(createdOn))
-            : '';
-          return (
-            <ConfigItem title={title} subtitle={subtitle} onPress={() => orderSelectHandler(item)}>
-              <StatusBadge order={item} />
-            </ConfigItem>
-          );
-        }}
       />
-    </View>
+    </Stack.Navigator>
   );
 }
