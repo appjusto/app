@@ -53,7 +53,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
   const description =
     order.type === 'food'
       ? t('Aguarde enquanto o restaurante confirma seu pedido...')
-      : t('A cobrança só será efetuada caso um entregador aceitar o seu pedido.');
+      : t('Aguarde enquanto criamos seu pedido...');
   return (
     <FeedbackView
       header={t('Pedido em andamento')}

@@ -1,7 +1,7 @@
 import { Feather } from '@expo/vector-icons';
 import { ReviewType } from 'appjusto-types';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, TextInputProps, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
@@ -9,18 +9,17 @@ import Pill from '../../../../common/components/views/Pill';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
-type Props = {
+interface Props extends TextInputProps {
   comment?: string;
   review?: ReviewType;
-  disabled?: boolean;
   onCommentChange?: (value: string) => void;
   onReviewChange?: (type: ReviewType) => void;
-};
+}
 
 export const ReviewBox = ({
   comment,
   review,
-  disabled,
+  editable,
   onCommentChange,
   onReviewChange,
 }: Props) => {
@@ -88,7 +87,7 @@ export const ReviewBox = ({
           )}
         </Text>
         <DefaultInput
-          editable={!disabled}
+          editable={editable}
           placeholder={t('Escreva sua mensagem')}
           multiline
           numberOfLines={6}

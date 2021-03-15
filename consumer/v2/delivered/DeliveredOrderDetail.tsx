@@ -135,8 +135,10 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
         <HR height={padding} />
         <ReviewBox
           review={review?.type ?? reviewType}
+          comment={review?.comment ?? comment}
+          editable={!!review}
+          focusable={!!review}
           onReviewChange={(type) => setReviewType(type)}
-          comment={comment}
           onCommentChange={(value) => setComment(value)}
         />
         <DefaultButton
