@@ -60,12 +60,7 @@ export default function ({ route, navigation }: Props) {
           reason: selectedReason!,
           comment: rejectionComment,
         });
-        navigation.replace('MainNavigator', {
-          screen: 'HomeNavigator',
-          params: {
-            screen: 'Home',
-          },
-        });
+        navigation.replace('MainNavigator', { screen: 'Home' });
       } catch (error) {
         setLoading(false);
         dispatch(showToast(error.toString()));

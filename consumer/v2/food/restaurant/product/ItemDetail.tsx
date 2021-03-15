@@ -134,7 +134,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   };
   // UI
   return (
-    <ScrollView style={{ ...screens.default }}>
+    <ScrollView style={{ ...screens.default }} scrollIndicatorInsets={{ right: 1 }}>
       <View style={{ paddingHorizontal: padding, marginBottom: halfPadding }}>
         <View style={{ width: '100%', height: 240, overflow: 'hidden' }}>
           {imageURI && (

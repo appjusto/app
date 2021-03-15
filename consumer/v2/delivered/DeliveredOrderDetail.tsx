@@ -91,7 +91,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
 
   return (
     <View style={{ ...screens.default }}>
-      <ScrollView>
+      <ScrollView scrollIndicatorInsets={{ right: 1 }}>
         <OrderMap order={order} ratio={360 / 160} />
         <PaddedView>
           <PlaceSummary title={t('Retirada')} place={order.origin!} />
