@@ -26,6 +26,8 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
+  // params
+  const { params } = route;
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -63,16 +65,18 @@ export default function ({ navigation, route }: Props) {
           //     ? { ...order.origin, additionalInfo: route.params.origin.additionalInfo }
           //     : route.params.origin;
           // api.order().updateOrder(orderId, { origin });
-          api.order().updateOrder(orderId, { origin: route.params.origin });
+          console.log('updating origin');
+          await api.order().updateOrder(orderId, { origin: route.params.origin });
         }
       }
       if (order && orderId && route.params?.destination) {
-        api.order().updateOrder(orderId, { destination: route.params.destination });
+        console.log('updating destination');
+        await api.order().updateOrder(orderId, { destination: route.params.destination });
       }
       if (route.params?.paymentMethodId) setSelectedPaymentMethodId(route.params?.paymentMethodId);
       // clearing params
     })();
-  }, [route.params]);
+  }, [params]);
 
   // handlers
   // navigate to 'AddressComplete' to enter address
