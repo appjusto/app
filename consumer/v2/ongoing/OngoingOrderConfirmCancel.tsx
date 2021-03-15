@@ -76,7 +76,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
         <View style={{ flex: 7 }}>
           <DefaultButton
             title={t('Cancelar pedido')}
-            onPress={() => navigation.navigate('CancelOrder', { orderId })}
+            onPress={() => navigation.navigate('OngoingOrderCanceled', { orderId })}
             activityIndicator={busy}
             disabled={busy}
           />
