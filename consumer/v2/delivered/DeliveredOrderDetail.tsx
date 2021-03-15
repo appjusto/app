@@ -149,20 +149,14 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
           disabled={isLoading || !!review?.type}
         />
         <HR height={padding} />
-        {order.tip?.value! > 0 ? (
-          <View>
-            <TipControl order={order} tip={tip} onChange={(value) => setTip(value)} />
-          </View>
-        ) : (
-          <View>
-            <TipControl
-              order={order}
-              tip={tip}
-              onChange={(value) => setTip(value)}
-              onConfirm={tipHandler}
-            />
-          </View>
-        )}
+        <View>
+          <TipControl
+            order={order}
+            tip={tip}
+            onChange={(value) => setTip(value)}
+            onConfirm={tipHandler}
+          />
+        </View>
         <HR height={padding} />
         <PaddedView>
           <DefaultButton

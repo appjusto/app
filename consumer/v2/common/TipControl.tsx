@@ -32,7 +32,8 @@ const data: HorizontalSelectItem[] = [
 export default function ({ order, tip, isLoading = false, onChange, onConfirm }: Props) {
   const alreadyTipped = Boolean(order.tip?.value);
   const selectedtip =
-    data.find((item) => item.data === order.tip?.value || item.data === tip) ?? data[0];
+    data.find((item) => item.data === order.tip!.value || (!alreadyTipped && item.data === tip)) ??
+    data[0];
   // UI
   return (
     <View style={{ paddingHorizontal: padding, paddingTop: padding }}>
@@ -62,7 +63,7 @@ export default function ({ order, tip, isLoading = false, onChange, onConfirm }:
         {onConfirm && (
           <DefaultButton
             style={{ marginTop: padding }}
-            title={alreadyTipped ? t('Obrigado pela caixinha!') : t('Enviar caixinha')}
+            title={alreadyTipped ? t('Caixinha enviada') : t('Enviar caixinha')}
             disabled={alreadyTipped || selectedtip.data === 0 || isLoading}
             activityIndicator={isLoading}
             onPress={() => onConfirm()}

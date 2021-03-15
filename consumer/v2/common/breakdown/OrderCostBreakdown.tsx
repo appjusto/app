@@ -31,16 +31,28 @@ export const OrderCostBreakdown = ({ order, selectedFare }: Props) => {
               </Text>
             </View>
           )}
+          {(selectedFare?.consumer.platformFee ?? 0) !== 0 && (
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('AppJusto')}</Text>
+              <Text style={{ ...texts.sm, lineHeight: 21 }}>
+                {formatCurrency(selectedFare!.consumer.platformFee)}
+              </Text>
+            </View>
+          )}
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('Entregador')}</Text>
+            <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('Entrega')}</Text>
             <Text style={{ ...texts.sm, lineHeight: 21 }}>
               {formatCurrency(selectedFare?.consumer.courierFee ?? 0)}
             </Text>
           </View>
-          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('Frota escolhida')}</Text>
-            <Text style={{ ...texts.sm, lineHeight: 21 }}>{selectedFare?.fleet.name}</Text>
-          </View>
+          {(order.tip?.value ?? 0) > 0 && (
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('Caixinha entregador')}</Text>
+              <Text style={{ ...texts.sm, lineHeight: 21 }}>
+                {formatCurrency(order.tip!.value)}
+              </Text>
+            </View>
+          )}
           {(selectedFare?.consumer.taxes ?? 0) !== 0 && (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ ...texts.sm, lineHeight: 21, color: colors.grey700 }}>
@@ -62,21 +74,6 @@ export const OrderCostBreakdown = ({ order, selectedFare }: Props) => {
             </View>
           )}
         </View>
-        {(selectedFare?.consumer.platformFee ?? 0) !== 0 && (
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginTop: 12,
-            }}
-          >
-            <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('AppJusto')}</Text>
-            <Text style={{ ...texts.sm, lineHeight: 21 }}>
-              {formatCurrency(selectedFare!.consumer.platformFee)}
-            </Text>
-          </View>
-        )}
       </PaddedView>
     </View>
   );
