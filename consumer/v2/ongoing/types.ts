@@ -14,7 +14,7 @@ export type OngoingOrderNavigatorParamList = {
   OngoingOrderConfirmCancel: {
     orderId: string;
   };
-  OngoingOrderCanceled: {
+  OngoingOrderCancelOrder: {
     orderId: string;
   };
   OngoingOrderCourierDetail: {

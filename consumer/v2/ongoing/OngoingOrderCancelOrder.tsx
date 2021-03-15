@@ -22,17 +22,17 @@ import { LoggedNavigatorParamList } from '../types';
 import { OngoingOrderNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<OngoingOrderNavigatorParamList, 'OngoingOrderCanceled'>,
+  StackNavigationProp<OngoingOrderNavigatorParamList, 'OngoingOrderCancelOrder'>,
   StackNavigationProp<LoggedNavigatorParamList>
 >;
-type ScreenRouteProp = RouteProp<OngoingOrderNavigatorParamList, 'OngoingOrderCanceled'>;
+type ScreenRouteProp = RouteProp<OngoingOrderNavigatorParamList, 'OngoingOrderCancelOrder'>;
 
 type Props = {
   route: ScreenRouteProp;
   navigation: ScreenNavigationProp;
 };
 
-export const OngoingOrderCanceled = ({ route, navigation }: Props) => {
+export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
   // params
   const { orderId } = route.params;
   // context
