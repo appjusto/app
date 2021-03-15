@@ -3,7 +3,8 @@ import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as Location from 'expo-location';
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../common/app/context';
@@ -16,6 +17,7 @@ import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { getOrders } from '../../../../common/store/order/selectors';
 import { colors, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { OrderItemModal } from '../../common/order-summary/OrderItemModal';
 import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
 import { HomeControls } from './controls/HomeControls';
@@ -36,6 +38,7 @@ export default function ({ navigation }: Props) {
   // state
   const { coords, permissionResponse } = useLastKnownLocation();
   const [availableCouriers, setAvailableCouriers] = React.useState(0);
+  const [modalVisible, setModalVisible] = React.useState(false);
   // side effects
   // request location permission
   React.useEffect(() => {
@@ -101,6 +104,10 @@ export default function ({ navigation }: Props) {
               subtitle="Compartilhe esse movimento por uma economia mais justa."
             />
           </View>
+          <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+            <OrderItemModal modalVisible={modalVisible} />
+            <Text>SHOW MODAL</Text>
+          </TouchableOpacity>
         </PaddedView>
       </ScrollView>
     </SafeAreaView>
