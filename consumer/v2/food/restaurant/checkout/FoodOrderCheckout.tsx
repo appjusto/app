@@ -2,14 +2,13 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Fleet, WithId } from 'appjusto-types';
 import React from 'react';
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { showToast } from '../../../../../common/store/ui/actions';
-import { colors, padding, screens } from '../../../../../common/styles';
+import { colors, screens } from '../../../../../common/styles';
 import { OrderSummary } from '../../../common/order-summary/OrderSummary';
 import { LoggedNavigatorParamList } from '../../../types';
 import { FoodOrderNavigatorParamList } from '../../types';
@@ -103,11 +102,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   }
   return (
     <ScrollView style={{ ...screens.default }}>
-      <TouchableOpacity style={{ marginVertical: padding }} onPress={() => setVisible(true)}>
-        <Text>Abrir modal</Text>
-      </TouchableOpacity>
       <OrderSummary
-        modalVisible={visible}
         order={order}
         selectedPaymentMethodId={selectedPaymentMethodId}
         waiting={isLoading}
@@ -126,7 +121,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         placeOrder={placeOrderHandler}
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         navigateFleetDetail={navigateFleetDetail}
-        onCloseModal={() => setVisible(false)}
+        modalVisible={visible}
+        onModal={() => setVisible(!visible)}
       />
     </ScrollView>
   );

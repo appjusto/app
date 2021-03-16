@@ -17,10 +17,10 @@ type Props = {
   modalVisible: boolean;
   item: OrderItem;
   api: Api;
-  onCloseModal: () => void;
+  onModal: () => void;
 };
 
-export const OrderItemModal = ({ modalVisible, item, order, api, onCloseModal }: Props) => {
+export const OrderItemModal = ({ modalVisible, item, order, api, onModal }: Props) => {
   //state
   const [quantity, setQuantity] = React.useState(item.quantity);
   //handlers
@@ -49,7 +49,7 @@ export const OrderItemModal = ({ modalVisible, item, order, api, onCloseModal }:
             borderWidth: 1,
           }}
         >
-          <TouchableOpacity onPress={onCloseModal}>
+          <TouchableOpacity onPress={onModal}>
             <View
               style={{
                 width: 32,

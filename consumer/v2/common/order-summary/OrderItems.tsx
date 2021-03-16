@@ -15,7 +15,7 @@ interface Props {
   onAddItemsPress: () => void;
   modalVisible: boolean;
   api: Api;
-  onCloseModal: () => void;
+  onModal: () => void;
 }
 
 export const OrderItems = ({
@@ -24,7 +24,7 @@ export const OrderItems = ({
   onAddItemsPress,
   modalVisible,
   api,
-  onCloseModal,
+  onModal,
 }: Props) => {
   return (
     <View>
@@ -32,7 +32,10 @@ export const OrderItems = ({
       <HR />
       {order.items?.map((item) => (
         <View key={item.id}>
-          <TouchableOpacity onPress={() => onEditItemPress(item.product.id, item.id)}>
+          <TouchableOpacity
+            // onPress={() => onEditItemPress(item.product.id, item.id)}
+            onPress={onModal}
+          >
             <View style={{ paddingHorizontal: padding, paddingVertical: 12 }}>
               <Text style={[texts.sm]}>{item.product.name}</Text>
               <View style={{ flexDirection: 'row' }}>
@@ -64,7 +67,7 @@ export const OrderItems = ({
             modalVisible={modalVisible}
             api={api}
             order={order}
-            onCloseModal={onCloseModal}
+            onModal={onModal}
           />
         </View>
       ))}

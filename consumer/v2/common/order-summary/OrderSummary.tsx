@@ -30,7 +30,7 @@ type Props = {
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;
   modalVisible: boolean;
-  onCloseModal: () => void;
+  onModal: () => void;
 };
 
 export const OrderSummary = ({
@@ -45,7 +45,7 @@ export const OrderSummary = ({
   navigateToFillPaymentInfo,
   navigateFleetDetail,
   modalVisible,
-  onCloseModal,
+  onModal,
 }: Props) => {
   // context
   const api = React.useContext(ApiContext);
@@ -103,9 +103,9 @@ export const OrderSummary = ({
             order={order}
             onEditItemPress={onEditItemPress!}
             onAddItemsPress={onAddItemsPress!}
-            modalVisible={modalVisible}
             api={api}
-            onCloseModal={onCloseModal}
+            onModal={onModal}
+            modalVisible={modalVisible}
           />
           <OrderAdditionalInfo value={additionalInfo} onAddInfo={setAdditionalInfo} />
         </View>
