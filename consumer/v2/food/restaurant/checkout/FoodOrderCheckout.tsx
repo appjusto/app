@@ -114,9 +114,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             value: order.destination ?? null,
           });
         }}
-        onEditItemPress={(productId, itemId) =>
-          navigation.navigate('ItemDetail', { productId, itemId })
-        }
+        onEditItemPress={(productId, itemId) => {
+          navigation.navigate('ItemDetail', { productId, itemId });
+          setVisible(false);
+        }}
         onAddItemsPress={() => navigation.navigate('RestaurantDetail')}
         placeOrder={placeOrderHandler}
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}

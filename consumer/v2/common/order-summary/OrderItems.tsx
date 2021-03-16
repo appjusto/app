@@ -68,6 +68,7 @@ export const OrderItems = ({
             api={api}
             order={order}
             onModal={onModal}
+            onEditItemPress={() => onEditItemPress(item.product.id, item.id)}
           />
         </View>
       ))}

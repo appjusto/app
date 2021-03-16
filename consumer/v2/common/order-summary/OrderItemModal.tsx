@@ -13,6 +13,7 @@ import { t } from '../../../../strings';
 import { ItemQuantity } from '../../food/restaurant/product/ItemQuantity';
 
 type Props = {
+  onEditItemPress: (productId: string, itemId: string) => void;
   order: WithId<Order>;
   modalVisible: boolean;
   item: OrderItem;
@@ -20,10 +21,18 @@ type Props = {
   onModal: () => void;
 };
 
-export const OrderItemModal = ({ modalVisible, item, order, api, onModal }: Props) => {
-  //state
+export const OrderItemModal = ({
+  modalVisible,
+  item,
+  order,
+  api,
+  onModal,
+  onEditItemPress,
+}: Props) => {
+  // state
   const [quantity, setQuantity] = React.useState(item.quantity);
-  //handlers
+  // handlers
+  // check if it is working correctly
   const updateQuantity = () => {
     (async () => {
       const updatedOrder = !item.id
@@ -34,6 +43,8 @@ export const OrderItemModal = ({ modalVisible, item, order, api, onModal }: Prop
       api.order().updateOrder(order.id, updatedOrder);
     })();
   };
+  // add a handler to remove the item
+
   return (
     <Modal animationType="fade" visible={modalVisible} transparent>
       <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', flex: 1 }}>
@@ -80,7 +91,7 @@ export const OrderItemModal = ({ modalVisible, item, order, api, onModal }: Prop
             </View>
           </View>
           <View style={{ flexDirection: 'row', marginTop: 24 }}>
-            <TouchableOpacity onPress={() => null}>
+            <TouchableOpacity onPress={() => onEditItemPress(item.product.id, item.id)}>
               <RoundedText>{t('Revisar detalhes do item')}</RoundedText>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => null} style={{ marginLeft: padding }}>
