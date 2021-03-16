@@ -2,7 +2,13 @@ import { Feather } from '@expo/vector-icons';
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { Fleet, Order, Place, WithId } from 'appjusto-types';
 import React from 'react';
-import { NativeSyntheticEvent, Text, TouchableWithoutFeedback, View } from 'react-native';
+import {
+  NativeSyntheticEvent,
+  Pressable,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -131,15 +137,15 @@ export default function ({
         {/* origin */}
         <View style={{ flex: 1, paddingHorizontal: padding }}>
           <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
-            <TouchableWithoutFeedback
+            <Pressable
               onPress={() => {
                 navigateToAddressComplete('origin', origin);
               }}
             >
-              <LabeledText title={t('Endereço de retirada')}>
-                {origin?.address?.main ?? t('Endereço com número')}
+              <LabeledText title={t('Endereço de retirada')} placeholder={t('Endereço com número')}>
+                {origin?.address?.main}
               </LabeledText>
-            </TouchableWithoutFeedback>
+            </Pressable>
 
             <DefaultInput
               style={{ marginTop: verticalPadding }}
@@ -189,15 +195,18 @@ export default function ({
         {Boolean(origin?.address.description) && (
           <View style={{ flex: 1, paddingHorizontal: padding }}>
             <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
-              <TouchableWithoutFeedback
+              <Pressable
                 onPress={() => {
                   navigateToAddressComplete('destination', destination ?? undefined);
                 }}
               >
-                <LabeledText title={t('Endereço de entrega')}>
-                  {destination?.address?.main ?? t('Endereço com número')}
+                <LabeledText
+                  title={t('Endereço de entrega')}
+                  placeholder={t('Endereço com número')}
+                >
+                  {destination?.address?.main}
                 </LabeledText>
-              </TouchableWithoutFeedback>
+              </Pressable>
 
               <DefaultInput
                 style={{ marginTop: verticalPadding }}
