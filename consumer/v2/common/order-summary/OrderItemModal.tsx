@@ -1,66 +1,83 @@
 import { MaterialIcons } from '@expo/vector-icons';
+import { Order, OrderItem, WithId } from 'appjusto-types';
 import React from 'react';
 import { Modal, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
+import Api from '../../../../common/store/api/api';
+import * as helpers from '../../../../common/store/api/order/helpers';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
+import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import { ItemQuantity } from '../../food/restaurant/product/ItemQuantity';
 
 type Props = {
+  order: WithId<Order>;
   modalVisible: boolean;
+  item: OrderItem;
+  api: Api;
+  onCloseModal: () => void;
 };
 
-export const OrderItemModal = ({ modalVisible }: Props) => {
-  const observations = 'Ao ponto, mas sem sangue';
-  const [quantity, setQuantity] = React.useState(1);
+export const OrderItemModal = ({ modalVisible, item, order, api, onCloseModal }: Props) => {
+  //state
+  const [quantity, setQuantity] = React.useState(item.quantity);
+  //handlers
+  const updateQuantity = () => {
+    (async () => {
+      const updatedOrder = !item.id
+        ? helpers.addItemToOrder(order, item)
+        : quantity > 0
+        ? helpers.updateItem(order, item)
+        : helpers.removeItem(order, item);
+      api.order().updateOrder(order.id, updatedOrder);
+    })();
+  };
   return (
-    <View style={{ flex: 1 }}>
-      <Modal animationType="slide" visible={modalVisible} transparent>
+    <Modal animationType="fade" visible={modalVisible} transparent>
+      <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', flex: 1 }}>
         <View
           style={{
             backgroundColor: colors.white,
             borderTopLeftRadius: 8,
             borderTopRightRadius: 8,
-            // flex: 1,
             paddingHorizontal: padding,
             paddingTop: padding,
-            height: '50%',
             marginTop: 'auto',
-            borderTopColor: colors.black,
+            borderColor: colors.grey500,
+            borderWidth: 1,
           }}
         >
-          <View
-            style={{
-              width: 32,
-              height: 32,
-              justifyContent: 'center',
-              alignItems: 'center',
-              ...borders.default,
-              borderColor: colors.green500,
-              backgroundColor: colors.green500,
-              alignSelf: 'flex-end',
-            }}
-          >
-            <MaterialIcons name="close" size={16} />
-          </View>
-          <Text style={{ ...texts.xl }}>{t('Filé de frango a parmegiana')}</Text>
-          <View style={{ marginTop: padding }}>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Nome do complemento')}</Text>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Nome do complemento')}</Text>
-          </View>
+          <TouchableOpacity onPress={onCloseModal}>
+            <View
+              style={{
+                width: 32,
+                height: 32,
+                justifyContent: 'center',
+                alignItems: 'center',
+                ...borders.default,
+                borderColor: colors.green500,
+                backgroundColor: colors.green500,
+                alignSelf: 'flex-end',
+              }}
+            >
+              <MaterialIcons name="close" size={16} />
+            </View>
+          </TouchableOpacity>
+          <Text style={{ ...texts.xl, marginBottom: padding }}>{item.product.name}</Text>
+          {item.complements?.map((complement) => (
+            <Text style={{ ...texts.sm, color: colors.grey700 }} key={complement.complementId}>
+              {complement.name}
+            </Text>
+          ))}
           <View>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Observações')}</Text>
-            <DefaultInput
-              editable={false}
-              placeholder={t('Escreva sua mensagem')}
-              multiline
-              numberOfLines={6}
-              value={observations}
-              style={{ height: 80, marginTop: halfPadding }}
-            />
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Observações:')}</Text>
+            <View style={{ ...borders.default, height: 66, padding, marginTop: halfPadding }}>
+              <Text style={{ ...texts.sm, color: colors.grey700, flexWrap: 'wrap' }}>
+                {item.notes ?? ''}
+              </Text>
+            </View>
           </View>
           <View style={{ flexDirection: 'row', marginTop: 24 }}>
             <TouchableOpacity onPress={() => null}>
@@ -76,16 +93,15 @@ export const OrderItemModal = ({ modalVisible }: Props) => {
             <ItemQuantity
               style={{ marginVertical: padding }}
               value={quantity}
-              minimum={0}
-              // title={`${t('Adicionar')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
-              title={t('Atualizar')}
+              minimum={item.id ? 0 : 1}
+              title={`${t('Atualizar')} ${formatCurrency(helpers.getItemTotal(item!))}`}
               disabled={false}
               onChange={(value) => setQuantity(value)}
-              onSubmit={() => null}
+              onSubmit={updateQuantity}
             />
           </View>
         </View>
-      </Modal>
-    </View>
+      </View>
+    </Modal>
   );
 };
