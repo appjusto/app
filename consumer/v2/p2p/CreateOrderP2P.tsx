@@ -46,7 +46,7 @@ export default function ({ navigation, route }: Props) {
     console.log('CreateOrderP2P useEffect; params: ', params);
     (async () => {
       if (params?.orderId) {
-        setOrderId(params?.orderId);
+        setOrderId(params.orderId);
         navigation.setParams({
           orderId: undefined,
         });
@@ -141,6 +141,7 @@ export default function ({ navigation, route }: Props) {
         params: { orderId },
       });
     } catch (error) {
+      console.warn(error.toString());
       dispatch(showToast(error.toString(), 'error'));
     }
   };
