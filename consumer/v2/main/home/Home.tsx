@@ -36,7 +36,6 @@ export default function ({ navigation }: Props) {
   // state
   const { coords, permissionResponse } = useLastKnownLocation();
   const [availableCouriers, setAvailableCouriers] = React.useState(0);
-  const [modalVisible, setModalVisible] = React.useState(false);
   // side effects
   // request location permission
   React.useEffect(() => {

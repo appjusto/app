@@ -18,7 +18,7 @@ type Props = {
   modalVisible: boolean;
   item: OrderItem;
   api: Api;
-  onModal: () => void;
+  onModal?: () => void;
 };
 
 export const OrderItemModal = ({

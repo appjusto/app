@@ -259,6 +259,7 @@ export default function ({
             placeOrder={placeOrder}
             navigateToFillPaymentInfo={navigateToFillPaymentInfo}
             navigateFleetDetail={navigateFleetDetail}
+            modalVisible={false}
           />
         )}
       </ViewPager>

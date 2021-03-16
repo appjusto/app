@@ -15,7 +15,7 @@ interface Props {
   onAddItemsPress: () => void;
   modalVisible: boolean;
   api: Api;
-  onModal: () => void;
+  onModal?: () => void;
 }
 
 export const OrderItems = ({

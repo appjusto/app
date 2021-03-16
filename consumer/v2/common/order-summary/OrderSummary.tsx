@@ -30,7 +30,7 @@ type Props = {
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;
   modalVisible: boolean;
-  onModal: () => void;
+  onModal?: () => void;
 };
 
 export const OrderSummary = ({
