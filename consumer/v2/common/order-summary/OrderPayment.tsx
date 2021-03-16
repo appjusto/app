@@ -16,6 +16,7 @@ interface Props {
   onEditPaymentMethod: () => void;
   onSubmit: () => void;
   activityIndicator: boolean;
+  onPixPayment: () => void;
 }
 
 export const OrderPayment = ({
@@ -24,13 +25,14 @@ export const OrderPayment = ({
   onEditPaymentMethod,
   onSubmit,
   activityIndicator,
+  onPixPayment,
 }: Props) => {
   const consumer = useSelector(getConsumer)!;
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
   return (
     <PaddedView>
       <View style={{ marginBottom: padding }}>
-        <PixCard />
+        <PixCard onPixPayment={onPixPayment} />
       </View>
       {Boolean(selectedPaymentMethod) && (
         <TouchableOpacity onPress={onEditPaymentMethod}>

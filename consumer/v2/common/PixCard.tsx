@@ -7,9 +7,13 @@ import RoundedText from '../../../common/components/texts/RoundedText';
 import { borders, colors, halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
-export const PixCard = () => {
+type Props = {
+  onPixPayment: () => void;
+};
+
+export const PixCard = ({ onPixPayment }: Props) => {
   return (
-    <TouchableOpacity onPress={() => null}>
+    <TouchableOpacity onPress={onPixPayment}>
       <PaddedView style={{ ...borders.default, height: 136, borderColor: colors.black }}>
         <View
           style={{

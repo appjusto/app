@@ -31,6 +31,7 @@ type Props = {
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;
   modalVisible: boolean;
   onModal?: () => void;
+  onPixPayment: () => void;
 };
 
 export const OrderSummary = ({
@@ -46,6 +47,7 @@ export const OrderSummary = ({
   navigateFleetDetail,
   modalVisible,
   onModal,
+  onPixPayment,
 }: Props) => {
   // context
   const api = React.useContext(ApiContext);
@@ -137,6 +139,7 @@ export const OrderSummary = ({
         isSubmitEnabled={canSubmit}
         onSubmit={() => placeOrder(selectedFare?.fleet?.id!)}
         activityIndicator={busy}
+        onPixPayment={onPixPayment}
       />
     </ScrollView>
   );

@@ -18,6 +18,7 @@ export type P2POrderNavigatorParamList = {
   FleetDetail: {
     fleetId: string;
   };
+  PayWithPix: undefined;
 } & AddressCompleteParamList;
 // } & ChatParamList;
 

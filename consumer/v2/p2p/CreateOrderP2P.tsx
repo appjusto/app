@@ -141,6 +141,7 @@ export default function ({ navigation, route }: Props) {
         navigateFleetDetail={navigateFleetDetail}
         navigateToTransportableItems={navigateToTransportableItems}
         placeOrder={placeOrderHandler}
+        onPixPayment={() => navigation.navigate('PayWithPix')}
       />
     </View>
   );
