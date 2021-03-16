@@ -43,14 +43,19 @@ export default function ({ navigation, route }: Props) {
   // side effects
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
-    console.log('CreateOrderP2P useEffect; params: ', route.params);
+    console.log('CreateOrderP2P useEffect; params: ', params);
     (async () => {
-      if (route.params?.orderId) setOrderId(route.params?.orderId);
-      if (route.params?.origin) {
+      if (params?.orderId) {
+        setOrderId(params?.orderId);
+        navigation.setParams({
+          orderId: undefined,
+        });
+      }
+      if (params?.origin) {
         if (!order) {
           try {
             setLoading(true);
-            const newOrder = await api.order().createOrderP2P(consumer, route.params.origin);
+            const newOrder = await api.order().createOrderP2P(consumer, params.origin);
             setLoading(false);
             setOrderId(newOrder.id);
           } catch (error) {
@@ -61,22 +66,30 @@ export default function ({ navigation, route }: Props) {
           // backend is handling this case, keep it here just while is being tested
           // if address is the same, update only additionalInfo to avoid losing
           // const origin: Place =
-          //   route.params.origin.address.description === order.origin?.address.description
-          //     ? { ...order.origin, additionalInfo: route.params.origin.additionalInfo }
-          //     : route.params.origin;
+          //   params.origin.address.description === order.origin?.address.description
+          //     ? { ...order.origin, additionalInfo: params.origin.additionalInfo }
+          //     : params.origin;
           // api.order().updateOrder(orderId, { origin });
-          console.log('updating origin');
-          await api.order().updateOrder(orderId, { origin: route.params.origin });
+          await api.order().updateOrder(orderId, { origin: params.origin });
         }
+        navigation.setParams({
+          origin: undefined,
+        });
       }
-      if (order && orderId && route.params?.destination) {
-        console.log('updating destination');
-        await api.order().updateOrder(orderId, { destination: route.params.destination });
+      if (order && orderId && params?.destination) {
+        await api.order().updateOrder(orderId, { destination: params.destination });
+        navigation.setParams({
+          destination: undefined,
+        });
       }
-      if (route.params?.paymentMethodId) setSelectedPaymentMethodId(route.params?.paymentMethodId);
-      // clearing params
+      if (params?.paymentMethodId) {
+        setSelectedPaymentMethodId(params?.paymentMethodId);
+        navigation.setParams({
+          paymentMethodId: undefined,
+        });
+      }
     })();
-  }, [params]);
+  }, [api, consumer, dispatch, navigation, order, orderId, params]);
 
   // handlers
   // navigate to 'AddressComplete' to enter address
