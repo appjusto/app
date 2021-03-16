@@ -8,6 +8,7 @@ import { getPaymentMethodById } from '../../../../common/store/api/business/cons
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { borders, colors, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { PixCard } from '../PixCard';
 
 interface Props {
   selectedPaymentMethodId?: string;
@@ -28,6 +29,9 @@ export const OrderPayment = ({
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
   return (
     <PaddedView>
+      <View style={{ marginBottom: padding }}>
+        <PixCard />
+      </View>
       {Boolean(selectedPaymentMethod) && (
         <TouchableOpacity onPress={onEditPaymentMethod}>
           <PaddedView>
