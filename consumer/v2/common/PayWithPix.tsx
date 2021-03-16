@@ -1,3 +1,5 @@
+import { RouteProp } from '@react-navigation/core';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Image, Text, View } from 'react-native';
 import { pix } from '../../../assets/icons';
@@ -8,7 +10,21 @@ import Pill from '../../../common/components/views/Pill';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
-export const PayWithPix = () => {
+export type PixParamList = {
+  PayWithPix: {
+    orderId: string;
+  };
+};
+
+type ScreenNavigationProp = StackNavigationProp<PixParamList, 'PayWithPix'>;
+type ScreenRouteProp = RouteProp<PixParamList, 'PayWithPix'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
+
+export const PayWithPix = ({ navigation, route }: Props) => {
   return (
     <View style={{ ...screens.config }}>
       <PaddedView style={{ flex: 1 }}>

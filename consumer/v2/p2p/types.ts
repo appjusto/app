@@ -1,5 +1,6 @@
 import { Place } from 'appjusto-types';
 import { AddressCompleteParamList } from '../common/AddressComplete';
+import { PixParamList } from '../common/PayWithPix';
 
 export type P2POrderNavigatorParamList = {
   CreateOrderP2P?: {
@@ -18,8 +19,8 @@ export type P2POrderNavigatorParamList = {
   FleetDetail: {
     fleetId: string;
   };
-  PayWithPix: undefined;
-} & AddressCompleteParamList;
+} & AddressCompleteParamList &
+  PixParamList;
 // } & ChatParamList;
 
 export enum Step {

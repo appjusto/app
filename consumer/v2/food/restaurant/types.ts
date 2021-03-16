@@ -1,4 +1,5 @@
 import { Place } from 'appjusto-types';
+import { PixParamList } from '../../common/PayWithPix';
 
 export type RestaurantNavigatorParamList = {
   RestaurantDetail: undefined;
@@ -25,4 +26,4 @@ export type RestaurantNavigatorParamList = {
   FleetDetail: {
     fleetId: string;
   };
-};
+} & PixParamList;
