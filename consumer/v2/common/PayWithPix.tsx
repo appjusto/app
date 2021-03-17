@@ -11,7 +11,7 @@ import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import Pill from '../../../common/components/views/Pill';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
-import { colors, padding, screens, texts } from '../../../common/styles';
+import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
 export type PixParamList = {
@@ -37,6 +37,8 @@ export const PayWithPix = ({ navigation, route }: Props) => {
   // screen state
   const [cpfKey, setCpfKey] = React.useState(false);
   const [pixValue, setPixValue] = React.useState('');
+  // for tests only
+  const [newScreen, setNewScreen] = React.useState(false);
   // side-effects
   // setting consumer cpf as pix key
   React.useEffect(() => {
@@ -44,7 +46,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
     if (cpfKey) setPixValue(consumer.cpf!);
   }, [cpfKey, consumer.cpf]);
 
-  return (
+  return !newScreen ? (
     <View style={{ ...screens.config }}>
       <PaddedView style={{ flex: 1 }}>
         <Image source={pix} />
@@ -95,7 +97,80 @@ export const PayWithPix = ({ navigation, route }: Props) => {
               'Você poderá deixar uma Caixinha de gorjeta para o entregador quando o seu pedido for entregue.'
             )}
           </Text>
-          <DefaultButton title={t('Gerar código de pagamento Pix')} />
+          <DefaultButton
+            title={t('Gerar código de pagamento Pix')}
+            onPress={() => setNewScreen(true)}
+          />
+        </View>
+      </View>
+    </View>
+  ) : (
+    <View style={{ ...screens.config }}>
+      <PaddedView style={{ flex: 1 }}>
+        <Image source={pix} />
+        <Text style={{ ...texts.lg, marginTop: padding }}>{t('Efetue o pagamento')}</Text>
+        <Text style={{ ...texts.sm, marginVertical: padding, color: colors.grey700 }}>
+          {t(
+            'Se você vai pagar com este mesmo dispositivo clique no botão Copiar chave de pagamento'
+          )}
+        </Text>
+        <Text style={{ ...texts.sm, marginBottom: padding, color: colors.grey700 }}>
+          {t(
+            'Depois, acesse o aplicativo do seu banco ou instituição financeira na seção Pix e procure a função Pix Copia e Cola'
+          )}
+        </Text>
+        <View
+          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
+        >
+          <View style={{ width: '49%' }}>
+            <View style={{ ...borders.default, height: 156, width: 156 }} />
+          </View>
+          <View style={{ width: '49%' }}>
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>
+              {t(
+                'Você ou outra pessoa também podem efetuar o pagamento através do QR Code ao lado'
+              )}
+            </Text>
+          </View>
+        </View>
+        <DefaultButton
+          title={t('Copiar chave de pagamento')}
+          style={{ marginTop: padding }}
+          onPress={() => setNewScreen(false)}
+        />
+      </PaddedView>
+      <View
+        style={{
+          backgroundColor: colors.white,
+          paddingTop: padding,
+          paddingRight: padding,
+          // flex: 1,
+          paddingBottom: 32,
+        }}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Pill />
+          <Text style={{ ...texts.md, marginLeft: 12 }}>{t('Importante')}</Text>
+        </View>
+
+        <View style={{ marginTop: padding, marginHorizontal: padding }}>
+          <Text
+            style={{
+              ...texts.xs,
+              color: colors.grey700,
+              marginBottom: padding,
+            }}
+          >
+            {t(
+              'Após realizar o pagamento na sua instituição financeira, confirme o pagamento aqui.'
+            )}
+          </Text>
+          <DefaultButton
+            title={t('Confirmar pagamento')}
+            onPress={() => null}
+            disabled={newScreen}
+            style={{ backgroundColor: colors.grey700 }}
+          />
         </View>
       </View>
     </View>
