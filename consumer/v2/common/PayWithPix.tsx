@@ -2,11 +2,15 @@ import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Image, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import { pix } from '../../../assets/icons';
+import CheckField from '../../../common/components/buttons/CheckField';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import Pill from '../../../common/components/views/Pill';
+import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { getConsumer } from '../../../common/store/consumer/selectors';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
@@ -25,6 +29,21 @@ type Props = {
 };
 
 export const PayWithPix = ({ navigation, route }: Props) => {
+  const { orderId } = route.params;
+  // redux store
+  const consumer = useSelector(getConsumer)!;
+  // state
+  const { order } = useObserveOrder(orderId);
+  // screen state
+  const [cpfKey, setCpfKey] = React.useState(false);
+  const [pixValue, setPixValue] = React.useState('');
+  // side-effects
+  // setting consumer cpf as pix key
+  React.useEffect(() => {
+    if (!cpfKey) setPixValue('');
+    if (cpfKey) setPixValue(consumer.cpf!);
+  }, [cpfKey, consumer.cpf]);
+
   return (
     <View style={{ ...screens.config }}>
       <PaddedView style={{ flex: 1 }}>
@@ -35,8 +54,15 @@ export const PayWithPix = ({ navigation, route }: Props) => {
             'É importante informar a sua chave para enviarmos o estorno do valor caso ocorra algum problema no pedido.'
           )}
         </Text>
-        <DefaultInput title={t('Chave Pix')} />
-        {/* add a radio/check with 'adicionar cpf' here */}
+        <DefaultInput title={t('Chave Pix')} value={pixValue} onChangeText={setPixValue} />
+        {consumer.cpf && (
+          <CheckField
+            checked={cpfKey}
+            onPress={() => setCpfKey(!cpfKey)}
+            text={t('Usar CPF como chave')}
+            style={{ marginTop: padding }}
+          />
+        )}
       </PaddedView>
       <View style={{ flex: 1 }} />
       <View
