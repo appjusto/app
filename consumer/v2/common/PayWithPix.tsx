@@ -116,7 +116,11 @@ export const PayWithPix = ({ navigation, route }: Props) => {
               'Você poderá deixar uma Caixinha de gorjeta para o entregador quando o seu pedido for entregue.'
             )}
           </Text>
-          <DefaultButton title={t('Gerar código de pagamento Pix')} onPress={payWithPix} />
+          <DefaultButton
+            title={t('Gerar código de pagamento Pix')}
+            onPress={payWithPix}
+            disabled={!pixValue}
+          />
         </View>
       </View>
     </View>

@@ -32,6 +32,7 @@ type Props = {
   modalVisible: boolean;
   onModal?: () => void;
   onPixPayment: () => void;
+  onFinishProfile: () => void;
 };
 
 export const OrderSummary = ({
@@ -48,6 +49,7 @@ export const OrderSummary = ({
   modalVisible,
   onModal,
   onPixPayment,
+  onFinishProfile,
 }: Props) => {
   // context
   const api = React.useContext(ApiContext);
@@ -140,6 +142,7 @@ export const OrderSummary = ({
         onSubmit={() => placeOrder(selectedFare?.fleet?.id!)}
         activityIndicator={busy}
         onPixPayment={onPixPayment}
+        onFinishProfile={onFinishProfile}
       />
     </ScrollView>
   );

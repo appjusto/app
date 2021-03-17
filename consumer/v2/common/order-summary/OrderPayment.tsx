@@ -17,6 +17,7 @@ interface Props {
   onSubmit: () => void;
   activityIndicator: boolean;
   onPixPayment: () => void;
+  onFinishProfile: () => void;
 }
 
 export const OrderPayment = ({
@@ -26,11 +27,21 @@ export const OrderPayment = ({
   onSubmit,
   activityIndicator,
   onPixPayment,
+  onFinishProfile,
 }: Props) => {
   const consumer = useSelector(getConsumer)!;
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
+  const unfinishedProfile = !consumer.name || !consumer.cpf;
   return (
     <PaddedView>
+      {unfinishedProfile && (
+        <DefaultButton
+          title={t('Finalizar cadastro')}
+          onPress={onFinishProfile}
+          secondary
+          style={{ marginBottom: padding }}
+        />
+      )}
       <View style={{ marginBottom: padding }}>
         <PixCard onPixPayment={onPixPayment} />
       </View>
@@ -60,7 +71,7 @@ export const OrderPayment = ({
 
       {!selectedPaymentMethod && (
         <DefaultButton
-          title={t('Finalizar cadastro e adicionar pagamento')}
+          title={t('Adicionar cartão de crédito')}
           onPress={onEditPaymentMethod}
           secondary
         />
