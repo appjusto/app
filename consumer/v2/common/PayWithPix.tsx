@@ -1,9 +1,10 @@
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Image, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { pix } from '../../../assets/icons';
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 import CheckField from '../../../common/components/buttons/CheckField';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
@@ -11,6 +12,7 @@ import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import Pill from '../../../common/components/views/Pill';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
+import { showToast } from '../../../common/store/ui/actions';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
@@ -29,7 +31,11 @@ type Props = {
 };
 
 export const PayWithPix = ({ navigation, route }: Props) => {
+  // params
   const { orderId } = route.params;
+  //context
+  const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
   // redux store
   const consumer = useSelector(getConsumer)!;
   // state
@@ -37,6 +43,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
   // screen state
   const [cpfKey, setCpfKey] = React.useState(false);
   const [pixValue, setPixValue] = React.useState('');
+  const [isLoading, setLoading] = React.useState(false);
   // for tests only
   const [newScreen, setNewScreen] = React.useState(false);
   // side-effects
@@ -45,6 +52,18 @@ export const PayWithPix = ({ navigation, route }: Props) => {
     if (!cpfKey) setPixValue('');
     if (cpfKey) setPixValue(consumer.cpf!);
   }, [cpfKey, consumer.cpf]);
+
+  // handlers
+  const payWithPix = async () => {
+    try {
+      setLoading(true);
+      api.profile().updateProfile(consumer.id, { pix: pixValue });
+      setLoading(false);
+      setNewScreen(true);
+    } catch (error) {
+      dispatch(showToast(t('Não foi possível copiar a chave de pagamento.'), 'error'));
+    }
+  };
 
   return !newScreen ? (
     <View style={{ ...screens.config }}>
@@ -97,10 +116,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
               'Você poderá deixar uma Caixinha de gorjeta para o entregador quando o seu pedido for entregue.'
             )}
           </Text>
-          <DefaultButton
-            title={t('Gerar código de pagamento Pix')}
-            onPress={() => setNewScreen(true)}
-          />
+          <DefaultButton title={t('Gerar código de pagamento Pix')} onPress={payWithPix} />
         </View>
       </View>
     </View>
