@@ -31,7 +31,7 @@ type Props = {
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;
   modalVisible: boolean;
   onOpenModal?: () => void;
-  navigateToPixPayment: (total: number) => void;
+  navigateToPixPayment: (total: number, fleetId: string) => void;
   navigateToFinishProfile: () => void;
 };
 
@@ -141,7 +141,9 @@ export const OrderSummary = ({
         isSubmitEnabled={canSubmit}
         onSubmit={() => placeOrder(selectedFare?.fleet?.id!)}
         activityIndicator={busy}
-        navigateToPixPayment={() => navigateToPixPayment(selectedFare?.consumer.total ?? 0)}
+        navigateToPixPayment={() =>
+          navigateToPixPayment(selectedFare?.consumer.total ?? 0, selectedFare?.fleet?.id!)
+        }
         navigateToFinishProfile={navigateToFinishProfile}
       />
     </ScrollView>

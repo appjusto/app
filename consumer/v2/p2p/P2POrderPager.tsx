@@ -24,7 +24,7 @@ type Props = {
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;
   navigateToTransportableItems: () => void;
   placeOrder: (fleetId: string) => Promise<void>;
-  navigateToPixPayment: (total: number) => void;
+  navigateToPixPayment: (total: number, fleetId: string) => void;
   navigateToFinishProfile: () => void;
 };
 

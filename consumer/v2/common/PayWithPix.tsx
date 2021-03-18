@@ -21,6 +21,7 @@ export type PixParamList = {
   PayWithPix: {
     orderId: string;
     total: number;
+    fleetId: string;
   };
 };
 
@@ -34,7 +35,7 @@ type Props = {
 
 export const PayWithPix = ({ navigation, route }: Props) => {
   // params
-  const { orderId, total } = route.params;
+  const { orderId, total, fleetId } = route.params;
   //context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -66,6 +67,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
       dispatch(showToast(t('Não foi possível copiar a chave de pagamento.'), 'error'));
     }
   };
+  console.log(fleetId);
   if (!order) {
     return (
       <View style={screens.centered}>

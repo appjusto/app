@@ -141,8 +141,8 @@ export default function ({ navigation, route }: Props) {
         navigateFleetDetail={navigateFleetDetail}
         navigateToTransportableItems={navigateToTransportableItems}
         placeOrder={placeOrderHandler}
-        navigateToPixPayment={(total) =>
-          navigation.navigate('PayWithPix', { orderId: orderId!, total })
+        navigateToPixPayment={(total, fleetId) =>
+          navigation.navigate('PayWithPix', { orderId: orderId!, total, fleetId })
         }
         navigateToFinishProfile={() =>
           navigation.navigate('ProfileNavigator', { screen: 'ProfileEdit' })
