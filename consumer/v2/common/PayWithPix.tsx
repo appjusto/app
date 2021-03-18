@@ -1,4 +1,4 @@
-import { RouteProp } from '@react-navigation/core';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { ActivityIndicator, Image, Text, View } from 'react-native';
@@ -13,9 +13,10 @@ import Pill from '../../../common/components/views/Pill';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { showToast } from '../../../common/store/ui/actions';
-import { borders, colors, padding, screens, texts } from '../../../common/styles';
+import { colors, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
+import { LoggedNavigatorParamList } from '../types';
 
 export type PixParamList = {
   PayWithPix: {
@@ -24,8 +25,10 @@ export type PixParamList = {
     fleetId: string;
   };
 };
-
-type ScreenNavigationProp = StackNavigationProp<PixParamList, 'PayWithPix'>;
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<PixParamList, 'PayWithPix'>,
+  StackNavigationProp<LoggedNavigatorParamList>
+>;
 type ScreenRouteProp = RouteProp<PixParamList, 'PayWithPix'>;
 
 type Props = {
@@ -45,29 +48,38 @@ export const PayWithPix = ({ navigation, route }: Props) => {
   const { order } = useObserveOrder(orderId);
   // screen state
   const [cpfKey, setCpfKey] = React.useState(false);
-  const [pixValue, setPixValue] = React.useState('');
+  const [pixKey, setPixKey] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
   // for tests only
-  const [newScreen, setNewScreen] = React.useState(false);
 
   // side-effects
   // setting consumer cpf as pix key
   React.useEffect(() => {
-    if (!cpfKey) setPixValue('');
-    if (cpfKey) setPixValue(consumer.cpf!);
+    if (!cpfKey) setPixKey('');
+    if (cpfKey) setPixKey(consumer.cpf!);
   }, [cpfKey, consumer.cpf]);
 
-  const payWithPix = async () => {
+  // handlers
+  const placeOrderWithPix = async () => {
     try {
       setLoading(true);
-      api.profile().updateProfile(consumer.id, { pix: pixValue });
+      await api.profile().updateProfile(consumer.id, { pix: pixKey });
+      await api.order().placeOrder({
+        orderId,
+        payableWith: 'pix',
+        fleetId,
+        pixKey,
+      });
       setLoading(false);
-      setNewScreen(true);
+      navigation.replace('OngoingOrderNavigator', {
+        screen: 'OngoingOrderConfirming',
+        params: { orderId, pixKey },
+      });
     } catch (error) {
-      dispatch(showToast(t('Não foi possível copiar a chave de pagamento.'), 'error'));
+      dispatch(showToast(error.toString(), 'error'));
     }
   };
-  console.log(fleetId);
+
   if (!order) {
     return (
       <View style={screens.centered}>
@@ -75,7 +87,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  return !newScreen ? (
+  return (
     <View style={{ ...screens.config }}>
       <PaddedView style={{ flex: 1 }}>
         <Image source={pix} />
@@ -85,7 +97,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
             'É importante informar a sua chave para enviarmos o estorno do valor caso ocorra algum problema no pedido.'
           )}
         </Text>
-        <DefaultInput title={t('Chave Pix')} value={pixValue} onChangeText={setPixValue} />
+        <DefaultInput title={t('Chave Pix')} value={pixKey} onChangeText={setPixKey} />
         {consumer.cpf && (
           <CheckField
             checked={cpfKey}
@@ -128,78 +140,8 @@ export const PayWithPix = ({ navigation, route }: Props) => {
           </Text>
           <DefaultButton
             title={t('Gerar código de pagamento Pix')}
-            onPress={payWithPix}
-            disabled={!pixValue}
-          />
-        </View>
-      </View>
-    </View>
-  ) : (
-    <View style={{ ...screens.config }}>
-      <PaddedView style={{ flex: 1 }}>
-        <Image source={pix} />
-        <Text style={{ ...texts.lg, marginTop: padding }}>{t('Efetue o pagamento')}</Text>
-        <Text style={{ ...texts.sm, marginVertical: padding, color: colors.grey700 }}>
-          {t(
-            'Se você vai pagar com este mesmo dispositivo clique no botão Copiar chave de pagamento'
-          )}
-        </Text>
-        <Text style={{ ...texts.sm, marginBottom: padding, color: colors.grey700 }}>
-          {t(
-            'Depois, acesse o aplicativo do seu banco ou instituição financeira na seção Pix e procure a função Pix Copia e Cola'
-          )}
-        </Text>
-        <View
-          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
-        >
-          <View style={{ width: '49%' }}>
-            <View style={{ ...borders.default, height: 156, width: 156 }} />
-          </View>
-          <View style={{ width: '49%' }}>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {t(
-                'Você ou outra pessoa também podem efetuar o pagamento através do QR Code ao lado'
-              )}
-            </Text>
-          </View>
-        </View>
-        <DefaultButton
-          title={t('Copiar chave de pagamento')}
-          style={{ marginTop: padding }}
-          onPress={() => setNewScreen(false)}
-        />
-      </PaddedView>
-      <View
-        style={{
-          backgroundColor: colors.white,
-          paddingTop: padding,
-          paddingRight: padding,
-          // flex: 1,
-          paddingBottom: 32,
-        }}
-      >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Pill />
-          <Text style={{ ...texts.md, marginLeft: 12 }}>{t('Importante')}</Text>
-        </View>
-
-        <View style={{ marginTop: padding, marginHorizontal: padding }}>
-          <Text
-            style={{
-              ...texts.xs,
-              color: colors.grey700,
-              marginBottom: padding,
-            }}
-          >
-            {t(
-              'Após realizar o pagamento na sua instituição financeira, confirme o pagamento aqui.'
-            )}
-          </Text>
-          <DefaultButton
-            title={t('Confirmar pagamento')}
-            onPress={() => null}
-            disabled={newScreen}
-            style={{ backgroundColor: colors.grey700 }}
+            onPress={placeOrderWithPix}
+            disabled={!pixKey}
           />
         </View>
       </View>

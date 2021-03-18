@@ -1,13 +1,16 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Image, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { pix } from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../common/components/containers/PaddedView';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { isOrderOngoing } from '../../../common/store/order/selectors';
-import { borders, colors, padding, screens } from '../../../common/styles';
+import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
 import { OngoingOrderNavigatorParamList } from './types';
@@ -25,7 +28,7 @@ type Props = {
 
 export const OrderConfirming = ({ navigation, route }: Props) => {
   // params
-  const { orderId } = route.params;
+  const { orderId, pixKey } = route.params;
   // screen state
   const { order } = useObserveOrder(orderId);
   // side effects
@@ -54,7 +57,44 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
     order.type === 'food'
       ? t('Aguarde enquanto o restaurante confirma seu pedido...')
       : t('A cobrança só será efetuada caso um entregador aceitar o seu pedido.');
-  return (
+  return pixKey ? (
+    <SafeAreaView style={{ ...screens.config }}>
+      <PaddedView style={{ flex: 1 }}>
+        <Image source={pix} />
+        <Text style={{ ...texts.lg, marginTop: padding }}>{t('Efetue o pagamento')}</Text>
+        <Text style={{ ...texts.sm, marginVertical: padding, color: colors.grey700 }}>
+          {t(
+            'Se você vai pagar com este mesmo dispositivo clique no botão Copiar chave de pagamento'
+          )}
+        </Text>
+        <Text style={{ ...texts.sm, marginBottom: padding, color: colors.grey700 }}>
+          {t(
+            'Depois, acesse o aplicativo do seu banco ou instituição financeira na seção Pix e procure a função Pix Copia e Cola'
+          )}
+        </Text>
+        <View
+          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
+        >
+          <View style={{ width: '49%' }}>
+            <View style={{ ...borders.default, height: 156, width: 156 }} />
+          </View>
+          <View style={{ width: '49%' }}>
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>
+              {t(
+                'Você ou outra pessoa também podem efetuar o pagamento através do QR Code ao lado'
+              )}
+            </Text>
+          </View>
+        </View>
+        <View style={{ flex: 1 }} />
+        <DefaultButton
+          title={t('Copiar chave de pagamento')}
+          style={{ marginTop: padding }}
+          onPress={() => null}
+        />
+      </PaddedView>
+    </SafeAreaView>
+  ) : (
     <FeedbackView
       header={t('Pedido em andamento')}
       description={description}
