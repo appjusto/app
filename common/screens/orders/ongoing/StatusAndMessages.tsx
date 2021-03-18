@@ -6,7 +6,7 @@ import { MessagesCard } from '../../home/cards/MessagesCard';
 import CourierStatusHighlight from './CourierStatusHighlight';
 
 type Props = {
-  dispatchingState: DispatchingState;
+  dispatchingState?: DispatchingState;
   orderId: string;
   onMessageReceived: () => void;
 };
