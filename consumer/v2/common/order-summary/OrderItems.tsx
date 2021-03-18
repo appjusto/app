@@ -28,7 +28,7 @@ export const OrderItems = ({
 }: Props) => {
   return (
     <View>
-      <SingleHeader title={order.business?.name ?? ''} />
+      <SingleHeader title={t('Revise seu pedido')} />
       <HR />
       {order.items?.map((item) => (
         <View key={item.id}>

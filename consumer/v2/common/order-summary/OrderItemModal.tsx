@@ -33,18 +33,23 @@ export const OrderItemModal = ({
   const [quantity, setQuantity] = React.useState(item.quantity);
   // handlers
   // check if it is working correctly
-  const updateQuantity = () => {
+  // const updateQuantity = () => {
+  //   (async () => {
+  //     const updatedOrder = !item.id
+  //       ? helpers.addItemToOrder(order, item)
+  //       : quantity > 0
+  //       ? helpers.updateItem(order, item)
+  //       : helpers.removeItem(order, item);
+  //     api.order().updateOrder(order.id, updatedOrder);
+  //   })();
+  // };
+  const removeItem = () => {
     (async () => {
-      const updatedOrder = !item.id
-        ? helpers.addItemToOrder(order, item)
-        : quantity > 0
-        ? helpers.updateItem(order, item)
-        : helpers.removeItem(order, item);
-      api.order().updateOrder(order.id, updatedOrder);
+      const updatedOrder = helpers.removeItem(order, item);
+      await api.order().updateOrder(order.id, updatedOrder);
     })();
   };
-  // add a handler to remove the item
-
+  console.log(order.items);
   return (
     <Modal animationType="fade" visible={modalVisible} transparent>
       <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', flex: 1 }}>
@@ -60,22 +65,25 @@ export const OrderItemModal = ({
             borderWidth: 1,
           }}
         >
-          <TouchableOpacity onPress={onOpenModal}>
-            <View
-              style={{
-                width: 32,
-                height: 32,
-                justifyContent: 'center',
-                alignItems: 'center',
-                ...borders.default,
-                borderColor: colors.green500,
-                backgroundColor: colors.green500,
-                alignSelf: 'flex-end',
-              }}
-            >
-              <MaterialIcons name="close" size={16} />
-            </View>
-          </TouchableOpacity>
+          <View style={{ alignItems: 'flex-end' }}>
+            <TouchableOpacity onPress={onOpenModal}>
+              <View
+                style={{
+                  width: 32,
+                  height: 32,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  ...borders.default,
+                  borderColor: colors.green500,
+                  backgroundColor: colors.green500,
+                  // alignSelf: 'flex-end',
+                }}
+              >
+                <MaterialIcons name="close" size={16} />
+              </View>
+            </TouchableOpacity>
+          </View>
+
           <Text style={{ ...texts.xl, marginBottom: padding }}>{item.product.name}</Text>
           {item.complements?.map((complement) => (
             <Text style={{ ...texts.sm, color: colors.grey700 }} key={complement.complementId}>
@@ -94,7 +102,7 @@ export const OrderItemModal = ({
             <TouchableOpacity onPress={() => onEditItemPress(item.product.id, item.id)}>
               <RoundedText>{t('Revisar detalhes do item')}</RoundedText>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => null} style={{ marginLeft: padding }}>
+            <TouchableOpacity onPress={removeItem} style={{ marginLeft: padding }}>
               <RoundedText color={colors.red}>{t('Remover')}</RoundedText>
             </TouchableOpacity>
           </View>
@@ -108,7 +116,7 @@ export const OrderItemModal = ({
               title={`${t('Atualizar')} ${formatCurrency(helpers.getItemTotal(item!))}`}
               disabled={false}
               onChange={(value) => setQuantity(value)}
-              onSubmit={updateQuantity}
+              onSubmit={() => null}
             />
           </View>
         </View>
