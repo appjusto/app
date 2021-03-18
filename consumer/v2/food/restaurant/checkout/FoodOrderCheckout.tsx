@@ -123,7 +123,13 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         navigateFleetDetail={navigateFleetDetail}
         modalVisible={visible}
-        onModal={() => setVisible(!visible)}
+        onOpenModal={() => setVisible(!visible)}
+        navigateToPixPayment={(total, fleetId) =>
+          navigation.navigate('PayWithPix', { orderId: order.id!, total, fleetId })
+        }
+        navigateToFinishProfile={() =>
+          navigation.navigate('ProfileNavigator', { screen: 'ProfileEdit' })
+        }
       />
     </ScrollView>
   );
