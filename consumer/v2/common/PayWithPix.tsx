@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { Image, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { pix } from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -14,11 +14,13 @@ import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrd
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
+import { formatCurrency } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 
 export type PixParamList = {
   PayWithPix: {
     orderId: string;
+    total: number;
   };
 };
 
@@ -32,7 +34,7 @@ type Props = {
 
 export const PayWithPix = ({ navigation, route }: Props) => {
   // params
-  const { orderId } = route.params;
+  const { orderId, total } = route.params;
   //context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -46,6 +48,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
   const [isLoading, setLoading] = React.useState(false);
   // for tests only
   const [newScreen, setNewScreen] = React.useState(false);
+
   // side-effects
   // setting consumer cpf as pix key
   React.useEffect(() => {
@@ -53,7 +56,6 @@ export const PayWithPix = ({ navigation, route }: Props) => {
     if (cpfKey) setPixValue(consumer.cpf!);
   }, [cpfKey, consumer.cpf]);
 
-  // handlers
   const payWithPix = async () => {
     try {
       setLoading(true);
@@ -64,7 +66,13 @@ export const PayWithPix = ({ navigation, route }: Props) => {
       dispatch(showToast(t('Não foi possível copiar a chave de pagamento.'), 'error'));
     }
   };
-
+  if (!order) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return !newScreen ? (
     <View style={{ ...screens.config }}>
       <PaddedView style={{ flex: 1 }}>
@@ -102,7 +110,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
             <Pill />
             <Text style={{ ...texts.md, marginLeft: 12 }}>{t('Valor total a pagar')}</Text>
           </View>
-          <Text style={{ ...texts.xl }}>{t('R$ 10,00')}</Text>
+          <Text style={{ ...texts.xl }}>{formatCurrency(total)}</Text>
         </View>
         <View style={{ marginTop: padding, marginHorizontal: padding }}>
           <Text
