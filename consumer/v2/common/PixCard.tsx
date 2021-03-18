@@ -8,12 +8,12 @@ import { borders, colors, halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
 type Props = {
-  onPixPayment: () => void;
+  navigateToPixPayment: () => void;
 };
 
-export const PixCard = ({ onPixPayment }: Props) => {
+export const PixCard = ({ navigateToPixPayment }: Props) => {
   return (
-    <TouchableOpacity onPress={onPixPayment}>
+    <TouchableOpacity onPress={navigateToPixPayment}>
       <PaddedView style={{ ...borders.default, height: 136, borderColor: colors.black }}>
         <View
           style={{

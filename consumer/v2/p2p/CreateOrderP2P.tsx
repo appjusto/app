@@ -141,8 +141,12 @@ export default function ({ navigation, route }: Props) {
         navigateFleetDetail={navigateFleetDetail}
         navigateToTransportableItems={navigateToTransportableItems}
         placeOrder={placeOrderHandler}
-        onPixPayment={(total) => navigation.navigate('PayWithPix', { orderId: orderId!, total })}
-        onFinishProfile={() => navigation.navigate('ProfileNavigator', { screen: 'ProfileEdit' })}
+        navigateToPixPayment={(total) =>
+          navigation.navigate('PayWithPix', { orderId: orderId!, total })
+        }
+        navigateToFinishProfile={() =>
+          navigation.navigate('ProfileNavigator', { screen: 'ProfileEdit' })
+        }
       />
     </View>
   );

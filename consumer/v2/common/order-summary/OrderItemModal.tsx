@@ -18,7 +18,7 @@ type Props = {
   modalVisible: boolean;
   item: OrderItem;
   api: Api;
-  onModal?: () => void;
+  onOpenModal?: () => void;
 };
 
 export const OrderItemModal = ({
@@ -26,7 +26,7 @@ export const OrderItemModal = ({
   item,
   order,
   api,
-  onModal,
+  onOpenModal,
   onEditItemPress,
 }: Props) => {
   // state
@@ -60,7 +60,7 @@ export const OrderItemModal = ({
             borderWidth: 1,
           }}
         >
-          <TouchableOpacity onPress={onModal}>
+          <TouchableOpacity onPress={onOpenModal}>
             <View
               style={{
                 width: 32,

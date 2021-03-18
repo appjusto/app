@@ -16,8 +16,8 @@ interface Props {
   onEditPaymentMethod: () => void;
   onSubmit: () => void;
   activityIndicator: boolean;
-  onPixPayment: () => void;
-  onFinishProfile: () => void;
+  navigateToPixPayment: () => void;
+  navigateToFinishProfile: () => void;
 }
 
 export const OrderPayment = ({
@@ -26,8 +26,8 @@ export const OrderPayment = ({
   onEditPaymentMethod,
   onSubmit,
   activityIndicator,
-  onPixPayment,
-  onFinishProfile,
+  navigateToPixPayment,
+  navigateToFinishProfile,
 }: Props) => {
   const consumer = useSelector(getConsumer)!;
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
@@ -37,13 +37,13 @@ export const OrderPayment = ({
       {unfinishedProfile && (
         <DefaultButton
           title={t('Finalizar cadastro')}
-          onPress={onFinishProfile}
+          onPress={navigateToFinishProfile}
           secondary
           style={{ marginBottom: padding }}
         />
       )}
       <View style={{ marginBottom: padding }}>
-        <PixCard onPixPayment={onPixPayment} />
+        <PixCard navigateToPixPayment={navigateToPixPayment} />
       </View>
       {Boolean(selectedPaymentMethod) && (
         <TouchableOpacity onPress={onEditPaymentMethod}>

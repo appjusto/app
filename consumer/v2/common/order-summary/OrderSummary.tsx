@@ -30,9 +30,9 @@ type Props = {
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;
   modalVisible: boolean;
-  onModal?: () => void;
-  onPixPayment: (total: number) => void;
-  onFinishProfile: () => void;
+  onOpenModal?: () => void;
+  navigateToPixPayment: (total: number) => void;
+  navigateToFinishProfile: () => void;
 };
 
 export const OrderSummary = ({
@@ -47,9 +47,9 @@ export const OrderSummary = ({
   navigateToFillPaymentInfo,
   navigateFleetDetail,
   modalVisible,
-  onModal,
-  onPixPayment,
-  onFinishProfile,
+  onOpenModal,
+  navigateToPixPayment,
+  navigateToFinishProfile,
 }: Props) => {
   // context
   const api = React.useContext(ApiContext);
@@ -108,7 +108,7 @@ export const OrderSummary = ({
             onEditItemPress={onEditItemPress!}
             onAddItemsPress={onAddItemsPress!}
             api={api}
-            onModal={onModal}
+            onOpenModal={onOpenModal}
             modalVisible={modalVisible}
           />
           <OrderAdditionalInfo value={additionalInfo} onAddInfo={setAdditionalInfo} />
@@ -141,8 +141,8 @@ export const OrderSummary = ({
         isSubmitEnabled={canSubmit}
         onSubmit={() => placeOrder(selectedFare?.fleet?.id!)}
         activityIndicator={busy}
-        onPixPayment={() => onPixPayment(selectedFare?.consumer.total ?? 0)}
-        onFinishProfile={onFinishProfile}
+        navigateToPixPayment={() => navigateToPixPayment(selectedFare?.consumer.total ?? 0)}
+        navigateToFinishProfile={navigateToFinishProfile}
       />
     </ScrollView>
   );
