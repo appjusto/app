@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { pix } from '../../../assets/icons';
+import { pix, QrCode } from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import FeedbackView from '../../../common/components/views/FeedbackView';
@@ -76,7 +76,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <View style={{ width: '49%' }}>
-            <View style={{ ...borders.default, height: 156, width: 156 }} />
+            <Image source={QrCode} />
           </View>
           <View style={{ width: '49%' }}>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
