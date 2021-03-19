@@ -1,47 +1,49 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { Order, OrderItem, WithId } from 'appjusto-types';
 import React from 'react';
-import { Modal, Text, View } from 'react-native';
+import { Modal, ModalProps, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ApiContext } from '../../../../common/app/context';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
-import Api from '../../../../common/store/api/api';
 import * as helpers from '../../../../common/store/api/order/helpers';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import { ItemQuantity } from '../../food/restaurant/product/ItemQuantity';
 
-type Props = {
-  onEditItemPress: (productId: string, itemId: string) => void;
+interface Props extends ModalProps {
   order: WithId<Order>;
-  modalVisible: boolean;
   item: OrderItem;
-  api: Api;
-  onOpenModal?: () => void;
-};
+  onModalClose: () => void;
+  onEditItemPress: (productId: string, itemId: string) => void;
+}
 
-export const OrderItemModal = ({
-  modalVisible,
-  item,
-  order,
-  api,
-  onOpenModal,
-  onEditItemPress,
-}: Props) => {
+export const OrderItemModal = ({ item, order, onModalClose, onEditItemPress, ...props }: Props) => {
+  // context
+  const api = React.useContext(ApiContext);
   // state
   const [quantity, setQuantity] = React.useState(item.quantity);
   // handlers
-  const removeItem = () => {
-    (async () => {
-      const updatedOrder = helpers.removeItem(order, item);
-      await api.order().updateOrder(order.id, updatedOrder);
-    })();
+  const removeItem = async () => {
+    const updatedOrder = helpers.removeItem(order, item);
+    await api.order().updateOrder(order.id, updatedOrder);
+    onModalClose();
   };
-
+  const updateItem = async () => {
+    const updatedOrder = helpers.updateItem(order, { ...item, quantity });
+    await api.order().updateOrder(order.id, updatedOrder);
+    onModalClose();
+  };
+  // UI
   return (
-    <Modal animationType="fade" visible={modalVisible} transparent>
-      <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', flex: 1 }}>
+    <Modal
+      animationType="slide"
+      transparent
+      {...props}
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
+    >
+      <View style={{ flex: 1 }}>
         <View
           style={{
             backgroundColor: colors.white,
@@ -55,7 +57,7 @@ export const OrderItemModal = ({
           }}
         >
           <View style={{ alignItems: 'flex-end' }}>
-            <TouchableOpacity onPress={onOpenModal}>
+            <TouchableOpacity onPress={onModalClose}>
               <View
                 style={{
                   width: 32,
@@ -101,12 +103,12 @@ export const OrderItemModal = ({
               style={{ marginVertical: padding }}
               value={quantity}
               minimum={1}
-              title={`${t('Atualizar')} ${formatCurrency(helpers.getItemTotal(item!))}`}
+              title={`${t('Atualizar')} ${formatCurrency(
+                helpers.getItemTotal({ ...item, quantity })
+              )}`}
               disabled={false}
-              onChange={(value) => {
-                setQuantity(value);
-              }}
-              onSubmit={() => null}
+              onChange={setQuantity}
+              onSubmit={updateItem}
             />
           </View>
         </View>

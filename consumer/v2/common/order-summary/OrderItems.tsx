@@ -3,7 +3,6 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import HR from '../../../../common/components/views/HR';
-import Api from '../../../../common/store/api/api';
 import { colors, padding, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
@@ -11,20 +10,18 @@ import { OrderItemModal } from './OrderItemModal';
 
 interface Props {
   order: WithId<Order>;
+  modalVisible: boolean;
   onEditItemPress: (productId: string, itemId: string) => void;
   onAddItemsPress: () => void;
-  modalVisible: boolean;
-  api: Api;
-  onOpenModal?: () => void;
+  onModalClose: () => void;
 }
 
 export const OrderItems = ({
   order,
+  modalVisible,
   onEditItemPress,
   onAddItemsPress,
-  modalVisible,
-  api,
-  onOpenModal,
+  onModalClose,
 }: Props) => {
   return (
     <View>
@@ -34,7 +31,7 @@ export const OrderItems = ({
         <View key={item.id}>
           <TouchableOpacity
             // onPress={() => onEditItemPress(item.product.id, item.id)}
-            onPress={onOpenModal}
+            onPress={onModalClose}
           >
             <View style={{ paddingHorizontal: padding, paddingVertical: 12 }}>
               <Text style={[texts.sm]}>{item.product.name}</Text>
@@ -64,10 +61,9 @@ export const OrderItems = ({
           </TouchableOpacity>
           <OrderItemModal
             item={item}
-            modalVisible={modalVisible}
-            api={api}
+            visible={modalVisible}
             order={order}
-            onOpenModal={onOpenModal}
+            onModalClose={onModalClose}
             onEditItemPress={() => onEditItemPress(item.product.id, item.id)}
           />
         </View>

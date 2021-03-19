@@ -30,9 +30,9 @@ type Props = {
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;
   modalVisible: boolean;
-  onOpenModal?: () => void;
   navigateToPixPayment: (total: number, fleetId: string) => void;
   navigateToFinishProfile: () => void;
+  onModalClose?: () => void;
 };
 
 export const OrderSummary = ({
@@ -47,7 +47,7 @@ export const OrderSummary = ({
   navigateToFillPaymentInfo,
   navigateFleetDetail,
   modalVisible,
-  onOpenModal,
+  onModalClose,
   navigateToPixPayment,
   navigateToFinishProfile,
 }: Props) => {
@@ -108,7 +108,7 @@ export const OrderSummary = ({
             onEditItemPress={onEditItemPress!}
             onAddItemsPress={onAddItemsPress!}
             api={api}
-            onOpenModal={onOpenModal}
+            onModalClose={onModalClose!}
             modalVisible={modalVisible}
           />
           <OrderAdditionalInfo value={additionalInfo} onAddInfo={setAdditionalInfo} />

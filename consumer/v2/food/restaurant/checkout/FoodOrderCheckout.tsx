@@ -40,7 +40,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     consumer.paymentChannel?.mostRecentPaymentMethodId
   );
   const [isLoading, setLoading] = React.useState(false);
-  const [visible, setVisible] = React.useState(false);
+  const [modalVisible, setModalVisible] = React.useState(false);
   // side effects
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
@@ -80,9 +80,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const navigateToFillPaymentInfo = React.useCallback(() => {
     // if user has no payment method, go direct to 'AddCard' screen
     if (!selectedPaymentMethodId) {
-      navigation.navigate('ProfileAddCard', { returnScreen: 'OrderCheckout' });
+      navigation.navigate('ProfileAddCard', { returnScreen: 'FoodOrderCheckout' });
     } else {
-      navigation.navigate('ProfilePaymentMethods', { returnScreen: 'OrderCheckout' });
+      navigation.navigate('ProfilePaymentMethods', { returnScreen: 'FoodOrderCheckout' });
     }
   }, [navigation, selectedPaymentMethodId]);
   // navigate to FleetDetail
@@ -109,21 +109,21 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         showMap
         onEditStep={() => {
           navigation.navigate('OrderDestination', {
-            returnScreen: 'OrderCheckout',
+            returnScreen: 'FoodOrderCheckout',
             returnParam: 'destination',
             value: order.destination ?? null,
           });
         }}
         onEditItemPress={(productId, itemId) => {
           navigation.navigate('ItemDetail', { productId, itemId });
-          setVisible(false);
+          setModalVisible(false);
         }}
         onAddItemsPress={() => navigation.navigate('RestaurantDetail')}
         placeOrder={placeOrderHandler}
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         navigateFleetDetail={navigateFleetDetail}
-        modalVisible={visible}
-        onOpenModal={() => setVisible(!visible)}
+        modalVisible={modalVisible}
+        onModalClose={() => setModalVisible(!modalVisible)}
         navigateToPixPayment={(total, fleetId) =>
           navigation.navigate('PayWithPix', { orderId: order.id!, total, fleetId })
         }

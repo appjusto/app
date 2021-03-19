@@ -13,15 +13,15 @@ export type RestaurantNavigatorParamList = {
     paymentMethodId?: string;
   };
   OrderDestination: {
-    returnScreen: 'OrderCheckout';
+    returnScreen: 'FoodOrderCheckout';
     returnParam: string;
     value?: Place | null;
   };
   ProfileAddCard?: {
-    returnScreen: 'OrderCheckout';
+    returnScreen: 'FoodOrderCheckout';
   };
   ProfilePaymentMethods?: {
-    returnScreen: 'OrderCheckout';
+    returnScreen: 'FoodOrderCheckout';
   };
   FleetDetail: {
     fleetId: string;
