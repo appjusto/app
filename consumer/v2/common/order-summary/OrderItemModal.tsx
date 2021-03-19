@@ -32,24 +32,13 @@ export const OrderItemModal = ({
   // state
   const [quantity, setQuantity] = React.useState(item.quantity);
   // handlers
-  // check if it is working correctly
-  // const updateQuantity = () => {
-  //   (async () => {
-  //     const updatedOrder = !item.id
-  //       ? helpers.addItemToOrder(order, item)
-  //       : quantity > 0
-  //       ? helpers.updateItem(order, item)
-  //       : helpers.removeItem(order, item);
-  //     api.order().updateOrder(order.id, updatedOrder);
-  //   })();
-  // };
   const removeItem = () => {
     (async () => {
       const updatedOrder = helpers.removeItem(order, item);
       await api.order().updateOrder(order.id, updatedOrder);
     })();
   };
-  console.log(order.items);
+
   return (
     <Modal animationType="fade" visible={modalVisible} transparent>
       <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', flex: 1 }}>
@@ -76,7 +65,6 @@ export const OrderItemModal = ({
                   ...borders.default,
                   borderColor: colors.green500,
                   backgroundColor: colors.green500,
-                  // alignSelf: 'flex-end',
                 }}
               >
                 <MaterialIcons name="close" size={16} />
@@ -112,10 +100,12 @@ export const OrderItemModal = ({
             <ItemQuantity
               style={{ marginVertical: padding }}
               value={quantity}
-              minimum={item.id ? 0 : 1}
+              minimum={1}
               title={`${t('Atualizar')} ${formatCurrency(helpers.getItemTotal(item!))}`}
               disabled={false}
-              onChange={(value) => setQuantity(value)}
+              onChange={(value) => {
+                setQuantity(value);
+              }}
               onSubmit={() => null}
             />
           </View>
