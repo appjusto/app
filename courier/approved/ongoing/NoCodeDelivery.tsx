@@ -14,13 +14,13 @@ import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
-import { OngoingParamList } from './types';
+import { OngoingDeliveryNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<OngoingParamList, 'NoCodeDelivery'>,
+  StackNavigationProp<OngoingDeliveryNavigatorParamList, 'NoCodeDelivery'>,
   StackNavigationProp<ApprovedParamList>
 >;
-type ScreenRoute = RouteProp<OngoingParamList, 'NoCodeDelivery'>;
+type ScreenRoute = RouteProp<OngoingDeliveryNavigatorParamList, 'NoCodeDelivery'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

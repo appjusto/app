@@ -22,13 +22,13 @@ import { ApprovedParamList } from '../types';
 import { CodeInput } from './code-input/CodeInput';
 import { RouteIcons } from './RouteIcons';
 import { StatusControl } from './StatusControl';
-import { OngoingParamList } from './types';
+import { OngoingDeliveryNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<OngoingParamList, 'OngoingDelivery'>,
+  StackNavigationProp<OngoingDeliveryNavigatorParamList, 'OngoingDelivery'>,
   StackNavigationProp<ApprovedParamList>
 >;
-type ScreenRoute = RouteProp<OngoingParamList, 'OngoingDelivery'>;
+type ScreenRoute = RouteProp<OngoingDeliveryNavigatorParamList, 'OngoingDelivery'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -155,7 +155,7 @@ export default function ({ navigation, route }: Props) {
             order={order}
             onChat={() => navigation.navigate('Chat', { orderId })}
             onProblem={() =>
-              navigation.navigate('ReportIssueCourierDeliveryProblem', {
+              navigation.navigate('ReportIssue', {
                 orderId,
                 issueType: 'courier-delivery-problem',
               })

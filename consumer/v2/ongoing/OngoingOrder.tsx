@@ -71,7 +71,7 @@ export default function ({ navigation, route }: Props) {
     if (!order) return;
     if (order.status === 'delivered') {
       navigation.navigate('OngoingOrderFeedback', { orderId });
-    } else if (order.dispatchingState === 'no-match') {
+    } else if (order.dispatchingStatus === 'no-match') {
       navigation.navigate('OngoingOrderNoMatch', { orderId });
     }
   }, [order]);

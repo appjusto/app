@@ -150,9 +150,11 @@ export default ({ navigation, route }: Props) => {
         </View>
         <HR height={padding} />
         <ReviewBox
-          onReviewChange={(type) => setReviewType(type)}
           review={review?.type ?? reviewType}
-          comment={comment}
+          comment={review?.comment ?? comment}
+          editable={!!review}
+          focusable={!!review}
+          onReviewChange={(type) => setReviewType(type)}
           onCommentChange={(value) => setComment(value)}
         />
         <HR />

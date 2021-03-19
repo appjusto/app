@@ -9,7 +9,7 @@ import { getFlavor } from '../../../store/config/selectors';
 import { borders, colors, halfPadding, padding, texts } from '../../../styles';
 
 type Props = {
-  dispatchingState: DispatchingState;
+  dispatchingState?: DispatchingState;
 };
 
 export default function ({ dispatchingState }: Props) {

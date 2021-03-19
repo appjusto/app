@@ -1,51 +1,50 @@
 import React from 'react';
-import { StyleSheet, Text, TextInputProps, View } from 'react-native';
+import { Text, TextInputProps, View } from 'react-native';
 import { borders, colors, texts } from '../../styles';
 
 export interface Props extends TextInputProps {
   title: string;
+  placeholder?: string;
   children?: React.ReactNode;
   disabled?: boolean;
 }
 
-export default ({ title, children, style: externalStyle, disabled, ...props }: Props) => (
+export default ({ title, placeholder, children, style, disabled, ...props }: Props) => (
   <View
     style={[
-      styles.container,
-      externalStyle,
-      { borderColor: disabled ? colors.grey700 : colors.grey500 },
+      {
+        height: 60,
+        ...borders.default,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 12,
+        borderColor: disabled ? colors.grey700 : colors.grey500,
+      },
+      style,
     ]}
   >
     <View>
-      <Text style={[styles.label, { color: disabled ? colors.grey700 : colors.green600 }]}>
+      <Text
+        style={{
+          ...texts.xs,
+          paddingVertical: 2,
+          color: disabled ? colors.grey700 : colors.green600,
+        }}
+      >
         {title}
       </Text>
-      <Text style={styles.text} {...props} numberOfLines={2}>
-        {children}
+      <Text
+        style={{
+          ...texts.md,
+          color: children ? colors.grey700 : colors.grey500,
+          flexWrap: 'wrap',
+        }}
+        {...props}
+        numberOfLines={2}
+      >
+        {children ?? placeholder}
       </Text>
     </View>
   </View>
 );
-
-const styles = StyleSheet.create({
-  container: {
-    // width: '100%',
-    height: 60,
-    ...borders.default,
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 12,
-  },
-  label: {
-    ...texts.xs,
-    color: colors.green600,
-    paddingVertical: 2,
-  },
-  text: {
-    ...texts.md,
-    color: colors.grey700,
-    flexWrap: 'wrap',
-  },
-});

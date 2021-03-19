@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Bank, BankAccountType } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
+import { Pressable, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
@@ -128,7 +128,7 @@ export default function ({ navigation, route }: Props) {
           </View>
           <View style={{ marginTop: halfPadding }}>
             {/* <DefaultInput title={t('Banco')} value={bank} onChangeText={(text) => setBank(text)} /> */}
-            <TouchableWithoutFeedback
+            <Pressable
               onPress={() => {
                 navigation.navigate('SelectBank');
               }}
@@ -138,7 +138,7 @@ export default function ({ navigation, route }: Props) {
                   {selectedBank?.name ?? t('Escolha seu banco')}
                 </LabeledText>
               </View>
-            </TouchableWithoutFeedback>
+            </Pressable>
             <PatternInput
               key={selectedBank?.name}
               style={{ marginTop: 16 }}

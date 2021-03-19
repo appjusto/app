@@ -9,9 +9,9 @@ import DeliveryCompleted from './DeliveryCompleted';
 import { NoCodeDelivery } from './NoCodeDelivery';
 import OngoingDelivery from './OngoingDelivery';
 import OrderCanceled from './OrderCanceled';
-import { OngoingParamList } from './types';
+import { OngoingDeliveryNavigatorParamList } from './types';
 
-const Stack = createStackNavigator<OngoingParamList>();
+const Stack = createStackNavigator<OngoingDeliveryNavigatorParamList>();
 export default function () {
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
@@ -42,7 +42,7 @@ export default function () {
         options={{ title: t('Confirmar entrega sem código') }}
       />
       <Stack.Screen
-        name="ReportIssueCourierDeliveryProblem"
+        name="ReportIssue"
         component={ReportIssue}
         options={{ title: t('Tive um problema') }}
       />

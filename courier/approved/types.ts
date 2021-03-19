@@ -4,12 +4,12 @@ import { DeliveriesNavigatorParamList } from './main/history/types';
 import { CourierProfileParamList } from './main/profile/types';
 import { MainParamList } from './main/types';
 import { MatchingParamList } from './matching/types';
-import { OngoingParamList } from './ongoing/types';
+import { OngoingDeliveryNavigatorParamList } from './ongoing/types';
 
 export type ApprovedParamList = {
   MainNavigator: NestedNavigatorParams<MainParamList>;
   MatchingNavigator: NestedNavigatorParams<MatchingParamList>;
-  OngoingDeliveryNavigator: NestedNavigatorParams<OngoingParamList>;
+  OngoingDeliveryNavigator: NestedNavigatorParams<OngoingDeliveryNavigatorParamList>;
   DeliveriesNavigator: NestedNavigatorParams<DeliveriesNavigatorParamList>;
   ProfileNavigator: NestedNavigatorParams<CourierProfileParamList>;
 } & PermissionDeniedParamList;

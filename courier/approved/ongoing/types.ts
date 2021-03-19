@@ -1,7 +1,7 @@
-import { IssueType } from 'appjusto-types';
 import { ChatParamList } from '../../../common/screens/Chat';
+import { ReportIssueParamList } from '../../../common/screens/ReportIssue';
 
-export type OngoingParamList = {
+export type OngoingDeliveryNavigatorParamList = {
   OngoingDelivery: {
     orderId: string;
     newMessage?: boolean;
@@ -17,11 +17,8 @@ export type OngoingParamList = {
   CancelOngoingDelivery: {
     orderId: string;
   };
-  ReportIssueCourierDeliveryProblem: {
-    issueType: IssueType;
-    orderId: string;
-  };
   NoCodeDelivery: {
     orderId: string;
   };
-} & ChatParamList;
+} & ChatParamList &
+  ReportIssueParamList;

@@ -40,6 +40,7 @@ export const CodeInput = ({ value, onChange }: Props) => {
         returnKeyType="next"
         onChangeText={(char) => updateValues(char, 0, secondInputRef)}
         onSubmitEditing={() => secondInputRef.current?.focus()}
+        importantForAutofill="no"
       />
       <View style={{ flex: 0.1 }} />
       <DigitInput
@@ -49,6 +50,7 @@ export const CodeInput = ({ value, onChange }: Props) => {
         returnKeyType="next"
         onChangeText={(char) => updateValues(char, 1, thirdInputRef)}
         onSubmitEditing={() => thirdInputRef.current?.focus()}
+        importantForAutofill="no"
       />
       <View style={{ flex: 0.1 }} />
       <DigitInput
@@ -56,6 +58,7 @@ export const CodeInput = ({ value, onChange }: Props) => {
         value={values[2]}
         returnKeyType="done"
         onChangeText={(char) => updateValues(char, 2)}
+        importantForAutofill="no"
       />
     </View>
   );
