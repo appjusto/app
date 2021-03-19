@@ -31,16 +31,20 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
   // side effects
   React.useEffect(() => {
     if (!order) return;
+    console.log('OrderConfirming', order.status);
     if (order.status === 'canceled') {
       navigation.popToTop();
     } else if (isOrderOngoing(order)) {
+      // TODO: p2p orders are confirmed before we have a courier
       navigation.replace('OngoingOrder', {
         orderId,
       });
+    } else if (order.status === 'declined') {
+      // TODO:
     } else if (order.dispatchingStatus === 'no-match') {
       navigation.navigate('OngoingOrderNoMatch', { orderId });
     }
-  }, [order]);
+  }, [navigation, order, orderId]);
   // UI
   if (!order) {
     // showing the indicator until the order is loaded
