@@ -2,7 +2,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { ConsumerProfile } from 'appjusto-types';
 import { trim } from 'lodash';
 import React from 'react';
-import { TextInput, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
@@ -18,7 +18,7 @@ import PatternInput from '../../../../common/components/inputs/PatternInput';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { consumerInfoSet } from '../../../../common/store/consumer/validators';
 import { showToast } from '../../../../common/store/ui/actions';
-import { padding, screens } from '../../../../common/styles';
+import { colors, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ProfileParamList } from './types';
 
@@ -61,6 +61,9 @@ export default function ({ navigation }: Props) {
   return (
     <View style={screens.config}>
       <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <Text style={{ ...texts.sm, color: colors.grey700, padding }}>
+          {t('*Precisamos do seu nome e cpf para pagamentos com Pix')}
+        </Text>
         <PaddedView>
           <DefaultInput
             title={t('E-mail')}

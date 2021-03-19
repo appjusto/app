@@ -40,6 +40,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     consumer.paymentChannel?.mostRecentPaymentMethodId
   );
   const [isLoading, setLoading] = React.useState(false);
+  const [visible, setVisible] = React.useState(false);
   // side effects
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
@@ -113,13 +114,22 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             value: order.destination ?? null,
           });
         }}
-        onEditItemPress={(productId, itemId) =>
-          navigation.navigate('ItemDetail', { productId, itemId })
-        }
+        onEditItemPress={(productId, itemId) => {
+          navigation.navigate('ItemDetail', { productId, itemId });
+          setVisible(false);
+        }}
         onAddItemsPress={() => navigation.navigate('RestaurantDetail')}
         placeOrder={placeOrderHandler}
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         navigateFleetDetail={navigateFleetDetail}
+        modalVisible={visible}
+        onOpenModal={() => setVisible(!visible)}
+        navigateToPixPayment={(total, fleetId) =>
+          navigation.navigate('PayWithPix', { orderId: order.id!, total, fleetId })
+        }
+        navigateToFinishProfile={() =>
+          navigation.navigate('ProfileNavigator', { screen: 'ProfileEdit' })
+        }
       />
     </ScrollView>
   );

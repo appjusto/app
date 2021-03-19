@@ -3,6 +3,7 @@ import { ReportIssueParamList } from '../../../common/screens/ReportIssue';
 export type OngoingOrderNavigatorParamList = {
   OngoingOrderConfirming: {
     orderId: string;
+    pixKey?: string;
   };
   OngoingOrderNoMatch: {
     orderId: string;

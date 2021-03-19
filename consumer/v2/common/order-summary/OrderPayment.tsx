@@ -8,6 +8,7 @@ import { getPaymentMethodById } from '../../../../common/store/api/business/cons
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { borders, colors, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { PixCard } from '../PixCard';
 
 interface Props {
   selectedPaymentMethodId?: string;
@@ -15,6 +16,8 @@ interface Props {
   onEditPaymentMethod: () => void;
   onSubmit: () => void;
   activityIndicator: boolean;
+  navigateToPixPayment: () => void;
+  navigateToFinishProfile: () => void;
 }
 
 export const OrderPayment = ({
@@ -23,11 +26,27 @@ export const OrderPayment = ({
   onEditPaymentMethod,
   onSubmit,
   activityIndicator,
+  navigateToPixPayment,
+  navigateToFinishProfile,
 }: Props) => {
   const consumer = useSelector(getConsumer)!;
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
+  const unfinishedProfile = !consumer.name || !consumer.cpf;
   return (
     <PaddedView>
+      {unfinishedProfile && (
+        <DefaultButton
+          title={t('Finalizar cadastro')}
+          onPress={navigateToFinishProfile}
+          secondary
+          style={{ marginBottom: padding }}
+        />
+      )}
+      {consumer.cpf && consumer.name && (
+        <View style={{ marginBottom: padding }}>
+          <PixCard navigateToPixPayment={navigateToPixPayment} />
+        </View>
+      )}
       {Boolean(selectedPaymentMethod) && (
         <TouchableOpacity onPress={onEditPaymentMethod}>
           <PaddedView>
@@ -54,7 +73,7 @@ export const OrderPayment = ({
 
       {!selectedPaymentMethod && (
         <DefaultButton
-          title={t('Finalizar cadastro e adicionar pagamento')}
+          title={t('Adicionar cartão de crédito')}
           onPress={onEditPaymentMethod}
           secondary
         />

@@ -4,6 +4,7 @@ import FleetDetail from '../../../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { t } from '../../../../strings';
 import { AddressComplete } from '../../common/AddressComplete';
+import { PayWithPix } from '../../common/PayWithPix';
 import ProfileAddCard from '../../main/profile/ProfileAddCard';
 import ProfilePaymentMethods from '../../main/profile/ProfilePaymentMethods';
 import { AboutRestaurant } from './about/AboutRestaurant';
@@ -45,6 +46,11 @@ export default function () {
       <Stack.Screen
         name="ProfilePaymentMethods"
         component={ProfilePaymentMethods}
+        options={{ title: t('Formas de pagamento') }}
+      />
+      <Stack.Screen
+        name="PayWithPix"
+        component={PayWithPix}
         options={{ title: t('Formas de pagamento') }}
       />
       <Stack.Screen

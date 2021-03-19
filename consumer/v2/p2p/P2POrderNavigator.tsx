@@ -4,6 +4,7 @@ import { defaultScreenOptions } from '../../../common/screens/options';
 import { t } from '../../../strings';
 import { AddressComplete } from '../common/AddressComplete';
 import FleetDetail from '../common/FleetDetail';
+import { PayWithPix } from '../common/PayWithPix';
 import ProfileAddCard from '../main/profile/ProfileAddCard';
 import ProfilePaymentMethods from '../main/profile/ProfilePaymentMethods';
 import CreateOrderP2P from './CreateOrderP2P';
@@ -38,6 +39,11 @@ export const P2POrderNavigator = () => {
       <Stack.Screen
         name="ProfilePaymentMethods"
         component={ProfilePaymentMethods}
+        options={{ title: t('Formas de pagamento') }}
+      />
+      <Stack.Screen
+        name="PayWithPix"
+        component={PayWithPix}
         options={{ title: t('Formas de pagamento') }}
       />
       <Stack.Screen
