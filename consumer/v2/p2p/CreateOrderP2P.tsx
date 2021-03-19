@@ -44,53 +44,45 @@ export default function ({ navigation, route }: Props) {
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
     console.log('CreateOrderP2P useEffect; params: ', params);
-    (async () => {
-      if (params?.orderId) {
-        setOrderId(params.orderId);
-        navigation.setParams({
-          orderId: undefined,
-        });
-      }
-      if (params?.origin) {
-        if (!order) {
+    if (params?.orderId) {
+      setOrderId(params.orderId);
+      navigation.setParams({
+        orderId: undefined,
+      });
+    }
+    if (params?.origin) {
+      if (!order) {
+        (async () => {
           try {
             setLoading(true);
-            const newOrder = await api.order().createOrderP2P(consumer, params.origin);
+            const newOrder = await api.order().createOrderP2P(consumer, params.origin!);
             setLoading(false);
             setOrderId(newOrder.id);
           } catch (error) {
             console.error(error);
             dispatch(showToast(error.toString(), 'error'));
           }
-        } else if (orderId) {
-          // backend is handling this case, keep it here just while is being tested
-          // if address is the same, update only additionalInfo to avoid losing
-          // const origin: Place =
-          //   params.origin.address.description === order.origin?.address.description
-          //     ? { ...order.origin, additionalInfo: params.origin.additionalInfo }
-          //     : params.origin;
-          // api.order().updateOrder(orderId, { origin });
-          await api.order().updateOrder(orderId, { origin: params.origin });
-        }
-        navigation.setParams({
-          origin: undefined,
-        });
+        })();
+      } else if (orderId) {
+        api.order().updateOrder(orderId, { origin: params.origin });
       }
-      if (order && orderId && params?.destination) {
-        await api.order().updateOrder(orderId, { destination: params.destination });
-        navigation.setParams({
-          destination: undefined,
-        });
-      }
-      if (params?.paymentMethodId) {
-        setSelectedPaymentMethodId(params?.paymentMethodId);
-        navigation.setParams({
-          paymentMethodId: undefined,
-        });
-      }
-    })();
+      navigation.setParams({
+        origin: undefined,
+      });
+    }
+    if (order && orderId && params?.destination) {
+      api.order().updateOrder(orderId, { destination: params.destination });
+      navigation.setParams({
+        destination: undefined,
+      });
+    }
+    if (params?.paymentMethodId) {
+      setSelectedPaymentMethodId(params?.paymentMethodId);
+      navigation.setParams({
+        paymentMethodId: undefined,
+      });
+    }
   }, [api, consumer, dispatch, navigation, order, orderId, params]);
-
   // handlers
   // navigate to 'AddressComplete' to enter address
   const navigateToAddressComplete = React.useCallback(
