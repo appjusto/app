@@ -47,7 +47,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   // screen state
   const { order } = useObserveOrder(orderId);
-  const [tip, setTip] = React.useState(500);
+  const [tip, setTip] = React.useState(0);
   const [reviewType, setReviewType] = React.useState<ReviewType>();
   const [comment, setComment] = React.useState('');
   const review = useCourierReview(orderId, order?.courier?.id);

@@ -44,7 +44,7 @@ export default ({ navigation, route }: Props) => {
   const [reviewType, setReviewType] = React.useState<ReviewType>();
   const review = useCourierReview(orderId, order?.courier?.id);
   const [comment, setComment] = React.useState('');
-  const [tip, setTip] = React.useState(500);
+  const [tip, setTip] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
 
   if (!order) {
