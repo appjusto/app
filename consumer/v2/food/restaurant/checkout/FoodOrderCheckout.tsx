@@ -73,6 +73,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         },
       });
     } catch (error) {
+      setLoading(false);
       dispatch(showToast(error.toString(), 'error'));
     }
   };

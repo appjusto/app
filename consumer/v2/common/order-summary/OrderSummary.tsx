@@ -107,7 +107,6 @@ export const OrderSummary = ({
             order={order}
             onEditItemPress={onEditItemPress!}
             onAddItemsPress={onAddItemsPress!}
-            api={api}
             onModalClose={onModalClose!}
             modalVisible={modalVisible}
           />
