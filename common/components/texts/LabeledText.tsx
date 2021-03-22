@@ -14,11 +14,12 @@ export default ({ title, placeholder, children, style, disabled, ...props }: Pro
     style={[
       {
         height: 60,
-        ...borders.default,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 12,
+        backgroundColor: colors.white,
+        ...borders.default,
         borderColor: disabled ? colors.grey700 : colors.grey500,
       },
       style,

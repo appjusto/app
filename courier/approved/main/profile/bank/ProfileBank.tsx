@@ -127,7 +127,6 @@ export default function ({ navigation, route }: Props) {
             </View>
           </View>
           <View style={{ marginTop: halfPadding }}>
-            {/* <DefaultInput title={t('Banco')} value={bank} onChangeText={(text) => setBank(text)} /> */}
             <Pressable
               onPress={() => {
                 navigation.navigate('SelectBank');
