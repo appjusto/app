@@ -14,19 +14,17 @@ export default function () {
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = useContext(ApiContext);
-
-  // app state
+  // redux
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
   const courier = useSelector(getCourier);
   const situation = courier?.situation;
-
   // side effects
   // once
   // subscribe for profile changes
   useEffect(() => {
     return dispatch(observeProfile(api)(flavor, user!.uid));
-  }, []);
+  }, [api, dispatch, flavor, user]);
   // UI
   if (!situation) {
     // showing the indicator until the profile is loaded
@@ -38,6 +36,5 @@ export default function () {
   } else if (situation === 'approved') {
     return <ApprovedNavigator />;
   }
-
   return <UnapprovedNavigator />;
 }
