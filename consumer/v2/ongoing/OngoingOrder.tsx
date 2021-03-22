@@ -105,9 +105,9 @@ export default function ({ navigation, route }: Props) {
   })();
   return (
     <View style={{ ...screens.default, paddingBottom: 32 }}>
-      <OngoingOrderStatus order={order} />
       {order.type === 'p2p' ? (
-        <View>
+        <ScrollView>
+          <OngoingOrderStatus order={order} />
           <View>
             <OrderMap order={order} ratio={1.2} />
             <StatusAndMessages
@@ -165,9 +165,10 @@ export default function ({ navigation, route }: Props) {
               />
             </View>
           </PaddedView> */}
-        </View>
+        </ScrollView>
       ) : (
         <ScrollView>
+          <OngoingOrderStatus order={order} />
           {order.status === 'dispatching' ? (
             <View>
               <View>

@@ -5,7 +5,6 @@ import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
-import HR from '../../../../common/components/views/HR';
 import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -42,46 +41,6 @@ export const OngoingOrderCourierDetail = ({ navigation, route }: Props) => {
 
   return (
     <ScrollView style={{ backgroundColor: colors.white }}>
-      <View style={{ ...screens.default, paddingBottom: halfPadding }}>
-        <SingleHeader title={t('Sobre o pedido')} />
-        <View style={{ paddingHorizontal: padding, marginTop: padding, marginBottom: halfPadding }}>
-          <DefaultButton
-            title={t('Alterar a rota de retirada ou entrega')}
-            style={{ marginBottom: 8, flex: 2 }}
-            onPress={() =>
-              navigation.navigate('P2POrderNavigator', {
-                screen: 'CreateOrderP2P',
-                params: { orderId: order.id },
-              })
-            }
-          />
-          <View
-            style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
-          >
-            <View style={{ flex: 7 }}>
-              <DefaultButton
-                title={t('Relatar um problema')}
-                onPress={() =>
-                  navigation.navigate('ReportIssue', {
-                    orderId: order.id,
-                    issueType: 'consumer-delivery-problem',
-                  })
-                }
-                secondary
-              />
-            </View>
-            <View style={{ flex: 7 }}>
-              <DefaultButton
-                title={t('Cancelar pedido')}
-                onPress={() => navigation.navigate('OngoingOrderConfirmCancel', { orderId })}
-                secondary
-                style={{ marginLeft: halfPadding }}
-              />
-            </View>
-          </View>
-        </View>
-      </View>
-      <HR height={padding} />
       <View style={{ paddingBottom: padding }}>
         <OrderCourierSummary courier={order.courier!} />
         <SingleHeader title={t('Integrante da frota')} />
