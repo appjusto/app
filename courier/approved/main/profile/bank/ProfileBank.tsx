@@ -165,7 +165,6 @@ export default function ({ navigation, route }: Props) {
                   )(agency);
                   setAgency(paddedAgency);
                 }
-                accountRef.current?.focus();
               }}
             />
             <View style={{ marginTop: 16, flexDirection: 'row', justifyContent: 'space-between' }}>
