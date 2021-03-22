@@ -31,7 +31,7 @@ export const OngoingOrderStatus = ({ order }: Props) => {
     header = t('Entregador chegou no local');
     description = t('Aguardando o cliente para retirada.');
   }
-  if (order.type === 'p2p') {
+  if (order.type === 'p2p' && order.dispatchingState !== 'arrived-destination') {
     header = t('Pedido Confirmado!');
   }
   return (
