@@ -3,11 +3,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { pix, QrCode } from '../../../assets/icons';
+import { QrCode } from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
+import { IconPixLogo } from '../../../common/icons/icon-pix-logo';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { isOrderOngoing } from '../../../common/store/order/selectors';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
@@ -64,7 +65,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
   return pixKey ? (
     <SafeAreaView style={{ ...screens.config }}>
       <PaddedView style={{ flex: 1 }}>
-        <Image source={pix} />
+        <IconPixLogo />
         <Text style={{ ...texts.lg, marginTop: padding }}>{t('Efetue o pagamento')}</Text>
         <Text style={{ ...texts.sm, marginVertical: padding, color: colors.grey700 }}>
           {t(

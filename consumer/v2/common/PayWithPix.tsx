@@ -1,15 +1,15 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { ActivityIndicator, Image, Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { pix } from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import CheckField from '../../../common/components/buttons/CheckField';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import Pill from '../../../common/components/views/Pill';
+import { IconPixLogo } from '../../../common/icons/icon-pix-logo';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { showToast } from '../../../common/store/ui/actions';
@@ -90,7 +90,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
   return (
     <View style={{ ...screens.config }}>
       <PaddedView style={{ flex: 1 }}>
-        <Image source={pix} />
+        <IconPixLogo />
         <Text style={{ ...texts.lg, marginTop: padding }}>{t('Informe sua chave')}</Text>
         <Text style={{ ...texts.sm, marginVertical: padding, color: colors.grey700 }}>
           {t(

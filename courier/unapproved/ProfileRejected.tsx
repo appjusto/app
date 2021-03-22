@@ -40,7 +40,7 @@ export default function ({ navigation }: Props) {
       try {
         await dispatch(updateProfile(api)(courier.id, { situation: 'pending' }));
       } catch (error) {
-        dispatch(showToast(error.toSring()));
+        dispatch(showToast(error.toString(), 'error'));
       }
     })();
   };

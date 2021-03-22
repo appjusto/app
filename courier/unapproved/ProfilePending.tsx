@@ -92,7 +92,7 @@ export default function ({ navigation, route }: Props) {
       try {
         await dispatch(updateProfile(api)(courier.id, { situation: 'submitted' }));
       } catch (error) {
-        dispatch(showToast(error.toSring()));
+        dispatch(showToast(error.toString(), 'error'));
       }
     })();
   };
