@@ -1,8 +1,8 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ActivityIndicator, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -15,7 +15,7 @@ import { courierNextPlace } from '../../../common/store/api/order/helpers';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { updateProfile } from '../../../common/store/user/actions';
-import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { DeliveredItems } from '../common/DeliveredItems';
 import { LoggedNavigatorParamList } from '../types';
@@ -146,25 +146,6 @@ export default function ({ navigation, route }: Props) {
               navigation.navigate('OngoingOrderConfirmCancel', { orderId })
             }
           />
-          {/* <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <View style={{ flex: 7 }}>
-              <DefaultButton title={t('Abrir chat')} onPress={openChatHandler} />
-            </View>
-            <View style={{ flex: 7, marginLeft: halfPadding }}>
-              <DefaultButton
-                title={t('Alterar rota')}
-                onPress={() =>
-                  navigation.navigate('P2POrderNavigator', {
-                    screen: 'CreateOrderP2P',
-                    params: {
-                      orderId,
-                    },
-                  })
-                }
-                secondary
-              />
-            </View>
-          </PaddedView> */}
         </ScrollView>
       ) : (
         <ScrollView>
@@ -181,70 +162,61 @@ export default function ({ navigation, route }: Props) {
               </View>
               <DeliveryInfo
                 order={order}
-                addressLabel={addressLabel}
-                nextPlace={nextPlace}
-                // onChangeRoute={() =>
-                //   navigation.navigate('P2POrderNavigator', {
-                //     screen: 'CreateOrderP2P',
-                //     params: { orderId: order.id },
-                //   })
-                // }
-                onCourierDetail={() => null}
+                onCourierDetail={() =>
+                  navigation.navigate('OngoingOrderCourierDetail', { orderId })
+                }
               />
               <HR />
-              <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <View style={{ flex: 7 }}>
-                  <DefaultButton title={t('Abrir chat')} onPress={openChatHandler} />
-                </View>
-                <View style={{ flex: 7, marginLeft: halfPadding }}>
-                  <DefaultButton
-                    title={t('Alterar rota')}
-                    onPress={() =>
-                      navigation.navigate('P2POrderNavigator', {
-                        screen: 'CreateOrderP2P',
-                        params: {
-                          orderId,
-                        },
-                      })
-                    }
-                    secondary
-                  />
-                </View>
-              </PaddedView>
               <HR height={padding} />
               <DeliveredItems order={order} />
+              <HR height={padding} />
+              <DeliveryActions
+                order={order}
+                onChangeRoute={() =>
+                  navigation.navigate('P2POrderNavigator', {
+                    screen: 'CreateOrderP2P',
+                    params: {
+                      orderId,
+                    },
+                  })
+                }
+                navigateToReportIssue={() =>
+                  navigation.navigate('ReportIssue', {
+                    orderId: order.id,
+                    issueType: 'consumer-delivery-problem',
+                  })
+                }
+                navigateToConfirmCancel={() =>
+                  navigation.navigate('OngoingOrderConfirmCancel', { orderId })
+                }
+              />
             </View>
           ) : (
             <View>
               <HR height={padding} />
               <DeliveredItems order={order} />
               <HR height={padding} />
-              <PaddedView
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <View>
-                  <Text style={[texts.xs, { color: colors.green600 }]}>{t('Entregar em')}</Text>
-                  <Text style={[texts.xs]}>{order.destination?.address.main ?? ''}</Text>
-                  <Text style={{ ...texts.xs, color: colors.grey700 }}>
-                    {order.destination?.additionalInfo ?? ''}
-                  </Text>
-                </View>
-                <TouchableOpacity onPress={() => null}>
-                  <Text style={[texts.xs, { color: colors.green600 }]}>{t('Alterar')}</Text>
-                </TouchableOpacity>
-              </PaddedView>
+              <DeliveryActions
+                order={order}
+                onChangeRoute={() =>
+                  navigation.navigate('P2POrderNavigator', {
+                    screen: 'CreateOrderP2P',
+                    params: {
+                      orderId,
+                    },
+                  })
+                }
+                navigateToReportIssue={() =>
+                  navigation.navigate('ReportIssue', {
+                    orderId: order.id,
+                    issueType: 'consumer-delivery-problem',
+                  })
+                }
+                navigateToConfirmCancel={() =>
+                  navigation.navigate('OngoingOrderConfirmCancel', { orderId })
+                }
+              />
               <HR height={padding} />
-              <PaddedView>
-                <DefaultButton
-                  title={t('Cancelar pedido')}
-                  onPress={() => navigation.navigate('OngoingOrderConfirmCancel', { orderId })}
-                  secondary
-                />
-              </PaddedView>
               <HR />
               <PaddedView>
                 <DefaultButton title={t('Abrir chat com o restaurante')} onPress={() => null} />
