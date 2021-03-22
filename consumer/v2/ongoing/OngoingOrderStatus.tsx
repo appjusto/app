@@ -13,7 +13,6 @@ interface Props {
 }
 
 export const OngoingOrderStatus = ({ order }: Props) => {
-  // if (order.type === 'p2p') return null;
   let header = t('Pedido confirmado!');
   let description = t('O restaurante já está com seu pedido e em breve iniciará o preparo.');
   if (order.status === 'preparing') {
@@ -32,6 +31,9 @@ export const OngoingOrderStatus = ({ order }: Props) => {
     header = t('Entregador chegou no local');
     description = t('Aguardando o cliente para retirada.');
   }
+  if (order.type === 'p2p') {
+    header = t('Pedido Confirmado!');
+  }
   return (
     <View style={{ padding, alignItems: 'center' }}>
       {order.status === 'dispatching' && order.dispatchingState === 'arrived-destination' ? (
@@ -39,14 +41,12 @@ export const OngoingOrderStatus = ({ order }: Props) => {
       ) : (
         <IconRequest />
       )}
-
       <Text style={{ marginTop: padding, ...texts.xl }}>{header}</Text>
       {order.type === 'food' && (
         <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>
           {description}
         </Text>
       )}
-
       {order.destination?.estimatedTimeOfArrival &&
         order.dispatchingState !== 'arrived-destination' && (
           <RoundedText style={{ marginTop: padding }}>{`${t('Previsão de entrega: ')} ${formatTime(
