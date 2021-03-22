@@ -57,7 +57,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
         setLoading(false);
         navigation.navigate('OngoingDelivery', { orderId, completeWithoutConfirmation: true });
       } catch (error) {
-        dispatch(showToast(error.toSring()));
+        dispatch(showToast(error.toString(), 'error'));
       }
     })();
   };

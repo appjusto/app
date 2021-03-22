@@ -83,7 +83,7 @@ export const OrderSummary = ({
       try {
         setQuotes(await api.order().getOrderQuotes(order.id));
       } catch (error) {
-        dispatch(showToast(error));
+        dispatch(showToast(error.toString(), 'error'));
       }
     })();
   }, [order]);

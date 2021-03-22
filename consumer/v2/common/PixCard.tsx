@@ -1,9 +1,9 @@
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { pix } from '../../../assets/icons';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
+import { IconPixLogo } from '../../../common/icons/icon-pix-logo';
 import { borders, colors, halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
@@ -23,7 +23,7 @@ export const PixCard = ({ navigateToPixPayment }: Props) => {
             marginBottom: halfPadding,
           }}
         >
-          <Image source={pix} />
+          <IconPixLogo />
           <RoundedText backgroundColor={colors.yellow}>{t('Novo!')}</RoundedText>
         </View>
         <Text style={{ ...texts.sm }}>

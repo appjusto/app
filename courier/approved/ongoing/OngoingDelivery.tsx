@@ -64,7 +64,7 @@ export default function ({ navigation, route }: Props) {
       try {
         await api.order().completeDelivery(orderId, code);
       } catch (error) {
-        dispatch(showToast(error.toSring()));
+        dispatch(showToast(error.toString(), 'error'));
       }
       setLoading(false);
     })();
@@ -101,7 +101,7 @@ export default function ({ navigation, route }: Props) {
           await api.order().completeDelivery(orderId, code);
         }
       } catch (error) {
-        dispatch(showToast(error.toSring()));
+        dispatch(showToast(error.toString(), 'error'));
       }
       setLoading(false);
     })();
