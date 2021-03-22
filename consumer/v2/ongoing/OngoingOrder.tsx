@@ -19,6 +19,7 @@ import { colors, halfPadding, padding, screens, texts } from '../../../common/st
 import { t } from '../../../strings';
 import { DeliveredItems } from '../common/DeliveredItems';
 import { LoggedNavigatorParamList } from '../types';
+import { DeliveryActions } from './DeliveryActions';
 import { DeliveryInfo } from './DeliveryInfo';
 import { OngoingOrderStatus } from './OngoingOrderStatus';
 import { OngoingOrderNavigatorParamList } from './types';
@@ -104,10 +105,11 @@ export default function ({ navigation, route }: Props) {
   })();
   return (
     <View style={{ ...screens.default, paddingBottom: 32 }}>
+      <OngoingOrderStatus order={order} />
       {order.type === 'p2p' ? (
         <View>
           <View>
-            <OrderMap order={order} ratio={0.8} />
+            <OrderMap order={order} ratio={1.2} />
             <StatusAndMessages
               dispatchingState={dispatchingState}
               orderId={orderId}
@@ -116,12 +118,35 @@ export default function ({ navigation, route }: Props) {
           </View>
           <DeliveryInfo
             order={order}
-            addressLabel={addressLabel}
-            nextPlace={nextPlace}
-            onChangeRoute={() => navigation.navigate('OngoingOrderCourierDetail', { orderId })}
+            onCourierDetail={() => navigation.navigate('OngoingOrderCourierDetail', { orderId })}
           />
-          <HR />
-          <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <DefaultButton
+            title={t('Abrir chat')}
+            onPress={openChatHandler}
+            style={{ marginHorizontal: padding, marginBottom: padding }}
+          />
+          <HR height={padding} />
+          <DeliveryActions
+            order={order}
+            onChangeRoute={() =>
+              navigation.navigate('P2POrderNavigator', {
+                screen: 'CreateOrderP2P',
+                params: {
+                  orderId,
+                },
+              })
+            }
+            navigateToReportIssue={() =>
+              navigation.navigate('ReportIssue', {
+                orderId: order.id,
+                issueType: 'consumer-delivery-problem',
+              })
+            }
+            navigateToConfirmCancel={() =>
+              navigation.navigate('OngoingOrderConfirmCancel', { orderId })
+            }
+          />
+          {/* <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <View style={{ flex: 7 }}>
               <DefaultButton title={t('Abrir chat')} onPress={openChatHandler} />
             </View>
@@ -139,11 +164,10 @@ export default function ({ navigation, route }: Props) {
                 secondary
               />
             </View>
-          </PaddedView>
+          </PaddedView> */}
         </View>
       ) : (
         <ScrollView>
-          <OngoingOrderStatus order={order} />
           {order.status === 'dispatching' ? (
             <View>
               <View>
@@ -158,12 +182,13 @@ export default function ({ navigation, route }: Props) {
                 order={order}
                 addressLabel={addressLabel}
                 nextPlace={nextPlace}
-                onChangeRoute={() =>
-                  navigation.navigate('P2POrderNavigator', {
-                    screen: 'CreateOrderP2P',
-                    params: { orderId: order.id },
-                  })
-                }
+                // onChangeRoute={() =>
+                //   navigation.navigate('P2POrderNavigator', {
+                //     screen: 'CreateOrderP2P',
+                //     params: { orderId: order.id },
+                //   })
+                // }
+                onCourierDetail={() => null}
               />
               <HR />
               <PaddedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

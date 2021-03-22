@@ -9,37 +9,35 @@ import { t } from '../../../strings';
 
 type Props = {
   order: WithId<Order>;
-  addressLabel: string;
-  nextPlace: Place | null | undefined;
-  onChangeRoute: () => void;
+  addressLabel?: string;
+  nextPlace?: Place | null | undefined;
+  onCourierDetail: () => void;
 };
 
-export const DeliveryInfo = ({ order, addressLabel, nextPlace, onChangeRoute }: Props) => {
+export const DeliveryInfo = ({ order, addressLabel, nextPlace, onCourierDetail }: Props) => {
   return (
-    <View
-      style={{
-        backgroundColor: colors.white,
-        flexDirection: 'row',
-        paddingHorizontal: padding,
-        paddingVertical: padding,
-      }}
-    >
-      <RoundedProfileImg flavor="courier" id={order.courier?.id} />
-      <View style={{ flex: 1, marginLeft: padding }}>
+    <TouchableOpacity onPress={onCourierDetail}>
+      <View
+        style={{
+          backgroundColor: colors.white,
+          flexDirection: 'row',
+          paddingHorizontal: padding,
+          paddingVertical: padding,
+        }}
+      >
+        <RoundedProfileImg flavor="courier" id={order.courier?.id} />
+        <View style={{ flex: 1, marginLeft: padding }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={[texts.md]}>{order.courier?.name}</Text>
+          </View>
+          <Text style={[texts.xs, { color: colors.grey700 }]}>{t('Conheça o entregador')}</Text>
+        </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={[texts.md]}>{order.courier?.name}</Text>
-        </View>
-        <Text style={[texts.xs, { color: colors.green600 }]}>{addressLabel}</Text>
-        <Text style={[texts.xs]}>{nextPlace?.address.main ?? ''}</Text>
-      </View>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <View>
-          <CourierDistanceBadge order={order} />
-          <TouchableOpacity onPress={onChangeRoute} style={{ marginTop: 12 }}>
-            <Text style={[texts.xs, { color: colors.green600 }]}>{t('Mais informações')}</Text>
-          </TouchableOpacity>
+          <View>
+            <CourierDistanceBadge order={order} />
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
