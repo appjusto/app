@@ -50,7 +50,10 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
           backgroundColor: 'white',
         }}
       />
-      <DefaultButton title={t('Voltar para o início')} onPress={() => navigation.popToTop()} />
+      <DefaultButton
+        title={t('Voltar para o início')}
+        onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
+      />
     </FeedbackView>
   );
 };

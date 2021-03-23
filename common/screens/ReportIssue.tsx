@@ -152,7 +152,10 @@ export const ReportIssue = ({ route, navigation }: Props) => {
         background={colors.grey50}
         description={feedbackDescription}
       >
-        <DefaultButton title={t('Voltar para o início')} onPress={() => navigation.pop()} />
+        <DefaultButton
+          title={t('Voltar para o início')}
+          onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
+        />
       </FeedbackView>
     );
   }
