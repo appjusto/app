@@ -1,6 +1,6 @@
-import React, { useRef, useCallback } from 'react';
+import React from 'react';
 import { Platform } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, MapViewProps, LatLng } from 'react-native-maps';
+import MapView, { LatLng, MapViewProps, PROVIDER_GOOGLE } from 'react-native-maps';
 
 interface Props extends MapViewProps {
   children?: React.ReactNode | React.ReactNode[];
@@ -10,11 +10,11 @@ interface Props extends MapViewProps {
 
 export default React.forwardRef(
   ({ children, coordinates, fitToElements, ...props }: Props, externalRef) => {
-    const internalRef = useRef<MapView>(null);
+    const internalRef = React.useRef<MapView>(null);
     const ref = (externalRef as React.RefObject<MapView>) || internalRef;
 
     // effects
-    const onMapReadyHandler = useCallback(() => {
+    const onMapReadyHandler = React.useCallback(() => {
       if (fitToElements && coordinates) {
         if (Platform.OS === 'ios') {
           ref?.current?.fitToElements(false);

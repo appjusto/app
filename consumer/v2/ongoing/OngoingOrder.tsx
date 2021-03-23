@@ -106,7 +106,7 @@ export default function ({ navigation, route }: Props) {
   return (
     <View style={{ ...screens.default, paddingBottom: 32 }}>
       {order.type === 'p2p' ? (
-        <ScrollView>
+        <ScrollView scrollIndicatorInsets={{ right: 1 }}>
           <OngoingOrderStatus order={order} />
           <View>
             <OrderMap order={order} ratio={1.2} />
