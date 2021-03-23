@@ -57,7 +57,7 @@ export default function ({ route, navigation }: Props) {
         setLoading(true);
         await api.order().rejectOrder(orderId, {
           courierId: courier.id,
-          reason: selectedReason!,
+          issue: selectedReason!,
           comment: rejectionComment,
         });
         navigation.replace('MainNavigator', { screen: 'Home' });
