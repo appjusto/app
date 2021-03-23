@@ -89,13 +89,10 @@ export default function ({ navigation, route }: Props) {
   const openChatHandler = () => navigation.navigate('OngoingOrderChat', { orderId });
   // ongoing UI
   const { dispatchingState } = order;
-  if (order.status === 'confirmed') {
+  if (order.type === 'p2p' && order.status === 'confirmed') {
     return (
       <ScrollView style={{ ...screens.default }}>
         <OngoingOrderStatus order={order} />
-        {/* <HR height={padding} /> */}
-        <OrderMap order={order} ratio={1.7} />
-        {/* <HR height={padding} /> */}
         <DeliveryInfo order={order} onCourierDetail={() => null} />
         <HR height={padding} />
         <DeliveryActions
