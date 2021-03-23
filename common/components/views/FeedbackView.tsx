@@ -1,9 +1,7 @@
-import { isEmpty } from 'lodash';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { colors, screens, texts } from '../../styles';
 import PaddedView from '../containers/PaddedView';
-import ShowIf from './ShowIf';
 
 type Props = {
   header?: string;
@@ -20,13 +18,11 @@ export default ({ header, description, icon, children, background }: Props) => {
         <View style={{ alignItems: 'center' }}>
           {header && <Text style={{ ...texts.x2l, textAlign: 'center' }}>{header}</Text>}
           <View style={{ height: 114, width: 114, marginTop: 22, marginBottom: 16 }}>{icon}</View>
-          <ShowIf test={!isEmpty(description)}>
-            {() => (
-              <Text style={{ ...texts.sm, color: colors.grey700, textAlign: 'center' }}>
-                {description}
-              </Text>
-            )}
-          </ShowIf>
+          {description && (
+            <Text style={{ ...texts.sm, color: colors.grey700, textAlign: 'center' }}>
+              {description}
+            </Text>
+          )}
         </View>
       </View>
       {children}
