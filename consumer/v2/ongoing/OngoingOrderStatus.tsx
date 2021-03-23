@@ -47,6 +47,11 @@ export const OngoingOrderStatus = ({ order }: Props) => {
           {description}
         </Text>
       )}
+      {order.type === 'p2p' && order.status === 'confirmed' && (
+        <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>
+          {t('Pedido: ')} {order.code}
+        </Text>
+      )}
       {order.destination?.estimatedTimeOfArrival &&
         order.dispatchingState !== 'arrived-destination' && (
           <RoundedText style={{ marginTop: padding }}>{`${t('Previsão de entrega: ')} ${formatTime(

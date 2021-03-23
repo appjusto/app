@@ -11,7 +11,6 @@ import HR from '../../../common/components/views/HR';
 import useNotificationToken from '../../../common/hooks/useNotificationToken';
 import { StatusAndMessages } from '../../../common/screens/orders/ongoing/StatusAndMessages';
 import OrderMap from '../../../common/screens/orders/OrderMap';
-import { courierNextPlace } from '../../../common/store/api/order/helpers';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { updateProfile } from '../../../common/store/user/actions';
@@ -89,20 +88,40 @@ export default function ({ navigation, route }: Props) {
   // handlers
   const openChatHandler = () => navigation.navigate('OngoingOrderChat', { orderId });
   // ongoing UI
-  const nextPlace = courierNextPlace(order);
   const { dispatchingState } = order;
-  const addressLabel = (() => {
-    if (dispatchingState === 'going-pickup') {
-      return t('Retirada em');
-    } else if (
-      dispatchingState === 'arrived-pickup' ||
-      dispatchingState === 'arrived-destination' ||
-      dispatchingState === 'going-destination'
-    ) {
-      return t('Entrega em');
-    }
-    return '';
-  })();
+  if (order.status === 'confirmed') {
+    return (
+      <ScrollView style={{ ...screens.default }}>
+        <OngoingOrderStatus order={order} />
+        {/* <HR height={padding} /> */}
+        <OrderMap order={order} ratio={1.7} />
+        {/* <HR height={padding} /> */}
+        <DeliveryInfo order={order} onCourierDetail={() => null} />
+        <HR height={padding} />
+        <DeliveryActions
+          order={order}
+          onChangeRoute={() =>
+            navigation.navigate('P2POrderNavigator', {
+              screen: 'CreateOrderP2P',
+              params: {
+                orderId,
+              },
+            })
+          }
+          navigateToReportIssue={() =>
+            navigation.navigate('ReportIssue', {
+              orderId: order.id,
+              issueType: 'consumer-delivery-problem',
+            })
+          }
+          navigateToConfirmCancel={() =>
+            navigation.navigate('OngoingOrderConfirmCancel', { orderId })
+          }
+        />
+        <HR />
+      </ScrollView>
+    );
+  }
   return (
     <View style={{ ...screens.default, paddingBottom: 32 }}>
       {order.type === 'p2p' ? (

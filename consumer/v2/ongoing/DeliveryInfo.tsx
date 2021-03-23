@@ -1,4 +1,4 @@
-import { Order, Place, WithId } from 'appjusto-types';
+import { Order, WithId } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -9,12 +9,10 @@ import { t } from '../../../strings';
 
 type Props = {
   order: WithId<Order>;
-  addressLabel?: string;
-  nextPlace?: Place | null | undefined;
   onCourierDetail: () => void;
 };
 
-export const DeliveryInfo = ({ order, addressLabel, nextPlace, onCourierDetail }: Props) => {
+export const DeliveryInfo = ({ order, onCourierDetail }: Props) => {
   return (
     <TouchableOpacity onPress={onCourierDetail}>
       <View
@@ -30,12 +28,16 @@ export const DeliveryInfo = ({ order, addressLabel, nextPlace, onCourierDetail }
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={[texts.md]}>{order.courier?.name}</Text>
           </View>
-          <Text style={[texts.xs, { color: colors.grey700 }]}>{t('Conheça o entregador')}</Text>
+          <Text style={[texts.xs, { color: colors.grey700 }]}>
+            {order.status === 'confirmed' ? t('Aguardando entregador') : t('Conheça o entregador')}
+          </Text>
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <View>
-            <CourierDistanceBadge order={order} />
-          </View>
+          {order.status !== 'confirmed' && (
+            <View>
+              <CourierDistanceBadge order={order} />
+            </View>
+          )}
         </View>
       </View>
     </TouchableOpacity>
