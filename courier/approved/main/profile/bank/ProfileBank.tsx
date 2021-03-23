@@ -127,7 +127,6 @@ export default function ({ navigation, route }: Props) {
             </View>
           </View>
           <View style={{ marginTop: halfPadding }}>
-            {/* <DefaultInput title={t('Banco')} value={bank} onChangeText={(text) => setBank(text)} /> */}
             <Pressable
               onPress={() => {
                 navigation.navigate('SelectBank');
@@ -166,7 +165,6 @@ export default function ({ navigation, route }: Props) {
                   )(agency);
                   setAgency(paddedAgency);
                 }
-                accountRef.current?.focus();
               }}
             />
             <View style={{ marginTop: 16, flexDirection: 'row', justifyContent: 'space-between' }}>

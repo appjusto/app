@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../common/app/context';
@@ -13,20 +13,20 @@ import UnapprovedNavigator from './unapproved/UnapprovedNavigator';
 export default function () {
   // context
   const dispatch = useDispatch<AppDispatch>();
-  const api = useContext(ApiContext);
-
-  // app state
+  const api = React.useContext(ApiContext);
+  // redux
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
   const courier = useSelector(getCourier);
   const situation = courier?.situation;
-
+  const courierId = user?.uid;
   // side effects
   // once
   // subscribe for profile changes
-  useEffect(() => {
-    return dispatch(observeProfile(api)(flavor, user!.uid));
-  }, []);
+  React.useEffect(() => {
+    if (!courierId) return;
+    return dispatch(observeProfile(api)(flavor, courierId));
+  }, [api, dispatch, flavor, courierId]);
   // UI
   if (!situation) {
     // showing the indicator until the profile is loaded
@@ -38,6 +38,5 @@ export default function () {
   } else if (situation === 'approved') {
     return <ApprovedNavigator />;
   }
-
   return <UnapprovedNavigator />;
 }

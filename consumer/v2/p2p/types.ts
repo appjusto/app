@@ -1,4 +1,5 @@
 import { Place } from 'appjusto-types';
+import { FleetDetailParamList } from '../../../common/screens/fleet/FleetDetail';
 import { AddressCompleteParamList } from '../common/AddressComplete';
 import { PixParamList } from '../common/PayWithPix';
 
@@ -16,11 +17,9 @@ export type P2POrderNavigatorParamList = {
   ProfilePaymentMethods: {
     returnScreen: 'CreateOrderP2P';
   };
-  FleetDetail: {
-    fleetId: string;
-  };
 } & AddressCompleteParamList &
-  PixParamList;
+  PixParamList &
+  FleetDetailParamList;
 // } & ChatParamList;
 
 export enum Step {

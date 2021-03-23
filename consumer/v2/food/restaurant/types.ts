@@ -1,4 +1,5 @@
 import { Place } from 'appjusto-types';
+import { FleetDetailParamList } from '../../../../common/screens/fleet/FleetDetail';
 import { PixParamList } from '../../common/PayWithPix';
 
 export type RestaurantNavigatorParamList = {
@@ -23,7 +24,5 @@ export type RestaurantNavigatorParamList = {
   ProfilePaymentMethods?: {
     returnScreen: 'FoodOrderCheckout';
   };
-  FleetDetail: {
-    fleetId: string;
-  };
-} & PixParamList;
+} & PixParamList &
+  FleetDetailParamList;

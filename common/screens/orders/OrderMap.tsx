@@ -30,14 +30,28 @@ export default function ({ order, ratio }: Props) {
   return (
     <View style={{ width, height: width / ratio }}>
       <DefaultMap coordinates={routeCoordinates} fitToElements style={{ flex: 1 }}>
-        <Marker coordinate={origin.location!} identifier="origin">
+        <Marker
+          key={`${origin.location!.latitude}-${origin.location!.longitude}`}
+          coordinate={origin.location!}
+          identifier="origin"
+          tracksViewChanges={false}
+        >
           <IconMapOrigin />
         </Marker>
-        <Marker coordinate={destination.location!} identifier="destination">
+        <Marker
+          key={`${destination.location!.latitude}-${destination.location!.longitude}`}
+          coordinate={destination.location!}
+          identifier="destination"
+          tracksViewChanges={false}
+        >
           <IconMapDestination />
         </Marker>
         {courier?.location && (
-          <Marker coordinate={courier.location}>
+          <Marker
+            key={`${courier.location!.latitude}-${courier.location!.longitude}`}
+            coordinate={courier.location}
+            tracksViewChanges={false}
+          >
             <IconMapCourier />
           </Marker>
         )}

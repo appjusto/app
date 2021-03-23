@@ -1,9 +1,9 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
+import FleetDetail from '../../../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import ProfileErase from '../../../../common/screens/profile/ProfileErase';
 import Terms from '../../../../common/screens/unlogged/Terms';
-import FleetDetail from '../../../../consumer/v2/common/FleetDetail';
 import { t } from '../../../../strings';
 import ProfileBank from './bank/ProfileBank';
 import SelectBank from './bank/SelectBank';

@@ -5,7 +5,7 @@ import { Issue } from 'appjusto-types/order/issues';
 import React from 'react';
 import { ActivityIndicator, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
@@ -15,7 +15,6 @@ import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { cancelOrder } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
-import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
@@ -38,13 +37,12 @@ export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  // app state
-  const busy = useSelector(getUIBusy);
   // state
   const issues = useIssues('consumer-cancel');
   const [selectedReason, setSelectedReason] = React.useState<WithId<Issue>>();
   const [rejectionComment, setRejectionComment] = React.useState<string>('');
-  const [issueSent, setIssueSent] = React.useState(false);
+  const [isLoading, setLoading] = React.useState(false);
+  const [isCanceled, setCanceled] = React.useState(false);
   // UI
   if (!issues) {
     return (
@@ -53,7 +51,7 @@ export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
       </View>
     );
   }
-  if (issueSent) {
+  if (isCanceled) {
     return (
       <FeedbackView
         header={t('Obrigado pelas informações. Seu pedido foi cancelado.')}
@@ -62,7 +60,7 @@ export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
       >
         <DefaultButton
           title={t('Voltar para o início')}
-          onPress={() => navigation.popToTop()}
+          onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
           secondary
         />
       </FeedbackView>
@@ -72,16 +70,18 @@ export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
   const cancelHandler = () => {
     (async () => {
       try {
+        setLoading(true);
         await dispatch(
           cancelOrder(api)(orderId, {
             issue: selectedReason!,
             comment: rejectionComment,
           })
         );
-        setIssueSent(true);
+        setCanceled(true);
       } catch (error) {
         dispatch(showToast(error.toString()));
       }
+      setLoading(false);
     })();
   };
   return (
@@ -101,7 +101,7 @@ export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
             onPress={() => setSelectedReason(issue)}
           />
         ))}
-        <Text style={{ ...texts.sm, marginBottom: padding, marginTop: padding }}>
+        <Text style={{ ...texts.xs, marginBottom: padding, marginTop: padding }}>
           {t(
             'Você pode usar o espaço abaixo para detalhar mais o cancelamento. Dessa forma conseguiremos melhorar nossos serviços:'
           )}
@@ -127,8 +127,8 @@ export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
           style={{ marginTop: padding }}
           title={t('Enviar')}
           onPress={cancelHandler}
-          disabled={!selectedReason || busy}
-          activityIndicator={busy}
+          disabled={!selectedReason || isLoading}
+          activityIndicator={isLoading}
         />
       </PaddedView>
     </KeyboardAwareScrollView>

@@ -1,7 +1,7 @@
 import { Fare, Fleet, WithId } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { FlatList, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { ApiContext } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
@@ -81,7 +81,7 @@ export const OrderAvailableFleets = ({
               keyExtractor={(item) => item.fleet.id!}
               renderItem={({ item }) => {
                 return (
-                  <TouchableHighlight onPress={() => onFareSelect(item)}>
+                  <TouchableOpacity onPress={() => onFareSelect(item)}>
                     <PaddedView
                       style={{
                         width: 156,
@@ -112,7 +112,7 @@ export const OrderAvailableFleets = ({
                         </View>
                       </TouchableOpacity>
                     </PaddedView>
-                  </TouchableHighlight>
+                  </TouchableOpacity>
                 );
               }}
               horizontal

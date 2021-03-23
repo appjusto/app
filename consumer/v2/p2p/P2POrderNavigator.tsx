@@ -1,9 +1,9 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
+import FleetDetail from '../../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../../common/screens/options';
 import { t } from '../../../strings';
 import { AddressComplete } from '../common/AddressComplete';
-import FleetDetail from '../common/FleetDetail';
 import { PayWithPix } from '../common/PayWithPix';
 import ProfileAddCard from '../main/profile/ProfileAddCard';
 import ProfilePaymentMethods from '../main/profile/ProfilePaymentMethods';

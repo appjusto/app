@@ -3,8 +3,10 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
+import { RestaurantNavigatorParamList } from '../../../consumer/v2/food/restaurant/types';
+import { P2POrderNavigatorParamList } from '../../../consumer/v2/p2p/types';
 import GainSimulator from '../../../courier/approved/main/profile/fleet/GainSimulator';
-import { FleetNavigatorParamList } from '../../../courier/approved/main/profile/fleet/types';
+import { CourierProfileParamList } from '../../../courier/approved/main/profile/types';
 import { t } from '../../../strings';
 import { ApiContext } from '../../app/context';
 import DefaultButton from '../../components/buttons/DefaultButton';
@@ -17,8 +19,17 @@ import { getCourier } from '../../store/courier/selectors';
 import { colors, screens, texts } from '../../styles';
 import { formatCurrency, formatDistance } from '../../utils/formatters';
 
-type ScreenNavigationProp = StackNavigationProp<FleetNavigatorParamList, 'FleetDetail'>;
-type ScreenRouteProp = RouteProp<FleetNavigatorParamList, 'FleetDetail'>;
+export type FleetDetailParamList = {
+  FleetDetail: {
+    fleetId: string;
+  };
+};
+
+type ScreenNavigationProp = StackNavigationProp<
+  P2POrderNavigatorParamList & RestaurantNavigatorParamList & CourierProfileParamList,
+  'AddressComplete'
+>;
+type ScreenRouteProp = RouteProp<FleetDetailParamList, 'FleetDetail'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

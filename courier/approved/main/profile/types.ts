@@ -1,4 +1,5 @@
 import { Bank } from 'appjusto-types';
+import { FleetDetailParamList } from '../../../../common/screens/fleet/FleetDetail';
 import { ProfileEraseParamList } from '../../../../common/screens/profile/ProfileErase';
 
 export type CourierProfileParamList = {
@@ -15,9 +16,7 @@ export type CourierProfileParamList = {
   ChooseFleet?: {
     fleetId: string;
   };
-  FleetDetail: {
-    fleetId: string;
-  };
   CreateFleet: undefined;
   AllFleets: undefined;
-} & ProfileEraseParamList;
+} & ProfileEraseParamList &
+  FleetDetailParamList;
