@@ -1,6 +1,3 @@
-import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { CompositeNavigationProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { CourierStatus } from 'appjusto-types';
 import { nanoid } from 'nanoid/non-secure';
 import React from 'react';
@@ -26,25 +23,15 @@ import {
 } from '../../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
-import { ApprovedParamList } from '../../types';
-import { MainParamList } from '../types';
-import { HomeParamList } from './types';
-
-type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<HomeParamList, 'Home'>,
-  CompositeNavigationProp<
-    BottomTabNavigationProp<MainParamList, 'HomeNavigator'>,
-    StackNavigationProp<ApprovedParamList, 'MainNavigator'>
-  >
->;
 
 type Props = {
-  navigation: ScreenNavigationProp;
+  onPermissionDenied: () => void;
+  onFleetDetail: () => void;
 };
 
 const { width } = Dimensions.get('window');
 
-export default function ({ navigation }: Props) {
+export default function ({ onPermissionDenied, onFleetDetail }: Props) {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -63,16 +50,9 @@ export default function ({ navigation }: Props) {
   // location permission denied
   React.useEffect(() => {
     if (working && locationPermission === 'denied') {
-      navigation.navigate('PermissionDeniedFeedback', {
-        title: t('Precisamos acessar a localização do seu dispositivo'),
-        subtitle: t(
-          'Para que possamos determinar o trajeto com precisão, precisamos que você dê acesso ao AppJusto para usar sua localização.'
-        ),
-      });
-      // removing previous token
-      dispatch(updateProfile(api)(courier!.id!, { notificationToken: null }));
+      onPermissionDenied();
     }
-  }, [working, locationPermission]);
+  }, [working, locationPermission, onPermissionDenied]);
 
   // handlers
   const toggleWorking = () => {
@@ -178,16 +158,7 @@ export default function ({ navigation }: Props) {
               {t('Distância mínima')} {formatDistance(courier.fleet!.distanceThreshold)}
             </Text>
             <View style={{ flex: 1 }} />
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('ProfileNavigator', {
-                  screen: 'ChooseFleet',
-                  params: {
-                    fleetId: courier.fleet!.id,
-                  },
-                })
-              }
-            >
+            <TouchableOpacity onPress={() => onFleetDetail()}>
               <View style={{ marginTop: padding, alignItems: 'center' }}>
                 <RoundedText>{t('Mudar de frota')}</RoundedText>
               </View>

@@ -1,6 +1,7 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { t } from 'i18n-js';
 import React, { useContext, useEffect } from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,14 +19,10 @@ import { DemandCard } from './components/DemandCard';
 import HomeControls from './HomeControls';
 import HomeDeliveriesSummary from './HomeDeliveriesSummary';
 import ModalChooser from './ModalChooser';
-import { HomeParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<HomeParamList, 'Home'>,
-  CompositeNavigationProp<
-    BottomTabNavigationProp<MainParamList, 'HomeNavigator'>,
-    StackNavigationProp<ApprovedParamList, 'MainNavigator'>
-  >
+  BottomTabNavigationProp<MainParamList, 'Home'>,
+  StackNavigationProp<ApprovedParamList, 'MainNavigator'>
 >;
 
 type Props = {
@@ -59,7 +56,26 @@ export default function ({ navigation }: Props) {
   return (
     <View style={[screens.default, screens.headless]}>
       <ScrollView>
-        <HomeControls navigation={navigation} />
+        <HomeControls
+          onPermissionDenied={() => {
+            navigation.navigate('PermissionDenied', {
+              title: t('Precisamos acessar a localização do seu dispositivo'),
+              subtitle: t(
+                'Para que possamos determinar o trajeto com precisão, precisamos que você dê acesso ao AppJusto para usar sua localização.'
+              ),
+            });
+            // removing previous token
+            dispatch(updateProfile(api)(courier!.id!, { notificationToken: null }));
+          }}
+          onFleetDetail={() =>
+            navigation.navigate('ProfileNavigator', {
+              screen: 'ChooseFleet',
+              params: {
+                fleetId: courier.fleet!.id,
+              },
+            })
+          }
+        />
         <PaddedView>
           <HomeOngoingDeliveries
             orders={ongoingOrders}
@@ -71,9 +87,7 @@ export default function ({ navigation }: Props) {
             }
           />
           <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('DeliveriesNavigator', { screen: 'DeliveryHistory' })
-            }
+            onPress={() => navigation.navigate('MainNavigator', { screen: 'DeliveryHistory' })}
           >
             <HomeDeliveriesSummary />
           </TouchableOpacity>
