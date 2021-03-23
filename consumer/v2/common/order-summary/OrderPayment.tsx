@@ -42,11 +42,9 @@ export const OrderPayment = ({
           style={{ marginBottom: padding }}
         />
       )}
-      {consumer.cpf && consumer.name && (
-        <View style={{ marginBottom: padding }}>
-          <PixCard navigateToPixPayment={navigateToPixPayment} />
-        </View>
-      )}
+      <View style={{ marginBottom: padding }}>
+        <PixCard navigateToPixPayment={navigateToPixPayment} />
+      </View>
       {Boolean(selectedPaymentMethod) && (
         <TouchableOpacity onPress={onEditPaymentMethod}>
           <PaddedView>
