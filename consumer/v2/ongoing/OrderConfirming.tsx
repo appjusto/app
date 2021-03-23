@@ -58,10 +58,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  const description =
-    order.type === 'food'
-      ? t('Aguarde enquanto o restaurante confirma seu pedido...')
-      : t('Aguarde enquanto criamos seu pedido...');
+  const description = t('Aguarde enquanto criamos seu pedido...');
   return pixKey ? (
     <SafeAreaView style={{ ...screens.config }}>
       <PaddedView style={{ flex: 1 }}>

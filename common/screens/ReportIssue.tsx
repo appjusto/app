@@ -7,6 +7,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useDispatch, useSelector } from 'react-redux';
 import { DeliveredOrderNavigatorParamList } from '../../consumer/v2/delivered/types';
 import { OngoingOrderNavigatorParamList } from '../../consumer/v2/ongoing/types';
+import { OngoingDeliveryNavigatorParamList } from '../../courier/approved/ongoing/types';
 import { t } from '../../strings';
 import { ApiContext, AppDispatch } from '../app/context';
 import DefaultButton from '../components/buttons/DefaultButton';
@@ -28,7 +29,9 @@ export type ReportIssueParamList = {
 };
 
 type ScreenNavigationProp = StackNavigationProp<
-  DeliveredOrderNavigatorParamList & OngoingOrderNavigatorParamList & OngoingDeliveryN,
+  DeliveredOrderNavigatorParamList &
+    OngoingOrderNavigatorParamList &
+    OngoingDeliveryNavigatorParamList,
   'ReportIssue'
 >;
 type ScreenRouteProp = RouteProp<ReportIssueParamList, 'ReportIssue'>;
