@@ -5,6 +5,7 @@ import React from 'react';
 import { Image } from 'react-native';
 import { useQuery, useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
+import * as Sentry from 'sentry-expo';
 import * as icons from '../../../assets/icons';
 import { useObserveOngoingOrders } from '../../../common/store/api/order/hooks/useObserveOngoingOrders';
 import { getUser } from '../../../common/store/user/selectors';
@@ -42,6 +43,7 @@ export default function ({ navigation }: Props) {
     // console.log(notification);
     if (notification) {
       const data = notification.data as OrderMatchPushMessageData;
+      Sentry.Native.captureMessage(`Received push: ${data.action}`);
       navigation.navigate('MatchingNavigator', {
         screen: 'Matching',
         params: {
@@ -55,7 +57,7 @@ export default function ({ navigation }: Props) {
           (notifications ?? []).filter((item) => item.id !== notification.id)
       );
     }
-  }, [matchingQuery.data]);
+  }, [matchingQuery.data, navigation, queryCache]);
 
   React.useEffect(() => {
     // console.log("MainNavigator ['notifications', 'order-chat']");
@@ -72,7 +74,7 @@ export default function ({ navigation }: Props) {
         },
       });
     }
-  }, [chatQuery.data]);
+  }, [chatQuery.data, navigation]);
 
   return (
     <Tab.Navigator

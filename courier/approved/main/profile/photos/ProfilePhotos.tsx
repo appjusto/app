@@ -1,5 +1,5 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { RouteProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
@@ -28,7 +28,9 @@ import useCourierSelfie from '../../../../../common/store/api/courier/hooks/useC
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
+import { LoggedNavigatorParamList } from '../../../../../consumer/v2/types';
 import { t } from '../../../../../strings';
+import { ApprovedParamList } from '../../../types';
 import { CourierProfileParamList } from '../types';
 import DocumentButton from './DocumentButton';
 
@@ -41,7 +43,10 @@ const defaultImageOptions: ImagePicker.ImagePickerOptions = {
 
 const { height, width } = Dimensions.get('window');
 
-type ScreenNavigationProp = StackNavigationProp<CourierProfileParamList, 'ProfilePhotos'>;
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<CourierProfileParamList, 'ProfilePhotos'>,
+  StackNavigationProp<LoggedNavigatorParamList & ApprovedParamList>
+>;
 type ScreenRouteProp = RouteProp<CourierProfileParamList, 'ProfilePhotos'>;
 
 type Props = {
@@ -129,7 +134,7 @@ export default function ({ navigation }: Props) {
       if (result.cancelled) return;
       changeImage(result);
     } else {
-      navigation.navigate('PermissionDeniedFeedback', {
+      navigation.navigate('PermissionDenied', {
         title: t('Precisamos acessar sua câmera'),
         subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
       });
@@ -142,7 +147,7 @@ export default function ({ navigation }: Props) {
       if (result.cancelled) return;
       changeImage(result);
     } else {
-      navigation.navigate('PermissionDeniedFeedback', {
+      navigation.navigate('PermissionDenied', {
         title: t('Precisamos acessar sua galeria'),
         subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
       });
