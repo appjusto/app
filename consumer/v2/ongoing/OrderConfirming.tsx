@@ -37,7 +37,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
     if (!order) return;
     console.log('OrderConfirming', order.status);
     if (order.status === 'canceled') {
-      navigation.popToTop();
+      navigation.replace('MainNavigator', { screen: 'Home' });
     } else if (isOrderOngoing(order)) {
       // TODO: p2p orders are confirmed before we have a courier
       navigation.replace('OngoingOrder', {
@@ -117,7 +117,10 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
         }}
       />
       {order.type === 'p2p' && (
-        <DefaultButton title={t('Voltar para o início')} onPress={() => navigation.popToTop()} />
+        <DefaultButton
+          title={t('Voltar para o início')}
+          onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
+        />
       )}
     </FeedbackView>
   );

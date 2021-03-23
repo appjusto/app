@@ -1,4 +1,4 @@
-import { RouteProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
@@ -11,11 +11,12 @@ import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
+import { ApprovedParamList } from '../types';
 import { OngoingDeliveryNavigatorParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<
-  OngoingDeliveryNavigatorParamList,
-  'DeliveryCompleted'
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<OngoingDeliveryNavigatorParamList, 'DeliveryCompleted'>,
+  StackNavigationProp<ApprovedParamList>
 >;
 type ScreenRoute = RouteProp<OngoingDeliveryNavigatorParamList, 'DeliveryCompleted'>;
 
@@ -60,7 +61,7 @@ export default function ({ navigation, route }: Props) {
       </View>
       <DefaultButton
         title={t('Finalizar')}
-        onPress={() => navigation.popToTop()}
+        onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
         style={{ marginTop: padding }}
       />
     </PaddedView>
