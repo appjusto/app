@@ -96,6 +96,7 @@ export const OrderPayment = ({
             title={t('Quero pagar com Pix')}
             style={{ marginBottom: padding }}
             onPress={navigateToPixPayment}
+            newFeature
           />
         )}
       </PaddedView>
