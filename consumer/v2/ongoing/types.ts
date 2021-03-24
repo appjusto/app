@@ -4,6 +4,7 @@ export type OngoingOrderNavigatorParamList = {
   OngoingOrderConfirming: {
     orderId: string;
     pixKey?: string;
+    total?: number;
   };
   OngoingOrderNoMatch: {
     orderId: string;

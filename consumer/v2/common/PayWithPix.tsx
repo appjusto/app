@@ -50,7 +50,6 @@ export const PayWithPix = ({ navigation, route }: Props) => {
   const [cpfKey, setCpfKey] = React.useState(false);
   const [pixKey, setPixKey] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
-  // for tests only
 
   // side-effects
   // setting consumer cpf as pix key
@@ -73,7 +72,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {
         screen: 'OngoingOrderConfirming',
-        params: { orderId, pixKey },
+        params: { orderId, pixKey, total },
       });
     } catch (error) {
       dispatch(showToast(error.toString(), 'error'));
@@ -87,6 +86,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
       </View>
     );
   }
+
   return (
     <View style={{ ...screens.config }}>
       <PaddedView style={{ flex: 1 }}>
@@ -97,15 +97,15 @@ export const PayWithPix = ({ navigation, route }: Props) => {
             'É importante informar a sua chave para enviarmos o estorno do valor caso ocorra algum problema no pedido.'
           )}
         </Text>
-        <DefaultInput title={t('Chave Pix')} value={pixKey} onChangeText={setPixKey} />
         {consumer.cpf && (
           <CheckField
             checked={cpfKey}
             onPress={() => setCpfKey(!cpfKey)}
             text={t('Usar CPF como chave')}
-            style={{ marginTop: padding }}
+            style={{ marginBottom: padding }}
           />
         )}
+        <DefaultInput title={t('Chave Pix')} value={pixKey} onChangeText={setPixKey} />
       </PaddedView>
       <View style={{ flex: 1 }} />
       <View

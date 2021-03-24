@@ -7,11 +7,13 @@ import { QrCode } from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import FeedbackView from '../../../common/components/views/FeedbackView';
+import Pill from '../../../common/components/views/Pill';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import { IconPixLogo } from '../../../common/icons/icon-pix-logo';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { isOrderOngoing } from '../../../common/store/order/selectors';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
+import { formatCurrency } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
 import { OngoingOrderNavigatorParamList } from './types';
@@ -29,7 +31,7 @@ type Props = {
 
 export const OrderConfirming = ({ navigation, route }: Props) => {
   // params
-  const { orderId, pixKey } = route.params;
+  const { orderId, pixKey, total } = route.params;
   // screen state
   const { order } = useObserveOrder(orderId);
   // side effects
@@ -60,18 +62,18 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
   }
   const description = t('Aguarde enquanto criamos seu pedido...');
   return pixKey ? (
-    <SafeAreaView style={{ ...screens.config }}>
-      <PaddedView style={{ flex: 1 }}>
+    <SafeAreaView style={{ ...screens.default }}>
+      <PaddedView>
         <IconPixLogo />
-        <Text style={{ ...texts.lg, marginTop: padding }}>{t('Efetue o pagamento')}</Text>
+        <Text style={{ ...texts.lg, marginTop: 24 }}>{t('Efetue o pagamento da sua fatura')}</Text>
         <Text style={{ ...texts.sm, marginVertical: padding, color: colors.grey700 }}>
           {t(
-            'Se você vai pagar com este mesmo dispositivo clique no botão Copiar chave de pagamento'
+            'Se você vai pagar com este mesmo dispositivo clique no botão "Copiar chave de pagamento".'
           )}
         </Text>
         <Text style={{ ...texts.sm, marginBottom: padding, color: colors.grey700 }}>
           {t(
-            'Depois, acesse o aplicativo do seu banco ou instituição financeira na seção Pix e procure a função Pix Copia e Cola'
+            'Depois, acesse o aplicativo do seu banco ou instituição financeira na seção Pix e procure a função "Pix Copia e Cola".'
           )}
         </Text>
         <View
@@ -88,13 +90,43 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
             </Text>
           </View>
         </View>
-        <View style={{ flex: 1 }} />
         <DefaultButton
           title={t('Copiar chave de pagamento')}
           style={{ marginTop: padding }}
           onPress={() => null}
         />
       </PaddedView>
+      <View style={{ flex: 1 }} />
+      <View style={{ flex: 1, marginBottom: padding }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingRight: padding,
+            marginBottom: padding,
+          }}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Pill yellow />
+            <Text style={{ ...texts.md, ...texts.bold, marginLeft: 12 }}>
+              {t('Aguardando pagamento')}
+            </Text>
+          </View>
+          <Text style={{ ...texts.xl }}>{formatCurrency(total!)}</Text>
+        </View>
+        <Text style={{ ...texts.xs, color: colors.grey700, paddingHorizontal: padding }}>
+          {t(
+            'Identificaremos o pagamento assim que ele for realizado e daremos continuidade ao seu pedido.'
+          )}
+        </Text>
+        <DefaultButton
+          title={t('Cancelar pedido')}
+          secondary
+          style={{ marginHorizontal: padding, marginTop: 24 }}
+          onPress={() => null}
+        />
+      </View>
     </SafeAreaView>
   ) : (
     <FeedbackView
