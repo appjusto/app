@@ -33,16 +33,16 @@ export const RestaurantListItem = ({ restaurant, cuisine, distance }: Props) => 
         <View style={{ justifyContent: 'center' }}>
           <Text style={{ ...texts.sm }}>{restaurant.name}</Text>
           <Text style={{ ...texts.xs, color: colors.green600 }}>{t(cuisine ?? '')}</Text>
-          {distance && !outOfRange && (
+          {distance && !outOfRange ? (
             <Text style={{ ...texts.xs, color: colors.grey700 }}>{formatDistance(distance)}</Text>
-          )}
-          {distance && outOfRange && (
+          ) : null}
+          {distance && outOfRange ? (
             <View style={{ marginTop: halfPadding }}>
               <RoundedText backgroundColor={colors.grey50} color={colors.grey700} noBorder>
                 {`${t('Raio de entrega: ')} ${formatDistance(restaurant.deliveryRange!)}`}
               </RoundedText>
             </View>
-          )}
+          ) : null}
         </View>
         <View
           style={{

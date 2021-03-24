@@ -182,7 +182,7 @@ export default function ({ navigation, route }: Props) {
           </View>
         </View>
         {/* Slider */}
-        {dispatchingState !== 'arrived-destination' && (
+        {dispatchingState !== 'arrived-destination' ? (
           <View style={{ marginTop: padding, paddingHorizontal: padding }}>
             <StatusControl
               key={dispatchingState}
@@ -193,8 +193,8 @@ export default function ({ navigation, route }: Props) {
               onConfirm={nextStatepHandler}
             />
           </View>
-        )}
-        {dispatchingState === 'arrived-destination' && (
+        ) : null}
+        {dispatchingState === 'arrived-destination' ? (
           <View>
             <HR height={padding} />
             <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>
@@ -222,7 +222,7 @@ export default function ({ navigation, route }: Props) {
               />
             </PaddedView>
           </View>
-        )}
+        ) : null}
       </KeyboardAwareScrollView>
     </View>
   );
