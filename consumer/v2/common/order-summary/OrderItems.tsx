@@ -1,9 +1,10 @@
+import { Feather } from '@expo/vector-icons';
 import { Order, WithId } from 'appjusto-types';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import HR from '../../../../common/components/views/HR';
-import { colors, padding, texts } from '../../../../common/styles';
+import { borders, colors, padding, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import { OrderItemModal } from './OrderItemModal';
@@ -34,8 +35,21 @@ export const OrderItems = ({
             onPress={onModalClose}
           >
             <View style={{ paddingHorizontal: padding, paddingVertical: 12 }}>
-              <Text style={[texts.sm]}>{item.product.name}</Text>
-              <View style={{ flexDirection: 'row' }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={[texts.sm]}>{item.product.name}</Text>
+                <Feather
+                  name="edit-3"
+                  size={12}
+                  style={{ ...borders.default, borderColor: colors.grey50, padding: 8 }}
+                />
+              </View>
+              <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
                 <Text style={{ ...texts.xs, color: colors.green500 }}>{`${item.quantity}x `}</Text>
                 <Text style={{ ...texts.xs, color: colors.grey700 }}>
                   {formatCurrency(item.product.price)}
@@ -46,7 +60,7 @@ export const OrderItems = ({
                   <Text
                     style={{ ...texts.xs, color: colors.grey700 }}
                   >{`+ ${complement.name}`}</Text>
-                  <View style={{ flexDirection: 'row' }}>
+                  <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
                     <Text
                       style={{ ...texts.xs, color: colors.green500 }}
                     >{`${item.quantity}x `}</Text>
