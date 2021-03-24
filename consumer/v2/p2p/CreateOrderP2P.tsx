@@ -154,9 +154,6 @@ export default function ({ navigation, route }: Props) {
         navigateToPixPayment={(total, fleetId) =>
           navigation.navigate('PayWithPix', { orderId: orderId!, total, fleetId })
         }
-        navigateToFinishProfile={() =>
-          navigation.navigate('ProfileNavigator', { screen: 'ProfileEdit' })
-        }
       />
     </View>
   );

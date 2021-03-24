@@ -128,9 +128,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         navigateToPixPayment={(total, fleetId) =>
           navigation.navigate('PayWithPix', { orderId: order.id!, total, fleetId })
         }
-        navigateToFinishProfile={() =>
-          navigation.navigate('ProfileNavigator', { screen: 'ProfileEdit' })
-        }
       />
     </ScrollView>
   );

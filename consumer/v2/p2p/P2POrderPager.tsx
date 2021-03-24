@@ -31,7 +31,6 @@ type Props = {
   navigateToTransportableItems: () => void;
   placeOrder: (fleetId: string) => Promise<void>;
   navigateToPixPayment: (total: number, fleetId: string) => void;
-  navigateToFinishProfile: () => void;
 };
 
 export default function ({
@@ -44,7 +43,6 @@ export default function ({
   navigateToTransportableItems,
   placeOrder,
   navigateToPixPayment,
-  navigateToFinishProfile,
 }: Props) {
   // params
   const { origin, destination } = order ?? {};
@@ -274,7 +272,6 @@ export default function ({
             navigateFleetDetail={navigateFleetDetail}
             modalVisible={false}
             navigateToPixPayment={navigateToPixPayment}
-            navigateToFinishProfile={navigateToFinishProfile}
           />
         )}
       </ViewPager>

@@ -31,7 +31,6 @@ type Props = {
   navigateFleetDetail: (fleet: WithId<Fleet>) => void;
   modalVisible: boolean;
   navigateToPixPayment: (total: number, fleetId: string) => void;
-  navigateToFinishProfile: () => void;
   onModalClose?: () => void;
 };
 
@@ -49,7 +48,6 @@ export const OrderSummary = ({
   modalVisible,
   onModalClose,
   navigateToPixPayment,
-  navigateToFinishProfile,
 }: Props) => {
   // context
   const api = React.useContext(ApiContext);
@@ -143,7 +141,6 @@ export const OrderSummary = ({
         navigateToPixPayment={() =>
           navigateToPixPayment(selectedFare?.consumer.total ?? 0, selectedFare?.fleet?.id!)
         }
-        navigateToFinishProfile={navigateToFinishProfile}
       />
     </ScrollView>
   );
