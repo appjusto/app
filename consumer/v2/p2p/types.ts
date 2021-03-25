@@ -13,6 +13,7 @@ export type P2POrderNavigatorParamList = {
     paymentMethodId?: string;
   };
   TransportableItems: undefined;
+  AboutCharges: undefined;
 } & AddressCompleteParamList &
   PixParamList &
   FleetDetailParamList &

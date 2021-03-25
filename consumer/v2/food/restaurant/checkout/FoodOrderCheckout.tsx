@@ -128,6 +128,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         navigateToPixPayment={(total, fleetId) =>
           navigation.navigate('PayWithPix', { orderId: order.id!, total, fleetId })
         }
+        navigateToAboutCharges={() => navigation.navigate('AboutCharges')}
       />
     </ScrollView>
   );

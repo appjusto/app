@@ -7,6 +7,7 @@ import { AddressComplete } from '../common/AddressComplete';
 import { PayWithPix } from '../common/PayWithPix';
 import ProfileAddCard from '../main/profile/ProfileAddCard';
 import ProfilePaymentMethods from '../main/profile/ProfilePaymentMethods';
+import { AboutCharges } from './AboutCharges';
 import CreateOrderP2P from './CreateOrderP2P';
 import { TransportableItems } from './TransportableItems';
 import { P2POrderNavigatorParamList } from './types';
@@ -44,6 +45,11 @@ export const P2POrderNavigator = () => {
       <Stack.Screen
         name="PayWithPix"
         component={PayWithPix}
+        options={{ title: t('Formas de pagamento') }}
+      />
+      <Stack.Screen
+        name="AboutCharges"
+        component={AboutCharges}
         options={{ title: t('Formas de pagamento') }}
       />
       <Stack.Screen

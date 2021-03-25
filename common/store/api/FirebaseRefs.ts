@@ -97,10 +97,9 @@ export default class FirebaseRefs {
   // storage
   // courier
   getCourierSelfieUploadPath = (courierId: string) => `couriers/${courierId}/selfie.jpg`;
-  getCourierSelfieDownloadPath = (courierId: string) => `couriers/${courierId}/selfie_160x160.jpg`;
+  getCourierSelfieDownloadPath = (courierId: string) => `couriers/${courierId}/selfie.jpg`;
   getCourierDocumentUploadPath = (courierId: string) => `couriers/${courierId}/document.jpg`;
-  getCourierDocumentDownloadPath = (courierId: string) =>
-    `couriers/${courierId}/document_160x160.jpg`;
+  getCourierDocumentDownloadPath = (courierId: string) => `couriers/${courierId}/document.jpg`;
   // business
   getBusinessStoragePath = (businessId: string) => `businesses/${businessId}`;
   getBusinessLogoUploadStoragePath = (businessId: string) =>

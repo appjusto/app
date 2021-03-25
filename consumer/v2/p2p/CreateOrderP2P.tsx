@@ -154,6 +154,7 @@ export default function ({ navigation, route }: Props) {
         navigateToPixPayment={(total, fleetId) =>
           navigation.navigate('PayWithPix', { orderId: orderId!, total, fleetId })
         }
+        navigateToAboutCharges={() => navigation.navigate('AboutCharges')}
       />
     </View>
   );

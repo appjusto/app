@@ -20,6 +20,7 @@ export type RestaurantNavigatorParamList = {
     returnParam: string;
     value?: Place | null;
   };
+  AboutCharges: undefined;
 } & PixParamList &
   FleetDetailParamList &
   ProfilePaymentMethodsParamList &

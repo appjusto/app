@@ -19,6 +19,7 @@ interface Props {
   onSubmit: () => void;
   activityIndicator: boolean;
   navigateToPixPayment: () => void;
+  navigateToAboutCharges: () => void;
 }
 
 export const OrderPayment = ({
@@ -28,6 +29,7 @@ export const OrderPayment = ({
   onSubmit,
   activityIndicator,
   navigateToPixPayment,
+  navigateToAboutCharges,
 }: Props) => {
   const consumer = useSelector(getConsumer)!;
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
@@ -63,7 +65,7 @@ export const OrderPayment = ({
                 </Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity style={{ marginTop: halfPadding }} onPress={() => null}>
+            <TouchableOpacity style={{ marginTop: halfPadding }} onPress={navigateToAboutCharges}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Feather name="info" size={14} />
                 <Text
