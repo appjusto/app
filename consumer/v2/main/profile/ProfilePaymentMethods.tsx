@@ -7,10 +7,21 @@ import ConfigItem from '../../../../common/components/views/ConfigItem';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { RestaurantNavigatorParamList } from '../../food/restaurant/types';
+import { P2POrderNavigatorParamList } from '../../p2p/types';
 import { ProfileParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfilePaymentMethods'>;
-type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfilePaymentMethods'>;
+export type ProfilePaymentMethodsParamList = {
+  ProfilePaymentMethods?: {
+    returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
+  };
+};
+
+type ScreenNavigationProp = StackNavigationProp<
+  ProfileParamList & RestaurantNavigatorParamList & P2POrderNavigatorParamList,
+  'ProfilePaymentMethods'
+>;
+type ScreenRouteProp = RouteProp<ProfilePaymentMethodsParamList, 'ProfilePaymentMethods'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
