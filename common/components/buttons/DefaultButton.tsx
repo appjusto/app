@@ -7,16 +7,14 @@ import {
   View,
   ViewProps,
 } from 'react-native';
-import { t } from '../../../strings';
 import { borders, colors, padding, texts } from '../../styles';
-import RoundedText from '../texts/RoundedText';
 
 export interface DefaultButtonProps extends TouchableOpacityProps, ViewProps {
   title: string;
   activityIndicator?: boolean;
   icon?: React.ReactNode;
   secondary?: boolean;
-  newFeature?: boolean;
+  children?: React.ReactNode | React.ReactNode[];
 }
 
 export default function ({
@@ -26,7 +24,7 @@ export default function ({
   secondary = false,
   disabled,
   style,
-  newFeature,
+  children,
   ...props
 }: DefaultButtonProps) {
   const backgroundColor = secondary
@@ -64,11 +62,7 @@ export default function ({
         {activityIndicator && (
           <ActivityIndicator size="small" color={secondary ? colors.black : colors.white} />
         )}
-        {newFeature && (
-          <RoundedText backgroundColor={colors.darkYellow} style={{ right: -64 }}>
-            {t('Novo!')}
-          </RoundedText>
-        )}
+        {children}
       </View>
     </TouchableOpacity>
   );

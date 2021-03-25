@@ -4,6 +4,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
+import RoundedText from '../../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
@@ -96,8 +97,11 @@ export const OrderPayment = ({
             title={t('Quero pagar com Pix')}
             style={{ marginBottom: padding }}
             onPress={navigateToPixPayment}
-            newFeature
-          />
+          >
+            <RoundedText backgroundColor={colors.darkYellow} style={{ right: -64 }}>
+              {t('Novo!')}
+            </RoundedText>
+          </DefaultButton>
         )}
       </PaddedView>
     </View>
