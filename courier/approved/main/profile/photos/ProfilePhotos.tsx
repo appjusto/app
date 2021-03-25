@@ -11,7 +11,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { useMutation } from 'react-query';
@@ -217,32 +216,29 @@ export default function ({ navigation }: Props) {
         </ConfigItem>
         <View style={{ flex: 1 }} />
         <View style={styles.imagesContainer}>
-          <TouchableOpacity onPress={() => actionSheetHandler(setNewSelfie)}>
-            <DocumentButton
-              title={t('Foto de rosto')}
-              onPress={() => {}}
-              hasTitle={!currentSelfie && !newSelfie}
-            >
-              <Image
-                source={newSelfie ?? currentSelfie ?? icons.selfie}
-                resizeMode="cover"
-                style={newSelfie || currentSelfie ? styles.image : styles.icon}
-              />
-            </DocumentButton>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => actionSheetHandler(setNewDocumentImage)}>
-            <DocumentButton
-              title={t('RG ou CNH aberta')}
-              onPress={() => {}}
-              hasTitle={!currentDocumentImage && !newDocumentImage}
-            >
-              <Image
-                source={newDocumentImage ?? currentDocumentImage ?? icons.license}
-                resizeMode="cover"
-                style={newDocumentImage || currentDocumentImage ? styles.image : styles.icon}
-              />
-            </DocumentButton>
-          </TouchableOpacity>
+          <DocumentButton
+            title={t('Foto de rosto')}
+            onPress={() => actionSheetHandler(setNewSelfie)}
+            hasTitle={!currentSelfie && !newSelfie}
+          >
+            <Image
+              source={newSelfie ?? currentSelfie ?? icons.selfie}
+              resizeMode="cover"
+              style={newSelfie || currentSelfie ? styles.image : styles.icon}
+            />
+          </DocumentButton>
+
+          <DocumentButton
+            title={t('RG ou CNH aberta')}
+            onPress={() => actionSheetHandler(setNewDocumentImage)}
+            hasTitle={!currentDocumentImage && !newDocumentImage}
+          >
+            <Image
+              source={newDocumentImage ?? currentDocumentImage ?? icons.license}
+              resizeMode="cover"
+              style={newDocumentImage || currentDocumentImage ? styles.image : styles.icon}
+            />
+          </DocumentButton>
         </View>
         <View style={{ flex: 1 }} />
         <View style={{ marginBottom: 32, paddingHorizontal: padding }}>
