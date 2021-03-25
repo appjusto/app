@@ -1,11 +1,11 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { defaultScreenOptions } from '../../../../common/screens/options';
+import ProfileErase from '../../../../common/screens/profile/ProfileErase';
 import { t } from '../../../../strings';
 import PaymentMethodDetail from './PaymentMethodDetail';
 import ProfileAddCard from './ProfileAddCard';
 import ProfileEdit from './ProfileEdit';
-import ProfileErase from './ProfileErase';
 import ProfilePaymentMethods from './ProfilePaymentMethods';
 import Terms from './Terms';
 import { ProfileParamList } from './types';

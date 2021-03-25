@@ -1,4 +1,4 @@
-import { RouteProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Issue, IssueType, WithId } from 'appjusto-types';
 import React from 'react';
@@ -7,7 +7,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useDispatch, useSelector } from 'react-redux';
 import { DeliveredOrderNavigatorParamList } from '../../consumer/v2/delivered/types';
 import { OngoingOrderNavigatorParamList } from '../../consumer/v2/ongoing/types';
+import { LoggedNavigatorParamList } from '../../consumer/v2/types';
 import { OngoingDeliveryNavigatorParamList } from '../../courier/approved/ongoing/types';
+import { ApprovedParamList } from '../../courier/approved/types';
 import { t } from '../../strings';
 import { ApiContext, AppDispatch } from '../app/context';
 import DefaultButton from '../components/buttons/DefaultButton';
@@ -28,11 +30,14 @@ export type ReportIssueParamList = {
   };
 };
 
-type ScreenNavigationProp = StackNavigationProp<
-  DeliveredOrderNavigatorParamList &
-    OngoingOrderNavigatorParamList &
-    OngoingDeliveryNavigatorParamList,
-  'ReportIssue'
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<
+    DeliveredOrderNavigatorParamList &
+      OngoingOrderNavigatorParamList &
+      OngoingDeliveryNavigatorParamList,
+    'ReportIssue'
+  >,
+  StackNavigationProp<ApprovedParamList & LoggedNavigatorParamList>
 >;
 type ScreenRouteProp = RouteProp<ReportIssueParamList, 'ReportIssue'>;
 

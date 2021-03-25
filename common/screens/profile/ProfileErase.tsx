@@ -3,6 +3,9 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext, useState } from 'react';
 import { Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { ProfileParamList } from '../../../consumer/v2/main/profile/types';
+import { CourierProfileParamList } from '../../../courier/approved/main/profile/types';
+import { UnapprovedParamList } from '../../../courier/unapproved/types';
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import CheckField from '../../components/buttons/CheckField';
@@ -17,7 +20,10 @@ export type ProfileEraseParamList = {
   ProfileErase: undefined;
 };
 
-type ScreenNavigationProp = StackNavigationProp<ProfileEraseParamList, 'ProfileErase'>;
+type ScreenNavigationProp = StackNavigationProp<
+  ProfileParamList & CourierProfileParamList & UnapprovedParamList,
+  'ProfileErase'
+>;
 type ScreenRouteProp = RouteProp<ProfileEraseParamList, 'ProfileErase'>;
 
 type Props = {

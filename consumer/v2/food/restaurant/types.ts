@@ -1,6 +1,8 @@
 import { Place } from 'appjusto-types';
 import { FleetDetailParamList } from '../../../../common/screens/fleet/FleetDetail';
 import { PixParamList } from '../../common/PayWithPix';
+import { ProfileAddCardParamList } from '../../main/profile/ProfileAddCard';
+import { ProfilePaymentMethodsParamList } from '../../main/profile/ProfilePaymentMethods';
 
 export type RestaurantNavigatorParamList = {
   RestaurantDetail: undefined;
@@ -18,11 +20,7 @@ export type RestaurantNavigatorParamList = {
     returnParam: string;
     value?: Place | null;
   };
-  ProfileAddCard?: {
-    returnScreen: 'FoodOrderCheckout';
-  };
-  ProfilePaymentMethods?: {
-    returnScreen: 'FoodOrderCheckout';
-  };
 } & PixParamList &
-  FleetDetailParamList;
+  FleetDetailParamList &
+  ProfilePaymentMethodsParamList &
+  ProfileAddCardParamList;

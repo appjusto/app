@@ -21,10 +21,21 @@ import useAxiosCancelToken from '../../../../common/hooks/useAxiosCancelToken';
 import { showToast } from '../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { RestaurantNavigatorParamList } from '../../food/restaurant/types';
+import { P2POrderNavigatorParamList } from '../../p2p/types';
 import { ProfileParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileAddCard'>;
-type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfileAddCard'>;
+export type ProfileAddCardParamList = {
+  ProfileAddCard?: {
+    returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
+  };
+};
+
+type ScreenNavigationProp = StackNavigationProp<
+  ProfileParamList & RestaurantNavigatorParamList & P2POrderNavigatorParamList,
+  'ProfileAddCard'
+>;
+type ScreenRouteProp = RouteProp<ProfileAddCardParamList, 'ProfileAddCard'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -73,10 +84,11 @@ export default function ({ navigation, route }: Props) {
         createCancelToken()
       );
       setLoading(false);
-      if (returnScreen)
+      if (returnScreen) {
         navigation.navigate(returnScreen, { paymentMethodId: result.paymentMethodId });
-      else navigation.pop();
+      } else navigation.pop();
     } catch (error) {
+      setLoading(false);
       dispatch(showToast(error.toString()));
     }
   };
