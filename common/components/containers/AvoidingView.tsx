@@ -1,6 +1,6 @@
 import { useHeaderHeight } from '@react-navigation/stack';
 import React, { ReactNode } from 'react';
-import { Platform, KeyboardAvoidingView, View, ViewProps } from 'react-native';
+import { KeyboardAvoidingView, Platform, View, ViewProps } from 'react-native';
 
 export interface Props extends ViewProps {
   children: ReactNode | ReactNode[];

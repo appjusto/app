@@ -4,8 +4,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { CourierCompany } from 'appjusto-types/courier';
 import { toNumber, trim } from 'lodash';
 import React from 'react';
-import { Text, TextInput, View } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAvoidingView, Text, TextInput, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
@@ -97,8 +97,12 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <View style={screens.config}>
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="never">
+    <KeyboardAvoidingView
+      behavior="position"
+      style={{ ...screens.config }}
+      keyboardVerticalOffset={52}
+    >
+      <ScrollView keyboardShouldPersistTaps="never">
         <PaddedView>
           <PatternInput
             mask={cnpjMask}
@@ -216,7 +220,7 @@ export default function ({ navigation, route }: Props) {
             activityIndicator={isLoading}
           />
         </PaddedView>
-      </KeyboardAwareScrollView>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }

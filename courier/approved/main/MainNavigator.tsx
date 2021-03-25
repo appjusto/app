@@ -92,6 +92,7 @@ export default function ({ navigation }: Props) {
         labelStyle: { ...texts.xs, marginBottom: 4 },
         labelPosition: 'beside-icon',
       }}
+      initialRouteName="Profile"
     >
       <Tab.Screen
         name="Home"
