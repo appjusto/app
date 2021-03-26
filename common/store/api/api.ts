@@ -58,7 +58,7 @@ export default class Api {
     const collectionName = extra.flavor === 'consumer' ? 'consumers' : 'couriers';
 
     this._refs = new FirebaseRefs(this.functions, this.firestore);
-    this._iugu = new IuguApi(extra.iugu.accountId);
+    this._iugu = new IuguApi(extra.iugu.accountId, extra.testing);
     this._files = new FilesApi(this.storage);
     this._auth = new AuthApi(this._refs, this.authentication, extra);
     this._platform = new PlatformApi(this._refs, this._files);

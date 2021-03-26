@@ -18,6 +18,7 @@ const {
   ALGOLIA_APPID,
   ALGOLIA_APIKEY,
   ALGOLIA_ENV,
+  TESTING,
 } = process.env;
 
 export default () => {
@@ -76,7 +77,7 @@ export default () => {
       apiKey: ALGOLIA_APIKEY,
       env: ALGOLIA_ENV,
     },
-    testing: true,
+    testing: TESTING === 'true',
   };
   return {
     expo: {
