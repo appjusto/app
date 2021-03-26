@@ -17,12 +17,20 @@ Notifications.setNotificationHandler({
 
 if (Platform.OS === 'android') {
   (async () => {
-    // await Notifications.deleteNotificationChannelAsync('matching');
+    // await Notifications.deleteNotificationChannelAsync('order-request');
     // const notificationChannels = await Notifications.getNotificationChannelsAsync();
     // console.log(notificationChannels);
-    // TODO: change from 'matching' to 'order-updates'
-    Notifications.setNotificationChannelAsync('matching', {
-      name: t('Atualização sobre os pedidos'),
+    Notifications.setNotificationChannelAsync('order-request', {
+      name: t('Novas corridas'),
+      importance: Notifications.AndroidImportance.HIGH,
+      enableVibrate: true,
+      vibrationPattern: [0, 250, 250, 250],
+      lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+      bypassDnd: true,
+      lightColor: colors.green100,
+    });
+    Notifications.setNotificationChannelAsync('order-update', {
+      name: t('Atualizações do pedido'),
       importance: Notifications.AndroidImportance.HIGH,
       enableVibrate: true,
       vibrationPattern: [0, 250, 250, 250],

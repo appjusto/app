@@ -19,8 +19,13 @@ type ScreenNavigationProp = StackNavigationProp<LoggedNavigatorParamList, 'MainN
 const Tab = createBottomTabNavigator<MainNavigatorParamList>();
 
 export const MainNavigator = () => {
+  // context
   const navigation = useNavigation<ScreenNavigationProp>();
+  // state
   const chatQuery = useQuery<PushMessage[]>(['notifications', 'order-chat'], () => []);
+  const orderUpdateQuery = useQuery<PushMessage[]>(['notifications', 'order-update'], () => []);
+  // side effects
+  // react to order-chat
   React.useEffect(() => {
     if (!chatQuery.data || chatQuery.data.length === 0) return;
     const [notification] = chatQuery.data;
@@ -34,6 +39,19 @@ export const MainNavigator = () => {
       });
     }
   }, [chatQuery.data, navigation]);
+  // react to order-update
+  React.useEffect(() => {
+    if (!orderUpdateQuery.data || orderUpdateQuery.data.length === 0) return;
+    const [notification] = orderUpdateQuery.data;
+    if (notification.clicked) {
+      navigation.navigate('OngoingOrderNavigator', {
+        screen: 'OngoingOrder',
+        params: {
+          orderId: notification.data.orderId,
+        },
+      });
+    }
+  }, [orderUpdateQuery.data, navigation]);
   return (
     <Tab.Navigator
       tabBarOptions={{
