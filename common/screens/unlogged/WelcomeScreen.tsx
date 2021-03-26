@@ -5,14 +5,11 @@ import {
   Dimensions,
   Image,
   Keyboard,
-  KeyboardAvoidingView,
-  Platform,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { illustration, logoWhite, motoIntro } from '../../../assets/icons';
 import { t } from '../../../strings';
@@ -72,94 +69,80 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      style={{ ...screens.default }}
-      contentContainerStyle={{
-        flexGrow: 1,
-      }}
-    >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -180}
-      >
-        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-          <View style={{ paddingHorizontal: padding }}>
-            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-              <View>
-                <View style={{ height: 200, marginTop: 30, width: 275 }}>
-                  <Image source={flavor === 'consumer' ? illustration : motoIntro} />
-                </View>
+    <View style={{ ...screens.default, justifyContent: 'flex-end' }}>
+      <View style={{ paddingHorizontal: padding }}>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View>
+            <View style={{ height: 200, marginTop: 30, width: 275 }}>
+              <Image source={flavor === 'consumer' ? illustration : motoIntro} />
+            </View>
 
-                <View style={{ height: 64, marginTop: 16, width: 152 }}>
-                  <Image style={{ height: '100%', width: '100%' }} source={logoWhite} />
-                </View>
+            <View style={{ height: 64, marginTop: 16, width: 152 }}>
+              <Image style={{ height: '100%', width: '100%' }} source={logoWhite} />
+            </View>
 
-                <View style={{ height: 58, marginTop: 16 }}>
-                  <Text style={[texts.x2l]}>{welcomeMessage}</Text>
-                </View>
+            <View style={{ height: 58, marginTop: 16 }}>
+              <Text style={[texts.x2l]}>{welcomeMessage}</Text>
+            </View>
 
-                <View style={{ width: '85%', height: 58, marginTop: 16 }}>
-                  <Text style={[texts.sm, { color: colors.grey700, lineHeight: 21 }]}>
-                    {t('Digite seu e-mail para entrar ou criar sua conta.')}
-                  </Text>
-                </View>
-              </View>
-            </TouchableWithoutFeedback>
+            <View style={{ width: '85%', height: 58, marginTop: 16 }}>
+              <Text style={[texts.sm, { color: colors.grey700, lineHeight: 21 }]}>
+                {t('Digite seu e-mail para entrar ou criar sua conta.')}
+              </Text>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
 
-            <DefaultInput
-              value={email}
-              title={t('Acesse sua conta')}
-              placeholder={t('Digite seu e-mail')}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              blurOnSubmit
-              autoCapitalize="none"
-              style={{ flex: 1 }}
+        <DefaultInput
+          value={email}
+          title={t('Acesse sua conta')}
+          placeholder={t('Digite seu e-mail')}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          blurOnSubmit
+          autoCapitalize="none"
+        />
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginTop: height > 700 ? 32 : 16,
+          }}
+        >
+          <View>
+            <CheckField
+              checked={acceptedTerms}
+              onPress={() => setAcceptTerms(!acceptedTerms)}
+              text={t('Aceito os termos de uso do app')}
             />
-
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginTop: height > 700 ? 32 : 16,
+          </View>
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Terms');
               }}
             >
-              <View>
-                <CheckField
-                  checked={acceptedTerms}
-                  onPress={() => setAcceptTerms(!acceptedTerms)}
-                  text={t('Aceito os termos de uso do app')}
-                />
-              </View>
-              <View>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('Terms');
-                  }}
-                >
-                  <Text style={[texts.xs, { color: colors.green600, lineHeight: 18 }]}>
-                    {t('Ler os termos')}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            {/* dummy view to accomadate keyboard better */}
-            <View style={{ height: 20 }} />
-          </View>
-
-          <View style={{ flex: 1 }} />
-          <View style={{ paddingHorizontal: 16, marginBottom: height > 700 ? 32 : 16 }}>
-            <DefaultButton
-              disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
-              title={t('Entrar')}
-              onPress={signInHandler}
-              activityIndicator={busy}
-            />
+              <Text style={[texts.xs, { color: colors.green600, lineHeight: 18 }]}>
+                {t('Ler os termos')}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
-      </KeyboardAvoidingView>
-    </ScrollView>
+        {/* dummy view to accomadate keyboard better */}
+        <View style={{ height: 20 }} />
+      </View>
+
+      <View style={{ flex: 1 }} />
+      <View style={{ paddingHorizontal: 16, marginBottom: height > 700 ? 32 : 16 }}>
+        <DefaultButton
+          disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
+          title={t('Entrar')}
+          onPress={signInHandler}
+          activityIndicator={busy}
+        />
+      </View>
+    </View>
   );
 }

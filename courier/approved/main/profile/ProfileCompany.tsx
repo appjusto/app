@@ -97,12 +97,8 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <KeyboardAvoidingView
-      behavior="position"
-      style={{ ...screens.config }}
-      keyboardVerticalOffset={52}
-    >
-      <ScrollView keyboardShouldPersistTaps="never">
+    <KeyboardAvoidingView behavior="padding" style={{ ...screens.config }}>
+      <ScrollView keyboardShouldPersistTaps="never" style={{ flex: 1 }}>
         <PaddedView>
           <PatternInput
             mask={cnpjMask}
