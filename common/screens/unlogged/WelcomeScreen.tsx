@@ -5,18 +5,20 @@ import {
   Dimensions,
   Image,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { illustration, logoWhite, motoIntro } from '../../../assets/icons';
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
-import AvoidingView from '../../components/containers/AvoidingView';
 import DefaultInput from '../../components/inputs/DefaultInput';
 import { getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
@@ -70,8 +72,17 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <View style={[screens.default]}>
-      <AvoidingView>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={{ ...screens.default }}
+      contentContainerStyle={{
+        flexGrow: 1,
+      }}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -180}
+      >
         <View style={{ flex: 1, justifyContent: 'flex-end' }}>
           <View style={{ paddingHorizontal: padding }}>
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -104,7 +115,9 @@ export default function ({ navigation, route }: Props) {
               keyboardType="email-address"
               blurOnSubmit
               autoCapitalize="none"
+              style={{ flex: 1 }}
             />
+
             <View
               style={{
                 flexDirection: 'row',
@@ -146,7 +159,7 @@ export default function ({ navigation, route }: Props) {
             />
           </View>
         </View>
-      </AvoidingView>
-    </View>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
