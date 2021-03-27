@@ -44,16 +44,16 @@ export default class CourierApi {
   // storage
   // selfie
   uploadSelfie(id: string, localUri: string, progressHandler?: (progress: number) => void) {
-    return this.files.upload(this.refs.getCourierSelfieUploadPath(id), localUri, progressHandler);
+    return this.files.upload(this.refs.getCourierSelfiePath(id), localUri, progressHandler);
   }
-  fetchSelfie(id: string) {
-    return this.files.getDownloadURL(this.refs.getCourierSelfieDownloadPath(id));
+  fetchSelfie(id: string, size?: string) {
+    return this.files.getDownloadURL(this.refs.getCourierSelfiePath(id, size));
   }
   // document
   uploadDocumentImage(id: string, localUri: string, progressHandler?: (progress: number) => void) {
-    return this.files.upload(this.refs.getCourierDocumentUploadPath(id), localUri, progressHandler);
+    return this.files.upload(this.refs.getCourierDocumentPath(id), localUri, progressHandler);
   }
-  fetchDocumentImage(id: string) {
-    return this.files.getDownloadURL(this.refs.getCourierDocumentDownloadPath(id));
+  fetchDocumentImage(id: string, size?: string) {
+    return this.files.getDownloadURL(this.refs.getCourierDocumentPath(id, size));
   }
 }

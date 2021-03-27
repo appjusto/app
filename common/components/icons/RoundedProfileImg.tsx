@@ -14,7 +14,7 @@ type Props = {
 export default function ({ flavor = 'courier', id, size = 64 }: Props) {
   // state
   const [selfie, setSelfie] = useState<ImageURISource>();
-  const currentSelfieQuery = useCourierSelfie(id);
+  const currentSelfieQuery = useCourierSelfie(id, '160x160');
 
   // side effects
   // get selfie
