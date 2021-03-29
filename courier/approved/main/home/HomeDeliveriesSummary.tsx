@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import { Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import { IconRequest } from '../../../../common/icons/icon-requests';
+import { IconRequestSmall } from '../../../../common/icons/icon-requests-small';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
 import {
   getDeliveredOrders,
@@ -46,7 +46,7 @@ export default function () {
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <IconRequest />
+        <IconRequestSmall />
         <View style={{ marginLeft: padding }}>
           <View
             style={{
