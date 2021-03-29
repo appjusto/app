@@ -6,6 +6,7 @@ import { t } from '../../../strings';
 import { AddressComplete } from '../common/AddressComplete';
 import { PayWithPix } from '../common/PayWithPix';
 import ProfileAddCard from '../main/profile/ProfileAddCard';
+import ProfileEdit from '../main/profile/ProfileEdit';
 import ProfilePaymentMethods from '../main/profile/ProfilePaymentMethods';
 import { AboutCharges } from './AboutCharges';
 import CreateOrderP2P from './CreateOrderP2P';
@@ -31,6 +32,11 @@ export const P2POrderNavigator = () => {
         name="TransportableItems"
         component={TransportableItems}
         options={{ title: t('O que pode ser transportado') }}
+      />
+      <Stack.Screen
+        name="ProfileEdit"
+        component={ProfileEdit}
+        options={{ title: t('Adicionar cartão') }}
       />
       <Stack.Screen
         name="ProfileAddCard"

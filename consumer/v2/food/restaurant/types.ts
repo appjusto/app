@@ -3,6 +3,7 @@ import { FleetDetailParamList } from '../../../../common/screens/fleet/FleetDeta
 import { PixParamList } from '../../common/PayWithPix';
 import { ProfileAddCardParamList } from '../../main/profile/ProfileAddCard';
 import { ProfilePaymentMethodsParamList } from '../../main/profile/ProfilePaymentMethods';
+import { ProfileParamList } from '../../main/profile/types';
 
 export type RestaurantNavigatorParamList = {
   RestaurantDetail: undefined;
@@ -24,4 +25,5 @@ export type RestaurantNavigatorParamList = {
 } & PixParamList &
   FleetDetailParamList &
   ProfilePaymentMethodsParamList &
-  ProfileAddCardParamList;
+  ProfileAddCardParamList &
+  ProfileParamList;

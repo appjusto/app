@@ -99,7 +99,8 @@ export default function ({ navigation, route }: Props) {
   const navigateToFillPaymentInfo = React.useCallback(() => {
     // if user has no payment method, go direct to 'AddCard' screen
     if (!selectedPaymentMethodId) {
-      navigation.navigate('ProfileAddCard', { returnScreen: 'CreateOrderP2P' });
+      // navigation.navigate('ProfileAddCard', { returnScreen: 'CreateOrderP2P' });
+      navigation.navigate('ProfileEdit', { firstOrder: true, returnScreen: 'CreateOrderP2P' });
     } else {
       navigation.navigate('ProfilePaymentMethods', { returnScreen: 'CreateOrderP2P' });
     }

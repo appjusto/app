@@ -1,3 +1,4 @@
+import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ConsumerProfile } from 'appjusto-types';
 import { trim } from 'lodash';
@@ -18,17 +19,21 @@ import PatternInput from '../../../../common/components/inputs/PatternInput';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { consumerInfoSet } from '../../../../common/store/consumer/validators';
 import { showToast } from '../../../../common/store/ui/actions';
-import { colors, padding, screens, texts } from '../../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ProfileParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileEdit'>;
+type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfileEdit'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 };
 
-export default function ({ navigation }: Props) {
+export default function ({ navigation, route }: Props) {
+  // params
+  const { firstOrder, returnScreen } = route.params;
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
@@ -44,13 +49,24 @@ export default function ({ navigation }: Props) {
   const canSubmit = consumerInfoSet(updatedConsumer);
   // handlers
   const updateProfileHandler = async () => {
-    try {
-      setLoading(true);
-      api.profile().updateProfile(consumer.id, updatedConsumer);
-      setLoading(false);
-      navigation.goBack();
-    } catch (error) {
-      dispatch(showToast(t('Não foi possível atualizar o perfil.'), 'error'));
+    if (!firstOrder) {
+      try {
+        setLoading(true);
+        api.profile().updateProfile(consumer.id, updatedConsumer);
+        setLoading(false);
+        navigation.goBack();
+      } catch (error) {
+        dispatch(showToast(t('Não foi possível atualizar o perfil.'), 'error'));
+      }
+    } else {
+      try {
+        setLoading(true);
+        api.profile().updateProfile(consumer.id, updatedConsumer);
+        setLoading(false);
+        navigation.navigate('ProfilePaymentMethods', { returnScreen });
+      } catch (error) {
+        dispatch(showToast(t('Não foi possível atualizar o perfil.'), 'error'));
+      }
     }
   };
   // refs
@@ -61,9 +77,55 @@ export default function ({ navigation }: Props) {
   return (
     <View style={screens.config}>
       <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
-        <Text style={{ ...texts.sm, color: colors.grey700, padding }}>
-          {t('*Precisamos do seu nome e cpf para pagamentos com Pix')}
-        </Text>
+        {firstOrder ? (
+          <Text
+            style={{
+              ...texts.x2l,
+              paddingHorizontal: padding,
+              paddingTop: padding,
+              paddingBottom: halfPadding,
+            }}
+          >
+            {t('Finalize seu cadastro')}
+          </Text>
+        ) : (
+          <Text
+            style={{
+              ...texts.x2l,
+              paddingHorizontal: padding,
+              paddingTop: padding,
+              paddingBottom: halfPadding,
+            }}
+          >
+            {t('Seus dados')}
+          </Text>
+        )}
+        {firstOrder ? (
+          <Text
+            style={{
+              ...texts.sm,
+              paddingHorizontal: padding,
+              color: colors.grey700,
+              paddingBottom: padding,
+            }}
+          >
+            {t(
+              'Seus dados pessoais serão usados somente para a criação das faturas dos seus pedidos.'
+            )}
+          </Text>
+        ) : (
+          <Text
+            style={{
+              ...texts.sm,
+              paddingHorizontal: padding,
+              color: colors.grey700,
+              paddingBottom: padding,
+            }}
+          >
+            {t('Edite seus dados pessoais:')}
+          </Text>
+        )}
+
         <PaddedView>
           <DefaultInput
             title={t('E-mail')}
@@ -118,7 +180,7 @@ export default function ({ navigation }: Props) {
           />
           <DefaultButton
             style={{ marginTop: padding }}
-            title={t('Atualizar')}
+            title={firstOrder ? t('Salvar e avançar para o pagamento') : t('Atualizar')}
             onPress={updateProfileHandler}
             disabled={!canSubmit || isLoading}
             activityIndicator={isLoading}

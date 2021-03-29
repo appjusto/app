@@ -11,7 +11,7 @@ import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import { ProfileParamList } from '../../../profile/types';
+import { ProfileParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'PaymentMethodDetail'>;
 type ScreenRouteProp = RouteProp<ProfileParamList, 'PaymentMethodDetail'>;

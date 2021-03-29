@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native';
 export const colors = {
   white: '#FFFFFF',
   grey50: '#F2F6EA',
+  grey90: '#E5E5E5',
   grey500: '#C8D7CB',
   grey700: '#697667',
   black: '#000000',
@@ -28,7 +29,7 @@ export const screens = StyleSheet.create({
   },
   config: {
     flex: 1,
-    backgroundColor: colors.grey50,
+    backgroundColor: colors.grey90,
   },
   centered: {
     flex: 1,

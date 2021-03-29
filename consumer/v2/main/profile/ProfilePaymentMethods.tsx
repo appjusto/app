@@ -13,7 +13,7 @@ import { ProfileParamList } from './types';
 
 export type ProfilePaymentMethodsParamList = {
   ProfilePaymentMethods?: {
-    returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
+    returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P';
   };
 };
 

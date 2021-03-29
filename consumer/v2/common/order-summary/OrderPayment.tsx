@@ -85,14 +85,15 @@ export const OrderPayment = ({
             secondary
           />
         )}
-
-        <DefaultButton
-          style={{ marginVertical: padding }}
-          title={t('Confirmar pedido')}
-          onPress={onSubmit}
-          disabled={!isSubmitEnabled}
-          activityIndicator={activityIndicator}
-        />
+        {Boolean(selectedPaymentMethod) && (
+          <DefaultButton
+            style={{ marginVertical: padding }}
+            title={t('Confirmar pedido')}
+            onPress={onSubmit}
+            disabled={!isSubmitEnabled}
+            activityIndicator={activityIndicator}
+          />
+        )}
         {Boolean(selectedPaymentMethod) && (
           <DefaultButton
             secondary

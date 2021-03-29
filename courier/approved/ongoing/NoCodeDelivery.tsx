@@ -2,13 +2,13 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Issue, WithId } from 'appjusto-types';
 import React from 'react';
-import { ActivityIndicator, Image, Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { motocycle } from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
+import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens, texts } from '../../../common/styles';
@@ -63,9 +63,8 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
   };
   return (
     <PaddedView style={{ ...screens.config }}>
-      <View style={{ height: 114, width: 114, marginTop: 80, marginBottom: padding }}>
-        <Image source={motocycle} />
-      </View>
+      <View style={{ flex: 1 }} />
+      <IconMotocycle />
       <Text style={{ ...texts.x2l }}>{t('Escolha o motivo da confirmação sem código:')}</Text>
       <View style={{ marginTop: padding }}>
         {issues?.map((issue) => (
@@ -74,6 +73,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
             title={issue.title}
             onPress={() => setSelectedIssue(issue)}
             checked={selectedIssue?.id === issue.id}
+            style={{ marginBottom: padding }}
           />
         ))}
       </View>
@@ -81,7 +81,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
       <DefaultButton
         title={t('Confirmar entrega')}
         onPress={confirmHandler}
-        disabled={isLoading}
+        disabled={isLoading || !selectedIssue}
         activityIndicator={isLoading}
       />
     </PaddedView>
