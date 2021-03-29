@@ -124,7 +124,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
           title={t('Cancelar pedido')}
           secondary
           style={{ marginHorizontal: padding, marginTop: 24 }}
-          onPress={() => null}
+          onPress={() => navigation.navigate('OngoingOrderConfirmCancel', { orderId })}
         />
       </View>
     </SafeAreaView>
