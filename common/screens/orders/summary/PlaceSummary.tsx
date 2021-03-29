@@ -27,12 +27,18 @@ export default function ({ place, title, onEdit }: Props) {
         <Text style={{ ...texts.xs }}>{place.intructions}</Text>
       </View>
       {onEdit && (
-        <View style={{ alignSelf: 'center' }}>
+        <View style={{ alignSelf: 'center', width: 32, height: 32 }}>
           <TouchableOpacity onPress={onEdit}>
             <Feather
               name="edit-3"
-              size={12}
-              style={{ ...borders.default, borderColor: colors.grey50, padding: 8 }}
+              size={14}
+              style={{
+                ...borders.default,
+                borderColor: colors.grey50,
+                padding: 8,
+                width: 32,
+                height: 32,
+              }}
             />
           </TouchableOpacity>
         </View>

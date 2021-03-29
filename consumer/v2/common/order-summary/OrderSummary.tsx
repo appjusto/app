@@ -96,7 +96,7 @@ export const OrderSummary = ({
           <OrderMap order={order} ratio={360 / 160} />
         </View>
       )}
-      <View style={{ marginTop: padding }}>
+      <View>
         <OrderPlacesSummary order={order} onEditStep={onEditStep} />
       </View>
 
