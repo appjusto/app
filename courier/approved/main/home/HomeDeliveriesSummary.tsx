@@ -44,7 +44,6 @@ export default function () {
         borderColor: colors.grey50,
         backgroundColor: colors.white,
       }}
-      half
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <IconRequest />

@@ -31,7 +31,7 @@ export const P2POrderNavigator = () => {
       <Stack.Screen
         name="TransportableItems"
         component={TransportableItems}
-        options={{ title: t('O que pode ser transportado') }}
+        options={{ title: t('Sobre as encomendas') }}
       />
       <Stack.Screen
         name="ProfileEdit"

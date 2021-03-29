@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
-import { Image, Share, TouchableOpacity } from 'react-native';
-import * as icons from '../../../../assets/icons';
+import { Share, TouchableOpacity } from 'react-native';
 import { t } from '../../../../strings';
+import { IconShare } from '../../../icons/icon-share';
 import HomeCard from './HomeCard';
 
 type Props = {
@@ -23,12 +23,7 @@ export default function ({ title, subtitle, isGrey }: Props) {
 
   return (
     <TouchableOpacity onPress={shareHandler}>
-      <HomeCard
-        icon={<Image source={icons.share} />}
-        title={t(title)}
-        subtitle={t(subtitle)}
-        grey={isGrey}
-      />
+      <HomeCard icon={<IconShare />} title={t(title)} subtitle={t(subtitle)} grey={isGrey} />
     </TouchableOpacity>
   );
 }

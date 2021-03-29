@@ -6,10 +6,10 @@ import { t } from '../../../strings';
 
 export const TransportableItems = () => {
   return (
-    <ScrollView style={{ ...screens.lightGrey }}>
+    <ScrollView style={{ ...screens.config }}>
       <PaddedView>
         <View>
-          <Text style={{ ...texts.x2l }}>{t('Saiba o que pode ser transportado')}</Text>
+          <Text style={{ ...texts.x2l }}>{t('Saiba o que pode ser\n transportado')}</Text>
         </View>
         <View style={{ marginTop: 24 }}>
           <Text style={{ ...texts.sm, color: colors.grey700 }}>

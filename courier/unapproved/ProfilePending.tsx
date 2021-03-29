@@ -117,7 +117,7 @@ export default function ({ navigation, route }: Props) {
           <Pressable delayLongPress={3000} onLongPress={() => navigation.navigate('ProfileErase')}>
             <Text style={[texts.sm, { color: colors.grey700, paddingTop: 16 }]}>
               {t(
-                'Preencha os dados a seguir e envie seu cadastro. Em até um dia você poderá começar a fazer suas entregas.'
+                'Seu cadastro passará por uma análise do nosso sistema para que você possa começar a fazer suas entregas.'
               )}
             </Text>
           </Pressable>

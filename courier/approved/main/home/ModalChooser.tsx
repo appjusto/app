@@ -30,7 +30,7 @@ export default function () {
     <PaddedView
       style={{ ...borders.default, backgroundColor: colors.white, borderColor: colors.grey50 }}
     >
-      <Text style={texts.md}>{t('Método de entrega de hoje: ')}</Text>
+      <Text style={texts.md}>{t('Como você vai fazer suas entregas hoje?')}</Text>
       <View style={{ marginTop: padding, flexDirection: 'row', justifyContent: 'space-between' }}>
         <IconButton
           title={t('Moto')}

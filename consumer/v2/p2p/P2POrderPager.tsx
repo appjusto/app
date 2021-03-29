@@ -181,8 +181,8 @@ export default function ({
                 }}
               >
                 <Feather name="info" size={14} />
-                <Text style={{ ...texts.xs, marginLeft: 4 }}>
-                  {t('O que pode ser transportado')}
+                <Text style={{ ...texts.xs, marginLeft: 4, textDecorationLine: 'underline' }}>
+                  {t('Sobre as encomendas')}
                 </Text>
               </View>
             </TouchableWithoutFeedback>

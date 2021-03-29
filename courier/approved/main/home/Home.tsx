@@ -15,7 +15,6 @@ import { updateProfile } from '../../../../common/store/user/actions';
 import { padding, screens } from '../../../../common/styles';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
-import { DemandCard } from './components/DemandCard';
 import HomeControls from './HomeControls';
 import HomeDeliveriesSummary from './HomeDeliveriesSummary';
 import ModalChooser from './ModalChooser';
@@ -77,6 +76,9 @@ export default function ({ navigation }: Props) {
           }
         />
         <PaddedView>
+          <View style={{ marginBottom: padding }}>
+            <ModalChooser />
+          </View>
           <HomeOngoingDeliveries
             orders={ongoingOrders}
             onSelect={(order, openChat) =>
@@ -91,14 +93,11 @@ export default function ({ navigation }: Props) {
           >
             <HomeDeliveriesSummary />
           </TouchableOpacity>
-          <View style={{ marginTop: padding }}>
-            <ModalChooser />
-          </View>
-          <View style={{ marginTop: padding }}>
+          {/* <View style={{ marginTop: padding }}>
             <View>
               <DemandCard />
             </View>
-          </View>
+          </View> */}
         </PaddedView>
       </ScrollView>
     </View>
