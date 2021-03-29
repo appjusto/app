@@ -82,7 +82,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     // if user has no payment method, go direct to 'AddCard' screen
     if (!selectedPaymentMethodId) {
       // navigation.navigate('ProfileAddCard', { returnScreen: 'FoodOrderCheckout' });
-      navigation.navigate('ProfileEdit', { firstOrder: true, returnScreen: 'CreateOrderP2P' });
+      navigation.navigate('ProfileEdit', { firstOrder: true, returnScreen: 'FoodOrderCheckout' });
     } else {
       navigation.navigate('ProfilePaymentMethods', { returnScreen: 'FoodOrderCheckout' });
     }
