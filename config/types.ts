@@ -7,20 +7,21 @@ export interface Extra {
   bundleIdentifier: string;
   androidPackage: string;
   firebase: FirebaseConfig;
-  googleApiKeys: {
-    android: string;
-    ios: string;
-  };
-  analytics: {
-    segmentAndroidKey: string;
-    segmentiOSKey: string;
-    sentryDNS: string;
-  };
+  googleMapsApiKey: string;
+  analytics: AnalyticsConfig;
   iugu: {
     accountId: string;
   };
   algolia: AlgoliaConfig;
   environment: Environment;
+}
+
+export interface AnalyticsConfig {
+  segmentConsumerAndroidKey: string;
+  segmentConsumeriOSKey: string;
+  segmentCourierAndroidKey: string;
+  segmentCourieriOSKey: string;
+  sentryDNS: string;
 }
 
 export interface AlgoliaConfig {
@@ -42,4 +43,5 @@ export interface FirebaseConfig {
     databaseURL: string;
     functionsURL: string;
   };
+  measurementId: string;
 }

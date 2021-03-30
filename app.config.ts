@@ -1,22 +1,26 @@
 import { ConfigContext, ExpoConfig } from '@expo/config';
 import { Flavor } from 'appjusto-types';
 import 'dotenv/config';
-import { Environment } from './config/types';
+import { Environment, Extra } from './config/types';
 
 const {
   FLAVOR,
   ENVIRONMENT,
-  GOOGLE_MAPS_API_KEY,
-  GOOGLE_ANDROID_API_KEY,
-  GOOGLE_IOS_API_KEY,
+  FIREBASE_API_KEY,
   FIREBASE_REGION,
   FIREBASE_PROJECT_ID,
   FIREBASE_DATABASE_NAME,
   FIREBASE_MESSAGING_SENDER_ID,
-  FIREBASE_APP_ID,
+  FIREBASE_CONSUMER_APP_ID,
+  FIREBASE_CONSUMER_MEASUREMENT_ID,
+  FIREBASE_COURIER_APP_ID,
+  FIREBASE_COURIER_MEASUREMENT_ID,
   FIREBASE_EMULATOR_HOST,
-  SEGMENT_ANDROID_KEY,
-  SEGMENT_IOS_KEY,
+  GOOGLE_MAPS_API_KEY,
+  SEGMENT_CONSUMER_IOS_KEY,
+  SEGMENT_CONSUMER_ANDROID_KEY,
+  SEGMENT_COURIER_IOS_KEY,
+  SEGMENT_COURIER_ANDROID_KEY,
   SENTRY_DSN,
   IUGU_ACCOUNT_ID,
   ALGOLIA_APPID,
@@ -30,7 +34,7 @@ const version = '0.11.0';
 const versionCode = 18;
 
 export default (context: ConfigContext): ExpoConfig => {
-  return {
+  const config: ExpoConfig = {
     name: name(),
     slug: slug(),
     scheme: scheme(),
@@ -54,6 +58,8 @@ export default (context: ConfigContext): ExpoConfig => {
     extra: extra(),
     hooks: hooks(),
   };
+  console.log(config);
+  return config;
 };
 
 const name = () => {
@@ -79,20 +85,20 @@ const scheme = () => {
   return scheme;
 };
 
-const appId = () => {
-  const appId = `com.appjusto.${flavor}`;
-  if (environment === 'dev') return `${appId}.dev`;
-  else if (environment === 'staging') return `${appId}.staging`;
-  return appId;
+const appBundlePackage = () => {
+  const appId = `br.com.appjusto.${flavor}`;
+  if (environment === 'dev' || environment === 'local') return `${appId}.dev`;
+  return `${appId}.${environment}`;
 };
 
-const icon = (platform: 'ios' | 'android', environment?: Environment) =>
-  environment
-    ? `./assets/icon-${flavor}-${platform}-${environment}.png`
-    : `./assets/icon-${flavor}-${platform}.png`;
+const icon = (platform: 'ios' | 'android') => {
+  if (environment === 'local' || environment === 'live')
+    return `./assets/icon-${flavor}-${platform}.png`;
+  return `./assets/icon-${flavor}-${environment}.png`;
+};
 
 const ios = () => ({
-  bundleIdentifier: appId(),
+  bundleIdentifier: appBundlePackage(),
   buildNumber: `${versionCode}`,
   icon: icon('ios'),
   supportsTablet: true,
@@ -111,7 +117,7 @@ const ios = () => ({
 const android = () =>
   (({
     android: {
-      package: appId(),
+      package: appBundlePackage(),
       versionCode,
       adaptiveIcon: {
         foregroundImage: icon('android'),
@@ -157,41 +163,42 @@ const permissions = () =>
         'RECORD_AUDIO',
       ];
 
-const extra = () => ({
+const extra = (): Extra => ({
   flavor,
-  bundleIdentifier: appId(),
-  androidPackage: appId(),
-  googleApiKeys: {
-    android: GOOGLE_ANDROID_API_KEY,
-    ios: GOOGLE_IOS_API_KEY,
-  },
+  environment,
+  bundleIdentifier: appBundlePackage(),
+  androidPackage: appBundlePackage(),
   firebase: {
-    apiKey: null, // it will be filled in runtime according with user's OS
+    apiKey: FIREBASE_API_KEY!, // it will be filled in runtime according with user's OS
     authDomain: `${FIREBASE_PROJECT_ID}.firebaseapp.com`,
     databaseURL: `https://${FIREBASE_DATABASE_NAME}.firebaseio.com`,
     functionsURL: `https://${FIREBASE_REGION}-${FIREBASE_PROJECT_ID}.cloudfunctions.net`,
-    projectId: FIREBASE_PROJECT_ID,
+    projectId: FIREBASE_PROJECT_ID!,
     storageBucket: `${FIREBASE_PROJECT_ID}.appspot.com`,
-    messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
-    appId: FIREBASE_APP_ID,
+    messagingSenderId: FIREBASE_MESSAGING_SENDER_ID!,
+    appId: flavor === 'consumer' ? FIREBASE_CONSUMER_APP_ID! : FIREBASE_COURIER_APP_ID!,
     emulator: {
       enabled: process.env.FIREBASE_EMULATOR === 'true',
       databaseURL: `${FIREBASE_EMULATOR_HOST}:8080`,
       functionsURL: `http://${FIREBASE_EMULATOR_HOST}:5001`,
     },
-    // measurementId: null,
+    measurementId:
+      flavor === 'consumer' ? FIREBASE_CONSUMER_MEASUREMENT_ID! : FIREBASE_COURIER_MEASUREMENT_ID!,
   },
+  googleMapsApiKey: GOOGLE_MAPS_API_KEY!,
   analytics: {
-    segmentAndroidKey: SEGMENT_ANDROID_KEY,
-    segmentiOSKey: SEGMENT_IOS_KEY,
-    sentryDNS: SENTRY_DSN,
+    segmentConsumerAndroidKey: SEGMENT_CONSUMER_ANDROID_KEY!,
+    segmentConsumeriOSKey: SEGMENT_CONSUMER_IOS_KEY!,
+    segmentCourierAndroidKey: SEGMENT_COURIER_ANDROID_KEY!,
+    segmentCourieriOSKey: SEGMENT_COURIER_IOS_KEY!,
+    sentryDNS: SENTRY_DSN!,
   },
   iugu: {
-    accountId: IUGU_ACCOUNT_ID,
+    accountId: IUGU_ACCOUNT_ID!,
   },
   algolia: {
-    appId: ALGOLIA_APPID,
-    apiKey: ALGOLIA_APIKEY,
+    appId: ALGOLIA_APPID!,
+    apiKey: ALGOLIA_APIKEY!,
   },
 });
 
