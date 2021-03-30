@@ -1,8 +1,7 @@
 import { Flavor } from 'appjusto-types/platform';
-import { Extra } from '../../utils/config';
+import { Extra } from '../../../config/types';
 
 export interface ConfigState {
   flavor: Flavor;
   extra: Extra;
-  env: 'development' | 'production';
 }

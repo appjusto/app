@@ -1,6 +1,6 @@
 import * as redux from 'redux';
 import ReduxThunk, { ThunkDispatch } from 'redux-thunk';
-import { Extra } from '../utils/config';
+import { Extra } from '../../config/types';
 import configReducer from './config/reducer';
 import { ConfigState } from './config/types';
 import consumerReducer from './consumer/reducer';
@@ -28,7 +28,6 @@ export const createStore = (extra: Extra) => {
     config: configReducer({
       flavor: extra.flavor,
       extra,
-      env: __DEV__ ? 'development' : 'production',
     }),
     courier: courierReducer,
     consumer: consumerReducer,

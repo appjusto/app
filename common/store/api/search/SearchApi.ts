@@ -1,7 +1,7 @@
 import algoliasearch, { SearchClient, SearchIndex } from 'algoliasearch/lite';
 import { Fleet } from 'appjusto-types';
 import { LatLng } from 'react-native-maps';
-import { AlgoliaConfig } from '../../../utils/config';
+import { AlgoliaConfig, Environment } from '../../../utils/config';
 import { SearchFilter, SearchKind, SearchOrder } from '../../consumer/types';
 
 export default class SearchApi {
@@ -15,20 +15,18 @@ export default class SearchApi {
   private productsByTotalSold: SearchIndex;
   private fleets: SearchIndex;
 
-  constructor(config: AlgoliaConfig) {
+  constructor(config: AlgoliaConfig, env: Environment) {
     this.client = algoliasearch(config.appId, config.apiKey);
-    this.restaurants = this.client.initIndex(`${config.env}_businesses`);
-    this.restaurantsByPrice = this.client.initIndex(`${config.env}_businesses_price_asc`);
+    this.restaurants = this.client.initIndex(`${env}_businesses`);
+    this.restaurantsByPrice = this.client.initIndex(`${env}_businesses_price_asc`);
     this.restaurantsByPreparationTime = this.client.initIndex(
-      `${config.env}_businesses_preparation_time_asc`
+      `${env}_businesses_preparation_time_asc`
     );
-    this.restaurantsByTotalOrders = this.client.initIndex(
-      `${config.env}_businesses_totalOrders_desc`
-    );
-    this.products = this.client.initIndex(`${config.env}_products`);
-    this.productsByPrice = this.client.initIndex(`${config.env}_products_price_asc`);
-    this.productsByTotalSold = this.client.initIndex(`${config.env}_products_totalSold_desc`);
-    this.fleets = this.client.initIndex(`${config.env}_fleets`);
+    this.restaurantsByTotalOrders = this.client.initIndex(`${env}_businesses_totalOrders_desc`);
+    this.products = this.client.initIndex(`${env}_products`);
+    this.productsByPrice = this.client.initIndex(`${env}_products_price_asc`);
+    this.productsByTotalSold = this.client.initIndex(`${env}_products_totalSold_desc`);
+    this.fleets = this.client.initIndex(`${env}_fleets`);
   }
 
   private createFilters(filters?: SearchFilter[]) {

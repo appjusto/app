@@ -40,7 +40,7 @@ export default function ({ navigation, route }: Props) {
   const api = React.useContext(ApiContext);
   // redux store
   const courier = useSelector(getCourier)!;
-  const testing = useSelector(getExtra).testing;
+  const testing = useSelector(getExtra).environment !== 'live';
   // state
   const [cnpj, setCNPJ] = React.useState(
     courier.company?.cnpj ?? (testing ? cnpjutils.generate() : '')

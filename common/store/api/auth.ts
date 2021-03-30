@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import { Extra } from '../../utils/config';
+import { Extra } from '../../../config/types';
 import { DeleteAccountSurvey } from '../user/types';
 import FirebaseRefs from './FirebaseRefs';
 

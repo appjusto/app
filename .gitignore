@@ -15,4 +15,5 @@ web-report/
 
 # Project
 .env
+.env.live
 .tmp/*
