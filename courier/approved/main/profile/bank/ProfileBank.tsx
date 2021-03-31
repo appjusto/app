@@ -21,10 +21,10 @@ import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../../common/store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
-import { BankParamList } from './types';
+import { CourierProfileParamList } from '../types';
 
-type ScreenNavigationProp = StackNavigationProp<BankParamList, 'ProfileBank'>;
-type ScreenRouteProp = RouteProp<BankParamList, 'ProfileBank'>;
+type ScreenNavigationProp = StackNavigationProp<CourierProfileParamList, 'ProfileBank'>;
+type ScreenRouteProp = RouteProp<CourierProfileParamList, 'ProfileBank'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

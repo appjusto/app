@@ -66,6 +66,12 @@ export default function ({ navigation, route }: Props) {
     });
   }, [yearsWithOrders]);
 
+  // array de objetos 'section' (mês), com um value 'data', q é um array de objetos com cada corrida do mês
+  // nesses objetos 'corrida', há o 'CourierFee', que é o valor de cada um delas.
+  // precisa somar esses CourierFee dentro de cada 'objeto corrida',
+  // dentro de um array 'data' em cada 'objeto mês'(section),
+  // dentro de um array de sections
+
   // UI
   const paddingTop = Constants.statusBarHeight;
   if (sections.length === 0) {
@@ -172,7 +178,10 @@ export default function ({ navigation, route }: Props) {
                         <DefaultButton
                           title={t('Transferir saque')}
                           onPress={() =>
-                            navigation.navigate('PaymentNavigator', { screen: 'WithDrawPayment' })
+                            navigation.navigate('PaymentNavigator', {
+                              screen: 'Payment',
+                              params: { operation: 'withdraw' },
+                            })
                           }
                         />
                       </View>
@@ -181,7 +190,10 @@ export default function ({ navigation, route }: Props) {
                           title={t('Adiantar valores')}
                           style={{ backgroundColor: colors.yellow, borderColor: colors.yellow }}
                           onPress={() =>
-                            navigation.navigate('PaymentNavigator', { screen: 'AntecipatePayment' })
+                            navigation.navigate('PaymentNavigator', {
+                              screen: 'Payment',
+                              params: { operation: 'antecipate' },
+                            })
                           }
                         />
                       </View>

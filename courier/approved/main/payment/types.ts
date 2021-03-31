@@ -1,4 +1,7 @@
+type FinancialOperation = 'withdraw' | 'antecipate';
+
 export type PaymentNavigatorParamList = {
-  AntecipatePayment: undefined;
-  WithDrawPayment: undefined;
+  Payment: {
+    operation: FinancialOperation;
+  };
 };
