@@ -175,6 +175,9 @@ export default function ({ navigation, route }: Props) {
                         <DefaultButton
                           title={t('Adiantar valores')}
                           style={{ backgroundColor: colors.yellow, borderColor: colors.yellow }}
+                          onPress={() =>
+                            navigation.navigate('PaymentNavigator', { screen: 'AntecipatePayment' })
+                          }
                         />
                       </View>
                     </View>
