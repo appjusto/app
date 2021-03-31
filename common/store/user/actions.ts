@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { ConsumerProfile, CourierProfile, Flavor, UserProfile, WithId } from 'appjusto-types';
+import { Environment } from '../../../config/types';
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
 import { awaitWithFeedback } from '../ui/actions';
@@ -21,13 +22,15 @@ export const observeAuthState = (api: Api) => (dispatch: AppDispatch) => {
   return unsubscribe;
 };
 
-export const signInWithEmail = (api: Api) => (email: string) => async (dispatch: AppDispatch) => {
+export const signInWithEmail = (api: Api) => (email: string, environment: Environment) => async (
+  dispatch: AppDispatch
+) => {
   try {
     AsyncStorage.setItem('email', email);
   } catch (e) {
     console.error(e);
   }
-  return dispatch(awaitWithFeedback(api.auth().sendSignInLinkToEmail(email)));
+  return dispatch(awaitWithFeedback(api.auth().sendSignInLinkToEmail(email, environment)));
 };
 
 export const getSignInEmail = () => {

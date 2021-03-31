@@ -1,7 +1,6 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { NavigationContainer } from '@react-navigation/native';
 import Constants from 'expo-constants';
-import * as Linking from 'expo-linking';
 import React, { ReactNode } from 'react';
 import { Platform, ToastAndroid, UIManager } from 'react-native';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -31,9 +30,9 @@ export interface Props {
 }
 
 export const AppContext = ({ children }: Props) => {
-  const path = extra.flavor;
+  const { environment } = extra;
   const linking = {
-    prefixes: [Linking.makeUrl(path), `https://deeplink.appjusto.com.br`],
+    prefixes: [`https://${environment}.deeplink.appjusto.com.br`],
   };
 
   // https://reactnative.dev/docs/layoutanimation.html

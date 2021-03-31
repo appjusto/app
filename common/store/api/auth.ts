@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import { Extra } from '../../../config/types';
+import { Environment, Extra } from '../../../config/types';
 import { DeleteAccountSurvey } from '../user/types';
 import FirebaseRefs from './FirebaseRefs';
 
@@ -10,10 +10,11 @@ export default class AuthApi {
     return this.auth.onAuthStateChanged(handler);
   }
 
-  sendSignInLinkToEmail(email: string): Promise<void> {
+  sendSignInLinkToEmail(email: string, environment: Environment): Promise<void> {
     this.auth.languageCode = 'pt'; // i18n
+    const domain = `${environment}.deeplink.appjusto.com.br`;
     return this.auth.sendSignInLinkToEmail(email, {
-      url: `https://deeplink.appjusto.com.br/${this.extra.flavor}/join?something=else'`,
+      url: `https://${domain}/${this.extra.flavor}/join`,
       handleCodeInApp: true,
       iOS: {
         bundleId: this.extra.bundleIdentifier,
@@ -22,7 +23,7 @@ export default class AuthApi {
         packageName: this.extra.androidPackage,
         installApp: true,
       },
-      dynamicLinkDomain: 'deeplink.appjusto.com.br',
+      dynamicLinkDomain: domain,
     });
   }
 

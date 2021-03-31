@@ -108,7 +108,7 @@ const ios = () => ({
     NSLocationAlwaysAndWhenInUseUsageDescription: 'Saber a localização do entregador',
     NSLocationAlwaysUsageDescription: 'Saber a localização do entregador',
   },
-  associatedDomains: ['applinks:deeplink.appjusto.com.br'],
+  associatedDomains: [`applinks:${environment}.deeplink.appjusto.com.br`],
   config: {
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
   },
@@ -134,7 +134,7 @@ const android = () =>
           data: [
             {
               scheme: 'https',
-              host: 'deeplink.appjusto.com.br',
+              host: `${environment}.deeplink.appjusto.com.br`,
               pathPrefix: `/${flavor}`,
             },
           ],
