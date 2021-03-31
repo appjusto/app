@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import { halfPadding, padding, texts } from '../../styles';
+import { texts } from '../../styles';
 import Pill from '../views/Pill';
 
 type Props = {
@@ -13,8 +13,6 @@ export default function ({ title }: Props) {
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: padding,
-        marginBottom: halfPadding,
       }}
     >
       <Pill />
