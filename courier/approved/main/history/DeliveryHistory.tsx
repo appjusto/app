@@ -156,13 +156,13 @@ export default function ({ navigation, route }: Props) {
                         <Text style={{ ...texts.sm, color: colors.grey700 }}>
                           {t('Disponível para saque:')}
                         </Text>
-                        <Text style={{ ...texts.xl }}>{t('R$ 1000')}</Text>
+                        <Text style={{ ...texts.xl }}>{t('R$ XXXX')}</Text>
                       </View>
                       <View>
                         <Text style={{ ...texts.sm, color: colors.grey700 }}>
                           {t('Compensando:')}
                         </Text>
-                        <Text style={{ ...texts.xl }}>{t('R$ 300')}</Text>
+                        <Text style={{ ...texts.xl }}>{t('R$ XXXX')}</Text>
                       </View>
                     </PaddedView>
                     <View

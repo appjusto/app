@@ -58,7 +58,7 @@ export const Payment = ({ navigation, route }: Props) => {
             style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
           >
             <Text style={{ ...texts.sm }}>{t('Disponível para saque')}</Text>
-            <Text style={{ ...texts.sm }}>{t('R$ 1.529,00')}</Text>
+            <Text style={{ ...texts.sm }}>{t('R$ XXXX,00')}</Text>
           </View>
           <View
             style={{
@@ -71,7 +71,7 @@ export const Payment = ({ navigation, route }: Props) => {
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
               {t('Tarifa de transferência')}
             </Text>
-            <Text style={{ ...texts.sm, color: colors.red }}>{t('-R$ 2,00')}</Text>
+            <Text style={{ ...texts.sm, color: colors.red }}>{t('-R$ X,00')}</Text>
           </View>
         </PaddedView>
       </View>
@@ -86,17 +86,20 @@ export const Payment = ({ navigation, route }: Props) => {
         }}
       >
         <SingleHeader title={t('Você irá receber')} />
-        <Text style={{ ...texts.xl }}>{t('R$ 1.527,00')}</Text>
+        <Text style={{ ...texts.xl }}>{t('R$ XXXX,00')}</Text>
       </View>
       <HR height={padding} color={colors.grey90} />
       <View style={{ paddingTop: halfPadding }}>
-        <BankData courier={courier} />
+        <BankData
+          courier={courier}
+          navigateToProfileBank={() => navigation.navigate('ProfileBank')}
+        />
         <HR height={padding} color={colors.grey90} />
         <PaddedView>
           <DefaultButton
             title={t('Solicitar transferência')}
             style={{ marginTop: 24 }}
-            onPress={() => null}
+            onPress={() => navigation.navigate('PaymentRequestedFeedback')}
           />
         </PaddedView>
       </View>
@@ -125,7 +128,7 @@ export const Payment = ({ navigation, route }: Props) => {
             style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
           >
             <Text style={{ ...texts.sm }}>{t('Disponível para saque')}</Text>
-            <Text style={{ ...texts.sm }}>{t('R$ 1.529,00')}</Text>
+            <Text style={{ ...texts.sm }}>{t('R$ XXXX,00')}</Text>
           </View>
           <View
             style={{
@@ -136,7 +139,7 @@ export const Payment = ({ navigation, route }: Props) => {
             }}
           >
             <Text style={{ ...texts.sm }}>{t('Valor para adiantamento')}</Text>
-            <Text style={{ ...texts.sm }}>{t('R$ 329,00')}</Text>
+            <Text style={{ ...texts.sm }}>{t('R$ XXX,00')}</Text>
           </View>
           <View
             style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
@@ -144,7 +147,7 @@ export const Payment = ({ navigation, route }: Props) => {
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
               {t('Taxa de adiantamento (2,5%')}
             </Text>
-            <Text style={{ ...texts.sm, color: colors.red }}>{t('-R$ 8,23')}</Text>
+            <Text style={{ ...texts.sm, color: colors.red }}>{t('-R$ X,XX')}</Text>
           </View>
           <View
             style={{
@@ -157,7 +160,7 @@ export const Payment = ({ navigation, route }: Props) => {
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
               {t('Tarifa de transferência')}
             </Text>
-            <Text style={{ ...texts.sm, color: colors.red }}>{t('-R$ 2,00')}</Text>
+            <Text style={{ ...texts.sm, color: colors.red }}>{t('-R$ X,00')}</Text>
           </View>
         </PaddedView>
       </View>
@@ -172,11 +175,14 @@ export const Payment = ({ navigation, route }: Props) => {
         }}
       >
         <SingleHeader title={t('Total com descontos')} />
-        <Text style={{ ...texts.xl }}>{t('R$ 1847,77')}</Text>
+        <Text style={{ ...texts.xl }}>{t('R$ XXXX,XX')}</Text>
       </View>
       <HR height={padding} color={colors.grey90} />
       <View style={{ paddingTop: halfPadding }}>
-        <BankData courier={courier} />
+        <BankData
+          courier={courier}
+          navigateToProfileBank={() => navigation.navigate('ProfileBank')}
+        />
         <HR height={padding} color={colors.grey90} />
         <PaddedView>
           <CheckField
@@ -187,7 +193,7 @@ export const Payment = ({ navigation, route }: Props) => {
           <DefaultButton
             title={t('Solicitar transferência com adiantamento')}
             style={{ marginTop: 24 }}
-            onPress={() => null}
+            onPress={() => navigation.navigate('PaymentRequestedFeedback')}
             disabled={!agreed}
           />
         </PaddedView>

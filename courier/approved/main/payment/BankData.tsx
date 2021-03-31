@@ -10,9 +10,10 @@ import { t } from '../../../../strings';
 
 type Props = {
   courier: WithId<CourierProfile>;
+  navigateToProfileBank: () => void;
 };
 
-export const BankData = ({ courier }: Props) => {
+export const BankData = ({ courier, navigateToProfileBank }: Props) => {
   return (
     <View>
       <SingleHeader title={t('Dados bancários')} />
@@ -52,8 +53,7 @@ export const BankData = ({ courier }: Props) => {
           <Text style={{ ...texts.sm }}>{courier.bankAccount?.accountFormatted}</Text>
         </View>
         <HR />
-        {/* TODO: this should navigate to ProfileBank and return */}
-        <TouchableOpacity style={{ paddingTop: 12 }} onPress={() => null}>
+        <TouchableOpacity style={{ paddingTop: 12 }} onPress={navigateToProfileBank}>
           <Text style={{ ...texts.sm, color: colors.green600 }}>
             {t('Alterar dados bancários')}
           </Text>
