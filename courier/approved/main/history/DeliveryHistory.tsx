@@ -66,12 +66,6 @@ export default function ({ navigation, route }: Props) {
     });
   }, [yearsWithOrders]);
 
-  // array de objetos 'section' (mês), com um value 'data', q é um array de objetos com cada corrida do mês
-  // nesses objetos 'corrida', há o 'CourierFee', que é o valor de cada um delas.
-  // precisa somar esses CourierFee dentro de cada 'objeto corrida',
-  // dentro de um array 'data' em cada 'objeto mês'(section),
-  // dentro de um array de sections
-
   // UI
   const paddingTop = Constants.statusBarHeight;
   if (sections.length === 0) {
