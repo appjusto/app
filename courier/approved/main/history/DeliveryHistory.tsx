@@ -5,6 +5,7 @@ import React, { useMemo } from 'react';
 import { Image, SectionList, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
+import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
@@ -135,6 +136,51 @@ export default function ({ navigation, route }: Props) {
                   </ConfigItem>
                 );
               }}
+              ListHeaderComponent={
+                sections.length > 0 ? (
+                  <View style={{ ...screens.default }}>
+                    <PaddedView
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <View>
+                        <Text style={{ ...texts.sm, color: colors.grey700 }}>
+                          {t('Disponível para saque:')}
+                        </Text>
+                        <Text style={{ ...texts.xl }}>{t('R$ 1000')}</Text>
+                      </View>
+                      <View>
+                        <Text style={{ ...texts.sm, color: colors.grey700 }}>
+                          {t('Compensando:')}
+                        </Text>
+                        <Text style={{ ...texts.xl }}>{t('R$ 300')}</Text>
+                      </View>
+                    </PaddedView>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        paddingHorizontal: padding,
+                        paddingBottom: padding,
+                      }}
+                    >
+                      <View style={{ width: '48%' }}>
+                        <DefaultButton title={t('Transferir saque')} />
+                      </View>
+                      <View style={{ width: '48%' }}>
+                        <DefaultButton
+                          title={t('Adiantar valores')}
+                          style={{ backgroundColor: colors.yellow, borderColor: colors.yellow }}
+                        />
+                      </View>
+                    </View>
+                  </View>
+                ) : null
+              }
             />
           </View>
         )}

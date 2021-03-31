@@ -78,8 +78,8 @@ export default function ({ onPermissionDenied, onFleetDetail }: Props) {
             style={[
               texts.x2l,
               {
-                paddingBottom: tallerDevice ? doublePadding : padding,
-                marginTop: tallerDevice ? doublePadding : 0,
+                // paddingBottom: tallerDevice ? padding : padding,
+                // marginTop: tallerDevice ? padding : 0,
               },
             ]}
           >
