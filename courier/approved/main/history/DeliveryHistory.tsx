@@ -169,7 +169,12 @@ export default function ({ navigation, route }: Props) {
                       }}
                     >
                       <View style={{ width: '48%' }}>
-                        <DefaultButton title={t('Transferir saque')} />
+                        <DefaultButton
+                          title={t('Transferir saque')}
+                          onPress={() =>
+                            navigation.navigate('PaymentNavigator', { screen: 'WithDrawPayment' })
+                          }
+                        />
                       </View>
                       <View style={{ width: '48%' }}>
                         <DefaultButton
