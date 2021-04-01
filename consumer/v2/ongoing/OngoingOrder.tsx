@@ -98,7 +98,14 @@ export default function ({ navigation, route }: Props) {
     >
       {order.type === 'p2p' ? (
         <View>
-          <OrderMap order={order} ratio={1} />
+          <View>
+            <OrderMap order={order} ratio={1} />
+            {/* <StatusAndMessages
+              dispatchingState={dispatchingState}
+              orderId={orderId}
+              onMessageReceived={openChatHandler}
+            /> */}
+          </View>
           <DeliveryInfo
             order={order}
             onCourierDetail={() => navigation.navigate('OngoingOrderCourierDetail', { orderId })}
