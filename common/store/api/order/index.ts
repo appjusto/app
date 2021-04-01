@@ -38,6 +38,7 @@ export default class OrderApi {
       consumer: {
         id: consumer.id,
         name: consumer.name ?? '',
+        notificationToken: consumer.notificationToken,
       },
       origin: {
         address: {

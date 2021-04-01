@@ -15,4 +15,9 @@ web-report/
 
 # Project
 *.env
+<<<<<<< HEAD
 .tmp/*
+=======
+.tmp/*
+google-services*.json
+>>>>>>> bc2eed8d00707e1642ac7584552c64b26698ce85

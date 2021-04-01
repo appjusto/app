@@ -1,14 +1,14 @@
 import {
-  IuguCreatePaymentTokenData,
   IuguCreatePaymentToken,
+  IuguCreatePaymentTokenData,
   IuguPaymentToken,
 } from 'appjusto-types/payment/iugu';
-import axios, { AxiosError, CancelToken } from 'axios';
+import axios, { CancelToken } from 'axios';
 
 const API_ENDPOINT = 'https://api.iugu.com/v1';
 
 export default class IuguApi {
-  constructor(private accountId: string) {}
+  constructor(private accountId: string, private testing: boolean) {}
 
   async createPaymentToken(
     data: IuguCreatePaymentTokenData,
@@ -18,7 +18,7 @@ export default class IuguApi {
     const payload: IuguCreatePaymentToken = {
       account_id: this.accountId,
       method: 'credit_card',
-      test: true, // TODO: remove
+      test: this.testing,
       data,
     };
     try {

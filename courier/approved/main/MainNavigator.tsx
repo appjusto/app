@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { ChatPushMessageData, OrderMatchPushMessageData, PushMessage } from 'appjusto-types';
+import { OrderMatchPushMessageData, PushMessage } from 'appjusto-types';
 import React from 'react';
 import { Image } from 'react-native';
 import { useQuery, useQueryClient } from 'react-query';
@@ -29,15 +29,16 @@ export default function ({ navigation }: Props) {
   const user = useSelector(getUser);
   // context
   const queryCache = useQueryClient();
-  const matchingQuery = useQuery<PushMessage[]>(['notifications', 'matching'], () => []);
+  const matchingQuery = useQuery<PushMessage[]>(['notifications', 'order-request'], () => []);
+  const orderUpdateQuery = useQuery<PushMessage[]>(['notifications', 'order-update'], () => []);
   const chatQuery = useQuery<PushMessage[]>(['notifications', 'order-chat'], () => []);
-
-  // effects
+  // side effects
   // subscribe for observing ongoing orders
   const options = React.useMemo(() => ({ courierId: user?.uid }), [user?.uid]);
   useObserveOngoingOrders(options);
+  // react to order-rrequest
   React.useEffect(() => {
-    // console.log("MainNavigator ['notifications', 'matching']");
+    // console.log("MainNavigator ['notifications', 'order-request']");
     if (!matchingQuery.data || matchingQuery.data.length === 0) return;
     const [notification] = matchingQuery.data;
     // console.log(notification);
@@ -52,29 +53,41 @@ export default function ({ navigation }: Props) {
       });
       // remove from cache
       queryCache.setQueryData(
-        ['notifications', 'matching'],
+        ['notifications', 'order-request'],
         (notifications: PushMessage[] | undefined) =>
           (notifications ?? []).filter((item) => item.id !== notification.id)
       );
     }
   }, [matchingQuery.data, navigation, queryCache]);
-
+  // react to order-chat
   React.useEffect(() => {
     // console.log("MainNavigator ['notifications', 'order-chat']");
     if (!chatQuery.data || chatQuery.data.length === 0) return;
     const [notification] = chatQuery.data;
     // console.log(notification);
     if (notification.clicked) {
-      const data = notification.data as ChatPushMessageData;
       navigation.navigate('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: {
-          orderId: data.orderId,
+          orderId: notification.data.orderId,
           newMessage: true,
         },
       });
     }
   }, [chatQuery.data, navigation]);
+  // react to order-update
+  React.useEffect(() => {
+    if (!orderUpdateQuery.data || orderUpdateQuery.data.length === 0) return;
+    const [notification] = orderUpdateQuery.data;
+    if (notification.clicked) {
+      navigation.navigate('OngoingDeliveryNavigator', {
+        screen: 'OngoingDelivery',
+        params: {
+          orderId: notification.data.orderId,
+        },
+      });
+    }
+  }, [orderUpdateQuery.data, navigation]);
 
   return (
     <Tab.Navigator

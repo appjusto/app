@@ -18,7 +18,7 @@ import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import AvoidingView from '../../components/containers/AvoidingView';
 import DefaultInput from '../../components/inputs/DefaultInput';
-import { getFlavor } from '../../store/config/selectors';
+import { getExtra, getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
 import { signInWithEmail } from '../../store/user/actions';
@@ -43,6 +43,7 @@ export default function ({ navigation, route }: Props) {
   // app state
   const busy = useSelector(getUIBusy);
   const flavor = useSelector(getFlavor);
+  const extra = useSelector(getExtra);
 
   // state
   const [email, setEmail] = useState('');
@@ -59,7 +60,7 @@ export default function ({ navigation, route }: Props) {
       dispatch(showToast(t('Digite um e-mail válido.')));
       return;
     }
-    await dispatch(signInWithEmail(api)(email));
+    await dispatch(signInWithEmail(api)(email, extra.environment));
     navigation.navigate('SignInFeedback', { email });
   }, [acceptedTerms, email]);
 

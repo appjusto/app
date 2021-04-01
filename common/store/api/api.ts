@@ -2,8 +2,7 @@
 import firebase from 'firebase';
 import 'firebase/firestore';
 import 'firebase/functions';
-import { Platform } from 'react-native';
-import { Extra } from '../../utils/config';
+import { Extra } from '../../../config/types';
 import AuthApi from './auth';
 import BusinessApi from './business';
 import ConsumerApi from './business/consumer';
@@ -39,8 +38,7 @@ export default class Api {
   private _search: SearchApi;
 
   constructor(extra: Extra) {
-    const apiKey = Platform.select(extra.googleApiKeys);
-    firebase.initializeApp({ ...extra.firebase, apiKey });
+    firebase.initializeApp(extra.firebase);
 
     this.authentication = firebase.auth();
     this.firestore = firebase.firestore();
@@ -58,7 +56,7 @@ export default class Api {
     const collectionName = extra.flavor === 'consumer' ? 'consumers' : 'couriers';
 
     this._refs = new FirebaseRefs(this.functions, this.firestore);
-    this._iugu = new IuguApi(extra.iugu.accountId);
+    this._iugu = new IuguApi(extra.iugu.accountId, extra.environment !== 'live');
     this._files = new FilesApi(this.storage);
     this._auth = new AuthApi(this._refs, this.authentication, extra);
     this._platform = new PlatformApi(this._refs, this._files);
@@ -67,9 +65,9 @@ export default class Api {
     this._fleet = new FleetApi(this._refs);
     this._consumer = new ConsumerApi(this._refs, this._iugu);
     this._order = new OrderApi(this._refs);
-    this._maps = new MapsApi(apiKey!);
+    this._maps = new MapsApi(extra.googleMapsApiKey);
     this._business = new BusinessApi(this._refs, this._files);
-    this._search = new SearchApi(extra.algolia);
+    this._search = new SearchApi(extra.algolia, extra.environment);
   }
 
   auth() {
