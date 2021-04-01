@@ -1,23 +1,18 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useCallback, useContext, useState } from 'react';
-import {
-  Dimensions,
-  Image,
-  Keyboard,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { Keyboard, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
-import { illustration, logoWhite, motoIntro } from '../../../assets/icons';
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import AvoidingView from '../../components/containers/AvoidingView';
 import DefaultInput from '../../components/inputs/DefaultInput';
+import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
+import { IconIntroDelivery } from '../../icons/icon-IntroDelivery';
+import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { getExtra, getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
@@ -35,7 +30,6 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  const { height } = Dimensions.get('window');
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -71,83 +65,68 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <View style={[screens.default]}>
+    <SafeAreaView style={{ ...screens.default, padding }}>
       <AvoidingView>
-        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-          <View style={{ paddingHorizontal: padding }}>
-            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-              <View>
-                <View style={{ height: 200, marginTop: 30, width: 275 }}>
-                  <Image source={flavor === 'consumer' ? illustration : motoIntro} />
-                </View>
-
-                <View style={{ height: 64, marginTop: 16, width: 152 }}>
-                  <Image style={{ height: '100%', width: '100%' }} source={logoWhite} />
-                </View>
-
-                <View style={{ height: 58, marginTop: 16 }}>
-                  <Text style={[texts.x2l]}>{welcomeMessage}</Text>
-                </View>
-
-                <View style={{ width: '85%', height: 58, marginTop: 16 }}>
-                  <Text style={[texts.sm, { color: colors.grey700, lineHeight: 21 }]}>
-                    {t('Digite seu e-mail para entrar ou criar sua conta.')}
-                  </Text>
-                </View>
-              </View>
-            </TouchableWithoutFeedback>
-
-            <DefaultInput
-              value={email}
-              title={t('Acesse sua conta')}
-              placeholder={t('Digite seu e-mail')}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              blurOnSubmit
-              autoCapitalize="none"
+        <View style={{ top: 0 }}>
+          {flavor === 'consumer' ? <IconIllustrationIntro /> : <IconIntroDelivery />}
+        </View>
+        <View style={{ marginTop: 40 }}>
+          <IconLogoGreen />
+        </View>
+        <View style={{ marginTop: padding }}>
+          <Text style={[texts.x2l]}>{welcomeMessage}</Text>
+        </View>
+        <View style={{ marginTop: padding }}>
+          <Text style={[texts.sm, { color: colors.grey700, lineHeight: 21 }]}>
+            {t('Digite seu e-mail para entrar ou criar sua conta.')}
+          </Text>
+        </View>
+        <View style={{ marginTop: padding }}>
+          <DefaultInput
+            value={email}
+            title={t('Acesse sua conta')}
+            placeholder={t('Digite seu e-mail')}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            blurOnSubmit
+            autoCapitalize="none"
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginTop: padding,
+          }}
+        >
+          <View>
+            <CheckField
+              checked={acceptedTerms}
+              onPress={() => setAcceptTerms(!acceptedTerms)}
+              text={t('Aceito os termos de uso do app')}
             />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginTop: height > 700 ? 32 : 16,
+          </View>
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Terms');
               }}
             >
-              <View>
-                <CheckField
-                  checked={acceptedTerms}
-                  onPress={() => setAcceptTerms(!acceptedTerms)}
-                  text={t('Aceito os termos de uso do app')}
-                />
-              </View>
-              <View>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('Terms');
-                  }}
-                >
-                  <Text style={[texts.xs, { color: colors.green600, lineHeight: 18 }]}>
-                    {t('Ler os termos')}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            {/* dummy view to accomadate keyboard better */}
-            <View style={{ height: 20 }} />
-          </View>
-
-          <View style={{ flex: 1 }} />
-          <View style={{ paddingHorizontal: 16, marginBottom: height > 700 ? 32 : 16 }}>
-            <DefaultButton
-              disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
-              title={t('Entrar')}
-              onPress={signInHandler}
-              activityIndicator={busy}
-            />
+              <Text style={[texts.xs, { color: colors.green600 }]}>{t('Ler os termos')}</Text>
+            </TouchableOpacity>
           </View>
         </View>
+        <View style={{ flex: 1 }} />
+        <View style={{ marginVertical: padding }}>
+          <DefaultButton
+            disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
+            title={t('Entrar')}
+            onPress={signInHandler}
+            activityIndicator={busy}
+          />
+        </View>
       </AvoidingView>
-    </View>
+    </SafeAreaView>
   );
 }
