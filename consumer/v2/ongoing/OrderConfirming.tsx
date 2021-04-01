@@ -11,7 +11,6 @@ import Pill from '../../../common/components/views/Pill';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import { IconPixLogo } from '../../../common/icons/icon-pix-logo';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
-import { isOrderOngoing } from '../../../common/store/order/selectors';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
@@ -40,8 +39,11 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
     console.log('OrderConfirming', order.status);
     if (order.status === 'canceled') {
       navigation.replace('MainNavigator', { screen: 'Home' });
-    } else if (isOrderOngoing(order)) {
-      // TODO: p2p orders are confirmed before we have a courier
+      // just p2p for now
+    } else if (
+      (order.type === 'p2p' && order.status === 'dispatching') ||
+      (order.type === 'food' && order.status === 'confirmed')
+    ) {
       navigation.replace('OngoingOrder', {
         orderId,
       });
@@ -60,7 +62,10 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  const description = t('Aguarde enquanto criamos seu pedido...');
+  const description =
+    order.type === 'food'
+      ? t('Aguarde enquanto o restaurante confirma seu pedido...')
+      : t('Aguarde enquanto encontramos um entregador pra você...');
   return pixKey ? (
     <SafeAreaView style={{ ...screens.default }}>
       <PaddedView>

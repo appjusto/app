@@ -14,5 +14,5 @@ web-report/
 .DS_Store
 
 # Project
-.env
+*.env
 .tmp/*

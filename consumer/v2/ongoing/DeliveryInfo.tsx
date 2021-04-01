@@ -21,23 +21,20 @@ export const DeliveryInfo = ({ order, onCourierDetail }: Props) => {
           flexDirection: 'row',
           paddingHorizontal: padding,
           paddingVertical: padding,
+          flex: 1,
         }}
       >
-        <RoundedProfileImg flavor="courier" id={order.courier?.id} />
+        <RoundedProfileImg flavor="courier" id={order.courier?.id} size={48} />
         <View style={{ flex: 1, marginLeft: padding }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={[texts.md]}>{order.courier?.name}</Text>
           </View>
-          <Text style={[texts.xs, { color: colors.grey700 }]}>
-            {order.status === 'confirmed' ? t('Aguardando entregador') : t('Conheça o entregador')}
-          </Text>
+          <Text style={[texts.xs, { color: colors.grey700 }]}>{t('Conheça o entregador')}</Text>
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          {order.status !== 'confirmed' && (
-            <View>
-              <CourierDistanceBadge order={order} />
-            </View>
-          )}
+          <View>
+            <CourierDistanceBadge order={order} />
+          </View>
         </View>
       </View>
     </TouchableOpacity>
