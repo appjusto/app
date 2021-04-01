@@ -25,8 +25,7 @@ export const HomeControls = ({ onStartOrderPress }: Props) => {
             style={[
               texts.x2l,
               {
-                paddingBottom: tallerDevice ? doublePadding : padding,
-                marginTop: tallerDevice ? doublePadding : 0,
+                paddingBottom: padding,
               },
             ]}
           >

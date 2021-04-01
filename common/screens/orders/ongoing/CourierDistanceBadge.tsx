@@ -3,8 +3,7 @@ import React from 'react';
 import { t } from '../../../../strings';
 import RoundedText from '../../../components/texts/RoundedText';
 import * as helpers from '../../../store/api/order/helpers';
-import { colors } from '../../../styles';
-import { formatDistance } from '../../../utils/formatters';
+import { formatDistance, formatDuration, separateWithDot } from '../../../utils/formatters';
 
 interface Props {
   order: Order;
@@ -16,14 +15,10 @@ export const CourierDistanceBadge = ({ order }: Props) => {
   const distance = helpers.courierDistanceFromNextPlace(order);
   let text = '';
   if (dispatchingState === 'going-pickup' || dispatchingState === 'going-destination') {
-    // text = separateWithDot(formatDistance(distance), formatDuration(route.duration));
-    text = formatDistance(distance);
+    text = separateWithDot(formatDistance(distance), formatDuration(route.duration));
+    // text = formatDistance(distance);
   } else if (dispatchingState === 'arrived-pickup' || dispatchingState === 'arrived-destination') {
     text = t('Entregador no local');
   }
-  return (
-    <RoundedText backgroundColor={colors.grey50} color={colors.grey700} noBorder>
-      {text}
-    </RoundedText>
-  );
+  return <RoundedText>{text}</RoundedText>;
 };

@@ -28,8 +28,12 @@ export default function ({ order, ratio }: Props) {
   });
 
   return (
-    <View style={{ width, height: width / ratio }}>
-      <DefaultMap coordinates={routeCoordinates} fitToElements style={{ flex: 1 }}>
+    <View style={{ width, height: width / ratio, alignSelf: 'center' }}>
+      <DefaultMap
+        coordinates={routeCoordinates}
+        fitToElements
+        style={{ height: '100%', width: '100%' }}
+      >
         <Marker
           key={`${origin.location!.latitude}-${origin.location!.longitude}`}
           coordinate={origin.location!}

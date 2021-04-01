@@ -21,7 +21,7 @@ export const P2POrderNavigator = () => {
       <Stack.Screen
         name="CreateOrderP2P"
         component={CreateOrderP2P}
-        options={{ title: t('Entrega de encomenda') }}
+        options={{ title: t('Encomenda') }}
       />
       <Stack.Screen
         name="AddressComplete"

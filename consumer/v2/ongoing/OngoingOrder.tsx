@@ -1,7 +1,7 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Dimensions, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -35,6 +35,7 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
+  const { width } = Dimensions.get('window');
   // params
   const { orderId, newMessage } = route.params;
   // context
@@ -43,6 +44,7 @@ export default function ({ navigation, route }: Props) {
   // redux
   const consumer = useSelector(getConsumer);
   // screen state
+  const [seenCodeInfo, setSeenCodeInfo] = React.useState(false);
   const { order } = useObserveOrder(orderId);
   const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
     consumer!.notificationToken
@@ -89,58 +91,31 @@ export default function ({ navigation, route }: Props) {
   const openChatHandler = () => navigation.navigate('OngoingOrderChat', { orderId });
   // ongoing UI
   const { dispatchingState } = order;
-  if (order.type === 'p2p' && order.status === 'confirmed') {
-    return (
-      <ScrollView style={{ ...screens.default }}>
-        <OngoingOrderStatus order={order} />
-        <DeliveryInfo order={order} onCourierDetail={() => null} />
-        <HR height={padding} />
-        <DeliveryActions
-          order={order}
-          onChangeRoute={() =>
-            navigation.navigate('P2POrderNavigator', {
-              screen: 'CreateOrderP2P',
-              params: {
-                orderId,
-              },
-            })
-          }
-          navigateToReportIssue={() =>
-            navigation.navigate('ReportIssue', {
-              orderId: order.id,
-              issueType: 'consumer-delivery-problem',
-            })
-          }
-          navigateToConfirmCancel={() =>
-            navigation.navigate('OngoingOrderConfirmCancel', { orderId })
-          }
-        />
-        <HR />
-      </ScrollView>
-    );
-  }
   return (
-    <View style={{ ...screens.default, paddingBottom: 32 }}>
+    <ScrollView
+      style={{ ...screens.default, paddingBottom: 32 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
       {order.type === 'p2p' ? (
-        <ScrollView scrollIndicatorInsets={{ right: 1 }}>
-          <OngoingOrderStatus order={order} />
+        <View>
           <View>
-            <OrderMap order={order} ratio={1.2} />
-            <StatusAndMessages
+            <OrderMap order={order} ratio={1} />
+            {/* <StatusAndMessages
               dispatchingState={dispatchingState}
               orderId={orderId}
               onMessageReceived={openChatHandler}
-            />
+            /> */}
           </View>
           <DeliveryInfo
             order={order}
             onCourierDetail={() => navigation.navigate('OngoingOrderCourierDetail', { orderId })}
           />
           <DefaultButton
-            title={t('Abrir chat')}
+            title={t('Abrir chat com o entregador')}
             onPress={openChatHandler}
             style={{ marginHorizontal: padding, marginBottom: padding }}
           />
+
           <HR height={padding} />
           <DeliveryActions
             order={order}
@@ -162,9 +137,9 @@ export default function ({ navigation, route }: Props) {
               navigation.navigate('OngoingOrderConfirmCancel', { orderId })
             }
           />
-        </ScrollView>
+        </View>
       ) : (
-        <ScrollView>
+        <View>
           <OngoingOrderStatus order={order} />
           {order.status === 'dispatching' ? (
             <View>
@@ -239,8 +214,8 @@ export default function ({ navigation, route }: Props) {
               </PaddedView>
             </View>
           )}
-        </ScrollView>
+        </View>
       )}
-    </View>
+    </ScrollView>
   );
 }
