@@ -30,8 +30,8 @@ const {
 
 const flavor: Flavor = FLAVOR as Flavor;
 const environment: Environment = ENVIRONMENT as Environment;
-const version = '0.11.0';
-const versionCode = 18;
+const version = '0.12.0';
+const versionCode = 19;
 
 export default (context: ConfigContext): ExpoConfig => {
   const config: ExpoConfig = {
@@ -123,7 +123,7 @@ const android = () =>
         foregroundImage: icon('android'),
         backgroundColor: flavor === 'consumer' ? '#78E08F' : '#FFE493',
       },
-      googleServicesFile: './google-services.json',
+      googleServicesFile: `./google-services-${environment}.json`,
       useNextNotificationsApi: true,
       softwareKeyboardLayoutMode: 'pan',
       permissions: permissions(),

@@ -7,17 +7,6 @@ import { getExtra } from '../utils/config';
 const { environment, flavor } = getExtra();
 
 export function init(props: AnalyticsConfig) {
-  Segment.initialize(
-    flavor === 'consumer'
-      ? {
-          androidWriteKey: props.segmentConsumerAndroidKey,
-          iosWriteKey: props.segmentConsumeriOSKey,
-        }
-      : {
-          androidWriteKey: props.segmentCourierAndroidKey,
-          iosWriteKey: props.segmentCourieriOSKey,
-        }
-  );
   Sentry.init({
     dsn: props.sentryDNS,
     enableInExpoDevelopment: true,
@@ -25,4 +14,29 @@ export function init(props: AnalyticsConfig) {
     environment,
     release: Constants.manifest.revisionId,
   });
+
+  const {
+    segmentConsumerAndroidKey,
+    segmentConsumeriOSKey,
+    segmentCourierAndroidKey,
+    segmentCourieriOSKey,
+  } = props;
+  if (
+    !segmentConsumerAndroidKey ||
+    !segmentConsumeriOSKey ||
+    !segmentCourierAndroidKey ||
+    !segmentCourieriOSKey
+  )
+    return;
+  Segment.initialize(
+    flavor === 'consumer'
+      ? {
+          androidWriteKey: segmentConsumerAndroidKey,
+          iosWriteKey: segmentConsumeriOSKey,
+        }
+      : {
+          androidWriteKey: segmentCourierAndroidKey,
+          iosWriteKey: segmentCourieriOSKey,
+        }
+  );
 }
