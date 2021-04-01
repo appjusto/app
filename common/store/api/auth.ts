@@ -12,7 +12,7 @@ export default class AuthApi {
 
   sendSignInLinkToEmail(email: string, environment: Environment): Promise<void> {
     this.auth.languageCode = 'pt'; // i18n
-    const domain = `${environment}.deeplink.appjusto.com.br`;
+    const domain = `${environment.charAt(0)}.deeplink.appjusto.com.br`;
     return this.auth.sendSignInLinkToEmail(email, {
       url: `https://${domain}/${this.extra.flavor}/join`,
       handleCodeInApp: true,

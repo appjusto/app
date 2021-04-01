@@ -32,7 +32,7 @@ export interface Props {
 export const AppContext = ({ children }: Props) => {
   const { environment } = extra;
   const linking = {
-    prefixes: [`https://${environment}.deeplink.appjusto.com.br`],
+    prefixes: [`https://${environment.charAt(0)}.deeplink.appjusto.com.br`],
   };
 
   // https://reactnative.dev/docs/layoutanimation.html
