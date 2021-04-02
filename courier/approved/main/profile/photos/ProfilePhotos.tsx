@@ -1,6 +1,7 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { CourierDocumentType } from 'appjusto-types/courier';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import React from 'react';
@@ -14,11 +15,13 @@ import {
   View,
 } from 'react-native';
 import { useMutation } from 'react-query';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as icons from '../../../../../assets/icons';
-import { ApiContext } from '../../../../../common/app/context';
+import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
+import RadioButton from '../../../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
+import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../../../common/components/views/ConfigItem';
 import HR from '../../../../../common/components/views/HR';
@@ -58,6 +61,7 @@ export default function ({ navigation }: Props) {
   // context
   const api = React.useContext(ApiContext);
   const { showActionSheetWithOptions } = useActionSheet();
+  const dispatch = useDispatch<AppDispatch>();
 
   // app state
   const busy = useSelector(getUIBusy);
@@ -72,6 +76,9 @@ export default function ({ navigation }: Props) {
   const [newDocumentImage, setNewDocumentImage] = React.useState<
     ImageURISource | undefined | null
   >();
+  const [documentType, setDocumentType] = React.useState<CourierDocumentType | undefined | null>();
+  const [inputValue, setInputValue] = React.useState<string>();
+
   type ChangeImageType = typeof setNewSelfie;
 
   const currentSelfieQuery = useCourierSelfie(courier.id);
@@ -97,8 +104,10 @@ export default function ({ navigation }: Props) {
   const canProceed = React.useMemo(() => {
     // no reason to upload if nothing has changed
     if (!newSelfie && !newDocumentImage) return false;
-    return (newSelfie || currentSelfie) && (newDocumentImage || currentDocumentImage);
-  }, [newSelfie, newDocumentImage]);
+    return (
+      (newSelfie || currentSelfie) && (newDocumentImage || currentDocumentImage) && documentType
+    );
+  }, [newSelfie, newDocumentImage, documentType]);
 
   // side effects
   // when current self is loaded, update state
@@ -171,6 +180,15 @@ export default function ({ navigation }: Props) {
       }
     );
 
+  // const updatePhotosHandler = async () => {
+  //   try {
+  //     await dispatch(updateProfile(api)(courier.id, updatedCourier));
+  //     navigation.goBack();
+  //   } catch (error) {
+  //     dispatch(showToast(t('Não foi possível atualizar seu perfil.')));
+  //   }
+  // };
+
   // UI
   return (
     <ScrollView>
@@ -215,7 +233,28 @@ export default function ({ navigation }: Props) {
         <Text style={{ ...texts.sm, marginTop: padding, paddingHorizontal: padding }}>
           {t('Qual documento você optou por enviar?')}
         </Text>
-        {/* add radio buttons here */}
+        <PaddedView style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <RadioButton
+            title={t('RG')}
+            onPress={() => setDocumentType('rg')}
+            checked={documentType === 'rg'}
+          />
+          <RadioButton
+            title={t('CNH')}
+            onPress={() => setDocumentType('cnh')}
+            style={{ marginLeft: padding }}
+            checked={documentType === 'cnh'}
+          />
+        </PaddedView>
+        <DefaultInput
+          title={t('Número do documento')}
+          placeholder={t('Digite o número do seu documento')}
+          style={{ marginBottom: padding, marginHorizontal: padding }}
+          value={inputValue}
+          onChangeText={setInputValue}
+        />
+        <HR color={colors.grey500} />
+        <Text style={{ ...texts.sm, padding }}>{t('Verifique se as imagens estão legíveis:')}</Text>
         <View style={styles.imagesContainer}>
           <DocumentButton
             title={t('Foto de rosto')}

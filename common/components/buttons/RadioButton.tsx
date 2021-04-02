@@ -20,7 +20,16 @@ export default function ({ title, checked, onPress, style, ...props }: Props) {
           style,
         ]}
       >
-        <View style={{ borderWidth: 2, borderRadius: 24, padding: 2, width: 24, height: 24 }}>
+        <View
+          style={{
+            borderWidth: 2,
+            borderRadius: 24,
+            padding: 2,
+            width: 24,
+            height: 24,
+            backgroundColor: colors.white,
+          }}
+        >
           {checked && (
             <View
               style={{ backgroundColor: colors.green500, borderRadius: 16, width: 16, height: 16 }}
