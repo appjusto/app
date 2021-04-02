@@ -20,7 +20,7 @@ import {
 import { showToast } from '../../common/store/ui/actions';
 import { getUIBusy } from '../../common/store/ui/selectors';
 import { updateProfile } from '../../common/store/user/actions';
-import { colors, screens, texts } from '../../common/styles';
+import { colors, halfPadding, screens, texts } from '../../common/styles';
 import { t } from '../../strings';
 import { UnapprovedParamList } from './types';
 
@@ -107,7 +107,9 @@ export default function ({ navigation, route }: Props) {
       <ScrollView>
         {/* header */}
         <PaddedView>
-          <Text style={{ ...texts.x2l, marginBottom: 24 }}>{t('Cadastro de novo entregador')}</Text>
+          <Text style={{ ...texts.x2l, marginBottom: 24, marginTop: halfPadding }}>
+            {t('Cadastro de novo entregador')}
+          </Text>
           <DefaultButton
             title={t('Enviar cadastro')}
             onPress={updateProfileHandler}

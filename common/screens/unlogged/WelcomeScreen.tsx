@@ -2,6 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useCallback, useContext, useState } from 'react';
 import { Keyboard, Text, TouchableOpacity, View } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { t } from '../../../strings';
@@ -67,20 +68,23 @@ export default function ({ navigation, route }: Props) {
   return (
     <SafeAreaView style={{ ...screens.default, padding }}>
       <AvoidingView>
-        <View style={{ top: 0 }}>
-          {flavor === 'consumer' ? <IconIllustrationIntro /> : <IconIntroDelivery />}
-        </View>
-        <View style={{ marginTop: 40 }}>
-          <IconLogoGreen />
-        </View>
-        <View style={{ marginTop: padding }}>
-          <Text style={[texts.x2l]}>{welcomeMessage}</Text>
-        </View>
-        <View style={{ marginTop: padding }}>
-          <Text style={[texts.sm, { color: colors.grey700, lineHeight: 21 }]}>
-            {t('Digite seu e-mail para entrar ou criar sua conta.')}
-          </Text>
-        </View>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View style={{ top: 0 }}>
+            {flavor === 'consumer' ? <IconIllustrationIntro /> : <IconIntroDelivery />}
+          </View>
+          <View style={{ marginTop: 40 }}>
+            <IconLogoGreen />
+          </View>
+          <View style={{ marginTop: padding }}>
+            <Text style={[texts.x2l]}>{welcomeMessage}</Text>
+          </View>
+          <View style={{ marginTop: padding }}>
+            <Text style={[texts.sm, { color: colors.grey700, lineHeight: 21 }]}>
+              {t('Digite seu e-mail para entrar ou criar sua conta.')}
+            </Text>
+          </View>
+        </TouchableWithoutFeedback>
+
         <View style={{ marginTop: padding }}>
           <DefaultInput
             value={email}

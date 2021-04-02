@@ -34,7 +34,7 @@ export default function ({
     : colors.green500;
   const borderColor =
     disabled || activityIndicator ? colors.grey500 : secondary ? colors.black : colors.green500;
-  const color = disabled ? (secondary ? colors.grey500 : colors.white) : colors.black;
+  const color = disabled ? (secondary ? colors.grey500 : colors.grey700) : colors.black;
 
   return (
     <TouchableOpacity disabled={disabled} {...props}>

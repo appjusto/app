@@ -4,11 +4,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { CourierProfile } from 'appjusto-types';
 import { trim } from 'lodash';
 import React from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Text, TextInput } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import AvoidingView from '../../../../common/components/containers/AvoidingView';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import {
@@ -67,8 +68,8 @@ export default function ({ navigation, route }: Props) {
   };
   // UI
   return (
-    <View style={screens.config}>
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="never">
+    <KeyboardAwareScrollView keyboardShouldPersistTaps="never" style={screens.config}>
+      <AvoidingView>
         <PaddedView>
           <DefaultInput
             title={t('Nome')}
@@ -139,7 +140,7 @@ export default function ({ navigation, route }: Props) {
             activityIndicator={busy}
           />
         </PaddedView>
-      </KeyboardAwareScrollView>
-    </View>
+      </AvoidingView>
+    </KeyboardAwareScrollView>
   );
 }

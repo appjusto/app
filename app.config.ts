@@ -58,7 +58,7 @@ export default (context: ConfigContext): ExpoConfig => {
     extra: extra(),
     hooks: hooks(),
   };
-  console.log(config);
+  // console.log(config);
   return config;
 };
 

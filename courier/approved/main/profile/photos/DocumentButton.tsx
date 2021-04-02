@@ -13,9 +13,10 @@ export default function ({ children, title, onPress, hasTitle }: Props) {
         style={{
           width: 160,
           height: 160,
-          backgroundColor: colors.grey50,
+          backgroundColor: colors.grey90,
           ...borders.default,
           borderColor: colors.white,
+          borderRadius: 80,
           // padding,
           justifyContent: 'center',
           alignItems: 'center',

@@ -21,12 +21,13 @@ import DefaultButton from '../../../../../common/components/buttons/DefaultButto
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../../../common/components/views/ConfigItem';
+import HR from '../../../../../common/components/views/HR';
 import ShowIf from '../../../../../common/components/views/ShowIf';
 import useCourierDocumentImage from '../../../../../common/store/api/courier/hooks/useCourierDocumentImage';
 import useCourierSelfie from '../../../../../common/store/api/courier/hooks/useCourierSelfie';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
-import { colors, padding, screens, texts } from '../../../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
 import { LoggedNavigatorParamList } from '../../../../../consumer/v2/types';
 import { t } from '../../../../../strings';
 import { ApprovedParamList } from '../../../types';
@@ -174,22 +175,19 @@ export default function ({ navigation }: Props) {
   return (
     <ScrollView>
       <View style={{ ...screens.config }}>
-        <PaddedView>
+        <PaddedView style={{ marginBottom: padding }}>
+          <Text style={{ ...texts.x2l, marginBottom: halfPadding }}>{t('Fotos e documentos')}</Text>
           <Text style={{ ...texts.sm, color: colors.grey700 }}>
+            {t('Se você optou por ')}
+            <Text style={[{ ...texts.sm, color: colors.grey700 }, texts.bold]}>{t('Moto ')}</Text>
+            {t('e/ou ')}
+            <Text style={[{ ...texts.sm, color: colors.grey700 }, texts.bold]}>{t('Carro')}</Text>
             {t(
-              'Precisamos da sua foto para incluir nas entregas. Se você for utilizar Moto e/ou Carro, vamos precisar também da foto da sua CNH; caso contrário, é só enviar a foto do seu RG.'
+              ', vamos precisar também da foto da sua CNH; caso contrário, é só enviar a foto do seu RG.'
             )}
           </Text>
         </PaddedView>
-
-        {/* {height > 700 && <View style={{ flex: 1 }} />} */}
-        <View
-          style={{
-            borderBottomColor: colors.grey500,
-            borderStyle: 'solid',
-            borderBottomWidth: 1,
-          }}
-        />
+        <HR color={colors.grey500} />
         <ConfigItem
           title={t('Foto do rosto')}
           subtitle={t('Adicionar selfie')}
@@ -214,7 +212,10 @@ export default function ({ navigation }: Props) {
             </View>
           )}
         </ConfigItem>
-        <View style={{ flex: 1 }} />
+        <Text style={{ ...texts.sm, marginTop: padding, paddingHorizontal: padding }}>
+          {t('Qual documento você optou por enviar?')}
+        </Text>
+        {/* add radio buttons here */}
         <View style={styles.imagesContainer}>
           <DocumentButton
             title={t('Foto de rosto')}

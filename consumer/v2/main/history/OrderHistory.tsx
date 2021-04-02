@@ -110,7 +110,7 @@ export default function ({ navigation, route }: Props) {
         header={t('Seu histórico está vazio')}
         description={t('Você ainda não fez nenhum pedido')}
         icon={<IconMotocycle />}
-        background={colors.grey50}
+        background={colors.grey90}
       />
     );
   }
