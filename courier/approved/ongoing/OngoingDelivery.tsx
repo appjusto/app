@@ -1,8 +1,8 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, Text, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -88,7 +88,6 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
-
   // UI handlers
   // handles updating dispatchingState
   const nextStatepHandler = () => {
@@ -112,7 +111,7 @@ export default function ({ navigation, route }: Props) {
     (type === 'food' && dispatchingState === 'arrived-pickup' && status !== 'dispatching');
   const nextStepLabel = (() => {
     const dispatchingState = order?.dispatchingState;
-    if (dispatchingState === 'going-pickup') {
+    if (!dispatchingState || dispatchingState === 'going-pickup') {
       return t('Cheguei para Retirada');
     } else if (dispatchingState === 'arrived-pickup') {
       return t('Saí para Entrega');
@@ -125,7 +124,7 @@ export default function ({ navigation, route }: Props) {
   })();
   const nextPlace = courierNextPlace(order);
   const addressLabel = (() => {
-    if (dispatchingState === 'going-pickup') {
+    if (!dispatchingState || dispatchingState === 'going-pickup') {
       return t('Retirada em');
     } else if (
       dispatchingState === 'arrived-pickup' ||
@@ -138,8 +137,12 @@ export default function ({ navigation, route }: Props) {
   })();
 
   return (
-    <View style={{ ...screens.default, paddingBottom: padding }}>
-      <KeyboardAwareScrollView extraHeight={padding}>
+    <ScrollView style={{ ...screens.default, paddingBottom: padding }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1, justifyContent: 'flex-end' }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -148}
+      >
         <View>
           <OrderMap order={order!} ratio={360 / 316} />
           <RouteIcons order={order} />
@@ -223,7 +226,7 @@ export default function ({ navigation, route }: Props) {
             </PaddedView>
           </View>
         ) : null}
-      </KeyboardAwareScrollView>
-    </View>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
