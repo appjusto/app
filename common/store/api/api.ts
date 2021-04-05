@@ -38,7 +38,6 @@ export default class Api {
   private _search: SearchApi;
 
   constructor(extra: Extra) {
-    console.log(extra.firebase);
     const app = firebase.initializeApp(extra.firebase);
 
     this.authentication = app.auth();
