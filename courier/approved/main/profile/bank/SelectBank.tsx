@@ -24,10 +24,11 @@ export default function ({ navigation, route }: Props) {
   const filteredBanks = React.useMemo(() => {
     if (!banks) return [];
     return banks.filter(
-      (bank) => bank.name.indexOf(bankSearch) !== -1 || bank.code.indexOf(bankSearch) !== -1
+      (bank) =>
+        bank.name.toLowerCase().indexOf(bankSearch.toLowerCase()) !== -1 ||
+        bank.code.indexOf(bankSearch) !== -1
     );
   }, [banks, bankSearch]);
-
   // UI
   return (
     <PaddedView style={{ ...screens.lightGrey }}>
@@ -38,6 +39,7 @@ export default function ({ navigation, route }: Props) {
         placeholder={t('Nome do seu banco')}
         onChangeText={setBankSearch}
         style={{ marginBottom: 32 }}
+        autoCapitalize="words"
       />
       <FlatList
         data={filteredBanks}

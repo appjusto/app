@@ -69,10 +69,10 @@ export default function ({ navigation, route }: Props) {
     <SafeAreaView style={{ ...screens.default, padding }}>
       <AvoidingView>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <View style={{ top: 0 }}>
+          <View style={{ left: -16 }}>
             {flavor === 'consumer' ? <IconIllustrationIntro /> : <IconIntroDelivery />}
           </View>
-          <View style={{ marginTop: 40 }}>
+          <View style={{ marginTop: padding }}>
             <IconLogoGreen />
           </View>
           <View style={{ marginTop: padding }}>

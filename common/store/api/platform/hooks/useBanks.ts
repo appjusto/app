@@ -6,12 +6,12 @@ export default function () {
   // context
   const api = useContext(ApiContext);
   // state
-  const [issues, setIssues] = React.useState<WithId<Bank>[]>();
+  const [banks, setBanks] = React.useState<WithId<Bank>[]>();
   // side effects
   React.useEffect(() => {
     (async () => {
-      setIssues(await api.platform().fetchBanks());
+      setBanks(await api.platform().fetchBanks());
     })();
   }, [api]);
-  return issues;
+  return banks;
 }
