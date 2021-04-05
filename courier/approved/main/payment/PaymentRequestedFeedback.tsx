@@ -23,7 +23,7 @@ export const PaymentRequestedFeedback = ({ navigation }: Props) => {
     <FeedbackView
       header={t('Solicitação realizada')}
       icon={<IconMotocycle />}
-      background={colors.grey90}
+      background={colors.grey50}
       description={t('Em até 4 dias o valor solicitado estará\n na sua conta')}
     >
       <DefaultButton

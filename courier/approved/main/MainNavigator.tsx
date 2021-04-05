@@ -9,7 +9,7 @@ import * as Sentry from 'sentry-expo';
 import * as icons from '../../../assets/icons';
 import { useObserveOngoingOrders } from '../../../common/store/api/order/hooks/useObserveOngoingOrders';
 import { getUser } from '../../../common/store/user/selectors';
-import { colors, halfPadding, texts } from '../../../common/styles';
+import { colors, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import DeliveryHistory from './history/DeliveryHistory';
@@ -96,13 +96,15 @@ export default function ({ navigation }: Props) {
         inactiveTintColor: colors.black,
         activeBackgroundColor: colors.green500,
         inactiveBackgroundColor: colors.white,
-        style: { height: 60, justifyContent: 'center' },
+        style: { height: 65, paddingHorizontal: 4 },
         tabStyle: {
-          borderRadius: 30,
-          height: 40,
-          marginTop: halfPadding,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: 32,
+          height: 36,
+          marginTop: 8,
         },
-        labelStyle: { ...texts.xs, marginBottom: 4 },
+        labelStyle: { ...texts.xs, marginBottom: 5 },
         labelPosition: 'beside-icon',
       }}
     >
