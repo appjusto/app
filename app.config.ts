@@ -58,7 +58,7 @@ export default (context: ConfigContext): ExpoConfig => {
     extra: extra(),
     hooks: hooks(),
   };
-  console.log(config);
+  // console.log(config);
   return config;
 };
 
@@ -171,6 +171,7 @@ const extra = (): Extra => ({
   firebase: {
     apiKey: FIREBASE_API_KEY!, // it will be filled in runtime according with user's OS
     authDomain: `${FIREBASE_PROJECT_ID}.firebaseapp.com`,
+    region: FIREBASE_REGION!,
     databaseURL: `https://${FIREBASE_DATABASE_NAME}.firebaseio.com`,
     functionsURL: `https://${FIREBASE_REGION}-${FIREBASE_PROJECT_ID}.cloudfunctions.net`,
     projectId: FIREBASE_PROJECT_ID!,
