@@ -34,6 +34,7 @@ export interface FirebaseConfig {
   authDomain: string;
   databaseURL: string;
   functionsURL: string;
+  region: string;
   projectId: string;
   storageBucket: string;
   messagingSenderId: string;

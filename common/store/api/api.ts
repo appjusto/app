@@ -38,12 +38,12 @@ export default class Api {
   private _search: SearchApi;
 
   constructor(extra: Extra) {
-    firebase.initializeApp(extra.firebase);
+    const app = firebase.initializeApp(extra.firebase);
 
-    this.authentication = firebase.auth();
-    this.firestore = firebase.firestore();
-    this.functions = firebase.functions();
-    this.storage = firebase.storage();
+    this.authentication = app.auth();
+    this.firestore = app.firestore();
+    this.functions = app.functions(extra.firebase.region);
+    this.storage = app.storage();
 
     if (extra.firebase.emulator.enabled) {
       this.firestore.settings({

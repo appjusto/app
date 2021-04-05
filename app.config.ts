@@ -30,8 +30,8 @@ const {
 
 const flavor: Flavor = FLAVOR as Flavor;
 const environment: Environment = ENVIRONMENT as Environment;
-const version = '0.12.0';
-const versionCode = 19;
+const version = '0.13.0';
+const versionCode = 20;
 
 export default (context: ConfigContext): ExpoConfig => {
   const config: ExpoConfig = {
@@ -171,6 +171,7 @@ const extra = (): Extra => ({
   firebase: {
     apiKey: FIREBASE_API_KEY!, // it will be filled in runtime according with user's OS
     authDomain: `${FIREBASE_PROJECT_ID}.firebaseapp.com`,
+    region: FIREBASE_REGION!,
     databaseURL: `https://${FIREBASE_DATABASE_NAME}.firebaseio.com`,
     functionsURL: `https://${FIREBASE_REGION}-${FIREBASE_PROJECT_ID}.cloudfunctions.net`,
     projectId: FIREBASE_PROJECT_ID!,
