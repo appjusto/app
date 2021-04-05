@@ -131,7 +131,7 @@ export default function ({
   return (
     <View style={{ ...screens.default }}>
       <StepControl
-        style={{ paddingHorizontal: padding, paddingBottom: padding }}
+        style={{ padding }}
         labels={[t('Retirada'), t('Entrega'), t('Confirmação')]}
         activeIndex={step}
         onChange={setPage}

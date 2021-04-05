@@ -12,7 +12,6 @@ import DefaultButton from '../../components/buttons/DefaultButton';
 import AvoidingView from '../../components/containers/AvoidingView';
 import DefaultInput from '../../components/inputs/DefaultInput';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
-import { IconIntroDelivery } from '../../icons/icon-IntroDelivery';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { getExtra, getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
@@ -69,9 +68,15 @@ export default function ({ navigation, route }: Props) {
     <SafeAreaView style={{ ...screens.default, padding }}>
       <AvoidingView>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <View style={{ left: -16 }}>
-            {flavor === 'consumer' ? <IconIllustrationIntro /> : <IconIntroDelivery />}
-          </View>
+          {flavor === 'consumer' ? (
+            <View style={{ top: 0, marginBottom: padding }}>
+              <IconIllustrationIntro />
+            </View>
+          ) : (
+            <View style={{ left: -16 }}>
+              <IconIllustrationIntro />
+            </View>
+          )}
           <View style={{ marginTop: padding }}>
             <IconLogoGreen />
           </View>
