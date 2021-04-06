@@ -27,7 +27,7 @@ export default React.forwardRef(
             backgroundColor: 'white',
             flexDirection: 'row',
             justifyContent: 'space-between',
-            alignItems: 'center',
+            alignItems: 'flex-start',
           },
           style,
         ]}

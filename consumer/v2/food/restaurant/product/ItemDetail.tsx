@@ -84,7 +84,6 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   // when product is loaded
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      // title: product?.name ?? '',
       title: business.name ?? '',
     });
   }, [navigation, business]);
@@ -180,7 +179,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
                 'Tem alguma observação? Por exemplo: sem molho, sem cebola, ponto da carne, etc'
               )}
               multiline
-              numberOfLines={6}
+              textAlignVertical="top"
               value={notes}
               onChangeText={setNotes}
             />

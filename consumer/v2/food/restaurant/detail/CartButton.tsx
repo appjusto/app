@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
 import { getOrderTotal } from '../../../../../common/store/api/order/helpers';
-import { colors, halfPadding, texts } from '../../../../../common/styles';
+import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 
@@ -20,7 +20,7 @@ export const CartButton = ({ order }: Props) => {
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          paddingHorizontal: 8,
+          paddingHorizontal: padding,
           paddingVertical: 12,
           backgroundColor: colors.green500,
           borderRadius: 8,
