@@ -8,7 +8,7 @@ import {
   useContextBusinessId,
 } from '../../../../../common/store/context/business';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
-import { colors, screens } from '../../../../../common/styles';
+import { colors, halfPadding, padding, screens } from '../../../../../common/styles';
 import { RestaurantHeader } from '../../common/RestaurantHeader';
 import { ProductListItem } from '../product/ProductListItem';
 import { RestaurantNavigatorParamList } from '../types';
@@ -34,6 +34,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
       title: restaurant?.name ?? '',
     });
   }, [navigation, restaurant]);
+
   // UI
   const sections =
     menu?.map((category) => ({
@@ -53,7 +54,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
         keyExtractor={(item) => item.id}
         sections={sections}
         ListHeaderComponent={
-          <View>
+          <View style={{ marginBottom: halfPadding }}>
             <RestaurantHeader
               restaurant={restaurant}
               onPress={() => navigation.navigate('AboutRestaurant')}
@@ -61,7 +62,11 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
             />
           </View>
         }
-        renderSectionHeader={({ section }) => <SingleHeader title={section.title} />}
+        renderSectionHeader={({ section }) => (
+          <View style={{ marginTop: padding }}>
+            <SingleHeader title={section.title} />
+          </View>
+        )}
         renderItem={({ item }) => {
           return (
             <TouchableOpacity

@@ -17,7 +17,7 @@ export const FoodOrderNavigator = () => {
       <Stack.Screen
         name="FoodOrderHome"
         component={FoodOrderHome}
-        options={{ title: t('Restaurantes e alimentação') }}
+        options={{ title: t('Restaurantes') }}
       />
       <Stack.Screen
         name="AddressComplete"

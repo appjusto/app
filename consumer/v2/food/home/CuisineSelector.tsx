@@ -3,7 +3,7 @@ import React from 'react';
 import { FlatList, TouchableOpacity, View } from 'react-native';
 import DoubleHeader from '../../../../common/components/texts/DoubleHeader';
 import useCuisines from '../../../../common/store/api/platform/hooks/useCuisines';
-import { halfPadding, padding } from '../../../../common/styles';
+import { padding } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import CuisinesBox from './CuisinesBox';
 
@@ -26,7 +26,6 @@ export const CuisineSelector = ({ selectedCuisineId, onSelect }: Props) => {
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => (selectedCuisineId === item.name ? onSelect(null) : onSelect(item))}
-              style={{ marginRight: halfPadding }}
             >
               <CuisinesBox cuisine={item} selected={selectedCuisineId === item.name} />
             </TouchableOpacity>

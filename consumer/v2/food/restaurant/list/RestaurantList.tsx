@@ -74,7 +74,9 @@ export default function ({ items, ListHeaderComponent, onSelect, onEndReached }:
       }
       ListHeaderComponent={ListHeaderComponent}
       renderSectionHeader={({ section }) => (
-        <DoubleHeader title={section.title} subtitle={section.subtitle} />
+        <View style={{ marginBottom: padding }}>
+          <DoubleHeader title={section.title} subtitle={section.subtitle} />
+        </View>
       )}
       sections={sections}
       keyExtractor={(item) => item.objectID}
@@ -83,7 +85,8 @@ export default function ({ items, ListHeaderComponent, onSelect, onEndReached }:
           <TouchableOpacity onPress={() => onSelect(item.objectID)}>
             <RestaurantListItem
               restaurant={item}
-              cuisine={findCuisineById(item.cuisine)?.name}
+              // cuisine={findCuisineById(item.cuisine)?.name}
+              cuisine={item.cuisine}
               distance={
                 location && item.businessAddress?.latlng
                   ? distanceBetweenLatLng(location, item.businessAddress.latlng)

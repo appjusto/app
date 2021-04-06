@@ -1,4 +1,4 @@
-import { Feather } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -76,14 +76,15 @@ export const LocationBar = () => {
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Feather name="navigation" size={10} />
+        {/* <Feather name="navigation" size={10} /> */}
+        <MaterialIcons name="gps-fixed" size={16} />
         <View style={{ flexShrink: 1 }}>
           <Text style={{ ...texts.xs, marginLeft: halfPadding, flexWrap: 'wrap' }}>
             {currentPlace?.address ? formatAddress(currentPlace.address) : ''}
           </Text>
         </View>
       </View>
-      <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Alterar')}</Text>
+      <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Trocar')}</Text>
     </View>
   );
 };

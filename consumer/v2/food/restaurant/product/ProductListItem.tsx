@@ -33,7 +33,7 @@ export const ProductListItem = ({ product, showRestaurantName }: Props) => {
         borderTopWidth: 1,
         borderStyle: 'solid',
         width: '100%',
-        borderColor: colors.grey500,
+        borderColor: colors.grey50,
       }}
     >
       <View

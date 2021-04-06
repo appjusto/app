@@ -84,9 +84,10 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   // when product is loaded
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title: product?.name ?? '',
+      // title: product?.name ?? '',
+      title: business.name ?? '',
     });
-  }, [navigation, product]);
+  }, [navigation, business]);
   // when editing order item
   React.useEffect(() => {
     if (!itemId) return;
