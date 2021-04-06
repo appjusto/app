@@ -20,19 +20,18 @@ export const OngoingOrderStatus = ({ order }: Props) => {
     description = t(
       'O restaurante começou a preparar seu pedido e logo estará prontinho para você.'
     );
-  } else if (order.status === 'ready') {
+  }
+  if (order.status === 'ready') {
     header = t('Pronto para entrega');
     description = t('Estamos aguardando o entregador pegar o seu pedido e levá-lo até você.');
-  } else if (order.status === 'dispatching') {
+  }
+  if (order.status === 'dispatching') {
     header = t('Saiu para entrega');
     description = t('Já pode se preparar! O entregador saiu e está levando o pedido até você. ');
   }
   if (order.status === 'dispatching' && order.dispatchingState === 'arrived-destination') {
     header = t('Entregador chegou no local');
     description = t('Aguardando o cliente para retirada.');
-  }
-  if (order.type === 'p2p' && order.dispatchingState !== 'arrived-destination') {
-    header = t('Pedido Confirmado!');
   }
   return (
     <View style={{ paddingHorizontal: padding, alignItems: 'center', paddingBottom: padding }}>
@@ -54,18 +53,6 @@ export const OngoingOrderStatus = ({ order }: Props) => {
           {description}
         </Text>
       )}
-      {/* {order.type === 'p2p' && order.status === 'confirmed' && (
-        <Text
-          style={{
-            ...texts.md,
-            color: colors.grey700,
-            textAlign: 'center',
-            marginTop: halfPadding,
-          }}
-        >
-          {t('Pedido: ')} {order.code}
-        </Text>
-      )} */}
       {order.destination?.estimatedTimeOfArrival &&
         order.dispatchingState !== 'arrived-destination' && (
           <View style={{ marginBottom: 8, marginTop: padding }}>
