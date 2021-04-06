@@ -157,6 +157,11 @@ export default function ({ navigation, route }: Props) {
                   navigation.navigate('OngoingOrderCourierDetail', { orderId })
                 }
               />
+              <DefaultButton
+                title={t('Abrir chat com o entregador')}
+                onPress={openChatHandler}
+                style={{ marginHorizontal: padding, marginBottom: padding }}
+              />
               <HR />
               <HR height={padding} />
               <DeliveredItems order={order} />

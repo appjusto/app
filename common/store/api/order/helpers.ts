@@ -93,7 +93,7 @@ export const getOrderTotal = (order: Order) =>
 
 export const courierNextPlace = (order: Order) => {
   const { dispatchingState, origin, destination } = order;
-  if (dispatchingState === 'going-pickup') return origin;
+  if (!dispatchingState || dispatchingState === 'going-pickup') return origin;
   if (dispatchingState === 'arrived-pickup') return destination;
   if (dispatchingState === 'going-destination') return destination;
   if (dispatchingState === 'arrived-destination') return destination;

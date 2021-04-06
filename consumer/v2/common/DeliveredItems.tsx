@@ -19,7 +19,7 @@ export const DeliveredItems = ({ order }: Props) => {
         <View key={item.id}>
           <View style={{ paddingHorizontal: padding, paddingVertical: 12 }}>
             <Text style={[texts.sm]}>{item.product.name}</Text>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row', marginVertical: 4 }}>
               <Text style={{ ...texts.xs, color: colors.green500 }}>{`${item.quantity}x `}</Text>
               <Text style={{ ...texts.xs, color: colors.grey700 }}>
                 {formatCurrency(item.product.price)}
@@ -28,7 +28,7 @@ export const DeliveredItems = ({ order }: Props) => {
             {item.complements?.map((complement) => (
               <View key={complement.complementId}>
                 <Text style={{ ...texts.xs, color: colors.grey700 }}>{`+ ${complement.name}`}</Text>
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row', marginVertical: 4 }}>
                   <Text
                     style={{ ...texts.xs, color: colors.green500 }}
                   >{`${item.quantity}x `}</Text>

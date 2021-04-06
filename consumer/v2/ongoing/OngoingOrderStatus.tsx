@@ -3,8 +3,8 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
-import { IconRequest } from '../../../common/icons/icon-requests';
-import { colors, padding, texts } from '../../../common/styles';
+import { IconOngoingRequest } from '../../../common/icons/icon-ongoingRequest';
+import { colors, halfPadding, padding, texts } from '../../../common/styles';
 import { formatTime } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 
@@ -35,28 +35,44 @@ export const OngoingOrderStatus = ({ order }: Props) => {
     header = t('Pedido Confirmado!');
   }
   return (
-    <View style={{ padding, alignItems: 'center' }}>
+    <View style={{ paddingHorizontal: padding, alignItems: 'center', paddingBottom: padding }}>
       {order.status === 'dispatching' && order.dispatchingState === 'arrived-destination' ? (
         <IconMotocycle />
       ) : (
-        <IconRequest />
+        <IconOngoingRequest />
       )}
       <Text style={{ marginTop: padding, ...texts.xl }}>{header}</Text>
       {order.type === 'food' && (
-        <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>
+        <Text
+          style={{
+            ...texts.md,
+            color: colors.grey700,
+            textAlign: 'center',
+            marginTop: halfPadding,
+          }}
+        >
           {description}
         </Text>
       )}
-      {order.type === 'p2p' && order.status === 'confirmed' && (
-        <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>
+      {/* {order.type === 'p2p' && order.status === 'confirmed' && (
+        <Text
+          style={{
+            ...texts.md,
+            color: colors.grey700,
+            textAlign: 'center',
+            marginTop: halfPadding,
+          }}
+        >
           {t('Pedido: ')} {order.code}
         </Text>
-      )}
+      )} */}
       {order.destination?.estimatedTimeOfArrival &&
         order.dispatchingState !== 'arrived-destination' && (
-          <RoundedText style={{ marginTop: padding }}>{`${t('Previsão de entrega: ')} ${formatTime(
-            order.destination.estimatedTimeOfArrival
-          )}`}</RoundedText>
+          <View style={{ marginBottom: 8, marginTop: padding }}>
+            <RoundedText>{`${t('Previsão de entrega: ')} ${formatTime(
+              order.destination.estimatedTimeOfArrival
+            )}`}</RoundedText>
+          </View>
         )}
     </View>
   );
