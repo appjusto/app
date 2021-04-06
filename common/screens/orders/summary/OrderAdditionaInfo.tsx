@@ -13,7 +13,7 @@ type Props = {
 export const OrderAdditionalInfo = ({ value, onAddInfo }: Props) => {
   return (
     <View style={{ paddingHorizontal: padding, marginBottom: padding }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: halfPadding }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: halfPadding }}>
         <Feather name="info" size={14} />
         <Text style={{ ...texts.sm, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
       </View>

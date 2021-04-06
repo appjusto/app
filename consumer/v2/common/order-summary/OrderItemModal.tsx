@@ -7,7 +7,7 @@ import { ApiContext } from '../../../../common/app/context';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
 import * as helpers from '../../../../common/store/api/order/helpers';
-import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
+import { borders, colors, padding, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import { ItemQuantity } from '../../food/restaurant/product/ItemQuantity';
@@ -35,6 +35,7 @@ export const OrderItemModal = ({ item, order, onModalClose, onEditItemPress, ...
     await api.order().updateOrder(order.id, updatedOrder);
     onModalClose();
   };
+  console.log(item);
   // UI
   return (
     <Modal
@@ -43,7 +44,7 @@ export const OrderItemModal = ({ item, order, onModalClose, onEditItemPress, ...
       {...props}
       style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
     >
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.6)' }}>
         <View
           style={{
             backgroundColor: colors.white,
@@ -65,8 +66,8 @@ export const OrderItemModal = ({ item, order, onModalClose, onEditItemPress, ...
                   justifyContent: 'center',
                   alignItems: 'center',
                   ...borders.default,
-                  borderColor: colors.green500,
-                  backgroundColor: colors.green500,
+                  // borderColor: colors.green500,
+                  // backgroundColor: colors.green500,
                 }}
               >
                 <MaterialIcons name="close" size={16} />
@@ -74,20 +75,16 @@ export const OrderItemModal = ({ item, order, onModalClose, onEditItemPress, ...
             </TouchableOpacity>
           </View>
 
-          <Text style={{ ...texts.xl, marginBottom: padding }}>{item.product.name}</Text>
+          <Text style={{ ...texts.xl }}>{item.product.name}</Text>
           {item.complements?.map((complement) => (
-            <Text style={{ ...texts.sm, color: colors.grey700 }} key={complement.complementId}>
+            <Text
+              style={{ ...texts.sm, color: colors.grey700, marginTop: padding }}
+              key={complement.complementId}
+            >
               {complement.name}
             </Text>
           ))}
-          <View>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Observações:')}</Text>
-            <View style={{ ...borders.default, height: 66, padding, marginTop: halfPadding }}>
-              <Text style={{ ...texts.sm, color: colors.grey700, flexWrap: 'wrap' }}>
-                {item.notes ?? ''}
-              </Text>
-            </View>
-          </View>
+          <Text style={{ ...texts.sm, color: colors.grey700 }}>{item.notes}</Text>
           <View style={{ flexDirection: 'row', marginTop: 24 }}>
             <TouchableOpacity onPress={() => onEditItemPress(item.product.id, item.id)}>
               <RoundedText>{t('Revisar detalhes do item')}</RoundedText>

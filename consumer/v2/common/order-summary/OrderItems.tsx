@@ -50,7 +50,7 @@ export const OrderItems = ({
                 />
               </View>
               <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                <Text style={{ ...texts.xs, color: colors.green500 }}>{`${item.quantity}x `}</Text>
+                <Text style={{ ...texts.xs, color: colors.green600 }}>{`${item.quantity}x `}</Text>
                 <Text style={{ ...texts.xs, color: colors.grey700 }}>
                   {formatCurrency(item.product.price)}
                 </Text>
@@ -62,7 +62,7 @@ export const OrderItems = ({
                   >{`+ ${complement.name}`}</Text>
                   <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
                     <Text
-                      style={{ ...texts.xs, color: colors.green500 }}
+                      style={{ ...texts.xs, color: colors.green600 }}
                     >{`${item.quantity}x `}</Text>
                     <Text style={{ ...texts.xs, color: colors.grey700 }}>
                       {formatCurrency(complement.price)}
