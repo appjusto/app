@@ -33,7 +33,7 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // params
-  const { firstOrder, returnScreen } = route.params;
+  const { firstOrder, returnScreen } = route.params ?? {};
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);

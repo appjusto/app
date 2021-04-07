@@ -1,10 +1,11 @@
 import { OrderType } from 'appjusto-types';
 import React from 'react';
-import { Image, Text, View } from 'react-native';
-import * as icons from '../../../../../assets/icons';
+import { Text, View } from 'react-native';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import ShowIf from '../../../../../common/components/views/ShowIf';
 import useTallerDevice from '../../../../../common/hooks/useTallerDevice';
+import { IconIllustrationPizza } from '../../../../../common/icons/icon-illustration-pizza';
+import { IconSmallUser } from '../../../../../common/icons/icon-small-user';
 import { colors, doublePadding, halfPadding, padding, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { HomeControlItem } from './HomeControlItem';
@@ -44,13 +45,13 @@ export const HomeControls = ({ onStartOrderPress }: Props) => {
         <HomeControlItem
           title={t('Restaurantes e alimentação')}
           subtitle={t('Peça comida de uma forma justa')}
-          icon={<Image source={icons.illustrationPizza} />}
+          icon={<IconIllustrationPizza />}
           onPress={() => onStartOrderPress('food')}
         />
         <HomeControlItem
           title={t('Transporte de encomendas')}
           subtitle={t('Para buscar e deixar pacotes')}
-          icon={<Image source={icons.consumerHomeIllustration} />}
+          icon={<IconSmallUser />}
           onPress={() => onStartOrderPress('p2p')}
         />
       </View>

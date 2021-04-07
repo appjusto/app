@@ -20,12 +20,11 @@ export const HomeControlItem = ({ title, subtitle, icon, onPress }: Props) => {
         ...borders.default,
         borderColor: colors.white,
         width: Math.floor((width - 3 * padding) / 2),
-        paddingHorizontal: 12,
-        paddingBottom: 12,
+        padding,
       }}
     >
       <TouchableOpacity onPress={onPress}>
-        <View>
+        <View style={{ marginBottom: halfPadding }}>
           {icon}
           <Text style={[texts.sm, { paddingTop: 4 }]}>{title}</Text>
           <Text style={[texts.xs, { paddingTop: halfPadding, color: colors.grey700 }]}>
