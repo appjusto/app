@@ -35,7 +35,6 @@ export const OrderItemModal = ({ item, order, onModalClose, onEditItemPress, ...
     await api.order().updateOrder(order.id, updatedOrder);
     onModalClose();
   };
-  console.log(item);
   // UI
   return (
     <Modal
