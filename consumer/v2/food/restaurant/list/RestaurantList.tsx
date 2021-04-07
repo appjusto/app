@@ -75,7 +75,11 @@ export default function ({ items, ListHeaderComponent, onSelect, onEndReached }:
       ListHeaderComponent={ListHeaderComponent}
       renderSectionHeader={({ section }) => (
         <View style={{ marginBottom: padding }}>
-          <DoubleHeader title={section.title} subtitle={section.subtitle} />
+          <DoubleHeader
+            title={section.title}
+            subtitle={section.subtitle}
+            secondary={section.data === closed}
+          />
         </View>
       )}
       sections={sections}

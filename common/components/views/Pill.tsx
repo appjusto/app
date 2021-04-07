@@ -4,16 +4,16 @@ import { colors } from '../../styles';
 
 type Props = {
   tall?: boolean;
-  yellow?: boolean;
+  color?: string;
 };
 
-export default function ({ tall, yellow }: Props) {
+export default function ({ tall, color }: Props) {
   return (
     <View
       style={{
         width: 4,
         height: tall ? 42 : 24,
-        backgroundColor: yellow ? colors.darkYellow : colors.green500,
+        backgroundColor: color ? color : colors.green500,
         borderRadius: 8,
       }}
     />

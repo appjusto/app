@@ -113,7 +113,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Pill yellow />
+            <Pill color={colors.yellow} />
             <Text style={{ ...texts.md, ...texts.bold, marginLeft: 12 }}>
               {t('Aguardando pagamento')}
             </Text>

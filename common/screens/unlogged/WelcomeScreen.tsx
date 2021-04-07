@@ -13,6 +13,7 @@ import AvoidingView from '../../components/containers/AvoidingView';
 import DefaultInput from '../../components/inputs/DefaultInput';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
+import { IconMotocycle } from '../../icons/icon-motocycle';
 import { getExtra, getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
@@ -65,18 +66,16 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <SafeAreaView style={{ ...screens.default, padding }}>
+    <SafeAreaView
+      style={{
+        ...screens.default,
+        paddingHorizontal: padding,
+        paddingBottom: padding,
+      }}
+    >
       <AvoidingView>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          {flavor === 'consumer' ? (
-            <View style={{ top: 0, marginBottom: padding }}>
-              <IconIllustrationIntro />
-            </View>
-          ) : (
-            <View style={{ left: -16 }}>
-              <IconIllustrationIntro />
-            </View>
-          )}
+          {flavor === 'consumer' ? <IconIllustrationIntro /> : <IconMotocycle />}
           <View style={{ marginTop: padding }}>
             <IconLogoGreen />
           </View>
