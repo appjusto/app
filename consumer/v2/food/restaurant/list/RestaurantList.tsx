@@ -84,13 +84,14 @@ export default function ({ items, ListHeaderComponent, onSelect, onEndReached }:
       )}
       sections={sections}
       keyExtractor={(item) => item.objectID}
-      renderItem={({ item }) => (
+      renderItem={({ item, section }) => (
         <View style={{ marginTop: halfPadding }}>
           <TouchableOpacity onPress={() => onSelect(item.objectID)}>
             <RestaurantListItem
               restaurant={item}
               // cuisine={findCuisineById(item.cuisine)?.name}
               cuisine={item.cuisine}
+              secondary={section.data === closed}
               distance={
                 location && item.businessAddress?.latlng
                   ? distanceBetweenLatLng(location, item.businessAddress.latlng)

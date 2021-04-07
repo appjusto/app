@@ -13,9 +13,10 @@ type Props = {
   restaurant: BusinessAlgolia;
   cuisine: string | undefined;
   distance: number | undefined;
+  secondary?: boolean;
 };
 
-export const RestaurantListItem = ({ restaurant, cuisine, distance }: Props) => {
+export const RestaurantListItem = ({ restaurant, cuisine, distance, secondary }: Props) => {
   const { data: logo } = useBusinessLogoURI(restaurant.objectID);
   const outOfRange = (restaurant.deliveryRange ?? 0) < (distance ?? 0);
   return (
@@ -32,9 +33,13 @@ export const RestaurantListItem = ({ restaurant, cuisine, distance }: Props) => 
       >
         <View style={{ justifyContent: 'center' }}>
           <Text style={{ ...texts.sm }}>{restaurant.name}</Text>
-          <Text style={{ ...texts.xs, color: colors.green600 }}>{t(cuisine ?? '')}</Text>
+          <Text style={{ ...texts.xs, color: secondary ? colors.grey700 : colors.green600 }}>
+            {t(cuisine ?? '')}
+          </Text>
           {distance && !outOfRange ? (
-            <Text style={{ ...texts.xs, color: colors.grey700 }}>{formatDistance(distance)}</Text>
+            <Text style={{ ...texts.xs, color: secondary ? colors.green600 : colors.grey700 }}>
+              {formatDistance(distance)}
+            </Text>
           ) : null}
           {distance && outOfRange ? (
             <View style={{ marginTop: halfPadding }}>
