@@ -56,9 +56,21 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
+  const canProceed = orderTotal >= restaurant!.minimumOrder!;
   //handlers
+  // const cartHandler = () => {
+  //   if (!restaurant) {
+  //     dispatch(
+  //       showToast(
+  //         t(`O pedido mínimo nesse restaurante é de ${formatCurrency(restaurant!.minimumOrder!)}`)
+  //       )
+  //     );
+  //   } else {
+  //     navigation.navigate('FoodOrderCheckout');
+  //   }
+  // };
   const cartHandler = () => {
-    if (orderTotal < restaurant!.minimumOrder!) {
+    if (canProceed) {
       dispatch(
         showToast(
           t(`O pedido mínimo nesse restaurante é de ${formatCurrency(restaurant!.minimumOrder!)}`)
@@ -98,10 +110,8 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
           );
         }}
       />
-      <TouchableOpacity onPress={cartHandler}>
-        <HR />
-        <CartButton order={activeOrder} />
-      </TouchableOpacity>
+      <HR />
+      <CartButton order={activeOrder} onCheckout={cartHandler} canProceed={canProceed} />
     </View>
   );
 });
