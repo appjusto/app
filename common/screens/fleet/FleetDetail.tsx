@@ -25,10 +25,9 @@ export type FleetDetailParamList = {
   };
 };
 
-type ScreenNavigationProp = StackNavigationProp<
-  P2POrderNavigatorParamList & RestaurantNavigatorParamList & CourierProfileParamList,
-  'AddressComplete'
->;
+type ScreenNavigationProp = StackNavigationProp<P2POrderNavigatorParamList, 'FleetDetail'> &
+  StackNavigationProp<RestaurantNavigatorParamList, 'FleetDetail'> &
+  StackNavigationProp<CourierProfileParamList, 'FleetDetail'>;
 type ScreenRouteProp = RouteProp<FleetDetailParamList, 'FleetDetail'>;
 
 type Props = {
@@ -58,7 +57,7 @@ export default function ({ navigation, route }: Props) {
   // UI handlers
   const confirmFleet = async () => {
     api.profile().updateProfile(courier.id, { fleet });
-    navigation.navigate('ChooseFleet', { fleetId: fleet.id });
+    navigation.navigate('FleetDetail', { fleetId });
   };
 
   const participants = `${fleet.participantsOnline} ${t('participantes')}`;
