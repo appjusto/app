@@ -65,35 +65,29 @@ export default (context: ConfigContext): ExpoConfig => {
 const name = () => {
   let name = 'AppJusto';
   if (flavor === 'courier') name = 'Parceiro Justo';
-  if (environment === 'local') return `(L) ${name}`;
-  else if (environment === 'dev') return `(D) ${name}`;
+  if (environment === 'dev') return `(D) ${name}`;
   else if (environment === 'staging') return `(S) ${name}`;
   return name;
 };
 
 const slug = () => {
   const slug = `app-justo-${flavor}`;
-  if (environment === 'dev') return `${slug}-dev`;
-  else if (environment === 'staging') return `${slug}-staging`;
+  if (environment !== 'live') return `${slug}-${environment}`;
   return slug;
 };
 
 const scheme = () => {
   const scheme = flavor === 'consumer' ? 'appjusto' : 'appjustocourier';
-  if (environment === 'dev') return `${scheme}dev`;
-  else if (environment === 'staging') return `${scheme}staging`;
+  if (environment !== 'live') return `${scheme}${environment}`;
   return scheme;
 };
 
 const appBundlePackage = () => {
-  const appId = `br.com.appjusto.${flavor}`;
-  if (environment === 'dev' || environment === 'local') return `${appId}.dev`;
-  return `${appId}.${environment}`;
+  return `br.com.appjusto.${flavor}.${environment}`;
 };
 
 const icon = (platform: 'ios' | 'android') => {
-  if (environment === 'local' || environment === 'live')
-    return `./assets/icon-${flavor}-${platform}.png`;
+  if (environment === 'live') return `./assets/icon-${flavor}-${platform}.png`;
   return `./assets/icon-${flavor}-${environment}.png`;
 };
 

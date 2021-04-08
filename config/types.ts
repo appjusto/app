@@ -1,6 +1,6 @@
 import { Flavor } from 'appjusto-types';
 
-export type Environment = 'local' | 'dev' | 'staging' | 'live';
+export type Environment = 'dev' | 'staging' | 'live';
 
 export interface Extra {
   flavor: Flavor;
