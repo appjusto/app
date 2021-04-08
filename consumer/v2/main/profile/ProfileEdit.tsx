@@ -1,4 +1,4 @@
-import { RouteProp } from '@react-navigation/core';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ConsumerProfile } from 'appjusto-types';
 import { trim } from 'lodash';
@@ -22,9 +22,14 @@ import { isConsumerProfileComplete } from '../../../../common/store/courier/vali
 import { showToast } from '../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { RestaurantNavigatorParamList } from '../../food/restaurant/types';
+import { P2POrderNavigatorParamList } from '../../p2p/types';
 import { ProfileParamList } from './types';
 
-type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'ProfileEdit'>;
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<ProfileParamList, 'ProfileEdit'>,
+  StackNavigationProp<P2POrderNavigatorParamList & RestaurantNavigatorParamList>
+>;
 type ScreenRouteProp = RouteProp<ProfileParamList, 'ProfileEdit'>;
 
 type Props = {
@@ -34,7 +39,7 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // params
-  const { returnScreen } = route.params ?? {};
+  const { returnScreen, returnNextScreen } = route.params ?? {};
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
@@ -55,7 +60,8 @@ export default function ({ navigation, route }: Props) {
       setLoading(true);
       api.profile().updateProfile(consumer.id, updatedConsumer);
       setLoading(false);
-      navigation.navigate('ProfilePaymentMethods', { returnScreen });
+      if (returnScreen) navigation.navigate(returnScreen, { returnScreen: returnNextScreen });
+      else navigation.goBack();
     } catch (error) {
       dispatch(showToast(t('Não foi possível atualizar o perfil.'), 'error'));
     }

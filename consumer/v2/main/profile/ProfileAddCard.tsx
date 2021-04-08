@@ -27,7 +27,7 @@ import { ProfileParamList } from './types';
 
 export type ProfileAddCardParamList = {
   ProfileAddCard?: {
-    returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
+    returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P';
   };
 };
 

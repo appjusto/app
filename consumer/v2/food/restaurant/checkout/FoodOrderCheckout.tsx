@@ -82,7 +82,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const navigateToFillPaymentInfo = React.useCallback(() => {
     // if user has no payment method, go direct to 'AddCard' screen
     if (!isConsumerProfileComplete(consumer)) {
-      navigation.navigate('ProfileEdit', { returnScreen: 'FoodOrderCheckout' });
+      const returnScreen = !selectedPaymentMethodId ? 'ProfileAddCard' : 'FoodOrderCheckout';
+      navigation.navigate('ProfileEdit', { returnScreen, returnNextScreen: 'FoodOrderCheckout' });
     } else if (!selectedPaymentMethodId) {
       navigation.navigate('ProfileAddCard', { returnScreen: 'FoodOrderCheckout' });
     } else {

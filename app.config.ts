@@ -95,7 +95,7 @@ const ios = () => ({
   bundleIdentifier: appBundlePackage(),
   buildNumber: `${versionCode}`,
   icon: icon('ios'),
-  supportsTablet: true,
+  supportsTablet: false,
   infoPlist: {
     UIBackgroundModes: ['location'],
     NSLocationWhenInUseUsageDescription: 'Saber a localização do entregador',

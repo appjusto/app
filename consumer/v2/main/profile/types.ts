@@ -5,7 +5,8 @@ import { ProfilePaymentMethodsParamList } from './ProfilePaymentMethods';
 
 export type ProfileParamList = {
   ProfileEdit?: {
-    returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P';
+    returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P' | 'ProfileAddCard';
+    returnNextScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P';
   };
   PaymentMethodDetail: {
     paymentData: IuguCustomerPaymentMethod;

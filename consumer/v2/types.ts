@@ -1,8 +1,8 @@
 import { PermissionDeniedParamList } from '../../common/screens/PermissionDenied';
 import { NestedNavigatorParams } from '../../common/types';
-import { ProfileParamList } from '../profile/types';
 import { DeliveredOrderNavigatorParamList } from './delivered/types';
 import { FoodOrderNavigatorParamList } from './food/types';
+import { ProfileParamList } from './main/profile/types';
 import { MainNavigatorParamList } from './main/types';
 import { OngoingOrderNavigatorParamList } from './ongoing/types';
 import { P2POrderNavigatorParamList } from './p2p/types';
