@@ -18,6 +18,7 @@ import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-
 import PatternInput from '../../../../common/components/inputs/PatternInput';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { consumerInfoSet } from '../../../../common/store/consumer/validators';
+import { isConsumerProfileComplete } from '../../../../common/store/courier/validators';
 import { showToast } from '../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -33,12 +34,13 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // params
-  const { firstOrder, returnScreen } = route.params ?? {};
+  const { returnScreen } = route.params ?? {};
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
   // app state
   const consumer = useSelector(getConsumer)!;
+  const isProfileComplete = isConsumerProfileComplete(consumer);
   // state
   const [email, setEmail] = React.useState<string>(consumer.email ?? '');
   const [name, setName] = React.useState<string>(consumer.name ?? '');
@@ -49,24 +51,13 @@ export default function ({ navigation, route }: Props) {
   const canSubmit = consumerInfoSet(updatedConsumer);
   // handlers
   const updateProfileHandler = async () => {
-    if (!firstOrder) {
-      try {
-        setLoading(true);
-        api.profile().updateProfile(consumer.id, updatedConsumer);
-        setLoading(false);
-        navigation.goBack();
-      } catch (error) {
-        dispatch(showToast(t('Não foi possível atualizar o perfil.'), 'error'));
-      }
-    } else {
-      try {
-        setLoading(true);
-        api.profile().updateProfile(consumer.id, updatedConsumer);
-        setLoading(false);
-        navigation.navigate('ProfilePaymentMethods', { returnScreen });
-      } catch (error) {
-        dispatch(showToast(t('Não foi possível atualizar o perfil.'), 'error'));
-      }
+    try {
+      setLoading(true);
+      api.profile().updateProfile(consumer.id, updatedConsumer);
+      setLoading(false);
+      navigation.navigate('ProfilePaymentMethods', { returnScreen });
+    } catch (error) {
+      dispatch(showToast(t('Não foi possível atualizar o perfil.'), 'error'));
     }
   };
   // refs
@@ -77,54 +68,31 @@ export default function ({ navigation, route }: Props) {
   return (
     <View style={screens.config}>
       <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
-        {firstOrder ? (
-          <Text
-            style={{
-              ...texts.x2l,
-              paddingHorizontal: padding,
-              paddingTop: padding,
-              paddingBottom: halfPadding,
-            }}
-          >
-            {t('Finalize seu cadastro')}
-          </Text>
-        ) : (
-          <Text
-            style={{
-              ...texts.x2l,
-              paddingHorizontal: padding,
-              paddingTop: padding,
-              paddingBottom: halfPadding,
-            }}
-          >
-            {t('Seus dados')}
-          </Text>
-        )}
-        {firstOrder ? (
-          <Text
-            style={{
-              ...texts.sm,
-              paddingHorizontal: padding,
-              color: colors.grey700,
-              paddingBottom: padding,
-            }}
-          >
-            {t(
-              'Seus dados pessoais serão usados somente para a criação das faturas dos seus pedidos.'
-            )}
-          </Text>
-        ) : (
-          <Text
-            style={{
-              ...texts.sm,
-              paddingHorizontal: padding,
-              color: colors.grey700,
-              paddingBottom: padding,
-            }}
-          >
-            {t('Edite seus dados pessoais:')}
-          </Text>
-        )}
+        <Text
+          style={{
+            ...texts.x2l,
+            paddingHorizontal: padding,
+            paddingTop: padding,
+            paddingBottom: halfPadding,
+          }}
+        >
+          {isProfileComplete ? t('Seus dados') : t('Finalize seu cadastro')}
+        </Text>
+
+        <Text
+          style={{
+            ...texts.sm,
+            paddingHorizontal: padding,
+            color: colors.grey700,
+            paddingBottom: padding,
+          }}
+        >
+          {isProfileComplete
+            ? t('Edite seus dados pessoais:')
+            : t(
+                'Seus dados pessoais serão usados somente para a criação das faturas dos seus pedidos.'
+              )}
+        </Text>
 
         <PaddedView>
           <DefaultInput
@@ -180,7 +148,7 @@ export default function ({ navigation, route }: Props) {
           />
           <DefaultButton
             style={{ marginTop: padding }}
-            title={firstOrder ? t('Salvar e avançar para o pagamento') : t('Atualizar')}
+            title={isProfileComplete ? t('Atualizar') : t('Salvar e avançar')}
             onPress={updateProfileHandler}
             disabled={!canSubmit || isLoading}
             activityIndicator={isLoading}

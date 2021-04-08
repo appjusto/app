@@ -1,7 +1,14 @@
 import * as cnpjutils from '@fnando/cnpj';
 import * as cpfutils from '@fnando/cpf';
-import { BankAccount, CourierCompany, CourierProfile } from 'appjusto-types';
+import { BankAccount, ConsumerProfile, CourierCompany, CourierProfile } from 'appjusto-types';
 import { isEmpty } from 'lodash';
+
+export const isConsumerProfileComplete = (
+  profile: Partial<ConsumerProfile> | undefined
+): boolean => {
+  if (!profile) return false;
+  return !isEmpty(profile.name) && cpfutils.isValid(profile.cpf ?? '');
+};
 
 export const courierInfoSet = (courier: Partial<CourierProfile> | undefined): boolean => {
   if (!courier) return false;

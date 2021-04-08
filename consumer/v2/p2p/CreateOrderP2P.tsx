@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
+import { isConsumerProfileComplete } from '../../../common/store/courier/validators';
 import { showToast } from '../../../common/store/ui/actions';
 import { screens } from '../../../common/styles';
 import { LoggedNavigatorParamList } from '../types';
@@ -98,13 +99,14 @@ export default function ({ navigation, route }: Props) {
   // navigate to ProfileAddCard or ProfilePaymentMethods to add or select payment method
   const navigateToFillPaymentInfo = React.useCallback(() => {
     // if user has no payment method, go direct to 'AddCard' screen
-    if (!selectedPaymentMethodId) {
-      // navigation.navigate('ProfileAddCard', { returnScreen: 'CreateOrderP2P' });
-      navigation.navigate('ProfileEdit', { firstOrder: true, returnScreen: 'CreateOrderP2P' });
+    if (!isConsumerProfileComplete(consumer)) {
+      navigation.navigate('ProfileEdit', { returnScreen: 'CreateOrderP2P' });
+    } else if (!selectedPaymentMethodId) {
+      navigation.navigate('ProfileAddCard', { returnScreen: 'CreateOrderP2P' });
     } else {
       navigation.navigate('ProfilePaymentMethods', { returnScreen: 'CreateOrderP2P' });
     }
-  }, [navigation, selectedPaymentMethodId]);
+  }, [consumer, navigation, selectedPaymentMethodId]);
   // navigate to FleetDetail
   const navigateFleetDetail = React.useCallback(
     (fleet: WithId<Fleet>) => {

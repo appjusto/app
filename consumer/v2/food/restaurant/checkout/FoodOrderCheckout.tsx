@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
+import { isConsumerProfileComplete } from '../../../../../common/store/courier/validators';
 import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, screens } from '../../../../../common/styles';
 import { OrderSummary } from '../../../common/order-summary/OrderSummary';
@@ -80,13 +81,14 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   // navigate to ProfileAddCard or ProfilePaymentMethods to add or select payment method
   const navigateToFillPaymentInfo = React.useCallback(() => {
     // if user has no payment method, go direct to 'AddCard' screen
-    if (!selectedPaymentMethodId) {
-      // navigation.navigate('ProfileAddCard', { returnScreen: 'FoodOrderCheckout' });
-      navigation.navigate('ProfileEdit', { firstOrder: true, returnScreen: 'FoodOrderCheckout' });
+    if (!isConsumerProfileComplete(consumer)) {
+      navigation.navigate('ProfileEdit', { returnScreen: 'FoodOrderCheckout' });
+    } else if (!selectedPaymentMethodId) {
+      navigation.navigate('ProfileAddCard', { returnScreen: 'FoodOrderCheckout' });
     } else {
       navigation.navigate('ProfilePaymentMethods', { returnScreen: 'FoodOrderCheckout' });
     }
-  }, [navigation, selectedPaymentMethodId]);
+  }, [consumer, navigation, selectedPaymentMethodId]);
   // navigate to FleetDetail
   const navigateFleetDetail = React.useCallback(
     (fleet: WithId<Fleet>) => {
