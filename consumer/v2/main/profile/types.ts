@@ -4,8 +4,7 @@ import { ProfileAddCardParamList } from './ProfileAddCard';
 import { ProfilePaymentMethodsParamList } from './ProfilePaymentMethods';
 
 export type ProfileParamList = {
-  ProfileEdit: {
-    firstOrder?: boolean;
+  ProfileEdit?: {
     returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P';
   };
   PaymentMethodDetail: {
