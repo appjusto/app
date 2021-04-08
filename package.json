@@ -52,6 +52,7 @@
     "geokit": "^1.1.0",
     "i18n-js": "^3.7.1",
     "lodash": "^4.17.19",
+    "marked": "^2.0.1",
     "nanoid": "^3.1.10",
     "normalizr": "^3.6.0",
     "react": "16.13.1",
@@ -69,12 +70,14 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "sentry-expo": "^3.0.4"
+    "sentry-expo": "^3.0.4",
+    "react-native-webview": "11.0.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
     "@types/i18n-js": "^3.0.3",
     "@types/mapbox__polyline": "^1.0.0",
+    "@types/marked": "^2.0.1",
     "@types/react": "~16.9.35",
     "@types/react-native": "~0.63.2",
     "@types/react-redux": "^7.1.9",
