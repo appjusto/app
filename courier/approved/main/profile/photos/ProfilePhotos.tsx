@@ -188,18 +188,20 @@ export default function ({ navigation }: Props) {
           </View>
         )}
       </ConfigItem>
-      <View style={[styles.imagesContainer, { marginTop: padding }]}>
-        <DocumentButton
-          title={t('Foto de rosto')}
-          onPress={() => actionSheetHandler(setNewSelfie, [1, 1])}
-          hasTitle={!currentSelfie && !newSelfie}
-        >
-          <Image
-            source={newSelfie ?? currentSelfie ?? icons.selfie}
-            resizeMode="cover"
-            style={newSelfie || currentSelfie ? styles.image : styles.icon}
-          />
-        </DocumentButton>
+      <View style={[styles.imagesContainer, { marginTop: 24 }]}>
+        <View style={{ marginBottom: height > 700 ? 24 : 0 }}>
+          <DocumentButton
+            title={t('Foto de rosto')}
+            onPress={() => actionSheetHandler(setNewSelfie, [1, 1])}
+            hasTitle={!currentSelfie && !newSelfie}
+          >
+            <Image
+              source={newSelfie ?? currentSelfie ?? icons.selfie}
+              resizeMode="cover"
+              style={newSelfie || currentSelfie ? styles.image : styles.icon}
+            />
+          </DocumentButton>
+        </View>
 
         <DocumentButton
           title={t('RG ou CNH aberta')}
@@ -234,15 +236,15 @@ const styles = StyleSheet.create({
   image: {
     width: 160,
     height: 160,
-    borderRadius: 90,
+    borderRadius: 80,
   },
   imagesContainer: {
     flexDirection: height > 700 ? 'column' : 'row',
     justifyContent: 'space-between',
     width: '100%',
     height: height > 700 ? 368 : 196,
+    // height: '100%',
     alignItems: 'center',
-    // padding: width > 360 ? 16 : 0,
     padding: width <= 320 ? 0 : 16,
     flex: 1,
   },
