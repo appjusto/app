@@ -88,7 +88,7 @@ export default function ({ navigation }: Props) {
     // no reason to upload if nothing has changed
     if (!newSelfie && !newDocumentImage) return false;
     return (newSelfie || currentSelfie) && (newDocumentImage || currentDocumentImage);
-  }, [newSelfie, newDocumentImage, currentSelfie, currentDocumentImage]);
+  }, [newSelfie, newDocumentImage]);
 
   // side effects
   // when current self is loaded, update state
@@ -102,7 +102,7 @@ export default function ({ navigation }: Props) {
     if (newSelfie?.uri) {
       uploadSelfie.mutate(newSelfie.uri);
     }
-  }, [newSelfie, uploadSelfie]);
+  }, [newSelfie]);
   // when current document image is loaded, update state
   React.useEffect(() => {
     if (currentDocumentImageQuery.data) {
@@ -114,7 +114,7 @@ export default function ({ navigation }: Props) {
     if (newDocumentImage?.uri) {
       uploadDocumentImage.mutate(newDocumentImage.uri);
     }
-  }, [newDocumentImage, uploadDocumentImage]);
+  }, [newDocumentImage]);
 
   // handlers
   const pickFromCamera = async (changeImage: ChangeImageType, aspect: [number, number]) => {
