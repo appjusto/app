@@ -1,7 +1,6 @@
 import * as Permissions from 'expo-permissions';
-import { useState, useEffect } from 'react';
-
-import { stopLocationUpdatesTask, startLocationUpdatesTask } from '../utils/location';
+import React from 'react';
+import { startLocationUpdatesTask, stopLocationUpdatesTask } from '../utils/location';
 
 const shouldAskPermission = (
   response: Permissions.PermissionResponse | null | undefined
@@ -13,19 +12,28 @@ const shouldAskPermission = (
 };
 
 export default function (enabled: boolean, key: string): Permissions.PermissionStatus {
+  const currentKey = React.useRef(key);
   // state
-  const [permissionResponse, setPermissionResponse] = useState<
+  const [permissionResponse, setPermissionResponse] = React.useState<
     Permissions.PermissionResponse | null | undefined
   >(undefined);
 
   // side effects
+  // get current permission status
+  React.useEffect(() => {
+    (async () => {
+      setPermissionResponse(await Permissions.getAsync(Permissions.LOCATION));
+    })();
+  }, []);
   // key is used to allow restarting the process of verification
-  useEffect(() => {
-    setPermissionResponse(null); // start or reset permission check process
+  React.useEffect(() => {
+    if (key !== currentKey.current) {
+      currentKey.current = key;
+      setPermissionResponse(null); // start or reset permission check process
+    }
   }, [key]);
-
   // check if we should ask permission or start/stop location updates task
-  useEffect(() => {
+  React.useEffect(() => {
     if (enabled) {
       if (shouldAskPermission(permissionResponse)) {
         (async () => {

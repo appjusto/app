@@ -1,7 +1,6 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { t } from 'i18n-js';
 import React, { useContext, useEffect } from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,14 +8,17 @@ import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import useNotificationToken from '../../../../common/hooks/useNotificationToken';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
+import { updateShownLocationDisclosure } from '../../../../common/store/courier/actions';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { padding, screens } from '../../../../common/styles';
+import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
 import HomeControls from './HomeControls';
 import HomeDeliveriesSummary from './HomeDeliveriesSummary';
+import { LocationDisclosureModal } from './LocationDisclosureModal';
 import ModalChooser from './ModalChooser';
 
 type ScreenNavigationProp = CompositeNavigationProp<
@@ -38,6 +40,7 @@ export default function ({ navigation }: Props) {
   const ongoingOrders = useSelector(getOrders);
 
   // state
+  const [locationModalVisible, setLocationModalVisible] = React.useState(false);
   const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
     courier!.notificationToken
   );
@@ -56,6 +59,9 @@ export default function ({ navigation }: Props) {
     <View style={[screens.default, screens.headless]}>
       <ScrollView>
         <HomeControls
+          onShowLocationDisclosure={() => {
+            setLocationModalVisible(true);
+          }}
           onPermissionDenied={() => {
             navigation.navigate('PermissionDenied', {
               title: t('Precisamos acessar a localização do seu dispositivo'),
@@ -100,6 +106,13 @@ export default function ({ navigation }: Props) {
           </View> */}
         </PaddedView>
       </ScrollView>
+      <LocationDisclosureModal
+        visible={locationModalVisible}
+        onModalClose={() => {
+          setLocationModalVisible(false);
+          dispatch(updateShownLocationDisclosure(true));
+        }}
+      />
     </View>
   );
 }
