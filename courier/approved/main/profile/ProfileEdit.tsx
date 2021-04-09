@@ -4,12 +4,10 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { CourierProfile } from 'appjusto-types';
 import { trim } from 'lodash';
 import React from 'react';
-import { Text, TextInput } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAvoidingView, Text, TextInput, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
-import AvoidingView from '../../../../common/components/containers/AvoidingView';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import {
@@ -68,79 +66,78 @@ export default function ({ navigation, route }: Props) {
   };
   // UI
   return (
-    <KeyboardAwareScrollView keyboardShouldPersistTaps="never" style={screens.config}>
-      <AvoidingView>
-        <PaddedView>
-          <DefaultInput
-            title={t('Nome')}
-            placeholder={t('Digite seu nome')}
-            value={name}
-            returnKeyType="next"
-            blurOnSubmit={false}
-            onChangeText={(text) => setName(text)}
-            onSubmitEditing={() => surnameRef.current?.focus()}
-            keyboardType="default"
-            maxLength={30}
-          />
-          <DefaultInput
-            ref={surnameRef}
-            style={{ marginTop: padding }}
-            title={t('Sobrenome')}
-            placeholder={t('Digite seu sobrenome')}
-            value={surname}
-            returnKeyType="next"
-            blurOnSubmit={false}
-            onChangeText={(text) => setSurname(text)}
-            onSubmitEditing={() => cpfRef.current?.focus()}
-            keyboardType="default"
-            maxLength={30}
-          />
-          <PatternInput
-            ref={cpfRef}
-            style={{ marginTop: padding }}
-            title={t('CPF')}
-            value={cpf}
-            placeholder={t('Seu CPF, apenas números')}
-            mask={cpfMask}
-            parser={numbersOnlyParser}
-            formatter={cpfFormatter}
-            keyboardType="number-pad"
-            returnKeyType="next"
-            blurOnSubmit={false}
-            onFocus={() => setFocusedField('cpf')}
-            onBlur={() => setFocusedField(undefined)}
-            onChangeText={(text) => setCpf(trim(text))}
-            onSubmitEditing={() => phoneRef.current?.focus()}
-          />
+    <KeyboardAvoidingView style={{ ...screens.config }}>
+      <PaddedView style={{ flex: 1 }}>
+        <DefaultInput
+          title={t('Nome')}
+          placeholder={t('Digite seu nome')}
+          value={name}
+          returnKeyType="next"
+          blurOnSubmit={false}
+          onChangeText={(text) => setName(text)}
+          onSubmitEditing={() => surnameRef.current?.focus()}
+          keyboardType="default"
+          maxLength={30}
+        />
+        <DefaultInput
+          ref={surnameRef}
+          style={{ marginTop: padding }}
+          title={t('Sobrenome')}
+          placeholder={t('Digite seu sobrenome')}
+          value={surname}
+          returnKeyType="next"
+          blurOnSubmit={false}
+          onChangeText={(text) => setSurname(text)}
+          onSubmitEditing={() => cpfRef.current?.focus()}
+          keyboardType="default"
+          maxLength={30}
+        />
+        <PatternInput
+          ref={cpfRef}
+          style={{ marginTop: padding }}
+          title={t('CPF')}
+          value={cpf}
+          placeholder={t('Seu CPF, apenas números')}
+          mask={cpfMask}
+          parser={numbersOnlyParser}
+          formatter={cpfFormatter}
+          keyboardType="number-pad"
+          returnKeyType="next"
+          blurOnSubmit={false}
+          onFocus={() => setFocusedField('cpf')}
+          onBlur={() => setFocusedField(undefined)}
+          onChangeText={(text) => setCpf(trim(text))}
+          onSubmitEditing={() => phoneRef.current?.focus()}
+        />
 
-          <PatternInput
-            ref={phoneRef}
-            style={{ marginTop: padding }}
-            title={t('Celular')}
-            value={phone}
-            placeholder={t('Número do seu celular')}
-            mask={phoneMask}
-            parser={numbersOnlyParser}
-            formatter={phoneFormatter}
-            keyboardType="number-pad"
-            returnKeyType="done"
-            blurOnSubmit
-            onChangeText={(text) => setPhone(trim(text))}
-          />
-          {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
-            <Text style={{ ...texts.sm, ...texts.bold, color: colors.grey700, marginTop: padding }}>
-              {t('O CPF digitado não é válido.')}
-            </Text>
-          )}
-          <DefaultButton
-            style={{ marginTop: padding }}
-            title={t('Atualizar')}
-            onPress={updateProfileHandler}
-            disabled={!canSubmit || busy}
-            activityIndicator={busy}
-          />
-        </PaddedView>
-      </AvoidingView>
-    </KeyboardAwareScrollView>
+        <PatternInput
+          ref={phoneRef}
+          style={{ marginTop: padding }}
+          title={t('Celular')}
+          value={phone}
+          placeholder={t('Número do seu celular')}
+          mask={phoneMask}
+          parser={numbersOnlyParser}
+          formatter={phoneFormatter}
+          keyboardType="number-pad"
+          returnKeyType="done"
+          blurOnSubmit
+          onChangeText={(text) => setPhone(trim(text))}
+        />
+        {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
+          <Text style={{ ...texts.sm, ...texts.bold, color: colors.grey700, marginTop: padding }}>
+            {t('O CPF digitado não é válido.')}
+          </Text>
+        )}
+        <View style={{ flex: 1 }} />
+        <DefaultButton
+          style={{ marginVertical: padding }}
+          title={t('Atualizar')}
+          onPress={updateProfileHandler}
+          disabled={!canSubmit || busy}
+          activityIndicator={busy}
+        />
+      </PaddedView>
+    </KeyboardAvoidingView>
   );
 }

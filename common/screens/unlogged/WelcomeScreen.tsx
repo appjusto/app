@@ -1,7 +1,14 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useCallback, useContext, useState } from 'react';
-import { Keyboard, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +16,6 @@ import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
-import AvoidingView from '../../components/containers/AvoidingView';
 import DefaultInput from '../../components/inputs/DefaultInput';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
@@ -70,13 +76,17 @@ export default function ({ navigation, route }: Props) {
       style={{
         ...screens.default,
         paddingHorizontal: padding,
-        paddingBottom: padding,
+        paddingVertical: padding,
       }}
     >
-      <AvoidingView>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -200}
+      >
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           {flavor === 'consumer' ? <IconIllustrationIntro /> : <IconMotocycle />}
-          <View style={{ marginTop: padding }}>
+          <View style={{ marginTop: 48 }}>
             <IconLogoGreen />
           </View>
           <View style={{ marginTop: padding }}>
@@ -126,7 +136,7 @@ export default function ({ navigation, route }: Props) {
           </View>
         </View>
         <View style={{ flex: 1 }} />
-        <View style={{ marginVertical: padding }}>
+        <View style={{ marginBottom: padding, marginTop: 32 }}>
           <DefaultButton
             disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
             title={t('Entrar')}
@@ -134,7 +144,7 @@ export default function ({ navigation, route }: Props) {
             activityIndicator={busy}
           />
         </View>
-      </AvoidingView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
