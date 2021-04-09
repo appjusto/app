@@ -35,7 +35,7 @@ export default class SearchApi {
         if (filter.type === 'cuisine') {
           return [...result, `cuisine: ${filter.value}`];
         } else if (filter.type === 'classification') {
-          return [...result, `classification: ${filter.value}`];
+          return [...result, `classifications: ${filter.value}`];
         }
         return result;
       }, [])
