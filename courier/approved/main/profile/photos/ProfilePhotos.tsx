@@ -6,9 +6,9 @@ import * as Permissions from 'expo-permissions';
 import React from 'react';
 import { Dimensions, Image, ImageURISource, StyleSheet, View } from 'react-native';
 import { useMutation } from 'react-query';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import * as icons from '../../../../../assets/icons';
-import { ApiContext, AppDispatch } from '../../../../../common/app/context';
+import { ApiContext } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../../../common/components/views/ConfigItem';
@@ -26,7 +26,7 @@ import DocumentButton from './DocumentButton';
 const defaultImageOptions: ImagePicker.ImagePickerOptions = {
   mediaTypes: ImagePicker.MediaTypeOptions.Images,
   allowsEditing: true,
-  aspect: [1, 1],
+  // aspect: [4, 3],
   quality: 1,
 };
 
@@ -47,7 +47,6 @@ export default function ({ navigation }: Props) {
   // context
   const api = React.useContext(ApiContext);
   const { showActionSheetWithOptions } = useActionSheet();
-  const dispatch = useDispatch<AppDispatch>();
 
   // app state
   const busy = useSelector(getUIBusy);
@@ -89,7 +88,7 @@ export default function ({ navigation }: Props) {
     // no reason to upload if nothing has changed
     if (!newSelfie && !newDocumentImage) return false;
     return (newSelfie || currentSelfie) && (newDocumentImage || currentDocumentImage);
-  }, [newSelfie, newDocumentImage]);
+  }, [newSelfie, newDocumentImage, currentSelfie, currentDocumentImage]);
 
   // side effects
   // when current self is loaded, update state
@@ -103,7 +102,7 @@ export default function ({ navigation }: Props) {
     if (newSelfie?.uri) {
       uploadSelfie.mutate(newSelfie.uri);
     }
-  }, [newSelfie]);
+  }, [newSelfie, uploadSelfie]);
   // when current document image is loaded, update state
   React.useEffect(() => {
     if (currentDocumentImageQuery.data) {
@@ -115,13 +114,13 @@ export default function ({ navigation }: Props) {
     if (newDocumentImage?.uri) {
       uploadDocumentImage.mutate(newDocumentImage.uri);
     }
-  }, [newDocumentImage]);
+  }, [newDocumentImage, uploadDocumentImage]);
 
   // handlers
-  const pickFromCamera = React.useCallback(async (changeImage: ChangeImageType) => {
+  const pickFromCamera = async (changeImage: ChangeImageType, aspect: [number, number]) => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA);
     if (granted) {
-      const result = await ImagePicker.launchCameraAsync(defaultImageOptions);
+      const result = await ImagePicker.launchCameraAsync({ ...defaultImageOptions, aspect });
       if (result.cancelled) return;
       changeImage(result);
     } else {
@@ -130,11 +129,11 @@ export default function ({ navigation }: Props) {
         subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
       });
     }
-  }, []);
-  const pickFromGallery = React.useCallback(async (changeImage: ChangeImageType) => {
+  };
+  const pickFromGallery = async (changeImage: ChangeImageType, aspect: [number, number]) => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (granted) {
-      const result = await ImagePicker.launchImageLibraryAsync(defaultImageOptions);
+      const result = await ImagePicker.launchImageLibraryAsync({ ...defaultImageOptions, aspect });
       if (result.cancelled) return;
       changeImage(result);
     } else {
@@ -143,9 +142,9 @@ export default function ({ navigation }: Props) {
         subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
       });
     }
-  }, []);
+  };
 
-  const actionSheetHandler = (changeImage: ChangeImageType) =>
+  const actionSheetHandler = (changeImage: ChangeImageType, aspect: [number, number]) =>
     showActionSheetWithOptions(
       {
         options: [t('Tirar uma foto'), t('Escolher da galeria'), t('Cancelar')],
@@ -155,9 +154,9 @@ export default function ({ navigation }: Props) {
         if (buttonIndex === 2) {
           // cancel action
         } else if (buttonIndex === 1) {
-          pickFromGallery(changeImage);
+          pickFromGallery(changeImage, aspect);
         } else if (buttonIndex === 0) {
-          pickFromCamera(changeImage);
+          pickFromCamera(changeImage, aspect);
         }
       }
     );
@@ -168,7 +167,7 @@ export default function ({ navigation }: Props) {
       <ConfigItem
         title={t('Foto do rosto')}
         subtitle={t('Adicionar selfie')}
-        onPress={() => actionSheetHandler(setNewSelfie)}
+        onPress={() => actionSheetHandler(setNewSelfie, [1, 1])}
         checked={!!currentSelfieQuery.data && !uploadSelfie.isLoading}
       >
         {uploadSelfie.isLoading && (
@@ -180,7 +179,7 @@ export default function ({ navigation }: Props) {
       <ConfigItem
         title={t('RG ou CNH aberta')}
         subtitle={t('Adicionar foto do documento')}
-        onPress={() => actionSheetHandler(setNewDocumentImage)}
+        onPress={() => actionSheetHandler(setNewDocumentImage, [4, 3])}
         checked={!!currentDocumentImageQuery.data && !uploadDocumentImage.isLoading}
       >
         {uploadDocumentImage.isLoading && (
@@ -192,7 +191,7 @@ export default function ({ navigation }: Props) {
       <View style={[styles.imagesContainer, { marginTop: padding }]}>
         <DocumentButton
           title={t('Foto de rosto')}
-          onPress={() => actionSheetHandler(setNewSelfie)}
+          onPress={() => actionSheetHandler(setNewSelfie, [1, 1])}
           hasTitle={!currentSelfie && !newSelfie}
         >
           <Image
@@ -204,7 +203,7 @@ export default function ({ navigation }: Props) {
 
         <DocumentButton
           title={t('RG ou CNH aberta')}
-          onPress={() => actionSheetHandler(setNewDocumentImage)}
+          onPress={() => actionSheetHandler(setNewDocumentImage, [4, 3])}
           hasTitle={!currentDocumentImage && !newDocumentImage}
         >
           <Image
