@@ -1,6 +1,9 @@
 import React from 'react';
 import { Modal, ModalProps, Text, View } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import { updateShownLocationDisclosure } from '../../../../common/store/courier/actions';
 import { colors, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
@@ -9,6 +12,9 @@ interface Props extends ModalProps {
 }
 
 export const LocationDisclosureModal = ({ onModalClose, ...props }: Props) => {
+  // context
+  const dispatch = useDispatch<AppDispatch>();
+  // UI
   return (
     <Modal transparent {...props}>
       <View
@@ -32,7 +38,13 @@ export const LocationDisclosureModal = ({ onModalClose, ...props }: Props) => {
               'O AppJusto coleta a localização somente quando você estiver disponível, para permitir o envio de corridas mais próximas e o acompanhamento das entregas. Isso também pode ocorrer com o aplicativo fechado ou sem uso no momento.'
             )}
           </Text>
-          <DefaultButton title={t('Ok, entendi')} onPress={onModalClose} />
+          <DefaultButton
+            title={t('Ok, entendi')}
+            onPress={() => {
+              dispatch(updateShownLocationDisclosure(true));
+              onModalClose();
+            }}
+          />
         </View>
       </View>
     </Modal>

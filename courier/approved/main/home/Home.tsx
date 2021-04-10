@@ -8,7 +8,6 @@ import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import useNotificationToken from '../../../../common/hooks/useNotificationToken';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
-import { updateShownLocationDisclosure } from '../../../../common/store/courier/actions';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
@@ -110,7 +109,6 @@ export default function ({ navigation }: Props) {
         visible={locationModalVisible}
         onModalClose={() => {
           setLocationModalVisible(false);
-          dispatch(updateShownLocationDisclosure(true));
         }}
       />
     </View>

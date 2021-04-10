@@ -37,27 +37,23 @@ export default function ({ onShowLocationDisclosure, onPermissionDenied, onFleet
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   const tallerDevice = useTallerDevice();
-
-  // app state
+  // redux
   const courier = useSelector(getCourier)!;
   const shownLocationDisclosure = useSelector(getShownLocationDisclosure);
   const status = courier!.status;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
-  const shoudAskPermission = working && shownLocationDisclosure;
 
   // state
   const [locationKey, setLocationKey] = React.useState(nanoid());
-  const locationPermission = useLocationUpdates(shoudAskPermission, locationKey);
+  const locationPermission = useLocationUpdates(working, locationKey);
 
   // side effects
-  // location permission denied
+  // location permission handling
   React.useEffect(() => {
-    if (working) {
-      if (!shownLocationDisclosure) {
-        onShowLocationDisclosure();
-      } else if (locationPermission === 'denied') {
-        onPermissionDenied();
-      }
+    if (locationPermission === 'denied') {
+      onPermissionDenied();
+    } else if (locationPermission === 'undetermined') {
+      if (working && !shownLocationDisclosure) onShowLocationDisclosure();
     }
   }, [
     working,
