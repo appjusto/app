@@ -63,7 +63,7 @@ export default function ({ navigation }: Props) {
   }, [coords]);
   // UI
   return (
-    <SafeAreaView style={[screens.default]}>
+    <SafeAreaView style={[screens.config]}>
       {/* <StatusBar /> */}
       <ScrollView>
         <HomeControls

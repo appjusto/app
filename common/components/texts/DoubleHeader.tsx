@@ -18,9 +18,7 @@ export default function ({ title, subtitle, secondary, ...props }: Props) {
         <Text style={{ ...texts.xl, color: secondary ? colors.grey700 : colors.black }}>
           {t(title)}
         </Text>
-        <Text style={{ ...texts.xs, color: secondary ? colors.grey700 : colors.grey700 }}>
-          {t(subtitle)}
-        </Text>
+        <Text style={{ ...texts.xs, color: colors.grey700 }}>{t(subtitle)}</Text>
       </View>
     </View>
   );

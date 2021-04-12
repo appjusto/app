@@ -1,3 +1,4 @@
+import { MaterialIcons } from '@expo/vector-icons';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
@@ -102,7 +103,6 @@ export default function ({ navigation, route }: Props) {
       });
     }
   };
-
   // UI
   if (sections.length === 0) {
     return (
@@ -152,6 +152,13 @@ export default function ({ navigation, route }: Props) {
                     title={title}
                     subtitle={subtitle}
                     onPress={() => orderSelectHandler(item)}
+                    leftIcon={
+                      item.type === 'food' ? (
+                        <MaterialIcons name="fastfood" size={16} />
+                      ) : (
+                        <MaterialIcons name="local-mall" size={16} />
+                      )
+                    }
                   >
                     <StatusBadge order={item} />
                   </ConfigItem>

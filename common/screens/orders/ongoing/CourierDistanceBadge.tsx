@@ -14,7 +14,11 @@ export const CourierDistanceBadge = ({ order }: Props) => {
   if (!route || !courier) return null;
   const distance = helpers.courierDistanceFromNextPlace(order);
   let text = '';
-  if (dispatchingState === 'going-pickup' || dispatchingState === 'going-destination') {
+  if (
+    !dispatchingState ||
+    dispatchingState === 'going-pickup' ||
+    dispatchingState === 'going-destination'
+  ) {
     text = separateWithDot(formatDistance(distance), formatDuration(route.duration));
     // text = formatDistance(distance);
   } else if (dispatchingState === 'arrived-pickup' || dispatchingState === 'arrived-destination') {

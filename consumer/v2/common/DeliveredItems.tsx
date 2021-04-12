@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import HR from '../../../common/components/views/HR';
-import { colors, padding, texts } from '../../../common/styles';
+import { colors, halfPadding, padding, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 
 interface Props {
@@ -13,7 +13,9 @@ interface Props {
 export const DeliveredItems = ({ order }: Props) => {
   return (
     <View>
-      <SingleHeader title={order.business?.name ?? ''} />
+      <View style={{ marginVertical: halfPadding }}>
+        <SingleHeader title={order.business?.name ?? ''} />
+      </View>
       <HR />
       {order.items?.map((item) => (
         <View key={item.id}>

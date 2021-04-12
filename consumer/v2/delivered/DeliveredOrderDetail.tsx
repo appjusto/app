@@ -136,7 +136,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
         <ReviewBox
           review={review?.type ?? reviewType}
           comment={review?.comment ?? comment}
-          editable={!!review}
+          editable={!review}
           focusable={!!review}
           onReviewChange={(type) => setReviewType(type)}
           onCommentChange={(value) => setComment(value)}
