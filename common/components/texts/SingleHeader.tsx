@@ -1,11 +1,11 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, ViewProps } from 'react-native';
 import { texts } from '../../styles';
 import Pill from '../views/Pill';
 
-type Props = {
+interface Props extends ViewProps {
   title: string;
-};
+}
 
 export default function ({ title }: Props) {
   return (
