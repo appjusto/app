@@ -9,12 +9,14 @@ import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import useNotificationToken from '../../../../common/hooks/useNotificationToken';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
+import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { padding, screens } from '../../../../common/styles';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
+import { FreshWorksCard } from './FreshWorksCard';
 import HomeControls from './HomeControls';
 import HomeDeliveriesSummary from './HomeDeliveriesSummary';
 import ModalChooser from './ModalChooser';
@@ -53,7 +55,7 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <View style={[screens.default, screens.headless]}>
+    <View style={[screens.config, screens.headless]}>
       <ScrollView>
         <HomeControls
           onPermissionDenied={() => {
@@ -76,9 +78,6 @@ export default function ({ navigation }: Props) {
           }
         />
         <PaddedView>
-          <View style={{ marginBottom: padding }}>
-            <ModalChooser />
-          </View>
           <HomeOngoingDeliveries
             orders={ongoingOrders}
             onSelect={(order, openChat) =>
@@ -93,6 +92,16 @@ export default function ({ navigation }: Props) {
           >
             <HomeDeliveriesSummary />
           </TouchableOpacity>
+          <View style={{ marginVertical: padding }}>
+            <FreshWorksCard />
+          </View>
+          <View style={{ marginBottom: padding }}>
+            <HomeShareCard
+              title="Divulgue o AppJusto"
+              subtitle="Compartilhe esse movimento por uma economia mais justa."
+            />
+          </View>
+          <ModalChooser />
           {/* <View style={{ marginTop: padding }}>
             <View>
               <DemandCard />
