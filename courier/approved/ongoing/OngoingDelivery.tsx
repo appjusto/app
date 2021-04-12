@@ -140,7 +140,7 @@ export default function ({ navigation, route }: Props) {
     <ScrollView style={{ ...screens.default, paddingBottom: padding }}>
       <KeyboardAvoidingView
         style={{ flex: 1, justifyContent: 'flex-end' }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -148}
       >
         <View>
