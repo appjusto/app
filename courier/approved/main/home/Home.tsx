@@ -3,7 +3,7 @@ import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { t } from 'i18n-js';
 import React, { useContext, useEffect } from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { Linking, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
@@ -93,7 +93,13 @@ export default function ({ navigation }: Props) {
             <HomeDeliveriesSummary />
           </TouchableOpacity>
           <View style={{ marginVertical: padding }}>
-            <FreshWorksCard />
+            <FreshWorksCard
+              onPress={() =>
+                Linking.openURL(
+                  'https://appjusto.freshdesk.com/support/solutions/folders/67000533349'
+                )
+              }
+            />
           </View>
           <View style={{ marginBottom: padding }}>
             <HomeShareCard

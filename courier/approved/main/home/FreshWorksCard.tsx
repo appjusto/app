@@ -4,9 +4,13 @@ import { IconFwCourier } from '../../../../common/icons/icon-fw-courier';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import { t } from '../../../../strings';
 
-export const FreshWorksCard = () => {
+type Props = {
+  onPress: () => void;
+};
+
+export const FreshWorksCard = ({ onPress }: Props) => {
   return (
-    <TouchableOpacity onPress={() => null}>
+    <TouchableOpacity onPress={onPress}>
       <HomeCard
         icon={<IconFwCourier />}
         title={t('Como funciona o AppJusto')}
