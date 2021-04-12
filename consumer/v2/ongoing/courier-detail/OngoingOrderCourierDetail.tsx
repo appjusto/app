@@ -40,7 +40,7 @@ export const OngoingOrderCourierDetail = ({ navigation, route }: Props) => {
   }
 
   return (
-    <ScrollView style={{ backgroundColor: colors.white }}>
+    <ScrollView style={{ backgroundColor: colors.white }} scrollIndicatorInsets={{ right: 1 }}>
       <View style={{ paddingBottom: padding }}>
         <OrderCourierSummary courier={order.courier!} />
         <SingleHeader title={t('Integrante da frota')} />

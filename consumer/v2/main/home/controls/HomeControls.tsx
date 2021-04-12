@@ -49,8 +49,8 @@ export const HomeControls = ({ onStartOrderPress }: Props) => {
           onPress={() => onStartOrderPress('food')}
         />
         <HomeControlItem
-          title={t('Transporte de encomendas')}
-          subtitle={t('Para buscar e deixar pacotes')}
+          title={t('Encomendas')}
+          subtitle={t('Peça para buscar ou entregar um pacote')}
           icon={<IconSmallUser />}
           onPress={() => onStartOrderPress('p2p')}
         />

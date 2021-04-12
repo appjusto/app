@@ -32,17 +32,17 @@ export default ({ navigation }: Props) => {
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <View style={{ alignItems: 'center' }}>
           <Text style={{ ...texts.x2l, textAlign: 'center' }}>
-            {t('Enviamos um link de confirmação para o seu e-mail.')}
+            {t('Enviamos uma confirmação para o seu e-mail.')}
           </Text>
           <View style={{ height: 114, width: 114, marginTop: 22, marginBottom: 16 }}>
             <IconMotocycle />
           </View>
           <Text style={{ ...texts.sm, color: colors.grey700, textAlign: 'center' }}>
-            {t('Continue o acesso clicando no link que você recebeu.')}
+            {t('Continue o acesso clicando no link enviado.')}
           </Text>
           <TouchableOpacity onPress={() => navigation.goBack()} style={{ alignItems: 'center' }}>
             <Text style={{ marginTop: padding, ...texts.xs, color: colors.green600 }}>
-              {t('Preencher o e-mail novamente')}
+              {t('Não recebeu? Preencha seu e-mail novamente.')}
             </Text>
           </TouchableOpacity>
         </View>

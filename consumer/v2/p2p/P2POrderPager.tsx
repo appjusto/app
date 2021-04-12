@@ -16,7 +16,7 @@ import { StepControl } from '../../../common/components/controls/step-control/St
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../common/components/texts/LabeledText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
-import { doublePadding, padding, screens, texts } from '../../../common/styles';
+import { padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { OrderSummary } from '../common/order-summary/OrderSummary';
 import { Step } from './types';
@@ -127,7 +127,7 @@ export default function ({
   };
   // UI
   const isDeviceTaller = useTallerDevice();
-  const verticalPadding = isDeviceTaller ? doublePadding : padding;
+  // const verticalPadding = isDeviceTaller ? doublePadding : padding;
   return (
     <View style={{ ...screens.default }}>
       <StepControl
@@ -140,7 +140,11 @@ export default function ({
       <ViewPager ref={viewPager} style={{ flex: 1 }} onPageScroll={onPageScroll}>
         {/* origin */}
         <View style={{ flex: 1, paddingHorizontal: padding }}>
-          <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+          <KeyboardAwareScrollView
+            keyboardShouldPersistTaps="always"
+            style={{ flex: 1 }}
+            contentContainerStyle={{ flex: 1 }}
+          >
             <Pressable
               onPress={() => {
                 navigateToAddressComplete('origin', origin);
@@ -152,7 +156,7 @@ export default function ({
             </Pressable>
 
             <DefaultInput
-              style={{ marginTop: verticalPadding }}
+              style={{ marginTop: 12 }}
               value={originAdditionalInfo}
               title={t('Complemento (se houver)')}
               placeholder={t('Apartamento, sala, loja, etc.')}
@@ -161,7 +165,7 @@ export default function ({
             />
 
             <DefaultInput
-              style={{ marginTop: verticalPadding }}
+              style={{ marginTop: 12 }}
               value={originInstructions}
               title={t('Instruções para entrega')}
               placeholder={t('Quem irá atender o entregador, etc.')}
@@ -186,8 +190,9 @@ export default function ({
                 </Text>
               </View>
             </TouchableWithoutFeedback>
+            <View style={{ flex: 1 }} />
             <DefaultButton
-              style={{ marginVertical: verticalPadding }}
+              style={{ marginBottom: padding }}
               title={t('Confirmar local de retirada')}
               onPress={nextStepHandler}
               disabled={!stepReady(step + 1)}
@@ -198,7 +203,11 @@ export default function ({
         {/* destination */}
         {Boolean(origin?.address.description) && (
           <View style={{ flex: 1, paddingHorizontal: padding }}>
-            <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+            <KeyboardAwareScrollView
+              keyboardShouldPersistTaps="always"
+              style={{ flex: 1 }}
+              contentContainerStyle={{ flex: 1 }}
+            >
               <Pressable
                 onPress={() => {
                   navigateToAddressComplete('destination', destination ?? undefined);
@@ -213,7 +222,7 @@ export default function ({
               </Pressable>
 
               <DefaultInput
-                style={{ marginTop: verticalPadding }}
+                style={{ marginTop: 12 }}
                 value={destinationAdditionalInfo}
                 title={t('Complemento (se houver)')}
                 placeholder={t('Apartamento, sala, loja, etc.')}
@@ -221,7 +230,7 @@ export default function ({
               />
 
               <DefaultInput
-                style={{ marginTop: verticalPadding }}
+                style={{ marginTop: 12 }}
                 value={destinationInstructions}
                 title={t('Instruções para entrega')}
                 placeholder={t('Quem irá atender o entregador, etc.')}
@@ -245,9 +254,9 @@ export default function ({
                   </Text>
                 </View>
               </TouchableWithoutFeedback>
-
+              <View style={{ flex: 1 }} />
               <DefaultButton
-                style={{ marginVertical: verticalPadding }}
+                style={{ marginBottom: padding }}
                 title={t('Confirmar local de entrega')}
                 onPress={nextStepHandler}
                 disabled={!stepReady(step + 1)}

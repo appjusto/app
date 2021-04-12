@@ -24,7 +24,7 @@ export default function ({ flipped, style, ...props }: Props) {
       ]}
       {...props}
     >
-      {flipped ? <Feather size={16} name="arrow-left" /> : <Feather size={16} name="arrow-right" />}
+      {flipped ? <Feather size={24} name="arrow-left" /> : <Feather size={16} name="arrow-right" />}
     </View>
   );
 }
