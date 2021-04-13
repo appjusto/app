@@ -1,52 +1,31 @@
 import React from 'react';
-import { Modal, ModalProps, Text, View } from 'react-native';
+import { ModalProps } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../../../common/app/context';
-import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import { DefaultModal } from '../../../../common/components/views/DefaultModal';
 import { updateShownLocationDisclosure } from '../../../../common/store/courier/actions';
-import { colors, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
 interface Props extends ModalProps {
-  onModalClose: () => void;
+  onDismiss: () => void;
 }
 
-export const LocationDisclosureModal = ({ onModalClose, ...props }: Props) => {
+export const LocationDisclosureModal = ({ onDismiss, ...props }: Props) => {
   // context
   const dispatch = useDispatch<AppDispatch>();
   // UI
   return (
-    <Modal transparent {...props}>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        }}
-      >
-        <View
-          style={{
-            marginHorizontal: padding * 2,
-            backgroundColor: colors.white,
-            padding: padding * 2,
-          }}
-        >
-          <Text style={{ ...texts.xl }}>{t('Compartilhamento da localização')}</Text>
-          <Text style={{ ...texts.md, marginVertical: padding * 2 }}>
-            {t(
-              'O AppJusto coleta a localização somente quando você estiver disponível, para permitir o envio de corridas mais próximas e o acompanhamento das entregas. Isso também pode ocorrer com o aplicativo fechado ou sem uso no momento.'
-            )}
-          </Text>
-          <DefaultButton
-            title={t('Ok, entendi')}
-            onPress={() => {
-              dispatch(updateShownLocationDisclosure(true));
-              onModalClose();
-            }}
-          />
-        </View>
-      </View>
-    </Modal>
+    <DefaultModal
+      header={t('Compartilhamento da localização')}
+      body={t(
+        'O AppJusto coleta a localização somente quando você estiver disponível, para permitir o envio de corridas mais próximas e o acompanhamento das entregas. Isso também pode ocorrer com o aplicativo fechado ou sem uso no momento.'
+      )}
+      dismissButtonTitle={t('Ok, entendi')}
+      onDismiss={() => {
+        dispatch(updateShownLocationDisclosure(true));
+        onDismiss();
+      }}
+      {...props}
+    />
   );
 };

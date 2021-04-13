@@ -2,8 +2,8 @@ export const numbersOnlyParser = (value: string) => value.replace(/[^0-9]/g, '')
 
 export const numbersAndLettersParser = (mask: string, padWithZeros?: boolean) => {
   const regexp = (char: string): RegExp => {
-    if (char === '9' || char === '0') return /\d/;
-    if (char === 'D') return /\w/;
+    if (char === '9' || char === 'D') return /\d/;
+    if (char === 'X') return /\w/;
     throw new Error(`Unexpected character in mask: ${char}`);
   };
   return (value: string) =>

@@ -122,7 +122,7 @@ export default function ({ navigation }: Props) {
       </ScrollView>
       <LocationDisclosureModal
         visible={locationModalVisible}
-        onModalClose={() => {
+        onDismiss={() => {
           setLocationModalVisible(false);
         }}
       />
