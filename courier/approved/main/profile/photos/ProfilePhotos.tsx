@@ -179,7 +179,7 @@ export default function ({ navigation }: Props) {
       <ConfigItem
         title={t('RG ou CNH aberta')}
         subtitle={t('Adicionar foto do documento')}
-        onPress={() => actionSheetHandler(setNewDocumentImage, [4, 3])}
+        onPress={() => actionSheetHandler(setNewDocumentImage, [8.5, 12])}
         checked={!!currentDocumentImageQuery.data && !uploadDocumentImage.isLoading}
       >
         {uploadDocumentImage.isLoading && (
@@ -205,7 +205,7 @@ export default function ({ navigation }: Props) {
 
         <DocumentButton
           title={t('RG ou CNH aberta')}
-          onPress={() => actionSheetHandler(setNewDocumentImage, [4, 3])}
+          onPress={() => actionSheetHandler(setNewDocumentImage, [8.5, 12])}
           hasTitle={!currentDocumentImage && !newDocumentImage}
         >
           <Image

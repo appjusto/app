@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { getShownLocationDisclosure } from '../store/courier/selectors';
 import { startLocationUpdatesTask, stopLocationUpdatesTask } from '../utils/location';
 
-export default function (enabled: boolean, key: string): Permissions.PermissionStatus {
+export default function (enabled: boolean, key: string): Permissions.PermissionStatus | undefined {
   // redux
   const shownLocationDisclosure = useSelector(getShownLocationDisclosure);
   // refs
@@ -62,5 +62,5 @@ export default function (enabled: boolean, key: string): Permissions.PermissionS
     }
   }, [enabled, shownLocationDisclosure, response]);
 
-  return response?.status ?? Permissions.PermissionStatus.UNDETERMINED;
+  return response?.status;
 }
