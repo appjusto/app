@@ -4,20 +4,28 @@ import { Issue, WithId } from 'appjusto-types';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import React from 'react';
-import { ActivityIndicator, ImageURISource, Text, TextInput, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import {
+  ActivityIndicator,
+  Image,
+  ImageURISource,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
+import { box } from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { showToast } from '../../../common/store/ui/actions';
-import { colors, padding, screens, texts } from '../../../common/styles';
+import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { defaultImageOptions } from '../main/profile/photos/ProfilePhotos';
 import { ApprovedParamList } from '../types';
-import { NoCodePhotoButton } from './NoCodePhotoButton';
 import { OngoingDeliveryNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
@@ -44,6 +52,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
   const [name, setName] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [packagePhoto, setPackagePhoto] = React.useState<ImageURISource | undefined | null>();
+  const [frontPhoto, setFrontPhoto] = React.useState<ImageURISource | undefined | null>();
   //refs
   const descriptionRef = React.useRef<TextInput>(null);
   // UI
@@ -56,12 +65,13 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
   }
   // UI handlers
 
-  const packagePhotoHandler = async (aspect: [number, number]) => {
+  const packagePhotoHandler = async (type: 'package' | 'front', aspect: [number, number]) => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA);
     if (granted) {
       const result = await ImagePicker.launchCameraAsync({ ...defaultImageOptions, aspect });
       if (result.cancelled) return;
-      setPackagePhoto(result);
+      if (type === 'package') setPackagePhoto(result);
+      if (type === 'front') setFrontPhoto(result);
     } else {
       navigation.navigate('PermissionDenied', {
         title: t('Precisamos acessar sua câmera'),
@@ -84,7 +94,6 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
       }
     })();
   };
-  console.log(packagePhoto);
   return (
     <ScrollView style={{ ...screens.default }} contentContainerStyle={{ flex: 1 }}>
       <PaddedView style={{ flex: 1 }}>
@@ -121,16 +130,56 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
             marginTop: padding,
           }}
         >
-          <NoCodePhotoButton
-            title={t('Foto da encomenda')}
-            onPress={() => packagePhotoHandler([1, 1])}
-            photoType="package"
-          />
-          <NoCodePhotoButton
-            title={t('Foto da fachada')}
-            onPress={() => packagePhotoHandler([1, 1])}
-            photoType="front"
-          />
+          <TouchableOpacity onPress={() => packagePhotoHandler('package', [1, 1])}>
+            <View
+              style={{
+                ...borders.default,
+                height: 160,
+                width: 160,
+                backgroundColor: colors.grey50,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <View style={{ alignItems: 'center' }}>
+                <Image
+                  source={packagePhoto ?? box}
+                  resizeMode="cover"
+                  style={packagePhoto ? styles.photo : styles.icon}
+                />
+                {!packagePhoto && (
+                  <Text style={{ ...texts.xs, marginTop: halfPadding }}>
+                    {t('Foto da encomenda')}
+                  </Text>
+                )}
+              </View>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => packagePhotoHandler('front', [1, 1])}>
+            <View
+              style={{
+                ...borders.default,
+                height: 160,
+                width: 160,
+                backgroundColor: colors.grey50,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <View style={{ alignItems: 'center' }}>
+                <Image
+                  source={frontPhoto ?? box}
+                  resizeMode="cover"
+                  style={frontPhoto ? styles.photo : styles.icon}
+                />
+                {!frontPhoto && (
+                  <Text style={{ ...texts.xs, marginTop: halfPadding }}>
+                    {t('Foto da fachada')}
+                  </Text>
+                )}
+              </View>
+            </View>
+          </TouchableOpacity>
         </View>
         <View style={{ flex: 1 }} />
         <DefaultButton
@@ -138,29 +187,19 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
           onPress={() => null}
           activityIndicator={isLoading}
         />
-        {/* primeira coisa: mandar a foto pro storage. ver o esquema da selfie */}
-        {/* <View style={{ flex: 1 }} />
-        <IconMotocycle />
-        <Text style={{ ...texts.x2l }}>{t('Escolha o motivo da confirmação sem código:')}</Text>
-        <View style={{ marginTop: padding }}>
-          {issues?.map((issue) => (
-            <RadioButton
-              key={issue.id}
-              title={issue.title}
-              onPress={() => setSelectedIssue(issue)}
-              checked={selectedIssue?.id === issue.id}
-              style={{ marginBottom: padding }}
-            />
-          ))}
-        </View>
-        <View style={{ flex: 1 }} />
-        <DefaultButton
-          title={t('Confirmar entrega')}
-          onPress={confirmHandler}
-          disabled={isLoading || !selectedIssue}
-          activityIndicator={isLoading}
-        /> */}
       </PaddedView>
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  icon: {
+    width: 40,
+    height: 40,
+  },
+  photo: {
+    borderRadius: 8,
+    height: 160,
+    width: 160,
+  },
+});
