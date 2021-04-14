@@ -7,9 +7,10 @@ import { borders, colors, halfPadding, texts } from '../../../common/styles';
 interface Props extends ButtonProps {
   children?: React.ReactNode;
   title: string;
+  photoType: 'package' | 'front';
 }
 
-export const NoCodePhotoButton = ({ children, onPress, title }: Props) => {
+export const NoCodePhotoButton = ({ children, onPress, title, photoType }: Props) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View
@@ -22,7 +23,7 @@ export const NoCodePhotoButton = ({ children, onPress, title }: Props) => {
           alignItems: 'center',
         }}
       >
-        <Feather name="box" size={40} />
+        <Feather name={photoType === 'package' ? 'box' : 'home'} size={40} />
         <Text style={{ ...texts.xs, marginTop: halfPadding }}>{title}</Text>
       </View>
     </TouchableOpacity>

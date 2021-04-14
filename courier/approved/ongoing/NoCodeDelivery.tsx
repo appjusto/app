@@ -6,6 +6,7 @@ import { ActivityIndicator, Text, TextInput, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
+import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
@@ -66,8 +67,8 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
     })();
   };
   return (
-    <ScrollView style={{ ...screens.default }}>
-      <PaddedView>
+    <ScrollView style={{ ...screens.default }} contentContainerStyle={{ flex: 1 }}>
+      <PaddedView style={{ flex: 1 }}>
         <DefaultInput
           title={t('Nome do recebedor')}
           placeholder={t('Nome de quem recebeu a encomenda')}
@@ -94,11 +95,26 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
           {t('Agora, tire uma foto da encomenda e da fachada do local de entrega:')}
         </Text>
         <View
-          style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: padding,
+          }}
         >
-          <NoCodePhotoButton title={t('Foto da encomenda')} onPress={() => null} />
-          <NoCodePhotoButton title={t('Foto da fachada')} onPress={() => null} />
+          <NoCodePhotoButton
+            title={t('Foto da encomenda')}
+            onPress={() => null}
+            photoType="package"
+          />
+          <NoCodePhotoButton title={t('Foto da fachada')} onPress={() => null} photoType="front" />
         </View>
+        <View style={{ flex: 1 }} />
+        <DefaultButton
+          title={t('Confirmar entrega')}
+          onPress={() => null}
+          activityIndicator={isLoading}
+        />
         {/* <View style={{ flex: 1 }} />
         <IconMotocycle />
         <Text style={{ ...texts.x2l }}>{t('Escolha o motivo da confirmação sem código:')}</Text>
