@@ -1,8 +1,10 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Issue, WithId } from 'appjusto-types';
+import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
 import React from 'react';
-import { ActivityIndicator, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, ImageURISource, Text, TextInput, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -13,6 +15,7 @@ import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import { defaultImageOptions } from '../main/profile/photos/ProfilePhotos';
 import { ApprovedParamList } from '../types';
 import { NoCodePhotoButton } from './NoCodePhotoButton';
 import { OngoingDeliveryNavigatorParamList } from './types';
@@ -40,6 +43,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
   const [isLoading, setLoading] = React.useState(false);
   const [name, setName] = React.useState('');
   const [description, setDescription] = React.useState('');
+  const [packagePhoto, setPackagePhoto] = React.useState<ImageURISource | undefined | null>();
   //refs
   const descriptionRef = React.useRef<TextInput>(null);
   // UI
@@ -51,6 +55,20 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
     );
   }
   // UI handlers
+
+  const packagePhotoHandler = async (aspect: [number, number]) => {
+    const { granted } = await Permissions.askAsync(Permissions.CAMERA);
+    if (granted) {
+      const result = await ImagePicker.launchCameraAsync({ ...defaultImageOptions, aspect });
+      if (result.cancelled) return;
+      setPackagePhoto(result);
+    } else {
+      navigation.navigate('PermissionDenied', {
+        title: t('Precisamos acessar sua câmera'),
+        subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
+      });
+    }
+  };
   const confirmHandler = () => {
     if (!selectedIssue) return;
     (async () => {
@@ -66,6 +84,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
       }
     })();
   };
+  console.log(packagePhoto);
   return (
     <ScrollView style={{ ...screens.default }} contentContainerStyle={{ flex: 1 }}>
       <PaddedView style={{ flex: 1 }}>
@@ -104,10 +123,14 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
         >
           <NoCodePhotoButton
             title={t('Foto da encomenda')}
-            onPress={() => null}
+            onPress={() => packagePhotoHandler([1, 1])}
             photoType="package"
           />
-          <NoCodePhotoButton title={t('Foto da fachada')} onPress={() => null} photoType="front" />
+          <NoCodePhotoButton
+            title={t('Foto da fachada')}
+            onPress={() => packagePhotoHandler([1, 1])}
+            photoType="front"
+          />
         </View>
         <View style={{ flex: 1 }} />
         <DefaultButton
@@ -115,6 +138,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
           onPress={() => null}
           activityIndicator={isLoading}
         />
+        {/* primeira coisa: mandar a foto pro storage. ver o esquema da selfie */}
         {/* <View style={{ flex: 1 }} />
         <IconMotocycle />
         <Text style={{ ...texts.x2l }}>{t('Escolha o motivo da confirmação sem código:')}</Text>

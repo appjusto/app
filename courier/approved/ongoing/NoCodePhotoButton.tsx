@@ -1,14 +1,21 @@
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { ButtonProps, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { borders, colors, halfPadding, texts } from '../../../common/styles';
 
-interface Props extends ButtonProps {
+// interface Props extends ButtonProps {
+//   children?: React.ReactNode;
+//   title: string;
+//   photoType: 'package' | 'front';
+// }
+
+type Props = {
   children?: React.ReactNode;
   title: string;
   photoType: 'package' | 'front';
-}
+  onPress: () => Promise<void>;
+};
 
 export const NoCodePhotoButton = ({ children, onPress, title, photoType }: Props) => {
   return (

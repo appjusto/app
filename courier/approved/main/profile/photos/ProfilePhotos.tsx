@@ -23,7 +23,7 @@ import { ApprovedParamList } from '../../../types';
 import { CourierProfileParamList } from '../types';
 import DocumentButton from './DocumentButton';
 
-const defaultImageOptions: ImagePicker.ImagePickerOptions = {
+export const defaultImageOptions: ImagePicker.ImagePickerOptions = {
   mediaTypes: ImagePicker.MediaTypeOptions.Images,
   allowsEditing: true,
   // aspect: [4, 3],
@@ -91,7 +91,7 @@ export default function ({ navigation }: Props) {
   }, [newSelfie, newDocumentImage]);
 
   // side effects
-  // when current self is loaded, update state
+  // when current selfie is loaded, update state
   React.useEffect(() => {
     if (currentSelfieQuery.data) {
       setCurrentSelfie({ uri: currentSelfieQuery.data });
