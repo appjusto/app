@@ -14,6 +14,7 @@ import { hyphenFormatter } from '../../../../../common/components/inputs/pattern
 import { numbersAndLettersParser } from '../../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../../common/components/inputs/PatternInput';
 import LabeledText from '../../../../../common/components/texts/LabeledText';
+import { DefaultModal } from '../../../../../common/components/views/DefaultModal';
 import useBanks from '../../../../../common/store/api/platform/hooks/useBanks';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { bankAccountSet } from '../../../../../common/store/courier/validators';
@@ -38,19 +39,20 @@ export default function ({ navigation, route }: Props) {
   // redux
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier)!;
+  const { bankAccount } = courier;
   // screen state
   const banks = useBanks();
   const [type, setType] = React.useState<BankAccountType>('Corrente');
   const [selectedBank, setSelectedBank] = React.useState<Bank>();
   const [agency, setAgency] = React.useState('');
   const [account, setAccount] = React.useState('');
+  const [warning, setWarning] = React.useState<string>();
   const canSubmit = selectedBank && !isEmpty(agency) && !isEmpty(account);
   // refs
   const accountRef = React.useRef<TextInput>(null);
   // side effects
   // checking initial bank information
   React.useEffect(() => {
-    const { bankAccount } = courier;
     if (bankAccount && bankAccountSet(bankAccount)) {
       const bank = banks?.find((b) => b.name === bankAccount?.name);
       if (bank) {
@@ -61,6 +63,11 @@ export default function ({ navigation, route }: Props) {
       }
     }
   }, [banks, courier]);
+  React.useEffect(() => {
+    if (!selectedBank) return;
+    if (bankAccount?.name === selectedBank.name) return; // no need to alert during update
+    setWarning(selectedBank.warning);
+  }, [bankAccount?.name, selectedBank]);
   React.useEffect(() => {
     const { bank } = route.params ?? {};
     if (bank) setSelectedBank(bank);
@@ -100,119 +107,134 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <ScrollView style={screens.config} contentContainerStyle={{ flex: 1 }}>
-      <PaddedView style={{ flex: 1 }}>
-        <Text style={{ ...texts.sm, marginTop: halfPadding, color: colors.grey700 }}>
-          {t('A conta precisa estar no seu CPF ou CNPJ. Não serão aceitas contas de terceiros.')}
-        </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: halfPadding,
-          }}
-        >
-          <RadioButton
-            title={t('Conta-Corrente')}
-            onPress={() => setType('Corrente')}
-            checked={type === 'Corrente'}
-          />
-          <View style={{ marginLeft: padding }}>
-            <RadioButton
-              title={t('Poupança')}
-              onPress={() => setType('Poupança')}
-              checked={type === 'Poupança'}
-            />
-          </View>
-        </View>
-        <View style={{ marginTop: halfPadding, flex: 1 }}>
-          <Pressable
-            onPress={() => {
-              navigation.navigate('SelectBank');
-            }}
-          >
-            <View>
-              <LabeledText style={{ marginTop: padding }} title={t('Banco')}>
-                {selectedBank?.name ?? t('Escolha seu banco')}
-              </LabeledText>
-            </View>
-          </Pressable>
-          <PatternInput
-            key={selectedBank?.name}
-            style={{ marginTop: 16 }}
-            title={t('Agência')}
-            placeholder={
-              (selectedBank?.agencyPattern.indexOf('D') ?? -1) > -1
-                ? t('Número da agência com o dígito')
-                : t('Número da agência')
-            }
-            value={agency}
-            mask={selectedBank?.agencyPattern}
-            parser={agencyParser}
-            formatter={agencyFormatter}
-            editable={!!selectedBank}
-            keyboardType="number-pad"
-            returnKeyType="next"
-            blurOnSubmit={false}
-            onChangeText={(text) => setAgency(text)}
-            onSubmitEditing={() => accountRef.current?.focus()}
-            onBlur={() => {
-              if (agency.length > 0) {
-                const paddedAgency = numbersAndLettersParser(
-                  selectedBank!.agencyPattern,
-                  true
-                )(agency);
-                setAgency(paddedAgency);
-              }
-            }}
-          />
+    <>
+      <ScrollView style={screens.config} contentContainerStyle={{ flex: 1 }}>
+        <PaddedView style={{ flex: 1 }}>
+          <Text style={{ ...texts.sm, marginTop: halfPadding, color: colors.grey700 }}>
+            {t('A conta precisa estar no seu CPF ou CNPJ. Não serão aceitas contas de terceiros.')}
+          </Text>
           <View
             style={{
-              marginTop: 16,
               flexDirection: 'row',
-              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginTop: halfPadding,
             }}
           >
+            <RadioButton
+              title={t('Conta-Corrente')}
+              onPress={() => setType('Corrente')}
+              checked={type === 'Corrente'}
+            />
+            <View style={{ marginLeft: padding }}>
+              <RadioButton
+                title={t('Poupança')}
+                onPress={() => setType('Poupança')}
+                checked={type === 'Poupança'}
+              />
+            </View>
+          </View>
+          <View style={{ marginTop: halfPadding, flex: 1 }}>
+            <Pressable
+              onPress={() => {
+                navigation.navigate('SelectBank');
+              }}
+            >
+              <View>
+                <LabeledText style={{ marginTop: padding }} title={t('Banco')}>
+                  {selectedBank?.name ?? t('Escolha seu banco')}
+                </LabeledText>
+              </View>
+            </Pressable>
             <PatternInput
               key={selectedBank?.name}
-              ref={accountRef}
-              style={{ flex: 1 }}
-              title={t('Conta')}
+              style={{ marginTop: 16 }}
+              title={t('Agência')}
               placeholder={
-                (selectedBank?.accountPattern.indexOf('D') ?? -1) > -1
-                  ? t('Número da conta com o dígito')
-                  : t('Número da conta')
+                (selectedBank?.agencyPattern.indexOf('D') ?? -1) > -1
+                  ? t('Número da agência com o dígito')
+                  : t('Número da agência')
               }
-              value={account}
-              mask={selectedBank?.accountPattern}
-              parser={accountParser}
-              formatter={accountFormatter}
+              value={agency}
+              mask={selectedBank?.agencyPattern}
+              parser={agencyParser}
+              formatter={agencyFormatter}
               editable={!!selectedBank}
-              keyboardType="number-pad"
-              returnKeyType="done"
-              blurOnSubmit
-              onChangeText={(text) => setAccount(text)}
+              keyboardType={
+                (selectedBank?.agencyPattern.indexOf('X') ?? -1) > -1 ? 'default' : 'number-pad'
+              }
+              returnKeyType="next"
+              blurOnSubmit={false}
+              onChangeText={(text) => setAgency(text)}
+              onSubmitEditing={() => accountRef.current?.focus()}
               onBlur={() => {
-                if (account.length > 0) {
-                  const paddedAccount = numbersAndLettersParser(
-                    selectedBank!.accountPattern,
+                if (agency.length > 0) {
+                  const paddedAgency = numbersAndLettersParser(
+                    selectedBank!.agencyPattern,
                     true
-                  )(account);
-                  setAccount(paddedAccount);
+                  )(agency);
+                  setAgency(paddedAgency);
                 }
               }}
             />
+            <View
+              style={{
+                marginTop: 16,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <PatternInput
+                key={selectedBank?.name}
+                ref={accountRef}
+                style={{ flex: 1 }}
+                title={t('Conta')}
+                placeholder={
+                  (selectedBank?.accountPattern.indexOf('D') ?? -1) > -1
+                    ? t('Número da conta com o dígito')
+                    : t('Número da conta')
+                }
+                value={account}
+                mask={selectedBank?.accountPattern}
+                parser={accountParser}
+                formatter={accountFormatter}
+                editable={!!selectedBank}
+                keyboardType={
+                  (selectedBank?.accountPattern.indexOf('X') ?? -1) > -1 ? 'default' : 'number-pad'
+                }
+                returnKeyType="done"
+                blurOnSubmit
+                onChangeText={(text) => setAccount(text)}
+                onBlur={() => {
+                  if (account.length > 0) {
+                    const paddedAccount = numbersAndLettersParser(
+                      selectedBank!.accountPattern,
+                      true
+                    )(account);
+                    setAccount(paddedAccount);
+                  }
+                }}
+              />
+            </View>
           </View>
-        </View>
-        <View style={{ flex: 1 }} />
-        <DefaultButton
-          style={{ marginTop: padding }}
-          title={t('Avançar')}
-          disabled={!canSubmit}
-          activityIndicator={busy}
-          onPress={submitBankHandler}
-        />
-      </PaddedView>
-    </ScrollView>
+          <View style={{ flex: 1 }} />
+          <DefaultButton
+            style={{ marginTop: padding }}
+            title={t('Avançar')}
+            disabled={!canSubmit}
+            activityIndicator={busy}
+            onPress={submitBankHandler}
+          />
+        </PaddedView>
+      </ScrollView>
+      <DefaultModal
+        header={t('Atenção')}
+        body={warning ?? ''}
+        dismissButtonTitle={t('Ok, entendi')}
+        onDismiss={() => {
+          setWarning(undefined);
+        }}
+        visible={warning !== undefined}
+      />
+    </>
   );
 }
