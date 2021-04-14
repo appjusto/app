@@ -101,6 +101,10 @@ export default class FirebaseRefs {
   getCourierDocumentPath = (courierId: string, size?: string) =>
     `couriers/${courierId}/document${size ? `_${size}` : ''}.jpg`;
 
+  // orders
+  getOrderPODPackagePath = (orderId: string) => `orders/${orderId}/package.jpg`;
+  getOrderPODFrontPath = (orderId: string) => `orders/${orderId}/front.jpg`;
+
   // business
   getBusinessStoragePath = (businessId: string) => `businesses/${businessId}`;
   getBusinessLogoUploadStoragePath = (businessId: string) =>

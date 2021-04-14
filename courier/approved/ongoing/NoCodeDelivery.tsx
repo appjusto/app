@@ -14,6 +14,7 @@ import {
   View,
 } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { useMutation } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { box } from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -53,6 +54,25 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
   const [description, setDescription] = React.useState('');
   const [packagePhoto, setPackagePhoto] = React.useState<ImageURISource | undefined | null>();
   const [frontPhoto, setFrontPhoto] = React.useState<ImageURISource | undefined | null>();
+  const uploadPODPackage = useMutation((localUri: string) =>
+    api.courier().uploadPODPackage(orderId, localUri)
+  );
+  const uploadPODFront = useMutation((localUri: string) =>
+    api.courier().uploadPODFront(orderId, localUri)
+  );
+  // side effects
+  //upload POD package photo
+  React.useEffect(() => {
+    if (packagePhoto?.uri) {
+      uploadPODPackage.mutate(packagePhoto.uri);
+    }
+  }, [packagePhoto, uploadPODPackage]);
+  //upload POD front photo
+  React.useEffect(() => {
+    if (frontPhoto?.uri) {
+      uploadPODFront.mutate(frontPhoto.uri);
+    }
+  }, [frontPhoto, uploadPODFront]);
   //refs
   const descriptionRef = React.useRef<TextInput>(null);
   // UI
@@ -64,8 +84,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
     );
   }
   // UI handlers
-
-  const packagePhotoHandler = async (type: 'package' | 'front', aspect: [number, number]) => {
+  const photoHandler = async (type: 'package' | 'front', aspect: [number, number]) => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA);
     if (granted) {
       const result = await ImagePicker.launchCameraAsync({ ...defaultImageOptions, aspect });
@@ -130,7 +149,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
             marginTop: padding,
           }}
         >
-          <TouchableOpacity onPress={() => packagePhotoHandler('package', [1, 1])}>
+          <TouchableOpacity onPress={() => photoHandler('package', [1, 1])}>
             <View
               style={{
                 ...borders.default,
@@ -155,7 +174,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
               </View>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => packagePhotoHandler('front', [1, 1])}>
+          <TouchableOpacity onPress={() => photoHandler('front', [1, 1])}>
             <View
               style={{
                 ...borders.default,
