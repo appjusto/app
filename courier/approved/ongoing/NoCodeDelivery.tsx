@@ -15,7 +15,7 @@ import {
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useMutation } from 'react-query';
 import { useDispatch } from 'react-redux';
-import { box } from '../../../assets/icons';
+import { box, house } from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
@@ -65,13 +65,13 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
     if (packagePhoto?.uri) {
       uploadPODPackage.mutate(packagePhoto.uri);
     }
-  }, [packagePhoto, uploadPODPackage]);
+  }, [packagePhoto]);
   //upload POD front photo
   React.useEffect(() => {
     if (frontPhoto?.uri) {
       uploadPODFront.mutate(frontPhoto.uri);
     }
-  }, [frontPhoto, uploadPODFront]);
+  }, [frontPhoto]);
   //refs
   const descriptionRef = React.useRef<TextInput>(null);
   // UI handlers
@@ -81,7 +81,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
       const result = await ImagePicker.launchCameraAsync({ ...defaultImageOptions, aspect });
       if (result.cancelled) return;
       if (type === 'package') setPackagePhoto(result);
-      if (type === 'front') setFrontPhoto(result);
+      else if (type === 'front') setFrontPhoto(result);
     } else {
       navigation.navigate('PermissionDenied', {
         title: t('Precisamos acessar sua câmera'),
@@ -186,7 +186,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
             >
               <View style={{ alignItems: 'center' }}>
                 <Image
-                  source={frontPhoto ?? box}
+                  source={frontPhoto ?? house}
                   resizeMode="cover"
                   style={frontPhoto ? styles.photo : styles.icon}
                 />
