@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import { useSearchFleets } from '../../../../../common/store/api/search/useSearchFleets';
+import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { CourierProfileParamList } from '../types';
@@ -15,17 +16,19 @@ type Props = {
 };
 
 export default function ({ navigation }: Props) {
-  // context
-
   // screen state
   const [fleetSearch, setFleetSearch] = useState('');
   const { fleets, fetchNextPage } = useSearchFleets(fleetSearch);
-
+  // side effects
+  // tracking
+  useSegmentScreen('All Fleets');
   // handlers
-  const navigateFleetDetail = React.useCallback((fleetId) => {
-    navigation.navigate('FleetDetail', { fleetId });
-  }, []);
-
+  const navigateFleetDetail = React.useCallback(
+    (fleetId) => {
+      navigation.navigate('FleetDetail', { fleetId });
+    },
+    [navigation]
+  );
   // UI
   if (!fleets) {
     return (

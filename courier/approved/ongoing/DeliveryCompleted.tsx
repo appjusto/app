@@ -8,6 +8,7 @@ import HorizontalSelect, {
 } from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
@@ -28,7 +29,6 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const { fee } = route.params;
-
   // screen state
   const clientFeedbackData: HorizontalSelectItem[] = [
     { title: t('Sim, tudo certo'), id: '1' },
@@ -37,8 +37,11 @@ export default function ({ navigation, route }: Props) {
   const [selectedClientFeedback, setSelectedClientFeedback] = useState<HorizontalSelectItem>(
     clientFeedbackData[0]
   );
+  // side effects
+  // tracking
+  useSegmentScreen('Delivery Completed');
   // handlers
-  //TODO: add a handler to send client feedback to database
+  // TODO: add a handler to send client feedback to database
   // UI
   return (
     <PaddedView style={{ ...screens.default }}>

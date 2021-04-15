@@ -9,6 +9,7 @@ import DefaultButton from '../../../../../common/components/buttons/DefaultButto
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import HR from '../../../../../common/components/views/HR';
+import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { showToast } from '../../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
@@ -49,12 +50,13 @@ export default function ({ navigation, route }: Props) {
   // refs
   const nameRef = React.useRef<TextInput>(null);
   const descriptionRef = React.useRef<TextInput>(null);
-
-  // effects
+  // side effects
+  // tracking
+  useSegmentScreen('Create Fleet');
+  // initial focus
   React.useEffect(() => {
     nameRef.current?.focus();
   }, []);
-
   // handlers
   const createFleetHandler = async () => {
     const fleet = await api.fleet().createFleet({

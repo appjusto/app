@@ -12,6 +12,7 @@ import PaddedView from '../components/containers/PaddedView';
 import RoundedProfileImg from '../components/icons/RoundedProfileImg';
 import DefaultInput from '../components/inputs/DefaultInput';
 import useObserveOrder from '../store/api/order/hooks/useObserveOrder';
+import { useSegmentScreen } from '../store/api/track';
 import { getFlavor } from '../store/config/selectors';
 import { groupOrderChatMessages } from '../store/order/selectors';
 import { getUser } from '../store/user/selectors';
@@ -45,6 +46,8 @@ export default function ({ route }: Props) {
   const [inputText, setInputText] = React.useState('');
   const groupedMessages = React.useMemo(() => groupOrderChatMessages(chat ?? []), [chat]);
   // side effects
+  // tracking
+  useSegmentScreen('Chat');
   React.useEffect(() => {
     queryClient.setQueryData(
       ['notifications', 'order-chat'],

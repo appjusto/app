@@ -13,6 +13,7 @@ import FeedbackView from '../../../../common/components/views/FeedbackView';
 import ShowIf from '../../../../common/components/views/ShowIf';
 import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
+import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
   getMonthsWithOrdersInYear,
   getOrdersWithFilter,
@@ -65,7 +66,9 @@ export default function ({ navigation, route }: Props) {
       };
     });
   }, [yearsWithOrders]);
-
+  // side effects
+  // tracking
+  useSegmentScreen('Delivery History');
   // UI
   const paddingTop = Constants.statusBarHeight;
   if (sections.length === 0) {

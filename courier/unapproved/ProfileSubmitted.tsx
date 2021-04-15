@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { ApiContext } from '../../common/app/context';
 import FeedbackView from '../../common/components/views/FeedbackView';
 import { IconMotocycle } from '../../common/icons/icon-motocycle';
+import { useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
 import { colors } from '../../common/styles';
 import { t } from '../../strings';
@@ -24,6 +25,9 @@ export default function ({ navigation }: Props) {
   // redux
   const courier = useSelector(getCourier)!;
   // side effects
+  // tracking
+  useSegmentScreen('Profile Submitted');
+  // adapting to situation changes
   React.useEffect(() => {
     if (courier.situation === 'submitted') {
       // api.courier().verifyProfile();

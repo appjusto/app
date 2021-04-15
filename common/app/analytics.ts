@@ -15,6 +15,8 @@ export function init(props: AnalyticsConfig) {
     release: Constants.manifest.revisionId,
   });
 
+  console.log(props);
+
   const {
     segmentConsumerAndroidKey,
     segmentConsumeriOSKey,

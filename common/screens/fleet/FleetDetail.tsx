@@ -14,6 +14,7 @@ import PaddedView from '../../components/containers/PaddedView';
 import RoundedText from '../../components/texts/RoundedText';
 import ShowIf from '../../components/views/ShowIf';
 import useObserveFleet from '../../store/api/fleet/hooks/useObserveFleet';
+import { useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
 import { getCourier } from '../../store/courier/selectors';
 import { colors, screens, texts } from '../../styles';
@@ -46,7 +47,9 @@ export default function ({ navigation, route }: Props) {
   const flavor = useSelector(getFlavor);
   // state
   const fleet = useObserveFleet(fleetId);
-  //handlers
+  // side effects
+  // tracking
+  useSegmentScreen('Fleet Detail', { fleetId });
   // UI
   if (!fleet) {
     return (
@@ -55,19 +58,18 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
-  // UI handlers
+  // handlers
   const confirmFleet = async () => {
     api.profile().updateProfile(courier.id, { fleet });
     navigation.navigate('ChooseFleet');
   };
-
+  // UI
   const participants = `${fleet.participantsOnline} ${t('participantes')}`;
   const minFee = formatCurrency(fleet.minimumFee);
   const minDistance = formatDistance(fleet.distanceThreshold);
   const additionalPerKm = formatCurrency(fleet.additionalPerKmAfterThreshold);
   const maxDistance = formatDistance(fleet.maxDistance);
   const maxDistanceOrigin = formatDistance(fleet.maxDistanceToOrigin);
-
   return (
     <View style={[screens.config]}>
       <ScrollView>

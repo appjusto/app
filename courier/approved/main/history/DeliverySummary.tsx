@@ -8,6 +8,7 @@ import HR from '../../../../common/components/views/HR';
 import OrderMap from '../../../../common/screens/orders/OrderMap';
 import PlaceSummary from '../../../../common/screens/orders/summary/PlaceSummary';
 import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
+import { useSegmentScreen } from '../../../../common/store/api/track';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import {
   formatCurrency,
@@ -30,7 +31,6 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const { orderId } = route.params;
-
   // screen state
   const { order } = useObserveOrder(orderId);
   if (!order) {
@@ -41,9 +41,11 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
-
   const fee = (order.fare?.consumer.courierFee ?? 0) + (order.tip?.value ?? 0);
-
+  // side effects
+  // tracking
+  useSegmentScreen('Delivery Summary');
+  // UI
   return (
     <View style={{ ...screens.default }}>
       <OrderMap order={order} ratio={360 / 160} />

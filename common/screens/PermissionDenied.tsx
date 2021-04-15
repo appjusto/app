@@ -5,6 +5,7 @@ import { Text } from 'react-native';
 import { t } from '../../strings';
 import DefaultButton from '../components/buttons/DefaultButton';
 import PaddedView from '../components/containers/PaddedView';
+import { useSegmentScreen } from '../store/api/track';
 import { borders, colors, padding, screens, texts } from '../styles';
 
 export type PermissionDeniedParamList = {
@@ -26,7 +27,9 @@ export const PermissionDenied = ({ route }: Props) => {
   const openSettings = (): void => {
     Linking.openSettings();
   };
-
+  // side effects
+  // tracking
+  useSegmentScreen('Permission Denied', { title });
   // UI
   return (
     <PaddedView style={{ ...screens.config, paddingTop: padding }}>

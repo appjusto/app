@@ -18,6 +18,7 @@ import {
 } from '../../../../common/components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
+import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { courierInfoSet } from '../../../../common/store/courier/validators';
 import { showToast } from '../../../../common/store/ui/actions';
@@ -51,6 +52,9 @@ export default function ({ navigation, route }: Props) {
   // helpers
   const updatedCourier: Partial<CourierProfile> = { name, surname, phone, cpf };
   const canSubmit = courierInfoSet(updatedCourier);
+  // side effects
+  // tracking
+  useSegmentScreen('Profile Edit');
   // refs
   const surnameRef = React.useRef<TextInput>(null);
   const cpfRef = React.useRef<TextInput>(null);

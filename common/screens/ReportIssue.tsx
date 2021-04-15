@@ -19,6 +19,7 @@ import DefaultInput from '../components/inputs/DefaultInput';
 import FeedbackView from '../components/views/FeedbackView';
 import { IconMotocycle } from '../icons/icon-motocycle';
 import useIssues from '../store/api/platform/hooks/useIssues';
+import { useSegmentScreen } from '../store/api/track';
 import { getCourier } from '../store/courier/selectors';
 import { showToast } from '../store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../styles';
@@ -59,6 +60,11 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   const [comment, setComment] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
   const [issueSent, setIssueSent] = React.useState(false);
+  // side effects
+  // tracking
+  useSegmentScreen('Report issue', {
+    issueType,
+  });
 
   const toastMessage = (() => {
     if (issueType === 'consumer-delivery-problem') {

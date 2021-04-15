@@ -14,6 +14,7 @@ import RoundedText from '../../../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../../../common/components/views/ConfigItem';
 import useCourierDocumentImage from '../../../../../common/store/api/courier/hooks/useCourierDocumentImage';
 import useCourierSelfie from '../../../../../common/store/api/courier/hooks/useCourierSelfie';
+import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { colors, padding, screens } from '../../../../../common/styles';
@@ -91,6 +92,8 @@ export default function ({ navigation }: Props) {
   }, [newSelfie, newDocumentImage]);
 
   // side effects
+  // tracking
+  useSegmentScreen('Profile Photos');
   // when current self is loaded, update state
   React.useEffect(() => {
     if (currentSelfieQuery.data) {

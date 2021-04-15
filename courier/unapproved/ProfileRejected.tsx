@@ -7,6 +7,7 @@ import * as icons from '../../assets/icons';
 import { ApiContext, AppDispatch } from '../../common/app/context';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../common/components/views/FeedbackView';
+import { useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
 import { showToast } from '../../common/store/ui/actions';
 import { getUIBusy } from '../../common/store/ui/selectors';
@@ -30,6 +31,9 @@ export default function ({ navigation }: Props) {
   const courier = useSelector(getCourier)!;
   const busy = useSelector(getUIBusy);
   // side effects
+  // tracking
+  useSegmentScreen('Profile Rejected');
+  // adapting to situation changes
   React.useEffect(() => {
     if (courier.situation === 'pending') navigation.replace('ProfilePending');
     else if (courier.situation === 'submitted') navigation.replace('ProfileSubmitted');

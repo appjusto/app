@@ -20,6 +20,7 @@ import DefaultInput from '../../components/inputs/DefaultInput';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { IconMotocycle } from '../../icons/icon-motocycle';
+import { track, useSegmentScreen } from '../../store/api/track';
 import { getExtra, getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
@@ -50,6 +51,9 @@ export default function ({ navigation, route }: Props) {
   const [email, setEmail] = useState('');
   const [acceptedTerms, setAcceptTerms] = useState(false);
 
+  // side effects
+  useSegmentScreen('Welcome');
+
   // handlers
   const signInHandler = useCallback(async () => {
     Keyboard.dismiss();
@@ -61,6 +65,7 @@ export default function ({ navigation, route }: Props) {
       dispatch(showToast(t('Digite um e-mail válido.')));
       return;
     }
+    track('Signing in', { email });
     await dispatch(signInWithEmail(api)(email, extra.environment));
     navigation.navigate('SignInFeedback', { email });
   }, [acceptedTerms, email]);

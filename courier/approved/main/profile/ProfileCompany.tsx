@@ -20,6 +20,7 @@ import {
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
 import * as viacep from '../../../../common/store/api/externals/viacep';
+import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getExtra } from '../../../../common/store/config/selectors';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { companyInfoSet } from '../../../../common/store/courier/validators';
@@ -70,7 +71,10 @@ export default function ({ navigation, route }: Props) {
   const cepRef = React.useRef<TextInput>(null);
   const numberRef = React.useRef<TextInput>(null);
   const additionalRef = React.useRef<TextInput>(null);
-  // effects
+  // side effects
+  // tracking
+  useSegmentScreen('Profile Company');
+  // updating fields after cep query
   React.useEffect(() => {
     if (cep.length === 8 && cepRef.current?.isFocused()) {
       (async () => {

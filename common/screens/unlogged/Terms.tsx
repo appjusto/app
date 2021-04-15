@@ -2,10 +2,14 @@ import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useTerms } from '../../store/api/platform/hooks/useTerms';
+import { useSegmentScreen } from '../../store/api/track';
 import { colors, padding, screens } from '../../styles';
 
 export default function Terms() {
+  // state
   const terms = useTerms();
+  // side effects
+  useSegmentScreen('Terms');
   // UI
   if (!terms) {
     return (

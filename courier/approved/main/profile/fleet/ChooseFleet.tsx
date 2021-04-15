@@ -5,6 +5,7 @@ import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
+import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
@@ -22,7 +23,9 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // redux store
   const courier = useSelector(getCourier)!;
-
+  // side effects
+  // tracking
+  useSegmentScreen('Choose Fleet');
   // UI
   if (!courier.fleet) {
     return (
@@ -31,7 +34,6 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
-
   return (
     <ScrollView style={{ ...screens.config }}>
       <View style={{ flex: 1 }}>

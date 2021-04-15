@@ -11,6 +11,7 @@ import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
 import useCourierDocumentImage from '../../common/store/api/courier/hooks/useCourierDocumentImage';
 import useCourierSelfie from '../../common/store/api/courier/hooks/useCourierSelfie';
+import { useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
 import {
   bankAccountSet,
@@ -54,6 +55,8 @@ export default function ({ navigation, route }: Props) {
   const [stepsDone, setStepsDone] = React.useState(0);
   const submitEnabled = situationsAllowed.includes(courier.situation) && stepsDone === totalSteps;
   // side effects
+  // tracking
+  useSegmentScreen('Profile Pending');
   // once
   React.useEffect(() => {
     // although this screen is named 'ProfilePending', it's also the first screen of UnapprovedNavigator

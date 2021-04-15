@@ -4,6 +4,7 @@ import React from 'react';
 import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import { MatchingParamList } from './types';
@@ -18,6 +19,9 @@ type Props = {
 };
 
 export default ({ navigation }: Props) => {
+  // side effects
+  // tracking
+  useSegmentScreen('Matching Error');
   // UI
   return (
     <FeedbackView

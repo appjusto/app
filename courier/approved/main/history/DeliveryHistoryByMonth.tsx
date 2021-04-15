@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import StatusBadge from '../../../../common/components/views/StatusBadge';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
+import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
   getOrderCreatedOn,
   getOrdersWithFilter,
@@ -49,7 +50,9 @@ export default function ({ navigation, route }: Props) {
   const options = React.useMemo(() => ({ courierId: user?.uid }), [user?.uid]);
   const orders = useObserveOrders(options);
   const filteredOrders = getOrdersWithFilter(orders, year, month);
-
+  // side effects
+  // tracking
+  useSegmentScreen('Delivery History by Month');
   // handlers
   const orderPressHandler = useCallback((order: WithId<Order>) => {
     if (isOrderOngoing(order)) {
@@ -63,9 +66,6 @@ export default function ({ navigation, route }: Props) {
       navigation.navigate('DeliverySummary', { orderId: order.id! });
     }
   }, []);
-
-  // console.log(filteredOrders);
-
   // UI
   return (
     <View style={{ ...screens.config }}>

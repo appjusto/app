@@ -14,6 +14,7 @@ import { StatusAndMessages } from '../../../common/screens/orders/ongoing/Status
 import OrderMap from '../../../common/screens/orders/OrderMap';
 import { courierNextPlace } from '../../../common/store/api/order/helpers';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -46,6 +47,8 @@ export default function ({ navigation, route }: Props) {
   const [code, setCode] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
   // side effects
+  // tracking
+  useSegmentScreen('Ongoing Delivery');
   // whenever params updates
   // open chat if there's a new message
   React.useEffect(() => {

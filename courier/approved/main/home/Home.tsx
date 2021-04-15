@@ -9,6 +9,7 @@ import PaddedView from '../../../../common/components/containers/PaddedView';
 import useNotificationToken from '../../../../common/hooks/useNotificationToken';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
+import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
@@ -47,6 +48,8 @@ export default function ({ navigation }: Props) {
   );
 
   // side effects
+  // tracking
+  useSegmentScreen('Home');
   // notification permission
   useEffect(() => {
     if (shouldDeleteToken || shouldUpdateToken) {

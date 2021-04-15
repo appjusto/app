@@ -5,6 +5,7 @@ import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import useBanks from '../../../../../common/store/api/platform/hooks/useBanks';
+import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { CourierProfileParamList } from '../types';
@@ -29,6 +30,9 @@ export default function ({ navigation, route }: Props) {
         bank.code.indexOf(bankSearch) !== -1
     );
   }, [banks, bankSearch]);
+  // side effects
+  // tracking
+  useSegmentScreen('Select Bank');
   // UI
   return (
     <PaddedView style={{ ...screens.lightGrey }}>

@@ -5,6 +5,7 @@ import { ActivityIndicator, Image, Text, View } from 'react-native';
 import * as icons from '../../../assets/icons';
 import { ApiContext } from '../../../common/app/context';
 import PaddedView from '../../../common/components/containers/PaddedView';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
@@ -31,6 +32,9 @@ export default function ({ navigation, route }: Props) {
   const api = React.useContext(ApiContext);
   // screen state
   const [isLoading, setLoading] = React.useState(false);
+  // side effects
+  // tracking
+  useSegmentScreen('Matching');
   // UI
   if (isLoading)
     return (

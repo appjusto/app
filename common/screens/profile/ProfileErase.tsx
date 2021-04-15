@@ -10,6 +10,7 @@ import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
+import { useSegmentScreen } from '../../store/api/track';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
 import { deleteAccount } from '../../store/user/actions';
@@ -35,10 +36,8 @@ export default function ({ navigation }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-
   // app state
   const busy = useSelector(getUIBusy);
-
   // screen state
   const [survey, setSurvey] = useState<DeleteAccountSurvey>({
     notWorkingOnMyRegion: false,
@@ -48,6 +47,9 @@ export default function ({ navigation }: Props) {
     didntFeelSafe: false,
     ratherUseAnotherApp: false,
   });
+  // side effects
+  // tracking
+  useSegmentScreen('Profile Erase');
   // handlers
   const eraseHandler = async () => {
     try {
@@ -56,7 +58,6 @@ export default function ({ navigation }: Props) {
       dispatch(showToast(error.toString(), 'error'));
     }
   };
-
   // UI
   return (
     <View style={{ ...screens.lightGrey }}>

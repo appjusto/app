@@ -7,6 +7,7 @@ import { t } from '../../../strings';
 import PaddedView from '../../components/containers/PaddedView';
 import useAuth, { AuthState } from '../../hooks/useAuth';
 import { IconMotocycle } from '../../icons/icon-motocycle';
+import { useSegmentScreen } from '../../store/api/track';
 import { colors, padding, screens, texts } from '../../styles';
 import { UnloggedParamList } from './types';
 
@@ -21,12 +22,13 @@ type Props = {
 export default ({ navigation }: Props) => {
   // state
   const [authState] = useAuth();
-
+  // side effects
+  // tracking
+  useSegmentScreen('Sign in Feedback');
   // UI
   if (authState === AuthState.SignedIn) {
     return null;
   }
-
   return (
     <PaddedView style={screens.default}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

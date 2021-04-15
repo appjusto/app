@@ -11,6 +11,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
@@ -42,6 +43,9 @@ export default function ({ route, navigation }: Props) {
   const [selectedReason, setSelectedReason] = useState<WithId<Issue>>();
   const [rejectionComment, setRejectionComment] = useState<string>('');
   const [isLoading, setLoading] = React.useState(false);
+  // side effects
+  // tracking
+  useSegmentScreen('Cancel Ongoing Delivery');
   // UI
   if (!issues) {
     return (
