@@ -1,6 +1,5 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Issue, WithId } from 'appjusto-types';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import React from 'react';
@@ -21,8 +20,7 @@ import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
-import useIssues from '../../../common/store/api/platform/hooks/useIssues';
-import { showToast } from '../../../common/store/ui/actions';
+import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { defaultImageOptions } from '../main/profile/photos/ProfilePhotos';
@@ -47,18 +45,19 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // state
-  const issues = useIssues('no-code-delivery');
-  const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
+  const { order } = useObserveOrder(orderId);
+  // const issues = useIssues('no-code-delivery');
+  // const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
   const [isLoading, setLoading] = React.useState(false);
   const [name, setName] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [packagePhoto, setPackagePhoto] = React.useState<ImageURISource | undefined | null>();
   const [frontPhoto, setFrontPhoto] = React.useState<ImageURISource | undefined | null>();
   const uploadPODPackage = useMutation((localUri: string) =>
-    api.courier().uploadPODPackage(orderId, localUri)
+    api.courier().uploadPODPackage(orderId, order!.courier!.id, localUri)
   );
   const uploadPODFront = useMutation((localUri: string) =>
-    api.courier().uploadPODFront(orderId, localUri)
+    api.courier().uploadPODFront(orderId, order!.courier!.id, localUri)
   );
   // side effects
   //upload POD package photo
@@ -75,14 +74,6 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
   }, [frontPhoto, uploadPODFront]);
   //refs
   const descriptionRef = React.useRef<TextInput>(null);
-  // UI
-  if (!issues) {
-    return (
-      <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green500} />
-      </View>
-    );
-  }
   // UI handlers
   const photoHandler = async (type: 'package' | 'front', aspect: [number, number]) => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA);
@@ -98,21 +89,29 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
       });
     }
   };
-  const confirmHandler = () => {
-    if (!selectedIssue) return;
-    (async () => {
-      try {
-        setLoading(true);
-        await api.order().createIssue(orderId, {
-          issue: selectedIssue,
-        });
-        setLoading(false);
-        navigation.navigate('OngoingDelivery', { orderId, completeWithoutConfirmation: true });
-      } catch (error) {
-        dispatch(showToast(error.toString(), 'error'));
-      }
-    })();
-  };
+  // UI
+  if (!order) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
+  // const confirmHandler = () => {
+  //   if (!selectedIssue) return;
+  //   (async () => {
+  //     try {
+  //       setLoading(true);
+  //       await api.order().createIssue(orderId, {
+  //         issue: selectedIssue,
+  //       });
+  //       setLoading(false);
+  //       navigation.navigate('OngoingDelivery', { orderId, completeWithoutConfirmation: true });
+  //     } catch (error) {
+  //       dispatch(showToast(error.toString(), 'error'));
+  //     }
+  //   })();
+  // };
   return (
     <ScrollView style={{ ...screens.default }} contentContainerStyle={{ flex: 1 }}>
       <PaddedView style={{ flex: 1 }}>

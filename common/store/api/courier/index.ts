@@ -57,10 +57,28 @@ export default class CourierApi {
     return this.files.getDownloadURL(this.refs.getCourierDocumentPath(id, size));
   }
   // Proof of delivery
-  uploadPODPackage(id: string, localUri: string, progressHandler?: (progress: number) => void) {
-    return this.files.upload(this.refs.getOrderPODPackagePath(id), localUri, progressHandler);
+  uploadPODPackage(
+    orderId: string,
+    courierId: string,
+    localUri: string,
+    progressHandler?: (progress: number) => void
+  ) {
+    return this.files.upload(
+      this.refs.getOrderPODPackagePath(orderId, courierId),
+      localUri,
+      progressHandler
+    );
   }
-  uploadPODFront(id: string, localUri: string, progressHandler?: (progress: number) => void) {
-    return this.files.upload(this.refs.getOrderPODFrontPath(id), localUri, progressHandler);
+  uploadPODFront(
+    orderId: string,
+    courierId: string,
+    localUri: string,
+    progressHandler?: (progress: number) => void
+  ) {
+    return this.files.upload(
+      this.refs.getOrderPODFrontPath(orderId, courierId),
+      localUri,
+      progressHandler
+    );
   }
 }
