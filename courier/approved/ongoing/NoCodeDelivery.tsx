@@ -21,6 +21,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { showToast } from '../../../common/store/ui/actions';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { defaultImageOptions } from '../main/profile/photos/ProfilePhotos';
@@ -46,8 +47,6 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   // state
   const { order } = useObserveOrder(orderId);
-  // const issues = useIssues('no-code-delivery');
-  // const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
   const [isLoading, setLoading] = React.useState(false);
   const [name, setName] = React.useState('');
   const [description, setDescription] = React.useState('');
@@ -89,6 +88,18 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
       });
     }
   };
+  const confirmHandler = () => {
+    if (!frontPhoto || !packagePhoto) return;
+    (async () => {
+      try {
+        setLoading(true);
+        await api.order().completeDelivery(orderId, undefined, name, description);
+        setLoading(false);
+      } catch (error) {
+        dispatch(showToast(error.toString(), 'error'));
+      }
+    })();
+  };
   // UI
   if (!order) {
     return (
@@ -97,21 +108,6 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  // const confirmHandler = () => {
-  //   if (!selectedIssue) return;
-  //   (async () => {
-  //     try {
-  //       setLoading(true);
-  //       await api.order().createIssue(orderId, {
-  //         issue: selectedIssue,
-  //       });
-  //       setLoading(false);
-  //       navigation.navigate('OngoingDelivery', { orderId, completeWithoutConfirmation: true });
-  //     } catch (error) {
-  //       dispatch(showToast(error.toString(), 'error'));
-  //     }
-  //   })();
-  // };
   return (
     <ScrollView style={{ ...screens.default }} contentContainerStyle={{ flex: 1 }}>
       <PaddedView style={{ flex: 1 }}>
@@ -202,8 +198,9 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
         <View style={{ flex: 1 }} />
         <DefaultButton
           title={t('Confirmar entrega')}
-          onPress={() => null}
+          onPress={confirmHandler}
           activityIndicator={isLoading}
+          disabled={!frontPhoto || !packagePhoto || isLoading}
         />
       </PaddedView>
     </ScrollView>
