@@ -89,7 +89,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
     }
   };
   const confirmHandler = () => {
-    if (!frontPhoto || !packagePhoto) return;
+    if (!frontPhoto || !packagePhoto || !name) return;
     (async () => {
       try {
         setLoading(true);
@@ -200,7 +200,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
           title={t('Confirmar entrega')}
           onPress={confirmHandler}
           activityIndicator={isLoading}
-          disabled={!frontPhoto || !packagePhoto || isLoading}
+          disabled={!frontPhoto || !packagePhoto || !name || isLoading}
         />
       </PaddedView>
     </ScrollView>
