@@ -1,5 +1,5 @@
 import { Feather } from '@expo/vector-icons';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
@@ -7,8 +7,8 @@ import { useContextBusiness } from '../../../../../common/store/context/business
 import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
-import { RestaurantNavigatorParamList } from '../../../home/restaurants/restaurant/types';
 import { RestaurantHeader } from '../../common/RestaurantHeader';
+import { RestaurantNavigatorParamList } from '../types';
 
 type ScreenNavigationProp = StackNavigationProp<RestaurantNavigatorParamList>;
 type ScreenRouteProp = RouteProp<RestaurantNavigatorParamList, 'AboutRestaurant'>;
@@ -53,22 +53,26 @@ export const AboutRestaurant = ({ route }: Props) => {
           }}
         >
           <View>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Domingo')}</Text>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Segunda')}</Text>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Terça')}</Text>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Quarta')}</Text>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Quinta')}</Text>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Sexta')}</Text>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Sábado')}</Text>
+            {restaurant.schedules.map((item) => (
+              <Text style={{ ...texts.sm, color: colors.grey700 }} key={item.day}>
+                {item.day}
+              </Text>
+            ))}
           </View>
           <View style={{ marginLeft: 24 }}>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Fechado')}</Text>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('12:00 às 19:00')}</Text>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('12:00 às 19:00')}</Text>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('12:00 às 19:00')}</Text>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('12:00 às 19:00')}</Text>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('12:00 às 19:00')}</Text>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('12:00 às 19:00')}</Text>
+            {restaurant.schedules.map((item) => {
+              const openTime = item.schedule[0].from;
+              const closeTime = item.schedule[0].to;
+              return !item.checked ? (
+                <Text style={{ ...texts.sm, color: colors.grey700 }} key={item.day}>
+                  {t('Fechado')}
+                </Text>
+              ) : (
+                <Text style={{ ...texts.sm, color: colors.grey700 }} key={item.day}>
+                  {openTime} às {closeTime}
+                </Text>
+              );
+            })}
           </View>
         </View>
       </View>

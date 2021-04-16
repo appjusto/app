@@ -55,7 +55,6 @@ export const ProductListItem = ({ product, showRestaurantName, complements }: Pr
           <Text style={{ ...texts.xs, color: colors.grey700, marginVertical: 4 }} numberOfLines={2}>
             {product.description}
           </Text>
-          {/* <Text style={{ ...texts.sm }}>{formatCurrency(product.price)}</Text> */}
           <Text style={{ ...texts.sm }}>
             {complements
               ? `${t('A partir de ')} ${formatCurrency(product.price)}`
