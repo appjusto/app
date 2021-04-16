@@ -211,18 +211,22 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           </View>
         )}
       </ScrollView>
-      <HR />
-      <PaddedView>
-        <ItemQuantity
-          style={{ marginBottom: padding }}
-          value={quantity}
-          minimum={itemId ? 0 : 1}
-          title={`${t('Adicionar')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
-          disabled={!canAddItemToOrder}
-          onChange={(value) => setQuantity(value)}
-          onSubmit={addItemToOrder}
-        />
-      </PaddedView>
+      {business.status === 'open' ? (
+        <View>
+          <HR />
+          <PaddedView>
+            <ItemQuantity
+              style={{ marginBottom: padding }}
+              value={quantity}
+              minimum={itemId ? 0 : 1}
+              title={`${t('Adicionar')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
+              disabled={!canAddItemToOrder}
+              onChange={(value) => setQuantity(value)}
+              onSubmit={addItemToOrder}
+            />
+          </PaddedView>
+        </View>
+      ) : null}
     </View>
   );
 };

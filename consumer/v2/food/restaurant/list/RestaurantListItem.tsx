@@ -26,7 +26,7 @@ export const RestaurantListItem = ({ restaurant, cuisine, distance, secondary }:
         style={{
           flexDirection: 'row',
           marginLeft: padding,
-          marginRight: 4,
+          marginRight: halfPadding,
           justifyContent: 'space-between',
           paddingTop: halfPadding,
         }}
@@ -56,7 +56,7 @@ export const RestaurantListItem = ({ restaurant, cuisine, distance, secondary }:
             justifyContent: 'space-between',
           }}
         >
-          <ListItemImage uri={logo} height={80} width={64} />
+          <ListItemImage uri={logo} height={80} width={80} />
         </View>
       </View>
     </View>
