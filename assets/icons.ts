@@ -30,6 +30,8 @@ const iconSearch = require('./icons/search.png');
 const iconUser = require('./icons/user.png');
 const restCardIcon = require('./icons/card-icon.png');
 const QrCodePix = require('./icons/qr-code-pix.png');
+const iconBoxPhoto = require('./icons/icon-boxphoto.png');
+const iconHouse = require('./icons/icon-boxhouse.png');
 
 export const checklistTick = iconChecklistTick;
 export const home = iconHome;
@@ -63,6 +65,8 @@ export const iconSad = iconSadYellow;
 export const cardIcon = restCardIcon;
 export const motoIntro = illustrationMotoIntro;
 export const QrCode = QrCodePix;
+export const box = iconBoxPhoto;
+export const house = iconHouse;
 
 export default [
   checklistTick,
@@ -97,4 +101,6 @@ export default [
   iconSad,
   motoIntro,
   QrCode,
+  box,
+  house,
 ];

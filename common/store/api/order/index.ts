@@ -104,8 +104,20 @@ export default class OrderApi {
     return (await this.refs.getNextDispatchingStateCallable()({ orderId })).data;
   }
 
-  async completeDelivery(orderId: string, handshakeResponse?: string) {
-    return (await this.refs.getCompleteDeliveryCallable()({ orderId, handshakeResponse })).data;
+  async completeDelivery(
+    orderId: string,
+    handshakeResponse?: string,
+    deliveredTo?: string,
+    comment?: string
+  ) {
+    return (
+      await this.refs.getCompleteDeliveryCallable()({
+        orderId,
+        handshakeResponse,
+        deliveredTo,
+        comment,
+      })
+    ).data;
   }
 
   // firestore

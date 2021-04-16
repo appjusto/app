@@ -1,6 +1,7 @@
 import { Product, ProductAlgolia, WithId } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
+import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
 import {
   useContextBusiness,
@@ -8,6 +9,7 @@ import {
 } from '../../../../../common/store/context/business';
 import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
+import { t } from '../../../../../strings';
 import { ListItemImage } from '../list/ListItemImage';
 
 interface Props {
@@ -26,6 +28,7 @@ export const ProductListItem = ({ product, showRestaurantName }: Props) => {
   const productId = isAlgoliaProduct(product) ? product.objectID : product.id;
   const businessName = isAlgoliaProduct(product) ? product.business.name : business?.name;
   const { data: imageURI } = useProductImageURI(businessId, productId);
+  const item = useProduct(businessId, productId);
   // UI
   return (
     <View
@@ -52,7 +55,11 @@ export const ProductListItem = ({ product, showRestaurantName }: Props) => {
           <Text style={{ ...texts.xs, color: colors.grey700, marginVertical: 4 }} numberOfLines={2}>
             {product.description}
           </Text>
-          <Text style={{ ...texts.sm }}>{formatCurrency(product.price)}</Text>
+          <Text style={{ ...texts.sm }}>
+            {item!.complementsEnabled
+              ? `${t('A partir de ')} ${formatCurrency(item!.price)}`
+              : formatCurrency(item!.price)}
+          </Text>
           {showRestaurantName && businessName && (
             <Text style={{ ...texts.xs, color: colors.green600 }}>{businessName}</Text>
           )}

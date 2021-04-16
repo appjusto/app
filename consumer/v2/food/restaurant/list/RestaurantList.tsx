@@ -54,7 +54,6 @@ export default function ({ items, ListHeaderComponent, onSelect, onEndReached }:
       },
     ];
   }
-
   return (
     <SectionList
       style={{ ...screens.default }}
