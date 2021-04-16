@@ -1,4 +1,5 @@
 import { StackNavigationProp } from '@react-navigation/stack';
+import { isEmpty } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, SectionList, TouchableOpacity, View } from 'react-native';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';
@@ -63,11 +64,13 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
             />
           </View>
         }
-        renderSectionHeader={({ section }) => (
-          <View style={{ marginTop: padding }}>
-            <SingleHeader title={section.title} />
-          </View>
-        )}
+        renderSectionHeader={({ section }) => {
+          return !isEmpty(section.data) ? (
+            <View style={{ marginTop: padding }}>
+              <SingleHeader title={section.title} />
+            </View>
+          ) : null;
+        }}
         renderItem={({ item }) => {
           return (
             <TouchableOpacity
