@@ -46,7 +46,7 @@ export const ItemQuantity = ({
           <QuantityButton sign="plus" size="big" />
         </TouchableOpacity>
       </View>
-      <View style={{ marginLeft: padding }}>
+      <View style={{ marginLeft: padding, flex: 1 }}>
         <DefaultButton disabled={disabled} title={title} onPress={onSubmit} />
       </View>
     </View>

@@ -19,9 +19,8 @@ export default class PlatformApi {
   }
 
   async fetchCuisines() {
-    const query = this.refs.getCuisinesRef();
-    const docs = (await query.get()).docs;
-    return documentsAs<Cuisine>(docs);
+    const querySnapshot = await this.refs.getCuisinesRef().orderBy('order', 'asc').get();
+    return documentsAs<Cuisine>(querySnapshot.docs);
   }
 
   async fetchFoodClassifications() {
