@@ -12,6 +12,7 @@ import {
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
+import { LocationDisclosureModal } from '../../../courier/approved/main/home/LocationDisclosureModal';
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import CheckField from '../../components/buttons/CheckField';
@@ -41,16 +42,13 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-
-  // app state
+  // redux store
   const busy = useSelector(getUIBusy);
   const flavor = useSelector(getFlavor);
   const extra = useSelector(getExtra);
-
   // state
   const [email, setEmail] = useState('');
   const [acceptedTerms, setAcceptTerms] = useState(false);
-
   // side effects
   useSegmentScreen('Welcome');
 
@@ -150,6 +148,7 @@ export default function ({ navigation, route }: Props) {
           />
         </View>
       </KeyboardAvoidingView>
+      {flavor === 'courier' && <LocationDisclosureModal />}
     </SafeAreaView>
   );
 }

@@ -1,12 +1,8 @@
 import * as Permissions from 'expo-permissions';
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { getShownLocationDisclosure } from '../store/courier/selectors';
 import { startLocationUpdatesTask, stopLocationUpdatesTask } from '../utils/location';
 
 export default function (enabled: boolean, key: string): Permissions.PermissionStatus | undefined {
-  // redux
-  const shownLocationDisclosure = useSelector(getShownLocationDisclosure);
   // refs
   const currentKey = React.useRef(key);
   // state
@@ -21,7 +17,6 @@ export default function (enabled: boolean, key: string): Permissions.PermissionS
     if (response === undefined) return false; // during initialization
     if (response.granted) return false;
     if (!enabled) return false;
-    if (!shownLocationDisclosure) return false;
     return response.canAskAgain;
   };
   // side effects
@@ -60,7 +55,7 @@ export default function (enabled: boolean, key: string): Permissions.PermissionS
         // };
       }
     }
-  }, [enabled, shownLocationDisclosure, response]);
+  }, [enabled, response]);
 
   return response?.status;
 }

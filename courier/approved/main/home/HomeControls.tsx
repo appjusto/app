@@ -1,5 +1,4 @@
 import { CourierStatus } from 'appjusto-types';
-import { nanoid } from 'nanoid/non-secure';
 import React from 'react';
 import { Dimensions, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,10 +6,9 @@ import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import ShowIf from '../../../../common/components/views/ShowIf';
-import useLocationUpdates from '../../../../common/hooks/useLocationUpdates';
 import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import { IconMotocycleCentered } from '../../../../common/icons/icon-motocycle-centered';
-import { getCourier, getShownLocationDisclosure } from '../../../../common/store/courier/selectors';
+import { getCourier } from '../../../../common/store/courier/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { updateProfile } from '../../../../common/store/user/actions';
 import {
@@ -25,44 +23,20 @@ import { formatCurrency, formatDistance } from '../../../../common/utils/formatt
 import { t } from '../../../../strings';
 
 type Props = {
-  onShowLocationDisclosure: () => void;
-  onPermissionDenied: () => void;
   onFleetDetail: () => void;
 };
 
 const { width } = Dimensions.get('window');
 
-export default function ({ onShowLocationDisclosure, onPermissionDenied, onFleetDetail }: Props) {
+export default function ({ onFleetDetail }: Props) {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   const tallerDevice = useTallerDevice();
-  // redux
+  // redux store
   const courier = useSelector(getCourier)!;
-  const shownLocationDisclosure = useSelector(getShownLocationDisclosure);
   const status = courier!.status;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
-
-  // state
-  const [locationKey, setLocationKey] = React.useState(nanoid());
-  const locationPermission = useLocationUpdates(working, locationKey);
-
-  // side effects
-  // location permission handling
-  React.useEffect(() => {
-    if (locationPermission === 'denied') {
-      onPermissionDenied();
-    } else if (locationPermission === 'undetermined') {
-      if (working && !shownLocationDisclosure) onShowLocationDisclosure();
-    }
-  }, [
-    working,
-    shownLocationDisclosure,
-    locationPermission,
-    onPermissionDenied,
-    onShowLocationDisclosure,
-  ]);
-
   // handlers
   const toggleWorking = () => {
     if (status === 'dispatching') {
@@ -72,9 +46,6 @@ export default function ({ onShowLocationDisclosure, onPermissionDenied, onFleet
       return;
     }
     const newStatus: CourierStatus = working ? 'unavailable' : 'available';
-    if (newStatus === 'available') {
-      setLocationKey(nanoid());
-    }
     dispatch(updateProfile(api)(courier.id, { status: newStatus }));
   };
 

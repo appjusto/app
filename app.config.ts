@@ -30,8 +30,8 @@ const {
 
 const flavor: Flavor = FLAVOR as Flavor;
 const environment: Environment = ENVIRONMENT as Environment;
-const version = '0.15.0';
-const versionCode = 22;
+const version = '0.16.0';
+const versionCode = 23;
 
 export default (context: ConfigContext): ExpoConfig => {
   const config: ExpoConfig = {
@@ -98,9 +98,12 @@ const ios = () => ({
   supportsTablet: false,
   infoPlist: {
     UIBackgroundModes: ['location'],
-    NSLocationWhenInUseUsageDescription: 'Saber a localização do entregador',
-    NSLocationAlwaysAndWhenInUseUsageDescription: 'Saber a localização do entregador',
-    NSLocationAlwaysUsageDescription: 'Saber a localização do entregador',
+    NSLocationWhenInUseUsageDescription:
+      'Precisamos da sua localização para enviar corridas próximas e monitorar a entrega.',
+    NSLocationAlwaysAndWhenInUseUsageDescription:
+      'Precisamos da sua localização para enviar corridas próximas e monitorar a entrega.',
+    NSLocationAlwaysUsageDescription:
+      'Precisamos da sua localização para enviar corridas próximas e monitorar a entrega.',
   },
   associatedDomains: [`applinks:${environment.charAt(0)}.deeplink.appjusto.com.br`],
   config: {
