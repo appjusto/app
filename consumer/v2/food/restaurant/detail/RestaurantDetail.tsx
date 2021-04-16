@@ -76,7 +76,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
             <TouchableOpacity
               onPress={() => navigation.navigate('ItemDetail', { productId: item.id })}
             >
-              <ProductListItem key={item.id} product={item} />
+              <ProductListItem key={item.id} product={item} complements={item.complementsEnabled} />
             </TouchableOpacity>
           );
         }}

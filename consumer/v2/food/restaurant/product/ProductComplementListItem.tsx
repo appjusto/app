@@ -34,7 +34,7 @@ export const ProductComplementListItem = ({ complement, selected, disabled, onTo
           paddingVertical: 12,
           // alignContent: 'center',
           alignItems: 'center',
-          borderBottomWidth: 1,
+          borderTopWidth: 1,
           borderStyle: 'solid',
           borderColor: colors.grey50,
         }}
