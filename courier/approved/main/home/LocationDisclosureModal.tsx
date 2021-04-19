@@ -26,10 +26,10 @@ export const LocationDisclosureModal = (props: ModalProps) => {
       dismissButtonTitle={t('Ok, entendi')}
       visible={permission && permission.status !== 'granted'}
       onDismiss={() => {
-        if (permission?.status === 'denied') {
-          Linking.openSettings();
-        } else {
+        if (permission?.canAskAgain) {
           askPermission();
+        } else {
+          Linking.openSettings();
         }
       }}
       {...props}
