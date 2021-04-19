@@ -2,7 +2,6 @@ import { Complement, ComplementGroup, Product, WithId } from 'appjusto-types';
 import React from 'react';
 import { View } from 'react-native';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';
-import HR from '../../../../../common/components/views/HR';
 import * as helpers from '../../../../../common/store/api/order/helpers';
 import { halfPadding, padding } from '../../../../../common/styles';
 import { ItemComplementRequiredLabel } from './ItemComplementRequiredLabel';
@@ -26,11 +25,10 @@ export const ItemComplements = ({ product, selectedComplements, onComplementTogg
         <View key={group.id}>
           <SingleHeader title={group.name} />
           <ItemComplementRequiredLabel
-            style={{ marginLeft: padding }}
+            style={{ marginLeft: padding, marginVertical: halfPadding }}
             group={group}
             totalSelected={helpers.totalComplementsInGroup(group, selectedComplements)}
           />
-          <HR style={{ marginTop: halfPadding }} />
           {group.items?.map((complement) => {
             const selected = Boolean(selectedComplements.find((c) => c.id === complement.id));
             return (

@@ -8,6 +8,7 @@ import React from 'react';
 import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../../common/app/context';
+import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import HR from '../../../../../common/components/views/HR';
 import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
@@ -134,60 +135,88 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   };
   // UI
   return (
-    <ScrollView style={{ ...screens.default }} scrollIndicatorInsets={{ right: 1 }}>
-      <View style={{ paddingHorizontal: padding, marginBottom: halfPadding }}>
-        <View style={{ width: '100%', height: 240, overflow: 'hidden' }}>
-          {imageURI && (
-            <Image
-              source={{ uri: imageURI }}
-              style={{ width: '100%', height: 240 }}
-              borderRadius={8}
-              resizeMode="cover"
-            />
-          )}
-        </View>
-        <View style={{ marginTop: padding }}>
-          <Text style={{ ...texts.xl }}>{product?.name ?? ''}</Text>
-          <Text style={{ ...texts.sm, color: colors.grey700, marginVertical: 4 }}>
-            {product?.description ?? ''}
-          </Text>
-          <Text style={{ ...texts.sm }}>{formatCurrency(product?.price ?? 0)}</Text>
-        </View>
-      </View>
-
-      <ItemComplements
-        product={product}
-        selectedComplements={complements}
-        onComplementToggle={(group, complement, selected) => {
-          if (!selected || helpers.canAddComplement(group, complements)) {
-            if (selected) setComplements([...complements, complement]);
-            else setComplements(complements.filter((c) => c.id !== complement.id));
-          }
-        }}
-      />
-      {business.status === 'open' && (
-        <View style={{ marginTop: 26 }}>
-          <HR />
-          <View style={{ padding: 12 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Feather name="info" size={14} />
-              <Text style={{ ...texts.sm, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
-            </View>
-            <DefaultInput
-              style={{ height: 96, marginTop: halfPadding }}
-              placeholder={t(
-                'Tem alguma observação? Por exemplo: sem molho, sem cebola, ponto da carne, etc'
-              )}
-              multiline
-              textAlignVertical="top"
-              value={notes}
-              onChangeText={setNotes}
-            />
+    <View style={{ ...screens.default }}>
+      <ScrollView style={{ ...screens.default }} scrollIndicatorInsets={{ right: 1 }}>
+        <View style={{ paddingHorizontal: padding, marginBottom: 24 }}>
+          <View style={{ width: '100%', height: 240, overflow: 'hidden' }}>
+            {imageURI && (
+              <Image
+                source={{ uri: imageURI }}
+                style={{ width: '100%', height: 240 }}
+                borderRadius={8}
+                resizeMode="cover"
+              />
+            )}
           </View>
+          <View style={{ marginTop: padding }}>
+            <Text style={{ ...texts.xl }}>{product?.name ?? ''}</Text>
+            <Text style={{ ...texts.sm, color: colors.grey700, marginVertical: 4 }}>
+              {product?.description ?? ''}
+            </Text>
+            <Text style={{ ...texts.sm }}>
+              {product.complementsEnabled
+                ? `${t('A partir de ')} ${formatCurrency(product.price)}`
+                : formatCurrency(product.price)}
+            </Text>
+          </View>
+        </View>
+
+        <ItemComplements
+          product={product}
+          selectedComplements={complements}
+          onComplementToggle={(group, complement, selected) => {
+            if (!selected || helpers.canAddComplement(group, complements)) {
+              if (selected) setComplements([...complements, complement]);
+              else setComplements(complements.filter((c) => c.id !== complement.id));
+            }
+          }}
+        />
+        {business.status === 'open' && (
+          <View style={{ marginTop: halfPadding }}>
+            <HR />
+            <View style={{ padding: 12 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Feather name="info" size={14} />
+                <Text style={{ ...texts.sm, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
+              </View>
+              <DefaultInput
+                style={{ height: 96, marginTop: halfPadding }}
+                placeholder={t(
+                  'Tem alguma observação? Por exemplo: sem molho, sem cebola, ponto da carne, etc'
+                )}
+                multiline
+                textAlignVertical="top"
+                value={notes}
+                onChangeText={setNotes}
+              />
+            </View>
+          </View>
+        )}
+        {business.status === 'closed' && (
+          <View
+            style={{
+              margin: padding,
+              padding: 25,
+              alignItems: 'center',
+              backgroundColor: colors.grey50,
+              ...borders.default,
+            }}
+          >
+            <Feather name="clock" size={26} />
+            <Text style={texts.sm}>{t('Desculpe, estamos fechados agora')}</Text>
+            <Text style={{ ...texts.xs, color: colors.grey700 }}>
+              {t('Abriremos {amanhã, dia da semana} às')}
+            </Text>
+            <Text style={texts.x2l}>{t('00:00')}</Text>
+          </View>
+        )}
+      </ScrollView>
+      {business.status === 'open' ? (
+        <View>
           <HR />
-          <View style={{ paddingHorizontal: 12 }}>
+          <PaddedView>
             <ItemQuantity
-              style={{ marginVertical: padding }}
+              style={{ marginBottom: padding }}
               value={quantity}
               minimum={itemId ? 0 : 1}
               title={`${t('Adicionar')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
@@ -195,27 +224,9 @@ export const ItemDetail = ({ navigation, route }: Props) => {
               onChange={(value) => setQuantity(value)}
               onSubmit={addItemToOrder}
             />
-          </View>
+          </PaddedView>
         </View>
-      )}
-      {business.status === 'closed' && (
-        <View
-          style={{
-            margin: padding,
-            padding: 25,
-            alignItems: 'center',
-            backgroundColor: colors.grey50,
-            ...borders.default,
-          }}
-        >
-          <Feather name="clock" size={26} />
-          <Text style={texts.sm}>{t('Desculpe, estamos fechados agora')}</Text>
-          <Text style={{ ...texts.xs, color: colors.grey700 }}>
-            {t('Abriremos {amanhã, dia da semana} às')}
-          </Text>
-          <Text style={texts.x2l}>{t('00:00')}</Text>
-        </View>
-      )}
-    </ScrollView>
+      ) : null}
+    </View>
   );
 };

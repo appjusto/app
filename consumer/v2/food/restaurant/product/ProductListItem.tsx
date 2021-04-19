@@ -1,7 +1,6 @@
 import { Product, ProductAlgolia, WithId } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
 import {
   useContextBusiness,
@@ -15,20 +14,21 @@ import { ListItemImage } from '../list/ListItemImage';
 interface Props {
   product: ProductAlgolia | WithId<Product>;
   showRestaurantName?: boolean;
+  complements?: boolean;
 }
 
 const isAlgoliaProduct = (product: ProductAlgolia | WithId<Product>): product is ProductAlgolia => {
   return (product as ProductAlgolia).objectID !== undefined;
 };
 
-export const ProductListItem = ({ product, showRestaurantName }: Props) => {
+export const ProductListItem = ({ product, showRestaurantName, complements }: Props) => {
   // state
   const businessId = useContextBusinessId();
   const business = useContextBusiness();
   const productId = isAlgoliaProduct(product) ? product.objectID : product.id;
   const businessName = isAlgoliaProduct(product) ? product.business.name : business?.name;
   const { data: imageURI } = useProductImageURI(businessId, productId);
-  const item = useProduct(businessId, productId);
+
   // UI
   return (
     <View
@@ -56,9 +56,9 @@ export const ProductListItem = ({ product, showRestaurantName }: Props) => {
             {product.description}
           </Text>
           <Text style={{ ...texts.sm }}>
-            {item!.complementsEnabled
-              ? `${t('A partir de ')} ${formatCurrency(item!.price)}`
-              : formatCurrency(item!.price)}
+            {complements
+              ? `${t('A partir de ')} ${formatCurrency(product.price)}`
+              : formatCurrency(product.price)}
           </Text>
           {showRestaurantName && businessName && (
             <Text style={{ ...texts.xs, color: colors.green600 }}>{businessName}</Text>

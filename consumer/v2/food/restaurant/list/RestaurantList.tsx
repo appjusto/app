@@ -56,7 +56,7 @@ export default function ({ items, ListHeaderComponent, onSelect, onEndReached }:
   }
   return (
     <SectionList
-      style={{ ...screens.default }}
+      style={{ ...screens.default, marginBottom: padding }}
       ListEmptyComponent={
         !items ? (
           <View style={{ ...screens.centered, marginTop: padding }}>
