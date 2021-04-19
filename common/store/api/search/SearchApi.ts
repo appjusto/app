@@ -62,20 +62,23 @@ export default class SearchApi {
     filters: SearchFilter[],
     aroundLocation: LatLng,
     query: string = '',
-    page?: number
+    page?: number,
+    hitsPerPage: number = 10
   ) {
     const index = this.getSearchIndex(kind, order);
     if (!index) throw new Error('Invalid index');
     return index.search<T>(query, {
       aroundLatLng: `${aroundLocation.latitude}, ${aroundLocation.longitude}`,
-      page,
       filters: this.createFilters(filters),
+      page,
+      hitsPerPage,
     });
   }
 
-  searchFleets(query: string = '', page?: number) {
+  searchFleets(query: string = '', page?: number, hitsPerPage: number = 10) {
     return this.fleets.search<Fleet>(query, {
       page,
+      hitsPerPage,
     });
   }
 }
