@@ -6,4 +6,5 @@ export type DeliveriesNavigatorParamList = {
   DeliverySummary: {
     orderId: string;
   };
+  ProfileSubmitted: undefined;
 };

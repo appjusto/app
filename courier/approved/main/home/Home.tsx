@@ -5,7 +5,7 @@ import { CourierStatus } from 'appjusto-types';
 import { LOCATION, usePermissions } from 'expo-permissions';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useContext, useEffect } from 'react';
-import { Linking, ScrollView, TouchableOpacity, View } from 'react-native';
+import { Linking, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
@@ -17,7 +17,7 @@ import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
-import { padding, screens } from '../../../../common/styles';
+import { borders, padding, screens } from '../../../../common/styles';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
 import { FreshWorksCard } from './FreshWorksCard';
@@ -100,6 +100,19 @@ export default function ({ navigation }: Props) {
               }
             />
           </View>
+          <View style={{ marginTop: padding }}>
+            <TouchableOpacity
+              style={{ ...borders.default, height: 32 }}
+              onPress={() =>
+                navigation.navigate('DeliveriesNavigator', { screen: 'ProfileSubmitted' })
+              }
+            >
+              <Text>IR PARA PROFILESUBMITTED</Text>
+            </TouchableOpacity>
+            {/* <View>
+              <DemandCard />
+            </View> */}
+          </View>
           <View style={{ marginBottom: padding }}>
             <HomeShareCard
               title="Divulgue o AppJusto"
@@ -107,11 +120,6 @@ export default function ({ navigation }: Props) {
             />
           </View>
           <ModalChooser />
-          {/* <View style={{ marginTop: padding }}>
-            <View>
-              <DemandCard />
-            </View>
-          </View> */}
         </PaddedView>
       </ScrollView>
       <LocationDisclosureModal />
