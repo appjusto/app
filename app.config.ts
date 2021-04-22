@@ -30,8 +30,8 @@ const {
 
 const flavor: Flavor = FLAVOR as Flavor;
 const environment: Environment = ENVIRONMENT as Environment;
-const version = '0.16.0';
-const versionCode = 23;
+const version = '0.17.0';
+const versionCode = 24;
 
 export default (context: ConfigContext): ExpoConfig => {
   const config: ExpoConfig = {
