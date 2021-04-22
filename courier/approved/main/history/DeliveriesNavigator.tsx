@@ -1,9 +1,9 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { defaultScreenOptions } from '../../../../common/screens/options';
+import { Onboarding } from '../../../../common/screens/unlogged/Onboarding';
 import { getMonthName } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
-import ProfileSubmitted from '../../../unapproved/ProfileSubmitted';
 import DeliveryHistoryByMonth from './DeliveryHistoryByMonth';
 import DeliverySummary from './DeliverySummary';
 import { DeliveriesNavigatorParamList } from './types';
@@ -25,9 +25,9 @@ export default function () {
         options={{ title: t('Corrida finalizada') }}
       />
       <Stack.Screen
-        name="ProfileSubmitted"
-        component={ProfileSubmitted}
-        options={{ headerShown: false }}
+        name="Onboarding"
+        component={Onboarding}
+        options={{ title: t('Boas vindas ao AppJusto') }}
       />
     </Stack.Navigator>
   );

@@ -103,9 +103,7 @@ export default function ({ navigation }: Props) {
           <View style={{ marginTop: padding }}>
             <TouchableOpacity
               style={{ ...borders.default, height: 32 }}
-              onPress={() =>
-                navigation.navigate('DeliveriesNavigator', { screen: 'ProfileSubmitted' })
-              }
+              onPress={() => navigation.navigate('DeliveriesNavigator', { screen: 'Onboarding' })}
             >
               <Text>IR PARA PROFILESUBMITTED</Text>
             </TouchableOpacity>
