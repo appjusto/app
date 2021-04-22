@@ -7,6 +7,7 @@ import { IconAppDelivery } from '../../icons/icon-app-delivery';
 import { IconBeta } from '../../icons/icon-beta';
 import { IconHangLoose } from '../../icons/icon-hang-loose';
 import { IconHeartBox } from '../../icons/icon-heart-box';
+import { IconShareBig } from '../../icons/icon-share-big';
 import { getFlavor } from '../../store/config/selectors';
 import { borders, halfPadding, padding, screens, texts } from '../../styles';
 
@@ -112,7 +113,7 @@ export const Onboarding = () => {
     bottomDescription = t(
       'Além de tornar as relações mais justas na sua região, você ainda ajuda a melhorar a qualidade do serviço para entregadores e restaurantes.'
     );
-    icon = <IconHeartBox />;
+    icon = <IconShareBig />;
     // stepDisplay
     buttonTitle = t('Começar');
   }
