@@ -28,6 +28,10 @@ export const Onboarding = ({ navigation }: Props) => {
   const [step, setStep] = React.useState(0);
   // refs
   const viewPager = React.useRef<ViewPager>(null);
+  // effects
+  React.useEffect(() => {
+    viewPager?.current?.setPage(step);
+  }, [step]);
   // handlers
   const advanceHandler = () => {
     if (step + 1 < steps.length) {
