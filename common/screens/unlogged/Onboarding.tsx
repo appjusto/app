@@ -1,6 +1,8 @@
+import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
+import { UnapprovedParamList } from '../../../courier/unapproved/types';
 import { t } from '../../../strings';
 import { ApiContext } from '../../app/context';
 import DefaultButton from '../../components/buttons/DefaultButton';
@@ -10,9 +12,14 @@ import { IconHangLoose } from '../../icons/icon-hang-loose';
 import { IconHeartBox } from '../../icons/icon-heart-box';
 import { IconShareBig } from '../../icons/icon-share-big';
 import { getFlavor } from '../../store/config/selectors';
-import { getConsumer } from '../../store/consumer/selectors';
-import { getCourier } from '../../store/courier/selectors';
+import { getUser } from '../../store/user/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../styles';
+
+type ScreenNavigationProp = StackNavigationProp<UnapprovedParamList, 'CourierOnboarding'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+};
 
 export enum OnboardingSteps {
   Welcome = 0,
@@ -22,22 +29,20 @@ export enum OnboardingSteps {
   Share,
 }
 
-export const Onboarding = () => {
+export const Onboarding = ({ navigation }: Props) => {
   // context
   const api = useContext(ApiContext);
   // redux store
   const flavor = useSelector(getFlavor);
   // state
   const [step, setStep] = React.useState(OnboardingSteps.Welcome);
-  const courier = useSelector(getCourier)!;
-  const consumer = useSelector(getConsumer)!;
+  const user = useSelector(getUser)!;
 
   let headerTitle;
   let topDescription;
   let bottomDescription;
   let icon;
   let buttonTitle;
-  // let stepDisplay;
   if (step === OnboardingSteps.Welcome) {
     if (flavor === 'courier') {
       headerTitle = t('Olá,\n que legal ver você aqui!');
@@ -47,8 +52,7 @@ export const Onboarding = () => {
       bottomDescription = t(
         'Estamos apenas começando. Com o comprometimento de todos, vamos dar certo. Ajude divulgando esse movimento!'
       );
-      icon = <IconHangLoose />; // maybe we can take the icon out of here
-      // stepDisplay
+      icon = <IconHangLoose />;
       buttonTitle = t('Avançar');
     } else {
       headerTitle = t('Olá,\n boas vindas ao AppJusto!');
@@ -59,7 +63,6 @@ export const Onboarding = () => {
         'O AppJusto veio para combater a precarização do trabalho e, com a ajuda de todos, vamos fazer dar certo!'
       );
       icon = <IconHangLoose />;
-      // stepDisplay
       buttonTitle = t('Avançar');
     }
   }
@@ -73,7 +76,6 @@ export const Onboarding = () => {
         'Fique à vontade para nos avisar pelo chat se perceber algum problema e também para contribuir com sugestões. Vamos juntos!'
       );
       icon = <IconBeta />;
-      // stepDisplay
       buttonTitle = t('Iniciar cadastro');
     } else {
       headerTitle = t('O AppJusto ainda está em fase de testes');
@@ -84,7 +86,6 @@ export const Onboarding = () => {
         'Imprevistos podem ocorrer nesse início. VoCê pode nos avisar pelo chat e também contribuir com sugestões. Vamos construir juntos!'
       );
       icon = <IconBeta />;
-      // stepDisplay
       buttonTitle = t('Avançar');
     }
   }
@@ -97,7 +98,6 @@ export const Onboarding = () => {
       'Na entrega de encomendas, os entregadores recebem o valor da frota que você escolher.'
     );
     icon = <IconAppDelivery />;
-    // stepDisplay
     buttonTitle = t('Avançar');
   }
   if (step === OnboardingSteps.YouCanChoose) {
@@ -109,7 +109,6 @@ export const Onboarding = () => {
       'Elas são ordenadas por quantidade de entregadores ativos próximos a você.'
     );
     icon = <IconHeartBox />;
-    // stepDisplay
     buttonTitle = t('Avançar');
   }
   if (step === OnboardingSteps.Share) {
@@ -119,7 +118,6 @@ export const Onboarding = () => {
       'Além de tornar as relações mais justas na sua região, você ainda ajuda a melhorar a qualidade do serviço para entregadores e restaurantes.'
     );
     icon = <IconShareBig />;
-    // stepDisplay
     buttonTitle = t('Começar');
   }
   const steps = [];
@@ -133,7 +131,7 @@ export const Onboarding = () => {
           width: halfPadding,
           ...borders.default,
           borderRadius: 4,
-          backgroundColor: colors.black,
+          backgroundColor: step === i + 1 ? colors.black : colors.grey50,
           marginRight: halfPadding,
         }}
         key={i}
@@ -141,14 +139,14 @@ export const Onboarding = () => {
     );
   }
 
-  // // handler
+  // handler
   const advanceHandler = async () => {
     if (flavor === 'courier' && step === OnboardingSteps.WeAreBeta) {
-      api.profile().updateProfile(courier.id, { onBoarded: true });
-      // navigation.navigate('screen')
+      api.profile().updateProfile(user.uid, { onboarded: true });
+      navigation.navigate('ProfilePending');
     }
     if (flavor === 'consumer' && step === OnboardingSteps.Share) {
-      api.profile().updateProfile(consumer.id, { onBoarded: true });
+      api.profile().updateProfile(user.uid, { onboarded: true });
       // navigation.navigate('screen')
     } else {
       setStep(step + 1);
@@ -176,7 +174,7 @@ export const Onboarding = () => {
       <DefaultButton
         title={buttonTitle ?? ''}
         style={{ marginTop: 32, marginBottom: padding }}
-        onPress={() => setStep(step + 1)}
+        onPress={advanceHandler}
       />
     </ScrollView>
   );

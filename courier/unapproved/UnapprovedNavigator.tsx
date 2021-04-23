@@ -1,9 +1,12 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import FleetDetail from '../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../common/screens/options';
 import { PermissionDenied } from '../../common/screens/PermissionDenied';
 import ProfileErase from '../../common/screens/profile/ProfileErase';
+import { Onboarding } from '../../common/screens/unlogged/Onboarding';
+import { getCourier } from '../../common/store/courier/selectors';
 import { t } from '../../strings';
 import ProfileBank from '../approved/main/profile/bank/ProfileBank';
 import SelectBank from '../approved/main/profile/bank/SelectBank';
@@ -20,8 +23,17 @@ import { UnapprovedParamList } from './types';
 
 const Stack = createStackNavigator<UnapprovedParamList>();
 export default function () {
+  const courier = useSelector(getCourier)!;
   return (
-    <Stack.Navigator screenOptions={defaultScreenOptions}>
+    <Stack.Navigator
+      screenOptions={defaultScreenOptions}
+      initialRouteName={courier.onboarded ? 'ProfilePending' : 'CourierOnboarding'}
+    >
+      <Stack.Screen
+        name="CourierOnboarding"
+        component={Onboarding}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="ProfilePending"
         component={ProfilePending}
