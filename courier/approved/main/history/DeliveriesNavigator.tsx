@@ -1,7 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { defaultScreenOptions } from '../../../../common/screens/options';
-import { Onboarding } from '../../../../common/screens/unlogged/onboarding/Onboarding';
 import { getMonthName } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import DeliveryHistoryByMonth from './DeliveryHistoryByMonth';
@@ -23,11 +22,6 @@ export default function () {
         name="DeliverySummary"
         component={DeliverySummary}
         options={{ title: t('Corrida finalizada') }}
-      />
-      <Stack.Screen
-        name="Onboarding"
-        component={Onboarding}
-        options={{ title: t('Boas vindas ao AppJusto') }}
       />
     </Stack.Navigator>
   );

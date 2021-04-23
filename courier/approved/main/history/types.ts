@@ -6,5 +6,4 @@ export type DeliveriesNavigatorParamList = {
   DeliverySummary: {
     orderId: string;
   };
-  Onboarding: undefined;
 };

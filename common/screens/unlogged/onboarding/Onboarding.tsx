@@ -30,6 +30,7 @@ export const Onboarding = ({ navigation }: Props) => {
   // state
   const steps = flavor === 'courier' ? config.courier : config.consumer;
   const [step, setStep] = React.useState(0);
+  const [isLoading, setLoading] = React.useState(false);
   // refs
   const viewPager = React.useRef<ViewPager>(null);
   // effects
@@ -41,7 +42,9 @@ export const Onboarding = ({ navigation }: Props) => {
     if (step + 1 < steps.length) {
       setStep(step + 1);
     } else {
+      setLoading(true);
       api.profile().updateProfile(user.uid, { onboarded: true });
+      setLoading(false);
       if (flavor === 'courier') {
         navigation.navigate('ProfilePending');
       } else {
@@ -77,8 +80,9 @@ export const Onboarding = ({ navigation }: Props) => {
                   height: halfPadding,
                   width: halfPadding,
                   ...borders.default,
+                  borderColor: step === i ? colors.black : colors.grey500,
                   borderRadius: 4,
-                  backgroundColor: step === i ? colors.black : colors.grey50,
+                  backgroundColor: step === i ? colors.black : colors.grey500,
                   marginRight: halfPadding,
                 }}
                 key={i}
@@ -89,6 +93,7 @@ export const Onboarding = ({ navigation }: Props) => {
             title={buttonTitle}
             style={{ marginTop: 32, marginBottom: padding }}
             onPress={advanceHandler}
+            disabled={isLoading}
           />
         </ScrollView>
       ))}

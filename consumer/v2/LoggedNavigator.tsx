@@ -59,7 +59,7 @@ export const LoggedNavigator = () => {
       <Stack.Screen
         name="ConsumerOnboarding"
         component={Onboarding}
-        options={{ headerShown: false }}
+        options={{ title: t('Boas vindas ao AppJusto'), headerLeft: () => null }}
       />
       <Stack.Screen
         name="MainNavigator"

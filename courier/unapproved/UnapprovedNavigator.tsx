@@ -32,7 +32,7 @@ export default function () {
       <Stack.Screen
         name="CourierOnboarding"
         component={Onboarding}
-        options={{ headerShown: false }}
+        options={{ title: t('Boas vindas ao AppJusto'), headerLeft: () => null }}
       />
       <Stack.Screen
         name="ProfilePending"
