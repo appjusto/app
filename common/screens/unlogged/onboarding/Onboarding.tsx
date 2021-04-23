@@ -38,12 +38,12 @@ export const Onboarding = ({ navigation }: Props) => {
     viewPager?.current?.setPage(step);
   }, [step]);
   // handlers
-  const advanceHandler = () => {
+  const advanceHandler = async () => {
     if (step + 1 < steps.length) {
       setStep(step + 1);
     } else {
       setLoading(true);
-      api.profile().updateProfile(user.uid, { onboarded: true });
+      await api.profile().updateProfile(user.uid, { onboarded: true });
       setLoading(false);
       if (flavor === 'courier') {
         navigation.navigate('ProfilePending');
