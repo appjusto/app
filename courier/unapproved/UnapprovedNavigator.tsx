@@ -5,7 +5,7 @@ import FleetDetail from '../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../common/screens/options';
 import { PermissionDenied } from '../../common/screens/PermissionDenied';
 import ProfileErase from '../../common/screens/profile/ProfileErase';
-import { Onboarding } from '../../common/screens/unlogged/Onboarding';
+import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
 import { getCourier } from '../../common/store/courier/selectors';
 import { t } from '../../strings';
 import ProfileBank from '../approved/main/profile/bank/ProfileBank';
