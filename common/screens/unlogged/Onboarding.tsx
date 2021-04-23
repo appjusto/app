@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { t } from '../../../strings';
+import { ApiContext } from '../../app/context';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import { IconAppDelivery } from '../../icons/icon-app-delivery';
 import { IconBeta } from '../../icons/icon-beta';
@@ -9,6 +10,8 @@ import { IconHangLoose } from '../../icons/icon-hang-loose';
 import { IconHeartBox } from '../../icons/icon-heart-box';
 import { IconShareBig } from '../../icons/icon-share-big';
 import { getFlavor } from '../../store/config/selectors';
+import { getConsumer } from '../../store/consumer/selectors';
+import { getCourier } from '../../store/courier/selectors';
 import { borders, halfPadding, padding, screens, texts } from '../../styles';
 
 export enum OnboardingSteps {
@@ -20,13 +23,15 @@ export enum OnboardingSteps {
 }
 
 export const Onboarding = () => {
+  // context
+  const api = useContext(ApiContext);
   // redux store
   const flavor = useSelector(getFlavor);
   // state
   const [step, setStep] = React.useState(OnboardingSteps.Welcome);
-  // estrututura:
-  //icon: IconHangLoose, IconBeta, IconAppDelivery, IconHeartBox, IconShareBig
-  //header
+  const courier = useSelector(getCourier)!;
+  const consumer = useSelector(getConsumer)!;
+
   let headerTitle;
   let topDescription;
   let bottomDescription;
@@ -135,6 +140,20 @@ export const Onboarding = () => {
       />
     );
   }
+
+  // // handler
+  const advanceHandler = async () => {
+    if (flavor === 'courier' && step === OnboardingSteps.WeAreBeta) {
+      api.profile().updateProfile(courier.id, { onBoarded: true });
+      // navigation.navigate('screen')
+    }
+    if (flavor === 'consumer' && step === OnboardingSteps.Share) {
+      api.profile().updateProfile(consumer.id, { onBoarded: true });
+      // navigation.navigate('screen')
+    } else {
+      setStep(step + 1);
+    }
+  };
 
   return (
     <ScrollView style={[screens.default, { paddingHorizontal: padding }]}>
