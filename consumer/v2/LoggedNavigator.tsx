@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../common/app/context';
 import { defaultScreenOptions } from '../../common/screens/options';
 import { PermissionDenied } from '../../common/screens/PermissionDenied';
+import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
 import { useObserveOngoingOrders } from '../../common/store/api/order/hooks/useObserveOngoingOrders';
 import { getFlavor } from '../../common/store/config/selectors';
 import { getConsumer } from '../../common/store/consumer/selectors';
@@ -51,7 +52,15 @@ export const LoggedNavigator = () => {
     );
   }
   return (
-    <Stack.Navigator screenOptions={defaultScreenOptions}>
+    <Stack.Navigator
+      screenOptions={defaultScreenOptions}
+      initialRouteName={consumer.onboarded ? 'MainNavigator' : 'ConsumerOnboarding'}
+    >
+      <Stack.Screen
+        name="ConsumerOnboarding"
+        component={Onboarding}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="MainNavigator"
         component={MainNavigator}
