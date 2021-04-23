@@ -12,7 +12,7 @@ import { IconShareBig } from '../../icons/icon-share-big';
 import { getFlavor } from '../../store/config/selectors';
 import { getConsumer } from '../../store/consumer/selectors';
 import { getCourier } from '../../store/courier/selectors';
-import { borders, halfPadding, padding, screens, texts } from '../../styles';
+import { borders, colors, halfPadding, padding, screens, texts } from '../../styles';
 
 export enum OnboardingSteps {
   Welcome = 0,
@@ -133,10 +133,10 @@ export const Onboarding = () => {
           width: halfPadding,
           ...borders.default,
           borderRadius: 4,
-          backgroundColor: 'black',
+          backgroundColor: colors.black,
           marginRight: halfPadding,
         }}
-        key={`key-${i}`}
+        key={i}
       />
     );
   }
