@@ -30,8 +30,8 @@ const {
 
 const flavor: Flavor = FLAVOR as Flavor;
 const environment: Environment = ENVIRONMENT as Environment;
-const version = '0.17.0';
-const versionCode = 24;
+const version = '0.17.1';
+const versionCode = 25;
 
 export default (context: ConfigContext): ExpoConfig => {
   const config: ExpoConfig = {
@@ -64,7 +64,7 @@ export default (context: ConfigContext): ExpoConfig => {
 
 const name = () => {
   let name = 'AppJusto';
-  if (flavor === 'courier') name = 'Parceiro Justo';
+  if (flavor === 'courier') name = 'AppJusto Entregador';
   if (environment === 'dev') return `(D) ${name}`;
   else if (environment === 'staging') return `(S) ${name}`;
   return name;
