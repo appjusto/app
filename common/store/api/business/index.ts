@@ -15,7 +15,6 @@ export default class BusinessApi {
   constructor(private refs: FirebaseRefs, private files: FilesApi) {}
 
   // firestore
-  // business
   observeBusiness(businessId: string, resultHandler: (business: WithId<Business>) => void) {
     const ref = this.refs.getBusinessRef(businessId);
     const unsubscribe = ref.onSnapshot(
@@ -24,15 +23,6 @@ export default class BusinessApi {
     );
     return unsubscribe;
   }
-
-  fetchBusinessLogoURI(businessId: string) {
-    return this.files.getDownloadURL(this.refs.getBusinessLogoStoragePath(businessId));
-  }
-
-  fetchBusinessCoverImageURI(businessId: string) {
-    return this.files.getDownloadURL(this.refs.getBusinessCoverStoragePath(businessId));
-  }
-
   // menu
   observeCategories(businessId: string, resultHandler: (categories: WithId<Category>[]) => void) {
     const unsubscribe = this.refs.getBusinessCategoriesRef(businessId).onSnapshot(
@@ -41,7 +31,6 @@ export default class BusinessApi {
     );
     return unsubscribe;
   }
-
   observeProducts(businessId: string, resultHandler: (products: WithId<Product>[]) => void) {
     const unsubscribe = this.refs.getBusinessProductsRef(businessId).onSnapshot(
       (snapshot) => resultHandler(documentsAs<Product>(snapshot.docs)),
@@ -49,7 +38,6 @@ export default class BusinessApi {
     );
     return unsubscribe;
   }
-
   observeProduct(
     businessId: string,
     productId: string,
@@ -61,7 +49,6 @@ export default class BusinessApi {
     );
     return unsubscribe;
   }
-
   observeProductComplementsGroups(
     businessId: string,
     productId: string,
@@ -75,7 +62,6 @@ export default class BusinessApi {
       );
     return unsubscribe;
   }
-
   observeProductComplements(
     businessId: string,
     productId: string,
@@ -89,7 +75,6 @@ export default class BusinessApi {
       );
     return unsubscribe;
   }
-
   observeMenuOrdering(businessId: string, resultHandler: (products: WithId<Ordering>) => void) {
     const unsubscribe = this.refs.getBusinessMenuOrderingRef(businessId).onSnapshot(
       (snapshot) => resultHandler(documentAs<Ordering>(snapshot)),
@@ -97,13 +82,18 @@ export default class BusinessApi {
     );
     return unsubscribe;
   }
-
+  // storage
+  fetchBusinessLogoURI(businessId: string) {
+    return this.files.getDownloadURL(this.refs.getBusinessLogoStoragePath(businessId));
+  }
+  fetchBusinessCoverImageURI(businessId: string) {
+    return this.files.getDownloadURL(this.refs.getBusinessCoverStoragePath(businessId));
+  }
   fetchProductImageURI(businessId: string, productId: string, size: string = '288x288') {
     return this.files.getDownloadURL(
       this.refs.getProductImageStoragePath(businessId, productId, size)
     );
   }
-
   fetchProductComplementImageURI(businessId: string, complementId: string) {
     return this.files.getDownloadURL(
       this.refs.getComplementImageStoragePath(businessId, complementId)

@@ -125,11 +125,8 @@ export default function ({ navigation, route }: Props) {
     if (!selectedPaymentMethodId) return;
     try {
       setLoading(true);
-      await api.order().placeOrder({
-        orderId,
-        payableWith: 'credit_card',
+      await api.order().placeOrder(orderId, fleetId, 'credit_card', {
         paymentMethodId: selectedPaymentMethodId,
-        fleetId,
       });
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {
