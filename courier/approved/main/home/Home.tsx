@@ -3,13 +3,11 @@ import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CourierStatus } from 'appjusto-types';
 import { LOCATION, usePermissions } from 'expo-permissions';
-import { nanoid } from 'nanoid/non-secure';
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import { Linking, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import useLocationUpdates from '../../../../common/hooks/useLocationUpdates';
 import useNotificationToken from '../../../../common/hooks/useNotificationToken';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
@@ -18,6 +16,10 @@ import { getCourier } from '../../../../common/store/courier/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { padding, screens } from '../../../../common/styles';
+import {
+  startLocationUpdatesTask,
+  stopLocationUpdatesTask,
+} from '../../../../common/utils/location';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
 import { FreshWorksCard } from './FreshWorksCard';
@@ -37,25 +39,30 @@ type Props = {
 
 export default function ({ navigation }: Props) {
   // context
-  const api = useContext(ApiContext);
+  const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // redux store
   const courier = useSelector(getCourier)!;
-  const { status } = courier;
   const ongoingOrders = useSelector(getOrders);
+  const { status } = courier;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
   // state
   const [locationPermission] = usePermissions(LOCATION);
-  const [locationKey] = React.useState(nanoid());
-  useLocationUpdates(locationPermission?.status === 'granted' && working, locationKey);
   const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
     courier!.notificationToken
   );
   // side effects
   // tracking
   useSegmentScreen('Home');
+  React.useEffect(() => {
+    if (working && locationPermission?.granted) {
+      startLocationUpdatesTask();
+    } else {
+      stopLocationUpdatesTask();
+    }
+  }, [locationPermission, working]);
   // notification permission
-  useEffect(() => {
+  React.useEffect(() => {
     if (shouldDeleteToken || shouldUpdateToken) {
       const token = shouldUpdateToken ? notificationToken : null;
       dispatch(updateProfile(api)(courier.id, { notificationToken: token }));

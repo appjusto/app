@@ -17,6 +17,7 @@ export const LocationDisclosureModal = (props: ModalProps) => {
     return () => navigation.removeListener('focus', getPermission);
   }, [navigation, getPermission]);
   // UI
+  if (!permission) return null;
   return (
     <DefaultModal
       header={t('Compartilhamento da localização')}
@@ -24,9 +25,9 @@ export const LocationDisclosureModal = (props: ModalProps) => {
         'O AppJusto coleta a localização somente quando você estiver disponível, para permitir o envio de corridas mais próximas e o acompanhamento das entregas. Isso também pode ocorrer com o aplicativo fechado ou sem uso no momento.'
       )}
       dismissButtonTitle={t('Ok, entendi')}
-      visible={permission && permission.status !== 'granted'}
+      visible={!permission.granted}
       onDismiss={() => {
-        if (permission?.canAskAgain) {
+        if (permission.canAskAgain) {
           askPermission();
         } else {
           Linking.openSettings();
