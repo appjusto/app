@@ -1,5 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import firebase from 'firebase';
 import React, { useContext } from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -59,8 +60,13 @@ export default function ({ navigation, route }: Props) {
     );
   }
   // handlers
-  const confirmFleet = async () => {
-    api.profile().updateProfile(courier.id, { fleet });
+  const confirmFleet = () => {
+    api.profile().updateProfile(courier.id, {
+      fleet: {
+        ...fleet,
+        joinedOn: firebase.firestore.FieldValue.serverTimestamp(),
+      },
+    });
     navigation.navigate('ChooseFleet');
   };
   // UI
