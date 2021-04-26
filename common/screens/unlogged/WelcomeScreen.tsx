@@ -2,6 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useCallback, useContext, useState } from 'react';
 import {
+  Dimensions,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -10,7 +11,6 @@ import {
   View,
 } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { LocationDisclosureModal } from '../../../courier/approved/main/home/LocationDisclosureModal';
 import { t } from '../../../strings';
@@ -19,7 +19,6 @@ import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import DefaultInput from '../../components/inputs/DefaultInput';
 import ShowIf from '../../components/views/ShowIf';
-import useTallerDevice from '../../hooks/useTallerDevice';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { IconMotocycle } from '../../icons/icon-motocycle';
@@ -28,7 +27,7 @@ import { getExtra, getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
 import { signInWithEmail } from '../../store/user/actions';
-import { colors, padding, screens, texts } from '../../styles';
+import { colors, halfPadding, padding, screens, texts } from '../../styles';
 import { validateEmail } from '../../utils/validators';
 import { UnloggedParamList } from './types';
 
@@ -44,7 +43,9 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  const tallerDevice = useTallerDevice();
+  // const tallerDevice = useTallerDevice();
+  const { height } = Dimensions.get('window');
+  const tallerDevice = height > 640;
   // redux store
   const busy = useSelector(getUIBusy);
   const flavor = useSelector(getFlavor);
@@ -73,12 +74,12 @@ export default function ({ navigation, route }: Props) {
 
   const welcomeMessage =
     flavor === 'consumer'
-      ? t('Somos um delivery aberto, transparente e consciente.')
-      : t('Ganhe mais e tenha mais controle do seu tempo.');
+      ? t('Um delivery aberto, transparente e consciente.')
+      : t('Ganhe mais dinheiro e tenha mais controle do seu tempo.');
 
   // UI
   return (
-    <SafeAreaView
+    <View
       style={{
         ...screens.default,
         paddingHorizontal: padding,
@@ -95,7 +96,7 @@ export default function ({ navigation, route }: Props) {
             {() => <IconIllustrationIntro />}
           </ShowIf>
           <ShowIf test={tallerDevice && flavor === 'courier'}>{() => <IconMotocycle />}</ShowIf>
-          <View style={{ marginTop: 48 }}>
+          <View style={{ marginTop: tallerDevice ? 48 : 32 }}>
             <IconLogoGreen />
           </View>
           <View style={{ marginTop: padding }}>
@@ -121,7 +122,7 @@ export default function ({ navigation, route }: Props) {
         </View>
         <View
           style={{
-            flexDirection: 'row',
+            flexDirection: tallerDevice ? 'row' : 'column',
             alignItems: 'center',
             justifyContent: 'space-between',
             marginTop: padding,
@@ -134,7 +135,7 @@ export default function ({ navigation, route }: Props) {
               text={t('Aceito os termos de uso do app')}
             />
           </View>
-          <View>
+          <View style={{ marginTop: !tallerDevice ? halfPadding : 0 }}>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('Terms');
@@ -145,7 +146,7 @@ export default function ({ navigation, route }: Props) {
           </View>
         </View>
         <View style={{ flex: 1 }} />
-        <View style={{ marginBottom: padding, marginTop: 32 }}>
+        <View style={{ marginBottom: padding, marginTop: !tallerDevice ? 32 : padding }}>
           <DefaultButton
             disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
             title={t('Entrar')}
@@ -155,6 +156,6 @@ export default function ({ navigation, route }: Props) {
         </View>
       </KeyboardAvoidingView>
       {flavor === 'courier' && <LocationDisclosureModal />}
-    </SafeAreaView>
+    </View>
   );
 }
