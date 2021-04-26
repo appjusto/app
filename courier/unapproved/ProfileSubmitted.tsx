@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { greenCheck } from '../../assets/icons';
 import { ApiContext } from '../../common/app/context';
 import HR from '../../common/components/views/HR';
-import { IconMotocycle } from '../../common/icons/icon-motocycle';
+import { IconMotocycleBeta } from '../../common/icons/icon-motocycle-beta';
 import HomeShareCard from '../../common/screens/home/cards/HomeShareCard';
 import { useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
@@ -33,19 +33,19 @@ export default function ({ navigation }: Props) {
   // tracking
   useSegmentScreen('Profile Submitted');
   // adapting to situation changes
-  React.useEffect(() => {
-    if (courier.situation === 'submitted') {
-      // api.courier().verifyProfile();
-    } else if (courier.situation === 'pending') {
-      setTimeout(() => {
-        navigation.replace('ProfilePending');
-      }, 100);
-    } else if (courier.situation === 'rejected') {
-      setTimeout(() => {
-        navigation.replace('ProfileRejected');
-      }, 100);
-    }
-  }, [courier, navigation, api]);
+  // React.useEffect(() => {
+  //   if (courier.situation === 'submitted') {
+  //     // api.courier().verifyProfile();
+  //   } else if (courier.situation === 'pending') {
+  //     setTimeout(() => {
+  //       navigation.replace('ProfilePending');
+  //     }, 100);
+  //   } else if (courier.situation === 'rejected') {
+  //     setTimeout(() => {
+  //       navigation.replace('ProfileRejected');
+  //     }, 100);
+  //   }
+  // }, [courier, navigation, api]);
   // UI
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -58,11 +58,13 @@ export default function ({ navigation }: Props) {
           }}
         >
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <IconMotocycle circleColor={colors.white} />
-            <Text style={{ ...texts.x2l, marginTop: 32 }}>{t('Cadastro enviado!')}</Text>
+            <IconMotocycleBeta />
+            <Text style={{ ...texts.x2l, marginTop: 32 }}>
+              {t('Cadastro enviado para o\n período de testes!')}
+            </Text>
             <Text style={{ ...texts.md, marginTop: 32 }}>
               {t(
-                'Estamos analisando as informações enviadas. Em breve você poderá começar a fazer suas entregas. Avisaremos quando a sua conta for aprovada.'
+                'Nós avisaremos assim que o período de testes começar para que você possa fazer as corridas. O início será nas próximas semanas. '
               )}
             </Text>
             <Text style={{ ...texts.md, marginTop: 32, marginBottom: 48 }}>
@@ -79,16 +81,46 @@ export default function ({ navigation }: Props) {
             }}
           >
             <Image source={greenCheck} />
-            <Text style={{ ...texts.xl, marginLeft: padding }}>{t('Autonomia e preço justo')}</Text>
+            <Text style={{ ...texts.xl, marginLeft: padding }}>
+              {t('Sobre o período de testes')}
+            </Text>
           </View>
           <Text style={{ ...texts.md }}>
             {t(
-              'No AppJusto, você pode definir o valor do seu serviço e mudar de frota quando quiser, escolhendo a melhor frota para cada dia.'
+              'O AppJusto não terá barreiras por região, então você poderá aceitar corridas em qualquer cidade do Brasil.'
             )}
           </Text>
           <Text style={{ ...texts.md, marginTop: 32, marginBottom: 48 }}>
             {t(
-              'O AppJusto não fica com nenhum valor da sua corrida! Retiramos apenas a taxa financeira, e o restante vai todo para você. Justo, né?'
+              'No início concentraremos nossos esforços para gerar pedidos na região central de São Paulo, e iremos expandir para os locais em que houverem mais cadastros.'
+            )}
+          </Text>
+        </View>
+        <HR color={colors.grey500} />
+        <View style={{ paddingHorizontal: padding }}>
+          <View
+            style={{
+              marginTop: 48,
+              marginBottom: 32,
+              flexDirection: 'row',
+            }}
+          >
+            <Image source={greenCheck} />
+            <Text style={{ ...texts.xl, marginLeft: padding }}>{t('Autonomia e preço justo')}</Text>
+          </View>
+          <Text style={{ ...texts.md }}>
+            {t(
+              'No AppJusto você pode definir o valor cobrado pelo seu serviço criando uma frota ou escolhendo aquela que é mais justa para você.'
+            )}
+          </Text>
+          <Text style={{ ...texts.md, marginTop: 32 }}>
+            {t(
+              'Ao começar, você estará na frota AppJusto, em que sua remuneração será de R$ 10,00 até 5km e mais R$ 2,00 por km adicional. Você pode mudar para outra frota quando quiser!'
+            )}
+          </Text>
+          <Text style={{ ...texts.md, marginTop: 32, marginBottom: 48 }}>
+            {t(
+              'Aqui no AppJusto não ganhamos nada em cima das entregas: o cliente paga direto para você, apenas com a taxa financeira sendo descontada.'
             )}
           </Text>
         </View>
@@ -105,24 +137,32 @@ export default function ({ navigation }: Props) {
             <Text style={{ ...texts.xl, marginLeft: padding }}>{t('Transparência')}</Text>
           </View>
           <Text style={{ ...texts.md }}>
-            {t('No AppJusto, você sempre sabe o quanto está sendo cobrado:')}
-          </Text>
-          <Text style={{ ...texts.md, marginTop: 32 }}>
             {t(
-              '\u25CF Taxa da financeira pelo recebimento pelo serviço: cartão de crédito 2,21% + R$ 0,09 (compensa em 30 dias).'
+              'Nas outras plataformas você recebe sem saber o que foi descontado. Aqui nós sempre vamos te informar de todas as cobranças. Quem tem maquininha sabe que toda transação digital tem taxa, e a nossa é uma das menores do mercado.'
             )}
           </Text>
           <Text style={{ ...texts.md, marginTop: 32 }}>
-            {t('\u25CF PIX: 0,99% (compensa no mesmo dia)')}
+            {t(
+              '\u25CF A taxa financeira é de 2,21% + R$ 0,09 por cartão de crédito ou 0,99% por Pix. Por exemplo: em uma corrida de R$ 10,00 recebida por cartão, você receberá R$ 9,68. Essa diferença não fica pra gente. É o custo da transação na instituição financeira'
+            )}
           </Text>
           <Text style={{ ...texts.md, marginTop: 32 }}>
-            {t('\u25CF Antecipação do cartão de crédito: 2,5%')}
+            {t(
+              '\u25CF Os pagamentos por cartão de crédito serão recebidos em 30 dias e os por Pix no mesmo dia'
+            )}
           </Text>
           <Text style={{ ...texts.md, marginTop: 32 }}>
-            {t('\u25CF Transferência para sua conta quando você quiser: R$ 2,00')}
+            {t(
+              '\u25CF Por causa dessa taxa menor e do recebimento rápido, vamos incentivar que os clientes paguem por Pix.'
+            )}
+          </Text>
+          <Text style={{ ...texts.md, marginTop: 32 }}>
+            {t('\u25CF Antecipações podem ser feitas com uma taxa de 2,5%.')}
           </Text>
           <Text style={{ ...texts.md, marginTop: 32, marginBottom: 48 }}>
-            {t('\u25CF Em breve, o AppJusto terá PIX para transferências grátis!')}
+            {t(
+              '\u25CF Para transferir para a sua conta o custo é de R$ 2,00. Em breve, teremos transferências grátis por Pix!'
+            )}
           </Text>
         </View>
         <HR color={colors.grey500} />
@@ -141,12 +181,17 @@ export default function ({ navigation }: Props) {
           </View>
           <Text style={{ ...texts.md }}>
             {t(
-              'Como somos um movimento para o bem de todos, adotamos a presunção da inocência para qualquer situação que possa ocorrer. Bloqueio só após a apuração dos fatos, e você sempre terá um atendimento humano.'
+              'Como os problemas de uma entrega podem ser causados por muitas situações como acidentes, falta de informação cedida pelos clientes, ou fraudes, achamos que o bloqueio automático é injusto.'
+            )}
+          </Text>
+          <Text style={{ ...texts.md, marginTop: 32 }}>
+            {t(
+              'Sempre haverá uma pessoa real apurando os fatos antes que qualquer medida seja tomada.'
             )}
           </Text>
           <Text style={{ ...texts.md, marginTop: 32, marginBottom: 48 }}>
             {t(
-              'No AppJusto, você não tem Score. Trabalhe da maneira que for adequada, sem influenciar nos pedidos que tocam. Contamos que todos vão colaborar com esse movimento aceitando os pedidos, e não pressionando entregadores.'
+              'No AppJusto também não temos score: você trabalha da maneira que achar adequada e recebe os pedidos que te beneficiarem.'
             )}
           </Text>
         </View>
@@ -166,13 +211,16 @@ export default function ({ navigation }: Props) {
           </View>
           <Text style={{ ...texts.md }}>
             {t(
-              'Quanto mais consumidores satisfeitos, mais pedidos vão tocar, e mais você pode ganhar o valor que acha justo para você.'
+              'Quanto mais consumidores satisfeitos, mais pedidos. E mais você poderá receber o valor que é justo pelo seu trabalho.'
+            )}
+          </Text>
+          <Text style={{ ...texts.md, marginTop: 32 }}>
+            {t(
+              'Para termos mais pedidos, contamos com os entregadores para receber os pedidos que tocarem e para divulgar a plataforma com outros entregadores.'
             )}
           </Text>
           <Text style={{ ...texts.md, marginTop: 32, marginBottom: 48 }}>
-            {t(
-              'Você pode ajudar a aumentar a demanda indicando para outros entregadores, restaurantes e consumidores. Comece a divulgar o AppJusto agora mesmo!'
-            )}
+            {t(' Comece a divulgar agora mesmo!')}
           </Text>
         </View>
         <View style={{ marginBottom: 48, paddingHorizontal: padding }}>
@@ -180,6 +228,38 @@ export default function ({ navigation }: Props) {
             title="Divulgue o AppJusto"
             subtitle="Compartilhe esse movimento por uma economia mais justa."
           />
+        </View>
+        <HR color={colors.grey500} />
+        <View style={{ marginHorizontal: padding }}>
+          <View
+            style={{
+              marginTop: 48,
+              marginBottom: 32,
+              flexDirection: 'row',
+            }}
+          >
+            <Image source={greenCheck} />
+            <Text style={{ ...texts.xl, marginLeft: padding }}>
+              {t('Atualize-se do movimento!')}
+            </Text>
+          </View>
+          <Text style={{ ...texts.md, marginBottom: 48 }}>
+            {t(
+              'Siga o @appjusto nas redes sociais e participe da linha de transmissão no WhatsApp, enviando seu nome para o número +55 11 99177-3353.'
+            )}
+          </Text>
+        </View>
+        <View style={{ paddingHorizontal: padding }}>
+          <HomeShareCard
+            title="Divulgue o AppJusto"
+            subtitle="Compartilhe esse movimento por uma economia mais justa."
+          />
+          <View style={{ marginTop: padding }}>
+            <HomeShareCard
+              title="Divulgue o AppJusto"
+              subtitle="Compartilhe esse movimento por uma economia mais justa."
+            />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
