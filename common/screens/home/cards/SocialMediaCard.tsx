@@ -1,5 +1,5 @@
 import React from 'react';
-import { Linking, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { t } from '../../../../strings';
 import { IconInstagram } from '../../../icons/icon-instagram';
 import { IconWhatsapp } from '../../../icons/icon-whatsapp';
@@ -17,11 +17,12 @@ export const SocialMediaCard = ({ app }: Props) => {
       : t('Clique para adicionar o nosso número e participar da linha de transmissão');
   return (
     <TouchableOpacity
-      onPress={
-        app === 'instagram'
-          ? () => Linking.openURL('https://www.instagram.com/')
-          : () => Linking.openURL('https://www.google.com/')
-      }
+      // onPress={
+      //   app === 'instagram'
+      //     ? () => Linking.openURL('https://www.instagram.com/')
+      //     : () => Linking.openURL('https://www.google.com/')
+      // }
+      onPress={() => null}
     >
       <HomeCard
         icon={app === 'instagram' ? <IconInstagram /> : <IconWhatsapp />}
