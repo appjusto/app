@@ -52,7 +52,7 @@ export default function () {
       <Stack.Screen
         name="ProfilePhotos"
         component={ProfilePhotos}
-        options={{ title: t('Fotos & Documentos') }}
+        options={{ title: t('Fotos e Documentos') }}
       />
       <Stack.Screen
         name="ProfileBank"
