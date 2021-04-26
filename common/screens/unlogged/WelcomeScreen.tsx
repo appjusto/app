@@ -21,7 +21,7 @@ import DefaultInput from '../../components/inputs/DefaultInput';
 import ShowIf from '../../components/views/ShowIf';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
-import { IconMotocycle } from '../../icons/icon-motocycle';
+import { IconMotoCycleBig } from '../../icons/icon-motocycle-big';
 import { track, useSegmentScreen } from '../../store/api/track';
 import { getExtra, getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
@@ -88,22 +88,26 @@ export default function ({ navigation, route }: Props) {
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
-        style={{ flex: 1 }}
+        style={{ flex: 1, marginTop: tallerDevice ? padding : 0 }}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -200}
       >
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <ShowIf test={tallerDevice && flavor === 'consumer'}>
             {() => <IconIllustrationIntro />}
           </ShowIf>
-          <ShowIf test={tallerDevice && flavor === 'courier'}>{() => <IconMotocycle />}</ShowIf>
+          <ShowIf test={tallerDevice && flavor === 'courier'}>
+            {() => (
+              <View style={{ left: -8 }}>
+                <IconMotoCycleBig />
+              </View>
+            )}
+          </ShowIf>
           <View style={{ marginTop: tallerDevice ? 48 : 32 }}>
             <IconLogoGreen />
           </View>
           <View style={{ marginTop: padding }}>
             <Text style={[texts.x2l]}>{welcomeMessage}</Text>
-          </View>
-          <View style={{ marginTop: padding }}>
-            <Text style={[texts.sm, { color: colors.grey700, lineHeight: 21 }]}>
+            <Text style={[texts.sm, { color: colors.grey700, lineHeight: 21, marginTop: padding }]}>
               {t('Digite seu e-mail para entrar ou criar sua conta.')}
             </Text>
           </View>
@@ -145,8 +149,14 @@ export default function ({ navigation, route }: Props) {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={{ flex: 1 }} />
-        <View style={{ marginBottom: padding, marginTop: !tallerDevice ? 32 : padding }}>
+        <View style={{ flex: 4 }} />
+        <View
+          style={{
+            marginBottom: padding,
+            marginTop: 32,
+            justifyContent: 'flex-end',
+          }}
+        >
           <DefaultButton
             disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
             title={t('Entrar')}
