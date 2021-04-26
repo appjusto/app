@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import React from 'react';
-import { Dimensions, Image, ImageURISource, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, ImageURISource, ScrollView, StyleSheet, View } from 'react-native';
 import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../../assets/icons';
@@ -17,7 +17,7 @@ import useCourierSelfie from '../../../../../common/store/api/courier/hooks/useC
 import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
-import { colors, padding, screens } from '../../../../../common/styles';
+import { colors, halfPadding, padding, screens } from '../../../../../common/styles';
 import { LoggedNavigatorParamList } from '../../../../../consumer/v2/types';
 import { t } from '../../../../../strings';
 import { ApprovedParamList } from '../../../types';
@@ -166,7 +166,7 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <View style={{ ...screens.config }}>
+    <ScrollView style={{ ...screens.config }}>
       <ConfigItem
         title={t('Foto do rosto')}
         subtitle={t('Adicionar selfie')}
@@ -191,7 +191,7 @@ export default function ({ navigation }: Props) {
           </View>
         )}
       </ConfigItem>
-      <View style={[styles.imagesContainer, { marginTop: 24 }]}>
+      <View style={[styles.imagesContainer, { marginVertical: 24 }]}>
         <View style={{ marginBottom: height > 700 ? 24 : 0 }}>
           <DocumentButton
             title={t('Foto de rosto')}
@@ -227,7 +227,7 @@ export default function ({ navigation }: Props) {
           activityIndicator={busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -237,9 +237,9 @@ const styles = StyleSheet.create({
     height: 48,
   },
   image: {
-    width: 160,
-    height: 160,
-    borderRadius: 80,
+    width: height > 700 ? 160 : 152,
+    height: height > 700 ? 160 : 152,
+    borderRadius: height > 700 ? 80 : 76,
   },
   imagesContainer: {
     flexDirection: height > 700 ? 'column' : 'row',
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     height: height > 700 ? 368 : 196,
     // height: '100%',
     alignItems: 'center',
-    padding: width <= 320 ? 0 : 16,
+    padding: width <= 320 ? halfPadding : padding,
     flex: 1,
   },
 });

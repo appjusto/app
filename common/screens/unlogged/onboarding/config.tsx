@@ -14,10 +14,10 @@ export interface ScreenConfig {
 }
 export const courier: ScreenConfig[] = [
   {
-    header: t('Olá,\n que legal ver você aqui!'),
+    header: t('Boas vindas,\n que legal ver você aqui!'),
     body: [
       t(
-        'Mais que um App de entregas, agora você faz parte de um movimento por relações mais justas e pelo fim da precarização do trabalho.'
+        'No AppJusto, além de fazer parte de um app de entregas, agora você participa de um movimento por relações mais justas e pelo fim da precarização do trabalho.'
       ),
       t(
         'Estamos apenas começando. Com o comprometimento de todos, vamos dar certo. Ajude divulgando esse movimento!'
@@ -27,13 +27,13 @@ export const courier: ScreenConfig[] = [
     buttonTitle: t('Avançar'),
   },
   {
-    header: t('O AppJusto ainda está em fase de testes'),
+    header: t('O AppJusto ainda está\n em fase de testes'),
     body: [
       t(
-        'Por enquanto, estamos em fase de validação e testes da plataforma. Queremos construir o melhor serviço pra você.'
+        'Por enquanto, estamos em fase de validação e testes da plataforma. Queremos construir o melhor serviço para você.'
       ),
       t(
-        'Fique à vontade para nos avisar pelo chat se perceber algum problema e também para contribuir com sugestões. Vamos juntos!'
+        'Você nos ajuda ao avisar pelo chat se perceber qualquer problema. Fique à vontade para contribuir com sugestões. Vamos juntos!'
       ),
     ],
     icon: <IconBeta />,
@@ -43,36 +43,36 @@ export const courier: ScreenConfig[] = [
 
 export const consumer = [
   {
-    header: t('Olá,\n boas vindas ao AppJusto!'),
+    header: t('Boas vindas,\n que legal ver você aqui!'),
     body: [
       t(
-        'Mais que um App de delivery, somos um movimento por relações mais justas para clientes, restaurantes e entregadores.'
+        'No AppJusto, além de um app de entregas, somos um movimento por relações mais justas para consumidores, restaurantes e entregadores.'
       ),
       t(
-        'O AppJusto veio para combater a precarização do trabalho e, com a ajuda de todos, vamos fazer dar certo!'
+        'O AppJusto veio para combater a precarização do trabalho e, com a participação de todos, podemos fazer a diferença!'
       ),
     ],
     icon: <IconHangLoose />,
     buttonTitle: t('Avançar'),
   },
   {
-    header: t('O AppJusto ainda está em fase de testes'),
+    header: t('O AppJusto ainda está\n em fase de testes'),
     body: [
       t(
-        'Por enquanto, estamos em fase de validação e testes da plataforma. Queremos construir o melhor serviço pra você.'
+        'Por enquanto, estamos em fase de validação e testes da plataforma. Queremos construir o melhor serviço para você.'
       ),
       t(
-        'Imprevistos podem ocorrer nesse início. VoCê pode nos avisar pelo chat e também contribuir com sugestões. Vamos construir juntos!'
+        'Você nos ajuda ao avisar pelo chat se perceber qualquer problema, e fique à vontade para contribuir com sugestões. Vamos juntos!'
       ),
     ],
     icon: <IconBeta />,
     buttonTitle: t('Avançar'),
   },
   {
-    header: t('Use para Delivery e Entrega de\n encomendas'),
+    header: t('Use para pedir comida e enviar\n encomendas'),
     body: [
       t(
-        'No Delivery, transferimos o valor integral das entregas para o entregador e cobramos a menor comissão possível do resraunte. Tudo para você ter o melhor serviço e menor preço.'
+        'No Delivery de comida, transferimos o valor integral das entregas para o entregador e cobramos a menor comissão dos restaurantes. Tudo para você ter o melhor serviço e menos pelos produtos.'
       ),
       t('Na entrega de encomendas, os entregadores recebem o valor da frota que você escolher.'),
     ],
@@ -83,9 +83,11 @@ export const consumer = [
     header: t('Escolha a frota que quiser!'),
     body: [
       t(
-        'O AppJusto permite que entregadores criem suas próprias frotas. Escolha por remuneração justa, causa social, emissão de CO2, tempo de entrega. Você pode escolher a frota que mais se identifica para a sua entrega!'
+        'O AppJusto possibilita que os próprios entregadores criem frotas com as suas preferências. Ao fazer o pedido, você escolhe a frota que mais se identificar!'
       ),
-      t('Elas são ordenadas por quantidade de entregadores ativos próximos a você.'),
+      t(
+        'As frotas podem variar por remuneração, causa social, emissão de CO2, entre outras. Elas são ordenadas por quantidade de entregadores próximos a você.'
+      ),
     ],
     icon: <IconHeartBox />,
     buttonTitle: t('Avançar'),
@@ -93,9 +95,9 @@ export const consumer = [
   {
     header: t('Use o AppJusto e indique para\n os seus amigos'),
     body: [
-      t('Quanto mais você usar e indicar, mais vocÊ ajuda o movimento a crescer!'),
+      t('Quanto mais você usar e indicar, mais você ajuda esse movimento a crescer!'),
       t(
-        'Além de tornar as relações mais justas na sua região, você ainda ajuda a melhorar a qualidade do serviço para entregadores e restaurantes.'
+        'Usando o AppJusto, você contribui para um delivery mais justo na sua região, favorecendo entregadores e restaurantes locais.\n Vamos começar?'
       ),
     ],
     icon: <IconShareBig />,
