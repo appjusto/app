@@ -123,7 +123,7 @@ export default function ({ navigation, route }: Props) {
         <View
           style={{
             flexDirection: tallerDevice ? 'row' : 'column',
-            alignItems: 'center',
+            alignItems: tallerDevice ? 'center' : 'flex-start',
             justifyContent: 'space-between',
             marginTop: padding,
           }}
