@@ -84,7 +84,6 @@ export default function ({ navigation }: Props) {
       },
     }
   );
-
   const canProceed = React.useMemo(() => {
     // no reason to upload if nothing has changed
     if (!newSelfie && !newDocumentImage) return false;
@@ -192,7 +191,7 @@ export default function ({ navigation }: Props) {
         )}
       </ConfigItem>
       <View style={[styles.imagesContainer, { marginVertical: 24 }]}>
-        <View style={{ marginBottom: height > 700 ? 24 : 0 }}>
+        <View style={{ marginBottom: height > 640 ? 24 : 0 }}>
           <DocumentButton
             title={t('Foto de rosto')}
             onPress={() => actionSheetHandler(setNewSelfie, [1, 1])}
@@ -219,14 +218,13 @@ export default function ({ navigation }: Props) {
         </DocumentButton>
       </View>
       <View style={{ flex: 1 }} />
-      <View style={{ marginBottom: 32, paddingHorizontal: padding }}>
-        <DefaultButton
-          title={t('Avançar')}
-          disabled={!canProceed}
-          onPress={() => navigation.goBack()}
-          activityIndicator={busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading}
-        />
-      </View>
+      <DefaultButton
+        title={t('Avançar')}
+        disabled={!canProceed}
+        onPress={() => navigation.goBack()}
+        activityIndicator={busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading}
+        style={{ marginBottom: 32, marginHorizontal: padding }}
+      />
     </ScrollView>
   );
 }
@@ -237,15 +235,15 @@ const styles = StyleSheet.create({
     height: 48,
   },
   image: {
-    width: height > 700 ? 160 : 152,
-    height: height > 700 ? 160 : 152,
-    borderRadius: height > 700 ? 80 : 76,
+    width: height > 640 ? 160 : 152,
+    height: height > 640 ? 160 : 152,
+    borderRadius: height > 640 ? 80 : 76,
   },
   imagesContainer: {
-    flexDirection: height > 700 ? 'column' : 'row',
+    flexDirection: height > 640 ? 'column' : 'row',
     justifyContent: 'space-between',
     width: '100%',
-    height: height > 700 ? 368 : 196,
+    height: height > 640 ? 368 : 196,
     // height: '100%',
     alignItems: 'center',
     padding: width <= 320 ? halfPadding : padding,

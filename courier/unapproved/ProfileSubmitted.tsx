@@ -252,7 +252,7 @@ export default function ({ navigation }: Props) {
         </View>
         <View style={{ paddingHorizontal: padding }}>
           <SocialMediaCard app="instagram" />
-          <View style={{ marginTop: padding }}>
+          <View style={{ marginVertical: padding }}>
             <SocialMediaCard app="whatsapp" />
           </View>
         </View>
