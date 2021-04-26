@@ -116,7 +116,7 @@ export default function ({ navigation, route }: Props) {
     <>
       <ScrollView style={screens.config}>
         <PaddedView style={{ flex: 1 }}>
-          <Text style={{ ...texts.sm, marginTop: halfPadding, color: colors.grey700 }}>
+          <Text style={{ ...texts.sm, color: colors.grey700 }}>
             {t('A conta precisa estar no seu CPF ou CNPJ. Não serão aceitas contas de terceiros.')}
           </Text>
           <View

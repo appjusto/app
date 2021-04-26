@@ -104,7 +104,7 @@ export default function ({ navigation, route }: Props) {
     <ScrollView
       keyboardShouldPersistTaps="never"
       style={{ ...screens.config }}
-      contentContainerStyle={{ flex: 1 }}
+      // contentContainerStyle={{ flex: 1 }}
     >
       <PaddedView style={{ flex: 1 }}>
         <PatternInput
