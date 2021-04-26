@@ -92,28 +92,10 @@ export default function ({ navigation, route }: Props) {
           returnKeyType="next"
           blurOnSubmit={false}
           onChangeText={(text) => setSurname(text)}
-          onSubmitEditing={() => cpfRef.current?.focus()}
+          onSubmitEditing={() => phoneRef.current?.focus()}
           keyboardType="default"
           maxLength={30}
         />
-        <PatternInput
-          ref={cpfRef}
-          style={{ marginTop: padding }}
-          title={t('CPF')}
-          value={cpf}
-          placeholder={t('Seu CPF, apenas números')}
-          mask={cpfMask}
-          parser={numbersOnlyParser}
-          formatter={cpfFormatter}
-          keyboardType="number-pad"
-          returnKeyType="next"
-          blurOnSubmit={false}
-          onFocus={() => setFocusedField('cpf')}
-          onBlur={() => setFocusedField(undefined)}
-          onChangeText={(text) => setCpf(trim(text))}
-          onSubmitEditing={() => phoneRef.current?.focus()}
-        />
-
         <PatternInput
           ref={phoneRef}
           style={{ marginTop: padding }}
@@ -125,14 +107,32 @@ export default function ({ navigation, route }: Props) {
           formatter={phoneFormatter}
           keyboardType="number-pad"
           returnKeyType="done"
-          blurOnSubmit
+          blurOnSubmit={false}
           onChangeText={(text) => setPhone(trim(text))}
+          onSubmitEditing={() => cpfRef.current?.focus()}
         />
         {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
           <Text style={{ ...texts.sm, ...texts.bold, color: colors.grey700, marginTop: padding }}>
             {t('O CPF digitado não é válido.')}
           </Text>
         )}
+        <PatternInput
+          ref={cpfRef}
+          style={{ marginTop: padding }}
+          title={t('CPF')}
+          value={cpf}
+          placeholder={t('Seu CPF, apenas números')}
+          mask={cpfMask}
+          parser={numbersOnlyParser}
+          formatter={cpfFormatter}
+          keyboardType="number-pad"
+          returnKeyType="next"
+          blurOnSubmit
+          onFocus={() => setFocusedField('cpf')}
+          onBlur={() => setFocusedField(undefined)}
+          onChangeText={(text) => setCpf(trim(text))}
+        />
+
         <View style={{ flex: 1 }} />
         <DefaultButton
           style={{ marginVertical: padding }}
