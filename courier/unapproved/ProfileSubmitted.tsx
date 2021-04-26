@@ -10,6 +10,7 @@ import { ApiContext } from '../../common/app/context';
 import HR from '../../common/components/views/HR';
 import { IconMotocycleBeta } from '../../common/icons/icon-motocycle-beta';
 import HomeShareCard from '../../common/screens/home/cards/HomeShareCard';
+import { SocialMediaCard } from '../../common/screens/home/cards/SocialMediaCard';
 import { useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
 import { colors, padding, screens, texts } from '../../common/styles';
@@ -250,15 +251,9 @@ export default function ({ navigation }: Props) {
           </Text>
         </View>
         <View style={{ paddingHorizontal: padding }}>
-          <HomeShareCard
-            title="Divulgue o AppJusto"
-            subtitle="Compartilhe esse movimento por uma economia mais justa."
-          />
+          <SocialMediaCard app="instagram" />
           <View style={{ marginTop: padding }}>
-            <HomeShareCard
-              title="Divulgue o AppJusto"
-              subtitle="Compartilhe esse movimento por uma economia mais justa."
-            />
+            <SocialMediaCard app="whatsapp" />
           </View>
         </View>
       </ScrollView>
