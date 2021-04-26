@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import React from 'react';
-import { Dimensions, Image, ImageURISource, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, ImageURISource, ScrollView, StyleSheet, View } from 'react-native';
 import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../../assets/icons';
@@ -17,7 +17,7 @@ import useCourierSelfie from '../../../../../common/store/api/courier/hooks/useC
 import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
-import { colors, padding, screens } from '../../../../../common/styles';
+import { colors, halfPadding, padding, screens } from '../../../../../common/styles';
 import { LoggedNavigatorParamList } from '../../../../../consumer/v2/types';
 import { t } from '../../../../../strings';
 import { ApprovedParamList } from '../../../types';
@@ -84,7 +84,6 @@ export default function ({ navigation }: Props) {
       },
     }
   );
-
   const canProceed = React.useMemo(() => {
     // no reason to upload if nothing has changed
     if (!newSelfie && !newDocumentImage) return false;
@@ -166,7 +165,7 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <View style={{ ...screens.config }}>
+    <ScrollView style={{ ...screens.config }}>
       <ConfigItem
         title={t('Foto do rosto')}
         subtitle={t('Adicionar selfie')}
@@ -191,8 +190,8 @@ export default function ({ navigation }: Props) {
           </View>
         )}
       </ConfigItem>
-      <View style={[styles.imagesContainer, { marginTop: 24 }]}>
-        <View style={{ marginBottom: height > 700 ? 24 : 0 }}>
+      <View style={[styles.imagesContainer, { marginVertical: 24 }]}>
+        <View style={{ marginBottom: height > 640 ? 24 : 0 }}>
           <DocumentButton
             title={t('Foto de rosto')}
             onPress={() => actionSheetHandler(setNewSelfie, [1, 1])}
@@ -219,15 +218,14 @@ export default function ({ navigation }: Props) {
         </DocumentButton>
       </View>
       <View style={{ flex: 1 }} />
-      <View style={{ marginBottom: 32, paddingHorizontal: padding }}>
-        <DefaultButton
-          title={t('Avançar')}
-          disabled={!canProceed}
-          onPress={() => navigation.goBack()}
-          activityIndicator={busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading}
-        />
-      </View>
-    </View>
+      <DefaultButton
+        title={t('Avançar')}
+        disabled={!canProceed}
+        onPress={() => navigation.goBack()}
+        activityIndicator={busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading}
+        style={{ marginBottom: 32, marginHorizontal: padding }}
+      />
+    </ScrollView>
   );
 }
 
@@ -237,18 +235,18 @@ const styles = StyleSheet.create({
     height: 48,
   },
   image: {
-    width: 160,
-    height: 160,
-    borderRadius: 80,
+    width: height > 640 ? 160 : 152,
+    height: height > 640 ? 160 : 152,
+    borderRadius: height > 640 ? 80 : 76,
   },
   imagesContainer: {
-    flexDirection: height > 700 ? 'column' : 'row',
+    flexDirection: height > 640 ? 'column' : 'row',
     justifyContent: 'space-between',
     width: '100%',
-    height: height > 700 ? 368 : 196,
+    height: height > 640 ? 368 : 196,
     // height: '100%',
     alignItems: 'center',
-    padding: width <= 320 ? 0 : 16,
+    padding: width <= 320 ? halfPadding : padding,
     flex: 1,
   },
 });

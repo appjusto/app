@@ -1,6 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Bank, BankAccountType } from 'appjusto-types';
+import { BankAccountPersonType } from 'appjusto-types/banking';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
@@ -49,6 +50,7 @@ export default function ({ navigation, route }: Props) {
   const [account, setAccount] = React.useState('');
   const [warning, setWarning] = React.useState<string>();
   const canSubmit = selectedBank && !isEmpty(agency) && !isEmpty(account);
+  const [personType, setPersonType] = React.useState<BankAccountPersonType>('Pessoa Física');
   // refs
   const accountRef = React.useRef<TextInput>(null);
   // side effects
@@ -102,6 +104,7 @@ export default function ({ navigation, route }: Props) {
           agencyFormatted: agencyFormatter!(agency),
           account,
           accountFormatted: accountFormatter!(account),
+          personType,
         },
       })
     );
@@ -111,9 +114,9 @@ export default function ({ navigation, route }: Props) {
   // UI
   return (
     <>
-      <ScrollView style={screens.config} contentContainerStyle={{ flex: 1 }}>
+      <ScrollView style={screens.config}>
         <PaddedView style={{ flex: 1 }}>
-          <Text style={{ ...texts.sm, marginTop: halfPadding, color: colors.grey700 }}>
+          <Text style={{ ...texts.sm, color: colors.grey700 }}>
             {t('A conta precisa estar no seu CPF ou CNPJ. Não serão aceitas contas de terceiros.')}
           </Text>
           <View
@@ -133,6 +136,29 @@ export default function ({ navigation, route }: Props) {
                 title={t('Poupança')}
                 onPress={() => setType('Poupança')}
                 checked={type === 'Poupança'}
+              />
+            </View>
+          </View>
+          <Text style={{ ...texts.sm, marginTop: halfPadding, color: colors.grey700 }}>
+            {t('Escolha a personalidade jurídica da sua conta, pessoa física ou jurídica.')}
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: halfPadding,
+            }}
+          >
+            <RadioButton
+              title={t('Pessoa Física')}
+              onPress={() => setPersonType('Pessoa Física')}
+              checked={personType === 'Pessoa Física'}
+            />
+            <View style={{ marginLeft: padding }}>
+              <RadioButton
+                title={t('Pessoa Jurídica')}
+                onPress={() => setPersonType('Pessoa Jurídica')}
+                checked={personType === 'Pessoa Jurídica'}
               />
             </View>
           </View>
