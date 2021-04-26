@@ -18,6 +18,8 @@ import { ApiContext, AppDispatch } from '../../app/context';
 import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import DefaultInput from '../../components/inputs/DefaultInput';
+import ShowIf from '../../components/views/ShowIf';
+import useTallerDevice from '../../hooks/useTallerDevice';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { IconMotocycle } from '../../icons/icon-motocycle';
@@ -42,6 +44,7 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  const tallerDevice = useTallerDevice();
   // redux store
   const busy = useSelector(getUIBusy);
   const flavor = useSelector(getFlavor);
@@ -88,7 +91,10 @@ export default function ({ navigation, route }: Props) {
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -200}
       >
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          {flavor === 'consumer' ? <IconIllustrationIntro /> : <IconMotocycle />}
+          <ShowIf test={tallerDevice && flavor === 'consumer'}>
+            {() => <IconIllustrationIntro />}
+          </ShowIf>
+          <ShowIf test={tallerDevice && flavor === 'courier'}>{() => <IconMotocycle />}</ShowIf>
           <View style={{ marginTop: 48 }}>
             <IconLogoGreen />
           </View>
