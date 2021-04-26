@@ -1,6 +1,7 @@
+import { DeleteAccountPayload } from 'appjusto-types';
+import Constants from 'expo-constants';
 import firebase from 'firebase';
 import { Environment, Extra } from '../../../config/types';
-import { DeleteAccountSurvey } from '../user/types';
 import FirebaseRefs from './FirebaseRefs';
 
 export default class AuthApi {
@@ -45,7 +46,10 @@ export default class AuthApi {
     return this.auth.signOut();
   }
 
-  deleteAccount(survey: DeleteAccountSurvey) {
-    return this.refs.getDeleteAccountCallable()(survey);
+  deleteAccount(payload: Partial<DeleteAccountPayload>) {
+    return this.refs.getDeleteAccountCallable()({
+      ...payload,
+      meta: { version: Constants.nativeBuildVersion },
+    });
   }
 }

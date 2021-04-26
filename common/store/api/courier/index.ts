@@ -1,4 +1,10 @@
-import { LatLng, Review } from 'appjusto-types';
+import {
+  FetchTotalCouriersNearbyPayload,
+  LatLng,
+  Review,
+  VerifyCourierProfilePayload,
+} from 'appjusto-types';
+import Constants from 'expo-constants';
 import firebase from 'firebase';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
@@ -11,17 +17,6 @@ type FetchTotalCouriersNearbyData = {
 export default class CourierApi {
   constructor(private refs: FirebaseRefs, private files: FilesApi) {}
 
-  // callables
-  // submit profile
-  async verifyProfile() {
-    return this.refs.getVerifyProfileCallable()();
-  }
-  async fetchTotalCouriersNearby(
-    location: LatLng,
-    distance: number = 15000
-  ): Promise<FetchTotalCouriersNearbyData> {
-    return (await this.refs.getFetchTotalCouriersNearbyCallable()({ location, distance })).data;
-  }
   // firestore
   async addReview(courierId: string, review: Review) {
     await this.refs
@@ -40,6 +35,24 @@ export default class CourierApi {
     const query = this.refs.getCourierReviewsRef(courierId);
     const docs = (await query.get()).docs;
     return documentsAs<Review>(docs);
+  }
+  // callables
+  async verifyProfile() {
+    const payload: VerifyCourierProfilePayload = {
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return this.refs.getVerifyProfileCallable()(payload);
+  }
+  async fetchTotalCouriersNearby(
+    location: LatLng,
+    distance: number = 15000
+  ): Promise<FetchTotalCouriersNearbyData> {
+    const payload: FetchTotalCouriersNearbyPayload = {
+      location,
+      distance,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getFetchTotalCouriersNearbyCallable()(payload)).data;
   }
   // storage
   // selfie

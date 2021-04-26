@@ -1,16 +1,26 @@
 import {
   Business,
+  CancelOrderPayload,
   ChatMessage,
+  CompleteDeliveryPayload,
   ConsumerProfile,
   Fare,
+  GetOrderQuotesPayload,
+  MatchOrderPayload,
+  NextDispatchingStatePayload,
   Order,
   OrderIssue,
   OrderItem,
   OrderRejection,
+  PaymentDetails,
   Place,
   PlaceOrderPayload,
+  RejectOrderPayload,
+  TipCourierPayload,
   WithId,
 } from 'appjusto-types';
+import { IuguPayableWith } from 'appjusto-types/payment/iugu';
+import Constants from 'expo-constants';
 import firebase from 'firebase';
 import { isEmpty } from 'lodash';
 import FirebaseRefs from '../FirebaseRefs';
@@ -20,7 +30,7 @@ import { ObserveOrdersOptions } from './types';
 export default class OrderApi {
   constructor(private refs: FirebaseRefs) {}
 
-  // callables
+  // firestore
   // consumer
   async createFoodOrder(
     business: WithId<Business>,
@@ -70,57 +80,13 @@ export default class OrderApi {
     const order = await this.refs.getOrdersRef().add(payload);
     return documentAs<Order>(await order.get());
   }
-
   async updateOrder(orderId: string, changes: Partial<Order>) {
     await this.refs.getOrderRef(orderId).update(changes);
   }
-
-  async getOrderQuotes(orderId: string) {
-    return (await this.refs.getGetOrderQuotesCallable()({ orderId })).data as Fare[];
+  async deleteOrder(orderId: string) {
+    return this.refs.getOrderRef(orderId).delete();
   }
 
-  async placeOrder(payload: PlaceOrderPayload) {
-    return (await this.refs.getPlaceOrderCallable()(payload)).data;
-  }
-
-  async cancelOrder(orderId: string, cancellation?: OrderIssue) {
-    return (await this.refs.getCancelOrderCallable()({ orderId, cancellation })).data;
-  }
-
-  async tipCourier(orderId: string, tip: number) {
-    return (await this.refs.getTipCourierCallable()({ orderId, tip })).data;
-  }
-
-  // courier
-  async matchOrder(orderId: string) {
-    return (await this.refs.getMatchOrderCallable()({ orderId })).data;
-  }
-
-  async rejectOrder(orderId: string, rejection: OrderRejection) {
-    return (await this.refs.getRejectOrderCallable()({ orderId, rejection })).data;
-  }
-
-  async nextDispatchingState(orderId: string) {
-    return (await this.refs.getNextDispatchingStateCallable()({ orderId })).data;
-  }
-
-  async completeDelivery(
-    orderId: string,
-    handshakeResponse?: string,
-    deliveredTo?: string,
-    comment?: string
-  ) {
-    return (
-      await this.refs.getCompleteDeliveryCallable()({
-        orderId,
-        handshakeResponse,
-        deliveredTo,
-        comment,
-      })
-    ).data;
-  }
-
-  // firestore
   // both courier & customers
   observeOrders(
     options: ObserveOrdersOptions,
@@ -183,7 +149,89 @@ export default class OrderApi {
       .add({ ...issue, createdOn: timestamp } as OrderIssue);
   }
 
-  async deleteOrder(orderId: string) {
-    return this.refs.getOrderRef(orderId).delete();
+  // callables
+  // consumer
+  async getOrderQuotes(orderId: string) {
+    const payload: GetOrderQuotesPayload = {
+      orderId,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getGetOrderQuotesCallable()(payload)).data as Fare[];
+  }
+
+  async placeOrder(
+    orderId: string,
+    fleetId: string,
+    payableWith: IuguPayableWith,
+    paymentDetails: PaymentDetails
+  ) {
+    const payload: PlaceOrderPayload = {
+      orderId,
+      fleetId,
+      payableWith,
+      paymentDetails,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getPlaceOrderCallable()(payload)).data;
+  }
+
+  async cancelOrder(orderId: string, cancellation?: OrderIssue) {
+    const payload: CancelOrderPayload = {
+      orderId,
+      cancellation,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getCancelOrderCallable()(payload)).data;
+  }
+
+  async tipCourier(orderId: string, tip: number) {
+    const payload: TipCourierPayload = {
+      orderId,
+      tip,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getTipCourierCallable()(payload)).data;
+  }
+
+  // courier
+  async matchOrder(orderId: string) {
+    const payload: MatchOrderPayload = {
+      orderId,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getMatchOrderCallable()(payload)).data;
+  }
+
+  async rejectOrder(orderId: string, rejection: OrderRejection) {
+    const payload: RejectOrderPayload = {
+      orderId,
+      rejection,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getRejectOrderCallable()(payload)).data;
+  }
+
+  async nextDispatchingState(orderId: string) {
+    const payload: NextDispatchingStatePayload = {
+      orderId,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getNextDispatchingStateCallable()(payload)).data;
+  }
+
+  async completeDelivery(
+    orderId: string,
+    handshakeResponse?: string,
+    deliveredTo?: string,
+    comment?: string
+  ) {
+    const payload: CompleteDeliveryPayload = {
+      orderId,
+      handshakeResponse,
+      deliveredTo,
+      comment,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getCompleteDeliveryCallable()(payload)).data;
   }
 }

@@ -60,11 +60,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     if (!selectedPaymentMethodId) return;
     try {
       setLoading(true);
-      await api.order().placeOrder({
-        orderId: order.id,
-        payableWith: 'credit_card',
+      await api.order().placeOrder(order.id, fleetId, 'credit_card', {
         paymentMethodId: selectedPaymentMethodId,
-        fleetId,
       });
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {

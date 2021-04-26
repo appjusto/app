@@ -63,11 +63,8 @@ export const PayWithPix = ({ navigation, route }: Props) => {
     try {
       setLoading(true);
       await api.profile().updateProfile(consumer.id, { pix: pixKey });
-      await api.order().placeOrder({
-        orderId,
-        payableWith: 'pix',
-        fleetId,
-        pixKey,
+      await api.order().placeOrder(orderId, fleetId, 'pix', {
+        key: pixKey,
       });
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {
