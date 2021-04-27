@@ -49,8 +49,8 @@ export default function ({ navigation, route }: Props) {
   const [agency, setAgency] = React.useState('');
   const [account, setAccount] = React.useState('');
   const [warning, setWarning] = React.useState<string>();
-  const canSubmit = selectedBank && !isEmpty(agency) && !isEmpty(account);
   const [personType, setPersonType] = React.useState<BankAccountPersonType>('Pessoa Física');
+  const canSubmit = selectedBank && !isEmpty(agency) && !isEmpty(account) && type && personType;
   // refs
   const accountRef = React.useRef<TextInput>(null);
   // side effects
@@ -65,6 +65,7 @@ export default function ({ navigation, route }: Props) {
         setType(bankAccount!.type);
         setAgency(bankAccount!.agency!);
         setAccount(bankAccount!.account);
+        setPersonType(bankAccount!.personType);
       }
     }
   }, [banks, courier]);
@@ -117,44 +118,18 @@ export default function ({ navigation, route }: Props) {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <PaddedView style={{ flex: 1 }}>
           <Text style={{ ...texts.sm, color: colors.grey700 }}>
-            {t('A conta precisa estar no seu CPF ou CNPJ. Não serão aceitas contas de terceiros.')}
+            <Text style={{ color: colors.red }}>{t('Aviso: ')}</Text>
+            {t(
+              'a conta precisa estar no seu nome ou da sua MEI ou empresa.\n Se seu CNPJ for de um MEI, você poderá cadastrar sua conta Pessoa Física. Caso contrário, você precisará cadastrar uma conta corrente no nome da sua Pessoa Jurídica. '
+            )}
           </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginTop: halfPadding,
-            }}
-          >
-            <RadioButton
-              title={t('Conta-Corrente')}
-              onPress={() => setType('Corrente')}
-              checked={type === 'Corrente'}
-            />
-            <View style={{ marginLeft: padding }}>
-              <RadioButton
-                title={t('Poupança')}
-                onPress={() => setType('Poupança')}
-                checked={type === 'Poupança'}
-              />
-            </View>
-          </View>
-          <Text style={{ ...texts.sm, marginTop: halfPadding, color: colors.grey700 }}>
-            {t('Escolha a personalidade jurídica da sua conta, pessoa física ou jurídica.')}
-          </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginTop: halfPadding,
-            }}
-          >
+          <View style={{ marginTop: padding }}>
             <RadioButton
               title={t('Pessoa Física')}
               onPress={() => setPersonType('Pessoa Física')}
               checked={personType === 'Pessoa Física'}
             />
-            <View style={{ marginLeft: padding }}>
+            <View style={{ marginTop: halfPadding }}>
               <RadioButton
                 title={t('Pessoa Jurídica')}
                 onPress={() => setPersonType('Pessoa Jurídica')}
@@ -243,6 +218,20 @@ export default function ({ navigation, route }: Props) {
                   }
                 }}
               />
+            </View>
+            <View style={{ marginTop: padding }}>
+              <RadioButton
+                title={t('Conta-Corrente')}
+                onPress={() => setType('Corrente')}
+                checked={type === 'Corrente'}
+              />
+              <View style={{ marginTop: halfPadding }}>
+                <RadioButton
+                  title={t('Poupança')}
+                  onPress={() => setType('Poupança')}
+                  checked={type === 'Poupança'}
+                />
+              </View>
             </View>
           </View>
           <View style={{ flex: 1 }} />
