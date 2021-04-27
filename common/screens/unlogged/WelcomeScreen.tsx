@@ -83,8 +83,8 @@ export default function ({ navigation, route }: Props) {
     <SafeAreaView style={{ ...screens.default }}>
       <View style={{ flex: 1, paddingHorizontal: padding }}>
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
-          style={{ flex: 1, marginTop: tallerDevice ? padding : 0 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ flex: 1 }}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -200}
         >
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -158,6 +158,7 @@ export default function ({ navigation, route }: Props) {
               title={t('Entrar')}
               onPress={signInHandler}
               activityIndicator={busy}
+              style={{ marginBottom: padding }}
             />
           </View>
         </KeyboardAvoidingView>
