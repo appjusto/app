@@ -80,13 +80,13 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <SafeAreaView style={{ ...screens.default }}>
-      <View style={{ flex: 1, paddingHorizontal: padding }}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={{ flex: 1 }}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -200}
-        >
+    <KeyboardAvoidingView
+      style={{ ...screens.default }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 32}
+    >
+      <SafeAreaView style={{ ...screens.default }}>
+        <View style={{ flex: 1, paddingHorizontal: padding }}>
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <ShowIf test={tallerDevice && flavor === 'consumer'}>
               {() => (
@@ -161,9 +161,10 @@ export default function ({ navigation, route }: Props) {
               style={{ marginBottom: padding }}
             />
           </View>
-        </KeyboardAvoidingView>
-        {flavor === 'courier' && <LocationDisclosureModal />}
-      </View>
-    </SafeAreaView>
+
+          {flavor === 'courier' && <LocationDisclosureModal />}
+        </View>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
