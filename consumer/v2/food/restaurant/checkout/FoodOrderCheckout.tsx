@@ -60,7 +60,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     if (!selectedPaymentMethodId) return;
     try {
       setLoading(true);
-      await api.order().placeOrder(order.id, fleetId, 'credit_card', {
+      await api.order().placeOrder(order.id, fleetId, {
+        payableWith: 'credit_card',
         paymentMethodId: selectedPaymentMethodId,
       });
       setLoading(false);

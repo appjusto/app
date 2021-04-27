@@ -12,14 +12,13 @@ import {
   OrderIssue,
   OrderItem,
   OrderRejection,
-  PaymentDetails,
   Place,
   PlaceOrderPayload,
   RejectOrderPayload,
   TipCourierPayload,
   WithId,
 } from 'appjusto-types';
-import { IuguPayableWith } from 'appjusto-types/payment/iugu';
+import { PlaceOrderPaymentDetails } from 'appjusto-types/order/payloads';
 import Constants from 'expo-constants';
 import firebase from 'firebase';
 import { isEmpty } from 'lodash';
@@ -159,17 +158,11 @@ export default class OrderApi {
     return (await this.refs.getGetOrderQuotesCallable()(payload)).data as Fare[];
   }
 
-  async placeOrder(
-    orderId: string,
-    fleetId: string,
-    payableWith: IuguPayableWith,
-    paymentDetails: PaymentDetails
-  ) {
+  async placeOrder(orderId: string, fleetId: string, details: PlaceOrderPaymentDetails) {
     const payload: PlaceOrderPayload = {
       orderId,
       fleetId,
-      payableWith,
-      paymentDetails,
+      ...details,
       meta: { version: Constants.nativeBuildVersion },
     };
     return (await this.refs.getPlaceOrderCallable()(payload)).data;

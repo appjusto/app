@@ -125,7 +125,8 @@ export default function ({ navigation, route }: Props) {
     if (!selectedPaymentMethodId) return;
     try {
       setLoading(true);
-      await api.order().placeOrder(orderId, fleetId, 'credit_card', {
+      await api.order().placeOrder(orderId, fleetId, {
+        payableWith: 'credit_card',
         paymentMethodId: selectedPaymentMethodId,
       });
       setLoading(false);
