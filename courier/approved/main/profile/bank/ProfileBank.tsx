@@ -182,7 +182,7 @@ export default function ({ navigation, route }: Props) {
             />
             <View
               style={{
-                marginTop: 16,
+                marginTop: padding,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
               }}
