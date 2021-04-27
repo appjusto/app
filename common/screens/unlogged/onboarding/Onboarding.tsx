@@ -1,10 +1,11 @@
-import ViewPager from '@react-native-community/viewpager';
+import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { NativeSyntheticEvent, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { LoggedNavigatorParamList } from '../../../../consumer/v2/types';
 import { UnapprovedParamList } from '../../../../courier/unapproved/types';
+import { t } from '../../../../strings';
 import { ApiContext } from '../../../app/context';
 import DefaultButton from '../../../components/buttons/DefaultButton';
 import { getFlavor } from '../../../store/config/selectors';
@@ -33,14 +34,10 @@ export const Onboarding = ({ navigation }: Props) => {
   const [isLoading, setLoading] = React.useState(false);
   // refs
   const viewPager = React.useRef<ViewPager>(null);
-  // effects
-  React.useEffect(() => {
-    viewPager?.current?.setPage(step);
-  }, [step]);
   // handlers
   const advanceHandler = async () => {
     if (step + 1 < steps.length) {
-      setStep(step + 1);
+      viewPager?.current?.setPage(step + 1);
     } else {
       setLoading(true);
       await api.profile().updateProfile(user.uid, { onboarded: true });
@@ -52,51 +49,60 @@ export const Onboarding = ({ navigation }: Props) => {
       }
     }
   };
+  const onPageScroll = (ev: NativeSyntheticEvent<ViewPagerOnPageScrollEventData>) => {
+    const { nativeEvent } = ev;
+    const { position } = nativeEvent;
+    if (position !== step) {
+      setStep(position);
+    }
+  };
   // UI
   return (
-    <ViewPager ref={viewPager} style={{ flex: 1 }}>
-      {steps.map(({ icon, header, body, buttonTitle }, index) => (
-        <ScrollView key={index} style={{ ...screens.default, paddingHorizontal: padding }}>
-          <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 48 }}>
-            {icon}
-            <Text style={{ ...texts.x2l, marginTop: 32, textAlign: 'center' }}>{header}</Text>
-            {body.map((value) => (
-              <Text key={value} style={{ ...texts.md, marginTop: 32, textAlign: 'center' }}>
-                {value}
-              </Text>
-            ))}
+    <ScrollView style={{ ...screens.default }}>
+      <ViewPager ref={viewPager} style={{ flex: 1, height: 500 }} onPageScroll={onPageScroll}>
+        {steps.map(({ icon, header, body }, index) => (
+          <View key={index} style={{ paddingHorizontal: padding }}>
+            <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 48 }}>
+              {icon}
+              <Text style={{ ...texts.x2l, marginTop: 32, textAlign: 'center' }}>{header}</Text>
+              {body.map((value) => (
+                <Text key={value} style={{ ...texts.md, marginTop: 32, textAlign: 'center' }}>
+                  {value}
+                </Text>
+              ))}
+            </View>
           </View>
+        ))}
+      </ViewPager>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginTop: 32,
+        }}
+      >
+        {new Array(steps.length).fill('').map((_, i) => (
           <View
             style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: 32,
+              height: halfPadding,
+              width: halfPadding,
+              ...borders.default,
+              borderColor: step === i ? colors.black : colors.grey500,
+              borderRadius: 4,
+              backgroundColor: step === i ? colors.black : colors.grey500,
+              marginRight: halfPadding,
             }}
-          >
-            {new Array(steps.length).fill('').map((_, i) => (
-              <View
-                style={{
-                  height: halfPadding,
-                  width: halfPadding,
-                  ...borders.default,
-                  borderColor: step === i ? colors.black : colors.grey500,
-                  borderRadius: 4,
-                  backgroundColor: step === i ? colors.black : colors.grey500,
-                  marginRight: halfPadding,
-                }}
-                key={i}
-              />
-            ))}
-          </View>
-          <DefaultButton
-            title={buttonTitle}
-            style={{ marginTop: 32, marginBottom: padding }}
-            onPress={advanceHandler}
-            disabled={isLoading}
+            key={i}
           />
-        </ScrollView>
-      ))}
-    </ViewPager>
+        ))}
+      </View>
+      <DefaultButton
+        title={step === steps.length - 1 ? t('Começar') : t('Avançar')}
+        style={{ marginTop: 32, marginBottom: padding }}
+        onPress={advanceHandler}
+        disabled={isLoading}
+      />
+    </ScrollView>
   );
 };

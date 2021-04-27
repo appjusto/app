@@ -10,7 +10,6 @@ export interface ScreenConfig {
   icon: React.ReactNode;
   header: string;
   body: string[];
-  buttonTitle: string;
 }
 export const courier: ScreenConfig[] = [
   {
@@ -24,7 +23,6 @@ export const courier: ScreenConfig[] = [
       ),
     ],
     icon: <IconHangLoose />,
-    buttonTitle: t('Avançar'),
   },
   {
     header: t('O AppJusto ainda está\n em fase de testes'),
@@ -37,11 +35,10 @@ export const courier: ScreenConfig[] = [
       ),
     ],
     icon: <IconBeta />,
-    buttonTitle: t('Iniciar cadastro'),
   },
 ];
 
-export const consumer = [
+export const consumer: ScreenConfig[] = [
   {
     header: t('Boas vindas,\n que legal ver você aqui!'),
     body: [
@@ -53,7 +50,6 @@ export const consumer = [
       ),
     ],
     icon: <IconHangLoose />,
-    buttonTitle: t('Avançar'),
   },
   {
     header: t('O AppJusto ainda está\n em fase de testes'),
@@ -66,7 +62,6 @@ export const consumer = [
       ),
     ],
     icon: <IconBeta />,
-    buttonTitle: t('Avançar'),
   },
   {
     header: t('Use para pedir comida e enviar\n encomendas'),
@@ -77,7 +72,6 @@ export const consumer = [
       t('Na entrega de encomendas, os entregadores recebem o valor da frota que você escolher.'),
     ],
     icon: <IconAppDelivery />,
-    buttonTitle: t('Avançar'),
   },
   {
     header: t('Escolha a frota que quiser!'),
@@ -90,7 +84,6 @@ export const consumer = [
       ),
     ],
     icon: <IconHeartBox />,
-    buttonTitle: t('Avançar'),
   },
   {
     header: t('Use o AppJusto e indique para\n os seus amigos'),
@@ -101,6 +94,5 @@ export const consumer = [
       ),
     ],
     icon: <IconShareBig />,
-    buttonTitle: t('Começar'),
   },
 ];
