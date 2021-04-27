@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { LocationDisclosureModal } from '../../../courier/approved/main/home/LocationDisclosureModal';
 import { t } from '../../../strings';
@@ -79,93 +80,89 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <View
-      style={{
-        ...screens.default,
-        paddingHorizontal: padding,
-        paddingVertical: padding,
-      }}
-    >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
-        style={{ flex: 1, marginTop: tallerDevice ? padding : 0 }}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -200}
-      >
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <ShowIf test={tallerDevice && flavor === 'consumer'}>
-            {() => <IconIllustrationIntro />}
-          </ShowIf>
-          <ShowIf test={tallerDevice && flavor === 'courier'}>
-            {() => (
-              <View style={{ left: -8 }}>
-                <IconMotoCycleBig />
-              </View>
-            )}
-          </ShowIf>
-          <View style={{ marginTop: tallerDevice ? 48 : 32 }}>
-            <IconLogoGreen />
-          </View>
-          <View style={{ marginTop: padding }}>
-            <Text style={[texts.x2l]}>{welcomeMessage}</Text>
-            <Text style={[texts.sm, { color: colors.grey700, lineHeight: 21, marginTop: padding }]}>
-              {t('Digite seu e-mail para entrar ou criar sua conta.')}
-            </Text>
-          </View>
-        </TouchableWithoutFeedback>
-
-        <View style={{ marginTop: padding }}>
-          <DefaultInput
-            value={email}
-            title={t('Acesse sua conta')}
-            placeholder={t('Digite seu e-mail')}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            blurOnSubmit
-            autoCapitalize="none"
-          />
-        </View>
-        <View
-          style={{
-            flexDirection: tallerDevice ? 'row' : 'column',
-            alignItems: tallerDevice ? 'center' : 'flex-start',
-            justifyContent: 'space-between',
-            marginTop: padding,
-          }}
+    <SafeAreaView style={{ ...screens.default }}>
+      <View style={{ flex: 1, paddingHorizontal: padding }}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
+          style={{ flex: 1, marginTop: tallerDevice ? padding : 0 }}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -200}
         >
-          <View>
-            <CheckField
-              checked={acceptedTerms}
-              onPress={() => setAcceptTerms(!acceptedTerms)}
-              text={t('Aceito os termos de uso do app')}
+          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <ShowIf test={tallerDevice && flavor === 'consumer'}>
+              {() => (
+                <View style={{ left: -12 }}>
+                  <IconIllustrationIntro />
+                </View>
+              )}
+            </ShowIf>
+            <ShowIf test={tallerDevice && flavor === 'courier'}>
+              {() => (
+                <View style={{ left: -12 }}>
+                  <IconMotoCycleBig />
+                </View>
+              )}
+            </ShowIf>
+            <View style={{ marginTop: tallerDevice ? padding : 32 }}>
+              <IconLogoGreen />
+            </View>
+            <View style={{ marginTop: padding }}>
+              <Text style={[texts.x2l]}>{welcomeMessage}</Text>
+              <Text
+                style={[texts.sm, { color: colors.grey700, lineHeight: 21, marginTop: padding }]}
+              >
+                {t('Digite seu e-mail para entrar ou criar sua conta.')}
+              </Text>
+            </View>
+          </TouchableWithoutFeedback>
+
+          <View style={{ marginTop: padding }}>
+            <DefaultInput
+              value={email}
+              title={t('Acesse sua conta')}
+              placeholder={t('Digite seu e-mail')}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              blurOnSubmit
+              autoCapitalize="none"
             />
           </View>
-          <View style={{ marginTop: !tallerDevice ? halfPadding : 0 }}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('Terms');
-              }}
-            >
-              <Text style={[texts.xs, { color: colors.green600 }]}>{t('Ler os termos')}</Text>
-            </TouchableOpacity>
+          <View
+            style={{
+              flexDirection: tallerDevice ? 'row' : 'column',
+              alignItems: tallerDevice ? 'center' : 'flex-start',
+              justifyContent: 'space-between',
+              marginTop: padding,
+            }}
+          >
+            <View>
+              <CheckField
+                checked={acceptedTerms}
+                onPress={() => setAcceptTerms(!acceptedTerms)}
+                text={t('Aceito os termos de uso do app')}
+              />
+            </View>
+            <View style={{ marginTop: !tallerDevice ? halfPadding : 0 }}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('Terms');
+                }}
+              >
+                <Text style={[texts.xs, { color: colors.green600 }]}>{t('Ler os termos')}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-        <View style={{ flex: 4 }} />
-        <View
-          style={{
-            marginBottom: padding,
-            marginTop: 32,
-            justifyContent: 'flex-end',
-          }}
-        >
-          <DefaultButton
-            disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
-            title={t('Entrar')}
-            onPress={signInHandler}
-            activityIndicator={busy}
-          />
-        </View>
-      </KeyboardAvoidingView>
-      {flavor === 'courier' && <LocationDisclosureModal />}
-    </View>
+          <View style={{ flex: 1 }} />
+          <View style={{ marginTop: 32 }}>
+            <DefaultButton
+              disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
+              title={t('Entrar')}
+              onPress={signInHandler}
+              activityIndicator={busy}
+            />
+          </View>
+        </KeyboardAvoidingView>
+        {flavor === 'courier' && <LocationDisclosureModal />}
+      </View>
+    </SafeAreaView>
   );
 }
