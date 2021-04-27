@@ -101,129 +101,127 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <ScrollView
-      keyboardShouldPersistTaps="never"
-      style={{ ...screens.config }}
-      // contentContainerStyle={{ flex: 1 }}
-    >
-      <PaddedView style={{ flex: 1 }}>
-        <PatternInput
-          mask={cnpjMask}
-          parser={numbersOnlyParser}
-          formatter={cnpjFormatter}
-          title={t('CNPJ')}
-          placeholder={t('Digite o CNPJ da empresa')}
-          value={cnpj}
-          keyboardType="decimal-pad"
-          returnKeyType="next"
-          blurOnSubmit={false}
-          onFocus={() => setFocusedField('cnpj')}
-          onBlur={() => setFocusedField(undefined)}
-          onChangeText={(text) => {
-            if (!isNaN(toNumber(text))) setCNPJ(text);
-          }}
-          onSubmitEditing={() => nameRef.current?.focus()}
-        />
-        <DefaultInput
-          ref={nameRef}
-          style={{ marginTop: padding }}
-          title={t('Razão Social')}
-          placeholder={t('Digite a razão social da empresa')}
-          value={name}
-          returnKeyType="next"
-          blurOnSubmit={false}
-          onChangeText={setName}
-          onSubmitEditing={() => cepRef.current?.focus()}
-          keyboardType="default"
-          autoCapitalize="characters"
-        />
-        <PatternInput
-          mask={cepMask}
-          parser={numbersOnlyParser}
-          formatter={cepFormatter}
-          ref={cepRef}
-          style={{ marginTop: padding }}
-          title={t('CEP')}
-          placeholder={t('Digite o CEP da empresa')}
-          value={cep}
-          returnKeyType="next"
-          onChangeText={(text) => {
-            if (!isNaN(toNumber(text))) setCEP(text);
-          }}
-          keyboardType="decimal-pad"
-        />
-        <DefaultInput
-          style={{ marginTop: padding }}
-          title={t('Endereço')}
-          placeholder={t('Endereço')}
-          value={address}
-          returnKeyType="next"
-          blurOnSubmit={false}
-          onChangeText={setAddress}
-          onSubmitEditing={() => numberRef.current?.focus()}
-          keyboardType="default"
-        />
-        <View style={{ flexDirection: 'row', marginTop: padding }}>
-          <DefaultInput
-            ref={numberRef}
-            style={{ flex: 1 }}
-            title={t('Número')}
-            value={number}
-            placeholder={t('000')}
-            keyboardType="phone-pad"
+    <View style={{ ...screens.config }}>
+      <ScrollView keyboardShouldPersistTaps="never" contentContainerStyle={{ flexGrow: 1 }}>
+        <PaddedView style={{ flex: 1 }}>
+          <PatternInput
+            mask={cnpjMask}
+            parser={numbersOnlyParser}
+            formatter={cnpjFormatter}
+            title={t('CNPJ')}
+            placeholder={t('Digite o CNPJ da empresa')}
+            value={cnpj}
+            keyboardType="decimal-pad"
             returnKeyType="next"
             blurOnSubmit={false}
-            onChangeText={setNumber}
-            onSubmitEditing={() => additionalRef.current?.focus()}
+            onFocus={() => setFocusedField('cnpj')}
+            onBlur={() => setFocusedField(undefined)}
+            onChangeText={(text) => {
+              if (!isNaN(toNumber(text))) setCNPJ(text);
+            }}
+            onSubmitEditing={() => nameRef.current?.focus()}
           />
           <DefaultInput
-            ref={additionalRef}
-            style={{ marginLeft: padding, flex: 4 }}
-            title={t('Complemento')}
-            value={additional}
-            placeholder={t('Sem complemento')}
-            maxLength={9}
+            ref={nameRef}
+            style={{ marginTop: padding }}
+            title={t('Razão Social')}
+            placeholder={t('Digite a razão social da empresa')}
+            value={name}
+            returnKeyType="next"
+            blurOnSubmit={false}
+            onChangeText={setName}
+            onSubmitEditing={() => cepRef.current?.focus()}
             keyboardType="default"
-            returnKeyType="done"
-            blurOnSubmit
-            onChangeText={setAdditional}
+            autoCapitalize="characters"
           />
-        </View>
-        <View style={{ flexDirection: 'row', marginTop: padding }}>
+          <PatternInput
+            mask={cepMask}
+            parser={numbersOnlyParser}
+            formatter={cepFormatter}
+            ref={cepRef}
+            style={{ marginTop: padding }}
+            title={t('CEP')}
+            placeholder={t('Digite o CEP da empresa')}
+            value={cep}
+            returnKeyType="next"
+            onChangeText={(text) => {
+              if (!isNaN(toNumber(text))) setCEP(text);
+            }}
+            keyboardType="decimal-pad"
+          />
           <DefaultInput
-            style={{ flex: 8 }}
-            title={t('Cidade')}
-            placeholder={t('Cidade')}
-            value={city}
-            returnKeyType="done"
-            onChangeText={setCity}
+            style={{ marginTop: padding }}
+            title={t('Endereço')}
+            placeholder={t('Endereço')}
+            value={address}
+            returnKeyType="next"
+            blurOnSubmit={false}
+            onChangeText={setAddress}
+            onSubmitEditing={() => numberRef.current?.focus()}
             keyboardType="default"
           />
-          <DefaultInput
-            style={{ flex: 2, marginLeft: padding }}
-            title={t('Estado')}
-            placeholder={t('UF')}
-            value={state}
-            maxLength={2}
-            returnKeyType="done"
-            onChangeText={setState}
-            keyboardType="default"
+          <View style={{ flexDirection: 'row', marginTop: padding, flex: 1 }}>
+            <DefaultInput
+              ref={numberRef}
+              style={{ flex: 1 }}
+              title={t('Número')}
+              value={number}
+              placeholder={t('000')}
+              keyboardType="phone-pad"
+              returnKeyType="next"
+              blurOnSubmit={false}
+              onChangeText={setNumber}
+              onSubmitEditing={() => additionalRef.current?.focus()}
+            />
+            <DefaultInput
+              ref={additionalRef}
+              style={{ marginLeft: padding, flex: 4 }}
+              title={t('Complemento')}
+              value={additional}
+              placeholder={t('Sem complemento')}
+              maxLength={9}
+              keyboardType="default"
+              returnKeyType="done"
+              blurOnSubmit
+              onChangeText={setAdditional}
+            />
+          </View>
+          <View style={{ flexDirection: 'row', marginTop: padding, flex: 1 }}>
+            <DefaultInput
+              style={{ flex: 8 }}
+              title={t('Cidade')}
+              placeholder={t('Cidade')}
+              value={city}
+              returnKeyType="done"
+              onChangeText={setCity}
+              keyboardType="default"
+            />
+            <DefaultInput
+              style={{ flex: 2, marginLeft: padding }}
+              title={t('Estado')}
+              placeholder={t('UF')}
+              value={state}
+              maxLength={2}
+              returnKeyType="done"
+              onChangeText={setState}
+              keyboardType="default"
+            />
+          </View>
+          {cnpj.length > 0 && !cnpjutils.isValid(cnpj) && focusedField !== 'cnpj' && (
+            <Text style={{ ...texts.sm, ...texts.bold, color: colors.grey700, marginTop: padding }}>
+              {t('O CNPJ digitado não é válido.')}
+            </Text>
+          )}
+          <View style={{ flex: 1 }} />
+          <DefaultButton
+            style={{ marginVertical: padding }}
+            title={t('Atualizar')}
+            onPress={updateProfileHandler}
+            disabled={!canSubmit || isLoading}
+            activityIndicator={isLoading}
           />
-        </View>
-        {cnpj.length > 0 && !cnpjutils.isValid(cnpj) && focusedField !== 'cnpj' && (
-          <Text style={{ ...texts.sm, ...texts.bold, color: colors.grey700, marginTop: padding }}>
-            {t('O CNPJ digitado não é válido.')}
-          </Text>
-        )}
-        <View style={{ flex: 1 }} />
-        <DefaultButton
-          style={{ marginVertical: padding }}
-          title={t('Atualizar')}
-          onPress={updateProfileHandler}
-          disabled={!canSubmit || isLoading}
-          activityIndicator={isLoading}
-        />
-      </PaddedView>
-    </ScrollView>
+        </PaddedView>
+      </ScrollView>
+    </View>
   );
 }

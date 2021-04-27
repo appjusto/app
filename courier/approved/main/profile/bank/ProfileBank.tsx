@@ -113,8 +113,8 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <>
-      <ScrollView style={screens.config}>
+    <View style={{ ...screens.config }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <PaddedView style={{ flex: 1 }}>
           <Text style={{ ...texts.sm, color: colors.grey700 }}>
             {t('A conta precisa estar no seu CPF ou CNPJ. Não serão aceitas contas de terceiros.')}
@@ -264,6 +264,6 @@ export default function ({ navigation, route }: Props) {
         }}
         visible={warning !== undefined}
       />
-    </>
+    </View>
   );
 }
