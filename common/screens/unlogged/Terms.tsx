@@ -18,10 +18,14 @@ export default function Terms() {
       </View>
     );
   }
+  const head =
+    '<head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>';
+  const html = `<html>${head}<body>${terms}</body></html>`;
+
   return (
     <WebView
       originWhitelist={['*']}
-      source={{ html: terms }}
+      source={{ html }}
       containerStyle={{
         // backgroundColor: colors.grey50,
         backgroundColor: colors.white,
