@@ -37,6 +37,7 @@
     "expo-asset": "~8.2.1",
     "expo-camera": "~9.1.0",
     "expo-constants": "~9.3.3",
+    "expo-device": "~2.4.0",
     "expo-font": "~8.4.0",
     "expo-image-manipulator": "~8.4.0",
     "expo-image-picker": "~9.2.0",
@@ -66,13 +67,13 @@
     "react-native-screens": "~2.15.2",
     "react-native-svg": "12.1.0",
     "react-native-web": "~0.13.12",
+    "react-native-webview": "11.0.0",
     "react-query": "3.5.11",
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "sentry-expo": "^3.0.4",
-    "react-native-webview": "11.0.0"
+    "sentry-expo": "^3.0.4"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
