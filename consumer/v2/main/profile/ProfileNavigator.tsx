@@ -1,6 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { defaultScreenOptions } from '../../../../common/screens/options';
+import { AboutApp } from '../../../../common/screens/profile/AboutApp';
 import ProfileErase from '../../../../common/screens/profile/ProfileErase';
 import { t } from '../../../../strings';
 import PaymentMethodDetail from './PaymentMethodDetail';
@@ -33,6 +34,11 @@ export default function () {
         name="PaymentMethodDetail"
         component={PaymentMethodDetail}
         options={{ title: t('Formas de pagamento') }}
+      />
+      <Stack.Screen
+        name="AboutApp"
+        component={AboutApp}
+        options={{ title: t('Sobre o AppJusto') }}
       />
       <Stack.Screen name="Terms" component={Terms} options={{ title: t('Termos de uso') }} />
       <Stack.Screen

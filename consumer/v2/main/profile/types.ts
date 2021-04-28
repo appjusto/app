@@ -12,6 +12,7 @@ export type ProfileParamList = {
     paymentData: IuguCustomerPaymentMethod;
   };
   Terms: undefined;
+  AboutApp: undefined;
 } & ProfileEraseParamList &
   ProfilePaymentMethodsParamList &
   ProfileAddCardParamList;
