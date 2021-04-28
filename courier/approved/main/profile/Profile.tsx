@@ -97,6 +97,15 @@ export default function ({ navigation }: Props) {
                 }
               />
               <ConfigItem
+                title={t('Sobre o AppJusto')}
+                subtitle={t('Tire suas dúvidas sobre o AppJusto')}
+                onPress={() =>
+                  navigation.navigate('ProfileNavigator', {
+                    screen: 'AboutApp',
+                  })
+                }
+              />
+              <ConfigItem
                 title={t('Termos de uso e política de privacidade')}
                 subtitle={t('Leia os termos de uso do AppJusto')}
                 onPress={() => navigation.navigate('ProfileNavigator', { screen: 'Terms' })}

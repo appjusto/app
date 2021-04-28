@@ -2,6 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import FleetDetail from '../../../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../../../common/screens/options';
+import { AboutApp } from '../../../../common/screens/profile/AboutApp';
 import ProfileErase from '../../../../common/screens/profile/ProfileErase';
 import Terms from '../../../../common/screens/unlogged/Terms';
 import { t } from '../../../../strings';
@@ -42,6 +43,11 @@ export default function () {
       <Stack.Screen
         name="SelectBank"
         component={SelectBank}
+        options={{ title: t('Escolha seu banco') }}
+      />
+      <Stack.Screen
+        name="AboutApp"
+        component={AboutApp}
         options={{ title: t('Escolha seu banco') }}
       />
       <Stack.Screen

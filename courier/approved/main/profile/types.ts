@@ -12,6 +12,7 @@ export type CourierProfileParamList = {
     bank: Bank;
   };
   SelectBank: undefined;
+  AboutApp: undefined;
   // fleets
   ChooseFleet?: {
     fleetId: string;
