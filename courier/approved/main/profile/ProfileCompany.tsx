@@ -160,7 +160,7 @@ export default function ({ navigation, route }: Props) {
             onSubmitEditing={() => numberRef.current?.focus()}
             keyboardType="default"
           />
-          <View style={{ flexDirection: 'row', marginTop: padding, flex: 1 }}>
+          <View style={{ flexDirection: 'row', marginTop: padding }}>
             <DefaultInput
               ref={numberRef}
               style={{ flex: 1 }}
@@ -175,7 +175,7 @@ export default function ({ navigation, route }: Props) {
             />
             <DefaultInput
               ref={additionalRef}
-              style={{ marginLeft: padding, flex: 4 }}
+              style={{ marginLeft: padding, flex: 3 }}
               title={t('Complemento')}
               value={additional}
               placeholder={t('Sem complemento')}
@@ -186,9 +186,9 @@ export default function ({ navigation, route }: Props) {
               onChangeText={setAdditional}
             />
           </View>
-          <View style={{ flexDirection: 'row', marginTop: padding, flex: 1 }}>
+          <View style={{ flexDirection: 'row', marginTop: padding }}>
             <DefaultInput
-              style={{ flex: 8 }}
+              style={{ flex: 3 }}
               title={t('Cidade')}
               placeholder={t('Cidade')}
               value={city}
@@ -197,7 +197,7 @@ export default function ({ navigation, route }: Props) {
               keyboardType="default"
             />
             <DefaultInput
-              style={{ flex: 2, marginLeft: padding }}
+              style={{ flex: 1, marginLeft: padding }}
               title={t('Estado')}
               placeholder={t('UF')}
               value={state}
