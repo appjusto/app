@@ -5,7 +5,6 @@ import {
   Dimensions,
   Keyboard,
   KeyboardAvoidingView,
-  Platform,
   Text,
   TouchableOpacity,
   View,
@@ -80,11 +79,7 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <KeyboardAvoidingView
-      style={{ ...screens.default }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 32}
-    >
+    <KeyboardAvoidingView style={{ ...screens.default }} behavior="padding">
       <SafeAreaView style={{ ...screens.default }}>
         <View style={{ flex: 1, paddingHorizontal: padding }}>
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
