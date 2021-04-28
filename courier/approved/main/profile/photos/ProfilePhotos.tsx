@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import React from 'react';
 import { Dimensions, Image, ImageURISource, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../../assets/icons';
@@ -165,7 +166,7 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <ScrollView style={{ ...screens.config }}>
+    <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
       <ConfigItem
         title={t('Foto do rosto')}
         subtitle={t('Adicionar selfie')}
@@ -218,13 +219,15 @@ export default function ({ navigation }: Props) {
         </DocumentButton>
       </View>
       <View style={{ flex: 1 }} />
-      <DefaultButton
-        title={t('Avançar')}
-        disabled={!canProceed}
-        onPress={() => navigation.goBack()}
-        activityIndicator={busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading}
-        style={{ marginBottom: 32, marginHorizontal: padding }}
-      />
+      <SafeAreaView>
+        <DefaultButton
+          title={t('Avançar')}
+          disabled={!canProceed}
+          onPress={() => navigation.goBack()}
+          activityIndicator={busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading}
+          style={{ marginBottom: padding, marginHorizontal: padding }}
+        />
+      </SafeAreaView>
     </ScrollView>
   );
 }

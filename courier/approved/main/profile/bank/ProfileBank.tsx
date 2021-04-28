@@ -6,6 +6,7 @@ import { isEmpty } from 'lodash';
 import React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
@@ -235,13 +236,14 @@ export default function ({ navigation, route }: Props) {
             </View>
           </View>
           <View style={{ flex: 1 }} />
-          <DefaultButton
-            style={{ marginTop: padding }}
-            title={t('Avançar')}
-            disabled={!canSubmit}
-            activityIndicator={busy}
-            onPress={submitBankHandler}
-          />
+          <SafeAreaView>
+            <DefaultButton
+              title={t('Avançar')}
+              disabled={!canSubmit}
+              activityIndicator={busy}
+              onPress={submitBankHandler}
+            />
+          </SafeAreaView>
         </PaddedView>
       </ScrollView>
       <DefaultModal

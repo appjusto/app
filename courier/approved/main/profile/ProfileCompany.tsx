@@ -6,6 +6,7 @@ import { toNumber, trim } from 'lodash';
 import React from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
@@ -213,13 +214,15 @@ export default function ({ navigation, route }: Props) {
             </Text>
           )}
           <View style={{ flex: 1 }} />
-          <DefaultButton
-            style={{ marginVertical: padding }}
-            title={t('Atualizar')}
-            onPress={updateProfileHandler}
-            disabled={!canSubmit || isLoading}
-            activityIndicator={isLoading}
-          />
+          <SafeAreaView>
+            <DefaultButton
+              // style={{ marginVertical: padding }}
+              title={t('Atualizar')}
+              onPress={updateProfileHandler}
+              disabled={!canSubmit || isLoading}
+              activityIndicator={isLoading}
+            />
+          </SafeAreaView>
         </PaddedView>
       </ScrollView>
     </View>
