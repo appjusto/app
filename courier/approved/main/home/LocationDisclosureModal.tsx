@@ -9,6 +9,7 @@ export const LocationDisclosureModal = (props: ModalProps) => {
   // context
   const navigation = useNavigation();
   // state
+  const [accepted, setAccepted] = React.useState(false);
   const [permission, askPermission, getPermission] = usePermissions(LOCATION);
   // side effects
   // update permission when window is focused
@@ -16,23 +17,29 @@ export const LocationDisclosureModal = (props: ModalProps) => {
     navigation.addListener('focus', getPermission);
     return () => navigation.removeListener('focus', getPermission);
   }, [navigation, getPermission]);
-  // UI
   if (!permission) return null;
+  // handlers
+  const modalHandler = () => {
+    setAccepted(true);
+    if (permission.canAskAgain) {
+      askPermission();
+    } else {
+      Linking.openSettings();
+    }
+  };
+  // UI
+  const message = !accepted
+    ? t(
+        'Você precisa permitir que o AppJusto saiba sua localização o tempo todo para que possamos enviar corridas próximas à você e acompanhar as entregas. Isso também pode ocorrer com o aplicativo fechado ou sem uso no momento. Nós só coletamos e utilizamos sua localização caso você esteja disponível para aceitar corridas.'
+      )
+    : t('Feche e reabra o App para que as permissões sejam atualizadas.');
   return (
     <DefaultModal
       header={t('Compartilhamento da localização')}
-      body={t(
-        'O AppJusto coleta a localização somente quando você estiver disponível, para permitir o envio de corridas mais próximas e o acompanhamento das entregas. Isso também pode ocorrer com o aplicativo fechado ou sem uso no momento.'
-      )}
+      body={message}
       dismissButtonTitle={t('Ok, entendi')}
       visible={!permission.granted}
-      onDismiss={() => {
-        if (permission.canAskAgain) {
-          askPermission();
-        } else {
-          Linking.openSettings();
-        }
-      }}
+      onDismiss={modalHandler}
       {...props}
     />
   );
