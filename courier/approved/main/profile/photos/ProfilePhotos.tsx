@@ -221,7 +221,7 @@ export default function ({ navigation }: Props) {
       <View style={{ flex: 1 }} />
       <SafeAreaView>
         <DefaultButton
-          title={t('Avançar')}
+          title={courier.situation === 'approved' ? t('Atualizar') : t('Avançar')}
           disabled={!canProceed}
           onPress={() => navigation.goBack()}
           activityIndicator={busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading}

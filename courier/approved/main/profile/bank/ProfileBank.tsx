@@ -238,7 +238,7 @@ export default function ({ navigation, route }: Props) {
           <View style={{ flex: 1 }} />
           <SafeAreaView>
             <DefaultButton
-              title={t('Avançar')}
+              title={courier.situation === 'approved' ? t('Atualizar') : t('Avançar')}
               disabled={!canSubmit}
               activityIndicator={busy}
               onPress={submitBankHandler}

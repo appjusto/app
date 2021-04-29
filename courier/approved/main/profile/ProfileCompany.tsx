@@ -217,7 +217,7 @@ export default function ({ navigation, route }: Props) {
           <SafeAreaView>
             <DefaultButton
               // style={{ marginVertical: padding }}
-              title={t('Atualizar')}
+              title={courier.situation === 'approved' ? t('Atualizar') : t('Avançar')}
               onPress={updateProfileHandler}
               disabled={!canSubmit || isLoading}
               activityIndicator={isLoading}
