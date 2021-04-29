@@ -8,6 +8,7 @@ import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
+import { formatDate } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import { CourierProfileParamList } from '../types';
 import { CourierFleetCard } from './components/CourierFleetCard';
@@ -39,15 +40,17 @@ export default function ({ navigation, route }: Props) {
       <View style={{ flex: 1 }}>
         <PaddedView>
           <Text style={{ ...texts.x2l, marginBottom: padding }}>{t('Sua frota atual')}</Text>
-          <Text
-            style={{
-              ...texts.sm,
-              color: colors.grey700,
-              marginBottom: 24,
-            }}
-          >
-            {t('Você está nessa frota desde 00/00/0000')}
-          </Text>
+          {courier.fleet.joinedOn && (
+            <Text
+              style={{
+                ...texts.sm,
+                color: colors.grey700,
+                marginBottom: 24,
+              }}
+            >
+              {`${t('Você está nessa frota desde')} ${formatDate(courier.fleet.joinedOn)} `}
+            </Text>
+          )}
           <CourierFleetCard fleet={courier.fleet} />
           <View style={{ marginTop: 24 }}>
             <DefaultButton
