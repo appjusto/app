@@ -5,6 +5,7 @@ import { CourierProfile } from 'appjusto-types';
 import { trim } from 'lodash';
 import React from 'react';
 import { KeyboardAvoidingView, Text, TextInput, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
@@ -134,13 +135,14 @@ export default function ({ navigation, route }: Props) {
         />
 
         <View style={{ flex: 1 }} />
-        <DefaultButton
-          style={{ marginVertical: padding }}
-          title={t('Atualizar')}
-          onPress={updateProfileHandler}
-          disabled={!canSubmit || busy}
-          activityIndicator={busy}
-        />
+        <SafeAreaView>
+          <DefaultButton
+            title={t('Atualizar')}
+            onPress={updateProfileHandler}
+            disabled={!canSubmit || busy}
+            activityIndicator={busy}
+          />
+        </SafeAreaView>
       </PaddedView>
     </KeyboardAvoidingView>
   );
