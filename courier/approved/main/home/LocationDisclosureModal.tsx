@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/core';
 import { LOCATION, usePermissions } from 'expo-permissions';
 import React from 'react';
-import { Linking, ModalProps } from 'react-native';
+import { BackHandler, Linking, ModalProps, Platform } from 'react-native';
 import { DefaultModal } from '../../../../common/components/views/DefaultModal';
 import { t } from '../../../../strings';
 
@@ -20,24 +20,33 @@ export const LocationDisclosureModal = (props: ModalProps) => {
   if (!permission) return null;
   // handlers
   const modalHandler = () => {
-    setAccepted(true);
-    if (permission.canAskAgain) {
-      askPermission();
+    if (!accepted) {
+      setAccepted(true);
+      if (permission.canAskAgain) {
+        askPermission();
+      } else {
+        Linking.openSettings();
+      }
     } else {
-      Linking.openSettings();
+      BackHandler.exitApp();
     }
   };
   // UI
+  const header = !accepted ? t('Compartilhamento da localização') : t('Reinicie o aplicativo');
   const message = !accepted
     ? t(
         'Você precisa permitir que o AppJusto saiba sua localização o tempo todo para que possamos enviar corridas próximas à você e acompanhar as entregas. Isso também pode ocorrer com o aplicativo fechado ou sem uso no momento. Nós só coletamos e utilizamos sua localização caso você esteja disponível para aceitar corridas.'
       )
-    : t('Feche e reabra o App para que as permissões sejam atualizadas.');
+    : t(
+        'Você precisa fechar o aplicativo para que as alterações de localização sejam aplicadas. Por favor, reabra o app após o fechamento.'
+      );
+  const buttonTitle =
+    !accepted || Platform.OS === 'ios' ? t('Ok, entendi') : t('Fechar aplicativo');
   return (
     <DefaultModal
-      header={t('Compartilhamento da localização')}
+      header={header}
       body={message}
-      dismissButtonTitle={t('Ok, entendi')}
+      dismissButtonTitle={buttonTitle}
       visible={!permission.granted}
       onDismiss={modalHandler}
       {...props}
