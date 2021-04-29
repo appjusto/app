@@ -2,6 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { ProfileParamList } from '../../../consumer/v2/main/profile/types';
 import { CourierProfileParamList } from '../../../courier/approved/main/profile/types';
@@ -61,8 +62,8 @@ export default function ({ navigation }: Props) {
   // UI
   return (
     <View style={{ ...screens.lightGrey }}>
-      <ScrollView>
-        <View style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <View>
           <Text style={{ ...texts.x2l, marginTop: 16 }}>
             {t('Tem certeza que deseja excluir sua conta?')}
           </Text>
@@ -126,21 +127,23 @@ export default function ({ navigation }: Props) {
           />
         </View>
         <View style={{ flex: 1 }} />
-        <View style={{ flex: 1, marginTop: padding }}>
-          <DefaultButton
-            style={{ width: '100%', marginBottom: 8 }}
-            title={t('Manter minha conta')}
-            disabled={busy}
-            onPress={() => navigation.goBack()}
-          />
-          <DefaultButton
-            title={t('Tenho certeza, pode excluir')}
-            style={{ marginBottom: 16 }}
-            onPress={eraseHandler}
-            disabled={busy}
-            activityIndicator={busy}
-            secondary
-          />
+        <View style={{ marginTop: padding }}>
+          <SafeAreaView>
+            <DefaultButton
+              style={{ width: '100%', marginBottom: 8 }}
+              title={t('Manter minha conta')}
+              disabled={busy}
+              onPress={() => navigation.goBack()}
+            />
+            <DefaultButton
+              title={t('Tenho certeza, pode excluir')}
+              style={{ marginBottom: 16 }}
+              onPress={eraseHandler}
+              disabled={busy}
+              activityIndicator={busy}
+              secondary
+            />
+          </SafeAreaView>
         </View>
       </ScrollView>
     </View>

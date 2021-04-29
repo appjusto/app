@@ -98,7 +98,7 @@ export default function ({ navigation, route }: Props) {
                 </View>
               )}
             </ShowIf>
-            <View style={{ marginTop: tallerDevice ? padding : 32 }}>
+            <View style={{ marginTop: 32 }}>
               <IconLogoGreen />
             </View>
             <View style={{ marginTop: padding }}>

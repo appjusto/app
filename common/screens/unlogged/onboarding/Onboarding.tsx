@@ -1,7 +1,8 @@
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { NativeSyntheticEvent, ScrollView, Text, View } from 'react-native';
+import { Dimensions, NativeSyntheticEvent, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import { LoggedNavigatorParamList } from '../../../../consumer/v2/types';
 import { UnapprovedParamList } from '../../../../courier/unapproved/types';
@@ -34,6 +35,8 @@ export const Onboarding = ({ navigation }: Props) => {
   const [isLoading, setLoading] = React.useState(false);
   // refs
   const viewPager = React.useRef<ViewPager>(null);
+  const { height } = Dimensions.get('window');
+  const tallerDevice = height > 640;
   // handlers
   const advanceHandler = async () => {
     if (step + 1 < steps.length) {
@@ -56,15 +59,20 @@ export const Onboarding = ({ navigation }: Props) => {
       setStep(position);
     }
   };
+  const styles = StyleSheet.create({
+    bigScreen: {
+      justifyContent: tallerDevice ? 'center' : undefined,
+    },
+  });
   // UI
   return (
     <View style={{ ...screens.default }}>
-      <ScrollView>
-        <ViewPager ref={viewPager} style={{ flex: 1, height: 500 }} onPageScroll={onPageScroll}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <ViewPager ref={viewPager} style={{ flex: 1 }} onPageScroll={onPageScroll}>
           {steps.map(({ icon, header, body }, index) => (
-            <View key={index} style={{ paddingHorizontal: padding }}>
-              <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 48 }}>
-                {icon}
+            <View key={index} style={[{ paddingHorizontal: padding, flex: 1 }, styles.bigScreen]}>
+              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                {tallerDevice ? <View>{icon}</View> : null}
                 <Text style={{ ...texts.x2l, marginTop: 32, textAlign: 'center' }}>{header}</Text>
                 {body.map((value) => (
                   <Text key={value} style={{ ...texts.md, marginTop: 32, textAlign: 'center' }}>
@@ -75,36 +83,37 @@ export const Onboarding = ({ navigation }: Props) => {
             </View>
           ))}
         </ViewPager>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 32,
-          }}
-        >
-          {new Array(steps.length).fill('').map((_, i) => (
-            <View
-              style={{
-                height: halfPadding,
-                width: halfPadding,
-                ...borders.default,
-                borderColor: step === i ? colors.black : colors.grey500,
-                borderRadius: 4,
-                backgroundColor: step === i ? colors.black : colors.grey500,
-                marginRight: halfPadding,
-              }}
-              key={i}
-            />
-          ))}
-        </View>
+      </ScrollView>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        {new Array(steps.length).fill('').map((_, i) => (
+          <View
+            style={{
+              height: halfPadding,
+              width: halfPadding,
+              ...borders.default,
+              borderColor: step === i ? colors.black : colors.grey500,
+              borderRadius: 4,
+              backgroundColor: step === i ? colors.black : colors.grey500,
+              marginRight: halfPadding,
+            }}
+            key={i}
+          />
+        ))}
+      </View>
+      <SafeAreaView>
         <DefaultButton
           title={step === steps.length - 1 ? t('Começar') : t('Avançar')}
           style={{ marginTop: 32, marginBottom: padding, marginHorizontal: padding }}
           onPress={advanceHandler}
           disabled={isLoading}
         />
-      </ScrollView>
+      </SafeAreaView>
     </View>
   );
 };
