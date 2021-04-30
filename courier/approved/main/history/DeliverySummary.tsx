@@ -33,6 +33,9 @@ export default function ({ navigation, route }: Props) {
   const { orderId } = route.params;
   // screen state
   const { order } = useObserveOrder(orderId);
+  // side effects
+  // tracking
+  useSegmentScreen('Delivery Summary');
   if (!order) {
     // showing the indicator until the order is loaded
     return (
@@ -42,17 +45,14 @@ export default function ({ navigation, route }: Props) {
     );
   }
   const fee = (order.fare?.consumer.courierFee ?? 0) + (order.tip?.value ?? 0);
-  // side effects
-  // tracking
-  useSegmentScreen('Delivery Summary');
   // UI
   return (
     <View style={{ ...screens.default }}>
       <OrderMap order={order} ratio={360 / 160} />
       <ScrollView>
         <PaddedView>
-          <PlaceSummary title={t('Retirada')} place={order.origin} />
-          <PlaceSummary title={t('Entrega')} place={order.destination} />
+          <PlaceSummary title={t('Retirada')} place={order.origin!} />
+          <PlaceSummary title={t('Entrega')} place={order.destination!} />
           <View style={{ marginTop: halfPadding }}>
             <RoundedText>
               {separateWithDot(
