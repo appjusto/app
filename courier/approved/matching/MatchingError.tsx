@@ -1,9 +1,9 @@
 import { CompositeNavigationProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
+import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -26,7 +26,7 @@ export default ({ navigation }: Props) => {
   return (
     <FeedbackView
       header={t('Esse pedido já foi aceito por outro entregador :(')}
-      icon={icons.coneYellow}
+      icon={<IconConeYellow />}
     >
       <DefaultButton
         title={t('Voltar para o início')}
