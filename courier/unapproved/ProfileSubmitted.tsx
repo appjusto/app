@@ -144,25 +144,25 @@ export default function ({ navigation }: Props) {
           </Text>
           <Text style={{ ...texts.md, marginTop: 32 }}>
             {t(
-              '\u25CF A taxa financeira é de 2,21% + R$ 0,09 por cartão de crédito ou 0,99% por Pix. Por exemplo: em uma corrida de R$ 10,00 recebida por cartão, você receberá R$ 9,68. Essa diferença não fica pra gente. É o custo da transação na instituição financeira'
+              '\u00B7 A taxa financeira é de 2,21% + R$ 0,09 por cartão de crédito ou 0,99% por Pix. Por exemplo: em uma corrida de R$ 10,00 recebida por cartão, você receberá R$ 9,68. Essa diferença não fica pra gente. É o custo da transação na instituição financeira'
             )}
           </Text>
           <Text style={{ ...texts.md, marginTop: 32 }}>
             {t(
-              '\u25CF Os pagamentos por cartão de crédito serão recebidos em 30 dias e os por Pix no mesmo dia'
+              '\u00B7 Os pagamentos por cartão de crédito serão recebidos em 30 dias e os por Pix no mesmo dia'
             )}
           </Text>
           <Text style={{ ...texts.md, marginTop: 32 }}>
             {t(
-              '\u25CF Por causa dessa taxa menor e do recebimento rápido, vamos incentivar que os clientes paguem por Pix.'
+              '\u00B7 Por causa dessa taxa menor e do recebimento rápido, vamos incentivar que os clientes paguem por Pix.'
             )}
           </Text>
           <Text style={{ ...texts.md, marginTop: 32 }}>
-            {t('\u25CF Antecipações podem ser feitas com uma taxa de 2,5%.')}
+            {t('\u00B7 Antecipações podem ser feitas com uma taxa de 2,5%.')}
           </Text>
           <Text style={{ ...texts.md, marginTop: 32, marginBottom: 48 }}>
             {t(
-              '\u25CF Para transferir para a sua conta o custo é de R$ 2,00. Em breve, teremos transferências grátis por Pix!'
+              '\u00B7 Para transferir para a sua conta o custo é de R$ 2,00. Em breve, teremos transferências grátis por Pix!'
             )}
           </Text>
         </View>
