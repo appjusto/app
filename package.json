@@ -22,7 +22,7 @@
     "predeploy": "git checkout $ENV && git pull && cp .$ENV.env .env",
     "deploy": "expo publish --release-channel $RELEASE_CHANNEL",
     "deploy-courier:dev": "ENV=dev FLAVOR=courier RELEASE_CHANNEL=dev npm run predeploy && npm version ${VERSION:-patch} && npm run deploy",
-    "version": "node ./version-inc",
+    "version": "node ./version-inc && git add version.json",
     "postversion": "git push && git push --tags && git fetch"
   },
   "dependencies": {
