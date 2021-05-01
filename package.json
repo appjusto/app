@@ -1,5 +1,5 @@
 {
-  "version": "0.18.5",
+  "version": "0.18.6",
   "license": "Apache-2.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "predeploy": "git checkout $ENV && git pull && cp .$ENV.env .env",
     "deploy": "expo publish --release-channel $RELEASE_CHANNEL",
     "deploy-courier:dev": "ENV=dev FLAVOR=courier RELEASE_CHANNEL=dev npm run predeploy && npm version ${VERSION:-patch} && npm run deploy",
-    "version": "node ./version-inc",
+    "version": "node ./version-inc && git add version.json",
     "postversion": "git push && git push --tags && git fetch"
   },
   "dependencies": {
