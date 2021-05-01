@@ -62,7 +62,11 @@ export default function ({ navigation, route }: Props) {
     // although this screen is named 'ProfilePending', it's also the first screen of UnapprovedNavigator
     // which means that it will be shown if courier is rejected. so, if that's the case,
     // we navigate to ProfileRejected after a short delay to make sure it will work on all devices
-    if (courier.situation === 'submitted' || courier.situation === 'verified') {
+    if (
+      courier.situation === 'submitted' ||
+      courier.situation === 'verified' ||
+      courier.situation === 'invalid'
+    ) {
       setTimeout(() => {
         navigation.replace('ProfileSubmitted');
       }, 100);
