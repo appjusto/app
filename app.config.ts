@@ -2,7 +2,7 @@ import { ConfigContext, ExpoConfig } from '@expo/config';
 import { Flavor } from 'appjusto-types';
 import 'dotenv/config';
 import { Environment, Extra } from './config/types';
-
+import { version, versionCode } from './version.json';
 const {
   FLAVOR,
   ENVIRONMENT,
@@ -30,8 +30,6 @@ const {
 
 const flavor: Flavor = FLAVOR as Flavor;
 const environment: Environment = ENVIRONMENT as Environment;
-const version = '0.18.2';
-const versionCode = 26;
 
 export default (context: ConfigContext): ExpoConfig => {
   const config: ExpoConfig = {

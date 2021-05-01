@@ -1,5 +1,5 @@
 {
-  "version": "0.18.3",
+  "version": "0.18.4",
   "license": "Apache-2.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -9,8 +9,20 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "lint": "eslint **/*.ts **/*.tsx",
-    "deploy": "git checkout $ENV && git pull && cp .$ENV.env .env && expo publish --release-channel $RELEASE_CHANNEL && npm version ${VERSION:-patch}",
-    "deploy-courier:dev": "FLAVOR=courier ENV=dev RELEASE_CHANNEL=dev npm run deploy"
+    "start-env": "cp .$ENV.env .env && expo start -c",
+    "start-consumer": "FLAVOR=consumer npm run start-env",
+    "start-consumer-dev": "ENV=dev npm run start-consumer",
+    "start-consumer-local": "ENV=dev FIREBASE_EMULATOR=true npm run start-consumer",
+    "start-consumer-staging": "ENV=staging npm run start-consumer",
+    "start-courier": "FLAVOR=courier npm run start-env",
+    "start-courier-dev": "ENV=dev npm run start-courier",
+    "start-courier-local": "ENV=dev FIREBASE_EMULATOR=true npm run start-courier",
+    "start-courier-staging": "ENV=staging npm run start-courier",
+    "inc-version": "node ./version-inc",
+    "deploy": "git checkout $ENV && git pull && cp .$ENV.env .env && expo publish --release-channel $RELEASE_CHANNEL",
+    "deploy-courier:dev": "npm version ${VERSION:-patch} && FLAVOR=courier ENV=dev RELEASE_CHANNEL=dev npm run deploy",
+    "version": "node ./version-inc",
+    "postversion": "git push && git push --tags && git fetch"
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.8.0",
