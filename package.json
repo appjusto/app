@@ -9,7 +9,8 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "lint": "eslint **/*.ts **/*.tsx",
-    "deploy-courier:dev": "cp .dev.env .env && FLAVOR=courier expo publish --release-channel dev"
+    "deploy": "git checkout $ENV && git pull && cp .$ENV.env .env && expo publish --release-channel $RELEASE_CHANNEL && npm version ${VERSION:-patch}",
+    "deploy-courier:dev": "FLAVOR=courier ENV=dev RELEASE_CHANNEL=dev npm run deploy"
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.8.0",
