@@ -19,8 +19,9 @@
     "start-courier-local": "ENV=dev FIREBASE_EMULATOR=true npm run start-courier",
     "start-courier-staging": "ENV=staging npm run start-courier",
     "inc-version": "node ./version-inc",
-    "deploy": "git checkout $ENV && git pull && cp .$ENV.env .env && expo publish --release-channel $RELEASE_CHANNEL",
-    "deploy-courier:dev": "npm version ${VERSION:-patch} && FLAVOR=courier ENV=dev RELEASE_CHANNEL=dev npm run deploy",
+    "predeploy": "git checkout $ENV && git pull && cp .$ENV.env .env",
+    "deploy": "expo publish --release-channel $RELEASE_CHANNEL",
+    "deploy-courier:dev": "ENV=dev FLAVOR=courier RELEASE_CHANNEL=dev npm run predeploy && npm version ${VERSION:-patch} && npm run deploy",
     "version": "node ./version-inc",
     "postversion": "git push && git push --tags && git fetch"
   },
