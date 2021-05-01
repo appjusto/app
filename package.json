@@ -21,7 +21,7 @@
     "inc-version": "node ./version-inc",
     "prepare-deploy": "git checkout $ENV && git pull && cp .$ENV.env .env",
     "deploy": "expo publish --release-channel $RELEASE_CHANNEL",
-    "deploy-courier:dev": "ENV=dev FLAVOR=courier RELEASE_CHANNEL=dev npm run prepare-deploy && npm version ${VERSION:-patch} && npm run deploy",
+    "deploy-courier:dev": "ENV=dev FLAVOR=courier npm run prepare-deploy && npm version ${VERSION:-patch} && RELEASE_CHANNEL=dev npm run deploy",
     "version": "node ./version-inc && git add version.json",
     "postversion": "git push && git push --tags && git fetch"
   },
