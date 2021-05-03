@@ -6,15 +6,20 @@ import { t } from '../../../../strings';
 
 type Props = {
   onPress: () => void;
+  onboarding?: boolean;
 };
 
-export const FreshWorksCard = ({ onPress }: Props) => {
+export const FreshDeskCard = ({ onPress, onboarding }: Props) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <HomeCard
         icon={<IconFwCourier />}
-        title={t('Como funciona o AppJusto')}
-        subtitle={t('Conheça as vantagens e entenda os benefícios que temos para você')}
+        title={onboarding ? t('Central de Ajuda') : t('Como funciona o AppJusto')}
+        subtitle={
+          onboarding
+            ? t('Tire suas dúvidas sobre o AppJusto')
+            : t('Conheça as vantagens e entenda os benefícios que temos para você')
+        }
       />
     </TouchableOpacity>
   );
