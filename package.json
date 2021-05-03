@@ -25,6 +25,7 @@
     "deploy-courier:live": "ENV=live FLAVOR=courier npm run prepare-deploy && npm version ${VERSION:-patch} && FLAVOR=courier RELEASE_CHANNEL=live-v0 npm run deploy",
     "deploy-consumer:dev": "ENV=dev FLAVOR=consumer npm run prepare-deploy && FLAVOR=consumer RELEASE_CHANNEL=dev npm run deploy",
     "deploy-consumer:live": "ENV=live FLAVOR=consumer npm run prepare-deploy && npm version ${VERSION:-patch} && FLAVOR=consumer RELEASE_CHANNEL=live-v0 npm run deploy",
+    "build-courier-live": "FLAVOR=courier expo build:android -t app-bundle --release-channel live-v0",
     "version": "node ./version-inc && git add version.json",
     "postversion": "git push && git push --tags && git fetch"
   },
