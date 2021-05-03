@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { CourierProfile, ProfileSituation } from 'appjusto-types';
+import { ProfileSituation } from 'appjusto-types';
 import firebase from 'firebase';
 import React from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
@@ -79,6 +79,16 @@ export default function ({ navigation, route }: Props) {
       }, 100);
     }
   }, [courier, navigation]);
+  // when location changes
+  React.useEffect(() => {
+    if (!coords) return;
+    api
+      .profile()
+      .updateLocation(
+        courier.id,
+        new firebase.firestore.GeoPoint(coords.latitude, coords.longitude)
+      );
+  }, [api, coords, courier.id]);
 
   // whenever state updates
   // recalculate steps done
@@ -100,18 +110,7 @@ export default function ({ navigation, route }: Props) {
   const updateProfileHandler = () => {
     (async () => {
       try {
-        const changes: Partial<CourierProfile> = { situation: 'submitted' };
-        await dispatch(
-          updateProfile(api)(
-            courier.id,
-            coords
-              ? {
-                  ...changes,
-                  coordinates: new firebase.firestore.GeoPoint(coords.latitude, coords.longitude),
-                }
-              : changes
-          )
-        );
+        await dispatch(updateProfile(api)(courier.id, { situation: 'submitted' }));
       } catch (error) {
         dispatch(showToast(error.toString(), 'error'));
       }
