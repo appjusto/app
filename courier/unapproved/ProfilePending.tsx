@@ -1,6 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { ProfileSituation } from 'appjusto-types';
+import { CourierProfile, ProfileSituation } from 'appjusto-types';
+import firebase from 'firebase';
 import React from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useQueryClient } from 'react-query';
@@ -9,6 +10,7 @@ import { ApiContext, AppDispatch } from '../../common/app/context';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
+import useLastKnownLocation from '../../common/hooks/useLastKnownLocation';
 import useCourierDocumentImage from '../../common/store/api/courier/hooks/useCourierDocumentImage';
 import useCourierSelfie from '../../common/store/api/courier/hooks/useCourierSelfie';
 import { useSegmentScreen } from '../../common/store/api/track';
@@ -46,6 +48,7 @@ export default function ({ navigation, route }: Props) {
   const currentDocumentImageQuery = useCourierDocumentImage(courier.id);
 
   // screen state
+  const { coords } = useLastKnownLocation();
   const situationsAllowed: ProfileSituation[] = ['pending'];
   const hasPersonalInfo = courierInfoSet(courier);
   const hasCompanyInfo = courier.company && companyInfoSet(courier.company);
@@ -97,7 +100,18 @@ export default function ({ navigation, route }: Props) {
   const updateProfileHandler = () => {
     (async () => {
       try {
-        await dispatch(updateProfile(api)(courier.id, { situation: 'submitted' }));
+        const changes: Partial<CourierProfile> = { situation: 'submitted' };
+        await dispatch(
+          updateProfile(api)(
+            courier.id,
+            coords
+              ? {
+                  ...changes,
+                  coordinates: new firebase.firestore.GeoPoint(coords.latitude, coords.longitude),
+                }
+              : changes
+          )
+        );
       } catch (error) {
         dispatch(showToast(error.toString(), 'error'));
       }
