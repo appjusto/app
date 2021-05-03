@@ -1,3 +1,4 @@
+import { LatLng } from 'appjusto-types';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import React from 'react';
@@ -19,7 +20,7 @@ export default function (enabled: boolean = true, key?: string) {
   const [lastKnownLocation, setLastKnownLocation] = React.useState<Location.LocationObject | null>(
     null
   );
-  const coords = React.useMemo(
+  const coords: LatLng | undefined = React.useMemo(
     () =>
       lastKnownLocation
         ? {
