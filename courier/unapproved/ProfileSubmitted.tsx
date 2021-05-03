@@ -35,20 +35,20 @@ export default function ({ navigation }: Props) {
   // side effects
   // tracking
   useSegmentScreen('Profile Submitted');
-  // adapting to situation changes
   React.useEffect(() => {
-    if (situation === 'submitted') {
+    if (courier.situation === 'submitted') {
       // api.courier().verifyProfile();
-    } else if (situation === 'pending' || situation === 'verified' || situation === 'invalid') {
+    } else if (courier.situation === 'pending') {
       setTimeout(() => {
         navigation.replace('ProfilePending');
       }, 100);
-    } else if (situation === 'rejected') {
+    } else if (courier.situation === 'rejected') {
       setTimeout(() => {
         navigation.replace('ProfileRejected');
       }, 100);
     }
-  }, [situation, navigation, api]);
+  }, [courier, navigation, api]);
+
   // UI
   return (
     <SafeAreaView style={{ flex: 1 }}>
