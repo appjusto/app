@@ -30,23 +30,24 @@ export default function ({ navigation }: Props) {
   const api = React.useContext(ApiContext);
   // redux
   const courier = useSelector(getCourier)!;
+  const { situation } = courier;
   // side effects
   // tracking
   useSegmentScreen('Profile Submitted');
   // adapting to situation changes
-  // React.useEffect(() => {
-  //   if (courier.situation === 'submitted') {
-  //     // api.courier().verifyProfile();
-  //   } else if (courier.situation === 'pending') {
-  //     setTimeout(() => {
-  //       navigation.replace('ProfilePending');
-  //     }, 100);
-  //   } else if (courier.situation === 'rejected') {
-  //     setTimeout(() => {
-  //       navigation.replace('ProfileRejected');
-  //     }, 100);
-  //   }
-  // }, [courier, navigation, api]);
+  React.useEffect(() => {
+    if (situation === 'submitted') {
+      // api.courier().verifyProfile();
+    } else if (situation === 'pending' || situation === 'verified' || situation === 'invalid') {
+      setTimeout(() => {
+        navigation.replace('ProfilePending');
+      }, 100);
+    } else if (situation === 'rejected') {
+      setTimeout(() => {
+        navigation.replace('ProfileRejected');
+      }, 100);
+    }
+  }, [situation, navigation, api]);
   // UI
   return (
     <SafeAreaView style={{ flex: 1 }}>
