@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Image, Linking, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
@@ -15,6 +15,7 @@ import { useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
 import { colors, padding, screens, texts } from '../../common/styles';
 import { t } from '../../strings';
+import { FreshDeskCard } from '../approved/main/home/FreshDeskCard';
 import { UnapprovedParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<UnapprovedParamList, 'ProfileSubmitted'>;
@@ -34,20 +35,20 @@ export default function ({ navigation }: Props) {
   // side effects
   // tracking
   useSegmentScreen('Profile Submitted');
-  // adapting to situation changes
   React.useEffect(() => {
-    if (situation === 'submitted') {
+    if (courier.situation === 'submitted') {
       // api.courier().verifyProfile();
-    } else if (situation === 'pending' || situation === 'verified' || situation === 'invalid') {
+    } else if (courier.situation === 'pending') {
       setTimeout(() => {
         navigation.replace('ProfilePending');
       }, 100);
-    } else if (situation === 'rejected') {
+    } else if (courier.situation === 'rejected') {
       setTimeout(() => {
         navigation.replace('ProfileRejected');
       }, 100);
     }
-  }, [situation, navigation, api]);
+  }, [courier, navigation, api]);
+
   // UI
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -56,7 +57,7 @@ export default function ({ navigation }: Props) {
           style={{
             backgroundColor: colors.green500,
             paddingHorizontal: padding,
-            paddingTop: 32,
+            paddingTop: 48,
           }}
         >
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -64,21 +65,21 @@ export default function ({ navigation }: Props) {
             <Text style={{ ...texts.x2l, marginTop: 32 }}>
               {t('Cadastro enviado para o\n período de testes!')}
             </Text>
-            <Text style={{ ...texts.md, marginTop: 32 }}>
-              {t(
-                'Nós avisaremos assim que o período de testes começar para que você possa fazer as corridas. O início será nas próximas semanas. '
-              )}
-            </Text>
-            <Text style={{ ...texts.md, marginTop: 32, marginBottom: 48 }}>
-              {t('Enquanto isso, aproveite para conhecer mais sobre o AppJusto:')}
-            </Text>
           </View>
+          <Text style={{ ...texts.md, marginTop: 32 }}>
+            {t(
+              'Nós avisaremos assim que o período de testes começar para que você possa fazer as corridas. O início será nas próximas semanas. '
+            )}
+          </Text>
+          <Text style={{ ...texts.md, marginTop: 32, marginBottom: 48 }}>
+            {t('Enquanto isso, aproveite para conhecer mais sobre o AppJusto:')}
+          </Text>
         </View>
         <View style={{ paddingHorizontal: padding }}>
           <View
             style={{
               marginTop: 48,
-              marginBottom: 32,
+              marginBottom: padding,
               flexDirection: 'row',
             }}
           >
@@ -103,7 +104,7 @@ export default function ({ navigation }: Props) {
           <View
             style={{
               marginTop: 48,
-              marginBottom: 32,
+              marginBottom: padding,
               flexDirection: 'row',
             }}
           >
@@ -131,7 +132,7 @@ export default function ({ navigation }: Props) {
           <View
             style={{
               marginTop: 48,
-              marginBottom: 32,
+              marginBottom: padding,
               flexDirection: 'row',
             }}
           >
@@ -168,17 +169,17 @@ export default function ({ navigation }: Props) {
           </Text>
         </View>
         <HR color={colors.grey500} />
-        <View style={{ paddingHorizontal: padding }}>
+        <View style={{ marginHorizontal: padding }}>
           <View
             style={{
               marginTop: 48,
-              marginBottom: 32,
+              marginBottom: padding,
               flexDirection: 'row',
             }}
           >
             <Image source={greenCheck} />
             <Text style={{ ...texts.xl, marginLeft: padding }}>
-              {t('Sem suspensões e bloqueios automáticos')}
+              {t('Sem suspensões e bloqueios\n automáticos')}
             </Text>
           </View>
           <Text style={{ ...texts.md }}>
@@ -202,7 +203,7 @@ export default function ({ navigation }: Props) {
           <View
             style={{
               marginTop: 48,
-              marginBottom: 32,
+              marginBottom: padding,
               flexDirection: 'row',
             }}
           >
@@ -250,11 +251,36 @@ export default function ({ navigation }: Props) {
               'Siga o @appjusto nas redes sociais e participe da linha de transmissão no WhatsApp, enviando seu nome para o número +55 11 99177-3353.'
             )}
           </Text>
-        </View>
-        <View style={{ paddingHorizontal: padding }}>
           <SocialMediaCard app="instagram" />
-          <View style={{ marginVertical: padding }}>
+          <View style={{ marginVertical: padding, marginBottom: 48 }}>
             <SocialMediaCard app="whatsapp" />
+          </View>
+        </View>
+        <HR color={colors.grey500} />
+        <View style={{ marginHorizontal: padding }}>
+          <View
+            style={{
+              marginTop: 48,
+              marginBottom: 32,
+              flexDirection: 'row',
+            }}
+          >
+            <Image source={greenCheck} />
+            <Text style={{ ...texts.xl, marginLeft: padding }}>{t('Ficou alguma dúvida?')}</Text>
+          </View>
+          <Text style={{ ...texts.md, marginBottom: 48 }}>
+            {t(
+              'Acesse nossa Central de ajuda e veja todo o material de suporte que preparamos para você.'
+            )}
+          </Text>
+          <View style={{ marginBottom: 48 }}>
+            <FreshDeskCard
+              onPress={() =>
+                Linking.openURL(
+                  'https://appjusto.freshdesk.com/support/solutions/folders/67000533349'
+                )
+              }
+            />
           </View>
         </View>
       </ScrollView>

@@ -46,7 +46,7 @@ export const Onboarding = ({ navigation }: Props) => {
       await api.profile().updateProfile(user.uid, { onboarded: true });
       setLoading(false);
       if (flavor === 'courier') {
-        navigation.navigate('ProfilePending');
+        navigation.replace('ProfilePending');
       } else {
         navigation.navigate('MainNavigator', { screen: 'Home' });
       }

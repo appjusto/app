@@ -22,7 +22,7 @@ import {
 } from '../../../../common/utils/location';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
-import { FreshWorksCard } from './FreshWorksCard';
+import { FreshDeskCard } from './FreshDeskCard';
 import HomeControls from './HomeControls';
 import HomeDeliveriesSummary from './HomeDeliveriesSummary';
 import { LocationDisclosureModal } from './LocationDisclosureModal';
@@ -99,7 +99,7 @@ export default function ({ navigation }: Props) {
             <HomeDeliveriesSummary />
           </TouchableOpacity>
           <View style={{ marginVertical: padding }}>
-            <FreshWorksCard
+            <FreshDeskCard
               onPress={() =>
                 Linking.openURL(
                   'https://appjusto.freshdesk.com/support/solutions/folders/67000533349'
