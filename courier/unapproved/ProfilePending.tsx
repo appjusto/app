@@ -3,7 +3,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { ProfileSituation } from 'appjusto-types';
 import firebase from 'firebase';
 import React from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../common/app/context';
@@ -22,8 +23,8 @@ import {
 } from '../../common/store/courier/validators';
 import { showToast } from '../../common/store/ui/actions';
 import { getUIBusy } from '../../common/store/ui/selectors';
-import { updateProfile } from '../../common/store/user/actions';
-import { colors, halfPadding, screens, texts } from '../../common/styles';
+import { signOut, updateProfile } from '../../common/store/user/actions';
+import { colors, halfPadding, padding, screens, texts } from '../../common/styles';
 import { t } from '../../strings';
 import { UnapprovedParamList } from './types';
 
@@ -121,6 +122,27 @@ export default function ({ navigation, route }: Props) {
     queryClient.refetchQueries();
   }, [queryClient]);
 
+  const logOut = () => {
+    console.log('cadê?');
+    Alert.alert(
+      t('Sair da conta'),
+      t(
+        'Sua conta não será excluída mas você precisará fazer login novamente para continuar usando o App.'
+      ),
+      [
+        {
+          text: t('Cancelar'),
+          style: 'cancel',
+        },
+        {
+          text: t('Confirmar'),
+          style: 'destructive',
+          onPress: () => signOut(api),
+        },
+      ]
+    );
+  };
+
   // UI
   return (
     <View style={[screens.config, screens.headless]}>
@@ -179,6 +201,13 @@ export default function ({ navigation, route }: Props) {
           onPress={() => navigation.navigate('ProfileBank')}
           checked={courier.bankAccount && bankAccountSet(courier.bankAccount)}
         />
+        <TouchableOpacity onPress={logOut}>
+          <View style={{ alignItems: 'center', marginTop: 32, height: padding }}>
+            <Text style={{ ...texts.xs, color: colors.green600 }}>
+              {t('Clique aqui para cancelar ou recomeçar seu cadastro.')}
+            </Text>
+          </View>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
