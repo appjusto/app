@@ -1,8 +1,7 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { NavigationContainer } from '@react-navigation/native';
-import Constants from 'expo-constants';
 import React, { ReactNode } from 'react';
-import { Platform, ToastAndroid, UIManager } from 'react-native';
+import { Platform, UIManager } from 'react-native';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import Toast from '../components/views/Toast';
@@ -38,11 +37,6 @@ export const AppContext = ({ children }: Props) => {
   // https://reactnative.dev/docs/layoutanimation.html
   if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
-  }
-
-  // debug only
-  if (Platform.OS === 'android' && extra.environment !== 'live') {
-    ToastAndroid.show('Testing mode ' + Constants.manifest.revisionId ?? '', ToastAndroid.LONG);
   }
 
   // UI

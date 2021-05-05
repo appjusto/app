@@ -1,10 +1,12 @@
+import Constants from 'expo-constants';
 import React from 'react';
-import { LogBox } from 'react-native';
+import { LogBox, Platform, ToastAndroid } from 'react-native';
 import { useSelector } from 'react-redux';
 import { AppContext } from './common/app/context';
 import PreloadAssets from './common/app/PreloadAssets';
 import ShowIf from './common/components/views/ShowIf';
 import { getFlavor } from './common/store/config/selectors';
+import { getExtra } from './common/utils/config';
 import ConsumerApp from './consumer/ConsumerApp';
 import CourierApp from './courier/CourierApp';
 
@@ -22,6 +24,12 @@ if (__DEV__) {
 
 const App = () => {
   const flavor = useSelector(getFlavor);
+  React.useEffect(() => {
+    // debug only
+    if (Platform.OS === 'android' && getExtra().environment !== 'live') {
+      ToastAndroid.show('Testing mode ' + Constants.manifest.revisionId ?? '', ToastAndroid.LONG);
+    }
+  }, []);
   return (
     <>
       <ShowIf test={flavor === 'consumer'}>{() => <ConsumerApp />}</ShowIf>
