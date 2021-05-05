@@ -6,6 +6,7 @@ import { t } from '../../../../strings';
 import { AddressComplete } from '../../common/AddressComplete';
 import { PayWithPix } from '../../common/PayWithPix';
 import ProfileAddCard from '../../main/profile/ProfileAddCard';
+import ProfileEdit from '../../main/profile/ProfileEdit';
 import ProfilePaymentMethods from '../../main/profile/ProfilePaymentMethods';
 import { AboutCharges } from '../../p2p/AboutCharges';
 import { AboutRestaurant } from './about/AboutRestaurant';
@@ -37,6 +38,11 @@ export default function () {
       <Stack.Screen
         name="FoodOrderCheckout"
         component={FoodOrderCheckout}
+        options={{ title: t('Sua sacola') }}
+      />
+      <Stack.Screen
+        name="ProfileEdit"
+        component={ProfileEdit}
         options={{ title: t('Sua sacola') }}
       />
       <Stack.Screen
