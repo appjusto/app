@@ -4,6 +4,7 @@ import React, { useContext } from 'react';
 import { Dimensions, NativeSyntheticEvent, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
+import * as Sentry from 'sentry-expo';
 import { LoggedNavigatorParamList } from '../../../../consumer/v2/types';
 import { UnapprovedParamList } from '../../../../courier/unapproved/types';
 import { t } from '../../../../strings';
@@ -43,13 +44,17 @@ export const Onboarding = ({ navigation }: Props) => {
       viewPager?.current?.setPage(step + 1);
     } else {
       setLoading(true);
-      await api.profile().updateProfile(user.uid, { onboarded: true });
-      setLoading(false);
-      if (flavor === 'courier') {
-        navigation.replace('ProfilePending');
-      } else {
-        navigation.navigate('MainNavigator', { screen: 'Home' });
+      try {
+        await api.profile().updateProfile(user.uid, { onboarded: true });
+        if (flavor === 'courier') {
+          navigation.replace('ProfilePending');
+        } else {
+          navigation.navigate('MainNavigator', { screen: 'Home' });
+        }
+      } catch (error) {
+        Sentry.Native.captureException(error);
       }
+      setLoading(false);
     }
   };
   const onPageScroll = (ev: NativeSyntheticEvent<ViewPagerOnPageScrollEventData>) => {

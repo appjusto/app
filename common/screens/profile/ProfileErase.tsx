@@ -1,5 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { DeleteAccountPayload } from 'appjusto-types';
 import React, { useContext, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,7 +16,6 @@ import { useSegmentScreen } from '../../store/api/track';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
 import { deleteAccount } from '../../store/user/actions';
-import { DeleteAccountSurvey } from '../../store/user/types';
 import { colors, padding, screens, texts } from '../../styles';
 
 export type ProfileEraseParamList = {
@@ -40,14 +40,14 @@ export default function ({ navigation }: Props) {
   // app state
   const busy = useSelector(getUIBusy);
   // screen state
-  const [survey, setSurvey] = useState<DeleteAccountSurvey>({
+  const [survey, setSurvey] = useState({
     notWorkingOnMyRegion: false,
     didntFindWhatINeeded: false,
     pricesHigherThanAlternatives: false,
     didntLikeApp: false,
     didntFeelSafe: false,
     ratherUseAnotherApp: false,
-  });
+  } as Partial<DeleteAccountPayload>);
   // side effects
   // tracking
   useSegmentScreen('Profile Erase');

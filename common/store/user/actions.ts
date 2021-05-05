@@ -1,10 +1,17 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { ConsumerProfile, CourierProfile, Flavor, UserProfile, WithId } from 'appjusto-types';
+import {
+  ConsumerProfile,
+  CourierProfile,
+  DeleteAccountPayload,
+  Flavor,
+  UserProfile,
+  WithId,
+} from 'appjusto-types';
+import * as Sentry from 'sentry-expo';
 import { Environment } from '../../../config/types';
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
 import { awaitWithFeedback } from '../ui/actions';
-import { DeleteAccountSurvey } from './types';
 
 export const USER_LOGGED_IN = 'USER_LOGGED_IN';
 export const USER_LOGGED_OUT = 'USER_LOGGED_OUT';
@@ -15,8 +22,10 @@ export const observeAuthState = (api: Api) => (dispatch: AppDispatch) => {
   const unsubscribe = api.auth().observeAuthState((user) => {
     if (user) {
       dispatch({ type: USER_LOGGED_IN, payload: user });
+      Sentry.Native.setUser({ id: user.uid, email: user.email! });
     } else {
       dispatch({ type: USER_LOGGED_OUT });
+      Sentry.Native.configureScope((scope) => scope.setUser(null));
     }
   });
   return unsubscribe;
@@ -54,10 +63,10 @@ export const signOut = (api: Api) => {
   return api.auth().signOut();
 };
 
-export const deleteAccount = (api: Api) => (survey: DeleteAccountSurvey) => async (
+export const deleteAccount = (api: Api) => (payload: Partial<DeleteAccountPayload>) => async (
   dispatch: AppDispatch
 ) => {
-  await dispatch(awaitWithFeedback(api.auth().deleteAccount(survey)));
+  await dispatch(awaitWithFeedback(api.auth().deleteAccount(payload)));
   dispatch({ type: USER_LOGGED_OUT });
 };
 

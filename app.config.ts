@@ -48,7 +48,7 @@ export default (context: ConfigContext): ExpoConfig => {
       icon: './assets/notification-icon.png',
     },
     updates: {
-      fallbackToCacheTimeout: 0,
+      fallbackToCacheTimeout: 30000,
     },
     assetBundlePatterns: ['**/*'],
     ios: ios(),
