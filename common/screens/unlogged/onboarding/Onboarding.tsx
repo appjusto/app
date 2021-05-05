@@ -11,6 +11,8 @@ import { t } from '../../../../strings';
 import { ApiContext } from '../../../app/context';
 import DefaultButton from '../../../components/buttons/DefaultButton';
 import { getFlavor } from '../../../store/config/selectors';
+import { getConsumer } from '../../../store/consumer/selectors';
+import { getCourier } from '../../../store/courier/selectors';
 import { getUser } from '../../../store/user/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../styles';
 import * as config from './config';
@@ -30,6 +32,8 @@ export const Onboarding = ({ navigation }: Props) => {
   // redux store
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser)!;
+  const courier = useSelector(getCourier);
+  const consumer = useSelector(getConsumer);
   // state
   const steps = flavor === 'courier' ? config.courier : config.consumer;
   const [step, setStep] = React.useState(0);
@@ -52,6 +56,7 @@ export const Onboarding = ({ navigation }: Props) => {
           navigation.navigate('MainNavigator', { screen: 'Home' });
         }
       } catch (error) {
+        console.log(flavor === 'courier' ? courier : consumer);
         Sentry.Native.captureException(error);
       }
       setLoading(false);
