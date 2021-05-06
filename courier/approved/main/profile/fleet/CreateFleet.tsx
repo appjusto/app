@@ -39,11 +39,11 @@ export default function ({ navigation, route }: Props) {
   // screen state
   const [name, setName] = React.useState('');
   const [description, setDescription] = React.useState('');
-  const [distanceThreshold, setDistanceThreshold] = React.useState(1000);
-  const [minimumFee, setMinimumFee] = React.useState(300);
-  const [additionalPerKmAfterThreshold, setAdditionalPerKmAfterThreshold] = React.useState(100);
-  const [maxDistance, setMaxDistance] = React.useState(10000);
-  const [maxDistanceToOrigin, setMaxDistanceToOrigin] = React.useState(3000);
+  const [distanceThreshold, setDistanceThreshold] = React.useState(5000);
+  const [minimumFee, setMinimumFee] = React.useState(1000);
+  const [additionalPerKmAfterThreshold, setAdditionalPerKmAfterThreshold] = React.useState(200);
+  const [maxDistance, setMaxDistance] = React.useState(30000);
+  const [maxDistanceToOrigin, setMaxDistanceToOrigin] = React.useState(15000);
   const canSubmit = React.useMemo(() => {
     return !isEmpty(name) && !isEmpty(description);
   }, [name, description]);

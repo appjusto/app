@@ -149,7 +149,7 @@ export default function ({ navigation, route }: Props) {
             formatter={cpfFormatter}
             keyboardType="number-pad"
             returnKeyType="done"
-            blurOnSubmit={false}
+            blurOnSubmit
             onChangeText={(text) => setCpf(trim(text))}
           />
           <DefaultButton
