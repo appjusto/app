@@ -102,7 +102,7 @@ export default function ({ navigation, route }: Props) {
   const cpfRef = React.useRef<TextInput>(null);
   // UI
   return (
-    <ScrollView contentContainerStyle={screens.config}>
+    <ScrollView style={screens.config} contentContainerStyle={{ flexGrow: 1 }}>
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1, padding }}>
           <PatternInput
