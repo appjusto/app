@@ -29,7 +29,7 @@ type Props = {
 
 export const AboutApp = ({ navigation }: Props) => {
   const appVersion = `${t('Versão:')} ${Constants.nativeAppVersion} / ${
-    Constants.nativeBuildVersion
+    Constants.manifest.version
   }`;
   const brand = Device.brand ?? Device.manufacturer ?? '';
   const model = Device.modelName ?? Device.modelId ?? Device.productName ?? '';

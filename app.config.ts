@@ -36,6 +36,7 @@ export default (context: ConfigContext): ExpoConfig => {
     name: name(),
     slug: slug(),
     scheme: scheme(),
+    privacy: 'hidden',
     platforms: ['ios', 'android'],
     version,
     orientation: 'portrait',

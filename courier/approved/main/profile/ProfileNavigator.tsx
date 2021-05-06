@@ -45,7 +45,11 @@ export default function () {
         component={SelectBank}
         options={{ title: t('Escolha seu banco') }}
       />
-      <Stack.Screen name="AboutApp" component={AboutApp} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="AboutApp"
+        component={AboutApp}
+        options={{ title: t('Sobre o AppJusto') }}
+      />
       <Stack.Screen
         name="ChooseFleet"
         component={ChooseFleet}
