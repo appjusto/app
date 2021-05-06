@@ -5,6 +5,7 @@ import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
+import useObserveFleet from '../../../../../common/store/api/fleet/hooks/useObserveFleet';
 import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
@@ -24,11 +25,13 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // redux store
   const courier = useSelector(getCourier)!;
+  // state
+  const fleet = useObserveFleet(courier.fleet!.id);
   // side effects
   // tracking
   useSegmentScreen('Choose Fleet');
   // UI
-  if (!courier.fleet) {
+  if (!fleet) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -40,7 +43,7 @@ export default function ({ navigation, route }: Props) {
       <View style={{ flex: 1 }}>
         <PaddedView>
           <Text style={{ ...texts.x2l, marginBottom: padding }}>{t('Sua frota atual')}</Text>
-          {courier.fleet.joinedOn && (
+          {courier.fleet!.joinedOn && (
             <Text
               style={{
                 ...texts.sm,
@@ -48,10 +51,10 @@ export default function ({ navigation, route }: Props) {
                 marginBottom: 24,
               }}
             >
-              {`${t('Você está nessa frota desde')} ${formatDate(courier.fleet.joinedOn)} `}
+              {`${t('Você está nessa frota desde')} ${formatDate(courier.fleet!.joinedOn)} `}
             </Text>
           )}
-          <CourierFleetCard fleet={courier.fleet} />
+          <CourierFleetCard fleet={fleet} />
           <View style={{ marginTop: 24 }}>
             <DefaultButton
               title={t('Veja todas as frotas disponíveis')}
