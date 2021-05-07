@@ -1,6 +1,8 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { CourierFleet } from 'appjusto-types';
 import firebase from 'firebase';
+import { omit } from 'lodash';
 import React, { useContext } from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -63,7 +65,7 @@ export default function ({ navigation, route }: Props) {
   const confirmFleet = () => {
     api.profile().updateProfile(courier.id, {
       fleet: {
-        ...fleet,
+        ...(omit(fleet, ['partipantsOnline', 'situation']) as CourierFleet),
         joinedOn: firebase.firestore.FieldValue.serverTimestamp(),
       },
     });
