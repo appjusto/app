@@ -1,4 +1,4 @@
-import { Category } from 'appjusto-types';
+import { Category } from '@appjusto/types';
 import React from 'react';
 import { useMenu } from '../api/business/hooks/useMenu';
 

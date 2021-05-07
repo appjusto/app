@@ -1,8 +1,7 @@
+import { Complement, OrderItem, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Complement, WithId } from 'appjusto-types';
-import { OrderItem } from 'appjusto-types/order/item';
 import { nanoid } from 'nanoid/non-secure';
 import React from 'react';
 import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';

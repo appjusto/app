@@ -1,4 +1,4 @@
-import { Fleet, WithId } from 'appjusto-types';
+import { Fleet, WithId } from '@appjusto/types';
 import firebase from 'firebase';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';

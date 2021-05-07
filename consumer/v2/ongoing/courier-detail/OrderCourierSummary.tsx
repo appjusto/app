@@ -1,5 +1,5 @@
+import { OrderCourier } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
-import { OrderCourier } from 'appjusto-types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedProfileImg from '../../../../common/components/icons/RoundedProfileImg';

@@ -1,6 +1,6 @@
+import { DeleteAccountPayload } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { DeleteAccountPayload } from 'appjusto-types';
 import React, { useContext, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

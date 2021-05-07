@@ -1,4 +1,4 @@
-import { DeleteAccountPayload } from 'appjusto-types';
+import { DeleteAccountPayload } from '@appjusto/types';
 import Constants from 'expo-constants';
 import firebase from 'firebase';
 import { Environment, Extra } from '../../../config/types';

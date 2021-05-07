@@ -1,6 +1,6 @@
+import { Fleet, Order, Place, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
-import { Fleet, Order, Place, WithId } from 'appjusto-types';
 import React from 'react';
 import {
   NativeSyntheticEvent,

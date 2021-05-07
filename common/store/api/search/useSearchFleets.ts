@@ -1,5 +1,5 @@
 import { SearchResponse } from '@algolia/client-search';
-import { Fleet, WithId } from 'appjusto-types';
+import { Fleet, WithId } from '@appjusto/types';
 import { debounce } from 'lodash';
 import React from 'react';
 import { ApiContext } from '../../../app/context';

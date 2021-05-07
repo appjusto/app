@@ -1,4 +1,4 @@
-import { Business, WithId } from 'appjusto-types';
+import { Business, WithId } from '@appjusto/types';
 import React from 'react';
 import { useBusiness } from '../api/business/hooks/useBusiness';
 import { ActiveOrderProvider } from './order';

@@ -1,6 +1,6 @@
+import { BusinessAlgolia } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { BusinessAlgolia } from 'appjusto-types';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../../../common/app/context';

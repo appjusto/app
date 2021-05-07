@@ -1,4 +1,4 @@
-import { LatLng } from 'appjusto-types';
+import { LatLng } from '@appjusto/types';
 import { distance } from 'geokit';
 import { round } from 'lodash';
 

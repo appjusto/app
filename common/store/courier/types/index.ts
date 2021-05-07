@@ -1,4 +1,4 @@
-import { CourierProfile, WithId } from 'appjusto-types';
+import { CourierProfile, WithId } from '@appjusto/types';
 
 export interface CourierState {
   courier?: WithId<CourierProfile>;

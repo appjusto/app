@@ -1,4 +1,4 @@
-import { FleetFareParams } from 'appjusto-types';
+import { FleetFareParams } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import PaddedView from '../../../../../common/components/containers/PaddedView';

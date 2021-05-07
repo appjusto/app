@@ -1,5 +1,5 @@
+import { Flavor } from '@appjusto/types';
 import { ConfigContext, ExpoConfig } from '@expo/config';
-import { Flavor } from 'appjusto-types';
 import 'dotenv/config';
 import { Environment, Extra } from './config/types';
 import { version, versionCode } from './version.json';

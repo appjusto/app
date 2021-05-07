@@ -1,6 +1,6 @@
+import { Address, Place } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Address, Place } from 'appjusto-types';
 import debounce from 'lodash/debounce';
 import { nanoid } from 'nanoid/non-secure';
 import React from 'react';

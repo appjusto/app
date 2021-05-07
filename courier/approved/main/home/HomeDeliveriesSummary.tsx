@@ -1,4 +1,4 @@
-import { OrderStatus } from 'appjusto-types';
+import { OrderStatus } from '@appjusto/types';
 import dayjs from 'dayjs';
 import React, { useMemo } from 'react';
 import { Text, View } from 'react-native';

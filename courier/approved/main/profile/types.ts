@@ -1,4 +1,4 @@
-import { Bank } from 'appjusto-types';
+import { Bank } from '@appjusto/types';
 import { FleetDetailParamList } from '../../../../common/screens/fleet/FleetDetail';
 import { ProfileEraseParamList } from '../../../../common/screens/profile/ProfileErase';
 

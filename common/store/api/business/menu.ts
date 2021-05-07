@@ -1,4 +1,4 @@
-import { Ordering, WithId } from 'appjusto-types';
+import { Ordering, WithId } from '@appjusto/types';
 
 const ordered = <T extends object>(items: WithId<T>[], order: string[]): WithId<T>[] => {
   return items

@@ -14,11 +14,11 @@ import {
   OrderRejection,
   Place,
   PlaceOrderPayload,
+  PlaceOrderPaymentDetails,
   RejectOrderPayload,
   TipCourierPayload,
   WithId,
-} from 'appjusto-types';
-import { PlaceOrderPaymentDetails } from 'appjusto-types/payloads/order';
+} from '@appjusto/types';
 import Constants from 'expo-constants';
 import firebase from 'firebase';
 import { isEmpty } from 'lodash';

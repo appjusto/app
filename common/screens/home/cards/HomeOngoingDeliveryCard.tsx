@@ -1,4 +1,4 @@
-import { Order, WithId } from 'appjusto-types';
+import { Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { t } from '../../../../strings';

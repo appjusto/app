@@ -1,4 +1,4 @@
-import { Fare, OrderIssue } from 'appjusto-types';
+import { Fare, OrderIssue } from '@appjusto/types';
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
 import { awaitWithFeedback } from '../ui/actions';

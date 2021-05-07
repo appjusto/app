@@ -1,4 +1,4 @@
-import { Fleet, WithId } from 'appjusto-types';
+import { Fleet, WithId } from '@appjusto/types';
 import firebase from 'firebase';
 import React from 'react';
 import { ApiContext } from '../../../../app/context';

@@ -1,5 +1,5 @@
+import { Order } from '@appjusto/types';
 import polyline from '@mapbox/polyline';
-import { Order } from 'appjusto-types';
 import React from 'react';
 import { Dimensions, View } from 'react-native';
 import { LatLng, Marker, Polyline } from 'react-native-maps';

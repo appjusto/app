@@ -1,4 +1,4 @@
-import { Cuisine, WithId } from 'appjusto-types';
+import { Cuisine, WithId } from '@appjusto/types';
 import React from 'react';
 import { FlatList, TouchableOpacity, View } from 'react-native';
 import DoubleHeader from '../../../../common/components/texts/DoubleHeader';

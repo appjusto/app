@@ -1,6 +1,6 @@
+import { OrderMatchPushMessageData, PushMessage } from '@appjusto/types';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { OrderMatchPushMessageData, PushMessage } from 'appjusto-types';
 import React from 'react';
 import { Image } from 'react-native';
 import { useQuery, useQueryClient } from 'react-query';

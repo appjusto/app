@@ -1,4 +1,4 @@
-import { IssueType, OrderMatchPushMessageData } from 'appjusto-types';
+import { IssueType, OrderMatchPushMessageData } from '@appjusto/types';
 
 export type MatchingParamList = {
   Matching: {

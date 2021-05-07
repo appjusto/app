@@ -1,8 +1,8 @@
+import { Order, WithId } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
-import { Order, WithId } from 'appjusto-types';
 import React from 'react';
 import { Image, SectionList, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';

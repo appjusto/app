@@ -1,5 +1,5 @@
 import { SearchResponse } from '@algolia/client-search';
-import { LatLng } from 'appjusto-types';
+import { LatLng } from '@appjusto/types';
 import { debounce } from 'lodash';
 import React from 'react';
 import { ApiContext } from '../../../app/context';

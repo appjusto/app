@@ -1,4 +1,4 @@
-import { Cuisine, WithId } from 'appjusto-types';
+import { Cuisine, WithId } from '@appjusto/types';
 import React from 'react';
 import { Image, Text, TouchableWithoutFeedback, View } from 'react-native';
 import * as icons from '../../../../assets/icons';

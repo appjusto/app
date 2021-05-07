@@ -1,5 +1,5 @@
-import { DeletePaymentMethodPayload, SavePaymentTokenPayload } from 'appjusto-types';
-import { IuguCreatePaymentTokenData } from 'appjusto-types/payment/iugu';
+import { DeletePaymentMethodPayload, SavePaymentTokenPayload } from '@appjusto/types';
+import { IuguCreatePaymentTokenData } from '@appjusto/types/payment/iugu';
 import { CancelToken } from 'axios';
 import Constants from 'expo-constants';
 import { t } from '../../../../../strings';

@@ -1,4 +1,4 @@
-import { Order } from 'appjusto-types';
+import { Order } from '@appjusto/types';
 import React from 'react';
 import { t } from '../../../../strings';
 import RoundedText from '../../../components/texts/RoundedText';

@@ -1,4 +1,4 @@
-import { Bank, WithId } from 'appjusto-types';
+import { Bank, WithId } from '@appjusto/types';
 import React, { useContext } from 'react';
 import { ApiContext } from '../../../../app/context';
 

@@ -1,4 +1,4 @@
-import { Bank, Classification, Cuisine, Issue, IssueType } from 'appjusto-types';
+import { Bank, Classification, Cuisine, Issue, IssueType } from '@appjusto/types';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentsAs } from '../types';

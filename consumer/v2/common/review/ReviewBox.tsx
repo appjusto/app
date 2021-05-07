@@ -1,5 +1,5 @@
+import { ReviewType } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
-import { ReviewType } from 'appjusto-types';
 import React from 'react';
 import { Text, TextInputProps, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';

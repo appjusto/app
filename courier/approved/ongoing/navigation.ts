@@ -1,4 +1,4 @@
-import { LatLng } from 'appjusto-types';
+import { LatLng } from '@appjusto/types';
 
 export type NavigationApp = 'google-maps' | 'waze';
 

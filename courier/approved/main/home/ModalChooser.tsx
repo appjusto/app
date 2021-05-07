@@ -1,4 +1,4 @@
-import { CourierMode } from 'appjusto-types/courier';
+import { CourierMode } from '@appjusto/types';
 import React, { useContext } from 'react';
 import { Text, View } from 'react-native';
 import { useSelector } from 'react-redux';

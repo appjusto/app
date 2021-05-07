@@ -3,7 +3,7 @@ import {
   LatLng,
   Review,
   VerifyCourierProfilePayload,
-} from 'appjusto-types';
+} from '@appjusto/types';
 import Constants from 'expo-constants';
 import firebase from 'firebase';
 import FilesApi from '../files';

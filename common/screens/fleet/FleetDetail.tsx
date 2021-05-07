@@ -1,6 +1,6 @@
+import { CourierFleet } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { CourierFleet } from 'appjusto-types';
 import firebase from 'firebase';
 import { omit } from 'lodash';
 import React, { useContext } from 'react';

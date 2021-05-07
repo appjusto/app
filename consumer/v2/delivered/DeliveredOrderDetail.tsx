@@ -1,6 +1,6 @@
+import { ReviewType } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { ReviewType } from 'appjusto-types';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';

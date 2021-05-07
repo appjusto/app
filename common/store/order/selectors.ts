@@ -1,4 +1,4 @@
-import { ChatMessage, Order, OrderStatus, WithId } from 'appjusto-types';
+import { ChatMessage, Order, OrderStatus, WithId } from '@appjusto/types';
 import { first, memoize, uniq } from 'lodash';
 import { createSelector } from 'reselect';
 import { State } from '..';

@@ -1,4 +1,4 @@
-import { Flavor } from 'appjusto-types';
+import { Flavor } from '@appjusto/types';
 import React, { useEffect, useState } from 'react';
 import { Image, ImageURISource, View } from 'react-native';
 import * as icons from '../../../assets/icons';

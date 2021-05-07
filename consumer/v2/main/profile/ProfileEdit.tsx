@@ -1,6 +1,6 @@
+import { ConsumerProfile } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { ConsumerProfile } from 'appjusto-types';
 import { trim } from 'lodash';
 import React from 'react';
 import { Text, TextInput, View } from 'react-native';

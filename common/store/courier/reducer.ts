@@ -1,4 +1,4 @@
-import { CourierProfile, WithId } from 'appjusto-types';
+import { CourierProfile, WithId } from '@appjusto/types';
 import { AnyAction } from 'redux';
 import { COURIER_PROFILE_UPDATED, USER_LOGGED_OUT } from '../user/actions';
 import { CourierState } from './types';

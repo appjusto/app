@@ -1,5 +1,5 @@
+import { Order, OrderItem, WithId } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
-import { Order, OrderItem, WithId } from 'appjusto-types';
 import React from 'react';
 import { Modal, ModalProps, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';

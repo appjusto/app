@@ -1,4 +1,4 @@
-import { CourierStatus } from 'appjusto-types';
+import { CourierStatus } from '@appjusto/types';
 import React from 'react';
 import { Dimensions, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';

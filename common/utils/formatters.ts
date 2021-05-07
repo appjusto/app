@@ -1,4 +1,4 @@
-import { Address } from 'appjusto-types';
+import { Address } from '@appjusto/types';
 import i18n, { ToCurrencyOptions } from 'i18n-js';
 import { round } from 'lodash';
 
