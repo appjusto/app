@@ -77,9 +77,7 @@ export default function ({ navigation, route }: Props) {
           const createdOn = getOrderCreatedOn(item);
           const totalFee = item.fare.consumer.courierFee + item.tip.value;
           const title = formatCurrency(totalFee);
-          const subtitle = `Pedido ${item.code}\nCorrida: ${formatCurrency(
-            item.fare.consumer.courierFee
-          )}\nCaixinha: ${formatCurrency(item.tip.value ?? 0)}\n${separateWithDot(
+          const subtitle = `Pedido ${item.code}\n${separateWithDot(
             formatDate(createdOn),
             formatTime(createdOn)
           )}`;

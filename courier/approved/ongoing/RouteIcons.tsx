@@ -34,10 +34,10 @@ export const RouteIcons = ({ order }: Props) => {
       <TouchableOpacity onPress={() => routeHandler('google-maps')}>
         <View
           style={{
-            height: 48,
-            width: 48,
+            height: 64,
+            width: 64,
             ...borders.default,
-            borderRadius: 24,
+            borderRadius: 32,
             borderColor: colors.grey50,
             justifyContent: 'center',
             alignItems: 'center',
@@ -50,14 +50,14 @@ export const RouteIcons = ({ order }: Props) => {
       <TouchableOpacity onPress={() => routeHandler('waze')}>
         <View
           style={{
-            height: 48,
-            width: 48,
+            height: 64,
+            width: 64,
             ...borders.default,
-            borderRadius: 24,
+            borderRadius: 32,
             borderColor: colors.grey50,
             justifyContent: 'center',
             alignItems: 'center',
-            marginLeft: halfPadding,
+            marginLeft: 24,
             backgroundColor: colors.white,
           }}
         >
