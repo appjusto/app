@@ -72,9 +72,9 @@ export default function (currentNotificationToken?: string | null): Returntype {
       try {
         setToken((await Notifications.getExpoPushTokenAsync()).data);
       } catch (error) {
-        Sentry.Native.captureException(error);
-        console.log('Error while calling Notifications.getExpoPushTokenAsync()');
+        console.error('Error while calling Notifications.getExpoPushTokenAsync()');
         console.error(error);
+        Sentry.Native.captureException(error);
       }
     } else {
       setError('permission-denied');

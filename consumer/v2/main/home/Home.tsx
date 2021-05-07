@@ -6,6 +6,7 @@ import React from 'react';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
+import * as Sentry from 'sentry-expo';
 import { ApiContext } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import useLastKnownLocation from '../../../../common/hooks/useLastKnownLocation';
@@ -51,8 +52,16 @@ export default function ({ navigation }: Props) {
   // fetch total couriers
   const fetchTotalCouriersNearby = async () => {
     if (!coords) return;
-    const { total } = await api.courier().fetchTotalCouriersNearby(coords);
-    setAvailableCouriers(total);
+    try {
+      const { total } = await api.courier().fetchTotalCouriersNearby(coords);
+      setAvailableCouriers(total);
+    } catch (error) {
+      console.error(
+        `Error while calling api.courier().fetchTotalCouriersNearby(${coords.latitude},${coords.longitude})`
+      );
+      console.error(error);
+      Sentry.Native.captureException(error);
+    }
   };
   React.useEffect(() => {
     navigation.addListener('focus', fetchTotalCouriersNearby);
