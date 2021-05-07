@@ -88,6 +88,7 @@ export const StatusControl = ({
               style={{ width: thumbWidth, height: trackHeight }}
               activityIndicator={isLoading}
               icon={<Feather name="arrow-right" size={14} style={{ marginLeft: halfPadding }} />}
+              disabled={disabled}
             />
           </Animated.View>
         </PanGestureHandler>

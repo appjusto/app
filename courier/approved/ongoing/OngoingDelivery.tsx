@@ -110,8 +110,7 @@ export default function ({ navigation, route }: Props) {
   };
   const { type, dispatchingState, status } = order;
   const nextStepDisabled =
-    isLoading ||
-    (type === 'food' && dispatchingState === 'arrived-pickup' && status !== 'dispatching');
+    isLoading || (type === 'food' && dispatchingState === 'arrived-pickup' && status === 'ready');
   const nextStepLabel = (() => {
     const dispatchingState = order?.dispatchingState;
     if (!dispatchingState || dispatchingState === 'going-pickup') {
