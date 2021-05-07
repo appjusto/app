@@ -75,7 +75,7 @@ export const OrderCourierSummary = ({ courier }: Props) => {
         <MaterialIcons name="thumb-up-off-alt" size={24} />
         <View style={{ alignItems: 'flex-start', paddingHorizontal: padding }}>
           <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Avaliações positivas')}</Text>
-          <Text style={{ ...texts.md }}>{courier.statistics?.negativeReviews ?? 0}</Text>
+          <Text style={{ ...texts.md }}>{courier.statistics?.positiveReviews ?? 0}</Text>
         </View>
       </View>
       <View

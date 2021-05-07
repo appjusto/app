@@ -69,7 +69,7 @@ export const OngoingOrderCourierDetail = ({ navigation, route }: Props) => {
           <View style={{ flex: 7 }}>
             <DefaultButton
               title={t('Abrir chat')}
-              onPress={() => navigation.navigate('Chat', { orderId })}
+              onPress={() => navigation.navigate('OngoingOrderChat', { orderId })}
             />
           </View>
           <View style={{ marginLeft: halfPadding, flex: 7 }}>
