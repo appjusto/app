@@ -1,4 +1,4 @@
-import { Order, WithId } from 'appjusto-types';
+import { Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { Image, Linking, TouchableOpacity, View } from 'react-native';
 import * as icons from '../../../assets/icons';

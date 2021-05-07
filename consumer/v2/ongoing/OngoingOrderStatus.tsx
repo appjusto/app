@@ -1,4 +1,4 @@
-import { Order } from 'appjusto-types';
+import { Order } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../common/components/texts/RoundedText';

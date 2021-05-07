@@ -1,4 +1,4 @@
-import { Bank } from 'appjusto-types';
+import { Bank } from '@appjusto/types';
 
 type FinancialOperation = 'withdraw' | 'antecipate';
 

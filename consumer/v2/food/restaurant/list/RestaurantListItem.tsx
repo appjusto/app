@@ -1,4 +1,4 @@
-import { BusinessAlgolia } from 'appjusto-types';
+import { BusinessAlgolia } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../../../common/components/texts/RoundedText';

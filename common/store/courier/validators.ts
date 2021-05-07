@@ -1,6 +1,6 @@
+import { BankAccount, ConsumerProfile, CourierCompany, CourierProfile } from '@appjusto/types';
 import * as cnpjutils from '@fnando/cnpj';
 import * as cpfutils from '@fnando/cpf';
-import { BankAccount, ConsumerProfile, CourierCompany, CourierProfile } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 
 export const isConsumerProfileComplete = (

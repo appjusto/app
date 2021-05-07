@@ -2,7 +2,7 @@ import {
   IuguCreatePaymentToken,
   IuguCreatePaymentTokenData,
   IuguPaymentToken,
-} from 'appjusto-types/payment/iugu';
+} from '@appjusto/types/payment/iugu';
 import axios, { CancelToken } from 'axios';
 
 const API_ENDPOINT = 'https://api.iugu.com/v1';

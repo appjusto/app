@@ -1,4 +1,4 @@
-import { Business, WithId } from 'appjusto-types';
+import { Business, WithId } from '@appjusto/types';
 import React from 'react';
 import { ApiContext } from '../../../../app/context';
 

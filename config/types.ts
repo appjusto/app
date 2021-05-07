@@ -1,4 +1,4 @@
-import { Flavor } from 'appjusto-types';
+import { Flavor } from '@appjusto/types';
 
 export type Environment = 'dev' | 'staging' | 'live';
 

@@ -1,4 +1,4 @@
-import { Complement, ComplementGroup, Product, WithId } from 'appjusto-types';
+import { Complement, ComplementGroup, Product, WithId } from '@appjusto/types';
 import React from 'react';
 import { View } from 'react-native';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';

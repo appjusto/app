@@ -1,4 +1,4 @@
-import { Order, WithId } from 'appjusto-types';
+import { Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { ApiContext } from '../../../../app/context';
 import { ObserveOrdersOptions } from '../types';

@@ -1,7 +1,6 @@
+import { Bank, BankAccountPersonType, BankAccountType } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Bank, BankAccountType } from 'appjusto-types';
-import { BankAccountPersonType } from 'appjusto-types/banking';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';

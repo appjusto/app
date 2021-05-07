@@ -1,4 +1,4 @@
-import { Business, WithId } from 'appjusto-types';
+import { Business, WithId } from '@appjusto/types';
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';

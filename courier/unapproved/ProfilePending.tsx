@@ -1,6 +1,6 @@
+import { ProfileSituation } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { ProfileSituation } from 'appjusto-types';
 import firebase from 'firebase';
 import React from 'react';
 import { Alert, Pressable, ScrollView, Text, View } from 'react-native';

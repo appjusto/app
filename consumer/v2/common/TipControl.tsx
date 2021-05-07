@@ -1,4 +1,4 @@
-import { Order } from 'appjusto-types';
+import { Order } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';

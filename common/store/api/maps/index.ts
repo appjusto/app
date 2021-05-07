@@ -1,4 +1,4 @@
-import { Address, LatLng } from 'appjusto-types';
+import { Address, LatLng } from '@appjusto/types';
 import axios, { CancelToken } from 'axios';
 
 const SEARCH_RADIUS = 30 * 1000; // 30km

@@ -1,5 +1,4 @@
-import { Complement, ComplementGroup, Order, Product, WithId } from 'appjusto-types';
-import { OrderItem } from 'appjusto-types/order/item';
+import { Complement, ComplementGroup, Order, OrderItem, Product, WithId } from '@appjusto/types';
 import { intersection, isEmpty } from 'lodash';
 import { distanceBetweenLatLng } from '../helpers';
 

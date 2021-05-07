@@ -1,4 +1,4 @@
-import { DispatchingState, Order, OrderStatus } from 'appjusto-types';
+import { DispatchingState, Order, OrderStatus } from '@appjusto/types';
 import React from 'react';
 import { t } from '../../../strings';
 import { isOrderOngoing } from '../../store/order/selectors';

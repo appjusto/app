@@ -1,4 +1,4 @@
-import { Order, WithId } from 'appjusto-types';
+import { Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { View } from 'react-native';
 import { padding } from '../../../styles';

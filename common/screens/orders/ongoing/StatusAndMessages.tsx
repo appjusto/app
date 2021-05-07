@@ -1,4 +1,4 @@
-import { DispatchingState } from 'appjusto-types';
+import { DispatchingState } from '@appjusto/types';
 import React from 'react';
 import { View } from 'react-native';
 import { padding } from '../../../styles';

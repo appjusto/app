@@ -1,6 +1,6 @@
+import { Issue, IssueType, WithId } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Issue, IssueType, WithId } from 'appjusto-types';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';

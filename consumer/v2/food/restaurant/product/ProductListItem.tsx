@@ -1,4 +1,4 @@
-import { Product, ProductAlgolia, WithId } from 'appjusto-types';
+import { Product, ProductAlgolia, WithId } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';

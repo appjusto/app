@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-community/async-storage';
 import {
   ConsumerProfile,
   CourierProfile,
@@ -6,7 +5,8 @@ import {
   Flavor,
   UserProfile,
   WithId,
-} from 'appjusto-types';
+} from '@appjusto/types';
+import AsyncStorage from '@react-native-community/async-storage';
 import * as Sentry from 'sentry-expo';
 import { Environment } from '../../../config/types';
 import { AppDispatch } from '../../app/context';

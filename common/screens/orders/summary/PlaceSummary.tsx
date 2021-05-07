@@ -1,5 +1,5 @@
+import { Place } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
-import { Place } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';

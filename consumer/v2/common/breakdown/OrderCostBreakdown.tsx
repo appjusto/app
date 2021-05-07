@@ -1,4 +1,4 @@
-import { Fare, Order } from 'appjusto-types';
+import { Fare, Order } from '@appjusto/types';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Text, View } from 'react-native';

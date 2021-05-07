@@ -1,7 +1,7 @@
+import { ReviewType } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { ReviewType } from 'appjusto-types';
 import React from 'react';
 import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';

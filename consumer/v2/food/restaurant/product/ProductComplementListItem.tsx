@@ -1,4 +1,4 @@
-import { Complement, WithId } from 'appjusto-types';
+import { Complement, WithId } from '@appjusto/types';
 import React from 'react';
 import { Text, TouchableWithoutFeedback, View } from 'react-native';
 import { QuantityButton } from '../../../../../common/components/buttons/QuantityButton';

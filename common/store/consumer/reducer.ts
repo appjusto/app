@@ -1,4 +1,4 @@
-import { ConsumerProfile, WithId } from 'appjusto-types';
+import { ConsumerProfile, WithId } from '@appjusto/types';
 import { AnyAction } from 'redux';
 import { CONSUMER_PROFILE_UPDATED, USER_LOGGED_OUT } from '../user/actions';
 import {

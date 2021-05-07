@@ -1,4 +1,4 @@
-import { LatLng } from 'appjusto-types';
+import { LatLng } from '@appjusto/types';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import React from 'react';

@@ -1,4 +1,4 @@
-import { ConsumerProfile, CourierProfile, UserProfile, WithId } from 'appjusto-types';
+import { ConsumerProfile, CourierProfile, UserProfile, WithId } from '@appjusto/types';
 import firebase from 'firebase';
 import * as geofirestore from 'geofirestore';
 import AuthApi from './auth';

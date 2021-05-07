@@ -1,5 +1,5 @@
+import { BusinessAlgolia, ProductAlgolia } from '@appjusto/types';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { BusinessAlgolia, ProductAlgolia } from 'appjusto-types';
 import React, { useState } from 'react';
 import { FlatList, Image, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';

@@ -1,4 +1,4 @@
-import { Order } from 'appjusto-types';
+import { Order } from '@appjusto/types';
 import React from 'react';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';

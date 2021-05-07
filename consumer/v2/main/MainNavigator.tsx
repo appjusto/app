@@ -1,7 +1,7 @@
+import { PushMessage } from '@appjusto/types';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { PushMessage } from 'appjusto-types';
 import React from 'react';
 import { Image } from 'react-native';
 import { useQuery } from 'react-query';

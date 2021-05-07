@@ -1,7 +1,7 @@
+import { CourierStatus } from '@appjusto/types';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { CourierStatus } from 'appjusto-types';
 import { LOCATION, usePermissions } from 'expo-permissions';
 import React from 'react';
 import { Linking, ScrollView, TouchableOpacity, View } from 'react-native';

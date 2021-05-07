@@ -1,4 +1,4 @@
-import { BusinessAlgolia } from 'appjusto-types';
+import { BusinessAlgolia } from '@appjusto/types';
 import React from 'react';
 import { ActivityIndicator, Image, SectionList, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';

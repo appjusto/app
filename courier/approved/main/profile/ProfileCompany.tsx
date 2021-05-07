@@ -1,7 +1,7 @@
+import { CourierCompany } from '@appjusto/types';
 import * as cnpjutils from '@fnando/cnpj';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { CourierCompany } from 'appjusto-types/courier';
 import { toNumber, trim } from 'lodash';
 import React from 'react';
 import { Text, TextInput, View } from 'react-native';

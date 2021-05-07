@@ -1,4 +1,4 @@
-import { ComplementGroup } from 'appjusto-types';
+import { ComplementGroup } from '@appjusto/types';
 import React from 'react';
 import { Text, View, ViewProps } from 'react-native';
 import { borders, colors, halfPadding, texts } from '../../../../../common/styles';

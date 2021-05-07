@@ -1,4 +1,4 @@
-import { OrderType } from 'appjusto-types';
+import { OrderType } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import PaddedView from '../../../../../common/components/containers/PaddedView';

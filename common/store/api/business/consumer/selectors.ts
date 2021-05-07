@@ -1,4 +1,4 @@
-import { ConsumerProfile } from 'appjusto-types';
+import { ConsumerProfile } from '@appjusto/types';
 
 export const getPaymentMethodById = (
   consumer: ConsumerProfile | undefined,

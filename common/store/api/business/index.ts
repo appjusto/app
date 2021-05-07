@@ -6,7 +6,7 @@ import {
   Ordering,
   Product,
   WithId,
-} from 'appjusto-types';
+} from '@appjusto/types';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';

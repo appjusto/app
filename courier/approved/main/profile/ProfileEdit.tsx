@@ -1,7 +1,7 @@
+import { CourierProfile } from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { CourierProfile } from 'appjusto-types';
 import { trim } from 'lodash';
 import React from 'react';
 import { KeyboardAvoidingView, Text, TextInput, View } from 'react-native';

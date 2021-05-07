@@ -1,5 +1,5 @@
+import { PushMessage } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
-import { PushMessage } from 'appjusto-types';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useQuery } from 'react-query';

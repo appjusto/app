@@ -1,4 +1,4 @@
-import { LatLng, Place } from 'appjusto-types';
+import { LatLng, Place } from '@appjusto/types';
 import { AppDispatch } from '../../app/context';
 import { SearchFilter, SearchKind, SearchOrder } from './types';
 

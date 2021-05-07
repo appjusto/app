@@ -1,4 +1,4 @@
-import { Place } from 'appjusto-types';
+import { Place } from '@appjusto/types';
 import { FleetDetailParamList } from '../../../../common/screens/fleet/FleetDetail';
 import { PixParamList } from '../../common/PayWithPix';
 import { ProfileAddCardParamList } from '../../main/profile/ProfileAddCard';

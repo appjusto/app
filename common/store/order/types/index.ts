@@ -1,4 +1,4 @@
-import { ChatMessage, Order, WithId } from 'appjusto-types';
+import { ChatMessage, Order, WithId } from '@appjusto/types';
 
 export interface GroupedChatMessages {
   id: string;

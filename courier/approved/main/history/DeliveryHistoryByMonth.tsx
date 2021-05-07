@@ -1,7 +1,7 @@
+import { Order, WithId } from '@appjusto/types';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Order, WithId } from 'appjusto-types';
 import React, { useCallback } from 'react';
 import { FlatList, View } from 'react-native';
 import { useSelector } from 'react-redux';

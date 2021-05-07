@@ -1,5 +1,5 @@
+import { ChatMessage, Flavor, PushMessage, WithId } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
-import { ChatMessage, Flavor, PushMessage, WithId } from 'appjusto-types';
 import React from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Text, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';

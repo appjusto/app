@@ -1,4 +1,4 @@
-import { OrderStatus } from 'appjusto-types';
+import { OrderStatus } from '@appjusto/types';
 
 export type ObserveOrdersOptions = {
   consumerId?: string;

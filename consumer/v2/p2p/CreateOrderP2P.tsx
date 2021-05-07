@@ -1,6 +1,6 @@
+import { Fleet, Place, WithId } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Fleet, Place, WithId } from 'appjusto-types';
 import React from 'react';
 import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';

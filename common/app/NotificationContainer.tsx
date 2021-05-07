@@ -1,4 +1,4 @@
-import { PushMessage, PushMessageData } from 'appjusto-types';
+import { PushMessage, PushMessageData } from '@appjusto/types';
 import * as Notifications from 'expo-notifications';
 import React from 'react';
 import { useQueryClient } from 'react-query';

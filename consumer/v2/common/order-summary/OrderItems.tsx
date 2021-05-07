@@ -1,5 +1,5 @@
+import { Order, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
-import { Order, WithId } from 'appjusto-types';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';

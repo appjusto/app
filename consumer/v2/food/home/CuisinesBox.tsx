@@ -1,4 +1,4 @@
-import { Cuisine } from 'appjusto-types';
+import { Cuisine } from '@appjusto/types';
 import React from 'react';
 import { View } from 'react-native';
 import RoundedText from '../../../../common/components/texts/RoundedText';

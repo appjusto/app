@@ -1,5 +1,5 @@
+import { Order, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
-import { Order, WithId } from 'appjusto-types';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Text, View } from 'react-native';
