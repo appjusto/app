@@ -67,7 +67,7 @@ export default function ({ navigation }: Props) {
       const token = shouldUpdateToken ? notificationToken : null;
       dispatch(updateProfile(api)(courier.id, { notificationToken: token }));
     }
-  }, [notificationToken, shouldDeleteToken, shouldUpdateToken]);
+  }, [notificationToken, courier.id, shouldDeleteToken, shouldUpdateToken, dispatch, api]);
 
   // UI
   return (

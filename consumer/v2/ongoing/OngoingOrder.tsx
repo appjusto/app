@@ -42,7 +42,7 @@ export default function ({ navigation, route }: Props) {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // redux
-  const consumer = useSelector(getConsumer);
+  const consumer = useSelector(getConsumer)!;
   // screen state
   const [seenCodeInfo, setSeenCodeInfo] = React.useState(false);
   const { order } = useObserveOrder(orderId);
@@ -64,9 +64,9 @@ export default function ({ navigation, route }: Props) {
   React.useEffect(() => {
     if (shouldDeleteToken || shouldUpdateToken) {
       const token = shouldUpdateToken ? notificationToken : null;
-      dispatch(updateProfile(api)(consumer!.id, { notificationToken: token }));
+      dispatch(updateProfile(api)(consumer.id, { notificationToken: token }));
     }
-  }, [api, consumer, dispatch, notificationToken, shouldDeleteToken, shouldUpdateToken]);
+  }, [api, consumer.id, dispatch, notificationToken, shouldDeleteToken, shouldUpdateToken]);
   // whenever order changes
   // check status to navigate to other screens
   React.useEffect(() => {
