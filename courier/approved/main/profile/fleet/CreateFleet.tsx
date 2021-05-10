@@ -58,6 +58,7 @@ export default function ({ navigation, route }: Props) {
   // handlers
   const createFleetHandler = async () => {
     try {
+      setLoading(true);
       const fleet = await api.fleet().createFleet({
         name,
         description,
@@ -74,6 +75,7 @@ export default function ({ navigation, route }: Props) {
       dispatch(showToast(t('Frota criada com sucesso!')));
       navigation.replace('FleetDetail', { fleetId: fleet.id });
     } catch (error) {
+      setLoading(false);
       console.log(error);
       Sentry.Native.captureException(error);
       dispatch(showToast(t('Não foi possível criar a frota.')));
