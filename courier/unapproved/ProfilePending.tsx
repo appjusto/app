@@ -45,6 +45,7 @@ export default function ({ navigation, route }: Props) {
   // app state
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier)!;
+  const { situation } = courier;
   const currentSelfieQuery = useCourierSelfie(courier.id);
   const currentDocumentImageQuery = useCourierDocumentImage(courier.id);
 
@@ -57,7 +58,7 @@ export default function ({ navigation, route }: Props) {
   const hasBankAccount = courier.bankAccount && bankAccountSet(courier.bankAccount);
   const totalSteps = 4;
   const [stepsDone, setStepsDone] = React.useState(0);
-  const submitEnabled = situationsAllowed.includes(courier.situation) && stepsDone === totalSteps;
+  const submitEnabled = situationsAllowed.includes(situation) && stepsDone === totalSteps;
   // side effects
   // tracking
   useSegmentScreen('Profile Pending');
@@ -66,20 +67,16 @@ export default function ({ navigation, route }: Props) {
     // although this screen is named 'ProfilePending', it's also the first screen of UnapprovedNavigator
     // which means that it will be shown if courier is rejected. so, if that's the case,
     // we navigate to ProfileRejected after a short delay to make sure it will work on all devices
-    if (
-      courier.situation === 'submitted' ||
-      courier.situation === 'verified' ||
-      courier.situation === 'invalid'
-    ) {
+    if (situation === 'submitted' || situation === 'verified' || situation === 'invalid') {
       setTimeout(() => {
         navigation.replace('ProfileSubmitted');
       }, 100);
-    } else if (courier.situation === 'rejected') {
+    } else if (situation === 'rejected') {
       setTimeout(() => {
         navigation.replace('ProfileRejected');
       }, 100);
     }
-  }, [courier, navigation]);
+  }, [situation, navigation]);
   // when location changes
   React.useEffect(() => {
     if (!coords) return;
