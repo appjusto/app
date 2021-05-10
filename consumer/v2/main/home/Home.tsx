@@ -56,10 +56,10 @@ export default function ({ navigation }: Props) {
       const { total } = await api.courier().fetchTotalCouriersNearby(coords);
       setAvailableCouriers(total);
     } catch (error) {
-      console.error(
+      console.log(
         `Error while calling api.courier().fetchTotalCouriersNearby(${coords.latitude},${coords.longitude})`
       );
-      console.error(error);
+      console.log(error);
       Sentry.Native.captureException(error);
     }
   };

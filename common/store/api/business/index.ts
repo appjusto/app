@@ -7,6 +7,7 @@ import {
   Product,
   WithId,
 } from '@appjusto/types';
+import * as Sentry from 'sentry-expo';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';
@@ -19,7 +20,10 @@ export default class BusinessApi {
     const ref = this.refs.getBusinessRef(businessId);
     const unsubscribe = ref.onSnapshot(
       (snapshot) => resultHandler(documentAs<Business>(snapshot)),
-      (error) => console.error(error)
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
     );
     return unsubscribe;
   }
@@ -27,14 +31,20 @@ export default class BusinessApi {
   observeCategories(businessId: string, resultHandler: (categories: WithId<Category>[]) => void) {
     const unsubscribe = this.refs.getBusinessCategoriesRef(businessId).onSnapshot(
       (snapshot) => resultHandler(documentsAs<Category>(snapshot.docs)),
-      (error) => console.error(error)
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
     );
     return unsubscribe;
   }
   observeProducts(businessId: string, resultHandler: (products: WithId<Product>[]) => void) {
     const unsubscribe = this.refs.getBusinessProductsRef(businessId).onSnapshot(
       (snapshot) => resultHandler(documentsAs<Product>(snapshot.docs)),
-      (error) => console.error(error)
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
     );
     return unsubscribe;
   }
@@ -45,7 +55,10 @@ export default class BusinessApi {
   ) {
     const unsubscribe = this.refs.getBusinessProductRef(businessId, productId).onSnapshot(
       (snapshot) => resultHandler(documentAs<Product>(snapshot)),
-      (error) => console.error(error)
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
     );
     return unsubscribe;
   }
@@ -58,7 +71,10 @@ export default class BusinessApi {
       .getBusinessProductComplementsGroupsRef(businessId, productId)
       .onSnapshot(
         (snapshot) => resultHandler(documentsAs<ComplementGroup>(snapshot.docs)),
-        (error) => console.error(error)
+        (error) => {
+          console.log(error);
+          Sentry.Native.captureException(error);
+        }
       );
     return unsubscribe;
   }
@@ -71,14 +87,20 @@ export default class BusinessApi {
       .getBusinessProductComplementsRef(businessId, productId)
       .onSnapshot(
         (snapshot) => resultHandler(documentsAs<Complement>(snapshot.docs)),
-        (error) => console.error(error)
+        (error) => {
+          console.log(error);
+          Sentry.Native.captureException(error);
+        }
       );
     return unsubscribe;
   }
   observeMenuOrdering(businessId: string, resultHandler: (products: WithId<Ordering>) => void) {
     const unsubscribe = this.refs.getBusinessMenuOrderingRef(businessId).onSnapshot(
       (snapshot) => resultHandler(documentAs<Ordering>(snapshot)),
-      (error) => console.error(error)
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
     );
     return unsubscribe;
   }
