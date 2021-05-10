@@ -81,4 +81,8 @@ export default class SearchApi {
       hitsPerPage,
     });
   }
+
+  clearCache() {
+    this.client.clearCache();
+  }
 }

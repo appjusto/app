@@ -22,6 +22,7 @@ import {
 import Constants from 'expo-constants';
 import firebase from 'firebase';
 import { isEmpty } from 'lodash';
+import * as Sentry from 'sentry-expo';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';
 import { ObserveOrdersOptions } from './types';
@@ -101,7 +102,10 @@ export default class OrderApi {
     if (businessId) query = query.where('business.id', '==', businessId);
     const unsubscribe = query.onSnapshot(
       (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
-      (error) => console.error(error)
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
     );
     // returns the unsubscribe function
     return unsubscribe;
@@ -112,7 +116,10 @@ export default class OrderApi {
   ): firebase.Unsubscribe {
     const unsubscribe = this.refs.getOrderRef(orderId).onSnapshot(
       (snapshot) => resultHandler(documentAs<Order>(snapshot)),
-      (error) => console.error(error)
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
     );
     // returns the unsubscribe function
     return unsubscribe;
@@ -127,7 +134,10 @@ export default class OrderApi {
       .orderBy('timestamp', 'asc')
       .onSnapshot(
         (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
-        (error) => console.error(error)
+        (error) => {
+          console.log(error);
+          Sentry.Native.captureException(error);
+        }
       );
     // returns the unsubscribe function
     return unsubscribe;

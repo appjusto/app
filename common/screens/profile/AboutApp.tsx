@@ -1,16 +1,19 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import Constants from 'expo-constants';
 import * as Device from 'expo-device';
-import React from 'react';
-import { Linking, Platform, View } from 'react-native';
+import React, { useContext } from 'react';
+import { Linking, Platform, Pressable, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch } from 'react-redux';
 import { ProfileParamList } from '../../../consumer/v2/main/profile/types';
 import { CourierProfileParamList } from '../../../courier/approved/main/profile/types';
 import { t } from '../../../strings';
+import { ApiContext, AppDispatch } from '../../app/context';
 import PaddedView from '../../components/containers/PaddedView';
 import ConfigItem from '../../components/views/ConfigItem';
 import { IconVersion } from '../../icons/icon-version';
+import { showToast } from '../../store/ui/actions';
 import { screens } from '../../styles';
 import HomeCard from '../home/cards/HomeCard';
 
@@ -28,6 +31,15 @@ type Props = {
 };
 
 export const AboutApp = ({ navigation }: Props) => {
+  // context
+  const api = useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
+  // handlers
+  const easterEggHandler = () => {
+    api.search().clearCache();
+    dispatch(showToast('Clearing algolia cache...'));
+  };
+  // UI
   const appVersion = `${t('Versão:')} ${Constants.nativeAppVersion} / ${
     Constants.manifest.version
   }`;
@@ -58,7 +70,9 @@ export const AboutApp = ({ navigation }: Props) => {
       <View style={{ flex: 1 }} />
       <SafeAreaView>
         <PaddedView>
-          <HomeCard icon={<IconVersion />} title={appVersion} subtitle={os} />
+          <Pressable delayLongPress={2000} onLongPress={easterEggHandler}>
+            <HomeCard icon={<IconVersion />} title={appVersion} subtitle={os} />
+          </Pressable>
         </PaddedView>
       </SafeAreaView>
     </ScrollView>

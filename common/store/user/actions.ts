@@ -36,8 +36,9 @@ export const signInWithEmail = (api: Api) => (email: string, environment: Enviro
 ) => {
   try {
     AsyncStorage.setItem('email', email);
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.log(error);
+    Sentry.Native.captureException(error);
   }
   return dispatch(awaitWithFeedback(api.auth().sendSignInLinkToEmail(email, environment)));
 };
@@ -45,8 +46,9 @@ export const signInWithEmail = (api: Api) => (email: string, environment: Enviro
 export const getSignInEmail = () => {
   try {
     return AsyncStorage.getItem('email');
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.log(error);
+    Sentry.Native.captureException(error);
     return Promise.resolve(null);
   }
 };

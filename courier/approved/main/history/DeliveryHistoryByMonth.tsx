@@ -75,7 +75,7 @@ export default function ({ navigation, route }: Props) {
         keyExtractor={(item) => item.id!}
         renderItem={({ item }) => {
           const createdOn = getOrderCreatedOn(item);
-          const totalFee = item.fare.consumer.courierFee + item.tip.value;
+          const totalFee = item.fare.consumer.courierFee + (item.tip?.value ?? 0);
           const title = formatCurrency(totalFee);
           const subtitle = `Pedido ${item.code}\n${separateWithDot(
             formatDate(createdOn),
