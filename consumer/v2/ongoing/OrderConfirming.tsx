@@ -42,7 +42,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
       // just p2p for now
     } else if (
       (order.type === 'p2p' && order.status === 'dispatching') ||
-      (order.type === 'food' && order.status === 'preparing')
+      (order.type === 'food' && order.status === 'confirmed')
     ) {
       navigation.replace('OngoingOrder', {
         orderId,

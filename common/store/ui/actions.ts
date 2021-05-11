@@ -24,7 +24,6 @@ export const awaitWithFeedback = <T>(promise: Promise<T>) => async (dispatch: Ap
     dispatch({ type: BUSY, payload: false });
     return result;
   } catch (error) {
-    // console.error(error);
     dispatch({ type: BUSY, payload: false });
     throw error;
   }

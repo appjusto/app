@@ -1,5 +1,6 @@
 import { Fleet, WithId } from '@appjusto/types';
 import firebase from 'firebase';
+import * as Sentry from 'sentry-expo';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';
 import { ObserveFleetOptions } from './types';
@@ -14,7 +15,10 @@ export default class FleetApi {
   ): firebase.Unsubscribe {
     const unsubscribe = this.refs.getFleetRef(fleetId).onSnapshot(
       (snapshot) => resultHandler(documentAs<Fleet>(snapshot)),
-      (error) => console.error(error)
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
     );
     // returns the unsubscribe function
     return unsubscribe;
@@ -42,7 +46,8 @@ export default class FleetApi {
         resultHandler(documentsAs<WithId<Fleet>>(querySnapshot.docs), last);
       },
       (error) => {
-        console.error(error);
+        console.log(error);
+        Sentry.Native.captureException(error);
       }
     );
     // returns the unsubscribe function

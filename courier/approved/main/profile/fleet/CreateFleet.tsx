@@ -4,6 +4,7 @@ import { isEmpty } from 'lodash';
 import React from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
@@ -12,7 +13,6 @@ import HR from '../../../../../common/components/views/HR';
 import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { showToast } from '../../../../../common/store/ui/actions';
-import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
@@ -34,7 +34,6 @@ export default function ({ navigation, route }: Props) {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // redux store
-  const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier)!;
   // screen state
   const [name, setName] = React.useState('');
@@ -44,9 +43,8 @@ export default function ({ navigation, route }: Props) {
   const [additionalPerKmAfterThreshold, setAdditionalPerKmAfterThreshold] = React.useState(200);
   const [maxDistance, setMaxDistance] = React.useState(30000);
   const [maxDistanceToOrigin, setMaxDistanceToOrigin] = React.useState(15000);
-  const canSubmit = React.useMemo(() => {
-    return !isEmpty(name) && !isEmpty(description);
-  }, [name, description]);
+  const [isLoading, setLoading] = React.useState(false);
+  const canSubmit = !isEmpty(name) && !isEmpty(description);
   // refs
   const nameRef = React.useRef<TextInput>(null);
   const descriptionRef = React.useRef<TextInput>(null);
@@ -59,20 +57,29 @@ export default function ({ navigation, route }: Props) {
   }, []);
   // handlers
   const createFleetHandler = async () => {
-    const fleet = await api.fleet().createFleet({
-      name,
-      description,
-      distanceThreshold,
-      minimumFee,
-      additionalPerKmAfterThreshold,
-      maxDistance,
-      maxDistanceToOrigin,
-      situation: 'approved',
-      createdBy: courier.id,
-      participantsOnline: 0,
-    });
-    dispatch(showToast(t('Frota criada com sucesso!')));
-    navigation.replace('FleetDetail', { fleetId: fleet.id });
+    try {
+      setLoading(true);
+      const fleet = await api.fleet().createFleet({
+        name,
+        description,
+        distanceThreshold,
+        minimumFee,
+        additionalPerKmAfterThreshold,
+        maxDistance,
+        maxDistanceToOrigin,
+        situation: 'approved',
+        createdBy: courier.id,
+        participantsOnline: 0,
+      });
+      api.search().clearCache();
+      dispatch(showToast(t('Frota criada com sucesso!')));
+      navigation.replace('FleetDetail', { fleetId: fleet.id });
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      Sentry.Native.captureException(error);
+      dispatch(showToast(t('Não foi possível criar a frota.')));
+    }
   };
 
   // UI
@@ -185,8 +192,8 @@ export default function ({ navigation, route }: Props) {
               style={{ marginTop: padding * 2 }}
               title={t('Confirmar criação da frota')}
               onPress={createFleetHandler}
-              disabled={!canSubmit || busy}
-              activityIndicator={busy}
+              disabled={!canSubmit || isLoading}
+              activityIndicator={isLoading}
             />
           </PaddedView>
         </View>

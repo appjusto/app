@@ -1,6 +1,7 @@
 import { ConsumerProfile, CourierProfile, UserProfile, WithId } from '@appjusto/types';
 import firebase from 'firebase';
 import * as geofirestore from 'geofirestore';
+import * as Sentry from 'sentry-expo';
 import AuthApi from './auth';
 import { documentAs } from './types';
 
@@ -38,7 +39,8 @@ export default class ProfileApi {
         else resultHandler(documentAs<UserProfile>(doc));
       },
       (error) => {
-        console.error(error);
+        console.log(error);
+        Sentry.Native.captureException(error);
       }
     );
     // returns the unsubscribe function

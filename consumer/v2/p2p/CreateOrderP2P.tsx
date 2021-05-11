@@ -4,6 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
@@ -60,7 +61,8 @@ export default function ({ navigation, route }: Props) {
             setLoading(false);
             setOrderId(newOrder.id);
           } catch (error) {
-            console.error(error);
+            console.log(error);
+            Sentry.Native.captureException(error);
             dispatch(showToast(error.toString(), 'error'));
           }
         })();

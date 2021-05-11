@@ -1,5 +1,6 @@
 import { Address, LatLng } from '@appjusto/types';
 import axios, { CancelToken } from 'axios';
+import * as Sentry from 'sentry-expo';
 
 const SEARCH_RADIUS = 30 * 1000; // 30km
 
@@ -39,13 +40,14 @@ export default class MapsApi {
           googlePlaceId,
         };
       });
-    } catch (err) {
-      if (axios.isCancel(err)) {
+    } catch (error) {
+      if (axios.isCancel(error)) {
         console.log('Request canceled!');
         return null;
       }
-      console.error(err);
-      return err;
+      console.log(error);
+      Sentry.Native.captureException(error);
+      return error;
     }
   }
 
@@ -67,8 +69,9 @@ export default class MapsApi {
         latitude: location.lat,
         longitude: location.lng,
       };
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.log(error);
+      Sentry.Native.captureException(error);
       return null;
     }
   }
