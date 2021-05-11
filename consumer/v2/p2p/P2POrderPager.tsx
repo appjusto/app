@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import { StepControl } from '../../../common/components/controls/step-control/StepControl';
@@ -191,12 +192,14 @@ export default function ({
               </View>
             </TouchableWithoutFeedback>
             <View style={{ flex: 1 }} />
-            <DefaultButton
-              style={{ marginBottom: padding }}
-              title={t('Confirmar local de retirada')}
-              onPress={nextStepHandler}
-              disabled={!stepReady(step + 1)}
-            />
+            <SafeAreaView>
+              <DefaultButton
+                style={{ marginBottom: padding }}
+                title={t('Confirmar local de retirada')}
+                onPress={nextStepHandler}
+                disabled={!stepReady(step + 1)}
+              />
+            </SafeAreaView>
           </KeyboardAwareScrollView>
         </View>
 
@@ -255,17 +258,19 @@ export default function ({
                 </View>
               </TouchableWithoutFeedback>
               <View style={{ flex: 1 }} />
-              <DefaultButton
-                style={{ marginBottom: padding }}
-                title={t('Confirmar local de entrega')}
-                onPress={nextStepHandler}
-                disabled={!stepReady(step + 1)}
-                activityIndicator={
-                  step === Step.Destination &&
-                  Boolean(order?.destination?.address.description) &&
-                  !order?.route
-                }
-              />
+              <SafeAreaView>
+                <DefaultButton
+                  style={{ marginBottom: padding }}
+                  title={t('Confirmar local de entrega')}
+                  onPress={nextStepHandler}
+                  disabled={!stepReady(step + 1)}
+                  activityIndicator={
+                    step === Step.Destination &&
+                    Boolean(order?.destination?.address.description) &&
+                    !order?.route
+                  }
+                />
+              </SafeAreaView>
             </KeyboardAwareScrollView>
           </View>
         )}
