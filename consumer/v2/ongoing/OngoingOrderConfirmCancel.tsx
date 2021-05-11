@@ -1,14 +1,23 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Image, View } from 'react-native';
+import { ActivityIndicator, Image, Text, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../common/components/containers/PaddedView';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getUIBusy } from '../../../common/store/ui/selectors';
-import { colors, halfPadding, padding, screens } from '../../../common/styles';
+import {
+  colors,
+  doublePadding,
+  halfPadding,
+  padding,
+  screens,
+  texts,
+} from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
 import { OngoingOrderNavigatorParamList } from './types';
@@ -40,7 +49,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
       </View>
     );
   }
-
+  console.log(order);
   const cancellationCharge =
     order.type === 'food'
       ? order.status === 'confirmed'
@@ -49,7 +58,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
   const description = cancellationCharge
     ? t('Seu pedido já foi iniciado e algumas taxas podem ser cobradas.')
     : t('Como seu pedido ainda não foi retirado, você não será cobrado pelo cancelamento.');
-  return (
+  return order.status === 'confirmed' ? (
     <View style={{ ...screens.default }}>
       <FeedbackView
         header={t('Tem certeza que deseja cancelar?')}
@@ -86,5 +95,60 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
         </View>
       </View>
     </View>
+  ) : (
+    <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
+      <PaddedView style={{ flex: 1 }}>
+        <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: doublePadding }}>
+          <Image source={icons.coneYellow} />
+          <Text style={{ ...texts.xl, marginTop: padding }}>{t('Aviso importante:')}</Text>
+          <Text style={{ ...texts.xl, color: colors.red }}>
+            {t('este cancelamento será cobrado')}
+          </Text>
+          <Text style={{ ...texts.sm, marginTop: padding, color: colors.grey700 }}>
+            {t(
+              'Recomendamos que entre em contato com o restaurante para verificar se ainda é possível cancelar sem o prejuízo dos produtos.'
+            )}
+          </Text>
+        </View>
+        <DefaultButton
+          title={t('Ligar para o restaurante')}
+          secondary
+          onPress={() => null}
+          style={{ marginTop: 24 }}
+        />
+      </PaddedView>
+      <View style={{ flex: 1 }} />
+      <PaddedView>
+        <Text style={{ ...texts.sm }}>
+          {t('Deseja confirmar o cancelamento mesmo com a cobrança dos valores do pedido?')}
+        </Text>
+        <View
+          style={{
+            marginTop: 24,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: padding,
+          }}
+        >
+          <View style={{ width: '48%' }}>
+            <DefaultButton
+              title={t('Voltar')}
+              onPress={() => navigation.goBack()}
+              activityIndicator={busy}
+              disabled={busy}
+            />
+          </View>
+          <View style={{ width: '48%' }}>
+            <DefaultButton
+              title={t('Confirmar')}
+              onPress={() => navigation.navigate('OngoingOrderCancelOrder', { orderId })}
+              activityIndicator={busy}
+              disabled={busy}
+            />
+          </View>
+        </View>
+      </PaddedView>
+    </ScrollView>
   );
 };
