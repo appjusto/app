@@ -160,19 +160,19 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           </View>
         </View>
 
-        <ItemComplements
-          product={product}
-          selectedComplements={complements}
-          onComplementToggle={(group, complement, selected) => {
-            if (!selected || helpers.canAddComplement(group, complements)) {
-              if (selected) setComplements([...complements, complement]);
-              else setComplements(complements.filter((c) => c.id !== complement.id));
-            }
-          }}
-        />
-        {business.status === 'open' && (
-          <View style={{ marginTop: halfPadding }}>
-            <HR />
+        {business.status === 'open' && business.enabled && (
+          <View>
+            <ItemComplements
+              product={product}
+              selectedComplements={complements}
+              onComplementToggle={(group, complement, selected) => {
+                if (!selected || helpers.canAddComplement(group, complements)) {
+                  if (selected) setComplements([...complements, complement]);
+                  else setComplements(complements.filter((c) => c.id !== complement.id));
+                }
+              }}
+            />
+            <HR style={{ marginTop: halfPadding }} />
             <View style={{ padding: 12 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Feather name="info" size={14} />
@@ -210,7 +210,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           </View>
         )}
       </ScrollView>
-      {business.status === 'open' ? (
+      {business.status === 'open' && business.enabled ? (
         <View>
           <HR />
           <PaddedView>

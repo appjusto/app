@@ -175,8 +175,12 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   }
   return (
     <KeyboardAwareScrollView
-      contentContainerStyle={{ ...screens.config }}
+      enableOnAndroid
+      enableAutomaticScroll
+      keyboardOpeningTime={0}
+      style={{ ...screens.config }}
       keyboardShouldPersistTaps="always"
+      contentContainerStyle={{ flexGrow: 1 }}
     >
       <PaddedView>
         <Text style={{ ...texts.xl, marginBottom: padding }}>{title}</Text>
@@ -191,8 +195,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
         ))}
         <Text
           style={{
-            ...texts.xl,
-            color: colors.grey700,
+            ...texts.sm,
             marginTop: 24,
             marginBottom: halfPadding,
           }}

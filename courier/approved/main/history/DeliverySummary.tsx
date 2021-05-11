@@ -51,8 +51,8 @@ export default function ({ navigation, route }: Props) {
       <OrderMap order={order} ratio={360 / 160} />
       <ScrollView>
         <PaddedView>
-          <PlaceSummary title={t('Retirada')} place={order.origin} />
-          <PlaceSummary title={t('Entrega')} place={order.destination} />
+          <PlaceSummary title={t('Retirada')} place={order.origin!} />
+          <PlaceSummary title={t('Entrega')} place={order.destination!} />
           <View style={{ marginTop: halfPadding }}>
             <RoundedText>
               {separateWithDot(
