@@ -81,10 +81,12 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
           );
         }}
       />
-      <TouchableOpacity onPress={() => navigation.navigate('FoodOrderCheckout')}>
-        <HR />
-        <CartButton order={activeOrder} />
-      </TouchableOpacity>
+      {restaurant.status === 'open' && restaurant.enabled ? (
+        <TouchableOpacity onPress={() => navigation.navigate('FoodOrderCheckout')}>
+          <HR />
+          <CartButton order={activeOrder} />
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 });

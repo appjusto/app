@@ -191,7 +191,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
             </View>
           </View>
         )}
-        {business.status === 'closed' && (
+        {(business.status === 'closed' || !business.enabled) && (
           <View
             style={{
               margin: padding,
