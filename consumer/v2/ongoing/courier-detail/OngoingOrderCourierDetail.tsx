@@ -29,6 +29,7 @@ export const OngoingOrderCourierDetail = ({ navigation, route }: Props) => {
   const { orderId } = route.params ?? {};
   //context
   const { order } = useObserveOrder(orderId);
+  // const order = useObserveOrder(orderId);
   // UI
   if (!order) {
     // showing the indicator until the order is loaded

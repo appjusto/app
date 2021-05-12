@@ -40,6 +40,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
   const busy = useSelector(getUIBusy);
   // screen state
   const { order } = useObserveOrder(orderId);
+  // const order = useObserveOrder(orderId);
   // UI
   if (!order) {
     // showing the indicator until the order is loaded

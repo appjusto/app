@@ -47,6 +47,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   // state
   const { order } = useObserveOrder(orderId);
+  // const order = useObserveOrder(orderId);
   const [isLoading, setLoading] = React.useState(false);
   const [name, setName] = React.useState('');
   const [description, setDescription] = React.useState('');

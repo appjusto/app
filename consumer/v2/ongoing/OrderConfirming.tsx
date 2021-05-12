@@ -33,6 +33,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
   const { orderId, pixKey, total } = route.params;
   // screen state
   const { order } = useObserveOrder(orderId);
+  // const order = useObserveOrder(orderId);
   // side effects
   React.useEffect(() => {
     if (!order) return;

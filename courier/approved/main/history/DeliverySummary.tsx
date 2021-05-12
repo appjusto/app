@@ -33,6 +33,7 @@ export default function ({ navigation, route }: Props) {
   const { orderId } = route.params;
   // screen state
   const { order } = useObserveOrder(orderId);
+  // const order = useObserveOrder(orderId);
   // side effects
   // tracking
   useSegmentScreen('Delivery Summary');

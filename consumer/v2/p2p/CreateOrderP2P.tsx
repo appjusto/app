@@ -38,6 +38,7 @@ export default function ({ navigation, route }: Props) {
   // state
   const [orderId, setOrderId] = React.useState<string>();
   const { order } = useObserveOrder(orderId);
+  // const order = useObserveOrder(orderId);
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
     consumer.paymentChannel?.mostRecentPaymentMethodId
   );

@@ -47,12 +47,14 @@ export default function ({ navigation, route }: Props) {
   // screen state
   const [seenCodeInfo, setSeenCodeInfo] = React.useState(false);
   const { order } = useObserveOrder(orderId);
+  // const order = useObserveOrder(orderId);
   const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
     consumer!.notificationToken
   );
   // side effects
   // whenever params changes
   // open chat if there's a new message
+  // TO-DO: get counterPartId. maybe use a new hook?!
   React.useEffect(() => {
     if (newMessage) {
       setTimeout(() => {
@@ -92,6 +94,8 @@ export default function ({ navigation, route }: Props) {
   }
   // handlers
   const openChatHandler = () => navigation.navigate('OngoingOrderChat', { orderId });
+  // const openChatHandler = () =>
+  // navigation.navigate('OngoingOrderChat', { orderId, counterpartId: order.courier!.id });
   const navigateToReportIssue = () =>
     navigation.navigate('ReportIssue', {
       orderId: order.id,

@@ -46,6 +46,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
   const consumer = useSelector(getConsumer)!;
   // state
   const { order } = useObserveOrder(orderId);
+  // const order = useObserveOrder(orderId);
   // screen state
   const [cpfKey, setCpfKey] = React.useState(false);
   const [pixKey, setPixKey] = React.useState('');
