@@ -83,7 +83,7 @@ export default function ({ navigation, route }: Props) {
   }, [order]);
 
   // UI
-  if (!order) {
+  if (!order?.dispatchingState) {
     // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
@@ -138,7 +138,6 @@ export default function ({ navigation, route }: Props) {
     }
     return '';
   })();
-
   return (
     <ScrollView style={{ ...screens.default, paddingBottom: padding }}>
       <KeyboardAvoidingView
