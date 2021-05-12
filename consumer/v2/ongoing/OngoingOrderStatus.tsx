@@ -13,8 +13,11 @@ interface Props {
 }
 
 export const OngoingOrderStatus = ({ order }: Props) => {
-  let header = t('Pedido confirmado!');
-  let description = t('O restaurante já está com seu pedido e em breve iniciará o preparo.');
+  let header = t('Pedido aprovado!');
+  let description =
+    order.type === 'food'
+      ? t('O restaurante já está com seu pedido e em breve iniciará o preparo.')
+      : t('Aguarde enquanto procuramos um entregador para você.');
   if (order.status === 'preparing') {
     header = t('Pedido em preparo');
     description = t(
@@ -41,18 +44,16 @@ export const OngoingOrderStatus = ({ order }: Props) => {
         <IconOngoingRequest />
       )}
       <Text style={{ marginTop: padding, ...texts.xl }}>{header}</Text>
-      {order.type === 'food' && (
-        <Text
-          style={{
-            ...texts.md,
-            color: colors.grey700,
-            textAlign: 'center',
-            marginTop: halfPadding,
-          }}
-        >
-          {description}
-        </Text>
-      )}
+      <Text
+        style={{
+          ...texts.md,
+          color: colors.grey700,
+          textAlign: 'center',
+          marginTop: halfPadding,
+        }}
+      >
+        {description}
+      </Text>
       {order.destination?.estimatedTimeOfArrival &&
         order.dispatchingState !== 'arrived-destination' && (
           <View style={{ marginBottom: 8, marginTop: padding }}>
