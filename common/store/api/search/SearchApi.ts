@@ -30,7 +30,8 @@ export default class SearchApi {
   }
 
   private createFilters(kind: SearchKind, filters?: SearchFilter[]) {
-    const businessEnabledFilter = kind === 'restaurant' ? 'enabled:true' : 'business.enabled:true';
+    const businessEnabledFilter =
+      kind === 'restaurant' ? 'enabled:true' : '(enabled: true AND business.enabled:true)';
     if (!filters || filters.length === 0) return businessEnabledFilter;
     return (
       businessEnabledFilter +
