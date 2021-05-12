@@ -22,6 +22,7 @@ import { formatTime } from '../utils/formatters';
 export type ChatParamList = {
   Chat: {
     orderId: string;
+    // counterpartId: string;
   };
 };
 
@@ -34,6 +35,7 @@ type Props = {
 export default function ({ route }: Props) {
   // params
   const { orderId } = route.params;
+  // const { orderId, counterpartId } = route.params;
   // context
   const api = React.useContext(ApiContext);
   const queryClient = useQueryClient();
@@ -42,6 +44,8 @@ export default function ({ route }: Props) {
   const user = useSelector(getUser)!;
   // screen state
   const { order, chat } = useObserveOrder(orderId);
+  // const order = useObserveOrder(orderId);
+  // const chat = useObserveOrderChat(orderId, user.uid, counterpartId);
 
   const [inputText, setInputText] = React.useState('');
   const groupedMessages = React.useMemo(() => groupOrderChatMessages(chat ?? []), [chat]);
@@ -55,6 +59,18 @@ export default function ({ route }: Props) {
         (notifications ?? []).map((n) => (n.data.orderId === orderId ? { ...n, read: true } : n))
     );
   }, [chat, orderId]);
+
+  // useSegmentScreen('Chat');
+  // React.useEffect(() => {
+  //   queryClient.setQueryData(
+  //     ['notifications', 'order-chat'],
+  //     (notifications: PushMessage[] | undefined) =>
+  //       (notifications ?? []).map((n) =>
+  //         n.data.orderId === orderId && n.data.from === counterpartId ? { ...n, read: true } : n
+  //       )
+  //   );
+  // }, [chat, queryClient, counterpartId, orderId]);
+  // console.log(chat);
 
   // UI
   if (!order) {

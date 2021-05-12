@@ -24,3 +24,18 @@ export default function (orderId: string | undefined) {
 
   return { order, chat };
 }
+
+// export const useObserveOrder = (orderId: string | undefined) => {
+//   // context
+//   const api = React.useContext(ApiContext);
+//   // app state
+//   const [order, setOrder] = React.useState<WithId<Order>>();
+//   // side effects
+//   // observe order
+//   React.useEffect(() => {
+//     if (!orderId) return;
+//     return api.order().observeOrder(orderId, setOrder);
+//   }, [api, orderId]);
+//   // result
+//   return order;
+// };

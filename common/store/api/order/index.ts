@@ -142,6 +142,24 @@ export default class OrderApi {
     // returns the unsubscribe function
     return unsubscribe;
   }
+  // observeOrderChat(
+  //   orderId: string,
+  //   userId: string,
+  //   counterpartId: string,
+  //   resultHandler: (orders: WithId<ChatMessage>[]) => void
+  // ): firebase.Unsubscribe {
+  //   const unsubscribe = this.refs
+  //     .getOrderChatRef(orderId)
+  //     .where('from', '==', userId)
+  //     .where('to', '==', counterpartId)
+  //     .orderBy('timestamp', 'asc')
+  //     .onSnapshot(
+  //       (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
+  //       (error) => console.error(error)
+  //     );
+  //   // returns the unsubscribe function
+  //   return unsubscribe;
+  // }
 
   async sendMessage(orderId: string, message: Partial<ChatMessage>) {
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
