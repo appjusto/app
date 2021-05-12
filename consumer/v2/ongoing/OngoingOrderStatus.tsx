@@ -28,9 +28,13 @@ export const OngoingOrderStatus = ({ order }: Props) => {
     header = t('Pronto para entrega');
     description = t('Estamos aguardando o entregador pegar o seu pedido e levá-lo até você.');
   }
-  if (order.status === 'dispatching') {
-    header = t('Saiu para entrega');
-    description = t('Já pode se preparar! O entregador saiu e está levando o pedido até você. ');
+  if (order.status === 'dispatching' && order.dispatchingState !== 'arrived-destination') {
+    header =
+      order.dispatchingState === 'going-pickup' ? t('Entrega iniciada') : t('Saiu para entrega');
+    description =
+      order.dispatchingState === 'going-pickup'
+        ? t('O entregador já está indo pegar o pedido.')
+        : t('Já pode se preparar! O entregador saiu e está levando o pedido até você. ');
   }
   if (order.status === 'dispatching' && order.dispatchingState === 'arrived-destination') {
     header = t('Entregador chegou no local');
