@@ -77,7 +77,10 @@ export const OrderSummary = ({
 
   // handlers
   const getOrderQuotesHandler = React.useCallback(async () => {
-    if (!order.origin?.location || !order.route) return;
+    if (!order.origin?.location || !order.route?.distance) {
+      if (order.route?.issue) dispatch(showToast(order.route.issue, 'error'));
+      return;
+    }
     (async () => {
       setQuotes(undefined);
       try {
@@ -86,7 +89,7 @@ export const OrderSummary = ({
         dispatch(showToast(error.toString(), 'error'));
       }
     })();
-  }, [order]);
+  }, [order, dispatch, api]);
 
   // UI
   return (
