@@ -5,6 +5,7 @@ import { ActivityIndicator, Image, Text, View } from 'react-native';
 import * as icons from '../../../assets/icons';
 import { ApiContext } from '../../../common/app/context';
 import PaddedView from '../../../common/components/containers/PaddedView';
+import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../common/utils/formatters';
@@ -35,6 +36,7 @@ export default function ({ navigation, route }: Props) {
   // side effects
   // tracking
   useSegmentScreen('Matching');
+  const tallerDevice = useTallerDevice();
   // UI
   if (isLoading)
     return (
@@ -153,7 +155,7 @@ export default function ({ navigation, route }: Props) {
         <AcceptControl
           onAccept={acceptHandler}
           onReject={rejectHandler}
-          style={{ marginBottom: padding * 4 }}
+          style={{ marginBottom: tallerDevice ? padding * 4 : padding }}
         />
       </PaddedView>
     </View>

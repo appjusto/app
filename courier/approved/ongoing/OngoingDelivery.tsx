@@ -83,7 +83,7 @@ export default function ({ navigation, route }: Props) {
   }, [order]);
 
   // UI
-  if (!order) {
+  if (!order?.dispatchingState) {
     // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
@@ -110,7 +110,8 @@ export default function ({ navigation, route }: Props) {
   };
   const { type, dispatchingState, status } = order;
   const nextStepDisabled =
-    isLoading || (type === 'food' && dispatchingState === 'arrived-pickup' && status === 'ready');
+    isLoading ||
+    (type === 'food' && dispatchingState === 'arrived-pickup' && status !== 'dispatching');
   const nextStepLabel = (() => {
     const dispatchingState = order?.dispatchingState;
     if (!dispatchingState || dispatchingState === 'going-pickup') {
@@ -137,7 +138,6 @@ export default function ({ navigation, route }: Props) {
     }
     return '';
   })();
-
   return (
     <ScrollView style={{ ...screens.default, paddingBottom: padding }}>
       <KeyboardAvoidingView

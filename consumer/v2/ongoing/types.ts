@@ -1,4 +1,5 @@
 import { ReportIssueParamList } from '../../../common/screens/ReportIssue';
+import { OrderCanceledParamList } from '../../../courier/approved/ongoing/OrderCanceled';
 
 export type OngoingOrderNavigatorParamList = {
   OngoingOrderConfirming: {
@@ -28,4 +29,5 @@ export type OngoingOrderNavigatorParamList = {
   OngoingOrderChat: {
     orderId: string;
   };
-} & ReportIssueParamList;
+} & ReportIssueParamList &
+  OrderCanceledParamList;

@@ -47,7 +47,6 @@ export default function ({ navigation, route }: Props) {
   const consumer = useSelector(getConsumer)!;
   const isProfileComplete = isConsumerProfileComplete(consumer);
   // state
-  const [email, setEmail] = React.useState<string>(consumer.email ?? '');
   const [name, setName] = React.useState<string>(consumer.name ?? '');
   const [surname, setSurname] = React.useState(consumer.surname ?? '');
   const [cpf, setCpf] = React.useState(consumer.cpf! ?? '');
@@ -101,17 +100,7 @@ export default function ({ navigation, route }: Props) {
         </Text>
 
         <PaddedView>
-          <DefaultInput
-            title={t('E-mail')}
-            placeholder={t('Digite seu e-mail')}
-            value={email}
-            returnKeyType="next"
-            blurOnSubmit={false}
-            onChangeText={(text) => setEmail(text)}
-            onSubmitEditing={() => nameRef.current?.focus()}
-            keyboardType="default"
-            editable={false}
-          />
+          <DefaultInput title={t('E-mail')} value={consumer.email} editable={false} />
           <DefaultInput
             ref={nameRef}
             style={{ marginTop: padding }}

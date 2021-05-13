@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -199,12 +200,14 @@ export const AddressComplete = ({ navigation, route }: Props) => {
         )}
         SectionSeparatorComponent={() => <View style={{ height: padding }} />}
       />
-      <DefaultButton
-        title={t('Confirmar endereço')}
-        onPress={completeHandler}
-        activityIndicator={isLoading}
-        disabled={isLoading || !selectedAddress}
-      />
+      <SafeAreaView>
+        <DefaultButton
+          title={t('Confirmar endereço')}
+          onPress={completeHandler}
+          activityIndicator={isLoading}
+          disabled={isLoading || !selectedAddress}
+        />
+      </SafeAreaView>
     </PaddedView>
   );
 };

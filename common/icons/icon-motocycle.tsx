@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Svg, { Circle, Color, Path, SvgProps } from 'react-native-svg';
+import useTallerDevice from '../hooks/useTallerDevice';
 import { colors } from '../styles';
 
 interface Props extends SvgProps {
@@ -16,14 +17,15 @@ export const IconMotocycle = ({
   const originalWidth = 115;
   const originalHeight = 114;
   const { width = originalWidth, height = originalHeight } = props;
+  const tallerDevice = useTallerDevice();
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       style={[style, flipped ? { transform: [{ scaleX: -1 }] } : null]}
       viewBox={`0 0 ${originalWidth} ${originalHeight}`}
-      width={width}
-      height={height}
+      width={tallerDevice ? width : 99}
+      height={tallerDevice ? height : 98}
       {...props}
     >
       <Circle cx={57} cy={57} r={57} fill={circleColor} />
