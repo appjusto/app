@@ -25,7 +25,7 @@ import { courierInfoSet } from '../../../../common/store/courier/validators';
 import { showToast } from '../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../common/store/user/actions';
-import { colors, padding, screens, texts } from '../../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { CourierProfileParamList } from './types';
 
@@ -72,8 +72,31 @@ export default function ({ navigation, route }: Props) {
   // UI
   return (
     <KeyboardAvoidingView style={{ ...screens.config }}>
+      <Text
+        style={{
+          ...texts.x2l,
+          paddingHorizontal: padding,
+          paddingTop: padding,
+          paddingBottom: halfPadding,
+        }}
+      >
+        {t('Seus dados')}
+      </Text>
+
+      <Text
+        style={{
+          ...texts.sm,
+          paddingHorizontal: padding,
+          color: colors.grey700,
+          paddingBottom: padding,
+        }}
+      >
+        {t('Edite seus dados pessoais:')}
+      </Text>
       <PaddedView style={{ flex: 1 }}>
+        <DefaultInput title={t('E-mail')} value={courier.email} editable={false} />
         <DefaultInput
+          style={{ marginTop: padding }}
           title={t('Nome')}
           placeholder={t('Digite seu nome')}
           value={name}

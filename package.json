@@ -1,5 +1,5 @@
 {
-  "version": "0.19.10",
+  "version": "1.0.0",
   "license": "Apache-2.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -14,10 +14,12 @@
     "start-consumer:dev": "ENV=dev npm run start-consumer",
     "start-consumer:local": "ENV=dev FIREBASE_EMULATOR=true npm run start-consumer",
     "start-consumer:staging": "ENV=staging npm run start-consumer",
+    "start-consumer:live": "ENV=live npm run start-consumer",
     "start-courier": "FLAVOR=courier npm run start-env",
     "start-courier:dev": "ENV=dev npm run start-courier",
     "start-courier:local": "ENV=dev FIREBASE_EMULATOR=true npm run start-courier",
     "start-courier:staging": "ENV=staging npm run start-courier",
+    "start-courier:live": "ENV=live npm run start-courier",
     "inc-version": "node ./version-inc",
     "prepare-deploy": "git checkout $ENV && git pull && cp .$ENV.env .env",
     "deploy": "expo publish --release-channel $RELEASE_CHANNEL",

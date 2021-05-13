@@ -29,17 +29,25 @@ export default class SearchApi {
     this.fleets = this.client.initIndex(`${env}_fleets`);
   }
 
-  private createFilters(filters?: SearchFilter[]) {
-    return filters
-      ?.reduce<string[]>((result, filter) => {
-        if (filter.type === 'cuisine') {
-          return [...result, `cuisine: ${filter.value}`];
-        } else if (filter.type === 'classification') {
-          return [...result, `classifications: ${filter.value}`];
-        }
-        return result;
-      }, [])
-      .join(' OR ');
+  private createFilters(kind: SearchKind, filters?: SearchFilter[]) {
+    const businessEnabledFilter =
+      kind === 'restaurant' ? 'enabled:true' : '(enabled:true AND business.enabled:true)';
+    if (!filters || filters.length === 0) return businessEnabledFilter;
+    return (
+      businessEnabledFilter +
+      ' AND (' +
+      filters
+        .reduce<string[]>((result, filter) => {
+          if (filter.type === 'cuisine') {
+            return [...result, `cuisine:${filter.value}`];
+          } else if (filter.type === 'classification') {
+            return [...result, `classifications:${filter.value}`];
+          }
+          return result;
+        }, [])
+        .join(' OR ') +
+      ')'
+    );
   }
 
   private getSearchIndex(kind: SearchKind, order: SearchOrder) {
@@ -69,7 +77,7 @@ export default class SearchApi {
     if (!index) throw new Error('Invalid index');
     return index.search<T>(query, {
       aroundLatLng: `${aroundLocation.latitude}, ${aroundLocation.longitude}`,
-      filters: this.createFilters(filters),
+      filters: this.createFilters(kind, filters),
       page,
       hitsPerPage,
     });

@@ -1,5 +1,6 @@
 import { ChatParamList } from '../../../common/screens/Chat';
 import { ReportIssueParamList } from '../../../common/screens/ReportIssue';
+import { OrderCanceledParamList } from './OrderCanceled';
 
 export type OngoingDeliveryNavigatorParamList = {
   OngoingDelivery: {
@@ -11,9 +12,6 @@ export type OngoingDeliveryNavigatorParamList = {
     orderId: string;
     fee: number;
   };
-  OrderCanceled: {
-    orderId: string;
-  };
   CancelOngoingDelivery: {
     orderId: string;
   };
@@ -21,4 +19,5 @@ export type OngoingDeliveryNavigatorParamList = {
     orderId: string;
   };
 } & ChatParamList &
-  ReportIssueParamList;
+  ReportIssueParamList &
+  OrderCanceledParamList;

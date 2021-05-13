@@ -84,7 +84,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   // when product is loaded
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title: business.name ?? '',
+      title: business?.name ?? '',
     });
   }, [navigation, business]);
   // when editing order item
@@ -108,7 +108,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     setNotes(item.notes ?? '');
   }, [itemId, activeOrder, product]);
   // UI
-  if (!product) {
+  if (!product || !business) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -160,19 +160,19 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           </View>
         </View>
 
-        <ItemComplements
-          product={product}
-          selectedComplements={complements}
-          onComplementToggle={(group, complement, selected) => {
-            if (!selected || helpers.canAddComplement(group, complements)) {
-              if (selected) setComplements([...complements, complement]);
-              else setComplements(complements.filter((c) => c.id !== complement.id));
-            }
-          }}
-        />
-        {business.status === 'open' && (
-          <View style={{ marginTop: halfPadding }}>
-            <HR />
+        {business.status === 'open' && business.enabled && (
+          <View>
+            <ItemComplements
+              product={product}
+              selectedComplements={complements}
+              onComplementToggle={(group, complement, selected) => {
+                if (!selected || helpers.canAddComplement(group, complements)) {
+                  if (selected) setComplements([...complements, complement]);
+                  else setComplements(complements.filter((c) => c.id !== complement.id));
+                }
+              }}
+            />
+            <HR style={{ marginTop: halfPadding }} />
             <View style={{ padding: 12 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Feather name="info" size={14} />
@@ -191,7 +191,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
             </View>
           </View>
         )}
-        {business.status === 'closed' && (
+        {(business.status === 'closed' || !business.enabled) && (
           <View
             style={{
               margin: padding,
@@ -210,7 +210,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           </View>
         )}
       </ScrollView>
-      {business.status === 'open' ? (
+      {business.status === 'open' && business.enabled ? (
         <View>
           <HR />
           <PaddedView>
