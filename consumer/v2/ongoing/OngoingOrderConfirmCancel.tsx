@@ -50,7 +50,6 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  console.log(order);
   const cancellationCharge =
     order.type === 'food'
       ? order.status === 'confirmed'
