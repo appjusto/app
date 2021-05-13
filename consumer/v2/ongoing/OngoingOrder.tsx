@@ -75,7 +75,7 @@ export default function ({ navigation, route }: Props) {
     if (order.status === 'delivered') {
       navigation.navigate('OngoingOrderFeedback', { orderId });
     } else if (order.status === 'canceled') {
-      navigation.navigate('OrderCanceled', { orderId });
+      navigation.replace('OrderCanceled', { orderId });
     } else if (order.dispatchingStatus === 'no-match') {
       navigation.navigate('OngoingOrderNoMatch', { orderId });
     }
