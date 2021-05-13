@@ -84,7 +84,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   // when product is loaded
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title: business.name ?? '',
+      title: business?.name ?? '',
     });
   }, [navigation, business]);
   // when editing order item
@@ -108,7 +108,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     setNotes(item.notes ?? '');
   }, [itemId, activeOrder, product]);
   // UI
-  if (!product) {
+  if (!product || !business) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />

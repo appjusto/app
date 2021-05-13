@@ -40,10 +40,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
     if (order.status === 'canceled') {
       navigation.replace('MainNavigator', { screen: 'Home' });
       // just p2p for now
-    } else if (
-      (order.type === 'p2p' && order.status === 'dispatching') ||
-      (order.type === 'food' && order.status === 'confirmed')
-    ) {
+    } else if (order.status === 'confirmed') {
       navigation.replace('OngoingOrder', {
         orderId,
       });

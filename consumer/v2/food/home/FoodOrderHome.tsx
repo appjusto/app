@@ -36,14 +36,11 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   const currentLocation = useSelector(getCurrentLocation);
   // state
   const [filters, setFilters] = React.useState<SearchFilter[]>([]);
-  const { results: restaurants, isLoading, fetchNextPage } = useSearch<BusinessAlgolia>(
-    true,
-    'restaurant',
-    'distance',
-    filters,
-    currentLocation,
-    ''
-  );
+  const {
+    results: restaurants,
+    isLoading,
+    fetchNextPage,
+  } = useSearch<BusinessAlgolia>(true, 'restaurant', 'distance', filters, currentLocation, '');
   // side effects
   React.useEffect(() => {
     if (place) {
