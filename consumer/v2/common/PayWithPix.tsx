@@ -10,7 +10,7 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import Pill from '../../../common/components/views/Pill';
 import { IconPixLogo } from '../../../common/icons/icon-pix-logo';
-import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens, texts } from '../../../common/styles';
@@ -45,8 +45,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
   // redux store
   const consumer = useSelector(getConsumer)!;
   // state
-  const { order } = useObserveOrder(orderId);
-  // const order = useObserveOrder(orderId);
+  const order = useObserveOrder(orderId);
   // screen state
   const [cpfKey, setCpfKey] = React.useState(false);
   const [pixKey, setPixKey] = React.useState('');

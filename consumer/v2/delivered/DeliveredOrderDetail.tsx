@@ -13,7 +13,7 @@ import Pill from '../../../common/components/views/Pill';
 import OrderMap from '../../../common/screens/orders/OrderMap';
 import PlaceSummary from '../../../common/screens/orders/summary/PlaceSummary';
 import { useCourierReview } from '../../../common/store/api/courier/hooks/useCourierReview';
-import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import {
@@ -46,8 +46,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // screen state
-  const { order } = useObserveOrder(orderId);
-  // const order = useObserveOrder(orderId);
+  const order = useObserveOrder(orderId);
   const [tip, setTip] = React.useState(0);
   const [reviewType, setReviewType] = React.useState<ReviewType>();
   const [comment, setComment] = React.useState('');

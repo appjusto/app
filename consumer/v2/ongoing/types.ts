@@ -28,6 +28,7 @@ export type OngoingOrderNavigatorParamList = {
   };
   OngoingOrderChat: {
     orderId: string;
+    counterpartId?: string;
   };
 } & ReportIssueParamList &
   OrderCanceledParamList;

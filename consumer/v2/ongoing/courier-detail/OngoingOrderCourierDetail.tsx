@@ -5,7 +5,7 @@ import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
-import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
+import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { LoggedNavigatorParamList } from '../../types';
@@ -28,8 +28,7 @@ export const OngoingOrderCourierDetail = ({ navigation, route }: Props) => {
   // params
   const { orderId } = route.params ?? {};
   //context
-  const { order } = useObserveOrder(orderId);
-  // const order = useObserveOrder(orderId);
+  const order = useObserveOrder(orderId);
   // UI
   if (!order) {
     // showing the indicator until the order is loaded
@@ -70,7 +69,12 @@ export const OngoingOrderCourierDetail = ({ navigation, route }: Props) => {
           <View style={{ flex: 7 }}>
             <DefaultButton
               title={t('Abrir chat')}
-              onPress={() => navigation.navigate('OngoingOrderChat', { orderId })}
+              onPress={() =>
+                navigation.navigate('OngoingOrderChat', {
+                  orderId,
+                  counterpartId: order.courier!.id,
+                })
+              }
             />
           </View>
           <View style={{ marginLeft: halfPadding, flex: 7 }}>

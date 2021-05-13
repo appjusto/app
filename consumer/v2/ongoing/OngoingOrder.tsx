@@ -11,7 +11,7 @@ import HR from '../../../common/components/views/HR';
 import useNotificationToken from '../../../common/hooks/useNotificationToken';
 import { StatusAndMessages } from '../../../common/screens/orders/ongoing/StatusAndMessages';
 import OrderMap from '../../../common/screens/orders/OrderMap';
-import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { updateProfile } from '../../../common/store/user/actions';
 import { colors, padding, screens } from '../../../common/styles';
@@ -46,8 +46,7 @@ export default function ({ navigation, route }: Props) {
   const consumer = useSelector(getConsumer)!;
   // screen state
   const [seenCodeInfo, setSeenCodeInfo] = React.useState(false);
-  const { order } = useObserveOrder(orderId);
-  // const order = useObserveOrder(orderId);
+  const order = useObserveOrder(orderId);
   const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
     consumer!.notificationToken
   );
@@ -94,6 +93,10 @@ export default function ({ navigation, route }: Props) {
   }
   // handlers
   const openChatHandler = () => navigation.navigate('OngoingOrderChat', { orderId });
+  const openChatWithCourier = () =>
+    navigation.navigate('OngoingOrderChat', { orderId, counterpartId: order.courier!.id });
+  const openChatWithRestaurant = () =>
+    navigation.navigate('OngoingOrderChat', { orderId, counterpartId: order.business!.id });
   // const openChatHandler = () =>
   // navigation.navigate('OngoingOrderChat', { orderId, counterpartId: order.courier!.id });
   const navigateToReportIssue = () =>
@@ -112,6 +115,8 @@ export default function ({ navigation, route }: Props) {
         orderId,
       },
     });
+
+  console.log(orderId);
 
   // ongoing UI
   const { dispatchingState } = order;
@@ -134,7 +139,7 @@ export default function ({ navigation, route }: Props) {
           <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
           <DefaultButton
             title={t('Abrir chat com o entregador')}
-            onPress={openChatHandler}
+            onPress={openChatWithCourier}
             style={{ marginHorizontal: padding, marginBottom: padding }}
           />
 
@@ -168,7 +173,7 @@ export default function ({ navigation, route }: Props) {
               <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
               <DefaultButton
                 title={t('Abrir chat com o entregador')}
-                onPress={openChatHandler}
+                onPress={openChatWithCourier}
                 style={{ marginHorizontal: padding, marginBottom: padding }}
               />
               <HR />

@@ -13,7 +13,7 @@ import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/Cou
 import { StatusAndMessages } from '../../../common/screens/orders/ongoing/StatusAndMessages';
 import OrderMap from '../../../common/screens/orders/OrderMap';
 import { courierNextPlace } from '../../../common/store/api/order/helpers';
-import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
@@ -43,8 +43,7 @@ export default function ({ navigation, route }: Props) {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // screen state
-  const { order } = useObserveOrder(orderId);
-  // const order = useObserveOrder(orderId);
+  const order = useObserveOrder(orderId);
   const [code, setCode] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
   // side effects

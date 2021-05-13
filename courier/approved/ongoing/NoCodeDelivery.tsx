@@ -20,7 +20,7 @@ import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
-import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { showToast } from '../../../common/store/ui/actions';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -46,8 +46,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // state
-  const { order } = useObserveOrder(orderId);
-  // const order = useObserveOrder(orderId);
+  const order = useObserveOrder(orderId);
   const [isLoading, setLoading] = React.useState(false);
   const [name, setName] = React.useState('');
   const [description, setDescription] = React.useState('');

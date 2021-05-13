@@ -8,7 +8,7 @@ import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import FeedbackView from '../../../common/components/views/FeedbackView';
-import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import {
   colors,
@@ -39,8 +39,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
   // app state
   const busy = useSelector(getUIBusy);
   // screen state
-  const { order } = useObserveOrder(orderId);
-  // const order = useObserveOrder(orderId);
+  const order = useObserveOrder(orderId);
   // UI
   if (!order) {
     // showing the indicator until the order is loaded

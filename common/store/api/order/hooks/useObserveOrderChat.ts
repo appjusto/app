@@ -22,7 +22,9 @@ export const useObserveOrderChat = (orderId: string, userId: string, counterpart
       .observeOrderChat(orderId, counterpartId, userId, setChatFromCounterPart);
     return () => {
       chatUserCounterpart();
+      console.log('chat from user sent');
       chatCounterPartUser();
+      console.log('chat from counterpart sent');
     };
   }, [api, orderId, userId, counterpartId]);
   // result

@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
-import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, padding, screens } from '../../../common/styles';
 import { OngoingOrderNavigatorParamList } from '../../../consumer/v2/ongoing/types';
 import { t } from '../../../strings';
@@ -38,7 +38,7 @@ export default ({ navigation, route }: Props) => {
   // params
   const { orderId } = route.params;
   // screen state
-  const { order } = useObserveOrder(orderId);
+  const order = useObserveOrder(orderId);
   // UI
   if (!order) {
     return (
