@@ -56,9 +56,15 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   }, [order, navigation]);
   // uploads the consumer name in his first order
   React.useEffect(() => {
-    api.order().updateOrder(order!.id, {
-      consumer: { id: order!.consumer.id, name: consumer.name },
-    });
+    if (!order) return;
+    if (consumer.name !== order.consumer.name) {
+      api.order().updateOrder(order.id, {
+        consumer: {
+          ...order.consumer,
+          name: consumer.name,
+        },
+      });
+    }
   }, [consumer.name, order, api]);
 
   // handlers
