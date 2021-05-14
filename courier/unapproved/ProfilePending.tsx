@@ -23,7 +23,7 @@ import {
 } from '../../common/store/courier/validators';
 import { showToast } from '../../common/store/ui/actions';
 import { getUIBusy } from '../../common/store/ui/selectors';
-import { signOut, updateProfile } from '../../common/store/user/actions';
+import { updateProfile } from '../../common/store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../common/styles';
 import { t } from '../../strings';
 import { UnapprovedParamList } from './types';
@@ -134,7 +134,7 @@ export default function ({ navigation, route }: Props) {
         {
           text: t('Confirmar'),
           style: 'destructive',
-          onPress: () => signOut(api),
+          onPress: () => api.signOut(),
         },
       ]
     );
