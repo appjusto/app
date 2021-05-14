@@ -1,7 +1,6 @@
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { borders, colors, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 

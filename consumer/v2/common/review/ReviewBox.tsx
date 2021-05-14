@@ -1,8 +1,7 @@
 import { ReviewType } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { Text, TextInputProps, View } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { Text, TextInputProps, TouchableWithoutFeedback, View } from 'react-native';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import Pill from '../../../../common/components/views/Pill';

@@ -1,6 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, TouchableOpacity, View } from 'react-native';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import { IconPixLogo } from '../../../common/icons/icon-pix-logo';
