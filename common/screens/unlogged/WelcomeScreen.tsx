@@ -75,9 +75,8 @@ export default function ({ navigation, route }: Props) {
 
   const welcomeMessage =
     flavor === 'consumer'
-      ? t('Um delivery aberto, transparente e consciente.')
-      : t('Ganhe mais dinheiro e tenha mais controle do seu tempo.');
-
+      ? t('Um movimento por relações mais justas no delivery.')
+      : t('Ganhe mais, com autonomia e transparência.');
   // UI
   return (
     <SafeAreaView style={{ ...screens.default }}>
