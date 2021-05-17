@@ -42,9 +42,11 @@ export default ({ navigation }: Props) => {
             {t('Continue o acesso clicando no link enviado.')}
           </Text>
           <TouchableOpacity onPress={() => navigation.goBack()} style={{ alignItems: 'center' }}>
-            <Text style={{ marginTop: padding, ...texts.xs, color: colors.green600 }}>
-              {t('Não recebeu? Preencha seu e-mail novamente.')}
-            </Text>
+            <>
+              <Text style={{ marginTop: padding, ...texts.xs, color: colors.green600 }}>
+                {t('Não recebeu? Preencha seu e-mail novamente.')}
+              </Text>
+            </>
           </TouchableOpacity>
         </View>
       </View>

@@ -12,15 +12,17 @@ type Props = {
 export const FreshDeskCard = ({ onPress, onboarding }: Props) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <HomeCard
-        icon={<IconFwCourier />}
-        title={onboarding ? t('Central de Ajuda') : t('Como funciona o AppJusto')}
-        subtitle={
-          onboarding
-            ? t('Tire suas dúvidas sobre o AppJusto')
-            : t('Conheça as vantagens e entenda os benefícios que temos para você')
-        }
-      />
+      <>
+        <HomeCard
+          icon={<IconFwCourier />}
+          title={onboarding ? t('Central de Ajuda') : t('Como funciona o AppJusto')}
+          subtitle={
+            onboarding
+              ? t('Tire suas dúvidas sobre o AppJusto')
+              : t('Conheça as vantagens e entenda os benefícios que temos para você')
+          }
+        />
+      </>
     </TouchableOpacity>
   );
 };

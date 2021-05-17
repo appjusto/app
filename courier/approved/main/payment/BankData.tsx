@@ -53,9 +53,11 @@ export const BankData = ({ courier, navigateToProfileBank }: Props) => {
         </View>
         <HR />
         <TouchableOpacity style={{ paddingTop: 12 }} onPress={navigateToProfileBank}>
-          <Text style={{ ...texts.sm, color: colors.green600 }}>
-            {t('Alterar dados bancários')}
-          </Text>
+          <>
+            <Text style={{ ...texts.sm, color: colors.green600 }}>
+              {t('Alterar dados bancários')}
+            </Text>
+          </>
         </TouchableOpacity>
       </PaddedView>
     </View>

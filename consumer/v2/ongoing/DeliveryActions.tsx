@@ -36,7 +36,9 @@ export const DeliveryActions = ({
           </Text>
         </View>
         <TouchableOpacity onPress={onChangeRoute}>
-          <Text style={[texts.xs, { color: colors.green600 }]}>{t('Alterar')}</Text>
+          <>
+            <Text style={[texts.xs, { color: colors.green600 }]}>{t('Alterar')}</Text>
+          </>
         </TouchableOpacity>
       </View>
       <View
