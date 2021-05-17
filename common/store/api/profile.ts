@@ -22,6 +22,7 @@ export default class ProfileApi {
     return this.firestore.collection(this.collectionName).doc(id);
   }
   private async createProfile(id: string) {
+    console.log(`Creating ${this.flavor} profile...`);
     await this.getProfileRef(id).set({
       situation: 'pending',
       email: this.auth.getEmail(),
