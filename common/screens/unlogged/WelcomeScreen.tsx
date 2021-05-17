@@ -90,31 +90,33 @@ export default function ({ navigation, route }: Props) {
       >
         <View style={{ flex: 1, paddingHorizontal: padding }}>
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <ShowIf test={tallerDevice && flavor === 'consumer'}>
-              {() => (
-                <View style={{ left: -12 }}>
-                  <IconIllustrationIntro />
-                </View>
-              )}
-            </ShowIf>
-            <ShowIf test={tallerDevice && flavor === 'courier'}>
-              {() => (
-                <View style={{ left: -12 }}>
-                  <IconMotoCycleBig />
-                </View>
-              )}
-            </ShowIf>
-            <View style={{ marginTop: 32 }}>
-              <IconLogoGreen />
-            </View>
-            <View style={{ marginTop: padding }}>
-              <Text style={[texts.x2l]}>{welcomeMessage}</Text>
-              <Text
-                style={[texts.sm, { color: colors.grey700, lineHeight: 21, marginTop: padding }]}
-              >
-                {t('Digite seu e-mail para entrar ou criar sua conta.')}
-              </Text>
-            </View>
+            <>
+              <ShowIf test={tallerDevice && flavor === 'consumer'}>
+                {() => (
+                  <View style={{ left: -12 }}>
+                    <IconIllustrationIntro />
+                  </View>
+                )}
+              </ShowIf>
+              <ShowIf test={tallerDevice && flavor === 'courier'}>
+                {() => (
+                  <View style={{ left: -12 }}>
+                    <IconMotoCycleBig />
+                  </View>
+                )}
+              </ShowIf>
+              <View style={{ marginTop: 32 }}>
+                <IconLogoGreen />
+              </View>
+              <View style={{ marginTop: padding }}>
+                <Text style={[texts.x2l]}>{welcomeMessage}</Text>
+                <Text
+                  style={[texts.sm, { color: colors.grey700, lineHeight: 21, marginTop: padding }]}
+                >
+                  {t('Digite seu e-mail para entrar ou criar sua conta.')}
+                </Text>
+              </View>
+            </>
           </TouchableWithoutFeedback>
 
           <View style={{ marginTop: padding }}>
