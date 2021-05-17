@@ -6,7 +6,6 @@ import { Alert, ScrollView, View } from 'react-native';
 import { ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import { useSegmentScreen } from '../../../../common/store/api/track';
-import { signOut } from '../../../../common/store/user/actions';
 import { screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
@@ -46,7 +45,7 @@ export default function ({ navigation }: Props) {
         {
           text: t('Confirmar'),
           style: 'destructive',
-          onPress: () => signOut(api),
+          onPress: () => api.signOut(),
         },
       ]
     );
