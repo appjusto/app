@@ -1,7 +1,6 @@
 import { Order, WithId } from '@appjusto/types';
 import React from 'react';
-import { Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, TouchableOpacity, View } from 'react-native';
 import RoundedProfileImg from '../../../common/components/icons/RoundedProfileImg';
 import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/CourierDistanceBadge';
 import { colors, padding, texts } from '../../../common/styles';

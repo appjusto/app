@@ -7,12 +7,13 @@ import {
   ActivityIndicator,
   Image,
   ImageURISource,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useMutation } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { box, house } from '../../../assets/icons';
