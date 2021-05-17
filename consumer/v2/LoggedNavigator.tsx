@@ -31,13 +31,14 @@ export const LoggedNavigator = () => {
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
   const consumer = useSelector(getConsumer);
+  const uid = user?.uid;
   // side effects
   // subscribe for profile changes
   React.useEffect(() => {
-    return dispatch(observeProfile(api)(flavor, user!.uid));
-  }, [dispatch, api, flavor, user]);
+    if (uid) return dispatch(observeProfile(api)(flavor, uid));
+  }, [dispatch, api, flavor, uid]);
   // subscribe for observing ongoing orders
-  const options = React.useMemo(() => ({ consumerId: user?.uid }), [user?.uid]);
+  const options = React.useMemo(() => ({ consumerId: uid }), [uid]);
   useObserveOngoingOrders(options);
   // UI
   if (consumer?.situation !== 'approved') {
