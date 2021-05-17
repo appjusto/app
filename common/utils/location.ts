@@ -1,6 +1,7 @@
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 import firebase from 'firebase';
+import * as Sentry from 'sentry-expo';
 import { t } from '../../strings';
 import { AppStore } from '../app/context';
 import Api from '../store/api/api';
@@ -33,22 +34,22 @@ interface LocationUpdateResult {
   locations: Location.LocationData[];
 }
 
-const locationTaskExecutor = (store: AppStore, api: Api): TaskManager.TaskManagerTaskExecutor => (
-  body: TaskManager.TaskManagerTaskBody
-) => {
-  if (body.error) {
-    // TODO: log `error.message`
-    return;
-  }
-  const result = body.data as LocationUpdateResult;
-  const [location] = result.locations;
-  const { latitude, longitude } = location.coords;
-  const coordinates = new firebase.firestore.GeoPoint(latitude, longitude);
+const locationTaskExecutor =
+  (store: AppStore, api: Api): TaskManager.TaskManagerTaskExecutor =>
+  (body: TaskManager.TaskManagerTaskBody) => {
+    if (body.error) {
+      Sentry.Native.captureException(body.error);
+      return;
+    }
+    const result = body.data as LocationUpdateResult;
+    const [location] = result.locations;
+    const { latitude, longitude } = location.coords;
+    const coordinates = new firebase.firestore.GeoPoint(latitude, longitude);
 
-  const state = store.getState();
-  const profile = getCourier(state) ?? getConsumer(state);
-  if (profile?.id) api.profile().updateLocation(profile.id, coordinates);
-};
+    const state = store.getState();
+    const profile = getCourier(state) ?? getConsumer(state);
+    if (profile?.id) api.profile().updateLocation(profile.id, coordinates);
+  };
 
 export const defineLocationUpdatesTask = (store: AppStore, api: Api) => {
   TaskManager.defineTask(TASK_FETCH_LOCATION, locationTaskExecutor(store, api));

@@ -38,6 +38,10 @@ export default class AuthApi {
     return userCredential.user;
   }
 
+  getUserId() {
+    return this.auth.currentUser?.uid;
+  }
+
   getEmail() {
     return this.auth.currentUser?.email;
   }

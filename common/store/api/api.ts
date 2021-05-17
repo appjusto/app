@@ -1,4 +1,5 @@
 // eslint-disable-next-line import/order
+import { CourierProfile, DeleteAccountPayload } from '@appjusto/types';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import 'firebase/functions';
@@ -53,14 +54,12 @@ export default class Api {
       this.functions.useFunctionsEmulator(extra.firebase.emulator.functionsURL);
     }
 
-    const collectionName = extra.flavor === 'consumer' ? 'consumers' : 'couriers';
-
     this._refs = new FirebaseRefs(this.functions, this.firestore);
     this._iugu = new IuguApi(extra.iugu.accountId, extra.environment !== 'live');
     this._files = new FilesApi(this.storage);
     this._auth = new AuthApi(this._refs, this.authentication, extra);
     this._platform = new PlatformApi(this._refs, this._files);
-    this._profile = new ProfileApi(this.firestore, this._auth, collectionName);
+    this._profile = new ProfileApi(this.firestore, this._auth, extra.flavor);
     this._courier = new CourierApi(this._refs, this._files);
     this._fleet = new FleetApi(this._refs);
     this._consumer = new ConsumerApi(this._refs, this._iugu);
@@ -112,5 +111,20 @@ export default class Api {
 
   search() {
     return this._search;
+  }
+
+  async signOut() {
+    const userId = this.auth().getUserId();
+    if (this.profile().flavor === 'courier' && userId) {
+      await this.profile().updateProfile(userId, {
+        status: 'unavailable',
+      } as Partial<CourierProfile>);
+    }
+    await this.auth().signOut();
+  }
+
+  async deleteAccount(payload: Partial<DeleteAccountPayload>) {
+    await this.auth().deleteAccount(payload);
+    await this.signOut();
   }
 }

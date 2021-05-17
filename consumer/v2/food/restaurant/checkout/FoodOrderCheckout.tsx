@@ -54,6 +54,19 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   React.useEffect(() => {
     if (order?.items?.length === 0) navigation.pop();
   }, [order, navigation]);
+  // uploads the consumer name in his first order
+  React.useEffect(() => {
+    if (!order) return;
+    if (consumer.name !== order.consumer.name) {
+      api.order().updateOrder(order.id, {
+        consumer: {
+          ...order.consumer,
+          name: consumer.name,
+        },
+      });
+    }
+  }, [consumer.name, order, api]);
+
   // handlers
   const placeOrderHandler = async (fleetId: string) => {
     if (!order) return;

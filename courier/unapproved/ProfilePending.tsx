@@ -3,8 +3,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import firebase from 'firebase';
 import React from 'react';
-import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Alert, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../common/app/context';
@@ -23,7 +22,7 @@ import {
 } from '../../common/store/courier/validators';
 import { showToast } from '../../common/store/ui/actions';
 import { getUIBusy } from '../../common/store/ui/selectors';
-import { signOut, updateProfile } from '../../common/store/user/actions';
+import { updateProfile } from '../../common/store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../common/styles';
 import { t } from '../../strings';
 import { UnapprovedParamList } from './types';
@@ -134,7 +133,7 @@ export default function ({ navigation, route }: Props) {
         {
           text: t('Confirmar'),
           style: 'destructive',
-          onPress: () => signOut(api),
+          onPress: () => api.signOut(),
         },
       ]
     );
