@@ -92,9 +92,9 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
 
   // const placeOrderHandler = () => {
   //   if (order.type === 'p2p') {
-  //     navigation.navigate('')
+  //     navigation.navigate('CreateOrderP2P', { orderId });
   //   }
-  // }
+  // };
 
   return (
     <View style={{ ...screens.default }}>
@@ -120,11 +120,11 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
             </RoundedText>
           </View>
         </PaddedView>
-        <HR height={padding} />
+        {/* <HR height={padding} /> */}
         {order.type === 'food' && (
           <View>
             <DeliveredItems order={order} />
-            <HR height={padding} />
+            {/* <HR height={padding} /> */}
           </View>
         )}
         {order.status !== 'canceled' ? (
@@ -188,11 +188,10 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
               />
             </PaddedView>
           </View>
-        ) : (
-          <PaddedView>
-            <DefaultButton title={t('Refazer pedido')} />
-          </PaddedView>
-        )}
+        ) : // <PaddedView>
+        //   <DefaultButton title={t('Refazer pedido')} onPress={placeOrderHandler} />
+        // </PaddedView>
+        null}
       </ScrollView>
     </View>
   );

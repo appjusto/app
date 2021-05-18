@@ -102,14 +102,12 @@ export default function ({ navigation, route }: Props) {
         },
       });
     } else if (status === 'canceled') {
-      if (type === 'p2p') {
-        navigation.navigate('DeliveredOrderNavigator', {
-          screen: 'DeliveredOrderDetail',
-          params: {
-            orderId,
-          },
-        });
-      }
+      navigation.navigate('DeliveredOrderNavigator', {
+        screen: 'DeliveredOrderDetail',
+        params: {
+          orderId,
+        },
+      });
     }
   };
   // UI
