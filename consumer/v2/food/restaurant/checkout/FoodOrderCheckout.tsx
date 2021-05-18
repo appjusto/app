@@ -57,7 +57,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   // uploads the consumer name in his first order
   React.useEffect(() => {
     if (!order) return;
-    if (consumer.name !== order.consumer.name) {
+    if (consumer.name && consumer.name !== order.consumer.name) {
       api.order().updateOrder(order.id, {
         consumer: {
           ...order.consumer,
