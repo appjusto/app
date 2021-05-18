@@ -56,12 +56,10 @@ export default function ({ navigation, route }: Props) {
   // TO-DO: get counterPartId. maybe use a new hook?!
   React.useEffect(() => {
     if (newMessage) {
-      setTimeout(() => {
-        navigation.setParams({ newMessage: false });
-        navigation.navigate('OngoingOrderChat', { orderId });
-      }, 100);
+      navigation.setParams({ newMessage: false });
+      openChatWithCourier(true);
     }
-  }, [navigation, newMessage, orderId]);
+  }, [navigation, newMessage]);
   // whenever notification token needs to be updated
   React.useEffect(() => {
     if (shouldDeleteToken || shouldUpdateToken) {
@@ -92,13 +90,16 @@ export default function ({ navigation, route }: Props) {
     );
   }
   // handlers
-  const openChatHandler = () => navigation.navigate('OngoingOrderChat', { orderId });
-  const openChatWithCourier = () =>
-    navigation.navigate('OngoingOrderChat', { orderId, counterpartId: order.courier!.id });
-  const openChatWithRestaurant = () =>
-    navigation.navigate('OngoingOrderChat', { orderId, counterpartId: order.business!.id });
-  // const openChatHandler = () =>
-  // navigation.navigate('OngoingOrderChat', { orderId, counterpartId: order.courier!.id });
+  const openChatWithCourier = (delayed?: boolean) => {
+    setTimeout(
+      () => {
+        navigation.navigate('OngoingOrderChat', { orderId, counterpartId: order.courier!.id });
+      },
+      delayed ? 100 : 0
+    );
+  };
+  // const openChatWithRestaurant = () =>
+  //   navigation.navigate('OngoingOrderChat', { orderId, counterpartId: order.business!.id });
   const navigateToReportIssue = () =>
     navigation.navigate('ReportIssue', {
       orderId: order.id,
@@ -139,7 +140,7 @@ export default function ({ navigation, route }: Props) {
           <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
           <DefaultButton
             title={t('Abrir chat com o entregador')}
-            onPress={openChatWithCourier}
+            onPress={() => openChatWithCourier()}
             style={{ marginHorizontal: padding, marginBottom: padding }}
           />
 
@@ -167,13 +168,13 @@ export default function ({ navigation, route }: Props) {
                 <StatusAndMessages
                   dispatchingState={dispatchingState}
                   orderId={orderId}
-                  onMessageReceived={openChatHandler}
+                  onMessageReceived={() => openChatWithCourier()}
                 />
               </View>
               <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
               <DefaultButton
                 title={t('Abrir chat com o entregador')}
-                onPress={openChatWithCourier}
+                onPress={() => openChatWithCourier()}
                 style={{ marginHorizontal: padding, marginBottom: padding }}
               />
               <HR />

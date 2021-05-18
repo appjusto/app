@@ -54,10 +54,8 @@ export default function ({ navigation, route }: Props) {
   React.useEffect(() => {
     if (newMessage) {
       // workaround to make sure chat is being shown; (it was not showing on Android devices during tests)
-      setTimeout(() => {
-        navigation.setParams({ newMessage: false });
-        navigation.navigate('Chat', { orderId });
-      }, 100);
+      navigation.setParams({ newMessage: false });
+      openChatWithConsumer(true);
     }
   }, [newMessage]);
   React.useEffect(() => {
@@ -108,6 +106,15 @@ export default function ({ navigation, route }: Props) {
       setLoading(false);
     })();
   };
+  const openChatWithConsumer = (delayed?: boolean) => {
+    setTimeout(
+      () => {
+        navigation.navigate('Chat', { orderId, counterpartId: order.consumer.id });
+      },
+      delayed ? 100 : 0
+    );
+  };
+  // UI
   const { type, dispatchingState, status } = order;
   const nextStepDisabled =
     isLoading ||
@@ -152,14 +159,14 @@ export default function ({ navigation, route }: Props) {
             <StatusAndMessages
               dispatchingState={dispatchingState}
               orderId={orderId}
-              onMessageReceived={() => navigation.navigate('Chat', { orderId })}
+              onMessageReceived={openChatWithConsumer}
             />
           </View>
         </View>
         <View style={{ marginTop: padding, paddingHorizontal: padding }}>
           <CourierDeliveryInfo
             order={order}
-            onChat={() => navigation.navigate('Chat', { orderId })}
+            onChat={openChatWithConsumer}
             onProblem={() =>
               navigation.navigate('ReportIssue', {
                 orderId,

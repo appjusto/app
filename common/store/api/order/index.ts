@@ -148,10 +148,11 @@ export default class OrderApi {
     counterpartId: string,
     resultHandler: (orders: WithId<ChatMessage>[]) => void
   ): firebase.Unsubscribe {
+    console.log('observeOrderChat', orderId, userId, counterpartId);
     const unsubscribe = this.refs
       .getOrderChatRef(orderId)
-      .where('from', '==', userId)
-      .where('to', '==', counterpartId)
+      .where('from.id', '==', userId)
+      .where('to.id', '==', counterpartId)
       .orderBy('timestamp', 'asc')
       .onSnapshot(
         (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
