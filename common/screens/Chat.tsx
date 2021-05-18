@@ -15,7 +15,6 @@ import { useObserveOrder } from '../store/api/order/hooks/useObserveOrder';
 import { useObserveOrderChat } from '../store/api/order/hooks/useObserveOrderChat';
 import { useSegmentScreen } from '../store/api/track';
 import { getFlavor } from '../store/config/selectors';
-import { groupOrderChatMessages } from '../store/order/selectors';
 import { getUser } from '../store/user/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../styles';
 import { formatTime } from '../utils/formatters';
@@ -44,23 +43,11 @@ export default function ({ route }: Props) {
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser)!;
   // screen state
-  // const { order, chat } = useObserveOrder(orderId);
   const order = useObserveOrder(orderId);
   const chat = useObserveOrderChat(orderId, user.uid, counterpartId!);
-
   const [inputText, setInputText] = React.useState('');
-  const groupedMessages = React.useMemo(() => groupOrderChatMessages(chat ?? []), [chat]);
   // side effects
   // tracking
-  // useSegmentScreen('Chat');
-  // React.useEffect(() => {
-  //   queryClient.setQueryData(
-  //     ['notifications', 'order-chat'],
-  //     (notifications: PushMessage[] | undefined) =>
-  //       (notifications ?? []).map((n) => (n.data.orderId === orderId ? { ...n, read: true } : n))
-  //   );
-  // }, [chat, orderId]);
-
   useSegmentScreen('Chat');
   React.useEffect(() => {
     queryClient.setQueryData(
@@ -96,10 +83,11 @@ export default function ({ route }: Props) {
     });
     setInputText('');
   };
-  const names = {
-    [order.courier!.id]: order.courier!.name,
-    [order.consumer!.id]: order.consumer!.name ?? t('Cliente'),
-    // [order.business!.id]: order.business!.name ?? t('Restaurante'),
+  const getName = (from: string) => {
+    if (from === order.consumer.id) return order.consumer.name ?? t('Cliente');
+    else if (from === order.courier?.id) return order.courier.name ?? t('Entregador');
+    else if (from === order.business?.id) return order.business.name ?? t('Restaurante');
+    else return 'Suporte';
   };
   return (
     <KeyboardAvoidingView
@@ -108,7 +96,7 @@ export default function ({ route }: Props) {
     >
       <FlatList
         keyboardShouldPersistTaps="never"
-        data={groupedMessages}
+        data={chat}
         keyExtractor={(item) => item.id}
         style={{ backgroundColor: colors.grey500 }}
         renderItem={({ item }) => (
@@ -125,7 +113,7 @@ export default function ({ route }: Props) {
                 id={item.from}
               />
               <View style={{ marginLeft: padding / 2 }}>
-                <Text style={[texts.md]}>{names[item.from]}</Text>
+                <Text style={[texts.md]}>{getName(item.from)}</Text>
               </View>
             </View>
             {item.messages.map((message: WithId<ChatMessage>) => (
