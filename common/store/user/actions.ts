@@ -31,17 +31,16 @@ export const observeAuthState = (api: Api) => (dispatch: AppDispatch) => {
   return unsubscribe;
 };
 
-export const signInWithEmail = (api: Api) => (email: string, environment: Environment) => async (
-  dispatch: AppDispatch
-) => {
-  try {
-    AsyncStorage.setItem('email', email);
-  } catch (error) {
-    console.log(error);
-    Sentry.Native.captureException(error);
-  }
-  return dispatch(awaitWithFeedback(api.auth().sendSignInLinkToEmail(email, environment)));
-};
+export const signInWithEmail =
+  (api: Api) => (email: string, environment: Environment) => async (dispatch: AppDispatch) => {
+    try {
+      AsyncStorage.setItem('email', email);
+    } catch (error) {
+      console.log(error);
+      Sentry.Native.captureException(error);
+    }
+    return dispatch(awaitWithFeedback(api.auth().sendSignInLinkToEmail(email, environment)));
+  };
 
 export const getSignInEmail = () => {
   try {
@@ -53,38 +52,34 @@ export const getSignInEmail = () => {
   }
 };
 
-export const isSignInWithEmailLink = (api: Api) => (link: string | null): boolean => {
-  return api.auth().isSignInWithEmailLink(link);
-};
+export const isSignInWithEmailLink =
+  (api: Api) =>
+  (link: string | null): boolean => {
+    return api.auth().isSignInWithEmailLink(link);
+  };
 
 export const signInWithEmailLink = (api: Api) => (email: string, link: string) => {
   return api.auth().signInWithEmailLink(email, link);
 };
 
-export const signOut = (api: Api) => {
-  return api.auth().signOut();
-};
-
-export const deleteAccount = (api: Api) => (payload: Partial<DeleteAccountPayload>) => async (
-  dispatch: AppDispatch
-) => {
-  await dispatch(awaitWithFeedback(api.auth().deleteAccount(payload)));
-  dispatch({ type: USER_LOGGED_OUT });
-};
+export const deleteAccount =
+  (api: Api) => (payload: Partial<DeleteAccountPayload>) => async (dispatch: AppDispatch) => {
+    await dispatch(awaitWithFeedback(api.deleteAccount(payload)));
+    dispatch({ type: USER_LOGGED_OUT });
+  };
 
 // watch for updates
-export const observeProfile = (api: Api) => (flavor: Flavor, id: string) => (
-  dispatch: AppDispatch
-) => {
-  return api.profile().observeProfile(id, (profile: WithId<UserProfile>): void => {
-    const actionType = flavor === 'consumer' ? CONSUMER_PROFILE_UPDATED : COURIER_PROFILE_UPDATED;
-    dispatch({ type: actionType, payload: profile });
-  });
-};
+export const observeProfile =
+  (api: Api) => (flavor: Flavor, id: string) => (dispatch: AppDispatch) => {
+    return api.profile().observeProfile(id, (profile: WithId<UserProfile>): void => {
+      const actionType = flavor === 'consumer' ? CONSUMER_PROFILE_UPDATED : COURIER_PROFILE_UPDATED;
+      dispatch({ type: actionType, payload: profile });
+    });
+  };
 
-export const updateProfile = (api: Api) => (
-  id: string,
-  changes: Partial<CourierProfile> | Partial<ConsumerProfile>
-) => async (dispatch: AppDispatch) => {
-  return dispatch(awaitWithFeedback(api.profile().updateProfile(id, changes)));
-};
+export const updateProfile =
+  (api: Api) =>
+  (id: string, changes: Partial<CourierProfile> | Partial<ConsumerProfile>) =>
+  async (dispatch: AppDispatch) => {
+    return dispatch(awaitWithFeedback(api.profile().updateProfile(id, changes)));
+  };

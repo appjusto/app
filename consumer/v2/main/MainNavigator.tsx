@@ -1,57 +1,19 @@
-import { PushMessage } from '@appjusto/types';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Image } from 'react-native';
-import { useQuery } from 'react-query';
 import * as icons from '../../../assets/icons';
 import { colors, texts } from '../../../common/styles';
 import { t } from '../../../strings';
-import { LoggedNavigatorParamList } from '../types';
 import OrderHistory from './history/OrderHistory';
 import Home from './home/Home';
 import Profile from './profile/Profile';
 import { MainNavigatorParamList } from './types';
-
-type ScreenNavigationProp = StackNavigationProp<LoggedNavigatorParamList, 'MainNavigator'>;
+import { useNotificationHandler } from './useNotificationHandler';
 
 const Tab = createBottomTabNavigator<MainNavigatorParamList>();
 
 export const MainNavigator = () => {
-  // context
-  const navigation = useNavigation<ScreenNavigationProp>();
-  // state
-  const chatQuery = useQuery<PushMessage[]>(['notifications', 'order-chat'], () => []);
-  const orderUpdateQuery = useQuery<PushMessage[]>(['notifications', 'order-update'], () => []);
-  // side effects
-  // react to order-chat
-  React.useEffect(() => {
-    if (!chatQuery.data || chatQuery.data.length === 0) return;
-    const [notification] = chatQuery.data;
-    if (notification.clicked) {
-      navigation.navigate('OngoingOrderNavigator', {
-        screen: 'OngoingOrder',
-        params: {
-          orderId: notification.data.orderId,
-          newMessage: true,
-        },
-      });
-    }
-  }, [chatQuery.data, navigation]);
-  // react to order-update
-  React.useEffect(() => {
-    if (!orderUpdateQuery.data || orderUpdateQuery.data.length === 0) return;
-    const [notification] = orderUpdateQuery.data;
-    if (notification.clicked) {
-      navigation.navigate('OngoingOrderNavigator', {
-        screen: 'OngoingOrder',
-        params: {
-          orderId: notification.data.orderId,
-        },
-      });
-    }
-  }, [orderUpdateQuery.data, navigation]);
+  useNotificationHandler();
   return (
     <Tab.Navigator
       tabBarOptions={{

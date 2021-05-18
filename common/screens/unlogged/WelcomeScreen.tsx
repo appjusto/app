@@ -1,8 +1,15 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useCallback, useContext, useState } from 'react';
-import { Dimensions, Keyboard, Platform, Text, TouchableOpacity, View } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import {
+  Dimensions,
+  Keyboard,
+  Platform,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
@@ -68,9 +75,8 @@ export default function ({ navigation, route }: Props) {
 
   const welcomeMessage =
     flavor === 'consumer'
-      ? t('Um delivery aberto, transparente e consciente.')
-      : t('Ganhe mais dinheiro e tenha mais controle do seu tempo.');
-
+      ? t('Um movimento por relações mais justas no delivery.')
+      : t('Ganhe mais, com autonomia e transparência.');
   // UI
   return (
     <SafeAreaView style={{ ...screens.default }}>
@@ -84,31 +90,33 @@ export default function ({ navigation, route }: Props) {
       >
         <View style={{ flex: 1, paddingHorizontal: padding }}>
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <ShowIf test={tallerDevice && flavor === 'consumer'}>
-              {() => (
-                <View style={{ left: -12 }}>
-                  <IconIllustrationIntro />
-                </View>
-              )}
-            </ShowIf>
-            <ShowIf test={tallerDevice && flavor === 'courier'}>
-              {() => (
-                <View style={{ left: -12 }}>
-                  <IconMotoCycleBig />
-                </View>
-              )}
-            </ShowIf>
-            <View style={{ marginTop: 32 }}>
-              <IconLogoGreen />
-            </View>
-            <View style={{ marginTop: padding }}>
-              <Text style={[texts.x2l]}>{welcomeMessage}</Text>
-              <Text
-                style={[texts.sm, { color: colors.grey700, lineHeight: 21, marginTop: padding }]}
-              >
-                {t('Digite seu e-mail para entrar ou criar sua conta.')}
-              </Text>
-            </View>
+            <>
+              <ShowIf test={tallerDevice && flavor === 'consumer'}>
+                {() => (
+                  <View style={{ left: -12 }}>
+                    <IconIllustrationIntro />
+                  </View>
+                )}
+              </ShowIf>
+              <ShowIf test={tallerDevice && flavor === 'courier'}>
+                {() => (
+                  <View style={{ left: -12 }}>
+                    <IconMotoCycleBig />
+                  </View>
+                )}
+              </ShowIf>
+              <View style={{ marginTop: 32 }}>
+                <IconLogoGreen />
+              </View>
+              <View style={{ marginTop: padding }}>
+                <Text style={[texts.x2l]}>{welcomeMessage}</Text>
+                <Text
+                  style={[texts.sm, { color: colors.grey700, lineHeight: 21, marginTop: padding }]}
+                >
+                  {t('Digite seu e-mail para entrar ou criar sua conta.')}
+                </Text>
+              </View>
+            </>
           </TouchableWithoutFeedback>
 
           <View style={{ marginTop: padding }}>

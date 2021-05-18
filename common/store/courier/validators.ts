@@ -33,8 +33,5 @@ export const companyInfoSet = (company: CourierCompany): boolean => {
   );
 };
 
-export const bankAccountSet = (bankAccount: BankAccount): boolean => {
-  return (
-    !isEmpty(bankAccount.name) && !isEmpty(bankAccount.agency) && !isEmpty(bankAccount.account)
-  );
-};
+export const bankAccountSet = ({ name, agency, account, personType, type }: BankAccount): boolean =>
+  !isEmpty(name) && !isEmpty(agency) && !isEmpty(account) && !isEmpty(personType) && !isEmpty(type);

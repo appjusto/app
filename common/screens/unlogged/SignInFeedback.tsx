@@ -1,8 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { t } from '../../../strings';
 import PaddedView from '../../components/containers/PaddedView';
 import useAuth, { AuthState } from '../../hooks/useAuth';
@@ -43,9 +42,11 @@ export default ({ navigation }: Props) => {
             {t('Continue o acesso clicando no link enviado.')}
           </Text>
           <TouchableOpacity onPress={() => navigation.goBack()} style={{ alignItems: 'center' }}>
-            <Text style={{ marginTop: padding, ...texts.xs, color: colors.green600 }}>
-              {t('Não recebeu? Preencha seu e-mail novamente.')}
-            </Text>
+            <>
+              <Text style={{ marginTop: padding, ...texts.xs, color: colors.green600 }}>
+                {t('Não recebeu? Preencha seu e-mail novamente.')}
+              </Text>
+            </>
           </TouchableOpacity>
         </View>
       </View>

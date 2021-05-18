@@ -11,28 +11,34 @@ export default function ({ children }: Props) {
   // context
   const queryClient = useQueryClient();
   // helpers
-  const add = React.useCallback((id: string, data: PushMessageData, clicked: boolean) => {
-    queryClient.setQueryData(
-      ['notifications', data.action],
-      (notifications: PushMessage[] | undefined) => [
-        ...(notifications ?? []),
-        { id, data, clicked },
-      ]
-    );
-  }, []);
+  const add = React.useCallback(
+    (id: string, data: PushMessageData, clicked: boolean) => {
+      queryClient.setQueryData(
+        ['notifications', data.action],
+        (notifications: PushMessage[] | undefined) => [
+          ...(notifications ?? []),
+          { id, data, clicked },
+        ]
+      );
+    },
+    [queryClient]
+  );
 
   // handlers
   // called whenever a notification is received while the app is running.
-  const receivedHandler = React.useCallback(async (notification: Notifications.Notification) => {
-    const { request } = notification;
-    const id = request.identifier;
-    // console.log('notification received (not clicked):', id);
-    const data = (request.content.data as unknown) as PushMessageData;
-    // add message to queryClient
-    add(id, data, false);
-    // dismiss notification if the app in running
-    // Notifications.dismissNotificationAsync(id);
-  }, []);
+  const receivedHandler = React.useCallback(
+    async (notification: Notifications.Notification) => {
+      const { request } = notification;
+      const id = request.identifier;
+      // console.log('notification received (not clicked):', id);
+      const data = request.content.data as unknown as PushMessageData;
+      // add message to queryClient
+      add(id, data, false);
+      // dismiss notification if the app in running
+      // Notifications.dismissNotificationAsync(id);
+    },
+    [add]
+  );
 
   // called whenever a user interacts with a notification (eg. taps on it).
   const responseReceivedHandler = React.useCallback(
@@ -41,7 +47,7 @@ export default function ({ children }: Props) {
       const { request } = notification;
       const id = request.identifier;
       // console.log('notification clicked:', id);
-      const data = (request.content.data as unknown) as PushMessageData;
+      const data = request.content.data as unknown as PushMessageData;
       // check if message was already added to the cache (it could happen if the app is in foreground and user clicks on the notification)
       const alreadyAdded =
         queryClient
@@ -66,29 +72,26 @@ export default function ({ children }: Props) {
         );
       }
       // dismiss all other notifications of this type
-      queryClient
-        .getQueryData<PushMessage[]>(['notifications', data.action])
-        ?.forEach((n) => {
-          if (n.id !== id) {
-            Notifications.dismissNotificationAsync(n.id);
-          }
-        });
+      queryClient.getQueryData<PushMessage[]>(['notifications', data.action])?.forEach((n) => {
+        if (n.id !== id) {
+          Notifications.dismissNotificationAsync(n.id);
+        }
+      });
     },
-    []
+    [add, queryClient]
   );
 
   // effects
   React.useEffect(() => {
     const subscription = Notifications.addNotificationReceivedListener(receivedHandler);
-    const responseSubscription = Notifications.addNotificationResponseReceivedListener(
-      responseReceivedHandler
-    );
+    const responseSubscription =
+      Notifications.addNotificationResponseReceivedListener(responseReceivedHandler);
 
     return () => {
       Notifications.removeNotificationSubscription(subscription);
       Notifications.removeNotificationSubscription(responseSubscription);
     };
-  }, []);
+  }, [receivedHandler, responseReceivedHandler]);
 
   return children as JSX.Element;
 }

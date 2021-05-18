@@ -1,4 +1,4 @@
-import { ConsumerProfile, CourierProfile, UserProfile, WithId } from '@appjusto/types';
+import { ConsumerProfile, CourierProfile, Flavor, UserProfile, WithId } from '@appjusto/types';
 import firebase from 'firebase';
 import * as geofirestore from 'geofirestore';
 import * as Sentry from 'sentry-expo';
@@ -7,12 +7,14 @@ import { documentAs } from './types';
 
 export default class ProfileApi {
   private firestoreWithGeo: geofirestore.GeoFirestore;
+  private collectionName: string;
   constructor(
     private firestore: firebase.firestore.Firestore,
     private auth: AuthApi,
-    private collectionName: string
+    public flavor: Flavor
   ) {
     this.firestoreWithGeo = geofirestore.initializeApp(this.firestore);
+    this.collectionName = this.flavor === 'consumer' ? 'consumers' : 'couriers';
   }
 
   // private helpers
@@ -20,6 +22,7 @@ export default class ProfileApi {
     return this.firestore.collection(this.collectionName).doc(id);
   }
   private async createProfile(id: string) {
+    console.log(`Creating ${this.flavor} profile...`);
     await this.getProfileRef(id).set({
       situation: 'pending',
       email: this.auth.getEmail(),

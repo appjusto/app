@@ -1,8 +1,7 @@
 import { Order, OrderItem, WithId } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Modal, ModalProps, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Modal, ModalProps, Text, TouchableOpacity, View } from 'react-native';
 import { ApiContext } from '../../../../common/app/context';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
@@ -73,7 +72,6 @@ export const OrderItemModal = ({ item, order, onModalClose, onEditItemPress, ...
               </View>
             </TouchableOpacity>
           </View>
-
           <Text style={{ ...texts.xl }}>{item.product.name}</Text>
           {item.complements?.map((complement) => (
             <Text

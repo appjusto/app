@@ -8,6 +8,7 @@ import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
+import SingleHeader from '../../../common/components/texts/SingleHeader';
 import HR from '../../../common/components/views/HR';
 import Pill from '../../../common/components/views/Pill';
 import OrderMap from '../../../common/screens/orders/OrderMap';
@@ -89,10 +90,24 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
     setLoading(false);
   };
 
+  // const placeOrderHandler = () => {
+  //   if (order.type === 'p2p') {
+  //     navigation.navigate('CreateOrderP2P', { orderId });
+  //   }
+  // };
+
   return (
     <View style={{ ...screens.default }}>
       <ScrollView scrollIndicatorInsets={{ right: 1 }}>
         <OrderMap order={order} ratio={360 / 160} />
+        {order.status === 'canceled' ? (
+          <View>
+            <View style={{ paddingVertical: halfPadding }}>
+              <SingleHeader title={t('Pedido cancelado')} />
+            </View>
+            <HR height={padding} />
+          </View>
+        ) : null}
         <PaddedView>
           <PlaceSummary title={t('Retirada')} place={order.origin!} />
           <PlaceSummary title={t('Entrega')} place={order.destination!} />
@@ -105,71 +120,78 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
             </RoundedText>
           </View>
         </PaddedView>
-        <HR height={padding} />
+        {/* <HR height={padding} /> */}
         {order.type === 'food' && (
           <View>
             <DeliveredItems order={order} />
-            <HR height={padding} />
+            {/* <HR height={padding} /> */}
           </View>
         )}
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Pill />
-          <PaddedView
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <Text style={{ ...texts.md, ...texts.bold }}>{t('Total pago')}</Text>
-            <Text style={{ ...texts.xl }}>
-              {formatCurrency((order.fare?.consumer.total ?? 0) + (order.tip?.value ?? 0))}
-            </Text>
-          </PaddedView>
-        </View>
-        <HR height={padding} />
-        <PaddedView>
-          <OrderCostBreakdown order={order} selectedFare={order.fare} />
-        </PaddedView>
-        <HR height={padding} />
-        <ReviewBox
-          review={review?.type ?? reviewType}
-          comment={review?.comment ?? comment}
-          editable={!review}
-          focusable={!!review}
-          onReviewChange={(type) => setReviewType(type)}
-          onCommentChange={(value) => setComment(value)}
-        />
-        <DefaultButton
-          title={review?.type ? t('Avaliação enviada') : t('Avaliar entregador')}
-          onPress={reviewHandler}
-          style={{ margin: padding }}
-          activityIndicator={isLoading}
-          disabled={isLoading || !!review?.type}
-        />
-        <HR height={padding} />
-        <View>
-          <TipControl
-            order={order}
-            tip={tip}
-            onChange={(value) => setTip(value)}
-            onConfirm={tipHandler}
-          />
-        </View>
-        <HR height={padding} />
-        <PaddedView>
-          <DefaultButton
-            title={t('Relatar um problema')}
-            onPress={() =>
-              navigation.navigate('ReportIssue', {
-                orderId: order.id,
-                issueType: 'consumer-delivery-problem',
-              })
-            }
-            secondary
-          />
-        </PaddedView>
+        {order.status !== 'canceled' ? (
+          <View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Pill />
+              <PaddedView
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={{ ...texts.md, ...texts.bold }}>{t('Total pago')}</Text>
+                <Text style={{ ...texts.xl }}>
+                  {formatCurrency((order.fare?.consumer.total ?? 0) + (order.tip?.value ?? 0))}
+                </Text>
+              </PaddedView>
+            </View>
+            <HR height={padding} />
+            <PaddedView>
+              <OrderCostBreakdown order={order} selectedFare={order.fare} />
+            </PaddedView>
+            <HR height={padding} />
+            <ReviewBox
+              review={review?.type ?? reviewType}
+              comment={review?.comment ?? comment}
+              editable={!review}
+              focusable={!!review}
+              onReviewChange={(type) => setReviewType(type)}
+              onCommentChange={(value) => setComment(value)}
+            />
+            <DefaultButton
+              title={review?.type ? t('Avaliação enviada') : t('Avaliar entregador')}
+              onPress={reviewHandler}
+              style={{ margin: padding }}
+              activityIndicator={isLoading}
+              disabled={isLoading || !!review?.type}
+            />
+            <HR height={padding} />
+            <View>
+              <TipControl
+                order={order}
+                tip={tip}
+                onChange={(value) => setTip(value)}
+                onConfirm={tipHandler}
+              />
+            </View>
+            <HR height={padding} />
+            <PaddedView>
+              <DefaultButton
+                title={t('Relatar um problema')}
+                onPress={() =>
+                  navigation.navigate('ReportIssue', {
+                    orderId: order.id,
+                    issueType: 'consumer-delivery-problem',
+                  })
+                }
+                secondary
+              />
+            </PaddedView>
+          </View>
+        ) : // <PaddedView>
+        //   <DefaultButton title={t('Refazer pedido')} onPress={placeOrderHandler} />
+        // </PaddedView>
+        null}
       </ScrollView>
     </View>
   );

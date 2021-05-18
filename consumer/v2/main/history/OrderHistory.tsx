@@ -101,6 +101,13 @@ export default function ({ navigation, route }: Props) {
           orderId,
         },
       });
+    } else if (status === 'canceled') {
+      navigation.navigate('DeliveredOrderNavigator', {
+        screen: 'DeliveredOrderDetail',
+        params: {
+          orderId,
+        },
+      });
     }
   };
   // UI

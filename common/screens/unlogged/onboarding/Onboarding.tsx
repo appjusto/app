@@ -49,7 +49,7 @@ export const Onboarding = ({ navigation }: Props) => {
     } else {
       setLoading(true);
       try {
-        await api.profile().updateProfile(user.uid, { onboarded: true });
+        await api.profile().updateProfile(user.uid, { situation: 'pending', onboarded: true });
         if (flavor === 'courier') {
           navigation.replace('ProfilePending');
         } else {

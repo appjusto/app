@@ -5,7 +5,6 @@ import React, { useContext } from 'react';
 import { Alert, ScrollView, View } from 'react-native';
 import { ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
-import { signOut } from '../../../../common/store/user/actions';
 import { screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { LoggedNavigatorParamList } from '../../types';
@@ -43,7 +42,7 @@ export default function ({ navigation }: Props) {
         {
           text: t('Confirmar'),
           style: 'destructive',
-          onPress: () => signOut(api),
+          onPress: () => api.signOut(),
         },
       ]
     );

@@ -1,7 +1,6 @@
 import { Order, WithId } from '@appjusto/types';
 import React from 'react';
-import { Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, TouchableOpacity, View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { colors, padding, texts } from '../../../common/styles';
@@ -37,7 +36,9 @@ export const DeliveryActions = ({
           </Text>
         </View>
         <TouchableOpacity onPress={onChangeRoute}>
-          <Text style={[texts.xs, { color: colors.green600 }]}>{t('Alterar')}</Text>
+          <>
+            <Text style={[texts.xs, { color: colors.green600 }]}>{t('Alterar')}</Text>
+          </>
         </TouchableOpacity>
       </View>
       <View
