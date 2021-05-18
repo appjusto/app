@@ -101,6 +101,15 @@ export default function ({ navigation, route }: Props) {
           orderId,
         },
       });
+    } else if (status === 'canceled') {
+      if (type === 'p2p') {
+        navigation.navigate('DeliveredOrderNavigator', {
+          screen: 'DeliveredOrderDetail',
+          params: {
+            orderId,
+          },
+        });
+      }
     }
   };
   // UI
