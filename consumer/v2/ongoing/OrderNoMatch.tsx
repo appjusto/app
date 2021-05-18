@@ -2,11 +2,11 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Image } from 'react-native';
-import { useSelector } from 'react-redux';
+import * as Sentry from 'sentry-expo';
 import * as icons from '../../../assets/icons';
+import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
-import { getUIBusy } from '../../../common/store/ui/selectors';
 import { borders, colors, padding } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
@@ -24,10 +24,26 @@ type Props = {
 };
 
 export const OrderNoMatch = ({ navigation, route }: Props) => {
+  // context
+  const api = React.useContext(ApiContext);
   // params
-  // const { orderId } = route.params ?? {};
-  // redux
-  const busy = useSelector(getUIBusy);
+  const { orderId } = route.params ?? {};
+  // state
+  const [isLoading, setLoading] = React.useState(false);
+  // handlers
+  const tryAgainHandler = async () => {
+    try {
+      setLoading(true);
+      await api.order().updateOrder(orderId, { dispatchingStatus: 'matching' });
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(
+        'Error while trying to update order.dispatchingStatus from no-match to matching again'
+      );
+      Sentry.Native.captureException(error);
+    }
+  };
   // UI
   return (
     <FeedbackView
@@ -37,12 +53,11 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
       )}
       icon={<Image source={icons.coneYellow} />}
     >
-      {/* TODO: start matching again */}
       <DefaultButton
         title={t('Tentar novamente')}
-        onPress={() => null}
-        activityIndicator={busy}
-        disabled={busy}
+        onPress={tryAgainHandler}
+        activityIndicator={isLoading}
+        disabled={isLoading}
         style={{
           ...borders.default,
           marginBottom: padding,
