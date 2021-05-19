@@ -13,9 +13,10 @@ type Props = {
   modalVisible: boolean;
   onModalClose: () => void;
   order: Order;
+  onEditAddress?: () => void;
 };
 
-export const DestinationModal = ({ modalVisible, onModalClose, order }: Props) => {
+export const DestinationModal = ({ modalVisible, onModalClose, order, onEditAddress }: Props) => {
   return (
     <Modal transparent visible={modalVisible}>
       <View
@@ -50,7 +51,9 @@ export const DestinationModal = ({ modalVisible, onModalClose, order }: Props) =
             <Text style={{ ...texts.lg, marginTop: 4 }}>{t('Apto 14')}</Text>
           )}
           <View style={{ marginTop: 24 }}>
-            <RoundedText>{t('Editar endereço de entrega')}</RoundedText>
+            <TouchableOpacity onPress={onEditAddress}>
+              <RoundedText>{t('Editar endereço de entrega')}</RoundedText>
+            </TouchableOpacity>
           </View>
           <HR style={{ marginTop: 24 }} />
           <DefaultButton

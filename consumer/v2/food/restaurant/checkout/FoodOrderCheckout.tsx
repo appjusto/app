@@ -49,6 +49,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   React.useEffect(() => {
     if (order && route.params?.destination) {
       api.order().updateOrder(order.id, { destination: route.params.destination });
+      console.log('DESTINATION UPDATED');
     }
     if (route.params?.paymentMethodId) setSelectedPaymentMethodId(route.params?.paymentMethodId);
   }, [api, order, route.params]);
@@ -68,7 +69,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       });
     }
   }, [consumer.name, order, api]);
-
+  console.log(destinationModalVisible, 'MODALVISIBLE');
   // handlers
   const placeOrderHandler = async (fleetId: string) => {
     if (!order) return;
@@ -151,6 +152,13 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         modalVisible={destinationModalVisible}
         onModalClose={() => setDestinationModalVisible(!destinationModalVisible)}
         order={order}
+        onEditAddress={() => {
+          navigation.navigate('OrderDestination', {
+            returnScreen: 'FoodOrderCheckout',
+            returnParam: 'destination',
+          });
+          setDestinationModalVisible(!destinationModalVisible);
+        }}
       />
     </ScrollView>
   );
