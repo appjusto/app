@@ -1,10 +1,12 @@
 import { CompositeNavigationProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
+import { View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { useSegmentScreen } from '../../../common/store/api/track';
+import { padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import { MatchingParamList } from './types';
@@ -24,15 +26,18 @@ export default ({ navigation }: Props) => {
   useSegmentScreen('Matching Error');
   // UI
   return (
-    <FeedbackView
-      header={t('Esse pedido já foi aceito por outro entregador :(')}
-      icon={<IconConeYellow />}
-    >
-      <DefaultButton
-        title={t('Voltar para o início')}
-        onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
-        secondary
-      />
-    </FeedbackView>
+    <View style={{ ...screens.default }}>
+      <FeedbackView
+        header={t('Esse pedido já foi aceito por outro entregador :(')}
+        icon={<IconConeYellow />}
+      >
+        <DefaultButton
+          title={t('Voltar para o início')}
+          onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
+          secondary
+          style={{ marginBottom: padding }}
+        />
+      </FeedbackView>
+    </View>
   );
 };
