@@ -51,6 +51,7 @@ export const DestinationModal = ({ modalVisible, onModalClose }: Props) => {
           <DefaultButton
             style={{ marginTop: halfPadding, marginBottom: padding }}
             title={t('Confirmar endereço de entrega')}
+            onPress={onModalClose}
           />
         </PaddedView>
       </View>

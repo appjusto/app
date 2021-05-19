@@ -14,6 +14,7 @@ import { OrderSummary } from '../../../common/order-summary/OrderSummary';
 import { LoggedNavigatorParamList } from '../../../types';
 import { FoodOrderNavigatorParamList } from '../../types';
 import { RestaurantNavigatorParamList } from '../types';
+import { DestinationModal } from './DestinationModal';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<RestaurantNavigatorParamList, 'FoodOrderCheckout'>,
@@ -42,6 +43,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   );
   const [isLoading, setLoading] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
+  const [destinationModalVisible, setDestinationModalVisible] = React.useState(true);
   // side effects
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
@@ -144,6 +146,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           navigation.navigate('PayWithPix', { orderId: order.id!, total, fleetId })
         }
         navigateToAboutCharges={() => navigation.navigate('AboutCharges')}
+      />
+      <DestinationModal
+        modalVisible={destinationModalVisible}
+        onModalClose={() => setDestinationModalVisible(!destinationModalVisible)}
       />
     </ScrollView>
   );
