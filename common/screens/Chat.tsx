@@ -11,10 +11,10 @@ import DefaultButton from '../components/buttons/DefaultButton';
 import PaddedView from '../components/containers/PaddedView';
 import RoundedProfileImg from '../components/icons/RoundedProfileImg';
 import DefaultInput from '../components/inputs/DefaultInput';
-import useObserveOrder from '../store/api/order/hooks/useObserveOrder';
+import { useObserveOrder } from '../store/api/order/hooks/useObserveOrder';
+import { useObserveOrderChat } from '../store/api/order/hooks/useObserveOrderChat';
 import { useSegmentScreen } from '../store/api/track';
 import { getFlavor } from '../store/config/selectors';
-import { groupOrderChatMessages } from '../store/order/selectors';
 import { getUser } from '../store/user/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../styles';
 import { formatTime } from '../utils/formatters';
@@ -22,6 +22,8 @@ import { formatTime } from '../utils/formatters';
 export type ChatParamList = {
   Chat: {
     orderId: string;
+    counterpartId: string;
+    counterpartFlavor: Flavor;
   };
 };
 
@@ -33,7 +35,7 @@ type Props = {
 
 export default function ({ route }: Props) {
   // params
-  const { orderId } = route.params;
+  const { orderId, counterpartId, counterpartFlavor } = route.params;
   // context
   const api = React.useContext(ApiContext);
   const queryClient = useQueryClient();
@@ -41,10 +43,9 @@ export default function ({ route }: Props) {
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser)!;
   // screen state
-  const { order, chat } = useObserveOrder(orderId);
-
+  const order = useObserveOrder(orderId);
+  const chat = useObserveOrderChat(orderId, user.uid, counterpartId);
   const [inputText, setInputText] = React.useState('');
-  const groupedMessages = React.useMemo(() => groupOrderChatMessages(chat ?? []), [chat]);
   // side effects
   // tracking
   useSegmentScreen('Chat');
@@ -52,9 +53,12 @@ export default function ({ route }: Props) {
     queryClient.setQueryData(
       ['notifications', 'order-chat'],
       (notifications: PushMessage[] | undefined) =>
-        (notifications ?? []).map((n) => (n.data.orderId === orderId ? { ...n, read: true } : n))
+        (notifications ?? []).map((n) =>
+          n.data.orderId === orderId && n.data.from === counterpartId ? { ...n, read: true } : n
+        )
     );
-  }, [chat, orderId]);
+  }, [chat, queryClient, counterpartId, orderId]);
+  console.log(chat);
 
   // UI
   if (!order) {
@@ -69,8 +73,8 @@ export default function ({ route }: Props) {
   const sendMessageHandler = () => {
     if (!inputText) return;
     const to: { agent: Flavor; id: string } = {
-      agent: flavor === 'consumer' ? 'courier' : 'consumer',
-      id: user.uid === order?.consumer.id ? order?.courier?.id! : order?.consumer?.id!,
+      agent: counterpartFlavor,
+      id: counterpartId,
     };
     api.order().sendMessage(orderId, {
       from: { agent: flavor, id: user.uid },
@@ -79,9 +83,11 @@ export default function ({ route }: Props) {
     });
     setInputText('');
   };
-  const names = {
-    [order.courier!.id]: order.courier!.name,
-    [order.consumer!.id]: order.consumer!.name ?? t('Cliente'),
+  const getName = (from: string) => {
+    if (from === order.consumer.id) return order.consumer.name ?? t('Cliente');
+    else if (from === order.courier?.id) return order.courier.name ?? t('Entregador');
+    else if (from === order.business?.id) return order.business.name ?? t('Restaurante');
+    else return 'Suporte';
   };
   return (
     <KeyboardAvoidingView
@@ -90,7 +96,7 @@ export default function ({ route }: Props) {
     >
       <FlatList
         keyboardShouldPersistTaps="never"
-        data={groupedMessages}
+        data={chat}
         keyExtractor={(item) => item.id}
         style={{ backgroundColor: colors.grey500 }}
         renderItem={({ item }) => (
@@ -107,7 +113,7 @@ export default function ({ route }: Props) {
                 id={item.from}
               />
               <View style={{ marginLeft: padding / 2 }}>
-                <Text style={[texts.md]}>{names[item.from]}</Text>
+                <Text style={[texts.md]}>{getName(item.from)}</Text>
               </View>
             </View>
             {item.messages.map((message: WithId<ChatMessage>) => (

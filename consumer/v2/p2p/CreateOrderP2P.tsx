@@ -6,7 +6,7 @@ import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
-import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { isConsumerProfileComplete } from '../../../common/store/courier/validators';
 import { showToast } from '../../../common/store/ui/actions';
@@ -37,7 +37,7 @@ export default function ({ navigation, route }: Props) {
   const consumer = useSelector(getConsumer)!;
   // state
   const [orderId, setOrderId] = React.useState<string>();
-  const { order } = useObserveOrder(orderId);
+  const order = useObserveOrder(orderId);
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
     consumer.paymentChannel?.mostRecentPaymentMethodId
   );

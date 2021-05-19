@@ -11,7 +11,7 @@ import HR from '../../../common/components/views/HR';
 import useNotificationToken from '../../../common/hooks/useNotificationToken';
 import { StatusAndMessages } from '../../../common/screens/orders/ongoing/StatusAndMessages';
 import OrderMap from '../../../common/screens/orders/OrderMap';
-import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { updateProfile } from '../../../common/store/user/actions';
 import { colors, padding, screens } from '../../../common/styles';
@@ -46,21 +46,20 @@ export default function ({ navigation, route }: Props) {
   const consumer = useSelector(getConsumer)!;
   // screen state
   const [seenCodeInfo, setSeenCodeInfo] = React.useState(false);
-  const { order } = useObserveOrder(orderId);
+  const order = useObserveOrder(orderId);
   const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
     consumer!.notificationToken
   );
   // side effects
   // whenever params changes
   // open chat if there's a new message
+  // TO-DO: get counterPartId. maybe use a new hook?!
   React.useEffect(() => {
     if (newMessage) {
-      setTimeout(() => {
-        navigation.setParams({ newMessage: false });
-        navigation.navigate('OngoingOrderChat', { orderId });
-      }, 100);
+      navigation.setParams({ newMessage: false });
+      openChatWithCourier(true);
     }
-  }, [navigation, newMessage, orderId]);
+  }, [navigation, newMessage]);
   // whenever notification token needs to be updated
   React.useEffect(() => {
     if (shouldDeleteToken || shouldUpdateToken) {
@@ -91,7 +90,30 @@ export default function ({ navigation, route }: Props) {
     );
   }
   // handlers
-  const openChatHandler = () => navigation.navigate('OngoingOrderChat', { orderId });
+  const openChatWithCourier = (delayed?: boolean) => {
+    setTimeout(
+      () => {
+        navigation.navigate('OngoingOrderChat', {
+          orderId,
+          counterpartId: order.courier!.id,
+          counterpartFlavor: 'courier',
+        });
+      },
+      delayed ? 100 : 0
+    );
+  };
+  // const openChatWithRestaurant = (delayed?: boolean) => {
+  //   setTimeout(
+  //     () => {
+  //       navigation.navigate('OngoingOrderChat', {
+  //         orderId,
+  //         counterpartId: order.business!.id,
+  //         counterpartFlavor: 'business',
+  //       });
+  //     },
+  //     delayed ? 100 : 0
+  //   );
+  // };
   const navigateToReportIssue = () =>
     navigation.navigate('ReportIssue', {
       orderId: order.id,
@@ -108,6 +130,8 @@ export default function ({ navigation, route }: Props) {
         orderId,
       },
     });
+
+  console.log(orderId);
 
   // ongoing UI
   const { dispatchingState } = order;
@@ -130,7 +154,7 @@ export default function ({ navigation, route }: Props) {
           <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
           <DefaultButton
             title={t('Abrir chat com o entregador')}
-            onPress={openChatHandler}
+            onPress={() => openChatWithCourier()}
             style={{ marginHorizontal: padding, marginBottom: padding }}
           />
 
@@ -158,13 +182,13 @@ export default function ({ navigation, route }: Props) {
                 <StatusAndMessages
                   dispatchingState={dispatchingState}
                   orderId={orderId}
-                  onMessageReceived={openChatHandler}
+                  onMessageReceived={() => openChatWithCourier()}
                 />
               </View>
               <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
               <DefaultButton
                 title={t('Abrir chat com o entregador')}
-                onPress={openChatHandler}
+                onPress={() => openChatWithCourier()}
                 style={{ marginHorizontal: padding, marginBottom: padding }}
               />
               <HR />

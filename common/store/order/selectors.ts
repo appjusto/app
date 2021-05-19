@@ -1,8 +1,8 @@
-import { ChatMessage, Order, OrderStatus, WithId } from '@appjusto/types';
-import { first, memoize, uniq } from 'lodash';
+import { Order, OrderStatus, WithId } from '@appjusto/types';
+import { memoize, uniq } from 'lodash';
 import { createSelector } from 'reselect';
 import { State } from '..';
-import { GroupedChatMessages, OrderState } from './types';
+import { OrderState } from './types';
 
 export const getOrderState = (state: State): OrderState => state.order;
 
@@ -72,16 +72,3 @@ export const summarizeOrders = memoize((orders: WithId<Order>[]) =>
     { delivered: 0, ongoing: 0, courierFee: 0 }
   )
 );
-
-// chat messages
-
-export const groupOrderChatMessages = (messages: WithId<ChatMessage>[]) =>
-  messages.reduce<GroupedChatMessages[]>((groups, message) => {
-    const currentGroup = first(groups);
-    if (message.from.id === currentGroup?.from) {
-      currentGroup!.messages.push(message);
-      return groups;
-    }
-    // use as id for chat group the id of the first message of the group
-    return [{ id: message.id, from: message.from.id, messages: [message] }, ...groups];
-  }, []);

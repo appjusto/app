@@ -12,7 +12,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import HR from '../../../common/components/views/HR';
 import { useCourierReview } from '../../../common/store/api/courier/hooks/useCourierReview';
-import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -40,7 +40,7 @@ export default ({ navigation, route }: Props) => {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // screen state
-  const { order } = useObserveOrder(orderId);
+  const order = useObserveOrder(orderId);
   const [reviewType, setReviewType] = React.useState<ReviewType>();
   const review = useCourierReview(orderId, order?.courier?.id);
   const [comment, setComment] = React.useState('');

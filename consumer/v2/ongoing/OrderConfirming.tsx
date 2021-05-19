@@ -10,7 +10,7 @@ import FeedbackView from '../../../common/components/views/FeedbackView';
 import Pill from '../../../common/components/views/Pill';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import { IconPixLogo } from '../../../common/icons/icon-pix-logo';
-import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
@@ -32,7 +32,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
   // params
   const { orderId, pixKey, total } = route.params;
   // screen state
-  const { order } = useObserveOrder(orderId);
+  const order = useObserveOrder(orderId);
   // side effects
   React.useEffect(() => {
     if (!order) return;

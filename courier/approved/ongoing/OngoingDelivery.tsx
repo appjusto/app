@@ -13,7 +13,7 @@ import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/Cou
 import { StatusAndMessages } from '../../../common/screens/orders/ongoing/StatusAndMessages';
 import OrderMap from '../../../common/screens/orders/OrderMap';
 import { courierNextPlace } from '../../../common/store/api/order/helpers';
-import useObserveOrder from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
@@ -43,7 +43,7 @@ export default function ({ navigation, route }: Props) {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // screen state
-  const { order } = useObserveOrder(orderId);
+  const order = useObserveOrder(orderId);
   const [code, setCode] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
   // side effects
@@ -54,10 +54,8 @@ export default function ({ navigation, route }: Props) {
   React.useEffect(() => {
     if (newMessage) {
       // workaround to make sure chat is being shown; (it was not showing on Android devices during tests)
-      setTimeout(() => {
-        navigation.setParams({ newMessage: false });
-        navigation.navigate('Chat', { orderId });
-      }, 100);
+      navigation.setParams({ newMessage: false });
+      openChatWithConsumer(true);
     }
   }, [newMessage]);
   React.useEffect(() => {
@@ -108,6 +106,19 @@ export default function ({ navigation, route }: Props) {
       setLoading(false);
     })();
   };
+  const openChatWithConsumer = (delayed?: boolean) => {
+    setTimeout(
+      () => {
+        navigation.navigate('Chat', {
+          orderId,
+          counterpartId: order.consumer.id,
+          counterpartFlavor: 'consumer',
+        });
+      },
+      delayed ? 100 : 0
+    );
+  };
+  // UI
   const { type, dispatchingState, status } = order;
   const nextStepDisabled =
     isLoading ||
@@ -152,14 +163,14 @@ export default function ({ navigation, route }: Props) {
             <StatusAndMessages
               dispatchingState={dispatchingState}
               orderId={orderId}
-              onMessageReceived={() => navigation.navigate('Chat', { orderId })}
+              onMessageReceived={openChatWithConsumer}
             />
           </View>
         </View>
         <View style={{ marginTop: padding, paddingHorizontal: padding }}>
           <CourierDeliveryInfo
             order={order}
-            onChat={() => navigation.navigate('Chat', { orderId })}
+            onChat={openChatWithConsumer}
             onProblem={() =>
               navigation.navigate('ReportIssue', {
                 orderId,

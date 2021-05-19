@@ -7,7 +7,7 @@ import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
 import OrderMap from '../../../../common/screens/orders/OrderMap';
 import PlaceSummary from '../../../../common/screens/orders/summary/PlaceSummary';
-import useObserveOrder from '../../../../common/store/api/order/hooks/useObserveOrder';
+import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import {
@@ -32,7 +32,7 @@ export default function ({ navigation, route }: Props) {
   // context
   const { orderId } = route.params;
   // screen state
-  const { order } = useObserveOrder(orderId);
+  const order = useObserveOrder(orderId);
   // side effects
   // tracking
   useSegmentScreen('Delivery Summary');
