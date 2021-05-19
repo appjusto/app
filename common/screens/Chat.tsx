@@ -23,7 +23,7 @@ export type ChatParamList = {
   Chat: {
     orderId: string;
     counterpartId: string;
-    conterpartFlavor: Flavor;
+    counterpartFlavor: Flavor;
   };
 };
 
@@ -35,7 +35,7 @@ type Props = {
 
 export default function ({ route }: Props) {
   // params
-  const { orderId, counterpartId, conterpartFlavor } = route.params;
+  const { orderId, counterpartId, counterpartFlavor } = route.params;
   // context
   const api = React.useContext(ApiContext);
   const queryClient = useQueryClient();
@@ -73,7 +73,7 @@ export default function ({ route }: Props) {
   const sendMessageHandler = () => {
     if (!inputText) return;
     const to: { agent: Flavor; id: string } = {
-      agent: conterpartFlavor,
+      agent: counterpartFlavor,
       id: counterpartId,
     };
     api.order().sendMessage(orderId, {

@@ -112,7 +112,7 @@ export default function ({ navigation, route }: Props) {
         navigation.navigate('Chat', {
           orderId,
           counterpartId: order.consumer.id,
-          conterpartFlavor: 'consumer',
+          counterpartFlavor: 'consumer',
         });
       },
       delayed ? 100 : 0

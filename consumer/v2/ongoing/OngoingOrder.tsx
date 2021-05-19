@@ -102,8 +102,18 @@ export default function ({ navigation, route }: Props) {
       delayed ? 100 : 0
     );
   };
-  // const openChatWithRestaurant = () =>
-  //   navigation.navigate('OngoingOrderChat', { orderId, counterpartId: order.business!.id });
+  // const openChatWithRestaurant = (delayed?: boolean) => {
+  //   setTimeout(
+  //     () => {
+  //       navigation.navigate('OngoingOrderChat', {
+  //         orderId,
+  //         counterpartId: order.business!.id,
+  //         counterpartFlavor: 'business',
+  //       });
+  //     },
+  //     delayed ? 100 : 0
+  //   );
+  // };
   const navigateToReportIssue = () =>
     navigation.navigate('ReportIssue', {
       orderId: order.id,
