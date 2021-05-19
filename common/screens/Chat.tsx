@@ -22,7 +22,8 @@ import { formatTime } from '../utils/formatters';
 export type ChatParamList = {
   Chat: {
     orderId: string;
-    counterpartId?: string;
+    counterpartId: string;
+    conterpartFlavor: Flavor;
   };
 };
 
@@ -34,8 +35,7 @@ type Props = {
 
 export default function ({ route }: Props) {
   // params
-  const { orderId, counterpartId } = route.params;
-  // const { orderId, counterpartId } = route.params;
+  const { orderId, counterpartId, conterpartFlavor } = route.params;
   // context
   const api = React.useContext(ApiContext);
   const queryClient = useQueryClient();
@@ -44,7 +44,7 @@ export default function ({ route }: Props) {
   const user = useSelector(getUser)!;
   // screen state
   const order = useObserveOrder(orderId);
-  const chat = useObserveOrderChat(orderId, user.uid, counterpartId!);
+  const chat = useObserveOrderChat(orderId, user.uid, counterpartId);
   const [inputText, setInputText] = React.useState('');
   // side effects
   // tracking
@@ -73,8 +73,8 @@ export default function ({ route }: Props) {
   const sendMessageHandler = () => {
     if (!inputText) return;
     const to: { agent: Flavor; id: string } = {
-      agent: flavor === 'consumer' ? 'courier' : 'consumer',
-      id: counterpartId!,
+      agent: conterpartFlavor,
+      id: counterpartId,
     };
     api.order().sendMessage(orderId, {
       from: { agent: flavor, id: user.uid },

@@ -93,7 +93,11 @@ export default function ({ navigation, route }: Props) {
   const openChatWithCourier = (delayed?: boolean) => {
     setTimeout(
       () => {
-        navigation.navigate('OngoingOrderChat', { orderId, counterpartId: order.courier!.id });
+        navigation.navigate('OngoingOrderChat', {
+          orderId,
+          counterpartId: order.courier!.id,
+          counterpartFlavor: 'courier',
+        });
       },
       delayed ? 100 : 0
     );

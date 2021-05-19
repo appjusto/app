@@ -73,6 +73,7 @@ export const OngoingOrderCourierDetail = ({ navigation, route }: Props) => {
                 navigation.navigate('OngoingOrderChat', {
                   orderId,
                   counterpartId: order.courier!.id,
+                  counterpartFlavor: 'courier',
                 })
               }
             />
