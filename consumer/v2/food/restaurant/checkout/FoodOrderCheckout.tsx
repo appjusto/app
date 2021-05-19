@@ -150,6 +150,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       <DestinationModal
         modalVisible={destinationModalVisible}
         onModalClose={() => setDestinationModalVisible(!destinationModalVisible)}
+        order={order}
       />
     </ScrollView>
   );

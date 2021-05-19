@@ -1,3 +1,4 @@
+import { Order } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Modal, Text, TouchableOpacity, View } from 'react-native';
@@ -11,9 +12,10 @@ import { t } from '../../../../../strings';
 type Props = {
   modalVisible: boolean;
   onModalClose: () => void;
+  order: Order;
 };
 
-export const DestinationModal = ({ modalVisible, onModalClose }: Props) => {
+export const DestinationModal = ({ modalVisible, onModalClose, order }: Props) => {
   return (
     <Modal transparent visible={modalVisible}>
       <View
@@ -42,11 +44,14 @@ export const DestinationModal = ({ modalVisible, onModalClose }: Props) => {
           <Text style={{ ...texts.sm, marginTop: padding, color: colors.grey700 }}>
             {t('Seu pedido será entregue em:')}
           </Text>
-          <Text style={{ ...texts.lg, marginTop: 4 }}>
-            {t('Rua dos Pinheiros, 100 - São Paulo/SP')}
-          </Text>
-          <Text style={{ ...texts.lg, marginBottom: 24 }}>{t('Apto 14')}</Text>
-          <RoundedText>{t('Editar endereço de entrega')}</RoundedText>
+          <Text style={{ ...texts.lg, marginTop: 4 }}>{order?.destination?.address.main}</Text>
+          <Text style={{ ...texts.lg, marginTop: 4 }}>{order?.destination?.address.secondary}</Text>
+          {order?.additionalInfo && (
+            <Text style={{ ...texts.lg, marginTop: 4 }}>{t('Apto 14')}</Text>
+          )}
+          <View style={{ marginTop: 24 }}>
+            <RoundedText>{t('Editar endereço de entrega')}</RoundedText>
+          </View>
           <HR style={{ marginTop: 24 }} />
           <DefaultButton
             style={{ marginTop: halfPadding, marginBottom: padding }}
