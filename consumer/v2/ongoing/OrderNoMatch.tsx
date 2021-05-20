@@ -1,12 +1,11 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Image } from 'react-native';
 import * as Sentry from 'sentry-expo';
-import * as icons from '../../../assets/icons';
 import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
+import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { borders, colors, padding } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
@@ -51,7 +50,7 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
       description={t(
         'Infelizmente não encontramos nenhum entregador disponível. Tente novamente mais tarde.'
       )}
-      icon={<Image source={icons.coneYellow} />}
+      icon={<IconConeYellow />}
     >
       <DefaultButton
         title={t('Tentar novamente')}

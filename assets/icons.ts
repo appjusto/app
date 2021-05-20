@@ -2,7 +2,6 @@ const iconChecklistTick = require('./icons/checklist-tick.png');
 const dragButton = require('./icons/drag-button.png');
 const iconHome = require('./icons/home.png');
 const iconCalendar = require('./icons/icon-calendar.png');
-const iconConeYellow = require('./icons/icon-cone-yellow.png');
 const iconGoogleMaps = require('./icons/icon-gmaps-logo.png');
 const iconLicense = require('./icons/icon-license.png');
 const iconPinPackageWhite = require('./icons/icon-pin-package-white.png');
@@ -37,7 +36,6 @@ const iconCheckGreen = require('./icons/icon-check-green.png');
 export const checklistTick = iconChecklistTick;
 export const home = iconHome;
 export const calendar = iconCalendar;
-export const coneYellow = iconConeYellow;
 export const license = iconLicense;
 export const pinPackageWhite = iconPinPackageWhite;
 export const pinPackage = iconPinPackage;
@@ -75,7 +73,6 @@ export default [
   home,
   calendar,
   cardIcon,
-  coneYellow,
   license,
   pinPackageWhite,
   pinPackage,

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Image, View } from 'react-native';
-import * as icons from '../../../../assets/icons';
+import { View } from 'react-native';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
+import { IconConeYellow } from '../../../../common/icons/icon-cone-yellow';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { t } from '../../../../strings';
 
@@ -12,7 +12,7 @@ export default function () {
       description={t(
         'Infelizmente não encontramos nenhum restaurante cadastrado no app próximo a você. Estamos começando, mas não se preocupe: em breve seu restaurante preferido estará aqui.'
       )}
-      icon={<Image source={icons.coneYellow} />}
+      icon={<IconConeYellow />}
     >
       <View style={{ marginTop: 32 }}>
         <HomeShareCard

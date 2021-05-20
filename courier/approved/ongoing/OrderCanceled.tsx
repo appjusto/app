@@ -1,11 +1,11 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Image, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
+import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, padding, screens } from '../../../common/styles';
 import { OngoingOrderNavigatorParamList } from '../../../consumer/v2/ongoing/types';
@@ -52,7 +52,7 @@ export default ({ navigation, route }: Props) => {
       header={`${t('Esse pedido foi cancelado pelo')} ${
         order!.type === 'food' ? t('restaurante') : t('cliente')
       }`}
-      icon={<Image source={icons.coneYellow} />}
+      icon={<IconConeYellow />}
     >
       <SafeAreaView>
         <DefaultButton

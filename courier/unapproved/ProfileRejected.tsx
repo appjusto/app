@@ -1,13 +1,12 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
-import * as icons from '../../assets/icons';
 import { ApiContext, AppDispatch } from '../../common/app/context';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../common/components/views/FeedbackView';
+import { IconConeYellow } from '../../common/icons/icon-cone-yellow';
 import { useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
 import { showToast } from '../../common/store/ui/actions';
@@ -55,7 +54,7 @@ export default function ({ navigation }: Props) {
     <FeedbackView
       header={t('Seu cadastro foi recusado :(')}
       description={courier.profileIssues?.join('\n') ?? 'Entre em contato com nosso suporte.'}
-      icon={<Image source={icons.coneYellow} />}
+      icon={<IconConeYellow />}
     >
       <DefaultButton
         title={t('Editar cadastro')}
