@@ -3,6 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import * as Sentry from 'sentry-expo';
 import * as icons from '../../assets/icons';
 import { ApiContext, AppDispatch } from '../../common/app/context';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
@@ -44,6 +45,7 @@ export default function ({ navigation }: Props) {
       try {
         await dispatch(updateProfile(api)(courier.id, { situation: 'pending' }));
       } catch (error) {
+        Sentry.Native.captureException(error);
         dispatch(showToast(error.toString(), 'error'));
       }
     })();
