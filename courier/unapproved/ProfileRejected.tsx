@@ -10,8 +10,6 @@ import { IconConeYellow } from '../../common/icons/icon-cone-yellow';
 import { useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
 import { showToast } from '../../common/store/ui/actions';
-import { getUIBusy } from '../../common/store/ui/selectors';
-import { updateProfile } from '../../common/store/user/actions';
 import { t } from '../../strings';
 import { UnapprovedParamList } from './types';
 
@@ -27,9 +25,10 @@ export default function ({ navigation }: Props) {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  // app state
+  // redux
   const courier = useSelector(getCourier)!;
-  const busy = useSelector(getUIBusy);
+  // state
+  const [isLoading, setLoading] = React.useState(false);
   // side effects
   // tracking
   useSegmentScreen('Profile Rejected');
@@ -42,8 +41,11 @@ export default function ({ navigation }: Props) {
   const updateProfileHandler = () => {
     (async () => {
       try {
-        await dispatch(updateProfile(api)(courier.id, { situation: 'pending' }));
+        setLoading(true);
+        await api.profile().updateProfile(courier.id, { situation: 'pending' });
+        setLoading(false);
       } catch (error) {
+        setLoading(false);
         Sentry.Native.captureException(error);
         dispatch(showToast(error.toString(), 'error'));
       }
@@ -53,15 +55,15 @@ export default function ({ navigation }: Props) {
   return (
     <FeedbackView
       header={t('Seu cadastro foi recusado :(')}
-      description={courier.profileIssues?.join('\n') ?? 'Entre em contato com nosso suporte.'}
+      description={courier.profileIssues?.join('\n') ?? t('Entre em contato com nosso suporte.')}
       icon={<IconConeYellow />}
     >
       <DefaultButton
         title={t('Editar cadastro')}
         onPress={updateProfileHandler}
         secondary
-        activityIndicator={busy}
-        disabled={busy}
+        activityIndicator={isLoading}
+        disabled={isLoading}
       />
     </FeedbackView>
   );
