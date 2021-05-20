@@ -67,14 +67,12 @@ export const OrderSummary = ({
   // update quotes
   React.useEffect(() => {
     getOrderQuotesHandler();
-    console.log('getOrderQuotesHandler CALLED');
   }, [order]);
   // whenever quotes are updated
   // select first fare and subscribe to involved fleets updates
   React.useEffect(() => {
     if (!quotes || isEmpty(quotes)) return;
     setSelectedFare(quotes[0]);
-    console.log('SETSELECTEDFARE TO QUOTES[0]');
   }, [quotes]);
 
   // handlers

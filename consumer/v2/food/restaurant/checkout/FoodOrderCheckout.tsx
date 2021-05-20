@@ -31,6 +31,8 @@ type Props = {
 };
 
 export const FoodOrderCheckout = ({ navigation, route }: Props) => {
+  // params
+  const { params } = route;
   // context
   const api = React.useContext(ApiContext);
   const order = useContextActiveOrder();
@@ -47,12 +49,21 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   // side effects
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
-    if (order && route.params?.destination) {
-      api.order().updateOrder(order.id, { destination: route.params.destination });
-      console.log('DESTINATION UPDATED');
+    if (params?.destination) {
+      if (order) {
+        api.order().updateOrder(order.id, { destination: params.destination });
+      }
+      navigation.setParams({
+        destination: undefined,
+      });
     }
-    if (route.params?.paymentMethodId) setSelectedPaymentMethodId(route.params?.paymentMethodId);
-  }, [api, order, route.params]);
+    if (params?.paymentMethodId) {
+      setSelectedPaymentMethodId(params?.paymentMethodId);
+      navigation.setParams({
+        paymentMethodId: undefined,
+      });
+    }
+  }, [api, navigation, order, params]);
   // check if order is empty to pop this screen
   React.useEffect(() => {
     if (order?.items?.length === 0) navigation.pop();
