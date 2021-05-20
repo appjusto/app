@@ -13,12 +13,19 @@ type Props = {
   modalVisible: boolean;
   onModalClose: () => void;
   order: Order;
-  onEditAddress?: () => void;
+  onEditAddress: () => void;
+  onConfirmAddress: () => void;
 };
 
-export const DestinationModal = ({ modalVisible, onModalClose, order, onEditAddress }: Props) => {
+export const DestinationModal = ({
+  modalVisible,
+  onModalClose,
+  order,
+  onEditAddress,
+  onConfirmAddress,
+}: Props) => {
   return (
-    <Modal transparent visible={modalVisible}>
+    <Modal transparent visible={modalVisible} animationType="slide">
       <View
         style={{
           flex: 1,
@@ -59,7 +66,7 @@ export const DestinationModal = ({ modalVisible, onModalClose, order, onEditAddr
           <DefaultButton
             style={{ marginTop: halfPadding, marginBottom: padding }}
             title={t('Confirmar endereço de entrega')}
-            onPress={onModalClose}
+            onPress={onConfirmAddress}
           />
         </PaddedView>
       </View>

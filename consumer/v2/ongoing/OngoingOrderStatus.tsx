@@ -16,7 +16,7 @@ export const OngoingOrderStatus = ({ order }: Props) => {
   let header = t('Pedido aprovado!');
   let description =
     order.type === 'food'
-      ? t('O restaurante já está com seu pedido e em breve iniciará o preparo.')
+      ? t('Aguarde enquanto o estabelecimento confirma o seu pedido.')
       : t('Aguarde enquanto procuramos um entregador para você.');
   if (order.status === 'preparing') {
     header = t('Pedido em preparo');

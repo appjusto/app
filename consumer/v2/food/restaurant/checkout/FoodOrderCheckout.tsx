@@ -45,13 +45,15 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   );
   const [isLoading, setLoading] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
-  const [destinationModalVisible, setDestinationModalVisible] = React.useState(true);
+  const [destinationModalVisible, setDestinationModalVisible] = React.useState(false);
+  const [confirmedDestination, setConfirmedDestination] = React.useState(false);
   // side effects
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
     if (params?.destination) {
       if (order) {
         api.order().updateOrder(order.id, { destination: params.destination });
+        setConfirmedDestination(true);
       }
       navigation.setParams({
         destination: undefined,
@@ -80,11 +82,14 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       });
     }
   }, [consumer.name, order, api]);
-  console.log(destinationModalVisible, 'MODALVISIBLE');
   // handlers
   const placeOrderHandler = async (fleetId: string) => {
     if (!order) return;
     if (!selectedPaymentMethodId) return;
+    if (!confirmedDestination) {
+      setDestinationModalVisible(true);
+      return;
+    }
     try {
       setLoading(true);
       await api.order().placeOrder(order.id, fleetId, {
@@ -141,7 +146,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           navigation.navigate('OrderDestination', {
             returnScreen: 'FoodOrderCheckout',
             returnParam: 'destination',
-            value: order.destination ?? null,
           });
         }}
         onEditItemPress={(productId, itemId) => {
@@ -161,14 +165,20 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       />
       <DestinationModal
         modalVisible={destinationModalVisible}
-        onModalClose={() => setDestinationModalVisible(!destinationModalVisible)}
+        onModalClose={() => {
+          setDestinationModalVisible(false);
+        }}
+        onConfirmAddress={() => {
+          setDestinationModalVisible(false);
+          setConfirmedDestination(true);
+        }}
         order={order}
         onEditAddress={() => {
           navigation.navigate('OrderDestination', {
             returnScreen: 'FoodOrderCheckout',
             returnParam: 'destination',
           });
-          setDestinationModalVisible(!destinationModalVisible);
+          setDestinationModalVisible(false);
         }}
       />
     </ScrollView>
