@@ -122,7 +122,7 @@ export const OrderSummary = ({
       )}
 
       <HR height={padding} />
-      {order.route?.distance === 0 ? (
+      {order.route?.issue ? (
         <View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Pill />
@@ -141,7 +141,7 @@ export const OrderSummary = ({
             </PaddedView>
           </View>
           <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
-            <RouteIssueCard />
+            <RouteIssueCard description={order.route.issue} />
           </View>
         </View>
       ) : (
