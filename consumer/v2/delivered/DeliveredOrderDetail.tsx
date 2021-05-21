@@ -53,6 +53,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const [comment, setComment] = React.useState('');
   const review = useCourierReview(orderId, order?.courier?.id);
   const [isLoading, setLoading] = React.useState(false);
+  const [reviewSent, setReviewSent] = React.useState(false);
 
   if (!order) {
     return (
@@ -83,6 +84,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
           orderId,
           comment,
         });
+        setReviewSent(true);
       }
     } catch (error) {
       dispatch(showToast(t('Não foi possível enviar a avaliação')));
@@ -159,11 +161,11 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
               onCommentChange={(value) => setComment(value)}
             />
             <DefaultButton
-              title={review?.type ? t('Avaliação enviada') : t('Avaliar entregador')}
+              title={review?.type || reviewSent ? t('Avaliação enviada') : t('Avaliar entregador')}
               onPress={reviewHandler}
               style={{ margin: padding }}
               activityIndicator={isLoading}
-              disabled={isLoading || !!review?.type}
+              disabled={isLoading || !!review?.type || reviewSent}
             />
             <HR height={padding} />
             <View>
