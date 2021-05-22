@@ -141,7 +141,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
               >
                 <Text style={{ ...texts.md, ...texts.bold }}>{t('Total pago')}</Text>
                 <Text style={{ ...texts.xl }}>
-                  {formatCurrency((order.fare?.consumer.total ?? 0) + (order.tip?.value ?? 0))}
+                  {formatCurrency((order.fare?.total ?? 0) + (order.tip?.value ?? 0))}
                 </Text>
               </PaddedView>
             </View>

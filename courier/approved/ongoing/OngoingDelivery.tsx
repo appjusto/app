@@ -74,7 +74,7 @@ export default function ({ navigation, route }: Props) {
   // check status to navigate to other screens
   React.useEffect(() => {
     if (order?.status === 'delivered') {
-      navigation.replace('DeliveryCompleted', { orderId, fee: order.fare!.consumer.courierFee });
+      navigation.replace('DeliveryCompleted', { orderId, fee: order.fare!.courier.value });
     } else if (order?.status === 'canceled') {
       navigation.replace('OrderCanceled', { orderId });
     }

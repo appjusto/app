@@ -11,14 +11,12 @@ export const getOrderQuotes = (api: Api) => (orderId: string) => async (dispatch
   return dispatch(awaitWithFeedback<Fare[]>(api.order().getOrderQuotes(orderId)));
 };
 
-export const tipCourier = (api: Api) => (orderId: string, tip: number) => async (
-  dispatch: AppDispatch
-) => {
-  return dispatch(awaitWithFeedback(api.order().tipCourier(orderId, tip)));
-};
+export const tipCourier =
+  (api: Api) => (orderId: string, tip: number) => async (dispatch: AppDispatch) => {
+    return dispatch(awaitWithFeedback(api.order().tipCourier(orderId, tip)));
+  };
 
-export const cancelOrder = (api: Api) => (orderId: string, cancellation?: OrderIssue) => async (
-  dispatch: AppDispatch
-) => {
-  return dispatch(awaitWithFeedback(api.order().cancelOrder(orderId, cancellation)));
-};
+export const cancelOrder =
+  (api: Api) => (orderId: string, cancellation?: OrderIssue) => async (dispatch: AppDispatch) => {
+    return dispatch(awaitWithFeedback(api.order().cancelOrder(orderId, cancellation)));
+  };
