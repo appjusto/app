@@ -31,48 +31,28 @@ export const OrderCostBreakdown = ({ order, selectedFare }: Props) => {
               </Text>
             </View>
           )}
-          {(selectedFare?.consumer.platformFee ?? 0) !== 0 && (
+          {selectedFare?.platform?.value ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('AppJusto')}</Text>
               <Text style={{ ...texts.sm, lineHeight: 21 }}>
-                {formatCurrency(selectedFare!.consumer.platformFee)}
+                {formatCurrency(selectedFare.platform.value)}
               </Text>
             </View>
-          )}
+          ) : null}
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('Entrega')}</Text>
             <Text style={{ ...texts.sm, lineHeight: 21 }}>
-              {formatCurrency(selectedFare?.consumer.courierFee ?? 0)}
+              {formatCurrency(selectedFare?.courier.value ?? 0)}
             </Text>
           </View>
-          {(order.tip?.value ?? 0) > 0 && (
+          {order.tip?.value ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('Caixinha entregador')}</Text>
               <Text style={{ ...texts.sm, lineHeight: 21 }}>
                 {formatCurrency(order.tip!.value)}
               </Text>
             </View>
-          )}
-          {(selectedFare?.consumer.taxes ?? 0) !== 0 && (
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ ...texts.sm, lineHeight: 21, color: colors.grey700 }}>
-                {t('Impostos')}
-              </Text>
-              <Text style={{ ...texts.sm, lineHeight: 21, color: colors.grey700 }}>
-                {formatCurrency(selectedFare!.consumer.taxes ?? 0)}
-              </Text>
-            </View>
-          )}
-          {(selectedFare?.consumer.financialFee ?? 0) !== 0 && (
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ ...texts.sm, lineHeight: 21, color: colors.grey700 }}>
-                {t('Tarifa financeira')}
-              </Text>
-              <Text style={{ ...texts.sm, lineHeight: 21, color: colors.grey700 }}>
-                {formatCurrency(selectedFare!.consumer.financialFee ?? 0)}
-              </Text>
-            </View>
-          )}
+          ) : null}
         </View>
       </PaddedView>
     </View>

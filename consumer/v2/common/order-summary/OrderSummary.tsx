@@ -1,4 +1,4 @@
-import { Fare, Fleet, Order, WithId } from '@appjusto/types';
+import { Fare, Order, WithId } from '@appjusto/types';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { ScrollView, View } from 'react-native';
@@ -28,7 +28,7 @@ type Props = {
   onAddItemsPress?: () => void;
   placeOrder: (fleetId: string) => void;
   navigateToFillPaymentInfo: () => void;
-  navigateFleetDetail: (fleet: WithId<Fleet>) => void;
+  navigateFleetDetail: (fleetId: string) => void;
   modalVisible: boolean;
   navigateToPixPayment: (total: number, fleetId: string) => void;
   onModalClose?: () => void;
@@ -133,7 +133,7 @@ export const OrderSummary = ({
 
       <HR height={padding} />
 
-      <OrderTotal total={selectedFare?.consumer.total ?? 0} />
+      <OrderTotal total={selectedFare?.total ?? 0} />
 
       <HR height={padding} />
 
@@ -144,7 +144,7 @@ export const OrderSummary = ({
         onSubmit={() => placeOrder(selectedFare?.fleet?.id!)}
         activityIndicator={busy}
         navigateToPixPayment={() =>
-          navigateToPixPayment(selectedFare?.consumer.total ?? 0, selectedFare?.fleet?.id!)
+          navigateToPixPayment(selectedFare?.total ?? 0, selectedFare?.fleet?.id!)
         }
         navigateToAboutCharges={navigateToAboutCharges}
       />

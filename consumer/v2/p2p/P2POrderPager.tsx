@@ -1,4 +1,4 @@
-import { Fleet, Order, Place, WithId } from '@appjusto/types';
+import { Order, Place, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import React from 'react';
@@ -28,7 +28,7 @@ type Props = {
   isLoading: boolean;
   navigateToAddressComplete: (returnParam: string, value?: Place) => void;
   navigateToFillPaymentInfo: () => void;
-  navigateFleetDetail: (fleet: WithId<Fleet>) => void;
+  navigateFleetDetail: (fleetId: string) => void;
   navigateToTransportableItems: () => void;
   placeOrder: (fleetId: string) => Promise<void>;
   navigateToPixPayment: (total: number, fleetId: string) => void;

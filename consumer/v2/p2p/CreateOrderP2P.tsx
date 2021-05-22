@@ -1,4 +1,4 @@
-import { Fleet, Place, WithId } from '@appjusto/types';
+import { Place } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -111,12 +111,9 @@ export default function ({ navigation, route }: Props) {
     }
   }, [consumer, navigation, selectedPaymentMethodId]);
   // navigate to FleetDetail
-  const navigateFleetDetail = React.useCallback(
-    (fleet: WithId<Fleet>) => {
-      navigation.navigate('FleetDetail', { fleetId: fleet.id });
-    },
-    [navigation]
-  );
+  const navigateFleetDetail = (fleetId: string) => {
+    navigation.navigate('FleetDetail', { fleetId });
+  };
   // navigate to TransportableItems
   const navigateToTransportableItems = React.useCallback(() => {
     navigation.navigate('TransportableItems');

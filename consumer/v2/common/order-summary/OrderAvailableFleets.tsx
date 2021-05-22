@@ -16,7 +16,7 @@ interface Props {
   quotes: Fare[] | undefined;
   selectedFare: Fare | undefined;
   onFareSelect: (fare: Fare) => void;
-  onFleetSelect: (fleet: WithId<Fleet>) => void;
+  onFleetSelect: (fleetId: string) => void;
   onRetry: () => void;
 }
 
@@ -104,9 +104,9 @@ export const OrderAvailableFleets = ({
                         } ${t('ativos agora')}`}
                       </Text>
                       <Text style={[texts.xl, texts.bold, { marginTop: padding }]}>
-                        {formatCurrency(item.consumer.courierFee)}
+                        {formatCurrency(item.courier.value)}
                       </Text>
-                      <TouchableOpacity onPress={() => onFleetSelect(item.fleet)}>
+                      <TouchableOpacity onPress={() => onFleetSelect(item.fleet.id)}>
                         <View style={{ marginTop: padding }}>
                           <RoundedText>{t('Ver detalhes')}</RoundedText>
                         </View>
