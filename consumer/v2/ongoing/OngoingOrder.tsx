@@ -1,7 +1,7 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Dimensions, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -36,7 +36,6 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  const { width } = Dimensions.get('window');
   // params
   const { orderId, newMessage } = route.params;
   // context
@@ -45,21 +44,46 @@ export default function ({ navigation, route }: Props) {
   // redux
   const consumer = useSelector(getConsumer)!;
   // screen state
-  const [seenCodeInfo, setSeenCodeInfo] = React.useState(false);
   const order = useObserveOrder(orderId);
+  const courierId = order?.courier?.id;
+  const businessId = order?.business?.id;
   const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
     consumer!.notificationToken
+  );
+  // helpers
+  const openChat = React.useCallback(
+    (counterpartId: string, delayed?: boolean) => {
+      setTimeout(
+        () => {
+          navigation.navigate('OngoingOrderChat', {
+            orderId,
+            counterpartId,
+            counterpartFlavor: 'courier',
+          });
+        },
+        delayed ? 100 : 0
+      );
+    },
+    [navigation, orderId]
+  );
+  const openChatWithCourier = React.useCallback(
+    (delayed?: boolean) => openChat(courierId!, delayed),
+    [openChat, courierId]
+  );
+  const openChatWithRestaurant = React.useCallback(
+    (delayed?: boolean) => openChat(businessId!, delayed),
+    [openChat, businessId]
   );
   // side effects
   // whenever params changes
   // open chat if there's a new message
-  // TO-DO: get counterPartId. maybe use a new hook?!
   React.useEffect(() => {
     if (newMessage) {
       navigation.setParams({ newMessage: false });
+      // TO-DO: get counterPartId. maybe use a new hook?!
       openChatWithCourier(true);
     }
-  }, [navigation, newMessage]);
+  }, [navigation, newMessage, openChatWithCourier]);
   // whenever notification token needs to be updated
   React.useEffect(() => {
     if (shouldDeleteToken || shouldUpdateToken) {
@@ -78,7 +102,7 @@ export default function ({ navigation, route }: Props) {
     } else if (order.dispatchingStatus === 'no-match') {
       navigation.navigate('OngoingOrderNoMatch', { orderId });
     }
-  }, [order]);
+  }, [navigation, order, orderId]);
 
   // UI
   // showing the indicator until the order is loaded
@@ -89,31 +113,7 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
-  // handlers
-  const openChatWithCourier = (delayed?: boolean) => {
-    setTimeout(
-      () => {
-        navigation.navigate('OngoingOrderChat', {
-          orderId,
-          counterpartId: order.courier!.id,
-          counterpartFlavor: 'courier',
-        });
-      },
-      delayed ? 100 : 0
-    );
-  };
-  // const openChatWithRestaurant = (delayed?: boolean) => {
-  //   setTimeout(
-  //     () => {
-  //       navigation.navigate('OngoingOrderChat', {
-  //         orderId,
-  //         counterpartId: order.business!.id,
-  //         counterpartFlavor: 'business',
-  //       });
-  //     },
-  //     delayed ? 100 : 0
-  //   );
-  // };
+  // UI handlers
   const navigateToReportIssue = () =>
     navigation.navigate('ReportIssue', {
       orderId: order.id,

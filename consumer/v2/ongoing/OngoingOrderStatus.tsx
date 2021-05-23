@@ -13,36 +13,52 @@ interface Props {
 }
 
 export const OngoingOrderStatus = ({ order }: Props) => {
-  let header = t('Pedido aprovado!');
-  let description =
-    order.type === 'food'
-      ? t('Aguarde enquanto o restaurante confirma seu pedido.')
-      : t('Aguarde enquanto procuramos um entregador para você.');
-  if (order.status === 'preparing') {
+  const { status, dispatchingState } = order;
+  let header: string | null = null;
+  let description: string | null = null;
+
+  if (status === 'confirming') {
+  } else if (status === 'confirmed') {
+    header = t('Pedido aprovado!');
+    description =
+      order.type === 'food'
+        ? t('Aguarde enquanto o restaurante confirma seu pedido.')
+        : t('Aguarde enquanto procuramos um entregador para você.');
+  } else if (status === 'preparing') {
     header = t('Pedido em preparo');
     description = t(
       'O restaurante começou a preparar seu pedido e logo estará prontinho para você.'
     );
-  }
-  if (order.status === 'ready') {
+  } else if (status === 'ready') {
     header = t('Pronto para entrega');
     description = t('Estamos aguardando o entregador pegar o seu pedido e levá-lo até você.');
+    if (dispatchingState === 'going-pickup') {
+      description = t('O entregador já está indo pegar o pedido.');
+    } else if (dispatchingState === 'arrived-pickup') {
+      description = t('O entregador já chegou ao restaurante.');
+    }
+  } else if (status === 'dispatching') {
+    header = t('Pronto para entrega');
+    description = t('O entregador já chegou ao restaurante.');
+    if (dispatchingState === 'going-destination') {
+      header = t('Saiu para entrega');
+      description = t('Já pode se preparar! O entregador saiu e está levando o pedido até você. ');
+    } else if (dispatchingState === 'arrived-destination') {
+      header = t('Entregador chegou!');
+      description = t('Aguardando o cliente para retirada.');
+    }
+  } else if (status === 'delivered') {
+    header = t('Pedido entregue!');
+    description = '';
+  } else if (status === 'canceled') {
+    header = t('Pedido cancelado!');
+    description = '';
+  } else if (status === 'declined') {
   }
-  if (order.status === 'dispatching' && order.dispatchingState !== 'arrived-destination') {
-    header =
-      order.dispatchingState === 'going-pickup' ? t('Entrega iniciada') : t('Saiu para entrega');
-    description =
-      order.dispatchingState === 'going-pickup'
-        ? t('O entregador já está indo pegar o pedido.')
-        : t('Já pode se preparar! O entregador saiu e está levando o pedido até você. ');
-  }
-  if (order.status === 'dispatching' && order.dispatchingState === 'arrived-destination') {
-    header = t('Entregador chegou no local');
-    description = t('Aguardando o cliente para retirada.');
-  }
+  if (header === null || description === null) return null;
   return (
     <View style={{ paddingHorizontal: padding, alignItems: 'center', paddingBottom: padding }}>
-      {order.status === 'dispatching' && order.dispatchingState === 'arrived-destination' ? (
+      {status === 'dispatching' && dispatchingState === 'arrived-destination' ? (
         <IconMotocycle />
       ) : (
         <IconOngoingRequest />
