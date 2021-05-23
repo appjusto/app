@@ -34,6 +34,7 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
     try {
       setLoading(true);
       await api.order().updateOrder(orderId, { dispatchingStatus: 'matching' });
+      navigation.replace('OngoingOrder', { orderId });
       setLoading(false);
     } catch (error) {
       setLoading(false);
