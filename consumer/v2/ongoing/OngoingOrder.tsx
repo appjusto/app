@@ -145,11 +145,11 @@ export default function ({ navigation, route }: Props) {
         <View style={{ flex: 1 }}>
           <View>
             <OrderMap order={order} ratio={1} />
-            {/* <StatusAndMessages
+            <StatusAndMessages
               dispatchingState={dispatchingState}
               orderId={orderId}
-              onMessageReceived={openChatHandler}
-            /> */}
+              onMessageReceived={openChatWithCourier} // just with the courier for now
+            />
           </View>
           <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
           <DefaultButton
@@ -245,18 +245,19 @@ export default function ({ navigation, route }: Props) {
                   </PaddedView>
                 </View>
               )}
-
-              {order.type === 'food' && (
-                <View>
-                  <HR height={padding} />
-                  <HR />
-                  <PaddedView>
-                    <DefaultButton title={t('Abrir chat com o restaurante')} onPress={() => null} />
-                  </PaddedView>
-                </View>
-              )}
             </View>
           )}
+          <View>
+            <HR height={padding} />
+            <HR />
+            <PaddedView>
+              <DefaultButton
+                title={t('Abrir chat com o restaurante')}
+                onPress={() => null}
+                style={{ marginBottom: padding }}
+              />
+            </PaddedView>
+          </View>
         </View>
       )}
     </ScrollView>
