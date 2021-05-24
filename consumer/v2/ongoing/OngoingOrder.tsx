@@ -245,19 +245,17 @@ export default function ({ navigation, route }: Props) {
                   </PaddedView>
                 </View>
               )}
+              {order.type === 'food' && (
+                <View>
+                  <HR height={padding} />
+                  <HR />
+                  <PaddedView>
+                    <DefaultButton title={t('Abrir chat com o restaurante')} onPress={() => null} />
+                  </PaddedView>
+                </View>
+              )}
             </View>
           )}
-          <View>
-            <HR height={padding} />
-            <HR />
-            <PaddedView>
-              <DefaultButton
-                title={t('Abrir chat com o restaurante')}
-                onPress={() => null}
-                style={{ marginBottom: padding }}
-              />
-            </PaddedView>
-          </View>
         </View>
       )}
     </ScrollView>
