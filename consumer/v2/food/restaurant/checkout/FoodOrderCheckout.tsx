@@ -46,6 +46,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [destinationModalVisible, setDestinationModalVisible] = React.useState(false);
   const [confirmedDestination, setConfirmedDestination] = React.useState(false);
+  const [orderAdditionalInfo, setOrderAdditionalInfo] = React.useState('');
   // side effects
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
@@ -91,6 +92,11 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
     try {
       setLoading(true);
+      if (orderAdditionalInfo.length > 0) {
+        await api.order().updateOrder(order.id, {
+          additionalInfo: orderAdditionalInfo,
+        });
+      }
       await api.order().placeOrder(order.id, fleetId, {
         payableWith: 'credit_card',
         paymentMethodId: selectedPaymentMethodId,
@@ -123,6 +129,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const navigateFleetDetail = (fleetId: string) => {
     navigation.navigate('FleetDetail', { fleetId });
   };
+
   // UI
   if (!order) {
     return (
@@ -158,6 +165,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           navigation.navigate('PayWithPix', { orderId: order.id!, total, fleetId })
         }
         navigateToAboutCharges={() => navigation.navigate('AboutCharges')}
+        additionalInfo={orderAdditionalInfo}
+        onAddInfo={(text) => setOrderAdditionalInfo(text)}
       />
       <DestinationModal
         modalVisible={destinationModalVisible}

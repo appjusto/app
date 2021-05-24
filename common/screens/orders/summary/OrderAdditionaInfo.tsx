@@ -22,7 +22,6 @@ export const OrderAdditionalInfo = ({ value, onAddInfo }: Props) => {
           'Tem alguma observação? Por exemplo: sem molho, sem cebola, ponto da carne, etc'
         )}
         multiline
-        numberOfLines={6} // How much is enough?
         value={value}
         onChangeText={(text) => onAddInfo(text)}
         style={{ height: 96, marginTop: halfPadding }}
