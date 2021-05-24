@@ -117,7 +117,7 @@ export const OrderSummary = ({
             onModalClose={onModalClose!}
             modalVisible={modalVisible}
           />
-          <OrderAdditionalInfo value={additionalInfo!} onAddInfo={onAddInfo} />
+          <OrderAdditionalInfo value={additionalInfo} onAddInfo={onAddInfo} />
         </View>
       )}
 

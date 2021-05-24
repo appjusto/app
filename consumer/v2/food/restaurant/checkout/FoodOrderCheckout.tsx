@@ -92,15 +92,15 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
     try {
       setLoading(true);
-      if (orderAdditionalInfo.length > 0) {
-        await api.order().updateOrder(order.id, {
-          additionalInfo: orderAdditionalInfo,
-        });
-      }
-      await api.order().placeOrder(order.id, fleetId, {
-        payableWith: 'credit_card',
-        paymentMethodId: selectedPaymentMethodId,
-      });
+      await api.order().placeOrder(
+        order.id,
+        fleetId,
+        {
+          payableWith: 'credit_card',
+          paymentMethodId: selectedPaymentMethodId,
+        },
+        orderAdditionalInfo
+      );
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {
         screen: 'OngoingOrderConfirming',

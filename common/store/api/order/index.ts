@@ -187,11 +187,17 @@ export default class OrderApi {
     return (await this.refs.getGetOrderQuotesCallable()(payload)).data as Fare[];
   }
 
-  async placeOrder(orderId: string, fleetId: string, details: PlaceOrderPaymentDetails) {
+  async placeOrder(
+    orderId: string,
+    fleetId: string,
+    details: PlaceOrderPaymentDetails,
+    additionalInfo?: string
+  ) {
     const payload: PlaceOrderPayload = {
       orderId,
       fleetId,
       ...details,
+      additionalInfo,
       meta: { version: Constants.nativeBuildVersion },
     };
     return (await this.refs.getPlaceOrderCallable()(payload)).data;
