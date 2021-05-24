@@ -23,12 +23,9 @@ export default function ({ navigation }: Props) {
   // tracking
   useSegmentScreen('All Fleets');
   // handlers
-  const navigateFleetDetail = React.useCallback(
-    (fleetId) => {
-      navigation.navigate('FleetDetail', { fleetId });
-    },
-    [navigation]
-  );
+  const navigateFleetDetail = (fleetId: string) => {
+    navigation.navigate('FleetDetail', { fleetId });
+  };
   // UI
   if (!fleets) {
     return (

@@ -1,15 +1,18 @@
-import { Fare, Fleet, Order, WithId } from '@appjusto/types';
+import { Fare, Order, WithId } from '@appjusto/types';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
+import PaddedView from '../../../../common/components/containers/PaddedView';
 import HR from '../../../../common/components/views/HR';
+import Pill from '../../../../common/components/views/Pill';
 import OrderMap from '../../../../common/screens/orders/OrderMap';
 import { OrderAdditionalInfo } from '../../../../common/screens/orders/summary/OrderAdditionaInfo';
 import { showToast } from '../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
-import { padding } from '../../../../common/styles';
+import { colors, padding, texts } from '../../../../common/styles';
+import { t } from '../../../../strings';
 import { Step } from '../../p2p/types';
 import { OrderCostBreakdown } from '../breakdown/OrderCostBreakdown';
 import { OrderAvailableFleets } from './OrderAvailableFleets';
@@ -17,6 +20,7 @@ import { OrderItems } from './OrderItems';
 import { OrderPayment } from './OrderPayment';
 import { OrderPlacesSummary } from './OrderPlacesSummary';
 import { OrderTotal } from './OrderTotal';
+import { RouteIssueCard } from './RouteIssueCard';
 
 type Props = {
   order: WithId<Order>;
@@ -28,7 +32,7 @@ type Props = {
   onAddItemsPress?: () => void;
   placeOrder: (fleetId: string) => void;
   navigateToFillPaymentInfo: () => void;
-  navigateFleetDetail: (fleet: WithId<Fleet>) => void;
+  navigateFleetDetail: (fleetId: string) => void;
   modalVisible: boolean;
   navigateToPixPayment: (total: number, fleetId: string) => void;
   onModalClose?: () => void;
@@ -118,14 +122,37 @@ export const OrderSummary = ({
       )}
 
       <HR height={padding} />
-
-      <OrderAvailableFleets
-        quotes={quotes}
-        selectedFare={selectedFare}
-        onFareSelect={(fare) => setSelectedFare(fare)}
-        onFleetSelect={navigateFleetDetail}
-        onRetry={getOrderQuotesHandler}
-      />
+      {order.route?.issue ? (
+        <View>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Pill />
+            <PaddedView
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <Text style={{ ...texts.md, ...texts.bold }}>{t('Escolha a frota')}</Text>
+              <Text style={{ ...texts.xs, color: colors.grey700 }}>
+                {quotes?.length ?? 0} {t('frota(s) ativas agora')}
+              </Text>
+            </PaddedView>
+          </View>
+          <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
+            <RouteIssueCard description={order.route.issue} />
+          </View>
+        </View>
+      ) : (
+        <OrderAvailableFleets
+          quotes={quotes}
+          selectedFare={selectedFare}
+          onFareSelect={(fare) => setSelectedFare(fare)}
+          onFleetSelect={navigateFleetDetail}
+          onRetry={getOrderQuotesHandler}
+        />
+      )}
 
       <HR height={padding} />
 
@@ -133,7 +160,7 @@ export const OrderSummary = ({
 
       <HR height={padding} />
 
-      <OrderTotal total={selectedFare?.consumer.total ?? 0} />
+      <OrderTotal total={selectedFare?.total ?? 0} />
 
       <HR height={padding} />
 
@@ -144,7 +171,7 @@ export const OrderSummary = ({
         onSubmit={() => placeOrder(selectedFare?.fleet?.id!)}
         activityIndicator={busy}
         navigateToPixPayment={() =>
-          navigateToPixPayment(selectedFare?.consumer.total ?? 0, selectedFare?.fleet?.id!)
+          navigateToPixPayment(selectedFare?.total ?? 0, selectedFare?.fleet?.id!)
         }
         navigateToAboutCharges={navigateToAboutCharges}
       />

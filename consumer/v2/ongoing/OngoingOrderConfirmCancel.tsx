@@ -1,13 +1,13 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Image, Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
-import * as icons from '../../../assets/icons';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import FeedbackView from '../../../common/components/views/FeedbackView';
+import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import {
@@ -62,7 +62,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
       <FeedbackView
         header={t('Tem certeza que deseja cancelar?')}
         description={description}
-        icon={<Image source={icons.coneYellow} />}
+        icon={<IconConeYellow />}
       />
       <View
         style={{
@@ -98,7 +98,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
     <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
       <PaddedView style={{ flex: 1 }}>
         <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: doublePadding }}>
-          <Image source={icons.coneYellow} />
+          <IconConeYellow />
           <Text style={{ ...texts.xl, marginTop: padding }}>{t('Aviso importante:')}</Text>
           <Text style={{ ...texts.xl, color: colors.red }}>
             {t('este cancelamento será cobrado')}

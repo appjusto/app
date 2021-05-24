@@ -1,10 +1,10 @@
 import { BusinessAlgolia } from '@appjusto/types';
 import React from 'react';
-import { ActivityIndicator, Image, SectionList, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, SectionList, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import * as icons from '../../../../../assets/icons';
 import DoubleHeader from '../../../../../common/components/texts/DoubleHeader';
 import FeedbackView from '../../../../../common/components/views/FeedbackView';
+import { IconConeYellow } from '../../../../../common/icons/icon-cone-yellow';
 import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 import useCuisines from '../../../../../common/store/api/platform/hooks/useCuisines';
 // import { distanceBetweenLatLng } from '../../../../common/store/api/helpers';
@@ -67,7 +67,7 @@ export default function ({ items, ListHeaderComponent, onSelect, onEndReached }:
             description={t(
               'Não encontramos nenhum resultado para a sua busca. Refaça a pesquisa ou utilize filtros diferentes.'
             )}
-            icon={<Image source={icons.coneYellow} />}
+            icon={<IconConeYellow />}
           />
         )
       }

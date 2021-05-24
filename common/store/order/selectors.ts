@@ -66,7 +66,7 @@ export const summarizeOrders = memoize((orders: WithId<Order>[]) =>
       ongoing: isOrderOngoing(order) ? result.ongoing + 1 : result.ongoing,
       courierFee:
         order.status === 'delivered'
-          ? result.courierFee + (order.fare?.consumer.courierFee ?? 0) + (order.tip?.value ?? 0)
+          ? result.courierFee + (order.fare?.courier.value ?? 0) + (order.tip?.value ?? 0)
           : result.courierFee,
     }),
     { delivered: 0, ongoing: 0, courierFee: 0 }

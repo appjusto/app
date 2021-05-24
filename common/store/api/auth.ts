@@ -1,6 +1,7 @@
 import { DeleteAccountPayload } from '@appjusto/types';
 import Constants from 'expo-constants';
 import firebase from 'firebase';
+// import * as Sentry from 'sentry-expo';
 import { Environment, Extra } from '../../../config/types';
 import FirebaseRefs from './FirebaseRefs';
 
@@ -11,9 +12,19 @@ export default class AuthApi {
     return this.auth.onAuthStateChanged(handler);
   }
 
-  sendSignInLinkToEmail(email: string, environment: Environment): Promise<void> {
+  async sendSignInLinkToEmail(email: string, environment: Environment): Promise<void> {
     this.auth.languageCode = 'pt'; // i18n
     const domain = `${environment.charAt(0)}.deeplink.appjusto.com.br`;
+    try {
+      await this.refs.getPlatformLoginLogsRef().add({
+        email,
+        flavor: this.extra.flavor,
+        signInAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+    } catch (error) {
+      // Sentry.Native.captureException(error);
+    }
+
     return this.auth.sendSignInLinkToEmail(email, {
       url: `https://${domain}/${this.extra.flavor}/join`,
       handleCodeInApp: true,

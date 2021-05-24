@@ -6,6 +6,7 @@ import React from 'react';
 import { Alert, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
+import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../common/app/context';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/containers/PaddedView';
@@ -109,6 +110,7 @@ export default function ({ navigation, route }: Props) {
       try {
         await dispatch(updateProfile(api)(courier.id, { situation: 'submitted' }));
       } catch (error) {
+        Sentry.Native.captureException(error);
         dispatch(showToast(error.toString(), 'error'));
       }
     })();
@@ -119,7 +121,6 @@ export default function ({ navigation, route }: Props) {
   }, [queryClient]);
 
   const logOut = () => {
-    console.log('cadê?');
     Alert.alert(
       t('Sair da conta'),
       t(
