@@ -239,6 +239,19 @@ export default function ({ navigation, route }: Props) {
             </PaddedView>
           </View>
         ) : null}
+        {order.type === 'food' && (
+          <View>
+            <HR height={padding} />
+            <HR />
+            <PaddedView>
+              <DefaultButton
+                title={t('Abrir chat com o restaurante')}
+                onPress={() => null}
+                style={{ marginBottom: padding }}
+              />
+            </PaddedView>
+          </View>
+        )}
       </KeyboardAvoidingView>
     </ScrollView>
   );

@@ -1,18 +1,15 @@
 import { Fare, Order, WithId } from '@appjusto/types';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
-import PaddedView from '../../../../common/components/containers/PaddedView';
 import HR from '../../../../common/components/views/HR';
-import Pill from '../../../../common/components/views/Pill';
 import OrderMap from '../../../../common/screens/orders/OrderMap';
 import { OrderAdditionalInfo } from '../../../../common/screens/orders/summary/OrderAdditionaInfo';
 import { showToast } from '../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
-import { colors, padding, texts } from '../../../../common/styles';
-import { t } from '../../../../strings';
+import { padding } from '../../../../common/styles';
 import { Step } from '../../p2p/types';
 import { OrderCostBreakdown } from '../breakdown/OrderCostBreakdown';
 import { OrderAvailableFleets } from './OrderAvailableFleets';
@@ -20,7 +17,6 @@ import { OrderItems } from './OrderItems';
 import { OrderPayment } from './OrderPayment';
 import { OrderPlacesSummary } from './OrderPlacesSummary';
 import { OrderTotal } from './OrderTotal';
-import { RouteIssueCard } from './RouteIssueCard';
 
 type Props = {
   order: WithId<Order>;
@@ -37,6 +33,8 @@ type Props = {
   navigateToPixPayment: (total: number, fleetId: string) => void;
   onModalClose?: () => void;
   navigateToAboutCharges: () => void;
+  additionalInfo?: string;
+  onAddInfo?: (text: string) => void;
 };
 
 export const OrderSummary = ({
@@ -54,6 +52,8 @@ export const OrderSummary = ({
   onModalClose,
   navigateToPixPayment,
   navigateToAboutCharges,
+  additionalInfo,
+  onAddInfo,
 }: Props) => {
   // context
   const api = React.useContext(ApiContext);
@@ -62,7 +62,7 @@ export const OrderSummary = ({
   const busy = useSelector(getUIBusy);
   const [quotes, setQuotes] = React.useState<Fare[]>();
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
-  const [additionalInfo, setAdditionalInfo] = React.useState('');
+  // const [additionalInfo, setAdditionalInfo] = React.useState('');
   const canSubmit = React.useMemo(() => {
     return selectedPaymentMethodId !== undefined && selectedFare !== undefined && !waiting;
   }, [selectedPaymentMethodId, selectedFare, waiting]);
@@ -117,42 +117,19 @@ export const OrderSummary = ({
             onModalClose={onModalClose!}
             modalVisible={modalVisible}
           />
-          <OrderAdditionalInfo value={additionalInfo} onAddInfo={setAdditionalInfo} />
+          <OrderAdditionalInfo value={additionalInfo} onAddInfo={onAddInfo} />
         </View>
       )}
 
       <HR height={padding} />
-      {order.route?.issue ? (
-        <View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Pill />
-            <PaddedView
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <Text style={{ ...texts.md, ...texts.bold }}>{t('Escolha a frota')}</Text>
-              <Text style={{ ...texts.xs, color: colors.grey700 }}>
-                {quotes?.length ?? 0} {t('frota(s) ativas agora')}
-              </Text>
-            </PaddedView>
-          </View>
-          <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
-            <RouteIssueCard description={order.route.issue} />
-          </View>
-        </View>
-      ) : (
-        <OrderAvailableFleets
-          quotes={quotes}
-          selectedFare={selectedFare}
-          onFareSelect={(fare) => setSelectedFare(fare)}
-          onFleetSelect={navigateFleetDetail}
-          onRetry={getOrderQuotesHandler}
-        />
-      )}
+
+      <OrderAvailableFleets
+        quotes={quotes}
+        selectedFare={selectedFare}
+        onFareSelect={(fare) => setSelectedFare(fare)}
+        onFleetSelect={navigateFleetDetail}
+        onRetry={getOrderQuotesHandler}
+      />
 
       <HR height={padding} />
 

@@ -13,6 +13,7 @@ import { OrderSummary } from '../../../common/order-summary/OrderSummary';
 import { LoggedNavigatorParamList } from '../../../types';
 import { FoodOrderNavigatorParamList } from '../../types';
 import { RestaurantNavigatorParamList } from '../types';
+import { DestinationModal } from './DestinationModal';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<RestaurantNavigatorParamList, 'FoodOrderCheckout'>,
@@ -29,6 +30,8 @@ type Props = {
 };
 
 export const FoodOrderCheckout = ({ navigation, route }: Props) => {
+  // params
+  const { params } = route;
   // context
   const api = React.useContext(ApiContext);
   const order = useContextActiveOrder();
@@ -41,14 +44,28 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   );
   const [isLoading, setLoading] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
+  const [destinationModalVisible, setDestinationModalVisible] = React.useState(false);
+  const [confirmedDestination, setConfirmedDestination] = React.useState(false);
+  const [orderAdditionalInfo, setOrderAdditionalInfo] = React.useState('');
   // side effects
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
-    if (order && route.params?.destination) {
-      api.order().updateOrder(order.id, { destination: route.params.destination });
+    if (params?.destination) {
+      if (order) {
+        api.order().updateOrder(order.id, { destination: params.destination });
+        setConfirmedDestination(true);
+      }
+      navigation.setParams({
+        destination: undefined,
+      });
     }
-    if (route.params?.paymentMethodId) setSelectedPaymentMethodId(route.params?.paymentMethodId);
-  }, [api, order, route.params]);
+    if (params?.paymentMethodId) {
+      setSelectedPaymentMethodId(params?.paymentMethodId);
+      navigation.setParams({
+        paymentMethodId: undefined,
+      });
+    }
+  }, [api, navigation, order, params]);
   // check if order is empty to pop this screen
   React.useEffect(() => {
     if (order?.items?.length === 0) navigation.pop();
@@ -65,17 +82,25 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       });
     }
   }, [consumer.name, order, api]);
-
   // handlers
   const placeOrderHandler = async (fleetId: string) => {
     if (!order) return;
     if (!selectedPaymentMethodId) return;
+    if (!confirmedDestination) {
+      setDestinationModalVisible(true);
+      return;
+    }
     try {
       setLoading(true);
-      await api.order().placeOrder(order.id, fleetId, {
-        payableWith: 'credit_card',
-        paymentMethodId: selectedPaymentMethodId,
-      });
+      await api.order().placeOrder(
+        order.id,
+        fleetId,
+        {
+          payableWith: 'credit_card',
+          paymentMethodId: selectedPaymentMethodId,
+        },
+        orderAdditionalInfo
+      );
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {
         screen: 'OngoingOrderConfirming',
@@ -104,6 +129,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const navigateFleetDetail = (fleetId: string) => {
     navigation.navigate('FleetDetail', { fleetId });
   };
+
   // UI
   if (!order) {
     return (
@@ -123,7 +149,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           navigation.navigate('OrderDestination', {
             returnScreen: 'FoodOrderCheckout',
             returnParam: 'destination',
-            value: order.destination ?? null,
           });
         }}
         onEditItemPress={(productId, itemId) => {
@@ -140,6 +165,26 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           navigation.navigate('PayWithPix', { orderId: order.id!, total, fleetId })
         }
         navigateToAboutCharges={() => navigation.navigate('AboutCharges')}
+        additionalInfo={orderAdditionalInfo}
+        onAddInfo={(text) => setOrderAdditionalInfo(text)}
+      />
+      <DestinationModal
+        modalVisible={destinationModalVisible}
+        onModalClose={() => {
+          setDestinationModalVisible(false);
+        }}
+        onConfirmAddress={() => {
+          setDestinationModalVisible(false);
+          setConfirmedDestination(true);
+        }}
+        order={order}
+        onEditAddress={() => {
+          navigation.navigate('OrderDestination', {
+            returnScreen: 'FoodOrderCheckout',
+            returnParam: 'destination',
+          });
+          setDestinationModalVisible(false);
+        }}
       />
     </ScrollView>
   );
