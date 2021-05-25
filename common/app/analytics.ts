@@ -1,4 +1,4 @@
-import * as Segment from 'expo-analytics-segment';
+// import * as Segment from 'expo-analytics-segment';
 import Constants from 'expo-constants';
 import * as Sentry from 'sentry-expo';
 import { AnalyticsConfig } from '../../config/types';
@@ -15,8 +15,6 @@ export function init(props: AnalyticsConfig) {
     release: Constants.manifest.revisionId,
   });
 
-  console.log(props);
-
   const {
     segmentConsumerAndroidKey,
     segmentConsumeriOSKey,
@@ -30,15 +28,16 @@ export function init(props: AnalyticsConfig) {
     !segmentCourieriOSKey
   )
     return;
-  Segment.initialize(
-    flavor === 'consumer'
-      ? {
-          androidWriteKey: segmentConsumerAndroidKey,
-          iosWriteKey: segmentConsumeriOSKey,
-        }
-      : {
-          androidWriteKey: segmentCourierAndroidKey,
-          iosWriteKey: segmentCourieriOSKey,
-        }
-  );
+  console.log('Segment.initialize');
+  // Segment.initialize(
+  //   flavor === 'consumer'
+  //     ? {
+  //         androidWriteKey: segmentConsumerAndroidKey,
+  //         iosWriteKey: segmentConsumeriOSKey,
+  //       }
+  //     : {
+  //         androidWriteKey: segmentCourierAndroidKey,
+  //         iosWriteKey: segmentCourieriOSKey,
+  //       }
+  // );
 }
