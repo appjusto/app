@@ -39,7 +39,7 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // params
-  const { orderId, newMessage, completeWithoutConfirmation } = route.params;
+  const { orderId, chatFrom, completeWithoutConfirmation } = route.params;
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -52,15 +52,31 @@ export default function ({ navigation, route }: Props) {
   // side effects
   // tracking
   useSegmentScreen('Ongoing Delivery');
+  // helpers
+  const openChat = React.useCallback(
+    (counterpartId: string, counterpartFlavor: Flavor, delayed?: boolean) => {
+      setTimeout(
+        () => {
+          navigation.navigate('Chat', {
+            orderId,
+            counterpartId,
+            counterpartFlavor,
+          });
+        },
+        delayed ? 100 : 0
+      );
+    },
+    [navigation, orderId]
+  );
   // whenever params updates
   // open chat if there's a new message
   React.useEffect(() => {
-    if (newMessage) {
+    if (chatFrom) {
       // workaround to make sure chat is being shown; (it was not showing on Android devices during tests)
-      navigation.setParams({ newMessage: false });
-      openChatWithConsumer(true);
+      navigation.setParams({ chatFrom: undefined });
+      openChat(chatFrom.id, chatFrom.agent);
     }
-  }, [newMessage]);
+  }, [navigation, chatFrom, openChat]);
   React.useEffect(() => {
     if (!completeWithoutConfirmation) return;
     (async () => {
@@ -82,21 +98,6 @@ export default function ({ navigation, route }: Props) {
       navigation.replace('OrderCanceled', { orderId });
     }
   }, [order]);
-  const openChat = React.useCallback(
-    (counterpartId: string, counterpartFlavor: Flavor, delayed?: boolean) => {
-      setTimeout(
-        () => {
-          navigation.navigate('Chat', {
-            orderId,
-            counterpartId,
-            counterpartFlavor,
-          });
-        },
-        delayed ? 100 : 0
-      );
-    },
-    [navigation, orderId]
-  );
   const openChatWithConsumer = React.useCallback(
     (delayed?: boolean) => openChat(consumerId!, 'consumer', delayed),
     [openChat, consumerId]

@@ -43,7 +43,7 @@ export default function ({ order, onSelect }: Props) {
           <MessagesCard
             orderId={order.id}
             variant="coupled"
-            onPress={() => onSelect(order, true)}
+            onPress={() => onSelect(order, false)}
           />
           <PaddedView
             style={{

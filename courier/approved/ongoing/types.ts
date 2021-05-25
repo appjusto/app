@@ -1,3 +1,4 @@
+import { ChatMessageUser } from '@appjusto/types';
 import { ChatParamList } from '../../../common/screens/Chat';
 import { ReportIssueParamList } from '../../../common/screens/ReportIssue';
 import { OrderCanceledParamList } from './OrderCanceled';
@@ -5,7 +6,7 @@ import { OrderCanceledParamList } from './OrderCanceled';
 export type OngoingDeliveryNavigatorParamList = {
   OngoingDelivery: {
     orderId: string;
-    newMessage?: boolean;
+    chatFrom?: ChatMessageUser;
     completeWithoutConfirmation?: boolean;
   };
   DeliveryCompleted: {

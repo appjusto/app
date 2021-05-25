@@ -65,12 +65,13 @@ export default function ({ navigation }: Props) {
     if (!chatQuery.data || chatQuery.data.length === 0) return;
     const [notification] = chatQuery.data;
     // console.log(notification);
-    if (notification.clicked) {
+    const { clicked, data } = notification;
+    if (clicked) {
       navigation.navigate('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: {
-          orderId: notification.data.orderId,
-          newMessage: true,
+          orderId: data.orderId,
+          chatFrom: data.from,
         },
       });
     }
