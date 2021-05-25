@@ -58,7 +58,6 @@ export default function ({ route }: Props) {
         )
     );
   }, [chat, queryClient, counterpartId, orderId]);
-  console.log(chat);
 
   // UI
   if (!order) {
@@ -89,6 +88,11 @@ export default function ({ route }: Props) {
     else if (from === order.business?.id) return order.business.name ?? t('Restaurante');
     else return 'Suporte';
   };
+  const getImageFlavor = (from: string) => {
+    if (from === order.consumer.id) return 'consumer';
+    else if (from === order.courier?.id) return 'courier';
+    else if (from === order.business?.id) return 'business';
+  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -108,10 +112,7 @@ export default function ({ route }: Props) {
             }}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <RoundedProfileImg
-                flavor={item.from === order.courier!.id ? 'courier' : 'consumer'}
-                id={item.from}
-              />
+              <RoundedProfileImg flavor={getImageFlavor(item.from)} id={item.from} />
               <View style={{ marginLeft: padding / 2 }}>
                 <Text style={[texts.md]}>{getName(item.from)}</Text>
               </View>
