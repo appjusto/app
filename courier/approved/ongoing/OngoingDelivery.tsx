@@ -185,9 +185,19 @@ export default function ({ navigation, route }: Props) {
             justifyContent: 'space-between',
           }}
         >
-          <View style={{ marginBottom: padding }}>
+          <View style={{ marginBottom: padding, maxWidth: '63%' }}>
             <Text style={[texts.xs, { color: colors.green600 }]}>{addressLabel}</Text>
-            <Text style={[texts.xs]}>{nextPlace?.address.main}</Text>
+            <Text style={[texts.xs, { marginTop: 4 }]} numberOfLines={2}>
+              {nextPlace?.address.main}
+            </Text>
+            {nextPlace?.additionalInfo && (
+              <Text style={[texts.xs, { marginTop: 4 }]}>{nextPlace?.additionalInfo}</Text>
+            )}
+            {nextPlace?.intructions && (
+              <Text style={[texts.xs, { marginTop: 4 }]} numberOfLines={2}>
+                {nextPlace?.intructions}
+              </Text>
+            )}
           </View>
           <View>
             <CourierDistanceBadge order={order} />

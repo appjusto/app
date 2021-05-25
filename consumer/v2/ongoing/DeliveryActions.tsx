@@ -28,9 +28,11 @@ export const DeliveryActions = ({
           alignItems: 'center',
         }}
       >
-        <View>
+        <View style={{ maxWidth: '70%' }}>
           <Text style={[texts.xs, { color: colors.green600 }]}>{t('Entregar em')}</Text>
-          <Text style={[texts.xs]}>{order.destination?.address.main ?? ''}</Text>
+          <Text style={[texts.xs]} numberOfLines={2}>
+            {order.destination?.address.main ?? ''}
+          </Text>
           <Text style={{ ...texts.xs, color: colors.grey700 }}>
             {order.destination?.additionalInfo ?? ''}
           </Text>
