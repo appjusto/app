@@ -1,4 +1,4 @@
-import { Flavor } from '@appjusto/types';
+import { ChatMessageUser, Flavor } from '@appjusto/types';
 import { ReportIssueParamList } from '../../../common/screens/ReportIssue';
 import { OrderCanceledParamList } from '../../../courier/approved/ongoing/OrderCanceled';
 
@@ -13,7 +13,7 @@ export type OngoingOrderNavigatorParamList = {
   };
   OngoingOrder: {
     orderId: string;
-    newMessage?: boolean;
+    chatFrom?: ChatMessageUser;
   };
   OngoingOrderConfirmCancel: {
     orderId: string;

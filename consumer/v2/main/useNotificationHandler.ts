@@ -18,12 +18,13 @@ export const useNotificationHandler = () => {
   React.useEffect(() => {
     if (!chatQuery.data || chatQuery.data.length === 0) return;
     const [notification] = chatQuery.data;
-    if (notification.clicked) {
+    const { clicked, data } = notification;
+    if (clicked) {
       navigation.navigate('OngoingOrderNavigator', {
         screen: 'OngoingOrder',
         params: {
-          orderId: notification.data.orderId,
-          newMessage: true,
+          orderId: data.orderId,
+          chatFrom: data.from,
         },
       });
     }

@@ -3,7 +3,7 @@ import { Feather } from '@expo/vector-icons';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { borders, colors, texts } from '../../../styles';
+import { borders, colors, halfPadding, texts } from '../../../styles';
 import { formatAddress } from '../../../utils/formatters';
 
 type Props = {
@@ -15,16 +15,20 @@ type Props = {
 export default function ({ place, title, onEdit }: Props) {
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-      <View>
+      <View style={{ maxWidth: '90%' }}>
         <Text style={{ ...texts.xs, color: colors.green600 }}>{title}</Text>
-        <Text style={{ ...texts.md }}>{formatAddress(place.address!)}</Text>
+        <Text style={{ ...texts.md, marginTop: 4 }} numberOfLines={2}>
+          {formatAddress(place.address!)}
+        </Text>
         {place.address?.secondary && (
-          <Text style={{ ...texts.sm }}>{place.address?.secondary ?? ''}</Text>
+          <Text style={{ ...texts.sm, marginTop: 4 }}>{place.address?.secondary ?? ''}</Text>
         )}
         {!isEmpty(place.additionalInfo) && (
-          <Text style={{ ...texts.xs }}>{place.additionalInfo}</Text>
+          <Text style={{ ...texts.xs, marginTop: 4 }}>{place.additionalInfo}</Text>
         )}
-        <Text style={{ ...texts.xs }}>{place.intructions}</Text>
+        <Text style={{ ...texts.xs, marginBottom: halfPadding, marginTop: 4 }}>
+          {place.intructions}
+        </Text>
       </View>
       {onEdit && (
         <View style={{ alignSelf: 'center', width: 32, height: 32 }}>

@@ -94,7 +94,7 @@ export const OrderSummary = ({
       }
     })();
   }, [order, dispatch, api]);
-
+  console.log(order);
   // UI
   return (
     <ScrollView style={{ flex: 1, marginBottom: 24 }}>
@@ -147,9 +147,7 @@ export const OrderSummary = ({
         isSubmitEnabled={canSubmit}
         onSubmit={() => placeOrder(selectedFare?.fleet?.id!)}
         activityIndicator={busy}
-        navigateToPixPayment={() =>
-          navigateToPixPayment(selectedFare?.total ?? 0, selectedFare?.fleet?.id!)
-        }
+        navigateToPixPayment={() => null}
         navigateToAboutCharges={navigateToAboutCharges}
       />
     </ScrollView>

@@ -38,7 +38,7 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // params
-  const { orderId, newMessage } = route.params;
+  const { orderId, chatFrom } = route.params;
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -79,12 +79,11 @@ export default function ({ navigation, route }: Props) {
   // whenever params changes
   // open chat if there's a new message
   React.useEffect(() => {
-    if (newMessage) {
-      navigation.setParams({ newMessage: false });
-      // TO-DO: get counterPartId. maybe use a new hook?!
-      openChatWithCourier(true);
+    if (chatFrom) {
+      navigation.setParams({ chatFrom: undefined });
+      openChat(chatFrom.id, chatFrom.agent);
     }
-  }, [navigation, newMessage, openChatWithCourier]);
+  }, [navigation, chatFrom, openChat]);
   // whenever notification token needs to be updated
   React.useEffect(() => {
     if (shouldDeleteToken || shouldUpdateToken) {
@@ -133,7 +132,6 @@ export default function ({ navigation, route }: Props) {
     });
 
   // ongoing UI
-  const { dispatchingState } = order;
   return (
     <ScrollView
       style={{ ...screens.default, paddingBottom: 32 }}

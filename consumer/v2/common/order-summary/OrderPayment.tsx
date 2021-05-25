@@ -4,13 +4,10 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import RoundedText from '../../../../common/components/texts/RoundedText';
-import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import { PixCard } from '../PixCard';
 
 interface Props {
   selectedPaymentMethodId?: string;
@@ -35,13 +32,15 @@ export const OrderPayment = ({
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
   return (
     <View>
-      <SingleHeader title={t('Forma de pagamento')} />
+      {/* <View style={{ marginTop: padding }}>
+        <SingleHeader title={t('Forma de pagamento')} />
+      </View> */}
       <PaddedView>
-        {Boolean(!selectedPaymentMethod) && (
+        {/* {Boolean(!selectedPaymentMethod) && (
           <View style={{ marginBottom: padding }}>
             <PixCard navigateToPixPayment={navigateToPixPayment} />
           </View>
-        )}
+        )} */}
         {Boolean(selectedPaymentMethod) && (
           <View style={{ marginBottom: halfPadding }}>
             <TouchableOpacity onPress={onEditPaymentMethod}>
@@ -80,9 +79,10 @@ export const OrderPayment = ({
 
         {Boolean(!selectedPaymentMethod) && (
           <DefaultButton
-            title={t('Escolher outra forma de pagamento')}
+            title={t('Escolher uma forma de pagamento')}
             onPress={onEditPaymentMethod}
             secondary
+            style={{ marginTop: padding }}
           />
         )}
         {Boolean(selectedPaymentMethod) && (
@@ -94,7 +94,7 @@ export const OrderPayment = ({
             activityIndicator={activityIndicator}
           />
         )}
-        {Boolean(selectedPaymentMethod) && (
+        {/* {Boolean(selectedPaymentMethod) && (
           <DefaultButton
             secondary
             title={t('Quero pagar com Pix')}
@@ -105,7 +105,7 @@ export const OrderPayment = ({
               {t('Novo!')}
             </RoundedText>
           </DefaultButton>
-        )}
+        )} */}
       </PaddedView>
     </View>
   );
