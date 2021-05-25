@@ -15,8 +15,9 @@ interface Props {
 
 export const MessagesCard = ({ orderId, variant = 'standalone', onPress }: Props) => {
   const chatQuery = useQuery<PushMessage[]>(['notifications', 'order-chat'], () => []);
-  const unreadCount = (chatQuery.data ?? []).filter((m) => m.data.orderId === orderId && !m.read)
-    .length;
+  const unreadCount = (chatQuery.data ?? []).filter(
+    (m) => m.data.orderId === orderId && !m.read
+  ).length;
   if (unreadCount === 0) return null;
   return (
     <TouchableOpacity onPress={onPress}>

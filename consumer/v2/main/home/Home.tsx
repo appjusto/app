@@ -92,7 +92,6 @@ export default function ({ navigation }: Props) {
                 screen: 'OngoingOrder',
                 params: {
                   orderId: order.id,
-                  newMessage: openChat,
                 },
               })
             }
