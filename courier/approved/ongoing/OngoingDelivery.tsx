@@ -1,3 +1,4 @@
+import { Flavor } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -46,6 +47,8 @@ export default function ({ navigation, route }: Props) {
   const order = useObserveOrder(orderId);
   const [code, setCode] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
+  const consumerId = order?.consumer.id;
+  const businessId = order?.business?.id;
   // side effects
   // tracking
   useSegmentScreen('Ongoing Delivery');
@@ -79,6 +82,29 @@ export default function ({ navigation, route }: Props) {
       navigation.replace('OrderCanceled', { orderId });
     }
   }, [order]);
+  const openChat = React.useCallback(
+    (counterpartId: string, counterpartFlavor: Flavor, delayed?: boolean) => {
+      setTimeout(
+        () => {
+          navigation.navigate('Chat', {
+            orderId,
+            counterpartId,
+            counterpartFlavor,
+          });
+        },
+        delayed ? 100 : 0
+      );
+    },
+    [navigation, orderId]
+  );
+  const openChatWithConsumer = React.useCallback(
+    (delayed?: boolean) => openChat(consumerId!, 'consumer', delayed),
+    [openChat, consumerId]
+  );
+  const openChatWithRestaurant = React.useCallback(
+    (delayed?: boolean) => openChat(businessId!, 'business', delayed),
+    [openChat, businessId]
+  );
 
   // UI
   if (!order?.dispatchingState) {
@@ -106,18 +132,7 @@ export default function ({ navigation, route }: Props) {
       setLoading(false);
     })();
   };
-  const openChatWithConsumer = (delayed?: boolean) => {
-    setTimeout(
-      () => {
-        navigation.navigate('Chat', {
-          orderId,
-          counterpartId: order.consumer.id,
-          counterpartFlavor: 'consumer',
-        });
-      },
-      delayed ? 100 : 0
-    );
-  };
+
   // UI
   const { type, dispatchingState, status } = order;
   const nextStepDisabled =
@@ -170,7 +185,7 @@ export default function ({ navigation, route }: Props) {
         <View style={{ marginTop: padding, paddingHorizontal: padding }}>
           <CourierDeliveryInfo
             order={order}
-            onChat={openChatWithConsumer}
+            onChat={() => openChatWithConsumer()}
             onProblem={() =>
               navigation.navigate('ReportIssue', {
                 orderId,
@@ -240,16 +255,13 @@ export default function ({ navigation, route }: Props) {
           </View>
         ) : null}
         {order.type === 'food' && (
-          <View>
-            <HR height={padding} />
-            <HR />
-            <PaddedView>
-              <DefaultButton
-                title={t('Abrir chat com o restaurante')}
-                onPress={() => null}
-                style={{ marginBottom: padding }}
-              />
-            </PaddedView>
+          <View style={{ marginHorizontal: padding }}>
+            <DefaultButton
+              title={t('Abrir chat com o restaurante')}
+              onPress={() => openChatWithRestaurant()}
+              style={{ marginBottom: padding }}
+              secondary
+            />
           </View>
         )}
       </KeyboardAvoidingView>
