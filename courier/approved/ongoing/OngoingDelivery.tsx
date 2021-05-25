@@ -206,14 +206,14 @@ export default function ({ navigation, route }: Props) {
             <Text style={[texts.xs, { marginTop: 4 }]} numberOfLines={2}>
               {nextPlace?.address.main}
             </Text>
-            {nextPlace?.additionalInfo && (
+            {nextPlace?.additionalInfo ? (
               <Text style={[texts.xs, { marginTop: 4 }]}>{nextPlace?.additionalInfo}</Text>
-            )}
-            {nextPlace?.intructions && (
+            ) : null}
+            {nextPlace?.intructions ? (
               <Text style={[texts.xs, { marginTop: 4 }]} numberOfLines={2}>
                 {nextPlace?.intructions}
               </Text>
-            )}
+            ) : null}
           </View>
           <View>
             <CourierDistanceBadge order={order} />
