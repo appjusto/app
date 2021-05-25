@@ -146,8 +146,7 @@ export default function ({ navigation, route }: Props) {
           <View>
             <OrderMap order={order} ratio={1} />
             <StatusAndMessages
-              dispatchingState={dispatchingState}
-              orderId={orderId}
+              order={order}
               onMessageReceived={openChatWithCourier} // just with the courier for now
             />
           </View>
@@ -179,11 +178,7 @@ export default function ({ navigation, route }: Props) {
             <View>
               <View>
                 <OrderMap order={order} ratio={1.2} />
-                <StatusAndMessages
-                  dispatchingState={dispatchingState}
-                  orderId={orderId}
-                  onMessageReceived={() => openChatWithCourier()}
-                />
+                <StatusAndMessages order={order} onMessageReceived={() => openChatWithCourier()} />
               </View>
               <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
               <DefaultButton

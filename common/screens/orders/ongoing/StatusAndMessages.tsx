@@ -1,4 +1,4 @@
-import { DispatchingState } from '@appjusto/types';
+import { Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { View } from 'react-native';
 import { padding } from '../../../styles';
@@ -6,20 +6,14 @@ import { MessagesCard } from '../../home/cards/MessagesCard';
 import CourierStatusHighlight from './CourierStatusHighlight';
 
 type Props = {
-  dispatchingState?: DispatchingState;
-  orderId: string;
+  order: WithId<Order>;
   onMessageReceived: () => void;
 };
 
-export const StatusAndMessages = ({
-  dispatchingState,
-  orderId,
-  onMessageReceived,
-  ...props
-}: Props) => {
+export const StatusAndMessages = ({ order, onMessageReceived, ...props }: Props) => {
   return (
     <View {...props}>
-      <CourierStatusHighlight dispatchingState={dispatchingState} />
+      <CourierStatusHighlight order={order} />
       <View
         style={{
           width: '100%',
@@ -28,7 +22,7 @@ export const StatusAndMessages = ({
           paddingHorizontal: padding,
         }}
       >
-        <MessagesCard orderId={orderId} onPress={onMessageReceived} />
+        <MessagesCard orderId={order.id} onPress={onMessageReceived} />
       </View>
     </View>
   );
