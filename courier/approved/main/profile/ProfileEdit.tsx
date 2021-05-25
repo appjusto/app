@@ -155,6 +155,7 @@ export default function ({ navigation, route }: Props) {
           onFocus={() => setFocusedField('cpf')}
           onBlur={() => setFocusedField(undefined)}
           onChangeText={(text) => setCpf(trim(text))}
+          editable={!courier.cpf!}
         />
 
         <View style={{ flex: 1 }} />
