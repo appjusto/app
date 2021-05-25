@@ -53,6 +53,7 @@ export default function ({ navigation, route }: Props) {
   // helpers
   const updatedCourier: Partial<CourierProfile> = { name, surname, phone, cpf };
   const canSubmit = courierInfoSet(updatedCourier);
+  const profileApproved = courier.situation === 'approved';
   // side effects
   // tracking
   useSegmentScreen('Profile Edit');
@@ -106,6 +107,7 @@ export default function ({ navigation, route }: Props) {
           onSubmitEditing={() => surnameRef.current?.focus()}
           keyboardType="default"
           maxLength={30}
+          editable={!profileApproved}
         />
         <DefaultInput
           ref={surnameRef}
@@ -119,6 +121,7 @@ export default function ({ navigation, route }: Props) {
           onSubmitEditing={() => phoneRef.current?.focus()}
           keyboardType="default"
           maxLength={30}
+          editable={!profileApproved}
         />
         <PatternInput
           ref={phoneRef}
@@ -134,6 +137,7 @@ export default function ({ navigation, route }: Props) {
           blurOnSubmit={false}
           onChangeText={(text) => setPhone(trim(text))}
           onSubmitEditing={() => cpfRef.current?.focus()}
+          editable={!profileApproved}
         />
         {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
           <Text style={{ ...texts.sm, ...texts.bold, color: colors.grey700, marginTop: padding }}>
@@ -155,17 +159,20 @@ export default function ({ navigation, route }: Props) {
           onFocus={() => setFocusedField('cpf')}
           onBlur={() => setFocusedField(undefined)}
           onChangeText={(text) => setCpf(trim(text))}
+          editable={!profileApproved}
         />
 
         <View style={{ flex: 1 }} />
-        <SafeAreaView>
-          <DefaultButton
-            title={courier.situation === 'approved' ? t('Atualizar') : t('Avançar')}
-            onPress={updateProfileHandler}
-            disabled={!canSubmit || busy}
-            activityIndicator={busy}
-          />
-        </SafeAreaView>
+        {!profileApproved && (
+          <SafeAreaView>
+            <DefaultButton
+              title={t('Avançar')}
+              onPress={updateProfileHandler}
+              disabled={!canSubmit || busy}
+              activityIndicator={busy}
+            />
+          </SafeAreaView>
+        )}
       </PaddedView>
     </KeyboardAvoidingView>
   );

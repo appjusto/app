@@ -1,4 +1,4 @@
-import { DispatchingState } from '@appjusto/types';
+import { Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -9,35 +9,62 @@ import { getFlavor } from '../../../store/config/selectors';
 import { borders, colors, halfPadding, padding, texts } from '../../../styles';
 
 type Props = {
-  dispatchingState?: DispatchingState;
+  order: WithId<Order>;
 };
 
-export default function ({ dispatchingState }: Props) {
+export default function ({ order }: Props) {
+  // params
+  const { type, status, dispatchingState, code } = order;
   // context
   const tallerDevice = useTallerDevice();
   // redux store
   const flavor = useSelector(getFlavor);
-
-  if (dispatchingState !== 'arrived-pickup' && dispatchingState !== 'arrived-destination')
-    return null;
+  // UI
   let title = '';
   let message = '';
   if (flavor === 'consumer') {
-    title = t('Entregador chegou ao local');
-    message =
-      dispatchingState === 'arrived-pickup'
-        ? t('Aguardando para retirada')
-        : t('Aguardando para entrega');
+    if (type === 'food') {
+      if (dispatchingState === 'arrived-pickup') {
+        title = t('Entregador chegou ao restaurante');
+        message = t('Entregador está aguardando receber o pedido do restaurante.');
+      } else if (dispatchingState === 'arrived-destination') {
+        title = t('Entregador chegou!');
+        message = t('Entregador está esperando para entregar o pedido.');
+      }
+    } else if (type === 'p2p') {
+      if (dispatchingState === 'arrived-pickup') {
+        title = t('Entregador chegou ao local');
+        message = t('Entregador está aguardando para receber a encomenda.');
+      } else if (dispatchingState === 'arrived-destination') {
+        title = t('Entregador chegou!');
+        message = t('Entregador está esperando para entregar a encomenda.');
+      }
+    }
   } else if (flavor === 'courier') {
-    if (dispatchingState === 'arrived-pickup') {
-      title = t('Aguardando para retirada');
-      message = t('Confirme sua saída somente após receber o pedido');
-    } else if (dispatchingState === 'arrived-destination') {
-      title = t('Aguardando para entrega');
-      message = t('Confirme sua saída somente após realizar a entregar');
+    if (type === 'food') {
+      if (dispatchingState === 'arrived-pickup') {
+        if (status === 'preparing') {
+          title = t('Aguardando pedido ficar pronto');
+          message = t('Confirme sua saída somente após receber o pedido');
+        } else if (status === 'ready') {
+          title = t('Pedido pronto!');
+          message = `${t('Informe o código')} ${code} para retirar o pedido.`;
+        }
+      } else if (dispatchingState === 'arrived-destination') {
+        title = t('Aguardando para fazer entrega');
+        message = t('Finalize a corrida somente após realizar a entrega.');
+      }
+    } else if (type === 'p2p') {
+      if (dispatchingState === 'arrived-pickup') {
+        title = t('Aguardando para fazer coleta');
+        message = t('Confirme sua saída somente após pegar a encomenda.');
+      } else if (dispatchingState === 'arrived-destination') {
+        title = t('Aguardando para fazer entrega');
+        message = t('Finalize a corrida somente após realizar a entrega.');
+      }
     }
   }
-
+  if (!title && !message) return null;
   return (
     <View style={{ paddingHorizontal: padding }}>
       <View style={{ flex: 1, alignItems: 'center' }}>

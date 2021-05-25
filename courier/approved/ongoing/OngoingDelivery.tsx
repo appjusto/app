@@ -175,11 +175,7 @@ export default function ({ navigation, route }: Props) {
           <OrderMap order={order!} ratio={360 / 316} />
           <RouteIcons order={order} />
           <View>
-            <StatusAndMessages
-              dispatchingState={dispatchingState}
-              orderId={orderId}
-              onMessageReceived={openChatWithConsumer}
-            />
+            <StatusAndMessages order={order} onMessageReceived={openChatWithConsumer} />
           </View>
         </View>
         <View style={{ marginTop: padding, paddingHorizontal: padding }}>
