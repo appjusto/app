@@ -51,6 +51,7 @@ export default function ({ navigation, route }: Props) {
   const [warning, setWarning] = React.useState<string>();
   const [personType, setPersonType] = React.useState<BankAccountPersonType>('Pessoa Física');
   const canSubmit = selectedBank && !isEmpty(agency) && !isEmpty(account) && type && personType;
+  const profileApproved = courier.situation === 'approved';
   // refs
   const accountRef = React.useRef<TextInput>(null);
   // side effects
@@ -126,13 +127,17 @@ export default function ({ navigation, route }: Props) {
           <View style={{ marginTop: padding }}>
             <RadioButton
               title={t('Pessoa Física')}
-              onPress={() => setPersonType('Pessoa Física')}
+              onPress={() => {
+                if (!profileApproved) setPersonType('Pessoa Física');
+              }}
               checked={personType === 'Pessoa Física'}
             />
             <View style={{ marginTop: halfPadding }}>
               <RadioButton
                 title={t('Pessoa Jurídica')}
-                onPress={() => setPersonType('Pessoa Jurídica')}
+                onPress={() => {
+                  if (!profileApproved) setPersonType('Pessoa Jurídica');
+                }}
                 checked={personType === 'Pessoa Jurídica'}
               />
             </View>
@@ -140,7 +145,7 @@ export default function ({ navigation, route }: Props) {
           <View style={{ marginTop: halfPadding, flex: 1 }}>
             <Pressable
               onPress={() => {
-                navigation.navigate('SelectBank');
+                if (!profileApproved) navigation.navigate('SelectBank');
               }}
             >
               <View>
@@ -162,7 +167,7 @@ export default function ({ navigation, route }: Props) {
               mask={selectedBank?.agencyPattern}
               parser={agencyParser}
               formatter={agencyFormatter}
-              editable={!!selectedBank}
+              editable={!profileApproved}
               keyboardType={
                 (selectedBank?.agencyPattern.indexOf('X') ?? -1) > -1 ? 'default' : 'number-pad'
               }
@@ -201,7 +206,7 @@ export default function ({ navigation, route }: Props) {
                 mask={selectedBank?.accountPattern}
                 parser={accountParser}
                 formatter={accountFormatter}
-                editable={!!selectedBank}
+                editable={!profileApproved}
                 keyboardType={
                   (selectedBank?.accountPattern.indexOf('X') ?? -1) > -1 ? 'default' : 'number-pad'
                 }
@@ -222,27 +227,33 @@ export default function ({ navigation, route }: Props) {
             <View style={{ marginTop: padding }}>
               <RadioButton
                 title={t('Conta-Corrente')}
-                onPress={() => setType('Corrente')}
+                onPress={() => {
+                  if (!profileApproved) setType('Corrente');
+                }}
                 checked={type === 'Corrente'}
               />
               <View style={{ marginTop: halfPadding }}>
                 <RadioButton
                   title={t('Poupança')}
-                  onPress={() => setType('Poupança')}
+                  onPress={() => {
+                    if (!profileApproved) setType('Poupança');
+                  }}
                   checked={type === 'Poupança'}
                 />
               </View>
             </View>
           </View>
           <View style={{ flex: 1 }} />
-          <SafeAreaView>
-            <DefaultButton
-              title={courier.situation === 'approved' ? t('Atualizar') : t('Avançar')}
-              disabled={!canSubmit}
-              activityIndicator={busy}
-              onPress={submitBankHandler}
-            />
-          </SafeAreaView>
+          {!profileApproved && (
+            <SafeAreaView>
+              <DefaultButton
+                title={t('Avançar')}
+                disabled={!canSubmit}
+                activityIndicator={busy}
+                onPress={submitBankHandler}
+              />
+            </SafeAreaView>
+          )}
         </PaddedView>
       </ScrollView>
       <DefaultModal

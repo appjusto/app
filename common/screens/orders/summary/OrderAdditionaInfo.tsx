@@ -25,6 +25,8 @@ export const OrderAdditionalInfo = ({ value, onAddInfo }: Props) => {
         value={value}
         onChangeText={(text) => onAddInfo(text)}
         style={{ height: 96, marginTop: halfPadding }}
+        returnKeyType="done"
+        blurOnSubmit
       />
     </View>
   );

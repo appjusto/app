@@ -1,3 +1,4 @@
+import { Flavor } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -52,13 +53,13 @@ export default function ({ navigation, route }: Props) {
   );
   // helpers
   const openChat = React.useCallback(
-    (counterpartId: string, delayed?: boolean) => {
+    (counterpartId: string, counterpartFlavor: Flavor, delayed?: boolean) => {
       setTimeout(
         () => {
           navigation.navigate('OngoingOrderChat', {
             orderId,
             counterpartId,
-            counterpartFlavor: 'courier',
+            counterpartFlavor,
           });
         },
         delayed ? 100 : 0
@@ -67,11 +68,11 @@ export default function ({ navigation, route }: Props) {
     [navigation, orderId]
   );
   const openChatWithCourier = React.useCallback(
-    (delayed?: boolean) => openChat(courierId!, delayed),
+    (delayed?: boolean) => openChat(courierId!, 'courier', delayed),
     [openChat, courierId]
   );
   const openChatWithRestaurant = React.useCallback(
-    (delayed?: boolean) => openChat(businessId!, delayed),
+    (delayed?: boolean) => openChat(businessId!, 'business', delayed),
     [openChat, businessId]
   );
   // side effects
@@ -131,8 +132,6 @@ export default function ({ navigation, route }: Props) {
       },
     });
 
-  console.log(orderId);
-
   // ongoing UI
   const { dispatchingState } = order;
   return (
@@ -146,8 +145,7 @@ export default function ({ navigation, route }: Props) {
           <View>
             <OrderMap order={order} ratio={1} />
             <StatusAndMessages
-              dispatchingState={dispatchingState}
-              orderId={orderId}
+              order={order}
               onMessageReceived={openChatWithCourier} // just with the courier for now
             />
           </View>
@@ -179,11 +177,7 @@ export default function ({ navigation, route }: Props) {
             <View>
               <View>
                 <OrderMap order={order} ratio={1.2} />
-                <StatusAndMessages
-                  dispatchingState={dispatchingState}
-                  orderId={orderId}
-                  onMessageReceived={() => openChatWithCourier()}
-                />
+                <StatusAndMessages order={order} onMessageReceived={() => openChatWithCourier()} />
               </View>
               <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
               <DefaultButton
@@ -201,6 +195,14 @@ export default function ({ navigation, route }: Props) {
                 navigateToReportIssue={navigateToReportIssue}
                 navigateToConfirmCancel={navigateToConfirmCancel}
               />
+              <View style={{ marginHorizontal: padding }}>
+                <DefaultButton
+                  title={t('Abrir chat com o restaurante')}
+                  onPress={() => openChatWithRestaurant()}
+                  style={{ marginBottom: padding }}
+                  secondary
+                />
+              </View>
             </View>
           ) : (
             <View>
@@ -215,6 +217,12 @@ export default function ({ navigation, route }: Props) {
                     navigateToReportIssue={navigateToReportIssue}
                     navigateToConfirmCancel={navigateToConfirmCancel}
                   />
+                  <PaddedView>
+                    <DefaultButton
+                      title={t('Abrir chat com o restaurante')}
+                      onPress={() => openChatWithRestaurant()}
+                    />
+                  </PaddedView>
                 </View>
               )}
               {order.type === 'p2p' && (
@@ -245,15 +253,18 @@ export default function ({ navigation, route }: Props) {
                   </PaddedView>
                 </View>
               )}
-              {order.type === 'food' && (
+              {/* {order.type === 'food' && (
                 <View>
                   <HR height={padding} />
                   <HR />
                   <PaddedView>
-                    <DefaultButton title={t('Abrir chat com o restaurante')} onPress={() => null} />
+                    <DefaultButton
+                      title={t('Abrir chat com o restaurante')}
+                      onPress={() => openChatWithRestaurant()}
+                    />
                   </PaddedView>
                 </View>
-              )}
+              )} */}
             </View>
           )}
         </View>
