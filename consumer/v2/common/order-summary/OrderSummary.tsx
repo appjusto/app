@@ -147,9 +147,7 @@ export const OrderSummary = ({
         isSubmitEnabled={canSubmit}
         onSubmit={() => placeOrder(selectedFare?.fleet?.id!)}
         activityIndicator={busy}
-        navigateToPixPayment={() =>
-          navigateToPixPayment(selectedFare?.total ?? 0, selectedFare?.fleet?.id!)
-        }
+        navigateToPixPayment={() => null}
         navigateToAboutCharges={navigateToAboutCharges}
       />
     </ScrollView>
