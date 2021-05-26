@@ -42,7 +42,7 @@ export default function ({ navigation, route }: Props) {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ConfigItem
-            title={item.data.last_digits}
+            title={item.data.display_number}
             subtitle={`Cartão de crédito\n${item.data.brand}`}
             onPress={() => {
               if (returnScreen) navigation.navigate(returnScreen, { paymentMethodId: item.id });
