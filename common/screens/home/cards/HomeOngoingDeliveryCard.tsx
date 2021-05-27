@@ -16,10 +16,26 @@ type Props = {
 export default function ({ order, onSelect }: Props) {
   const { dispatchingStatus, dispatchingState } = order;
   // UI
-  const title =
-    dispatchingStatus === 'matching'
-      ? t('Procurando entregadores próximos à')
-      : t('Corrida em andamento');
+  let title = '';
+  if (order.status === 'confirming' || order.status === 'quote') {
+    title = t('Aguarde enquanto criamos seu pedido...');
+  } else if (order.status === 'confirmed') {
+    if (order.dispatchingStatus === 'matching') {
+      title = t('Procurando entregadores próximos:');
+    } else {
+      title = t('Aguarde enquanto criamos o seu pedido...');
+    }
+  } else if (order.status === 'preparing') {
+    title = t('Pedido em preparo no estabelecimento');
+  } else if (order.status === 'ready') {
+    if (order.dispatchingStatus === 'matching') {
+      title = t('Procurando entregadores');
+    } else {
+      title = t('Corrida em andamento');
+    }
+  } else {
+    title = t('Corrida em andamento');
+  }
   let detail = '';
   if (order.origin && order.destination) {
     if (dispatchingStatus === 'matching') {
@@ -27,11 +43,11 @@ export default function ({ order, onSelect }: Props) {
     } else if (dispatchingState === 'going-pickup') {
       detail = `${t('À caminho de')} ${order.origin.address.main}`;
     } else if (dispatchingState === 'arrived-pickup') {
-      detail = order.origin.intructions ?? 'Aguardando retirada';
+      detail = 'Aguardando retirada';
     } else if (dispatchingState === 'going-destination') {
       detail = `${t('À caminho de')} ${order.destination.address.main}`;
     } else if (dispatchingState === 'arrived-destination') {
-      detail = order.destination.intructions ?? 'Aguardando entrega';
+      detail = 'Aguardando entrega';
     }
   }
   return (
@@ -57,7 +73,7 @@ export default function ({ order, onSelect }: Props) {
             ) : (
               <IconMotocycleCentered />
             )}
-            <View style={{ marginLeft: padding }}>
+            <View style={{ marginLeft: padding, maxWidth: '80%' }}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -66,15 +82,17 @@ export default function ({ order, onSelect }: Props) {
                 }}
               >
                 <View>
-                  <Text style={{ ...texts.sm }}>{title}</Text>
+                  <Text style={{ ...texts.sm }} numberOfLines={2}>
+                    {title}
+                  </Text>
                   <Text
                     style={{
                       ...texts.xs,
                       color: colors.grey700,
                       flexWrap: 'wrap',
-                      maxWidth: '85%',
+                      maxWidth: '97%',
                     }}
-                    numberOfLines={2}
+                    numberOfLines={3}
                   >
                     {detail}
                   </Text>
