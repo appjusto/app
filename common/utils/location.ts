@@ -13,8 +13,8 @@ const TASK_FETCH_LOCATION = 'TASK_FETCH_LOCATION';
 export const startLocationUpdatesTask = () => {
   return Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
     accuracy: Location.Accuracy.Highest,
-    distanceInterval: 1, // 1 meter minimum change betweens updates
-    deferredUpdatesInterval: 1000, // 1 second minimum interval between updates
+    distanceInterval: 2, // receive updates only when the location has changed by at least this distance in meters.
+    deferredUpdatesInterval: 3000, // minimum time to wait between each update in milliseconds.
     foregroundService: {
       notificationTitle: t('Localização ativa'),
       notificationBody: t('Para desativar, entre no app e pare de trabalhar.'),
