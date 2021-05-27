@@ -176,7 +176,7 @@ export default ({ navigation, route }: Props) => {
           >
             <View style={{ width: '49%' }}>
               <DefaultButton
-                title={t('Relatar um problema')}
+                title={t('Relatar problema')}
                 secondary
                 onPress={() =>
                   navigation.navigate('ReportIssue', {

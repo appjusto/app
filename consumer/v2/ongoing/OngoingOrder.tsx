@@ -152,14 +152,14 @@ export default function ({ navigation, route }: Props) {
                   alignItems: 'center',
                 }}
               >
-                <View style={{ width: '49%' }}>
+                <View>
                   <DefaultButton
-                    title={t('Relatar um problema')}
+                    title={t('Relatar problema')}
                     secondary
                     onPress={navigateToReportIssue}
                   />
                 </View>
-                <View style={{ width: '49%' }}>
+                <View>
                   <DefaultButton
                     title={t('Cancelar pedido')}
                     secondary

@@ -179,7 +179,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
             <HR height={padding} />
             <PaddedView>
               <DefaultButton
-                title={t('Relatar um problema')}
+                title={t('Relatar problema')}
                 onPress={() =>
                   navigation.navigate('ReportIssue', {
                     orderId: order.id,
