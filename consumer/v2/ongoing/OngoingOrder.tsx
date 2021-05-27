@@ -12,6 +12,7 @@ import HR from '../../../common/components/views/HR';
 import useNotificationToken from '../../../common/hooks/useNotificationToken';
 import { StatusAndMessages } from '../../../common/screens/orders/ongoing/StatusAndMessages';
 import OrderMap from '../../../common/screens/orders/OrderMap';
+import { OrderAdditionalInfo } from '../../../common/screens/orders/summary/OrderAdditionaInfo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { updateProfile } from '../../../common/store/user/actions';
@@ -207,6 +208,15 @@ export default function ({ navigation, route }: Props) {
             <View style={{ flex: 1 }}>
               <HR height={padding} />
               <DeliveredItems order={order} />
+              {order.additionalInfo ? (
+                <View>
+                  <OrderAdditionalInfo
+                    value={order.additionalInfo}
+                    onAddInfo={() => null}
+                    editable={false}
+                  />
+                </View>
+              ) : null}
               <HR height={padding} />
               <DeliveryActions
                 order={order}

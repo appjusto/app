@@ -60,7 +60,9 @@ export const OrderPayment = ({
                   />
                 </View>
                 <Text style={{ ...texts.sm, color: colors.grey700 }}>
-                  {`${t('Cartão de crédito')}: **** ${selectedPaymentMethod!.data.last_digits}`}
+                  {`${t('Cartão de crédito')}: XXXX-XXXX-XXXX-${
+                    selectedPaymentMethod!.data.last_digits
+                  }`}
                 </Text>
               </View>
             </TouchableOpacity>
