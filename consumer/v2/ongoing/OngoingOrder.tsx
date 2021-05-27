@@ -130,53 +130,102 @@ export default function ({ navigation, route }: Props) {
         orderId,
       },
     });
-
   // ongoing UI
   return (
     <ScrollView
       style={{ ...screens.default, paddingBottom: 32 }}
       scrollIndicatorInsets={{ right: 1 }}
+      contentContainerStyle={{ flexGrow: 1 }}
     >
       <OngoingOrderStatus order={order} />
-      {order.type === 'p2p' && order.status === 'dispatching' ? (
+      {order.type === 'p2p' ? (
         <View style={{ flex: 1 }}>
-          <View>
-            <OrderMap order={order} ratio={1} />
-            <StatusAndMessages
-              order={order}
-              onMessageReceived={openChatWithCourier} // just with the courier for now
-            />
-          </View>
-          <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
-          <DefaultButton
-            title={t('Abrir chat com o entregador')}
-            onPress={() => openChatWithCourier()}
-            style={{ marginHorizontal: padding, marginBottom: padding }}
-          />
-
-          <HR height={padding} />
-          <DeliveryActions
-            order={order}
-            onChangeRoute={() =>
-              navigation.navigate('P2POrderNavigator', {
-                screen: 'CreateOrderP2P',
-                params: {
-                  orderId,
-                },
-              })
-            }
-            navigateToReportIssue={navigateToReportIssue}
-            navigateToConfirmCancel={navigateToConfirmCancel}
-          />
+          {order.status !== 'dispatching' ? (
+            <View style={{ flex: 1 }}>
+              <OrderPlacesSummary order={order} onEditStep={() => null} />
+              <View style={{ flex: 1 }} />
+              <PaddedView
+                style={{
+                  marginTop: padding,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <View style={{ width: '49%' }}>
+                  <DefaultButton
+                    title={t('Relatar um problema')}
+                    secondary
+                    onPress={navigateToReportIssue}
+                  />
+                </View>
+                <View style={{ width: '49%' }}>
+                  <DefaultButton
+                    title={t('Cancelar pedido')}
+                    secondary
+                    onPress={navigateToConfirmCancel}
+                  />
+                </View>
+              </PaddedView>
+              <View style={{ flex: 1 }} />
+            </View>
+          ) : (
+            <View style={{ flex: 1 }}>
+              <OrderMap order={order} ratio={1} />
+              <StatusAndMessages
+                order={order}
+                onMessageReceived={openChatWithCourier} // just with the courier for now
+              />
+              <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
+              <DefaultButton
+                title={t('Abrir chat com o entregador')}
+                onPress={() => openChatWithCourier()}
+                style={{ marginHorizontal: padding, marginBottom: padding }}
+              />
+              <HR height={padding} />
+              <View style={{ marginBottom: padding }}>
+                <DeliveryActions
+                  order={order}
+                  onChangeRoute={() =>
+                    navigation.navigate('P2POrderNavigator', {
+                      screen: 'CreateOrderP2P',
+                      params: {
+                        orderId,
+                      },
+                    })
+                  }
+                  navigateToReportIssue={navigateToReportIssue}
+                  navigateToConfirmCancel={navigateToConfirmCancel}
+                />
+              </View>
+            </View>
+          )}
         </View>
       ) : (
         <View style={{ flex: 1 }}>
-          {order.status === 'dispatching' ? (
-            <View>
-              <View>
-                <OrderMap order={order} ratio={1.2} />
-                <StatusAndMessages order={order} onMessageReceived={() => openChatWithCourier()} />
-              </View>
+          {order.status !== 'dispatching' ? (
+            <View style={{ flex: 1 }}>
+              <HR height={padding} />
+              <DeliveredItems order={order} />
+              <HR height={padding} />
+              <DeliveryActions
+                order={order}
+                onChangeRoute={navigateToChangeRoute}
+                navigateToReportIssue={navigateToReportIssue}
+                navigateToConfirmCancel={navigateToConfirmCancel}
+              />
+              <View style={{ flex: 1 }} />
+              <PaddedView>
+                <DefaultButton
+                  title={t('Abrir chat com o restaurante')}
+                  onPress={() => openChatWithRestaurant()}
+                />
+              </PaddedView>
+            </View>
+          ) : (
+            <View style={{ flex: 1 }}>
+              <OrderMap order={order} ratio={1.2} />
+              <StatusAndMessages order={order} onMessageReceived={() => openChatWithCourier()} />
               <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
               <DefaultButton
                 title={t('Abrir chat com o entregador')}
@@ -193,7 +242,7 @@ export default function ({ navigation, route }: Props) {
                 navigateToReportIssue={navigateToReportIssue}
                 navigateToConfirmCancel={navigateToConfirmCancel}
               />
-              <View style={{ marginHorizontal: padding }}>
+              <View style={{ marginHorizontal: padding, marginBottom: padding }}>
                 <DefaultButton
                   title={t('Abrir chat com o restaurante')}
                   onPress={() => openChatWithRestaurant()}
@@ -201,68 +250,6 @@ export default function ({ navigation, route }: Props) {
                   secondary
                 />
               </View>
-            </View>
-          ) : (
-            <View>
-              {order.type === 'food' && (
-                <View>
-                  <HR height={padding} />
-                  <DeliveredItems order={order} />
-                  <HR height={padding} />
-                  <DeliveryActions
-                    order={order}
-                    onChangeRoute={navigateToChangeRoute}
-                    navigateToReportIssue={navigateToReportIssue}
-                    navigateToConfirmCancel={navigateToConfirmCancel}
-                  />
-                  <PaddedView>
-                    <DefaultButton
-                      title={t('Abrir chat com o restaurante')}
-                      onPress={() => openChatWithRestaurant()}
-                    />
-                  </PaddedView>
-                </View>
-              )}
-              {order.type === 'p2p' && (
-                <View>
-                  <OrderPlacesSummary order={order} onEditStep={() => null} />
-                  <PaddedView
-                    style={{
-                      marginTop: padding,
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <View style={{ width: '49%' }}>
-                      <DefaultButton
-                        title={t('Relatar um problema')}
-                        secondary
-                        onPress={navigateToReportIssue}
-                      />
-                    </View>
-                    <View style={{ width: '49%' }}>
-                      <DefaultButton
-                        title={t('Cancelar pedido')}
-                        secondary
-                        onPress={navigateToConfirmCancel}
-                      />
-                    </View>
-                  </PaddedView>
-                </View>
-              )}
-              {/* {order.type === 'food' && (
-                <View>
-                  <HR height={padding} />
-                  <HR />
-                  <PaddedView>
-                    <DefaultButton
-                      title={t('Abrir chat com o restaurante')}
-                      onPress={() => openChatWithRestaurant()}
-                    />
-                  </PaddedView>
-                </View>
-              )} */}
             </View>
           )}
         </View>
