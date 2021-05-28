@@ -51,7 +51,7 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
           style={{ marginBottom: padding }}
           onPress={() =>
             navigation.navigate('ReportIssue', {
-              issueType: 'courier-cancel',
+              issueType: 'courier-delivery-problem',
               orderId,
             })
           }
