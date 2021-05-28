@@ -4,7 +4,7 @@ import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { LOCATION, usePermissions } from 'expo-permissions';
 import React from 'react';
-import { Linking, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Linking, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
@@ -112,18 +112,6 @@ export default function ({ navigation }: Props) {
               title="Divulgue o AppJusto"
               subtitle="Compartilhe esse movimento por uma economia mais justa."
             />
-          </View>
-          <View style={{ marginBottom: padding }}>
-            <Pressable
-              onPress={() =>
-                navigation.navigate('OngoingDeliveryNavigator', {
-                  screen: 'DeliveryProblem',
-                  params: { orderId: 'pgaafBO5cOg3ss5dg0j1' },
-                })
-              }
-            >
-              <Text>TIVE UM PROBLEMA</Text>
-            </Pressable>
           </View>
           <ModalChooser />
         </PaddedView>
