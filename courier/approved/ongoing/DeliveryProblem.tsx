@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { ApiContext, AppDispatch } from '../../../common/app/context';
+import { AppDispatch } from '../../../common/app/context';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { IconProblemCancel } from '../../../common/icons/icon-problem-cancel';
 import { IconProblemChat } from '../../../common/icons/icon-problem-chat';
@@ -31,9 +31,8 @@ type Props = {
 
 export const DeliveryProblem = ({ navigation, route }: Props) => {
   // params
-  const { orderId } = route.params;
+  const { orderId, chatFrom } = route.params;
   // context
-  const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // screen state
   const order = useObserveOrder(orderId);
@@ -80,6 +79,14 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
       });
     }
   };
+  // open chat if there's a new message
+  React.useEffect(() => {
+    if (chatFrom) {
+      // workaround to make sure chat is being shown; (it was not showing on Android devices during tests)
+      navigation.setParams({ chatFrom: undefined });
+      openChat(chatFrom.id, chatFrom.agent);
+    }
+  }, [navigation, chatFrom, openChat]);
   // UI
   if (!order) {
     // showing the indicator until the order is loaded

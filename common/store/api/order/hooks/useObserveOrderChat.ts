@@ -15,7 +15,7 @@ export const useObserveOrderChat = (orderId: string, userId: string, counterpart
   // observe chat
   React.useEffect(() => {
     if (!orderId) return;
-    const unsub = api.order().observeOrderChat(orderId, userId, counterpartId, setChatFromUser); // the function that expects 4 arguments is commented in the code.
+    const unsub = api.order().observeOrderChat(orderId, userId, counterpartId, setChatFromUser);
     const unsub2 = api
       .order()
       .observeOrderChat(orderId, counterpartId, userId, setChatFromCounterPart);

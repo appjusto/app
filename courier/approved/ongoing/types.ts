@@ -21,6 +21,7 @@ export type OngoingDeliveryNavigatorParamList = {
   };
   DeliveryProblem: {
     orderId: string;
+    chatFrom?: ChatMessageUser;
   };
   CallCourier: undefined;
 } & ChatParamList &
