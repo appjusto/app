@@ -116,7 +116,7 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
             subtitle={t('Abrir chat direto com o restaurante')}
           />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('CallCourier')}>
           <HomeCard
             icon={<IconProblemUrgent />}
             title={t('Estou com o problema urgente')}
