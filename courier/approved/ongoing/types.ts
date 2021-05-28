@@ -19,6 +19,7 @@ export type OngoingDeliveryNavigatorParamList = {
   NoCodeDelivery: {
     orderId: string;
   };
+  DeliveryProblem: undefined;
 } & ChatParamList &
   ReportIssueParamList &
   OrderCanceledParamList;

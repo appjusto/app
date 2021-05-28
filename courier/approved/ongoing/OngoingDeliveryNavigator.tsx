@@ -6,6 +6,7 @@ import { ReportIssue } from '../../../common/screens/ReportIssue';
 import { t } from '../../../strings';
 import CancelOngoingDelivery from './CancelOngoingDelivery';
 import DeliveryCompleted from './DeliveryCompleted';
+import { DeliveryProblem } from './DeliveryProblem';
 import { NoCodeDelivery } from './NoCodeDelivery';
 import OngoingDelivery from './OngoingDelivery';
 import OrderCanceled from './OrderCanceled';
@@ -44,6 +45,11 @@ export default function () {
       <Stack.Screen
         name="ReportIssue"
         component={ReportIssue}
+        options={{ title: t('Tive um problema') }}
+      />
+      <Stack.Screen
+        name="DeliveryProblem"
+        component={DeliveryProblem}
         options={{ title: t('Tive um problema') }}
       />
     </Stack.Navigator>
