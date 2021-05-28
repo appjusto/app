@@ -101,7 +101,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   })();
   const title = (() => {
     if (issueType === 'courier-refuse') {
-      return t('Porque você recusou o pedido?');
+      return t('Porque você precisa desistir da entrega?');
     } else {
       return t('Qual o seu problema?');
     }
@@ -203,7 +203,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
           {inputHeader}
         </Text>
         <DefaultInput
-          style={{ height: 82 }}
+          style={{ height: 128 }}
           placeholder={t('Escreva sua mensagem')}
           multiline
           value={comment}

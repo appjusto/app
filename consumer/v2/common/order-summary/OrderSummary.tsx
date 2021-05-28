@@ -94,7 +94,7 @@ export const OrderSummary = ({
       }
     })();
   }, [order, dispatch, api]);
-  console.log(order);
+
   // UI
   return (
     <ScrollView style={{ flex: 1, marginBottom: 24 }}>

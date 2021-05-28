@@ -116,7 +116,10 @@ export default function ({ navigation }: Props) {
           <View style={{ marginBottom: padding }}>
             <Pressable
               onPress={() =>
-                navigation.navigate('OngoingDeliveryNavigator', { screen: 'DeliveryProblem' })
+                navigation.navigate('OngoingDeliveryNavigator', {
+                  screen: 'DeliveryProblem',
+                  params: { orderId: 'pgaafBO5cOg3ss5dg0j1' },
+                })
               }
             >
               <Text>TIVE UM PROBLEMA</Text>
