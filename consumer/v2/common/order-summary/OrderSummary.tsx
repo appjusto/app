@@ -62,6 +62,7 @@ export const OrderSummary = ({
   const busy = useSelector(getUIBusy);
   const [quotes, setQuotes] = React.useState<Fare[]>();
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
+  const [wantsCpf, setWantsCpf] = React.useState(false);
   // const [additionalInfo, setAdditionalInfo] = React.useState('');
   const canSubmit = React.useMemo(() => {
     return selectedPaymentMethodId !== undefined && selectedFare !== undefined && !waiting;
@@ -137,7 +138,11 @@ export const OrderSummary = ({
 
       <HR height={padding} />
 
-      <OrderTotal total={selectedFare?.total ?? 0} />
+      <OrderTotal
+        total={selectedFare?.total ?? 0}
+        switchValue={wantsCpf}
+        onSwitchValueChange={() => setWantsCpf(!wantsCpf)}
+      />
 
       <HR height={padding} />
 

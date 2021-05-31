@@ -1,17 +1,26 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Switch, Text, View } from 'react-native';
+import PaddedView from '../../../../common/components/containers/PaddedView';
+import {
+  cpfFormatter,
+  cpfMask,
+} from '../../../../common/components/inputs/pattern-input/formatters';
+import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
+import PatternInput from '../../../../common/components/inputs/PatternInput';
 import Pill from '../../../../common/components/views/Pill';
-import { colors, padding, texts } from '../../../../common/styles';
+import { borders, colors, padding, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 
 interface Props {
   total: number;
+  switchValue?: boolean;
+  onSwitchValueChange?: (value: boolean) => void;
 }
 
-export const OrderTotal = ({ total }: Props) => {
+export const OrderTotal = ({ total, switchValue, onSwitchValueChange }: Props) => {
   return (
-    <View style={{ paddingVertical: padding }}>
+    <View style={{ paddingTop: padding, flex: 1 }}>
       <View
         style={{
           flexDirection: 'row',
@@ -44,6 +53,44 @@ export const OrderTotal = ({ total }: Props) => {
           'Você poderá deixar uma Caixinha de gorjeta para o entregador quando o seu pedido for entregue.'
         )}
       </Text>
+      <PaddedView style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View
+          style={{
+            ...borders.default,
+            backgroundColor: colors.white,
+            borderColor: colors.black,
+            borderRadius: 32,
+          }}
+        >
+          <Switch
+            trackColor={{ false: colors.white, true: colors.white }}
+            thumbColor={switchValue ? colors.green500 : colors.yellow}
+            ios_backgroundColor={colors.white}
+            onValueChange={onSwitchValueChange}
+            value={switchValue}
+          />
+        </View>
+        <Text style={{ ...texts.sm, marginLeft: padding }}>{t('Adicionar CPF na nota')}</Text>
+      </PaddedView>
+      {switchValue && (
+        <View style={{ marginHorizontal: padding, marginBottom: padding }}>
+          <PatternInput
+            // ref={cpfRef}
+            style={{ marginTop: padding }}
+            title={t('CPF')}
+            value={'000.000.000-00'}
+            placeholder={t('Seu CPF, apenas números')}
+            mask={cpfMask}
+            parser={numbersOnlyParser}
+            formatter={cpfFormatter}
+            keyboardType="number-pad"
+            returnKeyType="default"
+            blurOnSubmit={false}
+            // onSubmitEditing={() => phoneRef.current?.focus()}
+            onChangeText={() => null}
+          />
+        </View>
+      )}
     </View>
   );
 };
