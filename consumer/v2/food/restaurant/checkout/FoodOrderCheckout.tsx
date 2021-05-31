@@ -54,6 +54,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [orderAdditionalInfo, setOrderAdditionalInfo] = React.useState('');
   const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
   const [wantsCpf, setWantsCpf] = React.useState(false);
+  const [shareDataWithBusiness, setShareDataWithBusiness] = React.useState(false);
+
   // side effects
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
@@ -207,6 +209,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         onSwitchValueChange={() => setWantsCpf(!wantsCpf)}
         cpf={cpf}
         setCpf={(text) => setCpf(text)}
+        shareDataWithBusiness={shareDataWithBusiness}
+        onShareData={() => setShareDataWithBusiness(!shareDataWithBusiness)}
       />
       <DestinationModal
         modalVisible={destinationModalVisible}
