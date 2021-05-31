@@ -79,7 +79,6 @@ export const OrderTotal = ({ total, switchValue, onSwitchValueChange, cpf, setCp
       {switchValue && (
         <View style={{ marginHorizontal: padding, marginBottom: padding }}>
           <PatternInput
-            // ref={cpfRef}
             style={{ marginTop: padding }}
             title={t('CPF')}
             value={cpf}
@@ -89,7 +88,7 @@ export const OrderTotal = ({ total, switchValue, onSwitchValueChange, cpf, setCp
             formatter={cpfFormatter}
             keyboardType="number-pad"
             returnKeyType="default"
-            blurOnSubmit={false}
+            blurOnSubmit
             onChangeText={(value) => setCpf(value)}
           />
         </View>

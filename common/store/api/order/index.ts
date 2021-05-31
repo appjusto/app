@@ -191,12 +191,14 @@ export default class OrderApi {
     orderId: string,
     fleetId: string,
     details: PlaceOrderPaymentDetails,
+    invoiceWithCpf: boolean,
     additionalInfo?: string
   ) {
     const payload: PlaceOrderPayload = {
       orderId,
       fleetId,
       ...details,
+      invoiceWithCpf,
       additionalInfo,
       meta: { version: Constants.nativeBuildVersion },
     };

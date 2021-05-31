@@ -135,6 +135,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           payableWith: 'credit_card',
           paymentMethodId: selectedPaymentMethodId,
         },
+        wantsCpf,
         orderAdditionalInfo
       );
       setLoading(false);
