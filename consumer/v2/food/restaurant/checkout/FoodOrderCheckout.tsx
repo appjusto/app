@@ -52,6 +52,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [destinationModalVisible, setDestinationModalVisible] = React.useState(false);
   const [confirmedDestination, setConfirmedDestination] = React.useState(false);
   const [orderAdditionalInfo, setOrderAdditionalInfo] = React.useState('');
+  const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
+  const [wantsCpf, setWantsCpf] = React.useState(false);
   // side effects
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
@@ -95,6 +97,20 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       setDestinationModalVisible(true);
       return;
     }
+    if (wantsCpf && !cpf) {
+      dispatch(
+        showToast(
+          t(
+            'Preencha o campo com o CPF para que ele seja adicionado na nota. Se não quer adicionar o CPF, desmarque a opção'
+          )
+        )
+      );
+      return;
+    }
+    if (wantsCpf && cpf.length !== 11) {
+      dispatch(showToast(t('CPF preenchido incorretamente. Por favor confira novamente')));
+      return;
+    }
     if (getOrderTotal(order!) < restaurant.minimumOrder!) {
       setLoading(true);
       dispatch(
@@ -119,6 +135,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           payableWith: 'credit_card',
           paymentMethodId: selectedPaymentMethodId,
         },
+        wantsCpf,
         orderAdditionalInfo
       );
       setLoading(false);
@@ -186,6 +203,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         navigateToAboutCharges={() => navigation.navigate('AboutCharges')}
         additionalInfo={orderAdditionalInfo}
         onAddInfo={(text) => setOrderAdditionalInfo(text)}
+        wantsCpf={wantsCpf}
+        onSwitchValueChange={() => setWantsCpf(!wantsCpf)}
+        cpf={cpf}
+        setCpf={(text) => setCpf(text)}
       />
       <DestinationModal
         modalVisible={destinationModalVisible}
