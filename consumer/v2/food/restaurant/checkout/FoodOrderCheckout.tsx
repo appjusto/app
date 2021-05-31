@@ -52,6 +52,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [destinationModalVisible, setDestinationModalVisible] = React.useState(false);
   const [confirmedDestination, setConfirmedDestination] = React.useState(false);
   const [orderAdditionalInfo, setOrderAdditionalInfo] = React.useState('');
+  const [shareDataWithBusiness, setShareDataWithBusiness] = React.useState(false);
   // side effects
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
@@ -186,6 +187,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         navigateToAboutCharges={() => navigation.navigate('AboutCharges')}
         additionalInfo={orderAdditionalInfo}
         onAddInfo={(text) => setOrderAdditionalInfo(text)}
+        shareDataWithBusiness={shareDataWithBusiness}
+        onShareData={() => setShareDataWithBusiness(!shareDataWithBusiness)}
       />
       <DestinationModal
         modalVisible={destinationModalVisible}

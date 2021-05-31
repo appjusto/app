@@ -42,6 +42,7 @@ export default function ({ navigation, route }: Props) {
     consumer.paymentChannel?.mostRecentPaymentMethodId
   );
   const [isLoading, setLoading] = React.useState(false);
+  const [shareDataWithBusiness, setShareDataWithBusiness] = React.useState(false);
   // side effects
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
@@ -156,6 +157,8 @@ export default function ({ navigation, route }: Props) {
           navigation.navigate('PayWithPix', { orderId: orderId!, total, fleetId })
         }
         navigateToAboutCharges={() => navigation.navigate('AboutCharges')}
+        shareDataWithBusiness={shareDataWithBusiness}
+        onShareData={() => setShareDataWithBusiness(!shareDataWithBusiness)}
       />
     </View>
   );

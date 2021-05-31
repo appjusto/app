@@ -33,6 +33,8 @@ type Props = {
   placeOrder: (fleetId: string) => Promise<void>;
   navigateToPixPayment: (total: number, fleetId: string) => void;
   navigateToAboutCharges: () => void;
+  shareDataWithBusiness?: boolean;
+  onShareData?: (value: boolean) => void;
 };
 
 export default function ({
@@ -46,6 +48,8 @@ export default function ({
   placeOrder,
   navigateToPixPayment,
   navigateToAboutCharges,
+  shareDataWithBusiness,
+  onShareData,
 }: Props) {
   // params
   const { origin, destination } = order ?? {};
@@ -289,6 +293,8 @@ export default function ({
             modalVisible={false}
             navigateToPixPayment={navigateToPixPayment}
             navigateToAboutCharges={navigateToAboutCharges}
+            shareDataWithBusiness={shareDataWithBusiness}
+            onShareData={onShareData}
           />
         )}
       </ViewPager>
