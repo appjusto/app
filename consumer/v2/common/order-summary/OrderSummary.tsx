@@ -126,30 +126,32 @@ export const OrderSummary = ({
           <OrderAdditionalInfo value={additionalInfo} onAddInfo={onAddInfo} />
         </View>
       )}
-      <View style={{ flex: 1, marginHorizontal: padding, marginBottom: padding }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
-          <Feather name="share-2" size={14} style={{ marginRight: 4 }} />
-          <Text style={{ ...texts.sm, color: colors.black }}>
-            {t('Compartilhar dados com o restaurante')}
+      {order.type === 'food' && (
+        <View style={{ flex: 1, marginHorizontal: padding, marginBottom: padding }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
+            <Feather name="share-2" size={14} style={{ marginRight: 4 }} />
+            <Text style={{ ...texts.sm, color: colors.black }}>
+              {t('Compartilhar dados com o restaurante')}
+            </Text>
+          </View>
+          <Text style={{ ...texts.xs, color: colors.grey700 }}>
+            {t(
+              'Aceito compartilhar meu nome, e-mail e telefone para eventuais promoções desse restaurante'
+            )}
           </Text>
+          <View style={{ marginTop: halfPadding, flexDirection: 'row', alignItems: 'center' }}>
+            <Switch
+              trackColor={{ false: colors.white, true: colors.white }}
+              thumbColor={shareDataWithBusiness ? colors.green500 : colors.yellow}
+              ios_backgroundColor={colors.white}
+              onValueChange={onShareData}
+              value={shareDataWithBusiness}
+              style={{ ...borders.default }}
+            />
+            <Text style={{ ...texts.sm, marginLeft: padding }}>{t('Compartilhar dados')}</Text>
+          </View>
         </View>
-        <Text style={{ ...texts.xs, color: colors.grey700 }}>
-          {t(
-            'Aceito compartilhar meu nome, e-mail e telefone para eventuais promoções desse restaurante'
-          )}
-        </Text>
-        <View style={{ marginTop: halfPadding, flexDirection: 'row', alignItems: 'center' }}>
-          <Switch
-            trackColor={{ false: colors.white, true: colors.white }}
-            thumbColor={shareDataWithBusiness ? colors.green500 : colors.yellow}
-            ios_backgroundColor={colors.white}
-            onValueChange={onShareData}
-            value={shareDataWithBusiness}
-            style={{ ...borders.default }}
-          />
-          <Text style={{ ...texts.sm, marginLeft: padding }}>{t('Compartilhar dados')}</Text>
-        </View>
-      </View>
+      )}
 
       <HR height={padding} />
 

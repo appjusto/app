@@ -157,8 +157,6 @@ export default function ({ navigation, route }: Props) {
           navigation.navigate('PayWithPix', { orderId: orderId!, total, fleetId })
         }
         navigateToAboutCharges={() => navigation.navigate('AboutCharges')}
-        shareDataWithBusiness={shareDataWithBusiness}
-        onShareData={() => setShareDataWithBusiness(!shareDataWithBusiness)}
       />
     </View>
   );
