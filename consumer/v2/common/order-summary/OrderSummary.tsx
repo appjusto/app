@@ -35,6 +35,10 @@ type Props = {
   navigateToAboutCharges: () => void;
   additionalInfo?: string;
   onAddInfo?: (text: string) => void;
+  cpf: string;
+  setCpf: (value: string) => void;
+  wantsCpf: boolean;
+  onSwitchValueChange: (value: boolean) => void;
 };
 
 export const OrderSummary = ({
@@ -54,6 +58,10 @@ export const OrderSummary = ({
   navigateToAboutCharges,
   additionalInfo,
   onAddInfo,
+  cpf,
+  setCpf,
+  wantsCpf,
+  onSwitchValueChange,
 }: Props) => {
   // context
   const api = React.useContext(ApiContext);
@@ -62,7 +70,7 @@ export const OrderSummary = ({
   const busy = useSelector(getUIBusy);
   const [quotes, setQuotes] = React.useState<Fare[]>();
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
-  const [wantsCpf, setWantsCpf] = React.useState(false);
+
   // const [additionalInfo, setAdditionalInfo] = React.useState('');
   const canSubmit = React.useMemo(() => {
     return selectedPaymentMethodId !== undefined && selectedFare !== undefined && !waiting;
@@ -95,7 +103,6 @@ export const OrderSummary = ({
       }
     })();
   }, [order, dispatch, api]);
-  console.log(order);
   // UI
   return (
     <ScrollView style={{ flex: 1, marginBottom: 24 }}>
@@ -141,7 +148,9 @@ export const OrderSummary = ({
       <OrderTotal
         total={selectedFare?.total ?? 0}
         switchValue={wantsCpf}
-        onSwitchValueChange={() => setWantsCpf(!wantsCpf)}
+        onSwitchValueChange={onSwitchValueChange}
+        cpf={cpf}
+        setCpf={setCpf}
       />
 
       <HR height={padding} />

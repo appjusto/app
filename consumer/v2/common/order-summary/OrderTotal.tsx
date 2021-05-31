@@ -14,11 +14,13 @@ import { t } from '../../../../strings';
 
 interface Props {
   total: number;
-  switchValue?: boolean;
+  switchValue: boolean;
   onSwitchValueChange?: (value: boolean) => void;
+  cpf: string;
+  setCpf: (value: string) => void;
 }
 
-export const OrderTotal = ({ total, switchValue, onSwitchValueChange }: Props) => {
+export const OrderTotal = ({ total, switchValue, onSwitchValueChange, cpf, setCpf }: Props) => {
   return (
     <View style={{ paddingTop: padding, flex: 1 }}>
       <View
@@ -53,7 +55,9 @@ export const OrderTotal = ({ total, switchValue, onSwitchValueChange }: Props) =
           'Você poderá deixar uma Caixinha de gorjeta para o entregador quando o seu pedido for entregue.'
         )}
       </Text>
-      <PaddedView style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <PaddedView
+        style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: colors.white }}
+      >
         <View
           style={{
             ...borders.default,
@@ -78,7 +82,7 @@ export const OrderTotal = ({ total, switchValue, onSwitchValueChange }: Props) =
             // ref={cpfRef}
             style={{ marginTop: padding }}
             title={t('CPF')}
-            value={'000.000.000-00'}
+            value={cpf}
             placeholder={t('Seu CPF, apenas números')}
             mask={cpfMask}
             parser={numbersOnlyParser}
@@ -86,8 +90,7 @@ export const OrderTotal = ({ total, switchValue, onSwitchValueChange }: Props) =
             keyboardType="number-pad"
             returnKeyType="default"
             blurOnSubmit={false}
-            // onSubmitEditing={() => phoneRef.current?.focus()}
-            onChangeText={() => null}
+            onChangeText={(value) => setCpf(value)}
           />
         </View>
       )}
