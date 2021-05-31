@@ -192,7 +192,8 @@ export default class OrderApi {
     fleetId: string,
     details: PlaceOrderPaymentDetails,
     invoiceWithCPF: boolean,
-    additionalInfo?: string
+    additionalInfo?: string,
+    wantToShareData?: boolean
   ) {
     const payload: PlaceOrderPayload = {
       orderId,
@@ -200,6 +201,7 @@ export default class OrderApi {
       ...details,
       invoiceWithCPF,
       additionalInfo,
+      wantToShareData,
       meta: { version: Constants.nativeBuildVersion },
     };
     return (await this.refs.getPlaceOrderCallable()(payload)).data;

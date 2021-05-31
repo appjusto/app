@@ -138,7 +138,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           paymentMethodId: selectedPaymentMethodId,
         },
         wantsCpf,
-        orderAdditionalInfo
+        orderAdditionalInfo,
+        shareDataWithBusiness
       );
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {
