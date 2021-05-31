@@ -13,6 +13,8 @@ import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import {
   cpfFormatter,
   cpfMask,
+  phoneFormatter,
+  phoneMask,
 } from '../../../../common/components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
@@ -50,8 +52,9 @@ export default function ({ navigation, route }: Props) {
   const [name, setName] = React.useState<string>(consumer.name ?? '');
   const [surname, setSurname] = React.useState(consumer.surname ?? '');
   const [cpf, setCpf] = React.useState(consumer.cpf! ?? '');
+  const [phone, setPhone] = React.useState(consumer.phone! ?? '');
   const [isLoading, setLoading] = React.useState(false);
-  const updatedConsumer: Partial<ConsumerProfile> = { name, surname, cpf };
+  const updatedConsumer: Partial<ConsumerProfile> = { name, surname, cpf, phone };
   const canSubmit = consumerInfoSet(updatedConsumer);
   // handlers
   const updateProfileHandler = async () => {
@@ -69,37 +72,42 @@ export default function ({ navigation, route }: Props) {
   const nameRef = React.useRef<TextInput>(null);
   const surnameRef = React.useRef<TextInput>(null);
   const cpfRef = React.useRef<TextInput>(null);
+  const phoneRef = React.useRef<TextInput>(null);
+  console.log(consumer.phone);
   // UI
   return (
     <View style={screens.config}>
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
-        <Text
-          style={{
-            ...texts.x2l,
-            paddingHorizontal: padding,
-            paddingTop: padding,
-            paddingBottom: halfPadding,
-          }}
-        >
-          {isProfileComplete ? t('Seus dados') : t('Finalize seu cadastro')}
-        </Text>
-
-        <Text
-          style={{
-            ...texts.sm,
-            paddingHorizontal: padding,
-            color: colors.grey700,
-            paddingBottom: padding,
-          }}
-        >
-          {isProfileComplete
-            ? t('Edite seus dados pessoais:')
-            : t(
-                'Seus dados pessoais serão usados somente para a criação das faturas dos seus pedidos.'
-              )}
-        </Text>
-
-        <PaddedView>
+      <KeyboardAwareScrollView
+        enableOnAndroid
+        enableAutomaticScroll
+        keyboardOpeningTime={0}
+        style={{ ...screens.config }}
+        keyboardShouldPersistTaps="always"
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <PaddedView style={{ flex: 1 }}>
+          <Text
+            style={{
+              ...texts.x2l,
+              paddingTop: padding,
+              paddingBottom: halfPadding,
+            }}
+          >
+            {isProfileComplete ? t('Seus dados') : t('Finalize seu cadastro')}
+          </Text>
+          <Text
+            style={{
+              ...texts.sm,
+              color: colors.grey700,
+              paddingBottom: padding,
+            }}
+          >
+            {isProfileComplete
+              ? t('Edite seus dados pessoais:')
+              : t(
+                  'Seus dados pessoais serão usados somente para a criação das faturas e receber atendimento quando for necessário.'
+                )}
+          </Text>
           <DefaultInput title={t('E-mail')} value={consumer.email} editable={false} />
           <DefaultInput
             ref={nameRef}
@@ -137,12 +145,28 @@ export default function ({ navigation, route }: Props) {
             parser={numbersOnlyParser}
             formatter={cpfFormatter}
             keyboardType="number-pad"
-            returnKeyType="done"
-            blurOnSubmit
+            returnKeyType="default"
+            blurOnSubmit={false}
+            onSubmitEditing={() => phoneRef.current?.focus()}
             onChangeText={(text) => setCpf(trim(text))}
           />
-          <DefaultButton
+          <PatternInput
+            ref={phoneRef}
             style={{ marginTop: padding }}
+            title={t('Celular')}
+            value={phone}
+            placeholder={t('Número do seu celular')}
+            mask={phoneMask}
+            parser={numbersOnlyParser}
+            formatter={phoneFormatter}
+            keyboardType="number-pad"
+            returnKeyType="done"
+            blurOnSubmit
+            onChangeText={(text) => setPhone(trim(text))}
+          />
+          <View style={{ flex: 1 }} />
+          <DefaultButton
+            style={{ marginBottom: padding }}
             title={isProfileComplete ? t('Atualizar') : t('Salvar e avançar')}
             onPress={updateProfileHandler}
             disabled={!canSubmit || isLoading}

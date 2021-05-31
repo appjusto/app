@@ -7,7 +7,7 @@ export const isConsumerProfileComplete = (
   profile: Partial<ConsumerProfile> | undefined
 ): boolean => {
   if (!profile) return false;
-  return !isEmpty(profile.name) && cpfutils.isValid(profile.cpf ?? '');
+  return !isEmpty(profile.name) && cpfutils.isValid(profile.cpf ?? '') && !isEmpty(profile.phone);
 };
 
 export const courierInfoSet = (courier: Partial<CourierProfile> | undefined): boolean => {
