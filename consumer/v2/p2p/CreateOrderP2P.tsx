@@ -45,6 +45,7 @@ export default function ({ navigation, route }: Props) {
   const [isLoading, setLoading] = React.useState(false);
   const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
   const [wantsCpf, setWantsCpf] = React.useState(false);
+  const [shareDataWithBusiness, setShareDataWithBusiness] = React.useState(false);
   // side effects
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
@@ -152,6 +153,7 @@ export default function ({ navigation, route }: Props) {
         },
         wantsCpf
       );
+
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {
         screen: 'OngoingOrderConfirming',
@@ -162,7 +164,7 @@ export default function ({ navigation, route }: Props) {
       dispatch(showToast(error.toString(), 'error'));
     }
   };
-  console.log(cpf);
+
   // UI
   return (
     <View style={{ ...screens.default }}>

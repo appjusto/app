@@ -1,7 +1,8 @@
 import { Fare, Order, WithId } from '@appjusto/types';
+import { Feather } from '@expo/vector-icons';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, Switch, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import HR from '../../../../common/components/views/HR';
@@ -9,7 +10,8 @@ import OrderMap from '../../../../common/screens/orders/OrderMap';
 import { OrderAdditionalInfo } from '../../../../common/screens/orders/summary/OrderAdditionaInfo';
 import { showToast } from '../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
-import { padding } from '../../../../common/styles';
+import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
+import { t } from '../../../../strings';
 import { Step } from '../../p2p/types';
 import { OrderCostBreakdown } from '../breakdown/OrderCostBreakdown';
 import { OrderAvailableFleets } from './OrderAvailableFleets';
@@ -39,6 +41,8 @@ type Props = {
   setCpf: (value: string) => void;
   wantsCpf: boolean;
   onSwitchValueChange: (value: boolean) => void;
+  shareDataWithBusiness?: boolean;
+  onShareData?: (value: boolean) => void;
 };
 
 export const OrderSummary = ({
@@ -62,6 +66,9 @@ export const OrderSummary = ({
   setCpf,
   wantsCpf,
   onSwitchValueChange,
+
+  shareDataWithBusiness,
+  onShareData,
 }: Props) => {
   // context
   const api = React.useContext(ApiContext);
@@ -70,7 +77,6 @@ export const OrderSummary = ({
   const busy = useSelector(getUIBusy);
   const [quotes, setQuotes] = React.useState<Fare[]>();
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
-
   // const [additionalInfo, setAdditionalInfo] = React.useState('');
   const canSubmit = React.useMemo(() => {
     return selectedPaymentMethodId !== undefined && selectedFare !== undefined && !waiting;
@@ -103,6 +109,7 @@ export const OrderSummary = ({
       }
     })();
   }, [order, dispatch, api]);
+
   // UI
   return (
     <ScrollView style={{ flex: 1, marginBottom: 24 }}>
@@ -126,6 +133,32 @@ export const OrderSummary = ({
             modalVisible={modalVisible}
           />
           <OrderAdditionalInfo value={additionalInfo} onAddInfo={onAddInfo} />
+        </View>
+      )}
+      {order.type === 'food' && (
+        <View style={{ flex: 1, marginHorizontal: padding, marginBottom: padding }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
+            <Feather name="share-2" size={14} style={{ marginRight: 4 }} />
+            <Text style={{ ...texts.sm, color: colors.black }}>
+              {t('Compartilhar dados com o restaurante')}
+            </Text>
+          </View>
+          <Text style={{ ...texts.xs, color: colors.grey700 }}>
+            {t(
+              'Aceito compartilhar meu nome, e-mail e telefone para eventuais promoções desse restaurante'
+            )}
+          </Text>
+          <View style={{ marginTop: halfPadding, flexDirection: 'row', alignItems: 'center' }}>
+            <Switch
+              trackColor={{ false: colors.white, true: colors.white }}
+              thumbColor={shareDataWithBusiness ? colors.green500 : colors.yellow}
+              ios_backgroundColor={colors.white}
+              onValueChange={onShareData}
+              value={shareDataWithBusiness}
+              style={{ ...borders.default }}
+            />
+            <Text style={{ ...texts.sm, marginLeft: padding }}>{t('Compartilhar dados')}</Text>
+          </View>
         </View>
       )}
 
