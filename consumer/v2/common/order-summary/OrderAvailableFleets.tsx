@@ -1,8 +1,7 @@
-import { Fare, Fleet, WithId } from '@appjusto/types';
+import { Fare } from '@appjusto/types';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
-import { ApiContext } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
@@ -27,18 +26,9 @@ export const OrderAvailableFleets = ({
   onFleetSelect,
   onRetry,
 }: Props) => {
-  // context
-  const api = React.useContext(ApiContext);
-  // state
-  const [fleets, setFleets] = React.useState<WithId<Fleet>[]>([]);
-  // side effects
-  React.useEffect(() => {
-    if (!quotes || isEmpty(quotes)) return;
-    const fleetsIds = quotes.map((quote) => quote.fleet.id);
-    return api.fleet().observeFleets(setFleets, { fleetsIds });
-  }, [quotes]);
-  // UI
   const isLoading = quotes === undefined;
+  const fleets = (quotes ?? []).map((quote) => quote.fleet);
+  // UI
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
