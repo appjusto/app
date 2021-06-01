@@ -6,6 +6,7 @@ import { ReportIssue } from '../../../common/screens/ReportIssue';
 import { t } from '../../../strings';
 import { CallCourier } from './CallCourier';
 import CancelOngoingDelivery from './CancelOngoingDelivery';
+import { CourierDropsOrder } from './CourierDropsOrder';
 import DeliveryCompleted from './DeliveryCompleted';
 import { DeliveryProblem } from './DeliveryProblem';
 import { NoCodeDelivery } from './NoCodeDelivery';
@@ -51,6 +52,11 @@ export default function () {
       <Stack.Screen
         name="DeliveryProblem"
         component={DeliveryProblem}
+        options={{ title: t('Tive um problema') }}
+      />
+      <Stack.Screen
+        name="CourierDropsOrder"
+        component={CourierDropsOrder}
         options={{ title: t('Tive um problema') }}
       />
       <Stack.Screen

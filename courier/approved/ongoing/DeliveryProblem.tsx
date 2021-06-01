@@ -60,12 +60,16 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
   );
   const refuseDeliveryHandler = () => {
     if (!order) return;
-    if (order.dispatchingState === 'going-pickup') {
-      navigation.navigate('ReportIssue', { issueType: 'courier-refuse', orderId });
-    } else {
-      dispatch(showToast(t('Só é possível desistir até o momento da retirada'), 'error'));
-    }
+    navigation.navigate('CourierDropsOrder', { orderId });
   };
+  // const refuseDeliveryHandler = () => {
+  //   if (!order) return;
+  //   if (order.dispatchingState === 'going-pickup') {
+  //     navigation.navigate('CourierDropsOrder', { issueType: 'courier-refuse', orderId });
+  //   } else {
+  //     dispatch(showToast(t('Só é possível desistir até o momento da retirada'), 'error'));
+  //   }
+  // };
   const deliveryProblemHandler = () => {
     if (!order) return;
     if (order.dispatchingState === 'going-pickup') {
