@@ -3,9 +3,13 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import { ReportIssueView } from '../../../common/components/views/ReportIssueView';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
+import { getCourier } from '../../../common/store/courier/selectors';
+import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '.././../../strings';
 import { ApprovedParamList } from '../types';
@@ -25,21 +29,40 @@ type Props = {
 export const CourierDropsOrder = ({ navigation, route }: Props) => {
   // params
   const { orderId } = route.params;
+  // context
+  const api = React.useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
   // state
   const issues = useIssues('courier-refuse');
+  const courier = useSelector(getCourier)!;
   // screen state
   const [comment, setComment] = React.useState('');
   const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
   const [isLoading, setLoading] = React.useState(false);
   // handlers
-  // this handler, for now, just navigates to the feedback screen.
-  // we need to call the api method (rejectOrder or the new dropOrder)
-  // before this navigation. also change it to "replace"
+  // this handler, just for tests, is calling rejectOrder and
+  // navigating to the DeliveryProblemFeedback. Will use navigation.replace in the end
   const dropOrderHandler = () => {
-    navigation.navigate('DeliveryProblemNavigator', {
-      screen: 'DeliveryProblemFeedback',
-      params: { issueType: 'courier-refuse', orderId },
-    });
+    if (!selectedIssue) return;
+    (async () => {
+      try {
+        setLoading(true);
+        await api.order().rejectOrder(orderId, {
+          courierId: courier.id,
+          issue: selectedIssue,
+          comment,
+        });
+        navigation.navigate('DeliveryProblemNavigator', {
+          screen: 'DeliveryProblemFeedback',
+          params: { issueType: 'courier-refuse', orderId },
+        });
+      } catch (error) {
+        setLoading(false);
+        dispatch(showToast(t('Não foi possível enviar o comentário')));
+      } finally {
+        setLoading(false);
+      }
+    })();
   };
 
   // UI

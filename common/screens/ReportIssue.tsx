@@ -17,7 +17,6 @@ import RadioButton from '../components/buttons/RadioButton';
 import PaddedView from '../components/containers/PaddedView';
 import DefaultInput from '../components/inputs/DefaultInput';
 import FeedbackView from '../components/views/FeedbackView';
-import { IconConeYellow } from '../icons/icon-cone-yellow';
 import { IconMotocycle } from '../icons/icon-motocycle';
 import useIssues from '../store/api/platform/hooks/useIssues';
 import { useSegmentScreen } from '../store/api/track';
@@ -72,8 +71,6 @@ export const ReportIssue = ({ route, navigation }: Props) => {
       return t('Não foi possível enviar a reclamação. Tente novamente.');
     } else if (issueType === 'courier-delivery-problem') {
       return t('Não foi possível enviar a reclamação. Tente novamente.');
-    } else if (issueType === 'courier-refuse') {
-      return t('Não foi possível enviar o comentário');
     } else {
       return '';
     }
@@ -83,8 +80,6 @@ export const ReportIssue = ({ route, navigation }: Props) => {
       return t('Obrigado pelas informações. Iremos analisar o ocorrido.');
     } else if (issueType === 'courier-delivery-problem') {
       return t('Aguarde enquanto estamos analisando o seu problema.');
-    } else if (issueType === 'courier-refuse') {
-      return t('O pedido foi cancelado');
     } else {
       return '';
     }
@@ -94,29 +89,19 @@ export const ReportIssue = ({ route, navigation }: Props) => {
       return undefined;
     } else if (issueType === 'courier-delivery-problem') {
       return t('Em breve entraremos em contato com você para relatar a resolução do seu problema.');
-    } else if (issueType === 'courier-refuse') {
-      return t('Como o pedido não foi retirado, você não receberá nada do valor da entrega.');
     } else {
       return undefined;
     }
   })();
   const title = (() => {
-    if (issueType === 'courier-refuse') {
-      return t('Porque você precisa desistir da entrega?');
-    } else if (issueType === 'courier-delivery-problem') {
+    if (issueType === 'courier-delivery-problem') {
       return t('Qual o problema que você teve ao transportar o pedido?');
     } else {
       return t('Qual o seu problema?');
     }
   })();
   const inputHeader = (() => {
-    if (issueType === 'courier-refuse') {
-      return t(
-        'Você pode usar o espaço abaixo para detalhar mais sua recusa, dessa forma conseguiremos melhorar nossos serviços:'
-      );
-    } else {
-      return t('Você pode detalhar mais seu problema:');
-    }
+    return t('Você pode detalhar mais seu problema:');
   })();
   // handlers
   const issueHandler = () => {
@@ -165,7 +150,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
     return (
       <FeedbackView
         header={feedbackHeaderTitle}
-        icon={issueType === 'courier-refuse' ? <IconConeYellow /> : <IconMotocycle />}
+        icon={<IconMotocycle />}
         background={colors.grey50}
         description={feedbackDescription}
       >
@@ -224,18 +209,6 @@ export const ReportIssue = ({ route, navigation }: Props) => {
           disabled={!selectedIssue || isLoading}
         />
       </PaddedView>
-      {/* {issueType === 'courier-delivery-problem' && (
-        <View style={{ backgroundColor: colors.white }}>
-          <SingleHeader title={t('Estou com um problema urgente')} />
-          <PaddedView>
-            <DefaultButton
-              title={t('Iniciar suport com o AppJusto')}
-              secondary
-              onPress={() => null}
-            />
-          </PaddedView>
-        </View>
-      )} */}
     </KeyboardAwareScrollView>
   );
 };
