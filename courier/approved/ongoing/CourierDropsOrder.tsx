@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import { ReportIssueView } from '../../../common/components/views/ReportIssueView';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
@@ -36,24 +37,21 @@ export const CourierDropsOrder = ({ navigation, route }: Props) => {
   const issues = useIssues('courier-refuse');
   // const issues = useIssues('courier-drops-delivery');
   const courier = useSelector(getCourier)!;
+  const order = useObserveOrder(orderId);
   // screen state
   const [comment, setComment] = React.useState('');
   const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
   const [isLoading, setLoading] = React.useState(false);
   // handlers
-  // this handler, just for tests, is calling rejectOrder and
-  // navigating to the DeliveryProblemFeedback. Will use navigation.replace in the end
+  // this handler, just for tests, is  navigating
+  //to the DeliveryProblemFeedback. Will use navigation.replace in the end
   const dropOrderHandler = () => {
     if (!selectedIssue) return;
     (async () => {
       try {
         setLoading(true);
-        await api.order().rejectOrder(orderId, {
-          courierId: courier.id,
-          issue: selectedIssue,
-          comment,
-        });
-        navigation.navigate('DeliveryProblemNavigator', {
+        await api.order().dropOrder(orderId, selectedIssue, comment);
+        navigation.replace('DeliveryProblemNavigator', {
           screen: 'DeliveryProblemFeedback',
           params: { issueType: 'courier-refuse', orderId },
         });
@@ -65,7 +63,7 @@ export const CourierDropsOrder = ({ navigation, route }: Props) => {
       }
     })();
   };
-
+  console.log(order?.dispatchingStatus);
   // UI
   if (!issues) {
     return (
