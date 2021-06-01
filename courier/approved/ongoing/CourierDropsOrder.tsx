@@ -34,6 +34,7 @@ export const CourierDropsOrder = ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   // state
   const issues = useIssues('courier-refuse');
+  // const issues = useIssues('courier-drops-delivery');
   const courier = useSelector(getCourier)!;
   // screen state
   const [comment, setComment] = React.useState('');
