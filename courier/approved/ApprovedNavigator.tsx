@@ -8,6 +8,7 @@ import MainNavigator from './main/MainNavigator';
 import PaymentNavigator from './main/payment/PaymentNavigator';
 import ProfileNavigator from './main/profile/ProfileNavigator';
 import MatchingNavigator from './matching/MatchingNavigator';
+import { DeliveryProblemNavigator } from './ongoing/delivery-problem/DeliveryProblemNavigator';
 import OngoingDeliveryNavigator from './ongoing/OngoingDeliveryNavigator';
 import { ApprovedParamList } from './types';
 
@@ -33,6 +34,11 @@ export default function () {
       <Stack.Screen
         name="DeliveriesNavigator"
         component={DeliveriesNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DeliveryProblemNavigator"
+        component={DeliveryProblemNavigator}
         options={{ headerShown: false }}
       />
       <Stack.Screen

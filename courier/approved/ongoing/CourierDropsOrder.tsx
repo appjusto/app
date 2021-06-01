@@ -31,7 +31,17 @@ export const CourierDropsOrder = ({ navigation, route }: Props) => {
   const [comment, setComment] = React.useState('');
   const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
   const [isLoading, setLoading] = React.useState(false);
-  console.log(selectedIssue);
+  // handlers
+  // this handler, for now, just navigates to the feedback screen.
+  // we need to call the api method (rejectOrder or the new dropOrder)
+  // before this navigation. also change it to "replace"
+  const dropOrderHandler = () => {
+    navigation.navigate('DeliveryProblemNavigator', {
+      screen: 'DeliveryProblemFeedback',
+      params: { issueType: 'courier-refuse', orderId },
+    });
+  };
+
   // UI
   if (!issues) {
     return (
@@ -50,7 +60,7 @@ export const CourierDropsOrder = ({ navigation, route }: Props) => {
         comment={comment}
         setComment={(text) => setComment(text)}
         disabled={!selectedIssue || isLoading}
-        onSendIssue={() => null}
+        onSendIssue={dropOrderHandler}
         isLoading={isLoading}
       >
         {issues.map((issue) => (

@@ -5,6 +5,7 @@ import { PaymentNavigatorParamList } from './main/payment/types';
 import { CourierProfileParamList } from './main/profile/types';
 import { MainParamList } from './main/types';
 import { MatchingParamList } from './matching/types';
+import { DeliveryProblemNavigatorParamList } from './ongoing/delivery-problem/types';
 import { OngoingDeliveryNavigatorParamList } from './ongoing/types';
 
 export type ApprovedParamList = {
@@ -14,4 +15,5 @@ export type ApprovedParamList = {
   DeliveriesNavigator: NestedNavigatorParams<DeliveriesNavigatorParamList>;
   ProfileNavigator: NestedNavigatorParams<CourierProfileParamList>;
   PaymentNavigator: NestedNavigatorParams<PaymentNavigatorParamList>;
+  DeliveryProblemNavigator: NestedNavigatorParams<DeliveryProblemNavigatorParamList>;
 } & PermissionDeniedParamList;
