@@ -12,7 +12,7 @@ export const DeliveryProblemNavigator = () => {
       <Stack.Screen
         name="DeliveryProblemFeedback"
         component={DeliveryProblemFeedback}
-        options={{ title: t('Tive um problema') }}
+        options={{ title: t('Tive um problema'), headerLeft: () => null }}
       />
     </Stack.Navigator>
   );

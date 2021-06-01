@@ -3,8 +3,6 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../../common/app/context';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { IconProblemCancel } from '../../../common/icons/icon-problem-cancel';
 import { IconProblemChat } from '../../../common/icons/icon-problem-chat';
@@ -12,7 +10,6 @@ import { IconProblemPack } from '../../../common/icons/icon-problem-pack';
 import { IconProblemUrgent } from '../../../common/icons/icon-problem-urgent';
 import HomeCard from '../../../common/screens/home/cards/HomeCard';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
-import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -32,8 +29,6 @@ type Props = {
 export const DeliveryProblem = ({ navigation, route }: Props) => {
   // params
   const { orderId, chatFrom } = route.params;
-  // context
-  const dispatch = useDispatch<AppDispatch>();
   // screen state
   const order = useObserveOrder(orderId);
   const businessId = order?.business?.id;
@@ -62,26 +57,13 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
     if (!order) return;
     navigation.navigate('CourierDropsOrder', { orderId });
   };
-  // const refuseDeliveryHandler = () => {
-  //   if (!order) return;
-  //   if (order.dispatchingState === 'going-pickup') {
-  //     navigation.navigate('CourierDropsOrder', { issueType: 'courier-refuse', orderId });
-  //   } else {
-  //     dispatch(showToast(t('Só é possível desistir até o momento da retirada'), 'error'));
-  //   }
-  // };
+
   const deliveryProblemHandler = () => {
     if (!order) return;
-    if (order.dispatchingState === 'going-pickup') {
-      dispatch(
-        showToast(t('Você precisa estar com o pedido em mãos para relatar um problema.'), 'error')
-      );
-    } else {
-      navigation.navigate('ReportIssue', {
-        issueType: 'courier-delivery-problem',
-        orderId,
-      });
-    }
+    navigation.navigate('ReportIssue', {
+      issueType: 'courier-delivery-problem',
+      orderId,
+    });
   };
   // open chat if there's a new message
   React.useEffect(() => {

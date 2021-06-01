@@ -28,23 +28,29 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
   const feedbackHeaderTitle = (() => {
     if (issueType === 'courier-refuse') {
       return t('O pedido foi cancelado');
-    } else {
-      return '';
+    } else if (issueType === 'courier-delivery-problem') {
+      return t('Aguarde enquanto estamos analisando o seu problema.');
     }
   })();
   const feedbackDescription = (() => {
     if (issueType === 'courier-refuse') {
       return t('Como o pedido não foi retirado, você não receberá nada do valor da entrega.');
-    } else {
-      return undefined;
+    } else if (issueType === 'courier-delivery-problem') {
+      return t('Em breve entraremos em contato com você para relatar a resolução do seu problema.');
     }
   })();
   // handlers
   const finishHandler = () => {
     if (issueType === 'courier-refuse') {
       navigation.replace('MainNavigator', { screen: 'Home' });
+    } else if (issueType === 'courier-delivery-problem') {
+      navigation.replace('OngoingDeliveryNavigator', {
+        screen: 'DeliveryProblem',
+        params: { orderId },
+      });
     }
   };
+  console.log(issueType);
   return (
     <FeedbackView
       header={feedbackHeaderTitle}

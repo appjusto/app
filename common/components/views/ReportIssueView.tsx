@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { t } from '../../../strings';
 import { halfPadding, padding, screens, texts } from '../../styles';
@@ -59,6 +59,7 @@ export const ReportIssueView = ({
           blurOnSubmit
         />
       </PaddedView>
+      <View style={{ flex: 1 }} />
       <PaddedView>
         <DefaultButton
           title={t('Enviar')}

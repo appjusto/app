@@ -2,8 +2,7 @@ import { Issue, IssueType, WithId } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { ActivityIndicator, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeliveredOrderNavigatorParamList } from '../../consumer/v2/delivered/types';
 import { OngoingOrderNavigatorParamList } from '../../consumer/v2/ongoing/types';
@@ -14,15 +13,14 @@ import { t } from '../../strings';
 import { ApiContext, AppDispatch } from '../app/context';
 import DefaultButton from '../components/buttons/DefaultButton';
 import RadioButton from '../components/buttons/RadioButton';
-import PaddedView from '../components/containers/PaddedView';
-import DefaultInput from '../components/inputs/DefaultInput';
 import FeedbackView from '../components/views/FeedbackView';
+import { ReportIssueView } from '../components/views/ReportIssueView';
 import { IconMotocycle } from '../icons/icon-motocycle';
 import useIssues from '../store/api/platform/hooks/useIssues';
 import { useSegmentScreen } from '../store/api/track';
 import { getCourier } from '../store/courier/selectors';
 import { showToast } from '../store/ui/actions';
-import { colors, halfPadding, padding, screens, texts } from '../styles';
+import { colors, padding, screens } from '../styles';
 
 export type ReportIssueParamList = {
   ReportIssue: {
@@ -106,32 +104,23 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   // handlers
   const issueHandler = () => {
     if (!selectedIssue) return;
-    if (issueType === 'courier-refuse') {
-      (async () => {
-        try {
-          setLoading(true);
-          await api.order().rejectOrder(orderId, selectedIssue, comment);
-          navigation.pop();
-        } catch (error) {
-          setLoading(false);
-          dispatch(showToast(t('Não foi possível enviar o comentário')));
-        }
-      })();
-    } else {
-      (async () => {
-        try {
-          setLoading(true);
-          await api.order().createIssue(orderId, {
-            issue: selectedIssue,
-            comment,
-          });
-          setLoading(false);
-          setIssueSent(true);
-        } catch (error) {
-          dispatch(showToast(toastMessage));
-        }
-      })();
-    }
+    (async () => {
+      try {
+        setLoading(true);
+        await api.order().createIssue(orderId, {
+          issue: selectedIssue,
+          comment,
+        });
+        navigation.replace('DeliveryProblemNavigator', {
+          screen: 'DeliveryProblemFeedback',
+          params: { issueType, orderId },
+        });
+        setLoading(false);
+        // setIssueSent(true);
+      } catch (error) {
+        dispatch(showToast(toastMessage));
+      }
+    })();
   };
   // UI
   if (!issues) {
@@ -158,16 +147,16 @@ export const ReportIssue = ({ route, navigation }: Props) => {
     );
   }
   return (
-    <KeyboardAwareScrollView
-      enableOnAndroid
-      enableAutomaticScroll
-      keyboardOpeningTime={0}
-      style={{ ...screens.config }}
-      keyboardShouldPersistTaps="always"
-      contentContainerStyle={{ flexGrow: 1 }}
-    >
-      <PaddedView>
-        <Text style={{ ...texts.xl, marginBottom: padding }}>{title}</Text>
+    <View style={{ ...screens.default }}>
+      <ReportIssueView
+        title={title}
+        inputHeader={inputHeader}
+        comment={comment}
+        setComment={(text) => setComment(text)}
+        disabled={!selectedIssue || isLoading}
+        onSendIssue={issueHandler}
+        isLoading={isLoading}
+      >
         {issues.map((issue) => (
           <View style={{ marginBottom: padding }} key={issue.id}>
             <RadioButton
@@ -177,34 +166,55 @@ export const ReportIssue = ({ route, navigation }: Props) => {
             />
           </View>
         ))}
-        <Text
-          style={{
-            ...texts.sm,
-            marginTop: 24,
-            marginBottom: halfPadding,
-          }}
-        >
-          {inputHeader}
-        </Text>
-        <DefaultInput
-          style={{ height: 128 }}
-          placeholder={t('Escreva sua mensagem')}
-          multiline
-          value={comment}
-          onChangeText={setComment}
-          textAlignVertical="top"
-          blurOnSubmit
-        />
-      </PaddedView>
-      <View style={{ flex: 1 }} />
-      <PaddedView>
-        <DefaultButton
-          title={t('Enviar')}
-          onPress={issueHandler}
-          activityIndicator={isLoading}
-          disabled={!selectedIssue || isLoading}
-        />
-      </PaddedView>
-    </KeyboardAwareScrollView>
+      </ReportIssueView>
+    </View>
+    // <KeyboardAwareScrollView
+    //   enableOnAndroid
+    //   enableAutomaticScroll
+    //   keyboardOpeningTime={0}
+    //   style={{ ...screens.config }}
+    //   keyboardShouldPersistTaps="always"
+    //   contentContainerStyle={{ flexGrow: 1 }}
+    // >
+    //   <PaddedView>
+    //     <Text style={{ ...texts.xl, marginBottom: padding }}>{title}</Text>
+    //     {issues.map((issue) => (
+    //       <View style={{ marginBottom: padding }} key={issue.id}>
+    //         <RadioButton
+    //           title={issue.title}
+    //           onPress={() => setSelectedIssue(issue)}
+    //           checked={selectedIssue?.id === issue.id}
+    //         />
+    //       </View>
+    //     ))}
+    //     <Text
+    //       style={{
+    //         ...texts.sm,
+    //         marginTop: 24,
+    //         marginBottom: halfPadding,
+    //       }}
+    //     >
+    //       {inputHeader}
+    //     </Text>
+    //     <DefaultInput
+    //       style={{ height: 128 }}
+    //       placeholder={t('Escreva sua mensagem')}
+    //       multiline
+    //       value={comment}
+    //       onChangeText={setComment}
+    //       textAlignVertical="top"
+    //       blurOnSubmit
+    //     />
+    //   </PaddedView>
+    //   <View style={{ flex: 1 }} />
+    //   <PaddedView>
+    //     <DefaultButton
+    //       title={t('Enviar')}
+    //       onPress={issueHandler}
+    //       activityIndicator={isLoading}
+    //       disabled={!selectedIssue || isLoading}
+    //     />
+    //   </PaddedView>
+    // </KeyboardAwareScrollView>
   );
 };
