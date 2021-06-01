@@ -104,7 +104,7 @@ export default function ({ navigation, route }: Props) {
       navigation.navigate('OngoingOrderNoMatch', { orderId });
     }
   }, [navigation, order, orderId]);
-
+  console.log(orderId);
   // UI
   // showing the indicator until the order is loaded
   if (!order) {
