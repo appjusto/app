@@ -4,14 +4,15 @@ import {
   ChatMessage,
   CompleteDeliveryPayload,
   ConsumerProfile,
+  DropOrderPayload,
   Fare,
   GetOrderQuotesPayload,
+  Issue,
   MatchOrderPayload,
   NextDispatchingStatePayload,
   Order,
   OrderIssue,
   OrderItem,
-  OrderRejection,
   Place,
   PlaceOrderPayload,
   PlaceOrderPaymentDetails,
@@ -234,13 +235,24 @@ export default class OrderApi {
     return (await this.refs.getMatchOrderCallable()(payload)).data;
   }
 
-  async rejectOrder(orderId: string, rejection: OrderRejection) {
+  async rejectOrder(orderId: string, issue: WithId<Issue>, comment?: string) {
     const payload: RejectOrderPayload = {
       orderId,
-      rejection,
+      issue,
+      comment,
       meta: { version: Constants.nativeBuildVersion },
     };
     return (await this.refs.getRejectOrderCallable()(payload)).data;
+  }
+
+  async dropOrder(orderId: string, issue: WithId<Issue>, comment?: string) {
+    const payload: DropOrderPayload = {
+      orderId,
+      issue,
+      comment,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getDropOrderCallable()(payload)).data;
   }
 
   async nextDispatchingState(orderId: string) {
