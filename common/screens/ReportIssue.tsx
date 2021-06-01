@@ -110,11 +110,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
       (async () => {
         try {
           setLoading(true);
-          await api.order().rejectOrder(orderId, {
-            courierId: courier.id,
-            issue: selectedIssue,
-            comment,
-          });
+          await api.order().rejectOrder(orderId, selectedIssue, comment);
           navigation.pop();
         } catch (error) {
           setLoading(false);
