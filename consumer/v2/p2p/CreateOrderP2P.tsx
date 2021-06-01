@@ -11,6 +11,7 @@ import { getConsumer } from '../../../common/store/consumer/selectors';
 import { isConsumerProfileComplete } from '../../../common/store/courier/validators';
 import { showToast } from '../../../common/store/ui/actions';
 import { screens } from '../../../common/styles';
+import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
 import { P2POrderHeader } from './P2POrderHeader';
 import P2POrderPager from './P2POrderPager';
@@ -42,6 +43,9 @@ export default function ({ navigation, route }: Props) {
     consumer.paymentChannel?.mostRecentPaymentMethodId
   );
   const [isLoading, setLoading] = React.useState(false);
+  const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
+  const [wantsCpf, setWantsCpf] = React.useState(false);
+  const [shareDataWithBusiness, setShareDataWithBusiness] = React.useState(false);
   // side effects
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
@@ -122,12 +126,34 @@ export default function ({ navigation, route }: Props) {
   const placeOrderHandler = async (fleetId: string) => {
     if (!orderId) return;
     if (!selectedPaymentMethodId) return;
+    if (wantsCpf && !cpf) {
+      dispatch(
+        showToast(
+          t(
+            'Preencha o campo com o CPF para que ele seja adicionado na nota. Se não quer adicionar o CPF, desmarque a opção'
+          )
+        )
+      );
+      return;
+    }
+    if (wantsCpf && cpf.length !== 11) {
+      dispatch(
+        showToast(t('CPF preenchido incorretamente. Por favor confira o número do seu documento'))
+      );
+      return;
+    }
     try {
       setLoading(true);
-      await api.order().placeOrder(orderId, fleetId, {
-        payableWith: 'credit_card',
-        paymentMethodId: selectedPaymentMethodId,
-      });
+      await api.order().placeOrder(
+        orderId,
+        fleetId,
+        {
+          payableWith: 'credit_card',
+          paymentMethodId: selectedPaymentMethodId,
+        },
+        wantsCpf
+      );
+
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {
         screen: 'OngoingOrderConfirming',
@@ -156,6 +182,10 @@ export default function ({ navigation, route }: Props) {
           navigation.navigate('PayWithPix', { orderId: orderId!, total, fleetId })
         }
         navigateToAboutCharges={() => navigation.navigate('AboutCharges')}
+        wantsCpf={wantsCpf}
+        onSwitchValueChange={() => setWantsCpf(!wantsCpf)}
+        cpf={cpf}
+        setCpf={(text) => setCpf(text)}
       />
     </View>
   );

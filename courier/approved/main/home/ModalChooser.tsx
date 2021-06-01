@@ -18,7 +18,7 @@ export default function () {
   const { mode } = courier;
   // side effects
   React.useEffect(() => {
-    if (!mode) api.profile().updateProfile(courier.id, { mode: 'motocycle' });
+    if (!mode) api.profile().updateProfile(courier.id, { mode: 'motorcycle' });
   }, []);
   // UI handlers
   const modeChangeHandler = (value: CourierMode) => {
@@ -34,8 +34,8 @@ export default function () {
       <View style={{ marginTop: padding, flexDirection: 'row', justifyContent: 'space-between' }}>
         <IconButton
           title={t('Moto')}
-          active={mode === 'motocycle'}
-          onPress={() => modeChangeHandler('motocycle')}
+          active={mode === 'motorcycle'}
+          onPress={() => modeChangeHandler('motorcycle')}
           icon={icons.motoSmall}
         />
         <IconButton
