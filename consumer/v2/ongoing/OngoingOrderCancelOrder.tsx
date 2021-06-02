@@ -12,7 +12,6 @@ import { ReportIssueView } from '../../../common/components/views/ReportIssueVie
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
-import { cancelOrder } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -61,7 +60,7 @@ export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
     })();
   };
 
-  console.log(costs.cancellationCosts);
+  // console.log(costs.cancellationCosts);
   // UI
   if (!issues) {
     return (
@@ -88,16 +87,14 @@ export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
   // handlers
   const cancelHandler = () => {
     if (!order) return;
-    if (order.type === 'food' && (order.status === 'confirming' || order.status === 'confirmed')) {
+    if (!selectedReason) return;
+    if (order.status === 'confirming' || order.status === 'confirmed') {
       (async () => {
         try {
           setLoading(true);
-          await dispatch(
-            cancelOrder(api)(orderId, {
-              issue: selectedReason!,
-              comment: rejectionComment,
-            })
-          );
+          await api
+            .order()
+            .cancelOrder(orderId, costs.cancellationCosts, selectedReason, rejectionComment);
           navigation.navigate('OngoingOrderCancelFeedback');
         } catch (error) {
           dispatch(showToast(error.toString()));
@@ -107,23 +104,7 @@ export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
       })();
     }
   };
-  // const cancelHandler = () => {
-  //   (async () => {
-  //     try {
-  //       setLoading(true);
-  //       await dispatch(
-  //         cancelOrder(api)(orderId, {
-  //           issue: selectedReason!,
-  //           comment: rejectionComment,
-  //         })
-  //       );
-  //       setCanceled(true);
-  //     } catch (error) {
-  //       dispatch(showToast(error.toString()));
-  //     }
-  //     setLoading(false);
-  //   })();
-  // };
+
   return (
     <View style={{ ...screens.default }}>
       <ReportIssueView

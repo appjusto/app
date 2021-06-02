@@ -199,10 +199,17 @@ export default class OrderApi {
     return (await this.refs.getCalculateCancellingCosts()(payload)).data;
   }
 
-  async cancelOrder(orderId: string, cancellation?: OrderIssue) {
+  async cancelOrder(
+    orderId: string,
+    acknowledgedCosts: number,
+    cancellation?: WithId<Issue>,
+    comment?: string
+  ) {
     const payload: CancelOrderPayload = {
       orderId,
+      acknowledgedCosts,
       cancellation,
+      comment,
       meta: { version: Constants.nativeBuildVersion },
     };
     return (await this.refs.getCancelOrderCallable()(payload)).data;
