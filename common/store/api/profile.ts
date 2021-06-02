@@ -52,6 +52,7 @@ export default class ProfileApi {
 
   // update profile
   updateProfile(id: string, changes: Partial<CourierProfile> | Partial<ConsumerProfile>) {
+    console.log('updating profile...');
     return this.getProfileRef(id).set(
       { ...changes, updatedOn: firebase.firestore.FieldValue.serverTimestamp() } as UserProfile,
       { merge: true }
@@ -59,6 +60,7 @@ export default class ProfileApi {
   }
 
   updateLocation(id: string, location: firebase.firestore.GeoPoint) {
+    console.log('updating location...');
     return this.firestoreWithGeo
       .collection(this.collectionName)
       .doc(id)
