@@ -1,6 +1,7 @@
+import firebase from 'firebase';
 import { AnyAction } from 'redux';
-
-import { USER_LOGGED_IN, USER_LOGGED_OUT } from './actions';
+import * as Sentry from 'sentry-expo';
+import { USER_AUTH_STATE_CHANGED } from './actions';
 import { UserState } from './types';
 
 const initialState: UserState = {};
@@ -8,11 +9,17 @@ const initialState: UserState = {};
 export default function (state: UserState = initialState, action: AnyAction): UserState {
   const { type, payload } = action;
   switch (type) {
-    case USER_LOGGED_IN: {
+    case USER_AUTH_STATE_CHANGED: {
+      if (!state.user && payload) {
+        console.log('User logged in.');
+        const user = payload as firebase.User;
+        Sentry.Native.setUser({ id: user.uid, email: user.email! });
+      }
+      if (state.user && !payload) {
+        console.log('User logged out');
+        Sentry.Native.configureScope((scope) => scope.setUser(null));
+      }
       return { ...state, user: payload };
-    }
-    case USER_LOGGED_OUT: {
-      return { ...state, user: null };
     }
     default:
       return state;

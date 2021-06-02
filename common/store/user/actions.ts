@@ -13,20 +13,13 @@ import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
 import { awaitWithFeedback } from '../ui/actions';
 
-export const USER_LOGGED_IN = 'USER_LOGGED_IN';
-export const USER_LOGGED_OUT = 'USER_LOGGED_OUT';
+export const USER_AUTH_STATE_CHANGED = 'USER_AUTH_STATE_CHANGED';
 export const CONSUMER_PROFILE_UPDATED = 'CONSUMER_PROFILE_UPDATED';
 export const COURIER_PROFILE_UPDATED = 'COURIER_PROFILE_UPDATED';
 
 export const observeAuthState = (api: Api) => (dispatch: AppDispatch) => {
   const unsubscribe = api.auth().observeAuthState((user) => {
-    if (user) {
-      dispatch({ type: USER_LOGGED_IN, payload: user });
-      Sentry.Native.setUser({ id: user.uid, email: user.email! });
-    } else {
-      dispatch({ type: USER_LOGGED_OUT });
-      Sentry.Native.configureScope((scope) => scope.setUser(null));
-    }
+    dispatch({ type: USER_AUTH_STATE_CHANGED, payload: user });
   });
   return unsubscribe;
 };
@@ -65,7 +58,7 @@ export const signInWithEmailLink = (api: Api) => (email: string, link: string) =
 export const deleteAccount =
   (api: Api) => (payload: Partial<DeleteAccountPayload>) => async (dispatch: AppDispatch) => {
     await dispatch(awaitWithFeedback(api.deleteAccount(payload)));
-    dispatch({ type: USER_LOGGED_OUT });
+    dispatch({ type: USER_AUTH_STATE_CHANGED, payload: null });
   };
 
 // watch for updates

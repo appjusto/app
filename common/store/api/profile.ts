@@ -39,7 +39,7 @@ export default class ProfileApi {
       async (doc) => {
         // ensure profile exists
         if (!doc.exists) await this.createProfile(id);
-        else resultHandler(documentAs<UserProfile>(doc));
+        else if (!doc.metadata.hasPendingWrites) resultHandler(documentAs<UserProfile>(doc));
       },
       (error) => {
         console.log(error);

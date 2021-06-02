@@ -1,6 +1,6 @@
 import { ConsumerProfile, WithId } from '@appjusto/types';
 import { AnyAction } from 'redux';
-import { CONSUMER_PROFILE_UPDATED, USER_LOGGED_OUT } from '../user/actions';
+import { CONSUMER_PROFILE_UPDATED, USER_AUTH_STATE_CHANGED } from '../user/actions';
 import {
   UPDATE_CURRENT_LOCATION,
   UPDATE_CURRENT_PLACE,
@@ -23,8 +23,9 @@ export default function (state: ConsumerState = initialState, action: AnyAction)
       const consumer = Object.assign({}, state.consumer, payload) as WithId<ConsumerProfile>;
       return { ...state, consumer };
     }
-    case USER_LOGGED_OUT: {
-      return { ...state, consumer: undefined };
+    case USER_AUTH_STATE_CHANGED: {
+      if (!payload) return { ...state, consumer: undefined };
+      return state;
     }
     case UPDATE_CURRENT_LOCATION: {
       return { ...state, currentLocation: action.payload };
