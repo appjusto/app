@@ -14,7 +14,7 @@ import {
   OrderRejection,
   Place,
   PlaceOrderPayload,
-  PlaceOrderPaymentDetails,
+  PlaceOrderPayloadPayment,
   RejectOrderPayload,
   TipCourierPayload,
   WithId,
@@ -190,7 +190,7 @@ export default class OrderApi {
   async placeOrder(
     orderId: string,
     fleetId: string,
-    details: PlaceOrderPaymentDetails,
+    payment: PlaceOrderPayloadPayment,
     invoiceWithCPF: boolean,
     additionalInfo?: string,
     wantToShareData?: boolean
@@ -198,7 +198,7 @@ export default class OrderApi {
     const payload: PlaceOrderPayload = {
       orderId,
       fleetId,
-      ...details,
+      payment,
       invoiceWithCPF,
       additionalInfo,
       wantToShareData,
