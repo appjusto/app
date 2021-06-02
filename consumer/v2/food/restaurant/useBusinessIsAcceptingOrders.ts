@@ -7,7 +7,7 @@ export const useBusinessIsAcceptingOrders = (business: Business) => {
   if (!business.enabled) return false;
   if (business.status !== 'open') return false;
   if (!platformParams) return false;
-  if (!business.keepAlive) return true; // TODO: change to false when admin is ready
+  if (!business.keepAlive) return false;
   const keepAlive = (business.keepAlive as firebase.firestore.Timestamp).toDate();
   return (
     getServerTime().getTime() - keepAlive.getTime() <
