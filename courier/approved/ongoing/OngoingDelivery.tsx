@@ -183,12 +183,7 @@ export default function ({ navigation, route }: Props) {
           <CourierDeliveryInfo
             order={order}
             onChat={() => openChatWithConsumer()}
-            onProblem={() =>
-              navigation.navigate('ReportIssue', {
-                orderId,
-                issueType: 'courier-delivery-problem',
-              })
-            }
+            onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
           />
           <HR />
         </View>

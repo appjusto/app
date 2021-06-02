@@ -22,6 +22,7 @@ export default class FirebaseRefs {
   // courier
   getMatchOrderCallable = () => this.functions.httpsCallable('matchOrder');
   getRejectOrderCallable = () => this.functions.httpsCallable('rejectOrder');
+  getDropOrderCallable = () => this.functions.httpsCallable('dropOrder');
   getNextDispatchingStateCallable = () => this.functions.httpsCallable('nextDispatchingState');
   getCompleteDeliveryCallable = () => this.functions.httpsCallable('completeDelivery');
 
