@@ -20,11 +20,15 @@ export default function (state: ConsumerState = initialState, action: AnyAction)
   const { type, payload } = action;
   switch (type) {
     case CONSUMER_PROFILE_UPDATED: {
-      const consumer = Object.assign({}, state.consumer, payload) as WithId<ConsumerProfile>;
+      const consumer = Object.assign(
+        {},
+        state.consumer,
+        payload?.profile
+      ) as WithId<ConsumerProfile>;
       return { ...state, consumer };
     }
     case USER_AUTH_STATE_CHANGED: {
-      if (!payload) return { ...state, consumer: undefined };
+      if (!payload?.profile) return { ...state, consumer: undefined };
       return state;
     }
     case UPDATE_CURRENT_LOCATION: {

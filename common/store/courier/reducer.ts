@@ -9,11 +9,11 @@ export default function (state: CourierState = initialState, action: AnyAction):
   const { type, payload } = action;
   switch (type) {
     case COURIER_PROFILE_UPDATED: {
-      const courier = Object.assign({}, state.courier, payload) as WithId<CourierProfile>;
+      const courier = Object.assign({}, state.courier, payload?.profile) as WithId<CourierProfile>;
       return { ...state, courier };
     }
     case USER_AUTH_STATE_CHANGED: {
-      if (!payload) return { ...state, courier: undefined };
+      if (!payload?.profile) return { ...state, courier: undefined };
       return state;
     }
     default:
