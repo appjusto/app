@@ -41,14 +41,7 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
   })();
   // handlers
   const finishHandler = () => {
-    if (issueType === 'courier-refuse') {
-      navigation.replace('MainNavigator', { screen: 'Home' });
-    } else if (issueType === 'courier-delivery-problem') {
-      navigation.replace('OngoingDeliveryNavigator', {
-        screen: 'DeliveryProblem',
-        params: { orderId },
-      });
-    }
+    navigation.replace('MainNavigator', { screen: 'Home' });
   };
   console.log(issueType);
   return (

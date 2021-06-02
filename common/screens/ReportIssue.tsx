@@ -130,7 +130,6 @@ export const ReportIssue = ({ route, navigation }: Props) => {
       </View>
     );
   }
-  // add right header and description for each case
   if (issueSent) {
     return (
       <FeedbackView
@@ -168,53 +167,5 @@ export const ReportIssue = ({ route, navigation }: Props) => {
         ))}
       </ReportIssueView>
     </View>
-    // <KeyboardAwareScrollView
-    //   enableOnAndroid
-    //   enableAutomaticScroll
-    //   keyboardOpeningTime={0}
-    //   style={{ ...screens.config }}
-    //   keyboardShouldPersistTaps="always"
-    //   contentContainerStyle={{ flexGrow: 1 }}
-    // >
-    //   <PaddedView>
-    //     <Text style={{ ...texts.xl, marginBottom: padding }}>{title}</Text>
-    //     {issues.map((issue) => (
-    //       <View style={{ marginBottom: padding }} key={issue.id}>
-    //         <RadioButton
-    //           title={issue.title}
-    //           onPress={() => setSelectedIssue(issue)}
-    //           checked={selectedIssue?.id === issue.id}
-    //         />
-    //       </View>
-    //     ))}
-    //     <Text
-    //       style={{
-    //         ...texts.sm,
-    //         marginTop: 24,
-    //         marginBottom: halfPadding,
-    //       }}
-    //     >
-    //       {inputHeader}
-    //     </Text>
-    //     <DefaultInput
-    //       style={{ height: 128 }}
-    //       placeholder={t('Escreva sua mensagem')}
-    //       multiline
-    //       value={comment}
-    //       onChangeText={setComment}
-    //       textAlignVertical="top"
-    //       blurOnSubmit
-    //     />
-    //   </PaddedView>
-    //   <View style={{ flex: 1 }} />
-    //   <PaddedView>
-    //     <DefaultButton
-    //       title={t('Enviar')}
-    //       onPress={issueHandler}
-    //       activityIndicator={isLoading}
-    //       disabled={!selectedIssue || isLoading}
-    //     />
-    //   </PaddedView>
-    // </KeyboardAwareScrollView>
   );
 };
