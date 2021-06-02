@@ -15,6 +15,7 @@ import { colors, screens } from '../../common/styles';
 import { t } from '../../strings';
 import { DeliveredOrderNavigator } from './delivered/DeliveredOrderNavigator';
 import { FoodOrderNavigator } from './food/FoodOrderNavigator';
+import { LoggedContextProvider } from './LoggedContext';
 import { MainNavigator } from './main/MainNavigator';
 import ProfileNavigator from './main/profile/ProfileNavigator';
 import { OngoingOrderNavigator } from './ongoing/OngoingOrderNavigator';
@@ -53,50 +54,52 @@ export const LoggedNavigator = () => {
     );
   }
   return (
-    <Stack.Navigator
-      screenOptions={defaultScreenOptions}
-      initialRouteName={consumer.onboarded ? 'MainNavigator' : 'ConsumerOnboarding'}
-    >
-      <Stack.Screen
-        name="ConsumerOnboarding"
-        component={Onboarding}
-        options={{ title: t('Boas vindas ao AppJusto'), headerLeft: () => null }}
-      />
-      <Stack.Screen
-        name="MainNavigator"
-        component={MainNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="P2POrderNavigator"
-        component={P2POrderNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="FoodOrderNavigator"
-        component={FoodOrderNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="OngoingOrderNavigator"
-        component={OngoingOrderNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="DeliveredOrderNavigator"
-        component={DeliveredOrderNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="ProfileNavigator"
-        component={ProfileNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="PermissionDenied"
-        component={PermissionDenied}
-        options={{ title: t('Compartilhar sua localização') }}
-      />
-    </Stack.Navigator>
+    <LoggedContextProvider>
+      <Stack.Navigator
+        screenOptions={defaultScreenOptions}
+        initialRouteName={consumer.onboarded ? 'MainNavigator' : 'ConsumerOnboarding'}
+      >
+        <Stack.Screen
+          name="ConsumerOnboarding"
+          component={Onboarding}
+          options={{ title: t('Boas vindas ao AppJusto'), headerLeft: () => null }}
+        />
+        <Stack.Screen
+          name="MainNavigator"
+          component={MainNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="P2POrderNavigator"
+          component={P2POrderNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="FoodOrderNavigator"
+          component={FoodOrderNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="OngoingOrderNavigator"
+          component={OngoingOrderNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DeliveredOrderNavigator"
+          component={DeliveredOrderNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ProfileNavigator"
+          component={ProfileNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="PermissionDenied"
+          component={PermissionDenied}
+          options={{ title: t('Compartilhar sua localização') }}
+        />
+      </Stack.Navigator>
+    </LoggedContextProvider>
   );
 };

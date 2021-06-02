@@ -51,7 +51,6 @@ export default class FilesApi {
       const uri = await ref.getDownloadURL();
       return uri;
     } catch (error) {
-      console.log(error);
       return null;
     }
   }
