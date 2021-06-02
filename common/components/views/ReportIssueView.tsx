@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { t } from '../../../strings';
 import { halfPadding, padding, screens, texts } from '../../styles';
 import DefaultButton from '../buttons/DefaultButton';
@@ -61,12 +62,14 @@ export const ReportIssueView = ({
       </PaddedView>
       <View style={{ flex: 1 }} />
       <PaddedView>
-        <DefaultButton
-          title={t('Enviar')}
-          onPress={onSendIssue}
-          activityIndicator={isLoading}
-          disabled={disabled}
-        />
+        <SafeAreaView>
+          <DefaultButton
+            title={t('Enviar')}
+            onPress={onSendIssue}
+            activityIndicator={isLoading}
+            disabled={disabled}
+          />
+        </SafeAreaView>
       </PaddedView>
     </KeyboardAwareScrollView>
   );

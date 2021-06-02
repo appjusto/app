@@ -43,7 +43,6 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
   const finishHandler = () => {
     navigation.replace('MainNavigator', { screen: 'Home' });
   };
-  console.log(issueType);
   return (
     <FeedbackView
       header={feedbackHeaderTitle}

@@ -10,6 +10,7 @@ import RadioButton from '../../../common/components/buttons/RadioButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { ReportIssueView } from '../../../common/components/views/ReportIssueView';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { cancelOrder } from '../../../common/store/order/actions';
 import { showToast } from '../../../common/store/ui/actions';
@@ -35,12 +36,15 @@ export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  // screen state
+  const order = useObserveOrder(orderId);
   // state
   const issues = useIssues('consumer-cancel');
   const [selectedReason, setSelectedReason] = React.useState<WithId<Issue>>();
   const [rejectionComment, setRejectionComment] = React.useState<string>('');
   const [isLoading, setLoading] = React.useState(false);
   const [isCanceled, setCanceled] = React.useState(false);
+
   // UI
   if (!issues) {
     return (
@@ -66,22 +70,43 @@ export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
   }
   // handlers
   const cancelHandler = () => {
-    (async () => {
-      try {
-        setLoading(true);
-        await dispatch(
-          cancelOrder(api)(orderId, {
-            issue: selectedReason!,
-            comment: rejectionComment,
-          })
-        );
-        setCanceled(true);
-      } catch (error) {
-        dispatch(showToast(error.toString()));
-      }
-      setLoading(false);
-    })();
+    if (!order) return;
+    if (order.type === 'food' && (order.status === 'confirming' || order.status === 'confirmed')) {
+      (async () => {
+        try {
+          setLoading(true);
+          await dispatch(
+            cancelOrder(api)(orderId, {
+              issue: selectedReason!,
+              comment: rejectionComment,
+            })
+          );
+          navigation.navigate('OngoingOrderCancelFeedback');
+        } catch (error) {
+          dispatch(showToast(error.toString()));
+        } finally {
+          setLoading(false);
+        }
+      })();
+    }
   };
+  // const cancelHandler = () => {
+  //   (async () => {
+  //     try {
+  //       setLoading(true);
+  //       await dispatch(
+  //         cancelOrder(api)(orderId, {
+  //           issue: selectedReason!,
+  //           comment: rejectionComment,
+  //         })
+  //       );
+  //       setCanceled(true);
+  //     } catch (error) {
+  //       dispatch(showToast(error.toString()));
+  //     }
+  //     setLoading(false);
+  //   })();
+  // };
   return (
     <View style={{ ...screens.default }}>
       <ReportIssueView
@@ -90,7 +115,7 @@ export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
         comment={rejectionComment}
         setComment={(text) => setRejectionComment(text)}
         disabled={!selectedReason || isLoading}
-        onSendIssue={() => null}
+        onSendIssue={cancelHandler}
         isLoading={isLoading}
       >
         {issues.map((issue) => (
