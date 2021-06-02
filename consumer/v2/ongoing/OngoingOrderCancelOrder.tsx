@@ -44,7 +44,24 @@ export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
   const [rejectionComment, setRejectionComment] = React.useState<string>('');
   const [isLoading, setLoading] = React.useState(false);
   const [isCanceled, setCanceled] = React.useState(false);
+  const [costs, setCosts] = React.useState({});
 
+  // side effects
+  React.useEffect(() => getCancellationCosts(), [order]);
+
+  // handlers
+  const getCancellationCosts = () => {
+    if (!order) return;
+    (async () => {
+      try {
+        setCosts(await api.order().calculateCancellingCosts(order.id));
+      } catch (error) {
+        dispatch(showToast(error.toString(), 'error'));
+      }
+    })();
+  };
+
+  console.log(costs.cancellationCosts);
   // UI
   if (!issues) {
     return (
