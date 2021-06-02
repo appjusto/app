@@ -1,5 +1,6 @@
 import {
   Business,
+  CalculateCancelingCostsPayload,
   CancelOrderPayload,
   ChatMessage,
   CompleteDeliveryPayload,
@@ -125,24 +126,6 @@ export default class OrderApi {
     // returns the unsubscribe function
     return unsubscribe;
   }
-  // observe order's chat
-  // observeOrderChat(
-  //   orderId: string,
-  //   resultHandler: (orders: WithId<ChatMessage>[]) => void
-  // ): firebase.Unsubscribe {
-  //   const unsubscribe = this.refs
-  //     .getOrderChatRef(orderId)
-  //     .orderBy('timestamp', 'asc')
-  //     .onSnapshot(
-  //       (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
-  //       (error) => {
-  //         console.log(error);
-  //         Sentry.Native.captureException(error);
-  //       }
-  //     );
-  //   // returns the unsubscribe function
-  //   return unsubscribe;
-  // }
   observeOrderChat(
     orderId: string,
     userId: string,
@@ -206,6 +189,14 @@ export default class OrderApi {
       meta: { version: Constants.nativeBuildVersion },
     };
     return (await this.refs.getPlaceOrderCallable()(payload)).data;
+  }
+
+  async calculateCancellingCosts(orderId: string) {
+    const payload: CalculateCancelingCostsPayload = {
+      orderId,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getCalculateCancellingCosts()(payload)).data;
   }
 
   async cancelOrder(orderId: string, cancellation?: OrderIssue) {
