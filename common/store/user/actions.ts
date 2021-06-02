@@ -64,10 +64,13 @@ export const deleteAccount =
 // watch for updates
 export const observeProfile =
   (api: Api) => (flavor: Flavor, id: string) => (dispatch: AppDispatch) => {
-    return api.profile().observeProfile(id, (profile: WithId<UserProfile>): void => {
-      const actionType = flavor === 'consumer' ? CONSUMER_PROFILE_UPDATED : COURIER_PROFILE_UPDATED;
-      dispatch({ type: actionType, payload: profile });
-    });
+    return api
+      .profile()
+      .observeProfile(id, (profile: WithId<UserProfile>, hasPendingWrites: boolean): void => {
+        const actionType =
+          flavor === 'consumer' ? CONSUMER_PROFILE_UPDATED : COURIER_PROFILE_UPDATED;
+        dispatch({ type: actionType, payload: { profile, metadata: { hasPendingWrites } } });
+      });
   };
 
 export const updateProfile =

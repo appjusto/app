@@ -8,18 +8,19 @@ const initialState: UserState = {};
 
 export default function (state: UserState = initialState, action: AnyAction): UserState {
   const { type, payload } = action;
+  const { profile, metadata } = payload;
   switch (type) {
     case USER_AUTH_STATE_CHANGED: {
-      if (!state.user && payload) {
+      if (!state.user && profile) {
         console.log('User logged in.');
-        const user = payload as firebase.User;
+        const user = profile as firebase.User;
         Sentry.Native.setUser({ id: user.uid, email: user.email! });
       }
-      if (state.user && !payload) {
+      if (state.user && !profile) {
         console.log('User logged out');
         Sentry.Native.configureScope((scope) => scope.setUser(null));
       }
-      return { ...state, user: payload };
+      return { ...state, user: profile, metadata };
     }
     default:
       return state;

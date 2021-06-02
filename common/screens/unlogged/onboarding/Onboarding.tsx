@@ -13,7 +13,7 @@ import DefaultButton from '../../../components/buttons/DefaultButton';
 import { getFlavor } from '../../../store/config/selectors';
 import { getConsumer } from '../../../store/consumer/selectors';
 import { getCourier } from '../../../store/courier/selectors';
-import { getUser } from '../../../store/user/selectors';
+import { getUser, hasPendingWrites } from '../../../store/user/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../styles';
 import * as config from './config';
 
@@ -32,12 +32,17 @@ export const Onboarding = ({ navigation }: Props) => {
   // redux store
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser)!;
+  const pendingWrite = useSelector(hasPendingWrites);
   const courier = useSelector(getCourier);
   const consumer = useSelector(getConsumer);
   // state
   const steps = flavor === 'courier' ? config.courier : config.consumer;
   const [step, setStep] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
+  // effects
+  React.useEffect(() => {
+    setLoading(pendingWrite);
+  }, [user, pendingWrite]);
   // refs
   const viewPager = React.useRef<ViewPager>(null);
   const { height } = Dimensions.get('window');
@@ -122,6 +127,7 @@ export const Onboarding = ({ navigation }: Props) => {
           style={{ marginTop: 32, marginBottom: padding, marginHorizontal: padding }}
           onPress={advanceHandler}
           disabled={isLoading}
+          activityIndicator={isLoading}
         />
       </SafeAreaView>
     </View>
