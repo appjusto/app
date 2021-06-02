@@ -120,7 +120,11 @@ export default function ({ navigation, route }: Props) {
       orderId: order.id,
       issueType: 'consumer-delivery-problem',
     });
-  const navigateToConfirmCancel = () => navigation.navigate('OngoingOrderCancelOrder', { orderId });
+  const navigateToConfirmCancel = () => {
+    if (order.status === 'preparing') {
+      navigation.navigate('OngoingOrderConfirmCancel', { orderId });
+    } else navigation.navigate('OngoingOrderCancelOrder', { orderId });
+  };
   const navigateToCourierDetail = () =>
     navigation.navigate('OngoingOrderCourierDetail', { orderId });
   const navigateToChangeRoute = () =>

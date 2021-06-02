@@ -1,14 +1,16 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, SafeAreaView, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { showToast } from '../../../common/store/ui/actions';
 import { getUIBusy } from '../../../common/store/ui/selectors';
 import {
   colors,
@@ -36,10 +38,32 @@ type Props = {
 export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
   // params
   const { orderId } = route.params;
+  // context
+  const api = React.useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
   // app state
   const busy = useSelector(getUIBusy);
   // screen state
   const order = useObserveOrder(orderId);
+  const [costs, setCosts] = React.useState({});
+
+  // side effects
+  React.useEffect(() => getCancellationCosts(), [order]);
+
+  // handlers
+  // you are using the same logig as in the OngoingOrderCancelOrder screen.
+  // turn this cancellation costs logic into a hook
+  const getCancellationCosts = () => {
+    if (!order) return;
+    (async () => {
+      try {
+        setCosts(await api.order().calculateCancellingCosts(order.id));
+      } catch (error) {
+        dispatch(showToast(error.toString(), 'error'));
+      }
+    })();
+  };
+  console.log(costs);
   // UI
   if (!order) {
     // showing the indicator until the order is loaded
@@ -121,7 +145,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
         <Text style={{ ...texts.sm }}>
           {t('Deseja confirmar o cancelamento mesmo com a cobrança dos valores do pedido?')}
         </Text>
-        <View
+        <SafeAreaView
           style={{
             marginTop: 24,
             flexDirection: 'row',
@@ -146,7 +170,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
               disabled={busy}
             />
           </View>
-        </View>
+        </SafeAreaView>
       </PaddedView>
     </ScrollView>
   );
