@@ -26,14 +26,14 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
   const { issueType, orderId } = route.params;
 
   const feedbackHeaderTitle = (() => {
-    if (issueType === 'courier-refuse') {
+    if (issueType === 'courier-drops-delivery') {
       return t('O pedido foi cancelado');
     } else if (issueType === 'courier-delivery-problem') {
       return t('Aguarde enquanto estamos analisando o seu problema.');
     }
   })();
   const feedbackDescription = (() => {
-    if (issueType === 'courier-refuse') {
+    if (issueType === 'courier-drops-delivery') {
       return t('Como o pedido não foi retirado, você não receberá nada do valor da entrega.');
     } else if (issueType === 'courier-delivery-problem') {
       return t('Em breve entraremos em contato com você para relatar a resolução do seu problema.');
@@ -46,7 +46,7 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
   return (
     <FeedbackView
       header={feedbackHeaderTitle}
-      icon={issueType === 'courier-refuse' ? <IconConeYellow /> : <IconMotocycle />}
+      icon={issueType === 'courier-drops-delivery' ? <IconConeYellow /> : <IconMotocycle />}
       background={colors.grey50}
       description={feedbackDescription}
     >
