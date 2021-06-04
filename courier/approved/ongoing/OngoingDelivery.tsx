@@ -123,18 +123,20 @@ export default function ({ navigation, route }: Props) {
     (async () => {
       setLoading(true);
       try {
-        if (order.dispatchingState !== 'arrived-destination') {
+        if (order.dispatchingState === 'going-destination') {
+          await api.order().nextDispatchingState(orderId);
+          setLoading(false);
+        } else if (order.dispatchingState === 'arrived-destination') {
+          await api.order().completeDelivery(orderId, code);
+          setLoading(false);
+        } else {
           await api.order().nextDispatchingState(orderId);
           setTimeout(() => {
             setLoading(false);
           }, 15000);
-        } else {
-          await api.order().completeDelivery(orderId, code);
         }
       } catch (error) {
         dispatch(showToast(error.toString(), 'error'));
-      } finally {
-        setLoading(false);
       }
     })();
   };

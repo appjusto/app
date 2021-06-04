@@ -23,7 +23,7 @@ const trackHeight = 48;
 const thumbWidth = 180;
 const marginHorizontal = 0;
 const leftmost = 0;
-const rightmost = width - thumbWidth - 40;
+const rightmost = width - thumbWidth - 35;
 const threshold = 30;
 
 export const StatusControl = ({
