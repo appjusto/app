@@ -11,13 +11,14 @@ type Props = {
   order: WithId<Order>;
   onChat: () => void;
   onProblem: () => void;
+  delivering?: boolean;
 };
 
-export const CourierDeliveryInfo = ({ order, onChat, onProblem }: Props) => {
+export const CourierDeliveryInfo = ({ order, onChat, onProblem, delivering }: Props) => {
   return (
     <View>
       <Text style={[texts.xs, { color: colors.green600 }]}>{t('Pedido de')}</Text>
-      <Text style={[texts.md]}>
+      <Text style={delivering ? { ...texts.lg } : { ...texts.md }}>
         {!isEmpty(order.consumer.name) ? order.consumer.name : t('Cliente')}
       </Text>
       <View
@@ -26,7 +27,7 @@ export const CourierDeliveryInfo = ({ order, onChat, onProblem }: Props) => {
         <TouchableOpacity onPress={onChat}>
           <View style={{ marginTop: halfPadding }}>
             <RoundedText
-              leftIcon={<Feather name="message-circle" size={12} style={{ marginRight: 6 }} />}
+              leftIcon={<Feather name="message-circle" size={12} style={{ marginRight: 4 }} />}
             >
               {t('Iniciar chat')}
             </RoundedText>
@@ -37,7 +38,7 @@ export const CourierDeliveryInfo = ({ order, onChat, onProblem }: Props) => {
             <RoundedText
               color={colors.red}
               leftIcon={
-                <Feather name="info" size={12} color={colors.red} style={{ marginRight: 6 }} />
+                <Feather name="info" size={12} color={colors.red} style={{ marginRight: 4 }} />
               }
             >
               {t('Tive um problema')}

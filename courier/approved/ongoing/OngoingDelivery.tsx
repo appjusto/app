@@ -2,9 +2,10 @@ import { Flavor } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, Text, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ActivityIndicator, Image, Text, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
+import { pinPackageWhite } from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
@@ -155,31 +156,27 @@ export default function ({ navigation, route }: Props) {
   const nextPlace = courierNextPlace(order);
   const addressLabel = (() => {
     if (!dispatchingState || dispatchingState === 'going-pickup') {
-      return t('Retirada em');
+      return t('Retirada');
     } else if (
       dispatchingState === 'arrived-pickup' ||
       dispatchingState === 'arrived-destination' ||
       dispatchingState === 'going-destination'
     ) {
-      return t('Entrega em');
+      return t('Entrega');
     }
     return '';
   })();
   return (
-    <ScrollView style={{ ...screens.default, paddingBottom: padding }}>
-      <KeyboardAvoidingView
-        style={{ flex: 1, justifyContent: 'flex-end' }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -148}
-      >
-        <View>
-          <OrderMap order={order!} ratio={360 / 316} />
-          <RouteIcons order={order} />
-          <View>
-            <StatusAndMessages order={order} onMessageReceived={openChatWithConsumer} />
-          </View>
-        </View>
-        <View style={{ marginTop: padding, paddingHorizontal: padding }}>
+    <KeyboardAwareScrollView
+      enableOnAndroid
+      enableAutomaticScroll
+      keyboardOpeningTime={0}
+      style={{ ...screens.default }}
+      keyboardShouldPersistTaps="always"
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
+      <View style={{ flex: 1 }}>
+        <View style={{ marginHorizontal: padding }}>
           <CourierDeliveryInfo
             order={order}
             onChat={() => openChatWithConsumer()}
@@ -189,10 +186,48 @@ export default function ({ navigation, route }: Props) {
                 issueType: 'courier-delivery-problem',
               })
             }
+            delivering
           />
-          <HR />
         </View>
-        <View
+        <View>
+          <OrderMap order={order!} ratio={360 / 316} />
+          <RouteIcons order={order} />
+          <View>
+            <StatusAndMessages order={order} onMessageReceived={openChatWithConsumer} />
+          </View>
+        </View>
+        <HR />
+        <PaddedView>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Image source={pinPackageWhite} style={{ width: 22, height: 28 }} />
+            <Text
+              style={[
+                texts.xs,
+                texts.bold,
+                { marginVertical: halfPadding, marginHorizontal: halfPadding },
+              ]}
+            >
+              {addressLabel}
+            </Text>
+            <CourierDistanceBadge order={order} />
+          </View>
+          <View style={{ marginTop: halfPadding }}>
+            <Text style={[texts.xl]} numberOfLines={2}>
+              {nextPlace?.address.main}
+            </Text>
+            {nextPlace?.additionalInfo ? (
+              <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]}>
+                {nextPlace?.additionalInfo}
+              </Text>
+            ) : null}
+            {nextPlace?.intructions ? (
+              <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={2}>
+                {nextPlace?.intructions}
+              </Text>
+            ) : null}
+          </View>
+        </PaddedView>
+        {/* <View
           style={{
             paddingHorizontal: padding,
             flexDirection: 'row',
@@ -218,10 +253,10 @@ export default function ({ navigation, route }: Props) {
           <View>
             <CourierDistanceBadge order={order} />
           </View>
-        </View>
+        </View> */}
         {/* Slider */}
         {dispatchingState !== 'arrived-destination' ? (
-          <View style={{ marginTop: padding, paddingHorizontal: padding }}>
+          <View style={{ paddingHorizontal: padding }}>
             <StatusControl
               key={dispatchingState}
               style={{ marginBottom: padding }}
@@ -271,7 +306,7 @@ export default function ({ navigation, route }: Props) {
             />
           </View>
         )}
-      </KeyboardAvoidingView>
-    </ScrollView>
+      </View>
+    </KeyboardAwareScrollView>
   );
 }
