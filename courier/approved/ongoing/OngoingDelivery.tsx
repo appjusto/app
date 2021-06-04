@@ -125,13 +125,17 @@ export default function ({ navigation, route }: Props) {
       try {
         if (order.dispatchingState !== 'arrived-destination') {
           await api.order().nextDispatchingState(orderId);
+          setTimeout(() => {
+            setLoading(false);
+          }, 15000);
         } else {
           await api.order().completeDelivery(orderId, code);
         }
       } catch (error) {
         dispatch(showToast(error.toString(), 'error'));
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     })();
   };
   // UI
@@ -147,6 +151,8 @@ export default function ({ navigation, route }: Props) {
       return t('Saí para Entrega');
     } else if (dispatchingState === 'going-destination') {
       return t('Cheguei para entrega');
+    } else if (dispatchingState === 'arrived-destination') {
+      return t('Confirmar entrega');
     }
     return '';
   })();
@@ -162,6 +168,11 @@ export default function ({ navigation, route }: Props) {
       return t('Entrega');
     }
     return '';
+  })();
+  const sliderColor = (() => {
+    if (!dispatchingState || dispatchingState === 'going-pickup') {
+      return colors.green500;
+    } else return colors.darkYellow;
   })();
   return (
     <KeyboardAwareScrollView
@@ -186,13 +197,15 @@ export default function ({ navigation, route }: Props) {
             delivering
           />
         </View>
-        <View>
-          <OrderMap order={order!} ratio={360 / 316} />
-          <RouteIcons order={order} />
+        {dispatchingState !== 'arrived-destination' && (
           <View>
-            <StatusAndMessages order={order} onMessageReceived={openChatWithConsumer} />
+            <OrderMap order={order!} ratio={360 / 316} />
+            <RouteIcons order={order} />
+            <View>
+              <StatusAndMessages order={order} onMessageReceived={openChatWithConsumer} />
+            </View>
           </View>
-        </View>
+        )}
         <HR />
         <PaddedView>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -239,8 +252,7 @@ export default function ({ navigation, route }: Props) {
               disabled={nextStepDisabled}
               isLoading={isLoading}
               onConfirm={nextStatepHandler}
-              borderColor={colors.darkYellow}
-              bgColor={colors.darkYellow}
+              color={sliderColor}
             />
           </View>
         ) : null}

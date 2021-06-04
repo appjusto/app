@@ -15,8 +15,7 @@ interface Props extends ViewProps {
   disabled?: boolean;
   isLoading?: boolean;
   onConfirm: () => void;
-  bgColor: string;
-  borderColor: string;
+  color: string;
 }
 
 const { width } = Dimensions.get('window');
@@ -32,8 +31,7 @@ export const StatusControl = ({
   disabled,
   isLoading = false,
   onConfirm,
-  bgColor,
-  borderColor,
+  color,
   style,
   ...props
 }: Props) => {
@@ -75,7 +73,8 @@ export const StatusControl = ({
             borderColor: colors.grey50,
           }}
         >
-          <Text style={[texts.sm]}>{t('Arrastar')}</Text>
+          {!isLoading && <Text style={[texts.sm]}>{t('Arrastar')}</Text>}
+
           <Feather name="check-circle" size={20} color={colors.black} style={{ marginLeft: 10 }} />
         </View>
         {/* thumb */}
@@ -99,8 +98,7 @@ export const StatusControl = ({
               style={{ height: trackHeight }}
               activityIndicator={isLoading}
               disabled={disabled}
-              bgColor={bgColor}
-              border={borderColor}
+              buttonColor={color}
             />
           </Animated.View>
         </PanGestureHandler>
