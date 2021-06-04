@@ -6,15 +6,17 @@ import {
   PanGestureHandler,
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
-import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
+import { borders, colors, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import SliderButton from './SliderButton';
 
 interface Props extends ViewProps {
   text: string;
   disabled?: boolean;
   isLoading?: boolean;
   onConfirm: () => void;
+  bgColor: string;
+  borderColor: string;
 }
 
 const { width } = Dimensions.get('window');
@@ -30,6 +32,8 @@ export const StatusControl = ({
   disabled,
   isLoading = false,
   onConfirm,
+  bgColor,
+  borderColor,
   style,
   ...props
 }: Props) => {
@@ -83,12 +87,20 @@ export const StatusControl = ({
               transform: [{ translateX }],
             }}
           >
-            <DefaultButton
+            {/* <DefaultButton
               title={text}
               style={{ height: trackHeight }}
               activityIndicator={isLoading}
               icon={<Feather name="arrow-right" size={14} style={{ marginLeft: halfPadding }} />}
               disabled={disabled}
+            /> */}
+            <SliderButton
+              title={text}
+              style={{ height: trackHeight }}
+              activityIndicator={isLoading}
+              disabled={disabled}
+              bgColor={bgColor}
+              border={borderColor}
             />
           </Animated.View>
         </PanGestureHandler>

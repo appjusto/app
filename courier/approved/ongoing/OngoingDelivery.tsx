@@ -230,34 +230,6 @@ export default function ({ navigation, route }: Props) {
             ) : null}
           </View>
         </PaddedView>
-        {/* <View
-          style={{
-            paddingHorizontal: padding,
-            flexDirection: 'row',
-            marginTop: padding,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <View style={{ marginBottom: padding, maxWidth: '63%' }}>
-            <Text style={[texts.xs, { color: colors.green600 }]}>{addressLabel}</Text>
-            <Text style={[texts.xs, { marginTop: 4 }]} numberOfLines={2}>
-              {nextPlace?.address.main}
-            </Text>
-            {nextPlace?.additionalInfo ? (
-              <Text style={[texts.xs, { marginTop: 4 }]}>{nextPlace?.additionalInfo}</Text>
-            ) : null}
-            {nextPlace?.intructions ? (
-              <Text style={[texts.xs, { marginTop: 4 }]} numberOfLines={2}>
-                {nextPlace?.intructions}
-              </Text>
-            ) : null}
-          </View>
-          <View>
-            <CourierDistanceBadge order={order} />
-          </View>
-        </View> */}
-        {/* Slider */}
         {dispatchingState !== 'arrived-destination' ? (
           <View style={{ paddingHorizontal: padding }}>
             <StatusControl
@@ -267,6 +239,8 @@ export default function ({ navigation, route }: Props) {
               disabled={nextStepDisabled}
               isLoading={isLoading}
               onConfirm={nextStatepHandler}
+              borderColor={colors.darkYellow}
+              bgColor={colors.darkYellow}
             />
           </View>
         ) : null}
