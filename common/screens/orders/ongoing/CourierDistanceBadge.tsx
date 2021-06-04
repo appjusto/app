@@ -3,13 +3,15 @@ import React from 'react';
 import { t } from '../../../../strings';
 import RoundedText from '../../../components/texts/RoundedText';
 import * as helpers from '../../../store/api/order/helpers';
+import { colors } from '../../../styles';
 import { formatDistance, formatDuration, separateWithDot } from '../../../utils/formatters';
 
 interface Props {
   order: Order;
+  delivering?: boolean;
 }
 
-export const CourierDistanceBadge = ({ order }: Props) => {
+export const CourierDistanceBadge = ({ order, delivering }: Props) => {
   const { route, courier, dispatchingState } = order;
   if (!route || !courier) return null;
   const distance = helpers.courierDistanceFromNextPlace(order);
@@ -19,10 +21,18 @@ export const CourierDistanceBadge = ({ order }: Props) => {
     dispatchingState === 'going-pickup' ||
     dispatchingState === 'going-destination'
   ) {
-    text = separateWithDot(formatDistance(distance), formatDuration(route.duration));
+    text = separateWithDot(formatDistance(distance), formatDuration(route.duration!));
     // text = formatDistance(distance);
   } else if (dispatchingState === 'arrived-pickup' || dispatchingState === 'arrived-destination') {
     text = t('Entregador no local');
   }
-  return <RoundedText>{text}</RoundedText>;
+  return (
+    <RoundedText
+      backgroundColor={delivering ? colors.grey50 : colors.white}
+      noBorder={delivering}
+      color={delivering ? colors.grey700 : colors.black}
+    >
+      {text}
+    </RoundedText>
+  );
 };

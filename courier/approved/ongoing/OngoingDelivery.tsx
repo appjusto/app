@@ -5,7 +5,7 @@ import React from 'react';
 import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
-import { pinPackageWhite } from '../../../assets/icons';
+import { pinPackage, pinPackageWhite } from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
@@ -134,7 +134,6 @@ export default function ({ navigation, route }: Props) {
       setLoading(false);
     })();
   };
-
   // UI
   const { type, dispatchingState, status } = order;
   const nextStepDisabled =
@@ -199,7 +198,10 @@ export default function ({ navigation, route }: Props) {
         <HR />
         <PaddedView>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image source={pinPackageWhite} style={{ width: 22, height: 28 }} />
+            <Image
+              source={dispatchingState === 'going-pickup' ? pinPackageWhite : pinPackage}
+              style={{ width: 22, height: 28 }}
+            />
             <Text
               style={[
                 texts.xs,
@@ -209,11 +211,14 @@ export default function ({ navigation, route }: Props) {
             >
               {addressLabel}
             </Text>
-            <CourierDistanceBadge order={order} />
+            <CourierDistanceBadge order={order} delivering />
           </View>
           <View style={{ marginTop: halfPadding }}>
             <Text style={[texts.xl]} numberOfLines={2}>
               {nextPlace?.address.main}
+            </Text>
+            <Text style={[texts.xl]} numberOfLines={2}>
+              {nextPlace?.address.secondary}
             </Text>
             {nextPlace?.additionalInfo ? (
               <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]}>
