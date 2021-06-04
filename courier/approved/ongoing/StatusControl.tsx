@@ -19,10 +19,10 @@ interface Props extends ViewProps {
 
 const { width } = Dimensions.get('window');
 const trackHeight = 48;
-const thumbWidth = 104;
+const thumbWidth = 180;
 const marginHorizontal = 0;
 const leftmost = 0;
-const rightmost = width - thumbWidth - 30;
+const rightmost = width - thumbWidth - 40;
 const threshold = 30;
 
 export const StatusControl = ({
@@ -71,7 +71,7 @@ export const StatusControl = ({
             borderColor: colors.grey50,
           }}
         >
-          <Text style={[texts.sm]}>{text}</Text>
+          <Text style={[texts.sm]}>{t('Arrastar')}</Text>
           <Feather name="check-circle" size={20} color={colors.black} style={{ marginLeft: 10 }} />
         </View>
         {/* thumb */}
@@ -84,8 +84,8 @@ export const StatusControl = ({
             }}
           >
             <DefaultButton
-              title={t('Arrastar')}
-              style={{ width: thumbWidth, height: trackHeight }}
+              title={text}
+              style={{ height: trackHeight }}
               activityIndicator={isLoading}
               icon={<Feather name="arrow-right" size={14} style={{ marginLeft: halfPadding }} />}
               disabled={disabled}

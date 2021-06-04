@@ -147,8 +147,6 @@ export default function ({ navigation, route }: Props) {
       return t('Saí para Entrega');
     } else if (dispatchingState === 'going-destination') {
       return t('Cheguei para entrega');
-    } else if (dispatchingState === 'arrived-destination') {
-      return t('Finalizar entrega');
     }
     return '';
   })();
@@ -200,7 +198,7 @@ export default function ({ navigation, route }: Props) {
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image
               source={dispatchingState === 'going-pickup' ? pinPackageWhite : pinPackage}
-              style={{ width: 22, height: 28 }}
+              style={{ width: 23, height: 28 }}
             />
             <Text
               style={[
