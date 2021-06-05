@@ -233,16 +233,12 @@ export default function ({ navigation, route }: Props) {
             <Text style={[texts.xl]} numberOfLines={2}>
               {nextPlace?.address.secondary}
             </Text>
-            {nextPlace?.additionalInfo ? (
-              <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]}>
-                {nextPlace?.additionalInfo}
-              </Text>
-            ) : null}
-            {nextPlace?.intructions ? (
-              <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={2}>
-                {nextPlace?.intructions}
-              </Text>
-            ) : null}
+            <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]}>
+              {nextPlace?.additionalInfo ?? ''}
+            </Text>
+            <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={2}>
+              {nextPlace?.intructions ?? ''}
+            </Text>
           </View>
         </PaddedView>
         {dispatchingState !== 'arrived-destination' ? (
