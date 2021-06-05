@@ -8,9 +8,10 @@ import { halfPadding, padding, texts } from '../../../styles';
 type Props = {
   value: string;
   onAddInfo: (text: string) => void;
+  editable?: boolean;
 };
 
-export const OrderAdditionalInfo = ({ value, onAddInfo }: Props) => {
+export const OrderAdditionalInfo = ({ value, onAddInfo, editable = true }: Props) => {
   return (
     <View style={{ paddingHorizontal: padding, marginBottom: padding }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: halfPadding }}>
@@ -27,6 +28,7 @@ export const OrderAdditionalInfo = ({ value, onAddInfo }: Props) => {
         style={{ height: 96, marginTop: halfPadding }}
         returnKeyType="done"
         blurOnSubmit
+        editable={editable}
       />
     </View>
   );

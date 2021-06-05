@@ -30,6 +30,7 @@ import {
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import { RestaurantNavigatorParamList } from '../types';
+import { useBusinessIsAcceptingOrders } from '../useBusinessIsAcceptingOrders';
 import { ItemComplements } from './ItemComplements';
 import { ItemQuantity } from './ItemQuantity';
 
@@ -53,6 +54,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const consumer = useSelector(getConsumer)!;
   const currentPlace = useSelector(getCurrentPlace);
   // screen state
+  const isAcceptingOrders = useBusinessIsAcceptingOrders(business);
   const product = useProduct(businessId, productId);
   const { data: imageURI } = useProductImageURI(businessId, productId, '1008x720');
   const [quantity, setQuantity] = React.useState(1);
@@ -191,7 +193,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
             </View>
           </View>
         )}
-        {(business.status === 'closed' || !business.enabled) && (
+        {!isAcceptingOrders ? (
           <View
             style={{
               margin: padding,
@@ -208,9 +210,9 @@ export const ItemDetail = ({ navigation, route }: Props) => {
             </Text>
             <Text style={texts.x2l}>{t('00:00')}</Text>
           </View>
-        )}
+        ) : null}
       </ScrollView>
-      {business.status === 'open' && business.enabled ? (
+      {isAcceptingOrders ? (
         <View>
           <HR />
           <PaddedView>

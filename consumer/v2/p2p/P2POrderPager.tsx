@@ -33,6 +33,10 @@ type Props = {
   placeOrder: (fleetId: string) => Promise<void>;
   navigateToPixPayment: (total: number, fleetId: string) => void;
   navigateToAboutCharges: () => void;
+  cpf: string;
+  setCpf: (value: string) => void;
+  wantsCpf: boolean;
+  onSwitchValueChange: (value: boolean) => void;
 };
 
 export default function ({
@@ -46,6 +50,10 @@ export default function ({
   placeOrder,
   navigateToPixPayment,
   navigateToAboutCharges,
+  cpf,
+  setCpf,
+  wantsCpf,
+  onSwitchValueChange,
 }: Props) {
   // params
   const { origin, destination } = order ?? {};
@@ -289,6 +297,10 @@ export default function ({
             modalVisible={false}
             navigateToPixPayment={navigateToPixPayment}
             navigateToAboutCharges={navigateToAboutCharges}
+            wantsCpf={wantsCpf}
+            onSwitchValueChange={onSwitchValueChange}
+            cpf={cpf}
+            setCpf={(text) => setCpf(text)}
           />
         )}
       </ViewPager>

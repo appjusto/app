@@ -9,6 +9,7 @@ export default class FirebaseRefs {
   // functions
   getVerifyProfileCallable = () => this.functions.httpsCallable('verifyProfile');
   getDeleteAccountCallable = () => this.functions.httpsCallable('deleteAccount');
+  getServerTimeCallable = () => this.functions.httpsCallable('getServerTime');
   // consumer
   getFetchTotalCouriersNearbyCallable = () =>
     this.functions.httpsCallable('fetchTotalCouriersNearby');

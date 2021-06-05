@@ -19,7 +19,7 @@ export const DeliveredOrderNavigator = () => {
       <Stack.Screen
         name="ReportIssue"
         component={ReportIssue}
-        options={{ title: t('Relatar um problema') }}
+        options={{ title: t('Relatar problema') }}
       />
     </Stack.Navigator>
   );

@@ -6,23 +6,24 @@ import {
   PanGestureHandler,
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
-import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
+import { borders, colors, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import SliderButton from './SliderButton';
 
 interface Props extends ViewProps {
   text: string;
   disabled?: boolean;
   isLoading?: boolean;
   onConfirm: () => void;
+  color: string;
 }
 
 const { width } = Dimensions.get('window');
 const trackHeight = 48;
-const thumbWidth = 104;
+const thumbWidth = 180;
 const marginHorizontal = 0;
 const leftmost = 0;
-const rightmost = width - thumbWidth - 30;
+const rightmost = width - thumbWidth - 35;
 const threshold = 30;
 
 export const StatusControl = ({
@@ -30,6 +31,7 @@ export const StatusControl = ({
   disabled,
   isLoading = false,
   onConfirm,
+  color,
   style,
   ...props
 }: Props) => {
@@ -71,7 +73,8 @@ export const StatusControl = ({
             borderColor: colors.grey50,
           }}
         >
-          <Text style={[texts.sm]}>{text}</Text>
+          {!isLoading && <Text style={[texts.sm]}>{t('Arrastar')}</Text>}
+
           <Feather name="check-circle" size={20} color={colors.black} style={{ marginLeft: 10 }} />
         </View>
         {/* thumb */}
@@ -83,12 +86,19 @@ export const StatusControl = ({
               transform: [{ translateX }],
             }}
           >
-            <DefaultButton
-              title={t('Arrastar')}
-              style={{ width: thumbWidth, height: trackHeight }}
+            {/* <DefaultButton
+              title={text}
+              style={{ height: trackHeight }}
               activityIndicator={isLoading}
               icon={<Feather name="arrow-right" size={14} style={{ marginLeft: halfPadding }} />}
               disabled={disabled}
+            /> */}
+            <SliderButton
+              title={text}
+              style={{ height: trackHeight }}
+              activityIndicator={isLoading}
+              disabled={disabled}
+              buttonColor={color}
             />
           </Animated.View>
         </PanGestureHandler>

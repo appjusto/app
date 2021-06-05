@@ -52,11 +52,7 @@ export const DeliveryActions = ({
         }}
       >
         <View style={{ width: '49%' }}>
-          <DefaultButton
-            title={t('Relatar um problema')}
-            secondary
-            onPress={navigateToReportIssue}
-          />
+          <DefaultButton title={t('Relatar problema')} secondary onPress={navigateToReportIssue} />
         </View>
         <View style={{ width: '49%' }}>
           <DefaultButton title={t('Cancelar pedido')} secondary onPress={navigateToConfirmCancel} />

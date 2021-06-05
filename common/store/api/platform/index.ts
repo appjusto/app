@@ -1,4 +1,4 @@
-import { Bank, Classification, Cuisine, Issue, IssueType } from '@appjusto/types';
+import { Bank, Classification, Cuisine, Issue, IssueType, PlatformParams } from '@appjusto/types';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentsAs } from '../types';
@@ -7,6 +7,11 @@ export default class PlatformApi {
   constructor(private refs: FirebaseRefs, private files: FilesApi) {}
 
   // firestore
+  async fetchPlatformParams() {
+    const snapshot = await this.refs.getPlatformParamsRef().get();
+    return snapshot.data() as PlatformParams;
+  }
+
   async fetchBanks() {
     const querySnapshot = await this.refs.getBanksRef().orderBy('order', 'asc').get();
     return documentsAs<Bank>(querySnapshot.docs);

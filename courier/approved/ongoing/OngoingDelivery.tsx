@@ -2,9 +2,10 @@ import { Flavor } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, Text, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ActivityIndicator, Image, Text, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
+import { pinPackage, pinPackageWhite } from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
@@ -122,18 +123,23 @@ export default function ({ navigation, route }: Props) {
     (async () => {
       setLoading(true);
       try {
-        if (order.dispatchingState !== 'arrived-destination') {
+        if (order.dispatchingState === 'going-destination') {
           await api.order().nextDispatchingState(orderId);
-        } else {
+          setLoading(false);
+        } else if (order.dispatchingState === 'arrived-destination') {
           await api.order().completeDelivery(orderId, code);
+          setLoading(false);
+        } else {
+          await api.order().nextDispatchingState(orderId);
+          setTimeout(() => {
+            setLoading(false);
+          }, 15000);
         }
       } catch (error) {
         dispatch(showToast(error.toString(), 'error'));
       }
-      setLoading(false);
     })();
   };
-
   // UI
   const { type, dispatchingState, status } = order;
   const nextStepDisabled =
@@ -148,38 +154,39 @@ export default function ({ navigation, route }: Props) {
     } else if (dispatchingState === 'going-destination') {
       return t('Cheguei para entrega');
     } else if (dispatchingState === 'arrived-destination') {
-      return t('Finalizar entrega');
+      return t('Confirmar entrega');
     }
     return '';
   })();
   const nextPlace = courierNextPlace(order);
   const addressLabel = (() => {
     if (!dispatchingState || dispatchingState === 'going-pickup') {
-      return t('Retirada em');
+      return t('Retirada');
     } else if (
       dispatchingState === 'arrived-pickup' ||
       dispatchingState === 'arrived-destination' ||
       dispatchingState === 'going-destination'
     ) {
-      return t('Entrega em');
+      return t('Entrega');
     }
     return '';
   })();
+  const sliderColor = (() => {
+    if (!dispatchingState || dispatchingState === 'going-pickup') {
+      return colors.green500;
+    } else return colors.darkYellow;
+  })();
   return (
-    <ScrollView style={{ ...screens.default, paddingBottom: padding }}>
-      <KeyboardAvoidingView
-        style={{ flex: 1, justifyContent: 'flex-end' }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -148}
-      >
-        <View>
-          <OrderMap order={order!} ratio={360 / 316} />
-          <RouteIcons order={order} />
-          <View>
-            <StatusAndMessages order={order} onMessageReceived={openChatWithConsumer} />
-          </View>
-        </View>
-        <View style={{ marginTop: padding, paddingHorizontal: padding }}>
+    <KeyboardAwareScrollView
+      enableOnAndroid
+      enableAutomaticScroll
+      keyboardOpeningTime={0}
+      style={{ ...screens.default }}
+      keyboardShouldPersistTaps="always"
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
+      <View style={{ flex: 1 }}>
+        <View style={{ marginHorizontal: padding }}>
           <CourierDeliveryInfo
             order={order}
             onChat={() => openChatWithConsumer()}
@@ -189,39 +196,57 @@ export default function ({ navigation, route }: Props) {
                 issueType: 'courier-delivery-problem',
               })
             }
+            delivering
           />
-          <HR />
         </View>
-        <View
-          style={{
-            paddingHorizontal: padding,
-            flexDirection: 'row',
-            marginTop: padding,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <View style={{ marginBottom: padding, maxWidth: '63%' }}>
-            <Text style={[texts.xs, { color: colors.green600 }]}>{addressLabel}</Text>
-            <Text style={[texts.xs, { marginTop: 4 }]} numberOfLines={2}>
+        {dispatchingState !== 'arrived-destination' && (
+          <View>
+            <OrderMap order={order!} ratio={360 / 316} />
+            <RouteIcons order={order} />
+            <View>
+              <StatusAndMessages order={order} onMessageReceived={openChatWithConsumer} />
+            </View>
+          </View>
+        )}
+        <HR />
+        <PaddedView>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Image
+              source={dispatchingState === 'going-pickup' ? pinPackageWhite : pinPackage}
+              style={{ width: 23, height: 28 }}
+            />
+            <Text
+              style={[
+                texts.xs,
+                texts.bold,
+                { marginVertical: halfPadding, marginHorizontal: halfPadding },
+              ]}
+            >
+              {addressLabel}
+            </Text>
+            <CourierDistanceBadge order={order} delivering />
+          </View>
+          <View style={{ marginTop: halfPadding }}>
+            <Text style={[texts.xl]} numberOfLines={2}>
               {nextPlace?.address.main}
             </Text>
+            <Text style={[texts.xl]} numberOfLines={2}>
+              {nextPlace?.address.secondary}
+            </Text>
             {nextPlace?.additionalInfo ? (
-              <Text style={[texts.xs, { marginTop: 4 }]}>{nextPlace?.additionalInfo}</Text>
+              <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]}>
+                {nextPlace?.additionalInfo}
+              </Text>
             ) : null}
             {nextPlace?.intructions ? (
-              <Text style={[texts.xs, { marginTop: 4 }]} numberOfLines={2}>
+              <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={2}>
                 {nextPlace?.intructions}
               </Text>
             ) : null}
           </View>
-          <View>
-            <CourierDistanceBadge order={order} />
-          </View>
-        </View>
-        {/* Slider */}
+        </PaddedView>
         {dispatchingState !== 'arrived-destination' ? (
-          <View style={{ marginTop: padding, paddingHorizontal: padding }}>
+          <View style={{ paddingHorizontal: padding }}>
             <StatusControl
               key={dispatchingState}
               style={{ marginBottom: padding }}
@@ -229,6 +254,7 @@ export default function ({ navigation, route }: Props) {
               disabled={nextStepDisabled}
               isLoading={isLoading}
               onConfirm={nextStatepHandler}
+              color={sliderColor}
             />
           </View>
         ) : null}
@@ -271,7 +297,7 @@ export default function ({ navigation, route }: Props) {
             />
           </View>
         )}
-      </KeyboardAvoidingView>
-    </ScrollView>
+      </View>
+    </KeyboardAwareScrollView>
   );
 }

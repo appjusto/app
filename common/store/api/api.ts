@@ -127,4 +127,9 @@ export default class Api {
     await this.auth().deleteAccount(payload);
     await this.signOut();
   }
+
+  async getServerTime(): Promise<number> {
+    const result = await this._refs.getServerTimeCallable()();
+    return result.data.time;
+  }
 }

@@ -4,11 +4,15 @@ import React from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
+import { getOrderTotal } from '../../../../../common/store/api/order/helpers';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
+import { useContextBusiness } from '../../../../../common/store/context/business';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { isConsumerProfileComplete } from '../../../../../common/store/courier/validators';
 import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, screens } from '../../../../../common/styles';
+import { formatCurrency } from '../../../../../common/utils/formatters';
+import { t } from '../../../../../strings';
 import { OrderSummary } from '../../../common/order-summary/OrderSummary';
 import { LoggedNavigatorParamList } from '../../../types';
 import { FoodOrderNavigatorParamList } from '../../types';
@@ -36,6 +40,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const api = React.useContext(ApiContext);
   const order = useContextActiveOrder();
   const dispatch = useDispatch<AppDispatch>();
+  const restaurant = useContextBusiness();
   // redux store
   const consumer = useSelector(getConsumer)!;
   // state
@@ -47,6 +52,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [destinationModalVisible, setDestinationModalVisible] = React.useState(false);
   const [confirmedDestination, setConfirmedDestination] = React.useState(false);
   const [orderAdditionalInfo, setOrderAdditionalInfo] = React.useState('');
+  const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
+  const [wantsCpf, setWantsCpf] = React.useState(false);
+  const [shareDataWithBusiness, setShareDataWithBusiness] = React.useState(false);
+
   // side effects
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
@@ -90,6 +99,35 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       setDestinationModalVisible(true);
       return;
     }
+    if (wantsCpf && !cpf) {
+      dispatch(
+        showToast(
+          t(
+            'Preencha o campo com o CPF para que ele seja adicionado na nota. Se não quer adicionar o CPF, desmarque a opção'
+          )
+        )
+      );
+      return;
+    }
+    if (wantsCpf && cpf.length !== 11) {
+      dispatch(showToast(t('CPF preenchido incorretamente. Por favor confira novamente')));
+      return;
+    }
+    if (getOrderTotal(order!) < restaurant.minimumOrder!) {
+      setLoading(true);
+      dispatch(
+        showToast(
+          t(
+            `O valor mínimo para pedidos nesse restaurante é de ${formatCurrency(
+              restaurant.minimumOrder!
+            )}`
+          ),
+          'error'
+        )
+      );
+      setLoading(false);
+      return;
+    }
     try {
       setLoading(true);
       await api.order().placeOrder(
@@ -99,7 +137,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           payableWith: 'credit_card',
           paymentMethodId: selectedPaymentMethodId,
         },
-        orderAdditionalInfo
+        wantsCpf,
+        orderAdditionalInfo,
+        shareDataWithBusiness
       );
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {
@@ -129,7 +169,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const navigateFleetDetail = (fleetId: string) => {
     navigation.navigate('FleetDetail', { fleetId });
   };
-
   // UI
   if (!order) {
     return (
@@ -167,6 +206,12 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         navigateToAboutCharges={() => navigation.navigate('AboutCharges')}
         additionalInfo={orderAdditionalInfo}
         onAddInfo={(text) => setOrderAdditionalInfo(text)}
+        wantsCpf={wantsCpf}
+        onSwitchValueChange={() => setWantsCpf(!wantsCpf)}
+        cpf={cpf}
+        setCpf={(text) => setCpf(text)}
+        shareDataWithBusiness={shareDataWithBusiness}
+        onShareData={() => setShareDataWithBusiness(!shareDataWithBusiness)}
       />
       <DestinationModal
         modalVisible={destinationModalVisible}

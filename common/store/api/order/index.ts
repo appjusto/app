@@ -14,7 +14,7 @@ import {
   OrderRejection,
   Place,
   PlaceOrderPayload,
-  PlaceOrderPaymentDetails,
+  PlaceOrderPayloadPayment,
   RejectOrderPayload,
   TipCourierPayload,
   WithId,
@@ -190,14 +190,18 @@ export default class OrderApi {
   async placeOrder(
     orderId: string,
     fleetId: string,
-    details: PlaceOrderPaymentDetails,
-    additionalInfo?: string
+    payment: PlaceOrderPayloadPayment,
+    invoiceWithCPF: boolean,
+    additionalInfo?: string,
+    wantToShareData?: boolean
   ) {
     const payload: PlaceOrderPayload = {
       orderId,
       fleetId,
-      ...details,
+      payment,
+      invoiceWithCPF,
       additionalInfo,
+      wantToShareData,
       meta: { version: Constants.nativeBuildVersion },
     };
     return (await this.refs.getPlaceOrderCallable()(payload)).data;
