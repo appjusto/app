@@ -111,39 +111,41 @@ const ios = () => ({
 });
 
 const android = () =>
-  (({
-    android: {
-      package: appBundlePackage(),
-      versionCode,
-      adaptiveIcon: {
-        foregroundImage: icon('android'),
-        backgroundColor: flavor === 'consumer' ? '#78E08F' : '#FFE493',
-      },
-      googleServicesFile: `./google-services-${environment}.json`,
-      useNextNotificationsApi: true,
-      softwareKeyboardLayoutMode: 'pan',
-      permissions: permissions(),
-      intentFilters: [
-        {
-          action: 'VIEW',
-          autoVerify: false,
-          data: [
-            {
-              scheme: 'https',
-              host: `${environment.charAt(0)}.deeplink.appjusto.com.br`,
-              pathPrefix: `/${flavor}`,
-            },
-          ],
-          category: ['BROWSABLE', 'DEFAULT'],
+  ((
+    {
+      android: {
+        package: appBundlePackage(),
+        versionCode,
+        adaptiveIcon: {
+          foregroundImage: icon('android'),
+          backgroundColor: flavor === 'consumer' ? '#78E08F' : '#FFE493',
         },
-      ],
-      config: {
-        googleMaps: {
-          apiKey: GOOGLE_MAPS_API_KEY,
+        googleServicesFile: `./google-services-${environment}.json`,
+        useNextNotificationsApi: true,
+        softwareKeyboardLayoutMode: 'pan',
+        permissions: permissions(),
+        intentFilters: [
+          {
+            action: 'VIEW',
+            autoVerify: false,
+            data: [
+              {
+                scheme: 'https',
+                host: `${environment.charAt(0)}.deeplink.appjusto.com.br`,
+                pathPrefix: `/${flavor}`,
+              },
+            ],
+            category: ['BROWSABLE', 'DEFAULT'],
+          },
+        ],
+        config: {
+          googleMaps: {
+            apiKey: GOOGLE_MAPS_API_KEY,
+          },
         },
       },
-    },
-  } as ExpoConfig).android);
+    } as ExpoConfig
+  ).android);
 
 const permissions = () =>
   flavor === 'consumer'
@@ -205,7 +207,7 @@ const hooks = () => ({
       file: 'sentry-expo/upload-sourcemaps',
       config: {
         organization: 'app-justo',
-        project: 'app-justo',
+        project: 'app',
         authToken: SENTRY_AUTH_TOKEN,
       },
     },
