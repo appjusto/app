@@ -4,7 +4,7 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Image, SectionList, Text, View } from 'react-native';
+import { Image, SectionList, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/containers/PaddedView';
@@ -110,6 +110,17 @@ export default function ({ navigation, route }: Props) {
       });
     }
   };
+  if (sections.length === 0) {
+    return (
+      <FeedbackView
+        header={t('Seu histórico está vazio')}
+        description={t('Você ainda não fez nenhum pedido')}
+        icon={<IconMotocycle />}
+        background={colors.grey50}
+      />
+    );
+  }
+
   // UI
   return (
     <Stack.Navigator>
@@ -124,20 +135,6 @@ export default function ({ navigation, route }: Props) {
               sections={sections}
               keyExtractor={(item) => item.id}
               stickySectionHeadersEnabled={false}
-              ListEmptyComponent={
-                !sections ? (
-                  <FeedbackView
-                    header={t('Seu histórico está vazio')}
-                    description={t('Você ainda não fez nenhum pedido')}
-                    icon={<IconMotocycle />}
-                    background={colors.grey50}
-                  />
-                ) : (
-                  <View style={screens.centered}>
-                    <ActivityIndicator size="large" color={colors.green500} />
-                  </View>
-                )
-              }
               renderSectionHeader={({ section }) => (
                 <PaddedView
                   style={{
