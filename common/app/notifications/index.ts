@@ -47,7 +47,7 @@ export const init = async (queryClient: QueryClient) => {
       bypassDnd: true,
       lightColor: colors.green100,
     });
-    await Notifications.setNotificationChannelAsync('profile-updates', {
+    await Notifications.setNotificationChannelAsync('profile-update', {
       name: t('Atualizações de perfil'),
       importance: Notifications.AndroidImportance.HIGH,
       enableVibrate: true,

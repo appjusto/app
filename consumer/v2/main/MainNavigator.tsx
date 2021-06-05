@@ -1,19 +1,51 @@
+import { PushMessageData } from '@appjusto/types';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/core';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Image } from 'react-native';
 import * as icons from '../../../assets/icons';
 import { colors, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import { LoggedNavigatorParamList } from '../types';
 import OrderHistory from './history/OrderHistory';
 import Home from './home/Home';
 import Profile from './profile/Profile';
 import { MainNavigatorParamList } from './types';
 import { useNotificationHandler } from './useNotificationHandler';
 
+type ScreenNavigationProp = StackNavigationProp<LoggedNavigatorParamList, 'MainNavigator'>;
+
 const Tab = createBottomTabNavigator<MainNavigatorParamList>();
 
 export const MainNavigator = () => {
-  useNotificationHandler();
+  // context
+  const navigation = useNavigation<ScreenNavigationProp>();
+  // handlers
+  const handler = React.useCallback(
+    (data: PushMessageData) => {
+      if (data.action === 'order-update') {
+        navigation.navigate('OngoingOrderNavigator', {
+          screen: 'OngoingOrder',
+          params: {
+            orderId: data.orderId,
+          },
+        });
+      } else if (data.action === 'order-chat') {
+        navigation.navigate('OngoingOrderNavigator', {
+          screen: 'OngoingOrder',
+          params: {
+            orderId: data.orderId,
+            chatFrom: data.from,
+          },
+        });
+      }
+    },
+    [navigation]
+  );
+  useNotificationHandler('order-update', handler);
+  useNotificationHandler('order-chat', handler);
+  // UI
   return (
     <Tab.Navigator
       tabBarOptions={{

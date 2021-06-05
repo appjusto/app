@@ -1,15 +1,16 @@
-import { OrderMatchPushMessageData, PushMessage } from '@appjusto/types';
+import { OrderMatchPushMessageData, PushMessageData } from '@appjusto/types';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Image } from 'react-native';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import * as icons from '../../../assets/icons';
 import { useObserveOngoingOrders } from '../../../common/store/api/order/hooks/useObserveOngoingOrders';
 import { getUser } from '../../../common/store/user/selectors';
 import { colors, texts } from '../../../common/styles';
+import { useNotificationHandler } from '../../../consumer/v2/main/useNotificationHandler';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import DeliveryHistory from './history/DeliveryHistory';
@@ -29,67 +30,44 @@ export default function ({ navigation }: Props) {
   const user = useSelector(getUser);
   // context
   const queryCache = useQueryClient();
-  const matchingQuery = useQuery<PushMessage[]>(['notifications', 'order-request'], () => []);
-  const orderUpdateQuery = useQuery<PushMessage[]>(['notifications', 'order-update'], () => []);
-  const chatQuery = useQuery<PushMessage[]>(['notifications', 'order-chat'], () => []);
+  // handlers
+  const handler = React.useCallback(
+    (data: PushMessageData) => {
+      if (data.action === 'order-request') {
+        Sentry.Native.captureMessage(`Received push: ${data.action}`);
+        navigation.navigate('MatchingNavigator', {
+          screen: 'Matching',
+          params: {
+            matchRequest: data as OrderMatchPushMessageData,
+          },
+        });
+      } else if (data.action === 'order-update') {
+        navigation.navigate('OngoingDeliveryNavigator', {
+          screen: 'OngoingDelivery',
+          params: {
+            orderId: data.orderId,
+          },
+        });
+      } else if (data.action === 'order-chat') {
+        navigation.navigate('OngoingDeliveryNavigator', {
+          screen: 'OngoingDelivery',
+          params: {
+            orderId: data.orderId,
+            chatFrom: data.from,
+          },
+        });
+      }
+    },
+    [navigation]
+  );
   // side effects
   // subscribe for observing ongoing orders
   const options = React.useMemo(() => ({ courierId: user?.uid }), [user?.uid]);
   useObserveOngoingOrders(options);
-  // react to order-rrequest
-  React.useEffect(() => {
-    // console.log("MainNavigator ['notifications', 'order-request']");
-    if (!matchingQuery.data || matchingQuery.data.length === 0) return;
-    const [notification] = matchingQuery.data;
-    // console.log(notification);
-    if (notification) {
-      const data = notification.data as OrderMatchPushMessageData;
-      Sentry.Native.captureMessage(`Received push: ${data.action}`);
-      navigation.navigate('MatchingNavigator', {
-        screen: 'Matching',
-        params: {
-          matchRequest: data,
-        },
-      });
-      // remove from cache
-      queryCache.setQueryData(
-        ['notifications', 'order-request'],
-        (notifications: PushMessage[] | undefined) =>
-          (notifications ?? []).filter((item) => item.id !== notification.id)
-      );
-    }
-  }, [matchingQuery.data, navigation, queryCache]);
-  // react to order-chat
-  React.useEffect(() => {
-    // console.log("MainNavigator ['notifications', 'order-chat']");
-    if (!chatQuery.data || chatQuery.data.length === 0) return;
-    const [notification] = chatQuery.data;
-    // console.log(notification);
-    const { clicked, data } = notification;
-    if (clicked) {
-      navigation.navigate('OngoingDeliveryNavigator', {
-        screen: 'OngoingDelivery',
-        params: {
-          orderId: data.orderId,
-          chatFrom: data.from,
-        },
-      });
-    }
-  }, [chatQuery.data, navigation]);
-  // react to order-update
-  React.useEffect(() => {
-    if (!orderUpdateQuery.data || orderUpdateQuery.data.length === 0) return;
-    const [notification] = orderUpdateQuery.data;
-    if (notification.clicked) {
-      navigation.navigate('OngoingDeliveryNavigator', {
-        screen: 'OngoingDelivery',
-        params: {
-          orderId: notification.data.orderId,
-        },
-      });
-    }
-  }, [orderUpdateQuery.data, navigation]);
-
+  useNotificationHandler('order-request', handler);
+  useNotificationHandler('order-update', handler);
+  useNotificationHandler('order-chat', handler);
+  // UI
   return (
     <Tab.Navigator
       tabBarOptions={{
