@@ -1,7 +1,8 @@
-import { PushMessage, PushMessageData } from '@appjusto/types';
+import { PushMessage, PushMessageActionType, PushMessageData } from '@appjusto/types';
 import * as Notifications from 'expo-notifications';
 import React from 'react';
 import { useQueryClient } from 'react-query';
+import { init } from '.';
 
 type Props = {
   children: React.ReactNode;
@@ -23,6 +24,18 @@ export default function ({ children }: Props) {
     },
     [queryClient]
   );
+  const dissmissRelatedNotifications = React.useCallback(
+    (id: string, action: PushMessageActionType) => {
+      console.log('dissmissRelatedNotifications', id, action);
+      const messages = queryClient.getQueryData<PushMessage[]>(['notifications', action]);
+      console.log(messages);
+      const promises = (messages ?? []).map((m) =>
+        m.id !== id ? Notifications.dismissNotificationAsync(m.id) : Promise.resolve()
+      );
+      Promise.all(promises);
+    },
+    [queryClient]
+  );
 
   // handlers
   // called whenever a notification is received while the app is running.
@@ -34,10 +47,11 @@ export default function ({ children }: Props) {
       const data = request.content.data as unknown as PushMessageData;
       // add message to queryClient
       add(id, data, false);
+      dissmissRelatedNotifications(id, data.action);
       // dismiss notification if the app in running
       // Notifications.dismissNotificationAsync(id);
     },
-    [add]
+    [add, dissmissRelatedNotifications]
   );
 
   // called whenever a user interacts with a notification (eg. taps on it).
@@ -71,17 +85,17 @@ export default function ({ children }: Props) {
           }
         );
       }
-      // dismiss all other notifications of this type
-      queryClient.getQueryData<PushMessage[]>(['notifications', data.action])?.forEach((n) => {
-        if (n.id !== id) {
-          Notifications.dismissNotificationAsync(n.id);
-        }
-      });
+      dissmissRelatedNotifications(id, data.action);
     },
-    [add, queryClient]
+    [queryClient, add, dissmissRelatedNotifications]
   );
 
   // effects
+  React.useEffect(() => {
+    (async () => {
+      await init(queryClient);
+    })();
+  }, [queryClient]);
   React.useEffect(() => {
     const subscription = Notifications.addNotificationReceivedListener(receivedHandler);
     const responseSubscription =

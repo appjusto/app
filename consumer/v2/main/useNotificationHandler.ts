@@ -1,4 +1,4 @@
-import { PushMessage } from '@appjusto/types';
+import { PushMessage, PushMessageData } from '@appjusto/types';
 import { useNavigation } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -7,39 +7,19 @@ import { LoggedNavigatorParamList } from '../types';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedNavigatorParamList, 'MainNavigator'>;
 
-export const useNotificationHandler = () => {
+export const useNotificationHandler = (
+  action: string,
+  handler: (data: PushMessageData) => void
+) => {
   // context
   const navigation = useNavigation<ScreenNavigationProp>();
   // state
-  const chatQuery = useQuery<PushMessage[]>(['notifications', 'order-chat'], () => []);
-  const orderUpdateQuery = useQuery<PushMessage[]>(['notifications', 'order-update'], () => []);
+  const query = useQuery<PushMessage[]>(['notifications', action], () => []);
   // side effects
-  // react to order-chat
   React.useEffect(() => {
-    if (!chatQuery.data || chatQuery.data.length === 0) return;
-    const [notification] = chatQuery.data;
+    if (!query.data || query.data.length === 0) return;
+    const [notification] = query.data;
     const { clicked, data } = notification;
-    if (clicked) {
-      navigation.navigate('OngoingOrderNavigator', {
-        screen: 'OngoingOrder',
-        params: {
-          orderId: data.orderId,
-          chatFrom: data.from,
-        },
-      });
-    }
-  }, [chatQuery.data, navigation]);
-  // react to order-update
-  React.useEffect(() => {
-    if (!orderUpdateQuery.data || orderUpdateQuery.data.length === 0) return;
-    const [notification] = orderUpdateQuery.data;
-    if (notification.clicked) {
-      navigation.navigate('OngoingOrderNavigator', {
-        screen: 'OngoingOrder',
-        params: {
-          orderId: notification.data.orderId,
-        },
-      });
-    }
-  }, [orderUpdateQuery.data, navigation]);
+    if (clicked) handler(data);
+  }, [query.data, navigation, handler]);
 };

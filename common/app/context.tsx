@@ -10,7 +10,7 @@ import Api from '../store/api/api';
 import { getExtra } from '../utils/config';
 import { defineLocationUpdatesTask } from '../utils/location';
 import * as analytics from './analytics';
-import NotificationContainer from './NotificationContainer';
+import NotificationContainer from './notifications/NotificationContainer';
 
 const extra = getExtra();
 const api = new Api(extra);
