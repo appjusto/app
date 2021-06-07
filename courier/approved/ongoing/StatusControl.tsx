@@ -97,8 +97,10 @@ export const StatusControl = ({
             <View
               style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}
             >
-              <Text style={[texts.sm, { marginRight: 10 }]}>{t('Aguarde')}</Text>
-              <ActivityIndicator size="small" color={colors.black} />
+              <Text style={[texts.sm, { marginRight: 10, color: colors.white }]}>
+                {t('Aguarde')}
+              </Text>
+              <ActivityIndicator size="small" color={colors.white} />
             </View>
           )}
         </View>
