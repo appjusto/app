@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
@@ -116,7 +116,14 @@ export default function ({ navigation, route }: Props) {
   // UI
   return (
     <View style={{ ...screens.config }}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <KeyboardAwareScrollView
+        enableOnAndroid
+        enableAutomaticScroll
+        keyboardOpeningTime={0}
+        style={{ flex: 1 }}
+        keyboardShouldPersistTaps="never"
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
         <PaddedView style={{ flex: 1 }}>
           <Text style={{ ...texts.sm, color: colors.grey700 }}>
             <Text style={{ color: colors.red }}>{t('Aviso: ')}</Text>
@@ -255,7 +262,7 @@ export default function ({ navigation, route }: Props) {
             </SafeAreaView>
           )}
         </PaddedView>
-      </ScrollView>
+      </KeyboardAwareScrollView>
       <DefaultModal
         header={t('Atenção')}
         body={warning ?? ''}

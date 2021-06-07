@@ -2,7 +2,8 @@ import { DeleteAccountPayload } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { ProfileParamList } from '../../../consumer/v2/main/profile/types';
@@ -12,6 +13,7 @@ import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
+import PaddedView from '../../components/containers/PaddedView';
 import { useSegmentScreen } from '../../store/api/track';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
@@ -61,12 +63,17 @@ export default function ({ navigation }: Props) {
   };
   // UI
   return (
-    <View style={{ ...screens.lightGrey }}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+    <KeyboardAwareScrollView
+      enableOnAndroid
+      enableAutomaticScroll
+      keyboardOpeningTime={0}
+      style={{ ...screens.config }}
+      keyboardShouldPersistTaps="never"
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
+      <PaddedView style={{ flex: 1 }}>
         <View>
-          <Text style={{ ...texts.x2l, marginTop: 16 }}>
-            {t('Tem certeza que deseja excluir sua conta?')}
-          </Text>
+          <Text style={{ ...texts.x2l }}>{t('Tem certeza que deseja excluir sua conta?')}</Text>
           <Text style={{ ...texts.sm, marginTop: 16, color: colors.grey700 }}>
             {t(
               'Todos os seus dados serão apagados do nosso sistema, juntamente com seu histórico de pedidos, e você terá que criar um novo cadastro para usar o AppJusto.'
@@ -145,7 +152,7 @@ export default function ({ navigation }: Props) {
             />
           </SafeAreaView>
         </View>
-      </ScrollView>
-    </View>
+      </PaddedView>
+    </KeyboardAwareScrollView>
   );
 }

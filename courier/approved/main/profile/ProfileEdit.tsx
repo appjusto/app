@@ -4,7 +4,8 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { trim } from 'lodash';
 import React from 'react';
-import { KeyboardAvoidingView, Text, TextInput, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
@@ -72,108 +73,117 @@ export default function ({ navigation, route }: Props) {
   };
   // UI
   return (
-    <KeyboardAvoidingView style={{ ...screens.config }}>
-      <Text
-        style={{
-          ...texts.x2l,
-          paddingHorizontal: padding,
-          paddingTop: padding,
-          paddingBottom: halfPadding,
-        }}
-      >
-        {t('Seus dados')}
-      </Text>
+    <KeyboardAwareScrollView
+      enableOnAndroid
+      enableAutomaticScroll
+      keyboardOpeningTime={0}
+      style={{ ...screens.config }}
+      keyboardShouldPersistTaps="never"
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
+      <View style={{ flex: 1 }}>
+        <Text
+          style={{
+            ...texts.x2l,
+            paddingHorizontal: padding,
+            paddingTop: padding,
+            paddingBottom: halfPadding,
+          }}
+        >
+          {t('Seus dados')}
+        </Text>
 
-      <Text
-        style={{
-          ...texts.sm,
-          paddingHorizontal: padding,
-          color: colors.grey700,
-          paddingBottom: padding,
-        }}
-      >
-        {t('Edite seus dados pessoais:')}
-      </Text>
-      <PaddedView style={{ flex: 1 }}>
-        <DefaultInput title={t('E-mail')} value={courier.email} editable={false} />
-        <DefaultInput
-          style={{ marginTop: padding }}
-          title={t('Nome')}
-          placeholder={t('Digite seu nome')}
-          value={name}
-          returnKeyType="next"
-          blurOnSubmit={false}
-          onChangeText={(text) => setName(text)}
-          onSubmitEditing={() => surnameRef.current?.focus()}
-          keyboardType="default"
-          maxLength={30}
-          editable={!profileApproved}
-        />
-        <DefaultInput
-          ref={surnameRef}
-          style={{ marginTop: padding }}
-          title={t('Sobrenome')}
-          placeholder={t('Digite seu sobrenome')}
-          value={surname}
-          returnKeyType="next"
-          blurOnSubmit={false}
-          onChangeText={(text) => setSurname(text)}
-          onSubmitEditing={() => phoneRef.current?.focus()}
-          keyboardType="default"
-          maxLength={30}
-          editable={!profileApproved}
-        />
-        <PatternInput
-          ref={phoneRef}
-          style={{ marginTop: padding }}
-          title={t('Celular')}
-          value={phone}
-          placeholder={t('Número do seu celular')}
-          mask={phoneMask}
-          parser={numbersOnlyParser}
-          formatter={phoneFormatter}
-          keyboardType="number-pad"
-          returnKeyType="done"
-          blurOnSubmit={false}
-          onChangeText={(text) => setPhone(trim(text))}
-          onSubmitEditing={() => cpfRef.current?.focus()}
-          editable={!profileApproved}
-        />
-        {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
-          <Text style={{ ...texts.sm, ...texts.bold, color: colors.grey700, marginTop: padding }}>
-            {t('O CPF digitado não é válido.')}
-          </Text>
-        )}
-        <PatternInput
-          ref={cpfRef}
-          style={{ marginTop: padding }}
-          title={t('CPF')}
-          value={cpf}
-          placeholder={t('Seu CPF, apenas números')}
-          mask={cpfMask}
-          parser={numbersOnlyParser}
-          formatter={cpfFormatter}
-          keyboardType="number-pad"
-          returnKeyType="next"
-          blurOnSubmit
-          onFocus={() => setFocusedField('cpf')}
-          onBlur={() => setFocusedField(undefined)}
-          onChangeText={(text) => setCpf(trim(text))}
-          editable={!profileApproved}
-        />
+        <Text
+          style={{
+            ...texts.sm,
+            paddingHorizontal: padding,
+            color: colors.grey700,
+            paddingBottom: padding,
+          }}
+        >
+          {t('Edite seus dados pessoais:')}
+        </Text>
+        <PaddedView style={{ flex: 1 }}>
+          <DefaultInput title={t('E-mail')} value={courier.email} editable={false} />
+          <DefaultInput
+            style={{ marginTop: padding }}
+            title={t('Nome')}
+            placeholder={t('Digite seu nome')}
+            value={name}
+            returnKeyType="next"
+            blurOnSubmit={false}
+            onChangeText={(text) => setName(text)}
+            onSubmitEditing={() => surnameRef.current?.focus()}
+            keyboardType="default"
+            maxLength={30}
+            editable={!profileApproved}
+          />
+          <DefaultInput
+            ref={surnameRef}
+            style={{ marginTop: padding }}
+            title={t('Sobrenome')}
+            placeholder={t('Digite seu sobrenome')}
+            value={surname}
+            returnKeyType="next"
+            blurOnSubmit={false}
+            onChangeText={(text) => setSurname(text)}
+            onSubmitEditing={() => phoneRef.current?.focus()}
+            keyboardType="default"
+            maxLength={30}
+            editable={!profileApproved}
+          />
+          <PatternInput
+            ref={phoneRef}
+            style={{ marginTop: padding }}
+            title={t('Celular')}
+            value={phone}
+            placeholder={t('Número do seu celular')}
+            mask={phoneMask}
+            parser={numbersOnlyParser}
+            formatter={phoneFormatter}
+            keyboardType="number-pad"
+            returnKeyType="done"
+            blurOnSubmit={false}
+            onChangeText={(text) => setPhone(trim(text))}
+            onSubmitEditing={() => cpfRef.current?.focus()}
+            editable={!profileApproved}
+          />
+          {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
+            <Text style={{ ...texts.sm, ...texts.bold, color: colors.grey700, marginTop: padding }}>
+              {t('O CPF digitado não é válido.')}
+            </Text>
+          )}
+          <PatternInput
+            ref={cpfRef}
+            style={{ marginTop: padding }}
+            title={t('CPF')}
+            value={cpf}
+            placeholder={t('Seu CPF, apenas números')}
+            mask={cpfMask}
+            parser={numbersOnlyParser}
+            formatter={cpfFormatter}
+            keyboardType="number-pad"
+            returnKeyType="next"
+            blurOnSubmit
+            onFocus={() => setFocusedField('cpf')}
+            onBlur={() => setFocusedField(undefined)}
+            onChangeText={(text) => setCpf(trim(text))}
+            editable={!profileApproved}
+          />
 
-        <View style={{ flex: 1 }} />
-        {!profileApproved && (
-          <SafeAreaView>
-            <DefaultButton
-              title={t('Avançar')}
-              onPress={updateProfileHandler}
-              disabled={!canSubmit || busy}
-              activityIndicator={busy}
-            />
-          </SafeAreaView>
-        )}
-      </PaddedView>
-    </KeyboardAvoidingView>
+          <View style={{ flex: 1 }} />
+          {!profileApproved && (
+            <SafeAreaView>
+              <DefaultButton
+                title={t('Avançar')}
+                onPress={updateProfileHandler}
+                disabled={!canSubmit || busy}
+                activityIndicator={busy}
+              />
+            </SafeAreaView>
+          )}
+        </PaddedView>
+      </View>
+    </KeyboardAwareScrollView>
   );
 }
