@@ -26,6 +26,7 @@ export default class ProfileApi {
     await this.getProfileRef(id).set({
       situation: 'pending',
       email: this.auth.getEmail(),
+      createdOn: firebase.firestore.FieldValue.serverTimestamp(),
     } as UserProfile);
   }
 
