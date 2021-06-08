@@ -11,14 +11,21 @@ export const CodeInput = ({ value, onChange }: Props) => {
   // state
   const values = [value.charAt(0), value.charAt(1), value.charAt(2)];
   // refs
+  const firstInputRef = React.useRef<TextInput>(null);
   const secondInputRef = React.useRef<TextInput>(null);
   const thirdInputRef = React.useRef<TextInput>(null);
   // UI handlers
-  const updateValues = (char: string, index: number, nextInputRef?: React.RefObject<TextInput>) => {
+  const updateValues = (
+    char: string,
+    index: number,
+    nextInputRef?: React.RefObject<TextInput>,
+    previousInputRef?: React.RefObject<TextInput>
+  ) => {
     onChange([...values.slice(0, index), char, ...values.slice(index + 1)].join(''));
-    if (nextInputRef?.current) {
-      // avoid jumping to next input if users delete
-      if (char) nextInputRef.current.focus();
+    if (char) {
+      if (nextInputRef?.current) nextInputRef.current.focus();
+    } else if (previousInputRef?.current) {
+      previousInputRef.current.focus();
     } else {
       Keyboard.dismiss();
     }
@@ -35,6 +42,7 @@ export const CodeInput = ({ value, onChange }: Props) => {
       }}
     >
       <DigitInput
+        ref={firstInputRef}
         value={values[0]}
         blurOnSubmit={false}
         returnKeyType="next"
@@ -48,7 +56,7 @@ export const CodeInput = ({ value, onChange }: Props) => {
         value={values[1]}
         blurOnSubmit={false}
         returnKeyType="next"
-        onChangeText={(char) => updateValues(char, 1, thirdInputRef)}
+        onChangeText={(char) => updateValues(char, 1, thirdInputRef, firstInputRef)}
         onSubmitEditing={() => thirdInputRef.current?.focus()}
         importantForAutofill="no"
       />
@@ -57,7 +65,7 @@ export const CodeInput = ({ value, onChange }: Props) => {
         ref={thirdInputRef}
         value={values[2]}
         returnKeyType="done"
-        onChangeText={(char) => updateValues(char, 2)}
+        onChangeText={(char) => updateValues(char, 2, undefined, secondInputRef)}
         importantForAutofill="no"
       />
     </View>

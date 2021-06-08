@@ -27,6 +27,9 @@ export const DigitInput = React.forwardRef(
           selectTextOnFocus
           value={value}
           onChangeText={onChangeText}
+          onKeyPress={(ev) => {
+            if (ev.nativeEvent.key === 'Backspace') onChangeText('');
+          }}
           {...props}
         />
       </View>
