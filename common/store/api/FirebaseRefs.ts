@@ -35,6 +35,8 @@ export default class FirebaseRefs {
   // platform docs
   getPlatformParamsRef = () => this.getPlatformRef().doc('params');
   getPlatformStatisticsRef = () => this.getPlatformRef().doc('statistics');
+  getPlatformCitiesStatisticsRef = () => this.getPlatformStatisticsRef().collection('cities');
+  getPlatformCityStatisticsRef = (name: string) => this.getPlatformCitiesStatisticsRef().doc(name);
   getPlatformDatasRef = () => this.getPlatformRef().doc('data');
   getPlatformLogsRef = () => this.getPlatformRef().doc('logs');
 
