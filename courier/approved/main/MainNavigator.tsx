@@ -3,7 +3,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Image } from 'react-native';
-import { useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import * as icons from '../../../assets/icons';
@@ -28,11 +27,9 @@ const Tab = createBottomTabNavigator<MainParamList>();
 export default function ({ navigation }: Props) {
   // redux store
   const user = useSelector(getUser);
-  // context
-  const queryCache = useQueryClient();
   // handlers
   const handler = React.useCallback(
-    (data: PushMessageData) => {
+    (data: PushMessageData, clicked?: boolean) => {
       if (data.action === 'order-request') {
         Sentry.Native.captureMessage(`Received push: ${data.action}`);
         navigation.navigate('MatchingNavigator', {
@@ -42,20 +39,22 @@ export default function ({ navigation }: Props) {
           },
         });
       } else if (data.action === 'order-update') {
-        navigation.navigate('OngoingDeliveryNavigator', {
-          screen: 'OngoingDelivery',
-          params: {
-            orderId: data.orderId,
-          },
-        });
+        if (clicked)
+          navigation.navigate('OngoingDeliveryNavigator', {
+            screen: 'OngoingDelivery',
+            params: {
+              orderId: data.orderId,
+            },
+          });
       } else if (data.action === 'order-chat') {
-        navigation.navigate('OngoingDeliveryNavigator', {
-          screen: 'OngoingDelivery',
-          params: {
-            orderId: data.orderId,
-            chatFrom: data.from,
-          },
-        });
+        if (clicked)
+          navigation.navigate('OngoingDeliveryNavigator', {
+            screen: 'OngoingDelivery',
+            params: {
+              orderId: data.orderId,
+              chatFrom: data.from,
+            },
+          });
       }
     },
     [navigation]

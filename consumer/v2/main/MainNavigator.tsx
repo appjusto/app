@@ -23,22 +23,24 @@ export const MainNavigator = () => {
   const navigation = useNavigation<ScreenNavigationProp>();
   // handlers
   const handler = React.useCallback(
-    (data: PushMessageData) => {
+    (data: PushMessageData, clicked?: boolean) => {
       if (data.action === 'order-update') {
-        navigation.navigate('OngoingOrderNavigator', {
-          screen: 'OngoingOrder',
-          params: {
-            orderId: data.orderId,
-          },
-        });
+        if (clicked)
+          navigation.navigate('OngoingOrderNavigator', {
+            screen: 'OngoingOrder',
+            params: {
+              orderId: data.orderId,
+            },
+          });
       } else if (data.action === 'order-chat') {
-        navigation.navigate('OngoingOrderNavigator', {
-          screen: 'OngoingOrder',
-          params: {
-            orderId: data.orderId,
-            chatFrom: data.from,
-          },
-        });
+        if (clicked)
+          navigation.navigate('OngoingOrderNavigator', {
+            screen: 'OngoingOrder',
+            params: {
+              orderId: data.orderId,
+              chatFrom: data.from,
+            },
+          });
       }
     },
     [navigation]
