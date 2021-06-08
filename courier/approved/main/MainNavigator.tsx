@@ -29,9 +29,10 @@ export default function ({ navigation }: Props) {
   const user = useSelector(getUser);
   // handlers
   const handler = React.useCallback(
-    (data: PushMessageData, clicked?: boolean) => {
+    (data: PushMessageData, clicked?: boolean, remove?: () => void) => {
       if (data.action === 'order-request') {
         Sentry.Native.captureMessage(`Received push: ${data.action}`);
+        remove!();
         navigation.navigate('MatchingNavigator', {
           screen: 'Matching',
           params: {

@@ -16,17 +16,14 @@ export default function ({ children }: Props) {
     (id: string, data: PushMessageData, clicked: boolean) => {
       queryClient.setQueryData(
         ['notifications', data.action],
-        (notifications: PushMessage[] | undefined) => [
-          ...(notifications ?? []),
-          { id, data, clicked },
-        ]
+        (notifications: PushMessage[] = []) => [...notifications, { id, data, clicked }]
       );
     },
     [queryClient]
   );
   const dissmissRelatedNotifications = React.useCallback(
-    (id: string, action: PushMessageActionType) => {
-      console.log('dissmissRelatedNotifications', id, action);
+    async (id: string, action: PushMessageActionType) => {
+      // console.log(`{dissmissRelatedNotifications} #${id}; action: ${action}`);
       const messages = queryClient.getQueryData<PushMessage[]>(['notifications', action]);
       console.log(messages);
       const promises = (messages ?? []).map((m) =>
@@ -45,9 +42,10 @@ export default function ({ children }: Props) {
       const id = request.identifier;
       // console.log('notification received (not clicked):', id);
       const data = request.content.data as unknown as PushMessageData;
+      // console.log(`{receivedHandler} #${id}; data:`, JSON.stringify(data));
       // add message to queryClient
       add(id, data, false);
-      dissmissRelatedNotifications(id, data.action);
+      await dissmissRelatedNotifications(id, data.action);
       // dismiss notification if the app in running
       // Notifications.dismissNotificationAsync(id);
     },
@@ -67,6 +65,7 @@ export default function ({ children }: Props) {
         queryClient
           .getQueryData<PushMessage[]>(['notifications', data.action])
           ?.some((m) => m.id === id) ?? false;
+      // console.log(`{responseReceivedHandler} #${id}; alreadyAdded: ${alreadyAdded}`);
       if (!alreadyAdded) {
         add(id, data, true);
       } else {
