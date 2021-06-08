@@ -1,15 +1,7 @@
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import {
-  Dimensions,
-  NativeSyntheticEvent,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Dimensions, NativeSyntheticEvent, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
@@ -76,7 +68,8 @@ export const Onboarding = ({ navigation }: Props) => {
           await api.profile().updateProfile(user.uid, { onboarded: true });
           navigation.replace('ProfilePending');
         } else {
-          await api.profile().updateProfile(user.uid, { onboarded: true, city });
+          // onboarded false for tests only
+          await api.profile().updateProfile(user.uid, { onboarded: false, city });
           navigation.navigate('RegistrationSubmitted');
         }
       } catch (error) {
@@ -123,9 +116,6 @@ export const Onboarding = ({ navigation }: Props) => {
                     {value}
                   </Text>
                 ))}
-                <Pressable onPress={() => navigation.navigate('RegistrationSubmitted')}>
-                  <Text>IR PARA REGISTRATION SUBMITTED</Text>
-                </Pressable>
               </View>
             </View>
           ))}
@@ -158,7 +148,7 @@ export const Onboarding = ({ navigation }: Props) => {
           title={step === steps.length - 1 ? t('Começar') : t('Avançar')}
           style={{ marginTop: 32, marginBottom: padding, marginHorizontal: padding }}
           onPress={advanceHandler}
-          disabled={flavor === 'consumer' ? isLoading || !city : isLoading}
+          disabled={flavor === 'consumer' && step === 2 ? isLoading || !city : isLoading}
           activityIndicator={isLoading}
         />
       </SafeAreaView>

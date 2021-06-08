@@ -2,7 +2,13 @@ import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-communi
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { NativeSyntheticEvent, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  NativeSyntheticEvent,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
@@ -10,7 +16,9 @@ import { LoggedNavigatorParamList } from '../../../../consumer/v2/types';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';
 import RoundedText from '../../../components/texts/RoundedText';
-import { getUser } from '../../../store/user/selectors';
+import { IconLogoBlackandWhite } from '../../../icons/icon-logo-b&w';
+import { IconPlay } from '../../../icons/icon-play';
+import { getConsumer } from '../../../store/consumer/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../styles';
 import HomeShareCard from '../../home/cards/HomeShareCard';
 import { SocialMediaCard } from '../../home/cards/SocialMediaCard';
@@ -26,7 +34,7 @@ type Props = {
 
 export const RegistrationSubmitted = ({ navigation, route }: Props) => {
   // redux store
-  const user = useSelector(getUser)!;
+  const consumer = useSelector(getConsumer);
   // state
   const steps = config.registrationSubmitted;
   const [step, setStep] = React.useState(0);
@@ -40,16 +48,25 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
       setStep(position);
     }
   };
-  console.log(user);
+  console.log(consumer);
+  // UI
+  // UI
+  if (!consumer) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <SafeAreaView style={{ ...screens.config }}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
         <PaddedView style={{ backgroundColor: colors.green500 }}>
           <RoundedText>{t('Pré-cadastro realizado com sucesso!')}</RoundedText>
           {/* add a "user counter" in this text. if user counter < 10, replace
           the string with 'Obrigado por fazer parte desse movimento em {nome da cidade}' */}
           <Text style={{ ...texts.x2l, marginVertical: padding }}>
-            {t('Você e mais 000 pessoas já fazem parte desse movimento em {nome da cidade}')}
+            {t(`Você e mais 000 pessoas já fazem parte desse movimento em ${consumer.city}`)}
           </Text>
           <Text style={{ ...texts.md, marginBottom: 24 }}>
             {t(
@@ -113,6 +130,29 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
               />
             ))}
           </View>
+          <TouchableOpacity>
+            <PaddedView
+              style={{
+                ...borders.default,
+                width: '100%',
+                height: 200,
+                backgroundColor: colors.grey700,
+                flexDirection: 'row',
+                marginBottom: 24,
+              }}
+            >
+              <View style={{ width: '50%' }}>
+                <IconPlay />
+                <Text style={{ ...texts.lg, marginTop: padding }}>
+                  {t('Assistir vídeo explicativo')}
+                </Text>
+              </View>
+              <View style={{ justifyContent: 'flex-end' }}>
+                <IconLogoBlackandWhite />
+              </View>
+            </PaddedView>
+          </TouchableOpacity>
+
           <SocialMediaCard app="instagram" />
         </PaddedView>
       </ScrollView>
