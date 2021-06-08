@@ -3,11 +3,7 @@ import React from 'react';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import PlaceSummary from '../../../../common/screens/orders/summary/PlaceSummary';
-import {
-  formatDistance,
-  formatDuration,
-  separateWithDot,
-} from '../../../../common/utils/formatters';
+import { formatDistance, formatTime, separateWithDot } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import { Step } from '../../p2p/types';
 
@@ -34,14 +30,16 @@ export const OrderPlacesSummary = ({ order, onEditStep }: Props) => {
           onEdit={() => onEditStep(Step.Destination)}
         />
       )}
-      {route && (
+      {route?.distance && destination?.estimatedTimeOfArrival && destination?.maxTimeOfArrival ? (
         <RoundedText>
           {separateWithDot(
             formatDistance(route.distance),
-            `${t('Estimativa: ')}${formatDuration(route.duration)}`
+            `${t('Previsão:')} ${formatTime(destination.estimatedTimeOfArrival)} - ${formatTime(
+              destination.maxTimeOfArrival
+            )}`
           )}
         </RoundedText>
-      )}
+      ) : null}
     </PaddedView>
   );
 };

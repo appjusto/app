@@ -32,5 +32,6 @@ export type OngoingOrderNavigatorParamList = {
     counterpartId: string;
     counterpartFlavor: Flavor;
   };
+  OngoingOrderCancelFeedback: undefined;
 } & ReportIssueParamList &
   OrderCanceledParamList;

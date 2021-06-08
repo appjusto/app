@@ -104,7 +104,7 @@ export default function ({ navigation, route }: Props) {
       navigation.navigate('OngoingOrderNoMatch', { orderId });
     }
   }, [navigation, order, orderId]);
-
+  console.log(orderId);
   // UI
   // showing the indicator until the order is loaded
   if (!order) {
@@ -120,8 +120,11 @@ export default function ({ navigation, route }: Props) {
       orderId: order.id,
       issueType: 'consumer-delivery-problem',
     });
-  const navigateToConfirmCancel = () =>
-    navigation.navigate('OngoingOrderConfirmCancel', { orderId });
+  const navigateToConfirmCancel = () => {
+    if (order.status === 'preparing') {
+      navigation.navigate('OngoingOrderConfirmCancel', { orderId });
+    } else navigation.navigate('OngoingOrderCancelOrder', { orderId });
+  };
   const navigateToCourierDetail = () =>
     navigation.navigate('OngoingOrderCourierDetail', { orderId });
   const navigateToChangeRoute = () =>

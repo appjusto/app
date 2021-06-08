@@ -4,8 +4,11 @@ import Chat from '../../../common/screens/Chat';
 import { defaultScreenOptions } from '../../../common/screens/options';
 import { ReportIssue } from '../../../common/screens/ReportIssue';
 import { t } from '../../../strings';
+import { CallCourier } from './CallCourier';
 import CancelOngoingDelivery from './CancelOngoingDelivery';
+import { CourierDropsOrder } from './CourierDropsOrder';
 import DeliveryCompleted from './DeliveryCompleted';
+import { DeliveryProblem } from './DeliveryProblem';
 import { NoCodeDelivery } from './NoCodeDelivery';
 import OngoingDelivery from './OngoingDelivery';
 import OrderCanceled from './OrderCanceled';
@@ -44,6 +47,21 @@ export default function () {
       <Stack.Screen
         name="ReportIssue"
         component={ReportIssue}
+        options={{ title: t('Tive um problema') }}
+      />
+      <Stack.Screen
+        name="DeliveryProblem"
+        component={DeliveryProblem}
+        options={{ title: t('Tive um problema') }}
+      />
+      <Stack.Screen
+        name="CourierDropsOrder"
+        component={CourierDropsOrder}
+        options={{ title: t('Tive um problema') }}
+      />
+      <Stack.Screen
+        name="CallCourier"
+        component={CallCourier}
         options={{ title: t('Tive um problema') }}
       />
     </Stack.Navigator>

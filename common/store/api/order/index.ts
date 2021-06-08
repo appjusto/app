@@ -1,17 +1,19 @@
 import {
   Business,
+  CalculateCancelingCostsPayload,
   CancelOrderPayload,
   ChatMessage,
   CompleteDeliveryPayload,
   ConsumerProfile,
+  DropOrderPayload,
   Fare,
   GetOrderQuotesPayload,
+  Issue,
   MatchOrderPayload,
   NextDispatchingStatePayload,
   Order,
   OrderIssue,
   OrderItem,
-  OrderRejection,
   Place,
   PlaceOrderPayload,
   PlaceOrderPayloadPayment,
@@ -124,24 +126,6 @@ export default class OrderApi {
     // returns the unsubscribe function
     return unsubscribe;
   }
-  // observe order's chat
-  // observeOrderChat(
-  //   orderId: string,
-  //   resultHandler: (orders: WithId<ChatMessage>[]) => void
-  // ): firebase.Unsubscribe {
-  //   const unsubscribe = this.refs
-  //     .getOrderChatRef(orderId)
-  //     .orderBy('timestamp', 'asc')
-  //     .onSnapshot(
-  //       (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
-  //       (error) => {
-  //         console.log(error);
-  //         Sentry.Native.captureException(error);
-  //       }
-  //     );
-  //   // returns the unsubscribe function
-  //   return unsubscribe;
-  // }
   observeOrderChat(
     orderId: string,
     userId: string,
@@ -207,10 +191,25 @@ export default class OrderApi {
     return (await this.refs.getPlaceOrderCallable()(payload)).data;
   }
 
-  async cancelOrder(orderId: string, cancellation?: OrderIssue) {
+  async calculateCancellingCosts(orderId: string) {
+    const payload: CalculateCancelingCostsPayload = {
+      orderId,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getCalculateCancellingCosts()(payload)).data;
+  }
+
+  async cancelOrder(
+    orderId: string,
+    acknowledgedCosts: number,
+    cancellation?: WithId<Issue>,
+    comment?: string
+  ) {
     const payload: CancelOrderPayload = {
       orderId,
+      acknowledgedCosts,
       cancellation,
+      comment,
       meta: { version: Constants.nativeBuildVersion },
     };
     return (await this.refs.getCancelOrderCallable()(payload)).data;
@@ -234,13 +233,24 @@ export default class OrderApi {
     return (await this.refs.getMatchOrderCallable()(payload)).data;
   }
 
-  async rejectOrder(orderId: string, rejection: OrderRejection) {
+  async rejectOrder(orderId: string, issue: WithId<Issue>, comment?: string) {
     const payload: RejectOrderPayload = {
       orderId,
-      rejection,
+      issue,
+      comment,
       meta: { version: Constants.nativeBuildVersion },
     };
     return (await this.refs.getRejectOrderCallable()(payload)).data;
+  }
+
+  async dropOrder(orderId: string, issue: WithId<Issue>, comment?: string) {
+    const payload: DropOrderPayload = {
+      orderId,
+      issue,
+      comment,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getDropOrderCallable()(payload)).data;
   }
 
   async nextDispatchingState(orderId: string) {
