@@ -9,7 +9,7 @@ type ScreenNavigationProp = StackNavigationProp<LoggedNavigatorParamList, 'MainN
 
 export const useNotificationHandler = (
   action: string,
-  handler: (data: PushMessageData) => void
+  handler: (data: PushMessageData, clicked?: boolean) => void
 ) => {
   // context
   const navigation = useNavigation<ScreenNavigationProp>();
@@ -20,6 +20,6 @@ export const useNotificationHandler = (
     if (!query.data || query.data.length === 0) return;
     const [notification] = query.data;
     const { clicked, data } = notification;
-    if (clicked) handler(data);
+    handler(data, clicked);
   }, [query.data, navigation, handler]);
 };
