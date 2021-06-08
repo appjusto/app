@@ -6,6 +6,7 @@ import { ApiContext, AppDispatch } from '../../common/app/context';
 import { defaultScreenOptions } from '../../common/screens/options';
 import { PermissionDenied } from '../../common/screens/PermissionDenied';
 import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
+import { RegistrationSubmitted } from '../../common/screens/unlogged/onboarding/RegistrationSubmitted';
 import { useObserveOngoingOrders } from '../../common/store/api/order/hooks/useObserveOngoingOrders';
 import { getFlavor } from '../../common/store/config/selectors';
 import { getConsumer } from '../../common/store/consumer/selectors';
@@ -63,6 +64,11 @@ export const LoggedNavigator = () => {
           name="ConsumerOnboarding"
           component={Onboarding}
           options={{ title: t('Boas vindas ao AppJusto'), headerLeft: () => null }}
+        />
+        <Stack.Screen
+          name="RegistrationSubmitted"
+          component={RegistrationSubmitted}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="MainNavigator"

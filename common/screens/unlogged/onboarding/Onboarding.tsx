@@ -1,7 +1,15 @@
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { Dimensions, NativeSyntheticEvent, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Dimensions,
+  NativeSyntheticEvent,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
@@ -64,10 +72,12 @@ export const Onboarding = ({ navigation }: Props) => {
     } else {
       setLoading(true);
       try {
+        // consumer: we need to send the city in this updateProfile call
         await api.profile().updateProfile(user.uid, { onboarded: true });
         if (flavor === 'courier') {
           navigation.replace('ProfilePending');
         } else {
+          // consumer: navigate to the new Screen 'ConsumerRegistration'
           navigation.navigate('MainNavigator', { screen: 'Home' });
         }
       } catch (error) {
@@ -114,6 +124,9 @@ export const Onboarding = ({ navigation }: Props) => {
                     {value}
                   </Text>
                 ))}
+                <Pressable onPress={() => navigation.navigate('RegistrationSubmitted')}>
+                  <Text>IR PARA REGISTRATION SUBMITTED</Text>
+                </Pressable>
               </View>
             </View>
           ))}
