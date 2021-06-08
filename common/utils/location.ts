@@ -13,11 +13,11 @@ const TASK_FETCH_LOCATION = 'TASK_FETCH_LOCATION';
 export const startLocationUpdatesTask = () => {
   return Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
     accuracy: Location.Accuracy.Highest,
-    distanceInterval: 2, // receive updates only when the location has changed by at least this distance in meters.
-    deferredUpdatesInterval: 3000, // minimum time to wait between each update in milliseconds.
+    distanceInterval: 5, // receive updates only when the location has changed by at least this distance in meters.
+    deferredUpdatesInterval: 5000, // minimum time to wait between each update in milliseconds.
     foregroundService: {
       notificationTitle: t('Localização ativa'),
-      notificationBody: t('Para desativar, entre no app e pare de trabalhar.'),
+      notificationBody: t('Para desativar acesse o app e fique indisponível para corridas.'),
       notificationColor: '#78E08F',
     },
   });
