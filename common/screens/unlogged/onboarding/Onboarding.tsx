@@ -10,11 +10,20 @@ import { UnapprovedParamList } from '../../../../courier/unapproved/types';
 import { t } from '../../../../strings';
 import { ApiContext } from '../../../app/context';
 import DefaultButton from '../../../components/buttons/DefaultButton';
+import DefaultInput from '../../../components/inputs/DefaultInput';
 import { getFlavor } from '../../../store/config/selectors';
 import { getConsumer } from '../../../store/consumer/selectors';
 import { getCourier } from '../../../store/courier/selectors';
 import { getUser, hasPendingWrites } from '../../../store/user/selectors';
-import { borders, colors, halfPadding, padding, screens, texts } from '../../../styles';
+import {
+  borders,
+  colors,
+  doublePadding,
+  halfPadding,
+  padding,
+  screens,
+  texts,
+} from '../../../styles';
 import * as config from './config';
 
 type ScreenNavigationProp = StackNavigationProp<
@@ -39,6 +48,7 @@ export const Onboarding = ({ navigation }: Props) => {
   const steps = flavor === 'courier' ? config.courier : config.consumer;
   const [step, setStep] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
+  const [city, setCity] = React.useState('');
   // effects
   React.useEffect(() => {
     setLoading(pendingWrite);
@@ -84,11 +94,21 @@ export const Onboarding = ({ navigation }: Props) => {
     <View style={{ ...screens.default }}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <ViewPager ref={viewPager} style={{ flex: 1 }} onPageScroll={onPageScroll}>
-          {steps.map(({ icon, header, body }, index) => (
+          {steps.map(({ icon, header, body, input }, index) => (
             <View key={index} style={[{ paddingHorizontal: padding, flex: 1 }, styles.bigScreen]}>
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                 {tallerDevice ? <View>{icon}</View> : null}
                 <Text style={{ ...texts.x2l, marginTop: 32, textAlign: 'center' }}>{header}</Text>
+                {input && (
+                  <DefaultInput
+                    title={t('Cidade')}
+                    placeholder={t('Digite sua cidade')}
+                    value={city}
+                    onChangeText={setCity}
+                    textAlignVertical="top"
+                    style={{ marginTop: doublePadding }}
+                  />
+                )}
                 {body.map((value) => (
                   <Text key={value} style={{ ...texts.md, marginTop: 32, textAlign: 'center' }}>
                     {value}

@@ -8,6 +8,7 @@ export interface ScreenConfig {
   icon: React.ReactNode;
   header: string;
   body: string[];
+  input?: boolean;
 }
 export const courier: ScreenConfig[] = [
   {
@@ -53,32 +54,6 @@ export const consumer: ScreenConfig[] = [
     header: t('Em qual cidade você mora?'),
     body: [t('Informaremos assim que o app estiver disponível perto de você!')],
     icon: <IconSetLocation />,
+    input: true,
   },
-  // {
-  //   header: t('Use para pedir comida e enviar\n encomendas'),
-  //   body: [
-  //     t(
-  //       'No Delivery de comida, o entregador recebe o valor integral da corrida e cobramos a menor taxa dos restaurantes. Na entrega de encomendas, os entregadores recebem o valor da frota que você escolher.'
-  //     ),
-  //   ],
-  //   icon: <IconAppDelivery />,
-  // },
-  // {
-  //   header: t('Escolha a frota que quiser!'),
-  //   body: [
-  //     t(
-  //       'No AppJusto, os entregadores podem criar frotas com as suas próprias condições. Você escolhe a que mais se identificar! Elas são ordenadas pela quantidade de entregadores perto de você.'
-  //     ),
-  //   ],
-  //   icon: <IconHeartBox />,
-  // },
-  // {
-  //   header: t('Use o AppJusto e indique para\n os seus amigos'),
-  //   body: [
-  //     t(
-  //       'Quanto mais usar e indicar, mais você ajuda esse movimento a crescer. Contribua para um delivery mais justo na sua região! Vamos começar?'
-  //     ),
-  //   ],
-  //   icon: <IconShareBig />,
-  // },
 ];
