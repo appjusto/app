@@ -1,16 +1,18 @@
+import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Text } from 'react-native';
+import { NativeSyntheticEvent, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LoggedNavigatorParamList } from '../../../../consumer/v2/types';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';
 import RoundedText from '../../../components/texts/RoundedText';
-import { colors, padding, screens, texts } from '../../../styles';
+import { borders, colors, halfPadding, padding, screens, texts } from '../../../styles';
 import HomeShareCard from '../../home/cards/HomeShareCard';
 import { SocialMediaCard } from '../../home/cards/SocialMediaCard';
+import * as config from './config';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedNavigatorParamList, 'RegistrationSubmitted'>;
 type ScreenRouteProp = RouteProp<LoggedNavigatorParamList, 'RegistrationSubmitted'>;
@@ -22,6 +24,22 @@ type Props = {
 
 export const RegistrationSubmitted = ({ navigation, route }: Props) => {
   // this screen must receive the city: string from the Onboarding screen
+
+  // incluir no consumer um RegistrationLocation {city: string}
+  // no backend, teremos de ver o número de users em cada city
+  // state
+  const steps = config.registrationSubmitted;
+  const [step, setStep] = React.useState(0);
+  // refs
+  const viewPager = React.useRef<ViewPager>(null);
+  // handlers
+  const onPageScroll = (ev: NativeSyntheticEvent<ViewPagerOnPageScrollEventData>) => {
+    const { nativeEvent } = ev;
+    const { position } = nativeEvent;
+    if (position !== step) {
+      setStep(position);
+    }
+  };
   return (
     <SafeAreaView style={{ ...screens.config }}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -46,6 +64,54 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
           <Text style={{ ...texts.lg, marginBottom: 24 }}>
             {t('Enquanto isso, aproveite para conhecer mais sobre o AppJusto:')}
           </Text>
+          {/* this ViewPager only shows in screen if you hardcode a height and width. why? */}
+          <ViewPager
+            ref={viewPager}
+            style={{ width: '100%', height: 200 }}
+            onPageScroll={onPageScroll}
+          >
+            {steps.map(({ header, body }, index) => (
+              <View
+                style={{
+                  ...borders.default,
+                  backgroundColor: colors.white,
+                  borderColor: colors.white,
+                  padding: 24,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  // flex: 1,
+                }}
+                key={index}
+              >
+                <Text style={[texts.md, texts.bold]}>{header}</Text>
+                <Text style={{ ...texts.md, marginTop: padding }}>{body}</Text>
+              </View>
+            ))}
+          </ViewPager>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            {new Array(steps.length).fill('').map((_, i) => (
+              <View
+                style={{
+                  height: halfPadding,
+                  width: halfPadding,
+                  ...borders.default,
+                  borderColor: step === i ? colors.black : colors.grey500,
+                  borderRadius: 4,
+                  backgroundColor: step === i ? colors.black : colors.grey500,
+                  marginRight: halfPadding,
+                  marginVertical: 24,
+                }}
+                key={i}
+              />
+            ))}
+          </View>
           <SocialMediaCard app="instagram" />
         </PaddedView>
       </ScrollView>

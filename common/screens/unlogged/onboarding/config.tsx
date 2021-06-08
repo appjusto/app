@@ -57,3 +57,29 @@ export const consumer: ScreenConfig[] = [
     input: true,
   },
 ];
+
+export interface RegistrationSubmittedConfig {
+  header: string;
+  body: string;
+}
+
+export const registrationSubmitted: RegistrationSubmittedConfig[] = [
+  {
+    header: t('Use o AppJusto para pedir comida e enviar encomendas'),
+    body: t(
+      'Se pedir comida, o entregador recebe o valor integral da corrida! Nas encomendas, os entregadores recebem o valor da frota que você escolher.'
+    ),
+  },
+  {
+    header: t('Escolha a frota que quiser'),
+    body: t(
+      'No AppJusto, os entregadores podem criar frotas com condições próprias e definir o valor de seu trabalho. Escolha a frota que quiser para o seu pedido!'
+    ),
+  },
+  {
+    header: t('Restaurantes pagam menos para você pagar menos!'),
+    body: t(
+      'Cobramos a menor taxa dos restaurantes para que eles possam oferecer preços menores. Nos outros apps, o custo é alto e acaba sendo repassado aos clientes.'
+    ),
+  },
+];
