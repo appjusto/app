@@ -72,13 +72,12 @@ export const Onboarding = ({ navigation }: Props) => {
     } else {
       setLoading(true);
       try {
-        // consumer: we need to send the city in this updateProfile call
-        await api.profile().updateProfile(user.uid, { onboarded: true });
         if (flavor === 'courier') {
+          await api.profile().updateProfile(user.uid, { onboarded: true });
           navigation.replace('ProfilePending');
         } else {
-          // consumer: navigate to the new Screen 'ConsumerRegistration'
-          navigation.navigate('MainNavigator', { screen: 'Home' });
+          await api.profile().updateProfile(user.uid, { onboarded: true, city });
+          navigation.navigate('RegistrationSubmitted');
         }
       } catch (error) {
         console.log(flavor === 'courier' ? courier : consumer);
@@ -159,7 +158,7 @@ export const Onboarding = ({ navigation }: Props) => {
           title={step === steps.length - 1 ? t('Começar') : t('Avançar')}
           style={{ marginTop: 32, marginBottom: padding, marginHorizontal: padding }}
           onPress={advanceHandler}
-          disabled={isLoading}
+          disabled={flavor === 'consumer' ? isLoading || !city : isLoading}
           activityIndicator={isLoading}
         />
       </SafeAreaView>

@@ -5,10 +5,12 @@ import React from 'react';
 import { NativeSyntheticEvent, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
 import { LoggedNavigatorParamList } from '../../../../consumer/v2/types';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';
 import RoundedText from '../../../components/texts/RoundedText';
+import { getUser } from '../../../store/user/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../styles';
 import HomeShareCard from '../../home/cards/HomeShareCard';
 import { SocialMediaCard } from '../../home/cards/SocialMediaCard';
@@ -23,10 +25,8 @@ type Props = {
 };
 
 export const RegistrationSubmitted = ({ navigation, route }: Props) => {
-  // this screen must receive the city: string from the Onboarding screen
-
-  // incluir no consumer um RegistrationLocation {city: string}
-  // no backend, teremos de ver o número de users em cada city
+  // redux store
+  const user = useSelector(getUser)!;
   // state
   const steps = config.registrationSubmitted;
   const [step, setStep] = React.useState(0);
@@ -40,6 +40,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
       setStep(position);
     }
   };
+  console.log(user);
   return (
     <SafeAreaView style={{ ...screens.config }}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
