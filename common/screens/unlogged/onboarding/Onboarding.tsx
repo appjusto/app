@@ -103,10 +103,16 @@ export const Onboarding = ({ navigation }: Props) => {
                 <Text style={{ ...texts.x2l, marginTop: 32, textAlign: 'center' }}>{header}</Text>
                 {input && (
                   <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 32 }}>
-                    <Pressable style={{ marginRight: halfPadding, flex: 1 }}>
+                    <Pressable
+                      style={{ marginRight: halfPadding, flex: 1 }}
+                      onPress={() => navigation.navigate('SelectLocation')}
+                    >
                       <LabeledText title={t('Estado')}>{t('UF')}</LabeledText>
                     </Pressable>
-                    <Pressable style={{ flex: 3 }}>
+                    <Pressable
+                      style={{ flex: 3 }}
+                      onPress={() => navigation.navigate('SelectLocation')}
+                    >
                       <LabeledText title={t('Cidade')}>{t('Digite a cidade')}</LabeledText>
                     </Pressable>
                   </View>
