@@ -95,6 +95,7 @@
     "react-native-svg": "12.1.0",
     "react-native-web": "~0.13.12",
     "react-native-webview": "11.0.0",
+    "react-native-youtube-iframe": "^2.1.0",
     "react-query": "3.5.11",
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",

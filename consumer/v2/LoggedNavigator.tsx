@@ -69,7 +69,7 @@ export const LoggedNavigator = () => {
         <Stack.Screen
           name="SelectLocation"
           component={SelectLocation}
-          options={{ headerShown: false }}
+          options={{ title: t('Informe sua localização') }}
         />
         <Stack.Screen
           name="RegistrationSubmitted"
