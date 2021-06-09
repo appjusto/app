@@ -5,6 +5,7 @@ import React from 'react';
 import {
   ActivityIndicator,
   Image,
+  Linking,
   NativeSyntheticEvent,
   Text,
   TouchableOpacity,
@@ -134,7 +135,9 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
               />
             ))}
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => Linking.openURL('https://www.youtube.com/watch?v=KOD94Vn80-o')}
+          >
             <View style={{ marginHorizontal: padding, height: 200 }}>
               <Image
                 source={require('../../../../assets/images/onboarding-video-image.jpeg')}
