@@ -68,8 +68,7 @@ export const Onboarding = ({ navigation }: Props) => {
           await api.profile().updateProfile(user.uid, { onboarded: true });
           navigation.replace('ProfilePending');
         } else {
-          // onboarded false for tests only
-          await api.profile().updateProfile(user.uid, { onboarded: false, city });
+          await api.profile().updateProfile(user.uid, { onboarded: true, city });
           navigation.replace('RegistrationSubmitted');
         }
       } catch (error) {

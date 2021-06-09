@@ -31,7 +31,6 @@ export default function ({ navigation }: Props) {
   const api = React.useContext(ApiContext);
   // redux
   const courier = useSelector(getCourier)!;
-  const { situation } = courier;
   // side effects
   // tracking
   useSegmentScreen('Profile Submitted');

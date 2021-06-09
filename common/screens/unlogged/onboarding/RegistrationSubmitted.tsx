@@ -2,22 +2,16 @@ import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-communi
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import {
-  ActivityIndicator,
-  Image,
-  Linking,
-  NativeSyntheticEvent,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Image, Linking, NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import { LoggedNavigatorParamList } from '../../../../consumer/v2/types';
 import { t } from '../../../../strings';
+import { ApiContext } from '../../../app/context';
 import PaddedView from '../../../components/containers/PaddedView';
 import RoundedText from '../../../components/texts/RoundedText';
+import { useSegmentScreen } from '../../../store/api/track';
 import { getConsumer } from '../../../store/consumer/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../styles';
 import HomeShareCard from '../../home/cards/HomeShareCard';
@@ -33,13 +27,24 @@ type Props = {
 };
 
 export const RegistrationSubmitted = ({ navigation, route }: Props) => {
+  // context
+  const api = React.useContext(ApiContext);
   // redux store
-  const consumer = useSelector(getConsumer);
+  const consumer = useSelector(getConsumer)!;
   // state
   const steps = config.registrationSubmitted;
   const [step, setStep] = React.useState(0);
   // refs
   const viewPager = React.useRef<ViewPager>(null);
+  // side effects
+  // tracking
+  useSegmentScreen('Registration Submitted');
+  // this is commented because right now we are approving all consumers automatically
+  // React.useEffect(() => {
+  //   if (consumer.situation === 'approved') {
+  //     navigation.replace('MainNavigator', { screen: 'Home' });
+  //   }
+  // }, [consumer, navigation, api]);
   // handlers
   const onPageScroll = (ev: NativeSyntheticEvent<ViewPagerOnPageScrollEventData>) => {
     const { nativeEvent } = ev;
@@ -48,25 +53,16 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
       setStep(position);
     }
   };
-  console.log(consumer);
   // UI
-  // UI
-  if (!consumer) {
-    return (
-      <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green500} />
-      </View>
-    );
-  }
   return (
     <SafeAreaView style={{ ...screens.config }}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <PaddedView style={{ backgroundColor: colors.green500 }}>
           <RoundedText>{t('Pré-cadastro realizado com sucesso!')}</RoundedText>
-          {/* add a "user counter" in this text. if user counter < 10, replace
-          the string with 'Obrigado por fazer parte desse movimento em {nome da cidade}' */}
+          {/* add a "user counter" in this text. if user counter > 10, replace
+          the string with 'Você e mais 000 pessoas já fazem parte desse movimento em ${consumer.city}' */}
           <Text style={{ ...texts.x2l, marginVertical: padding }}>
-            {t(`Você e mais 000 pessoas já fazem parte desse movimento em ${consumer.city}`)}
+            {t(`Obrigado por fazer parte desse movimento em ${consumer.city}`)}
           </Text>
           <Text style={{ ...texts.md, marginBottom: 24 }}>
             {t(
