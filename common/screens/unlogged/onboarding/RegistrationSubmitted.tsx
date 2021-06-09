@@ -31,6 +31,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
   const api = React.useContext(ApiContext);
   // redux store
   const consumer = useSelector(getConsumer)!;
+  const [states, setStates] = React.useState();
   // state
   const steps = config.registrationSubmitted;
   const [step, setStep] = React.useState(0);
@@ -45,6 +46,15 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
   //     navigation.replace('MainNavigator', { screen: 'Home' });
   //   }
   // }, [consumer, navigation, api]);
+  // React.useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       setStates(await api.getAllStates());
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   })();
+  // }, [api]);
   // handlers
   const onPageScroll = (ev: NativeSyntheticEvent<ViewPagerOnPageScrollEventData>) => {
     const { nativeEvent } = ev;
@@ -53,6 +63,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
       setStep(position);
     }
   };
+  // console.log(states);
   // UI
   return (
     <SafeAreaView style={{ ...screens.config }}>
@@ -142,7 +153,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
               />
             </View>
           </TouchableOpacity>
-          <View style={{ marginHorizontal: padding, marginTop: 24 }}>
+          <View style={{ marginHorizontal: padding, marginTop: 24, marginBottom: padding }}>
             <SocialMediaCard app="instagram" />
           </View>
         </View>

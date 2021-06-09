@@ -1,7 +1,15 @@
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { Dimensions, NativeSyntheticEvent, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Dimensions,
+  NativeSyntheticEvent,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
@@ -10,20 +18,12 @@ import { UnapprovedParamList } from '../../../../courier/unapproved/types';
 import { t } from '../../../../strings';
 import { ApiContext } from '../../../app/context';
 import DefaultButton from '../../../components/buttons/DefaultButton';
-import DefaultInput from '../../../components/inputs/DefaultInput';
+import LabeledText from '../../../components/texts/LabeledText';
 import { getFlavor } from '../../../store/config/selectors';
 import { getConsumer } from '../../../store/consumer/selectors';
 import { getCourier } from '../../../store/courier/selectors';
 import { getUser, hasPendingWrites } from '../../../store/user/selectors';
-import {
-  borders,
-  colors,
-  doublePadding,
-  halfPadding,
-  padding,
-  screens,
-  texts,
-} from '../../../styles';
+import { borders, colors, halfPadding, padding, screens, texts } from '../../../styles';
 import * as config from './config';
 
 type ScreenNavigationProp = StackNavigationProp<
@@ -49,6 +49,7 @@ export const Onboarding = ({ navigation }: Props) => {
   const [step, setStep] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
   const [city, setCity] = React.useState('');
+  const [UF, setUF] = React.useState('');
   // effects
   React.useEffect(() => {
     setLoading(pendingWrite);
@@ -101,14 +102,14 @@ export const Onboarding = ({ navigation }: Props) => {
                 {tallerDevice ? <View>{icon}</View> : null}
                 <Text style={{ ...texts.x2l, marginTop: 32, textAlign: 'center' }}>{header}</Text>
                 {input && (
-                  <DefaultInput
-                    title={t('Cidade')}
-                    placeholder={t('Digite sua cidade')}
-                    value={city}
-                    onChangeText={setCity}
-                    textAlignVertical="top"
-                    style={{ marginTop: doublePadding }}
-                  />
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 32 }}>
+                    <Pressable style={{ marginRight: halfPadding, flex: 1 }}>
+                      <LabeledText title={t('Estado')}>{t('UF')}</LabeledText>
+                    </Pressable>
+                    <Pressable style={{ flex: 3 }}>
+                      <LabeledText title={t('Cidade')}>{t('Digite a cidade')}</LabeledText>
+                    </Pressable>
+                  </View>
                 )}
                 {body.map((value) => (
                   <Text key={value} style={{ ...texts.md, marginTop: 32, textAlign: 'center' }}>
