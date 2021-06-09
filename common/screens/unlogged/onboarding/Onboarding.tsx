@@ -48,8 +48,8 @@ export const Onboarding = ({ navigation }: Props) => {
   const steps = flavor === 'courier' ? config.courier : config.consumer;
   const [step, setStep] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
+  const [state, setState] = React.useState('');
   const [city, setCity] = React.useState('');
-  const [UF, setUF] = React.useState('');
   // effects
   React.useEffect(() => {
     setLoading(pendingWrite);
@@ -69,7 +69,7 @@ export const Onboarding = ({ navigation }: Props) => {
           await api.profile().updateProfile(user.uid, { onboarded: true });
           navigation.replace('ProfilePending');
         } else {
-          await api.profile().updateProfile(user.uid, { onboarded: true, city });
+          await api.profile().updateProfile(user.uid, { onboarded: true, city, state });
           navigation.replace('RegistrationSubmitted');
         }
       } catch (error) {
@@ -105,13 +105,13 @@ export const Onboarding = ({ navigation }: Props) => {
                   <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 32 }}>
                     <Pressable
                       style={{ marginRight: halfPadding, flex: 1 }}
-                      onPress={() => navigation.navigate('SelectLocation')}
+                      onPress={() => navigation.navigate('SelectLocation', { state, city })}
                     >
                       <LabeledText title={t('Estado')}>{t('UF')}</LabeledText>
                     </Pressable>
                     <Pressable
                       style={{ flex: 3 }}
-                      onPress={() => navigation.navigate('SelectLocation')}
+                      onPress={() => navigation.navigate('SelectLocation', { state, city })}
                     >
                       <LabeledText title={t('Cidade')}>{t('Digite a cidade')}</LabeledText>
                     </Pressable>
