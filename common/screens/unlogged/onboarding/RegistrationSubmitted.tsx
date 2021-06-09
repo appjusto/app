@@ -4,6 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import {
   ActivityIndicator,
+  Image,
   NativeSyntheticEvent,
   Text,
   TouchableOpacity,
@@ -16,8 +17,6 @@ import { LoggedNavigatorParamList } from '../../../../consumer/v2/types';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';
 import RoundedText from '../../../components/texts/RoundedText';
-import { IconLogoBlackandWhite } from '../../../icons/icon-logo-b&w';
-import { IconPlay } from '../../../icons/icon-play';
 import { getConsumer } from '../../../store/consumer/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../styles';
 import HomeShareCard from '../../home/cards/HomeShareCard';
@@ -60,7 +59,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
   }
   return (
     <SafeAreaView style={{ ...screens.config }}>
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <PaddedView style={{ backgroundColor: colors.green500 }}>
           <RoundedText>{t('Pré-cadastro realizado com sucesso!')}</RoundedText>
           {/* add a "user counter" in this text. if user counter < 10, replace
@@ -78,10 +77,13 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
             subtitle="Clique para compartilhar o movimento nas suas redes"
           />
         </PaddedView>
-        <PaddedView>
-          <Text style={{ ...texts.lg, marginBottom: 24 }}>
-            {t('Enquanto isso, aproveite para conhecer mais sobre o AppJusto:')}
-          </Text>
+        <View style={{ flex: 1 }}>
+          <PaddedView>
+            <Text style={{ ...texts.lg, marginBottom: halfPadding }}>
+              {t('Enquanto isso, aproveite para conhecer mais sobre o AppJusto:')}
+            </Text>
+          </PaddedView>
+
           {/* this ViewPager only shows in screen if you hardcode a height and width. why? */}
           <ViewPager
             ref={viewPager}
@@ -89,21 +91,22 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
             onPageScroll={onPageScroll}
           >
             {steps.map(({ header, body }, index) => (
-              <View
-                style={{
-                  ...borders.default,
-                  backgroundColor: colors.white,
-                  borderColor: colors.white,
-                  padding: 24,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  // flex: 1,
-                }}
-                key={index}
-              >
-                <Text style={[texts.md, texts.bold]}>{header}</Text>
-                <Text style={{ ...texts.md, marginTop: padding }}>{body}</Text>
-              </View>
+              <PaddedView key={index}>
+                <View
+                  style={{
+                    ...borders.default,
+                    backgroundColor: colors.white,
+                    borderColor: colors.white,
+                    padding: 24,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flex: 1,
+                  }}
+                >
+                  <Text style={[texts.md, texts.bold]}>{header}</Text>
+                  <Text style={{ ...texts.md, marginTop: padding }}>{body}</Text>
+                </View>
+              </PaddedView>
             ))}
           </ViewPager>
 
@@ -112,6 +115,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
+              flex: 1,
             }}
           >
             {new Array(steps.length).fill('').map((_, i) => (
@@ -131,30 +135,18 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
             ))}
           </View>
           <TouchableOpacity>
-            <PaddedView
-              style={{
-                ...borders.default,
-                width: '100%',
-                height: 200,
-                backgroundColor: colors.grey700,
-                flexDirection: 'row',
-                marginBottom: 24,
-              }}
-            >
-              <View style={{ width: '50%' }}>
-                <IconPlay />
-                <Text style={{ ...texts.lg, marginTop: padding }}>
-                  {t('Assistir vídeo explicativo')}
-                </Text>
-              </View>
-              <View style={{ justifyContent: 'flex-end' }}>
-                <IconLogoBlackandWhite />
-              </View>
-            </PaddedView>
+            <View style={{ marginHorizontal: padding, height: 200 }}>
+              <Image
+                source={require('../../../../assets/images/onboarding-video-image.jpeg')}
+                style={{ height: '100%', width: '100%', borderRadius: 8 }}
+                resizeMode="stretch"
+              />
+            </View>
           </TouchableOpacity>
-
-          <SocialMediaCard app="instagram" />
-        </PaddedView>
+          <View style={{ marginHorizontal: padding, marginTop: 24 }}>
+            <SocialMediaCard app="instagram" />
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

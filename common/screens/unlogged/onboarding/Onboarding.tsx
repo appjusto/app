@@ -70,7 +70,7 @@ export const Onboarding = ({ navigation }: Props) => {
         } else {
           // onboarded false for tests only
           await api.profile().updateProfile(user.uid, { onboarded: false, city });
-          navigation.navigate('RegistrationSubmitted');
+          navigation.replace('RegistrationSubmitted');
         }
       } catch (error) {
         console.log(flavor === 'courier' ? courier : consumer);
