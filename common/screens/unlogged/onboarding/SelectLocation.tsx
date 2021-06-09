@@ -25,6 +25,10 @@ export const SelectLocation = ({ navigation, route }: Props) => {
   const [states, setStates] = React.useState<IBGEState[]>([]);
   const [cities, setCities] = React.useState<IBGECity[]>([]);
   const [cityName, setCityName] = React.useState('');
+  const filteredCities = React.useMemo(() => {
+    if (!cities) return [];
+    return cities.filter((city) => city.nome.toLowerCase().indexOf(cityName.toLowerCase()) !== -1);
+  }, [cities, cityName]);
   // effects
   // navigation params
   React.useEffect(() => {
@@ -75,7 +79,7 @@ export const SelectLocation = ({ navigation, route }: Props) => {
             onChangeText={setCityName}
           />
           <FlatList
-            data={cities}
+            data={filteredCities}
             renderItem={({ item }) => {
               return (
                 <TouchableOpacity

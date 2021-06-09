@@ -1,4 +1,5 @@
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
+import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import {
@@ -30,12 +31,14 @@ type ScreenNavigationProp = StackNavigationProp<
   UnapprovedParamList & LoggedNavigatorParamList,
   'CourierOnboarding'
 >;
+type ScreenRouteProp = RouteProp<LoggedNavigatorParamList, 'ConsumerOnboarding'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 };
 
-export const Onboarding = ({ navigation }: Props) => {
+export const Onboarding = ({ navigation, route }: Props) => {
   // context
   const api = useContext(ApiContext);
   // redux store
@@ -54,6 +57,15 @@ export const Onboarding = ({ navigation }: Props) => {
   React.useEffect(() => {
     setLoading(pendingWrite);
   }, [user, pendingWrite]);
+
+  React.useEffect(() => {
+    if (route.params?.state) {
+      setState(route.params.state);
+    }
+    if (route.params?.city) {
+      setCity(route.params.city);
+    }
+  }, [route.params]);
   // refs
   const viewPager = React.useRef<ViewPager>(null);
   const { height } = Dimensions.get('window');
@@ -91,6 +103,7 @@ export const Onboarding = ({ navigation }: Props) => {
       justifyContent: tallerDevice ? 'center' : undefined,
     },
   });
+  console.log(city, state);
   // UI
   return (
     <View style={{ ...screens.default }}>
@@ -107,7 +120,9 @@ export const Onboarding = ({ navigation }: Props) => {
                       style={{ marginRight: halfPadding, flex: 1 }}
                       onPress={() => navigation.navigate('SelectLocation', { mode: 'states' })}
                     >
-                      <LabeledText title={t('Estado')}>{t('UF')}</LabeledText>
+                      <LabeledText title={t('Estado')} placeholder={t('UF')}>
+                        {route.params?.state}
+                      </LabeledText>
                     </Pressable>
                     <Pressable
                       style={{ flex: 3 }}
@@ -115,7 +130,9 @@ export const Onboarding = ({ navigation }: Props) => {
                         navigation.navigate('SelectLocation', { mode: 'cities', state })
                       }
                     >
-                      <LabeledText title={t('Cidade')}>{t('Digite a cidade')}</LabeledText>
+                      <LabeledText title={t('Cidade')} placeholder={t('Digite a cidade')}>
+                        {route.params?.city}
+                      </LabeledText>
                     </Pressable>
                   </View>
                 )}

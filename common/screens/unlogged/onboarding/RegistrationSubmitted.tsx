@@ -2,9 +2,10 @@ import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-communi
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Image, Linking, NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
+import { NativeSyntheticEvent, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import YoutubePlayer from 'react-native-youtube-iframe';
 import { useSelector } from 'react-redux';
 import { LoggedNavigatorParamList } from '../../../../consumer/v2/types';
 import { t } from '../../../../strings';
@@ -31,7 +32,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
   const api = React.useContext(ApiContext);
   // redux store
   const consumer = useSelector(getConsumer)!;
-  const [states, setStates] = React.useState();
+  const [playing, setPlaying] = React.useState(false);
   // state
   const steps = config.registrationSubmitted;
   const [step, setStep] = React.useState(0);
@@ -63,7 +64,14 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
       setStep(position);
     }
   };
-  // console.log(states);
+  const onStateChange = React.useCallback((state) => {
+    if (state === 'ended') {
+      setPlaying(false);
+    }
+  }, []);
+  // const togglePlaying = React.useCallback(() => {
+  //   setPlaying((prev) => !prev);
+  // }, []);
   // UI
   return (
     <SafeAreaView style={{ ...screens.config }}>
@@ -142,7 +150,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
               />
             ))}
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => Linking.openURL('https://www.youtube.com/watch?v=KOD94Vn80-o')}
           >
             <View style={{ marginHorizontal: padding, height: 200 }}>
@@ -152,7 +160,17 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
                 resizeMode="stretch"
               />
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <PaddedView style={{ marginTop: halfPadding, borderRadius: halfPadding }}>
+            <YoutubePlayer
+              height={200}
+              play={playing}
+              // videoId={'iee2TATGMyI'}
+              videoId="KOD94Vn80-o"
+              onChangeState={onStateChange}
+              webViewStyle={{ borderRadius: halfPadding }}
+            />
+          </PaddedView>
           <View style={{ marginHorizontal: padding, marginTop: 24, marginBottom: padding }}>
             <SocialMediaCard app="instagram" />
           </View>
