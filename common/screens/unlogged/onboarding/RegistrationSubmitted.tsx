@@ -166,7 +166,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
               height={200}
               play={playing}
               // videoId={'iee2TATGMyI'}
-              videoId="KOD94Vn80-o"
+              videoId="QM81nPxGBXQ"
               onChangeState={onStateChange}
               webViewStyle={{ borderRadius: halfPadding }}
             />
