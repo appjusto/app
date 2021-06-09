@@ -1,10 +1,10 @@
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { LoggedNavigatorParamList } from '../../../../consumer/v2/types';
 import { t } from '../../../../strings';
+import DefaultButton from '../../../components/buttons/DefaultButton';
 import DefaultInput from '../../../components/inputs/DefaultInput';
 import {
   fetchBrazilianCitiesByState,
@@ -12,7 +12,7 @@ import {
   IBGECity,
   IBGEState,
 } from '../../../store/api/externals/ibge';
-import { padding, screens } from '../../../styles';
+import { padding, screens, texts } from '../../../styles';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedNavigatorParamList, 'SelectLocation'>;
 type ScreenRouteProp = RouteProp<LoggedNavigatorParamList, 'SelectLocation'>;
@@ -55,22 +55,52 @@ export const SelectLocation = ({ navigation, route }: Props) => {
       })();
     }
   }, [state]);
+
   // UI
   return (
-    <SafeAreaView style={{ ...screens.lightGrey }}>
+    <View style={{ ...screens.lightGrey, paddingTop: padding }}>
+      <DefaultInput
+        title={t('Estado')}
+        placeholder={t('Digite seu estado')}
+        style={{ marginBottom: padding }}
+        value={state}
+        onChangeText={setState}
+      />
+      <DefaultInput
+        title={t('Cidade')}
+        placeholder={t('Digite sua cidade')}
+        style={{ marginBottom: padding }}
+        editable={state.length >= 2}
+      />
+      {mode === 'states' ? (
+        <View>
+          <FlatList
+            data={states}
+            renderItem={({ item }) => {
+              return (
+                <TouchableOpacity>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      width: '100%',
+                      height: 60,
+                    }}
+                  >
+                    <Text style={{ ...texts.md }}>{item.sigla}</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+            keyExtractor={(item) => item.sigla}
+          />
+        </View>
+      ) : (
+        <></>
+      )}
+      {/* <View style={{ flex: 1 }} /> */}
       <View>
-        <DefaultInput
-          title={t('Estado')}
-          placeholder={t('Digite seu estado')}
-          style={{ marginBottom: padding }}
-        ></DefaultInput>
-        <DefaultInput
-          title={t('Cidade')}
-          placeholder={t('Digite sua cidade')}
-          style={{ marginBottom: padding }}
-        ></DefaultInput>
-        {mode === 'states' ? <></> : <></>}
+        <DefaultButton title={t('Confirmar localização')} style={{ marginBottom: padding }} />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
