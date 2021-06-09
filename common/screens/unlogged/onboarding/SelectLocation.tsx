@@ -4,7 +4,6 @@ import React from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { LoggedNavigatorParamList } from '../../../../consumer/v2/types';
 import { t } from '../../../../strings';
-import DefaultButton from '../../../components/buttons/DefaultButton';
 import DefaultInput from '../../../components/inputs/DefaultInput';
 import {
   fetchBrazilianCitiesByState,
@@ -23,62 +22,33 @@ type Props = {
 };
 
 export const SelectLocation = ({ navigation, route }: Props) => {
-  const [states, setStates] = React.useState<IBGEState[]>();
-  const [cities, setCities] = React.useState<IBGECity[]>();
-  const [state, setState] = React.useState('');
-  const [city, setCity] = React.useState('');
-  const [mode, setMode] = React.useState<'states' | 'cities'>('states');
+  const [states, setStates] = React.useState<IBGEState[]>([]);
+  const [cities, setCities] = React.useState<IBGECity[]>([]);
+  const [cityName, setCityName] = React.useState('');
   // effects
   // navigation params
   React.useEffect(() => {
-    if (route.params.state) {
-      navigation.setParams({ state: undefined });
-      setState(route.params.state);
-    }
-    if (route.params.city) {
-      navigation.setParams({ city: undefined });
-      setCity(route.params.city);
-    }
-  }, [navigation, route.params]);
-  // state
-  React.useEffect(() => {
-    if (states === undefined) {
-      (async () => {
+    (async () => {
+      if (route.params.mode === 'states') {
         setStates(await fetchBrazilianStates());
-      })();
-    }
-  }, [states]);
-  React.useEffect(() => {
-    if (state.length === 2) {
-      (async () => {
-        setCities(await fetchBrazilianCitiesByState(state));
-      })();
-    }
-  }, [state]);
-
+      } else if (route.params.mode === 'cities') {
+        setCities(await fetchBrazilianCitiesByState(route.params.state));
+      }
+    })();
+  }, [navigation, route.params]);
   // UI
   return (
     <View style={{ ...screens.lightGrey, paddingTop: padding }}>
-      <DefaultInput
-        title={t('Estado')}
-        placeholder={t('Digite seu estado')}
-        style={{ marginBottom: padding }}
-        value={state}
-        onChangeText={setState}
-      />
-      <DefaultInput
-        title={t('Cidade')}
-        placeholder={t('Digite sua cidade')}
-        style={{ marginBottom: padding }}
-        editable={state.length >= 2}
-      />
-      {mode === 'states' ? (
-        <View>
+      {route.params.mode === 'states' ? (
+        <>
+          {/* states */}
           <FlatList
             data={states}
             renderItem={({ item }) => {
               return (
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('ConsumerOnboarding', { state: item.sigla })}
+                >
                   <View
                     style={{
                       flexDirection: 'row',
@@ -86,21 +56,47 @@ export const SelectLocation = ({ navigation, route }: Props) => {
                       height: 60,
                     }}
                   >
-                    <Text style={{ ...texts.md }}>{item.sigla}</Text>
+                    <Text style={{ ...texts.md }}>{item.nome}</Text>
                   </View>
                 </TouchableOpacity>
               );
             }}
             keyExtractor={(item) => item.sigla}
           />
-        </View>
+        </>
       ) : (
-        <></>
+        <>
+          {/* cities */}
+          <DefaultInput
+            title={t('Cidade')}
+            placeholder={t('Digite a cidade')}
+            style={{ marginBottom: padding }}
+            value={cityName}
+            onChangeText={setCityName}
+          />
+          <FlatList
+            data={cities}
+            renderItem={({ item }) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('ConsumerOnboarding', { city: item.nome })}
+                >
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      width: '100%',
+                      height: 60,
+                    }}
+                  >
+                    <Text style={{ ...texts.md }}>{item.nome}</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+            keyExtractor={(item) => item.nome}
+          />
+        </>
       )}
-      {/* <View style={{ flex: 1 }} /> */}
-      <View>
-        <DefaultButton title={t('Confirmar localização')} style={{ marginBottom: padding }} />
-      </View>
     </View>
   );
 };

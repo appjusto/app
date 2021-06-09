@@ -105,13 +105,15 @@ export const Onboarding = ({ navigation }: Props) => {
                   <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 32 }}>
                     <Pressable
                       style={{ marginRight: halfPadding, flex: 1 }}
-                      onPress={() => navigation.navigate('SelectLocation', { state, city })}
+                      onPress={() => navigation.navigate('SelectLocation', { mode: 'states' })}
                     >
                       <LabeledText title={t('Estado')}>{t('UF')}</LabeledText>
                     </Pressable>
                     <Pressable
                       style={{ flex: 3 }}
-                      onPress={() => navigation.navigate('SelectLocation', { state, city })}
+                      onPress={() =>
+                        navigation.navigate('SelectLocation', { mode: 'cities', state })
+                      }
                     >
                       <LabeledText title={t('Cidade')}>{t('Digite a cidade')}</LabeledText>
                     </Pressable>

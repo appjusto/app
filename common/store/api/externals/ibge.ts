@@ -1,6 +1,7 @@
 import axios, { CancelToken } from 'axios';
 
 export interface IBGEState {
+  nome: string;
   sigla: string;
 }
 
@@ -11,7 +12,7 @@ export interface IBGECity {
 const baseURL = 'https://servicodados.ibge.gov.br/api/v1/localidades/estados';
 
 export const fetchBrazilianStates = async (cancelToken?: CancelToken) => {
-  const response = await axios.get<IBGEState[]>(baseURL, { cancelToken });
+  const response = await axios.get<IBGEState[]>(`${baseURL}?orderBy=nome`, { cancelToken });
   return response.data;
 };
 

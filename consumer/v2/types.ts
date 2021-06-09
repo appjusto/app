@@ -8,12 +8,19 @@ import { OngoingOrderNavigatorParamList } from './ongoing/types';
 import { P2POrderNavigatorParamList } from './p2p/types';
 
 export type LoggedNavigatorParamList = {
-  ConsumerOnboarding: undefined;
-  RegistrationSubmitted: undefined;
-  SelectLocation: {
-    state: string;
-    city: string;
+  ConsumerOnboarding?: {
+    state?: string;
+    city?: string;
   };
+  RegistrationSubmitted: undefined;
+  SelectLocation:
+    | {
+        mode: 'states';
+      }
+    | {
+        mode: 'cities';
+        state: string;
+      };
   MainNavigator: NestedNavigatorParams<MainNavigatorParamList>;
   P2POrderNavigator: NestedNavigatorParams<P2POrderNavigatorParamList>;
   FoodOrderNavigator: NestedNavigatorParams<FoodOrderNavigatorParamList>;
