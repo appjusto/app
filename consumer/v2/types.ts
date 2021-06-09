@@ -10,7 +10,10 @@ import { P2POrderNavigatorParamList } from './p2p/types';
 export type LoggedNavigatorParamList = {
   ConsumerOnboarding: undefined;
   RegistrationSubmitted: undefined;
-  SelectLocation: undefined;
+  SelectLocation: {
+    state: string;
+    city: string;
+  };
   MainNavigator: NestedNavigatorParams<MainNavigatorParamList>;
   P2POrderNavigator: NestedNavigatorParams<P2POrderNavigatorParamList>;
   FoodOrderNavigator: NestedNavigatorParams<FoodOrderNavigatorParamList>;
