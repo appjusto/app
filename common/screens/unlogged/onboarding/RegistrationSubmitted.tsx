@@ -33,7 +33,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
   // state
   const steps = config.registrationSubmitted;
   const [step, setStep] = React.useState(0);
-  const cityStats = useCityStatistics(city!);
+  const cityStats = useCityStatistics(city);
   const [playing, setPlaying] = React.useState(false);
   const [consumers, setConsumers] = React.useState<number>();
   // refs
