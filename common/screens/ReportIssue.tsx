@@ -18,8 +18,9 @@ import { ReportIssueView } from '../components/views/ReportIssueView';
 import { IconMotocycle } from '../icons/icon-motocycle';
 import useIssues from '../store/api/platform/hooks/useIssues';
 import { useSegmentScreen } from '../store/api/track';
-import { getCourier } from '../store/courier/selectors';
+import { getFlavor } from '../store/config/selectors';
 import { showToast } from '../store/ui/actions';
+import { getUser } from '../store/user/selectors';
 import { colors, padding, screens } from '../styles';
 
 export type ReportIssueParamList = {
@@ -52,7 +53,8 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // state
-  const courier = useSelector(getCourier)!;
+  const user = useSelector(getUser)!;
+  const flavor = useSelector(getFlavor);
   const issues = useIssues(issueType);
   const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
   const [comment, setComment] = React.useState('');
@@ -109,6 +111,8 @@ export const ReportIssue = ({ route, navigation }: Props) => {
         setLoading(true);
         await api.order().createIssue(orderId, {
           issue: selectedIssue,
+          createdBy: user.uid,
+          flavor,
           comment,
         });
         navigation.replace('DeliveryProblemNavigator', {
