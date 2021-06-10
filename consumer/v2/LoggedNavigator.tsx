@@ -59,7 +59,7 @@ export const LoggedNavigator = () => {
     <LoggedContextProvider>
       <Stack.Navigator
         screenOptions={defaultScreenOptions}
-        initialRouteName={consumer.onboarded ? 'RegistrationSubmitted' : 'ConsumerOnboarding'}
+        initialRouteName={consumer.onboarded ? 'MainNavigator' : 'ConsumerOnboarding'}
       >
         <Stack.Screen
           name="ConsumerOnboarding"
