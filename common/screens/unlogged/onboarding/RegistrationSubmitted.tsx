@@ -29,7 +29,8 @@ type Props = {
 
 export const RegistrationSubmitted = ({ navigation, route }: Props) => {
   // redux store
-  const { city } = useSelector(getConsumer)!;
+  const consumer = useSelector(getConsumer)!;
+  const { city, situation } = consumer;
   // state
   const steps = config.registrationSubmitted;
   const [step, setStep] = React.useState(0);
@@ -38,21 +39,19 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
   const [consumers, setConsumers] = React.useState<number>();
   // refs
   const viewPager = React.useRef<ViewPager>(null);
-  // side effects
   // tracking
   useSegmentScreen('Registration Submitted');
-  // effects
+  // side effects
   React.useEffect(() => {
     if (cityStats) {
       if (!consumers) setConsumers(cityStats.consumers);
     }
   }, [cityStats, consumers]);
-  // this is commented because right now we are approving all consumers automatically
-  // React.useEffect(() => {
-  //   if (consumer.situation === 'approved') {
-  //     navigation.replace('MainNavigator', { screen: 'Home' });
-  //   }
-  // }, [consumer, navigation, api]);
+  React.useEffect(() => {
+    if (situation === 'approved') {
+      navigation.replace('MainNavigator', { screen: 'Home' });
+    }
+  }, [situation, navigation]);
   // handlers
   const onPageScroll = (ev: NativeSyntheticEvent<ViewPagerOnPageScrollEventData>) => {
     const { nativeEvent } = ev;
