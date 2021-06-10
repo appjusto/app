@@ -2,7 +2,7 @@ import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-communi
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { NativeSyntheticEvent, Text, View } from 'react-native';
+import { ActivityIndicator, NativeSyntheticEvent, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import YoutubePlayer from 'react-native-youtube-iframe';
@@ -41,7 +41,6 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
   // side effects
   // tracking
   useSegmentScreen('Registration Submitted');
-  console.log('cityStats', cityStats);
   // effects
   React.useEffect(() => {
     if (cityStats) {
@@ -67,17 +66,20 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
       setPlaying(false);
     }
   }, []);
-  console.log(city);
-  console.log(cityStats);
   // UI
+  if (!consumers) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <SafeAreaView style={{ ...screens.config }}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <PaddedView style={{ backgroundColor: colors.green500 }}>
           <RoundedText>{t('Pré-cadastro realizado com sucesso!')}</RoundedText>
-          {/* add a "user counter" in this text. if user counter > 10, replace
-          the string with 'Você e mais 000 pessoas já fazem parte desse movimento em ${consumer.city}' */}
-          {consumers ? (
+          {consumers > 1 ? (
             <Text style={{ ...texts.x2l, marginVertical: padding }}>
               {t(`Você e mais ${consumers} pessoas já fazem parte desse movimento em ${city}`)}
             </Text>
