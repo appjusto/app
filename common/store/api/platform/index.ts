@@ -41,10 +41,24 @@ export default class PlatformApi {
     const docs = (await query.get()).docs;
     return documentsAs<Classification>(docs);
   }
-  async fetchCityStatistics(city: string) {
-    const snapshot = await this.refs.getPlatformCityStatisticsRef(city).get();
-    return snapshot.data() as CityStatistics;
+
+  observeCityStatistics(
+    city: string,
+    resultHandler: (cityStatistics: CityStatistics | null) => void
+  ): firebase.Unsubscribe {
+    const unsubscribe = this.refs.getPlatformCityStatisticsRef(city).onSnapshot(
+      async (doc) => {
+        if (doc.exists) resultHandler(doc.data() as CityStatistics);
+        else resultHandler(null);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+    // returns the unsubscribe function
+    return unsubscribe;
   }
+
   // storage
   fetchCuisineImageURI(imagePath: string) {
     return this.files.getDownloadURL(imagePath);

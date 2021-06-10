@@ -12,6 +12,7 @@ import {
   IBGEState,
 } from '../../../store/api/externals/ibge';
 import { padding, screens, texts } from '../../../styles';
+import { removeAccents } from '../../../utils/formatters';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedNavigatorParamList, 'SelectLocation'>;
 type ScreenRouteProp = RouteProp<LoggedNavigatorParamList, 'SelectLocation'>;
@@ -27,7 +28,9 @@ export const SelectLocation = ({ navigation, route }: Props) => {
   const [cityName, setCityName] = React.useState('');
   const filteredCities = React.useMemo(() => {
     if (!cities) return [];
-    return cities.filter((city) => city.nome.toLowerCase().indexOf(cityName.toLowerCase()) !== -1);
+    return cities.filter(
+      (city) => removeAccents(city.nome).indexOf(removeAccents(cityName)) !== -1
+    );
   }, [cities, cityName]);
   // effects
   // navigation params

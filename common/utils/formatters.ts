@@ -6,6 +6,12 @@ import { round } from 'lodash';
 
 export const padWithZero = (value: number) => (value < 10 ? `0${value}` : `${value}`);
 export const separateWithDot = (left: string, right: string) => `${left}  \u00B7  ${right}`;
+export const removeAccents = (str: string) => {
+  return str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+};
 
 const dateInput = (value: Date | firebase.firestore.FieldValue) =>
   value.constructor.name === 'Date'

@@ -1,4 +1,3 @@
-import { CityStatistics } from '@appjusto/types';
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -10,9 +9,9 @@ import YoutubePlayer from 'react-native-youtube-iframe';
 import { useSelector } from 'react-redux';
 import { LoggedNavigatorParamList } from '../../../../consumer/v2/types';
 import { t } from '../../../../strings';
-import { ApiContext } from '../../../app/context';
 import PaddedView from '../../../components/containers/PaddedView';
 import RoundedText from '../../../components/texts/RoundedText';
+import { useCityStatistics } from '../../../store/api/platform/hooks/useCityStatistics';
 import { useSegmentScreen } from '../../../store/api/track';
 import { getConsumer } from '../../../store/consumer/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../styles';
@@ -29,27 +28,26 @@ type Props = {
 };
 
 export const RegistrationSubmitted = ({ navigation, route }: Props) => {
-  // context
-  const api = React.useContext(ApiContext);
   // redux store
   const { city } = useSelector(getConsumer)!;
-  const [playing, setPlaying] = React.useState(false);
   // state
   const steps = config.registrationSubmitted;
   const [step, setStep] = React.useState(0);
-  // const cityStats = useCityStatistics(city!);
-  const [cityStats, setCityStats] = React.useState<CityStatistics>();
+  const cityStats = useCityStatistics(city!);
+  const [playing, setPlaying] = React.useState(false);
+  const [consumers, setConsumers] = React.useState<number>();
   // refs
   const viewPager = React.useRef<ViewPager>(null);
   // side effects
   // tracking
   useSegmentScreen('Registration Submitted');
+  console.log('cityStats', cityStats);
+  // effects
   React.useEffect(() => {
-    if (!city) return;
-    (async () => {
-      setCityStats(await api.platform().fetchCityStatistics(city));
-    })();
-  }, [api, city]);
+    if (cityStats) {
+      if (!consumers) setConsumers(cityStats.consumers);
+    }
+  }, [cityStats, consumers]);
   // this is commented because right now we are approving all consumers automatically
   // React.useEffect(() => {
   //   if (consumer.situation === 'approved') {
@@ -71,6 +69,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
   }, []);
   console.log(city);
   console.log(cityStats);
+  // UI
   return (
     <SafeAreaView style={{ ...screens.config }}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -78,11 +77,9 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
           <RoundedText>{t('Pré-cadastro realizado com sucesso!')}</RoundedText>
           {/* add a "user counter" in this text. if user counter > 10, replace
           the string with 'Você e mais 000 pessoas já fazem parte desse movimento em ${consumer.city}' */}
-          {cityStats?.consumers ? (
+          {consumers ? (
             <Text style={{ ...texts.x2l, marginVertical: padding }}>
-              {t(
-                `Você e mais ${cityStats?.consumers} pessoas já fazem parte desse movimento em ${city}`
-              )}
+              {t(`Você e mais ${consumers} pessoas já fazem parte desse movimento em ${city}`)}
             </Text>
           ) : (
             <Text style={{ ...texts.x2l, marginVertical: padding }}>
