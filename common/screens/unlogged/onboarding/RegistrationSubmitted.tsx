@@ -1,3 +1,4 @@
+import { CityStatistics } from '@appjusto/types';
 import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -31,31 +32,30 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   // redux store
-  const consumer = useSelector(getConsumer)!;
+  const { city } = useSelector(getConsumer)!;
   const [playing, setPlaying] = React.useState(false);
   // state
   const steps = config.registrationSubmitted;
   const [step, setStep] = React.useState(0);
+  // const cityStats = useCityStatistics(city!);
+  const [cityStats, setCityStats] = React.useState<CityStatistics>();
   // refs
   const viewPager = React.useRef<ViewPager>(null);
   // side effects
   // tracking
   useSegmentScreen('Registration Submitted');
+  React.useEffect(() => {
+    if (!city) return;
+    (async () => {
+      setCityStats(await api.platform().fetchCityStatistics(city));
+    })();
+  }, [api, city]);
   // this is commented because right now we are approving all consumers automatically
   // React.useEffect(() => {
   //   if (consumer.situation === 'approved') {
   //     navigation.replace('MainNavigator', { screen: 'Home' });
   //   }
   // }, [consumer, navigation, api]);
-  // React.useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       setStates(await api.getAllStates());
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   })();
-  // }, [api]);
   // handlers
   const onPageScroll = (ev: NativeSyntheticEvent<ViewPagerOnPageScrollEventData>) => {
     const { nativeEvent } = ev;
@@ -69,10 +69,8 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
       setPlaying(false);
     }
   }, []);
-  // const togglePlaying = React.useCallback(() => {
-  //   setPlaying((prev) => !prev);
-  // }, []);
-  // UI
+  console.log(city);
+  console.log(cityStats);
   return (
     <SafeAreaView style={{ ...screens.config }}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -80,9 +78,18 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
           <RoundedText>{t('Pré-cadastro realizado com sucesso!')}</RoundedText>
           {/* add a "user counter" in this text. if user counter > 10, replace
           the string with 'Você e mais 000 pessoas já fazem parte desse movimento em ${consumer.city}' */}
-          <Text style={{ ...texts.x2l, marginVertical: padding }}>
-            {t(`Obrigado por fazer parte desse movimento em ${consumer.city}`)}
-          </Text>
+          {cityStats?.consumers ? (
+            <Text style={{ ...texts.x2l, marginVertical: padding }}>
+              {t(
+                `Você e mais ${cityStats?.consumers} pessoas já fazem parte desse movimento em ${city}`
+              )}
+            </Text>
+          ) : (
+            <Text style={{ ...texts.x2l, marginVertical: padding }}>
+              {t(`Obrigado por fazer parte desse movimento em ${city}`)}
+            </Text>
+          )}
+
           <Text style={{ ...texts.md, marginBottom: 24 }}>
             {t(
               'Quanto mais gente compartilhar essa ideia, mais rápido um delivery justo para todos será realidade. Participe divulgando!'
@@ -150,22 +157,10 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
               />
             ))}
           </View>
-          {/* <TouchableOpacity
-            onPress={() => Linking.openURL('https://www.youtube.com/watch?v=KOD94Vn80-o')}
-          >
-            <View style={{ marginHorizontal: padding, height: 200 }}>
-              <Image
-                source={require('../../../../assets/images/onboarding-video-image.jpeg')}
-                style={{ height: '100%', width: '100%', borderRadius: 8 }}
-                resizeMode="stretch"
-              />
-            </View>
-          </TouchableOpacity> */}
           <PaddedView style={{ marginTop: halfPadding, borderRadius: halfPadding }}>
             <YoutubePlayer
               height={200}
               play={playing}
-              // videoId={'iee2TATGMyI'}
               videoId="QM81nPxGBXQ"
               onChangeState={onStateChange}
               webViewStyle={{ borderRadius: halfPadding }}

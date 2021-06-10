@@ -103,7 +103,6 @@ export const Onboarding = ({ navigation, route }: Props) => {
       justifyContent: tallerDevice ? 'center' : undefined,
     },
   });
-  console.log(city, state);
   // UI
   return (
     <View style={{ ...screens.default }}>

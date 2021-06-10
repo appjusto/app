@@ -1,4 +1,12 @@
-import { Bank, Classification, Cuisine, Issue, IssueType, PlatformParams } from '@appjusto/types';
+import {
+  Bank,
+  CityStatistics,
+  Classification,
+  Cuisine,
+  Issue,
+  IssueType,
+  PlatformParams,
+} from '@appjusto/types';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentsAs } from '../types';
@@ -32,6 +40,10 @@ export default class PlatformApi {
     const query = this.refs.getClassificationsRef();
     const docs = (await query.get()).docs;
     return documentsAs<Classification>(docs);
+  }
+  async fetchCityStatistics(city: string) {
+    const snapshot = await this.refs.getPlatformCityStatisticsRef(city).get();
+    return snapshot.data() as CityStatistics;
   }
   // storage
   fetchCuisineImageURI(imagePath: string) {
