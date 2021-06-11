@@ -38,7 +38,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
     if (!order) return;
     console.log('OrderConfirming', order.status);
     if (order.status === 'canceled') {
-      navigation.replace('MainNavigator', { screen: 'Home' });
+      navigation.replace('OrderCanceled', { orderId });
       // just p2p for now
     } else if (order.status === 'confirmed') {
       navigation.replace('OngoingOrder', {
