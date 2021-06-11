@@ -138,9 +138,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
     >
       <DefaultButton
         title={t('Cancelar pedido')}
-        onPress={() =>
-          navigation.navigate('OngoingOrderCancelOrder', { orderId, acknowledgedCosts: 0 })
-        }
+        onPress={() => navigation.navigate('OngoingOrderConfirmCancel', { orderId })}
         style={{
           ...borders.default,
           marginBottom: padding,

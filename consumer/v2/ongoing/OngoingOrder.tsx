@@ -16,7 +16,7 @@ import { OrderAdditionalInfo } from '../../../common/screens/orders/summary/Orde
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { updateProfile } from '../../../common/store/user/actions';
-import { colors, padding, screens } from '../../../common/styles';
+import { borders, colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { DeliveredItems } from '../common/DeliveredItems';
 import { OrderPlacesSummary } from '../common/order-summary/OrderPlacesSummary';
@@ -136,12 +136,12 @@ export default function ({ navigation, route }: Props) {
   return (
     <ScrollView
       style={{ ...screens.default, paddingBottom: 32 }}
-      scrollIndicatorInsets={{ right: 1 }}
       contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
     >
-      <OngoingOrderStatus order={order} />
       {order.type === 'p2p' ? (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, ...borders.default, borderColor: 'white' }}>
+          <OngoingOrderStatus order={order} />
           {order.status !== 'dispatching' ? (
             <View style={{ flex: 1 }}>
               <OrderPlacesSummary order={order} onEditStep={() => null} />
@@ -184,6 +184,7 @@ export default function ({ navigation, route }: Props) {
                 onPress={() => openChatWithCourier()}
                 style={{ marginHorizontal: padding, marginBottom: padding }}
               />
+
               <HR height={padding} />
               <View style={{ marginBottom: padding }}>
                 <DeliveryActions
@@ -204,7 +205,8 @@ export default function ({ navigation, route }: Props) {
           )}
         </View>
       ) : (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, ...borders.default, borderColor: 'white' }}>
+          <OngoingOrderStatus order={order} />
           {order.status !== 'dispatching' ? (
             <View style={{ flex: 1 }}>
               <HR height={padding} />
@@ -238,6 +240,7 @@ export default function ({ navigation, route }: Props) {
               <OrderMap order={order} ratio={1.2} />
               <StatusAndMessages order={order} onMessageReceived={() => openChatWithCourier()} />
               <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
+              {/* pode estar causando o problema de clicar no topo - chat em 'food' */}
               <DefaultButton
                 title={t('Abrir chat com o entregador')}
                 onPress={() => openChatWithCourier()}
