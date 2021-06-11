@@ -52,9 +52,9 @@ export const CourierDropsOrder = ({ navigation, route }: Props) => {
         setLoading(true);
         await api.order().dropOrder(orderId, selectedIssue, comment);
         console.log('dropOrder called');
-        navigation.replace('DeliveryProblemNavigator', {
-          screen: 'DeliveryProblemFeedback',
-          params: { issueType: 'courier-drops-delivery', orderId },
+        navigation.replace('DeliveryProblemFeedback', {
+          orderId,
+          issueType: 'courier-drops-delivery',
         });
       } catch (error) {
         setLoading(false);

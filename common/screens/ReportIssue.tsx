@@ -115,9 +115,9 @@ export const ReportIssue = ({ route, navigation }: Props) => {
           flavor,
           comment,
         });
-        navigation.replace('DeliveryProblemNavigator', {
-          screen: 'DeliveryProblemFeedback',
-          params: { issueType, orderId },
+        navigation.replace('DeliveryProblemFeedback', {
+          issueType: 'courier-delivery-problem',
+          orderId,
         });
         setLoading(false);
         // setIssueSent(true);

@@ -133,7 +133,7 @@ export default function ({ navigation, route }: Props) {
           await api.order().nextDispatchingState(orderId);
           setTimeout(() => {
             setLoading(false);
-          }, 15000);
+          }, 5000);
         }
       } catch (error) {
         dispatch(showToast(error.toString(), 'error'));

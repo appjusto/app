@@ -6,15 +6,23 @@ import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import { colors } from '../../../common/styles';
+import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import { DeliveryProblemNavigatorParamList } from './delivery-problem/types';
+import { OngoingDeliveryNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<DeliveryProblemNavigatorParamList, 'DeliveryProblemFeedback'>,
-  StackNavigationProp<ApprovedParamList>
+  StackNavigationProp<
+    DeliveryProblemNavigatorParamList & OngoingDeliveryNavigatorParamList,
+    'DeliveryProblemFeedback'
+  >,
+  StackNavigationProp<ApprovedParamList & LoggedNavigatorParamList>
 >;
-type ScreenRoute = RouteProp<DeliveryProblemNavigatorParamList, 'DeliveryProblemFeedback'>;
+type ScreenRoute = RouteProp<
+  DeliveryProblemNavigatorParamList & OngoingDeliveryNavigatorParamList,
+  'DeliveryProblemFeedback'
+>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -41,8 +49,13 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
   })();
   // handlers
   const finishHandler = () => {
-    navigation.replace('MainNavigator', { screen: 'Home' });
+    if (issueType === 'courier-delivery-problem') {
+      navigation.navigate('OngoingDelivery', { orderId });
+    } else {
+      navigation.replace('MainNavigator', { screen: 'Home' });
+    }
   };
+  console.log(issueType);
   return (
     <FeedbackView
       header={feedbackHeaderTitle}
@@ -50,7 +63,7 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
       background={colors.grey50}
       description={feedbackDescription}
     >
-      <DefaultButton title={t('Voltar para o início')} onPress={finishHandler} />
+      <DefaultButton title={t('Voltar')} onPress={finishHandler} />
     </FeedbackView>
   );
 };
