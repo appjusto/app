@@ -50,12 +50,11 @@ export const CourierDropsOrder = ({ navigation, route }: Props) => {
     (async () => {
       try {
         setLoading(true);
-        console.log('TENTANDO CHAMAR DROPORDER');
         await api.order().dropOrder(orderId, selectedIssue, comment);
         console.log('dropOrder called');
         navigation.replace('DeliveryProblemNavigator', {
           screen: 'DeliveryProblemFeedback',
-          params: { issueType: 'courier-refuse', orderId },
+          params: { issueType: 'courier-drops-delivery', orderId },
         });
       } catch (error) {
         setLoading(false);
