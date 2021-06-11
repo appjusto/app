@@ -6,6 +6,7 @@ import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
+import { isConsumerProfileComplete } from '../../../../common/store/courier/validators';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
@@ -79,15 +80,7 @@ export const OrderPayment = ({
           </View>
         )}
 
-        {Boolean(!selectedPaymentMethod) && (
-          <DefaultButton
-            title={t('Escolher uma forma de pagamento')}
-            onPress={onEditPaymentMethod}
-            secondary
-            style={{ marginTop: padding }}
-          />
-        )}
-        {Boolean(selectedPaymentMethod) && (
+        {isConsumerProfileComplete(consumer) && selectedPaymentMethod ? (
           <DefaultButton
             style={{ marginVertical: padding }}
             title={t('Confirmar pedido')}
@@ -95,7 +88,19 @@ export const OrderPayment = ({
             disabled={!isSubmitEnabled}
             activityIndicator={activityIndicator}
           />
+        ) : (
+          <DefaultButton
+            title={
+              !isConsumerProfileComplete(consumer)
+                ? t('Completar cadastro')
+                : t('Escolher uma forma de pagamento')
+            }
+            onPress={onEditPaymentMethod}
+            secondary
+            style={{ marginTop: padding }}
+          />
         )}
+
         {/* {Boolean(selectedPaymentMethod) && (
           <DefaultButton
             secondary
