@@ -44,23 +44,22 @@ export const LoggedNavigator = () => {
   const options = React.useMemo(() => ({ consumerId: uid }), [uid]);
   useObserveOngoingOrders(options);
   // UI
-  if (consumer?.situation !== 'approved') {
-    // showing the indicator until the profile is loaded
-    // the first time should take longer as the profile is created with situation === 'pending' and than
-    // updated by a trigger after automatic validation
-    // TODO: handle other situation cases in the future
+  if (!consumer?.situation) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
+  const initialRouteName =
+    consumer.situation === 'approved'
+      ? 'MainNavigator'
+      : consumer.onboarded
+      ? 'RegistrationSubmitted'
+      : 'ConsumerOnboarding';
   return (
     <LoggedContextProvider>
-      <Stack.Navigator
-        screenOptions={defaultScreenOptions}
-        initialRouteName={consumer.onboarded ? 'MainNavigator' : 'ConsumerOnboarding'}
-      >
+      <Stack.Navigator screenOptions={defaultScreenOptions} initialRouteName={initialRouteName}>
         <Stack.Screen
           name="ConsumerOnboarding"
           component={Onboarding}
