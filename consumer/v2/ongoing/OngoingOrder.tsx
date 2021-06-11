@@ -98,9 +98,13 @@ export default function ({ navigation, route }: Props) {
     if (!order) return;
     if (order.status === 'delivered') {
       navigation.navigate('OngoingOrderFeedback', { orderId });
-    } else if (order.status === 'canceled') {
-      navigation.replace('OrderCanceled', { orderId });
-    } else if (order.dispatchingStatus === 'no-match') {
+    }
+    // we will need to navigate to OrderCanceled when the order is cancelled by
+    // a restaurant or courier
+    // else if (order.status === 'canceled') {
+    //   navigation.replace('OrderCanceled', { orderId });
+    // }
+    else if (order.dispatchingStatus === 'no-match') {
       navigation.navigate('OngoingOrderNoMatch', { orderId });
     }
   }, [navigation, order, orderId]);
