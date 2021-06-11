@@ -3,6 +3,7 @@ import React from 'react';
 import Chat from '../../../common/screens/Chat';
 import { defaultScreenOptions } from '../../../common/screens/options';
 import { ReportIssue } from '../../../common/screens/ReportIssue';
+import { DeliveryProblemFeedback } from '../../../courier/approved/ongoing/DeliveryProblemFeedback';
 import OrderCanceled from '../../../courier/approved/ongoing/OrderCanceled';
 import { t } from '../../../strings';
 import { OngoingOrderCourierDetail } from './courier-detail/OngoingOrderCourierDetail';
@@ -54,6 +55,11 @@ export const OngoingOrderNavigator = () => {
         name="OngoingOrderCancelFeedback"
         component={OngoingOrderCancelFeedback}
         options={{ title: t('Cancelar pedido') }}
+      />
+      <Stack.Screen
+        name="DeliveryProblemFeedback"
+        component={DeliveryProblemFeedback}
+        options={{ title: t('Tive um problema') }}
       />
       <Stack.Screen
         name="OngoingOrderCourierDetail"

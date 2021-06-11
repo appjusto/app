@@ -115,10 +115,17 @@ export const ReportIssue = ({ route, navigation }: Props) => {
           flavor,
           comment,
         });
-        navigation.replace('DeliveryProblemFeedback', {
-          issueType: 'courier-delivery-problem',
-          orderId,
-        });
+        if (issueType === 'consumer-delivery-problem') {
+          navigation.replace('DeliveryProblemFeedback', {
+            issueType: 'consumer-delivery-problem',
+            orderId,
+          });
+        } else {
+          navigation.replace('DeliveryProblemFeedback', {
+            issueType: 'courier-delivery-problem',
+            orderId,
+          });
+        }
         setLoading(false);
         // setIssueSent(true);
       } catch (error) {
