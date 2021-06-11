@@ -123,7 +123,9 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
           title={t('Cancelar pedido')}
           secondary
           style={{ marginHorizontal: padding, marginTop: 24 }}
-          onPress={() => navigation.navigate('OngoingOrderCancelOrder', { orderId })}
+          onPress={() =>
+            navigation.navigate('OngoingOrderCancelOrder', { orderId, acknowledgedCosts: 0 })
+          }
         />
       </View>
     </SafeAreaView>
@@ -136,7 +138,9 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
     >
       <DefaultButton
         title={t('Cancelar pedido')}
-        onPress={() => navigation.navigate('OngoingOrderCancelOrder', { orderId })}
+        onPress={() =>
+          navigation.navigate('OngoingOrderCancelOrder', { orderId, acknowledgedCosts: 0 })
+        }
         style={{
           ...borders.default,
           marginBottom: padding,

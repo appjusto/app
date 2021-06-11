@@ -1,12 +1,13 @@
 import {
   Business,
-  CalculateCancelingCostsPayload,
   CancelOrderPayload,
   ChatMessage,
   CompleteDeliveryPayload,
   ConsumerProfile,
   DropOrderPayload,
   Fare,
+  GetCancellationInfoPayload,
+  GetCancellationInfoResult,
   GetOrderQuotesPayload,
   Issue,
   MatchOrderPayload,
@@ -191,12 +192,13 @@ export default class OrderApi {
     return (await this.refs.getPlaceOrderCallable()(payload)).data;
   }
 
-  async calculateCancellingCosts(orderId: string) {
-    const payload: CalculateCancelingCostsPayload = {
+  async getCancellationInfo(orderId: string) {
+    const payload: GetCancellationInfoPayload = {
       orderId,
       meta: { version: Constants.nativeBuildVersion },
     };
-    return (await this.refs.getCalculateCancellingCosts()(payload)).data;
+    return (await this.refs.getCancellationInfoCallable()(payload))
+      .data as GetCancellationInfoResult;
   }
 
   async cancelOrder(

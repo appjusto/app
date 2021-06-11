@@ -3,23 +3,13 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, SafeAreaView, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useDispatch, useSelector } from 'react-redux';
-import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
+import { useGetCancellationInfo } from '../../../common/store/api/order/hooks/useGetCancellationInfo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
-import { showToast } from '../../../common/store/ui/actions';
-import { getUIBusy } from '../../../common/store/ui/selectors';
-import {
-  colors,
-  doublePadding,
-  halfPadding,
-  padding,
-  screens,
-  texts,
-} from '../../../common/styles';
+import { colors, doublePadding, padding, screens, texts } from '../../../common/styles';
+import { formatCurrency } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
 import { OngoingOrderNavigatorParamList } from './types';
@@ -38,107 +28,62 @@ type Props = {
 export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
   // params
   const { orderId } = route.params;
-  // context
-  const api = React.useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
-  // app state
-  const busy = useSelector(getUIBusy);
-  // screen state
+  //  state
   const order = useObserveOrder(orderId);
-  const [costs, setCosts] = React.useState({});
-
-  // side effects
-  React.useEffect(() => getCancellationCosts(), [order]);
-
+  const cancellationInfo = useGetCancellationInfo(orderId);
+  console.log(cancellationInfo);
   // handlers
-  // you are using the same logig as in the OngoingOrderCancelOrder screen.
-  // turn this cancellation costs logic into a hook
-  const getCancellationCosts = () => {
-    if (!order) return;
-    (async () => {
-      try {
-        setCosts(await api.order().calculateCancellingCosts(order.id));
-      } catch (error) {
-        dispatch(showToast(error.toString(), 'error'));
-      }
-    })();
-  };
-  console.log(costs);
+  const cancelOrderHandler = React.useCallback(() => {
+    navigation.navigate('OngoingOrderCancelOrder', {
+      orderId,
+      acknowledgedCosts: cancellationInfo!.costs,
+    });
+  }, [navigation, orderId, cancellationInfo]);
+  // side effects
+  React.useEffect(() => {
+    if (cancellationInfo?.costs === 0) cancelOrderHandler();
+  }, [cancelOrderHandler, cancellationInfo]);
   // UI
-  if (!order) {
-    // showing the indicator until the order is loaded
+  if (!order || cancellationInfo === undefined || cancellationInfo.costs === 0) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
-  const cancellationCharge =
-    order.type === 'food'
-      ? order.status === 'confirmed'
-      : order.dispatchingState === 'going-destination' ||
-        order.dispatchingState === 'arrived-destination';
-  const description = cancellationCharge
-    ? t('Seu pedido já foi iniciado e algumas taxas podem ser cobradas.')
-    : t('Como seu pedido ainda não foi retirado, você não será cobrado pelo cancelamento.');
-  return order.status === 'confirmed' ? (
-    <View style={{ ...screens.default }}>
-      <FeedbackView
-        header={t('Tem certeza que deseja cancelar?')}
-        description={description}
-        icon={<IconConeYellow />}
-      />
-      <View
-        style={{
-          width: '100%',
-          borderBottomWidth: 1,
-          borderBottomColor: colors.grey500,
-          marginBottom: padding,
-        }}
-      />
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          marginBottom: padding,
-          justifyContent: 'space-between',
-          paddingHorizontal: padding,
-        }}
-      >
-        <View style={{ flex: 7 }}>
-          <DefaultButton
-            title={t('Cancelar pedido')}
-            onPress={() => navigation.navigate('OngoingOrderCancelOrder', { orderId })}
-            activityIndicator={busy}
-            disabled={busy}
-          />
-        </View>
-        <View style={{ marginLeft: halfPadding, flex: 7 }}>
-          <DefaultButton title={t('Não cancelar')} onPress={() => navigation.pop()} secondary />
-        </View>
-      </View>
-    </View>
-  ) : (
+  return (
     <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
       <PaddedView style={{ flex: 1 }}>
         <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: doublePadding }}>
           <IconConeYellow />
           <Text style={{ ...texts.xl, marginTop: padding }}>{t('Aviso importante:')}</Text>
           <Text style={{ ...texts.xl, color: colors.red }}>
-            {t('este cancelamento será cobrado')}
-          </Text>
-          <Text style={{ ...texts.sm, marginTop: padding, color: colors.grey700 }}>
-            {t(
-              'Recomendamos que entre em contato com o restaurante para verificar se ainda é possível cancelar sem o prejuízo dos produtos.'
-            )}
+            {`${t('O valor de')} ${formatCurrency(cancellationInfo.costs)} não será reembolsado.`}
           </Text>
         </View>
-        <DefaultButton
-          title={t('Ligar para o restaurante')}
-          secondary
-          onPress={() => null}
-          style={{ marginTop: 24 }}
-        />
+        {order.type === 'food' ? (
+          <View>
+            <Text style={{ ...texts.sm, marginTop: padding, color: colors.grey700 }}>
+              {t(
+                'Recomendamos que entre em contato com o restaurante para verificar se ainda é possível cancelar sem o prejuízo dos produtos.'
+              )}
+            </Text>
+            <DefaultButton
+              title={t('Ligar para o restaurante')}
+              secondary
+              onPress={() => null}
+              style={{ marginTop: 24 }}
+            />
+          </View>
+        ) : (
+          <View>
+            <Text style={{ ...texts.sm, marginTop: padding, color: colors.grey700 }}>
+              {t(
+                'Depois que o entregador inicia a corrida não é mais possível fazer o cancelamento da corrida.'
+              )}
+            </Text>
+          </View>
+        )}
       </PaddedView>
       <View style={{ flex: 1 }} />
       <PaddedView>
@@ -155,20 +100,10 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
           }}
         >
           <View style={{ width: '48%' }}>
-            <DefaultButton
-              title={t('Voltar')}
-              onPress={() => navigation.goBack()}
-              activityIndicator={busy}
-              disabled={busy}
-            />
+            <DefaultButton title={t('Voltar')} onPress={() => navigation.goBack()} />
           </View>
           <View style={{ width: '48%' }}>
-            <DefaultButton
-              title={t('Confirmar')}
-              onPress={() => navigation.navigate('OngoingOrderCancelOrder', { orderId })}
-              activityIndicator={busy}
-              disabled={busy}
-            />
+            <DefaultButton title={t('Confirmar')} onPress={cancelOrderHandler} />
           </View>
         </SafeAreaView>
       </PaddedView>

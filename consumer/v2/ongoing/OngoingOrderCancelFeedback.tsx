@@ -24,9 +24,9 @@ export const OngoingOrderCancelFeedback = ({ navigation, route }: Props) => {
   return (
     <FeedbackView
       header={t('Obrigado pelas informações. Seu pedido foi cancelado.')}
+      description={t('Você pode ver as informações desse pedido no seu Histórico de Pedidos.')}
       icon={<IconMotocycle />}
       background={colors.grey50}
-      description=""
     >
       <DefaultButton
         title={t('Voltar para o início')}

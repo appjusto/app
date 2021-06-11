@@ -16,6 +16,7 @@ type Props = {
   disabled: boolean;
   onSendIssue: () => void;
   isLoading: boolean;
+  submitTitle?: string;
   children: React.ReactNode;
 };
 
@@ -27,6 +28,7 @@ export const ReportIssueView = ({
   disabled,
   onSendIssue,
   isLoading,
+  submitTitle,
   children,
 }: Props) => {
   return (
@@ -64,7 +66,7 @@ export const ReportIssueView = ({
       <PaddedView>
         <SafeAreaView>
           <DefaultButton
-            title={t('Enviar')}
+            title={submitTitle ?? t('Enviar')}
             onPress={onSendIssue}
             activityIndicator={isLoading}
             disabled={disabled}

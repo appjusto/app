@@ -20,6 +20,7 @@ export type OngoingOrderNavigatorParamList = {
   };
   OngoingOrderCancelOrder: {
     orderId: string;
+    acknowledgedCosts: number;
   };
   OngoingOrderCourierDetail: {
     orderId: string;
