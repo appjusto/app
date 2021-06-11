@@ -65,6 +65,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   const [additionalInfo, setAdditionalInfo] = React.useState(value?.additionalInfo ?? '');
   const [autocompletePredictions, setAutoCompletePredictions] = React.useState<Address[]>([]);
   const [selectedAddress, setSelectedAddress] = React.useState<Address | null>(null);
+  console.log(autocompletePredictions);
   const sections: SectionListData<Address>[] = React.useMemo(() => {
     let sections: SectionListData<Address>[] = [];
     sections = [
@@ -175,7 +176,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
         stickySectionHeadersEnabled={false}
         style={{ flex: 1 }}
         sections={sections}
-        keyExtractor={(item) => item.description}
+        keyExtractor={(item) => item.googlePlaceId ?? `${item.main} ${item.secondary}`}
         keyboardShouldPersistTaps="handled"
         renderSectionHeader={({ section }) => {
           if (section.key === 'search-results' && isLoading)
