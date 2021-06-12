@@ -23,17 +23,20 @@ export const MainNavigator = () => {
   const navigation = useNavigation<ScreenNavigationProp>();
   // handlers
   const handler = React.useCallback(
-    (data: PushMessageData, clicked?: boolean) => {
+    (data: PushMessageData, clicked?: boolean, remove?: () => void) => {
       if (data.action === 'order-update') {
-        if (clicked)
+        if (clicked) {
+          remove!();
           navigation.navigate('OngoingOrderNavigator', {
             screen: 'OngoingOrder',
             params: {
               orderId: data.orderId,
             },
           });
+        }
       } else if (data.action === 'order-chat') {
-        if (clicked)
+        if (clicked) {
+          remove!();
           navigation.navigate('OngoingOrderNavigator', {
             screen: 'OngoingOrder',
             params: {
@@ -41,6 +44,7 @@ export const MainNavigator = () => {
               chatFrom: data.from,
             },
           });
+        }
       }
     },
     [navigation]

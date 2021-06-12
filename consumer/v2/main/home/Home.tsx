@@ -87,11 +87,12 @@ export default function ({ navigation }: Props) {
         <PaddedView>
           <HomeOngoingDeliveries
             orders={ongoingOrders}
-            onSelect={(order, openChat) =>
+            onOpenChat={(order, chatFrom) =>
               navigation.navigate('OngoingOrderNavigator', {
                 screen: 'OngoingOrder',
                 params: {
                   orderId: order.id,
+                  chatFrom,
                 },
               })
             }

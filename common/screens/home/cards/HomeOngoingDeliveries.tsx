@@ -1,4 +1,4 @@
-import { Order, WithId } from '@appjusto/types';
+import { ChatMessageUser, Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { View } from 'react-native';
 import { padding } from '../../../styles';
@@ -6,10 +6,10 @@ import HomeOngoingDeliveryCard from './HomeOngoingDeliveryCard';
 
 type Props = {
   orders: WithId<Order>[] | undefined;
-  onSelect: (order: WithId<Order>, openChat: boolean) => void;
+  onOpenChat: (order: WithId<Order>, message?: ChatMessageUser) => void;
 };
 
-export default function ({ orders, onSelect }: Props) {
+export default function ({ orders, onOpenChat }: Props) {
   // UI
   if (!orders) return null;
   return (
@@ -17,7 +17,7 @@ export default function ({ orders, onSelect }: Props) {
       {orders.map((order) => {
         return (
           <View key={order.id} style={{ marginBottom: padding }}>
-            <HomeOngoingDeliveryCard order={order} onSelect={onSelect} />
+            <HomeOngoingDeliveryCard order={order} onOpenChat={onOpenChat} />
           </View>
         );
       })}

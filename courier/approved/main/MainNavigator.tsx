@@ -40,15 +40,18 @@ export default function ({ navigation }: Props) {
           },
         });
       } else if (data.action === 'order-update') {
-        if (clicked)
+        if (clicked) {
+          remove!();
           navigation.navigate('OngoingDeliveryNavigator', {
             screen: 'OngoingDelivery',
             params: {
               orderId: data.orderId,
             },
           });
+        }
       } else if (data.action === 'order-chat') {
-        if (clicked)
+        if (clicked) {
+          remove!();
           navigation.navigate('OngoingDeliveryNavigator', {
             screen: 'OngoingDelivery',
             params: {
@@ -56,6 +59,7 @@ export default function ({ navigation }: Props) {
               chatFrom: data.from,
             },
           });
+        }
       }
     },
     [navigation]

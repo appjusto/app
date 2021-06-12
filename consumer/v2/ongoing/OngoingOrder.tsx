@@ -14,6 +14,7 @@ import { StatusAndMessages } from '../../../common/screens/orders/ongoing/Status
 import OrderMap from '../../../common/screens/orders/OrderMap';
 import { OrderAdditionalInfo } from '../../../common/screens/orders/summary/OrderAdditionaInfo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { updateProfile } from '../../../common/store/user/actions';
 import { borders, colors, padding, screens } from '../../../common/styles';
@@ -39,7 +40,7 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // params
-  const { orderId, chatFrom } = route.params;
+  const { orderId } = route.params;
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -52,6 +53,8 @@ export default function ({ navigation, route }: Props) {
   const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
     consumer!.notificationToken
   );
+  // tracking
+  useSegmentScreen('Ongoing Delivery');
   // helpers
   const openChat = React.useCallback(
     (counterpartId: string, counterpartFlavor: Flavor, delayed?: boolean) => {
@@ -80,11 +83,11 @@ export default function ({ navigation, route }: Props) {
   // whenever params changes
   // open chat if there's a new message
   React.useEffect(() => {
-    if (chatFrom) {
+    if (route.params.chatFrom) {
       navigation.setParams({ chatFrom: undefined });
-      openChat(chatFrom.id, chatFrom.agent, true);
+      openChat(route.params.chatFrom.id, route.params.chatFrom.agent, true);
     }
-  }, [navigation, chatFrom, openChat]);
+  }, [route.params, navigation, openChat]);
   // whenever notification token needs to be updated
   React.useEffect(() => {
     if (shouldDeleteToken || shouldUpdateToken) {
