@@ -1,26 +1,32 @@
-import { PushMessage } from '@appjusto/types';
+import { ChatMessageUser } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';
+import {
+  unreadMessages,
+  useObserveOrderChat,
+} from '../../../store/api/order/hooks/useObserveOrderChat';
+import { getUser } from '../../../store/user/selectors';
 import { borders, colors, halfPadding, texts } from '../../../styles';
 
 interface Props {
   orderId: string;
   variant?: 'standalone' | 'coupled';
-  onPress: () => void;
+  onOpenChat: (from: ChatMessageUser) => void;
 }
 
-export const MessagesCard = ({ orderId, variant = 'standalone', onPress }: Props) => {
-  const chatQuery = useQuery<PushMessage[]>(['notifications', 'order-chat'], () => []);
-  const unreadCount = (chatQuery.data ?? []).filter(
-    (m) => m.data.orderId === orderId && !m.read
-  ).length;
-  if (unreadCount === 0) return null;
+export const MessagesCard = ({ orderId, variant = 'standalone', onOpenChat }: Props) => {
+  // redux
+  const user = useSelector(getUser)!;
+  // state
+  const chat = useObserveOrderChat(orderId, user.uid);
+  const unread = unreadMessages(chat, user.uid);
+  if (unread.length === 0) return null;
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={() => onOpenChat(unread[0].from)}>
       <View
         style={{
           ...(variant === 'standalone'
@@ -37,7 +43,7 @@ export const MessagesCard = ({ orderId, variant = 'standalone', onPress }: Props
         <PaddedView style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Feather name="message-circle" size={18} />
           <Text style={{ ...texts.xs, marginLeft: halfPadding }}>
-            {t('Você tem')} {unreadCount} {t('novas mensagens.')}
+            {t('Você tem')} {unread.length} {t('novas mensagens.')}
           </Text>
           <View style={{ flex: 1 }} />
           <Text style={{ ...texts.xs, ...texts.bold, color: colors.green600 }}>

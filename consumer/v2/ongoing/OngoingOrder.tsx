@@ -82,7 +82,7 @@ export default function ({ navigation, route }: Props) {
   React.useEffect(() => {
     if (chatFrom) {
       navigation.setParams({ chatFrom: undefined });
-      openChat(chatFrom.id, chatFrom.agent);
+      openChat(chatFrom.id, chatFrom.agent, true);
     }
   }, [navigation, chatFrom, openChat]);
   // whenever notification token needs to be updated
@@ -180,7 +180,7 @@ export default function ({ navigation, route }: Props) {
               <OrderMap order={order} ratio={1} />
               <StatusAndMessages
                 order={order}
-                onMessageReceived={openChatWithCourier} // just with the courier for now
+                onOpenChat={(from) => openChat(from.id, from.agent)}
               />
               <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
               <DefaultButton
@@ -242,7 +242,10 @@ export default function ({ navigation, route }: Props) {
           ) : (
             <View style={{ flex: 1 }}>
               <OrderMap order={order} ratio={1.2} />
-              <StatusAndMessages order={order} onMessageReceived={() => openChatWithCourier()} />
+              <StatusAndMessages
+                order={order}
+                onOpenChat={(from) => openChat(from.id, from.agent)}
+              />
               <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
               {/* pode estar causando o problema de clicar no topo - chat em 'food' */}
               <DefaultButton

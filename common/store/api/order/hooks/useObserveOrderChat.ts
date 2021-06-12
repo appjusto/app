@@ -4,7 +4,7 @@ import React from 'react';
 import { ApiContext } from '../../../../app/context';
 import { GroupedChatMessages } from '../../../order/types';
 
-export const useObserveOrderChat = (orderId: string, userId: string, counterpartId: string) => {
+export const useObserveOrderChat = (orderId: string, userId: string, counterpartId?: string) => {
   // context
   const api = React.useContext(ApiContext);
   // app state
@@ -25,8 +25,6 @@ export const useObserveOrderChat = (orderId: string, userId: string, counterpart
     };
   }, [api, orderId, userId, counterpartId]);
   // group messages whenever chat updates
-  console.log(chatFromUser);
-  console.log(chatFromCounterPart);
   React.useEffect(() => {
     setChat(groupOrderChatMessages(chatFromUser.concat(chatFromCounterPart).sort(sortMessages)));
   }, [chatFromUser, chatFromCounterPart]);
@@ -55,3 +53,11 @@ const groupOrderChatMessages = (messages: WithId<ChatMessage>[]) =>
     // use as id for chat group the id of the first message of the group
     return [{ id: message.id, from: message.from.id, messages: [message] }, ...groups];
   }, []);
+
+export const unreadMessages = (chat: GroupedChatMessages[], toId: string) =>
+  chat.reduce((result, group) => {
+    return [
+      ...result,
+      ...group.messages.filter((message) => message.to.id === toId && !message.read),
+    ];
+  }, [] as WithId<ChatMessage>[]);

@@ -97,6 +97,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
         await api.order().completeDelivery(orderId, undefined, name, description);
         setLoading(false);
       } catch (error) {
+        setLoading(false);
         dispatch(showToast(error.toString(), 'error'));
       }
     })();

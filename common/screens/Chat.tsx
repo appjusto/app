@@ -1,4 +1,4 @@
-import { ChatMessage, Flavor, PushMessage, WithId } from '@appjusto/types';
+import { ChatMessage, Flavor, WithId } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import React from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Text, View } from 'react-native';
@@ -12,7 +12,7 @@ import PaddedView from '../components/containers/PaddedView';
 import RoundedProfileImg from '../components/icons/RoundedProfileImg';
 import DefaultInput from '../components/inputs/DefaultInput';
 import { useObserveOrder } from '../store/api/order/hooks/useObserveOrder';
-import { useObserveOrderChat } from '../store/api/order/hooks/useObserveOrderChat';
+import { unreadMessages, useObserveOrderChat } from '../store/api/order/hooks/useObserveOrderChat';
 import { useSegmentScreen } from '../store/api/track';
 import { getFlavor } from '../store/config/selectors';
 import { getUser } from '../store/user/selectors';
@@ -45,19 +45,19 @@ export default function ({ route }: Props) {
   // screen state
   const order = useObserveOrder(orderId);
   const chat = useObserveOrderChat(orderId, user.uid, counterpartId);
+  const unread = unreadMessages(chat, user.uid);
   const [inputText, setInputText] = React.useState('');
   // side effects
   // tracking
   useSegmentScreen('Chat');
   React.useEffect(() => {
-    queryClient.setQueryData(
-      ['notifications', 'order-chat'],
-      (notifications: PushMessage[] | undefined) =>
-        (notifications ?? []).map((n) =>
-          n.data.orderId === orderId && n.data.from === counterpartId ? { ...n, read: true } : n
-        )
-    );
-  }, [chat, queryClient, counterpartId, orderId]);
+    if (unread.length > 0) {
+      api.order().updateReadMessages(
+        orderId,
+        unread.map((message) => message.id)
+      );
+    }
+  }, [api, orderId, unread]);
 
   // UI
   if (!order) {

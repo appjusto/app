@@ -7,7 +7,6 @@ export type OngoingDeliveryNavigatorParamList = {
   OngoingDelivery: {
     orderId: string;
     chatFrom?: ChatMessageUser;
-    completeWithoutConfirmation?: boolean;
   };
   DeliveryCompleted: {
     orderId: string;

@@ -87,6 +87,7 @@ export default class FirebaseRefs {
   getOrdersRef = () => this.firestore.collection('orders');
   getOrderRef = (id: string) => this.getOrdersRef().doc(id);
   getOrderChatRef = (id: string) => this.getOrdersRef().doc(id).collection('chat');
+  getOrderChatMessageRef = (orderId: string, id: string) => this.getOrderChatRef(orderId).doc(id);
   getOrderIssuesRef = (id: string) => this.getOrdersRef().doc(id).collection('issues');
 
   // consumers

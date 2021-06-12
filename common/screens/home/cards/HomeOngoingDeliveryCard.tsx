@@ -1,4 +1,4 @@
-import { Order, WithId } from '@appjusto/types';
+import { ChatMessageUser, Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { t } from '../../../../strings';
@@ -10,7 +10,7 @@ import { MessagesCard } from './MessagesCard';
 
 type Props = {
   order: WithId<Order>;
-  onSelect: (order: WithId<Order>, openChat: boolean) => void;
+  onSelect: (order: WithId<Order>, message?: ChatMessageUser) => void;
 };
 
 export default function ({ order, onSelect }: Props) {
@@ -51,7 +51,7 @@ export default function ({ order, onSelect }: Props) {
     }
   }
   return (
-    <TouchableOpacity onPress={() => onSelect(order, false)}>
+    <TouchableOpacity onPress={() => onSelect(order)}>
       <View
         style={{ ...borders.default, borderColor: colors.black, backgroundColor: colors.yellow }}
       >
@@ -59,7 +59,7 @@ export default function ({ order, onSelect }: Props) {
           <MessagesCard
             orderId={order.id}
             variant="coupled"
-            onPress={() => onSelect(order, false)}
+            onOpenChat={(from) => onSelect(order, from)}
           />
           <PaddedView
             style={{

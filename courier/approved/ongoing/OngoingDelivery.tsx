@@ -40,7 +40,7 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // params
-  const { orderId, chatFrom, completeWithoutConfirmation } = route.params;
+  const { orderId } = route.params;
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -69,36 +69,6 @@ export default function ({ navigation, route }: Props) {
     },
     [navigation, orderId]
   );
-  // whenever params updates
-  // open chat if there's a new message
-  React.useEffect(() => {
-    if (chatFrom) {
-      // workaround to make sure chat is being shown; (it was not showing on Android devices during tests)
-      navigation.setParams({ chatFrom: undefined });
-      openChat(chatFrom.id, chatFrom.agent);
-    }
-  }, [navigation, chatFrom, openChat]);
-  React.useEffect(() => {
-    if (!completeWithoutConfirmation) return;
-    (async () => {
-      setLoading(true);
-      try {
-        await api.order().completeDelivery(orderId, code);
-      } catch (error) {
-        dispatch(showToast(error.toString(), 'error'));
-      }
-      setLoading(false);
-    })();
-  }, [completeWithoutConfirmation]);
-  // whenever order updates
-  // check status to navigate to other screens
-  React.useEffect(() => {
-    if (order?.status === 'delivered') {
-      navigation.replace('DeliveryCompleted', { orderId, fee: order.fare!.courier.value });
-    } else if (order?.status === 'canceled') {
-      navigation.replace('OrderCanceled', { orderId });
-    }
-  }, [order]);
   const openChatWithConsumer = React.useCallback(
     (delayed?: boolean) => openChat(consumerId!, 'consumer', delayed),
     [openChat, consumerId]
@@ -107,6 +77,23 @@ export default function ({ navigation, route }: Props) {
     (delayed?: boolean) => openChat(businessId!, 'business', delayed),
     [openChat, businessId]
   );
+  // whenever params updates
+  // open chat if there's a new message
+  React.useEffect(() => {
+    if (route.params.chatFrom) {
+      navigation.setParams({ chatFrom: undefined });
+      openChat(route.params.chatFrom.id, route.params.chatFrom.agent, true);
+    }
+  }, [route.params, navigation, openChat]);
+  // whenever order updates
+  // check status to navigate to other screens
+  React.useEffect(() => {
+    if (order?.status === 'delivered') {
+      navigation.replace('DeliveryCompleted', { orderId, fee: order.fare!.courier.value });
+    } else if (order?.status === 'canceled') {
+      navigation.replace('OrderCanceled', { orderId });
+    }
+  }, [order, navigation, orderId]);
 
   // UI
   if (!order?.dispatchingState) {
@@ -198,7 +185,10 @@ export default function ({ navigation, route }: Props) {
             <OrderMap order={order!} ratio={360 / 316} />
             <RouteIcons order={order} />
             <View>
-              <StatusAndMessages order={order} onMessageReceived={openChatWithConsumer} />
+              <StatusAndMessages
+                order={order}
+                onOpenChat={(from) => openChat(from.id, from.agent)}
+              />
             </View>
           </View>
         )}

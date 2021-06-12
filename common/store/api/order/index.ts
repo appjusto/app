@@ -31,7 +31,7 @@ import { documentAs, documentsAs } from '../types';
 import { ObserveOrdersOptions } from './types';
 
 export default class OrderApi {
-  constructor(private refs: FirebaseRefs) {}
+  constructor(private refs: FirebaseRefs, private firestore: firebase.firestore.Firestore) {}
 
   // firestore
   // consumer
@@ -129,20 +129,18 @@ export default class OrderApi {
   }
   observeOrderChat(
     orderId: string,
-    userId: string,
-    counterpartId: string,
+    fromId: string | undefined,
+    toId: string | undefined,
     resultHandler: (orders: WithId<ChatMessage>[]) => void
   ): firebase.Unsubscribe {
-    console.log('observeOrderChat', orderId, userId, counterpartId);
-    const unsubscribe = this.refs
-      .getOrderChatRef(orderId)
-      .where('from.id', '==', userId)
-      .where('to.id', '==', counterpartId)
-      .orderBy('timestamp', 'asc')
-      .onSnapshot(
-        (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
-        (error) => console.error(error)
-      );
+    const chatRef = this.refs.getOrderChatRef(orderId);
+    let query = chatRef.orderBy('timestamp', 'asc');
+    if (fromId) query = query.where('from.id', '==', fromId);
+    if (toId) query = query.where('to.id', '==', toId);
+    const unsubscribe = query.onSnapshot(
+      (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
+      (error) => console.error(error)
+    );
     // returns the unsubscribe function
     return unsubscribe;
   }
@@ -153,6 +151,16 @@ export default class OrderApi {
       ...message,
       timestamp,
     });
+  }
+
+  async updateReadMessages(orderId: string, messageIds: string[]) {
+    const batch = this.firestore.batch();
+    messageIds.forEach((id) => {
+      batch.update(this.refs.getOrderChatMessageRef(orderId, id), {
+        read: true,
+      } as Partial<ChatMessage>);
+    });
+    return batch.commit();
   }
 
   async createIssue(orderId: string, issue: OrderIssue) {

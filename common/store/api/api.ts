@@ -63,7 +63,7 @@ export default class Api {
     this._courier = new CourierApi(this._refs, this._files);
     this._fleet = new FleetApi(this._refs);
     this._consumer = new ConsumerApi(this._refs, this._iugu);
-    this._order = new OrderApi(this._refs);
+    this._order = new OrderApi(this._refs, this.firestore);
     this._maps = new MapsApi(extra.googleMapsApiKey);
     this._business = new BusinessApi(this._refs, this._files);
     this._search = new SearchApi(extra.algolia, extra.environment);
