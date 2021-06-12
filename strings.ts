@@ -61,6 +61,7 @@ const pt = {
   time: {
     formats: {
       default: '%Hh%M',
+      raw: '%H%M',
     },
   },
 };

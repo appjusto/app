@@ -12,6 +12,7 @@ import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import HR from '../../../../../common/components/views/HR';
 import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
+import { getBusinessNextOpeningDay } from '../../../../../common/store/api/business/selectors';
 import * as helpers from '../../../../../common/store/api/order/helpers';
 import { getConsumer, getCurrentPlace } from '../../../../../common/store/consumer/selectors';
 import {
@@ -27,7 +28,7 @@ import {
   screens,
   texts,
 } from '../../../../../common/styles';
-import { formatCurrency } from '../../../../../common/utils/formatters';
+import { formatCurrency, formatHour } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import { RestaurantNavigatorParamList } from '../types';
 import { useBusinessIsAcceptingOrders } from '../useBusinessIsAcceptingOrders';
@@ -216,10 +217,16 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           >
             <Feather name="clock" size={26} />
             <Text style={texts.sm}>{t('Desculpe, estamos fechados agora')}</Text>
-            <Text style={{ ...texts.xs, color: colors.grey700 }}>
-              {t('Abriremos {amanhã, dia da semana} às')}
-            </Text>
-            <Text style={texts.x2l}>{t('00:00')}</Text>
+            {getBusinessNextOpeningDay(business) ? (
+              <>
+                <Text style={{ ...texts.xs, color: colors.grey700 }}>
+                  {`${t('Abriremos')} ${getBusinessNextOpeningDay(business)!.day} ${t('às')}`}
+                </Text>
+                <Text style={texts.x2l}>
+                  {formatHour(getBusinessNextOpeningDay(business)!.schedule[0].from)}
+                </Text>
+              </>
+            ) : null}
           </View>
         )}
       </ScrollView>

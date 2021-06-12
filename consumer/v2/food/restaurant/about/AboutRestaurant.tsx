@@ -5,7 +5,7 @@ import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useContextBusiness } from '../../../../../common/store/context/business';
 import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
-import { formatCurrency } from '../../../../../common/utils/formatters';
+import { formatCurrency, formatHour } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import { RestaurantHeader } from '../../common/RestaurantHeader';
 import { RestaurantNavigatorParamList } from '../types';
@@ -69,7 +69,7 @@ export const AboutRestaurant = ({ route }: Props) => {
                 </Text>
               ) : (
                 <Text style={{ ...texts.sm, color: colors.grey700 }} key={item.day}>
-                  {openTime} às {closeTime}
+                  {`${formatHour(openTime)} ${t('às')} ${formatHour(closeTime)}`}
                 </Text>
               );
             })}

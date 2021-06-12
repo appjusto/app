@@ -13,24 +13,8 @@ export const removeAccents = (str: string) => {
     .replace(/[\u0300-\u036f]/g, '');
 };
 
-const dateInput = (value: Date | firebase.firestore.FieldValue) =>
-  value.constructor.name === 'Date'
-    ? (value as Date)
-    : (value as firebase.firestore.Timestamp).toDate();
-
-// date & time
-export const formatDate = (
-  date: Date | firebase.firestore.FieldValue,
-  pattern: 'default' | 'monthYear' = 'default'
-) => i18n.l(`date.formats.${pattern}`, dateInput(date));
-
-export const formatTime = (date: Date | firebase.firestore.FieldValue) =>
-  i18n.l('time.formats.default', dateInput(date));
-export const getMonthName = (month: number) => i18n.strftime(new Date(2020, month, 1), '%B');
-
-export const formatDuration = (duration: number) => {
-  return `${round(duration / 60, 0)} min`;
-};
+// datetime
+export { formatDate, formatDuration, formatHour, formatTime } from './datetime';
 
 // distance
 export const formatDistance = (distance: number) => {
