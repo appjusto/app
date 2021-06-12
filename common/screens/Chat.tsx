@@ -3,7 +3,6 @@ import { RouteProp } from '@react-navigation/native';
 import React from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Text, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-import { useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import { t } from '../../strings';
 import { ApiContext } from '../app/context';
@@ -38,7 +37,6 @@ export default function ({ route }: Props) {
   const { orderId, counterpartId, counterpartFlavor } = route.params;
   // context
   const api = React.useContext(ApiContext);
-  const queryClient = useQueryClient();
   // app state
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser)!;
