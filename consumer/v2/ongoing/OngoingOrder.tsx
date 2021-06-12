@@ -4,8 +4,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useDispatch, useSelector } from 'react-redux';
-import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import HR from '../../../common/components/views/HR';
@@ -15,8 +13,6 @@ import OrderMap from '../../../common/screens/orders/OrderMap';
 import { OrderAdditionalInfo } from '../../../common/screens/orders/summary/OrderAdditionaInfo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { getConsumer } from '../../../common/store/consumer/selectors';
-import { updateProfile } from '../../../common/store/user/actions';
 import { borders, colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { DeliveredItems } from '../common/DeliveredItems';
@@ -41,18 +37,11 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // params
   const { orderId } = route.params;
-  // context
-  const api = React.useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
-  // redux
-  const consumer = useSelector(getConsumer)!;
   // screen state
   const order = useObserveOrder(orderId);
   const courierId = order?.courier?.id;
   const businessId = order?.business?.id;
-  const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
-    consumer!.notificationToken
-  );
+  useNotificationToken();
   // tracking
   useSegmentScreen('Ongoing Delivery');
   // helpers
@@ -88,13 +77,6 @@ export default function ({ navigation, route }: Props) {
       openChat(route.params.chatFrom.id, route.params.chatFrom.agent, true);
     }
   }, [route.params, navigation, openChat]);
-  // whenever notification token needs to be updated
-  React.useEffect(() => {
-    if (shouldDeleteToken || shouldUpdateToken) {
-      const token = shouldUpdateToken ? notificationToken : null;
-      dispatch(updateProfile(api)(consumer.id, { notificationToken: token }));
-    }
-  }, [api, consumer.id, dispatch, notificationToken, shouldDeleteToken, shouldUpdateToken]);
   // whenever order changes
   // check status to navigate to other screens
   React.useEffect(() => {

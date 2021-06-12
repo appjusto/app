@@ -14,7 +14,6 @@ import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
-import { updateProfile } from '../../../../common/store/user/actions';
 import { padding, screens } from '../../../../common/styles';
 import {
   startLocationUpdatesTask,
@@ -48,9 +47,7 @@ export default function ({ navigation }: Props) {
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
   // state
   const [locationPermission] = usePermissions(LOCATION);
-  const [notificationToken, shouldDeleteToken, shouldUpdateToken] = useNotificationToken(
-    courier!.notificationToken
-  );
+  useNotificationToken();
   // side effects
   // tracking
   useSegmentScreen('Home');
@@ -61,14 +58,6 @@ export default function ({ navigation }: Props) {
       stopLocationUpdatesTask();
     }
   }, [locationPermission, working]);
-  // notification permission
-  React.useEffect(() => {
-    if (shouldDeleteToken || shouldUpdateToken) {
-      const token = shouldUpdateToken ? notificationToken : null;
-      dispatch(updateProfile(api)(courier.id, { notificationToken: token }));
-    }
-  }, [notificationToken, courier.id, shouldDeleteToken, shouldUpdateToken, dispatch, api]);
-
   // UI
   return (
     <View style={[screens.config, screens.headless]}>

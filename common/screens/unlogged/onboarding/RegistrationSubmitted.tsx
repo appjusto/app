@@ -11,6 +11,7 @@ import { LoggedNavigatorParamList } from '../../../../consumer/v2/types';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';
 import RoundedText from '../../../components/texts/RoundedText';
+import useNotificationToken from '../../../hooks/useNotificationToken';
 import { useCityStatistics } from '../../../store/api/platform/hooks/useCityStatistics';
 import { useSegmentScreen } from '../../../store/api/track';
 import { getConsumer } from '../../../store/consumer/selectors';
@@ -37,6 +38,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
   const cityStats = useCityStatistics(city);
   const [playing, setPlaying] = React.useState(false);
   const [consumers, setConsumers] = React.useState<number>();
+  useNotificationToken();
   // refs
   const viewPager = React.useRef<ViewPager>(null);
   // tracking
