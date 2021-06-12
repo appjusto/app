@@ -14,12 +14,10 @@ const shouldAskPermission = (
 
 export default function (enabled: boolean = true, key?: string) {
   // state
-  const [permissionResponse, setPermissionResponse] = React.useState<
-    Permissions.PermissionResponse | null | undefined
-  >(undefined);
-  const [lastKnownLocation, setLastKnownLocation] = React.useState<Location.LocationObject | null>(
-    null
-  );
+  const [permissionResponse, setPermissionResponse] =
+    React.useState<Permissions.PermissionResponse | null | undefined>(undefined);
+  const [lastKnownLocation, setLastKnownLocation] =
+    React.useState<Location.LocationObject | null>(null);
   const coords: LatLng | undefined = React.useMemo(
     () =>
       lastKnownLocation

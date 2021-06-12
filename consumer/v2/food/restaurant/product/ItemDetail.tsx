@@ -162,7 +162,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           </View>
         </View>
 
-        {business.status === 'open' && business.enabled && (
+        {isAcceptingOrders ? (
           <View>
             <ItemComplements
               product={product}
@@ -191,9 +191,20 @@ export const ItemDetail = ({ navigation, route }: Props) => {
                 onChangeText={setNotes}
               />
             </View>
+            <HR />
+            <PaddedView>
+              <ItemQuantity
+                style={{ marginBottom: padding }}
+                value={quantity}
+                minimum={itemId ? 0 : 1}
+                title={`${t('Adicionar')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
+                disabled={!canAddItemToOrder}
+                onChange={(value) => setQuantity(value)}
+                onSubmit={addItemToOrder}
+              />
+            </PaddedView>
           </View>
-        )}
-        {!isAcceptingOrders ? (
+        ) : (
           <View
             style={{
               margin: padding,
@@ -210,24 +221,8 @@ export const ItemDetail = ({ navigation, route }: Props) => {
             </Text>
             <Text style={texts.x2l}>{t('00:00')}</Text>
           </View>
-        ) : null}
+        )}
       </ScrollView>
-      {isAcceptingOrders ? (
-        <View>
-          <HR />
-          <PaddedView>
-            <ItemQuantity
-              style={{ marginBottom: padding }}
-              value={quantity}
-              minimum={itemId ? 0 : 1}
-              title={`${t('Adicionar')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
-              disabled={!canAddItemToOrder}
-              onChange={(value) => setQuantity(value)}
-              onSubmit={addItemToOrder}
-            />
-          </PaddedView>
-        </View>
-      ) : null}
     </View>
   );
 };
