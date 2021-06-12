@@ -1,4 +1,5 @@
 import { Feather } from '@expo/vector-icons';
+import * as cnpjutils from '@fnando/cnpj';
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -99,10 +100,12 @@ export const AboutRestaurant = ({ route }: Props) => {
             {t('CEP: ')}
             {restaurant.businessAddress.cep}
           </Text>
-          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 32 }}>
-            {t('CNPJ ')}
-            {restaurant.cnpj}
-          </Text>
+          {restaurant.cnpj ? (
+            <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 32 }}>
+              {t('CNPJ ')}
+              {cnpjutils.format(restaurant.cnpj)}
+            </Text>
+          ) : null}
         </View>
       </View>
     </ScrollView>
