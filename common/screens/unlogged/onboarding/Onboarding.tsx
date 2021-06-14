@@ -78,8 +78,9 @@ export const Onboarding = ({ navigation, route }: Props) => {
       setLoading(true);
       try {
         if (flavor === 'courier') {
-          await api.profile().updateProfile(user.uid, { onboarded: true });
-          navigation.replace('ProfilePending');
+          // await api.profile().updateProfile(user.uid, { onboarded: true });
+          // navigation.replace('ProfilePending');
+          navigation.navigate('ProfileSubmitted');
         } else {
           await api.profile().updateProfile(user.uid, { onboarded: true, city, state });
           navigation.replace('RegistrationSubmitted');

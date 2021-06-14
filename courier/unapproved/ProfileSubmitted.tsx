@@ -4,16 +4,19 @@ import React from 'react';
 import { Image, Linking, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import YoutubePlayer from 'react-native-youtube-iframe';
 import { useSelector } from 'react-redux';
 import { greenCheck } from '../../assets/icons';
 import { ApiContext } from '../../common/app/context';
+import PaddedView from '../../common/components/containers/PaddedView';
+import ConfigItem from '../../common/components/views/ConfigItem';
 import HR from '../../common/components/views/HR';
 import { IconMotocycleBeta } from '../../common/icons/icon-motocycle-beta';
 import HomeShareCard from '../../common/screens/home/cards/HomeShareCard';
 import { SocialMediaCard } from '../../common/screens/home/cards/SocialMediaCard';
 import { useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
-import { colors, padding, screens, texts } from '../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../common/styles';
 import { t } from '../../strings';
 import { FreshDeskCard } from '../approved/main/home/FreshDeskCard';
 import { UnapprovedParamList } from './types';
@@ -31,22 +34,31 @@ export default function ({ navigation }: Props) {
   const api = React.useContext(ApiContext);
   // redux
   const courier = useSelector(getCourier)!;
+  // screen state
+  const [playing, setPlaying] = React.useState(false);
+
   // side effects
   // tracking
   useSegmentScreen('Profile Submitted');
-  React.useEffect(() => {
-    if (courier.situation === 'submitted') {
-      // api.courier().verifyProfile();
-    } else if (courier.situation === 'pending') {
-      setTimeout(() => {
-        navigation.replace('ProfilePending');
-      }, 100);
-    } else if (courier.situation === 'rejected') {
-      setTimeout(() => {
-        navigation.replace('ProfileRejected');
-      }, 100);
+  // React.useEffect(() => {
+  //   if (courier.situation === 'submitted') {
+  //     // api.courier().verifyProfile();
+  //   } else if (courier.situation === 'pending') {
+  //     setTimeout(() => {
+  //       navigation.replace('ProfilePending');
+  //     }, 100);
+  //   } else if (courier.situation === 'rejected') {
+  //     setTimeout(() => {
+  //       navigation.replace('ProfileRejected');
+  //     }, 100);
+  //   }
+  // }, [courier, navigation, api]);
+  // handlers
+  const onPlaying = React.useCallback((state) => {
+    if (state === 'ended') {
+      setPlaying(false);
     }
-  }, [courier, navigation, api]);
+  }, []);
 
   // UI
   return (
@@ -65,139 +77,54 @@ export default function ({ navigation }: Props) {
               {t('Cadastro enviado para o\n período de testes!')}
             </Text>
           </View>
-          <Text style={{ ...texts.md, marginTop: 32 }}>
-            {t(
-              'Nós avisaremos assim que o período de testes começar para que você possa fazer as corridas. O início será nas próximas semanas. '
-            )}
-          </Text>
-          <Text style={{ ...texts.md, marginTop: 32, marginBottom: 48 }}>
+        </View>
+        <PaddedView>
+          <Text style={{ ...texts.lg }}>
             {t('Enquanto isso, aproveite para conhecer mais sobre o AppJusto:')}
           </Text>
-        </View>
-        <View style={{ paddingHorizontal: padding }}>
-          <View
-            style={{
-              marginTop: 48,
-              marginBottom: padding,
-              flexDirection: 'row',
-            }}
-          >
-            <Image source={greenCheck} />
-            <Text style={{ ...texts.xl, marginLeft: padding }}>
-              {t('Sobre o período de testes')}
-            </Text>
+          <View style={{ marginTop: padding }}>
+            <YoutubePlayer
+              height={200}
+              play={playing}
+              videoId="QM81nPxGBXQ" // add the courier video
+              onChangeState={onPlaying}
+              webViewStyle={{ borderRadius: halfPadding }}
+            />
           </View>
-          <Text style={{ ...texts.md }}>
-            {t(
-              'O AppJusto não terá barreiras por região, então você poderá aceitar corridas em qualquer cidade do Brasil.'
-            )}
-          </Text>
-          <Text style={{ ...texts.md, marginTop: 32, marginBottom: 48 }}>
-            {t(
-              'No início concentraremos nossos esforços para gerar pedidos na região central de São Paulo, e iremos expandir para os locais em que houverem mais cadastros.'
-            )}
-          </Text>
+        </PaddedView>
+        <View>
+          <HR color={colors.grey500} />
+          <ConfigItem
+            title={t('Sobre o período de testes')}
+            subtitle={t('Saiba como acontecerão os testes')}
+            onPress={() => null}
+          />
+          <ConfigItem
+            title={t('Saiba como acontecerão os testes')}
+            subtitle={t('Veja como você define o preço')}
+            onPress={() => null}
+          />
+          <ConfigItem
+            title={t('Transparência')}
+            subtitle={t('Saiba sobre os valores recebidos ')}
+            onPress={() => null}
+          />
+          <ConfigItem
+            title={t('Sem bloqueios automáticos')}
+            subtitle={t('Entenda o motivo de não termos Score')}
+            onPress={() => null}
+          />
+          <ConfigItem
+            title={t('Fique disponível para corridas')}
+            subtitle={t('Saiba como ajudar o movimento')}
+            onPress={() => null}
+          />
+          <ConfigItem
+            title={t('Central de Ajuda')}
+            subtitle={t('Conheças as regras e saiba mais sobre o AppJusto')}
+            onPress={() => null}
+          />
         </View>
-        <HR color={colors.grey500} />
-        <View style={{ paddingHorizontal: padding }}>
-          <View
-            style={{
-              marginTop: 48,
-              marginBottom: padding,
-              flexDirection: 'row',
-            }}
-          >
-            <Image source={greenCheck} />
-            <Text style={{ ...texts.xl, marginLeft: padding }}>{t('Autonomia e preço justo')}</Text>
-          </View>
-          <Text style={{ ...texts.md }}>
-            {t(
-              'No AppJusto você pode definir o valor cobrado pelo seu serviço criando uma frota ou escolhendo aquela que é mais justa para você.'
-            )}
-          </Text>
-          <Text style={{ ...texts.md, marginTop: 32 }}>
-            {t(
-              'Ao começar, você estará na frota AppJusto, em que sua remuneração será de R$ 10,00 até 5km e mais R$ 2,00 por km adicional. Você pode mudar para outra frota quando quiser!'
-            )}
-          </Text>
-          <Text style={{ ...texts.md, marginTop: 32, marginBottom: 48 }}>
-            {t(
-              'Aqui no AppJusto não ganhamos nada em cima das entregas: o cliente paga direto para você, apenas com a taxa financeira sendo descontada.'
-            )}
-          </Text>
-        </View>
-        <HR color={colors.grey500} />
-        <View style={{ paddingHorizontal: padding }}>
-          <View
-            style={{
-              marginTop: 48,
-              marginBottom: padding,
-              flexDirection: 'row',
-            }}
-          >
-            <Image source={greenCheck} />
-            <Text style={{ ...texts.xl, marginLeft: padding }}>{t('Transparência')}</Text>
-          </View>
-          <Text style={{ ...texts.md }}>
-            {t(
-              'Nas outras plataformas você recebe sem saber o que foi descontado. Aqui nós sempre vamos te informar de todas as cobranças. Quem tem maquininha sabe que toda transação digital tem taxa, e a nossa é uma das menores do mercado.'
-            )}
-          </Text>
-          <Text style={{ ...texts.md, marginTop: 32 }}>
-            {t(
-              '\u00B7 A taxa financeira é de 2,21% + R$ 0,09 por cartão de crédito ou 0,99% por Pix. Por exemplo: em uma corrida de R$ 10,00 recebida por cartão, você receberá R$ 9,68. Essa diferença não fica pra gente. É o custo da transação na instituição financeira'
-            )}
-          </Text>
-          <Text style={{ ...texts.md, marginTop: 32 }}>
-            {t(
-              '\u00B7 Os pagamentos por cartão de crédito serão recebidos em 30 dias e os por Pix no mesmo dia'
-            )}
-          </Text>
-          <Text style={{ ...texts.md, marginTop: 32 }}>
-            {t(
-              '\u00B7 Por causa dessa taxa menor e do recebimento rápido, vamos incentivar que os clientes paguem por Pix.'
-            )}
-          </Text>
-          <Text style={{ ...texts.md, marginTop: 32 }}>
-            {t('\u00B7 Antecipações podem ser feitas com uma taxa de 2,5%.')}
-          </Text>
-          <Text style={{ ...texts.md, marginTop: 32, marginBottom: 48 }}>
-            {t(
-              '\u00B7 Para transferir para a sua conta o custo é de R$ 2,00. Em breve, teremos transferências grátis por Pix!'
-            )}
-          </Text>
-        </View>
-        <HR color={colors.grey500} />
-        <View style={{ marginHorizontal: padding }}>
-          <View
-            style={{
-              marginTop: 48,
-              marginBottom: padding,
-              flexDirection: 'row',
-            }}
-          >
-            <Image source={greenCheck} />
-            <Text style={{ ...texts.xl, marginLeft: padding }}>
-              {t('Sem suspensões e bloqueios\n automáticos')}
-            </Text>
-          </View>
-          <Text style={{ ...texts.md }}>
-            {t(
-              'Como os problemas de uma entrega podem ser causados por muitas situações como acidentes, falta de informação cedida pelos clientes, ou fraudes, achamos que o bloqueio automático é injusto.'
-            )}
-          </Text>
-          <Text style={{ ...texts.md, marginTop: 32 }}>
-            {t(
-              'Sempre haverá uma pessoa real apurando os fatos antes que qualquer medida seja tomada.'
-            )}
-          </Text>
-          <Text style={{ ...texts.md, marginTop: 32, marginBottom: 48 }}>
-            {t(
-              'No AppJusto também não temos score: você trabalha da maneira que achar adequada e recebe os pedidos que te beneficiarem.'
-            )}
-          </Text>
-        </View>
-        <HR color={colors.grey500} />
         <View style={{ marginHorizontal: padding }}>
           <View
             style={{

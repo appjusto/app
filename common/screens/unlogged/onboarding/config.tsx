@@ -61,6 +61,7 @@ export const consumer: ScreenConfig[] = [
 export interface RegistrationSubmittedConfig {
   header: string;
   body: string;
+  button?: boolean;
 }
 
 export const registrationSubmitted: RegistrationSubmittedConfig[] = [
@@ -81,5 +82,24 @@ export const registrationSubmitted: RegistrationSubmittedConfig[] = [
     body: t(
       'Cobramos a menor taxa dos restaurantes para que eles possam oferecer preços menores. Nos outros apps, o custo é alto e acaba sendo repassado aos clientes.'
     ),
+  },
+];
+export const profileSubmitted: RegistrationSubmittedConfig[] = [
+  {
+    header: t('Com paciência vai dar certo'),
+    body: t(
+      'Ainda não temos previsão para o início das operações. Isso ocorrerá quando iniciarem os pedidos na plataforma. Fique tranquilo que vamos te avisar!'
+    ),
+  },
+  {
+    header: t('Aprovações durante o beta'),
+    body: t(
+      'Aprovações ocorrerão de acordo com o aumento de pedidos. Entraremos em contato para verificar seu interesse em começar com a gente.'
+    ),
+  },
+  {
+    header: t('Acompanhe as novidades'),
+    body: t('Adicione o nosso número no WhatsApp para atualizações:'),
+    button: true,
   },
 ];

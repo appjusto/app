@@ -62,7 +62,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
       setStep(position);
     }
   };
-  const onStateChange = React.useCallback((state) => {
+  const onPlaying = React.useCallback((state) => {
     if (state === 'ended') {
       setPlaying(false);
     }
@@ -162,7 +162,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
               height={200}
               play={playing}
               videoId="QM81nPxGBXQ"
-              onChangeState={onStateChange}
+              onChangeState={onPlaying}
               webViewStyle={{ borderRadius: halfPadding }}
             />
           </PaddedView>
