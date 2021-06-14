@@ -34,13 +34,23 @@ export default class ProfileApi {
   // observe profile changes
   observeProfile(
     id: string,
-    resultHandler: (profile: WithId<UserProfile>, hasPendingWrites: boolean) => void
+    resultHandler: (profile: WithId<UserProfile>) => void
   ): firebase.Unsubscribe {
     const unsubscribe = this.getProfileRef(id).onSnapshot(
-      async (doc) => {
+      async (snapshot) => {
         // ensure profile exists
-        if (!doc.exists) await this.createProfile(id);
-        else resultHandler(documentAs<UserProfile>(doc), doc.metadata.hasPendingWrites);
+        if (!snapshot.exists) {
+          const unsub = this.getProfileRef(id).onSnapshot(
+            { includeMetadataChanges: true },
+            (snapshotWithMetadata) => {
+              if (!snapshotWithMetadata.metadata.hasPendingWrites) {
+                resultHandler(documentAs<UserProfile>(snapshotWithMetadata));
+                unsub();
+              }
+            }
+          );
+          await this.createProfile(id);
+        } else resultHandler(documentAs<UserProfile>(snapshot));
       },
       (error) => {
         console.log(error);

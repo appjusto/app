@@ -23,7 +23,7 @@ import LabeledText from '../../../components/texts/LabeledText';
 import { getFlavor } from '../../../store/config/selectors';
 import { getConsumer } from '../../../store/consumer/selectors';
 import { getCourier } from '../../../store/courier/selectors';
-import { getUser, hasPendingWrites } from '../../../store/user/selectors';
+import { getUser } from '../../../store/user/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../styles';
 import * as config from './config';
 
@@ -44,7 +44,6 @@ export const Onboarding = ({ navigation, route }: Props) => {
   // redux store
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser)!;
-  const pendingWrite = useSelector(hasPendingWrites);
   const courier = useSelector(getCourier);
   const consumer = useSelector(getConsumer);
   // state
@@ -54,10 +53,6 @@ export const Onboarding = ({ navigation, route }: Props) => {
   const [state, setState] = React.useState('');
   const [city, setCity] = React.useState('');
   // effects
-  React.useEffect(() => {
-    setLoading(pendingWrite);
-  }, [user, pendingWrite]);
-
   React.useEffect(() => {
     if (route.params?.state) {
       setState(route.params.state);
@@ -172,7 +167,7 @@ export const Onboarding = ({ navigation, route }: Props) => {
           title={step === steps.length - 1 ? t('Começar') : t('Avançar')}
           style={{ marginTop: 32, marginBottom: padding, marginHorizontal: padding }}
           onPress={advanceHandler}
-          disabled={flavor === 'consumer' && step === 2 ? isLoading || !city : isLoading}
+          disabled={isLoading || (flavor === 'consumer' && !city && step === 2)}
           activityIndicator={isLoading}
         />
       </SafeAreaView>
