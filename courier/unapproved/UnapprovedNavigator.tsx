@@ -17,7 +17,11 @@ import CreateFleet from '../approved/main/profile/fleet/CreateFleet';
 import ProfilePhotos from '../approved/main/profile/photos/ProfilePhotos';
 import ProfileCompany from '../approved/main/profile/ProfileCompany';
 import ProfileEdit from '../approved/main/profile/ProfileEdit';
+import { AboutAutonomy } from './AboutAutonomy';
+import { AboutBeAvailable } from './AboutBeAvailable';
+import { AboutNoScore } from './AboutNoScore';
 import { AboutTests } from './AboutTests';
+import { AboutTransparency } from './AboutTransparency';
 import ProfilePending from './ProfilePending';
 import ProfileRejected from './ProfileRejected';
 import ProfileSubmitted from './ProfileSubmitted';
@@ -95,6 +99,26 @@ export default function () {
         name="AboutTests"
         component={AboutTests}
         options={{ title: t('Sobre o período de testes') }}
+      />
+      <Stack.Screen
+        name="AboutAutonomy"
+        component={AboutAutonomy}
+        options={{ title: t('Autonomia e preço justo') }}
+      />
+      <Stack.Screen
+        name="AboutTransparency"
+        component={AboutTransparency}
+        options={{ title: t('Transparência') }}
+      />
+      <Stack.Screen
+        name="AboutNoScore"
+        component={AboutNoScore}
+        options={{ title: t('Sem bloqueios automáticos') }}
+      />
+      <Stack.Screen
+        name="AboutBeAvailable"
+        component={AboutBeAvailable}
+        options={{ title: t('Fique disponível para corridas') }}
       />
       <Stack.Screen
         name="AboutApp"

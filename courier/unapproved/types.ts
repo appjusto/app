@@ -7,5 +7,9 @@ export type UnapprovedParamList = {
   ProfileRejected: undefined;
   CourierOnboarding: undefined;
   AboutTests: undefined;
+  AboutAutonomy: undefined;
+  AboutTransparency: undefined;
+  AboutNoScore: undefined;
+  AboutBeAvailable: undefined;
 } & CourierProfileParamList &
   PermissionDeniedParamList;

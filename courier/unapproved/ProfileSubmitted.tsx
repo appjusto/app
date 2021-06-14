@@ -156,7 +156,7 @@ export default function ({ navigation }: Props) {
             <YoutubePlayer
               height={200}
               play={playing}
-              videoId="QM81nPxGBXQ" // add the courier video
+              videoId="KOD94Vn80-o"
               onChangeState={onPlaying}
               webViewStyle={{ borderRadius: halfPadding }}
             />
@@ -170,24 +170,24 @@ export default function ({ navigation }: Props) {
             onPress={() => navigation.navigate('AboutTests')}
           />
           <ConfigItem
-            title={t('Saiba como acontecerão os testes')}
+            title={t('Autonomia e preço justo')}
             subtitle={t('Veja como você define o preço')}
-            onPress={() => navigation.navigate('AboutTests')}
+            onPress={() => navigation.navigate('AboutAutonomy')}
           />
           <ConfigItem
             title={t('Transparência')}
             subtitle={t('Saiba sobre os valores recebidos ')}
-            onPress={() => navigation.navigate('AboutTests')}
+            onPress={() => navigation.navigate('AboutTransparency')}
           />
           <ConfigItem
             title={t('Sem bloqueios automáticos')}
             subtitle={t('Entenda o motivo de não termos Score')}
-            onPress={() => navigation.navigate('AboutTests')}
+            onPress={() => navigation.navigate('AboutNoScore')}
           />
           <ConfigItem
             title={t('Fique disponível para corridas')}
             subtitle={t('Saiba como ajudar o movimento')}
-            onPress={() => navigation.navigate('AboutTests')}
+            onPress={() => navigation.navigate('AboutBeAvailable')}
           />
           <ConfigItem
             title={t('Central de Ajuda')}
