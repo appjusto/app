@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import FleetDetail from '../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../common/screens/options';
 import { PermissionDenied } from '../../common/screens/PermissionDenied';
+import { AboutApp } from '../../common/screens/profile/AboutApp';
 import ProfileErase from '../../common/screens/profile/ProfileErase';
 import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
 import { getCourier } from '../../common/store/courier/selectors';
@@ -16,6 +17,7 @@ import CreateFleet from '../approved/main/profile/fleet/CreateFleet';
 import ProfilePhotos from '../approved/main/profile/photos/ProfilePhotos';
 import ProfileCompany from '../approved/main/profile/ProfileCompany';
 import ProfileEdit from '../approved/main/profile/ProfileEdit';
+import { AboutTests } from './AboutTests';
 import ProfilePending from './ProfilePending';
 import ProfileRejected from './ProfileRejected';
 import ProfileSubmitted from './ProfileSubmitted';
@@ -88,6 +90,16 @@ export default function () {
         name="ProfileSubmitted"
         component={ProfileSubmitted}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AboutTests"
+        component={AboutTests}
+        options={{ title: t('Sobre o período de testes') }}
+      />
+      <Stack.Screen
+        name="AboutApp"
+        component={AboutApp}
+        options={{ title: t('Sobre o AppJusto') }}
       />
       <Stack.Screen
         name="ProfileRejected"

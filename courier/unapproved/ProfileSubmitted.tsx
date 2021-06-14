@@ -2,12 +2,13 @@ import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-communi
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { NativeSyntheticEvent, Text, View } from 'react-native';
+import { Linking, NativeSyntheticEvent, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../common/app/context';
+import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
 import HR from '../../common/components/views/HR';
@@ -36,7 +37,7 @@ export default function ({ navigation }: Props) {
   const courier = useSelector(getCourier)!;
   // screen state
   const [playing, setPlaying] = React.useState(false);
-  const steps = config.registrationSubmitted;
+  const steps = config.profileSubmitted;
   const [step, setStep] = React.useState(0);
   // refs
   const viewPager = React.useRef<ViewPager>(null);
@@ -93,7 +94,7 @@ export default function ({ navigation }: Props) {
               style={{ width: '100%', height: 200 }}
               onPageScroll={onPageScroll}
             >
-              {steps.map(({ header, body }, index) => (
+              {steps.map(({ header, body, button }, index) => (
                 <View key={index} style={{ paddingHorizontal: halfPadding }}>
                   <View
                     style={{
@@ -109,6 +110,14 @@ export default function ({ navigation }: Props) {
                   >
                     <Text style={[texts.md, texts.bold]}>{header}</Text>
                     <Text style={{ ...texts.md, marginTop: padding }}>{body}</Text>
+                    {button && (
+                      <DefaultButton
+                        secondary
+                        title={t('Adicionar (11) 97215-9106')}
+                        onPress={() => Linking.openURL('https://wa.me/551199177-3353')}
+                        style={{ width: '100%', paddingTop: padding }}
+                      />
+                    )}
                   </View>
                 </View>
               ))}
@@ -158,32 +167,32 @@ export default function ({ navigation }: Props) {
           <ConfigItem
             title={t('Sobre o período de testes')}
             subtitle={t('Saiba como acontecerão os testes')}
-            onPress={() => null}
+            onPress={() => navigation.navigate('AboutTests')}
           />
           <ConfigItem
             title={t('Saiba como acontecerão os testes')}
             subtitle={t('Veja como você define o preço')}
-            onPress={() => null}
+            onPress={() => navigation.navigate('AboutTests')}
           />
           <ConfigItem
             title={t('Transparência')}
             subtitle={t('Saiba sobre os valores recebidos ')}
-            onPress={() => null}
+            onPress={() => navigation.navigate('AboutTests')}
           />
           <ConfigItem
             title={t('Sem bloqueios automáticos')}
             subtitle={t('Entenda o motivo de não termos Score')}
-            onPress={() => null}
+            onPress={() => navigation.navigate('AboutTests')}
           />
           <ConfigItem
             title={t('Fique disponível para corridas')}
             subtitle={t('Saiba como ajudar o movimento')}
-            onPress={() => null}
+            onPress={() => navigation.navigate('AboutTests')}
           />
           <ConfigItem
             title={t('Central de Ajuda')}
             subtitle={t('Conheças as regras e saiba mais sobre o AppJusto')}
-            onPress={() => null}
+            onPress={() => navigation.navigate('AboutApp')}
           />
         </View>
         <PaddedView>

@@ -99,7 +99,7 @@ export const profileSubmitted: RegistrationSubmittedConfig[] = [
   },
   {
     header: t('Acompanhe as novidades'),
-    body: t('Adicione o nosso número no WhatsApp para atualizações:'),
+    body: t('Adicione o nosso número no\n WhatsApp para atualizações:'),
     button: true,
   },
 ];
