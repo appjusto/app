@@ -1,12 +1,13 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
+import { View } from 'react-native';
 import * as Sentry from 'sentry-expo';
 import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
-import { borders, colors, padding } from '../../../common/styles';
+import { padding } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
 import { OngoingOrderNavigatorParamList } from './types';
@@ -53,18 +54,30 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
       )}
       icon={<IconConeYellow />}
     >
-      <DefaultButton
-        title={t('Tentar novamente')}
-        onPress={tryAgainHandler}
-        activityIndicator={isLoading}
-        disabled={isLoading}
+      <View
         style={{
-          ...borders.default,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           marginBottom: padding,
-          borderColor: colors.black,
-          backgroundColor: 'white',
         }}
-      />
+      >
+        <DefaultButton
+          title={t('Tentar novamente')}
+          onPress={tryAgainHandler}
+          activityIndicator={isLoading}
+          disabled={isLoading}
+          secondary
+        />
+
+        <DefaultButton
+          title={t('Cancelar pedido')}
+          onPress={() => navigation.navigate('OngoingOrderConfirmCancel', { orderId })}
+          activityIndicator={isLoading}
+          disabled={isLoading}
+          secondary
+        />
+      </View>
       <DefaultButton
         title={t('Voltar para o início')}
         onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
