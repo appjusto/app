@@ -1,12 +1,12 @@
+import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Image, Linking, Text, View } from 'react-native';
+import { NativeSyntheticEvent, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import { useSelector } from 'react-redux';
-import { greenCheck } from '../../assets/icons';
 import { ApiContext } from '../../common/app/context';
 import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
@@ -14,11 +14,11 @@ import HR from '../../common/components/views/HR';
 import { IconMotocycleBeta } from '../../common/icons/icon-motocycle-beta';
 import HomeShareCard from '../../common/screens/home/cards/HomeShareCard';
 import { SocialMediaCard } from '../../common/screens/home/cards/SocialMediaCard';
+import * as config from '../../common/screens/unlogged/onboarding/config';
 import { useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
-import { colors, halfPadding, padding, screens, texts } from '../../common/styles';
+import { borders, colors, halfPadding, padding, screens, texts } from '../../common/styles';
 import { t } from '../../strings';
-import { FreshDeskCard } from '../approved/main/home/FreshDeskCard';
 import { UnapprovedParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<UnapprovedParamList, 'ProfileSubmitted'>;
@@ -36,7 +36,10 @@ export default function ({ navigation }: Props) {
   const courier = useSelector(getCourier)!;
   // screen state
   const [playing, setPlaying] = React.useState(false);
-
+  const steps = config.registrationSubmitted;
+  const [step, setStep] = React.useState(0);
+  // refs
+  const viewPager = React.useRef<ViewPager>(null);
   // side effects
   // tracking
   useSegmentScreen('Profile Submitted');
@@ -54,6 +57,13 @@ export default function ({ navigation }: Props) {
   //   }
   // }, [courier, navigation, api]);
   // handlers
+  const onPageScroll = (ev: NativeSyntheticEvent<ViewPagerOnPageScrollEventData>) => {
+    const { nativeEvent } = ev;
+    const { position } = nativeEvent;
+    if (position !== step) {
+      setStep(position);
+    }
+  };
   const onPlaying = React.useCallback((state) => {
     if (state === 'ended') {
       setPlaying(false);
@@ -76,6 +86,57 @@ export default function ({ navigation }: Props) {
             <Text style={{ ...texts.x2l, marginTop: 32 }}>
               {t('Cadastro enviado para o\n período de testes!')}
             </Text>
+          </View>
+          <View style={{ marginTop: 24, marginBottom: padding }}>
+            <ViewPager
+              ref={viewPager}
+              style={{ width: '100%', height: 200 }}
+              onPageScroll={onPageScroll}
+            >
+              {steps.map(({ header, body }, index) => (
+                <View key={index} style={{ paddingHorizontal: halfPadding }}>
+                  <View
+                    style={{
+                      ...borders.default,
+                      backgroundColor: colors.white,
+                      borderColor: colors.white,
+                      padding: 24,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flex: 1,
+                      height: 200,
+                    }}
+                  >
+                    <Text style={[texts.md, texts.bold]}>{header}</Text>
+                    <Text style={{ ...texts.md, marginTop: padding }}>{body}</Text>
+                  </View>
+                </View>
+              ))}
+            </ViewPager>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flex: 1,
+            }}
+          >
+            {new Array(steps.length).fill('').map((_, i) => (
+              <View
+                style={{
+                  height: halfPadding,
+                  width: halfPadding,
+                  ...borders.default,
+                  borderColor: step === i ? colors.black : colors.white,
+                  borderRadius: 4,
+                  backgroundColor: step === i ? colors.black : colors.white,
+                  marginRight: halfPadding,
+                  marginBottom: 24,
+                }}
+                key={i}
+              />
+            ))}
           </View>
         </View>
         <PaddedView>
@@ -125,90 +186,20 @@ export default function ({ navigation }: Props) {
             onPress={() => null}
           />
         </View>
-        <View style={{ marginHorizontal: padding }}>
-          <View
-            style={{
-              marginTop: 48,
-              marginBottom: padding,
-              flexDirection: 'row',
-            }}
-          >
-            <Image source={greenCheck} />
-            <Text style={{ ...texts.xl, marginLeft: padding }}>
-              {t('Fique sempre diponível para\n aceitar corridas e indique para todos')}
-            </Text>
-          </View>
-          <Text style={{ ...texts.md }}>
-            {t(
-              'Quanto mais consumidores satisfeitos, mais pedidos. E mais você poderá receber o valor que é justo pelo seu trabalho.'
-            )}
-          </Text>
-          <Text style={{ ...texts.md, marginTop: 32 }}>
-            {t(
-              'Para termos mais pedidos, contamos com os entregadores para receber os pedidos que tocarem e para divulgar a plataforma com outros entregadores.'
-            )}
-          </Text>
-          <Text style={{ ...texts.md, marginTop: 32, marginBottom: 48 }}>
-            {t(' Comece a divulgar agora mesmo!')}
-          </Text>
-        </View>
-        <View style={{ marginBottom: 48, paddingHorizontal: padding }}>
-          <HomeShareCard
-            title="Divulgue o AppJusto"
-            subtitle="Compartilhe esse movimento por uma economia mais justa."
-          />
-        </View>
-        <HR color={colors.grey500} />
-        <View style={{ marginHorizontal: padding }}>
-          <View
-            style={{
-              marginTop: 48,
-              marginBottom: 32,
-              flexDirection: 'row',
-            }}
-          >
-            <Image source={greenCheck} />
-            <Text style={{ ...texts.xl, marginLeft: padding }}>
-              {t('Atualize-se do movimento!')}
-            </Text>
-          </View>
-          <Text style={{ ...texts.md, marginBottom: 48 }}>
-            {t(
-              'Siga o @appjusto nas redes sociais e participe da linha de transmissão no WhatsApp, enviando seu nome para o número +55 11 99177-3353.'
-            )}
-          </Text>
-          <SocialMediaCard app="instagram" />
-          <View style={{ marginVertical: padding, marginBottom: 48 }}>
-            <SocialMediaCard app="whatsapp" />
-          </View>
-        </View>
-        <HR color={colors.grey500} />
-        <View style={{ marginHorizontal: padding }}>
-          <View
-            style={{
-              marginTop: 48,
-              marginBottom: 32,
-              flexDirection: 'row',
-            }}
-          >
-            <Image source={greenCheck} />
-            <Text style={{ ...texts.xl, marginLeft: padding }}>{t('Ficou alguma dúvida?')}</Text>
-          </View>
-          <Text style={{ ...texts.md, marginBottom: 48 }}>
-            {t(
-              'Acesse nossa Central de ajuda e veja todo o material de suporte que preparamos para você.'
-            )}
-          </Text>
-          <View style={{ marginBottom: 48 }}>
-            <FreshDeskCard
-              onPress={() =>
-                Linking.openURL(
-                  'https://appjusto.freshdesk.com/support/solutions/folders/67000533349'
-                )
-              }
+        <PaddedView>
+          <View style={{ marginBottom: padding }}>
+            <HomeShareCard
+              title="Divulgue o AppJusto"
+              subtitle="Clique para compartilhar esse movimento nas suas redes"
             />
           </View>
-        </View>
+          <View style={{ marginBottom: padding }}>
+            <SocialMediaCard app="whatsapp" />
+          </View>
+          <View>
+            <SocialMediaCard app="instagram" />
+          </View>
+        </PaddedView>
       </ScrollView>
     </SafeAreaView>
   );
