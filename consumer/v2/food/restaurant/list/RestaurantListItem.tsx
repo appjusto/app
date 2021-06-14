@@ -44,7 +44,7 @@ export const RestaurantListItem = ({ restaurant, cuisine, distance, secondary }:
           {distance && outOfRange ? (
             <View style={{ marginTop: halfPadding }}>
               <RoundedText backgroundColor={colors.grey50} color={colors.grey700} noBorder>
-                {`${t('Raio de entrega: ')} ${formatDistance(restaurant.deliveryRange!)}`}
+                {`${t('Fora do raio de entrega de')} ${formatDistance(restaurant.deliveryRange!)}`}
               </RoundedText>
             </View>
           ) : null}

@@ -48,8 +48,28 @@ export const LocationBar = () => {
     // select from current location
     else if (coords) {
       dispatch(updateCurrentLocation(coords));
+    } else {
+      // Instituto Tomie Ohtake
+      // dispatch(
+      //   updateCurrentLocation({
+      //     latitude: -23.560631640364686,
+      //     longitude: -46.69466297049767,
+      //   })
+      // );
+      // dispatch(
+      //   updateCurrentPlace({
+      //     address: {
+      //       main: 'Pinheiros',
+      //       secondary: '',
+      //       description: '',
+      //     },
+      //     location: coords,
+      //   })
+      // );
+    }
+    if (currentLocation && !currentPlace) {
       (async () => {
-        const address = await api.maps().googleReverseGeocode(coords);
+        const address = await api.maps().googleReverseGeocode(currentLocation);
         if (address)
           dispatch(
             updateCurrentPlace({
@@ -59,7 +79,7 @@ export const LocationBar = () => {
           );
       })();
     }
-  }, [consumer, currentPlace, coords]);
+  }, [consumer, currentPlace, coords, currentLocation, api, dispatch]);
   // UI
   return (
     <View
