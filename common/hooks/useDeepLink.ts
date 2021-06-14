@@ -1,15 +1,16 @@
-// import Constants from 'expo-constants';
 import * as Linking from 'expo-linking';
-import { useEffect, useState } from 'react';
-// import { Platform, ToastAndroid } from 'react-native';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../app/context';
 
 export default function () {
+  const dispatch = useDispatch<AppDispatch>();
   // state
-  const [deepLink, setDeeplink] = useState<string | undefined | null>(undefined);
+  const [deeplink, setDeeplink] = React.useState<string | null>();
 
   // side effects
   // once
-  useEffect(() => {
+  React.useEffect(() => {
     Linking.getInitialURL().then((value) => {
       setDeeplink(value);
     });
@@ -19,7 +20,7 @@ export default function () {
     Linking.addEventListener('url', handler);
 
     return () => Linking.removeEventListener('url', handler);
-  }, []);
+  }, [dispatch]);
 
-  return deepLink;
+  return deeplink;
 }

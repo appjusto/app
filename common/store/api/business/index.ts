@@ -16,6 +16,12 @@ export default class BusinessApi {
   constructor(private refs: FirebaseRefs, private files: FilesApi) {}
 
   // firestore
+  async fetchBusinessWithCode(code: string) {
+    const ref = this.refs.getBusinessesRef().where('code', '==', code).limit(1);
+    const snapshot = await ref.get();
+    if (snapshot.empty) return null;
+    return documentAs<Business>(snapshot.docs[0]);
+  }
   observeBusiness(businessId: string, resultHandler: (business: WithId<Business>) => void) {
     const ref = this.refs.getBusinessRef(businessId);
     const unsubscribe = ref.onSnapshot(
