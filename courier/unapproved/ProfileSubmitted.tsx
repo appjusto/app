@@ -44,19 +44,19 @@ export default function ({ navigation }: Props) {
   // side effects
   // tracking
   useSegmentScreen('Profile Submitted');
-  // React.useEffect(() => {
-  //   if (courier.situation === 'submitted') {
-  //     // api.courier().verifyProfile();
-  //   } else if (courier.situation === 'pending') {
-  //     setTimeout(() => {
-  //       navigation.replace('ProfilePending');
-  //     }, 100);
-  //   } else if (courier.situation === 'rejected') {
-  //     setTimeout(() => {
-  //       navigation.replace('ProfileRejected');
-  //     }, 100);
-  //   }
-  // }, [courier, navigation, api]);
+  React.useEffect(() => {
+    if (courier.situation === 'submitted') {
+      // api.courier().verifyProfile();
+    } else if (courier.situation === 'pending') {
+      setTimeout(() => {
+        navigation.replace('ProfilePending');
+      }, 100);
+    } else if (courier.situation === 'rejected') {
+      setTimeout(() => {
+        navigation.replace('ProfileRejected');
+      }, 100);
+    }
+  }, [courier, navigation, api]);
   // handlers
   const onPageScroll = (ev: NativeSyntheticEvent<ViewPagerOnPageScrollEventData>) => {
     const { nativeEvent } = ev;
@@ -113,9 +113,9 @@ export default function ({ navigation }: Props) {
                     {button && (
                       <DefaultButton
                         secondary
-                        title={t('Adicionar (11) 97215-9106')}
+                        title={t('Adicionar')}
                         onPress={() => Linking.openURL('https://wa.me/551199177-3353')}
-                        style={{ width: '100%', paddingTop: padding }}
+                        style={{ marginTop: padding }}
                       />
                     )}
                   </View>
