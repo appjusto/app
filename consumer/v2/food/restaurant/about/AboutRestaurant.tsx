@@ -34,10 +34,12 @@ export const AboutRestaurant = ({ route }: Props) => {
       <RestaurantHeader restaurant={restaurant} />
       <View style={{ marginTop: padding, padding }}>
         <Text style={{ ...texts.sm }}>{restaurant.description}</Text>
-        <Text style={{ marginTop: padding, ...texts.sm, color: colors.grey700 }}>
-          {t('Valor mínimo de pedido ')}
-          {formatCurrency(restaurant.minimumOrder ?? 0)}
-        </Text>
+        {restaurant.minimumOrder ? (
+          <Text style={{ marginTop: padding, ...texts.sm, color: colors.grey700 }}>
+            {t('Valor mínimo de pedido ')}
+            {formatCurrency(restaurant.minimumOrder ?? 0)}
+          </Text>
+        ) : null}
       </View>
       <View style={{ width: '100%', height: padding, backgroundColor: colors.grey50 }} />
       <View style={{ marginTop: padding, paddingHorizontal: padding, paddingBottom: padding }}>

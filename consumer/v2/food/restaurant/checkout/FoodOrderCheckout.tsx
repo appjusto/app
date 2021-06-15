@@ -113,7 +113,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       dispatch(showToast(t('CPF preenchido incorretamente. Por favor confira novamente')));
       return;
     }
-    if (getOrderTotal(order!) < restaurant.minimumOrder!) {
+    if (restaurant.minimumOrder && restaurant.minimumOrder > getOrderTotal(order!)) {
       setLoading(true);
       dispatch(
         showToast(
