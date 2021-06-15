@@ -20,6 +20,7 @@ import { FoodOrderNavigator } from './food/FoodOrderNavigator';
 import { LoggedContextProvider } from './LoggedContext';
 import { MainNavigator } from './main/MainNavigator';
 import ProfileNavigator from './main/profile/ProfileNavigator';
+import { OngoingOrderCancelFeedback } from './ongoing/OngoingOrderCancelFeedback';
 import { OngoingOrderNavigator } from './ongoing/OngoingOrderNavigator';
 import { P2POrderNavigator } from './p2p/P2POrderNavigator';
 import { LoggedNavigatorParamList } from './types';
@@ -109,6 +110,11 @@ export const LoggedNavigator = () => {
           name="PermissionDenied"
           component={PermissionDenied}
           options={{ title: t('Compartilhar sua localização') }}
+        />
+        <Stack.Screen
+          name="OngoingOrderCancelFeedback"
+          component={OngoingOrderCancelFeedback}
+          options={{ title: t('Pedido cancelado') }}
         />
       </Stack.Navigator>
     </LoggedContextProvider>

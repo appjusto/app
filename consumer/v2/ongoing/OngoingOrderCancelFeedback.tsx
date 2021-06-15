@@ -1,4 +1,4 @@
-import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
+import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -7,17 +7,16 @@ import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import { colors } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
-import { OngoingOrderNavigatorParamList } from './types';
 
-type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<OngoingOrderNavigatorParamList, 'OngoingOrderCancelFeedback'>,
-  StackNavigationProp<LoggedNavigatorParamList>
+type ScreenNavigationProp = StackNavigationProp<
+  LoggedNavigatorParamList,
+  'OngoingOrderCancelFeedback'
 >;
-type ScreenRouteProp = RouteProp<OngoingOrderNavigatorParamList, 'OngoingOrderCancelFeedback'>;
+type ScreenRouteProp = RouteProp<LoggedNavigatorParamList, 'OngoingOrderCancelFeedback'>;
 
 type Props = {
-  route: ScreenRouteProp;
   navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 };
 
 export const OngoingOrderCancelFeedback = ({ navigation, route }: Props) => {

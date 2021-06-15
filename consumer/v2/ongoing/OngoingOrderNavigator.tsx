@@ -8,7 +8,6 @@ import OrderCanceled from '../../../courier/approved/ongoing/OrderCanceled';
 import { t } from '../../../strings';
 import { OngoingOrderCourierDetail } from './courier-detail/OngoingOrderCourierDetail';
 import OngoingOrder from './OngoingOrder';
-import { OngoingOrderCancelFeedback } from './OngoingOrderCancelFeedback';
 import { OngoingOrderCancelOrder } from './OngoingOrderCancelOrder';
 import { OngoingOrderConfirmCancel } from './OngoingOrderConfirmCancel';
 import OngoingOrderFeedback from './OngoingOrderFeedback';
@@ -49,11 +48,6 @@ export const OngoingOrderNavigator = () => {
       <Stack.Screen
         name="OngoingOrderCancelOrder"
         component={OngoingOrderCancelOrder}
-        options={{ title: t('Cancelar pedido') }}
-      />
-      <Stack.Screen
-        name="OngoingOrderCancelFeedback"
-        component={OngoingOrderCancelFeedback}
         options={{ title: t('Cancelar pedido') }}
       />
       <Stack.Screen
