@@ -220,11 +220,9 @@ export const ItemDetail = ({ navigation, route }: Props) => {
             {getBusinessNextOpeningDay(business) ? (
               <>
                 <Text style={{ ...texts.xs, color: colors.grey700 }}>
-                  {`${t('Abriremos')} ${getBusinessNextOpeningDay(business)!.day} ${t('às')}`}
+                  {`${t('Abriremos')} ${getBusinessNextOpeningDay(business)![0]} ${t('às')}`}
                 </Text>
-                <Text style={texts.x2l}>
-                  {formatHour(getBusinessNextOpeningDay(business)!.schedule[0].from)}
-                </Text>
+                <Text style={texts.x2l}>{formatHour(getBusinessNextOpeningDay(business)![1])}</Text>
               </>
             ) : null}
           </View>
