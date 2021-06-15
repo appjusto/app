@@ -59,7 +59,10 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
   // handlers
   const finishHandler = () => {
     if (issueType === 'courier-delivery-problem') {
-      navigation.replace('OngoingDelivery', { orderId });
+      navigation.navigate('OngoingDeliveryNavigator', {
+        screen: 'OngoingDelivery',
+        params: { orderId },
+      });
     } else if (issueType === 'consumer-delivery-problem') {
       navigation.replace('OngoingOrder', { orderId });
     } else {
