@@ -19,6 +19,7 @@ if (__DEV__) {
     'Setting a timer',
     'Note: Native Sentry SDK is disabled',
     'Attempt to invoke interface method',
+    'Non-serializable values were found',
   ]);
 }
 

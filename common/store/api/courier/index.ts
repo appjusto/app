@@ -1,4 +1,5 @@
 import {
+  CourierOrderRequest,
   FetchTotalCouriersNearbyPayload,
   LatLng,
   Review,
@@ -6,6 +7,7 @@ import {
 } from '@appjusto/types';
 import Constants from 'expo-constants';
 import firebase from 'firebase';
+import * as Sentry from 'sentry-expo';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentsAs } from '../types';
@@ -18,6 +20,24 @@ export default class CourierApi {
   constructor(private refs: FirebaseRefs, private files: FilesApi) {}
 
   // firestore
+  observePendingRequests(
+    courierId: string,
+    resultHandler: (orders: CourierOrderRequest[]) => void
+  ): firebase.Unsubscribe {
+    const unsubscribe = this.refs
+      .getCourierRequestsRef(courierId)
+      .where('situation', '==', 'pending')
+      .orderBy('createdOn', 'desc')
+      .onSnapshot(
+        (querySnapshot) => resultHandler(documentsAs<CourierOrderRequest>(querySnapshot.docs)),
+        (error) => {
+          console.log(error);
+          Sentry.Native.captureException(error);
+        }
+      );
+    // returns the unsubscribe function
+    return unsubscribe;
+  }
   async addReview(courierId: string, review: Review) {
     await this.refs
       .getCourierReviewsRef(courierId)

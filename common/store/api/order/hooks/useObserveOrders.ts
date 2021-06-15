@@ -12,7 +12,7 @@ export const useObserveOrders = (options: ObserveOrdersOptions) => {
   // observe orders
   React.useEffect(() => {
     return api.order().observeOrders(options, setOrders);
-  }, []);
+  }, [api]);
   // result
   return orders;
 };

@@ -163,10 +163,7 @@ export default function ({ navigation, route }: Props) {
           ) : (
             <View style={{ flex: 1 }}>
               <OrderMap order={order} ratio={1} />
-              <StatusAndMessages
-                order={order}
-                onOpenChat={(from) => openChat(from.id, from.agent)}
-              />
+              <StatusAndMessages order={order} onPress={(from) => openChat(from.id, from.agent)} />
               <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
               <DefaultButton
                 title={t('Abrir chat com o entregador')}
@@ -227,10 +224,7 @@ export default function ({ navigation, route }: Props) {
           ) : (
             <View style={{ flex: 1 }}>
               <OrderMap order={order} ratio={1.2} />
-              <StatusAndMessages
-                order={order}
-                onOpenChat={(from) => openChat(from.id, from.agent)}
-              />
+              <StatusAndMessages order={order} onPress={(from) => openChat(from.id, from.agent)} />
               <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
               {/* pode estar causando o problema de clicar no topo - chat em 'food' */}
               <DefaultButton

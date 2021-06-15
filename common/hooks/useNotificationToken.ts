@@ -1,6 +1,7 @@
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
+import firebase from 'firebase';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
@@ -62,9 +63,10 @@ export default function (): Returntype {
   React.useEffect(() => {
     if (!user?.uid) return;
     if (shouldDeleteToken || shouldUpdateToken) {
-      api
-        .profile()
-        .updateProfile(user.uid, { notificationToken: shouldUpdateToken ? token : null });
+      api.profile().updateProfile(user.uid, {
+        notificationToken: shouldUpdateToken ? token : null,
+        updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+      });
     }
   }, [token, user?.uid, shouldDeleteToken, shouldUpdateToken, api]);
 

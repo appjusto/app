@@ -4,15 +4,15 @@ import { View } from 'react-native';
 import { MessagesCard } from '../../home/cards/MessagesCard';
 import CourierStatusHighlight from './CourierStatusHighlight';
 
-type Props = {
+interface Props {
   order: WithId<Order>;
-  onOpenChat: (from: ChatMessageUser) => void;
-};
+  onPress: (from: ChatMessageUser) => void;
+}
 
-export const StatusAndMessages = ({ order, onOpenChat, ...props }: Props) => {
+export const StatusAndMessages = ({ order, onPress, ...props }: Props) => {
   return (
     <View {...props}>
-      <MessagesCard orderId={order.id} onOpenChat={onOpenChat} />
+      <MessagesCard orderId={order.id} onPress={onPress} />
       <CourierStatusHighlight order={order} />
     </View>
   );

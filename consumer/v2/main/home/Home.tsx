@@ -87,7 +87,7 @@ export default function ({ navigation }: Props) {
         <PaddedView>
           <HomeOngoingDeliveries
             orders={ongoingOrders}
-            onOpenChat={(order, chatFrom) =>
+            onPress={(order, chatFrom) =>
               navigation.navigate('OngoingOrderNavigator', {
                 screen: 'OngoingOrder',
                 params: {

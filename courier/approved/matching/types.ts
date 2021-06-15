@@ -1,8 +1,9 @@
-import { IssueType, OrderMatchPushMessageData } from '@appjusto/types';
+import { CourierOrderRequest, IssueType } from '@appjusto/types';
 
 export type MatchingParamList = {
+  OrderRequests: undefined;
   Matching: {
-    matchRequest: OrderMatchPushMessageData;
+    matchRequest: CourierOrderRequest;
   };
   RefuseDelivery: {
     issueType: IssueType;

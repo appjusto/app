@@ -5,12 +5,14 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { LOCATION, usePermissions } from 'expo-permissions';
 import React from 'react';
 import { Linking, ScrollView, TouchableOpacity, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { ApiContext, AppDispatch } from '../../../../common/app/context';
+import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import useNotificationToken from '../../../../common/hooks/useNotificationToken';
+import { IconHomeCourierRequests } from '../../../../common/icons/icon-home-courier-requests';
+import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
+import { useObservePendingRequests } from '../../../../common/store/api/courier/hooks/useObservePendingRequests';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
@@ -19,6 +21,7 @@ import {
   startLocationUpdatesTask,
   stopLocationUpdatesTask,
 } from '../../../../common/utils/location';
+import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
 import { FreshDeskCard } from './FreshDeskCard';
@@ -37,12 +40,10 @@ type Props = {
 };
 
 export default function ({ navigation }: Props) {
-  // context
-  const api = React.useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
   // redux store
   const courier = useSelector(getCourier)!;
   const ongoingOrders = useSelector(getOrders);
+  const requests = useObservePendingRequests(courier.id);
   const { status } = courier;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
   // state
@@ -73,9 +74,26 @@ export default function ({ navigation }: Props) {
           }
         />
         <PaddedView>
+          {requests.length > 0 ? (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('MatchingNavigator', {
+                  screen: 'OrderRequests',
+                })
+              }
+            >
+              <View style={{ marginVertical: padding }}>
+                <HomeCard
+                  icon={<IconHomeCourierRequests />}
+                  title={t('Novos pedidos disponíveis')}
+                  subtitle={t('Existem pedidos em abertos que você pode aceitar agora mesmo!')}
+                />
+              </View>
+            </TouchableOpacity>
+          ) : null}
           <HomeOngoingDeliveries
             orders={ongoingOrders}
-            onOpenChat={(order, chatFrom) =>
+            onPress={(order, chatFrom) =>
               navigation.navigate('OngoingDeliveryNavigator', {
                 screen: 'OngoingDelivery',
                 params: { orderId: order.id, chatFrom },
