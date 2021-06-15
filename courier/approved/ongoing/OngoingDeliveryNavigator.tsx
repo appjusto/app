@@ -9,7 +9,6 @@ import CancelOngoingDelivery from './CancelOngoingDelivery';
 import { CourierDropsOrder } from './CourierDropsOrder';
 import DeliveryCompleted from './DeliveryCompleted';
 import { DeliveryProblem } from './DeliveryProblem';
-import { DeliveryProblemFeedback } from './DeliveryProblemFeedback';
 import { NoCodeDelivery } from './NoCodeDelivery';
 import OngoingDelivery from './OngoingDelivery';
 import OrderCanceled from './OrderCanceled';
@@ -53,11 +52,6 @@ export default function () {
       <Stack.Screen
         name="DeliveryProblem"
         component={DeliveryProblem}
-        options={{ title: t('Tive um problema') }}
-      />
-      <Stack.Screen
-        name="DeliveryProblemFeedback"
-        component={DeliveryProblemFeedback}
         options={{ title: t('Tive um problema') }}
       />
       <Stack.Screen

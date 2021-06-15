@@ -11,11 +11,8 @@ import { OngoingDeliveryNavigatorParamList } from '../../courier/approved/ongoin
 import { ApprovedParamList } from '../../courier/approved/types';
 import { t } from '../../strings';
 import { ApiContext, AppDispatch } from '../app/context';
-import DefaultButton from '../components/buttons/DefaultButton';
 import RadioButton from '../components/buttons/RadioButton';
-import FeedbackView from '../components/views/FeedbackView';
 import { ReportIssueView } from '../components/views/ReportIssueView';
-import { IconMotocycle } from '../icons/icon-motocycle';
 import useIssues from '../store/api/platform/hooks/useIssues';
 import { useSegmentScreen } from '../store/api/track';
 import { getFlavor } from '../store/config/selectors';
@@ -59,7 +56,6 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
   const [comment, setComment] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
-  const [issueSent, setIssueSent] = React.useState(false);
   // side effects
   // tracking
   useSegmentScreen('Report issue', {
@@ -73,24 +69,6 @@ export const ReportIssue = ({ route, navigation }: Props) => {
       return t('Não foi possível enviar a reclamação. Tente novamente.');
     } else {
       return '';
-    }
-  })();
-  const feedbackHeaderTitle = (() => {
-    if (issueType === 'consumer-delivery-problem') {
-      return t('Obrigado pelas informações. Iremos analisar o ocorrido.');
-    } else if (issueType === 'courier-delivery-problem') {
-      return t('Aguarde enquanto estamos analisando o seu problema.');
-    } else {
-      return '';
-    }
-  })();
-  const feedbackDescription = (() => {
-    if (issueType === 'consumer-delivery-problem') {
-      return undefined;
-    } else if (issueType === 'courier-delivery-problem') {
-      return t('Em breve entraremos em contato com você para relatar a resolução do seu problema.');
-    } else {
-      return undefined;
     }
   })();
   const title = (() => {
@@ -139,21 +117,6 @@ export const ReportIssue = ({ route, navigation }: Props) => {
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
-    );
-  }
-  if (issueSent) {
-    return (
-      <FeedbackView
-        header={feedbackHeaderTitle}
-        icon={<IconMotocycle />}
-        background={colors.grey50}
-        description={feedbackDescription}
-      >
-        <DefaultButton
-          title={t('Voltar para o início')}
-          onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
-        />
-      </FeedbackView>
     );
   }
   return (

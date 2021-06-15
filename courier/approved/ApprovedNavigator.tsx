@@ -8,7 +8,7 @@ import MainNavigator from './main/MainNavigator';
 import PaymentNavigator from './main/payment/PaymentNavigator';
 import ProfileNavigator from './main/profile/ProfileNavigator';
 import MatchingNavigator from './matching/MatchingNavigator';
-import { DeliveryProblemNavigator } from './ongoing/delivery-problem/DeliveryProblemNavigator';
+import { DeliveryProblemFeedback } from './ongoing/DeliveryProblemFeedback';
 import OngoingDeliveryNavigator from './ongoing/OngoingDeliveryNavigator';
 import { ApprovedParamList } from './types';
 
@@ -37,11 +37,6 @@ export default function () {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="DeliveryProblemNavigator"
-        component={DeliveryProblemNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
         name="PaymentNavigator"
         component={PaymentNavigator}
         options={{ headerShown: false }}
@@ -55,6 +50,11 @@ export default function () {
         name="PermissionDenied"
         component={PermissionDenied}
         options={{ title: t('Compartilhar sua localização') }}
+      />
+      <Stack.Screen
+        name="DeliveryProblemFeedback"
+        component={DeliveryProblemFeedback}
+        options={{ title: t('Tive um problema'), headerLeft: () => null }}
       />
     </Stack.Navigator>
   );

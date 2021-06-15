@@ -1,3 +1,4 @@
+import { IssueType } from '../../../types';
 import { PermissionDeniedParamList } from '../../common/screens/PermissionDenied';
 import { NestedNavigatorParams } from '../../common/types';
 import { DeliveriesNavigatorParamList } from './main/history/types';
@@ -5,7 +6,6 @@ import { PaymentNavigatorParamList } from './main/payment/types';
 import { CourierProfileParamList } from './main/profile/types';
 import { MainParamList } from './main/types';
 import { MatchingParamList } from './matching/types';
-import { DeliveryProblemNavigatorParamList } from './ongoing/delivery-problem/types';
 import { OngoingDeliveryNavigatorParamList } from './ongoing/types';
 
 export type ApprovedParamList = {
@@ -15,5 +15,8 @@ export type ApprovedParamList = {
   DeliveriesNavigator: NestedNavigatorParams<DeliveriesNavigatorParamList>;
   ProfileNavigator: NestedNavigatorParams<CourierProfileParamList>;
   PaymentNavigator: NestedNavigatorParams<PaymentNavigatorParamList>;
-  DeliveryProblemNavigator: NestedNavigatorParams<DeliveryProblemNavigatorParamList>;
+  DeliveryProblemFeedback: {
+    issueType: IssueType;
+    orderId: string;
+  };
 } & PermissionDeniedParamList;
