@@ -75,12 +75,20 @@ export default function ({ navigation }: Props) {
         />
         <PaddedView>
           {requests.length > 0 ? (
-            <TouchableOpacity onPress={() => null}>
-              <HomeCard
-                icon={<IconHomeCourierRequests />}
-                title={t('Novos pedidos disponíveis')}
-                subtitle={t('Existem pedidos em abertos que você pode aceitar agora mesmo!')}
-              />
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('MatchingNavigator', {
+                  screen: 'OrderRequests',
+                })
+              }
+            >
+              <View style={{ marginVertical: padding }}>
+                <HomeCard
+                  icon={<IconHomeCourierRequests />}
+                  title={t('Novos pedidos disponíveis')}
+                  subtitle={t('Existem pedidos em abertos que você pode aceitar agora mesmo!')}
+                />
+              </View>
             </TouchableOpacity>
           ) : null}
           <HomeOngoingDeliveries
