@@ -10,10 +10,10 @@ import { MessagesCard } from './MessagesCard';
 
 type Props = {
   order: WithId<Order>;
-  onOpenChat: (order: WithId<Order>, message?: ChatMessageUser) => void;
+  onPress: (order: WithId<Order>, message?: ChatMessageUser) => void;
 };
 
-export default function ({ order, onOpenChat }: Props) {
+export default function ({ order, onPress }: Props) {
   const { dispatchingStatus, dispatchingState } = order;
   // UI
   let title = '';
@@ -51,7 +51,7 @@ export default function ({ order, onOpenChat }: Props) {
     }
   }
   return (
-    <TouchableOpacity onPress={() => onOpenChat(order)}>
+    <TouchableOpacity onPress={() => onPress(order)}>
       <View
         style={{ ...borders.default, borderColor: colors.black, backgroundColor: colors.yellow }}
       >
@@ -59,7 +59,7 @@ export default function ({ order, onOpenChat }: Props) {
           <MessagesCard
             orderId={order.id}
             variant="coupled"
-            onOpenChat={(from) => onOpenChat(order, from)}
+            onPress={(from) => onPress(order, from)}
           />
           <PaddedView
             style={{

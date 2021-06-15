@@ -185,10 +185,7 @@ export default function ({ navigation, route }: Props) {
             <OrderMap order={order!} ratio={360 / 316} />
             <RouteIcons order={order} />
             <View>
-              <StatusAndMessages
-                order={order}
-                onOpenChat={(from) => openChat(from.id, from.agent)}
-              />
+              <StatusAndMessages order={order} onPress={(from) => openChat(from.id, from.agent)} />
             </View>
           </View>
         )}

@@ -15,10 +15,10 @@ import { borders, colors, halfPadding, texts } from '../../../styles';
 interface Props {
   orderId: string;
   variant?: 'standalone' | 'coupled';
-  onOpenChat: (from: ChatMessageUser) => void;
+  onPress: (from: ChatMessageUser) => void;
 }
 
-export const MessagesCard = ({ orderId, variant = 'standalone', onOpenChat }: Props) => {
+export const MessagesCard = ({ orderId, variant = 'standalone', onPress }: Props) => {
   // redux
   const user = useSelector(getUser)!;
   // state
@@ -26,7 +26,7 @@ export const MessagesCard = ({ orderId, variant = 'standalone', onOpenChat }: Pr
   const unread = unreadMessages(chat, user.uid);
   if (unread.length === 0) return null;
   return (
-    <TouchableOpacity onPress={() => onOpenChat(unread[0].from)}>
+    <TouchableOpacity onPress={() => onPress(unread[0].from)}>
       <View
         style={{
           ...(variant === 'standalone'

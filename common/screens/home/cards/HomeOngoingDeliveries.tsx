@@ -6,10 +6,10 @@ import HomeOngoingDeliveryCard from './HomeOngoingDeliveryCard';
 
 type Props = {
   orders: WithId<Order>[] | undefined;
-  onOpenChat: (order: WithId<Order>, message?: ChatMessageUser) => void;
+  onPress: (order: WithId<Order>, message?: ChatMessageUser) => void;
 };
 
-export default function ({ orders, onOpenChat }: Props) {
+export default function ({ orders, onPress }: Props) {
   // UI
   if (!orders) return null;
   return (
@@ -17,7 +17,7 @@ export default function ({ orders, onOpenChat }: Props) {
       {orders.map((order) => {
         return (
           <View key={order.id} style={{ marginBottom: padding }}>
-            <HomeOngoingDeliveryCard order={order} onOpenChat={onOpenChat} />
+            <HomeOngoingDeliveryCard order={order} onPress={onPress} />
           </View>
         );
       })}
