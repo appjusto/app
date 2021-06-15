@@ -8,6 +8,7 @@ import RoundedText from '../../../common/components/texts/RoundedText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, doublePadding, padding, screens, texts } from '../../../common/styles';
+import { formatCurrency, formatDistance, formatTime } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import { AcceptControl } from './AcceptControl';
@@ -26,12 +27,12 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // params
-  // const { matchRequest } = route.params;
-  // const { orderId } = matchRequest;
+  const { matchRequest } = route.params;
+  const { orderId } = matchRequest;
   // context
   const api = React.useContext(ApiContext);
   // screen state
-  // const order = useObserveOrder(orderId);
+
   const [isLoading, setLoading] = React.useState(false);
   // side effects
   // tracking
@@ -45,27 +46,28 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   // UI handlers
-  // const acceptHandler = async () => {
-  //   try {
-  //     setLoading(true);
-  //     await api.order().matchOrder(orderId);
-  //     setLoading(false);
-  //     navigation.replace('OngoingDeliveryNavigator', {
-  //       screen: 'OngoingDelivery',
-  //       params: {
-  //         orderId,
-  //       },
-  //     });
-  //   } catch (error) {
-  //     setLoading(false);
-  //     navigation.replace('MatchingError');
-  //   }
-  // };
-  // const rejectHandler = () => {
-  // using this until backend is published again with the new issueType
-  // navigation.replace('RefuseDelivery', { orderId, issueType: 'courier-drops-delivery' });
-  // navigation.replace('RefuseDelivery', { orderId, issueType: 'courier-rejects-matching' });
-  // };
+  const acceptHandler = async () => {
+    try {
+      setLoading(true);
+      await api.order().matchOrder(orderId);
+      setLoading(false);
+      navigation.replace('OngoingDeliveryNavigator', {
+        screen: 'OngoingDelivery',
+        params: {
+          orderId,
+        },
+      });
+    } catch (error) {
+      setLoading(false);
+      navigation.replace('MatchingError');
+    }
+  };
+  const rejectHandler = () => {
+    // using this until backend is published again with the new issueType
+    navigation.replace('RefuseDelivery', { orderId, issueType: 'courier-drops-delivery' });
+    // navigation.replace('RefuseDelivery', { orderId, issueType: 'courier-rejects-matching' });
+  };
+  console.log(matchRequest.readyAt);
   // UI
   return (
     <ScrollView style={[screens.default]} contentContainerStyle={{ flexGrow: 1 }}>
@@ -73,13 +75,17 @@ export default function ({ navigation, route }: Props) {
         {/* header */}
         <View style={{ alignItems: 'center', backgroundColor: colors.green500 }}>
           <Text style={[texts.x2l, { marginTop: 40 }]}>{t('Nova corrida para você!')}</Text>
-          {/* <Text style={[texts.x40l]}>{formatCurrency(matchRequest.courierFee)}</Text> */}
-          <Text style={[texts.x40l, { marginBottom: 40 }]}>{t('R$ 10,00')}</Text>
-          <RoundedText style={{ marginBottom: 40 }}>{t('Previsão de preparo - 00h00')}</RoundedText>
+          <Text style={[texts.x40l, { marginBottom: 40 }]}>
+            {formatCurrency(matchRequest.courierFee)}
+          </Text>
+          {matchRequest.readyAt && (
+            <RoundedText style={{ marginBottom: 40 }}>
+              {formatTime(matchRequest.readyAt)}
+            </RoundedText>
+          )}
         </View>
         {/* body */}
         <View style={{ paddingLeft: padding }}>
-          {/* distance to origin */}
           {/* origin */}
           <View style={{ flexDirection: 'row', alignItems: 'center', paddingTop: doublePadding }}>
             <Image
@@ -89,18 +95,11 @@ export default function ({ navigation, route }: Props) {
             <View style={{ flex: 1 }}>
               <Text style={[texts.sm, { color: colors.green600 }]}>{t('Retirada')}</Text>
               <View>
-                {/* <Text style={[texts.md]}>
-              {formatDistance(matchRequest.distanceToOrigin)} {t('até a retirada')}
-            </Text> */}
                 <Text style={[texts.x2l]}>
-                  {t('0.5 km')} {t('até a retirada')}
+                  {formatDistance(matchRequest.distanceToOrigin)} {t('até a retirada')}
                 </Text>
-                {/* <Text style={[texts.md, { flexWrap: 'wrap' }]} numberOfLines={3}>
-                  {matchRequest.originAddress}
-                </Text> */}
-                {/* MOSTRAR ENDEREÇO SECONDARY */}
                 <Text style={[texts.md, { flexWrap: 'wrap' }]} numberOfLines={3}>
-                  Pinheiros, São Paulo - SP
+                  {matchRequest.originAddress}
                 </Text>
               </View>
             </View>
@@ -122,36 +121,21 @@ export default function ({ navigation, route }: Props) {
             <View style={{ flex: 1 }}>
               <Text style={[texts.sm, { color: colors.green600 }]}>{t('Entrega')}</Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                {/* <Text style={[texts.md]}>
-              {formatDistance(matchRequest.totalDistance)} {t('no percurso total')}
-            </Text> */}
                 <Text style={[texts.x2l]}>
-                  {t('4.5 km')} {t('até a entrega')}
+                  {formatDistance(matchRequest.totalDistance)} {t('no percurso total')}
                 </Text>
-                {/* <Text style={[texts.md, { flexWrap: 'wrap' }]} numberOfLines={3}>
-                  {matchRequest.destinationAddress}
-                </Text> */}
-                {/* MOSTRAR ENDEREÇO SECONDARY */}
                 <Text style={[texts.md, { flexWrap: 'wrap' }]} numberOfLines={3}>
-                  Pinheiros, São Paulo - SP
+                  {matchRequest.destinationAddress}
                 </Text>
               </View>
             </View>
           </View>
-          {/* <View
-            style={{
-              borderLeftWidth: 1,
-              borderLeftColor: colors.black,
-              marginLeft: padding,
-              height: 15,
-            }}
-          /> */}
         </View>
         <View style={{ flex: 1 }} />
         {/* accept / reject control */}
         <AcceptControl
-          onAccept={() => null}
-          onReject={() => null}
+          onAccept={acceptHandler}
+          onReject={rejectHandler}
           style={{ marginBottom: tallerDevice ? padding * 4 : padding, paddingHorizontal: padding }}
         />
       </View>
