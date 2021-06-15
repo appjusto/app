@@ -1,11 +1,7 @@
 import firebase from 'firebase';
 import { AnyAction } from 'redux';
 import * as Sentry from 'sentry-expo';
-import {
-  CONSUMER_PROFILE_UPDATED,
-  COURIER_PROFILE_UPDATED,
-  USER_AUTH_STATE_CHANGED,
-} from './actions';
+import { USER_AUTH_STATE_CHANGED } from './actions';
 import { UserState } from './types';
 
 const initialState: UserState = {};
@@ -24,12 +20,6 @@ export default function (state: UserState = initialState, action: AnyAction): Us
         Sentry.Native.configureScope((scope) => scope.setUser(null));
       }
       return { ...state, user: payload };
-    }
-    case CONSUMER_PROFILE_UPDATED: {
-      return { ...state, metadata: payload.metadata };
-    }
-    case COURIER_PROFILE_UPDATED: {
-      return { ...state, metadata: payload.metadata };
     }
     default:
       return state;

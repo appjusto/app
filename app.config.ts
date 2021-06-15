@@ -104,7 +104,9 @@ const ios = () => ({
     NSLocationAlwaysUsageDescription:
       'Precisamos da sua localização para enviar corridas próximas e monitorar a entrega.',
   },
-  associatedDomains: [`applinks:${environment.charAt(0)}.deeplink.appjusto.com.br`],
+  associatedDomains: [`applinks:${environment.charAt(0)}.deeplink.appjusto.com.br`].concat(
+    environment === 'live' ? ['applinks:link.appjusto.com.br'] : []
+  ),
   config: {
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
   },
@@ -137,7 +139,24 @@ const android = () =>
             ],
             category: ['BROWSABLE', 'DEFAULT'],
           },
-        ],
+        ].concat(
+          environment === 'live'
+            ? [
+                {
+                  action: 'VIEW',
+                  autoVerify: false,
+                  data: [
+                    {
+                      scheme: 'https',
+                      host: 'link.appjusto.com.br',
+                      pathPrefix: `/${flavor}`,
+                    },
+                  ],
+                  category: ['BROWSABLE', 'DEFAULT'],
+                },
+              ]
+            : []
+        ),
         config: {
           googleMaps: {
             apiKey: GOOGLE_MAPS_API_KEY,

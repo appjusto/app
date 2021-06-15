@@ -5,6 +5,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Image } from 'react-native';
 import * as icons from '../../../assets/icons';
+import { ApiContext } from '../../../common/app/context';
+import { useDeeplinkAction } from '../../../common/hooks/useDeeplinkAction';
 import { colors, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
@@ -21,6 +23,7 @@ const Tab = createBottomTabNavigator<MainNavigatorParamList>();
 export const MainNavigator = () => {
   // context
   const navigation = useNavigation<ScreenNavigationProp>();
+  const api = React.useContext(ApiContext);
   // handlers
   const handler = React.useCallback(
     (data: PushMessageData, clicked?: boolean, remove?: () => void) => {
@@ -51,6 +54,26 @@ export const MainNavigator = () => {
   );
   useNotificationHandler('order-update', handler);
   useNotificationHandler('order-chat', handler);
+  const action = useDeeplinkAction();
+  React.useEffect(() => {
+    if (!action) return;
+    if (action.screen === 'restaurant-detail' && action.params?.code) {
+      api
+        .business()
+        .fetchBusinessWithCode(action.params.code)
+        .then((business) => {
+          if (business) {
+            navigation.navigate('FoodOrderNavigator', {
+              screen: 'RestaurantNavigator',
+              params: {
+                restaurantId: business.id,
+                screen: 'RestaurantDetail',
+              },
+            });
+          }
+        });
+    }
+  }, [action, api, navigation]);
   // UI
   return (
     <Tab.Navigator
