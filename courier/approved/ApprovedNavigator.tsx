@@ -54,7 +54,7 @@ export default function () {
       <Stack.Screen
         name="DeliveryProblemFeedback"
         component={DeliveryProblemFeedback}
-        options={{ title: t('Tive um problema'), headerLeft: () => null }}
+        options={{ title: t('Tive um problema') }}
       />
     </Stack.Navigator>
   );
