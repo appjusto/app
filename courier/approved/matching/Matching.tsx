@@ -1,14 +1,14 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Image, Text, View } from 'react-native';
+import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
 import * as icons from '../../../assets/icons';
 import { ApiContext } from '../../../common/app/context';
-import PaddedView from '../../../common/components/containers/PaddedView';
+import RoundedText from '../../../common/components/texts/RoundedText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { colors, padding, screens, texts } from '../../../common/styles';
-import { formatCurrency, formatDistance } from '../../../common/utils/formatters';
+import { colors, doublePadding, padding, screens, texts } from '../../../common/styles';
+import { formatCurrency, formatDistance, formatTime } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import { AcceptControl } from './AcceptControl';
@@ -32,6 +32,7 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = React.useContext(ApiContext);
   // screen state
+
   const [isLoading, setLoading] = React.useState(false);
   // side effects
   // tracking
@@ -66,44 +67,37 @@ export default function ({ navigation, route }: Props) {
     navigation.replace('RefuseDelivery', { orderId, issueType: 'courier-drops-delivery' });
     // navigation.replace('RefuseDelivery', { orderId, issueType: 'courier-rejects-matching' });
   };
+  console.log(matchRequest.readyAt);
   // UI
   return (
-    <View style={[screens.default, screens.headless]}>
-      <PaddedView style={{ flex: 1 }}>
+    <ScrollView style={[screens.default]} contentContainerStyle={{ flexGrow: 1 }}>
+      <View style={{ flex: 1 }}>
         {/* header */}
-        <View style={{ marginTop: padding, alignItems: 'center' }}>
-          <Text style={[texts.x2l, { color: colors.green600 }]}>
-            {t('Nova corrida para você!')}
-          </Text>
-          <Text style={[texts.x40l]}>{formatCurrency(matchRequest.courierFee)}</Text>
+        <View style={{ alignItems: 'center', backgroundColor: colors.green500 }}>
+          <Text style={[texts.x2l, { marginTop: 40 }]}>{t('Nova corrida para você!')}</Text>
+          <Text style={[texts.x40l, { marginBottom: 40 }]}>{formatCurrency(matchRequest.fee)}</Text>
+          {matchRequest.readyAt ? (
+            <RoundedText style={{ marginBottom: 40 }}>
+              {formatTime(matchRequest.readyAt)}
+            </RoundedText>
+          ) : (
+            <RoundedText>{t('Pedido pronto')}</RoundedText>
+          )}
         </View>
-        <View style={{ flex: 1 }} />
         {/* body */}
-        <View>
-          {/* distance to origin */}
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image source={icons.transit} style={{ width: 32, height: 32, marginRight: padding }} />
-            <Text style={[texts.md]}>
-              {formatDistance(matchRequest.distanceToOrigin)} {t('até a retirada')}
-            </Text>
-          </View>
-          <View
-            style={{
-              borderLeftWidth: 1,
-              borderLeftColor: colors.black,
-              marginLeft: padding,
-              height: 15,
-            }}
-          />
+        <View style={{ paddingLeft: padding }}>
           {/* origin */}
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', paddingTop: doublePadding }}>
             <Image
               source={icons.pinPackageWhite}
-              style={{ width: 34, height: 44, marginRight: padding }}
+              style={{ width: 32, height: 40, marginRight: padding }}
             />
             <View style={{ flex: 1 }}>
               <Text style={[texts.sm, { color: colors.green600 }]}>{t('Retirada')}</Text>
-              <View style={{ flexDirection: 'row' }}>
+              <View>
+                <Text style={[texts.x2l]}>
+                  {formatDistance(matchRequest.distanceToOrigin)} {t('até a retirada')}
+                </Text>
                 <Text style={[texts.md, { flexWrap: 'wrap' }]} numberOfLines={3}>
                   {matchRequest.originAddress}
                 </Text>
@@ -115,41 +109,26 @@ export default function ({ navigation, route }: Props) {
               borderLeftWidth: 1,
               borderLeftColor: colors.black,
               marginLeft: padding,
-              height: 15,
+              height: 32,
             }}
           />
           {/* destination */}
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image
               source={icons.pinPackage}
-              style={{ width: 34, height: 44, marginRight: padding }}
+              style={{ width: 32, height: 40, marginRight: padding }}
             />
             <View style={{ flex: 1 }}>
               <Text style={[texts.sm, { color: colors.green600 }]}>{t('Entrega')}</Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                <Text style={[texts.x2l]}>
+                  {formatDistance(matchRequest.distance)} {t('no percurso total')}
+                </Text>
                 <Text style={[texts.md, { flexWrap: 'wrap' }]} numberOfLines={3}>
                   {matchRequest.destinationAddress}
                 </Text>
               </View>
             </View>
-          </View>
-          <View
-            style={{
-              borderLeftWidth: 1,
-              borderLeftColor: colors.black,
-              marginLeft: padding,
-              height: 15,
-            }}
-          />
-          {/* total distance */}
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image
-              source={icons.transitConclusion}
-              style={{ width: 32, height: 32, marginRight: padding }}
-            />
-            <Text style={[texts.md]}>
-              {formatDistance(matchRequest.totalDistance)} {t('no percurso total')}
-            </Text>
           </View>
         </View>
         <View style={{ flex: 1 }} />
@@ -157,9 +136,9 @@ export default function ({ navigation, route }: Props) {
         <AcceptControl
           onAccept={acceptHandler}
           onReject={rejectHandler}
-          style={{ marginBottom: tallerDevice ? padding * 4 : padding }}
+          style={{ marginBottom: tallerDevice ? padding * 4 : padding, paddingHorizontal: padding }}
         />
-      </PaddedView>
-    </View>
+      </View>
+    </ScrollView>
   );
 }
