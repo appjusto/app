@@ -78,10 +78,12 @@ export default function ({ navigation, route }: Props) {
           <Text style={[texts.x40l, { marginBottom: 40 }]}>
             {formatCurrency(matchRequest.courierFee)}
           </Text>
-          {matchRequest.readyAt && (
+          {matchRequest.readyAt ? (
             <RoundedText style={{ marginBottom: 40 }}>
               {formatTime(matchRequest.readyAt)}
             </RoundedText>
+          ) : (
+            <RoundedText>{t('Pedido pronto')}</RoundedText>
           )}
         </View>
         {/* body */}
