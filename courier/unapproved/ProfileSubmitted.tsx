@@ -12,6 +12,7 @@ import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
 import HR from '../../common/components/views/HR';
+import useNotificationToken from '../../common/hooks/useNotificationToken';
 import { IconMotocycleBeta } from '../../common/icons/icon-motocycle-beta';
 import HomeShareCard from '../../common/screens/home/cards/HomeShareCard';
 import { SocialMediaCard } from '../../common/screens/home/cards/SocialMediaCard';
@@ -41,6 +42,8 @@ export default function ({ navigation }: Props) {
   const [step, setStep] = React.useState(0);
   // refs
   const viewPager = React.useRef<ViewPager>(null);
+  // notifications
+  useNotificationToken();
   // side effects
   // tracking
   useSegmentScreen('Profile Submitted');

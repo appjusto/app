@@ -3,6 +3,7 @@ import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import PaddedView from '../../common/components/containers/PaddedView';
 import HomeShareCard from '../../common/screens/home/cards/HomeShareCard';
+import { useSegmentScreen } from '../../common/store/api/track';
 import { screens, texts } from '../../common/styles';
 import { t } from '../../strings';
 import { UnapprovedParamList } from './types';
@@ -10,6 +11,8 @@ import { UnapprovedParamList } from './types';
 type ScreenNavigationProp = StackNavigationProp<UnapprovedParamList, 'AboutBeAvailable'>;
 
 export const AboutBeAvailable = () => {
+  // tracking
+  useSegmentScreen('About be available');
   return (
     <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
       <PaddedView>

@@ -2,6 +2,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ScrollView, Text } from 'react-native';
 import PaddedView from '../../common/components/containers/PaddedView';
+import { useSegmentScreen } from '../../common/store/api/track';
 import { screens, texts } from '../../common/styles';
 import { t } from '../../strings';
 import { UnapprovedParamList } from './types';
@@ -9,6 +10,8 @@ import { UnapprovedParamList } from './types';
 type ScreenNavigationProp = StackNavigationProp<UnapprovedParamList, 'AboutAutonomy'>;
 
 export const AboutAutonomy = () => {
+  // tracking
+  useSegmentScreen('About autonomy');
   return (
     <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
       <PaddedView>
