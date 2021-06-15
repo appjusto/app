@@ -81,7 +81,7 @@ export default function ({ navigation, route }: Props) {
               {formatTime(matchRequest.readyAt)}
             </RoundedText>
           ) : (
-            <RoundedText>{t('Pedido pronto')}</RoundedText>
+            <RoundedText style={{ marginBottom: 40 }}>{t('Pedido pronto')}</RoundedText>
           )}
         </View>
         {/* body */}
@@ -98,7 +98,7 @@ export default function ({ navigation, route }: Props) {
                 <Text style={[texts.x2l]}>
                   {formatDistance(matchRequest.distanceToOrigin)} {t('até a retirada')}
                 </Text>
-                <Text style={[texts.md, { flexWrap: 'wrap' }]} numberOfLines={3}>
+                <Text style={[texts.md, { flexWrap: 'wrap', maxWidth: '80%' }]} numberOfLines={3}>
                   {matchRequest.originAddress}
                 </Text>
               </View>
@@ -124,7 +124,7 @@ export default function ({ navigation, route }: Props) {
                 <Text style={[texts.x2l]}>
                   {formatDistance(matchRequest.distance)} {t('no percurso total')}
                 </Text>
-                <Text style={[texts.md, { flexWrap: 'wrap' }]} numberOfLines={3}>
+                <Text style={[texts.md, { flexWrap: 'wrap', maxWidth: '80%' }]} numberOfLines={3}>
                   {matchRequest.destinationAddress}
                 </Text>
               </View>
