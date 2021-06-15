@@ -37,6 +37,5 @@ export type OngoingOrderNavigatorParamList = {
     issueType: IssueType;
     orderId: string;
   };
-  OngoingOrderCancelFeedback: undefined;
 } & ReportIssueParamList &
   OrderCanceledParamList;
