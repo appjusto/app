@@ -14,7 +14,7 @@ export const removeAccents = (str: string) => {
 };
 
 // datetime
-export { formatDate, formatDuration, formatHour, formatTime } from './datetime';
+export { formatDate, formatDuration, formatHour, formatTime, getMonthName } from './datetime';
 
 // distance
 export const formatDistance = (distance: number) => {
