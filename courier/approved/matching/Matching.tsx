@@ -75,9 +75,7 @@ export default function ({ navigation, route }: Props) {
         {/* header */}
         <View style={{ alignItems: 'center', backgroundColor: colors.green500 }}>
           <Text style={[texts.x2l, { marginTop: 40 }]}>{t('Nova corrida para você!')}</Text>
-          <Text style={[texts.x40l, { marginBottom: 40 }]}>
-            {formatCurrency(matchRequest.courierFee)}
-          </Text>
+          <Text style={[texts.x40l, { marginBottom: 40 }]}>{formatCurrency(matchRequest.fee)}</Text>
           {matchRequest.readyAt ? (
             <RoundedText style={{ marginBottom: 40 }}>
               {formatTime(matchRequest.readyAt)}
@@ -124,7 +122,7 @@ export default function ({ navigation, route }: Props) {
               <Text style={[texts.sm, { color: colors.green600 }]}>{t('Entrega')}</Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                 <Text style={[texts.x2l]}>
-                  {formatDistance(matchRequest.totalDistance)} {t('no percurso total')}
+                  {formatDistance(matchRequest.distance)} {t('no percurso total')}
                 </Text>
                 <Text style={[texts.md, { flexWrap: 'wrap' }]} numberOfLines={3}>
                   {matchRequest.destinationAddress}
