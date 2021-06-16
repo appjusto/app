@@ -7,7 +7,6 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import { IconProblemCancel } from '../../../common/icons/icon-problem-cancel';
 import { IconProblemChat } from '../../../common/icons/icon-problem-chat';
 import { IconProblemPack } from '../../../common/icons/icon-problem-pack';
-import { IconProblemUrgent } from '../../../common/icons/icon-problem-urgent';
 import HomeCard from '../../../common/screens/home/cards/HomeCard';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, padding, screens } from '../../../common/styles';
@@ -109,13 +108,14 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
             subtitle={t('Abrir chat direto com o restaurante')}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('CallCourier')}>
+        {/* commented for now. will be added back later */}
+        {/* <TouchableOpacity onPress={() => navigation.navigate('CallCourier')}>
           <HomeCard
             icon={<IconProblemUrgent />}
             title={t('Estou com o problema urgente')}
             subtitle={t('O AppJusto vai ligar para você')}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </PaddedView>
     </ScrollView>
   );
