@@ -77,7 +77,7 @@ export default function ({ navigation, route }: Props) {
         </PaddedView>
         <HR height={padding} />
         <PaddedView>
-          <OrderCostBreakdown order={order} selectedFare={order.fare} />
+          <OrderCostBreakdown order={order} selectedFare={order.fare} hideItems />
         </PaddedView>
       </ScrollView>
     </View>

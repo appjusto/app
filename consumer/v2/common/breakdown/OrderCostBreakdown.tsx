@@ -12,9 +12,10 @@ import { t } from '../../../../strings';
 type Props = {
   order: Order;
   selectedFare: Fare | undefined;
+  hideItems?: boolean;
 };
 
-export const OrderCostBreakdown = ({ order, selectedFare }: Props) => {
+export const OrderCostBreakdown = ({ order, selectedFare, hideItems }: Props) => {
   return (
     <View style={{ flex: 1 }}>
       <SingleHeader title={t('Entenda os valores')} />
@@ -23,14 +24,14 @@ export const OrderCostBreakdown = ({ order, selectedFare }: Props) => {
           {t('Somos transparentes do início ao fim da entrega')}
         </Text>
         <View style={{ marginTop: padding }}>
-          {!isEmpty(order.items) && (
+          {!isEmpty(order.items) && !hideItems ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('Itens do pedido')}</Text>
               <Text style={{ ...texts.sm, lineHeight: 21 }}>
                 {formatCurrency(getOrderTotal(order))}
               </Text>
             </View>
-          )}
+          ) : null}
           {selectedFare?.platform?.value ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('AppJusto')}</Text>

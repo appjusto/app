@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { defaultScreenOptions } from '../../../../common/screens/options';
-import { getMonthName } from '../../../../common/utils/formatters';
+import { getMonthName } from '../../../../common/utils/formatters/datetime';
 import { t } from '../../../../strings';
 import DeliveryHistoryByMonth from './DeliveryHistoryByMonth';
 import DeliverySummary from './DeliverySummary';

@@ -49,7 +49,7 @@ export const OngoingOrderStatus = ({ order }: Props) => {
       description = t('Já pode se preparar! O entregador saiu e está levando o pedido até você.');
     } else if (dispatchingState === 'arrived-destination') {
       header = t('Entregador chegou!');
-      description = t('Aguardando o cliente para a entrega.');
+      description = t('O entregador já está no local de entrega.');
     }
   } else if (status === 'delivered') {
     header = t('Pedido entregue!');

@@ -49,12 +49,14 @@ export const ProductComplementListItem = ({ complement, selected, disabled, onTo
         </View>
         <View style={{ flex: 1, paddingHorizontal: padding }}>
           <Text style={{ ...texts.sm }}>{complement.name}</Text>
-          <Text
-            style={{ ...texts.sm, color: colors.grey700, marginTop: 4, flexWrap: 'wrap' }}
-            numberOfLines={2}
-          >
-            {complement.description}
-          </Text>
+          {complement.description ? (
+            <Text
+              style={{ ...texts.sm, color: colors.grey700, marginTop: 4, flexWrap: 'wrap' }}
+              numberOfLines={2}
+            >
+              {complement.description}
+            </Text>
+          ) : null}
           <Text style={{ ...texts.sm, marginTop: 4 }}>{formatCurrency(complement.price)}</Text>
         </View>
         <View>
