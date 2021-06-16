@@ -52,7 +52,12 @@ export default function ({ navigation, route }: Props) {
   const [cpf, setCpf] = React.useState(courier.cpf! ?? '');
   const [focusedField, setFocusedField] = React.useState<string>();
   // helpers
-  const updatedCourier: Partial<CourierProfile> = { name, surname, phone, cpf };
+  const updatedCourier: Partial<CourierProfile> = {
+    name: name.trim(),
+    surname: surname.trim(),
+    cpf: cpf.trim(),
+    phone: phone.trim(),
+  };
   const canSubmit = courierInfoSet(updatedCourier);
   const profileApproved = courier.situation === 'approved';
   // side effects

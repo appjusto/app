@@ -54,7 +54,12 @@ export default function ({ navigation, route }: Props) {
   const [cpf, setCpf] = React.useState(consumer.cpf! ?? '');
   const [phone, setPhone] = React.useState(consumer.phone! ?? '');
   const [isLoading, setLoading] = React.useState(false);
-  const updatedConsumer: Partial<ConsumerProfile> = { name, surname, cpf, phone };
+  const updatedConsumer: Partial<ConsumerProfile> = {
+    name: name.trim(),
+    surname: surname.trim(),
+    cpf: cpf.trim(),
+    phone: phone.trim(),
+  };
   const canSubmit = consumerInfoSet(updatedConsumer);
   // handlers
   const updateProfileHandler = async () => {
