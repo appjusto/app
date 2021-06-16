@@ -11,5 +11,6 @@ export type UnapprovedParamList = {
   AboutTransparency: undefined;
   AboutNoScore: undefined;
   AboutBeAvailable: undefined;
+  AboutApp: undefined;
 } & CourierProfileParamList &
   PermissionDeniedParamList;

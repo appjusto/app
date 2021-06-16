@@ -8,6 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 import { ProfileParamList } from '../../../consumer/v2/main/profile/types';
 import { CourierProfileParamList } from '../../../courier/approved/main/profile/types';
+import { UnapprovedParamList } from '../../../courier/unapproved/types';
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import PaddedView from '../../components/containers/PaddedView';
@@ -22,7 +23,7 @@ export type AboutAppParamList = {
 };
 
 type ScreenNavigationProp = StackNavigationProp<
-  ProfileParamList & CourierProfileParamList,
+  ProfileParamList & CourierProfileParamList & UnapprovedParamList,
   'AboutApp'
 >;
 

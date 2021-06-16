@@ -15,7 +15,7 @@ export const AboutBeAvailable = () => {
   useSegmentScreen('About be available');
   return (
     <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
-      <PaddedView>
+      <PaddedView style={{ flex: 1 }}>
         <Text style={{ ...texts.x2l }}>
           {t('Você é importante para esse movimento dar certo. Divulgue para outros entregadores!')}
         </Text>
