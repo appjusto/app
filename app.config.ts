@@ -168,7 +168,7 @@ const android = () =>
 
 const permissions = () =>
   flavor === 'consumer'
-    ? ['ACCESS_COARSE_LOCATION']
+    ? undefined
     : [
         'ACCESS_FINE_LOCATION',
         'ACCESS_COARSE_LOCATION',
