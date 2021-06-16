@@ -7,18 +7,20 @@ type Props = {
   subtitle: string;
   icon: React.ReactNode;
   grey?: boolean;
+  bgColor?: string;
+  borderColor?: string;
 };
 
-export default function ({ title, subtitle, icon, grey }: Props) {
+export default function ({ title, subtitle, icon, grey, bgColor, borderColor }: Props) {
   return (
     <View
       style={{
         ...borders.default,
-        borderColor: grey ? colors.grey500 : colors.grey50,
+        borderColor: borderColor ? borderColor : grey ? colors.grey500 : colors.grey50,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        backgroundColor: grey ? colors.grey50 : colors.white,
+        backgroundColor: bgColor ? bgColor : grey ? colors.grey50 : colors.white,
         padding,
       }}
     >

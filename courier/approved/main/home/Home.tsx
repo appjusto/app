@@ -16,7 +16,7 @@ import { useObservePendingRequests } from '../../../../common/store/api/courier/
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
-import { padding, screens } from '../../../../common/styles';
+import { colors, padding, screens } from '../../../../common/styles';
 import {
   startLocationUpdatesTask,
   stopLocationUpdatesTask,
@@ -86,7 +86,9 @@ export default function ({ navigation }: Props) {
                 <HomeCard
                   icon={<IconHomeCourierRequests />}
                   title={t('Novos pedidos disponíveis')}
-                  subtitle={t('Existem pedidos em abertos que você pode aceitar agora mesmo!')}
+                  subtitle={t('Existe pedidos que você pode aceitar agora mesmo!')}
+                  bgColor={colors.yellow}
+                  borderColor={colors.black}
                 />
               </View>
             </TouchableOpacity>
