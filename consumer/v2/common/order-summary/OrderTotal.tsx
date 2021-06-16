@@ -8,7 +8,7 @@ import {
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
 import Pill from '../../../../common/components/views/Pill';
-import { borders, colors, padding, texts } from '../../../../common/styles';
+import { colors, padding, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 
@@ -58,22 +58,14 @@ export const OrderTotal = ({ total, switchValue, onSwitchValueChange, cpf, setCp
       <PaddedView
         style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: colors.white }}
       >
-        <View
-          style={{
-            ...borders.default,
-            backgroundColor: colors.white,
-            borderColor: colors.black,
-            borderRadius: 32,
-          }}
-        >
-          <Switch
-            trackColor={{ false: colors.white, true: colors.white }}
-            thumbColor={switchValue ? colors.green500 : colors.yellow}
-            ios_backgroundColor={colors.white}
-            onValueChange={onSwitchValueChange}
-            value={switchValue}
-          />
-        </View>
+        <Switch
+          trackColor={{ false: colors.grey500, true: colors.white }}
+          thumbColor={switchValue ? colors.green500 : colors.yellow}
+          ios_backgroundColor={colors.white}
+          onValueChange={onSwitchValueChange}
+          value={switchValue}
+        />
+
         <Text style={{ ...texts.sm, marginLeft: padding }}>{t('Adicionar CPF na nota')}</Text>
       </PaddedView>
       {switchValue && (

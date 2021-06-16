@@ -10,7 +10,7 @@ import OrderMap from '../../../../common/screens/orders/OrderMap';
 import { OrderAdditionalInfo } from '../../../../common/screens/orders/summary/OrderAdditionaInfo';
 import { showToast } from '../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../common/store/ui/selectors';
-import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
+import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { Step } from '../../p2p/types';
 import { OrderCostBreakdown } from '../breakdown/OrderCostBreakdown';
@@ -150,12 +150,11 @@ export const OrderSummary = ({
           </Text>
           <View style={{ marginTop: halfPadding, flexDirection: 'row', alignItems: 'center' }}>
             <Switch
-              trackColor={{ false: colors.white, true: colors.white }}
+              trackColor={{ false: colors.grey500, true: colors.white }}
               thumbColor={shareDataWithBusiness ? colors.green500 : colors.yellow}
               ios_backgroundColor={colors.white}
               onValueChange={onShareData}
               value={shareDataWithBusiness}
-              style={{ ...borders.default }}
             />
             <Text style={{ ...texts.sm, marginLeft: padding }}>{t('Compartilhar dados')}</Text>
           </View>
