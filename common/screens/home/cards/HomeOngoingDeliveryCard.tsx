@@ -1,10 +1,12 @@
 import { ChatMessageUser, Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';
 import { IconMotocycleCentered } from '../../../icons/icon-motocycle-centered';
 import { IconRequest } from '../../../icons/icon-requests';
+import { getFlavor } from '../../../store/config/selectors';
 import { borders, colors, padding, texts } from '../../../styles';
 import { MessagesCard } from './MessagesCard';
 
@@ -14,42 +16,69 @@ type Props = {
 };
 
 export default function ({ order, onPress }: Props) {
-  const { dispatchingStatus, dispatchingState } = order;
+  const { dispatchingStatus, dispatchingState, type, status } = order;
+  // redux store
+  const flavor = useSelector(getFlavor);
   // UI
   let title = '';
-  if (order.status === 'confirming' || order.status === 'quote') {
-    title = t('Aguarde enquanto criamos seu pedido...');
-  } else if (order.status === 'confirmed') {
-    if (order.dispatchingStatus === 'matching') {
-      title = t('Procurando entregadores próximos:');
-    } else {
-      title = t('Aguarde enquanto criamos o seu pedido...');
-    }
-  } else if (order.status === 'preparing') {
-    title = t('Pedido em preparo no estabelecimento');
-  } else if (order.status === 'ready') {
-    if (order.dispatchingStatus === 'matching') {
-      title = t('Procurando entregadores');
-    } else {
-      title = t('Corrida em andamento');
-    }
-  } else {
-    title = t('Corrida em andamento');
-  }
   let detail = '';
-  if (order.origin && order.destination) {
-    if (dispatchingStatus === 'matching') {
-      detail = `${order.origin.address.main}`;
-    } else if (dispatchingState === 'going-pickup') {
-      detail = `${t('À caminho de')} ${order.origin.address.main}`;
-    } else if (dispatchingState === 'arrived-pickup') {
-      detail = 'Aguardando retirada';
-    } else if (dispatchingState === 'going-destination') {
-      detail = `${t('À caminho de')} ${order.destination.address.main}`;
-    } else if (dispatchingState === 'arrived-destination') {
-      detail = 'Aguardando entrega';
+  if (flavor === 'consumer') {
+    if (type === 'food') {
+      if (status === 'confirming') {
+        title = t('Aguarde enquanto criamos seu pedido...');
+      } else if (status === 'confirmed') {
+        title = t('Aguarde enquanto o restaurante confirma seu pedido.');
+      } else if (status === 'declined') {
+        title = t('Problema no pagamento');
+        detail = t('Selecione outra forma de pagamento');
+      } else if (status === 'preparing') {
+        title = t('Pedido em preparo no estabelecimento');
+      } else if (status === 'ready') {
+        if (dispatchingStatus === 'matching') {
+          title = t('Procurando entregadores');
+        }
+      }
+      if (order.origin && order.destination) {
+        if (dispatchingStatus === 'matching') detail = `${order.origin.address.main}`;
+        if (dispatchingState === 'going-pickup') {
+          detail = `${t('À caminho de')} ${order.business!.name}`;
+        } else if (dispatchingState === 'arrived-pickup') {
+          detail = 'Aguardando retirada';
+        } else if (dispatchingState === 'going-destination') {
+          detail = `${t('À caminho de')} ${order.destination.address.main}`;
+        } else if (dispatchingState === 'arrived-destination') {
+          detail = 'Aguardando entrega';
+        }
+      } else {
+        title = t('Corrida em andamento');
+      }
+    }
+    if (type === 'p2p') {
+      if (status === 'confirming') {
+        title = t('Aguarde enquanto criamos seu pedido...');
+      } else if (status === 'confirmed') {
+        title = t('Aguarde enquanto procuramos um entregador.');
+      } else if (status === 'declined') {
+        title = t('Problema no pagamento');
+        detail = t('Selecione outra forma de pagamento');
+      }
+      if (order.origin && order.destination) {
+        if (dispatchingStatus === 'matching') detail = `${order.origin.address.main}`;
+        if (dispatchingState === 'going-pickup') {
+          detail = `${t('À caminho de')} ${order.origin.address.main}`;
+        } else if (dispatchingState === 'arrived-pickup') {
+          detail = 'Aguardando retirada';
+        } else if (dispatchingState === 'going-destination') {
+          detail = `${t('À caminho de')} ${order.destination.address.main}`;
+        } else if (dispatchingState === 'arrived-destination') {
+          detail = 'Aguardando entrega';
+        }
+      } else {
+        title = t('Corrida em andamento');
+      }
     }
   }
+
   return (
     <TouchableOpacity onPress={() => onPress(order)}>
       <View
