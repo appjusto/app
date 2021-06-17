@@ -5,7 +5,7 @@ import React, { useContext } from 'react';
 import { Linking, Platform, Pressable, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ProfileParamList } from '../../../consumer/v2/main/profile/types';
 import { CourierProfileParamList } from '../../../courier/approved/main/profile/types';
 import { UnapprovedParamList } from '../../../courier/unapproved/types';
@@ -14,6 +14,7 @@ import { ApiContext, AppDispatch } from '../../app/context';
 import PaddedView from '../../components/containers/PaddedView';
 import ConfigItem from '../../components/views/ConfigItem';
 import { IconVersion } from '../../icons/icon-version';
+import { getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { screens } from '../../styles';
 import HomeCard from '../home/cards/HomeCard';
@@ -35,6 +36,8 @@ export const AboutApp = ({ navigation }: Props) => {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  // redux store
+  const flavor = useSelector(getFlavor);
   // handlers
   const easterEggHandler = () => {
     api.search().clearCache();
@@ -49,13 +52,19 @@ export const AboutApp = ({ navigation }: Props) => {
   const os = `${brand} ${model} ${Device.osVersion} ${
     Platform.OS === 'android' ? Device.platformApiLevel : ''
   }`;
+  // handlers
+  const freshDeskHandler = () => {
+    if (flavor === 'courier') {
+      Linking.openURL('https://appjusto.freshdesk.com/support/solutions/67000358755');
+    } else Linking.openURL('https://appjusto.freshdesk.com/support/home');
+  };
   return (
     <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
       <View style={{ flex: 1 }}>
         <ConfigItem
           title={t('Central de ajuda')}
           subtitle={t('Tire suas dúvidas')}
-          onPress={() => Linking.openURL('https://appjusto.freshdesk.com/')}
+          onPress={freshDeskHandler}
         />
         <ConfigItem
           title={t('Site oficial')}
