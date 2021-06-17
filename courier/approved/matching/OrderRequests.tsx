@@ -47,7 +47,12 @@ export default function ({ navigation, route }: Props) {
             title={formatCurrency(item.fee)}
             subtitle={`${formatDistance(item.distance)} ${t('de percurso')}`}
             onPress={() => {
-              navigation.navigate('Matching', { matchRequest: item });
+              navigation.navigate('MatchingNavigator', {
+                screen: 'Matching',
+                params: {
+                  matchRequest: item,
+                },
+              });
             }}
           >
             <RoundedText>{`${formatDistance(item.distanceToOrigin)} ${t(
