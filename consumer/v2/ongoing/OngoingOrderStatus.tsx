@@ -32,18 +32,19 @@ export const OngoingOrderStatus = ({ order }: Props) => {
   } else if (status === 'ready') {
     header = t('Pronto para entrega');
     description = t('Estamos aguardando o entregador pegar o seu pedido e levá-lo até você.');
-    if (dispatchingState === 'going-pickup') {
-      description = t('O entregador já está indo pegar o pedido.');
-    } else if (dispatchingState === 'arrived-pickup') {
-      description = t('O entregador já chegou ao restaurante.');
-    }
   } else if (status === 'dispatching') {
     if (dispatchingState === 'going-pickup') {
-      header = t('Indo para a coleta');
-      description = t('O entregador está indo para o local de coleta.');
+      header = order.type === 'food' ? t('Indo para o restaurante') : t('Indo para a coleta');
+      description =
+        order.type === 'food'
+          ? t('O entregador já está indo pegar o pedido.')
+          : t('O entregador está indo para o local de coleta.');
     } else if (dispatchingState === 'arrived-pickup') {
-      header = t('Aguardando coleta');
-      description = t('O entregador já chegou ao local de coleta.');
+      header = order.type === 'food' ? t('Aguardando retirada') : t('Aguardando coleta');
+      description =
+        order.type === 'food'
+          ? t('O entregador já chegou ao restaurante.')
+          : t('O entregador já chegou ao local de coleta.');
     } else if (dispatchingState === 'going-destination') {
       header = t('Saiu para entrega');
       description = t('Já pode se preparar! O entregador saiu e está levando o pedido até você.');
