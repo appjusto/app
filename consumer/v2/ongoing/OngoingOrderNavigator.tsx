@@ -6,6 +6,7 @@ import { ReportIssue } from '../../../common/screens/ReportIssue';
 import { DeliveryProblemFeedback } from '../../../courier/approved/ongoing/DeliveryProblemFeedback';
 import OrderCanceled from '../../../courier/approved/ongoing/OrderCanceled';
 import { t } from '../../../strings';
+import { OngoingOrderDeclined } from '../common/OngoingOrderDeclined';
 import { OngoingOrderCourierDetail } from './courier-detail/OngoingOrderCourierDetail';
 import OngoingOrder from './OngoingOrder';
 import { OngoingOrderCancelOrder } from './OngoingOrderCancelOrder';
@@ -23,6 +24,11 @@ export const OngoingOrderNavigator = () => {
       <Stack.Screen
         name="OngoingOrderConfirming"
         component={OrderConfirming}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="OngoingOrderDeclined"
+        component={OngoingOrderDeclined}
         options={{ headerShown: false }}
       />
       <Stack.Screen
