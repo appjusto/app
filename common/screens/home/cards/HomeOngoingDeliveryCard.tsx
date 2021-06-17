@@ -36,45 +36,45 @@ export default function ({ order, onPress }: Props) {
       } else if (status === 'ready') {
         if (dispatchingStatus === 'matching') {
           title = t('Procurando entregadores');
+        } else if (dispatchingStatus === 'confirmed') {
+          title = t('Corrida em andamento');
+          if (dispatchingState === 'going-pickup') {
+            detail = `${t('À caminho de')} ${order.business!.name}`;
+          } else if (dispatchingState === 'arrived-pickup') {
+            detail = t('Aguardando retirada');
+          }
         }
-      }
-      if (order.origin && order.destination) {
-        if (dispatchingStatus === 'matching') detail = `${order.origin.address.main}`;
-        if (dispatchingState === 'going-pickup') {
-          detail = `${t('À caminho de')} ${order.business!.name}`;
-        } else if (dispatchingState === 'arrived-pickup') {
-          detail = 'Aguardando retirada';
-        } else if (dispatchingState === 'going-destination') {
-          detail = `${t('À caminho de')} ${order.destination.address.main}`;
-        } else if (dispatchingState === 'arrived-destination') {
-          detail = 'Aguardando entrega';
-        }
-      } else {
+      } else if (status === 'dispatching') {
         title = t('Corrida em andamento');
+        if (dispatchingState === 'arrived-pickup') {
+          detail = t('Retirada efetuada');
+        } else if (dispatchingState === 'going-destination') {
+          detail = `${t('À caminho de')} ${order.destination!.address.main}`;
+        } else if (dispatchingState === 'arrived-destination') {
+          detail = 'Entregador chegou para entrega';
+        }
       }
     }
     if (type === 'p2p') {
       if (status === 'confirming') {
         title = t('Aguarde enquanto criamos seu pedido...');
       } else if (status === 'confirmed') {
-        title = t('Aguarde enquanto procuramos um entregador.');
+        title = t('Procurando entregador próximo a.');
+        detail = `${order.origin!.address.main}`;
       } else if (status === 'declined') {
         title = t('Problema no pagamento');
         detail = t('Selecione outra forma de pagamento');
-      }
-      if (order.origin && order.destination) {
-        if (dispatchingStatus === 'matching') detail = `${order.origin.address.main}`;
+      } else if (status === 'dispatching') {
+        title = t('Corrida em andamento');
         if (dispatchingState === 'going-pickup') {
-          detail = `${t('À caminho de')} ${order.origin.address.main}`;
+          detail = `${t('À caminho de')} ${order.origin!.address.main}`;
         } else if (dispatchingState === 'arrived-pickup') {
           detail = 'Aguardando retirada';
         } else if (dispatchingState === 'going-destination') {
-          detail = `${t('À caminho de')} ${order.destination.address.main}`;
+          detail = `${t('À caminho de')} ${order.destination!.address.main}`;
         } else if (dispatchingState === 'arrived-destination') {
           detail = 'Aguardando entrega';
         }
-      } else {
-        title = t('Corrida em andamento');
       }
     }
   }
