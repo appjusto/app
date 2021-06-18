@@ -49,7 +49,7 @@ export default (context: ConfigContext): ExpoConfig => {
       icon: './assets/notification-icon.png',
     },
     updates: {
-      fallbackToCacheTimeout: 30000,
+      fallbackToCacheTimeout: 1000 * (flavor === 'courier' ? 120 : 10),
     },
     assetBundlePatterns: ['**/*'],
     ios: ios(),
