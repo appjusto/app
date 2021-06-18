@@ -1,7 +1,6 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import * as Location from 'expo-location';
 import React from 'react';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -35,20 +34,8 @@ export default function ({ navigation }: Props) {
   // redux store
   const ongoingOrders = useSelector(getOrders);
   // state
-  const { coords, permissionResponse } = useLastKnownLocation();
+  const { coords } = useLastKnownLocation();
   const [availableCouriers, setAvailableCouriers] = React.useState(0);
-  // side effects
-  // request location permission
-  React.useEffect(() => {
-    if (permissionResponse?.status === Location.PermissionStatus.DENIED) {
-      navigation.navigate('PermissionDenied', {
-        title: t('Precisamos acessar sua localização'),
-        subtitle: t(
-          'Para que possamos determinar o trajeto com precisão, precisamos que você dê acesso ao AppJusto para usar sua localização.'
-        ),
-      });
-    }
-  }, [permissionResponse]);
   // fetch total couriers
   const fetchTotalCouriersNearby = async () => {
     if (!coords) return;

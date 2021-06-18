@@ -1,4 +1,7 @@
 import { CourierStatus } from '@appjusto/types';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { CompositeNavigationProp, useNavigation } from '@react-navigation/core';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Dimensions, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,6 +24,13 @@ import {
 } from '../../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
+import { ApprovedParamList } from '../../types';
+import { MainParamList } from '../types';
+
+type ScreenNavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<MainParamList, 'Home'>,
+  StackNavigationProp<ApprovedParamList, 'MainNavigator'>
+>;
 
 type Props = {
   onFleetDetail: () => void;
@@ -30,6 +40,7 @@ const { width } = Dimensions.get('window');
 
 export default function ({ onFleetDetail }: Props) {
   // context
+  const navigation = useNavigation<ScreenNavigationProp>();
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   const tallerDevice = useTallerDevice();
@@ -46,6 +57,13 @@ export default function ({ onFleetDetail }: Props) {
       return;
     }
     const newStatus: CourierStatus = working ? 'unavailable' : 'available';
+    if (!courier.notificationToken && newStatus === 'available') {
+      navigation.navigate('PermissionDenied', {
+        title: t('Precisamos de permissão para te enviar mensagens'),
+        subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
+      });
+      return;
+    }
     dispatch(updateProfile(api)(courier.id, { status: newStatus }));
   };
 

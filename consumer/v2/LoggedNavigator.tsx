@@ -4,7 +4,6 @@ import { ActivityIndicator, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../common/app/context';
 import { defaultScreenOptions } from '../../common/screens/options';
-import { PermissionDenied } from '../../common/screens/PermissionDenied';
 import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
 import { RegistrationSubmitted } from '../../common/screens/unlogged/onboarding/RegistrationSubmitted';
 import { SelectLocation } from '../../common/screens/unlogged/onboarding/SelectLocation';
@@ -105,11 +104,6 @@ export const LoggedNavigator = () => {
           name="ProfileNavigator"
           component={ProfileNavigator}
           options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="PermissionDenied"
-          component={PermissionDenied}
-          options={{ title: t('Compartilhar sua localização') }}
         />
         <Stack.Screen
           name="OngoingOrderCancelFeedback"

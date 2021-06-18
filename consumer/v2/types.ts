@@ -1,4 +1,3 @@
-import { PermissionDeniedParamList } from '../../common/screens/PermissionDenied';
 import { NestedNavigatorParams } from '../../common/types';
 import { DeliveredOrderNavigatorParamList } from './delivered/types';
 import { FoodOrderNavigatorParamList } from './food/types';
@@ -28,4 +27,4 @@ export type LoggedNavigatorParamList = {
   DeliveredOrderNavigator: NestedNavigatorParams<DeliveredOrderNavigatorParamList>;
   ProfileNavigator: NestedNavigatorParams<ProfileParamList>;
   OngoingOrderCancelFeedback: undefined;
-} & PermissionDeniedParamList;
+};
