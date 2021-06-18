@@ -55,6 +55,7 @@ export const OngoingOrdersStatuses: OrderStatus[] = [
   'preparing',
   'ready',
   'dispatching',
+  'declined',
 ];
 
 export const isOrderOngoing = (order: Order) => OngoingOrdersStatuses.includes(order.status);
