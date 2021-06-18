@@ -72,7 +72,7 @@ export const P2POrderHeader = ({ order }: Props) => {
         )}
       </ShowIf>
       {/* after order has been created */}
-      <ShowIf test={!canChangeRoute}>{() => <OrderMap order={order} ratio={1} />}</ShowIf>
+      <ShowIf test={!canChangeRoute}>{() => <OrderMap order={order} ratio={360 / 160} />}</ShowIf>
     </View>
   );
 };
