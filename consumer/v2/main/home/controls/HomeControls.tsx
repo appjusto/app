@@ -30,7 +30,7 @@ export const HomeControls = ({ onStartOrderPress }: Props) => {
               },
             ]}
           >
-            {t('Somos um delivery aberto, transparente e consciente.')}
+            {t('Um delivery aberto, transparente e consciente.')}
           </Text>
         )}
       </ShowIf>
@@ -43,7 +43,7 @@ export const HomeControls = ({ onStartOrderPress }: Props) => {
         }}
       >
         <HomeControlItem
-          title={t('Restaurantes e alimentação')}
+          title={t('Restaurantes')}
           subtitle={t('Peça comida de uma forma justa')}
           icon={<IconIllustrationPizza />}
           onPress={() => onStartOrderPress('food')}
