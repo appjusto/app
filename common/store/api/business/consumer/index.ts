@@ -14,7 +14,6 @@ export default class ConsumerApi {
   constructor(private refs: FirebaseRefs, private iugu: IuguApi) {}
 
   async saveCard(
-    cpf: string,
     data: IuguCreatePaymentTokenData,
     cancelToken?: CancelToken
   ): Promise<SaveCardResult> {
@@ -22,7 +21,6 @@ export default class ConsumerApi {
     if (!paymentToken) throw new Error(t('Não foi possível salvar o cartão de crédito.'));
     const payload: SavePaymentTokenPayload = {
       paymentToken,
-      cpf,
       meta: { version: Constants.nativeBuildVersion },
     };
     const result = await this.refs.getSavePaymentTokenCallable()(payload);

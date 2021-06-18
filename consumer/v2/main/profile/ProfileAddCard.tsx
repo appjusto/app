@@ -1,5 +1,4 @@
 import { Feather } from '@expo/vector-icons';
-import * as cpfutils from '@fnando/cpf';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty, toNumber, trim } from 'lodash';
@@ -13,8 +12,6 @@ import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import {
   cardFormatter,
   cardMask,
-  cpfFormatter,
-  cpfMask,
 } from '../../../../common/components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
@@ -56,8 +53,6 @@ export default function ({ navigation, route }: Props) {
   const [cvv, setCVV] = React.useState('');
   const [name, setName] = React.useState('');
   const [surname, setSurname] = React.useState('');
-  const [cpf, setCPF] = React.useState('');
-  const [focusedField, setFocusedField] = React.useState<string>();
   const [isLoading, setLoading] = React.useState(false);
   const canSubmit =
     !isEmpty(number) &&
@@ -65,15 +60,13 @@ export default function ({ navigation, route }: Props) {
     !isEmpty(year) &&
     !isEmpty(cvv) &&
     !isEmpty(name) &&
-    !isEmpty(surname) &&
-    cpfutils.isValid(cpf);
+    !isEmpty(surname);
   // UI handlers
   const createCancelToken = useAxiosCancelToken();
   const saveCardHandler = async () => {
     try {
       setLoading(true);
       const result = await api.consumer().saveCard(
-        cpf,
         {
           number,
           month,
@@ -99,7 +92,6 @@ export default function ({ navigation, route }: Props) {
   const cvvRef = React.useRef<TextInput>(null);
   const nameRef = React.useRef<TextInput>(null);
   const surnameRef = React.useRef<TextInput>(null);
-  const cpfRef = React.useRef<TextInput>(null);
   // UI
   return (
     <ScrollView style={screens.config} contentContainerStyle={{ flexGrow: 1 }}>
@@ -198,35 +190,11 @@ export default function ({ navigation, route }: Props) {
               textContentType="familyName"
               autoCompleteType="name"
               autoCapitalize="characters"
-              returnKeyType="next"
-              blurOnSubmit={false}
+              returnKeyType="done"
+              blurOnSubmit
               onChangeText={setSurname}
-              onSubmitEditing={() => cpfRef.current?.focus()}
             />
           </View>
-          <PatternInput
-            ref={cpfRef}
-            style={{ marginTop: padding }}
-            title={t('CPF do titular')}
-            value={cpf}
-            placeholder={t('Seu CPF, apenas números')}
-            mask={cpfMask}
-            parser={numbersOnlyParser}
-            formatter={cpfFormatter}
-            keyboardType="number-pad"
-            returnKeyType="done"
-            blurOnSubmit
-            onFocus={() => setFocusedField('cpf')}
-            onBlur={() => setFocusedField(undefined)}
-            onChangeText={(text) => {
-              if (!isNaN(toNumber(text))) setCPF(text);
-            }}
-          />
-          {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
-            <Text style={{ ...texts.sm, ...texts.bold, color: colors.grey700, marginTop: padding }}>
-              {t('O CPF digitado não é válido.')}
-            </Text>
-          )}
         </View>
 
         <View style={{ flex: 1 }} />
@@ -247,8 +215,9 @@ export default function ({ navigation, route }: Props) {
               'Cada uma dessas cobranças vai pra uma conta específica, facilitando a divisão entre restaurantes e entregadores.'
             )}
           </Text>
+          <View style={{ flex: 1 }} />
           <DefaultButton
-            style={{ marginTop: padding }}
+            style={{ marginVertical: padding }}
             title={t('Salvar')}
             onPress={saveCardHandler}
             disabled={!canSubmit || isLoading}
