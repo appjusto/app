@@ -182,7 +182,7 @@ export default function ({ navigation, route }: Props) {
         </View>
         {dispatchingState !== 'arrived-destination' && (
           <View>
-            <OrderMap order={order!} ratio={360 / 316} />
+            <OrderMap order={order!} ratio={1} />
             <RouteIcons order={order} />
             <View>
               <StatusAndMessages order={order} onPress={(from) => openChat(from.id, from.agent)} />
