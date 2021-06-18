@@ -24,16 +24,6 @@ export default function ({ order }: Props) {
   let message = '';
   if (flavor === 'consumer') {
     if (type === 'food') {
-      // if (
-      //   dispatchingState === 'arrived-pickup' &&
-      //   status === 'dispatching' &&
-      //   order.dispatchingStatus === 'confirmed'
-      // ) {
-      //   title = t('Entregador chegou ao restaurante');
-      //   message = t(
-      //     'Entregador já está com o pedido em mãos e deve sair para a entrega em instantes.'
-      //   );
-      // }
       if (dispatchingState === 'arrived-pickup') {
         title = t('Entregador chegou ao restaurante');
         message = t('Entregador está aguardando receber o pedido do restaurante.');
