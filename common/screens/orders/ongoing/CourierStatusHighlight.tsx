@@ -26,7 +26,7 @@ export default function ({ order }: Props) {
     if (type === 'food') {
       if (dispatchingState === 'arrived-pickup') {
         title = t('Entregador chegou ao restaurante');
-        message = t('Entregador está aguardando receber o pedido do restaurante.');
+        message = t('Entregador está aguardando receber o pedido do restaurante.'); // mostra essa msg tb qdo o entregador já recebeu
       } else if (dispatchingState === 'arrived-destination') {
         title = t('Entregador chegou!');
         message = t('Entregador está esperando para entregar o pedido.');
