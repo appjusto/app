@@ -67,7 +67,6 @@ export default function ({ navigation, route }: Props) {
     navigation.replace('RefuseDelivery', { orderId, issueType: 'courier-drops-delivery' });
     // navigation.replace('RefuseDelivery', { orderId, issueType: 'courier-rejects-matching' });
   };
-  console.log(matchRequest.readyAt);
   // UI
   return (
     <ScrollView style={[screens.default]} contentContainerStyle={{ flexGrow: 1 }}>
@@ -76,9 +75,9 @@ export default function ({ navigation, route }: Props) {
         <View style={{ alignItems: 'center', backgroundColor: colors.green500 }}>
           <Text style={[texts.x2l, { marginTop: 40 }]}>{t('Nova corrida para você!')}</Text>
           <Text style={[texts.x40l, { marginBottom: 40 }]}>{formatCurrency(matchRequest.fee)}</Text>
-          {matchRequest.readyAt ? (
+          {matchRequest.readyAt && formatTime(matchRequest.readyAt) ? (
             <RoundedText style={{ marginBottom: 40 }}>
-              {formatTime(matchRequest.readyAt)}
+              {formatTime(matchRequest.readyAt)!}
             </RoundedText>
           ) : (
             <RoundedText style={{ marginBottom: 40 }}>{t('Pedido pronto')}</RoundedText>

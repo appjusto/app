@@ -11,12 +11,12 @@ export const getWeekName = (index: number) => weekDays[index];
 export const formatDate = (
   date: Date | firebase.firestore.FieldValue,
   pattern: 'default' | 'monthYear' = 'default'
-) => i18n.l(`date.formats.${pattern}`, dateInput(date));
+) => (date ? i18n.l(`date.formats.${pattern}`, dateInput(date)) : undefined);
 
 export const formatTime = (
   date: Date | firebase.firestore.FieldValue,
   pattern: 'default' | 'raw' = 'default'
-) => i18n.l(`time.formats.${pattern}`, dateInput(date));
+) => (date ? i18n.l(`time.formats.${pattern}`, dateInput(date)) : undefined);
 
 export const formatDuration = (duration: number) => {
   return `${round(duration / 60, 0)} min`;
