@@ -42,7 +42,11 @@ export default function ({ order, onPress }: Props) {
             detail = `${t('À caminho de')} ${order.business!.name}`;
           } else if (dispatchingState === 'arrived-pickup') {
             detail = t('Aguardando retirada');
+          } else if (!dispatchingState) {
+            title = t('Corrida em andamento');
           }
+        } else if (dispatchingStatus === 'matched') {
+          title = t('Corrida em andamento');
         }
       } else if (status === 'dispatching') {
         title = t('Corrida em andamento');
@@ -108,9 +112,10 @@ export default function ({ order, onPress }: Props) {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   alignItems: 'center',
+                  maxWidth: '95%',
                 }}
               >
-                <View>
+                <View style={{ width: '100%' }}>
                   <Text style={{ ...texts.sm }} numberOfLines={2}>
                     {title}
                   </Text>
