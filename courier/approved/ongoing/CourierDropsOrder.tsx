@@ -58,7 +58,7 @@ export const CourierDropsOrder = ({ navigation, route }: Props) => {
         });
       } catch (error) {
         setLoading(false);
-        dispatch(showToast(t('Não foi possível enviar o comentário')));
+        dispatch(showToast(t('Não foi possível enviar o comentário'), 'error'));
       } finally {
         setLoading(false);
       }

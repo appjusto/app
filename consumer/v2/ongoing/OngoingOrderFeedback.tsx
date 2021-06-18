@@ -70,7 +70,7 @@ export default ({ navigation, route }: Props) => {
       navigation.navigate('MainNavigator', { screen: 'Home' });
     } catch (error) {
       // find a better error message
-      dispatch(showToast(t('Não foi possível enviar a avaliação e/ou caixinha')));
+      dispatch(showToast(t('Não foi possível enviar a avaliação e/ou caixinha'), 'error'));
     }
     setLoading(false);
   };

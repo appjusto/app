@@ -78,7 +78,7 @@ export default function ({ navigation, route }: Props) {
       setLoading(false);
       console.log(error);
       Sentry.Native.captureException(error);
-      dispatch(showToast(t('Não foi possível criar a frota.')));
+      dispatch(showToast(t('Não foi possível criar a frota.'), 'error'));
     }
   };
 

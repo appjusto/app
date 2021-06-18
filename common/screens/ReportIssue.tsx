@@ -107,7 +107,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
         setLoading(false);
         // setIssueSent(true);
       } catch (error) {
-        dispatch(showToast(toastMessage));
+        dispatch(showToast(toastMessage, 'error'));
       }
     })();
   };

@@ -66,7 +66,7 @@ export default function () {
             style={{ marginRight: halfPadding }}
           />
         </View>
-        <Text style={{ ...texts.xs, flexWrap: 'wrap' }} numberOfLines={3}>
+        <Text style={{ ...texts.xs, flexWrap: 'wrap', maxWidth: '90%' }} numberOfLines={3}>
           {message}
         </Text>
       </View>

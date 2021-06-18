@@ -70,7 +70,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
       if (tip > 0) await api.order().tipCourier(order.id, tip);
       dispatch(showToast(t('Caixinha enviada!')));
     } catch (error) {
-      dispatch(showToast(t('Não foi possível enviar a caixinha')));
+      dispatch(showToast(t('Não foi possível enviar a caixinha'), 'error'));
     }
     setLoading(false);
   };
@@ -87,7 +87,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
         setReviewSent(true);
       }
     } catch (error) {
-      dispatch(showToast(t('Não foi possível enviar a avaliação')));
+      dispatch(showToast(t('Não foi possível enviar a avaliação'), 'error'));
     }
     setLoading(false);
   };

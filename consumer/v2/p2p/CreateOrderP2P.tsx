@@ -138,7 +138,10 @@ export default function ({ navigation, route }: Props) {
     }
     if (wantsCpf && cpf.length !== 11) {
       dispatch(
-        showToast(t('CPF preenchido incorretamente. Por favor confira o número do seu documento'))
+        showToast(
+          t('CPF preenchido incorretamente. Por favor confira o número do seu documento'),
+          'error'
+        )
       );
       return;
     }

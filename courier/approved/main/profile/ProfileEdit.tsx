@@ -73,7 +73,7 @@ export default function ({ navigation, route }: Props) {
       await dispatch(updateProfile(api)(courier.id, updatedCourier));
       navigation.goBack();
     } catch (error) {
-      dispatch(showToast(t('Não foi possível atualizar seu perfil.')));
+      dispatch(showToast(t('Não foi possível atualizar seu perfil.'), 'error'));
     }
   };
   // UI
