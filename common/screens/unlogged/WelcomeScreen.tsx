@@ -61,11 +61,11 @@ export default function ({ navigation, route }: Props) {
   const signInHandler = useCallback(async () => {
     Keyboard.dismiss();
     if (!acceptedTerms) {
-      dispatch(showToast(t('Você precisa aceitar os termos para criar sua conta.')));
+      dispatch(showToast(t('Você precisa aceitar os termos para criar sua conta.'), 'error'));
       return;
     }
     if (validateEmail(email).status !== 'ok') {
-      dispatch(showToast(t('Digite um e-mail válido.')));
+      dispatch(showToast(t('Digite um e-mail válido.'), 'error'));
       return;
     }
     track('Signing in', { email });

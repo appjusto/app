@@ -90,7 +90,7 @@ export default function ({ navigation, route }: Props) {
       } else navigation.pop();
     } catch (error) {
       setLoading(false);
-      dispatch(showToast(error.toString()));
+      dispatch(showToast(error.toString(), 'error'));
     }
   };
   // refs

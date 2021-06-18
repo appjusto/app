@@ -99,7 +99,7 @@ export default function ({ onFleetDetail }: Props) {
           }}
         >
           <View style={styles.controlItem}>
-            <IconMotocycleCentered />
+            {working ? <IconMotocycleCentered flipped /> : <IconMotocycleCentered />}
             <Text style={[texts.sm, { paddingTop: 4 }]}>
               {working ? t('Disponível para corridas') : t('Indisponível para corridas')}
             </Text>
@@ -157,7 +157,7 @@ export default function ({ onFleetDetail }: Props) {
             </Text>
             <View style={{ flex: 1 }} />
             <TouchableOpacity onPress={() => onFleetDetail()}>
-              <View style={{ marginTop: padding, alignItems: 'center' }}>
+              <View style={{ marginTop: padding, alignItems: 'flex-start' }}>
                 <RoundedText>{t('Mudar de frota')}</RoundedText>
               </View>
             </TouchableOpacity>

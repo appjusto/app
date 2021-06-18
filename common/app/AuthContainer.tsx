@@ -17,7 +17,7 @@ export default ({ Unlogged, Logged }: Props) => {
   const [authState, user] = useAuth();
   useEffect(() => {
     if (authState === AuthState.InvalidCredentials) {
-      dispatch(showToast(t('Sua sessão expirou. Faça login novamente.')));
+      dispatch(showToast(t('Sua sessão expirou. Faça login novamente.'), 'error'));
     }
   }, [authState, user]);
 

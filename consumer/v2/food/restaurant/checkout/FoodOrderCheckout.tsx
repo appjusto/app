@@ -110,7 +110,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       return;
     }
     if (wantsCpf && cpf.length !== 11) {
-      dispatch(showToast(t('CPF preenchido incorretamente. Por favor confira novamente')));
+      dispatch(showToast(t('CPF preenchido incorretamente. Por favor confira novamente'), 'error'));
       return;
     }
     if (restaurant.minimumOrder && restaurant.minimumOrder > getOrderTotal(order!)) {

@@ -48,7 +48,7 @@ export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
         navigation.replace('OngoingOrderCancelFeedback');
       } catch (error) {
         setLoading(false);
-        dispatch(showToast(error.toString()));
+        dispatch(showToast(error.toString(), 'error'));
       }
     })();
   };

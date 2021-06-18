@@ -66,7 +66,7 @@ export default function ({ route, navigation }: Props) {
         navigation.replace('MainNavigator', { screen: 'Home' });
       } catch (error) {
         setLoading(false);
-        dispatch(showToast(error.toString()));
+        dispatch(showToast(error.toString(), 'error'));
       }
     })();
   };

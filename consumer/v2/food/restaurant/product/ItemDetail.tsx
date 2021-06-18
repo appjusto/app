@@ -10,6 +10,7 @@ import { ApiContext } from '../../../../../common/app/context';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import HR from '../../../../../common/components/views/HR';
+import useTallerDevice from '../../../../../common/hooks/useTallerDevice';
 import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
 import { getBusinessNextOpeningDay } from '../../../../../common/store/api/business/selectors';
@@ -51,6 +52,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const business = useContextBusiness();
   const businessId = useContextBusinessId();
   const activeOrder = useContextActiveOrder();
+  const tallerDevice = useTallerDevice();
   // redux store
   const consumer = useSelector(getConsumer)!;
   const currentPlace = useSelector(getCurrentPlace);
@@ -137,8 +139,12 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   };
   // UI
   return (
-    <View style={{ ...screens.default }}>
-      <ScrollView style={{ ...screens.default }} scrollIndicatorInsets={{ right: 1 }}>
+    <ScrollView
+      style={{ ...screens.default }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
+      <View style={{ flex: 1 }}>
         <View style={{ paddingHorizontal: padding, marginBottom: 24 }}>
           <View style={{ width: '100%', height: 240, overflow: 'hidden' }}>
             {imageURI && (
@@ -162,9 +168,9 @@ export const ItemDetail = ({ navigation, route }: Props) => {
             </Text>
           </View>
         </View>
-
+        {tallerDevice ? <View style={{ flex: 1 }} /> : null}
         {isAcceptingOrders ? (
-          <View>
+          <View style={{ flex: 1 }}>
             <ItemComplements
               product={product}
               selectedComplements={complements}
@@ -192,6 +198,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
                 onChangeText={setNotes}
               />
             </View>
+            <View style={{ flex: 1 }} />
             <HR />
             <PaddedView>
               <ItemQuantity
@@ -227,7 +234,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
             ) : null}
           </View>
         )}
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   );
 };

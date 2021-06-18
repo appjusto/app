@@ -47,7 +47,7 @@ export const AboutApp = ({ navigation }: Props) => {
   // handlers
   const easterEggHandler = () => {
     api.search().clearCache();
-    dispatch(showToast('Clearing algolia cache...'));
+    dispatch(showToast('Clearing algolia cache...', 'success'));
   };
   // UI
   const appVersion = `${t('Versão:')} ${Constants.nativeAppVersion} / ${

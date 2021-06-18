@@ -27,17 +27,19 @@ export default function ({ title, subtitle, icon, grey, bgColor, borderColor }: 
       {icon}
       <View style={{ marginLeft: padding }}>
         <Text style={{ ...texts.sm }}>{title}</Text>
-        <Text
-          style={{
-            ...texts.xs,
-            color: colors.grey700,
-            flexWrap: 'wrap',
-            maxWidth: '85%',
-          }}
-          numberOfLines={2}
-        >
-          {subtitle}
-        </Text>
+        <View style={{ maxWidth: '90%' }}>
+          <Text
+            style={{
+              ...texts.xs,
+              color: colors.grey700,
+              flexWrap: 'wrap',
+              width: '100%',
+            }}
+            numberOfLines={2}
+          >
+            {subtitle}
+          </Text>
+        </View>
       </View>
     </View>
   );
