@@ -2,9 +2,9 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
@@ -14,6 +14,7 @@ import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { getOrders } from '../../../../common/store/order/selectors';
+import { showToast } from '../../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { LoggedNavigatorParamList } from '../../types';
@@ -57,6 +58,10 @@ export default function ({ navigation }: Props) {
   React.useEffect(() => {
     fetchTotalCouriersNearby();
   }, [coords]);
+  const dispatch = useDispatch();
+  const toastHandler = () => {
+    dispatch(showToast(t('Sua sessão expirou. Faça login novamente.'), 'error'));
+  };
   // UI
   return (
     <SafeAreaView style={[screens.config]}>
@@ -96,6 +101,11 @@ export default function ({ navigation }: Props) {
               title="Divulgue o AppJusto"
               subtitle="Compartilhe esse movimento por uma economia mais justa."
             />
+          </View>
+          <View style={{ marginTop: padding }}>
+            <TouchableOpacity onPress={toastHandler}>
+              <Text>MOSTAR TOAST</Text>
+            </TouchableOpacity>
           </View>
         </PaddedView>
       </ScrollView>

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Animated, Text, View } from 'react-native';
+import { Animated, Image, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { checkToast, errorToast } from '../../../assets/icons';
 import { hideToast } from '../../store/ui/actions';
 import { getToast } from '../../store/ui/selectors';
-import { borders, colors, halfPadding, padding, texts } from '../../styles';
+import { colors, halfPadding, texts } from '../../styles';
 
 // const percentualWidth = 0.8;
 const duration = 250;
@@ -40,27 +41,31 @@ export default function () {
     <Animated.View
       style={{
         position: 'absolute',
-        bottom: 40,
-        left: padding,
-        right: padding,
+        bottom: 24,
         opacity,
+        width: '100%',
+        minHeight: 48,
+        flex: 1,
       }}
     >
       <View
         style={{
-          ...borders.default,
-          ...borders.rounder,
-          ...borders.thicker,
-          borderColor: colors.black,
-          backgroundColor: type === 'success' ? colors.green500 : colors.yellow,
+          backgroundColor: type === 'success' ? colors.green100 : colors.yellow,
           width: '100%',
           // flexWrap: 'wrap',
           padding: halfPadding,
-          // alignItems: 'center',
           justifyContent: 'center',
+          alignItems: 'center',
           flex: 1,
+          flexDirection: 'row',
         }}
       >
+        <View>
+          <Image
+            source={type === 'success' ? checkToast : errorToast}
+            style={{ marginRight: halfPadding }}
+          />
+        </View>
         <Text style={{ ...texts.xs, flexWrap: 'wrap' }} numberOfLines={3}>
           {message}
         </Text>
