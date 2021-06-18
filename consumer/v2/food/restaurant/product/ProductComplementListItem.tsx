@@ -59,9 +59,11 @@ export const ProductComplementListItem = ({ complement, selected, disabled, onTo
           ) : null}
           <Text style={{ ...texts.sm, marginTop: 4 }}>{formatCurrency(complement.price)}</Text>
         </View>
-        <View>
-          <ListItemImage uri={imageURI} height={96} width={96} />
-        </View>
+        {imageURI ? (
+          <View>
+            <ListItemImage uri={imageURI} height={96} width={96} />
+          </View>
+        ) : null}
       </View>
     </TouchableWithoutFeedback>
   );
