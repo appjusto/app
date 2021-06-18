@@ -1,6 +1,7 @@
 import React from 'react';
 import { Linking, TouchableOpacity } from 'react-native';
 import { t } from '../../../../strings';
+import { AppJustoInstagramURL, AppJustoWhatsAppURL } from '../../../../strings/values';
 import { IconInstagram } from '../../../icons/icon-instagram';
 import { IconWhatsapp } from '../../../icons/icon-whatsapp';
 import HomeCard from './HomeCard';
@@ -19,8 +20,8 @@ export const SocialMediaCard = ({ app }: Props) => {
     <TouchableOpacity
       onPress={
         app === 'instagram'
-          ? () => Linking.openURL('https://www.instagram.com/appjusto/')
-          : () => Linking.openURL('https://wa.me/551199177-3353')
+          ? () => Linking.openURL(AppJustoInstagramURL)
+          : () => Linking.openURL(AppJustoWhatsAppURL)
       }
     >
       <HomeCard

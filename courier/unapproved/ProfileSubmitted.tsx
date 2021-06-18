@@ -21,6 +21,7 @@ import { useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../common/styles';
 import { t } from '../../strings';
+import { AppJustoWhatsAppURL } from '../../strings/values';
 import { UnapprovedParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<UnapprovedParamList, 'ProfileSubmitted'>;
@@ -117,7 +118,7 @@ export default function ({ navigation }: Props) {
                       <DefaultButton
                         secondary
                         title={t('Adicionar')}
-                        onPress={() => Linking.openURL('https://wa.me/551199177-3353')}
+                        onPress={() => Linking.openURL(AppJustoWhatsAppURL)}
                         style={{ marginTop: padding }}
                       />
                     )}

@@ -57,12 +57,10 @@ export default function ({ navigation }: Props) {
   // screen state
   const [currentSelfie, setCurrentSelfie] = React.useState<ImageURISource | undefined | null>();
   const [newSelfie, setNewSelfie] = React.useState<ImageURISource | undefined | null>();
-  const [currentDocumentImage, setCurrentDocumentImage] = React.useState<
-    ImageURISource | undefined | null
-  >();
-  const [newDocumentImage, setNewDocumentImage] = React.useState<
-    ImageURISource | undefined | null
-  >();
+  const [currentDocumentImage, setCurrentDocumentImage] =
+    React.useState<ImageURISource | undefined | null>();
+  const [newDocumentImage, setNewDocumentImage] =
+    React.useState<ImageURISource | undefined | null>();
 
   type ChangeImageType = typeof setNewSelfie;
 

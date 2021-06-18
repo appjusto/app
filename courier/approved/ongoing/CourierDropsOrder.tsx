@@ -12,7 +12,7 @@ import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
-import { t } from '.././../../strings';
+import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import { OngoingDeliveryNavigatorParamList } from './types';
 

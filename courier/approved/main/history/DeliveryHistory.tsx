@@ -21,8 +21,7 @@ import {
 } from '../../../../common/store/order/selectors';
 import { getUser } from '../../../../common/store/user/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
-import { formatCurrency } from '../../../../common/utils/formatters';
-import { getMonthName } from '../../../../common/utils/formatters/datetime';
+import { formatCurrency, getMonthName } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';

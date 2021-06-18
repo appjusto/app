@@ -10,6 +10,12 @@ import { ProfileParamList } from '../../../consumer/v2/main/profile/types';
 import { CourierProfileParamList } from '../../../courier/approved/main/profile/types';
 import { UnapprovedParamList } from '../../../courier/unapproved/types';
 import { t } from '../../../strings';
+import {
+  AppJustoFreshdeskConsumerURL,
+  AppJustoFreshdeskCourierURL,
+  AppJustoGithubURL,
+  AppJustoSiteURL,
+} from '../../../strings/values';
 import { ApiContext, AppDispatch } from '../../app/context';
 import PaddedView from '../../components/containers/PaddedView';
 import ConfigItem from '../../components/views/ConfigItem';
@@ -54,9 +60,9 @@ export const AboutApp = ({ navigation }: Props) => {
   }`;
   // handlers
   const freshDeskHandler = () => {
-    if (flavor === 'courier') {
-      Linking.openURL('https://appjusto.freshdesk.com/support/solutions/67000358755');
-    } else Linking.openURL('https://appjusto.freshdesk.com/support/home');
+    Linking.openURL(
+      flavor === 'courier' ? AppJustoFreshdeskCourierURL : AppJustoFreshdeskConsumerURL
+    );
   };
   return (
     <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
@@ -69,12 +75,12 @@ export const AboutApp = ({ navigation }: Props) => {
         <ConfigItem
           title={t('Site oficial')}
           subtitle={t('Acesse nosso site')}
-          onPress={() => Linking.openURL('https://appjusto.com.br/')}
+          onPress={() => Linking.openURL(AppJustoSiteURL)}
         />
         <ConfigItem
           title={t('Código aberto')}
           subtitle={t('Acesse o repositório com o código no GitHub')}
-          onPress={() => Linking.openURL('https://github.com/appjusto')}
+          onPress={() => Linking.openURL(AppJustoGithubURL)}
         />
       </View>
       <View style={{ flex: 1 }} />

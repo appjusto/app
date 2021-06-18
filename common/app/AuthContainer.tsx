@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-
 import { t } from '../../strings';
 import useAuth, { AuthState } from '../hooks/useAuth';
 import { showToast } from '../store/ui/actions';

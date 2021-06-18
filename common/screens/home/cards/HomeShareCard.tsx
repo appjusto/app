@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { Share, TouchableOpacity } from 'react-native';
 import { t } from '../../../../strings';
+import { AppJustoSiteURL } from '../../../../strings/values';
 import { IconShare } from '../../../icons/icon-share';
 import HomeCard from './HomeCard';
 
@@ -14,9 +15,9 @@ export default function ({ title, subtitle, isGrey }: Props) {
   const shareHandler = useCallback(() => {
     try {
       Share.share({
-        message: `O AppJusto é um app de entregas open-source que cobra menos dos restaurantes e dá autonomia aos entregadores. Faça parte desse movimento! Saiba mais em: https://appjusto.com.br`,
+        message: `O AppJusto é um app de entregas open-source que cobra menos dos restaurantes e dá autonomia aos entregadores. Faça parte desse movimento! Saiba mais em: ${AppJustoSiteURL}`,
         title: 'AppJusto',
-        url: `https://appjusto.com.br`,
+        url: AppJustoSiteURL,
       });
     } catch (error) {}
   }, []);
