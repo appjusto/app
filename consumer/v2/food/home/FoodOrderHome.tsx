@@ -3,7 +3,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../../../../common/app/context';
+import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import { useSearch } from '../../../../common/store/api/search/useSearch';
 import {
   updateCurrentLocation,
@@ -12,7 +12,8 @@ import {
 import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import { SearchFilter } from '../../../../common/store/consumer/types';
 import { LoggedNavigatorParamList } from '../../types';
-import RestaurantList from '../restaurant/list/RestaurantList';
+import { sectionsFromResults } from '../restaurant/list';
+import { RestaurantList } from '../restaurant/list/RestaurantList';
 import { FoodOrderNavigatorParamList } from '../types';
 import { FoodOrderHomeHeader } from './FoodOrderHomeHeader';
 
@@ -31,6 +32,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   // params
   const { place } = route.params ?? {};
   // context
+  const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // redux store
   const currentLocation = useSelector(getCurrentLocation);
@@ -39,8 +41,10 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   const {
     results: restaurants,
     isLoading,
+    refetch,
     fetchNextPage,
   } = useSearch<BusinessAlgolia>(true, 'restaurant', 'distance', filters, currentLocation, '');
+  const [refreshing, setRefreshing] = React.useState(false);
   // side effects
   React.useEffect(() => {
     if (place) {
@@ -48,13 +52,19 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
       dispatch(updateCurrentPlace(place));
     }
   }, [dispatch, place]);
+  // handlers
+  const refresh = async () => {
+    setRefreshing(true);
+    await api.search().clearCache();
+    await refetch();
+    setRefreshing(false);
+  };
   // UI
   return (
     <RestaurantList
-      items={restaurants}
+      sections={sectionsFromResults(restaurants)}
       ListHeaderComponent={
         <FoodOrderHomeHeader
-          isLoading={isLoading}
           selectedCuisineId={filters.find(() => true)?.value}
           onLocationPress={() => {
             navigation.navigate('AddressComplete', {
@@ -77,6 +87,9 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
         });
       }}
       onEndReached={() => fetchNextPage()}
+      loading={isLoading}
+      refreshing={refreshing}
+      onRefresh={() => refresh()}
     />
   );
 };

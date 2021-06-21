@@ -18,15 +18,13 @@ export const useSearch = <T extends object>(
   // state
   const [response, setResponse] = React.useState<SearchResponse<T>>();
   const [results, setResults] = React.useState<T[]>();
-  const [isLoading, setLoading] = React.useState(false);
+  const [isLoading, setLoading] = React.useState(true);
   // helpers
   const search = React.useCallback(
-    (location: LatLng, input: string, filters: SearchFilter[], page?: number) => {
-      (async () => {
-        setLoading(true);
-        setResponse(await api.search().search(kind, order, filters, location, input, page));
-        setLoading(false);
-      })();
+    async (location: LatLng, input: string, filters: SearchFilter[], page?: number) => {
+      setLoading(true);
+      setResponse(await api.search().search(kind, order, filters, location, input, page));
+      setLoading(false);
     },
     [api, kind, order]
   );
@@ -63,5 +61,12 @@ export const useSearch = <T extends object>(
     if (hasNextPage) debouncedSearch(coords, name, filters, response.page + 1);
   }, [name, coords, response, debouncedSearch, filters]);
 
-  return { results, isLoading, fetchNextPage };
+  const refetch = () => {
+    if (name === undefined) return;
+    if (!coords) return;
+    if (!response) return;
+    return search(coords, name, filters, response.page);
+  };
+
+  return { results, isLoading, refetch, fetchNextPage };
 };

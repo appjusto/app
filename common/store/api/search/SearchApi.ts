@@ -91,6 +91,6 @@ export default class SearchApi {
   }
 
   clearCache() {
-    this.client.clearCache();
+    return this.client.clearCache();
   }
 }

@@ -1,11 +1,21 @@
 import { BusinessAlgolia, ProductAlgolia } from '@appjusto/types';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useState } from 'react';
-import { FlatList, Image, TextInput, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
+import { ApiContext } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
+import FeedbackView from '../../../../common/components/views/FeedbackView';
+import { IconConeYellow } from '../../../../common/icons/icon-cone-yellow';
 import { useSearch } from '../../../../common/store/api/search/useSearch';
 import {
   getCurrentLocation,
@@ -14,7 +24,9 @@ import {
   getSearchOrder,
 } from '../../../../common/store/consumer/selectors';
 import { colors, padding, screens } from '../../../../common/styles';
-import RestaurantList from '../restaurant/list/RestaurantList';
+import { t } from '../../../../strings';
+import { sectionsFromResults } from '../restaurant/list';
+import { RestaurantList } from '../restaurant/list/RestaurantList';
 import { ProductListItem } from '../restaurant/product/ProductListItem';
 import { FoodOrderNavigatorParamList } from '../types';
 import { FilterSelector } from './FilterSelector';
@@ -26,6 +38,8 @@ type Props = {
 };
 
 export default function ({ navigation }: Props) {
+  // context
+  const api = React.useContext(ApiContext);
   // refs
   const searchInputRef = React.useRef<TextInput>();
   // redux store
@@ -35,8 +49,13 @@ export default function ({ navigation }: Props) {
   const order = useSelector(getSearchOrder);
   const filters = useSelector(getSearchFilters);
   // state
-  const [search, setSearch] = useState<string>('');
-  const { results: restaurants } = useSearch<BusinessAlgolia>(
+  const [search, setSearch] = React.useState<string>('');
+  const [refreshing, setRefreshing] = React.useState(false);
+  const {
+    results: restaurants,
+    refetch: refetchRestaurants,
+    isLoading: loadingRestaurants,
+  } = useSearch<BusinessAlgolia>(
     kind === 'restaurant',
     kind,
     order,
@@ -44,18 +63,28 @@ export default function ({ navigation }: Props) {
     currentLocation,
     search
   );
-  const { results: products } = useSearch<ProductAlgolia>(
-    kind === 'product',
-    kind,
-    order,
-    filters,
-    currentLocation,
-    search
-  );
+  const {
+    results: products,
+    refetch: refetchProducts,
+    isLoading: loadingProducts,
+  } = useSearch<ProductAlgolia>(kind === 'product', kind, order, filters, currentLocation, search);
   // initial focus
   React.useEffect(() => {
     searchInputRef.current?.focus();
   }, []);
+  // handlers
+  const refreshRestaurants = async () => {
+    setRefreshing(true);
+    await api.search().clearCache();
+    await refetchRestaurants();
+    setRefreshing(false);
+  };
+  const refreshProducts = async () => {
+    setRefreshing(true);
+    await api.search().clearCache();
+    await refetchProducts();
+    setRefreshing(false);
+  };
 
   //UI
   return (
@@ -86,10 +115,13 @@ export default function ({ navigation }: Props) {
       </PaddedView>
       {kind === 'restaurant' && (
         <RestaurantList
-          items={restaurants}
+          sections={sectionsFromResults(restaurants)}
           onSelect={(restaurantId) =>
             navigation.navigate('RestaurantNavigator', { restaurantId, screen: 'RestaurantDetail' })
           }
+          loading={loadingRestaurants}
+          refreshing={refreshing}
+          onRefresh={() => refreshRestaurants()}
         />
       )}
       {kind === 'product' && (
@@ -112,6 +144,22 @@ export default function ({ navigation }: Props) {
               <ProductListItem product={item} showRestaurantName />
             </TouchableOpacity>
           )}
+          ListEmptyComponent={
+            loadingProducts ? (
+              <View style={{ ...screens.centered, marginTop: padding }}>
+                <ActivityIndicator size="small" color={colors.green500} />
+              </View>
+            ) : (
+              <FeedbackView
+                description={t(
+                  'Não encontramos nenhum resultado para a sua busca. Refaça a pesquisa ou utilize filtros diferentes.'
+                )}
+                icon={<IconConeYellow />}
+              />
+            )
+          }
+          refreshing={refreshing}
+          onRefresh={() => refreshProducts()}
         />
       )}
     </View>

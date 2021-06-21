@@ -9,7 +9,6 @@ import { CuisineSelector } from './CuisineSelector';
 import { LocationBar } from './LocationBar';
 
 type Props = {
-  isLoading: boolean;
   selectedCuisineId?: string;
   onLocationPress: () => void;
   onSearchPress: () => void;

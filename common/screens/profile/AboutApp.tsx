@@ -5,7 +5,7 @@ import React, { useContext } from 'react';
 import { Linking, Platform, Pressable, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ProfileParamList } from '../../../consumer/v2/main/profile/types';
 import { CourierProfileParamList } from '../../../courier/approved/main/profile/types';
 import { UnapprovedParamList } from '../../../courier/unapproved/types';
@@ -15,7 +15,6 @@ import { ApiContext, AppDispatch } from '../../app/context';
 import PaddedView from '../../components/containers/PaddedView';
 import ConfigItem from '../../components/views/ConfigItem';
 import { IconVersion } from '../../icons/icon-version';
-import { getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { screens } from '../../styles';
 import HomeCard from '../home/cards/HomeCard';
@@ -37,8 +36,6 @@ export const AboutApp = ({ navigation }: Props) => {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  // redux store
-  const flavor = useSelector(getFlavor);
   // handlers
   const easterEggHandler = () => {
     api.search().clearCache();
