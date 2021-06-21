@@ -21,7 +21,7 @@ import { useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../common/styles';
 import { t } from '../../strings';
-import { AppJustoWhatsAppURL } from '../../strings/values';
+import { AppJustoFreshdeskCourierURL, AppJustoWhatsAppURL } from '../../strings/values';
 import { UnapprovedParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<UnapprovedParamList, 'ProfileSubmitted'>;
@@ -196,6 +196,11 @@ export default function ({ navigation }: Props) {
           <ConfigItem
             title={t('Central de Ajuda')}
             subtitle={t('Conheças as regras e saiba mais sobre o AppJusto')}
+            onPress={() => Linking.openURL(AppJustoFreshdeskCourierURL)}
+          />
+          <ConfigItem
+            title={t('Sobre o AppJusto')}
+            subtitle={t('Acesse nossas páginas')}
             onPress={() => navigation.navigate('AboutApp')}
           />
         </View>

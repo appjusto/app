@@ -2,11 +2,12 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { Alert, ScrollView, View } from 'react-native';
+import { Alert, Linking, ScrollView, View } from 'react-native';
 import { ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import { screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { AppJustoFreshdeskConsumerURL } from '../../../../strings/values';
 import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
 
@@ -70,8 +71,13 @@ export default function ({ navigation }: Props) {
                 }
               />
               <ConfigItem
+                title={t('Central de ajuda')}
+                subtitle={t('Tire suas dúvidas sobre a plataforma')}
+                onPress={() => Linking.openURL(AppJustoFreshdeskConsumerURL)}
+              />
+              <ConfigItem
                 title={t('Sobre o AppJusto')}
-                subtitle={t('Tire suas dúvidas sobre o AppJusto')}
+                subtitle={t('Acesse nossas páginas')}
                 onPress={() =>
                   navigation.navigate('ProfileNavigator', {
                     screen: 'AboutApp',

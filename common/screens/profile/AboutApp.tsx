@@ -10,12 +10,7 @@ import { ProfileParamList } from '../../../consumer/v2/main/profile/types';
 import { CourierProfileParamList } from '../../../courier/approved/main/profile/types';
 import { UnapprovedParamList } from '../../../courier/unapproved/types';
 import { t } from '../../../strings';
-import {
-  AppJustoFreshdeskConsumerURL,
-  AppJustoFreshdeskCourierURL,
-  AppJustoGithubURL,
-  AppJustoSiteURL,
-} from '../../../strings/values';
+import { AppJustoGithubURL, AppJustoSiteURL } from '../../../strings/values';
 import { ApiContext, AppDispatch } from '../../app/context';
 import PaddedView from '../../components/containers/PaddedView';
 import ConfigItem from '../../components/views/ConfigItem';
@@ -58,20 +53,10 @@ export const AboutApp = ({ navigation }: Props) => {
   const os = `${brand} ${model} ${Device.osVersion} ${
     Platform.OS === 'android' ? Device.platformApiLevel : ''
   }`;
-  // handlers
-  const freshDeskHandler = () => {
-    Linking.openURL(
-      flavor === 'courier' ? AppJustoFreshdeskCourierURL : AppJustoFreshdeskConsumerURL
-    );
-  };
+
   return (
     <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
       <View style={{ flex: 1 }}>
-        <ConfigItem
-          title={t('Central de ajuda')}
-          subtitle={t('Tire suas dúvidas')}
-          onPress={freshDeskHandler}
-        />
         <ConfigItem
           title={t('Site oficial')}
           subtitle={t('Acesse nosso site')}
