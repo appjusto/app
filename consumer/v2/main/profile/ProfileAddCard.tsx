@@ -171,7 +171,7 @@ export default function ({ navigation, route }: Props) {
               title={t('Nome ')}
               value={name}
               placeholder={t('Conforme cartão')}
-              keyboardType="name-phone-pad"
+              keyboardType="default"
               returnKeyType="next"
               textContentType="givenName"
               autoCompleteType="name"
@@ -186,7 +186,7 @@ export default function ({ navigation, route }: Props) {
               title={t('Sobrenome')}
               value={surname}
               placeholder={t('Conforme cartão')}
-              keyboardType="name-phone-pad"
+              keyboardType="default"
               textContentType="familyName"
               autoCompleteType="name"
               autoCapitalize="characters"

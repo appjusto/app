@@ -13,6 +13,7 @@ import {
   MatchOrderPayload,
   NextDispatchingStatePayload,
   Order,
+  OrderConfirmation,
   OrderIssue,
   OrderItem,
   Place,
@@ -115,10 +116,24 @@ export default class OrderApi {
   }
   observeOrder(
     orderId: string,
-    resultHandler: (orders: WithId<Order>) => void
+    resultHandler: (order: WithId<Order>) => void
   ): firebase.Unsubscribe {
     const unsubscribe = this.refs.getOrderRef(orderId).onSnapshot(
       (snapshot) => resultHandler(documentAs<Order>(snapshot)),
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
+    );
+    // returns the unsubscribe function
+    return unsubscribe;
+  }
+  observeOrderConfirmation(
+    orderId: string,
+    resultHandler: (confirmation: OrderConfirmation) => void
+  ): firebase.Unsubscribe {
+    const unsubscribe = this.refs.getOrderConfirmationRef(orderId).onSnapshot(
+      (snapshot) => resultHandler(snapshot.data() as OrderConfirmation),
       (error) => {
         console.log(error);
         Sentry.Native.captureException(error);

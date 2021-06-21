@@ -1,4 +1,4 @@
-import { Order, WithId } from '@appjusto/types';
+import { Order, OrderConfirmation, WithId } from '@appjusto/types';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -10,9 +10,10 @@ import { borders, colors, halfPadding, padding, texts } from '../../../styles';
 
 type Props = {
   order: WithId<Order>;
+  confirmation?: OrderConfirmation;
 };
 
-export default function ({ order }: Props) {
+export const CourierStatusHighlight = ({ order, confirmation }: Props) => {
   // params
   const { type, status, dispatchingState, code } = order;
   // context
@@ -35,7 +36,13 @@ export default function ({ order }: Props) {
         }
       } else if (dispatchingState === 'arrived-destination') {
         title = t('Entregador chegou!');
-        message = t('Entregador está esperando para entregar o pedido.');
+        if (confirmation?.handshakeChallenge) {
+          message = t(
+            `Informe o código ${confirmation.handshakeChallenge} para o entregador finalizar o pedido.`
+          );
+        } else {
+          message = t('Entregador está esperando para entregar o pedido.');
+        }
       }
     } else if (type === 'p2p') {
       if (dispatchingState === 'arrived-pickup') {
@@ -107,7 +114,7 @@ export default function ({ order }: Props) {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   card: {
