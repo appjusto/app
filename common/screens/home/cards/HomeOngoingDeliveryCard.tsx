@@ -81,6 +81,23 @@ export default function ({ order, onPress }: Props) {
         }
       }
     }
+  } else if (flavor === 'courier') {
+    title = t('Corrida em andamento');
+    if (dispatchingState === 'going-pickup') {
+      detail =
+        type === 'p2p'
+          ? `${t('À caminho de')} ${order.origin!.address.main}`
+          : `${t('À caminho de')} ${order.business!.name}`;
+    } else if (dispatchingState === 'arrived-pickup') {
+      detail =
+        type === 'p2p'
+          ? t('Chegou ao endereço de coleta')
+          : `${t('Chegou em')} ${order.business!.name}`;
+    } else if (dispatchingState === 'going-destination') {
+      detail = `${t('À caminho de')} ${order.destination!.address.main}`;
+    } else if (dispatchingState === 'arrived-destination') {
+      detail = t('Aguardando entrega');
+    }
   }
 
   return (
