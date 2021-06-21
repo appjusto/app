@@ -1,15 +1,17 @@
 import { Flavor } from '@appjusto/types';
+import { Feather } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useKeepAwake } from 'expo-keep-awake';
 import React from 'react';
-import { ActivityIndicator, Image, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
 import { pinPackage, pinPackageWhite } from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
+import RoundedText from '../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import HR from '../../../common/components/views/HR';
 import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/CourierDistanceBadge';
@@ -27,6 +29,7 @@ import { CodeInput } from './code-input/CodeInput';
 import { RouteIcons } from './RouteIcons';
 import { StatusControl } from './StatusControl';
 import { OngoingDeliveryNavigatorParamList } from './types';
+import { WithdrawOrderModal } from './WithdrawOrderModal';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<OngoingDeliveryNavigatorParamList, 'OngoingDelivery'>,
@@ -274,13 +277,13 @@ export default function ({ navigation, route }: Props) {
         </View>
       ) : (
         <View style={{ flex: 1 }}>
-          <View style={{ marginHorizontal: padding }}>
+          {/* <View style={{ marginHorizontal: padding }}>
             <CourierDeliveryInfo
               order={order}
               onChat={() => openChatWithConsumer()}
               onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
             />
-          </View>
+          </View> */}
           {dispatchingState !== 'arrived-destination' && (
             <View>
               <OrderMap order={order!} ratio={1} />
@@ -295,21 +298,52 @@ export default function ({ navigation, route }: Props) {
           )}
           <HR />
           <PaddedView>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Image
-                source={dispatchingState === 'going-pickup' ? pinPackageWhite : pinPackage}
-                style={{ width: 23, height: 28 }}
-              />
-              <Text
-                style={[
-                  texts.xs,
-                  texts.bold,
-                  { marginVertical: halfPadding, marginHorizontal: halfPadding },
-                ]}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Image
+                  source={dispatchingState === 'going-pickup' ? pinPackageWhite : pinPackage}
+                  style={{ width: 23, height: 28 }}
+                />
+                <Text
+                  style={[
+                    texts.xs,
+                    texts.bold,
+                    { marginVertical: halfPadding, marginHorizontal: halfPadding },
+                  ]}
+                >
+                  {addressLabel}
+                </Text>
+                <CourierDistanceBadge order={order} delivering />
+              </View>
+
+              <View
+                style={{
+                  alignSelf: 'flex-end',
+                  marginLeft: halfPadding,
+                }}
               >
-                {addressLabel}
-              </Text>
-              <CourierDistanceBadge order={order} delivering />
+                <TouchableOpacity>
+                  <RoundedText
+                    color={colors.red}
+                    leftIcon={
+                      <Feather
+                        name="info"
+                        size={12}
+                        color={colors.red}
+                        style={{ marginRight: 4 }}
+                      />
+                    }
+                  >
+                    {t('Tive um problema')}
+                  </RoundedText>
+                </TouchableOpacity>
+              </View>
             </View>
             <View style={{ marginTop: halfPadding }}>
               <Text style={[texts.xl]} numberOfLines={2}>
@@ -368,6 +402,14 @@ export default function ({ navigation, route }: Props) {
               </PaddedView>
             </View>
           ) : null}
+          {/* <DefaultModal
+            header="Olá"
+            body="Retire o pedido"
+            dismissButtonTitle="Recebi o pedido"
+            visible
+            onDismiss={() => null}
+          /> */}
+          <WithdrawOrderModal visible onDismiss={() => null} />
         </View>
       )}
     </KeyboardAwareScrollView>
