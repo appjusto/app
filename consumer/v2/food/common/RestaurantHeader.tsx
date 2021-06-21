@@ -2,9 +2,9 @@ import { Business, WithId } from '@appjusto/types';
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import * as icons from '../../../../assets/icons';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import { useBusinessCoverImageURI } from '../../../../common/store/api/business/hooks/useBusinessCoverImageURI';
+import { useBusinessLogoURI } from '../../../../common/store/api/business/hooks/useBusinessLogoURI';
 import { distanceBetweenLatLng } from '../../../../common/store/api/helpers';
 import useCuisines from '../../../../common/store/api/platform/hooks/useCuisines';
 import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
@@ -15,6 +15,7 @@ import {
   separateWithDot,
 } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
+import { ListItemImage } from '../restaurant/list/ListItemImage';
 
 type Props = {
   restaurant: WithId<Business>;
@@ -30,6 +31,7 @@ export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) =>
   const cuisine = cuisines?.find((c) => c.name === restaurant.cuisine);
   const averagePreparationTime = restaurant.averageCookingTime ?? 0;
   const { data: coverURI } = useBusinessCoverImageURI(restaurant.id);
+  const { data: logo } = useBusinessLogoURI(restaurant.id);
   const distance =
     location && restaurant.businessAddress?.latlng
       ? distanceBetweenLatLng(location, restaurant.businessAddress.latlng)
@@ -71,7 +73,7 @@ export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) =>
             </Text>
           </View>
           <View>
-            <Image source={icons.cardIcon} />
+            <ListItemImage uri={logo} height={64} width={64} />
           </View>
         </View>
       </TouchableOpacity>

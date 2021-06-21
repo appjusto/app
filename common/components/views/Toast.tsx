@@ -1,7 +1,7 @@
+import { Feather, MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Animated, Image, Text, View } from 'react-native';
+import { Animated, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkToast, errorToast } from '../../../assets/icons';
 import { hideToast } from '../../store/ui/actions';
 import { getToast } from '../../store/ui/selectors';
 import { colors, halfPadding, texts } from '../../styles';
@@ -61,14 +61,21 @@ export default function () {
         }}
       >
         <View>
-          <Image
-            source={type === 'success' ? checkToast : errorToast}
-            style={{ marginRight: halfPadding }}
-          />
+          {type === 'success' ? (
+            <View style={{ marginRight: halfPadding }}>
+              <Feather name="check" size={16} />
+            </View>
+          ) : (
+            <View style={{ marginRight: halfPadding }}>
+              <MaterialIcons name="close" size={16} />
+            </View>
+          )}
         </View>
-        <Text style={{ ...texts.xs, flexWrap: 'wrap', maxWidth: '90%' }} numberOfLines={3}>
-          {message}
-        </Text>
+        <View style={{ maxWidth: '90%' }}>
+          <Text style={{ ...texts.xs, flexWrap: 'wrap' }} numberOfLines={3}>
+            {message}
+          </Text>
+        </View>
       </View>
     </Animated.View>
   );
