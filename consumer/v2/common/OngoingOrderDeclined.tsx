@@ -34,33 +34,6 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  // handlers
-  const changePaymentHandler = () => {
-    if (order.type === 'p2p')
-      navigation.navigate('P2POrderNavigator', {
-        screen: 'ProfilePaymentMethods',
-        params: { returnScreen: 'CreateOrderP2P' },
-      });
-    else
-      navigation.navigate('FoodOrderNavigator', {
-        screen: 'RestaurantNavigator',
-        params: {
-          restaurantId: order.business!.id,
-          screen: 'ProfilePaymentMethods',
-          params: { returnScreen: 'FoodOrderCheckout' },
-        },
-      });
-  };
-  const reviewOrderHandler = () => {
-    if (order?.type === 'p2p') {
-      navigation.navigate('P2POrderNavigator', { screen: 'CreateOrderP2P', params: { orderId } });
-    } else {
-      navigation.navigate('FoodOrderNavigator', {
-        screen: 'RestaurantNavigator',
-        params: { restaurantId: order.business!.id, screen: 'FoodOrderCheckout' },
-      });
-    }
-  };
 
   return (
     <ScrollView style={{ ...screens.default }} contentContainerStyle={{ flexGrow: 1 }}>
@@ -72,21 +45,13 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
         icon={<IconConeYellow />}
         background={colors.white}
       >
-        <DefaultButton title={t('Alterar forma de pagamento')} onPress={changePaymentHandler} />
-        {order.type === 'food' && order.dispatchingStatus === 'declined' ? null : (
-          <DefaultButton
-            title={t('Revisar pedido')}
-            secondary
-            style={{ marginVertical: padding }}
-            onPress={reviewOrderHandler}
-          />
-        )}
-        {/* <DefaultButton
+        <DefaultButton title={t('Alterar forma de pagamento')} onPress={() => null} />
+        <DefaultButton
           title={t('Revisar pedido')}
           secondary
           style={{ marginVertical: padding }}
-          onPress={reviewOrderHandler}
-        /> */}
+          onPress={() => null}
+        />
       </FeedbackView>
     </ScrollView>
   );

@@ -2,7 +2,7 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
@@ -96,15 +96,6 @@ export default function ({ navigation }: Props) {
               title="Divulgue o AppJusto"
               subtitle="Compartilhe esse movimento por uma economia mais justa."
             />
-          </View>
-          <View style={{ marginTop: padding }}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('OngoingOrderNavigator', { screen: 'OngoingOrderDeclined' })
-              }
-            >
-              <Text>ir para OngoingOrderCanceled</Text>
-            </TouchableOpacity>
           </View>
         </PaddedView>
       </ScrollView>
