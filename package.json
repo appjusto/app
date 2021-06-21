@@ -68,6 +68,7 @@
     "expo-font": "~8.4.0",
     "expo-image-manipulator": "~8.4.0",
     "expo-image-picker": "~9.2.0",
+    "expo-keep-awake": "~8.4.0",
     "expo-linking": "~2.0.1",
     "expo-localization": "~9.1.0",
     "expo-location": "~10.0.0",

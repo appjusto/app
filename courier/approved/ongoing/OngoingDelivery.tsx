@@ -1,6 +1,7 @@
 import { Flavor } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useKeepAwake } from 'expo-keep-awake';
 import React from 'react';
 import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -53,6 +54,8 @@ export default function ({ navigation, route }: Props) {
   // side effects
   // tracking
   useSegmentScreen('Ongoing Delivery');
+  // keeping screen awake
+  useKeepAwake();
   // helpers
   const openChat = React.useCallback(
     (counterpartId: string, counterpartFlavor: Flavor, delayed?: boolean) => {
