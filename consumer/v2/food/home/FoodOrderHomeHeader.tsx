@@ -5,7 +5,6 @@ import * as icons from '../../../../assets/icons';
 import DoubleHeader from '../../../../common/components/texts/DoubleHeader';
 import { borders, colors, halfPadding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import { CuisineSelector } from './CuisineSelector';
 import { LocationBar } from './LocationBar';
 
 type Props = {
@@ -57,10 +56,10 @@ export const FoodOrderHomeHeader = ({
         </TouchableWithoutFeedback>
       </View>
       {/* by cuisine */}
-      <CuisineSelector
+      {/* <CuisineSelector
         selectedCuisineId={selectedCuisineId}
         onSelect={(cuisine) => onCuisineSelect(cuisine)}
-      />
+      /> */}
     </View>
   );
 };
