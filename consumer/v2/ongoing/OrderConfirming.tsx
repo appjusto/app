@@ -45,7 +45,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
         orderId,
       });
     } else if (order.status === 'declined') {
-      // TODO:
+      navigation.replace('OngoingOrderDeclined', { orderId });
     } else if (order.dispatchingStatus === 'no-match') {
       navigation.navigate('OngoingOrderNoMatch', { orderId });
     }

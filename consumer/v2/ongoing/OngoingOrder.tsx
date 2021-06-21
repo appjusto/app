@@ -95,6 +95,11 @@ export default function ({ navigation, route }: Props) {
     else if (order.dispatchingStatus === 'no-match') {
       navigation.navigate('OngoingOrderNoMatch', { orderId });
     }
+    // whenever a consumer payment method has been approved for the itens
+    // but has no funds to pay for the courier in a food order
+    else if (order.type === 'food' && order.dispatchingStatus === 'declined') {
+      navigation.replace('OngoingOrderDeclined', { orderId });
+    }
   }, [navigation, order, orderId]);
   console.log(orderId);
   // UI
