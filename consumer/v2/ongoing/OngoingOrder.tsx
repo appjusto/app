@@ -12,6 +12,7 @@ import { StatusAndMessages } from '../../../common/screens/orders/ongoing/Status
 import OrderMap from '../../../common/screens/orders/OrderMap';
 import { OrderAdditionalInfo } from '../../../common/screens/orders/summary/OrderAdditionaInfo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useObserveOrderConfirmation } from '../../../common/store/api/order/hooks/useObserveOrderConfirmation';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { borders, colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -39,6 +40,7 @@ export default function ({ navigation, route }: Props) {
   const { orderId } = route.params;
   // screen state
   const order = useObserveOrder(orderId);
+  const confirmation = useObserveOrderConfirmation(orderId);
   const courierId = order?.courier?.id;
   const businessId = order?.business?.id;
   useNotificationToken();
@@ -163,7 +165,11 @@ export default function ({ navigation, route }: Props) {
           ) : (
             <View style={{ flex: 1 }}>
               <OrderMap order={order} ratio={1} />
-              <StatusAndMessages order={order} onPress={(from) => openChat(from.id, from.agent)} />
+              <StatusAndMessages
+                order={order}
+                confirmation={confirmation}
+                onPress={(from) => openChat(from.id, from.agent)}
+              />
               <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
               <DefaultButton
                 title={t('Abrir chat com o entregador')}
@@ -224,7 +230,11 @@ export default function ({ navigation, route }: Props) {
           ) : (
             <View style={{ flex: 1 }}>
               <OrderMap order={order} ratio={1} />
-              <StatusAndMessages order={order} onPress={(from) => openChat(from.id, from.agent)} />
+              <StatusAndMessages
+                order={order}
+                confirmation={confirmation}
+                onPress={(from) => openChat(from.id, from.agent)}
+              />
               <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
               {/* pode estar causando o problema de clicar no topo - chat em 'food' */}
               <DefaultButton
