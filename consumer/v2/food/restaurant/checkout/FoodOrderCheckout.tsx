@@ -40,7 +40,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const api = React.useContext(ApiContext);
   const order = useContextActiveOrder();
   const dispatch = useDispatch<AppDispatch>();
-  const restaurant = useContextBusiness();
+  const restaurant = useContextBusiness()!;
   // redux store
   const consumer = useSelector(getConsumer)!;
   // state

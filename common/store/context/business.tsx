@@ -27,7 +27,7 @@ export const BusinessProvider = ({ businessId, children }: Props) => {
 
 export const useContextBusiness = () => {
   const value = React.useContext(BusinessContext);
-  return value.business!;
+  return value.business;
 };
 
 export const useContextBusinessId = () => {

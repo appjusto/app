@@ -1,9 +1,10 @@
 import { Business } from '@appjusto/types';
 import { useLoggedContextGetServerTime, useLoggedContextPlatformParams } from '../../LoggedContext';
 
-export const useBusinessIsAcceptingOrders = (business: Business) => {
+export const useBusinessIsAcceptingOrders = (business?: Business) => {
   const platformParams = useLoggedContextPlatformParams();
   const getServerTime = useLoggedContextGetServerTime();
+  if (!business) return false;
   if (!business.enabled) return false;
   if (business.status !== 'open') return false;
   if (!platformParams) return false;
