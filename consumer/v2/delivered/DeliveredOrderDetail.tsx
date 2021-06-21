@@ -148,9 +148,9 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
               </PaddedView>
             </View>
             <HR height={padding} />
-            <PaddedView>
+            <View style={{ paddingTop: padding }}>
               <OrderCostBreakdown order={order} selectedFare={order.fare} />
-            </PaddedView>
+            </View>
             <HR height={padding} />
             <ReviewBox
               review={review?.type ?? reviewType}

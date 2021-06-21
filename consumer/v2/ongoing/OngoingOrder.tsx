@@ -16,6 +16,7 @@ import { useObserveOrderConfirmation } from '../../../common/store/api/order/hoo
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { borders, colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
+import { OrderCostBreakdown } from '../common/breakdown/OrderCostBreakdown';
 import { DeliveredItems } from '../common/DeliveredItems';
 import { OrderPlacesSummary } from '../common/order-summary/OrderPlacesSummary';
 import { LoggedNavigatorParamList } from '../types';
@@ -212,6 +213,10 @@ export default function ({ navigation, route }: Props) {
                   />
                 </View>
               ) : null}
+              <HR height={padding} />
+              <View style={{ paddingTop: padding }}>
+                <OrderCostBreakdown order={order} selectedFare={order.fare} />
+              </View>
               <HR height={padding} />
               <DeliveryActions
                 order={order}
