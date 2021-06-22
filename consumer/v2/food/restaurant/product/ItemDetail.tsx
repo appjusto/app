@@ -139,102 +139,110 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   };
   // UI
   return (
-    <ScrollView
-      style={{ ...screens.default }}
-      contentContainerStyle={{ flexGrow: 1 }}
-      scrollIndicatorInsets={{ right: 1 }}
-    >
-      <View style={{ flex: 1 }}>
-        <View style={{ paddingHorizontal: padding, marginBottom: 24 }}>
-          <View style={{ width: '100%', height: 240, overflow: 'hidden' }}>
-            {imageURI && (
-              <Image
-                source={{ uri: imageURI }}
-                style={{ width: '100%', height: 240 }}
-                borderRadius={8}
-                resizeMode="cover"
-              />
-            )}
-          </View>
-          <View style={{ marginTop: padding }}>
-            <Text style={{ ...texts.xl }}>{product?.name ?? ''}</Text>
-            <Text style={{ ...texts.sm, color: colors.grey700, marginVertical: 4 }}>
-              {product?.description ?? ''}
-            </Text>
-            <Text style={{ ...texts.sm }}>
-              {product.complementsEnabled
-                ? `${t('A partir de ')} ${formatCurrency(product.price)}`
-                : formatCurrency(product.price)}
-            </Text>
-          </View>
-        </View>
-        {tallerDevice ? <View style={{ flex: 1 }} /> : null}
-        {isAcceptingOrders ? (
-          <View style={{ flex: 1 }}>
-            <ItemComplements
-              product={product}
-              selectedComplements={complements}
-              onComplementToggle={(group, complement, selected) => {
-                if (!selected || helpers.canAddComplement(group, complements)) {
-                  if (selected) setComplements([...complements, complement]);
-                  else setComplements(complements.filter((c) => c.id !== complement.id));
-                }
-              }}
-            />
-            <HR style={{ marginTop: halfPadding }} />
-            <View style={{ padding: 12 }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Feather name="info" size={14} />
-                <Text style={{ ...texts.sm, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
-              </View>
-              <DefaultInput
-                style={{ height: 96, marginTop: halfPadding }}
-                placeholder={t(
-                  'Tem alguma observação? Por exemplo: sem molho, sem cebola, ponto da carne, etc'
-                )}
-                multiline
-                textAlignVertical="top"
-                value={notes}
-                onChangeText={setNotes}
-              />
+    <View style={{ ...screens.default }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flexGrow: 1 }}
+        scrollIndicatorInsets={{ right: 1 }}
+      >
+        <View style={{ flex: 1 }}>
+          <View style={{ paddingHorizontal: padding, marginBottom: 24 }}>
+            <View style={{ width: '100%', height: 240, overflow: 'hidden' }}>
+              {imageURI && (
+                <Image
+                  source={{ uri: imageURI }}
+                  style={{ width: '100%', height: 240 }}
+                  borderRadius={8}
+                  resizeMode="cover"
+                />
+              )}
             </View>
-            <View style={{ flex: 1 }} />
-            <HR />
-            <PaddedView>
-              <ItemQuantity
-                style={{ marginBottom: padding }}
-                value={quantity}
-                minimum={itemId ? 0 : 1}
-                title={`${t('Adicionar')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
-                disabled={!canAddItemToOrder}
-                onChange={(value) => setQuantity(value)}
-                onSubmit={addItemToOrder}
+            <View style={{ marginTop: padding }}>
+              <Text style={{ ...texts.xl }}>{product?.name ?? ''}</Text>
+              <Text style={{ ...texts.sm, color: colors.grey700, marginVertical: 4 }}>
+                {product?.description ?? ''}
+              </Text>
+              <Text style={{ ...texts.sm }}>
+                {product.complementsEnabled
+                  ? `${t('A partir de ')} ${formatCurrency(product.price)}`
+                  : formatCurrency(product.price)}
+              </Text>
+            </View>
+          </View>
+          {tallerDevice ? <View style={{ flex: 1 }} /> : null}
+          {isAcceptingOrders ? (
+            <View style={{ flex: 1 }}>
+              <ItemComplements
+                product={product}
+                selectedComplements={complements}
+                onComplementToggle={(group, complement, selected) => {
+                  if (!selected || helpers.canAddComplement(group, complements)) {
+                    if (selected) setComplements([...complements, complement]);
+                    else setComplements(complements.filter((c) => c.id !== complement.id));
+                  }
+                }}
               />
-            </PaddedView>
-          </View>
-        ) : (
-          <View
-            style={{
-              margin: padding,
-              padding: 25,
-              alignItems: 'center',
-              backgroundColor: colors.grey50,
-              ...borders.default,
-            }}
-          >
-            <Feather name="clock" size={26} />
-            <Text style={texts.sm}>{t('Desculpe, estamos fechados agora')}</Text>
-            {getBusinessNextOpeningDay(business) ? (
-              <>
-                <Text style={{ ...texts.xs, color: colors.grey700 }}>
-                  {`${t('Abriremos')} ${getBusinessNextOpeningDay(business)![0]} ${t('às')}`}
-                </Text>
-                <Text style={texts.x2l}>{formatHour(getBusinessNextOpeningDay(business)![1])}</Text>
-              </>
-            ) : null}
-          </View>
-        )}
-      </View>
-    </ScrollView>
+              <HR style={{ marginTop: halfPadding }} />
+              <View style={{ padding: 12 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Feather name="info" size={14} />
+                  <Text style={{ ...texts.sm, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
+                </View>
+                <DefaultInput
+                  style={{ height: 96, marginTop: halfPadding }}
+                  placeholder={t(
+                    'Tem alguma observação? Por exemplo: sem molho, sem cebola, ponto da carne, etc'
+                  )}
+                  multiline
+                  textAlignVertical="top"
+                  value={notes}
+                  onChangeText={setNotes}
+                />
+              </View>
+              <View style={{ flex: 1 }} />
+            </View>
+          ) : (
+            <View
+              style={{
+                margin: padding,
+                padding: 25,
+                alignItems: 'center',
+                backgroundColor: colors.grey50,
+                ...borders.default,
+              }}
+            >
+              <Feather name="clock" size={26} />
+              <Text style={texts.sm}>{t('Desculpe, estamos fechados agora')}</Text>
+              {getBusinessNextOpeningDay(business) ? (
+                <>
+                  <Text style={{ ...texts.xs, color: colors.grey700 }}>
+                    {`${t('Abriremos')} ${getBusinessNextOpeningDay(business)![0]} ${t('às')}`}
+                  </Text>
+                  <Text style={texts.x2l}>
+                    {formatHour(getBusinessNextOpeningDay(business)![1])}
+                  </Text>
+                </>
+              ) : null}
+            </View>
+          )}
+        </View>
+      </ScrollView>
+      {isAcceptingOrders ? (
+        <View>
+          <HR />
+          <PaddedView>
+            <ItemQuantity
+              style={{ marginBottom: padding }}
+              value={quantity}
+              minimum={itemId ? 0 : 1}
+              title={`${t('Adicionar')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
+              disabled={!canAddItemToOrder}
+              onChange={(value) => setQuantity(value)}
+              onSubmit={addItemToOrder}
+            />
+          </PaddedView>
+        </View>
+      ) : null}
+    </View>
   );
 };
