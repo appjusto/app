@@ -2,10 +2,7 @@ import { Product, ProductAlgolia, WithId } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
-import {
-  useContextBusiness,
-  useContextBusinessId,
-} from '../../../../../common/store/context/business';
+import { useContextBusiness } from '../../../../../common/store/context/business';
 import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
@@ -23,11 +20,11 @@ const isAlgoliaProduct = (product: ProductAlgolia | WithId<Product>): product is
 
 export const ProductListItem = ({ product, showRestaurantName, complements }: Props) => {
   // state
-  const businessId = useContextBusinessId();
   const business = useContextBusiness();
+  const businessId = isAlgoliaProduct(product) ? product.business.id : business?.id;
   const productId = isAlgoliaProduct(product) ? product.objectID : product.id;
   const businessName = isAlgoliaProduct(product) ? product.business.name : business?.name;
-  const { data: imageURI } = useProductImageURI(businessId, productId);
+  const { data: imageURI } = useProductImageURI(businessId!, productId);
 
   // UI
   return (
