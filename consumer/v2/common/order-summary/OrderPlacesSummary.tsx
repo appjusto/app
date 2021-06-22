@@ -30,13 +30,11 @@ export const OrderPlacesSummary = ({ order, onEditStep }: Props) => {
           onEdit={() => onEditStep(Step.Destination)}
         />
       )}
-      {route?.distance && destination?.estimatedTimeOfArrival && destination?.maxTimeOfArrival ? (
+      {route?.distance && destination?.estimatedTimeOfArrival ? (
         <RoundedText>
           {separateWithDot(
             formatDistance(route.distance),
-            `${t('Previsão:')} ${formatTime(destination.estimatedTimeOfArrival)} - ${formatTime(
-              destination.maxTimeOfArrival
-            )}`
+            `${t('Previsão:')} ${formatTime(destination.estimatedTimeOfArrival)}`
           )}
         </RoundedText>
       ) : null}

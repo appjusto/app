@@ -4,11 +4,10 @@ import React from 'react';
 import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
 import * as icons from '../../../assets/icons';
 import { ApiContext } from '../../../common/app/context';
-import RoundedText from '../../../common/components/texts/RoundedText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, doublePadding, padding, screens, texts } from '../../../common/styles';
-import { formatCurrency, formatDistance, formatTime } from '../../../common/utils/formatters';
+import { formatCurrency, formatDistance } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import { AcceptControl } from './AcceptControl';
@@ -75,13 +74,13 @@ export default function ({ navigation, route }: Props) {
         <View style={{ alignItems: 'center', backgroundColor: colors.green500 }}>
           <Text style={[texts.x2l, { marginTop: 40 }]}>{t('Nova corrida para você!')}</Text>
           <Text style={[texts.x40l, { marginBottom: 40 }]}>{formatCurrency(matchRequest.fee)}</Text>
-          {matchRequest.readyAt && formatTime(matchRequest.readyAt) ? (
+          {/* {matchRequest.readyAt && formatTime(matchRequest.readyAt) ? (
             <RoundedText style={{ marginBottom: 40 }}>
               {formatTime(matchRequest.readyAt)!}
             </RoundedText>
           ) : (
             <RoundedText style={{ marginBottom: 40 }}>{t('Pedido pronto')}</RoundedText>
-          )}
+          )} */}
         </View>
         {/* body */}
         <View style={{ paddingLeft: padding }}>
