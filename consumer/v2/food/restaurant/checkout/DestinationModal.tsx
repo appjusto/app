@@ -54,9 +54,9 @@ export const DestinationModal = ({
           </Text>
           <Text style={{ ...texts.lg, marginTop: 4 }}>{order?.destination?.address.main}</Text>
           <Text style={{ ...texts.lg, marginTop: 4 }}>{order?.destination?.address.secondary}</Text>
-          {order?.additionalInfo && (
-            <Text style={{ ...texts.lg, marginTop: 4 }}>{t('Apto 14')}</Text>
-          )}
+          {order?.additionalInfo ? (
+            <Text style={{ ...texts.lg, marginTop: 4 }}>{order.additionalInfo}</Text>
+          ) : null}
           <View style={{ marginTop: 24 }}>
             <TouchableOpacity onPress={onEditAddress}>
               <RoundedText>{t('Editar endereço de entrega')}</RoundedText>

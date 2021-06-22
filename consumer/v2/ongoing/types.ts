@@ -1,6 +1,7 @@
 import { ChatMessageUser, Flavor, IssueType } from '@appjusto/types';
 import { ReportIssueParamList } from '../../../common/screens/ReportIssue';
 import { OrderCanceledParamList } from '../../../courier/approved/ongoing/OrderCanceled';
+import { ProfilePaymentMethodsParamList } from '../main/profile/ProfilePaymentMethods';
 
 export type OngoingOrderNavigatorParamList = {
   OngoingOrderConfirming: {
@@ -38,7 +39,9 @@ export type OngoingOrderNavigatorParamList = {
     orderId: string;
   };
   OngoingOrderDeclined: {
-    orderId?: string;
+    orderId: string;
+    paymentMethodId?: string;
   };
 } & ReportIssueParamList &
+  ProfilePaymentMethodsParamList &
   OrderCanceledParamList;

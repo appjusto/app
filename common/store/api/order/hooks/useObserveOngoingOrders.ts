@@ -16,9 +16,7 @@ export const useObserveOngoingOrders = (options: ObserveOrdersOptions) => {
     React.useMemo(
       () => ({
         ...options,
-        // TODO: exchange when update payment method is working
-        statuses: OngoingOrdersStatuses.concat(flavor === 'consumer' ? [] : []),
-        // statuses: OngoingOrdersStatuses.concat(flavor === 'consumer' ? ['declined'] : []),
+        statuses: OngoingOrdersStatuses.concat(flavor === 'consumer' ? ['declined'] : []),
       }),
       [options, flavor]
     )

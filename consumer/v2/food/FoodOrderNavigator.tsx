@@ -31,7 +31,10 @@ export const FoodOrderNavigator = () => {
       />
       <Stack.Screen name="RestaurantNavigator" options={{ headerShown: false }}>
         {(props) => (
-          <BusinessProvider businessId={props.route.params.restaurantId}>
+          <BusinessProvider
+            businessId={props.route.params.restaurantId}
+            orderId={props.route.params.orderId}
+          >
             <RestaurantNavigator />
           </BusinessProvider>
         )}

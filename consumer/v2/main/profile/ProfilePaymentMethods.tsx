@@ -8,17 +8,21 @@ import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { RestaurantNavigatorParamList } from '../../food/restaurant/types';
+import { OngoingOrderNavigatorParamList } from '../../ongoing/types';
 import { P2POrderNavigatorParamList } from '../../p2p/types';
 import { ProfileParamList } from './types';
 
 export type ProfilePaymentMethodsParamList = {
   ProfilePaymentMethods?: {
-    returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P';
+    returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P' | 'OngoingOrderDeclined';
   };
 };
 
 type ScreenNavigationProp = StackNavigationProp<
-  ProfileParamList & RestaurantNavigatorParamList & P2POrderNavigatorParamList,
+  ProfileParamList &
+    RestaurantNavigatorParamList &
+    P2POrderNavigatorParamList &
+    OngoingOrderNavigatorParamList,
   'ProfilePaymentMethods'
 >;
 type ScreenRouteProp = RouteProp<ProfilePaymentMethodsParamList, 'ProfilePaymentMethods'>;

@@ -12,15 +12,18 @@ const BusinessContext = React.createContext<Value>({});
 
 interface Props {
   businessId: string;
+  orderId?: string;
   children: React.ReactNode | React.ReactNode[];
 }
 
-export const BusinessProvider = ({ businessId, children }: Props) => {
+export const BusinessProvider = ({ businessId, orderId, children }: Props) => {
   const business = useBusiness(businessId);
   const value: Value = { businessId, business };
   return (
     <BusinessContext.Provider value={value}>
-      <ActiveOrderProvider businessId={businessId}>{children}</ActiveOrderProvider>
+      <ActiveOrderProvider businessId={businessId} orderId={orderId}>
+        {children}
+      </ActiveOrderProvider>
     </BusinessContext.Provider>
   );
 };

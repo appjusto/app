@@ -10,6 +10,7 @@ export type FoodOrderNavigatorParamList = {
   RestaurantSearch: undefined;
   RestaurantNavigator: {
     restaurantId: string;
+    orderId?: string;
   } & NestedNavigatorParams<RestaurantNavigatorParamList>;
   FilterScreen: undefined;
 } & AddressCompleteParamList;

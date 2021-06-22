@@ -24,10 +24,46 @@ type Props = {
 
 export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   // params
-  const { orderId } = route.params;
+  const { orderId, paymentMethodId } = route.params;
   // screen state
   const order = useObserveOrder(orderId);
-  if (!order) {
+  const [isLoading, setLoading] = React.useState(false);
+  // handlers
+  const reviewOrderHandler = React.useCallback(
+    (paymentMethodId?: string) => {
+      if (!order) return;
+      if (order.type === 'p2p') {
+        navigation.replace('P2POrderNavigator', {
+          screen: 'CreateOrderP2P',
+          // orderId: order.id,
+          params: { paymentMethodId },
+        });
+      } else {
+        navigation.replace('FoodOrderNavigator', {
+          screen: 'RestaurantNavigator',
+          params: {
+            restaurantId: order.business!.id,
+            orderId: order.id,
+            screen: 'FoodOrderCheckout',
+            params: { paymentMethodId },
+          },
+        });
+      }
+    },
+    [navigation, order]
+  );
+  // effects
+  React.useEffect(() => {
+    if (paymentMethodId) {
+      navigation.setParams({
+        paymentMethodId: undefined,
+      });
+      setLoading(true);
+      setTimeout(() => reviewOrderHandler(paymentMethodId), 1000);
+    }
+  }, [navigation, order, paymentMethodId, reviewOrderHandler]);
+  // UI
+  if (!order || isLoading) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -36,30 +72,9 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   }
   // handlers
   const changePaymentHandler = () => {
-    if (order.type === 'p2p')
-      navigation.navigate('P2POrderNavigator', {
-        screen: 'ProfilePaymentMethods',
-        params: { returnScreen: 'CreateOrderP2P' },
-      });
-    else
-      navigation.navigate('FoodOrderNavigator', {
-        screen: 'RestaurantNavigator',
-        params: {
-          restaurantId: order.business!.id,
-          screen: 'ProfilePaymentMethods',
-          params: { returnScreen: 'FoodOrderCheckout' },
-        },
-      });
-  };
-  const reviewOrderHandler = () => {
-    if (order?.type === 'p2p') {
-      navigation.navigate('P2POrderNavigator', { screen: 'CreateOrderP2P', params: { orderId } });
-    } else {
-      navigation.navigate('FoodOrderNavigator', {
-        screen: 'RestaurantNavigator',
-        params: { restaurantId: order.business!.id, screen: 'FoodOrderCheckout' },
-      });
-    }
+    navigation.navigate('ProfilePaymentMethods', {
+      returnScreen: 'OngoingOrderDeclined',
+    });
   };
 
   return (
@@ -78,7 +93,7 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
             title={t('Revisar pedido')}
             secondary
             style={{ marginVertical: padding }}
-            onPress={reviewOrderHandler}
+            onPress={() => reviewOrderHandler()}
           />
         )}
         {/* <DefaultButton
