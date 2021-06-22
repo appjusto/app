@@ -7,6 +7,7 @@ import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { padding } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
@@ -30,6 +31,14 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
   const { orderId } = route.params ?? {};
   // state
   const [isLoading, setLoading] = React.useState(false);
+  const order = useObserveOrder(orderId);
+  // side effects
+  React.useEffect(() => {
+    if (!order) return;
+    if (order.dispatchingStatus === 'matched') {
+      navigation.replace('OngoingOrder', { orderId });
+    }
+  }, [order, orderId, navigation]);
   // handlers
   const tryAgainHandler = async () => {
     try {
