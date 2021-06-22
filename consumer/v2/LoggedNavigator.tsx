@@ -4,6 +4,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../common/app/context';
 import { defaultScreenOptions } from '../../common/screens/options';
+import ProfileBlocked from '../../common/screens/profile/ProfileBlocked';
 import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
 import { RegistrationSubmitted } from '../../common/screens/unlogged/onboarding/RegistrationSubmitted';
 import { SelectLocation } from '../../common/screens/unlogged/onboarding/SelectLocation';
@@ -125,6 +126,11 @@ export const LoggedNavigator = () => {
           name="OngoingOrderCancelFeedback"
           component={OngoingOrderCancelFeedback}
           options={{ title: t('Pedido cancelado') }}
+        />
+        <Stack.Screen
+          name="ProfileBlocked"
+          component={ProfileBlocked}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </LoggedContextProvider>
