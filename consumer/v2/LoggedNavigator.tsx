@@ -51,12 +51,28 @@ export const LoggedNavigator = () => {
       </View>
     );
   }
-  const initialRouteName =
-    consumer.situation === 'approved'
-      ? 'MainNavigator'
-      : consumer.onboarded
-      ? 'RegistrationSubmitted'
-      : 'ConsumerOnboarding';
+  const { situation, onboarded } = consumer;
+  let initialRouteName:
+    | 'MainNavigator'
+    | 'RegistrationSubmitted'
+    | 'ConsumerOnboarding'
+    | 'ProfileBlocked'
+    | undefined = undefined;
+  if (
+    situation === 'blocked' ||
+    situation === 'deleted' ||
+    situation === 'rejected' ||
+    situation === 'invalid'
+  ) {
+    initialRouteName = 'ProfileBlocked';
+  } else if (situation === 'approved') {
+    initialRouteName = 'MainNavigator';
+  } else if (onboarded) {
+    initialRouteName = 'RegistrationSubmitted';
+  } else {
+    initialRouteName = 'ConsumerOnboarding';
+  }
+  if (!initialRouteName) return null;
   return (
     <LoggedContextProvider>
       <Stack.Navigator screenOptions={defaultScreenOptions} initialRouteName={initialRouteName}>

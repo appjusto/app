@@ -12,6 +12,7 @@ export type LoggedNavigatorParamList = {
     city?: string;
   };
   RegistrationSubmitted: undefined;
+  ProfileBlocked: undefined;
   SelectLocation:
     | {
         mode: 'states';

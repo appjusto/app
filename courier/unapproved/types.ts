@@ -5,6 +5,7 @@ export type UnapprovedParamList = {
   ProfilePending: undefined;
   ProfileSubmitted: undefined;
   ProfileRejected: undefined;
+  ProfileBlocked: undefined;
   CourierOnboarding: undefined;
   AboutTests: undefined;
   AboutAutonomy: undefined;

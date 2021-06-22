@@ -5,6 +5,7 @@ import FleetDetail from '../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../common/screens/options';
 import { PermissionDenied } from '../../common/screens/PermissionDenied';
 import { AboutApp } from '../../common/screens/profile/AboutApp';
+import ProfileBlocked from '../../common/screens/profile/ProfileBlocked';
 import ProfileErase from '../../common/screens/profile/ProfileErase';
 import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
 import { getCourier } from '../../common/store/courier/selectors';
@@ -128,6 +129,11 @@ export default function () {
       <Stack.Screen
         name="ProfileRejected"
         component={ProfileRejected}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ProfileBlocked"
+        component={ProfileBlocked}
         options={{ headerShown: false }}
       />
       <Stack.Screen
