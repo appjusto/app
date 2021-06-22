@@ -3,7 +3,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useKeepAwake } from 'expo-keep-awake';
 import React from 'react';
-import { ActivityIndicator, Image, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Keyboard, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
 import { pinPackage, pinPackageWhite } from '../../../assets/icons';
@@ -117,6 +117,7 @@ export default function ({ navigation, route }: Props) {
           await api.order().nextDispatchingState(orderId);
           setLoading(false);
         } else if (order.dispatchingState === 'arrived-destination') {
+          Keyboard.dismiss();
           await api.order().completeDelivery(orderId, code);
           setLoading(false);
         } else {
