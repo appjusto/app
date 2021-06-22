@@ -95,6 +95,7 @@ export default function ({ route }: Props) {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={[screens.default]}
+      keyboardVerticalOffset={72}
     >
       <FlatList
         keyboardShouldPersistTaps="never"
@@ -144,26 +145,27 @@ export default function ({ route }: Props) {
           </PaddedView>
         )}
         inverted
+        ListFooterComponent={
+          <PaddedView style={{ backgroundColor: colors.white }}>
+            <DefaultInput
+              value={inputText}
+              placeholder={t('Escreva sua mensagem')}
+              onChangeText={setInputText}
+              multiline
+              numberOfLines={3}
+              onSubmitEditing={sendMessageHandler}
+              blurOnSubmit
+            >
+              <DefaultButton
+                style={{ marginLeft: padding }}
+                title={t('Enviar')}
+                onPress={sendMessageHandler}
+                disabled={inputText.length === 0}
+              />
+            </DefaultInput>
+          </PaddedView>
+        }
       />
-
-      <PaddedView style={{ backgroundColor: colors.white }}>
-        <DefaultInput
-          value={inputText}
-          placeholder={t('Escreva sua mensagem')}
-          onChangeText={setInputText}
-          multiline
-          numberOfLines={3}
-          onSubmitEditing={sendMessageHandler}
-          blurOnSubmit
-        >
-          <DefaultButton
-            style={{ marginLeft: padding }}
-            title={t('Enviar')}
-            onPress={sendMessageHandler}
-            disabled={inputText.length === 0}
-          />
-        </DefaultInput>
-      </PaddedView>
     </KeyboardAvoidingView>
   );
 }
