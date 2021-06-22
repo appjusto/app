@@ -76,7 +76,7 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
       returnScreen: 'OngoingOrderDeclined',
     });
   };
-
+  // UI
   return (
     <ScrollView style={{ ...screens.default }} contentContainerStyle={{ flexGrow: 1 }}>
       <FeedbackView
@@ -96,12 +96,6 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
             onPress={() => reviewOrderHandler()}
           />
         )}
-        {/* <DefaultButton
-          title={t('Revisar pedido')}
-          secondary
-          style={{ marginVertical: padding }}
-          onPress={reviewOrderHandler}
-        /> */}
       </FeedbackView>
     </ScrollView>
   );
