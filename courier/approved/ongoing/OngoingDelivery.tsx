@@ -126,6 +126,7 @@ export default function ({ navigation, route }: Props) {
           }, 5000);
         }
       } catch (error) {
+        setLoading(false);
         dispatch(showToast(error.toString(), 'error'));
       }
     })();

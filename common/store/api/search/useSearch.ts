@@ -47,7 +47,7 @@ export const useSearch = <T extends object>(
   // update results when response changes
   React.useEffect(() => {
     if (!response) {
-      setResults([]);
+      setResults(undefined);
       return;
     }
     const hits = response.hits;
