@@ -46,7 +46,10 @@ export const useSearch = <T extends object>(
   }, [enabled, name, coords, debouncedSearch, filters]);
   // update results when response changes
   React.useEffect(() => {
-    if (!response) return;
+    if (!response) {
+      setResults([]);
+      return;
+    }
     const hits = response.hits;
     if (response.page === 0) setResults(hits);
     else setResults([...(results ?? []), ...hits]);
@@ -64,8 +67,8 @@ export const useSearch = <T extends object>(
   const refetch = () => {
     if (name === undefined) return;
     if (!coords) return;
-    if (!response) return;
-    return search(coords, name, filters, response.page);
+    setResponse(undefined);
+    return search(coords, name, filters);
   };
 
   return { results, isLoading, refetch, fetchNextPage };
