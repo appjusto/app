@@ -238,7 +238,10 @@ export default function ({ navigation, route }: Props) {
             </Text>
           </View>
         </PaddedView> */}
-        <OngoingDeliveryInfo order={order} />
+        <OngoingDeliveryInfo
+          order={order}
+          onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
+        />
         {/* Status slider */}
         {/* it appears while dispatchingState !== 'arrived-destination' */}
         {dispatchingState !== 'arrived-destination' ? (

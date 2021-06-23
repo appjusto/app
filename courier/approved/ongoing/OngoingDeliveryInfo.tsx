@@ -1,8 +1,10 @@
+import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { Order, WithId } from '../../../../types';
 import { pinPackage, pinPackageWhite } from '../../../assets/icons';
 import PaddedView from '../../../common/components/containers/PaddedView';
+import RoundedText from '../../../common/components/texts/RoundedText';
 import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/CourierDistanceBadge';
 import { courierNextPlace } from '../../../common/store/api/order/helpers';
 import { colors, halfPadding, texts } from '../../../common/styles';
@@ -10,10 +12,11 @@ import { t } from '../../../strings';
 
 type Props = {
   order: WithId<Order>;
+  onProblem: () => void;
 };
 
-export const OngoingDeliveryInfo = ({ order }: Props) => {
-  const { dispatchingState } = order;
+export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
+  const { dispatchingState, type } = order;
   const nextPlace = courierNextPlace(order);
   const addressLabel = (() => {
     if (!dispatchingState || dispatchingState === 'going-pickup') {
@@ -29,21 +32,37 @@ export const OngoingDeliveryInfo = ({ order }: Props) => {
   })();
   return (
     <PaddedView>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Image
-          source={dispatchingState === 'going-pickup' ? pinPackageWhite : pinPackage}
-          style={{ width: 23, height: 28 }}
-        />
-        <Text
-          style={[
-            texts.xs,
-            texts.bold,
-            { marginVertical: halfPadding, marginHorizontal: halfPadding },
-          ]}
-        >
-          {addressLabel}
-        </Text>
-        <CourierDistanceBadge order={order} delivering />
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Image
+            source={dispatchingState === 'going-pickup' ? pinPackageWhite : pinPackage}
+            style={{ width: 23, height: 28 }}
+          />
+          <Text
+            style={[
+              texts.xs,
+              texts.bold,
+              { marginVertical: halfPadding, marginHorizontal: halfPadding },
+            ]}
+          >
+            {addressLabel}
+          </Text>
+          <CourierDistanceBadge order={order} delivering />
+        </View>
+        {type === 'food' && dispatchingState === 'going-pickup' ? (
+          <View>
+            <TouchableOpacity onPress={onProblem}>
+              <RoundedText
+                color={colors.red}
+                leftIcon={
+                  <Feather name="info" size={12} color={colors.red} style={{ marginRight: 4 }} />
+                }
+              >
+                {t('Tive um problema')}
+              </RoundedText>
+            </TouchableOpacity>
+          </View>
+        ) : null}
       </View>
       <View style={{ marginTop: halfPadding }}>
         <Text style={[texts.xl]} numberOfLines={2}>
