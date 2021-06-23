@@ -20,6 +20,7 @@ import { t } from '../../../strings';
 import { CourierDeliveryInfo } from '../components/CourierDeliveryInfo';
 import { ApprovedParamList } from '../types';
 import { CodeInput } from './code-input/CodeInput';
+import { OngoingDeliveryCode } from './OngoingDeliveryCode';
 import { OngoingDeliveryInfo } from './OngoingDeliveryInfo';
 import { OngoingDeliveryMap } from './OngoingDeliveryMap';
 import { StatusControl } from './StatusControl';
@@ -113,10 +114,13 @@ export default function ({ navigation, route }: Props) {
         if (order.dispatchingState === 'going-destination') {
           await api.order().nextDispatchingState(orderId);
           setLoading(false);
-        } else if (order.dispatchingState === 'arrived-destination') {
-          await api.order().completeDelivery(orderId, code);
-          setLoading(false);
-        } else {
+        }
+        // this will be handled by the codeDeliveryHandler
+        // else if (order.dispatchingState === 'arrived-destination') {
+        //   await api.order().completeDelivery(orderId, code);
+        //   setLoading(false);
+        // }
+        else {
           await api.order().nextDispatchingState(orderId);
           setTimeout(() => {
             setLoading(false);
@@ -124,6 +128,18 @@ export default function ({ navigation, route }: Props) {
         }
       } catch (error) {
         dispatch(showToast(error.toString(), 'error'));
+      }
+    })();
+  };
+  const codeDeliveryHandler = () => {
+    (async () => {
+      setLoading(true);
+      try {
+        await api.order().completeDelivery(orderId, code);
+        setLoading(false);
+      } catch (error) {
+        dispatch(showToast(error.toString(), 'error'));
+        setLoading(false);
       }
     })();
   };
@@ -265,6 +281,14 @@ export default function ({ navigation, route }: Props) {
             />
           </PaddedView>
         </View>
+        <OngoingDeliveryCode
+          code={code}
+          onSetCode={setCode}
+          buttonTitle={t('Confirmar entrega')}
+          onDelivery={codeDeliveryHandler}
+          isLoading={isLoading}
+          onNoCodeDelivery={() => navigation.navigate('NoCodeDelivery', { orderId })}
+        />
       </View>
       {/* {order.type === 'p2p' ? (
         <View style={{ flex: 1 }}>
