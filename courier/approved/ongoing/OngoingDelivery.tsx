@@ -20,6 +20,7 @@ import { OngoingDeliveryInfo } from './OngoingDeliveryInfo';
 import { OngoingDeliveryMap } from './OngoingDeliveryMap';
 import { StatusControl } from './StatusControl';
 import { OngoingDeliveryNavigatorParamList } from './types';
+import { WithdrawOrderModal } from './WithdrawOrderModal';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<OngoingDeliveryNavigatorParamList, 'OngoingDelivery'>,
@@ -296,6 +297,8 @@ export default function ({ navigation, route }: Props) {
           onNoCodeDelivery={() => navigation.navigate('NoCodeDelivery', { orderId })}
           dispatchingState={dispatchingState}
         />
+        {/* withdrawal modal */}
+        <WithdrawOrderModal visible onDismiss={() => null} order={order} />
       </View>
       {/* {order.type === 'p2p' ? (
         <View style={{ flex: 1 }}>
