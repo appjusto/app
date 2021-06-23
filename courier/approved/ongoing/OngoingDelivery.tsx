@@ -3,23 +3,18 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useKeepAwake } from 'expo-keep-awake';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
-import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import PaddedView from '../../../common/components/containers/PaddedView';
-import SingleHeader from '../../../common/components/texts/SingleHeader';
-import HR from '../../../common/components/views/HR';
 import { courierNextPlace } from '../../../common/store/api/order/helpers';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
-import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { CourierDeliveryInfo } from '../components/CourierDeliveryInfo';
 import { ApprovedParamList } from '../types';
-import { CodeInput } from './code-input/CodeInput';
 import { OngoingDeliveryCode } from './OngoingDeliveryCode';
 import { OngoingDeliveryInfo } from './OngoingDeliveryInfo';
 import { OngoingDeliveryMap } from './OngoingDeliveryMap';
@@ -95,6 +90,8 @@ export default function ({ navigation, route }: Props) {
       navigation.replace('OrderCanceled', { orderId });
     }
   }, [order, navigation, orderId]);
+  // refs
+  const codeDeliveryRef = React.useRef();
 
   // UI
   if (!order?.dispatchingState) {
@@ -139,6 +136,8 @@ export default function ({ navigation, route }: Props) {
         setLoading(false);
       } catch (error) {
         dispatch(showToast(error.toString(), 'error'));
+        setLoading(false);
+      } finally {
         setLoading(false);
       }
     })();
@@ -242,19 +241,22 @@ export default function ({ navigation, route }: Props) {
         <OngoingDeliveryInfo order={order} />
         {/* Status slider */}
         {/* it appears while dispatchingState !== 'arrived-destination' */}
-        <View style={{ paddingHorizontal: padding }}>
-          <StatusControl
-            key={dispatchingState}
-            style={{ marginBottom: padding }}
-            text={nextStepLabel}
-            disabled={nextStepDisabled}
-            isLoading={isLoading}
-            onConfirm={nextStatepHandler}
-            color={sliderColor}
-          />
-        </View>
+        {dispatchingState !== 'arrived-destination' ? (
+          <View style={{ paddingHorizontal: padding }}>
+            <StatusControl
+              key={dispatchingState}
+              style={{ marginBottom: padding }}
+              text={nextStepLabel}
+              disabled={nextStepDisabled}
+              isLoading={isLoading}
+              onConfirm={nextStatepHandler}
+              color={sliderColor}
+            />
+          </View>
+        ) : null}
+
         {/* code input. it appears when the courier arrived-pickup */}
-        <View>
+        {/* <View>
           <HR height={padding} />
           <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>
             <SingleHeader title={t('Código de confirmação')} />
@@ -280,14 +282,16 @@ export default function ({ navigation, route }: Props) {
               onPress={() => navigation.navigate('NoCodeDelivery', { orderId })}
             />
           </PaddedView>
-        </View>
+        </View> */}
         <OngoingDeliveryCode
+          // do we need to focus on this component when it appears?
           code={code}
           onSetCode={setCode}
           buttonTitle={t('Confirmar entrega')}
           onDelivery={codeDeliveryHandler}
           isLoading={isLoading}
           onNoCodeDelivery={() => navigation.navigate('NoCodeDelivery', { orderId })}
+          dispatchingState={dispatchingState}
         />
       </View>
       {/* {order.type === 'p2p' ? (

@@ -52,12 +52,20 @@ export const OngoingDeliveryInfo = ({ order }: Props) => {
         <Text style={[texts.xl]} numberOfLines={2}>
           {nextPlace?.address.secondary}
         </Text>
-        <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]}>
-          {nextPlace?.additionalInfo ?? ''}
-        </Text>
-        <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={2}>
-          {nextPlace?.intructions ?? ''}
-        </Text>
+        {nextPlace?.additionalInfo ? (
+          <View>
+            <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]}>
+              {nextPlace?.additionalInfo ?? ''}
+            </Text>
+          </View>
+        ) : null}
+        {nextPlace?.intructions ? (
+          <View>
+            <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={2}>
+              {nextPlace?.intructions ?? ''}
+            </Text>
+          </View>
+        ) : null}
       </View>
     </PaddedView>
   );

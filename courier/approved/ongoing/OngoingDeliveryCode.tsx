@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
+import { DispatchingState } from '../../../../types';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
@@ -15,6 +16,7 @@ type Props = {
   onDelivery: () => void;
   isLoading: boolean;
   onNoCodeDelivery: () => void;
+  dispatchingState: DispatchingState;
 };
 
 export const OngoingDeliveryCode = ({
@@ -24,8 +26,9 @@ export const OngoingDeliveryCode = ({
   onDelivery,
   isLoading,
   onNoCodeDelivery,
+  dispatchingState,
 }: Props) => {
-  return (
+  return dispatchingState === 'arrived-destination' ? (
     <View>
       <HR height={padding} />
       <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>
@@ -53,5 +56,5 @@ export const OngoingDeliveryCode = ({
         />
       </PaddedView>
     </View>
-  );
+  ) : null;
 };
