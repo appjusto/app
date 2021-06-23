@@ -8,9 +8,10 @@ import { t } from '../../../strings';
 
 export interface Props extends ModalProps {
   order: WithId<Order>;
+  onWithdrawal: () => void;
 }
 
-export const WithdrawOrderModal = ({ order, ...props }: Props) => {
+export const WithdrawOrderModal = ({ order, onWithdrawal, ...props }: Props) => {
   return (
     <Modal transparent {...props}>
       <View
@@ -46,7 +47,7 @@ export const WithdrawOrderModal = ({ order, ...props }: Props) => {
             <Text style={{ ...texts.x4l }}>{order.consumer.name}</Text>
           </View>
           <View style={{ width: '100%' }}>
-            <DefaultButton title={t('Recebi o pedido')} onPress={() => null} />
+            <DefaultButton title={t('Recebi o pedido')} onPress={onWithdrawal} />
           </View>
         </View>
       </View>

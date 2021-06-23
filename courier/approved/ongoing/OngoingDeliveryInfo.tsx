@@ -31,7 +31,7 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
     return '';
   })();
   return (
-    <PaddedView>
+    <PaddedView style={{ flex: 1 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Image
@@ -86,6 +86,7 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
           </View>
         ) : null}
       </View>
+      <View style={{ flex: 1 }} />
     </PaddedView>
   );
 };

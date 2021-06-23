@@ -7,7 +7,6 @@ import { ActivityIndicator, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
-import { courierNextPlace } from '../../../common/store/api/order/helpers';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
@@ -43,6 +42,7 @@ export default function ({ navigation, route }: Props) {
   const order = useObserveOrder(orderId);
   const [code, setCode] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
+  const [modalOpen, setModalOpen] = React.useState(false);
   const consumerId = order?.consumer.id;
   const businessId = order?.business?.id;
   // side effects
@@ -91,9 +91,6 @@ export default function ({ navigation, route }: Props) {
       navigation.replace('OrderCanceled', { orderId });
     }
   }, [order, navigation, orderId]);
-  // refs
-  const codeDeliveryRef = React.useRef();
-
   // UI
   if (!order?.dispatchingState) {
     // showing the indicator until the order is loaded
@@ -104,21 +101,15 @@ export default function ({ navigation, route }: Props) {
     );
   }
   // UI handlers
-  // handles updating dispatchingState
-  const nextStatepHandler = () => {
+  const statusControlHandler = () => {
     (async () => {
       setLoading(true);
       try {
-        if (order.dispatchingState === 'going-destination') {
+        if (order.type === 'food' && order.dispatchingState === 'going-pickup') {
           await api.order().nextDispatchingState(orderId);
           setLoading(false);
-        }
-        // this will be handled by the codeDeliveryHandler
-        // else if (order.dispatchingState === 'arrived-destination') {
-        //   await api.order().completeDelivery(orderId, code);
-        //   setLoading(false);
-        // }
-        else {
+          setModalOpen(true);
+        } else {
           await api.order().nextDispatchingState(orderId);
           setTimeout(() => {
             setLoading(false);
@@ -143,6 +134,16 @@ export default function ({ navigation, route }: Props) {
       }
     })();
   };
+  const withDrawOrderHandler = () => {
+    (async () => {
+      try {
+        await api.order().nextDispatchingState(orderId);
+        setModalOpen(false);
+      } catch (error) {
+        dispatch(showToast(error.toString(), 'error'));
+      }
+    })();
+  };
   // UI
   const { type, dispatchingState, status } = order;
   const nextStepDisabled =
@@ -161,19 +162,6 @@ export default function ({ navigation, route }: Props) {
     }
     return '';
   })();
-  const nextPlace = courierNextPlace(order);
-  const addressLabel = (() => {
-    if (!dispatchingState || dispatchingState === 'going-pickup') {
-      return t('Retirada');
-    } else if (
-      dispatchingState === 'arrived-pickup' ||
-      dispatchingState === 'arrived-destination' ||
-      dispatchingState === 'going-destination'
-    ) {
-      return t('Entrega');
-    }
-    return '';
-  })();
   const sliderColor = (() => {
     if (!dispatchingState || dispatchingState === 'going-pickup') {
       return colors.green500;
@@ -189,62 +177,20 @@ export default function ({ navigation, route }: Props) {
       contentContainerStyle={{ flexGrow: 1 }}
     >
       <View style={{ flex: 1 }}>
-        {/* top panel */}
-        {/* it appears all the time, except in food orders while the courier is going-pickup to the rest */}
+        {/* top*/}
         <CourierDeliveryInfo
           order={order}
           onChat={() => openChatWithConsumer()}
           onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
         />
-        {/* center panel */}
-        {/* it only appears while dispatchingState !== 'arrived-destination' */}
-        {/* <View>
-          <OrderMap order={order!} ratio={1} />
-          <RouteIcons order={order} />
-          <View>
-            <StatusAndMessages order={order} onPress={(from) => openChat(from.id, from.agent)} />
-          </View>
-        </View> */}
+        {/* center*/}
         <OngoingDeliveryMap order={order} onOpenChat={(from) => openChat(from.id, from.agent)} />
-        {/* bottom panel */}
-        {/* <PaddedView>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image
-              source={dispatchingState === 'going-pickup' ? pinPackageWhite : pinPackage}
-              style={{ width: 23, height: 28 }}
-            />
-            <Text
-              style={[
-                texts.xs,
-                texts.bold,
-                { marginVertical: halfPadding, marginHorizontal: halfPadding },
-              ]}
-            >
-              {addressLabel}
-            </Text>
-            <CourierDistanceBadge order={order} delivering />
-          </View>
-          <View style={{ marginTop: halfPadding }}>
-            <Text style={[texts.xl]} numberOfLines={2}>
-              {nextPlace?.address.main}
-            </Text>
-            <Text style={[texts.xl]} numberOfLines={2}>
-              {nextPlace?.address.secondary}
-            </Text>
-            <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]}>
-              {nextPlace?.additionalInfo ?? ''}
-            </Text>
-            <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={2}>
-              {nextPlace?.intructions ?? ''}
-            </Text>
-          </View>
-        </PaddedView> */}
+        {/* bottom*/}
         <OngoingDeliveryInfo
           order={order}
           onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
         />
         {/* Status slider */}
-        {/* it appears while dispatchingState !== 'arrived-destination' */}
         {dispatchingState !== 'arrived-destination' ? (
           <View style={{ paddingHorizontal: padding }}>
             <StatusControl
@@ -253,40 +199,12 @@ export default function ({ navigation, route }: Props) {
               text={nextStepLabel}
               disabled={nextStepDisabled}
               isLoading={isLoading}
-              onConfirm={nextStatepHandler}
+              onConfirm={statusControlHandler}
               color={sliderColor}
             />
           </View>
         ) : null}
-
-        {/* code input. it appears when the courier arrived-pickup */}
-        {/* <View>
-          <HR height={padding} />
-          <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>
-            <SingleHeader title={t('Código de confirmação')} />
-            <View style={{ paddingHorizontal: padding }}>
-              <Text style={{ ...texts.sm, marginBottom: padding }}>
-                {t('Digite o código de confirmação fornecido pelo cliente:')}
-              </Text>
-              <CodeInput value={code} onChange={setCode} />
-              <DefaultButton
-                title={nextStepLabel}
-                onPress={nextStatepHandler}
-                activityIndicator={isLoading}
-                disabled={isLoading || code.length < 3}
-                style={{ marginTop: padding }}
-              />
-            </View>
-          </View>
-          <HR height={padding} />
-          <PaddedView>
-            <DefaultButton
-              secondary
-              title={t('Confirmar entrega sem código')}
-              onPress={() => navigation.navigate('NoCodeDelivery', { orderId })}
-            />
-          </PaddedView>
-        </View> */}
+        {/* code input */}
         <OngoingDeliveryCode
           // do we need to focus on this component when it appears?
           code={code}
@@ -298,235 +216,8 @@ export default function ({ navigation, route }: Props) {
           dispatchingState={dispatchingState}
         />
         {/* withdrawal modal */}
-        <WithdrawOrderModal visible onDismiss={() => null} order={order} />
+        <WithdrawOrderModal visible={modalOpen} order={order} onWithdrawal={withDrawOrderHandler} />
       </View>
-      {/* {order.type === 'p2p' ? (
-        <View style={{ flex: 1 }}>
-          {dispatchingState !== 'arrived-destination' && (
-            <View>
-              <OrderMap order={order!} ratio={1} />
-              <RouteIcons order={order} />
-              <View>
-                <StatusAndMessages
-                  order={order}
-                  onPress={(from) => openChat(from.id, from.agent)}
-                />
-              </View>
-            </View>
-          )}
-          <HR />
-          <PaddedView>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Image
-                source={dispatchingState === 'going-pickup' ? pinPackageWhite : pinPackage}
-                style={{ width: 23, height: 28 }}
-              />
-              <Text
-                style={[
-                  texts.xs,
-                  texts.bold,
-                  { marginVertical: halfPadding, marginHorizontal: halfPadding },
-                ]}
-              >
-                {addressLabel}
-              </Text>
-              <CourierDistanceBadge order={order} delivering />
-            </View>
-            <View style={{ marginTop: halfPadding }}>
-              <Text style={[texts.xl]} numberOfLines={2}>
-                {nextPlace?.address.main}
-              </Text>
-              <Text style={[texts.xl]} numberOfLines={2}>
-                {nextPlace?.address.secondary}
-              </Text>
-              <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]}>
-                {nextPlace?.additionalInfo ?? ''}
-              </Text>
-              <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={2}>
-                {nextPlace?.intructions ?? ''}
-              </Text>
-            </View>
-          </PaddedView>
-          {dispatchingState !== 'arrived-destination' ? (
-            <View style={{ paddingHorizontal: padding }}>
-              <StatusControl
-                key={dispatchingState}
-                style={{ marginBottom: padding }}
-                text={nextStepLabel}
-                disabled={nextStepDisabled}
-                isLoading={isLoading}
-                onConfirm={nextStatepHandler}
-                color={sliderColor}
-              />
-            </View>
-          ) : null}
-          {dispatchingState === 'arrived-destination' ? (
-            <View>
-              <HR height={padding} />
-              <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>
-                <SingleHeader title={t('Código de confirmação')} />
-                <View style={{ paddingHorizontal: padding }}>
-                  <Text style={{ ...texts.sm, marginBottom: padding }}>
-                    {t('Digite o código de confirmação fornecido pelo cliente:')}
-                  </Text>
-                  <CodeInput value={code} onChange={setCode} />
-                  <DefaultButton
-                    title={nextStepLabel}
-                    onPress={nextStatepHandler}
-                    activityIndicator={isLoading}
-                    disabled={isLoading || code.length < 3}
-                    style={{ marginTop: padding }}
-                  />
-                </View>
-              </View>
-              <HR height={padding} />
-              <PaddedView>
-                <DefaultButton
-                  secondary
-                  title={t('Confirmar entrega sem código')}
-                  onPress={() => navigation.navigate('NoCodeDelivery', { orderId })}
-                />
-              </PaddedView>
-            </View>
-          ) : null}
-        </View>
-      ) : (
-        <View style={{ flex: 1 }}> */}
-      {/* <View style={{ marginHorizontal: padding }}>
-            <CourierDeliveryInfo
-              order={order}
-              onChat={() => openChatWithConsumer()}
-              onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
-            />
-          </View> */}
-      {/* {dispatchingState !== 'arrived-destination' && (
-            <View>
-              <OrderMap order={order!} ratio={1} />
-              <RouteIcons order={order} />
-              <View>
-                <StatusAndMessages
-                  order={order}
-                  onPress={(from) => openChat(from.id, from.agent)}
-                />
-              </View>
-            </View>
-          )}
-          <HR />
-          <PaddedView>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image
-                  source={dispatchingState === 'going-pickup' ? pinPackageWhite : pinPackage}
-                  style={{ width: 23, height: 28 }}
-                />
-                <Text
-                  style={[
-                    texts.xs,
-                    texts.bold,
-                    { marginVertical: halfPadding, marginHorizontal: halfPadding },
-                  ]}
-                >
-                  {addressLabel}
-                </Text>
-                <CourierDistanceBadge order={order} delivering />
-              </View>
-
-              <View
-                style={{
-                  alignSelf: 'flex-end',
-                  marginLeft: halfPadding,
-                }}
-              >
-                <TouchableOpacity>
-                  <RoundedText
-                    color={colors.red}
-                    leftIcon={
-                      <Feather
-                        name="info"
-                        size={12}
-                        color={colors.red}
-                        style={{ marginRight: 4 }}
-                      />
-                    }
-                  >
-                    {t('Tive um problema')}
-                  </RoundedText>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={{ marginTop: halfPadding }}>
-              <Text style={[texts.xl]} numberOfLines={2}>
-                {nextPlace?.address.main}
-              </Text>
-              <Text style={[texts.xl]} numberOfLines={2}>
-                {nextPlace?.address.secondary}
-              </Text>
-              <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]}>
-                {nextPlace?.additionalInfo ?? ''}
-              </Text>
-              <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={2}>
-                {nextPlace?.intructions ?? ''}
-              </Text>
-            </View>
-          </PaddedView>
-          {dispatchingState !== 'arrived-destination' ? (
-            <View style={{ paddingHorizontal: padding }}>
-              <StatusControl
-                key={dispatchingState}
-                style={{ marginBottom: padding }}
-                text={nextStepLabel}
-                disabled={nextStepDisabled}
-                isLoading={isLoading}
-                onConfirm={nextStatepHandler}
-                color={sliderColor}
-              />
-            </View>
-          ) : null}
-          {dispatchingState === 'arrived-destination' ? (
-            <View>
-              <HR height={padding} />
-              <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>
-                <SingleHeader title={t('Código de confirmação')} />
-                <View style={{ paddingHorizontal: padding }}>
-                  <Text style={{ ...texts.sm, marginBottom: padding }}>
-                    {t('Digite o código de confirmação fornecido pelo cliente:')}
-                  </Text>
-                  <CodeInput value={code} onChange={setCode} />
-                  <DefaultButton
-                    title={nextStepLabel}
-                    onPress={nextStatepHandler}
-                    activityIndicator={isLoading}
-                    disabled={isLoading || code.length < 3}
-                    style={{ marginTop: padding }}
-                  />
-                </View>
-              </View>
-              <HR height={padding} />
-              <PaddedView>
-                <DefaultButton
-                  secondary
-                  title={t('Confirmar entrega sem código')}
-                  onPress={() => navigation.navigate('NoCodeDelivery', { orderId })}
-                />
-              </PaddedView>
-            </View>
-          ) : null} */}
-      {/* <DefaultModal
-            header="Olá"
-            body="Retire o pedido"
-            dismissButtonTitle="Recebi o pedido"
-            visible
-            onDismiss={() => null}
-          /> */}
-      {/* <WithdrawOrderModal visible onDismiss={() => null} />
-        </View>
-      )} */}
     </KeyboardAwareScrollView>
   );
 }
