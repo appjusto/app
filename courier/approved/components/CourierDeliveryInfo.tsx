@@ -16,7 +16,7 @@ type Props = {
 
 export const CourierDeliveryInfo = ({ order, onChat, onProblem, delivering }: Props) => {
   return (
-    <View>
+    <View style={{ marginHorizontal: padding }}>
       <Text style={[texts.xs, { color: colors.green600 }]}>{t('Pedido de')}</Text>
       <Text style={delivering ? { ...texts.lg } : { ...texts.md }}>
         {!isEmpty(order.consumer.name) ? order.consumer.name : t('Cliente')}

@@ -1,22 +1,16 @@
 import { Flavor } from '@appjusto/types';
-import { Feather } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useKeepAwake } from 'expo-keep-awake';
 import React from 'react';
-import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
-import { pinPackage, pinPackageWhite } from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import RoundedText from '../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import HR from '../../../common/components/views/HR';
-import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/CourierDistanceBadge';
-import { StatusAndMessages } from '../../../common/screens/orders/ongoing/StatusAndMessages';
-import OrderMap from '../../../common/screens/orders/OrderMap';
 import { courierNextPlace } from '../../../common/store/api/order/helpers';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
@@ -26,10 +20,10 @@ import { t } from '../../../strings';
 import { CourierDeliveryInfo } from '../components/CourierDeliveryInfo';
 import { ApprovedParamList } from '../types';
 import { CodeInput } from './code-input/CodeInput';
-import { RouteIcons } from './RouteIcons';
+import { OngoingDeliveryInfo } from './OngoingDeliveryInfo';
+import { OngoingDeliveryMap } from './OngoingDeliveryMap';
 import { StatusControl } from './StatusControl';
 import { OngoingDeliveryNavigatorParamList } from './types';
-import { WithdrawOrderModal } from './WithdrawOrderModal';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<OngoingDeliveryNavigatorParamList, 'OngoingDelivery'>,
@@ -175,18 +169,105 @@ export default function ({ navigation, route }: Props) {
       enableAutomaticScroll
       keyboardOpeningTime={0}
       style={{ ...screens.default }}
-      keyboardShouldPersistTaps="always"
+      keyboardShouldPersistTaps="never"
       contentContainerStyle={{ flexGrow: 1 }}
     >
-      {order.type === 'p2p' ? (
-        <View style={{ flex: 1 }}>
-          <View style={{ marginHorizontal: padding }}>
-            <CourierDeliveryInfo
-              order={order}
-              onChat={() => openChatWithConsumer()}
-              onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
-            />
+      <View style={{ flex: 1 }}>
+        {/* top panel */}
+        {/* it appears all the time, except in food orders while the courier is going-pickup to the rest */}
+        <CourierDeliveryInfo
+          order={order}
+          onChat={() => openChatWithConsumer()}
+          onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
+        />
+        {/* center panel */}
+        {/* it only appears while dispatchingState !== 'arrived-destination' */}
+        {/* <View>
+          <OrderMap order={order!} ratio={1} />
+          <RouteIcons order={order} />
+          <View>
+            <StatusAndMessages order={order} onPress={(from) => openChat(from.id, from.agent)} />
           </View>
+        </View> */}
+        <OngoingDeliveryMap order={order} onOpenChat={(from) => openChat(from.id, from.agent)} />
+        {/* bottom panel */}
+        {/* <PaddedView>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Image
+              source={dispatchingState === 'going-pickup' ? pinPackageWhite : pinPackage}
+              style={{ width: 23, height: 28 }}
+            />
+            <Text
+              style={[
+                texts.xs,
+                texts.bold,
+                { marginVertical: halfPadding, marginHorizontal: halfPadding },
+              ]}
+            >
+              {addressLabel}
+            </Text>
+            <CourierDistanceBadge order={order} delivering />
+          </View>
+          <View style={{ marginTop: halfPadding }}>
+            <Text style={[texts.xl]} numberOfLines={2}>
+              {nextPlace?.address.main}
+            </Text>
+            <Text style={[texts.xl]} numberOfLines={2}>
+              {nextPlace?.address.secondary}
+            </Text>
+            <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]}>
+              {nextPlace?.additionalInfo ?? ''}
+            </Text>
+            <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={2}>
+              {nextPlace?.intructions ?? ''}
+            </Text>
+          </View>
+        </PaddedView> */}
+        <OngoingDeliveryInfo order={order} />
+        {/* Status slider */}
+        {/* it appears while dispatchingState !== 'arrived-destination' */}
+        <View style={{ paddingHorizontal: padding }}>
+          <StatusControl
+            key={dispatchingState}
+            style={{ marginBottom: padding }}
+            text={nextStepLabel}
+            disabled={nextStepDisabled}
+            isLoading={isLoading}
+            onConfirm={nextStatepHandler}
+            color={sliderColor}
+          />
+        </View>
+        {/* code input. it appears when the courier arrived-pickup */}
+        <View>
+          <HR height={padding} />
+          <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>
+            <SingleHeader title={t('Código de confirmação')} />
+            <View style={{ paddingHorizontal: padding }}>
+              <Text style={{ ...texts.sm, marginBottom: padding }}>
+                {t('Digite o código de confirmação fornecido pelo cliente:')}
+              </Text>
+              <CodeInput value={code} onChange={setCode} />
+              <DefaultButton
+                title={nextStepLabel}
+                onPress={nextStatepHandler}
+                activityIndicator={isLoading}
+                disabled={isLoading || code.length < 3}
+                style={{ marginTop: padding }}
+              />
+            </View>
+          </View>
+          <HR height={padding} />
+          <PaddedView>
+            <DefaultButton
+              secondary
+              title={t('Confirmar entrega sem código')}
+              onPress={() => navigation.navigate('NoCodeDelivery', { orderId })}
+            />
+          </PaddedView>
+        </View>
+      </View>
+      {/* {order.type === 'p2p' ? (
+        <View style={{ flex: 1 }}>
           {dispatchingState !== 'arrived-destination' && (
             <View>
               <OrderMap order={order!} ratio={1} />
@@ -276,15 +357,15 @@ export default function ({ navigation, route }: Props) {
           ) : null}
         </View>
       ) : (
-        <View style={{ flex: 1 }}>
-          {/* <View style={{ marginHorizontal: padding }}>
+        <View style={{ flex: 1 }}> */}
+      {/* <View style={{ marginHorizontal: padding }}>
             <CourierDeliveryInfo
               order={order}
               onChat={() => openChatWithConsumer()}
               onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
             />
           </View> */}
-          {dispatchingState !== 'arrived-destination' && (
+      {/* {dispatchingState !== 'arrived-destination' && (
             <View>
               <OrderMap order={order!} ratio={1} />
               <RouteIcons order={order} />
@@ -401,17 +482,17 @@ export default function ({ navigation, route }: Props) {
                 />
               </PaddedView>
             </View>
-          ) : null}
-          {/* <DefaultModal
+          ) : null} */}
+      {/* <DefaultModal
             header="Olá"
             body="Retire o pedido"
             dismissButtonTitle="Recebi o pedido"
             visible
             onDismiss={() => null}
           /> */}
-          <WithdrawOrderModal visible onDismiss={() => null} />
+      {/* <WithdrawOrderModal visible onDismiss={() => null} />
         </View>
-      )}
+      )} */}
     </KeyboardAwareScrollView>
   );
 }
