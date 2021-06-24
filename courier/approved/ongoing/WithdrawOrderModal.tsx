@@ -36,7 +36,7 @@ export const WithdrawOrderModal = ({ order, onWithdrawal, ...props }: Props) => 
           </View>
           <Text style={{ ...texts.x2l }}>{t('Retire o pedido')}</Text>
           <Text style={{ ...texts.sm, color: colors.grey700 }}>
-            {t('Mostre essa tela para o resturante')}
+            {t('Mostre essa tela para o restaurante')}
           </Text>
           <View style={{ marginTop: 24, alignItems: 'center' }}>
             <Text style={{ ...texts.xl, color: colors.grey700 }}>{t('Pedido Nº')}</Text>
