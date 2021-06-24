@@ -145,27 +145,25 @@ export default function ({ route }: Props) {
           </PaddedView>
         )}
         inverted
-        ListFooterComponent={
-          <PaddedView style={{ backgroundColor: colors.white }}>
-            <DefaultInput
-              value={inputText}
-              placeholder={t('Escreva sua mensagem')}
-              onChangeText={setInputText}
-              multiline
-              numberOfLines={3}
-              onSubmitEditing={sendMessageHandler}
-              blurOnSubmit
-            >
-              <DefaultButton
-                style={{ marginLeft: padding }}
-                title={t('Enviar')}
-                onPress={sendMessageHandler}
-                disabled={inputText.length === 0}
-              />
-            </DefaultInput>
-          </PaddedView>
-        }
       />
+      <PaddedView style={{ backgroundColor: colors.white }}>
+        <DefaultInput
+          value={inputText}
+          placeholder={t('Escreva sua mensagem')}
+          onChangeText={setInputText}
+          multiline
+          numberOfLines={3}
+          onSubmitEditing={sendMessageHandler}
+          blurOnSubmit
+        >
+          <DefaultButton
+            style={{ marginLeft: padding }}
+            title={t('Enviar')}
+            onPress={sendMessageHandler}
+            disabled={inputText.length === 0}
+          />
+        </DefaultInput>
+      </PaddedView>
     </KeyboardAvoidingView>
   );
 }
