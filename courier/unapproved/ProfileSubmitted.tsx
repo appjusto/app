@@ -74,7 +74,7 @@ export default function ({ navigation }: Props) {
       setPlaying(false);
     }
   }, []);
-
+  console.log(courier.id);
   // UI
   return (
     <SafeAreaView style={{ flex: 1 }}>

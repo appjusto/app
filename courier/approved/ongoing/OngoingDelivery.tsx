@@ -101,14 +101,17 @@ export default function ({ navigation, route }: Props) {
     );
   }
   // UI handlers
-  const statusControlHandler = () => {
+  const nextDispatchingStateHandler = () => {
     (async () => {
       setLoading(true);
       try {
         if (order.type === 'food' && order.dispatchingState === 'going-pickup') {
+          setModalOpen(true);
           await api.order().nextDispatchingState(orderId);
           setLoading(false);
-          setModalOpen(true);
+        } else if (order.type === 'food' && order.dispatchingState === 'arrived-pickup') {
+          await api.order().nextDispatchingState(orderId);
+          setLoading(false);
         } else {
           await api.order().nextDispatchingState(orderId);
           setTimeout(() => {
@@ -129,18 +132,6 @@ export default function ({ navigation, route }: Props) {
       } catch (error) {
         dispatch(showToast(error.toString(), 'error'));
         setLoading(false);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  };
-  const withDrawOrderHandler = () => {
-    (async () => {
-      try {
-        await api.order().nextDispatchingState(orderId);
-        setModalOpen(false);
-      } catch (error) {
-        dispatch(showToast(error.toString(), 'error'));
       }
     })();
   };
@@ -199,7 +190,7 @@ export default function ({ navigation, route }: Props) {
               text={nextStepLabel}
               disabled={nextStepDisabled}
               isLoading={isLoading}
-              onConfirm={statusControlHandler}
+              onConfirm={nextDispatchingStateHandler}
               color={sliderColor}
             />
           </View>
@@ -215,7 +206,14 @@ export default function ({ navigation, route }: Props) {
           dispatchingState={dispatchingState}
         />
         {/* withdrawal modal */}
-        <WithdrawOrderModal visible={modalOpen} order={order} onWithdrawal={withDrawOrderHandler} />
+        <WithdrawOrderModal
+          visible={modalOpen}
+          order={order}
+          onWithdrawal={() => {
+            setModalOpen(false);
+            nextDispatchingStateHandler();
+          }}
+        />
       </View>
     </KeyboardAwareScrollView>
   );
