@@ -11,7 +11,7 @@ type Props = {
 };
 
 export const OngoingDeliveryMap = ({ order, onOpenChat }: Props) => {
-  return (
+  return order.dispatchingState === 'arrived-destination' ? null : (
     <View>
       <OrderMap order={order!} ratio={1} />
       <RouteIcons order={order} />
