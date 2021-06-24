@@ -206,7 +206,6 @@ export default function ({ navigation, route }: Props) {
         ) : null}
         {/* code input */}
         <OngoingDeliveryCode
-          // do we need to focus on this component when it appears?
           code={code}
           onSetCode={setCode}
           buttonTitle={t('Confirmar entrega')}
