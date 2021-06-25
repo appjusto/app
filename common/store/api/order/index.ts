@@ -154,7 +154,7 @@ export default class OrderApi {
     if (toId) query = query.where('to.id', '==', toId);
     const unsubscribe = query.onSnapshot(
       (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
-      (error) => console.error(error)
+      (error) => null
     );
     // returns the unsubscribe function
     return unsubscribe;
