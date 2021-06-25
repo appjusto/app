@@ -2,16 +2,16 @@ import { CourierOrderRequest } from '@appjusto/types';
 import React from 'react';
 import { ApiContext } from '../../../../app/context';
 
-export const useObservePendingRequests = (courierId: string) => {
+export const useObserveOrderRequest = (courierId: string, orderId: string) => {
   // context
   const api = React.useContext(ApiContext);
   // state
-  const [requests, setRequests] = React.useState<CourierOrderRequest[]>([]);
+  const [request, setRequest] = React.useState<CourierOrderRequest>();
   // side effects
-  // observe pending requests
+  // observe request
   React.useEffect(() => {
-    return api.courier().observePendingRequests(courierId, setRequests);
+    return api.courier().observeOrderRequest(courierId, orderId, setRequest);
   }, [api, courierId]);
   // result
-  return requests;
+  return request;
 };

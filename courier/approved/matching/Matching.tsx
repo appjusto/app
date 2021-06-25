@@ -1,12 +1,20 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import * as Location from 'expo-location';
 import React from 'react';
 import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
+import * as Sentry from 'sentry-expo';
 import * as icons from '../../../assets/icons';
 import { ApiContext } from '../../../common/app/context';
+import DefaultButton from '../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
+import { useObserveOrderRequest } from '../../../common/store/api/courier/hooks/useObserveOrderRequest';
+import { distanceBetweenLatLng } from '../../../common/store/api/helpers';
 import { useSegmentScreen } from '../../../common/store/api/track';
+import { getCourier } from '../../../common/store/courier/selectors';
 import { colors, doublePadding, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency, formatDistance, formatTime } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
@@ -28,13 +36,30 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // params
   const { matchRequest } = route.params;
-  const { orderId } = matchRequest;
+  const { orderId, origin, distanceToOrigin } = matchRequest;
   // context
   const api = React.useContext(ApiContext);
-  // screen state
-
-  const [isLoading, setLoading] = React.useState(false);
+  const courier = useSelector(getCourier)!;
+  // state
+  const request = useObserveOrderRequest(courier.id, orderId);
+  const [distance, setDistance] = React.useState(distanceToOrigin);
+  const [isLoading, setLoading] = React.useState(true);
   // side effects
+  React.useEffect(() => {
+    (async () => {
+      const position = await Location.getCurrentPositionAsync();
+      const currentDistanceToOrigin = distanceBetweenLatLng(position.coords, origin);
+      Sentry.Native.captureMessage('Matching', {
+        extra: {
+          orderId,
+          distanceToOrigin,
+          currentDistanceToOrigin,
+        },
+      });
+      setDistance(currentDistanceToOrigin);
+      setLoading(false);
+    })();
+  }, []);
   // tracking
   useSegmentScreen('Matching');
   const tallerDevice = useTallerDevice();
@@ -95,7 +120,7 @@ export default function ({ navigation, route }: Props) {
               <Text style={[texts.sm, { color: colors.green600 }]}>{t('Retirada')}</Text>
               <View>
                 <Text style={[texts.x2l]}>
-                  {formatDistance(matchRequest.distanceToOrigin)} {t('até a retirada')}
+                  {formatDistance(distance)} {t('até a retirada')}
                 </Text>
                 <Text style={[texts.md, { flexWrap: 'wrap', maxWidth: '80%' }]} numberOfLines={3}>
                   {matchRequest.originAddress}
@@ -132,11 +157,23 @@ export default function ({ navigation, route }: Props) {
         </View>
         <View style={{ flex: 1 }} />
         {/* accept / reject control */}
-        <AcceptControl
-          onAccept={acceptHandler}
-          onReject={rejectHandler}
-          style={{ marginBottom: tallerDevice ? padding * 4 : padding, paddingHorizontal: padding }}
-        />
+        {request?.situation === 'pending' ? (
+          <AcceptControl
+            onAccept={acceptHandler}
+            onReject={rejectHandler}
+            style={{
+              marginBottom: tallerDevice ? padding * 4 : padding,
+              paddingHorizontal: padding,
+            }}
+          />
+        ) : (
+          <PaddedView>
+            <DefaultButton
+              title={t('Corrida indisponível')}
+              onPress={() => navigation.popToTop()}
+            />
+          </PaddedView>
+        )}
       </View>
     </ScrollView>
   );

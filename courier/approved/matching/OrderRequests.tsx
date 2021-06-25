@@ -6,7 +6,7 @@ import { FlatList, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../common/components/views/ConfigItem';
-import { useObservePendingRequests } from '../../../common/store/api/courier/hooks/useObservePendingRequests';
+import { useobservePendingOrderRequests } from '../../../common/store/api/courier/hooks/useobservePendingOrderRequests';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { screens } from '../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../common/utils/formatters';
@@ -29,7 +29,7 @@ export default function ({ navigation, route }: Props) {
   // context
   const courier = useSelector(getCourier)!;
   // state
-  const requests = useObservePendingRequests(courier.id);
+  const requests = useobservePendingOrderRequests(courier.id);
   return (
     <View style={{ ...screens.config }}>
       <FlatList

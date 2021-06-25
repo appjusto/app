@@ -10,7 +10,7 @@ import firebase from 'firebase';
 import * as Sentry from 'sentry-expo';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
-import { documentsAs } from '../types';
+import { documentAs, documentsAs } from '../types';
 
 type FetchTotalCouriersNearbyData = {
   total: number;
@@ -20,7 +20,7 @@ export default class CourierApi {
   constructor(private refs: FirebaseRefs, private files: FilesApi) {}
 
   // firestore
-  observePendingRequests(
+  observePendingOrderRequests(
     courierId: string,
     resultHandler: (orders: CourierOrderRequest[]) => void
   ): firebase.Unsubscribe {
@@ -35,6 +35,21 @@ export default class CourierApi {
           Sentry.Native.captureException(error);
         }
       );
+    // returns the unsubscribe function
+    return unsubscribe;
+  }
+  observeOrderRequest(
+    courierId: string,
+    orderId: string,
+    resultHandler: (order: CourierOrderRequest) => void
+  ): firebase.Unsubscribe {
+    const unsubscribe = this.refs.getCourierOrderRequestsRef(courierId, orderId).onSnapshot(
+      (snapshot) => resultHandler(documentAs<CourierOrderRequest>(snapshot)),
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
+    );
     // returns the unsubscribe function
     return unsubscribe;
   }

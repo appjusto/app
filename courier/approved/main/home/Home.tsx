@@ -12,7 +12,7 @@ import { IconHomeCourierRequests } from '../../../../common/icons/icon-home-cour
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
-import { useObservePendingRequests } from '../../../../common/store/api/courier/hooks/useObservePendingRequests';
+import { useobservePendingOrderRequests } from '../../../../common/store/api/courier/hooks/useobservePendingOrderRequests';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
@@ -43,7 +43,7 @@ export default function ({ navigation }: Props) {
   // redux store
   const courier = useSelector(getCourier)!;
   const ongoingOrders = useSelector(getOrders);
-  const requests = useObservePendingRequests(courier.id);
+  const requests = useobservePendingOrderRequests(courier.id);
   const { status } = courier;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
   // state
