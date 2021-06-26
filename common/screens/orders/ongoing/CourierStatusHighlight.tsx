@@ -30,9 +30,7 @@ export const CourierStatusHighlight = ({ order, confirmation }: Props) => {
         message = t('Entregador está aguardando receber o pedido do restaurante.');
         if (status === 'dispatching' && order.dispatchingStatus === 'confirmed') {
           title = t('Entregador chegou ao restaurante');
-          message = t(
-            'Entregador já está com o pedido em mãos e deve sair para a entrega em instantes.'
-          );
+          message = t('Entregador retirou o pedido e sairá para a entrega em instantes.');
         }
       } else if (dispatchingState === 'arrived-destination') {
         title = t('Entregador chegou!');
@@ -104,7 +102,7 @@ export const CourierStatusHighlight = ({ order, confirmation }: Props) => {
                   color: colors.grey700,
                   flexWrap: 'wrap',
                 }}
-                numberOfLines={2}
+                numberOfLines={3}
               >
                 {message}
               </Text>

@@ -57,13 +57,17 @@ export default function ({ order, onPress }: Props) {
         } else if (dispatchingState === 'arrived-destination') {
           detail = 'Entregador chegou para entrega';
         }
+        if (dispatchingStatus === 'no-match') {
+          title = t('Sem entregadores na região');
+          detail = t('Clique para tentar novamente');
+        }
       }
     }
     if (type === 'p2p') {
       if (status === 'confirming') {
         title = t('Aguarde enquanto criamos seu pedido...');
       } else if (status === 'confirmed') {
-        title = t('Procurando entregador próximo a.');
+        title = t('Procurando entregador próximo a');
         detail = `${order.origin!.address.main}`;
       } else if (status === 'declined') {
         title = t('Problema no pagamento');
@@ -79,6 +83,10 @@ export default function ({ order, onPress }: Props) {
         } else if (dispatchingState === 'arrived-destination') {
           detail = 'Aguardando entrega';
         }
+      }
+      if (dispatchingStatus === 'no-match') {
+        title = t('Sem entregadores na região');
+        detail = t('Clique para tentar novamente');
       }
     }
   } else if (flavor === 'courier') {
