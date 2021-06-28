@@ -3,30 +3,23 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useKeepAwake } from 'expo-keep-awake';
 import React from 'react';
-import { ActivityIndicator, Image, Keyboard, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
-import { pinPackage, pinPackageWhite } from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
-import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import PaddedView from '../../../common/components/containers/PaddedView';
-import SingleHeader from '../../../common/components/texts/SingleHeader';
-import HR from '../../../common/components/views/HR';
-import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/CourierDistanceBadge';
-import { StatusAndMessages } from '../../../common/screens/orders/ongoing/StatusAndMessages';
-import OrderMap from '../../../common/screens/orders/OrderMap';
-import { courierNextPlace } from '../../../common/store/api/order/helpers';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
-import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { CourierDeliveryInfo } from '../components/CourierDeliveryInfo';
 import { ApprovedParamList } from '../types';
-import { CodeInput } from './code-input/CodeInput';
-import { RouteIcons } from './RouteIcons';
+import { OngoingDeliveryCode } from './OngoingDeliveryCode';
+import { OngoingDeliveryInfo } from './OngoingDeliveryInfo';
+import { OngoingDeliveryMap } from './OngoingDeliveryMap';
 import { StatusControl } from './StatusControl';
 import { OngoingDeliveryNavigatorParamList } from './types';
+import { WithdrawOrderModal } from './WithdrawOrderModal';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<OngoingDeliveryNavigatorParamList, 'OngoingDelivery'>,
@@ -49,6 +42,7 @@ export default function ({ navigation, route }: Props) {
   const order = useObserveOrder(orderId);
   const [code, setCode] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
+  const [modalOpen, setModalOpen] = React.useState(false);
   const consumerId = order?.consumer.id;
   const businessId = order?.business?.id;
   // side effects
@@ -97,7 +91,6 @@ export default function ({ navigation, route }: Props) {
       navigation.replace('OrderCanceled', { orderId });
     }
   }, [order, navigation, orderId]);
-
   // UI
   if (!order?.dispatchingState) {
     // showing the indicator until the order is loaded
@@ -108,20 +101,19 @@ export default function ({ navigation, route }: Props) {
     );
   }
   // UI handlers
-  // handles updating dispatchingState
-  const nextStatepHandler = () => {
+  const nextDispatchingStateHandler = () => {
     (async () => {
       setLoading(true);
       try {
-        if (order.dispatchingState === 'going-destination') {
-          await api.order().nextDispatchingState(orderId);
-          setLoading(false);
-        } else if (order.dispatchingState === 'arrived-destination') {
+        if (order.dispatchingState === 'arrived-destination') {
           Keyboard.dismiss();
           await api.order().completeDelivery(orderId, code);
           setLoading(false);
         } else {
           await api.order().nextDispatchingState(orderId);
+          if (order.dispatchingState === 'going-pickup' && order.type === 'food') {
+            setModalOpen(true);
+          }
           setTimeout(() => {
             setLoading(false);
           }, 5000);
@@ -129,6 +121,18 @@ export default function ({ navigation, route }: Props) {
       } catch (error) {
         setLoading(false);
         dispatch(showToast(error.toString(), 'error'));
+      }
+    })();
+  };
+  const codeDeliveryHandler = () => {
+    (async () => {
+      setLoading(true);
+      try {
+        await api.order().completeDelivery(orderId, code);
+        setLoading(false);
+      } catch (error) {
+        dispatch(showToast(error.toString(), 'error'));
+        setLoading(false);
       }
     })();
   };
@@ -150,19 +154,6 @@ export default function ({ navigation, route }: Props) {
     }
     return '';
   })();
-  const nextPlace = courierNextPlace(order);
-  const addressLabel = (() => {
-    if (!dispatchingState || dispatchingState === 'going-pickup') {
-      return t('Retirada');
-    } else if (
-      dispatchingState === 'arrived-pickup' ||
-      dispatchingState === 'arrived-destination' ||
-      dispatchingState === 'going-destination'
-    ) {
-      return t('Entrega');
-    }
-    return '';
-  })();
   const sliderColor = (() => {
     if (!dispatchingState || dispatchingState === 'going-pickup') {
       return colors.green500;
@@ -174,59 +165,24 @@ export default function ({ navigation, route }: Props) {
       enableAutomaticScroll
       keyboardOpeningTime={0}
       style={{ ...screens.default }}
-      keyboardShouldPersistTaps="always"
+      keyboardShouldPersistTaps="never"
       contentContainerStyle={{ flexGrow: 1 }}
     >
       <View style={{ flex: 1 }}>
-        <View style={{ marginHorizontal: padding }}>
-          <CourierDeliveryInfo
-            order={order}
-            onChat={() => openChatWithConsumer()}
-            onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
-          />
-        </View>
-        {dispatchingState !== 'arrived-destination' && (
-          <View>
-            <OrderMap order={order!} ratio={1} />
-            <RouteIcons order={order} />
-            <View>
-              <StatusAndMessages order={order} onPress={(from) => openChat(from.id, from.agent)} />
-            </View>
-          </View>
-        )}
-        <HR />
-        <PaddedView>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image
-              source={dispatchingState === 'going-pickup' ? pinPackageWhite : pinPackage}
-              style={{ width: 23, height: 28 }}
-            />
-            <Text
-              style={[
-                texts.xs,
-                texts.bold,
-                { marginVertical: halfPadding, marginHorizontal: halfPadding },
-              ]}
-            >
-              {addressLabel}
-            </Text>
-            <CourierDistanceBadge order={order} delivering />
-          </View>
-          <View style={{ marginTop: halfPadding }}>
-            <Text style={[texts.xl]} numberOfLines={2}>
-              {nextPlace?.address.main}
-            </Text>
-            <Text style={[texts.xl]} numberOfLines={2}>
-              {nextPlace?.address.secondary}
-            </Text>
-            <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]}>
-              {nextPlace?.additionalInfo ?? ''}
-            </Text>
-            <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={2}>
-              {nextPlace?.intructions ?? ''}
-            </Text>
-          </View>
-        </PaddedView>
+        {/* top*/}
+        <CourierDeliveryInfo
+          order={order}
+          onChat={() => openChatWithConsumer()}
+          onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
+        />
+        {/* center*/}
+        <OngoingDeliveryMap order={order} onOpenChat={(from) => openChat(from.id, from.agent)} />
+        {/* bottom*/}
+        <OngoingDeliveryInfo
+          order={order}
+          onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
+        />
+        {/* Status slider */}
         {dispatchingState !== 'arrived-destination' ? (
           <View style={{ paddingHorizontal: padding }}>
             <StatusControl
@@ -235,50 +191,30 @@ export default function ({ navigation, route }: Props) {
               text={nextStepLabel}
               disabled={nextStepDisabled}
               isLoading={isLoading}
-              onConfirm={nextStatepHandler}
+              onConfirm={nextDispatchingStateHandler}
               color={sliderColor}
             />
           </View>
         ) : null}
-        {dispatchingState === 'arrived-destination' ? (
-          <View>
-            <HR height={padding} />
-            <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>
-              <SingleHeader title={t('Código de confirmação')} />
-              <View style={{ paddingHorizontal: padding }}>
-                <Text style={{ ...texts.sm, marginBottom: padding }}>
-                  {t('Digite o código de confirmação fornecido pelo cliente:')}
-                </Text>
-                <CodeInput value={code} onChange={setCode} />
-                <DefaultButton
-                  title={nextStepLabel}
-                  onPress={nextStatepHandler}
-                  activityIndicator={isLoading}
-                  disabled={isLoading || code.length < 3}
-                  style={{ marginTop: padding }}
-                />
-              </View>
-            </View>
-            <HR height={padding} />
-            <PaddedView>
-              <DefaultButton
-                secondary
-                title={t('Confirmar entrega sem código')}
-                onPress={() => navigation.navigate('NoCodeDelivery', { orderId })}
-              />
-            </PaddedView>
-          </View>
-        ) : null}
-        {order.type === 'food' && (
-          <View style={{ marginHorizontal: padding }}>
-            <DefaultButton
-              title={t('Abrir chat com o restaurante')}
-              onPress={() => openChatWithRestaurant()}
-              style={{ marginBottom: padding }}
-              secondary
-            />
-          </View>
-        )}
+        {/* code input */}
+        <OngoingDeliveryCode
+          code={code}
+          onSetCode={setCode}
+          buttonTitle={t('Confirmar entrega')}
+          onDelivery={codeDeliveryHandler}
+          isLoading={isLoading}
+          onNoCodeDelivery={() => navigation.navigate('NoCodeDelivery', { orderId })}
+          dispatchingState={dispatchingState}
+        />
+        {/* withdrawal modal */}
+        <WithdrawOrderModal
+          visible={modalOpen}
+          order={order}
+          onWithdrawal={() => {
+            setModalOpen(false);
+            nextDispatchingStateHandler();
+          }}
+        />
       </View>
     </KeyboardAwareScrollView>
   );
