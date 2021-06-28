@@ -238,6 +238,7 @@ export default function ({
                 title={t('Complemento (se houver)')}
                 placeholder={t('Apartamento, sala, loja, etc.')}
                 onChangeText={(text) => setDestinationAdditionalInfo(text)}
+                editable={Boolean(destination)}
               />
 
               <DefaultInput
@@ -248,7 +249,8 @@ export default function ({
                 onChangeText={(text) => setDestinationInstructions(text)}
                 blurOnSubmit
                 multiline
-                numberOfLines={3}
+                editable={Boolean(destination)}
+                // numberOfLines={3}
               />
 
               <TouchableWithoutFeedback onPress={navigateToTransportableItems}>
