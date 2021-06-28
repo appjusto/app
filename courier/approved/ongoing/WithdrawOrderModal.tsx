@@ -34,9 +34,10 @@ export const WithdrawOrderModal = ({ order, onWithdrawal, ...props }: Props) => 
           <View style={{ marginBottom: halfPadding }}>
             <IconOngoingRequest />
           </View>
-          <Text style={{ ...texts.x2l }}>
+          <Text style={{ ...texts.xl, color: colors.grey700 }}>
             {order.status === 'dispatching' ? t('Retire o pedido') : t('Aguarde')}
           </Text>
+          <Text style={{ ...texts.x2l }}>{order.business?.name}</Text>
           <Text style={{ ...texts.sm, color: colors.grey700 }}>
             {order.status === 'dispatching'
               ? t('Mostre essa tela para o restaurante')
