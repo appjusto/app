@@ -24,6 +24,7 @@ import { LoggedNavigatorParamList } from '../types';
 import { DeliveryActions } from './DeliveryActions';
 import { DeliveryConfirmation } from './DeliveryConfirmation';
 import { DeliveryInfo } from './DeliveryInfo';
+import { FoodOrderItemsInfo } from './FoodOrderItemsInfo';
 import { OngoingMapAndInfo } from './OngoingMapAndInfo';
 import { OngoingOrderStatus } from './OngoingOrderStatus';
 import { OngoingOrderNavigatorParamList } from './types';
@@ -162,6 +163,7 @@ export default function ({ navigation, route }: Props) {
             switchValue={wantsCode}
             onChangeCodeDelivery={() => setWantsCode(!wantsCode)}
           />
+          <FoodOrderItemsInfo order={order} />
         </View>
       ) : (
         <View>
