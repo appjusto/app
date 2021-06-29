@@ -49,7 +49,7 @@ export const DeliveryConfirmation = ({
             alignItems: 'center',
             paddingHorizontal: padding,
             flex: 1,
-            marginBottom: padding,
+            height: 64,
           }}
         >
           <View
@@ -71,7 +71,7 @@ export const DeliveryConfirmation = ({
           </View>
           <Text style={{ ...texts.sm, marginLeft: halfPadding }}>{t('Código de confirmação')}</Text>
           <View style={{ flex: 1 }} />
-          {confirmation?.handshakeChallenge ? (
+          {confirmation?.handshakeChallenge && switchValue ? (
             <Text style={{ ...texts.x4l }}>{confirmation.handshakeChallenge}</Text>
           ) : null}
         </View>

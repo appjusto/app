@@ -55,7 +55,7 @@ export default function ({ navigation, route }: Props) {
     { title: t('Deixar na portaria'), id: '2' },
   ];
   const [codeFeedback, setCodeFeedback] = React.useState<HorizontalSelectItem>(codeFeedbackData[0]);
-  const [wantsCode, setWantsCode] = React.useState(true);
+  const [wantsCode, setWantsCode] = React.useState(false);
   // tracking
   useSegmentScreen('Ongoing Delivery');
   // helpers
@@ -180,7 +180,10 @@ export default function ({ navigation, route }: Props) {
             <HR />
             {order.type === 'food' && order.status !== 'dispatching' ? (
               <PaddedView>
-                <DefaultButton title={t('Abrir chat com o restaurante')} />
+                <DefaultButton
+                  title={t('Abrir chat com o restaurante')}
+                  onPress={() => openChatWithRestaurant()}
+                />
               </PaddedView>
             ) : null}
           </View>
