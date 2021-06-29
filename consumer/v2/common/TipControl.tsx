@@ -66,7 +66,9 @@ export default function ({ order, tip, isLoading = false, onChange, onConfirm }:
             title={
               alreadyTipped
                 ? t('Caixinha enviada')
-                : `${t('Pagar')} ${selectedtip.title} ${t('de')} ${t('caixinha')}`
+                : selectedtip.title !== 'Sem caixinha'
+                ? `${t('Pagar ')} ${selectedtip.title} ${t('de')} ${t('caixinha')}`
+                : t('Escolha um valor')
             }
             disabled={alreadyTipped || selectedtip.data === 0 || isLoading}
             activityIndicator={isLoading}
