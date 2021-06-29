@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
-import { IconOngoingRequest } from '../../../common/icons/icon-ongoingRequest';
+import { IconOngoingStatus } from '../../../common/icons/icon-ongoing-status';
 import { colors, halfPadding, padding, texts } from '../../../common/styles';
 import { formatTime } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
@@ -95,18 +95,18 @@ export const OngoingOrderStatus = ({ order }: Props) => {
   }
 
   return (
-    <View style={{ paddingHorizontal: padding, alignItems: 'center', paddingBottom: padding }}>
+    <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
       {status === 'dispatching' && dispatchingState === 'arrived-destination' ? (
         <IconMotocycle />
       ) : (
-        <IconOngoingRequest />
+        <IconOngoingStatus />
       )}
-      <Text style={{ marginTop: padding, ...texts.xl }}>{header}</Text>
+
+      <Text style={{ marginTop: halfPadding, ...texts.xl }}>{header}</Text>
       <Text
         style={{
-          ...texts.md,
+          ...texts.sm,
           color: colors.grey700,
-          textAlign: 'center',
           marginTop: halfPadding,
         }}
       >
@@ -115,9 +115,9 @@ export const OngoingOrderStatus = ({ order }: Props) => {
       {order.destination?.estimatedTimeOfArrival &&
         order.dispatchingState !== 'arrived-destination' && (
           <View style={{ marginBottom: 8, marginTop: padding }}>
-            <RoundedText>{`${t('Previsão de entrega: ')} ${formatTime(
-              order.destination.estimatedTimeOfArrival
-            )}`}</RoundedText>
+            <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>{`${t(
+              'Previsão de entrega: '
+            )} ${formatTime(order.destination.estimatedTimeOfArrival)}`}</RoundedText>
           </View>
         )}
     </View>
