@@ -51,6 +51,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
       navigation.navigate('OngoingOrderNoMatch', { orderId });
     }
   }, [navigation, order, orderId]);
+  console.log(orderId);
   // UI
   if (!order) {
     // showing the indicator until the order is loaded

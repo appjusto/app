@@ -9,22 +9,19 @@ import SingleHeader from '../../../common/components/texts/SingleHeader';
 import { colors, halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
-export const DeliveryConfirmation = () => {
-  const codeFeedbackData: HorizontalSelectItem[] = [
-    { title: t('Encontrar com o entregador'), id: '1' },
-    { title: t('Deixar na portaria'), id: '2' },
-  ];
-  const [codeFeedback, setCodeFeedback] = React.useState<HorizontalSelectItem>(codeFeedbackData[0]);
+type Props = {
+  data: HorizontalSelectItem[];
+  selected: HorizontalSelectItem;
+  onSelect: (value: HorizontalSelectItem) => void;
+};
+
+export const DeliveryConfirmation = ({ data, selected, onSelect }: Props) => {
   return (
     <View style={{ backgroundColor: colors.white, paddingVertical: padding, flex: 1 }}>
       <View style={{ flex: 1 }}>
         <SingleHeader title={t('Confirmação da entrega')} />
         <View style={{ paddingHorizontal: padding, paddingTop: halfPadding }}>
-          <HorizontalSelect
-            data={codeFeedbackData}
-            selected={codeFeedback}
-            onSelect={setCodeFeedback}
-          />
+          <HorizontalSelect data={data} selected={selected} onSelect={onSelect} />
         </View>
 
         <PaddedView>
