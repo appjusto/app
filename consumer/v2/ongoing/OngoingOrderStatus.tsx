@@ -2,7 +2,7 @@ import { Order } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../common/components/texts/RoundedText';
-import { IconMotocycle } from '../../../common/icons/icon-motocycle';
+import { IconOngoingMotocycle } from '../../../common/icons/icon-ongoing-motocycle';
 import { IconOngoingStatus } from '../../../common/icons/icon-ongoing-status';
 import { colors, halfPadding, padding, texts } from '../../../common/styles';
 import { formatTime } from '../../../common/utils/formatters';
@@ -95,9 +95,9 @@ export const OngoingOrderStatus = ({ order }: Props) => {
   }
 
   return (
-    <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
+    <View style={{ paddingHorizontal: padding, paddingVertical: padding }}>
       {status === 'dispatching' && dispatchingState === 'arrived-destination' ? (
-        <IconMotocycle />
+        <IconOngoingMotocycle />
       ) : (
         <IconOngoingStatus />
       )}
