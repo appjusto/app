@@ -25,6 +25,7 @@ import { DeliveryActions } from './DeliveryActions';
 import { DeliveryConfirmation } from './DeliveryConfirmation';
 import { DeliveryInfo } from './DeliveryInfo';
 import { FoodOrderItemsInfo } from './FoodOrderItemsInfo';
+import { OngoingActions } from './OngoingActions';
 import { OngoingMapAndInfo } from './OngoingMapAndInfo';
 import { OngoingOrderStatus } from './OngoingOrderStatus';
 import { OngoingOrderNavigatorParamList } from './types';
@@ -164,6 +165,10 @@ export default function ({ navigation, route }: Props) {
             onChangeCodeDelivery={() => setWantsCode(!wantsCode)}
           />
           <FoodOrderItemsInfo order={order} />
+          <HR height={padding} />
+          <OrderCostBreakdown order={order} selectedFare={order.fare} />
+          <HR height={padding} />
+          <OngoingActions order={order} />
         </View>
       ) : (
         <View>

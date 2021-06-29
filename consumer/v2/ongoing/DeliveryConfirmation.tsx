@@ -46,6 +46,7 @@ export const DeliveryConfirmation = ({
             alignItems: 'center',
             paddingHorizontal: padding,
             flex: 1,
+            marginBottom: padding,
           }}
         >
           <View
