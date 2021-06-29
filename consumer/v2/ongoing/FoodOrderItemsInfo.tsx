@@ -24,7 +24,9 @@ export const FoodOrderItemsInfo = ({ order }: Props) => {
             <Feather name="info" size={14} />
             <Text style={{ ...texts.sm, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
           </View>
-          <Text style={{ ...texts.xs, color: colors.grey700 }}>{order.additionalInfo}</Text>
+          <Text style={{ ...texts.xs, color: colors.grey700, marginTop: 4 }}>
+            {order.additionalInfo}
+          </Text>
         </View>
       ) : null}
     </View>

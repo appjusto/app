@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { Switch } from 'react-native-gesture-handler';
+import { OrderConfirmation } from '../../../../types';
 import HorizontalSelect, {
   HorizontalSelectItem,
 } from '../../../common/components/buttons/HorizontalSelect';
@@ -16,6 +17,7 @@ type Props = {
   onSelect: (value: HorizontalSelectItem) => void;
   switchValue: boolean;
   onChangeCodeDelivery: (value: boolean) => void;
+  confirmation: OrderConfirmation | undefined;
 };
 
 export const DeliveryConfirmation = ({
@@ -24,6 +26,7 @@ export const DeliveryConfirmation = ({
   onSelect,
   switchValue,
   onChangeCodeDelivery,
+  confirmation,
 }: Props) => {
   return (
     <View style={{ backgroundColor: colors.white, paddingTop: padding, flex: 1 }}>
@@ -68,7 +71,9 @@ export const DeliveryConfirmation = ({
           </View>
           <Text style={{ ...texts.sm, marginLeft: halfPadding }}>{t('Código de confirmação')}</Text>
           <View style={{ flex: 1 }} />
-          <Text style={{ ...texts.x4l }}>000</Text>
+          {confirmation?.handshakeChallenge ? (
+            <Text style={{ ...texts.x4l }}>{confirmation.handshakeChallenge}</Text>
+          ) : null}
         </View>
         <PaddedView style={{ backgroundColor: colors.grey50, flex: 1 }}>
           <View style={{ flexDirection: 'row' }}>

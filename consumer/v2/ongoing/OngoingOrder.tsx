@@ -152,6 +152,7 @@ export default function ({ navigation, route }: Props) {
         <View style={{ flex: 1 }}>
           {/* top */}
           <OngoingOrderStatus order={order} />
+          {order.status !== 'dispatching' && <HR height={padding} />}
           <OngoingMapAndInfo
             order={order}
             onCourierDetail={navigateToCourierDetail}
@@ -163,12 +164,26 @@ export default function ({ navigation, route }: Props) {
             onSelect={setCodeFeedback}
             switchValue={wantsCode}
             onChangeCodeDelivery={() => setWantsCode(!wantsCode)}
+            confirmation={confirmation}
           />
           <FoodOrderItemsInfo order={order} />
           <HR height={padding} />
           <OrderCostBreakdown order={order} selectedFare={order.fare} />
           <HR height={padding} />
-          <OngoingActions order={order} />
+          <View style={{ paddingBottom: 24 }}>
+            <OngoingActions
+              order={order}
+              navigateToReportIssue={navigateToReportIssue}
+              navigateToConfirmCancel={navigateToConfirmCancel}
+              newMessage={false}
+            />
+            <HR />
+            {order.type === 'food' && order.status !== 'dispatching' ? (
+              <PaddedView>
+                <DefaultButton title={t('Abrir chat com o restaurante')} />
+              </PaddedView>
+            ) : null}
+          </View>
         </View>
       ) : (
         <View>

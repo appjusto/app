@@ -114,7 +114,7 @@ export const OngoingOrderStatus = ({ order }: Props) => {
       </Text>
       {order.destination?.estimatedTimeOfArrival &&
         order.dispatchingState !== 'arrived-destination' && (
-          <View style={{ marginBottom: 8, marginTop: padding }}>
+          <View style={{ marginTop: padding }}>
             <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>{`${t(
               'Previsão de entrega: '
             )} ${formatTime(order.destination.estimatedTimeOfArrival)}`}</RoundedText>
