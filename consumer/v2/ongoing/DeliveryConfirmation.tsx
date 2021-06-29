@@ -6,18 +6,27 @@ import HorizontalSelect, {
 } from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
-import { colors, halfPadding, padding, texts } from '../../../common/styles';
+import { IconFastFood } from '../../../common/icons/icon-fast-food';
+import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
 type Props = {
   data: HorizontalSelectItem[];
   selected: HorizontalSelectItem;
   onSelect: (value: HorizontalSelectItem) => void;
+  switchValue: boolean;
+  onChangeCodeDelivery: (value: boolean) => void;
 };
 
-export const DeliveryConfirmation = ({ data, selected, onSelect }: Props) => {
+export const DeliveryConfirmation = ({
+  data,
+  selected,
+  onSelect,
+  switchValue,
+  onChangeCodeDelivery,
+}: Props) => {
   return (
-    <View style={{ backgroundColor: colors.white, paddingVertical: padding, flex: 1 }}>
+    <View style={{ backgroundColor: colors.white, paddingTop: padding, flex: 1 }}>
       <View style={{ flex: 1 }}>
         <SingleHeader title={t('Confirmação da entrega')} />
         <View style={{ paddingHorizontal: padding, paddingTop: halfPadding }}>
@@ -39,11 +48,42 @@ export const DeliveryConfirmation = ({ data, selected, onSelect }: Props) => {
             flex: 1,
           }}
         >
-          <Switch />
+          <View
+            style={{
+              ...borders.default,
+              backgroundColor: colors.white,
+              borderColor: colors.black,
+              borderWidth: 2,
+              borderRadius: 32,
+            }}
+          >
+            <Switch
+              trackColor={{ false: colors.white, true: colors.white }}
+              value={switchValue}
+              thumbColor={switchValue ? colors.green500 : colors.yellow}
+              ios_backgroundColor={colors.white}
+              onValueChange={onChangeCodeDelivery}
+            />
+          </View>
           <Text style={{ ...texts.sm, marginLeft: halfPadding }}>{t('Código de confirmação')}</Text>
           <View style={{ flex: 1 }} />
           <Text style={{ ...texts.x4l }}>000</Text>
         </View>
+        <PaddedView style={{ backgroundColor: colors.grey50, flex: 1 }}>
+          <View style={{ flexDirection: 'row' }}>
+            <IconFastFood />
+            <View style={{ marginLeft: padding, maxWidth: '82%' }}>
+              <Text style={{ ...texts.sm }}>
+                {t('Lembre-se: o entregador não deve cobrar nada ao entregar seu pedido')}
+              </Text>
+              <Text style={{ ...texts.xs, marginTop: halfPadding, color: colors.grey700 }}>
+                {t(
+                  'O seu pedido já foi pago e não necessita de nenhuma pagamento adicional. Se isso acontecer, relate o problema para nós.'
+                )}
+              </Text>
+            </View>
+          </View>
+        </PaddedView>
       </View>
     </View>
   );

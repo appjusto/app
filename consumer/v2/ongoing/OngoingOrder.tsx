@@ -53,6 +53,7 @@ export default function ({ navigation, route }: Props) {
     { title: t('Deixar na portaria'), id: '2' },
   ];
   const [codeFeedback, setCodeFeedback] = React.useState<HorizontalSelectItem>(codeFeedbackData[0]);
+  const [wantsCode, setWantsCode] = React.useState(true);
   // tracking
   useSegmentScreen('Ongoing Delivery');
   // helpers
@@ -158,6 +159,8 @@ export default function ({ navigation, route }: Props) {
             data={codeFeedbackData}
             selected={codeFeedback}
             onSelect={setCodeFeedback}
+            switchValue={wantsCode}
+            onChangeCodeDelivery={() => setWantsCode(!wantsCode)}
           />
         </View>
       ) : (
