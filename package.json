@@ -105,7 +105,7 @@
     "sentry-expo": "^3.0.4"
   },
   "devDependencies": {
-    "@babel/core": "~7.9.0",
+    "@babel/core": "~7.14.6",
     "@types/i18n-js": "^3.0.3",
     "@types/mapbox__polyline": "^1.0.0",
     "@types/marked": "^2.0.1",
