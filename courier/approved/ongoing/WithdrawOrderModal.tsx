@@ -35,11 +35,13 @@ export const WithdrawOrderModal = ({ order, onWithdrawal, ...props }: Props) => 
             <IconOngoingRequest />
           </View>
           <Text style={{ ...texts.xl, color: colors.grey700 }}>
-            {order.status === 'dispatching' ? t('Retire o pedido') : t('Aguarde')}
+            {order.status === 'ready' || order.status === 'dispatching'
+              ? t('Retire o pedido')
+              : t('Aguarde')}
           </Text>
           <Text style={{ ...texts.x2l }}>{order.business?.name}</Text>
           <Text style={{ ...texts.sm, color: colors.grey700 }}>
-            {order.status === 'dispatching'
+            {order.status === 'ready' || order.status === 'dispatching'
               ? t('Mostre essa tela para o restaurante')
               : t('O pedido está sendo finalizado')}
           </Text>
@@ -53,9 +55,13 @@ export const WithdrawOrderModal = ({ order, onWithdrawal, ...props }: Props) => 
           </View>
           <View style={{ width: '100%' }}>
             <DefaultButton
-              title={order.status === 'dispatching' ? t('Recebi o pedido') : t('Aguarde')}
+              title={
+                order.status === 'ready' || order.status === 'dispatching'
+                  ? t('Recebi o pedido')
+                  : t('Aguarde')
+              }
               onPress={onWithdrawal}
-              disabled={order.status !== 'dispatching'}
+              disabled={order.status !== 'ready' && order.status !== 'dispatching'}
             />
           </View>
         </View>

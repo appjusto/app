@@ -86,7 +86,6 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
           </View>
         ) : null}
       </View>
-      <View style={{ flex: 1 }} />
     </PaddedView>
   );
 };
