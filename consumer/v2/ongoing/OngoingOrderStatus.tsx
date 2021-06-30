@@ -95,6 +95,8 @@ export const OngoingOrderStatus = ({ order }: Props) => {
   }
 
   return (
+    // this will receive the code and a button to confirm delivery
+    // also, looks like we will show the "previsão" rounded text all the time
     <View style={{ paddingHorizontal: padding, paddingVertical: padding }}>
       {status === 'dispatching' && dispatchingState === 'arrived-destination' ? (
         <IconOngoingMotocycle />

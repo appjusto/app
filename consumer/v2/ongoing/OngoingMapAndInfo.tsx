@@ -19,11 +19,22 @@ export const OngoingMapAndInfo = ({ order, onCourierDetail, onChatWithCourier }:
     <View>
       <OrderMap order={order} ratio={1} />
       <DeliveryInfo order={order} onCourierDetail={onCourierDetail} />
-      <DefaultButton
-        title={t('Abrir chat com o entregador')}
-        onPress={() => onChatWithCourier()}
-        style={{ marginHorizontal: padding, marginBottom: padding }}
-      />
+      {order.dispatchingState !== 'arrived-destination' ? (
+        // should this button turn orange when there is a new message?
+        <DefaultButton
+          title={t('Abrir chat com o entregador')}
+          onPress={() => onChatWithCourier()}
+          style={{ marginHorizontal: padding, marginBottom: padding }}
+        />
+      ) : (
+        <DefaultButton
+          title={t('Abrir chat com o entregador')}
+          onPress={() => onChatWithCourier()}
+          style={{ marginHorizontal: padding, marginBottom: padding }}
+          secondary
+        />
+      )}
+
       <HR height={padding} />
     </View>
   ) : null;

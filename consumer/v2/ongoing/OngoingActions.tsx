@@ -58,6 +58,7 @@ export const OngoingActions = ({
         </View>
       </View>
       {newMessage ? (
+        // looks like this will be for messages from restaurant and courier
         <PaddedView
           style={{
             ...borders.default,

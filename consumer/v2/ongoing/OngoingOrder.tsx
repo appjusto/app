@@ -158,14 +158,16 @@ export default function ({ navigation, route }: Props) {
             onCourierDetail={navigateToCourierDetail}
             onChatWithCourier={openChatWithCourier}
           />
-          <DeliveryConfirmation
-            data={codeFeedbackData}
-            selected={codeFeedback}
-            onSelect={setCodeFeedback}
-            switchValue={wantsCode}
-            onChangeCodeDelivery={() => setWantsCode(!wantsCode)}
-            confirmation={confirmation}
-          />
+          {order.dispatchingState !== 'arrived-pickup' ? (
+            <DeliveryConfirmation
+              data={codeFeedbackData}
+              selected={codeFeedback}
+              onSelect={setCodeFeedback}
+              switchValue={wantsCode}
+              onChangeCodeDelivery={() => setWantsCode(!wantsCode)}
+              confirmation={confirmation}
+            />
+          ) : null}
           <FoodOrderItemsInfo order={order} />
           <HR height={padding} />
           <OrderCostBreakdown order={order} selectedFare={order.fare} />
