@@ -7,8 +7,6 @@ import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import * as icons from '../../../assets/icons';
 import { ApiContext } from '../../../common/app/context';
-import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { useObserveOrderRequest } from '../../../common/store/api/courier/hooks/useObserveOrderRequest';
@@ -59,7 +57,12 @@ export default function ({ navigation, route }: Props) {
       setDistance(currentDistanceToOrigin);
       setLoading(false);
     })();
-  }, []);
+  }, [distanceToOrigin, orderId, origin]);
+  React.useEffect(() => {
+    if (request?.situation === 'expired') {
+      navigation.replace('MatchingError');
+    }
+  }, [navigation, request]);
   // tracking
   useSegmentScreen('Matching');
   const tallerDevice = useTallerDevice();
@@ -166,14 +169,7 @@ export default function ({ navigation, route }: Props) {
               paddingHorizontal: padding,
             }}
           />
-        ) : (
-          <PaddedView>
-            <DefaultButton
-              title={t('Corrida indisponível')}
-              onPress={() => navigation.popToTop()}
-            />
-          </PaddedView>
-        )}
+        ) : null}
       </View>
     </ScrollView>
   );
