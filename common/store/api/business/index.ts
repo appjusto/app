@@ -45,13 +45,16 @@ export default class BusinessApi {
     return unsubscribe;
   }
   observeProducts(businessId: string, resultHandler: (products: WithId<Product>[]) => void) {
-    const unsubscribe = this.refs.getBusinessProductsRef(businessId).onSnapshot(
-      (snapshot) => resultHandler(documentsAs<Product>(snapshot.docs)),
-      (error) => {
-        console.log(error);
-        Sentry.Native.captureException(error);
-      }
-    );
+    const unsubscribe = this.refs
+      .getBusinessProductsRef(businessId)
+      .where('enabled', '==', true)
+      .onSnapshot(
+        (snapshot) => resultHandler(documentsAs<Product>(snapshot.docs)),
+        (error) => {
+          console.log(error);
+          Sentry.Native.captureException(error);
+        }
+      );
     return unsubscribe;
   }
   observeProduct(
