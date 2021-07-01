@@ -1,12 +1,10 @@
-import * as Linking from 'expo-linking';
-import { useEffect, useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { ApiContext, AppDispatch } from '../app/context';
 import {
-  observeAuthState,
   getSignInEmail,
   isSignInWithEmailLink,
+  observeAuthState,
   signInWithEmailLink,
 } from '../store/user/actions';
 import { getUser } from '../store/user/selectors';
@@ -21,11 +19,9 @@ export enum AuthState {
   InvalidCredentials = 'invalid-credentials',
 }
 
-const extractAuthLink = (link: string): string | null => {
-  const parsedURL = Linking.parse(link);
-  if (parsedURL.scheme === 'exp') return parsedURL.queryParams?.link ?? null;
-  // if (parsedURL.scheme === 'appjusto') return parsedURL.queryParams?.link ?? null;
-  if (parsedURL.scheme === 'https') return link;
+const extractAuthLink = (link: string) => {
+  const authLink = link.split('link=').find((_, i, a) => i === a.length - 1);
+  if (authLink) return decodeURIComponent(authLink);
   return null;
 };
 
