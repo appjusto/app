@@ -7,6 +7,7 @@ import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
+import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
@@ -50,6 +51,13 @@ export default function ({ navigation, route }: Props) {
   useSegmentScreen('Ongoing Delivery');
   // keeping screen awake
   useKeepAwake();
+  // modal
+  React.useEffect(() => {
+    if (!order) return;
+    if (order.dispatchingState === 'arrived-pickup' && order.type === 'food') {
+      setModalOpen(true);
+    }
+  }, [order]);
   // helpers
   const openChat = React.useCallback(
     (counterpartId: string, counterpartFlavor: Flavor, delayed?: boolean) => {
@@ -196,6 +204,15 @@ export default function ({ navigation, route }: Props) {
             />
           </View>
         ) : null}
+        {/* chat with restaurant */}
+        <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
+          <DefaultButton
+            title={t('Abrir chat com o restaurante')}
+            onPress={() => openChatWithRestaurant()}
+            secondary
+          />
+        </View>
+
         {/* code input */}
         <OngoingDeliveryCode
           code={code}
@@ -211,8 +228,8 @@ export default function ({ navigation, route }: Props) {
           visible={modalOpen}
           order={order}
           onWithdrawal={() => {
-            setModalOpen(false);
             nextDispatchingStateHandler();
+            setModalOpen(false);
           }}
         />
       </View>

@@ -12,6 +12,22 @@ export interface Props extends ModalProps {
 }
 
 export const WithdrawOrderModal = ({ order, onWithdrawal, ...props }: Props) => {
+  const title = (() => {
+    if (order.status === 'dispatching') {
+      return t('Retire o pedido');
+    } else if (order.status === 'ready') {
+      return t('Aguardando retirada');
+    } else {
+      return t('Aguarde');
+    }
+  })();
+  const subTitle = (() => {
+    if (order.status === 'dispatching' || order.status === 'ready') {
+      return t('Mostre essa tela para o restaurante');
+    } else {
+      return t('O pedido está sendo finalizado');
+    }
+  })();
   return (
     <Modal transparent {...props}>
       <View
@@ -34,17 +50,9 @@ export const WithdrawOrderModal = ({ order, onWithdrawal, ...props }: Props) => 
           <View style={{ marginBottom: halfPadding }}>
             <IconOngoingRequest />
           </View>
-          <Text style={{ ...texts.xl, color: colors.grey700 }}>
-            {order.status === 'ready' || order.status === 'dispatching'
-              ? t('Retire o pedido')
-              : t('Aguarde')}
-          </Text>
+          <Text style={{ ...texts.xl, color: colors.grey700 }}>{title}</Text>
           <Text style={{ ...texts.x2l }}>{order.business?.name}</Text>
-          <Text style={{ ...texts.sm, color: colors.grey700 }}>
-            {order.status === 'ready' || order.status === 'dispatching'
-              ? t('Mostre essa tela para o restaurante')
-              : t('O pedido está sendo finalizado')}
-          </Text>
+          <Text style={{ ...texts.sm, color: colors.grey700 }}>{subTitle}</Text>
           <View style={{ marginTop: 24, alignItems: 'center' }}>
             <Text style={{ ...texts.xl, color: colors.grey700 }}>{t('Pedido Nº')}</Text>
             <Text style={{ ...texts.x4l }}>{order.code}</Text>
@@ -55,13 +63,9 @@ export const WithdrawOrderModal = ({ order, onWithdrawal, ...props }: Props) => 
           </View>
           <View style={{ width: '100%' }}>
             <DefaultButton
-              title={
-                order.status === 'ready' || order.status === 'dispatching'
-                  ? t('Recebi o pedido')
-                  : t('Aguarde')
-              }
+              title={order.status === 'dispatching' ? t('Recebi o pedido') : t('Aguarde')}
               onPress={onWithdrawal}
-              disabled={order.status !== 'ready' && order.status !== 'dispatching'}
+              disabled={order.status !== 'dispatching'}
             />
           </View>
         </View>
