@@ -11,6 +11,7 @@ import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import HR from '../../../../../common/components/views/HR';
 import useTallerDevice from '../../../../../common/hooks/useTallerDevice';
+import { IconSemaphoreSmall } from '../../../../../common/icons/icon-semaphore-small';
 import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
 import { getBusinessNextOpeningDay } from '../../../../../common/store/api/business/selectors';
@@ -153,17 +154,27 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const getActionsUI = () => {
     if (isOutOfRange)
       return (
-        <View
-          style={{
-            margin: padding,
-            padding: 25,
-            alignItems: 'center',
-            backgroundColor: colors.grey50,
-            ...borders.default,
-          }}
-        >
-          <Feather name="clock" size={26} />
-          <Text style={texts.sm}>{t('Você está fora da área de entrega')}</Text>
+        <View style={{ flex: 1, paddingBottom: padding }}>
+          <View
+            style={{
+              margin: padding,
+              paddingHorizontal: padding,
+              paddingVertical: 24,
+              alignItems: 'center',
+              backgroundColor: colors.grey50,
+              ...borders.default,
+            }}
+          >
+            <IconSemaphoreSmall />
+            <Text style={{ ...texts.sm, marginTop: halfPadding }}>
+              {t('Restaurante fora da área de entrega')}
+            </Text>
+            <Text style={{ ...texts.xs, color: colors.grey700 }}>
+              {t(
+                'Infelizmente ainda não atendemos seu endereço, mas você pode continuar explorando o cardápio'
+              )}
+            </Text>
+          </View>
         </View>
       );
     if (isAcceptingOrders)
