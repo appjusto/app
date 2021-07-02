@@ -14,8 +14,13 @@ import useTallerDevice from '../../../../../common/hooks/useTallerDevice';
 import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
 import { getBusinessNextOpeningDay } from '../../../../../common/store/api/business/selectors';
+import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 import * as helpers from '../../../../../common/store/api/order/helpers';
-import { getConsumer, getCurrentPlace } from '../../../../../common/store/consumer/selectors';
+import {
+  getConsumer,
+  getCurrentLocation,
+  getCurrentPlace,
+} from '../../../../../common/store/consumer/selectors';
 import {
   useContextBusiness,
   useContextBusinessId,
@@ -56,10 +61,17 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   // redux store
   const consumer = useSelector(getConsumer)!;
   const currentPlace = useSelector(getCurrentPlace);
-  // screen state
+  // state
+  const location = useSelector(getCurrentLocation);
+  const distance =
+    location && business?.businessAddress?.latlng
+      ? distanceBetweenLatLng(location, business.businessAddress.latlng)
+      : 0;
+  const isOutOfRange = (business?.deliveryRange ?? 0) < (distance ?? 0);
   const isAcceptingOrders = useBusinessIsAcceptingOrders(business);
   const product = useProduct(businessId, productId);
   const { data: imageURI } = useProductImageURI(businessId, productId, '1008x720');
+  // screen state
   const [quantity, setQuantity] = React.useState(1);
   const [complements, setComplements] = React.useState<WithId<Complement>[]>([]);
   const [notes, setNotes] = React.useState<string>('');
@@ -138,6 +150,78 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     })();
   };
   // UI
+  const getActionsUI = () => {
+    if (isOutOfRange)
+      return (
+        <View
+          style={{
+            margin: padding,
+            padding: 25,
+            alignItems: 'center',
+            backgroundColor: colors.grey50,
+            ...borders.default,
+          }}
+        >
+          <Feather name="clock" size={26} />
+          <Text style={texts.sm}>{t('Você está fora da área de entrega')}</Text>
+        </View>
+      );
+    if (isAcceptingOrders)
+      return (
+        <View style={{ flex: 1 }}>
+          <ItemComplements
+            product={product}
+            selectedComplements={complements}
+            onComplementToggle={(group, complement, selected) => {
+              if (!selected || helpers.canAddComplement(group, complements)) {
+                if (selected) setComplements([...complements, complement]);
+                else setComplements(complements.filter((c) => c.id !== complement.id));
+              }
+            }}
+          />
+          <HR style={{ marginTop: halfPadding }} />
+          <View style={{ padding: 12 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Feather name="info" size={14} />
+              <Text style={{ ...texts.sm, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
+            </View>
+            <DefaultInput
+              style={{ height: 96, marginTop: halfPadding }}
+              placeholder={t(
+                'Tem alguma observação? Por exemplo: sem molho, sem cebola, ponto da carne, etc'
+              )}
+              multiline
+              textAlignVertical="top"
+              value={notes}
+              onChangeText={setNotes}
+            />
+          </View>
+          <View style={{ flex: 1 }} />
+        </View>
+      );
+    return (
+      <View
+        style={{
+          margin: padding,
+          padding: 25,
+          alignItems: 'center',
+          backgroundColor: colors.grey50,
+          ...borders.default,
+        }}
+      >
+        <Feather name="clock" size={26} />
+        <Text style={texts.sm}>{t('Desculpe, estamos fechados agora')}</Text>
+        {getBusinessNextOpeningDay(business) ? (
+          <>
+            <Text style={{ ...texts.xs, color: colors.grey700 }}>
+              {`${t('Abriremos')} ${getBusinessNextOpeningDay(business)![0]} ${t('às')}`}
+            </Text>
+            <Text style={texts.x2l}>{formatHour(getBusinessNextOpeningDay(business)![1])}</Text>
+          </>
+        ) : null}
+      </View>
+    );
+  };
   return (
     <View style={{ ...screens.default }}>
       <ScrollView
@@ -170,64 +254,10 @@ export const ItemDetail = ({ navigation, route }: Props) => {
             </View>
           </View>
           {tallerDevice ? <View style={{ flex: 1 }} /> : null}
-          {isAcceptingOrders ? (
-            <View style={{ flex: 1 }}>
-              <ItemComplements
-                product={product}
-                selectedComplements={complements}
-                onComplementToggle={(group, complement, selected) => {
-                  if (!selected || helpers.canAddComplement(group, complements)) {
-                    if (selected) setComplements([...complements, complement]);
-                    else setComplements(complements.filter((c) => c.id !== complement.id));
-                  }
-                }}
-              />
-              <HR style={{ marginTop: halfPadding }} />
-              <View style={{ padding: 12 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Feather name="info" size={14} />
-                  <Text style={{ ...texts.sm, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
-                </View>
-                <DefaultInput
-                  style={{ height: 96, marginTop: halfPadding }}
-                  placeholder={t(
-                    'Tem alguma observação? Por exemplo: sem molho, sem cebola, ponto da carne, etc'
-                  )}
-                  multiline
-                  textAlignVertical="top"
-                  value={notes}
-                  onChangeText={setNotes}
-                />
-              </View>
-              <View style={{ flex: 1 }} />
-            </View>
-          ) : (
-            <View
-              style={{
-                margin: padding,
-                padding: 25,
-                alignItems: 'center',
-                backgroundColor: colors.grey50,
-                ...borders.default,
-              }}
-            >
-              <Feather name="clock" size={26} />
-              <Text style={texts.sm}>{t('Desculpe, estamos fechados agora')}</Text>
-              {getBusinessNextOpeningDay(business) ? (
-                <>
-                  <Text style={{ ...texts.xs, color: colors.grey700 }}>
-                    {`${t('Abriremos')} ${getBusinessNextOpeningDay(business)![0]} ${t('às')}`}
-                  </Text>
-                  <Text style={texts.x2l}>
-                    {formatHour(getBusinessNextOpeningDay(business)![1])}
-                  </Text>
-                </>
-              ) : null}
-            </View>
-          )}
+          {getActionsUI()}
         </View>
       </ScrollView>
-      {isAcceptingOrders ? (
+      {!isOutOfRange && isAcceptingOrders ? (
         <View>
           <HR />
           <PaddedView>
