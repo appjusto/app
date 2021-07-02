@@ -212,7 +212,7 @@ export default function ({ navigation, route }: Props) {
           </Text>
           <Text style={{ ...texts.xs, marginTop: padding }}>
             {t(
-              'Cada uma dessas cobranças vai pra uma conta específica, facilitando a divisão entre restaurantes e entregadores.'
+              'Cada uma dessas cobranças vai pra uma conta específica, facilitando a divisão entre restaurantes e entregadores/as.'
             )}
           </Text>
           <View style={{ flex: 1 }} />

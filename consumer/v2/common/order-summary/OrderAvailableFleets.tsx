@@ -86,7 +86,7 @@ export const OrderAvailableFleets = ({
                       <Text numberOfLines={2} style={[texts.sm, texts.bold]}>
                         {item.fleet.name}
                       </Text>
-                      <Text style={[texts.xs, { marginTop: padding }]}>{t('Entregadores')}</Text>
+                      <Text style={[texts.xs, { marginTop: padding }]}>{t('Entregadores/as')}</Text>
                       <Text style={[texts.xs, texts.bold]}>
                         {`${
                           fleets.find((fleet) => fleet.id === item.fleet.id)?.participantsOnline ??

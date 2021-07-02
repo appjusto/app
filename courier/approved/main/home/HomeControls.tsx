@@ -81,7 +81,7 @@ export default function ({ onFleetDetail }: Props) {
               },
             ]}
           >
-            {`${t('Olá')}, ${courier.name ?? 'entregador'}. ${t(
+            {`${t('Olá')}, ${courier.name ?? 'entregador/a'}. ${t(
               'Faça suas corridas com segurança.'
             )}`}
           </Text>

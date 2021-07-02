@@ -50,7 +50,7 @@ export const DemandCard = () => {
         >
           <MaterialIcons name="motorcycle" size={24} color={colors.green500} />
           <Text style={{ ...texts.x2l, marginVertical: padding }}>{t('000')}</Text>
-          <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Entregadores ativos')}</Text>
+          <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Entregadores/as ativos')}</Text>
         </View>
         <View
           style={{

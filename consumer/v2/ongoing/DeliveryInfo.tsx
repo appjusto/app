@@ -28,7 +28,7 @@ export const DeliveryInfo = ({ order, onCourierDetail }: Props) => {
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={[texts.md]}>{order.courier?.name}</Text>
           </View>
-          <Text style={[texts.xs, { color: colors.grey700 }]}>{t('Conheça o entregador')}</Text>
+          <Text style={[texts.xs, { color: colors.grey700 }]}>{t('Conheça o/a entregador/a')}</Text>
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View>

@@ -26,29 +26,29 @@ export const CourierStatusHighlight = ({ order, confirmation }: Props) => {
   if (flavor === 'consumer') {
     if (type === 'food') {
       if (dispatchingState === 'arrived-pickup') {
-        title = t('Entregador chegou ao restaurante');
-        message = t('Entregador está aguardando receber o pedido do restaurante.');
+        title = t('Entregador/a chegou ao restaurante');
+        message = t('Entregador/a está aguardando receber o pedido do restaurante.');
         if (status === 'dispatching' && order.dispatchingStatus === 'confirmed') {
-          title = t('Entregador chegou ao restaurante');
-          message = t('Entregador retirou o pedido e sairá para a entrega em instantes.');
+          title = t('Entregador/a chegou ao restaurante');
+          message = t('Entregador/a retirou o pedido e sairá para a entrega em instantes.');
         }
       } else if (dispatchingState === 'arrived-destination') {
-        title = t('Entregador chegou!');
+        title = t('Entregador/a chegou!');
         if (confirmation?.handshakeChallenge) {
           message = t(
-            `Informe o código ${confirmation.handshakeChallenge} para o entregador finalizar o pedido.`
+            `Informe o código ${confirmation.handshakeChallenge} para o/a entregador/a finalizar o pedido.`
           );
         } else {
-          message = t('Entregador está esperando para entregar o pedido.');
+          message = t('Entregador/a está esperando para entregar o pedido.');
         }
       }
     } else if (type === 'p2p') {
       if (dispatchingState === 'arrived-pickup') {
-        title = t('Entregador chegou ao local');
-        message = t('Entregador está aguardando para receber a encomenda.');
+        title = t('Entregador/a chegou ao local');
+        message = t('Entregador/a está aguardando para receber a encomenda.');
       } else if (dispatchingState === 'arrived-destination') {
-        title = t('Entregador chegou!');
-        message = t('Entregador está esperando para entregar a encomenda.');
+        title = t('Entregador/a chegou!');
+        message = t('Entregador/a está esperando para entregar a encomenda.');
       }
     }
   } else if (flavor === 'courier') {

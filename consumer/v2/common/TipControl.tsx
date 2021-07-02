@@ -39,7 +39,7 @@ export default function ({ order, tip, isLoading = false, onChange, onConfirm }:
       <View>
         <Text style={{ ...texts.xl, ...texts.bold }}>{t('Caixinha')}</Text>
         <Text style={{ ...texts.md, color: colors.grey700, flexWrap: 'wrap' }}>
-          {t('Valorize ainda mais o trabalho do seu entregador')}
+          {t('Valorize ainda mais o trabalho do/a entregador/a')}
         </Text>
       </View>
       <View style={{ paddingBottom: padding }}>

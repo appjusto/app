@@ -25,7 +25,7 @@ export const CodeInfoBox = ({ onPress }: Props) => {
             <Text style={[texts.xs, texts.bold]}>{t('Código de confirmação')}</Text>
             <Text style={{ ...texts.xs }}>
               {t(
-                'Ao receber o pedido, informe os 3 primeiros dígitos do seu CPF para o entregador'
+                'Ao receber o pedido, informe os 3 primeiros dígitos do seu CPF para o/a entregador/a'
               )}
             </Text>
             <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Ok, entendi')}</Text>

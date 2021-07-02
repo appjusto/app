@@ -27,7 +27,7 @@ export const ReviewBox = ({
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Pill />
         <Text style={{ ...texts.md, ...texts.bold, marginLeft: 12 }}>
-          {t('Como foi a sua experiência com o entregador?')}
+          {t('Como foi a sua experiência com o/a entregador/a?')}
         </Text>
       </View>
       <View

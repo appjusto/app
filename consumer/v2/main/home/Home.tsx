@@ -87,7 +87,7 @@ export default function ({ navigation }: Props) {
           <View>
             <HomeCard
               icon={<IconMotocycle circleColor={colors.grey50} width={64} height={64} />}
-              title={`${availableCouriers} ${t('entregadores disponíveis')}`}
+              title={`${availableCouriers} ${t('entregadores/as disponíveis')}`}
               subtitle={t(`num raio de 15km`)}
             />
           </View>

@@ -17,7 +17,7 @@ export const AboutCharges = () => {
       </Text>
       <Text style={{ ...texts.sm, color: colors.grey700 }}>
         {t(
-          'Cada uma dessas cobranças vai pra uma conta específica, facilitando a divisão entre restaurantes e entregadores, e possibilitando sermos mais justos em relação aos valores cobrados.'
+          'Cada uma dessas cobranças vai pra uma conta específica, facilitando a divisão entre restaurantes e entregadores/as, e possibilitando sermos mais justos em relação aos valores cobrados.'
         )}
       </Text>
     </PaddedView>

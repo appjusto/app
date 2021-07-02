@@ -128,7 +128,7 @@ export default function ({ navigation, route }: Props) {
               onDecrease={() => setMinimumFee(minimumFee - 100)}
               value={formatCurrency(minimumFee)}
               description={t(
-                'Defina o valor que os entregadores dessa frota receberão ao percorrer a Distância Inicial Mínima.'
+                'Defina o valor que os/as entregadores/as dessa frota receberão ao percorrer a Distância Inicial Mínima.'
               )}
             />
             <FleetRule
@@ -137,7 +137,7 @@ export default function ({ navigation, route }: Props) {
               onDecrease={() => setDistanceThreshold(distanceThreshold - 1000)}
               value={formatDistance(distanceThreshold)}
               description={t(
-                'Defina em Km a distância para o Pagamento Mínimo. Abaixo dessa distância, os entregadores dessa frota receberão o Pagamento Mínimo. Acima dessa distância, os entregadores receberão um Valor Adicional por Km Rodado.'
+                'Defina em Km a distância para o Pagamento Mínimo. Abaixo dessa distância, os/as entregadores/as dessa frota receberão o Pagamento Mínimo. Acima dessa distância, os/as entregadores/as receberão um Valor Adicional por Km Rodado.'
               )}
             />
             <FleetRule
@@ -150,7 +150,7 @@ export default function ({ navigation, route }: Props) {
               }
               value={formatCurrency(additionalPerKmAfterThreshold)}
               description={t(
-                'Defina o valor adicional que os entregadores dessa frota receberão por Km ao percorrer uma distância acima da Distância Inicial Mínima.'
+                'Defina o valor adicional que os/as entregadores/as dessa frota receberão por Km ao percorrer uma distância acima da Distância Inicial Mínima.'
               )}
             />
             <FleetRule
@@ -159,7 +159,7 @@ export default function ({ navigation, route }: Props) {
               onDecrease={() => setMaxDistance(maxDistance - 1000)}
               value={formatDistance(maxDistance)}
               description={t(
-                'Defina em Km a distância máxima que os entregadores dessa frota poderão percorrer para fazer uma entrega. Pedidos recebidos com distância máxima acima da definida não serão exibidos.'
+                'Defina em Km a distância máxima que os/as entregadores/as dessa frota poderão percorrer para fazer uma entrega. Pedidos recebidos com distância máxima acima da definida não serão exibidos.'
               )}
             />
             <FleetRule

@@ -90,7 +90,7 @@ export const OngoingOrderCourierDetail = ({ navigation, route }: Props) => {
             marginBottom: padding,
           }}
         >
-          {t('Ao ligar, seu número será protegido e o entregador não verá seu telefone real.')}
+          {t('Ao ligar, seu número será protegido e o/a entregador/a não verá seu telefone real.')}
         </Text>
       </View>
     </ScrollView>

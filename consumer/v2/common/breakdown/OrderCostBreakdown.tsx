@@ -48,7 +48,7 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems }: Props) =>
           </View>
           {order.tip?.value ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('Caixinha entregador')}</Text>
+              <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('Caixinha entregador/a')}</Text>
               <Text style={{ ...texts.sm, lineHeight: 21 }}>
                 {formatCurrency(order.tip!.value)}
               </Text>

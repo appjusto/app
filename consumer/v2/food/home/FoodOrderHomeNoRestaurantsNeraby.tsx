@@ -19,7 +19,7 @@ export default function () {
           isGrey
           title={t('Divulgue o AppJusto')}
           subtitle={t(
-            'Assim mais clientes, entregadores, e restaurantes, podem fazer parte de entregas mais justas.'
+            'Assim mais clientes, entregadores/as, e restaurantes, podem fazer parte de entregas mais justas.'
           )}
         />
       </View>

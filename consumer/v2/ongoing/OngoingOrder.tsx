@@ -178,7 +178,7 @@ export default function ({ navigation, route }: Props) {
               />
               <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
               <DefaultButton
-                title={t('Abrir chat com o entregador')}
+                title={t('Abrir chat com entregador/a')}
                 onPress={() => openChatWithCourier()}
                 style={{ marginHorizontal: padding, marginBottom: padding }}
               />
@@ -248,7 +248,7 @@ export default function ({ navigation, route }: Props) {
               <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
               {/* pode estar causando o problema de clicar no topo - chat em 'food' */}
               <DefaultButton
-                title={t('Abrir chat com o entregador')}
+                title={t('Abrir chat com entregador/a')}
                 onPress={() => openChatWithCourier()}
                 style={{ marginHorizontal: padding, marginBottom: padding }}
               />
