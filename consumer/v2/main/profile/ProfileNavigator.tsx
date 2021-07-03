@@ -3,12 +3,12 @@ import React from 'react';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { AboutApp } from '../../../../common/screens/profile/AboutApp';
 import ProfileErase from '../../../../common/screens/profile/ProfileErase';
+import Terms from '../../../../common/screens/unlogged/Terms';
 import { t } from '../../../../strings';
 import PaymentMethodDetail from './PaymentMethodDetail';
 import ProfileAddCard from './ProfileAddCard';
 import ProfileEdit from './ProfileEdit';
 import ProfilePaymentMethods from './ProfilePaymentMethods';
-import Terms from './Terms';
 import { ProfileParamList } from './types';
 
 const Stack = createStackNavigator<ProfileParamList>();
