@@ -24,7 +24,7 @@ export const RejectedMatchingFeedback = ({ navigation }: Props) => {
       header={t('Obrigado pelas informações')}
       icon={<IconConeYellow />}
       background={colors.grey50}
-      description={t('Seu feedback serve para que melhoremos nossos serviços')}
+      description={t('Seu feedback serve para melhorar nossos serviços')}
     >
       <DefaultButton
         title={t('Voltar para o início')}
