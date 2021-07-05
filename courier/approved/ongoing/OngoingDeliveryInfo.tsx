@@ -32,6 +32,7 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
     }
     return '';
   })();
+  if (!dispatchingState) return null;
   return (
     <PaddedView style={{ flex: 1 }}>
       {tallerDevice ? (
