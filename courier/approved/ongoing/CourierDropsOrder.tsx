@@ -3,13 +3,12 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import { ReportIssueView } from '../../../common/components/views/ReportIssueView';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
-import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -29,14 +28,13 @@ type Props = {
 
 export const CourierDropsOrder = ({ navigation, route }: Props) => {
   // params
-  const { orderId } = route.params;
+  const { orderId, issueType } = route.params;
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // state
   // const issues = useIssues('courier-refuse');
-  const issues = useIssues('courier-drops-delivery');
-  const courier = useSelector(getCourier)!;
+  const issues = useIssues(issueType);
   const order = useObserveOrder(orderId);
   // screen state
   const [comment, setComment] = React.useState('');
@@ -54,13 +52,11 @@ export const CourierDropsOrder = ({ navigation, route }: Props) => {
         console.log('dropOrder called');
         navigation.replace('DeliveryProblemFeedback', {
           orderId,
-          issueType: 'courier-drops-delivery',
+          issueType,
         });
       } catch (error) {
         setLoading(false);
         dispatch(showToast(t('Não foi possível enviar o comentário'), 'error'));
-      } finally {
-        setLoading(false);
       }
     })();
   };

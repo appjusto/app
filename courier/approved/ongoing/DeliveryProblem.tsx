@@ -54,11 +54,20 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
   );
   const refuseDeliveryHandler = () => {
     if (!order) return;
-    navigation.navigate('CourierDropsOrder', { orderId });
+    if (order.type === 'food') {
+      navigation.navigate('CourierDropsOrder', {
+        orderId,
+        issueType: 'courier-drops-food-delivery',
+      });
+    } else {
+      navigation.navigate('CourierDropsOrder', {
+        orderId,
+        issueType: 'courier-drops-p2p-delivery',
+      });
+    }
   };
 
   const deliveryProblemHandler = () => {
-    if (!order) return;
     navigation.navigate('ReportIssue', {
       issueType: 'courier-delivery-problem',
       orderId,
@@ -84,20 +93,29 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
   return (
     <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
       <PaddedView style={{ flex: 1 }}>
-        <TouchableOpacity style={{ marginBottom: padding }} onPress={refuseDeliveryHandler}>
-          <HomeCard
-            icon={<IconProblemCancel />}
-            title={t('Desistir da entrega')}
-            subtitle={t('Atenção: só é possível desistir até o momento da retirada')}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={{ marginBottom: padding }} onPress={deliveryProblemHandler}>
-          <HomeCard
-            icon={<IconProblemPack />}
-            title={t('Tive um problema com o pedido')}
-            subtitle={t('Se você já estiver com o pedido em mãos e teve um problema')}
-          />
-        </TouchableOpacity>
+        {order.dispatchingState === 'going-pickup' ||
+        order.dispatchingState === 'arrived-pickup' ? (
+          <View>
+            <TouchableOpacity style={{ marginBottom: padding }} onPress={refuseDeliveryHandler}>
+              <HomeCard
+                icon={<IconProblemCancel />}
+                title={t('Desistir da entrega')}
+                subtitle={t('Atenção: só é possível desistir até o momento da retirada')}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View>
+            <TouchableOpacity style={{ marginBottom: padding }} onPress={deliveryProblemHandler}>
+              <HomeCard
+                icon={<IconProblemPack />}
+                title={t('Tive um problema com o pedido')}
+                subtitle={t('Se você já estiver com o pedido em mãos e teve um problema')}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
+
         <TouchableOpacity
           style={{ marginBottom: padding }}
           onPress={() => openChatWithRestaurant()}
