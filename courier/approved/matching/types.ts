@@ -5,9 +5,14 @@ export type MatchingParamList = {
   Matching: {
     matchRequest: CourierOrderRequest;
   };
+  // remove this after
   RefuseDelivery: {
     issueType: IssueType;
     orderId: string;
   };
+  RejectedMatching: {
+    orderId: string;
+  };
+  RejectedMatchingFeedback: undefined;
   MatchingError: undefined;
 };

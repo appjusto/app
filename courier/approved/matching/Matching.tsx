@@ -96,8 +96,8 @@ export default function ({ navigation, route }: Props) {
   };
   const rejectHandler = () => {
     // using this until backend is published again with the new issueType
-    navigation.replace('RefuseDelivery', { orderId, issueType: 'courier-drops-delivery' });
-    // navigation.replace('RefuseDelivery', { orderId, issueType: 'courier-rejects-matching' });
+    // navigation.replace('RefuseDelivery', { orderId, issueType: 'courier-drops-delivery' });
+    navigation.replace('RejectedMatching', { orderId });
   };
   // UI
   return (
