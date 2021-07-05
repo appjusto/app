@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../app/context';
@@ -21,36 +21,30 @@ export enum AuthState {
 }
 
 const extractAuthLink = (link: string) => {
-  const authLink = link.split('link=').find((_, i, a) => i === a.length - 1);
-  Sentry.Native.captureMessage('Deeplink', {
-    extra: {
-      link,
-      authLink: authLink ? decodeURIComponent(authLink) : null,
-    },
-  });
-  if (authLink) return decodeURIComponent(authLink);
-  return null;
+  if (!link) return null;
+  const authLink = link.split('link=').find((_, i, a) => i === a.length - 1)!;
+  if (authLink === link) return null;
+  return decodeURIComponent(authLink);
 };
 
-export default function (): [AuthState, firebase.User | undefined | null] {
+export const useAuth = (): [AuthState, firebase.User | undefined | null] => {
   // context
-  const api = useContext(ApiContext);
+  const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
 
   // state
   const user = useSelector(getUser);
-  const [authState, setAuthState] = useState<AuthState>(AuthState.CheckingPreviousSession);
+  const [authState, setAuthState] = React.useState<AuthState>(AuthState.CheckingPreviousSession);
   const deepLink = useDeepLink();
 
   // side effects
   // subscribe once to be notified whenever the user changes (capture by the next effect)
-  useEffect(() => {
-    const unsubscribe = dispatch(observeAuthState(api));
-    return unsubscribe;
-  }, []);
+  React.useEffect(() => {
+    return dispatch(observeAuthState(api));
+  }, [api, dispatch]);
 
   // whenever auth changes
-  useEffect(() => {
+  React.useEffect(() => {
     // undefined means we're still checking; nothing to be done in this case
     if (user === undefined) return;
     // null means that we've already checked and no user was previously stored
@@ -62,13 +56,11 @@ export default function (): [AuthState, firebase.User | undefined | null] {
   }, [user]);
 
   // check deeplink again
-  useEffect(() => {
-    if (authState === AuthState.InvalidCredentials || authState === AuthState.Unsigned) {
-      setAuthState(AuthState.CheckingDeeplink);
-    }
+  React.useEffect(() => {
+    setAuthState(AuthState.CheckingDeeplink);
   }, [deepLink]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (authState !== AuthState.CheckingDeeplink) return;
     // undefined means useDeeplink hasnt finished yet
     if (deepLink === undefined) return;
@@ -78,6 +70,15 @@ export default function (): [AuthState, firebase.User | undefined | null] {
       return;
     }
     const link = extractAuthLink(deepLink);
+    console.log(deepLink);
+    console.log(link);
+    Sentry.Native.captureMessage('Deeplink', {
+      extra: {
+        deepLink,
+        link,
+      },
+    });
+
     if (link === null) {
       setAuthState(AuthState.Unsigned);
       return;
@@ -99,7 +100,7 @@ export default function (): [AuthState, firebase.User | undefined | null] {
         setAuthState(AuthState.InvalidCredentials);
       }
     });
-  }, [deepLink, authState]);
+  }, [deepLink, authState, api]);
 
   return [authState, user];
-}
+};

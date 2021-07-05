@@ -9,6 +9,7 @@ import YoutubePlayer from 'react-native-youtube-iframe';
 import { useSelector } from 'react-redux';
 import { LoggedNavigatorParamList } from '../../../../consumer/v2/types';
 import { t } from '../../../../strings';
+import { ApiContext } from '../../../app/context';
 import PaddedView from '../../../components/containers/PaddedView';
 import RoundedText from '../../../components/texts/RoundedText';
 import useNotificationToken from '../../../hooks/useNotificationToken';
@@ -29,26 +30,32 @@ type Props = {
 };
 
 export const RegistrationSubmitted = ({ navigation, route }: Props) => {
+  // context
+  const api = React.useContext(ApiContext);
   // redux store
   const consumer = useSelector(getConsumer)!;
   const { city, situation } = consumer;
   // state
   const steps = config.registrationSubmitted;
   const [step, setStep] = React.useState(0);
-  const cityStats = useCityStatistics(city);
   const [playing, setPlaying] = React.useState(false);
-  const [consumers, setConsumers] = React.useState<number>();
+  const cityStats = useCityStatistics(city);
+  const [totalConsumersInCity, setTotalConsumersInCity] = React.useState<number>(0);
   useNotificationToken();
   // refs
   const viewPager = React.useRef<ViewPager>(null);
   // tracking
   useSegmentScreen('Registration Submitted');
   // side effects
+  // submit profile
   React.useEffect(() => {
-    if (cityStats) {
-      if (!consumers) setConsumers(cityStats.consumers);
-    }
-  }, [cityStats, consumers]);
+    api.profile().updateProfile(consumer.id, { situation: 'submitted' });
+  }, [api, consumer.id]);
+  // update city statistics
+  React.useEffect(() => {
+    if (cityStats) setTotalConsumersInCity(cityStats.consumers);
+  }, [cityStats]);
+  // react to approved
   React.useEffect(() => {
     if (situation === 'approved') {
       navigation.replace('MainNavigator', { screen: 'Home' });
@@ -62,13 +69,13 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
       setStep(position);
     }
   };
-  const onPlaying = React.useCallback((state) => {
+  const onVideoChangeState = React.useCallback((state) => {
     if (state === 'ended') {
       setPlaying(false);
     }
   }, []);
   // UI
-  if (!consumers) {
+  if (!totalConsumersInCity) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -80,9 +87,11 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <PaddedView style={{ backgroundColor: colors.green500 }}>
           <RoundedText>{t('Pré-cadastro realizado com sucesso!')}</RoundedText>
-          {consumers > 1 ? (
+          {totalConsumersInCity > 1 ? (
             <Text style={{ ...texts.x2l, marginVertical: padding }}>
-              {t(`Você e mais ${consumers} pessoas já fazem parte desse movimento em ${city}`)}
+              {t(
+                `Você e mais ${totalConsumersInCity} pessoas já fazem parte desse movimento em ${city}`
+              )}
             </Text>
           ) : (
             <Text style={{ ...texts.x2l, marginVertical: padding }}>
@@ -162,7 +171,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
               height={200}
               play={playing}
               videoId="QM81nPxGBXQ"
-              onChangeState={onPlaying}
+              onChangeState={onVideoChangeState}
               webViewStyle={{ borderRadius: halfPadding }}
             />
           </PaddedView>

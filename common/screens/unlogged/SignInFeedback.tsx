@@ -4,7 +4,7 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { t } from '../../../strings';
 import PaddedView from '../../components/containers/PaddedView';
-import useAuth, { AuthState } from '../../hooks/useAuth';
+import { AuthState, useAuth } from '../../hooks/useAuth';
 import { IconMotocycle } from '../../icons/icon-motocycle';
 import { useSegmentScreen } from '../../store/api/track';
 import { colors, padding, screens, texts } from '../../styles';
