@@ -57,7 +57,12 @@ export const useAuth = (): [AuthState, firebase.User | undefined | null] => {
 
   // check deeplink again
   React.useEffect(() => {
-    setAuthState(AuthState.CheckingDeeplink);
+    setAuthState((state) => {
+      if (state === AuthState.InvalidCredentials || state === AuthState.Unsigned) {
+        return AuthState.CheckingDeeplink;
+      }
+      return state;
+    });
   }, [deepLink]);
 
   React.useEffect(() => {
