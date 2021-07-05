@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../app/context';
 import {
   getSignInEmail,
@@ -21,6 +22,12 @@ export enum AuthState {
 
 const extractAuthLink = (link: string) => {
   const authLink = link.split('link=').find((_, i, a) => i === a.length - 1);
+  Sentry.Native.captureMessage('Deeplink', {
+    extra: {
+      link,
+      authLink: authLink ? decodeURIComponent(authLink) : null,
+    },
+  });
   if (authLink) return decodeURIComponent(authLink);
   return null;
 };
