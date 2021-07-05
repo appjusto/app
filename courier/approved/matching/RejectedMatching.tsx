@@ -2,14 +2,13 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Issue, WithId } from '../../../../types';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import { ReportIssueView } from '../../../common/components/views/ReportIssueView';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { showToast } from '../../../common/store/ui/actions';
-import { getUser } from '../../../common/store/user/selectors';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -34,7 +33,6 @@ export const RejectedMatching = ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   // state
   const issues = useIssues('courier-rejects-matching');
-  const user = useSelector(getUser)!;
   const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
   const [comment, setComment] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
@@ -44,18 +42,11 @@ export const RejectedMatching = ({ navigation, route }: Props) => {
     (async () => {
       try {
         setLoading(true);
-        await api.order().createIssue(orderId, {
-          issue: selectedIssue,
-          createdBy: user.uid,
-          flavor: 'courier',
-          comment,
-        });
-        navigation.replace('DeliveryProblemFeedback', {
-          issueType: 'courier-rejects-matching',
-          orderId,
-        });
+        await api.order().rejectOrder(orderId, selectedIssue!, comment);
+        navigation.replace('RejectedMatchingFeedback');
         setLoading(false);
       } catch (error) {
+        setLoading(false);
         dispatch(showToast(t('Não foi possível enviar a razão. Tente novamente.'), 'error'));
       }
     })();

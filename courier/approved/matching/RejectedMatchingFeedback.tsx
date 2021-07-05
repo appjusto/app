@@ -27,8 +27,8 @@ export const RejectedMatchingFeedback = ({ navigation }: Props) => {
       description={t('Seu feedback serve para que melhoremos nossos serviços')}
     >
       <DefaultButton
-        title={t('Voltar')}
-        onPress={() => navigation.navigate('MainNavigator', { screen: 'Home' })}
+        title={t('Voltar para o início')}
+        onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
         style={{ paddingBottom: padding }}
       />
     </FeedbackView>
