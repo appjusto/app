@@ -8,7 +8,7 @@ import RoundedText from '../../../common/components/texts/RoundedText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/CourierDistanceBadge';
 import { courierNextPlace } from '../../../common/store/api/order/helpers';
-import { colors, halfPadding, texts } from '../../../common/styles';
+import { colors, doublePadding, halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
 type Props = {
@@ -103,28 +103,32 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
           </View>
         </View>
       )}
-      <View style={{ marginTop: halfPadding }}>
-        <Text style={[texts.xl]} numberOfLines={2}>
-          {nextPlace?.address.main}
-        </Text>
-        <Text style={[texts.xl]} numberOfLines={2}>
-          {nextPlace?.address.secondary}
-        </Text>
-        {nextPlace?.additionalInfo ? (
-          <View>
-            <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]}>
-              {nextPlace?.additionalInfo ?? ''}
-            </Text>
-          </View>
-        ) : null}
-        {nextPlace?.intructions ? (
-          <View>
-            <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={2}>
-              {nextPlace?.intructions ?? ''}
-            </Text>
-          </View>
-        ) : null}
-      </View>
+      {order.type === 'food' && order.dispatchingState !== 'arrived-pickup' ? (
+        <View style={{ marginTop: halfPadding }}>
+          <Text style={[texts.xl]} numberOfLines={2}>
+            {nextPlace?.address.main}
+          </Text>
+          <Text style={[texts.xl]} numberOfLines={2}>
+            {nextPlace?.address.secondary}
+          </Text>
+          {nextPlace?.additionalInfo ? (
+            <View>
+              <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]}>
+                {nextPlace?.additionalInfo ?? ''}
+              </Text>
+            </View>
+          ) : null}
+          {nextPlace?.intructions ? (
+            <View>
+              <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={2}>
+                {nextPlace?.intructions ?? ''}
+              </Text>
+            </View>
+          ) : null}
+        </View>
+      ) : (
+        <View style={{ height: doublePadding }} />
+      )}
     </PaddedView>
   );
 };

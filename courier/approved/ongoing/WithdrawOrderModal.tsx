@@ -9,9 +9,10 @@ import { t } from '../../../strings';
 export interface Props extends ModalProps {
   order: WithId<Order>;
   onWithdrawal: () => void;
+  onIssue: () => void;
 }
 
-export const WithdrawOrderModal = ({ order, onWithdrawal, ...props }: Props) => {
+export const WithdrawOrderModal = ({ order, onWithdrawal, onIssue, ...props }: Props) => {
   const title = (() => {
     if (order.status === 'dispatching') {
       return t('Retire o pedido');
@@ -66,6 +67,12 @@ export const WithdrawOrderModal = ({ order, onWithdrawal, ...props }: Props) => 
               title={order.status === 'dispatching' ? t('Recebi o pedido') : t('Aguarde')}
               onPress={onWithdrawal}
               disabled={order.status !== 'dispatching'}
+            />
+            <DefaultButton
+              title={t('Tive um problema')}
+              onPress={onIssue}
+              secondary
+              style={{ marginTop: halfPadding }}
             />
           </View>
         </View>
