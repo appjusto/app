@@ -40,6 +40,7 @@ export default function ({ navigation, route }: Props) {
   const courier = useSelector(getCourier)!;
   // state
   const request = useObserveOrderRequest(courier.id, orderId);
+  const canAccept = request?.situation === 'pending' || request?.situation === 'viewed';
   const [distance, setDistance] = React.useState(distanceToOrigin);
   const [isLoading, setLoading] = React.useState(true);
   // side effects
@@ -63,6 +64,9 @@ export default function ({ navigation, route }: Props) {
       navigation.replace('MatchingError');
     }
   }, [navigation, request]);
+  React.useEffect(() => {
+    api.courier().viewOrderRequest(courier.id, orderId);
+  }, [api, courier.id, orderId]);
   // tracking
   useSegmentScreen('Matching');
   const tallerDevice = useTallerDevice();
@@ -160,7 +164,7 @@ export default function ({ navigation, route }: Props) {
         </View>
         <View style={{ flex: 1 }} />
         {/* accept / reject control */}
-        {request?.situation === 'pending' ? (
+        {canAccept ? (
           <AcceptControl
             onAccept={acceptHandler}
             onReject={rejectHandler}
