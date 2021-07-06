@@ -70,6 +70,7 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
     if (!order) return;
     if (order.type === 'food') {
       if (order.dispatchingState === 'arrived-pickup') {
+        // when courier clicks in "problem" button in the modal
         navigation.navigate('ReportIssue', {
           issueType: 'courier-pickup-food-delivery',
           orderId,
@@ -121,6 +122,7 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
       </View>
     );
   }
+  console.log(order.dispatchingState);
   return (
     <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
       <PaddedView style={{ flex: 1 }}>

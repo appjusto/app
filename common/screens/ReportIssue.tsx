@@ -62,9 +62,6 @@ export const ReportIssue = ({ route, navigation }: Props) => {
     issueType,
   });
 
-  const toastMessage = (() => {
-    return t('Não foi possível enviar a reclamação. Tente novamente.');
-  })();
   const title = (() => {
     if (
       issueType === 'courier-delivering-food-order' ||
@@ -72,13 +69,8 @@ export const ReportIssue = ({ route, navigation }: Props) => {
     ) {
       return t('Qual o problema que você teve ao transportar o pedido?');
     } else {
-      // 'courier-pickup-food-delivery'
-      // 'courier-pickup-p2p-delivery'
       return t('Qual o seu problema?');
     }
-  })();
-  const inputHeader = (() => {
-    return t('Você pode detalhar mais seu problema:');
   })();
   // handlers
   const issueHandler = () => {
@@ -104,12 +96,12 @@ export const ReportIssue = ({ route, navigation }: Props) => {
           });
         }
         setLoading(false);
-        // setIssueSent(true);
       } catch (error) {
-        dispatch(showToast(toastMessage, 'error'));
+        dispatch(showToast(t('Não foi possível enviar a reclamação. Tente novamente.'), 'error'));
       }
     })();
   };
+  console.log(issueType);
   // UI
   if (!issues) {
     return (
@@ -122,7 +114,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
     <View style={{ ...screens.default }}>
       <ReportIssueView
         title={title}
-        inputHeader={inputHeader}
+        inputHeader={t('Você pode detalhar mais seu problema:')}
         comment={comment}
         setComment={(text) => setComment(text)}
         disabled={!selectedIssue || isLoading}

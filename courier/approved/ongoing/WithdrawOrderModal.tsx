@@ -34,7 +34,6 @@ export const WithdrawOrderModal = ({ order, onWithdrawal, ...props }: Props) => 
         style={{
           flex: 1,
           justifyContent: 'center',
-          // alignItems: 'center',
           backgroundColor: 'rgba(0, 0, 0, 0.8)',
         }}
       >
