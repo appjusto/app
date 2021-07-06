@@ -50,16 +50,20 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
       return t('Em breve entraremos em contato com você para relatar a resolução do seu problema.');
     }
   })();
+
+  const ongoingDelivery =
+    issueType === 'courier-pickup-food-delivery' ||
+    issueType === 'courier-pickup-p2p-delivery' ||
+    issueType === 'courier-delivering-food-order' ||
+    issueType === 'courier-delivering-p2p-order' ||
+    issueType === 'courier-destination-food' ||
+    issueType === 'courier-destination-p2p';
+
+  const droppedDelivery =
+    issueType === 'courier-drops-food-delivery' || issueType === 'courier-drops-p2p-delivery';
   // handlers
   const finishHandler = () => {
-    if (
-      issueType === 'courier-pickup-food-delivery' ||
-      issueType === 'courier-pickup-p2p-delivery' ||
-      issueType === 'courier-delivering-food-order' ||
-      issueType === 'courier-delivering-p2p-order' ||
-      issueType === 'courier-destination-food' ||
-      issueType === 'courier-destination-p2p'
-    ) {
+    if (ongoingDelivery) {
       navigation.replace('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: { orderId },
@@ -74,14 +78,7 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
   return (
     <FeedbackView
       header={feedbackHeaderTitle}
-      icon={
-        issueType === 'courier-drops-food-delivery' ||
-        issueType === 'courier-drops-p2p-delivery' ? (
-          <IconConeYellow />
-        ) : (
-          <IconMotocycle />
-        )
-      }
+      icon={droppedDelivery ? <IconConeYellow /> : <IconMotocycle />}
       background={colors.grey50}
       description={feedbackDescription}
     >
