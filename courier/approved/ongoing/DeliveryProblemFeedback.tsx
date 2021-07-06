@@ -37,7 +37,7 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
   const { issueType, orderId } = route.params;
 
   const feedbackHeaderTitle = (() => {
-    if (issueType === 'courier-drops-delivery') {
+    if (issueType === 'courier-drops-food-delivery' || issueType === 'courier-drops-p2p-delivery') {
       return t('O pedido foi cancelado');
     } else if (
       issueType === 'courier-delivery-problem' ||
@@ -47,7 +47,7 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
     }
   })();
   const feedbackDescription = (() => {
-    if (issueType === 'courier-drops-delivery') {
+    if (issueType === 'courier-drops-food-delivery' || issueType === 'courier-drops-p2p-delivery') {
       return t('Como o pedido não foi retirado, você não receberá nada do valor da entrega.');
     } else if (
       issueType === 'courier-delivery-problem' ||
@@ -73,7 +73,14 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
   return (
     <FeedbackView
       header={feedbackHeaderTitle}
-      icon={issueType === 'courier-drops-delivery' ? <IconConeYellow /> : <IconMotocycle />}
+      icon={
+        issueType === 'courier-drops-food-delivery' ||
+        issueType === 'courier-drops-p2p-delivery' ? (
+          <IconConeYellow />
+        ) : (
+          <IconMotocycle />
+        )
+      }
       background={colors.grey50}
       description={feedbackDescription}
     >
