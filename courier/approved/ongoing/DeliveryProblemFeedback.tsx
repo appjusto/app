@@ -39,20 +39,14 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
   const feedbackHeaderTitle = (() => {
     if (issueType === 'courier-drops-food-delivery' || issueType === 'courier-drops-p2p-delivery') {
       return t('O pedido foi cancelado');
-    } else if (
-      issueType === 'courier-delivery-problem' ||
-      issueType === 'consumer-delivery-problem'
-    ) {
+    } else {
       return t('Aguarde enquanto estamos analisando o seu problema.');
     }
   })();
   const feedbackDescription = (() => {
     if (issueType === 'courier-drops-food-delivery' || issueType === 'courier-drops-p2p-delivery') {
       return t('Como o pedido não foi retirado, você não receberá nada do valor da entrega.');
-    } else if (
-      issueType === 'courier-delivery-problem' ||
-      issueType === 'consumer-delivery-problem'
-    ) {
+    } else {
       return t('Em breve entraremos em contato com você para relatar a resolução do seu problema.');
     }
   })();

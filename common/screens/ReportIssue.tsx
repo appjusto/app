@@ -63,18 +63,14 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   });
 
   const toastMessage = (() => {
-    if (issueType === 'consumer-delivery-problem') {
-      return t('Não foi possível enviar a reclamação. Tente novamente.');
-    } else if (issueType === 'courier-delivery-problem') {
-      return t('Não foi possível enviar a reclamação. Tente novamente.');
-    } else {
-      return '';
-    }
+    return t('Não foi possível enviar a reclamação. Tente novamente.');
   })();
   const title = (() => {
     if (issueType === 'courier-delivery-problem') {
       return t('Qual o problema que você teve ao transportar o pedido?');
     } else {
+      // 'courier-pickup-food-delivery'
+      // 'courier-pickup-p2p-delivery'
       return t('Qual o seu problema?');
     }
   })();
@@ -100,7 +96,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
           });
         } else {
           navigation.replace('DeliveryProblemFeedback', {
-            issueType: 'courier-delivery-problem',
+            issueType,
             orderId,
           });
         }

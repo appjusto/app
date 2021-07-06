@@ -4,14 +4,13 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import { IconProblemCancel } from '../../../common/icons/icon-problem-cancel';
 import { IconProblemChat } from '../../../common/icons/icon-problem-chat';
-import { IconProblemPack } from '../../../common/icons/icon-problem-pack';
 import HomeCard from '../../../common/screens/home/cards/HomeCard';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
+import { DeliveryProblemCard } from './delivery-problem/DeliveryProblemCard';
 import { OngoingDeliveryNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
@@ -68,10 +67,22 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
   };
 
   const deliveryProblemHandler = () => {
-    navigation.navigate('ReportIssue', {
-      issueType: 'courier-delivery-problem',
-      orderId,
-    });
+    if (!order) return;
+    if (order.type === 'food') {
+      if (order.dispatchingState === 'arrived-pickup') {
+        navigation.navigate('ReportIssue', {
+          issueType: 'courier-pickup-food-delivery',
+          orderId,
+        });
+      }
+    } else if (order.type === 'p2p') {
+      if (order.dispatchingState === 'arrived-pickup') {
+        navigation.navigate('ReportIssue', {
+          issueType: 'courier-pickup-p2p-delivery',
+          orderId,
+        });
+      }
+    }
   };
   // open chat if there's a new message
   React.useEffect(() => {
@@ -95,27 +106,21 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
       <PaddedView style={{ flex: 1 }}>
         {order.dispatchingState === 'going-pickup' ||
         order.dispatchingState === 'arrived-pickup' ? (
-          <View>
-            <TouchableOpacity style={{ marginBottom: padding }} onPress={refuseDeliveryHandler}>
-              <HomeCard
-                icon={<IconProblemCancel />}
-                title={t('Desistir da entrega')}
-                subtitle={t('Atenção: só é possível desistir até o momento da retirada')}
-              />
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <View>
-            <TouchableOpacity style={{ marginBottom: padding }} onPress={deliveryProblemHandler}>
-              <HomeCard
-                icon={<IconProblemPack />}
-                title={t('Tive um problema com o pedido')}
-                subtitle={t('Se você já estiver com o pedido em mãos e teve um problema')}
-              />
-            </TouchableOpacity>
-          </View>
-        )}
-
+          <DeliveryProblemCard
+            title={t('Desistir da entrega')}
+            subtitle={t('Atenção: só é possível desistir até o momento da retirada')}
+            onPress={refuseDeliveryHandler}
+            situation="drop"
+          />
+        ) : null}
+        {order.status === 'dispatching' ? (
+          <DeliveryProblemCard
+            title={t('Tive um problema com o pedido')}
+            subtitle={t('Se você já estiver com o pedido em mãos e teve um problema')}
+            onPress={deliveryProblemHandler}
+            situation="problem"
+          />
+        ) : null}
         <TouchableOpacity
           style={{ marginBottom: padding }}
           onPress={() => openChatWithRestaurant()}
