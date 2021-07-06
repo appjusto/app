@@ -1,6 +1,7 @@
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 import firebase from 'firebase';
+import { LatLng } from 'react-native-maps';
 import * as Sentry from 'sentry-expo';
 import { t } from '../../strings';
 import { AppStore } from '../app/context';
@@ -31,7 +32,7 @@ export const stopLocationUpdatesTask = async () => {
 };
 
 interface LocationUpdateResult {
-  locations: Location.LocationData[];
+  locations: { coords: LatLng }[];
 }
 
 const locationTaskExecutor =

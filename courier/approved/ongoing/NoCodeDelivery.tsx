@@ -1,7 +1,6 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -76,7 +75,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
   const descriptionRef = React.useRef<TextInput>(null);
   // UI handlers
   const photoHandler = async (type: 'package' | 'front', aspect: [number, number]) => {
-    const { granted } = await Permissions.askAsync(Permissions.CAMERA);
+    const { granted } = await ImagePicker.requestCameraPermissionsAsync();
     if (granted) {
       const result = await ImagePicker.launchCameraAsync({ ...defaultImageOptions, aspect });
       if (result.cancelled) return;

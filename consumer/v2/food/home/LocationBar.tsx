@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
-import useLastKnownLocation from '../../../../common/hooks/useLastKnownLocation';
+import useLastKnownLocation from '../../../../common/location/useLastKnownLocation';
 import {
   updateCurrentLocation,
   updateCurrentPlace,

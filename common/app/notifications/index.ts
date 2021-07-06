@@ -1,10 +1,9 @@
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
-import { QueryClient } from 'react-query';
 import { t } from '../../../strings';
 import { colors } from '../../styles';
 
-export const init = async (queryClient: QueryClient) => {
+export const init = async () => {
   Notifications.setNotificationHandler({
     handleNotification: async (notification) => {
       console.log('handling...');

@@ -1,6 +1,9 @@
 import Constants from 'expo-constants';
-import * as Notifications from 'expo-notifications';
-import * as Permissions from 'expo-permissions';
+import {
+  getExpoPushTokenAsync,
+  getPermissionsAsync,
+  requestPermissionsAsync,
+} from 'expo-notifications';
 import firebase from 'firebase';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -33,15 +36,15 @@ export default function (): Returntype {
   const shouldUpdateToken = !shouldDeleteToken && token !== currentNotificationToken;
 
   const askPermission = async () => {
-    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    const { status: existingStatus } = await getPermissionsAsync();
     let finalStatus = existingStatus;
     if (existingStatus !== 'granted') {
-      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      const { status } = await requestPermissionsAsync();
       finalStatus = status;
     }
     if (finalStatus === 'granted') {
       try {
-        setToken((await Notifications.getExpoPushTokenAsync()).data);
+        setToken((await getExpoPushTokenAsync()).data);
       } catch (error) {
         console.log('Error while calling Notifications.getExpoPushTokenAsync()');
         console.log(error);

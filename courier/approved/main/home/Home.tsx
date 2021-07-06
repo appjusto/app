@@ -2,7 +2,6 @@ import { CourierStatus } from '@appjusto/types';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { LOCATION, usePermissions } from 'expo-permissions';
 import React from 'react';
 import { Linking, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -47,18 +46,17 @@ export default function ({ navigation }: Props) {
   const { status } = courier;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
   // state
-  const [locationPermission] = usePermissions(LOCATION);
   useNotificationToken();
   // side effects
   // tracking
   useSegmentScreen('Home');
   React.useEffect(() => {
-    if (working && locationPermission?.granted) {
+    if (working) {
       startLocationUpdatesTask();
     } else {
       stopLocationUpdatesTask();
     }
-  }, [locationPermission, working]);
+  }, [working]);
   // UI
   return (
     <View style={[screens.config, screens.headless]}>
