@@ -95,15 +95,19 @@ const ios = () => ({
   buildNumber: `${versionCode}`,
   icon: icon('ios'),
   supportsTablet: false,
-  infoPlist: {
-    UIBackgroundModes: ['location'],
-    NSLocationWhenInUseUsageDescription:
-      'Precisamos da sua localização para enviar corridas próximas e monitorar a entrega.',
-    NSLocationAlwaysAndWhenInUseUsageDescription:
-      'Precisamos da sua localização para enviar corridas próximas e monitorar a entrega.',
-    NSLocationAlwaysUsageDescription:
-      'Precisamos da sua localização para enviar corridas próximas e monitorar a entrega.',
-  },
+  infoPlist:
+    flavor === 'consumer'
+      ? {
+          NSLocationWhenInUseUsageDescription:
+            'Precisamos da sua localização para exibir os restaurantes próximos a você',
+        }
+      : {
+          UIBackgroundModes: ['location'],
+          NSLocationWhenInUseUsageDescription:
+            'Precisamos da sua localização para enviar corridas próximas e monitorar a entrega.',
+          NSLocationAlwaysAndWhenInUseUsageDescription:
+            'Precisamos da sua localização para enviar corridas próximas e monitorar a entrega.',
+        },
   associatedDomains: [`applinks:${environment.charAt(0)}.deeplink.appjusto.com.br`].concat(
     environment === 'live' ? ['applinks:link.appjusto.com.br'] : []
   ),
