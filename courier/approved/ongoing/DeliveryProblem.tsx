@@ -2,12 +2,10 @@ import { Flavor } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, ScrollView, View } from 'react-native';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import { IconProblemChat } from '../../../common/icons/icon-problem-chat';
-import HomeCard from '../../../common/screens/home/cards/HomeCard';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
-import { colors, padding, screens } from '../../../common/styles';
+import { colors, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import { DeliveryProblemCard } from './delivery-problem/DeliveryProblemCard';
@@ -140,27 +138,22 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
             title={t('Tive um problema com o pedido')}
             subtitle={t('Se você já estiver com o pedido em mãos e teve um problema')}
             onPress={deliveryProblemHandler}
-            situation="problem"
+            situation="courier-problem"
           />
         ) : null}
-        <TouchableOpacity
-          style={{ marginBottom: padding }}
+        <DeliveryProblemCard
+          title={t('Preciso falar com o restaurante')}
+          subtitle={t('Abrir chat direto com o restaurante')}
           onPress={() => openChatWithRestaurant()}
-        >
-          <HomeCard
-            icon={<IconProblemChat />}
-            title={t('Preciso falar com o restaurante')}
-            subtitle={t('Abrir chat direto com o restaurante')}
-          />
-        </TouchableOpacity>
+          situation="chat"
+        />
         {/* commented for now. will be added back later */}
-        {/* <TouchableOpacity onPress={() => navigation.navigate('CallCourier')}>
-          <HomeCard
-            icon={<IconProblemUrgent />}
-            title={t('Estou com o problema urgente')}
-            subtitle={t('O AppJusto vai ligar para você')}
-          />
-        </TouchableOpacity> */}
+        {/* <DeliveryProblemCard
+          title={t('Estou com o problema urgente')}
+          subtitle={t('O AppJusto vai ligar para você')}
+          onPress={() => null}
+          situation="urgent"
+        /> */}
       </PaddedView>
     </ScrollView>
   );
