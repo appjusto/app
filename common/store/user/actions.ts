@@ -6,7 +6,7 @@ import {
   UserProfile,
   WithId,
 } from '@appjusto/types';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Sentry from 'sentry-expo';
 import { Environment } from '../../../config/types';
 import { AppDispatch } from '../../app/context';
