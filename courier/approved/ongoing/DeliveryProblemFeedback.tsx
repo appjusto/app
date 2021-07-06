@@ -52,7 +52,14 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
   })();
   // handlers
   const finishHandler = () => {
-    if (issueType === 'courier-delivery-problem') {
+    if (
+      issueType === 'courier-pickup-food-delivery' ||
+      issueType === 'courier-pickup-p2p-delivery' ||
+      issueType === 'courier-delivering-food-order' ||
+      issueType === 'courier-delivering-p2p-order' ||
+      issueType === 'courier-destination-food' ||
+      issueType === 'courier-destination-p2p'
+    ) {
       navigation.replace('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: { orderId },

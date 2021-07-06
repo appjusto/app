@@ -66,7 +66,10 @@ export const ReportIssue = ({ route, navigation }: Props) => {
     return t('Não foi possível enviar a reclamação. Tente novamente.');
   })();
   const title = (() => {
-    if (issueType === 'courier-delivery-problem') {
+    if (
+      issueType === 'courier-delivering-food-order' ||
+      issueType === 'courier-delivering-p2p-order'
+    ) {
       return t('Qual o problema que você teve ao transportar o pedido?');
     } else {
       // 'courier-pickup-food-delivery'

@@ -74,11 +74,31 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
           issueType: 'courier-pickup-food-delivery',
           orderId,
         });
+      } else if (order.dispatchingState === 'going-destination') {
+        navigation.navigate('ReportIssue', {
+          issueType: 'courier-delivering-food-order',
+          orderId,
+        });
+      } else if (order.dispatchingState === 'arrived-destination') {
+        navigation.navigate('ReportIssue', {
+          issueType: 'courier-destination-food',
+          orderId,
+        });
       }
     } else if (order.type === 'p2p') {
       if (order.dispatchingState === 'arrived-pickup') {
         navigation.navigate('ReportIssue', {
           issueType: 'courier-pickup-p2p-delivery',
+          orderId,
+        });
+      } else if (order.dispatchingState === 'going-destination') {
+        navigation.navigate('ReportIssue', {
+          issueType: 'courier-delivering-p2p-order',
+          orderId,
+        });
+      } else if (order.dispatchingState === 'arrived-destination') {
+        navigation.navigate('ReportIssue', {
+          issueType: 'courier-destination-p2p',
           orderId,
         });
       }
