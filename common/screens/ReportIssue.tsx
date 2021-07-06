@@ -84,17 +84,10 @@ export const ReportIssue = ({ route, navigation }: Props) => {
           flavor,
           comment,
         });
-        if (issueType === 'consumer-delivery-problem') {
-          navigation.replace('DeliveryProblemFeedback', {
-            issueType: 'consumer-delivery-problem',
-            orderId,
-          });
-        } else {
-          navigation.replace('DeliveryProblemFeedback', {
-            issueType,
-            orderId,
-          });
-        }
+        navigation.replace('DeliveryProblemFeedback', {
+          issueType,
+          orderId,
+        });
         setLoading(false);
       } catch (error) {
         dispatch(showToast(t('Não foi possível enviar a reclamação. Tente novamente.'), 'error'));

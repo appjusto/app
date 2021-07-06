@@ -61,6 +61,17 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
 
   const droppedDelivery =
     issueType === 'courier-drops-food-delivery' || issueType === 'courier-drops-p2p-delivery';
+
+  const ongoingOrder =
+    issueType === 'consumer-delivered-food-order' ||
+    'consumer-going-pickup-food' ||
+    'consumer-ongoing-food' ||
+    'consumer-arrived-food-order' ||
+    'consumer-delivered-p2p-order' ||
+    'consumer-going-pickup-p2p' ||
+    'consumer-ongoing-p2p' ||
+    'consumer-arrived-p2p-order';
+
   // handlers
   const finishHandler = () => {
     if (ongoingDelivery) {
@@ -68,7 +79,7 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
         screen: 'OngoingDelivery',
         params: { orderId },
       });
-    } else if (issueType === 'consumer-delivery-problem') {
+    } else if (ongoingOrder) {
       navigation.replace('OngoingOrder', { orderId });
     } else {
       navigation.replace('MainNavigator', { screen: 'Home' });
