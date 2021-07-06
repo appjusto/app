@@ -1,4 +1,4 @@
-import { Flavor } from '@appjusto/types';
+import { Flavor, IssueType } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -49,18 +49,22 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
     (delayed?: boolean) => openChat(businessId!, 'business', delayed),
     [openChat, businessId]
   );
+  const navigateToAction = (
+    screen: 'ReportIssue' | 'CourierDropsOrder',
+    issueType: IssueType,
+    orderId: string
+  ) => {
+    navigation.navigate(screen, {
+      issueType,
+      orderId,
+    });
+  };
   const refuseDeliveryHandler = () => {
     if (!order) return;
     if (order.type === 'food') {
-      navigation.navigate('CourierDropsOrder', {
-        orderId,
-        issueType: 'courier-drops-food-delivery',
-      });
+      navigateToAction('CourierDropsOrder', 'courier-drops-food-delivery', orderId);
     } else {
-      navigation.navigate('CourierDropsOrder', {
-        orderId,
-        issueType: 'courier-drops-p2p-delivery',
-      });
+      navigateToAction('CourierDropsOrder', 'courier-drops-p2p-delivery', orderId);
     }
   };
 
@@ -69,37 +73,19 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
     if (order.type === 'food') {
       if (order.dispatchingState === 'arrived-pickup') {
         // when courier clicks in "problem" button in the modal
-        navigation.navigate('ReportIssue', {
-          issueType: 'courier-pickup-food-delivery',
-          orderId,
-        });
+        navigateToAction('ReportIssue', 'courier-pickup-food-delivery', orderId);
       } else if (order.dispatchingState === 'going-destination') {
-        navigation.navigate('ReportIssue', {
-          issueType: 'courier-delivering-food-order',
-          orderId,
-        });
+        navigateToAction('ReportIssue', 'courier-delivering-food-order', orderId);
       } else if (order.dispatchingState === 'arrived-destination') {
-        navigation.navigate('ReportIssue', {
-          issueType: 'courier-destination-food',
-          orderId,
-        });
+        navigateToAction('ReportIssue', 'courier-destination-food', orderId);
       }
     } else if (order.type === 'p2p') {
       if (order.dispatchingState === 'arrived-pickup') {
-        navigation.navigate('ReportIssue', {
-          issueType: 'courier-pickup-p2p-delivery',
-          orderId,
-        });
+        navigateToAction('ReportIssue', 'courier-pickup-p2p-delivery', orderId);
       } else if (order.dispatchingState === 'going-destination') {
-        navigation.navigate('ReportIssue', {
-          issueType: 'courier-delivering-p2p-order',
-          orderId,
-        });
+        navigateToAction('ReportIssue', 'courier-delivering-p2p-order', orderId);
       } else if (order.dispatchingState === 'arrived-destination') {
-        navigation.navigate('ReportIssue', {
-          issueType: 'courier-destination-p2p',
-          orderId,
-        });
+        navigateToAction('ReportIssue', 'courier-destination-p2p', orderId);
       }
     }
   };
@@ -120,7 +106,6 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  console.log(order.dispatchingState);
   return (
     <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
       <PaddedView style={{ flex: 1 }}>
