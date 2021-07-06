@@ -43,8 +43,6 @@ export const LocationDisclosureModal = (props: ModalProps) => {
     }
   };
   // UI
-  console.log('foregroundStatus', foregroundStatus);
-  console.log('backgroundStatus', backgroundStatus);
   return (
     <DefaultModal
       header={t('Compartilhar localização.')}
