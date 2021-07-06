@@ -23,7 +23,6 @@ export enum AuthState {
 const extractAuthLink = (link: string) => {
   if (!link) return null;
   const authLink = link.split('link=').find((_, i, a) => i === a.length - 1)!;
-  if (authLink === link) return null;
   return decodeURIComponent(authLink);
 };
 
@@ -84,14 +83,14 @@ export const useAuth = (): [AuthState, firebase.User | undefined | null] => {
       },
     });
 
-    if (link === null) {
+    if (link === null || !isSignInWithEmailLink(api)(link)) {
       setAuthState(AuthState.Unsigned);
       return;
     }
-    if (!isSignInWithEmailLink(api)(link)) {
-      setAuthState(AuthState.InvalidCredentials);
-      return;
-    }
+    // if (!isSignInWithEmailLink(api)(link)) {
+    //   setAuthState(AuthState.InvalidCredentials);
+    //   return;
+    // }
     setAuthState(AuthState.SigningIn);
     getSignInEmail().then(async (email) => {
       if (!email) {
@@ -102,6 +101,7 @@ export const useAuth = (): [AuthState, firebase.User | undefined | null] => {
         await signInWithEmailLink(api)(email, link!);
         // const continueUrl = Linking.parse(link).queryParams?.continueUrl;
       } catch (e) {
+        Sentry.Native.captureException(e);
         setAuthState(AuthState.InvalidCredentials);
       }
     });
