@@ -224,7 +224,11 @@ export default function ({
                 navigateToAddressComplete('destination', destination ?? undefined);
               }}
             >
-              <LabeledText title={t('Endereço de entrega')} placeholder={t('Endereço com número')}>
+              <LabeledText
+                title={t('Endereço de entrega')}
+                placeholder={t('Endereço com número')}
+                editable={Boolean(origin?.address.description)}
+              >
                 {destination?.address?.main}
               </LabeledText>
             </Pressable>
