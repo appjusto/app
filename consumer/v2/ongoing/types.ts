@@ -34,6 +34,10 @@ export type OngoingOrderNavigatorParamList = {
     counterpartId: string;
     counterpartFlavor: Flavor;
   };
+  OngoingOrderProblem: {
+    orderId: string;
+    chatFrom?: ChatMessageUser;
+  };
   DeliveryProblemFeedback: {
     issueType: IssueType;
     orderId: string;

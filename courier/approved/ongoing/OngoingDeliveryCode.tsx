@@ -16,7 +16,7 @@ type Props = {
   onDelivery: () => void;
   isLoading: boolean;
   onNoCodeDelivery: () => void;
-  dispatchingState: DispatchingState;
+  dispatchingState: DispatchingState | undefined;
 };
 
 export const OngoingDeliveryCode = ({
@@ -28,7 +28,7 @@ export const OngoingDeliveryCode = ({
   onNoCodeDelivery,
   dispatchingState,
 }: Props) => {
-  return dispatchingState === 'arrived-destination' ? (
+  return dispatchingState && dispatchingState === 'arrived-destination' ? (
     <View>
       <HR height={padding} />
       <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>

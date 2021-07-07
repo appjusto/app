@@ -112,10 +112,16 @@ export default function ({ navigation, route }: Props) {
     );
   }
   // UI handlers
-  const navigateToReportIssue = () =>
-    navigation.navigate('ReportIssue', {
+  // old handler
+  // const navigateToReportIssue = () =>
+  //   navigation.navigate('ReportIssue', {
+  //     orderId: order.id,
+  //     issueType: 'consumer-delivery-problem',
+  //   });
+  // new handler
+  const navigateToOrderProblem = () =>
+    navigation.navigate('OngoingOrderProblem', {
       orderId: order.id,
-      issueType: 'consumer-delivery-problem',
     });
   const navigateToConfirmCancel = () => {
     navigation.navigate('OngoingOrderConfirmCancel', { orderId });
@@ -155,7 +161,7 @@ export default function ({ navigation, route }: Props) {
                   <DefaultButton
                     title={t('Relatar problema')}
                     secondary
-                    onPress={navigateToReportIssue}
+                    onPress={navigateToOrderProblem}
                   />
                 </View>
                 <View>
@@ -195,7 +201,7 @@ export default function ({ navigation, route }: Props) {
                       },
                     })
                   }
-                  navigateToReportIssue={navigateToReportIssue}
+                  navigateToReportIssue={navigateToOrderProblem}
                   navigateToConfirmCancel={navigateToConfirmCancel}
                 />
               </View>
@@ -226,7 +232,7 @@ export default function ({ navigation, route }: Props) {
               <DeliveryActions
                 order={order}
                 onChangeRoute={navigateToChangeRoute}
-                navigateToReportIssue={navigateToReportIssue}
+                navigateToReportIssue={navigateToOrderProblem}
                 navigateToConfirmCancel={navigateToConfirmCancel}
               />
               <View style={{ flex: 1 }} />
@@ -259,7 +265,7 @@ export default function ({ navigation, route }: Props) {
               <DeliveryActions
                 order={order}
                 onChangeRoute={navigateToChangeRoute}
-                navigateToReportIssue={navigateToReportIssue}
+                navigateToReportIssue={navigateToOrderProblem}
                 navigateToConfirmCancel={navigateToConfirmCancel}
               />
               <View style={{ marginHorizontal: padding, marginBottom: padding }}>

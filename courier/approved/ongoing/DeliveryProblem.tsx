@@ -1,17 +1,14 @@
-import { Flavor } from '@appjusto/types';
+import { Flavor, IssueType } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, ScrollView, View } from 'react-native';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import { IconProblemCancel } from '../../../common/icons/icon-problem-cancel';
-import { IconProblemChat } from '../../../common/icons/icon-problem-chat';
-import { IconProblemPack } from '../../../common/icons/icon-problem-pack';
-import HomeCard from '../../../common/screens/home/cards/HomeCard';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
-import { colors, padding, screens } from '../../../common/styles';
+import { colors, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
+import { DeliveryProblemCard } from './delivery-problem/DeliveryProblemCard';
 import { OngoingDeliveryNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
@@ -52,17 +49,45 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
     (delayed?: boolean) => openChat(businessId!, 'business', delayed),
     [openChat, businessId]
   );
+  const navigateToAction = (
+    screen: 'ReportIssue' | 'CourierDropsOrder',
+    issueType: IssueType,
+    orderId: string
+  ) => {
+    navigation.navigate(screen, {
+      issueType,
+      orderId,
+    });
+  };
   const refuseDeliveryHandler = () => {
     if (!order) return;
-    navigation.navigate('CourierDropsOrder', { orderId });
+    if (order.type === 'food') {
+      navigateToAction('CourierDropsOrder', 'courier-drops-food-delivery', orderId);
+    } else {
+      navigateToAction('CourierDropsOrder', 'courier-drops-p2p-delivery', orderId);
+    }
   };
 
   const deliveryProblemHandler = () => {
     if (!order) return;
-    navigation.navigate('ReportIssue', {
-      issueType: 'courier-delivery-problem',
-      orderId,
-    });
+    if (order.type === 'food') {
+      if (order.dispatchingState === 'arrived-pickup') {
+        // when courier clicks in "problem" button in the modal
+        navigateToAction('ReportIssue', 'courier-pickup-food-delivery', orderId);
+      } else if (order.dispatchingState === 'going-destination') {
+        navigateToAction('ReportIssue', 'courier-delivering-food-order', orderId);
+      } else if (order.dispatchingState === 'arrived-destination') {
+        navigateToAction('ReportIssue', 'courier-destination-food', orderId);
+      }
+    } else if (order.type === 'p2p') {
+      if (order.dispatchingState === 'arrived-pickup') {
+        navigateToAction('ReportIssue', 'courier-pickup-p2p-delivery', orderId);
+      } else if (order.dispatchingState === 'going-destination') {
+        navigateToAction('ReportIssue', 'courier-delivering-p2p-order', orderId);
+      } else if (order.dispatchingState === 'arrived-destination') {
+        navigateToAction('ReportIssue', 'courier-destination-p2p', orderId);
+      }
+    }
   };
   // open chat if there's a new message
   React.useEffect(() => {
@@ -84,38 +109,36 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
   return (
     <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
       <PaddedView style={{ flex: 1 }}>
-        <TouchableOpacity style={{ marginBottom: padding }} onPress={refuseDeliveryHandler}>
-          <HomeCard
-            icon={<IconProblemCancel />}
+        {order.dispatchingState === 'going-pickup' ||
+        order.dispatchingState === 'arrived-pickup' ? (
+          <DeliveryProblemCard
             title={t('Desistir da entrega')}
             subtitle={t('Atenção: só é possível desistir até o momento da retirada')}
+            onPress={refuseDeliveryHandler}
+            situation="drop"
           />
-        </TouchableOpacity>
-        <TouchableOpacity style={{ marginBottom: padding }} onPress={deliveryProblemHandler}>
-          <HomeCard
-            icon={<IconProblemPack />}
+        ) : null}
+        {order.status === 'dispatching' ? (
+          <DeliveryProblemCard
             title={t('Tive um problema com o pedido')}
             subtitle={t('Se você já estiver com o pedido em mãos e teve um problema')}
+            onPress={deliveryProblemHandler}
+            situation="courier-problem"
           />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ marginBottom: padding }}
+        ) : null}
+        <DeliveryProblemCard
+          title={t('Preciso falar com o restaurante')}
+          subtitle={t('Abrir chat direto com o restaurante')}
           onPress={() => openChatWithRestaurant()}
-        >
-          <HomeCard
-            icon={<IconProblemChat />}
-            title={t('Preciso falar com o restaurante')}
-            subtitle={t('Abrir chat direto com o restaurante')}
-          />
-        </TouchableOpacity>
+          situation="chat"
+        />
         {/* commented for now. will be added back later */}
-        {/* <TouchableOpacity onPress={() => navigation.navigate('CallCourier')}>
-          <HomeCard
-            icon={<IconProblemUrgent />}
-            title={t('Estou com o problema urgente')}
-            subtitle={t('O AppJusto vai ligar para você')}
-          />
-        </TouchableOpacity> */}
+        {/* <DeliveryProblemCard
+          title={t('Estou com o problema urgente')}
+          subtitle={t('O AppJusto vai ligar para você')}
+          onPress={() => null}
+          situation="urgent"
+        /> */}
       </PaddedView>
     </ScrollView>
   );

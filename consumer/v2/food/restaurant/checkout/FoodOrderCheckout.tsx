@@ -180,6 +180,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   return (
     <ScrollView style={{ ...screens.default }}>
       <OrderSummary
+        activityIndicator={isLoading}
         order={order}
         selectedPaymentMethodId={selectedPaymentMethodId}
         waiting={isLoading}

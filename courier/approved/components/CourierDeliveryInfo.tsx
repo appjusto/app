@@ -15,7 +15,12 @@ type Props = {
 };
 
 export const CourierDeliveryInfo = ({ order, onChat, onProblem, delivering }: Props) => {
-  return order.type === 'food' && order.dispatchingState === 'going-pickup' ? null : (
+  if (
+    (order.type === 'food' && order.dispatchingState === 'going-pickup') ||
+    !order.dispatchingState
+  )
+    return null;
+  return (
     <View style={{ marginHorizontal: padding }}>
       <Text style={[texts.xs, { color: colors.green600 }]}>{t('Pedido de')}</Text>
       <Text style={delivering ? { ...texts.lg } : { ...texts.md }}>

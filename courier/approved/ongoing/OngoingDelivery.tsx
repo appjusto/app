@@ -17,6 +17,7 @@ import { CourierDeliveryInfo } from '../components/CourierDeliveryInfo';
 import { ApprovedParamList } from '../types';
 import { OngoingDeliveryCode } from './OngoingDeliveryCode';
 import { OngoingDeliveryInfo } from './OngoingDeliveryInfo';
+import { OngoingDeliveryLoading } from './OngoingDeliveryLoading';
 import { OngoingDeliveryMap } from './OngoingDeliveryMap';
 import { StatusControl } from './StatusControl';
 import { OngoingDeliveryNavigatorParamList } from './types';
@@ -100,7 +101,7 @@ export default function ({ navigation, route }: Props) {
     }
   }, [order, navigation, orderId]);
   // UI
-  if (!order?.dispatchingState) {
+  if (!order) {
     // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
@@ -190,8 +191,9 @@ export default function ({ navigation, route }: Props) {
           order={order}
           onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
         />
+        <OngoingDeliveryLoading dispatchingState={dispatchingState} />
         {/* Status slider */}
-        {dispatchingState !== 'arrived-destination' ? (
+        {dispatchingState && dispatchingState !== 'arrived-destination' ? (
           <View style={{ paddingHorizontal: padding }}>
             <StatusControl
               key={dispatchingState}
@@ -205,13 +207,15 @@ export default function ({ navigation, route }: Props) {
           </View>
         ) : null}
         {/* chat with restaurant */}
-        <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
-          <DefaultButton
-            title={t('Abrir chat com o restaurante')}
-            onPress={() => openChatWithRestaurant()}
-            secondary
-          />
-        </View>
+        {dispatchingState ? (
+          <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
+            <DefaultButton
+              title={t('Abrir chat com o restaurante')}
+              onPress={() => openChatWithRestaurant()}
+              secondary
+            />
+          </View>
+        ) : null}
 
         {/* code input */}
         <OngoingDeliveryCode
@@ -229,6 +233,10 @@ export default function ({ navigation, route }: Props) {
           order={order}
           onWithdrawal={() => {
             nextDispatchingStateHandler();
+            setModalOpen(false);
+          }}
+          onIssue={() => {
+            navigation.navigate('DeliveryProblem', { orderId });
             setModalOpen(false);
           }}
         />

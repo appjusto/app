@@ -11,7 +11,7 @@ export const useObserveOrderRequest = (courierId: string, orderId: string) => {
   // observe request
   React.useEffect(() => {
     return api.courier().observeOrderRequest(courierId, orderId, setRequest);
-  }, [api, courierId]);
+  }, [api, courierId, orderId]);
   // result
   return request;
 };
