@@ -221,6 +221,7 @@ export default function ({
           >
             <Pressable
               onPress={() => {
+                if (!origin) return;
                 navigateToAddressComplete('destination', destination ?? undefined);
               }}
             >
