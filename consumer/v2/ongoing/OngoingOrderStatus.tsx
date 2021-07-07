@@ -5,7 +5,7 @@ import RoundedText from '../../../common/components/texts/RoundedText';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import { IconOngoingRequest } from '../../../common/icons/icon-ongoingRequest';
 import { colors, halfPadding, padding, texts } from '../../../common/styles';
-import { formatTime } from '../../../common/utils/formatters';
+import { getETAWithMargin } from '../../../common/utils/formatters/datetime';
 import { t } from '../../../strings';
 
 interface Props {
@@ -117,7 +117,7 @@ export const OngoingOrderStatus = ({ order }: Props) => {
       {order.destination?.estimatedTimeOfArrival &&
         order.dispatchingState !== 'arrived-destination' && (
           <View style={{ marginBottom: 8, marginTop: padding }}>
-            <RoundedText>{`${t('Previsão de entrega: ')} ${formatTime(
+            <RoundedText>{`${t('Previsão de entrega: ')} ${getETAWithMargin(
               order.destination.estimatedTimeOfArrival
             )}`}</RoundedText>
           </View>

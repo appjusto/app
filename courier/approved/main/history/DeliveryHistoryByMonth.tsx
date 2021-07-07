@@ -10,8 +10,8 @@ import StatusBadge from '../../../../common/components/views/StatusBadge';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
-  getOrderCreatedOn,
   getOrdersWithFilter,
+  getOrderTime,
   isOrderOngoing,
 } from '../../../../common/store/order/selectors';
 import { getUser } from '../../../../common/store/user/selectors';
@@ -74,12 +74,12 @@ export default function ({ navigation, route }: Props) {
         data={filteredOrders}
         keyExtractor={(item) => item.id!}
         renderItem={({ item }) => {
-          const createdOn = getOrderCreatedOn(item);
+          const time = getOrderTime(item);
           const totalFee = item.fare!.courier.value + (item.tip?.value ?? 0);
           const title = formatCurrency(totalFee);
           const subtitle = `Pedido ${item.code}\n${separateWithDot(
-            formatDate(createdOn),
-            formatTime(createdOn)
+            formatDate(time),
+            formatTime(time)
           )}`;
           return (
             <ConfigItem title={title} subtitle={subtitle} onPress={() => orderPressHandler(item)}>

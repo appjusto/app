@@ -14,8 +14,8 @@ import StatusBadge from '../../../../common/components/views/StatusBadge';
 import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
 import {
-  getOrderCreatedOn,
   getOrdersWithFilter,
+  getOrderTime,
   getYearsWithOrders,
   isOrderOngoing,
 } from '../../../../common/store/order/selectors';
@@ -148,14 +148,12 @@ export default function ({ navigation, route }: Props) {
                 </PaddedView>
               )}
               renderItem={({ item }) => {
-                const createdOn = getOrderCreatedOn(item);
+                const time = getOrderTime(item);
                 const title =
                   item.type === 'food'
                     ? item.business?.name ?? ''
                     : formatAddress(item.origin!.address);
-                const subtitle = createdOn
-                  ? separateWithDot(formatDate(createdOn), formatTime(createdOn))
-                  : '';
+                const subtitle = separateWithDot(formatDate(time), formatTime(time));
                 return (
                   <ConfigItem
                     title={title}

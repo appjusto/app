@@ -1,4 +1,5 @@
 import { Order, OrderStatus, WithId } from '@appjusto/types';
+import firebase from 'firebase';
 import { memoize, uniq } from 'lodash';
 import { createSelector } from 'reselect';
 import { State } from '..';
@@ -12,18 +13,21 @@ export const getOrderById = createSelector(getOrderState, (orderState) =>
 
 export const getOrders = (state: State) => getOrderState(state).orders;
 
-export const getOrderCreatedOn = (order: WithId<Order>) =>
-  order.createdOn ? (order.createdOn as firebase.firestore.Timestamp).toDate() : new Date();
+export const getOrderTime = (order: WithId<Order>) => {
+  const time = order.deliveredOn ?? order.confirmedOn ?? order.createdOn;
+  if (time) return (time as firebase.firestore.Timestamp).toDate();
+  return new Date();
+};
 
 export const getYearsWithOrders = (orders: WithId<Order>[]) =>
-  uniq(orders.map((order) => getOrderCreatedOn(order).getFullYear()));
+  uniq(orders.map((order) => getOrderTime(order).getFullYear()));
 
 export const getMonthsWithOrdersInYear = (orders: WithId<Order>[]) =>
   memoize((year: number) =>
     uniq(
       orders
-        .filter((order) => getOrderCreatedOn(order).getFullYear() === year)
-        .map((order) => getOrderCreatedOn(order).getMonth())
+        .filter((order) => getOrderTime(order).getFullYear() === year)
+        .map((order) => getOrderTime(order).getMonth())
     )
   );
 
@@ -34,11 +38,11 @@ export const getOrdersWithFilter = (
   day?: number
 ) =>
   orders.filter((order) => {
-    const createdOn = getOrderCreatedOn(order);
-    if (!createdOn) return false;
-    if (year !== createdOn.getFullYear()) return false;
-    if (month && month !== createdOn.getMonth()) return false;
-    if (day && day !== createdOn.getDate()) return false;
+    const time = getOrderTime(order);
+    if (!time) return false;
+    if (year !== time.getFullYear()) return false;
+    if (month && month !== time.getMonth()) return false;
+    if (day && day !== time.getDate()) return false;
     return true;
   });
 
@@ -47,7 +51,7 @@ export const getDeliveredOrders = (orders: WithId<Order>[]) =>
 
 export const getOrdersSince = (orders: WithId<Order>[], date: Date) =>
   orders.filter((order) => {
-    return (getOrderCreatedOn(order)?.getTime() ?? 0) >= date.getTime();
+    return (getOrderTime(order)?.getTime() ?? 0) >= date.getTime();
   });
 
 export const OngoingOrdersStatuses: OrderStatus[] = [
