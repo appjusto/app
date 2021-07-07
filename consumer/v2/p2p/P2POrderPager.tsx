@@ -1,6 +1,5 @@
 import { Order, Place, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
-import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import React from 'react';
 import {
   NativeSyntheticEvent,
@@ -10,6 +9,8 @@ import {
   View,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+// import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
+import PagerView, { ViewPagerOnPageScrollEventData } from 'react-native-pager-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -82,7 +83,7 @@ export default function ({
       setDestinationInstructions(order.destination.intructions);
   }, [order]);
   // refs
-  const viewPager = React.useRef<ViewPager>(null);
+  const pagerView = React.useRef<PagerView>(null);
   // helpers
   const stepReady = (value: Step): boolean => {
     if (value === Step.Origin) return true; // always enabled
@@ -93,7 +94,7 @@ export default function ({
   };
   const setPage = (index: number): void => {
     if (stepReady(index)) {
-      viewPager?.current?.setPage(index);
+      pagerView?.current?.setPage(index);
     }
   };
   const nextPage = (): void => setPage(step + 1);
@@ -146,7 +147,7 @@ export default function ({
         onChange={setPage}
       />
 
-      <ViewPager ref={viewPager} style={{ flex: 1 }} onPageScroll={onPageScroll}>
+      <PagerView ref={pagerView} style={{ flex: 1 }} onPageScroll={onPageScroll}>
         {/* origin */}
         <View style={{ flex: 1, paddingHorizontal: padding }}>
           <KeyboardAwareScrollView
@@ -305,7 +306,7 @@ export default function ({
             setCpf={(text) => setCpf(text)}
           />
         )}
-      </ViewPager>
+      </PagerView>
     </View>
   );
 }
