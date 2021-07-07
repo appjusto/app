@@ -235,6 +235,10 @@ export default function ({ navigation, route }: Props) {
             nextDispatchingStateHandler();
             setModalOpen(false);
           }}
+          onIssue={() => {
+            navigation.navigate('DeliveryProblem', { orderId });
+            setModalOpen(false);
+          }}
         />
       </View>
     </KeyboardAwareScrollView>
