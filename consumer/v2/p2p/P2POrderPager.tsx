@@ -213,99 +213,96 @@ export default function ({
         </View>
 
         {/* destination */}
-        {Boolean(origin?.address.description) && (
-          <View style={{ flex: 1, paddingHorizontal: padding }}>
-            <KeyboardAwareScrollView
-              keyboardShouldPersistTaps="always"
-              style={{ flex: 1 }}
-              contentContainerStyle={{ flex: 1 }}
+        <View style={{ flex: 1, paddingHorizontal: padding }}>
+          <KeyboardAwareScrollView
+            keyboardShouldPersistTaps="always"
+            style={{ flex: 1 }}
+            contentContainerStyle={{ flex: 1 }}
+          >
+            <Pressable
+              onPress={() => {
+                navigateToAddressComplete('destination', destination ?? undefined);
+              }}
             >
-              <Pressable
-                onPress={() => {
-                  navigateToAddressComplete('destination', destination ?? undefined);
+              <LabeledText title={t('Endereço de entrega')} placeholder={t('Endereço com número')}>
+                {destination?.address?.main}
+              </LabeledText>
+            </Pressable>
+
+            <DefaultInput
+              style={{ marginTop: 12 }}
+              value={destinationAdditionalInfo}
+              title={t('Complemento (se houver)')}
+              placeholder={t('Apartamento, sala, loja, etc.')}
+              onChangeText={(text) => setDestinationAdditionalInfo(text)}
+              editable={Boolean(destination)}
+            />
+
+            <DefaultInput
+              style={{ marginTop: 12 }}
+              value={destinationInstructions}
+              title={t('Instruções para entrega')}
+              placeholder={t('Quem irá atender o/a entregador/a, etc.')}
+              onChangeText={(text) => setDestinationInstructions(text)}
+              blurOnSubmit
+              multiline
+              editable={Boolean(destination)}
+              // numberOfLines={3}
+            />
+
+            <TouchableWithoutFeedback onPress={navigateToTransportableItems}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginTop: padding,
                 }}
               >
-                <LabeledText
-                  title={t('Endereço de entrega')}
-                  placeholder={t('Endereço com número')}
-                >
-                  {destination?.address?.main}
-                </LabeledText>
-              </Pressable>
-
-              <DefaultInput
-                style={{ marginTop: 12 }}
-                value={destinationAdditionalInfo}
-                title={t('Complemento (se houver)')}
-                placeholder={t('Apartamento, sala, loja, etc.')}
-                onChangeText={(text) => setDestinationAdditionalInfo(text)}
-                editable={Boolean(destination)}
+                <Feather name="info" size={14} />
+                <Text style={{ ...texts.xs, marginLeft: 4 }}>
+                  {t('Saiba o que pode ser transportado')}
+                </Text>
+              </View>
+            </TouchableWithoutFeedback>
+            <View style={{ flex: 1 }} />
+            <SafeAreaView>
+              <DefaultButton
+                style={{ marginBottom: padding }}
+                title={t('Confirmar local de entrega')}
+                onPress={nextStepHandler}
+                disabled={!stepReady(step + 1)}
+                activityIndicator={
+                  step === Step.Destination &&
+                  Boolean(order?.destination?.address.description) &&
+                  !order?.route
+                }
               />
-
-              <DefaultInput
-                style={{ marginTop: 12 }}
-                value={destinationInstructions}
-                title={t('Instruções para entrega')}
-                placeholder={t('Quem irá atender o/a entregador/a, etc.')}
-                onChangeText={(text) => setDestinationInstructions(text)}
-                blurOnSubmit
-                multiline
-                editable={Boolean(destination)}
-                // numberOfLines={3}
-              />
-
-              <TouchableWithoutFeedback onPress={navigateToTransportableItems}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginTop: padding,
-                  }}
-                >
-                  <Feather name="info" size={14} />
-                  <Text style={{ ...texts.xs, marginLeft: 4 }}>
-                    {t('Saiba o que pode ser transportado')}
-                  </Text>
-                </View>
-              </TouchableWithoutFeedback>
-              <View style={{ flex: 1 }} />
-              <SafeAreaView>
-                <DefaultButton
-                  style={{ marginBottom: padding }}
-                  title={t('Confirmar local de entrega')}
-                  onPress={nextStepHandler}
-                  disabled={!stepReady(step + 1)}
-                  activityIndicator={
-                    step === Step.Destination &&
-                    Boolean(order?.destination?.address.description) &&
-                    !order?.route
-                  }
-                />
-              </SafeAreaView>
-            </KeyboardAwareScrollView>
-          </View>
-        )}
+            </SafeAreaView>
+          </KeyboardAwareScrollView>
+        </View>
 
         {/* confirmation */}
-        {Boolean(order?.route) && (
-          <OrderSummary
-            order={order!}
-            selectedPaymentMethodId={selectedPaymentMethodId}
-            waiting={isLoading}
-            showMap={!isDeviceTaller}
-            onEditStep={setPage}
-            placeOrder={placeOrder}
-            navigateToFillPaymentInfo={navigateToFillPaymentInfo}
-            navigateFleetDetail={navigateFleetDetail}
-            modalVisible={false}
-            navigateToPixPayment={navigateToPixPayment}
-            navigateToAboutCharges={navigateToAboutCharges}
-            wantsCpf={wantsCpf}
-            onSwitchValueChange={onSwitchValueChange}
-            cpf={cpf}
-            setCpf={(text) => setCpf(text)}
-          />
-        )}
+        <View>
+          {order?.route ? (
+            <OrderSummary
+              order={order!}
+              selectedPaymentMethodId={selectedPaymentMethodId}
+              waiting={isLoading}
+              showMap={!isDeviceTaller}
+              onEditStep={setPage}
+              placeOrder={placeOrder}
+              navigateToFillPaymentInfo={navigateToFillPaymentInfo}
+              navigateFleetDetail={navigateFleetDetail}
+              modalVisible={false}
+              navigateToPixPayment={navigateToPixPayment}
+              navigateToAboutCharges={navigateToAboutCharges}
+              wantsCpf={wantsCpf}
+              onSwitchValueChange={onSwitchValueChange}
+              cpf={cpf}
+              setCpf={(text) => setCpf(text)}
+            />
+          ) : null}
+        </View>
       </PagerView>
     </View>
   );
