@@ -2,32 +2,37 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, SectionList, TouchableOpacity, View } from 'react-native';
+import { useSelector } from 'react-redux';
+import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';
 import HR from '../../../../../common/components/views/HR';
 import { useMenu } from '../../../../../common/store/api/business/hooks/useMenu';
+import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import {
   useContextBusiness,
   useContextBusinessId,
 } from '../../../../../common/store/context/business';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { colors, halfPadding, padding, screens } from '../../../../../common/styles';
+import { t } from '../../../../../strings';
 import { RestaurantHeader } from '../../common/RestaurantHeader';
 import { ProductListItem } from '../product/ProductListItem';
 import { RestaurantNavigatorParamList } from '../types';
 import { CartButton } from './CartButton';
 
 type ScreenNavigationProp = StackNavigationProp<RestaurantNavigatorParamList>;
-// type ScreenRouteProp = RouteProp<RestaurantNavigatorParamList, 'RestaurantDetail'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
-  // route: ScreenRouteProp;
 };
 
 export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   // context
   const restaurant = useContextBusiness();
   const activeOrder = useContextActiveOrder();
+  // redux
+  const consumer = useSelector(getConsumer);
   // state
   const menu = useMenu(useContextBusinessId());
   // side effects
@@ -50,7 +55,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
       </View>
     );
   return (
-    <View style={{ ...screens.default, paddingBottom: padding }}>
+    <View style={{ ...screens.default }}>
       <SectionList
         style={{ flex: 1 }}
         keyExtractor={(item) => item.id}
@@ -81,6 +86,14 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
           );
         }}
       />
+      {!consumer ? (
+        <PaddedView>
+          <DefaultButton
+            title={t('Para pedir, crie uma conta')}
+            onPress={() => navigation.navigate('WelcomeScreen')}
+          />
+        </PaddedView>
+      ) : null}
       {restaurant.status === 'open' && restaurant.enabled ? (
         <TouchableOpacity onPress={() => navigation.navigate('FoodOrderCheckout')}>
           <HR />

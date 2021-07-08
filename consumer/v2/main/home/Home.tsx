@@ -5,17 +5,13 @@ import React from 'react';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
-import * as Sentry from 'sentry-expo';
-import { ApiContext } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
-import useLastKnownLocation from '../../../../common/location/useLastKnownLocation';
-import HomeCard from '../../../../common/screens/home/cards/HomeCard';
+import { HomeCouriersNearbyCard } from '../../../../common/screens/home/cards/HomeCouriersNearbyCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
+import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
-import { colors, padding, screens } from '../../../../common/styles';
-import { t } from '../../../../strings';
+import { padding, screens } from '../../../../common/styles';
 import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
 import { HomeControls } from './controls/HomeControls';
@@ -29,34 +25,9 @@ type Props = {
 };
 
 export default function ({ navigation }: Props) {
-  // context
-  const api = React.useContext(ApiContext);
   // redux store
+  const consumer = useSelector(getConsumer);
   const ongoingOrders = useSelector(getOrders);
-  // state
-  const { coords } = useLastKnownLocation();
-  const [availableCouriers, setAvailableCouriers] = React.useState(0);
-  // fetch total couriers
-  const fetchTotalCouriersNearby = async () => {
-    if (!coords) return;
-    try {
-      const { total } = await api.courier().fetchTotalCouriersNearby(coords);
-      setAvailableCouriers(total);
-    } catch (error) {
-      console.log(
-        `Error while calling api.courier().fetchTotalCouriersNearby(${coords.latitude},${coords.longitude})`
-      );
-      console.log(error);
-      Sentry.Native.captureException(error);
-    }
-  };
-  React.useEffect(() => {
-    navigation.addListener('focus', fetchTotalCouriersNearby);
-    return () => navigation.removeListener('focus', fetchTotalCouriersNearby);
-  });
-  React.useEffect(() => {
-    fetchTotalCouriersNearby();
-  }, [coords]);
   // UI
   return (
     <SafeAreaView style={[screens.config]}>
@@ -64,10 +35,14 @@ export default function ({ navigation }: Props) {
       <ScrollView>
         <HomeControls
           onStartOrderPress={(type) => {
-            if (type === 'p2p') {
-              navigation.navigate('P2POrderNavigator', { screen: 'CreateOrderP2P' });
-            } else {
+            if (type === 'food') {
               navigation.navigate('FoodOrderNavigator', { screen: 'FoodOrderHome' });
+            } else {
+              if (consumer) {
+                navigation.navigate('P2POrderNavigator', { screen: 'CreateOrderP2P' });
+              } else {
+                navigation.navigate('WelcomeScreen');
+              }
             }
           }}
         />
@@ -84,13 +59,7 @@ export default function ({ navigation }: Props) {
               })
             }
           />
-          <View>
-            <HomeCard
-              icon={<IconMotocycle circleColor={colors.grey50} width={64} height={64} />}
-              title={`${availableCouriers} ${t('entregadores/as disponíveis')}`}
-              subtitle={t(`num raio de 15km`)}
-            />
-          </View>
+          <HomeCouriersNearbyCard />
           <View style={{ marginTop: padding }}>
             <HomeShareCard
               title="Divulgue o AppJusto"

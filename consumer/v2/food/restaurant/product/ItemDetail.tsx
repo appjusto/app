@@ -7,6 +7,7 @@ import React from 'react';
 import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../../common/app/context';
+import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import HR from '../../../../../common/components/views/HR';
@@ -60,7 +61,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const activeOrder = useContextActiveOrder();
   const tallerDevice = useTallerDevice();
   // redux store
-  const consumer = useSelector(getConsumer)!;
+  const consumer = useSelector(getConsumer);
   const currentPlace = useSelector(getCurrentPlace);
   // state
   const location = useSelector(getCurrentLocation);
@@ -138,7 +139,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     (async () => {
       if (!orderItem) return;
       if (!activeOrder) {
-        api.order().createFoodOrder(business, consumer, [orderItem], currentPlace ?? null);
+        api.order().createFoodOrder(business, consumer!, [orderItem], currentPlace ?? null);
       } else {
         const updatedOrder = !itemId
           ? helpers.addItemToOrder(activeOrder, orderItem)
@@ -152,6 +153,16 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   };
   // UI
   const getActionsUI = () => {
+    if (!consumer) {
+      return (
+        <PaddedView>
+          <DefaultButton
+            title={t('Para pedir, crie uma conta')}
+            onPress={() => navigation.navigate('WelcomeScreen')}
+          />
+        </PaddedView>
+      );
+    }
     if (isOutOfRange)
       return (
         <View style={{ flex: 1, paddingBottom: padding }}>

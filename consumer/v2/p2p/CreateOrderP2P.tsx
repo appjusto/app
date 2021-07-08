@@ -35,17 +35,16 @@ export default function ({ navigation, route }: Props) {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // redux store
-  const consumer = useSelector(getConsumer)!;
+  const consumer = useSelector(getConsumer);
   // state
   const [orderId, setOrderId] = React.useState<string>();
   const order = useObserveOrder(orderId);
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
-    consumer.paymentChannel?.mostRecentPaymentMethodId
+    consumer?.paymentChannel?.mostRecentPaymentMethodId
   );
   const [isLoading, setLoading] = React.useState(false);
-  const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
+  const [cpf, setCpf] = React.useState(consumer?.cpf ?? '');
   const [wantsCpf, setWantsCpf] = React.useState(false);
-  const [shareDataWithBusiness, setShareDataWithBusiness] = React.useState(false);
   // side effects
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
@@ -61,7 +60,7 @@ export default function ({ navigation, route }: Props) {
         (async () => {
           try {
             setLoading(true);
-            const newOrder = await api.order().createOrderP2P(consumer, params.origin!);
+            const newOrder = await api.order().createOrderP2P(consumer!, params.origin!);
             setLoading(false);
             setOrderId(newOrder.id);
           } catch (error) {

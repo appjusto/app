@@ -1,5 +1,6 @@
 import { normalize } from 'normalizr';
 import { AnyAction } from 'redux';
+import { USER_AUTH_STATE_CHANGED } from '../user/actions';
 import { ORDERS_UPDATED } from './actions';
 import * as schema from './schema';
 import { OrderState } from './types';
@@ -15,6 +16,13 @@ export default function (state: OrderState = initialState, action: AnyAction): O
     case ORDERS_UPDATED: {
       const ordersById = normalize(payload, [schema.order]).entities.orders ?? {};
       return { ...state, orders: payload, ordersById };
+    }
+    case USER_AUTH_STATE_CHANGED: {
+      if (!payload) {
+        console.log('User logged out');
+        return { ...state, orders: [] };
+      }
+      return state;
     }
     default:
       return state;
