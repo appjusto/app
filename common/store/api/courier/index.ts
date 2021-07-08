@@ -53,6 +53,11 @@ export default class CourierApi {
     // returns the unsubscribe function
     return unsubscribe;
   }
+  viewOrderRequest(courierId: string, orderId: string) {
+    return this.refs.getCourierOrderRequestsRef(courierId, orderId).update({
+      situation: 'viewed',
+    } as Partial<CourierOrderRequest>);
+  }
   async addReview(courierId: string, review: Review) {
     await this.refs
       .getCourierReviewsRef(courierId)

@@ -7,6 +7,7 @@ import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
+import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
@@ -16,6 +17,7 @@ import { CourierDeliveryInfo } from '../components/CourierDeliveryInfo';
 import { ApprovedParamList } from '../types';
 import { OngoingDeliveryCode } from './OngoingDeliveryCode';
 import { OngoingDeliveryInfo } from './OngoingDeliveryInfo';
+import { OngoingDeliveryLoading } from './OngoingDeliveryLoading';
 import { OngoingDeliveryMap } from './OngoingDeliveryMap';
 import { StatusControl } from './StatusControl';
 import { OngoingDeliveryNavigatorParamList } from './types';
@@ -50,6 +52,13 @@ export default function ({ navigation, route }: Props) {
   useSegmentScreen('Ongoing Delivery');
   // keeping screen awake
   useKeepAwake();
+  // modal
+  React.useEffect(() => {
+    if (!order) return;
+    if (order.dispatchingState === 'arrived-pickup' && order.type === 'food') {
+      setModalOpen(true);
+    }
+  }, [order]);
   // helpers
   const openChat = React.useCallback(
     (counterpartId: string, counterpartFlavor: Flavor, delayed?: boolean) => {
@@ -92,7 +101,7 @@ export default function ({ navigation, route }: Props) {
     }
   }, [order, navigation, orderId]);
   // UI
-  if (!order?.dispatchingState) {
+  if (!order) {
     // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
@@ -182,8 +191,9 @@ export default function ({ navigation, route }: Props) {
           order={order}
           onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
         />
+        <OngoingDeliveryLoading dispatchingState={dispatchingState} />
         {/* Status slider */}
-        {dispatchingState !== 'arrived-destination' ? (
+        {dispatchingState && dispatchingState !== 'arrived-destination' ? (
           <View style={{ paddingHorizontal: padding }}>
             <StatusControl
               key={dispatchingState}
@@ -196,6 +206,17 @@ export default function ({ navigation, route }: Props) {
             />
           </View>
         ) : null}
+        {/* chat with restaurant */}
+        {dispatchingState ? (
+          <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
+            <DefaultButton
+              title={t('Abrir chat com o restaurante')}
+              onPress={() => openChatWithRestaurant()}
+              secondary
+            />
+          </View>
+        ) : null}
+
         {/* code input */}
         <OngoingDeliveryCode
           code={code}
@@ -211,8 +232,12 @@ export default function ({ navigation, route }: Props) {
           visible={modalOpen}
           order={order}
           onWithdrawal={() => {
-            setModalOpen(false);
             nextDispatchingStateHandler();
+            setModalOpen(false);
+          }}
+          onIssue={() => {
+            navigation.navigate('DeliveryProblem', { orderId });
+            setModalOpen(false);
           }}
         />
       </View>

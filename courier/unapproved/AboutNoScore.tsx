@@ -16,7 +16,7 @@ export const AboutNoScore = () => {
     <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
       <PaddedView>
         <Text style={{ ...texts.x2l }}>
-          {t('Não bloqueamos de forma automática, e nem temos Score para entregadores')}
+          {t('Não bloqueamos de forma automática, e nem temos Score para entregadores/as')}
         </Text>
         <Text style={{ ...texts.md, marginTop: 24 }}>
           {t(

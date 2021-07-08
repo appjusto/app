@@ -52,7 +52,7 @@ export const OrderTotal = ({ total, switchValue, onSwitchValueChange, cpf, setCp
         }}
       >
         {t(
-          'Você poderá deixar uma Caixinha de gorjeta para o entregador quando o seu pedido for entregue.'
+          'Você poderá deixar uma Caixinha de gorjeta para o/a entregador/a quando o seu pedido for entregue.'
         )}
       </Text>
       <PaddedView

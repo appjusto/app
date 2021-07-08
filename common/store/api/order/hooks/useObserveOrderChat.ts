@@ -38,8 +38,8 @@ const timestampToDate = (value: firebase.firestore.FieldValue) =>
 const sortMessages = (a: ChatMessage, b: ChatMessage) => {
   if (a.timestamp && b.timestamp)
     return timestampToDate(a.timestamp).getTime() - timestampToDate(b.timestamp).getTime();
-  if (!a.timestamp) return -1;
-  else if (b.timestamp) return 1;
+  if (!a.timestamp) return 1;
+  else if (!b.timestamp) return -1;
   return 0;
 };
 

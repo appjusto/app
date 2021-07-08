@@ -177,7 +177,7 @@ export default function ({
               style={{ marginTop: 12 }}
               value={originInstructions}
               title={t('Instruções para entrega')}
-              placeholder={t('Quem irá atender o entregador, etc.')}
+              placeholder={t('Quem irá atender o/a entregador/a, etc.')}
               onChangeText={(text) => setOriginInstructions(text)}
               editable={Boolean(origin)}
               blurOnSubmit
@@ -245,7 +245,7 @@ export default function ({
                 style={{ marginTop: 12 }}
                 value={destinationInstructions}
                 title={t('Instruções para entrega')}
-                placeholder={t('Quem irá atender o entregador, etc.')}
+                placeholder={t('Quem irá atender o/a entregador/a, etc.')}
                 onChangeText={(text) => setDestinationInstructions(text)}
                 blurOnSubmit
                 multiline

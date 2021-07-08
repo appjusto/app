@@ -138,7 +138,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
             }}
           >
             {t(
-              'Você poderá deixar uma Caixinha de gorjeta para o entregador quando o seu pedido for entregue.'
+              'Você poderá deixar uma Caixinha de gorjeta para o/a entregador/a quando o seu pedido for entregue.'
             )}
           </Text>
           <DefaultButton

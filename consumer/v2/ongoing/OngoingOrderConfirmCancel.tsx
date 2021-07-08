@@ -79,7 +79,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
           <View>
             <Text style={{ ...texts.sm, marginTop: padding, color: colors.grey700 }}>
               {t(
-                'Depois que o entregador inicia a corrida não é mais possível fazer o cancelamento da corrida.'
+                'Depois que o/a entregador/a inicia a corrida não é mais possível fazer o cancelamento da corrida.'
               )}
             </Text>
           </View>

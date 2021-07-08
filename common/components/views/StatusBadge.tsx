@@ -17,7 +17,7 @@ const getStatusLabel = (status: OrderStatus, dispatchingState: DispatchingState)
   if (dispatchingState === 'going-destination') return t('Saiu para entrega');
   if (dispatchingState === 'arrived-destination') return t('Chegou no destino');
   // possible dispatchingState here: 'idle' 'matching', 'going-pickup', 'arrived-pickup', 'unmatched'
-  return t('Aguardando entregador');
+  return t('Aguardando entregador/a');
 };
 
 type Props = {

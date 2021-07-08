@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 import { t } from '../../strings';
-import useAuth, { AuthState } from '../hooks/useAuth';
+import { AuthState, useAuth } from '../hooks/useAuth';
 import { showToast } from '../store/ui/actions';
 
 interface Props {
@@ -14,12 +14,12 @@ export default ({ Unlogged, Logged }: Props) => {
   const dispatch = useDispatch();
 
   // side effects
-  const [authState, user] = useAuth();
-  useEffect(() => {
+  const [authState] = useAuth();
+  React.useEffect(() => {
     if (authState === AuthState.InvalidCredentials) {
       dispatch(showToast(t('Sua sessão expirou. Faça login novamente.'), 'error'));
     }
-  }, [authState, user]);
+  }, [authState, dispatch]);
 
   // UI
   // show nothing while checking for credentials

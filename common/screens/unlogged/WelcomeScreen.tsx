@@ -69,9 +69,15 @@ export default function ({ navigation, route }: Props) {
       return;
     }
     track('Signing in', { email });
-    await dispatch(signInWithEmail(api)(email, extra.environment));
+    try {
+      await dispatch(signInWithEmail(api)(email.trim(), extra.environment));
+    } catch (error) {
+      dispatch(
+        showToast(t('Não foi possível registrar. Verifique seu e-mail e tente novamente.'), 'error')
+      );
+    }
     navigation.navigate('SignInFeedback', { email });
-  }, [acceptedTerms, email]);
+  }, [acceptedTerms, api, dispatch, email, extra.environment, navigation]);
 
   const welcomeMessage =
     flavor === 'consumer'

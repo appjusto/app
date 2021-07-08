@@ -10,7 +10,7 @@ export const sectionsFromResults = (items: BusinessAlgolia[] | undefined) => {
     sections = [
       {
         title: t('Restaurantes abertos agora'),
-        subtitle: t('Valor justo para restaurantes e entregadores'),
+        subtitle: t('Valor justo para restaurantes e entregadores/as'),
         data: open,
       },
     ];

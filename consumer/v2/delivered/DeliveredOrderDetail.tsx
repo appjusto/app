@@ -161,7 +161,9 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
               onCommentChange={(value) => setComment(value)}
             />
             <DefaultButton
-              title={review?.type || reviewSent ? t('Avaliação enviada') : t('Avaliar entregador')}
+              title={
+                review?.type || reviewSent ? t('Avaliação enviada') : t('Avaliar entregador/a')
+              }
               onPress={reviewHandler}
               style={{ margin: padding }}
               activityIndicator={isLoading}

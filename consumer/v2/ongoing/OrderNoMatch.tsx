@@ -57,9 +57,9 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
   // UI
   return (
     <FeedbackView
-      header={t('Sem entregadores na região :(')}
+      header={t('Sem entregadores/as na região :(')}
       description={t(
-        'Infelizmente não encontramos nenhum entregador disponível. Tente novamente mais tarde.'
+        'Infelizmente não encontramos nenhum/a entregador/a disponível. Tente novamente mais tarde.'
       )}
       icon={<IconConeYellow />}
     >

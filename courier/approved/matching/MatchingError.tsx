@@ -28,7 +28,7 @@ export default ({ navigation }: Props) => {
   return (
     <View style={{ ...screens.default }}>
       <FeedbackView
-        header={t('Esse pedido já foi aceito por outro entregador :(')}
+        header={t('Esse pedido já foi aceito por outro/a entregador/a :(')}
         icon={<IconConeYellow />}
       >
         <DefaultButton

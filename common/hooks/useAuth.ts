@@ -1,12 +1,11 @@
-import * as Linking from 'expo-linking';
-import { useEffect, useContext, useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
+import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../app/context';
 import {
-  observeAuthState,
   getSignInEmail,
   isSignInWithEmailLink,
+  observeAuthState,
   signInWithEmailLink,
 } from '../store/user/actions';
 import { getUser } from '../store/user/selectors';
@@ -21,33 +20,30 @@ export enum AuthState {
   InvalidCredentials = 'invalid-credentials',
 }
 
-const extractAuthLink = (link: string): string | null => {
-  const parsedURL = Linking.parse(link);
-  if (parsedURL.scheme === 'exp') return parsedURL.queryParams?.link ?? null;
-  // if (parsedURL.scheme === 'appjusto') return parsedURL.queryParams?.link ?? null;
-  if (parsedURL.scheme === 'https') return link;
-  return null;
+const extractAuthLink = (link: string) => {
+  if (!link) return null;
+  const authLink = link.split('link=').find((_, i, a) => i === a.length - 1)!;
+  return decodeURIComponent(authLink);
 };
 
-export default function (): [AuthState, firebase.User | undefined | null] {
+export const useAuth = (): [AuthState, firebase.User | undefined | null] => {
   // context
-  const api = useContext(ApiContext);
+  const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
 
   // state
   const user = useSelector(getUser);
-  const [authState, setAuthState] = useState<AuthState>(AuthState.CheckingPreviousSession);
+  const [authState, setAuthState] = React.useState<AuthState>(AuthState.CheckingPreviousSession);
   const deepLink = useDeepLink();
 
   // side effects
   // subscribe once to be notified whenever the user changes (capture by the next effect)
-  useEffect(() => {
-    const unsubscribe = dispatch(observeAuthState(api));
-    return unsubscribe;
-  }, []);
+  React.useEffect(() => {
+    return dispatch(observeAuthState(api));
+  }, [api, dispatch]);
 
   // whenever auth changes
-  useEffect(() => {
+  React.useEffect(() => {
     // undefined means we're still checking; nothing to be done in this case
     if (user === undefined) return;
     // null means that we've already checked and no user was previously stored
@@ -59,13 +55,16 @@ export default function (): [AuthState, firebase.User | undefined | null] {
   }, [user]);
 
   // check deeplink again
-  useEffect(() => {
-    if (authState === AuthState.InvalidCredentials || authState === AuthState.Unsigned) {
-      setAuthState(AuthState.CheckingDeeplink);
-    }
+  React.useEffect(() => {
+    setAuthState((state) => {
+      if (state === AuthState.InvalidCredentials || state === AuthState.Unsigned) {
+        return AuthState.CheckingDeeplink;
+      }
+      return state;
+    });
   }, [deepLink]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (authState !== AuthState.CheckingDeeplink) return;
     // undefined means useDeeplink hasnt finished yet
     if (deepLink === undefined) return;
@@ -75,14 +74,23 @@ export default function (): [AuthState, firebase.User | undefined | null] {
       return;
     }
     const link = extractAuthLink(deepLink);
-    if (link === null) {
+    console.log(deepLink);
+    console.log(link);
+    Sentry.Native.captureMessage('Deeplink', {
+      extra: {
+        deepLink,
+        link,
+      },
+    });
+
+    if (link === null || !isSignInWithEmailLink(api)(link)) {
       setAuthState(AuthState.Unsigned);
       return;
     }
-    if (!isSignInWithEmailLink(api)(link)) {
-      setAuthState(AuthState.InvalidCredentials);
-      return;
-    }
+    // if (!isSignInWithEmailLink(api)(link)) {
+    //   setAuthState(AuthState.InvalidCredentials);
+    //   return;
+    // }
     setAuthState(AuthState.SigningIn);
     getSignInEmail().then(async (email) => {
       if (!email) {
@@ -93,10 +101,11 @@ export default function (): [AuthState, firebase.User | undefined | null] {
         await signInWithEmailLink(api)(email, link!);
         // const continueUrl = Linking.parse(link).queryParams?.continueUrl;
       } catch (e) {
+        Sentry.Native.captureException(e);
         setAuthState(AuthState.InvalidCredentials);
       }
     });
-  }, [deepLink, authState]);
+  }, [deepLink, authState, api]);
 
   return [authState, user];
-}
+};

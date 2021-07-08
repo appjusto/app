@@ -82,7 +82,7 @@ export default function ({ route }: Props) {
   };
   const getName = (from: string) => {
     if (from === order.consumer.id) return order.consumer.name ?? t('Cliente');
-    else if (from === order.courier?.id) return order.courier.name ?? t('Entregador');
+    else if (from === order.courier?.id) return order.courier.name ?? t('Entregador/a');
     else if (from === order.business?.id) return order.business.name ?? t('Restaurante');
     else return 'Suporte';
   };

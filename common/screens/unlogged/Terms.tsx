@@ -1,6 +1,8 @@
+import Constants from 'expo-constants';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { WebView } from 'react-native-webview';
+import { t } from '../../../strings';
 import { useTerms } from '../../store/api/platform/hooks/useTerms';
 import { useSegmentScreen } from '../../store/api/track';
 import { colors, padding, screens } from '../../styles';
@@ -18,9 +20,12 @@ export default function Terms() {
       </View>
     );
   }
+  const appVersion = `${t('Versão:')} ${Constants.nativeAppVersion} / ${
+    Constants.manifest.version
+  }`;
   const head =
     '<head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>';
-  const html = `<html>${head}<body>${terms}</body></html>`;
+  const html = `<html>${head}<body>${terms}<p>${appVersion}</p></body></html>`;
 
   return (
     <WebView

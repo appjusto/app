@@ -45,6 +45,7 @@ export default class OrderApi {
     const payload: Order = {
       type: 'food',
       status: 'quote',
+      dispatchingStatus: 'idle',
       business: {
         id: business.id,
         name: business.name,
@@ -74,6 +75,7 @@ export default class OrderApi {
     const payload: Order = {
       type: 'p2p',
       status: 'quote',
+      dispatchingStatus: 'idle',
       consumer: {
         id: consumer.id,
         name: consumer.name ?? '',

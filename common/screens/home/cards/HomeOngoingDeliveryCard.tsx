@@ -35,7 +35,7 @@ export default function ({ order, onPress }: Props) {
         title = t('Pedido em preparo no estabelecimento');
       } else if (status === 'ready') {
         if (dispatchingStatus === 'matching') {
-          title = t('Procurando entregadores');
+          title = t('Procurando entregadores/as');
         } else if (dispatchingStatus === 'confirmed') {
           title = t('Corrida em andamento');
           if (dispatchingState === 'going-pickup') {
@@ -55,10 +55,10 @@ export default function ({ order, onPress }: Props) {
         } else if (dispatchingState === 'going-destination') {
           detail = `${t('À caminho de')} ${order.destination!.address.main}`;
         } else if (dispatchingState === 'arrived-destination') {
-          detail = 'Entregador chegou para entrega';
+          detail = 'Entregador/a chegou para entrega';
         }
         if (dispatchingStatus === 'no-match') {
-          title = t('Sem entregadores na região');
+          title = t('Sem entregadores/as na região');
           detail = t('Clique para tentar novamente');
         }
       }
@@ -67,7 +67,7 @@ export default function ({ order, onPress }: Props) {
       if (status === 'confirming') {
         title = t('Aguarde enquanto criamos seu pedido...');
       } else if (status === 'confirmed') {
-        title = t('Procurando entregador próximo a');
+        title = t('Procurando entregador/a próximo a');
         detail = `${order.origin!.address.main}`;
       } else if (status === 'declined') {
         title = t('Problema no pagamento');
@@ -85,7 +85,7 @@ export default function ({ order, onPress }: Props) {
         }
       }
       if (dispatchingStatus === 'no-match') {
-        title = t('Sem entregadores na região');
+        title = t('Sem entregadores/as na região');
         detail = t('Clique para tentar novamente');
       }
     }

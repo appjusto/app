@@ -15,7 +15,7 @@ type Props = {
 export const OrderCourierSummary = ({ courier }: Props) => {
   return (
     <View>
-      <SingleHeader title={t('Sobre o entregador')} />
+      <SingleHeader title={t('Sobre o/a entregador/a')} />
       <View
         style={{
           flexDirection: 'row',

@@ -24,7 +24,7 @@ export const CourierDistanceBadge = ({ order, delivering }: Props) => {
     text = separateWithDot(formatDistance(distance), formatDuration(route.duration!));
     // text = formatDistance(distance);
   } else if (dispatchingState === 'arrived-pickup' || dispatchingState === 'arrived-destination') {
-    text = t('Entregador no local');
+    text = t('Entregador/a no local');
   }
   return (
     <RoundedText

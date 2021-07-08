@@ -36,7 +36,7 @@ export const consumer: ScreenConfig[] = [
     header: t('Boas vindas,\n que legal ver você aqui!'),
     body: [
       t(
-        'O AppJusto nasceu para combater a precarização do trabalho. Somos um movimento por relações mais justas entre consumidores, restaurantes e entregadores.'
+        'O AppJusto nasceu para combater a precarização do trabalho. Somos um movimento por relações mais justas entre consumidores, restaurantes e entregadores/as.'
       ),
     ],
     icon: <IconHangLoose />,
@@ -68,13 +68,13 @@ export const registrationSubmitted: RegistrationSubmittedConfig[] = [
   {
     header: t('Use o AppJusto para pedir comida e enviar encomendas'),
     body: t(
-      'Se pedir comida, o entregador recebe o valor integral da corrida! Nas encomendas, os entregadores recebem o valor da frota que você escolher.'
+      'Se pedir comida, o/a entregador/a recebe o valor integral da corrida! Nas encomendas, os/as entregadores/as recebem o valor da frota que você escolher.'
     ),
   },
   {
     header: t('Escolha a frota que quiser'),
     body: t(
-      'No AppJusto, os entregadores podem criar frotas com condições próprias e definir o valor de seu trabalho. Escolha a frota que quiser para o seu pedido!'
+      'No AppJusto, os/as entregadores/as podem criar frotas com condições próprias e definir o valor de seu trabalho. Escolha a frota que quiser para o seu pedido!'
     ),
   },
   {

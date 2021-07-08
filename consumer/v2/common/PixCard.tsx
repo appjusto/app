@@ -27,7 +27,7 @@ export const PixCard = ({ navigateToPixPayment }: Props) => {
         </View>
         <Text style={{ ...texts.sm }}>
           {t(
-            'Entregador e restaurante recebem agora, sem precisar esperar até o fim do mês, e você colabora com uma economia justa!'
+            'Entregador/a e restaurante recebem agora, sem precisar esperar até o fim do mês, e você colabora com uma economia justa!'
           )}
         </Text>
       </PaddedView>

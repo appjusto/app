@@ -7,8 +7,6 @@ import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import * as icons from '../../../assets/icons';
 import { ApiContext } from '../../../common/app/context';
-import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { useObserveOrderRequest } from '../../../common/store/api/courier/hooks/useObserveOrderRequest';
@@ -42,6 +40,7 @@ export default function ({ navigation, route }: Props) {
   const courier = useSelector(getCourier)!;
   // state
   const request = useObserveOrderRequest(courier.id, orderId);
+  const canAccept = request?.situation === 'pending' || request?.situation === 'viewed';
   const [distance, setDistance] = React.useState(distanceToOrigin);
   const [isLoading, setLoading] = React.useState(true);
   // side effects
@@ -59,7 +58,15 @@ export default function ({ navigation, route }: Props) {
       setDistance(currentDistanceToOrigin);
       setLoading(false);
     })();
-  }, []);
+  }, [distanceToOrigin, orderId, origin]);
+  React.useEffect(() => {
+    if (request?.situation === 'expired') {
+      navigation.replace('MatchingError');
+    }
+  }, [navigation, request]);
+  React.useEffect(() => {
+    api.courier().viewOrderRequest(courier.id, orderId);
+  }, [api, courier.id, orderId]);
   // tracking
   useSegmentScreen('Matching');
   const tallerDevice = useTallerDevice();
@@ -89,8 +96,8 @@ export default function ({ navigation, route }: Props) {
   };
   const rejectHandler = () => {
     // using this until backend is published again with the new issueType
-    navigation.replace('RefuseDelivery', { orderId, issueType: 'courier-drops-delivery' });
-    // navigation.replace('RefuseDelivery', { orderId, issueType: 'courier-rejects-matching' });
+    // navigation.replace('RefuseDelivery', { orderId, issueType: 'courier-drops-delivery' });
+    navigation.replace('RejectedMatching', { orderId });
   };
   // UI
   return (
@@ -157,7 +164,7 @@ export default function ({ navigation, route }: Props) {
         </View>
         <View style={{ flex: 1 }} />
         {/* accept / reject control */}
-        {request?.situation === 'pending' ? (
+        {canAccept ? (
           <AcceptControl
             onAccept={acceptHandler}
             onReject={rejectHandler}
@@ -166,14 +173,7 @@ export default function ({ navigation, route }: Props) {
               paddingHorizontal: padding,
             }}
           />
-        ) : (
-          <PaddedView>
-            <DefaultButton
-              title={t('Corrida indisponível')}
-              onPress={() => navigation.popToTop()}
-            />
-          </PaddedView>
-        )}
+        ) : null}
       </View>
     </ScrollView>
   );

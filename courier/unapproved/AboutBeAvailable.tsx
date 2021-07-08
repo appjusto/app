@@ -17,16 +17,18 @@ export const AboutBeAvailable = () => {
     <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
       <PaddedView style={{ flex: 1 }}>
         <Text style={{ ...texts.x2l }}>
-          {t('Você é importante para esse movimento dar certo. Divulgue para outros entregadores!')}
-        </Text>
-        <Text style={{ ...texts.md, marginTop: 24 }}>
           {t(
-            'Quanto mais consumidores satisfeitos, mais pedidos. Se os entregadores aceitarem sempre os pedidos que tocarem pelo AppJusto, mais força terá a rede.'
+            'Você é importante para esse movimento dar certo. Divulgue para outros/as entregadores/as!'
           )}
         </Text>
         <Text style={{ ...texts.md, marginTop: 24 }}>
           {t(
-            'Contamos com a sua ajuda para difundir esse movimento. Comece a divulgar o AppJusto para outros entregadores agora mesmo!'
+            'Quanto mais consumidores satisfeitos, mais pedidos. Se os/as entregadores/as aceitarem sempre os pedidos que tocarem pelo AppJusto, mais força terá a rede.'
+          )}
+        </Text>
+        <Text style={{ ...texts.md, marginTop: 24 }}>
+          {t(
+            'Contamos com a sua ajuda para difundir esse movimento. Comece a divulgar o AppJusto para outros/as entregadores/as agora mesmo!'
           )}
         </Text>
         <View style={{ flex: 1 }} />

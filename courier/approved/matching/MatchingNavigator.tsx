@@ -6,6 +6,7 @@ import { t } from '../../../strings';
 import Matching from './Matching';
 import MatchingError from './MatchingError';
 import OrderRequests from './OrderRequests';
+import { RejectedMatching } from './RejectedMatching';
 import { MatchingParamList } from './types';
 
 const Stack = createStackNavigator<MatchingParamList>();
@@ -23,9 +24,15 @@ export default function () {
         component={MatchingError}
         options={{ headerShown: false }}
       />
+      {/* remove this screen after */}
       <Stack.Screen
         name="RefuseDelivery"
         component={ReportIssue}
+        options={{ title: t('Recusou o pedido') }}
+      />
+      <Stack.Screen
+        name="RejectedMatching"
+        component={RejectedMatching}
         options={{ title: t('Recusou o pedido') }}
       />
     </Stack.Navigator>

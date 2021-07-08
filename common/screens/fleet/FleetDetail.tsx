@@ -100,7 +100,7 @@ export default function ({ navigation, route }: Props) {
           </View>
           <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
             {t(
-              'Valor que os entregadores dessa frota receberão ao percorrer a Distância Inicial Mínima.'
+              'Valor que entregadores/as dessa frota receberão ao percorrer a Distância Inicial Mínima.'
             )}
           </Text>
           <View
@@ -116,7 +116,7 @@ export default function ({ navigation, route }: Props) {
           </View>
           <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
             {t(
-              'Distância para o Pagamento Mínimo. Abaixo dessa distância, os entregadores dessa frota receberão o Pagamento Mínimo. Acima dessa distância, os entregadores receberão um Valor Adicional por Km Rodado.'
+              'Distância para o Pagamento Mínimo. Abaixo dessa distância, entregadores/as dessa frota receberão o Pagamento Mínimo. Acima dessa distância, entregadores/as receberão um Valor Adicional por Km Rodado.'
             )}
           </Text>
           <View
@@ -132,7 +132,7 @@ export default function ({ navigation, route }: Props) {
           </View>
           <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
             {t(
-              'Valor adicional por Km que os entregadores dessa frota receberão ao percorrer uma distância acima da Distância Inicial Mínima.'
+              'Valor adicional por Km que entregadores/as dessa frota receberão ao percorrer uma distância acima da Distância Inicial Mínima.'
             )}
           </Text>
           <View
@@ -148,7 +148,7 @@ export default function ({ navigation, route }: Props) {
           </View>
           <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
             {t(
-              'Distância máxima em Km que os entregadores dessa frota poderão percorrer para fazer uma entrega. Pedidos recebidos com distância máxima acima não serão exibidos.'
+              'Distância máxima em Km que entregadores/as dessa frota poderão percorrer para fazer uma entrega. Pedidos recebidos com distância máxima acima não serão exibidos.'
             )}
           </Text>
           <View
