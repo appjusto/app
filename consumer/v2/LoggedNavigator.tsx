@@ -70,7 +70,7 @@ export const LoggedNavigator = () => {
     initialRouteName = 'MainNavigator';
   } else if (onboarded) {
     initialRouteName = 'RegistrationSubmitted';
-  } else if (situation === 'pending') {
+  } else {
     initialRouteName = 'ConsumerOnboarding';
   }
   if (!initialRouteName) return null;
