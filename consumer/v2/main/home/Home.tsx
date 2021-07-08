@@ -9,6 +9,7 @@ import PaddedView from '../../../../common/components/containers/PaddedView';
 import { HomeCouriersNearbyCard } from '../../../../common/screens/home/cards/HomeCouriersNearbyCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
+import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
 import { padding, screens } from '../../../../common/styles';
@@ -18,7 +19,7 @@ import { HomeControls } from './controls/HomeControls';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<MainNavigatorParamList, 'Home'>,
-  StackNavigationProp<LoggedNavigatorParamList>
+  StackNavigationProp<LoggedNavigatorParamList & UnloggedParamList>
 >;
 type Props = {
   navigation: ScreenNavigationProp;
