@@ -1,6 +1,6 @@
 import { Complement, OrderItem, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
-import { RouteProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { nanoid } from 'nanoid/non-secure';
 import React from 'react';
@@ -13,6 +13,7 @@ import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import HR from '../../../../../common/components/views/HR';
 import useTallerDevice from '../../../../../common/hooks/useTallerDevice';
 import { IconSemaphoreSmall } from '../../../../../common/icons/icon-semaphore-small';
+import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
 import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
 import { getBusinessNextOpeningDay } from '../../../../../common/store/api/business/selectors';
@@ -38,12 +39,20 @@ import {
 } from '../../../../../common/styles';
 import { formatCurrency, formatHour } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
+import { LoggedNavigatorParamList } from '../../../types';
+import { FoodOrderNavigatorParamList } from '../../types';
 import { RestaurantNavigatorParamList } from '../types';
 import { useBusinessIsAcceptingOrders } from '../useBusinessIsAcceptingOrders';
 import { ItemComplements } from './ItemComplements';
 import { ItemQuantity } from './ItemQuantity';
 
-type ScreenNavigationProp = StackNavigationProp<RestaurantNavigatorParamList>;
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<RestaurantNavigatorParamList, 'ItemDetail'>,
+  CompositeNavigationProp<
+    StackNavigationProp<FoodOrderNavigatorParamList, 'RestaurantNavigator'>,
+    StackNavigationProp<LoggedNavigatorParamList & UnloggedParamList>
+  >
+>;
 type ScreenRouteProp = RouteProp<RestaurantNavigatorParamList, 'ItemDetail'>;
 
 type Props = {

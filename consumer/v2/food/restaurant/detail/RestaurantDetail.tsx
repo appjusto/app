@@ -1,3 +1,4 @@
+import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
@@ -7,6 +8,7 @@ import DefaultButton from '../../../../../common/components/buttons/DefaultButto
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';
 import HR from '../../../../../common/components/views/HR';
+import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
 import { useMenu } from '../../../../../common/store/api/business/hooks/useMenu';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import {
@@ -16,12 +18,20 @@ import {
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { colors, halfPadding, padding, screens } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
+import { LoggedNavigatorParamList } from '../../../types';
 import { RestaurantHeader } from '../../common/RestaurantHeader';
+import { FoodOrderNavigatorParamList } from '../../types';
 import { ProductListItem } from '../product/ProductListItem';
 import { RestaurantNavigatorParamList } from '../types';
 import { CartButton } from './CartButton';
 
-type ScreenNavigationProp = StackNavigationProp<RestaurantNavigatorParamList>;
+type ScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<RestaurantNavigatorParamList, 'RestaurantDetail'>,
+  CompositeNavigationProp<
+    StackNavigationProp<FoodOrderNavigatorParamList, 'RestaurantNavigator'>,
+    StackNavigationProp<LoggedNavigatorParamList & UnloggedParamList>
+  >
+>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -41,7 +51,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
       title: restaurant?.name ?? '',
     });
   }, [navigation, restaurant]);
-
+  console.log(consumer?.id);
   // UI
   const sections =
     menu?.map((category) => ({
