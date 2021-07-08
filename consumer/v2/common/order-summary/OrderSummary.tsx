@@ -3,13 +3,12 @@ import { Feather } from '@expo/vector-icons';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { ScrollView, Switch, Text, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import HR from '../../../../common/components/views/HR';
 import OrderMap from '../../../../common/screens/orders/OrderMap';
 import { OrderAdditionalInfo } from '../../../../common/screens/orders/summary/OrderAdditionaInfo';
 import { showToast } from '../../../../common/store/ui/actions';
-import { getUIBusy } from '../../../../common/store/ui/selectors';
 import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { Step } from '../../p2p/types';
@@ -43,6 +42,7 @@ type Props = {
   onSwitchValueChange: (value: boolean) => void;
   shareDataWithBusiness?: boolean;
   onShareData?: (value: boolean) => void;
+  activityIndicator: boolean;
 };
 
 export const OrderSummary = ({
@@ -66,7 +66,7 @@ export const OrderSummary = ({
   setCpf,
   wantsCpf,
   onSwitchValueChange,
-
+  activityIndicator,
   shareDataWithBusiness,
   onShareData,
 }: Props) => {
@@ -74,7 +74,6 @@ export const OrderSummary = ({
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // state
-  const busy = useSelector(getUIBusy);
   const [quotes, setQuotes] = React.useState<Fare[]>();
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
   // const [additionalInfo, setAdditionalInfo] = React.useState('');
@@ -169,6 +168,7 @@ export const OrderSummary = ({
         onFareSelect={(fare) => setSelectedFare(fare)}
         onFleetSelect={navigateFleetDetail}
         onRetry={getOrderQuotesHandler}
+        order={order}
       />
 
       <HR height={padding} />
@@ -192,7 +192,7 @@ export const OrderSummary = ({
         onEditPaymentMethod={navigateToFillPaymentInfo}
         isSubmitEnabled={canSubmit}
         onSubmit={() => placeOrder(selectedFare?.fleet?.id!)}
-        activityIndicator={busy}
+        activityIndicator={activityIndicator}
         navigateToPixPayment={() => null}
         navigateToAboutCharges={navigateToAboutCharges}
       />

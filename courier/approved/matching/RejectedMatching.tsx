@@ -1,66 +1,57 @@
-import { Issue, WithId } from '@appjusto/types';
-import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { useDispatch } from 'react-redux';
+import { Issue, WithId } from '../../../../types';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import { ReportIssueView } from '../../../common/components/views/ReportIssueView';
-import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
-import { OngoingDeliveryNavigatorParamList } from './types';
+import { MatchingParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<OngoingDeliveryNavigatorParamList, 'CourierDropsOrder'>,
-  StackNavigationProp<ApprovedParamList>
+  StackNavigationProp<MatchingParamList, 'RejectedMatching'>,
+  StackNavigationProp<ApprovedParamList, 'MatchingNavigator'>
 >;
-type ScreenRoute = RouteProp<OngoingDeliveryNavigatorParamList, 'CourierDropsOrder'>;
+type ScreenRouteProp = RouteProp<MatchingParamList, 'RejectedMatching'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
-  route: ScreenRoute;
+  route: ScreenRouteProp;
 };
 
-export const CourierDropsOrder = ({ navigation, route }: Props) => {
+export const RejectedMatching = ({ navigation, route }: Props) => {
   // params
-  const { orderId, issueType } = route.params;
+  const { orderId } = route.params;
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // state
-  // const issues = useIssues('courier-refuse');
-  const issues = useIssues(issueType);
-  const order = useObserveOrder(orderId);
-  // screen state
-  const [comment, setComment] = React.useState('');
+  const issues = useIssues('courier-rejects-matching');
   const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
+  const [comment, setComment] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
-  // handlers
-  // this handler, just for tests, is  navigating
-  //to the DeliveryProblemFeedback. Will use navigation.replace in the end
-  const dropOrderHandler = () => {
+  // handler
+  const issueHandler = () => {
     if (!selectedIssue) return;
     (async () => {
       try {
         setLoading(true);
-        await api.order().dropOrder(orderId, selectedIssue, comment);
-        console.log('dropOrder called');
-        navigation.replace('DeliveryProblemFeedback', {
-          orderId,
-          issueType,
-        });
+        await api.order().rejectOrder(orderId, selectedIssue!, comment);
+        navigation.replace('RejectedMatchingFeedback');
+        setLoading(false);
       } catch (error) {
         setLoading(false);
-        dispatch(showToast(t('Não foi possível enviar o comentário'), 'error'));
+        dispatch(showToast(t('Não foi possível enviar a razão. Tente novamente.'), 'error'));
       }
     })();
   };
-  console.log(order?.dispatchingStatus);
+
   // UI
   if (!issues) {
     return (
@@ -72,14 +63,14 @@ export const CourierDropsOrder = ({ navigation, route }: Props) => {
   return (
     <View style={{ ...screens.default }}>
       <ReportIssueView
-        title={t('Porque você precisa desistir da entrega?')}
+        title={t('Por que você rejeitou a corrida?')}
         inputHeader={t(
           'Você pode usar o espaço abaixo para detalhar mais sua recusa, dessa forma conseguiremos melhorar nossos serviços:'
         )}
         comment={comment}
         setComment={(text) => setComment(text)}
         disabled={!selectedIssue || isLoading}
-        onSendIssue={dropOrderHandler}
+        onSendIssue={issueHandler}
         isLoading={isLoading}
       >
         {issues.map((issue) => (
