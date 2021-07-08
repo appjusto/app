@@ -47,12 +47,12 @@ export default function (enabled: boolean = true, key?: string) {
       }
       if (permissionResponse?.granted) {
         (async () => {
-          const last = await Location.getLastKnownPositionAsync();
-          if (last) setLastKnownLocation(last);
-          else {
-            const current = await Location.getCurrentPositionAsync();
-            setLastKnownLocation(current);
-          }
+          // const last = await Location.getLastKnownPositionAsync();
+          // if (last) setLastKnownLocation(last);
+          // else {
+          const current = await Location.getCurrentPositionAsync();
+          setLastKnownLocation(current);
+          // }
         })();
       }
     }
