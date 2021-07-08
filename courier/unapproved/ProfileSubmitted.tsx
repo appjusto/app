@@ -1,9 +1,10 @@
-import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
+// import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Linking, NativeSyntheticEvent, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import PagerView, { ViewPagerOnPageScrollEventData } from 'react-native-pager-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import { useSelector } from 'react-redux';
@@ -42,7 +43,7 @@ export default function ({ navigation }: Props) {
   const steps = config.profileSubmitted;
   const [step, setStep] = React.useState(0);
   // refs
-  const viewPager = React.useRef<ViewPager>(null);
+  const pagerView = React.useRef<PagerView>(null);
   // notifications
   useNotificationToken();
   // side effects
@@ -93,8 +94,8 @@ export default function ({ navigation }: Props) {
             </Text>
           </View>
           <View style={{ marginTop: 24, marginBottom: padding }}>
-            <ViewPager
-              ref={viewPager}
+            <PagerView
+              ref={pagerView}
               style={{ width: '100%', height: 200 }}
               onPageScroll={onPageScroll}
             >
@@ -125,7 +126,7 @@ export default function ({ navigation }: Props) {
                   </View>
                 </View>
               ))}
-            </ViewPager>
+            </PagerView>
           </View>
           <View
             style={{

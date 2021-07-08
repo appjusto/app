@@ -1,9 +1,10 @@
-import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
+// import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, NativeSyntheticEvent, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import PagerView, { ViewPagerOnPageScrollEventData } from 'react-native-pager-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import { useSelector } from 'react-redux';
@@ -43,7 +44,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
   const [totalConsumersInCity, setTotalConsumersInCity] = React.useState<number>(0);
   useNotificationToken();
   // refs
-  const viewPager = React.useRef<ViewPager>(null);
+  const pagerView = React.useRef<PagerView>(null);
   // tracking
   useSegmentScreen('Registration Submitted');
   // side effects
@@ -117,8 +118,8 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
           </PaddedView>
 
           {/* this ViewPager only shows in screen if you hardcode a height and width. why? */}
-          <ViewPager
-            ref={viewPager}
+          <PagerView
+            ref={pagerView}
             style={{ width: '100%', height: 200 }}
             onPageScroll={onPageScroll}
           >
@@ -140,7 +141,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
                 </View>
               </PaddedView>
             ))}
-          </ViewPager>
+          </PagerView>
 
           <View
             style={{

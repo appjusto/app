@@ -1,4 +1,4 @@
-import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
+// import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
@@ -11,6 +11,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import PagerView, { ViewPagerOnPageScrollEventData } from 'react-native-pager-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
@@ -62,13 +63,13 @@ export const Onboarding = ({ navigation, route }: Props) => {
     }
   }, [route.params]);
   // refs
-  const viewPager = React.useRef<ViewPager>(null);
+  const pagerView = React.useRef<PagerView>(null);
   const { height } = Dimensions.get('window');
   const tallerDevice = height > 640;
   // handlers
   const advanceHandler = async () => {
     if (step + 1 < steps.length) {
-      viewPager?.current?.setPage(step + 1);
+      pagerView?.current?.setPage(step + 1);
     } else {
       setLoading(true);
       try {
@@ -102,7 +103,7 @@ export const Onboarding = ({ navigation, route }: Props) => {
   return (
     <View style={{ ...screens.default }}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <ViewPager ref={viewPager} style={{ flex: 1 }} onPageScroll={onPageScroll}>
+        <PagerView ref={pagerView} style={{ flex: 1 }} onPageScroll={onPageScroll}>
           {steps.map(({ icon, header, body, input }, index) => (
             <View key={index} style={[{ paddingHorizontal: padding, flex: 1 }, styles.bigScreen]}>
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -138,7 +139,7 @@ export const Onboarding = ({ navigation, route }: Props) => {
               </View>
             </View>
           ))}
-        </ViewPager>
+        </PagerView>
       </ScrollView>
       <View
         style={{
