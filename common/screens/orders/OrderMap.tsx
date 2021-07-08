@@ -1,8 +1,9 @@
 import { Order } from '@appjusto/types';
 import polyline from '@mapbox/polyline';
+import { FeatureCollection } from 'geojson';
 import React from 'react';
-import { Dimensions, View } from 'react-native';
-import { LatLng, Marker, Polyline } from 'react-native-maps';
+import { Dimensions, Platform, View } from 'react-native';
+import { Geojson, Marker } from 'react-native-maps';
 import DefaultMap from '../../components/views/DefaultMap';
 import { IconMapCourier } from '../../icons/icon-mapCourier';
 import { IconMapDestination } from '../../icons/icon-mapDestination';
@@ -15,23 +16,42 @@ type Props = {
 
 export default function ({ order, ratio }: Props) {
   if (!order) return null;
-  if (!order.origin?.location) return null;
-  if (!order.destination?.location) return null;
-  if (!order.route?.polyline) return null;
+  const { courier, origin, destination, route } = order;
+  if (!origin?.location) return null;
+  if (!destination?.location) return null;
+  if (!route?.polyline) return null;
 
   const { width } = Dimensions.get('window');
-
-  const { courier, origin, destination, route } = order;
-
-  const routeCoordinates = polyline.decode(route.polyline).map((pair) => {
-    return { latitude: pair[0], longitude: pair[1] } as LatLng;
-  });
+  const geojson: FeatureCollection = React.useMemo(
+    () => ({
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            ...polyline.toGeoJSON(route.polyline!),
+          },
+        },
+      ],
+    }),
+    [route.polyline]
+  );
+  // const routeCoordinates = polyline.decode(route.polyline).map((pair) => {
+  //   return { latitude: pair[0], longitude: pair[1] } as LatLng;
+  // });
 
   return (
     <View style={{ width, height: width / ratio, alignSelf: 'center' }}>
       <DefaultMap
-        coordinates={routeCoordinates}
-        fitToElements
+        // coordinates={[origin.location, destination.location]}
+        // coordinates={routeCoordinates}
+        // fitToElements
+        initialRegion={{
+          ...destination.location,
+          latitudeDelta: 0.03,
+          longitudeDelta: 0.03,
+        }}
         style={{ height: '100%', width: '100%' }}
       >
         <Marker
@@ -59,7 +79,15 @@ export default function ({ order, ratio }: Props) {
             <IconMapCourier />
           </Marker>
         )}
-        <Polyline coordinates={routeCoordinates} />
+        {Platform.OS === 'ios' ? (
+          <Geojson
+            geojson={geojson}
+            strokeColor="black"
+            fillColor="black"
+            strokeWidth={2}
+            lineCap="round"
+          />
+        ) : null}
       </DefaultMap>
     </View>
   );
