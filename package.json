@@ -90,7 +90,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-keyboard-aware-scroll-view": "^0.9.3",
-    "react-native-maps": "0.28.0",
+    "react-native-pager-view": "5.0.12",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
     "react-native-svg": "12.1.1",
@@ -103,7 +103,7 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "sentry-expo": "^4.0.0",
-    "react-native-pager-view": "5.0.12"
+    "react-native-maps": "0.28.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
