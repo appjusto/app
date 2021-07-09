@@ -53,8 +53,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   const { value, returnScreen, returnParam } = route.params;
   // context
   const api = React.useContext(ApiContext);
-  const consumer = useSelector(getConsumer)!;
-  const { favoritePlaces } = consumer;
+  const consumer = useSelector(getConsumer);
   // state
   const [isLoading, setLoading] = React.useState(false);
   const { coords } = useLastKnownLocation();
@@ -72,13 +71,13 @@ export const AddressComplete = ({ navigation, route }: Props) => {
       ...sections,
       { title: t('Resultados da busca'), data: autocompletePredictions, key: 'search-results' },
     ];
-    const addresses = (favoritePlaces ?? []).map((place) => place.address);
+    const addresses = (consumer?.favoritePlaces ?? []).map((place) => place.address);
     sections = [
       ...sections,
       { title: t('Últimos endereços utilizados'), data: addresses, key: 'last-used-address' },
     ];
     return sections;
-  }, [autocompletePredictions, favoritePlaces]);
+  }, [autocompletePredictions, consumer?.favoritePlaces]);
   // helpers
   // using cancel token to allow canceling ongoing requests after unmounting
   const createCancelToken = useAxiosCancelToken();
@@ -136,10 +135,12 @@ export const AddressComplete = ({ navigation, route }: Props) => {
       Keyboard.dismiss();
       setAutoCompletePredictions([]); // clearing predictions hides the modal
       setSelectedAddress(item);
-      const favoritePlace = favoritePlaces?.find((p) => p.address.description === item.description);
+      const favoritePlace = consumer?.favoritePlaces?.find(
+        (p) => p.address.description === item.description
+      );
       if (favoritePlace?.additionalInfo) setAdditionalInfo(favoritePlace.additionalInfo);
     },
-    [favoritePlaces]
+    [consumer?.favoritePlaces]
   );
 
   // confirm button callback
