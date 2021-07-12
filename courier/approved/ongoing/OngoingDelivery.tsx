@@ -44,7 +44,11 @@ export default function ({ navigation, route }: Props) {
   const order = useObserveOrder(orderId);
   const [code, setCode] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
-  const [modalOpen, setModalOpen] = React.useState(false);
+  const modalVisible =
+    order?.type === 'food' &&
+    order.dispatchingState === 'arrived-pickup' &&
+    order.status === 'ready';
+  const [modalOpen, setModalOpen] = React.useState(modalVisible);
   const consumerId = order?.consumer.id;
   const businessId = order?.business?.id;
   // side effects
@@ -55,7 +59,11 @@ export default function ({ navigation, route }: Props) {
   // modal
   React.useEffect(() => {
     if (!order) return;
-    if (order.dispatchingState === 'arrived-pickup' && order.type === 'food') {
+    if (
+      order.dispatchingState === 'arrived-pickup' &&
+      order.type === 'food' &&
+      (order.status === 'ready' || order.status === 'dispatching')
+    ) {
       setModalOpen(true);
     }
   }, [order]);
@@ -120,9 +128,9 @@ export default function ({ navigation, route }: Props) {
           setLoading(false);
         } else {
           await api.order().nextDispatchingState(orderId);
-          if (order.dispatchingState === 'going-pickup' && order.type === 'food') {
-            setModalOpen(true);
-          }
+          // if (order.dispatchingState === 'going-pickup' && order.type === 'food') {
+          //   setModalOpen(true);
+          // }
           setTimeout(() => {
             setLoading(false);
           }, 5000);
@@ -147,9 +155,7 @@ export default function ({ navigation, route }: Props) {
   };
   // UI
   const { type, dispatchingState, status } = order;
-  const nextStepDisabled =
-    isLoading ||
-    (type === 'food' && dispatchingState === 'arrived-pickup' && status !== 'dispatching');
+  const nextStepDisabled = isLoading || (type === 'food' && dispatchingState === 'arrived-pickup');
   const nextStepLabel = (() => {
     const dispatchingState = order?.dispatchingState;
     if (!dispatchingState || dispatchingState === 'going-pickup') {
@@ -195,6 +201,12 @@ export default function ({ navigation, route }: Props) {
         {/* Status slider */}
         {dispatchingState && dispatchingState !== 'arrived-destination' ? (
           <View style={{ paddingHorizontal: padding }}>
+            {modalVisible ||
+            (status === 'dispatching' && dispatchingState !== 'going-destination') ? (
+              <View style={{ paddingVertical: padding }}>
+                <DefaultButton title={t('Recebi o pedido')} onPress={() => setModalOpen(true)} />
+              </View>
+            ) : null}
             <StatusControl
               key={dispatchingState}
               style={{ marginBottom: padding }}
