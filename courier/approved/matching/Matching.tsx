@@ -153,7 +153,7 @@ export default function ({ navigation, route }: Props) {
               <Text style={[texts.sm, { color: colors.green600 }]}>{t('Entrega')}</Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                 <Text style={[texts.x2l]}>
-                  {formatDistance(matchRequest.distance)} {t('no percurso total')}
+                  {formatDistance(matchRequest.distance)} {t('até a entrega')}
                 </Text>
                 <Text style={[texts.md, { flexWrap: 'wrap', maxWidth: '80%' }]} numberOfLines={3}>
                   {matchRequest.destinationAddress}
