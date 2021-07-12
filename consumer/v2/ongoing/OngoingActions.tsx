@@ -31,20 +31,6 @@ export const OngoingActions = ({
   // state
   const chat = useObserveOrderChat(order.id, user.uid);
   const unread = unreadMessages(chat, user.uid);
-  const title = (() => {
-    if (unread[0].from.agent === 'business') {
-      return t('Nova mensagem do restaurante');
-    } else {
-      return t('Nova mensagem do entregador');
-    }
-  })();
-  const subtitle = (() => {
-    if (unread[0].from.agent === 'business') {
-      return t('Olá, precisamos falar com você');
-    } else {
-      return t('Olá, preciso falar com você');
-    }
-  })();
   return (
     <PaddedView style={{ flex: 1 }}>
       <Text style={[texts.xs, { color: colors.green600 }]}>{t('Entregar em')}</Text>
@@ -94,8 +80,10 @@ export const OngoingActions = ({
           >
             <IconMessageReceived />
             <View style={{ marginLeft: padding }}>
-              <Text style={{ ...texts.sm }}>{title}</Text>
-              <Text style={{ ...texts.xs, color: colors.grey700 }}>{subtitle}</Text>
+              <Text style={{ ...texts.sm }}>{t('Você tem uma nova mensagem')}</Text>
+              <Text style={{ ...texts.xs, color: colors.grey700 }}>
+                {t('Olá, precisamos falar com você')}
+              </Text>
             </View>
           </PaddedView>
         </TouchableOpacity>

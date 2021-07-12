@@ -186,7 +186,7 @@ export default function ({ navigation, route }: Props) {
               onMessageReceived={(from) => openChat(from.id, from.agent)}
             />
             <HR />
-            {order.type === 'food' && order.status !== 'dispatching' ? (
+            {order.type === 'food' ? (
               <PaddedView>
                 <DefaultButton
                   title={t('Abrir chat com o restaurante')}
