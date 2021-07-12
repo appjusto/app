@@ -183,7 +183,7 @@ export default function ({ navigation, route }: Props) {
               order={order}
               navigateToReportIssue={navigateToOrderProblem}
               navigateToConfirmCancel={navigateToConfirmCancel}
-              newMessage={false}
+              onMessageReceived={(from) => openChat(from.id, from.agent)}
             />
             <HR />
             {order.type === 'food' && order.status !== 'dispatching' ? (

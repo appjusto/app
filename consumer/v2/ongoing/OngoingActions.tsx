@@ -1,9 +1,15 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { Order, WithId } from '../../../../types';
+import { useSelector } from 'react-redux';
+import { ChatMessageUser, Order, WithId } from '../../../../types';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { IconMessageReceived } from '../../../common/icons/icon-message-received';
+import {
+  unreadMessages,
+  useObserveOrderChat,
+} from '../../../common/store/api/order/hooks/useObserveOrderChat';
+import { getUser } from '../../../common/store/user/selectors';
 import { borders, colors, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
@@ -11,15 +17,34 @@ type Props = {
   order: WithId<Order>;
   navigateToReportIssue: () => void;
   navigateToConfirmCancel: () => void;
-  newMessage: boolean;
+  onMessageReceived: (from: ChatMessageUser) => void;
 };
 
 export const OngoingActions = ({
   order,
   navigateToReportIssue,
   navigateToConfirmCancel,
-  newMessage,
+  onMessageReceived,
 }: Props) => {
+  // redux
+  const user = useSelector(getUser)!;
+  // state
+  const chat = useObserveOrderChat(order.id, user.uid);
+  const unread = unreadMessages(chat, user.uid);
+  const title = (() => {
+    if (unread[0].from.agent === 'business') {
+      return t('Nova mensagem do restaurante');
+    } else {
+      return t('Nova mensagem do entregador');
+    }
+  })();
+  const subtitle = (() => {
+    if (unread[0].from.agent === 'business') {
+      return t('Olá, precisamos falar com você');
+    } else {
+      return t('Olá, preciso falar com você');
+    }
+  })();
   return (
     <PaddedView style={{ flex: 1 }}>
       <Text style={[texts.xs, { color: colors.green600 }]}>{t('Entregar em')}</Text>
@@ -57,24 +82,23 @@ export const OngoingActions = ({
           </TouchableOpacity>
         </View>
       </View>
-      {newMessage ? (
-        // looks like this will be for messages from restaurant and courier
-        <PaddedView
-          style={{
-            ...borders.default,
-            backgroundColor: colors.yellow,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
-          <IconMessageReceived />
-          <View style={{ marginLeft: padding }}>
-            <Text style={{ ...texts.sm }}>{t('Nova mensagem do restaurante')}</Text>
-            <Text style={{ ...texts.xs, color: colors.grey700 }}>
-              {t('Olá, precisamos falar com você')}
-            </Text>
-          </View>
-        </PaddedView>
+      {unread.length > 0 ? (
+        <TouchableOpacity onPress={() => onMessageReceived(unread[0].from)}>
+          <PaddedView
+            style={{
+              ...borders.default,
+              backgroundColor: colors.yellow,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            <IconMessageReceived />
+            <View style={{ marginLeft: padding }}>
+              <Text style={{ ...texts.sm }}>{title}</Text>
+              <Text style={{ ...texts.xs, color: colors.grey700 }}>{subtitle}</Text>
+            </View>
+          </PaddedView>
+        </TouchableOpacity>
       ) : (
         <View
           style={{
