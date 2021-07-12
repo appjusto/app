@@ -9,21 +9,14 @@ import { HorizontalSelectItem } from '../../../common/components/buttons/Horizon
 import PaddedView from '../../../common/components/containers/PaddedView';
 import HR from '../../../common/components/views/HR';
 import useNotificationToken from '../../../common/hooks/useNotificationToken';
-import { StatusAndMessages } from '../../../common/screens/orders/ongoing/StatusAndMessages';
-import OrderMap from '../../../common/screens/orders/OrderMap';
-import { OrderAdditionalInfo } from '../../../common/screens/orders/summary/OrderAdditionaInfo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useObserveOrderConfirmation } from '../../../common/store/api/order/hooks/useObserveOrderConfirmation';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { borders, colors, padding, screens } from '../../../common/styles';
+import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { OrderCostBreakdown } from '../common/breakdown/OrderCostBreakdown';
-import { DeliveredItems } from '../common/DeliveredItems';
-import { OrderPlacesSummary } from '../common/order-summary/OrderPlacesSummary';
 import { LoggedNavigatorParamList } from '../types';
-import { DeliveryActions } from './DeliveryActions';
 import { DeliveryConfirmation } from './DeliveryConfirmation';
-import { DeliveryInfo } from './DeliveryInfo';
 import { FoodOrderItemsInfo } from './FoodOrderItemsInfo';
 import { OngoingActions } from './OngoingActions';
 import { OngoingMapAndInfo } from './OngoingMapAndInfo';
@@ -113,7 +106,6 @@ export default function ({ navigation, route }: Props) {
     }
   }, [navigation, order, orderId]);
   console.log(orderId);
-  const [newScreen, setNewScreen] = React.useState(true);
   // UI
   // showing the indicator until the order is loaded
   if (!order) {
@@ -124,13 +116,7 @@ export default function ({ navigation, route }: Props) {
     );
   }
   // UI handlers
-  // old handler
-  // const navigateToReportIssue = () =>
-  //   navigation.navigate('ReportIssue', {
-  //     orderId: order.id,
-  //     issueType: 'consumer-delivery-problem',
-  //   });
-  // new handler
+
   const navigateToOrderProblem = () =>
     navigation.navigate('OngoingOrderProblem', {
       orderId: order.id,
@@ -154,190 +140,47 @@ export default function ({ navigation, route }: Props) {
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
     >
-      {newScreen ? (
-        <View style={{ flex: 1 }}>
-          {/* top */}
-          <OngoingOrderStatus order={order} />
-          {order.status !== 'dispatching' && <HR height={padding} />}
-          <OngoingMapAndInfo
-            order={order}
-            onCourierDetail={navigateToCourierDetail}
-            onChatWithCourier={openChatWithCourier}
+      <View style={{ flex: 1 }}>
+        {/* top */}
+        <OngoingOrderStatus order={order} />
+        {order.status !== 'dispatching' && <HR height={padding} />}
+        <OngoingMapAndInfo
+          order={order}
+          onCourierDetail={navigateToCourierDetail}
+          onChatWithCourier={openChatWithCourier}
+        />
+        {order.dispatchingState !== 'arrived-pickup' ? (
+          <DeliveryConfirmation
+            data={codeFeedbackData}
+            selected={codeFeedback}
+            onSelect={setCodeFeedback}
+            switchValue={wantsCode}
+            onChangeCodeDelivery={() => setWantsCode(!wantsCode)}
+            confirmation={confirmation}
           />
-          {order.dispatchingState !== 'arrived-pickup' ? (
-            <DeliveryConfirmation
-              data={codeFeedbackData}
-              selected={codeFeedback}
-              onSelect={setCodeFeedback}
-              switchValue={wantsCode}
-              onChangeCodeDelivery={() => setWantsCode(!wantsCode)}
-              confirmation={confirmation}
-            />
+        ) : null}
+        <FoodOrderItemsInfo order={order} />
+        <HR height={padding} />
+        <OrderCostBreakdown order={order} selectedFare={order.fare} />
+        <HR height={padding} />
+        <View style={{ paddingBottom: 24 }}>
+          <OngoingActions
+            order={order}
+            navigateToReportIssue={navigateToOrderProblem}
+            navigateToConfirmCancel={navigateToConfirmCancel}
+            onMessageReceived={(from) => openChat(from.id, from.agent)}
+          />
+          <HR />
+          {order.type === 'food' ? (
+            <PaddedView>
+              <DefaultButton
+                title={t('Abrir chat com o restaurante')}
+                onPress={() => openChatWithRestaurant()}
+              />
+            </PaddedView>
           ) : null}
-          <FoodOrderItemsInfo order={order} />
-          <HR height={padding} />
-          <OrderCostBreakdown order={order} selectedFare={order.fare} />
-          <HR height={padding} />
-          <View style={{ paddingBottom: 24 }}>
-            <OngoingActions
-              order={order}
-              navigateToReportIssue={navigateToOrderProblem}
-              navigateToConfirmCancel={navigateToConfirmCancel}
-              onMessageReceived={(from) => openChat(from.id, from.agent)}
-            />
-            <HR />
-            {order.type === 'food' ? (
-              <PaddedView>
-                <DefaultButton
-                  title={t('Abrir chat com o restaurante')}
-                  onPress={() => openChatWithRestaurant()}
-                />
-              </PaddedView>
-            ) : null}
-          </View>
         </View>
-      ) : (
-        <View>
-          {order.type === 'p2p' ? (
-            <View style={{ flex: 1, ...borders.default, borderColor: 'white' }}>
-              <OngoingOrderStatus order={order} />
-              {order.status !== 'dispatching' ? (
-                <View style={{ flex: 1 }}>
-                  <OrderPlacesSummary order={order} onEditStep={() => null} />
-                  <View style={{ flex: 1 }} />
-                  <PaddedView
-                    style={{
-                      marginTop: padding,
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <View>
-                      <DefaultButton
-                        title={t('Relatar problema')}
-                        secondary
-                        onPress={navigateToOrderProblem}
-                      />
-                    </View>
-                    <View>
-                      <DefaultButton
-                        title={t('Cancelar pedido')}
-                        secondary
-                        onPress={navigateToConfirmCancel}
-                      />
-                    </View>
-                  </PaddedView>
-                  <View style={{ flex: 1 }} />
-                </View>
-              ) : (
-                <View style={{ flex: 1 }}>
-                  <OrderMap order={order} ratio={1} />
-                  <StatusAndMessages
-                    order={order}
-                    confirmation={confirmation}
-                    onPress={(from) => openChat(from.id, from.agent)}
-                  />
-                  <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
-                  <DefaultButton
-                    title={t('Abrir chat com o entregador')}
-                    onPress={() => openChatWithCourier()}
-                    style={{ marginHorizontal: padding, marginBottom: padding }}
-                  />
-
-                  <HR height={padding} />
-                  <View style={{ marginBottom: padding }}>
-                    <DeliveryActions
-                      order={order}
-                      onChangeRoute={() =>
-                        navigation.navigate('P2POrderNavigator', {
-                          screen: 'CreateOrderP2P',
-                          params: {
-                            orderId,
-                          },
-                        })
-                      }
-                      navigateToReportIssue={navigateToOrderProblem}
-                      navigateToConfirmCancel={navigateToConfirmCancel}
-                    />
-                  </View>
-                </View>
-              )}
-            </View>
-          ) : (
-            <View style={{ flex: 1, ...borders.default, borderColor: 'white' }}>
-              <OngoingOrderStatus order={order} />
-              {order.status !== 'dispatching' ? (
-                <View style={{ flex: 1 }}>
-                  <HR height={padding} />
-                  <DeliveredItems order={order} />
-                  {order.additionalInfo ? (
-                    <View>
-                      <OrderAdditionalInfo
-                        value={order.additionalInfo}
-                        onAddInfo={() => null}
-                        editable={false}
-                      />
-                    </View>
-                  ) : null}
-                  <HR height={padding} />
-                  <View style={{ paddingTop: padding }}>
-                    <OrderCostBreakdown order={order} selectedFare={order.fare} />
-                  </View>
-                  <HR height={padding} />
-                  <DeliveryActions
-                    order={order}
-                    onChangeRoute={navigateToChangeRoute}
-                    navigateToReportIssue={navigateToOrderProblem}
-                    navigateToConfirmCancel={navigateToConfirmCancel}
-                  />
-                  <View style={{ flex: 1 }} />
-                  <PaddedView>
-                    <DefaultButton
-                      title={t('Abrir chat com o restaurante')}
-                      onPress={() => openChatWithRestaurant()}
-                    />
-                  </PaddedView>
-                </View>
-              ) : (
-                <View style={{ flex: 1 }}>
-                  <OrderMap order={order} ratio={1} />
-                  <StatusAndMessages
-                    order={order}
-                    confirmation={confirmation}
-                    onPress={(from) => openChat(from.id, from.agent)}
-                  />
-                  <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
-                  {/* pode estar causando o problema de clicar no topo - chat em 'food' */}
-                  <DefaultButton
-                    title={t('Abrir chat com o entregador')}
-                    onPress={() => openChatWithCourier()}
-                    style={{ marginHorizontal: padding, marginBottom: padding }}
-                  />
-                  <HR />
-                  <HR height={padding} />
-                  <DeliveredItems order={order} />
-                  <HR height={padding} />
-                  <DeliveryActions
-                    order={order}
-                    onChangeRoute={navigateToChangeRoute}
-                    navigateToReportIssue={navigateToOrderProblem}
-                    navigateToConfirmCancel={navigateToConfirmCancel}
-                  />
-                  <View style={{ marginHorizontal: padding, marginBottom: padding }}>
-                    <DefaultButton
-                      title={t('Abrir chat com o restaurante')}
-                      onPress={() => openChatWithRestaurant()}
-                      style={{ marginBottom: padding }}
-                      secondary
-                    />
-                  </View>
-                </View>
-              )}
-            </View>
-          )}
-        </View>
-      )}
+      </View>
     </ScrollView>
   );
 }

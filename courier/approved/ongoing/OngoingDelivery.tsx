@@ -239,6 +239,7 @@ export default function ({ navigation, route }: Props) {
             navigation.navigate('DeliveryProblem', { orderId });
             setModalOpen(false);
           }}
+          onModalClose={() => setModalOpen(false)}
         />
       </View>
     </KeyboardAwareScrollView>
