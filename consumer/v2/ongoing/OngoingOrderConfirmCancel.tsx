@@ -37,8 +37,12 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
     navigation.navigate('OngoingOrderCancelOrder', {
       orderId,
       acknowledgedCosts: cancellationInfo!.costs,
+      issueType:
+        order?.type === 'food'
+          ? 'consumer-cancel-food-with-payment'
+          : 'consumer-cancel-p2p-with-payment',
     });
-  }, [navigation, orderId, cancellationInfo]);
+  }, [navigation, orderId, cancellationInfo, order]);
   // side effects
   React.useEffect(() => {
     if (cancellationInfo?.costs === 0) cancelOrderHandler();
