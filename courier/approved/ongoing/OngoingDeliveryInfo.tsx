@@ -21,10 +21,13 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
   const nextPlace = courierNextPlace(order);
   const tallerDevice = useTallerDevice();
   const addressLabel = (() => {
-    if (!dispatchingState || dispatchingState === 'going-pickup') {
+    if (
+      !dispatchingState ||
+      dispatchingState === 'going-pickup' ||
+      dispatchingState === 'arrived-pickup'
+    ) {
       return t('Retirada');
     } else if (
-      dispatchingState === 'arrived-pickup' ||
       dispatchingState === 'arrived-destination' ||
       dispatchingState === 'going-destination'
     ) {
@@ -127,7 +130,7 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
             </View>
           ) : null}
         </View>
-      ) : order.dispatchingState !== 'arrived-pickup' ? (
+      ) : (
         <View style={{ marginTop: halfPadding }}>
           <Text style={[texts.xl]} numberOfLines={2}>
             {nextPlace?.address.main}
@@ -150,7 +153,7 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
             </View>
           ) : null}
         </View>
-      ) : null}
+      )}
     </PaddedView>
   );
 };

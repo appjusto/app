@@ -204,18 +204,19 @@ export default function ({ navigation, route }: Props) {
             {modalVisible ||
             (status === 'dispatching' && dispatchingState !== 'going-destination') ? (
               <View style={{ paddingVertical: padding }}>
-                <DefaultButton title={t('Recebi o pedido')} onPress={() => setModalOpen(true)} />
+                <DefaultButton title={t('Receber pedido')} onPress={() => setModalOpen(true)} />
               </View>
-            ) : null}
-            <StatusControl
-              key={dispatchingState}
-              style={{ marginBottom: padding }}
-              text={nextStepLabel}
-              disabled={nextStepDisabled}
-              isLoading={isLoading}
-              onConfirm={nextDispatchingStateHandler}
-              color={sliderColor}
-            />
+            ) : (
+              <StatusControl
+                key={dispatchingState}
+                style={{ marginBottom: padding }}
+                text={nextStepLabel}
+                disabled={nextStepDisabled}
+                isLoading={isLoading}
+                onConfirm={nextDispatchingStateHandler}
+                color={sliderColor}
+              />
+            )}
           </View>
         ) : null}
         {/* chat with restaurant */}
