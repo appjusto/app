@@ -166,7 +166,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
       return (
         <PaddedView>
           <DefaultButton
-            title={t('Para pedir, faça login')}
+            title={t('Faça login para pedir')}
             onPress={() => navigation.navigate('WelcomeScreen')}
           />
         </PaddedView>
