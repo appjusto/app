@@ -1,4 +1,4 @@
-import { Complement, OrderItem, WithId } from '@appjusto/types';
+import { Complement, OrderItem, OrderItemComplement, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -14,6 +14,7 @@ import useTallerDevice from '../../../../../common/hooks/useTallerDevice';
 import { IconSemaphoreSmall } from '../../../../../common/icons/icon-semaphore-small';
 import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
+import { getParent } from '../../../../../common/store/api/business/menu';
 import { getBusinessNextOpeningDay } from '../../../../../common/store/api/business/selectors';
 import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 import * as helpers from '../../../../../common/store/api/order/helpers';
@@ -26,7 +27,7 @@ import {
   useContextBusiness,
   useContextBusinessId,
 } from '../../../../../common/store/context/business';
-import { useContextMenuGetCategory } from '../../../../../common/store/context/menu';
+import { useContextMenu, useContextMenuOrdering } from '../../../../../common/store/context/menu';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import {
   borders,
@@ -59,7 +60,8 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const business = useContextBusiness();
   const businessId = useContextBusinessId();
   const activeOrder = useContextActiveOrder();
-  const getCategory = useContextMenuGetCategory();
+  const menu = useContextMenu();
+  const ordering = useContextMenuOrdering();
   const tallerDevice = useTallerDevice();
   // redux store
   const consumer = useSelector(getConsumer)!;
@@ -86,15 +88,21 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         id: product.id,
         name: product.name,
         price: product.price,
-        categoryName: getCategory(product.id)?.name ?? '',
+        categoryName: getParent(ordering!, menu!, product.id)?.name ?? '',
       },
       quantity,
       notes,
-      complements: complements.map((complement) => ({
-        name: complement.name,
-        complementId: complement.id,
-        price: complement.price,
-      })),
+      complements: complements.map(
+        (complement) =>
+          ({
+            name: complement.name,
+            complementId: complement.id,
+            price: complement.price,
+            groupName:
+              getParent(product.complementsOrder!, product.complementsGroups!, complement.id)
+                ?.name ?? '',
+          } as OrderItemComplement)
+      ),
     } as OrderItem;
   }, [product, itemId, quantity, notes, complements]);
   const canAddItemToOrder = React.useMemo(() => {

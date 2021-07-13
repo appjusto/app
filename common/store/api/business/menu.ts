@@ -26,3 +26,16 @@ export const getSorted = <T extends object, T2 extends object>(
     };
   });
 };
+
+export const getParent = <T extends object>(
+  ordering: Ordering,
+  firstLevels: WithId<T>[],
+  secondLevelID: string
+) =>
+  firstLevels.find(
+    (first) =>
+      first.id ===
+      Object.entries(ordering.secondLevelIdsByFirstLevelId).find(([_, ids]) =>
+        ids.includes(secondLevelID)
+      )![0]
+  );

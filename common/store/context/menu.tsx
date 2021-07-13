@@ -1,10 +1,10 @@
-import { Category, WithId } from '@appjusto/types';
+import { Category, Ordering, WithId } from '@appjusto/types';
 import React from 'react';
 import { useMenu } from '../api/business/hooks/useMenu';
 
 interface Value {
-  menu: Category[] | undefined;
-  getCategory: (productId: string) => WithId<Category> | undefined;
+  menu: WithId<Category>[] | undefined;
+  ordering: Ordering | undefined;
 }
 
 const MenuContext = React.createContext<Value | undefined>(undefined);
@@ -23,6 +23,6 @@ export const useContextMenu = () => {
   return React.useContext(MenuContext)!.menu;
 };
 
-export const useContextMenuGetCategory = () => {
-  return React.useContext(MenuContext)!.getCategory;
+export const useContextMenuOrdering = () => {
+  return React.useContext(MenuContext)!.ordering;
 };
