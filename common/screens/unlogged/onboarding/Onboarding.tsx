@@ -41,17 +41,7 @@ export const Onboarding = ({ navigation, route }: Props) => {
   const steps = flavor === 'courier' ? config.courier : config.consumer;
   const [step, setStep] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
-  const [state, setState] = React.useState('');
-  const [city, setCity] = React.useState('');
-  // effects
-  React.useEffect(() => {
-    if (route.params?.state) {
-      setState(route.params.state);
-    }
-    if (route.params?.city) {
-      setCity(route.params.city);
-    }
-  }, [route.params]);
+
   // refs
   const pagerView = React.useRef<PagerView>(null);
   const { height } = Dimensions.get('window');
@@ -67,7 +57,7 @@ export const Onboarding = ({ navigation, route }: Props) => {
           await api.profile().updateProfile(user.uid, { onboarded: true });
           navigation.replace('ProfilePending');
         } else {
-          await api.profile().updateProfile(user.uid, { onboarded: true, city, state });
+          await api.profile().updateProfile(user.uid, { onboarded: true });
           navigation.replace('MainNavigator', { screen: 'Home' });
         }
       } catch (error) {
@@ -99,28 +89,6 @@ export const Onboarding = ({ navigation, route }: Props) => {
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                 {tallerDevice ? <View>{icon}</View> : null}
                 <Text style={{ ...texts.x2l, marginTop: 32, textAlign: 'center' }}>{header}</Text>
-                {/* {input && (
-                  <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 32 }}>
-                    <Pressable
-                      style={{ marginRight: halfPadding, flex: 1 }}
-                      onPress={() => navigation.navigate('SelectLocation', { mode: 'states' })}
-                    >
-                      <LabeledText title={t('Estado')} placeholder={t('UF')}>
-                        {route.params?.state}
-                      </LabeledText>
-                    </Pressable>
-                    <Pressable
-                      style={{ flex: 3 }}
-                      onPress={() =>
-                        navigation.navigate('SelectLocation', { mode: 'cities', state })
-                      }
-                    >
-                      <LabeledText title={t('Cidade')} placeholder={t('Digite a cidade')}>
-                        {route.params?.city}
-                      </LabeledText>
-                    </Pressable>
-                  </View>
-                )} */}
                 {body.map((value) => (
                   <Text key={value} style={{ ...texts.md, marginTop: 32, textAlign: 'center' }}>
                     {value}
