@@ -30,6 +30,7 @@ export const ActiveOrderProvider = ({ businessId, orderId, children }: Props) =>
     )
   );
   const value: Value = { order: order ?? quote };
+  // console.log('ActiveOrderProvider', value.order?.id);
   return <ActiveOrderContext.Provider value={value}>{children}</ActiveOrderContext.Provider>;
 };
 

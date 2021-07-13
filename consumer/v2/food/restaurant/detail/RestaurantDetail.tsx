@@ -4,11 +4,8 @@ import React from 'react';
 import { ActivityIndicator, SectionList, TouchableOpacity, View } from 'react-native';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';
 import HR from '../../../../../common/components/views/HR';
-import { useMenu } from '../../../../../common/store/api/business/hooks/useMenu';
-import {
-  useContextBusiness,
-  useContextBusinessId,
-} from '../../../../../common/store/context/business';
+import { useContextBusiness } from '../../../../../common/store/context/business';
+import { useContextMenu } from '../../../../../common/store/context/menu';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { colors, halfPadding, padding, screens } from '../../../../../common/styles';
 import { RestaurantHeader } from '../../common/RestaurantHeader';
@@ -28,8 +25,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   // context
   const restaurant = useContextBusiness();
   const activeOrder = useContextActiveOrder();
-  // state
-  const menu = useMenu(useContextBusinessId());
+  const menu = useContextMenu();
   // side effects
   React.useLayoutEffect(() => {
     navigation.setOptions({

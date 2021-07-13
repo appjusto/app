@@ -1,8 +1,13 @@
-import { Category } from '@appjusto/types';
+import { Category, WithId } from '@appjusto/types';
 import React from 'react';
 import { useMenu } from '../api/business/hooks/useMenu';
 
-const MenuContext = React.createContext<Category[] | undefined>(undefined);
+interface Value {
+  menu: Category[] | undefined;
+  getCategory: (productId: string) => WithId<Category> | undefined;
+}
+
+const MenuContext = React.createContext<Value | undefined>(undefined);
 
 interface Props {
   businessId: string;
@@ -10,10 +15,14 @@ interface Props {
 }
 
 export const MenuProvider = ({ businessId, children }: Props) => {
-  const menu = useMenu(businessId);
-  return <MenuContext.Provider value={menu}>{children}</MenuContext.Provider>;
+  const value = useMenu(businessId);
+  return <MenuContext.Provider value={value}>{children}</MenuContext.Provider>;
 };
 
 export const useContextMenu = () => {
-  return React.useContext(MenuContext);
+  return React.useContext(MenuContext)!.menu;
+};
+
+export const useContextMenuGetCategory = () => {
+  return React.useContext(MenuContext)!.getCategory;
 };

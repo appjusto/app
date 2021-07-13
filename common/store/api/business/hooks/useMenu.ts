@@ -7,6 +7,16 @@ export const useMenu = (businessId: string) => {
   const categories = useCategories(businessId);
   const products = useProducts(businessId);
   const ordering = useObserveMenuOrdering(businessId);
-
-  return getSorted(categories, products, ordering);
+  const menu = getSorted(categories, products, ordering);
+  const getCategory = (productId: string) =>
+    ordering
+      ? categories.find(
+          (category) =>
+            category.id ===
+            Object.entries(ordering.secondLevelIdsByFirstLevelId).find(([_, ids]) =>
+              ids.includes(productId)
+            )![0]
+        )
+      : undefined;
+  return { menu, getCategory };
 };
