@@ -124,45 +124,47 @@ export default function ({ navigation, route }: Props) {
             </>
           </TouchableWithoutFeedback>
 
-          <View style={{ marginTop: padding }}>
-            <DefaultInput
-              value={email}
-              title={t('Acesse sua conta')}
-              placeholder={t('Digite seu e-mail')}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              blurOnSubmit
-              autoCapitalize="none"
-            />
-          </View>
-          <View
-            style={{
-              flexDirection: tallerDevice ? 'row' : 'column',
-              alignItems: tallerDevice ? 'center' : 'flex-start',
-              justifyContent: 'space-between',
-              marginTop: padding,
-              flex: 1,
-            }}
-          >
-            <View>
-              <CheckField
-                checked={acceptedTerms}
-                onPress={() => setAcceptTerms(!acceptedTerms)}
-                text={t('Aceito os termos de uso do app')}
+          <View style={{ flex: 1 }}>
+            <View style={{ marginTop: padding }}>
+              <DefaultInput
+                value={email}
+                title={t('Acesse sua conta')}
+                placeholder={t('Digite seu e-mail')}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                blurOnSubmit
+                autoCapitalize="none"
               />
             </View>
-            <View style={{ marginTop: !tallerDevice ? halfPadding : 0 }}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('Terms');
-                }}
-              >
-                <Text style={[texts.xs, { color: colors.green600 }]}>{t('Ler os termos')}</Text>
-              </TouchableOpacity>
+            <View
+              style={{
+                flexDirection: tallerDevice ? 'row' : 'column',
+                alignItems: tallerDevice ? 'center' : 'flex-start',
+                justifyContent: 'space-between',
+                marginTop: padding,
+                // flex: 1,
+              }}
+            >
+              <View>
+                <CheckField
+                  checked={acceptedTerms}
+                  onPress={() => setAcceptTerms(!acceptedTerms)}
+                  text={t('Aceito os termos de uso do app')}
+                />
+              </View>
+              <View style={{ marginTop: !tallerDevice ? halfPadding : 0 }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('Terms');
+                  }}
+                >
+                  <Text style={[texts.xs, { color: colors.green600 }]}>{t('Ler os termos')}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
           <View style={{ flex: 1 }} />
-          <View style={{ marginTop: 32, marginBottom: padding, flex: 1 }}>
+          <View style={{ marginTop: 32, marginBottom: padding }}>
             <DefaultButton
               disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
               title={t('Entrar')}

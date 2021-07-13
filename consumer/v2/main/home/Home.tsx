@@ -32,6 +32,14 @@ export default function ({ navigation }: Props) {
   const consumer = useSelector(getConsumer);
   const ongoingOrders = useSelector(getOrders);
   // UI
+  // console.log(consumer?.id);
+  // if (consumer?.onboarded && consumer?.situation !== 'approved') {
+  //   return (
+  //     <View style={screens.centered}>
+  //       <ActivityIndicator size="large" color={colors.green500} />
+  //     </View>
+  //   );
+  // }
   return (
     <View style={[screens.headless, screens.config]}>
       {/* <StatusBar /> */}
