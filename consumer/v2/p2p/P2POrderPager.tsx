@@ -296,7 +296,6 @@ export default function ({
             placeOrder={placeOrder}
             navigateToFillPaymentInfo={navigateToFillPaymentInfo}
             navigateFleetDetail={navigateFleetDetail}
-            modalVisible={false}
             navigateToPixPayment={navigateToPixPayment}
             navigateToAboutCharges={navigateToAboutCharges}
             wantsCpf={wantsCpf}

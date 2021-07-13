@@ -30,9 +30,7 @@ type Props = {
   placeOrder: (fleetId: string) => void;
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleetId: string) => void;
-  modalVisible: boolean;
   navigateToPixPayment: (total: number, fleetId: string) => void;
-  onModalClose?: () => void;
   navigateToAboutCharges: () => void;
   additionalInfo?: string;
   onAddInfo?: (text: string) => void;
@@ -56,8 +54,6 @@ export const OrderSummary = ({
   placeOrder,
   navigateToFillPaymentInfo,
   navigateFleetDetail,
-  modalVisible,
-  onModalClose,
   navigateToPixPayment,
   navigateToAboutCharges,
   additionalInfo,
@@ -128,8 +124,6 @@ export const OrderSummary = ({
             order={order}
             onEditItemPress={onEditItemPress!}
             onAddItemsPress={onAddItemsPress!}
-            onModalClose={onModalClose!}
-            modalVisible={modalVisible}
           />
           <OrderAdditionalInfo value={additionalInfo} onAddInfo={onAddInfo} />
         </View>

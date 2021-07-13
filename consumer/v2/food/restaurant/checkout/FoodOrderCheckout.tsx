@@ -48,7 +48,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     consumer.paymentChannel?.mostRecentPaymentMethodId
   );
   const [isLoading, setLoading] = React.useState(false);
-  const [modalVisible, setModalVisible] = React.useState(false);
   const [destinationModalVisible, setDestinationModalVisible] = React.useState(false);
   const [confirmedDestination, setConfirmedDestination] = React.useState(false);
   const [orderAdditionalInfo, setOrderAdditionalInfo] = React.useState('');
@@ -193,14 +192,11 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         }}
         onEditItemPress={(productId, itemId) => {
           navigation.navigate('ItemDetail', { productId, itemId });
-          setModalVisible(false);
         }}
         onAddItemsPress={() => navigation.navigate('RestaurantDetail')}
         placeOrder={placeOrderHandler}
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         navigateFleetDetail={navigateFleetDetail}
-        modalVisible={modalVisible}
-        onModalClose={() => setModalVisible(!modalVisible)}
         navigateToPixPayment={(total, fleetId) =>
           navigation.navigate('PayWithPix', { orderId: order.id!, total, fleetId })
         }

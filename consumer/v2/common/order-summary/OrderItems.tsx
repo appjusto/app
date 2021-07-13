@@ -11,29 +11,21 @@ import { OrderItemModal } from './OrderItemModal';
 
 interface Props {
   order: WithId<Order>;
-  modalVisible: boolean;
   onEditItemPress: (productId: string, itemId: string) => void;
   onAddItemsPress: () => void;
-  onModalClose: () => void;
 }
 
-export const OrderItems = ({
-  order,
-  modalVisible,
-  onEditItemPress,
-  onAddItemsPress,
-  onModalClose,
-}: Props) => {
+export const OrderItems = ({ order, onEditItemPress, onAddItemsPress }: Props) => {
+  // state
+  const [selectedItem, setSelectedItem] = React.useState<string>();
+  // UI
   return (
     <View>
       <SingleHeader title={t('Revise seu pedido')} />
       <HR />
       {order.items?.map((item) => (
         <View key={item.id}>
-          <TouchableOpacity
-            // onPress={() => onEditItemPress(item.product.id, item.id)}
-            onPress={onModalClose}
-          >
+          <TouchableOpacity onPress={() => setSelectedItem(item.id)}>
             <View style={{ paddingHorizontal: padding, paddingVertical: 12 }}>
               <View
                 style={{
@@ -75,9 +67,9 @@ export const OrderItems = ({
           </TouchableOpacity>
           <OrderItemModal
             item={item}
-            visible={modalVisible}
+            visible={selectedItem === item.id}
             order={order}
-            onModalClose={onModalClose}
+            onModalClose={() => setSelectedItem(undefined)}
             onEditItemPress={() => onEditItemPress(item.product.id, item.id)}
           />
         </View>
