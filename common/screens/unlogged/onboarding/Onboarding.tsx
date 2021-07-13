@@ -2,17 +2,8 @@
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import {
-  Dimensions,
-  NativeSyntheticEvent,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Dimensions, NativeSyntheticEvent, ScrollView, StyleSheet, Text, View } from 'react-native';
 import PagerView, { ViewPagerOnPageScrollEventData } from 'react-native-pager-view';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { LoggedNavigatorParamList } from '../../../../consumer/v2/types';
@@ -20,7 +11,6 @@ import { UnapprovedParamList } from '../../../../courier/unapproved/types';
 import { t } from '../../../../strings';
 import { ApiContext } from '../../../app/context';
 import DefaultButton from '../../../components/buttons/DefaultButton';
-import LabeledText from '../../../components/texts/LabeledText';
 import { getFlavor } from '../../../store/config/selectors';
 import { getConsumer } from '../../../store/consumer/selectors';
 import { getCourier } from '../../../store/courier/selectors';
@@ -78,7 +68,7 @@ export const Onboarding = ({ navigation, route }: Props) => {
           navigation.replace('ProfilePending');
         } else {
           await api.profile().updateProfile(user.uid, { onboarded: true, city, state });
-          navigation.replace('RegistrationSubmitted');
+          navigation.replace('MainNavigator', { screen: 'Home' });
         }
       } catch (error) {
         console.log(flavor === 'courier' ? courier : consumer);
@@ -104,12 +94,12 @@ export const Onboarding = ({ navigation, route }: Props) => {
     <View style={{ ...screens.default }}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <PagerView ref={pagerView} style={{ flex: 1 }} onPageScroll={onPageScroll}>
-          {steps.map(({ icon, header, body, input }, index) => (
+          {steps.map(({ icon, header, body }, index) => (
             <View key={index} style={[{ paddingHorizontal: padding, flex: 1 }, styles.bigScreen]}>
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                 {tallerDevice ? <View>{icon}</View> : null}
                 <Text style={{ ...texts.x2l, marginTop: 32, textAlign: 'center' }}>{header}</Text>
-                {input && (
+                {/* {input && (
                   <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 32 }}>
                     <Pressable
                       style={{ marginRight: halfPadding, flex: 1 }}
@@ -130,7 +120,7 @@ export const Onboarding = ({ navigation, route }: Props) => {
                       </LabeledText>
                     </Pressable>
                   </View>
-                )}
+                )} */}
                 {body.map((value) => (
                   <Text key={value} style={{ ...texts.md, marginTop: 32, textAlign: 'center' }}>
                     {value}
@@ -163,15 +153,19 @@ export const Onboarding = ({ navigation, route }: Props) => {
           />
         ))}
       </View>
-      <SafeAreaView>
+      <View>
         <DefaultButton
           title={step === steps.length - 1 ? t('Começar') : t('Avançar')}
-          style={{ marginTop: 32, marginBottom: padding, marginHorizontal: padding }}
+          style={{
+            marginTop: 32,
+            marginBottom: padding,
+            marginHorizontal: padding,
+          }}
           onPress={advanceHandler}
-          disabled={isLoading || (flavor === 'consumer' && !city && step === 2)}
+          disabled={isLoading}
           activityIndicator={isLoading}
         />
-      </SafeAreaView>
+      </View>
     </View>
   );
 };

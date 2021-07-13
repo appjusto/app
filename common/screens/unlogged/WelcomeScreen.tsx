@@ -141,6 +141,7 @@ export default function ({ navigation, route }: Props) {
               alignItems: tallerDevice ? 'center' : 'flex-start',
               justifyContent: 'space-between',
               marginTop: padding,
+              flex: 1,
             }}
           >
             <View>
@@ -161,7 +162,7 @@ export default function ({ navigation, route }: Props) {
             </View>
           </View>
           <View style={{ flex: 1 }} />
-          <View style={{ marginTop: 32, marginBottom: padding }}>
+          <View style={{ marginTop: 32, marginBottom: padding, flex: 1 }}>
             <DefaultButton
               disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
               title={t('Entrar')}

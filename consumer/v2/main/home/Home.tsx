@@ -3,7 +3,6 @@ import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { IconLogin } from '../../../../common/icons/icon-login';
@@ -34,7 +33,7 @@ export default function ({ navigation }: Props) {
   const ongoingOrders = useSelector(getOrders);
   // UI
   return (
-    <SafeAreaView style={[screens.config]}>
+    <View style={[screens.headless, screens.config]}>
       {/* <StatusBar /> */}
       <ScrollView>
         <HomeControls
@@ -83,6 +82,6 @@ export default function ({ navigation }: Props) {
           </View>
         </PaddedView>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

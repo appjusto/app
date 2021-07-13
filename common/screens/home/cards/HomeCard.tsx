@@ -27,7 +27,7 @@ export default function ({ title, subtitle, icon, grey, bgColor, borderColor }: 
       {icon}
       <View style={{ marginLeft: padding }}>
         <Text style={{ ...texts.sm }}>{title}</Text>
-        <View style={{ maxWidth: '90%' }}>
+        <View style={{ maxWidth: '85%' }}>
           <Text
             style={{
               ...texts.xs,
@@ -35,7 +35,6 @@ export default function ({ title, subtitle, icon, grey, bgColor, borderColor }: 
               flexWrap: 'wrap',
               width: '100%',
             }}
-            numberOfLines={2}
           >
             {subtitle}
           </Text>
