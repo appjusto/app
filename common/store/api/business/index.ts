@@ -81,8 +81,7 @@ export default class BusinessApi {
   ) {
     const unsubscribe = this.refs
       .getBusinessProductComplementsGroupsRef(businessId, productId)
-      // TODO: uncomment after enabling on the backend
-      // .where('enabled', '==', true)
+      .where('enabled', '==', true)
       .onSnapshot(
         (snapshot) => resultHandler(documentsAs<ComplementGroup>(snapshot.docs)),
         (error) => {
@@ -99,8 +98,7 @@ export default class BusinessApi {
   ) {
     const unsubscribe = this.refs
       .getBusinessProductComplementsRef(businessId, productId)
-      // TODO: uncomment after enabling on the backend
-      // .where('enabled', '==', true)
+      .where('enabled', '==', true)
       .onSnapshot(
         (snapshot) => resultHandler(documentsAs<Complement>(snapshot.docs)),
         (error) => {
