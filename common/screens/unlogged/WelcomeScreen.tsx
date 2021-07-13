@@ -11,7 +11,6 @@ import {
   View,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { LocationDisclosureModal } from '../../../courier/approved/main/home/LocationDisclosureModal';
 import { t } from '../../../strings';
@@ -81,11 +80,11 @@ export default function ({ navigation, route }: Props) {
 
   const welcomeMessage =
     flavor === 'consumer'
-      ? t('Um movimento por relações mais justas no delivery.')
+      ? t('Um delivery aberto, transparente e consciente.')
       : t('Ganhe mais, com autonomia e transparência.');
   // UI
   return (
-    <SafeAreaView style={{ ...screens.default }}>
+    <View style={{ ...screens.default }}>
       <KeyboardAwareScrollView
         enableOnAndroid
         enableAutomaticScroll
@@ -99,19 +98,19 @@ export default function ({ navigation, route }: Props) {
             <>
               <ShowIf test={tallerDevice && flavor === 'consumer'}>
                 {() => (
-                  <View style={{ left: -12 }}>
+                  <View style={{ left: -16 }}>
                     <IconIllustrationIntro />
                   </View>
                 )}
               </ShowIf>
               <ShowIf test={tallerDevice && flavor === 'courier'}>
                 {() => (
-                  <View style={{ left: -12 }}>
+                  <View style={{ left: -16 }}>
                     <IconMotoCycleBig />
                   </View>
                 )}
               </ShowIf>
-              <View style={{ marginTop: 32 }}>
+              <View style={{ marginTop: padding }}>
                 <IconLogoGreen />
               </View>
               <View style={{ marginTop: padding }}>
@@ -162,7 +161,7 @@ export default function ({ navigation, route }: Props) {
             </View>
           </View>
           <View style={{ flex: 1 }} />
-          <View style={{ marginTop: 32 }}>
+          <View style={{ marginTop: 32, marginBottom: padding }}>
             <DefaultButton
               disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
               title={t('Entrar')}
@@ -175,6 +174,6 @@ export default function ({ navigation, route }: Props) {
           {flavor === 'courier' && <LocationDisclosureModal />}
         </View>
       </KeyboardAwareScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

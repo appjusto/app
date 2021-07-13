@@ -22,7 +22,7 @@ export default function () {
       <Stack.Screen
         name="WelcomeScreen"
         component={WelcomeScreen}
-        options={{ title: t('Faça login') }}
+        options={{ title: t('Entrar no AppJusto') }}
       />
       <Stack.Screen
         name="SignInFeedback"
