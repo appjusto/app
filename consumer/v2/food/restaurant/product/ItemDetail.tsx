@@ -26,6 +26,7 @@ import {
   useContextBusiness,
   useContextBusinessId,
 } from '../../../../../common/store/context/business';
+import { useContextMenuGetCategory } from '../../../../../common/store/context/menu';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import {
   borders,
@@ -58,6 +59,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const business = useContextBusiness();
   const businessId = useContextBusinessId();
   const activeOrder = useContextActiveOrder();
+  const getCategory = useContextMenuGetCategory();
   const tallerDevice = useTallerDevice();
   // redux store
   const consumer = useSelector(getConsumer)!;
@@ -84,6 +86,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         id: product.id,
         name: product.name,
         price: product.price,
+        categoryName: getCategory(product.id)?.name ?? '',
       },
       quantity,
       notes,
