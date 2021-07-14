@@ -31,22 +31,6 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   // screen state
   const order = useObserveOrder(orderId);
   const [isLoading, setLoading] = React.useState(false);
-  // side effects
-  // when adding new payment method
-  React.useEffect(() => {
-    if (paymentMethodId) {
-      (async () => {
-        setLoading(true);
-        try {
-          api.order().updateOrderCallable(orderId, { payableWith: 'credit_card', paymentMethodId });
-          setLoading(false);
-          navigation.navigate('OngoingOrder', { orderId });
-        } catch (error) {
-          setLoading(false);
-        }
-      })();
-    }
-  }, [api, orderId, paymentMethodId, navigation]);
   // handlers
   const reviewOrderHandler = React.useCallback(
     (paymentMethodId?: string) => {
@@ -73,14 +57,31 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   );
   // effects
   React.useEffect(() => {
+    if (!order) return;
     if (paymentMethodId) {
-      navigation.setParams({
-        paymentMethodId: undefined,
-      });
-      setLoading(true);
-      setTimeout(() => reviewOrderHandler(paymentMethodId), 1000);
+      // when the items' charge is ok but the courier's charge is declined
+      if (order.dispatchingStatus === 'declined') {
+        (async () => {
+          setLoading(true);
+          try {
+            api
+              .order()
+              .updateOrderCallable(orderId, { payableWith: 'credit_card', paymentMethodId });
+            setLoading(false);
+            navigation.navigate('OngoingOrder', { orderId });
+          } catch (error) {
+            setLoading(false);
+          }
+        })();
+      } else {
+        navigation.setParams({
+          paymentMethodId: undefined,
+        });
+        setLoading(true);
+        setTimeout(() => reviewOrderHandler(paymentMethodId), 1000);
+      }
     }
-  }, [navigation, order, paymentMethodId, reviewOrderHandler]);
+  }, [navigation, order, paymentMethodId, reviewOrderHandler, api, orderId]);
   // UI
   if (!order || isLoading) {
     return (
