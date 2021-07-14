@@ -139,6 +139,7 @@ export default function ({ navigation, route }: Props) {
                 title={t('Acesse sua conta')}
                 placeholder={t('Digite seu e-mail')}
                 onChangeText={setEmail}
+                autoCompleteType="email"
                 keyboardType="email-address"
                 blurOnSubmit
                 autoCapitalize="none"
@@ -175,7 +176,7 @@ export default function ({ navigation, route }: Props) {
           <View style={{ marginTop: 32, paddingBottom: padding }}>
             <DefaultButton
               disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
-              title={t('Faça login para pedir')}
+              title={flavor === 'courier' ? t('Entrar') : t('Faça login para pedir')}
               onPress={signInHandler}
               activityIndicator={busy}
               style={{ marginBottom: padding }}
