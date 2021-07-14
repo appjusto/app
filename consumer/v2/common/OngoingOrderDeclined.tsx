@@ -2,6 +2,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
@@ -25,9 +26,27 @@ type Props = {
 export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   // params
   const { orderId, paymentMethodId } = route.params;
+  // context
+  const api = React.useContext(ApiContext);
   // screen state
   const order = useObserveOrder(orderId);
   const [isLoading, setLoading] = React.useState(false);
+  // side effects
+  // when adding new payment method
+  React.useEffect(() => {
+    if (paymentMethodId) {
+      (async () => {
+        setLoading(true);
+        try {
+          api.order().updateOrderCallable(orderId, { payableWith: 'credit_card', paymentMethodId });
+          setLoading(false);
+          navigation.navigate('OngoingOrder', { orderId });
+        } catch (error) {
+          setLoading(false);
+        }
+      })();
+    }
+  }, [api, orderId, paymentMethodId, navigation]);
   // handlers
   const reviewOrderHandler = React.useCallback(
     (paymentMethodId?: string) => {

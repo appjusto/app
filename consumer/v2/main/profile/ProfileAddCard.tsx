@@ -20,6 +20,7 @@ import { showToast } from '../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { RestaurantNavigatorParamList } from '../../food/restaurant/types';
+import { OngoingOrderNavigatorParamList } from '../../ongoing/types';
 import { P2POrderNavigatorParamList } from '../../p2p/types';
 import { ProfileParamList } from './types';
 
@@ -30,7 +31,10 @@ export type ProfileAddCardParamList = {
 };
 
 type ScreenNavigationProp = StackNavigationProp<
-  ProfileParamList & RestaurantNavigatorParamList & P2POrderNavigatorParamList,
+  ProfileParamList &
+    RestaurantNavigatorParamList &
+    P2POrderNavigatorParamList &
+    OngoingOrderNavigatorParamList,
   'ProfileAddCard'
 >;
 type ScreenRouteProp = RouteProp<ProfileAddCardParamList, 'ProfileAddCard'>;
