@@ -19,6 +19,7 @@ import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import DefaultInput from '../../components/inputs/DefaultInput';
 import ShowIf from '../../components/views/ShowIf';
+import { IconBetaSmall } from '../../icons/icon-beta-small';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { IconMotoCycleBig } from '../../icons/icon-motocycle-big';
@@ -55,7 +56,6 @@ export default function ({ navigation, route }: Props) {
   const [acceptedTerms, setAcceptTerms] = useState(false);
   // side effects
   useSegmentScreen('Welcome');
-
   // handlers
   const signInHandler = useCallback(async () => {
     Keyboard.dismiss();
@@ -98,19 +98,27 @@ export default function ({ navigation, route }: Props) {
             <>
               <ShowIf test={tallerDevice && flavor === 'consumer'}>
                 {() => (
-                  <View style={{ left: -16 }}>
-                    <IconIllustrationIntro />
+                  <View
+                    style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}
+                  >
+                    <View style={{ top: -16 }}>
+                      <IconIllustrationIntro />
+                    </View>
+                    <IconBetaSmall />
                   </View>
                 )}
               </ShowIf>
               <ShowIf test={tallerDevice && flavor === 'courier'}>
                 {() => (
-                  <View style={{ left: -16 }}>
+                  <View
+                    style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}
+                  >
                     <IconMotoCycleBig />
+                    <IconBetaSmall />
                   </View>
                 )}
               </ShowIf>
-              <View style={{ marginTop: padding }}>
+              <View style={{ marginTop: flavor === 'courier' ? padding : 0 }}>
                 <IconLogoGreen />
               </View>
               <View style={{ marginTop: padding }}>
@@ -167,7 +175,7 @@ export default function ({ navigation, route }: Props) {
           <View style={{ marginTop: 32, paddingBottom: padding }}>
             <DefaultButton
               disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
-              title={t('Entrar')}
+              title={t('Faça login para pedir')}
               onPress={signInHandler}
               activityIndicator={busy}
               style={{ marginBottom: padding }}
