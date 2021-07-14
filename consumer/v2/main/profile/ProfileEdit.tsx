@@ -78,7 +78,7 @@ export default function ({ navigation, route }: Props) {
   const surnameRef = React.useRef<TextInput>(null);
   const cpfRef = React.useRef<TextInput>(null);
   const phoneRef = React.useRef<TextInput>(null);
-  console.log(consumer.phone);
+
   // UI
   return (
     <View style={screens.config}>

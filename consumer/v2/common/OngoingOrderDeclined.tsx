@@ -88,14 +88,13 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
         background={colors.white}
       >
         <DefaultButton title={t('Alterar forma de pagamento')} onPress={changePaymentHandler} />
-        {order.type === 'food' && order.dispatchingStatus === 'declined' ? null : (
+        <View style={{ paddingVertical: padding }}>
           <DefaultButton
             title={t('Revisar pedido')}
             secondary
-            style={{ paddingVertical: padding }}
             onPress={() => reviewOrderHandler()}
           />
-        )}
+        </View>
       </FeedbackView>
     </ScrollView>
   );

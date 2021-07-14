@@ -93,7 +93,7 @@ export default function ({ navigation, route }: Props) {
     }
     // whenever a consumer payment method has been approved for the itens
     // but has no funds to pay for the courier in a food order
-    else if (order.status === 'declined') {
+    else if (order.status === 'declined' || order.dispatchingStatus === 'declined') {
       navigation.replace('OngoingOrderDeclined', { orderId });
     }
     // we will need to navigate to OrderCanceled when the order is cancelled by
