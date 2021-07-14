@@ -11,7 +11,7 @@ import { ApiContext, AppDispatch } from '../../common/app/context';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
-import useLastKnownLocation from '../../common/hooks/useLastKnownLocation';
+import useLastKnownLocation from '../../common/location/useLastKnownLocation';
 import useCourierDocumentImage from '../../common/store/api/courier/hooks/useCourierDocumentImage';
 import useCourierSelfie from '../../common/store/api/courier/hooks/useCourierSelfie';
 import { useSegmentScreen } from '../../common/store/api/track';

@@ -1,9 +1,11 @@
-import { Cuisine, WithId } from '@appjusto/types';
+import { ConsumerProfile, Cuisine, WithId } from '@appjusto/types';
 import React from 'react';
-import { Image, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { Image, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import * as icons from '../../../../assets/icons';
 import DoubleHeader from '../../../../common/components/texts/DoubleHeader';
-import { borders, colors, halfPadding, texts } from '../../../../common/styles';
+import { IconLogin } from '../../../../common/icons/icon-login';
+import HomeCard from '../../../../common/screens/home/cards/HomeCard';
+import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { LocationBar } from './LocationBar';
 
@@ -12,6 +14,8 @@ type Props = {
   onLocationPress: () => void;
   onSearchPress: () => void;
   onCuisineSelect: (cuisine: WithId<Cuisine> | null) => void;
+  consumer: WithId<ConsumerProfile> | undefined;
+  onLogin: () => void;
 };
 
 export const FoodOrderHomeHeader = ({
@@ -19,6 +23,8 @@ export const FoodOrderHomeHeader = ({
   onLocationPress,
   onSearchPress,
   onCuisineSelect,
+  consumer,
+  onLogin,
 }: Props) => {
   return (
     <View>
@@ -27,6 +33,17 @@ export const FoodOrderHomeHeader = ({
           <LocationBar />
         </View>
       </TouchableWithoutFeedback>
+      {/* login */}
+      {!consumer ? (
+        <TouchableOpacity onPress={onLogin} style={{ marginTop: 24, paddingHorizontal: padding }}>
+          <HomeCard
+            icon={<IconLogin />}
+            title={t('Crie uma conta ou faça o login')}
+            subtitle={t('Você precisa estar logado para pedir')}
+            // grey
+          />
+        </TouchableOpacity>
+      ) : null}
       {/* search */}
       <DoubleHeader
         title={t('Já sabe o que quer?')}

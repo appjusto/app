@@ -86,15 +86,14 @@ export default function ({ navigation, route }: Props) {
         enableOnAndroid
         enableAutomaticScroll
         keyboardOpeningTime={0}
-        style={{ ...screens.config }}
-        keyboardShouldPersistTaps="always"
+        style={{ flex: 1 }}
+        keyboardShouldPersistTaps="never"
         contentContainerStyle={{ flexGrow: 1 }}
       >
         <PaddedView style={{ flex: 1 }}>
           <Text
             style={{
               ...texts.x2l,
-              paddingTop: padding,
               paddingBottom: halfPadding,
             }}
           >
@@ -170,13 +169,14 @@ export default function ({ navigation, route }: Props) {
             onChangeText={(text) => setPhone(trim(text))}
           />
           <View style={{ flex: 1 }} />
-          <DefaultButton
-            style={{ marginBottom: padding }}
-            title={isProfileComplete ? t('Atualizar') : t('Salvar e avançar')}
-            onPress={updateProfileHandler}
-            disabled={!canSubmit || isLoading}
-            activityIndicator={isLoading}
-          />
+          <View style={{ paddingVertical: padding }}>
+            <DefaultButton
+              title={isProfileComplete ? t('Atualizar') : t('Salvar e avançar')}
+              onPress={updateProfileHandler}
+              disabled={!canSubmit || isLoading}
+              activityIndicator={isLoading}
+            />
+          </View>
         </PaddedView>
       </KeyboardAwareScrollView>
     </View>

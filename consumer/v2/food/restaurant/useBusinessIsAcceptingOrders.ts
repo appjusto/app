@@ -4,6 +4,8 @@ import { useLoggedContextGetServerTime, useLoggedContextPlatformParams } from '.
 export const useBusinessIsAcceptingOrders = (business?: Business) => {
   const platformParams = useLoggedContextPlatformParams();
   const getServerTime = useLoggedContextGetServerTime();
+  if (!platformParams) return false;
+  if (!getServerTime) return false;
   if (!business) return false;
   if (!business.enabled) return false;
   if (business.status !== 'open') return false;

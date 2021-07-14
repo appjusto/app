@@ -23,16 +23,12 @@ export const LoggedContextProvider = (props: LoggedContextProps) => {
 
 export const useLoggedContextGetServerTime = () => {
   const context = React.useContext(LoggedContext);
-  if (!context) {
-    throw new Error('useLoggedContext must be used within the ApiProvider');
-  }
+  if (!context) return null;
   return context.getServerTime;
 };
 
 export const useLoggedContextPlatformParams = () => {
   const context = React.useContext(LoggedContext);
-  if (!context) {
-    throw new Error('useLoggedContext must be used within the ApiProvider');
-  }
+  if (!context) return null;
   return context.platformParams;
 };

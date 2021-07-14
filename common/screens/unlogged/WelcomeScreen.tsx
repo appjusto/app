@@ -11,7 +11,6 @@ import {
   View,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { LocationDisclosureModal } from '../../../courier/approved/main/home/LocationDisclosureModal';
 import { t } from '../../../strings';
@@ -20,6 +19,7 @@ import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import DefaultInput from '../../components/inputs/DefaultInput';
 import ShowIf from '../../components/views/ShowIf';
+import { IconBetaSmall } from '../../icons/icon-beta-small';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { IconMotoCycleBig } from '../../icons/icon-motocycle-big';
@@ -56,7 +56,6 @@ export default function ({ navigation, route }: Props) {
   const [acceptedTerms, setAcceptTerms] = useState(false);
   // side effects
   useSegmentScreen('Welcome');
-
   // handlers
   const signInHandler = useCallback(async () => {
     Keyboard.dismiss();
@@ -81,11 +80,11 @@ export default function ({ navigation, route }: Props) {
 
   const welcomeMessage =
     flavor === 'consumer'
-      ? t('Um movimento por relações mais justas no delivery.')
+      ? t('Um delivery aberto, transparente e consciente.')
       : t('Ganhe mais, com autonomia e transparência.');
   // UI
   return (
-    <SafeAreaView style={{ ...screens.default }}>
+    <View style={{ ...screens.default }}>
       <KeyboardAwareScrollView
         enableOnAndroid
         enableAutomaticScroll
@@ -99,19 +98,27 @@ export default function ({ navigation, route }: Props) {
             <>
               <ShowIf test={tallerDevice && flavor === 'consumer'}>
                 {() => (
-                  <View style={{ left: -12 }}>
-                    <IconIllustrationIntro />
+                  <View
+                    style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}
+                  >
+                    <View style={{ top: -16 }}>
+                      <IconIllustrationIntro />
+                    </View>
+                    <IconBetaSmall />
                   </View>
                 )}
               </ShowIf>
               <ShowIf test={tallerDevice && flavor === 'courier'}>
                 {() => (
-                  <View style={{ left: -12 }}>
+                  <View
+                    style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}
+                  >
                     <IconMotoCycleBig />
+                    <IconBetaSmall />
                   </View>
                 )}
               </ShowIf>
-              <View style={{ marginTop: 32 }}>
+              <View style={{ marginTop: flavor === 'courier' ? padding : 0 }}>
                 <IconLogoGreen />
               </View>
               <View style={{ marginTop: padding }}>
@@ -125,47 +132,50 @@ export default function ({ navigation, route }: Props) {
             </>
           </TouchableWithoutFeedback>
 
-          <View style={{ marginTop: padding }}>
-            <DefaultInput
-              value={email}
-              title={t('Acesse sua conta')}
-              placeholder={t('Digite seu e-mail')}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              blurOnSubmit
-              autoCapitalize="none"
-            />
-          </View>
-          <View
-            style={{
-              flexDirection: tallerDevice ? 'row' : 'column',
-              alignItems: tallerDevice ? 'center' : 'flex-start',
-              justifyContent: 'space-between',
-              marginTop: padding,
-            }}
-          >
-            <View>
-              <CheckField
-                checked={acceptedTerms}
-                onPress={() => setAcceptTerms(!acceptedTerms)}
-                text={t('Aceito os termos de uso do app')}
+          <View style={{ flex: 1 }}>
+            <View style={{ marginTop: padding }}>
+              <DefaultInput
+                value={email}
+                title={t('Acesse sua conta')}
+                placeholder={t('Digite seu e-mail')}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                blurOnSubmit
+                autoCapitalize="none"
               />
             </View>
-            <View style={{ marginTop: !tallerDevice ? halfPadding : 0 }}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('Terms');
-                }}
-              >
-                <Text style={[texts.xs, { color: colors.green600 }]}>{t('Ler os termos')}</Text>
-              </TouchableOpacity>
+            <View
+              style={{
+                flexDirection: tallerDevice ? 'row' : 'column',
+                alignItems: tallerDevice ? 'center' : 'flex-start',
+                justifyContent: 'space-between',
+                marginTop: padding,
+                // flex: 1,
+              }}
+            >
+              <View>
+                <CheckField
+                  checked={acceptedTerms}
+                  onPress={() => setAcceptTerms(!acceptedTerms)}
+                  text={t('Aceito os termos de uso do app')}
+                />
+              </View>
+              <View style={{ marginTop: !tallerDevice ? halfPadding : 0 }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('Terms');
+                  }}
+                >
+                  <Text style={[texts.xs, { color: colors.green600 }]}>{t('Ler os termos')}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
           <View style={{ flex: 1 }} />
-          <View style={{ marginTop: 32 }}>
+          <View style={{ marginTop: 32, paddingBottom: padding }}>
             <DefaultButton
               disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
-              title={t('Entrar')}
+              title={t('Faça login para pedir')}
               onPress={signInHandler}
               activityIndicator={busy}
               style={{ marginBottom: padding }}
@@ -175,6 +185,6 @@ export default function ({ navigation, route }: Props) {
           {flavor === 'courier' && <LocationDisclosureModal />}
         </View>
       </KeyboardAwareScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

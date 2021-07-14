@@ -33,7 +33,7 @@ export const RestaurantList = ({ sections, loading, onSelect, ...props }: Props)
   // UI
   return (
     <SectionList
-      style={{ ...screens.default, marginBottom: padding }}
+      style={{ ...screens.default, paddingBottom: padding }}
       ListEmptyComponent={
         loading ? (
           <View style={{ ...screens.centered, marginTop: padding }}>

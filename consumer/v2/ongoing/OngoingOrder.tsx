@@ -126,13 +126,13 @@ export default function ({ navigation, route }: Props) {
   };
   const navigateToCourierDetail = () =>
     navigation.navigate('OngoingOrderCourierDetail', { orderId });
-  const navigateToChangeRoute = () =>
-    navigation.navigate('P2POrderNavigator', {
-      screen: 'CreateOrderP2P',
-      params: {
-        orderId,
-      },
-    });
+  // const navigateToChangeRoute = () =>
+  //   navigation.navigate('P2POrderNavigator', {
+  //     screen: 'CreateOrderP2P',
+  //     params: {
+  //       orderId,
+  //     },
+  //   });
   // ongoing UI
   return (
     <ScrollView

@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
-import useLastKnownLocation from '../../../../common/hooks/useLastKnownLocation';
+import useLastKnownLocation from '../../../../common/location/useLastKnownLocation';
 import {
   updateCurrentLocation,
   updateCurrentPlace,
@@ -22,7 +22,7 @@ export const LocationBar = () => {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // redux store
-  const consumer = useSelector(getConsumer)!;
+  const consumer = useSelector(getConsumer);
   const currentPlace = useSelector(getCurrentPlace);
   const currentLocation = useSelector(getCurrentLocation);
   // state
@@ -40,7 +40,7 @@ export const LocationBar = () => {
       return;
     }
     // select last used place if exists
-    const lastPlace = consumer.favoritePlaces?.find(() => true);
+    const lastPlace = consumer?.favoritePlaces?.find(() => true);
     if (lastPlace) {
       dispatch(updateCurrentPlace(lastPlace));
       dispatch(updateCurrentLocation(lastPlace.location!));

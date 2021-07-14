@@ -2,19 +2,18 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import * as Sentry from 'sentry-expo';
-import { ApiContext } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import useLastKnownLocation from '../../../../common/hooks/useLastKnownLocation';
-import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
+import { IconLogin } from '../../../../common/icons/icon-login';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
+import { HomeCouriersNearbyCard } from '../../../../common/screens/home/cards/HomeCouriersNearbyCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
+import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
+import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
-import { colors, padding, screens } from '../../../../common/styles';
+import { padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
@@ -22,52 +21,31 @@ import { HomeControls } from './controls/HomeControls';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<MainNavigatorParamList, 'Home'>,
-  StackNavigationProp<LoggedNavigatorParamList>
+  StackNavigationProp<LoggedNavigatorParamList & UnloggedParamList>
 >;
 type Props = {
   navigation: ScreenNavigationProp;
 };
 
 export default function ({ navigation }: Props) {
-  // context
-  const api = React.useContext(ApiContext);
   // redux store
+  const consumer = useSelector(getConsumer);
   const ongoingOrders = useSelector(getOrders);
-  // state
-  const { coords } = useLastKnownLocation();
-  const [availableCouriers, setAvailableCouriers] = React.useState(0);
-  // fetch total couriers
-  const fetchTotalCouriersNearby = async () => {
-    if (!coords) return;
-    try {
-      const { total } = await api.courier().fetchTotalCouriersNearby(coords);
-      setAvailableCouriers(total);
-    } catch (error) {
-      console.log(
-        `Error while calling api.courier().fetchTotalCouriersNearby(${coords.latitude},${coords.longitude})`
-      );
-      console.log(error);
-      Sentry.Native.captureException(error);
-    }
-  };
-  React.useEffect(() => {
-    navigation.addListener('focus', fetchTotalCouriersNearby);
-    return () => navigation.removeListener('focus', fetchTotalCouriersNearby);
-  });
-  React.useEffect(() => {
-    fetchTotalCouriersNearby();
-  }, [coords]);
   // UI
   return (
-    <SafeAreaView style={[screens.config]}>
+    <View style={[screens.headless, screens.config]}>
       {/* <StatusBar /> */}
       <ScrollView>
         <HomeControls
           onStartOrderPress={(type) => {
-            if (type === 'p2p') {
-              navigation.navigate('P2POrderNavigator', { screen: 'CreateOrderP2P' });
-            } else {
+            if (type === 'food') {
               navigation.navigate('FoodOrderNavigator', { screen: 'FoodOrderHome' });
+            } else {
+              if (consumer) {
+                navigation.navigate('P2POrderNavigator', { screen: 'CreateOrderP2P' });
+              } else {
+                navigation.navigate('WelcomeScreen');
+              }
             }
           }}
         />
@@ -84,21 +62,26 @@ export default function ({ navigation }: Props) {
               })
             }
           />
-          <View>
-            <HomeCard
-              icon={<IconMotocycle circleColor={colors.grey50} width={64} height={64} />}
-              title={`${availableCouriers} ${t('entregadores/as disponíveis')}`}
-              subtitle={t(`num raio de 15km`)}
-            />
-          </View>
+          {!consumer ? (
+            <TouchableOpacity onPress={() => navigation.navigate('WelcomeScreen')}>
+              <HomeCard
+                icon={<IconLogin />}
+                title={t('Crie uma conta ou faça o login')}
+                subtitle={t('Você precisa estar logado para pedir')}
+                // grey
+              />
+            </TouchableOpacity>
+          ) : null}
+          {/* ítalo wants to also show the HomeCouriersNearbyCard for unlogged consumers */}
+          <HomeCouriersNearbyCard />
           <View style={{ marginTop: padding }}>
             <HomeShareCard
               title="Divulgue o AppJusto"
-              subtitle="Compartilhe esse movimento por uma economia mais justa."
+              subtitle="Compartilhe esse movimento por uma economia mais justa"
             />
           </View>
         </PaddedView>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

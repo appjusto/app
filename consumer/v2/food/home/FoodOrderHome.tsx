@@ -4,12 +4,13 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
+import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
 import { useSearch } from '../../../../common/store/api/search/useSearch';
 import {
   updateCurrentLocation,
   updateCurrentPlace,
 } from '../../../../common/store/consumer/actions';
-import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
+import { getConsumer, getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import { SearchFilter } from '../../../../common/store/consumer/types';
 import { LoggedNavigatorParamList } from '../../types';
 import { sectionsFromResults } from '../restaurant/list';
@@ -19,7 +20,7 @@ import { FoodOrderHomeHeader } from './FoodOrderHomeHeader';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<FoodOrderNavigatorParamList, 'FoodOrderHome'>,
-  StackNavigationProp<LoggedNavigatorParamList>
+  StackNavigationProp<LoggedNavigatorParamList & UnloggedParamList>
 >;
 type ScreenRouteProp = RouteProp<FoodOrderNavigatorParamList, 'FoodOrderHome'>;
 
@@ -36,6 +37,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   // redux store
   const currentLocation = useSelector(getCurrentLocation);
+  const consumer = useSelector(getConsumer);
   // state
   const [filters, setFilters] = React.useState<SearchFilter[]>([]);
   const {
@@ -78,6 +80,8 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
           onCuisineSelect={(cuisine) => {
             setFilters(cuisine ? [{ type: 'cuisine', value: cuisine.name }] : []);
           }}
+          consumer={consumer}
+          onLogin={() => navigation.navigate('WelcomeScreen')}
         />
       }
       onSelect={(restaurantId) => {

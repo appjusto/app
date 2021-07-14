@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+import firebase from 'firebase';
 import i18n from 'i18n-js';
 import { round } from 'lodash';
 import { dateInput } from './utils';
@@ -21,6 +23,9 @@ export const formatTime = (
 export const formatDuration = (duration: number) => {
   return `${round(duration / 60, 0)} min`;
 };
+
+export const getETAWithMargin = (date: Date | firebase.firestore.FieldValue) =>
+  `${formatTime(date)} - ${formatTime(dayjs(dateInput(date)).add(15, 'minute').toDate())}`;
 
 export const formatHour = (value: string | undefined) => {
   let formatedNumber = '';

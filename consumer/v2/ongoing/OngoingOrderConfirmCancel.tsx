@@ -100,7 +100,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: padding,
+            paddingBottom: padding,
           }}
         >
           <View style={{ width: '48%' }}>

@@ -1,4 +1,5 @@
 import * as Linking from 'expo-linking';
+import { useURL } from 'expo-linking';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { getFlavor } from '../store/config/selectors';
@@ -13,7 +14,7 @@ export const useDeeplinkAction = () => {
   // redux
   const flavor = useSelector(getFlavor);
   // state
-  const deeplink = Linking.useUrl();
+  const deeplink = useURL();
   const [action, setAction] = React.useState<DeeplinkAction>();
   // side effects
   React.useEffect(() => {

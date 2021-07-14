@@ -21,7 +21,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import useAxiosCancelToken from '../../../common/hooks/useAxiosCancelToken';
-import useLastKnownLocation from '../../../common/hooks/useLastKnownLocation';
+import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { formatAddress } from '../../../common/utils/formatters';

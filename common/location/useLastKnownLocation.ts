@@ -1,10 +1,10 @@
 import { LatLng } from '@appjusto/types';
 import * as Location from 'expo-location';
-import * as Permissions from 'expo-permissions';
+import { requestForegroundPermissionsAsync } from 'expo-location';
 import React from 'react';
 
 const shouldAskPermission = (
-  response: Permissions.PermissionResponse | null | undefined
+  response: Location.LocationPermissionResponse | null | undefined
 ): boolean => {
   if (response === undefined) return false; // during initialization
   if (response === null) return true;
@@ -14,10 +14,12 @@ const shouldAskPermission = (
 
 export default function (enabled: boolean = true, key?: string) {
   // state
-  const [permissionResponse, setPermissionResponse] =
-    React.useState<Permissions.PermissionResponse | null | undefined>(undefined);
-  const [lastKnownLocation, setLastKnownLocation] =
-    React.useState<Location.LocationObject | null>(null);
+  const [permissionResponse, setPermissionResponse] = React.useState<
+    Location.LocationPermissionResponse | null | undefined
+  >(undefined);
+  const [lastKnownLocation, setLastKnownLocation] = React.useState<Location.LocationObject | null>(
+    null
+  );
   const coords: LatLng | undefined = React.useMemo(
     () =>
       lastKnownLocation
@@ -39,18 +41,18 @@ export default function (enabled: boolean = true, key?: string) {
     if (enabled) {
       if (shouldAskPermission(permissionResponse)) {
         (async () => {
-          setPermissionResponse(await Permissions.askAsync(Permissions.LOCATION));
+          setPermissionResponse(await requestForegroundPermissionsAsync());
         })();
         return;
       }
       if (permissionResponse?.granted) {
         (async () => {
-          const last = await Location.getLastKnownPositionAsync();
-          if (last) setLastKnownLocation(last);
-          else {
-            const current = await Location.getCurrentPositionAsync();
-            setLastKnownLocation(current);
-          }
+          // const last = await Location.getLastKnownPositionAsync();
+          // if (last) setLastKnownLocation(last);
+          // else {
+          const current = await Location.getCurrentPositionAsync();
+          setLastKnownLocation(current);
+          // }
         })();
       }
     }

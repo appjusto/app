@@ -92,9 +92,9 @@ export default function ({ children }: Props) {
   // effects
   React.useEffect(() => {
     (async () => {
-      await init(queryClient);
+      await init();
     })();
-  }, [queryClient]);
+  }, []);
   React.useEffect(() => {
     const subscription = Notifications.addNotificationReceivedListener(receivedHandler);
     const responseSubscription =

@@ -2,7 +2,6 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
 import React from 'react';
 import { Dimensions, Image, ImageURISource, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -57,10 +56,12 @@ export default function ({ navigation }: Props) {
   // screen state
   const [currentSelfie, setCurrentSelfie] = React.useState<ImageURISource | undefined | null>();
   const [newSelfie, setNewSelfie] = React.useState<ImageURISource | undefined | null>();
-  const [currentDocumentImage, setCurrentDocumentImage] =
-    React.useState<ImageURISource | undefined | null>();
-  const [newDocumentImage, setNewDocumentImage] =
-    React.useState<ImageURISource | undefined | null>();
+  const [currentDocumentImage, setCurrentDocumentImage] = React.useState<
+    ImageURISource | undefined | null
+  >();
+  const [newDocumentImage, setNewDocumentImage] = React.useState<
+    ImageURISource | undefined | null
+  >();
 
   type ChangeImageType = typeof setNewSelfie;
 
@@ -119,7 +120,7 @@ export default function ({ navigation }: Props) {
 
   // handlers
   const pickFromCamera = async (changeImage: ChangeImageType, aspect: [number, number]) => {
-    const { granted } = await Permissions.askAsync(Permissions.CAMERA);
+    const { granted } = await ImagePicker.requestCameraPermissionsAsync();
     if (granted) {
       const result = await ImagePicker.launchCameraAsync({ ...defaultImageOptions, aspect });
       if (result.cancelled) return;
@@ -132,7 +133,7 @@ export default function ({ navigation }: Props) {
     }
   };
   const pickFromGallery = async (changeImage: ChangeImageType, aspect: [number, number]) => {
-    const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    const { granted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (granted) {
       const result = await ImagePicker.launchImageLibraryAsync({ ...defaultImageOptions, aspect });
       if (result.cancelled) return;
