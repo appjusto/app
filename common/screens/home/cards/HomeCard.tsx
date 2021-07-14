@@ -25,9 +25,9 @@ export default function ({ title, subtitle, icon, grey, bgColor, borderColor }: 
       }}
     >
       {icon}
-      <View style={{ marginLeft: padding }}>
+      <View style={{ marginLeft: padding, maxWidth: '75%' }}>
         <Text style={{ ...texts.sm }}>{title}</Text>
-        <View style={{ maxWidth: '85%' }}>
+        <View>
           <Text
             style={{
               ...texts.xs,

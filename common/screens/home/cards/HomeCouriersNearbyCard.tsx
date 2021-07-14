@@ -53,7 +53,7 @@ export const HomeCouriersNearbyCard = () => {
       <HomeCard
         icon={<IconMotocycle circleColor={colors.grey50} width={64} height={64} />}
         title={`${availableCouriers} ${t('pessoas disponíveis')}`}
-        subtitle={t(`num raio de 15km`)}
+        subtitle={t('para entregas até 15km')}
       />
     </TouchableOpacity>
   );
