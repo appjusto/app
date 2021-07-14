@@ -92,7 +92,7 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
           <DefaultButton
             title={t('Revisar pedido')}
             secondary
-            style={{ marginVertical: padding }}
+            style={{ paddingVertical: padding }}
             onPress={() => reviewOrderHandler()}
           />
         )}

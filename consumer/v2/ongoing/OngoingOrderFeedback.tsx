@@ -76,8 +76,8 @@ export default ({ navigation, route }: Props) => {
   };
   // UI
   return (
-    <View style={{ ...screens.default, paddingBottom: padding }}>
-      <ScrollView scrollIndicatorInsets={{ right: 1 }}>
+    <View style={{ ...screens.default }}>
+      <ScrollView scrollIndicatorInsets={{ right: 1 }} style={{ paddingBottom: padding }}>
         {/* header */}
         <PaddedView>
           <View

@@ -164,7 +164,7 @@ export default function ({ navigation, route }: Props) {
             </View>
           </View>
           <View style={{ flex: 1 }} />
-          <View style={{ marginTop: 32, marginBottom: padding }}>
+          <View style={{ marginTop: 32, paddingBottom: padding }}>
             <DefaultButton
               disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
               title={t('Entrar')}

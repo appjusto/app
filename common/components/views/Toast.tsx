@@ -1,6 +1,6 @@
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Animated, Text, View } from 'react-native';
+import { Animated, Platform, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideToast } from '../../store/ui/actions';
 import { getToast } from '../../store/ui/selectors';
@@ -41,7 +41,7 @@ export default function () {
     <Animated.View
       style={{
         position: 'absolute',
-        bottom: 24,
+        bottom: Platform.OS === 'android' ? 0 : halfPadding,
         opacity,
         width: '100%',
         minHeight: 48,

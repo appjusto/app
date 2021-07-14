@@ -11,7 +11,6 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 // import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import PagerView, { ViewPagerOnPageScrollEventData } from 'react-native-pager-view';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import { StepControl } from '../../../common/components/controls/step-control/StepControl';
@@ -201,14 +200,13 @@ export default function ({
               </View>
             </TouchableWithoutFeedback>
             <View style={{ flex: 1 }} />
-            <SafeAreaView>
+            <View style={{ paddingBottom: padding }}>
               <DefaultButton
-                style={{ marginBottom: padding }}
                 title={t('Confirmar local de retirada')}
                 onPress={nextStepHandler}
                 disabled={!stepReady(step + 1)}
               />
-            </SafeAreaView>
+            </View>
           </KeyboardAwareScrollView>
         </View>
 
@@ -270,9 +268,8 @@ export default function ({
               </View>
             </TouchableWithoutFeedback>
             <View style={{ flex: 1 }} />
-            <SafeAreaView>
+            <View style={{ paddingBottom: padding }}>
               <DefaultButton
-                style={{ marginBottom: padding }}
                 title={t('Confirmar local de entrega')}
                 onPress={nextStepHandler}
                 disabled={!stepReady(step + 1)}
@@ -282,7 +279,7 @@ export default function ({
                   !order?.route
                 }
               />
-            </SafeAreaView>
+            </View>
           </KeyboardAwareScrollView>
         </View>
 

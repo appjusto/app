@@ -246,7 +246,6 @@ export default function ({ navigation, route }: Props) {
                 onPress={(from) => openChat(from.id, from.agent)}
               />
               <DeliveryInfo order={order} onCourierDetail={navigateToCourierDetail} />
-              {/* pode estar causando o problema de clicar no topo - chat em 'food' */}
               <DefaultButton
                 title={t('Abrir chat com entregador/a')}
                 onPress={() => openChatWithCourier()}
@@ -262,11 +261,11 @@ export default function ({ navigation, route }: Props) {
                 navigateToReportIssue={navigateToReportIssue}
                 navigateToConfirmCancel={navigateToConfirmCancel}
               />
-              <View style={{ marginHorizontal: padding, marginBottom: padding }}>
+              <View style={{ marginHorizontal: padding, paddingBottom: padding }}>
                 <DefaultButton
                   title={t('Abrir chat com o restaurante')}
                   onPress={() => openChatWithRestaurant()}
-                  style={{ marginBottom: padding }}
+                  style={{ paddingBottom: padding }}
                   secondary
                 />
               </View>

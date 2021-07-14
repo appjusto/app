@@ -217,7 +217,7 @@ export default function ({ navigation, route }: Props) {
           </Text>
           <View style={{ flex: 1 }} />
           <DefaultButton
-            style={{ marginVertical: padding }}
+            style={{ paddingVertical: padding }}
             title={t('Salvar')}
             onPress={saveCardHandler}
             disabled={!canSubmit || isLoading}

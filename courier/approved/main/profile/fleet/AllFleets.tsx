@@ -64,7 +64,7 @@ export default function ({ navigation }: Props) {
           </View>
         }
         renderItem={({ item }) => (
-          <View style={{ paddingHorizontal: padding, marginBottom: padding }}>
+          <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
             <CourierFleetCard fleet={item} listItem onPress={() => navigateFleetDetail(item.id)} />
           </View>
         )}

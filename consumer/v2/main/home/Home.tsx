@@ -77,7 +77,7 @@ export default function ({ navigation }: Props) {
           <View style={{ marginTop: padding }}>
             <HomeShareCard
               title="Divulgue o AppJusto"
-              subtitle="Compartilhe esse movimento por uma economia mais justa."
+              subtitle="Compartilhe esse movimento por uma economia mais justa"
             />
           </View>
         </PaddedView>

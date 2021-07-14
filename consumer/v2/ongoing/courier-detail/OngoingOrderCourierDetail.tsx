@@ -87,7 +87,7 @@ export const OngoingOrderCourierDetail = ({ navigation, route }: Props) => {
             ...texts.xs,
             color: colors.grey700,
             paddingHorizontal: padding,
-            marginBottom: padding,
+            paddingBottom: padding,
           }}
         >
           {t('Ao ligar, seu número será protegido e o/a entregador/a não verá seu telefone real.')}
