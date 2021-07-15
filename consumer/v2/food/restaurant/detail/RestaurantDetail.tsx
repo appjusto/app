@@ -66,6 +66,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
         style={{ flex: 1 }}
         keyExtractor={(item) => item.id}
         sections={sections}
+        stickySectionHeadersEnabled={false}
         ListHeaderComponent={
           <View style={{ marginBottom: halfPadding }}>
             <RestaurantHeader
