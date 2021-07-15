@@ -10,13 +10,17 @@ export const useObserveOrder = (orderId: string | undefined) => {
   // redux
   const user = useSelector(getUser);
   // state
-  const [order, setOrder] = React.useState<WithId<Order>>();
+  const [order, setOrder] = React.useState<WithId<Order> | null>();
   // side effects
   // observe order
   React.useEffect(() => {
     if (!user) return;
     if (!orderId) return;
-    return api.order().observeOrder(orderId, setOrder);
+    try {
+      return api.order().observeOrder(orderId, setOrder);
+    } catch (error) {
+      setOrder(null);
+    }
   }, [user, orderId, api]);
   // result
   return order;

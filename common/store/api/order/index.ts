@@ -124,8 +124,7 @@ export default class OrderApi {
     const unsubscribe = this.refs.getOrderRef(orderId).onSnapshot(
       (snapshot) => resultHandler(documentAs<Order>(snapshot)),
       (error) => {
-        console.log(error);
-        Sentry.Native.captureException(error);
+        throw error;
       }
     );
     // returns the unsubscribe function
