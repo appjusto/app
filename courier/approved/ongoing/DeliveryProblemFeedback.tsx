@@ -38,7 +38,7 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
 
   const feedbackHeaderTitle = (() => {
     if (issueType === 'courier-drops-food-delivery' || issueType === 'courier-drops-p2p-delivery') {
-      return t('O pedido foi cancelado');
+      return t('Você foi removido do pedido');
     } else {
       return t('Aguarde enquanto estamos analisando o seu problema.');
     }

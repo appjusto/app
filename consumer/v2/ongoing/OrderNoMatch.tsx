@@ -35,7 +35,7 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
   // side effects
   React.useEffect(() => {
     if (!order) return;
-    if (order.dispatchingStatus === 'matched') {
+    if (order.dispatchingStatus === 'matched' || order.dispatchingStatus === 'outsourced') {
       navigation.replace('OngoingOrder', { orderId });
     }
   }, [order, orderId, navigation]);
