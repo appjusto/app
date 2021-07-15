@@ -1,7 +1,8 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import { getOrderTotal } from '../../../../../common/store/api/order/helpers';
@@ -177,7 +178,14 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     );
   }
   return (
-    <ScrollView style={{ ...screens.default }}>
+    <KeyboardAwareScrollView
+      style={{ ...screens.default }}
+      scrollIndicatorInsets={{ right: 1 }}
+      enableOnAndroid
+      enableAutomaticScroll
+      keyboardOpeningTime={0}
+      keyboardShouldPersistTaps="never"
+    >
       <OrderSummary
         activityIndicator={isLoading}
         order={order}
@@ -228,6 +236,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           setDestinationModalVisible(false);
         }}
       />
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 };
