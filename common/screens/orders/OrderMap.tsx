@@ -1,9 +1,8 @@
-import { Order } from '@appjusto/types';
+import { LatLng, Order } from '@appjusto/types';
 import polyline from '@mapbox/polyline';
-import { FeatureCollection } from 'geojson';
 import React from 'react';
 import { Dimensions, Platform, View } from 'react-native';
-import { Geojson, Marker } from 'react-native-maps';
+import { Marker, Polyline } from 'react-native-maps';
 import DefaultMap from '../../components/views/DefaultMap';
 import { IconMapCourier } from '../../icons/icon-mapCourier';
 import { IconMapDestination } from '../../icons/icon-mapDestination';
@@ -22,31 +21,16 @@ export default function ({ order, ratio }: Props) {
   if (!route?.polyline) return null;
 
   const { width } = Dimensions.get('window');
-  const geojson: FeatureCollection = React.useMemo(
-    () => ({
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            ...polyline.toGeoJSON(route.polyline!),
-          },
-        },
-      ],
-    }),
-    [route.polyline]
-  );
-  // const routeCoordinates = polyline.decode(route.polyline).map((pair) => {
-  //   return { latitude: pair[0], longitude: pair[1] } as LatLng;
-  // });
+  const routeCoordinates = polyline.decode(route.polyline).map((pair) => {
+    return { latitude: pair[0], longitude: pair[1] } as LatLng;
+  });
 
   return (
     <View style={{ width, height: width / ratio, alignSelf: 'center' }}>
       <DefaultMap
         // coordinates={[origin.location, destination.location]}
-        // coordinates={routeCoordinates}
-        // fitToElements
+        coordinates={routeCoordinates}
+        fitToElements
         initialRegion={{
           ...destination.location,
           latitudeDelta: 0.03,
@@ -79,15 +63,12 @@ export default function ({ order, ratio }: Props) {
             <IconMapCourier />
           </Marker>
         )}
-        {Platform.OS === 'ios' ? (
-          <Geojson
-            geojson={geojson}
-            strokeColor="black"
-            fillColor="black"
-            strokeWidth={2}
-            lineCap="round"
-          />
-        ) : null}
+        {/* https://github.com/react-native-maps/react-native-maps/issues/3823 */}
+        {Platform.OS === 'android' ? (
+          <Polyline coordinates={routeCoordinates} lineDashPattern={[1]} />
+        ) : (
+          <Polyline coordinates={routeCoordinates} />
+        )}
       </DefaultMap>
     </View>
   );
