@@ -125,14 +125,14 @@ export default function ({ navigation, route }: Props) {
           Keyboard.dismiss();
           await api.order().completeDelivery(orderId, code);
           setLoading(false);
+        } else if (order.dispatchingState === 'going-destination') {
+          await api.order().nextDispatchingState(orderId);
+          setLoading(false);
         } else {
           await api.order().nextDispatchingState(orderId);
-          // if (order.dispatchingState === 'going-pickup' && order.type === 'food') {
-          //   setModalOpen(true);
-          // }
           setTimeout(() => {
             setLoading(false);
-          }, 5000);
+          }, 15000);
         }
       } catch (error) {
         setLoading(false);
