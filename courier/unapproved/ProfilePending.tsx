@@ -147,7 +147,7 @@ export default function ({ navigation, route }: Props) {
         {/* header */}
         <PaddedView>
           <Text style={{ ...texts.x2l, marginBottom: 24, marginTop: halfPadding }}>
-            {t('Cadastro de novo/a entregador/a')}
+            {t('Cadastro de novo/a\n entregador/a')}
           </Text>
           <DefaultButton
             title={t('Enviar cadastro')}

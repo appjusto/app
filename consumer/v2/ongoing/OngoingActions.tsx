@@ -62,11 +62,11 @@ export const OngoingActions = ({
             </View>
           ) : null}
         </View>
-        <View>
+        {/* <View>
           <TouchableOpacity onPress={() => null}>
             <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Alterar')}</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
       {unread.length > 0 ? (
         <TouchableOpacity onPress={() => onMessageReceived(unread[0].from)}>

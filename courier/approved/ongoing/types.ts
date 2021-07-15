@@ -22,6 +22,10 @@ export type OngoingDeliveryNavigatorParamList = {
     orderId: string;
     chatFrom?: ChatMessageUser;
   };
+  DeliveryProblemFeedback: {
+    issueType: IssueType;
+    orderId: string;
+  };
   CourierDropsOrder: {
     orderId: string;
     issueType: IssueType;
