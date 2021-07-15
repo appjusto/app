@@ -32,56 +32,46 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   const order = useObserveOrder(orderId);
   const [isLoading, setLoading] = React.useState(false);
   // handlers
-  const reviewOrderHandler = React.useCallback(
-    (paymentMethodId?: string) => {
-      if (!order) return;
-      if (order.type === 'p2p') {
-        navigation.replace('P2POrderNavigator', {
-          screen: 'CreateOrderP2P',
-          // orderId: order.id,
-          params: { paymentMethodId },
-        });
-      } else {
-        navigation.replace('FoodOrderNavigator', {
-          screen: 'RestaurantNavigator',
-          params: {
-            restaurantId: order.business!.id,
-            orderId: order.id,
-            screen: 'FoodOrderCheckout',
-            params: { paymentMethodId },
-          },
-        });
-      }
-    },
-    [navigation, order]
-  );
+  const reviewOrderHandler = () => {
+    if (!order) return;
+    if (order.type === 'p2p') {
+      navigation.replace('P2POrderNavigator', {
+        screen: 'CreateOrderP2P',
+        params: {
+          orderId: order.id,
+        },
+      });
+    } else {
+      navigation.replace('FoodOrderNavigator', {
+        screen: 'RestaurantNavigator',
+        params: {
+          restaurantId: order.business!.id,
+          orderId: order.id,
+          screen: 'FoodOrderCheckout',
+        },
+      });
+    }
+  };
   // effects
   React.useEffect(() => {
-    if (!order) return;
     if (paymentMethodId) {
+      navigation.setParams({
+        paymentMethodId: undefined,
+      });
       // when the items' charge is ok but the courier's charge is declined
-      if (order.dispatchingStatus === 'declined') {
-        (async () => {
-          setLoading(true);
-          try {
-            api
-              .order()
-              .updateOrderCallable(orderId, { payableWith: 'credit_card', paymentMethodId });
-            setLoading(false);
-            navigation.navigate('OngoingOrder', { orderId });
-          } catch (error) {
-            setLoading(false);
-          }
-        })();
-      } else {
-        navigation.setParams({
-          paymentMethodId: undefined,
-        });
+      (async () => {
         setLoading(true);
-        setTimeout(() => reviewOrderHandler(paymentMethodId), 1000);
-      }
+        try {
+          api.order().updateOrderCallable(orderId, { payableWith: 'credit_card', paymentMethodId });
+          setLoading(false);
+          navigation.navigate('OngoingOrder', { orderId });
+        } catch (error) {
+          setLoading(false);
+          // TODO: show toast
+        }
+      })();
     }
-  }, [navigation, order, paymentMethodId, reviewOrderHandler, api, orderId]);
+  }, [paymentMethodId, orderId, navigation, api]);
   // UI
   if (!order || isLoading) {
     return (
@@ -108,7 +98,7 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
         background={colors.white}
       >
         <DefaultButton title={t('Alterar forma de pagamento')} onPress={changePaymentHandler} />
-        {order.type === 'food' && order.dispatchingStatus !== 'declined' ? (
+        {order.status === 'declined' ? (
           <View style={{ paddingVertical: padding }}>
             <DefaultButton
               title={t('Revisar pedido')}
