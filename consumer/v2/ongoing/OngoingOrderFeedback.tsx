@@ -117,59 +117,72 @@ export default ({ navigation, route }: Props) => {
             <HR height={padding} />
           </View>
         )}
-        {/* tip */}
-        <TipControl order={order} tip={tip} onChange={(value) => setTip(value)} />
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: padding,
-            paddingHorizontal: padding,
-          }}
-        >
-          <MaterialIcons name="check" size={24} />
-          <View style={{ alignItems: 'flex-start', paddingHorizontal: padding }}>
-            <Text style={{ ...texts.xs, color: colors.grey700 }}>
-              {t('Entregas realizadas perfeitamente')}
-            </Text>
-            <Text style={{ ...texts.md }}>{order.courier?.statistics?.deliveries ?? 0}</Text>
+        {order.courier ? (
+          <View>
+            {/* tip */}
+            <TipControl order={order} tip={tip} onChange={(value) => setTip(value)} />
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: padding,
+                paddingHorizontal: padding,
+              }}
+            >
+              <MaterialIcons name="check" size={24} />
+              <View style={{ alignItems: 'flex-start', paddingHorizontal: padding }}>
+                <Text style={{ ...texts.xs, color: colors.grey700 }}>
+                  {t('Entregas realizadas perfeitamente')}
+                </Text>
+                <Text style={{ ...texts.md }}>{order.courier.statistics?.deliveries ?? 0}</Text>
+              </View>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 12,
+                paddingHorizontal: padding,
+              }}
+            >
+              <MaterialIcons name="thumb-up-off-alt" size={24} />
+              <View style={{ alignItems: 'flex-start', paddingHorizontal: padding }}>
+                <Text style={{ ...texts.xs, color: colors.grey700 }}>
+                  {t('Avaliações positivas')}
+                </Text>
+                <Text style={{ ...texts.md }}>
+                  {order.courier.statistics?.positiveReviews ?? 0}
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 12,
+                paddingHorizontal: padding,
+                marginBottom: padding,
+              }}
+            >
+              <MaterialIcons name="thumb-down-off-alt" size={24} />
+              <View style={{ alignItems: 'flex-start', paddingHorizontal: padding }}>
+                <Text style={{ ...texts.xs, color: colors.grey700 }}>
+                  {t('Avaliações negativas')}
+                </Text>
+                <Text style={{ ...texts.md }}>
+                  {order.courier.statistics?.negativeReviews ?? 0}
+                </Text>
+              </View>
+            </View>
+            <HR height={padding} />
+            {/* review */}
+            <ReviewBox
+              review={review?.type ?? reviewType}
+              comment={review?.comment ?? comment}
+              focusable={!!review}
+              onReviewChange={(type) => setReviewType(type)}
+              onCommentChange={(value) => setComment(value)}
+            />
+            <HR />
           </View>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 12,
-            paddingHorizontal: padding,
-          }}
-        >
-          <MaterialIcons name="thumb-up-off-alt" size={24} />
-          <View style={{ alignItems: 'flex-start', paddingHorizontal: padding }}>
-            <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Avaliações positivas')}</Text>
-            <Text style={{ ...texts.md }}>{order.courier?.statistics?.positiveReviews ?? 0}</Text>
-          </View>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 12,
-            paddingHorizontal: padding,
-            marginBottom: padding,
-          }}
-        >
-          <MaterialIcons name="thumb-down-off-alt" size={24} />
-          <View style={{ alignItems: 'flex-start', paddingHorizontal: padding }}>
-            <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Avaliações negativas')}</Text>
-            <Text style={{ ...texts.md }}>{order.courier?.statistics?.negativeReviews ?? 0}</Text>
-          </View>
-        </View>
-        <HR height={padding} />
-        <ReviewBox
-          review={review?.type ?? reviewType}
-          comment={review?.comment ?? comment}
-          focusable={!!review}
-          onReviewChange={(type) => setReviewType(type)}
-          onCommentChange={(value) => setComment(value)}
-        />
-        <HR />
+        ) : null}
         {/* actions */}
         <View style={{ paddingHorizontal: padding }}>
           <DefaultButton

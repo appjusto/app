@@ -152,33 +152,37 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
               <OrderCostBreakdown order={order} selectedFare={order.fare} />
             </View>
             <HR height={padding} />
-            <ReviewBox
-              review={review?.type ?? reviewType}
-              comment={review?.comment ?? comment}
-              editable={!review}
-              focusable={!!review}
-              onReviewChange={(type) => setReviewType(type)}
-              onCommentChange={(value) => setComment(value)}
-            />
-            <DefaultButton
-              title={
-                review?.type || reviewSent ? t('Avaliação enviada') : t('Avaliar entregador/a')
-              }
-              onPress={reviewHandler}
-              style={{ margin: padding }}
-              activityIndicator={isLoading}
-              disabled={isLoading || !!review?.type || reviewSent}
-            />
-            <HR height={padding} />
-            <View>
-              <TipControl
-                order={order}
-                tip={tip}
-                onChange={(value) => setTip(value)}
-                onConfirm={tipHandler}
-              />
-            </View>
-            <HR height={padding} />
+            {order.courier ? (
+              <View>
+                <ReviewBox
+                  review={review?.type ?? reviewType}
+                  comment={review?.comment ?? comment}
+                  editable={!review}
+                  focusable={!!review}
+                  onReviewChange={(type) => setReviewType(type)}
+                  onCommentChange={(value) => setComment(value)}
+                />
+                <DefaultButton
+                  title={
+                    review?.type || reviewSent ? t('Avaliação enviada') : t('Avaliar entregador/a')
+                  }
+                  onPress={reviewHandler}
+                  style={{ margin: padding }}
+                  activityIndicator={isLoading}
+                  disabled={isLoading || !!review?.type || reviewSent}
+                />
+                <HR height={padding} />
+                <View>
+                  <TipControl
+                    order={order}
+                    tip={tip}
+                    onChange={(value) => setTip(value)}
+                    onConfirm={tipHandler}
+                  />
+                </View>
+                <HR height={padding} />
+              </View>
+            ) : null}
             <PaddedView>
               <DefaultButton
                 title={t('Relatar problema')}
