@@ -74,10 +74,23 @@ export default ({ navigation, route }: Props) => {
     }
     setLoading(false);
   };
+  const issueHandler = () => {
+    if (order.type === 'food') {
+      navigation.navigate('ReportIssue', {
+        orderId: order.id,
+        issueType: 'consumer-delivered-food-order',
+      });
+    } else {
+      navigation.navigate('ReportIssue', {
+        orderId: order.id,
+        issueType: 'consumer-delivered-p2p-order',
+      });
+    }
+  };
   // UI
   return (
-    <View style={{ ...screens.default, paddingBottom: padding }}>
-      <ScrollView scrollIndicatorInsets={{ right: 1 }}>
+    <View style={{ ...screens.default }}>
+      <ScrollView scrollIndicatorInsets={{ right: 1 }} style={{ paddingBottom: padding }}>
         {/* header */}
         <PaddedView>
           <View
@@ -175,16 +188,7 @@ export default ({ navigation, route }: Props) => {
             }}
           >
             <View style={{ width: '49%' }}>
-              <DefaultButton
-                title={t('Relatar problema')}
-                secondary
-                onPress={() =>
-                  navigation.navigate('ReportIssue', {
-                    orderId: order.id,
-                    issueType: 'consumer-delivery-problem',
-                  })
-                }
-              />
+              <DefaultButton title={t('Relatar problema')} secondary onPress={issueHandler} />
             </View>
             <View style={{ width: '49%' }}>
               <DefaultButton

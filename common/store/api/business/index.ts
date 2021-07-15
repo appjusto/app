@@ -35,13 +35,16 @@ export default class BusinessApi {
   }
   // menu
   observeCategories(businessId: string, resultHandler: (categories: WithId<Category>[]) => void) {
-    const unsubscribe = this.refs.getBusinessCategoriesRef(businessId).onSnapshot(
-      (snapshot) => resultHandler(documentsAs<Category>(snapshot.docs)),
-      (error) => {
-        console.log(error);
-        Sentry.Native.captureException(error);
-      }
-    );
+    const unsubscribe = this.refs
+      .getBusinessCategoriesRef(businessId)
+      .where('enabled', '==', true)
+      .onSnapshot(
+        (snapshot) => resultHandler(documentsAs<Category>(snapshot.docs)),
+        (error) => {
+          console.log(error);
+          Sentry.Native.captureException(error);
+        }
+      );
     return unsubscribe;
   }
   observeProducts(businessId: string, resultHandler: (products: WithId<Product>[]) => void) {
@@ -78,6 +81,7 @@ export default class BusinessApi {
   ) {
     const unsubscribe = this.refs
       .getBusinessProductComplementsGroupsRef(businessId, productId)
+      .where('enabled', '==', true)
       .onSnapshot(
         (snapshot) => resultHandler(documentsAs<ComplementGroup>(snapshot.docs)),
         (error) => {
@@ -94,6 +98,7 @@ export default class BusinessApi {
   ) {
     const unsubscribe = this.refs
       .getBusinessProductComplementsRef(businessId, productId)
+      .where('enabled', '==', true)
       .onSnapshot(
         (snapshot) => resultHandler(documentsAs<Complement>(snapshot.docs)),
         (error) => {

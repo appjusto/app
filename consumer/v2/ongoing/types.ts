@@ -22,6 +22,7 @@ export type OngoingOrderNavigatorParamList = {
   OngoingOrderCancelOrder: {
     orderId: string;
     acknowledgedCosts: number;
+    issueType: IssueType;
   };
   OngoingOrderCourierDetail: {
     orderId: string;
@@ -33,6 +34,10 @@ export type OngoingOrderNavigatorParamList = {
     orderId: string;
     counterpartId: string;
     counterpartFlavor: Flavor;
+  };
+  OngoingOrderProblem: {
+    orderId: string;
+    chatFrom?: ChatMessageUser;
   };
   DeliveryProblemFeedback: {
     issueType: IssueType;

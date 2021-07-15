@@ -1,4 +1,4 @@
-import { Complement, OrderItem, WithId } from '@appjusto/types';
+import { Complement, OrderItem, OrderItemComplement, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -16,6 +16,7 @@ import { IconSemaphoreSmall } from '../../../../../common/icons/icon-semaphore-s
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
 import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
+import { getParent } from '../../../../../common/store/api/business/menu';
 import { getBusinessNextOpeningDay } from '../../../../../common/store/api/business/selectors';
 import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 import * as helpers from '../../../../../common/store/api/order/helpers';
@@ -28,6 +29,7 @@ import {
   useContextBusiness,
   useContextBusinessId,
 } from '../../../../../common/store/context/business';
+import { useContextMenu, useContextMenuOrdering } from '../../../../../common/store/context/menu';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import {
   borders,
@@ -68,6 +70,8 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const business = useContextBusiness();
   const businessId = useContextBusinessId();
   const activeOrder = useContextActiveOrder();
+  const menu = useContextMenu();
+  const ordering = useContextMenuOrdering();
   const tallerDevice = useTallerDevice();
   // redux store
   const consumer = useSelector(getConsumer);
@@ -94,14 +98,21 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         id: product.id,
         name: product.name,
         price: product.price,
+        categoryName: getParent(ordering!, menu!, product.id)?.name ?? '',
       },
       quantity,
       notes,
-      complements: complements.map((complement) => ({
-        name: complement.name,
-        complementId: complement.id,
-        price: complement.price,
-      })),
+      complements: complements.map(
+        (complement) =>
+          ({
+            name: complement.name,
+            complementId: complement.id,
+            price: complement.price,
+            groupName:
+              getParent(product.complementsOrder!, product.complementsGroups!, complement.id)
+                ?.name ?? '',
+          } as OrderItemComplement)
+      ),
     } as OrderItem;
   }, [product, itemId, quantity, notes, complements]);
   const canAddItemToOrder = React.useMemo(() => {
@@ -166,7 +177,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
       return (
         <PaddedView>
           <DefaultButton
-            title={t('Para pedir, faça login')}
+            title={t('Faça login para pedir')}
             onPress={() => navigation.navigate('WelcomeScreen')}
           />
         </PaddedView>

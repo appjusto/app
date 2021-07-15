@@ -2,10 +2,11 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
+import { IconLogin } from '../../../../common/icons/icon-login';
+import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import { HomeCouriersNearbyCard } from '../../../../common/screens/home/cards/HomeCouriersNearbyCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
@@ -13,6 +14,7 @@ import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
 import { padding, screens } from '../../../../common/styles';
+import { t } from '../../../../strings';
 import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
 import { HomeControls } from './controls/HomeControls';
@@ -31,7 +33,7 @@ export default function ({ navigation }: Props) {
   const ongoingOrders = useSelector(getOrders);
   // UI
   return (
-    <SafeAreaView style={[screens.config]}>
+    <View style={[screens.headless, screens.config]}>
       {/* <StatusBar /> */}
       <ScrollView>
         <HomeControls
@@ -60,15 +62,26 @@ export default function ({ navigation }: Props) {
               })
             }
           />
+          {!consumer ? (
+            <TouchableOpacity onPress={() => navigation.navigate('WelcomeScreen')}>
+              <HomeCard
+                icon={<IconLogin />}
+                title={t('Crie uma conta ou faça o login')}
+                subtitle={t('Você precisa estar logado para pedir')}
+                // grey
+              />
+            </TouchableOpacity>
+          ) : null}
+          {/* ítalo wants to also show the HomeCouriersNearbyCard for unlogged consumers */}
           <HomeCouriersNearbyCard />
           <View style={{ marginTop: padding }}>
             <HomeShareCard
               title="Divulgue o AppJusto"
-              subtitle="Compartilhe esse movimento por uma economia mais justa."
+              subtitle="Compartilhe esse movimento por uma economia mais justa"
             />
           </View>
         </PaddedView>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

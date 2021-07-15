@@ -21,6 +21,7 @@ import {
   PlaceOrderPayloadPayment,
   RejectOrderPayload,
   TipCourierPayload,
+  UpdateOrderPayload,
   WithId,
 } from '@appjusto/types';
 import Constants from 'expo-constants';
@@ -215,6 +216,15 @@ export default class OrderApi {
       meta: { version: Constants.nativeBuildVersion },
     };
     return (await this.refs.getPlaceOrderCallable()(payload)).data;
+  }
+
+  async updateOrderCallable(orderId: string, payment: PlaceOrderPayloadPayment) {
+    const payload: UpdateOrderPayload = {
+      orderId,
+      payment,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getUpdateOrderCallable()(payload)).data;
   }
 
   async getCancellationInfo(orderId: string) {

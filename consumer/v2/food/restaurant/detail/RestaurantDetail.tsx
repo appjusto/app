@@ -9,12 +9,9 @@ import PaddedView from '../../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';
 import HR from '../../../../../common/components/views/HR';
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
-import { useMenu } from '../../../../../common/store/api/business/hooks/useMenu';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
-import {
-  useContextBusiness,
-  useContextBusinessId,
-} from '../../../../../common/store/context/business';
+import { useContextBusiness } from '../../../../../common/store/context/business';
+import { useContextMenu } from '../../../../../common/store/context/menu';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { colors, halfPadding, padding, screens } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
@@ -41,10 +38,9 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   // context
   const restaurant = useContextBusiness();
   const activeOrder = useContextActiveOrder();
+  const menu = useContextMenu();
   // redux
   const consumer = useSelector(getConsumer);
-  // state
-  const menu = useMenu(useContextBusinessId());
   // side effects
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -99,12 +95,12 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
       {!consumer ? (
         <PaddedView>
           <DefaultButton
-            title={t('Para pedir, faça login')}
+            title={t('Faça login para pedir')}
             onPress={() => navigation.navigate('WelcomeScreen')}
           />
         </PaddedView>
       ) : null}
-      {restaurant.status === 'open' && restaurant.enabled ? (
+      {consumer && restaurant.status === 'open' && restaurant.enabled ? (
         <TouchableOpacity onPress={() => navigation.navigate('FoodOrderCheckout')}>
           <HR />
           <CartButton order={activeOrder} />

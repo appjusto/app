@@ -62,24 +62,15 @@ export const ReportIssue = ({ route, navigation }: Props) => {
     issueType,
   });
 
-  const toastMessage = (() => {
-    if (issueType === 'consumer-delivery-problem') {
-      return t('Não foi possível enviar a reclamação. Tente novamente.');
-    } else if (issueType === 'courier-delivery-problem') {
-      return t('Não foi possível enviar a reclamação. Tente novamente.');
-    } else {
-      return '';
-    }
-  })();
   const title = (() => {
-    if (issueType === 'courier-delivery-problem') {
+    if (
+      issueType === 'courier-delivering-food-order' ||
+      issueType === 'courier-delivering-p2p-order'
+    ) {
       return t('Qual o problema que você teve ao transportar o pedido?');
     } else {
       return t('Qual o seu problema?');
     }
-  })();
-  const inputHeader = (() => {
-    return t('Você pode detalhar mais seu problema:');
   })();
   // handlers
   const issueHandler = () => {
@@ -93,24 +84,17 @@ export const ReportIssue = ({ route, navigation }: Props) => {
           flavor,
           comment,
         });
-        if (issueType === 'consumer-delivery-problem') {
-          navigation.replace('DeliveryProblemFeedback', {
-            issueType: 'consumer-delivery-problem',
-            orderId,
-          });
-        } else {
-          navigation.replace('DeliveryProblemFeedback', {
-            issueType: 'courier-delivery-problem',
-            orderId,
-          });
-        }
+        navigation.replace('DeliveryProblemFeedback', {
+          issueType,
+          orderId,
+        });
         setLoading(false);
-        // setIssueSent(true);
       } catch (error) {
-        dispatch(showToast(toastMessage, 'error'));
+        dispatch(showToast(t('Não foi possível enviar a reclamação. Tente novamente.'), 'error'));
       }
     })();
   };
+  console.log(issueType);
   // UI
   if (!issues) {
     return (
@@ -123,7 +107,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
     <View style={{ ...screens.default }}>
       <ReportIssueView
         title={title}
-        inputHeader={inputHeader}
+        inputHeader={t('Você pode detalhar mais seu problema:')}
         comment={comment}
         setComment={(text) => setComment(text)}
         disabled={!selectedIssue || isLoading}

@@ -27,17 +27,16 @@ type Props = {
 
 export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
   // params
-  const { orderId, acknowledgedCosts } = route.params;
+  const { orderId, acknowledgedCosts, issueType } = route.params;
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // state
-  const issues = useIssues('consumer-cancel');
+  const issues = useIssues(issueType);
   const [selectedReason, setSelectedReason] = React.useState<WithId<Issue>>();
   const [rejectionComment, setRejectionComment] = React.useState<string>('');
   const [isLoading, setLoading] = React.useState(false);
 
-  // console.log(costs.cancellationCosts);
   // handlers
   const cancelHandler = () => {
     (async () => {

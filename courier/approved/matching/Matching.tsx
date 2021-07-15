@@ -40,6 +40,7 @@ export default function ({ navigation, route }: Props) {
   const courier = useSelector(getCourier)!;
   // state
   const request = useObserveOrderRequest(courier.id, orderId);
+  const canAccept = request?.situation === 'pending' || request?.situation === 'viewed';
   const [distance, setDistance] = React.useState(distanceToOrigin);
   const [isLoading, setLoading] = React.useState(true);
   // side effects
@@ -63,6 +64,9 @@ export default function ({ navigation, route }: Props) {
       navigation.replace('MatchingError');
     }
   }, [navigation, request]);
+  React.useEffect(() => {
+    api.courier().viewOrderRequest(courier.id, orderId);
+  }, [api, courier.id, orderId]);
   // tracking
   useSegmentScreen('Matching');
   const tallerDevice = useTallerDevice();
@@ -91,9 +95,7 @@ export default function ({ navigation, route }: Props) {
     }
   };
   const rejectHandler = () => {
-    // using this until backend is published again with the new issueType
-    navigation.replace('RefuseDelivery', { orderId, issueType: 'courier-drops-delivery' });
-    // navigation.replace('RefuseDelivery', { orderId, issueType: 'courier-rejects-matching' });
+    navigation.replace('RejectedMatching', { orderId });
   };
   // UI
   return (
@@ -149,7 +151,7 @@ export default function ({ navigation, route }: Props) {
               <Text style={[texts.sm, { color: colors.green600 }]}>{t('Entrega')}</Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                 <Text style={[texts.x2l]}>
-                  {formatDistance(matchRequest.distance)} {t('no percurso total')}
+                  {formatDistance(matchRequest.distance)} {t('até a entrega')}
                 </Text>
                 <Text style={[texts.md, { flexWrap: 'wrap', maxWidth: '80%' }]} numberOfLines={3}>
                   {matchRequest.destinationAddress}
@@ -160,7 +162,7 @@ export default function ({ navigation, route }: Props) {
         </View>
         <View style={{ flex: 1 }} />
         {/* accept / reject control */}
-        {request?.situation === 'pending' ? (
+        {canAccept ? (
           <AcceptControl
             onAccept={acceptHandler}
             onReject={rejectHandler}

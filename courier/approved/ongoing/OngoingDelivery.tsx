@@ -17,8 +17,9 @@ import { CourierDeliveryInfo } from '../components/CourierDeliveryInfo';
 import { ApprovedParamList } from '../types';
 import { OngoingDeliveryCode } from './OngoingDeliveryCode';
 import { OngoingDeliveryInfo } from './OngoingDeliveryInfo';
+import { OngoingDeliveryLoading } from './OngoingDeliveryLoading';
 import { OngoingDeliveryMap } from './OngoingDeliveryMap';
-import { StatusControl } from './StatusControl';
+import { OngoingDeliverySlider } from './OngoingDeliverySlider';
 import { OngoingDeliveryNavigatorParamList } from './types';
 import { WithdrawOrderModal } from './WithdrawOrderModal';
 
@@ -54,7 +55,11 @@ export default function ({ navigation, route }: Props) {
   // modal
   React.useEffect(() => {
     if (!order) return;
-    if (order.dispatchingState === 'arrived-pickup' && order.type === 'food') {
+    if (
+      order.dispatchingState === 'arrived-pickup' &&
+      order.type === 'food' &&
+      (order.status === 'ready' || order.status === 'dispatching')
+    ) {
       setModalOpen(true);
     }
   }, [order]);
@@ -93,14 +98,15 @@ export default function ({ navigation, route }: Props) {
   // whenever order updates
   // check status to navigate to other screens
   React.useEffect(() => {
-    if (order?.status === 'delivered') {
+    if (!order) return;
+    if (order.status === 'delivered') {
       navigation.replace('DeliveryCompleted', { orderId, fee: order.fare!.courier.value });
-    } else if (order?.status === 'canceled') {
+    } else if (order.status === 'canceled' || order.dispatchingStatus === 'declined') {
       navigation.replace('OrderCanceled', { orderId });
     }
   }, [order, navigation, orderId]);
   // UI
-  if (!order?.dispatchingState) {
+  if (!order) {
     // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
@@ -119,9 +125,9 @@ export default function ({ navigation, route }: Props) {
           setLoading(false);
         } else {
           await api.order().nextDispatchingState(orderId);
-          if (order.dispatchingState === 'going-pickup' && order.type === 'food') {
-            setModalOpen(true);
-          }
+          // if (order.dispatchingState === 'going-pickup' && order.type === 'food') {
+          //   setModalOpen(true);
+          // }
           setTimeout(() => {
             setLoading(false);
           }, 5000);
@@ -145,10 +151,8 @@ export default function ({ navigation, route }: Props) {
     })();
   };
   // UI
-  const { type, dispatchingState, status } = order;
-  const nextStepDisabled =
-    isLoading ||
-    (type === 'food' && dispatchingState === 'arrived-pickup' && status !== 'dispatching');
+  const { type, dispatchingState } = order;
+  const nextStepDisabled = isLoading || (type === 'food' && dispatchingState === 'arrived-pickup');
   const nextStepLabel = (() => {
     const dispatchingState = order?.dispatchingState;
     if (!dispatchingState || dispatchingState === 'going-pickup') {
@@ -190,28 +194,27 @@ export default function ({ navigation, route }: Props) {
           order={order}
           onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
         />
+        <OngoingDeliveryLoading dispatchingState={dispatchingState} />
         {/* Status slider */}
-        {dispatchingState !== 'arrived-destination' ? (
-          <View style={{ paddingHorizontal: padding }}>
-            <StatusControl
-              key={dispatchingState}
-              style={{ marginBottom: padding }}
-              text={nextStepLabel}
-              disabled={nextStepDisabled}
-              isLoading={isLoading}
-              onConfirm={nextDispatchingStateHandler}
-              color={sliderColor}
+        <OngoingDeliverySlider
+          order={order}
+          text={nextStepLabel}
+          onReceiveOrder={() => setModalOpen(true)}
+          disabled={nextStepDisabled}
+          isLoading={isLoading}
+          onConfirm={nextDispatchingStateHandler}
+          sliderColor={sliderColor}
+        />
+        {/* chat with restaurant */}
+        {dispatchingState ? (
+          <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
+            <DefaultButton
+              title={t('Abrir chat com o restaurante')}
+              onPress={() => openChatWithRestaurant()}
+              secondary
             />
           </View>
         ) : null}
-        {/* chat with restaurant */}
-        <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
-          <DefaultButton
-            title={t('Abrir chat com o restaurante')}
-            onPress={() => openChatWithRestaurant()}
-            secondary
-          />
-        </View>
 
         {/* code input */}
         <OngoingDeliveryCode
@@ -231,6 +234,11 @@ export default function ({ navigation, route }: Props) {
             nextDispatchingStateHandler();
             setModalOpen(false);
           }}
+          onIssue={() => {
+            navigation.navigate('DeliveryProblem', { orderId });
+            setModalOpen(false);
+          }}
+          onModalClose={() => setModalOpen(false)}
         />
       </View>
     </KeyboardAwareScrollView>

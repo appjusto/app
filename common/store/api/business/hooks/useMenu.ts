@@ -7,6 +7,6 @@ export const useMenu = (businessId: string) => {
   const categories = useCategories(businessId);
   const products = useProducts(businessId);
   const ordering = useObserveMenuOrdering(businessId);
-
-  return getSorted(categories, products, ordering);
+  const menu = getSorted(categories, products, ordering);
+  return { menu, ordering };
 };

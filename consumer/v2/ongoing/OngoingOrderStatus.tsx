@@ -2,8 +2,8 @@ import { Order } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../common/components/texts/RoundedText';
-import { IconMotocycle } from '../../../common/icons/icon-motocycle';
-import { IconOngoingRequest } from '../../../common/icons/icon-ongoingRequest';
+import { IconOngoingMotocycle } from '../../../common/icons/icon-ongoing-motocycle';
+import { IconOngoingStatus } from '../../../common/icons/icon-ongoing-status';
 import { colors, halfPadding, padding, texts } from '../../../common/styles';
 import { getETAWithMargin } from '../../../common/utils/formatters/datetime';
 import { t } from '../../../strings';
@@ -97,18 +97,20 @@ export const OngoingOrderStatus = ({ order }: Props) => {
   }
 
   return (
-    <View style={{ paddingHorizontal: padding, alignItems: 'center', paddingBottom: padding }}>
+    // this will receive the code and a button to confirm delivery
+    // also, looks like we will show the "previsão" rounded text all the time
+    <View style={{ paddingHorizontal: padding, paddingVertical: padding }}>
       {status === 'dispatching' && dispatchingState === 'arrived-destination' ? (
-        <IconMotocycle />
+        <IconOngoingMotocycle />
       ) : (
-        <IconOngoingRequest />
+        <IconOngoingStatus />
       )}
-      <Text style={{ marginTop: padding, ...texts.xl }}>{header}</Text>
+
+      <Text style={{ marginTop: halfPadding, ...texts.xl }}>{header}</Text>
       <Text
         style={{
-          ...texts.md,
+          ...texts.sm,
           color: colors.grey700,
-          textAlign: 'center',
           marginTop: halfPadding,
         }}
       >
@@ -116,10 +118,10 @@ export const OngoingOrderStatus = ({ order }: Props) => {
       </Text>
       {order.destination?.estimatedTimeOfArrival &&
         order.dispatchingState !== 'arrived-destination' && (
-          <View style={{ marginBottom: 8, marginTop: padding }}>
-            <RoundedText>{`${t('Previsão de entrega: ')} ${getETAWithMargin(
-              order.destination.estimatedTimeOfArrival
-            )}`}</RoundedText>
+          <View style={{ marginTop: padding }}>
+            <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>{`${t(
+              'Previsão de entrega: '
+            )} ${getETAWithMargin(order.destination.estimatedTimeOfArrival)}`}</RoundedText>
           </View>
         )}
     </View>

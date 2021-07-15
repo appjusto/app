@@ -21,10 +21,13 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
   const nextPlace = courierNextPlace(order);
   const tallerDevice = useTallerDevice();
   const addressLabel = (() => {
-    if (!dispatchingState || dispatchingState === 'going-pickup') {
+    if (
+      !dispatchingState ||
+      dispatchingState === 'going-pickup' ||
+      dispatchingState === 'arrived-pickup'
+    ) {
       return t('Retirada');
     } else if (
-      dispatchingState === 'arrived-pickup' ||
       dispatchingState === 'arrived-destination' ||
       dispatchingState === 'going-destination'
     ) {
@@ -32,6 +35,7 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
     }
     return '';
   })();
+  if (!dispatchingState) return null;
   return (
     <PaddedView style={{ flex: 1 }}>
       {tallerDevice ? (
@@ -103,28 +107,53 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
           </View>
         </View>
       )}
-      <View style={{ marginTop: halfPadding }}>
-        <Text style={[texts.xl]} numberOfLines={2}>
-          {nextPlace?.address.main}
-        </Text>
-        <Text style={[texts.xl]} numberOfLines={2}>
-          {nextPlace?.address.secondary}
-        </Text>
-        {nextPlace?.additionalInfo ? (
-          <View>
-            <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]}>
-              {nextPlace?.additionalInfo ?? ''}
-            </Text>
-          </View>
-        ) : null}
-        {nextPlace?.intructions ? (
-          <View>
-            <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={2}>
-              {nextPlace?.intructions ?? ''}
-            </Text>
-          </View>
-        ) : null}
-      </View>
+      {order.type === 'p2p' ? (
+        <View style={{ marginTop: halfPadding }}>
+          <Text style={[texts.xl]} numberOfLines={2}>
+            {nextPlace?.address.main}
+          </Text>
+          <Text style={[texts.xl]} numberOfLines={2}>
+            {nextPlace?.address.secondary}
+          </Text>
+          {nextPlace?.additionalInfo ? (
+            <View>
+              <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]}>
+                {nextPlace?.additionalInfo ?? ''}
+              </Text>
+            </View>
+          ) : null}
+          {nextPlace?.intructions ? (
+            <View>
+              <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={2}>
+                {nextPlace?.intructions ?? ''}
+              </Text>
+            </View>
+          ) : null}
+        </View>
+      ) : (
+        <View style={{ marginTop: halfPadding }}>
+          <Text style={[texts.xl]} numberOfLines={2}>
+            {nextPlace?.address.main}
+          </Text>
+          <Text style={[texts.xl]} numberOfLines={2}>
+            {nextPlace?.address.secondary}
+          </Text>
+          {nextPlace?.additionalInfo ? (
+            <View>
+              <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]}>
+                {nextPlace?.additionalInfo ?? ''}
+              </Text>
+            </View>
+          ) : null}
+          {nextPlace?.intructions ? (
+            <View>
+              <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={2}>
+                {nextPlace?.intructions ?? ''}
+              </Text>
+            </View>
+          ) : null}
+        </View>
+      )}
     </PaddedView>
   );
 };

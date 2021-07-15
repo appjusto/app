@@ -25,7 +25,7 @@ export const formatDuration = (duration: number) => {
 };
 
 export const getETAWithMargin = (date: Date | firebase.firestore.FieldValue) =>
-  `${formatTime(date)} - ${formatTime(dayjs(dateInput(date)).add(30, 'minute').toDate())}`;
+  `${formatTime(date)} - ${formatTime(dayjs(dateInput(date)).add(15, 'minute').toDate())}`;
 
 export const formatHour = (value: string | undefined) => {
   let formatedNumber = '';
