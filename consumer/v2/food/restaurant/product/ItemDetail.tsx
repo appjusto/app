@@ -311,7 +311,6 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           <HR />
           <PaddedView>
             <ItemQuantity
-              style={{ marginBottom: padding }}
               value={quantity}
               minimum={itemId ? 0 : 1}
               title={`${t('Adicionar')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
