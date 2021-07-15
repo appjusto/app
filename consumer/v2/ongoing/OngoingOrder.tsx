@@ -3,7 +3,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import { HorizontalSelectItem } from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
@@ -135,10 +135,14 @@ export default function ({ navigation, route }: Props) {
   //   });
   // ongoing UI
   return (
-    <ScrollView
+    <KeyboardAwareScrollView
       style={{ ...screens.default, paddingBottom: 32 }}
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
+      enableOnAndroid
+      enableAutomaticScroll
+      keyboardOpeningTime={0}
+      keyboardShouldPersistTaps="never"
     >
       <View style={{ flex: 1 }}>
         {/* top */}
@@ -179,6 +183,6 @@ export default function ({ navigation, route }: Props) {
           ) : null}
         </View>
       </View>
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }

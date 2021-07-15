@@ -4,7 +4,8 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { nanoid } from 'nanoid/non-secure';
 import React from 'react';
-import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Text, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
@@ -266,10 +267,14 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   };
   return (
     <View style={{ ...screens.default }}>
-      <ScrollView
+      <KeyboardAwareScrollView
+        enableOnAndroid
+        enableAutomaticScroll
+        keyboardOpeningTime={0}
         style={{ flex: 1 }}
         contentContainerStyle={{ flexGrow: 1 }}
         scrollIndicatorInsets={{ right: 1 }}
+        keyboardShouldPersistTaps="never"
       >
         <View style={{ flex: 1 }}>
           <View style={{ paddingHorizontal: padding, marginBottom: 24 }}>
@@ -298,7 +303,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           {tallerDevice ? <View style={{ flex: 1 }} /> : null}
           {getActionsUI()}
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
       {!isOutOfRange && isAcceptingOrders ? (
         <View>
           <HR />

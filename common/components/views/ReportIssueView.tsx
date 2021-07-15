@@ -37,7 +37,7 @@ export const ReportIssueView = ({
       enableAutomaticScroll
       keyboardOpeningTime={0}
       style={{ ...screens.config }}
-      keyboardShouldPersistTaps="always"
+      keyboardShouldPersistTaps="never"
       contentContainerStyle={{ flexGrow: 1 }}
     >
       <PaddedView>
