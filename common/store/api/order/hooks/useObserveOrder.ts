@@ -16,11 +16,7 @@ export const useObserveOrder = (orderId: string | undefined) => {
   React.useEffect(() => {
     if (!user) return;
     if (!orderId) return;
-    try {
-      return api.order().observeOrder(orderId, setOrder);
-    } catch (error) {
-      setOrder(null);
-    }
+    return api.order().observeOrder(orderId, setOrder, () => setOrder(null));
   }, [user, orderId, api]);
   // result
   return order;

@@ -119,13 +119,12 @@ export default class OrderApi {
   }
   observeOrder(
     orderId: string,
-    resultHandler: (order: WithId<Order>) => void
+    resultHandler: (order: WithId<Order>) => void,
+    errorHandler: (error: firebase.firestore.FirestoreError) => void
   ): firebase.Unsubscribe {
     const unsubscribe = this.refs.getOrderRef(orderId).onSnapshot(
       (snapshot) => resultHandler(documentAs<Order>(snapshot)),
-      (error) => {
-        throw error;
-      }
+      (error) => errorHandler(error)
     );
     // returns the unsubscribe function
     return unsubscribe;

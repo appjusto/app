@@ -82,7 +82,6 @@ export default function ({ navigation, route }: Props) {
     try {
       setLoading(true);
       await api.order().matchOrder(orderId);
-      setLoading(false);
       navigation.replace('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: {
