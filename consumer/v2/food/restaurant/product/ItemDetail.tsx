@@ -236,6 +236,8 @@ export const ItemDetail = ({ navigation, route }: Props) => {
               textAlignVertical="top"
               value={notes}
               onChangeText={setNotes}
+              blurOnSubmit
+              returnKeyType="done"
             />
           </View>
           <View style={{ flex: 1 }} />
