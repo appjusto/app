@@ -42,17 +42,23 @@ export const OngoingOrderStatus = ({ order }: Props) => {
         }
       }
     } else if (status === 'dispatching') {
-      if (dispatchingState === 'arrived-pickup') {
-        header = t('Retirada efetuada');
-        description = t('O/A entregador/a já está com o pedido em mãos.');
-      } else if (dispatchingState === 'going-destination') {
-        header = t('Saiu para entrega');
-        description = t(
-          'Já pode se preparar! O/A entregador/a saiu e está levando o pedido até você.'
-        );
-      } else if (dispatchingState === 'arrived-destination') {
-        header = t('Entregador/a chegou!');
-        description = t('O/A entregador/a já está no local de entrega.');
+      if (dispatchingStatus === 'outsourced') {
+        header = t('Entrega em andamento');
+        description = t('A entrega está sendo realizada por um entregador externo');
+      } else {
+        if (dispatchingState === 'arrived-pickup') {
+          header = t('Retirada efetuada');
+          description = t('O/A entregador/a já está com o pedido em mãos.');
+        } else if (dispatchingState === 'going-destination') {
+          // COLOCAR AQUI UM IF PRO OUTSOURCED
+          header = t('Saiu para entrega');
+          description = t(
+            'Já pode se preparar! O/A entregador/a saiu e está levando o pedido até você.'
+          );
+        } else if (dispatchingState === 'arrived-destination') {
+          header = t('Entregador/a chegou!');
+          description = t('O/A entregador/a já está no local de entrega.');
+        }
       }
     } else if (status === 'delivered') {
       header = t('Pedido entregue!');

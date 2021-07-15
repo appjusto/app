@@ -50,12 +50,16 @@ export default function ({ order, onPress }: Props) {
         }
       } else if (status === 'dispatching') {
         title = t('Corrida em andamento');
-        if (dispatchingState === 'arrived-pickup') {
-          detail = t('Retirada efetuada');
-        } else if (dispatchingState === 'going-destination') {
-          detail = `${t('À caminho de')} ${order.destination!.address.main}`;
-        } else if (dispatchingState === 'arrived-destination') {
-          detail = 'Entregador/a chegou para entrega';
+        if (dispatchingStatus === 'outsourced') {
+          detail = t('A entrega está sendo realizada por um entregador externo');
+        } else {
+          if (dispatchingState === 'arrived-pickup') {
+            detail = t('Retirada efetuada');
+          } else if (dispatchingState === 'going-destination') {
+            detail = `${t('À caminho de')} ${order.destination!.address.main}`;
+          } else if (dispatchingState === 'arrived-destination') {
+            detail = 'Entregador/a chegou para entrega';
+          }
         }
         if (dispatchingStatus === 'no-match') {
           title = t('Sem entregadores/as na região');
