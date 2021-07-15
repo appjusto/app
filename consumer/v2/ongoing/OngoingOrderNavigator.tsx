@@ -7,6 +7,7 @@ import { DeliveryProblemFeedback } from '../../../courier/approved/ongoing/Deliv
 import OrderCanceled from '../../../courier/approved/ongoing/OrderCanceled';
 import { t } from '../../../strings';
 import { OngoingOrderDeclined } from '../common/OngoingOrderDeclined';
+import ProfileAddCard from '../main/profile/ProfileAddCard';
 import ProfilePaymentMethods from '../main/profile/ProfilePaymentMethods';
 import { OngoingOrderCourierDetail } from './courier-detail/OngoingOrderCourierDetail';
 import OngoingOrder from './OngoingOrder';
@@ -87,6 +88,11 @@ export const OngoingOrderNavigator = () => {
         name="ProfilePaymentMethods"
         component={ProfilePaymentMethods}
         options={{ title: t('Formas de pagamento') }}
+      />
+      <Stack.Screen
+        name="ProfileAddCard"
+        component={ProfileAddCard}
+        options={{ title: t('Adicionar cartão') }}
       />
       <Stack.Screen name="OngoingOrderChat" component={Chat} options={{ title: t('Chat') }} />
     </Stack.Navigator>
