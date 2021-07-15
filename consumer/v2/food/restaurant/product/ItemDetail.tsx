@@ -178,7 +178,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         <PaddedView>
           <DefaultButton
             title={t('Faça login para pedir')}
-            onPress={() => navigation.navigate('WelcomeScreen')}
+            onPress={() => navigation.replace('WelcomeScreen')}
           />
         </PaddedView>
       );

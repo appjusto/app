@@ -81,7 +81,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
             setFilters(cuisine ? [{ type: 'cuisine', value: cuisine.name }] : []);
           }}
           consumer={consumer}
-          onLogin={() => navigation.navigate('WelcomeScreen')}
+          onLogin={() => navigation.replace('WelcomeScreen')}
         />
       }
       onSelect={(restaurantId) => {

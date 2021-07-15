@@ -96,7 +96,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
         <PaddedView>
           <DefaultButton
             title={t('Faça login para pedir')}
-            onPress={() => navigation.navigate('WelcomeScreen')}
+            onPress={() => navigation.replace('WelcomeScreen')}
           />
         </PaddedView>
       ) : null}
