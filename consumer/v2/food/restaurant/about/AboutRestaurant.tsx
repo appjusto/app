@@ -64,15 +64,15 @@ export const AboutRestaurant = ({ route }: Props) => {
           </View>
           <View style={{ marginLeft: 24 }}>
             {restaurant.schedules.map((item) => {
-              const openTime = item.schedule[0].from;
-              const closeTime = item.schedule[0].to;
               return !item.checked ? (
                 <Text style={{ ...texts.sm, color: colors.grey700 }} key={item.day}>
                   {t('Fechado')}
                 </Text>
               ) : (
                 <Text style={{ ...texts.sm, color: colors.grey700 }} key={item.day}>
-                  {`${formatHour(openTime)} ${t('às')} ${formatHour(closeTime)}`}
+                  {item.schedule
+                    .map(({ from, to }) => `${formatHour(from)} ${t('às')} ${formatHour(to)}`)
+                    .join('  -  ')}
                 </Text>
               );
             })}
