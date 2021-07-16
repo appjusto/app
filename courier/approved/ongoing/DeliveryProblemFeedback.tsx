@@ -74,17 +74,15 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
 
   // handlers
   const finishHandler = () => {
-    if (ongoingDelivery) {
+    if (droppedDelivery) {
+      navigation.replace('MainNavigator', { screen: 'Home' });
+    } else if (ongoingDelivery) {
       navigation.replace('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: { orderId },
       });
-    }
-    if (ongoingOrder) {
+    } else if (ongoingOrder) {
       navigation.replace('OngoingOrder', { orderId });
-    }
-    if (droppedDelivery) {
-      navigation.replace('MainNavigator', { screen: 'Home' });
     }
   };
   console.log(issueType);
