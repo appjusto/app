@@ -208,7 +208,7 @@ export default function ({ navigation, route }: Props) {
           sliderColor={sliderColor}
         />
         {/* chat with restaurant */}
-        {dispatchingState ? (
+        {type === 'food' && dispatchingState ? (
           <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
             <DefaultButton
               title={t('Abrir chat com o restaurante')}

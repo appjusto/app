@@ -72,7 +72,7 @@ export default function ({ navigation }: Props) {
               />
               <ConfigItem
                 title={t('Central de ajuda')}
-                subtitle={t('Tire suas dúvidas sobre a plataforma')}
+                subtitle={t('Tire suas dúvidas ou envie uma mensagem')}
                 onPress={() => Linking.openURL(AppJustoFreshdeskConsumerURL)}
               />
               <ConfigItem

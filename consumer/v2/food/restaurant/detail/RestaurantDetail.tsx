@@ -63,6 +63,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   return (
     <View style={{ ...screens.default }}>
       <SectionList
+        scrollIndicatorInsets={{ right: 1 }}
         style={{ flex: 1 }}
         keyExtractor={(item) => item.id}
         sections={sections}

@@ -31,7 +31,7 @@
     "deploy-consumer:live": "ENV=live FLAVOR=consumer npm run prepare-deploy && FLAVOR=consumer RELEASE_CHANNEL=live-v0 npm run deploy",
     "build-android-courier:live": "FLAVOR=courier expo build:android -t app-bundle --release-channel live-v0",
     "build-android-consumer:live": "FLAVOR=consumer expo build:android -t app-bundle --release-channel live-v0",
-    "build-ios-consumer:live": "cp .live.env .env && npm version ${VERSION:-patch} && FLAVOR=consumer expo publish --release-channel live-ios && FLAVOR=consumer expo build:ios -t archive --release-channel live-ios",
+    "build-ios-consumer:live": "FLAVOR=consumer expo publish --release-channel live-v0 && FLAVOR=consumer expo build:ios -t archive --release-channel live-v0",
     "clear-cache": "watchman watch-del-all && rm -rf node_modules/ && rm -f package-lock.json && npm install --legacy-peer-deps",
     "version": "node ./version-inc && git add version.json",
     "postversion": "git push && git push --tags && git fetch"
