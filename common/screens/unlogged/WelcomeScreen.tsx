@@ -8,7 +8,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View,
+  View
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,7 +19,6 @@ import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import DefaultInput from '../../components/inputs/DefaultInput';
 import ShowIf from '../../components/views/ShowIf';
-import { IconBetaSmall } from '../../icons/icon-beta-small';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { IconMotoCycleBig } from '../../icons/icon-motocycle-big';
@@ -104,7 +103,6 @@ export default function ({ navigation, route }: Props) {
                     <View style={{ top: -16 }}>
                       <IconIllustrationIntro />
                     </View>
-                    <IconBetaSmall />
                   </View>
                 )}
               </ShowIf>
@@ -114,7 +112,6 @@ export default function ({ navigation, route }: Props) {
                     style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}
                   >
                     <IconMotoCycleBig />
-                    <IconBetaSmall />
                   </View>
                 )}
               </ShowIf>
