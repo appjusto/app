@@ -10,7 +10,6 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import HR from '../../../common/components/views/HR';
-import Pill from '../../../common/components/views/Pill';
 import OrderMap from '../../../common/screens/orders/OrderMap';
 import PlaceSummary from '../../../common/screens/orders/summary/PlaceSummary';
 import { useCourierReview } from '../../../common/store/api/courier/hooks/useCourierReview';
@@ -104,9 +103,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
         <OrderMap order={order} ratio={360 / 160} />
         {order.status === 'canceled' ? (
           <View>
-            <View style={{ paddingVertical: halfPadding }}>
-              <SingleHeader title={t('Pedido cancelado')} />
-            </View>
+            <SingleHeader title={t('Pedido cancelado')} />
             <HR height={padding} />
           </View>
         ) : null}
@@ -131,24 +128,22 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
         )}
         {order.status !== 'canceled' ? (
           <View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Pill />
-              <PaddedView
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <Text style={{ ...texts.md, ...texts.bold }}>{t('Total pago')}</Text>
-                <Text style={{ ...texts.xl }}>
-                  {formatCurrency((order.fare?.total ?? 0) + (order.tip?.value ?? 0))}
-                </Text>
-              </PaddedView>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingRight: padding,
+                paddingBottom: halfPadding,
+              }}
+            >
+              <SingleHeader title={t('Total pago')} />
+              <Text style={{ ...texts.xl }}>
+                {formatCurrency((order.fare?.total ?? 0) + (order.tip?.value ?? 0))}
+              </Text>
             </View>
             <HR height={padding} />
-            <View style={{ paddingTop: padding }}>
+            <View style={{ paddingTop: halfPadding }}>
               <OrderCostBreakdown order={order} selectedFare={order.fare} />
             </View>
             <HR height={padding} />
@@ -167,7 +162,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
                     review?.type || reviewSent ? t('Avaliação enviada') : t('Avaliar entregador/a')
                   }
                   onPress={reviewHandler}
-                  style={{ margin: padding }}
+                  style={{ margin: padding, marginTop: 0 }}
                   activityIndicator={isLoading}
                   disabled={isLoading || !!review?.type || reviewSent}
                 />

@@ -12,7 +12,7 @@ import useNotificationToken from '../../../common/hooks/useNotificationToken';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useObserveOrderConfirmation } from '../../../common/store/api/order/hooks/useObserveOrderConfirmation';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { colors, padding, screens } from '../../../common/styles';
+import { colors, halfPadding, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { OrderCostBreakdown } from '../common/breakdown/OrderCostBreakdown';
 import { LoggedNavigatorParamList } from '../types';
@@ -163,7 +163,9 @@ export default function ({ navigation, route }: Props) {
         />
         <FoodOrderItemsInfo order={order} />
         <HR height={padding} />
-        <OrderCostBreakdown order={order} selectedFare={order.fare} />
+        <View style={{ paddingTop: halfPadding }}>
+          <OrderCostBreakdown order={order} selectedFare={order.fare} />
+        </View>
         <HR height={padding} />
         <View style={{ paddingBottom: 24 }}>
           <OngoingActions

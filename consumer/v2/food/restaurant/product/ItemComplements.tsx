@@ -25,7 +25,7 @@ export const ItemComplements = ({ product, selectedComplements, onComplementTogg
         <View key={group.id}>
           <SingleHeader title={group.name} />
           <ItemComplementRequiredLabel
-            style={{ marginLeft: padding, marginVertical: halfPadding }}
+            style={{ marginLeft: padding, marginBottom: halfPadding }}
             group={group}
             totalSelected={helpers.totalComplementsInGroup(group, selectedComplements)}
           />

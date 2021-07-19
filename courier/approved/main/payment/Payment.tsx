@@ -10,7 +10,7 @@ import PaddedView from '../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import HR from '../../../../common/components/views/HR';
 import { getCourier } from '../../../../common/store/courier/selectors';
-import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { colors, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { BankData } from './BankData';
 import { PaymentNavigatorParamList } from './types';
@@ -46,10 +46,10 @@ export const Payment = ({ navigation, route }: Props) => {
         </Text>
       </PaddedView>
       <HR height={padding} color={colors.grey90} />
-      <View style={{ paddingTop: halfPadding }}>
+      <View>
         <SingleHeader title={t('Entenda os valores')} />
         <Text
-          style={{ ...texts.xs, color: colors.grey700, paddingHorizontal: padding, paddingTop: 12 }}
+          style={{ ...texts.xs, color: colors.grey700, paddingHorizontal: padding, paddingTop: 4 }}
         >
           {t('Veja o resumo da sua transferência')}
         </Text>
@@ -82,14 +82,13 @@ export const Payment = ({ navigation, route }: Props) => {
           justifyContent: 'space-between',
           alignItems: 'center',
           paddingRight: padding,
-          paddingVertical: halfPadding,
         }}
       >
         <SingleHeader title={t('Você irá receber')} />
         <Text style={{ ...texts.xl }}>{t('R$ XXXX,00')}</Text>
       </View>
       <HR height={padding} color={colors.grey90} />
-      <View style={{ paddingTop: halfPadding }}>
+      <View>
         <BankData
           courier={courier}
           navigateToProfileBank={() => navigation.navigate('ProfileBank')}
@@ -116,10 +115,10 @@ export const Payment = ({ navigation, route }: Props) => {
         </Text>
       </PaddedView>
       <HR height={padding} color={colors.grey90} />
-      <View style={{ paddingTop: halfPadding }}>
+      <View>
         <SingleHeader title={t('Entenda os valores')} />
         <Text
-          style={{ ...texts.xs, color: colors.grey700, paddingHorizontal: padding, paddingTop: 12 }}
+          style={{ ...texts.xs, color: colors.grey700, paddingHorizontal: padding, paddingTop: 4 }}
         >
           {t('Veja os descontos do seu adiantamento')}
         </Text>
@@ -171,14 +170,13 @@ export const Payment = ({ navigation, route }: Props) => {
           justifyContent: 'space-between',
           alignItems: 'center',
           paddingRight: padding,
-          paddingVertical: halfPadding,
         }}
       >
         <SingleHeader title={t('Total com descontos')} />
         <Text style={{ ...texts.xl }}>{t('R$ XXXX,XX')}</Text>
       </View>
       <HR height={padding} color={colors.grey90} />
-      <View style={{ paddingTop: halfPadding }}>
+      <View>
         <BankData
           courier={courier}
           navigateToProfileBank={() => navigation.navigate('ProfileBank')}

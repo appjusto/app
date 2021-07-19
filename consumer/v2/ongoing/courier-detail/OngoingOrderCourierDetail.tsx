@@ -3,7 +3,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
-import PaddedView from '../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
@@ -44,9 +43,11 @@ export const OngoingOrderCourierDetail = ({ navigation, route }: Props) => {
       <View style={{ paddingBottom: padding }}>
         <OrderCourierSummary courier={order.courier!} />
         <SingleHeader title={t('Integrante da frota')} />
-        <PaddedView>
+        <View
+          style={{ paddingHorizontal: padding, paddingBottom: padding, paddingTop: halfPadding }}
+        >
           <OrderFleetSummary fleetId={order.fare!.fleet.id} />
-        </PaddedView>
+        </View>
       </View>
       <View>
         <View

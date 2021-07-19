@@ -72,7 +72,7 @@ export const FilterScreen = ({ navigation }: Props) => {
       {/* order by */}
       <View>
         <SingleHeader title={t('Ordernar por')} />
-        <HR height={1} style={{ paddingTop: halfPadding }} />
+        <HR height={1} />
         <PaddedView>
           {orderByOptions.map((item) => (
             <View key={item.value} style={{ marginTop: halfPadding }}>
@@ -89,7 +89,7 @@ export const FilterScreen = ({ navigation }: Props) => {
       {kind === 'restaurant' && cuisines && (
         <View>
           <SingleHeader title={t('Categorias')} />
-          <HR height={1} style={{ paddingTop: halfPadding }} />
+          <HR height={1} />
           <PaddedView style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             {cuisines.map((cuisine) => {
               const selected =
@@ -124,7 +124,7 @@ export const FilterScreen = ({ navigation }: Props) => {
       {kind === 'product' && classifications && (
         <View>
           <SingleHeader title={t('Classificações especiais')} />
-          <HR height={1} style={{ paddingTop: halfPadding }} />
+          <HR height={1} />
           <PaddedView>
             {classifications?.map((classification) => {
               const selected =

@@ -13,7 +13,7 @@ import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { useContextBusiness } from '../../../../../common/store/context/business';
 import { useContextMenu } from '../../../../../common/store/context/menu';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
-import { colors, halfPadding, padding, screens } from '../../../../../common/styles';
+import { colors, halfPadding, screens } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { LoggedNavigatorParamList } from '../../../types';
 import { RestaurantHeader } from '../../common/RestaurantHeader';
@@ -79,8 +79,8 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
         }
         renderSectionHeader={({ section }) => {
           return !isEmpty(section.data) ? (
-            <View style={{ marginTop: padding }}>
-              <SingleHeader title={section.title} />
+            <View style={{ marginTop: halfPadding }}>
+              <SingleHeader title={section.title} textTransform="capitalize" />
             </View>
           ) : null;
         }}

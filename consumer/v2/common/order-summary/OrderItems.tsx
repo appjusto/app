@@ -26,7 +26,7 @@ export const OrderItems = ({ order, onEditItemPress, onAddItemsPress }: Props) =
       {order.items?.map((item) => (
         <View key={item.id}>
           <TouchableOpacity onPress={() => setSelectedItem(item.id)}>
-            <View style={{ paddingHorizontal: padding, paddingVertical: 12 }}>
+            <View style={{ paddingHorizontal: padding, paddingBottom: 12, paddingTop: 4 }}>
               <View
                 style={{
                   flexDirection: 'row',
