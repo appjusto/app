@@ -50,10 +50,7 @@ export const ProductComplementListItem = ({ complement, selected, disabled, onTo
         <View style={{ flex: 1, paddingHorizontal: padding }}>
           <Text style={{ ...texts.sm }}>{complement.name}</Text>
           {complement.description ? (
-            <Text
-              style={{ ...texts.sm, color: colors.grey700, marginTop: 4, flexWrap: 'wrap' }}
-              numberOfLines={2}
-            >
+            <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 4, flexWrap: 'wrap' }}>
               {complement.description}
             </Text>
           ) : null}

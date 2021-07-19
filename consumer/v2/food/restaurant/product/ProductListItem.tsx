@@ -61,9 +61,11 @@ export const ProductListItem = ({ product, showRestaurantName, complements }: Pr
             <Text style={{ ...texts.xs, color: colors.green600 }}>{businessName}</Text>
           )}
         </View>
-        <View>
-          <ListItemImage uri={imageURI} height={80} width={80} />
-        </View>
+        {imageURI ? (
+          <View>
+            <ListItemImage uri={imageURI} height={80} width={80} />
+          </View>
+        ) : null}
       </View>
     </View>
   );
