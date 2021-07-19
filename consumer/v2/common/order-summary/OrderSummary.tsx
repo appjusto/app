@@ -143,7 +143,7 @@ export const OrderSummary = ({
           </Text>
           <View style={{ marginTop: halfPadding, flexDirection: 'row', alignItems: 'center' }}>
             <Switch
-              trackColor={{ false: colors.grey500, true: colors.white }}
+              trackColor={{ false: colors.grey500, true: colors.grey500 }}
               thumbColor={shareDataWithBusiness ? colors.green500 : colors.yellow}
               ios_backgroundColor={colors.white}
               onValueChange={onShareData}
