@@ -58,7 +58,7 @@ export default function ({ order, onPress }: Props) {
           } else if (dispatchingState === 'going-destination') {
             detail = `${t('À caminho de')} ${order.destination!.address.main}`;
           } else if (dispatchingState === 'arrived-destination') {
-            detail = 'Entregador/a chegou para entrega';
+            detail = `${order.courier?.name ?? t('Entregador/a')} ${t('chegou para entrega')}`;
           }
         }
         if (dispatchingStatus === 'no-match') {

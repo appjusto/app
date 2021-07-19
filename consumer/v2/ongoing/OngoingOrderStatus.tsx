@@ -35,10 +35,14 @@ export const OngoingOrderStatus = ({ order }: Props) => {
         description = t('Estamos procurando um/a entregador/a para o seu pedido');
         if (dispatchingState === 'going-pickup') {
           header = t('Indo para o restaurante');
-          description = t('O/A entregador/a já está indo pegar o pedido.');
+          description = `${order.courier?.name ?? t('O/A entregador/a')} ${t(
+            'já está indo pegar o pedido.'
+          )}`;
         } else if (dispatchingState === 'arrived-pickup') {
           header = t('Aguardando retirada');
-          description = t('O/A entregador/a já chegou ao restaurante.');
+          description = `${order.courier?.name ?? t('O/A entregador/a')} ${t(
+            'já chegou ao restaurante.'
+          )}`;
         }
       }
     } else if (status === 'dispatching') {
@@ -48,16 +52,19 @@ export const OngoingOrderStatus = ({ order }: Props) => {
       } else {
         if (dispatchingState === 'arrived-pickup') {
           header = t('Retirada efetuada');
-          description = t('O/A entregador/a já está com o pedido em mãos.');
+          description = `${order.courier?.name ?? t('O/A entregador/a')} ${t(
+            'já está com o pedido em mãos.'
+          )}`;
         } else if (dispatchingState === 'going-destination') {
-          // COLOCAR AQUI UM IF PRO OUTSOURCED
           header = t('Saiu para entrega');
-          description = t(
-            'Já pode se preparar! O/A entregador/a saiu e está levando o pedido até você.'
-          );
+          description = `${t('Já pode se preparar!')} ${
+            order.courier?.name ?? t('O/A entregador/a')
+          } ${t('saiu e está levando o pedido até você.')}`;
         } else if (dispatchingState === 'arrived-destination') {
-          header = t('Entregador/a chegou!');
-          description = t('O/A entregador/a já está no local de entrega.');
+          header = `${order.courier?.name ?? t('O/A entregador/a')} ${t('chegou!')}`;
+          description = `${order.courier?.name ?? t('O/A entregador/a')} ${t(
+            'já está no local de entrega.'
+          )}`;
         }
       }
     } else if (status === 'delivered') {
@@ -77,18 +84,24 @@ export const OngoingOrderStatus = ({ order }: Props) => {
     } else if (status === 'dispatching') {
       if (dispatchingState === 'going-pickup') {
         header = t('Indo para a coleta');
-        description = t('O/A entregador/a está indo para o local de coleta.');
+        description = `${order.courier?.name ?? t('O/A entregador/a')} ${t(
+          'está indo para o local de coleta.'
+        )}`;
       } else if (dispatchingState === 'arrived-pickup') {
         header = t('Aguardando coleta');
-        description = t('O/A entregador/a já chegou ao local de coleta.');
+        description = `${order.courier?.name ?? t('O/A entregador/a')} ${t(
+          'já chegou ao local de coleta.'
+        )}`;
       } else if (dispatchingState === 'going-destination') {
         header = t('Saiu para entrega');
-        description = t(
-          'Já pode se preparar! O/A entregador/a saiu e já está levando a encomenda ao destino.'
-        );
+        description = `${t('Já pode se preparar!')} ${
+          order.courier?.name ?? t('O/A entregador/a')
+        } ${t('saiu e já está levando a encomenda ao destino.')}`;
       } else if (dispatchingState === 'arrived-destination') {
-        header = t('Entregador/a chegou!');
-        description = t('O/A entregador/a já está no local de entrega.');
+        header = `${order.courier?.name ?? t('O/A entregador/a')} ${t('chegou!')}`;
+        description = `${order.courier?.name ?? t('O/A entregador/a')} ${t(
+          'já está no local de entrega.'
+        )}`;
       }
     } else if (status === 'delivered') {
       header = t('Pedido entregue!');
@@ -103,8 +116,6 @@ export const OngoingOrderStatus = ({ order }: Props) => {
   }
 
   return (
-    // this will receive the code and a button to confirm delivery
-    // also, looks like we will show the "previsão" rounded text all the time
     <View style={{ paddingHorizontal: padding, paddingVertical: padding }}>
       {status === 'dispatching' && dispatchingState === 'arrived-destination' ? (
         <IconOngoingMotocycle />
