@@ -44,7 +44,7 @@ export default function ({ order, tip, isLoading = false, onChange, onConfirm }:
       </View>
       <View style={{ paddingBottom: padding }}>
         <View style={{ flexDirection: 'row', paddingBottom: padding, marginTop: 24 }}>
-          <RoundedProfileImg flavor="courier" id={order.courier?.id} />
+          <RoundedProfileImg flavor="courier" id={order.courier?.id} size={64} />
           {order.courier?.joined && (
             <View style={{ marginLeft: halfPadding }}>
               <Text style={[texts.sm]}>{order.courier?.name}</Text>
