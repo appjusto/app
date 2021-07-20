@@ -45,25 +45,40 @@ export const OrderAvailableFleets = ({
           }}
         >
           <Text style={{ ...texts.md, ...texts.bold }}>{t('Escolha a frota')}</Text>
-          <Text style={{ ...texts.xs, color: colors.grey700 }}>
-            {quotes?.length ?? 0} {t('frota(s) ativas agora')}
-          </Text>
+          {quotes?.length ? (
+            <Text style={{ ...texts.xs, color: colors.grey700 }}>
+              {t('Exibindo ')}
+              {quotes?.length ?? 0}
+            </Text>
+          ) : (
+            <Text style={{ ...texts.xs, color: colors.grey700 }}>
+              {t('Sem frotas disponíveis')}
+            </Text>
+          )}
         </PaddedView>
       </View>
-      <PaddedView>
+      <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
         {order.route?.issue ? (
           <RouteIssueCard />
         ) : (
           <View>
-            <Text style={{ ...texts.xs, color: colors.grey700, marginBottom: 12 }}>
-              {t(
-                'Você pode escolher a frota que quiser para sua entrega. Frotas podem ter preços e características diferentes.'
-              )}
-            </Text>
+            {quotes?.length ? (
+              <Text style={{ ...texts.xs, color: colors.grey700, marginBottom: 12 }}>
+                {t(
+                  'Frotas podem ter preços e características diferentes.\n Entregadores recebem o valor integral da frota.'
+                )}
+              </Text>
+            ) : (
+              <Text style={{ ...texts.xs, color: colors.grey700, marginBottom: 12 }}>
+                {t(
+                  'Infelizmente estamos sem entregadores disponíveis...\n Tente novamente em alguns minutos.'
+                )}
+              </Text>
+            )}
             <ShowIf test={isEmpty(quotes)}>
               {() => (
                 <DefaultButton
-                  title={t('Click para tentar novamente')}
+                  title={t('Procurar frotas disponíveis')}
                   onPress={onRetry}
                   activityIndicator={isLoading}
                   disabled={isLoading}
@@ -122,7 +137,7 @@ export const OrderAvailableFleets = ({
             </ShowIf>
           </View>
         )}
-      </PaddedView>
+      </View>
     </View>
   );
 };

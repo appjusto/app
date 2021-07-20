@@ -125,7 +125,7 @@ export const OrderSummary = ({
             onEditItemPress={onEditItemPress!}
             onAddItemsPress={onAddItemsPress!}
           />
-          <OrderAdditionalInfo value={additionalInfo} onAddInfo={onAddInfo} />
+          <OrderAdditionalInfo value={additionalInfo!} onAddInfo={onAddInfo!} />
         </View>
       )}
       {order.type === 'food' && (
