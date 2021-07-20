@@ -83,7 +83,7 @@ export const DeliveryConfirmation = ({
         <PaddedView style={{ backgroundColor: colors.grey50, flex: 1 }}>
           <View style={{ flexDirection: 'row' }}>
             <IconFastFood />
-            <View style={{ marginLeft: padding, maxWidth: '82%' }}>
+            <View style={{ marginLeft: padding, width: '75%' }}>
               <Text style={{ ...texts.sm }}>
                 {t('Lembre-se: o entregador não deve cobrar nada ao entregar seu pedido')}
               </Text>

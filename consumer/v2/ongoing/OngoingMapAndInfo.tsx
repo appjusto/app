@@ -17,7 +17,7 @@ type Props = {
 export const OngoingMapAndInfo = ({ order, onCourierDetail, onChatWithCourier }: Props) => {
   return order.status === 'dispatching' ? (
     <View>
-      <OrderMap order={order} ratio={1} />
+      <OrderMap order={order} ratio={240 / 160} />
       <DeliveryInfo order={order} onCourierDetail={onCourierDetail} />
       <DefaultButton
         title={t('Abrir chat com o entregador')}
