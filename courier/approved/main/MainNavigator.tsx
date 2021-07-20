@@ -2,13 +2,13 @@ import { OrderMatchPushMessageData, PushMessageData } from '@appjusto/types';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Image } from 'react-native';
+import { Dimensions, Image, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import * as icons from '../../../assets/icons';
 import { useObserveOngoingOrders } from '../../../common/store/api/order/hooks/useObserveOngoingOrders';
 import { getUser } from '../../../common/store/user/selectors';
-import { colors, texts } from '../../../common/styles';
+import { halfPadding, padding, texts } from '../../../common/styles';
 import { useNotificationHandler } from '../../../consumer/v2/main/useNotificationHandler';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -76,40 +76,106 @@ export default function ({ navigation }: Props) {
   useNotificationHandler('order-request', handler);
   useNotificationHandler('order-update', handler);
   useNotificationHandler('order-chat', handler);
+  const { width } = Dimensions.get('window');
   // UI
   return (
     <Tab.Navigator
       tabBarOptions={{
-        activeTintColor: colors.black,
-        inactiveTintColor: colors.black,
-        activeBackgroundColor: colors.green500,
-        inactiveBackgroundColor: colors.white,
-        style: { height: 65, paddingHorizontal: 4 },
-        tabStyle: {
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderRadius: 32,
-          height: 36,
-          marginTop: 8,
+        showLabel: false,
+        style: {
+          height: 65,
+          paddingVertical: 20,
+          paddingHorizontal: padding,
+          width,
         },
-        labelStyle: { ...texts.xs, marginBottom: 5 },
-        labelPosition: 'beside-icon',
+        tabStyle: {
+          height: 24,
+          alignContent: 'flex-start',
+        },
       }}
     >
       <Tab.Screen
         name="Home"
         component={Home}
-        options={{ title: t('Início'), tabBarIcon: () => <Image source={icons.home} /> }}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                left: -16,
+              }}
+            >
+              <Image
+                source={focused ? icons.homeFocused : icons.home}
+                style={{
+                  height: 24,
+                  width: 24,
+                  marginRight: halfPadding,
+                }}
+              />
+              <Text style={{ ...texts.xs, fontFamily: focused ? 'BarlowBold' : 'BarlowMedium' }}>
+                {t('Início')}
+              </Text>
+            </View>
+          ),
+        }}
       />
       <Tab.Screen
         name="DeliveryHistory"
         component={DeliveryHistory}
-        options={{ title: t('Suas corridas'), tabBarIcon: () => <Image source={icons.orders} /> }}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                left: -8,
+              }}
+            >
+              <Image
+                source={focused ? icons.ordersFocused : icons.orders}
+                style={{
+                  height: 24,
+                  width: 24,
+                  marginRight: halfPadding,
+                }}
+              />
+              <Text style={{ ...texts.xs, fontFamily: focused ? 'BarlowBold' : 'BarlowMedium' }}>
+                {t('Suas corridas')}
+              </Text>
+            </View>
+          ),
+        }}
       />
       <Tab.Screen
         name="Profile"
         component={Profile}
-        options={{ title: t('Sua conta'), tabBarIcon: () => <Image source={icons.user} /> }}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+              }}
+            >
+              <Image
+                source={focused ? icons.userFocused : icons.user}
+                style={{
+                  height: 24,
+                  width: 24,
+                  marginRight: halfPadding,
+                }}
+              />
+              <Text style={{ ...texts.xs, fontFamily: focused ? 'BarlowBold' : 'BarlowMedium' }}>
+                {t('Sua conta')}
+              </Text>
+            </View>
+          ),
+        }}
       />
     </Tab.Navigator>
   );
