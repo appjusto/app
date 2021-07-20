@@ -132,7 +132,6 @@ export default function ({ order, onPress }: Props) {
               flexDirection: 'row',
               alignItems: 'center',
             }}
-            half
           >
             {flavor === 'courier' ? <IconMotocycleCentered /> : <IconRequestSmall />}
             <View style={{ marginLeft: padding, maxWidth: '80%' }}>

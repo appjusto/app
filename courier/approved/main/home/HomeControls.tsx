@@ -8,20 +8,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
-import ShowIf from '../../../../common/components/views/ShowIf';
-import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import { IconMotocycleCentered } from '../../../../common/icons/icon-motocycle-centered';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { updateProfile } from '../../../../common/store/user/actions';
-import {
-  borders,
-  colors,
-  doublePadding,
-  halfPadding,
-  padding,
-  texts,
-} from '../../../../common/styles';
+import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
@@ -43,7 +34,6 @@ export default function ({ onFleetDetail }: Props) {
   const navigation = useNavigation<ScreenNavigationProp>();
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  const tallerDevice = useTallerDevice();
   // redux store
   const courier = useSelector(getCourier)!;
   const status = courier!.status;
@@ -70,32 +60,26 @@ export default function ({ onFleetDetail }: Props) {
   // UI
   return (
     <PaddedView style={[{ backgroundColor: working ? colors.green500 : colors.darkYellow }]}>
-      <ShowIf test={tallerDevice}>
-        {() => (
-          <Text
-            style={[
-              texts.x2l,
-              {
-                // paddingBottom: tallerDevice ? padding : padding,
-                // marginTop: tallerDevice ? padding : 0,
-              },
-            ]}
-          >
-            {`${t('Olá')}, ${courier.name ?? 'entregador/a'}. ${t(
-              'Faça suas corridas com segurança.'
-            )}`}
-          </Text>
-        )}
-      </ShowIf>
-
+      <Text
+        style={[
+          texts.x2l,
+          {
+            paddingBottom: halfPadding,
+            paddingTop: halfPadding,
+          },
+        ]}
+      >
+        {`${t('Olá')}, ${courier.name ?? 'entregador/a'}. ${t(
+          'Faça suas corridas com segurança.'
+        )}`}
+      </Text>
       {/* controls */}
       <View>
-        <Text style={{ marginBottom: 4, marginTop: halfPadding }}>ID: #{courier.code}</Text>
+        <Text style={{ marginBottom: 4 }}>ID: #{courier.code}</Text>
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginBottom: tallerDevice ? doublePadding : halfPadding,
           }}
         >
           <View style={styles.controlItem}>
