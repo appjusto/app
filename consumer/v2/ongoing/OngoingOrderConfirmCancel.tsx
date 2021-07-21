@@ -61,27 +61,43 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
         <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: doublePadding }}>
           <IconConeYellow />
           <Text style={{ ...texts.xl, marginTop: padding }}>{t('Aviso importante:')}</Text>
-          <Text style={{ ...texts.xl, color: colors.red }}>
+          <Text style={{ ...texts.xl, color: colors.red, textAlign: 'center' }}>
             {`${t('O valor de')} ${formatCurrency(cancellationInfo.costs)} não será reembolsado.`}
           </Text>
         </View>
         {order.type === 'food' ? (
           <View>
-            <Text style={{ ...texts.sm, marginTop: padding, color: colors.grey700 }}>
+            {/* hiding this until it is possible to call the restaurant */}
+            {/* <Text
+              style={{
+                ...texts.sm,
+                marginTop: padding,
+                color: colors.grey700,
+                textAlign: 'center',
+              }}
+            >
               {t(
                 'Recomendamos que entre em contato com o restaurante para verificar se ainda é possível cancelar sem o prejuízo dos produtos.'
               )}
-            </Text>
-            <DefaultButton
+            </Text> */}
+            {/* hiding this until it is possible to call the restaurant */}
+            {/* <DefaultButton
               title={t('Ligar para o restaurante')}
               secondary
               onPress={() => null}
               style={{ marginTop: 24 }}
-            />
+            /> */}
           </View>
         ) : (
           <View>
-            <Text style={{ ...texts.sm, marginTop: padding, color: colors.grey700 }}>
+            <Text
+              style={{
+                ...texts.sm,
+                marginTop: padding,
+                color: colors.grey700,
+                textAlign: 'center',
+              }}
+            >
               {t(
                 'Depois que o/a entregador/a inicia a corrida não é mais possível fazer o cancelamento da corrida.'
               )}
@@ -91,7 +107,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
       </PaddedView>
       <View style={{ flex: 1 }} />
       <PaddedView>
-        <Text style={{ ...texts.sm }}>
+        <Text style={{ ...texts.sm, textAlign: 'center' }}>
           {t('Deseja confirmar o cancelamento mesmo com a cobrança dos valores do pedido?')}
         </Text>
         <SafeAreaView
@@ -104,7 +120,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
           }}
         >
           <View style={{ width: '48%' }}>
-            <DefaultButton title={t('Voltar')} onPress={() => navigation.goBack()} />
+            <DefaultButton title={t('Voltar')} onPress={() => navigation.goBack()} grey />
           </View>
           <View style={{ width: '48%' }}>
             <DefaultButton title={t('Confirmar')} onPress={cancelOrderHandler} />

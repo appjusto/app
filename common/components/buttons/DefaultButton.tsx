@@ -15,6 +15,7 @@ export interface DefaultButtonProps extends TouchableOpacityProps, ViewProps {
   icon?: React.ReactNode;
   secondary?: boolean;
   children?: React.ReactNode | React.ReactNode[];
+  grey?: boolean;
 }
 
 export default function ({
@@ -25,16 +26,29 @@ export default function ({
   disabled,
   style,
   children,
+  grey,
   ...props
 }: DefaultButtonProps) {
-  const backgroundColor = secondary
-    ? colors.white
-    : disabled || activityIndicator
-    ? colors.grey500
-    : colors.green500;
-  const borderColor =
-    disabled || activityIndicator ? colors.grey500 : secondary ? colors.black : colors.green500;
-  const color = disabled ? (secondary ? colors.grey500 : colors.grey700) : colors.black;
+  const backgroundColor = (() => {
+    if (secondary) return colors.white;
+    else if (disabled || activityIndicator) return colors.grey500;
+    else if (grey) return colors.grey700;
+    else return colors.green500;
+  })();
+  const borderColor = (() => {
+    if (disabled || activityIndicator) return colors.grey500;
+    else if (secondary) return colors.black;
+    else if (grey) return colors.grey700;
+    else return colors.green500;
+  })();
+  const color = (() => {
+    if (disabled) {
+      if (secondary) return colors.grey500;
+      else return colors.grey700;
+    } else if (grey) {
+      return colors.white;
+    } else return colors.black;
+  })();
 
   return (
     <TouchableOpacity disabled={disabled} {...props}>

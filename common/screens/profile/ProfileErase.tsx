@@ -148,7 +148,7 @@ export default function ({ navigation }: Props) {
               onPress={eraseHandler}
               disabled={busy}
               activityIndicator={busy}
-              secondary
+              grey
             />
           </SafeAreaView>
         </View>
