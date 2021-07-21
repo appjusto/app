@@ -1,8 +1,9 @@
+import { Feather } from '@expo/vector-icons';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, SectionList, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, SectionList, Share, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
@@ -15,6 +16,7 @@ import { useContextMenu } from '../../../../../common/store/context/menu';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { colors, halfPadding, screens } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
+import { AppJustoSiteURL } from '../../../../../strings/values';
 import { LoggedNavigatorParamList } from '../../../types';
 import { RestaurantHeader } from '../../common/RestaurantHeader';
 import { FoodOrderNavigatorParamList } from '../../types';
@@ -41,10 +43,28 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   const menu = useContextMenu();
   // redux
   const consumer = useSelector(getConsumer);
+
   // side effects
   React.useLayoutEffect(() => {
+    const shareRestaurant = () => {
+      //this needs the deeplinks Italo appointed in the backlog (notion)
+      try {
+        Share.share({
+          message: `Pedi em ${
+            restaurant!.name
+          } usando o AppJusto, uma plataforma de delivery mais justa para clientes, entregadores e restaurantes. Peça também e faça parte desse movimento!`,
+          title: 'AppJusto',
+          url: AppJustoSiteURL,
+        });
+      } catch (error) {}
+    };
     navigation.setOptions({
       title: restaurant?.name ?? '',
+      headerRight: () => (
+        <TouchableOpacity onPress={shareRestaurant}>
+          <Feather name="share-2" size={20} style={{ paddingRight: 12 }} />
+        </TouchableOpacity>
+      ),
     });
   }, [navigation, restaurant]);
   console.log(consumer?.id);

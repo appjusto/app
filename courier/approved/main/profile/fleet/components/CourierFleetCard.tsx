@@ -111,15 +111,6 @@ export const CourierFleetCard = ({ fleet, listItem, onPress }: Props) => {
           {formatDistance(fleet.maxDistanceToOrigin)}
         </RoundedText>
       </View>
-      {/* <View style={{ paddingTop: padding }}>
-        <TouchableOpacity onPress={shareFleetHandler}>
-          <HomeCard
-            icon={<IconShare />}
-            title={t('Compartilhar frota')}
-            subtitle={t('Divulgue para os seus amigos e os faça participar dessa frota')}
-          />
-        </TouchableOpacity>
-      </View> */}
       {listItem ? (
         <DefaultButton
           title={t('Detalhes da frota')}
