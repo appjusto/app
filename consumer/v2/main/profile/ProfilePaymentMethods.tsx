@@ -1,11 +1,13 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
+import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
-import { screens } from '../../../../common/styles';
+import { colors, padding, screens, texts } from '../../../../common/styles';
+import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import { RestaurantNavigatorParamList } from '../../food/restaurant/types';
 import { OngoingOrderNavigatorParamList } from '../../ongoing/types';
@@ -15,6 +17,8 @@ import { ProfileParamList } from './types';
 export type ProfilePaymentMethodsParamList = {
   ProfilePaymentMethods?: {
     returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P' | 'OngoingOrderDeclined';
+    courierFee?: number;
+    fleetName?: string;
   };
 };
 
@@ -34,7 +38,7 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // context
-  const { returnScreen } = route.params ?? {};
+  const { returnScreen, courierFee, fleetName } = route.params ?? {};
   // redux
   const consumer = useSelector(getConsumer);
   const cards = consumer?.paymentChannel?.methods ?? [];
@@ -58,6 +62,42 @@ export default function ({ navigation, route }: Props) {
             }}
           />
         )}
+        ListHeaderComponent={
+          courierFee && fleetName ? (
+            <View style={{ backgroundColor: colors.white }}>
+              <SingleHeader title={t('Valor pendente')} />
+              <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
+                <Text style={{ ...texts.xs, color: colors.grey700 }}>
+                  {t(
+                    'Já foi efetuado o pagamento do produto, e ocorreu um problema para cobrar o valor  da entrega.'
+                  )}
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingTop: 12,
+                    paddingBottom: 2,
+                  }}
+                >
+                  <Text style={{ ...texts.sm }}>{t('Entregador')}</Text>
+                  <Text style={{ ...texts.sm }}>{formatCurrency(courierFee!)}</Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <Text style={{ ...texts.sm }}>{t('Frota escolhida')}</Text>
+                  <Text style={{ ...texts.sm }}>{fleetName}</Text>
+                </View>
+              </View>
+            </View>
+          ) : null
+        }
         ListFooterComponent={() => (
           <ConfigItem
             title={t('Adicionar novo cartão de crédito')}
