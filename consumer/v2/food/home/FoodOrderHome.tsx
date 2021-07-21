@@ -94,6 +94,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
       loading={isLoading}
       refreshing={refreshing}
       onRefresh={() => refresh()}
+      onRecommend={() => navigation.navigate('RecommendRestaurant')}
     />
   );
 };
