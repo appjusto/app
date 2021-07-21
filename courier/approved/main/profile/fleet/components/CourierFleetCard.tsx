@@ -1,11 +1,15 @@
 import { Fleet } from '@appjusto/types';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Share, Text, TouchableOpacity, View } from 'react-native';
 import DefaultButton from '../../../../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../../../common/components/texts/RoundedText';
+import { IconShare } from '../../../../../../common/icons/icon-share';
+import HomeCard from '../../../../../../common/screens/home/cards/HomeCard';
 import { borders, colors, halfPadding, padding, texts } from '../../../../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../../../../common/utils/formatters';
 import { t } from '../../../../../../strings';
+import { AppJustoSiteURL } from '../../../../../../strings/values';
 
 type Props = {
   fleet: Fleet;
@@ -14,12 +18,20 @@ type Props = {
 };
 
 export const CourierFleetCard = ({ fleet, listItem, onPress }: Props) => {
+  const shareFleetHandler = React.useCallback(() => {
+    //this needs the deeplinks Italo appointed in the backlog (notion)
+    try {
+      Share.share({
+        message: `Eu faço parte da ${fleet.name} no AppJusto, app criado para combater a exploração dos entregadores. Faça parte dessa frota também!`,
+        title: 'AppJusto',
+        url: AppJustoSiteURL,
+      });
+    } catch (error) {}
+  }, []);
   return (
-    <View
+    <PaddedView
       style={{
         ...borders.default,
-        paddingHorizontal: 12,
-        paddingVertical: padding,
         backgroundColor: colors.white,
       }}
     >
@@ -99,14 +111,33 @@ export const CourierFleetCard = ({ fleet, listItem, onPress }: Props) => {
           {formatDistance(fleet.maxDistanceToOrigin)}
         </RoundedText>
       </View>
-      {listItem && (
+      {/* <View style={{ paddingTop: padding }}>
+        <TouchableOpacity onPress={shareFleetHandler}>
+          <HomeCard
+            icon={<IconShare />}
+            title={t('Compartilhar frota')}
+            subtitle={t('Divulgue para os seus amigos e os faça participar dessa frota')}
+          />
+        </TouchableOpacity>
+      </View> */}
+      {listItem ? (
         <DefaultButton
           title={t('Detalhes da frota')}
           secondary
           style={{ marginTop: padding }}
           onPress={onPress}
         />
+      ) : (
+        <View style={{ paddingTop: padding }}>
+          <TouchableOpacity onPress={shareFleetHandler}>
+            <HomeCard
+              icon={<IconShare />}
+              title={t('Compartilhar frota')}
+              subtitle={t('Divulgue para os seus amigos e os faça participar dessa frota')}
+            />
+          </TouchableOpacity>
+        </View>
       )}
-    </View>
+    </PaddedView>
   );
 };
