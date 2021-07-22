@@ -56,7 +56,11 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
     );
   }
   return (
-    <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView
+      style={{ ...screens.config }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
       <PaddedView style={{ flex: 1 }}>
         <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: doublePadding }}>
           <IconConeYellow />

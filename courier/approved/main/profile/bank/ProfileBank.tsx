@@ -123,6 +123,7 @@ export default function ({ navigation, route }: Props) {
         style={{ flex: 1 }}
         keyboardShouldPersistTaps="never"
         contentContainerStyle={{ flexGrow: 1 }}
+        scrollIndicatorInsets={{ right: 1 }}
       >
         <PaddedView style={{ flex: 1 }}>
           <Text style={{ ...texts.sm, color: colors.grey700 }}>

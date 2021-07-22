@@ -30,7 +30,7 @@ export const AboutRestaurant = ({ route }: Props) => {
     );
 
   return (
-    <ScrollView style={{ ...screens.default }}>
+    <ScrollView style={{ ...screens.default }} scrollIndicatorInsets={{ right: 1 }}>
       <RestaurantHeader restaurant={restaurant} />
       <View style={{ marginTop: padding, padding }}>
         <Text style={{ ...texts.sm }}>{restaurant.description}</Text>

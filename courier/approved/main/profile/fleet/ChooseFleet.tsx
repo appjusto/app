@@ -39,7 +39,7 @@ export default function ({ navigation, route }: Props) {
     );
   }
   return (
-    <ScrollView style={{ ...screens.config }}>
+    <ScrollView style={{ ...screens.config }} scrollIndicatorInsets={{ right: 1 }}>
       <View style={{ flex: 1 }}>
         <PaddedView>
           <Text style={{ ...texts.x2l, marginBottom: padding }}>{t('Sua frota atual')}</Text>

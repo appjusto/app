@@ -8,7 +8,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View
+  View,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
@@ -91,6 +91,7 @@ export default function ({ navigation, route }: Props) {
         extraHeight={Platform.select({ android: 32 })}
         style={{ flex: 1 }}
         contentContainerStyle={{ flexGrow: 1 }}
+        scrollIndicatorInsets={{ right: 1 }}
       >
         <View style={{ flex: 1, paddingHorizontal: padding }}>
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>

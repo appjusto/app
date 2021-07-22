@@ -165,7 +165,11 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView
+      style={{ ...screens.config }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
       <ConfigItem
         title={t('Foto do rosto')}
         subtitle={t('Adicionar selfie')}

@@ -13,7 +13,11 @@ export const AboutTests = () => {
   // tracking
   useSegmentScreen('About tests');
   return (
-    <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView
+      style={{ ...screens.config }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
       <PaddedView>
         <Text style={{ ...texts.x2l }}>
           {t('Os cadastros estão abertos para todo o Brasil, mas os testes iniciarão em São Paulo')}

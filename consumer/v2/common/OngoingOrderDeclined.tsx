@@ -106,7 +106,11 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   })();
   // UI
   return (
-    <ScrollView style={{ ...screens.default }} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView
+      style={{ ...screens.default }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
       <FeedbackView
         header={header}
         description={description}

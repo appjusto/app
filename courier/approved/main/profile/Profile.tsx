@@ -60,7 +60,7 @@ export default function ({ navigation }: Props) {
         options={{ title: 'Seus dados' }}
         children={() => (
           <View style={[screens.config]}>
-            <ScrollView>
+            <ScrollView scrollIndicatorInsets={{ right: 1 }}>
               <ConfigItem
                 title={t('Dados pessoais')}
                 subtitle={t('Seu nome, sobrenome, CPF e número do celular')}

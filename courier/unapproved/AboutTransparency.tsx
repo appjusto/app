@@ -13,7 +13,11 @@ export const AboutTransparency = () => {
   // tracking
   useSegmentScreen('About transparency');
   return (
-    <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView
+      style={{ ...screens.config }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
       <PaddedView>
         <Text style={{ ...texts.x2l }}>
           {t('O AppJusto acredita na transparência em primeiro lugar')}

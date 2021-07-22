@@ -110,7 +110,11 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
     );
   }
   return (
-    <ScrollView style={{ ...screens.default }} contentContainerStyle={{ flex: 1 }}>
+    <ScrollView
+      style={{ ...screens.default }}
+      contentContainerStyle={{ flex: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
       <PaddedView style={{ flex: 1 }}>
         <DefaultInput
           title={t('Nome do recebedor')}

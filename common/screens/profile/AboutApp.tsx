@@ -52,7 +52,11 @@ export const AboutApp = ({ navigation }: Props) => {
   }`;
 
   return (
-    <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView
+      style={{ ...screens.config }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
       <View style={{ flex: 1 }}>
         <ConfigItem
           title={t('Site oficial')}

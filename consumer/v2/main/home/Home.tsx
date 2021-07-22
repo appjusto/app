@@ -35,7 +35,7 @@ export default function ({ navigation }: Props) {
   return (
     <View style={[screens.headless, screens.config]}>
       {/* <StatusBar /> */}
-      <ScrollView>
+      <ScrollView scrollIndicatorInsets={{ right: 1 }}>
         <HomeControls
           onStartOrderPress={(type) => {
             if (type === 'food') {

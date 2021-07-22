@@ -44,6 +44,7 @@ export const RecommendRestaurant = ({ navigation }: Props) => {
       style={{ ...screens.config }}
       keyboardShouldPersistTaps="never"
       contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
     >
       <PaddedView style={{ flex: 1 }}>
         <Text style={{ ...texts.x2l }}>{t('Indique um restaurante')}</Text>

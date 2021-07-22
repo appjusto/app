@@ -39,6 +39,7 @@ export const ReportIssueView = ({
       style={{ ...screens.config }}
       keyboardShouldPersistTaps="never"
       contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
     >
       <PaddedView>
         <Text style={{ ...texts.xl, marginBottom: padding }}>{title}</Text>

@@ -85,7 +85,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
   }
   return (
     <SafeAreaView style={{ ...screens.config }}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} scrollIndicatorInsets={{ right: 1 }}>
         <PaddedView style={{ backgroundColor: colors.green500 }}>
           <RoundedText>{t('Pré-cadastro realizado com sucesso!')}</RoundedText>
           {totalConsumersInCity > 1 ? (

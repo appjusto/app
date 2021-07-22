@@ -38,7 +38,7 @@ export const Payment = ({ navigation, route }: Props) => {
       </View>
     );
   return operation === 'withdraw' ? (
-    <ScrollView style={{ ...screens.default }}>
+    <ScrollView style={{ ...screens.default }} scrollIndicatorInsets={{ right: 1 }}>
       <PaddedView>
         <Text style={{ ...texts.xl }}>{t('Disponível para saque')}</Text>
         <Text style={{ ...texts.md, color: colors.grey700, marginTop: padding }}>

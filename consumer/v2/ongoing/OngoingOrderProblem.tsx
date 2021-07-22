@@ -75,7 +75,11 @@ export const OngoingOrderProblem = ({ navigation, route }: Props) => {
     }
   };
   return (
-    <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView
+      style={{ ...screens.config }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
       <PaddedView style={{ flex: 1 }}>
         {/* goes to a screen with a ReportIssueView */}
         <DeliveryProblemCard

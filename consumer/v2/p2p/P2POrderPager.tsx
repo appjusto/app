@@ -153,6 +153,7 @@ export default function ({
             keyboardShouldPersistTaps="always"
             style={{ flex: 1 }}
             contentContainerStyle={{ flex: 1 }}
+            scrollIndicatorInsets={{ right: 1 }}
           >
             <Pressable
               onPress={() => {
@@ -216,6 +217,7 @@ export default function ({
             keyboardShouldPersistTaps="always"
             style={{ flex: 1 }}
             contentContainerStyle={{ flex: 1 }}
+            scrollIndicatorInsets={{ right: 1 }}
           >
             <Pressable
               onPress={() => {
