@@ -68,7 +68,7 @@ export const OngoingActions = ({
           </TouchableOpacity>
         </View>
       </View>
-      {unread.length > 0 ? (
+      {unread.length > 0 && order.status !== 'dispatching' ? (
         <TouchableOpacity onPress={() => onMessageReceived(unread[0].from)}>
           <PaddedView
             style={{

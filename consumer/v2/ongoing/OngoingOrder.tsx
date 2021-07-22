@@ -152,6 +152,7 @@ export default function ({ navigation, route }: Props) {
           order={order}
           onCourierDetail={navigateToCourierDetail}
           onChatWithCourier={openChatWithCourier}
+          onOpenChat={(from) => openChat(from.id, from.agent)}
         />
         <DeliveryConfirmation
           data={codeFeedbackData}
