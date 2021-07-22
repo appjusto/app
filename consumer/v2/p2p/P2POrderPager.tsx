@@ -291,6 +291,7 @@ export default function ({
             <OrderSummary
               order={order!}
               selectedPaymentMethodId={selectedPaymentMethodId}
+              activityIndicator={isLoading}
               waiting={isLoading}
               showMap={!isDeviceTaller}
               onEditStep={setPage}
