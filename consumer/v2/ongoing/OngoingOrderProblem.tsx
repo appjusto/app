@@ -1,7 +1,7 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Linking, ScrollView, View } from 'react-native';
 import { IssueType } from '../../../../types';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
@@ -92,7 +92,7 @@ export const OngoingOrderProblem = ({ navigation, route }: Props) => {
         <DeliveryProblemCard
           title={t('Preciso falar com o AppJusto')}
           subtitle={t('Abrir chat no WhatsApp')}
-          onPress={() => null}
+          onPress={() => Linking.openURL('https://wa.me/551197821-0274')}
           situation="chat"
         />
         {/* commented for now. will be added back later when we have this feature */}

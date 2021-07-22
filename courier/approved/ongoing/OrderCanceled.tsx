@@ -49,9 +49,10 @@ export default ({ navigation, route }: Props) => {
   }
   return (
     <FeedbackView
-      header={`${t('Esse pedido foi cancelado pelo')} ${
-        order!.type === 'food' ? t('restaurante') : t('cliente')
-      }`}
+      header={t('Esse pedido foi cancelado')}
+      // header={`${t('Esse pedido foi cancelado pelo')} ${
+      //   order!.type === 'food' ? t('restaurante') : t('cliente')
+      // }`}
       icon={<IconConeYellow />}
     >
       <SafeAreaView>
