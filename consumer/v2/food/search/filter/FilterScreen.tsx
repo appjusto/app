@@ -93,7 +93,7 @@ export const FilterScreen = ({ navigation }: Props) => {
           <PaddedView style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             {cuisines.map((cuisine) => {
               const selected =
-                selectedCuisines.find((item) => item.value === cuisine.id) !== undefined;
+                selectedCuisines.find((item) => item.value === cuisine.name) !== undefined;
               return (
                 <TouchableWithoutFeedback
                   key={cuisine.id}
