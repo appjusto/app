@@ -71,7 +71,10 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
   const deliveryProblemHandler = () => {
     if (!order) return;
     if (order.type === 'food') {
-      if (order.dispatchingState === 'arrived-pickup') {
+      if (
+        order.dispatchingState === 'going-pickup' ||
+        order.dispatchingState === 'arrived-pickup'
+      ) {
         // when courier clicks in "problem" button in the modal
         navigateToAction('ReportIssue', 'courier-pickup-food-delivery', orderId);
       } else if (order.dispatchingState === 'going-destination') {
@@ -80,7 +83,10 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
         navigateToAction('ReportIssue', 'courier-destination-food', orderId);
       }
     } else if (order.type === 'p2p') {
-      if (order.dispatchingState === 'arrived-pickup') {
+      if (
+        order.dispatchingState === 'going-pickup' ||
+        order.dispatchingState === 'arrived-pickup'
+      ) {
         navigateToAction('ReportIssue', 'courier-pickup-p2p-delivery', orderId);
       } else if (order.dispatchingState === 'going-destination') {
         navigateToAction('ReportIssue', 'courier-delivering-p2p-order', orderId);

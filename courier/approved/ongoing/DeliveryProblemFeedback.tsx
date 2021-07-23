@@ -34,37 +34,14 @@ type Props = {
 export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
   // params
   const { issueType, orderId } = route.params;
-
-  const ongoingDelivery =
-    issueType === 'courier-pickup-food-delivery' ||
-    issueType === 'courier-pickup-p2p-delivery' ||
-    issueType === 'courier-delivering-food-order' ||
-    issueType === 'courier-delivering-p2p-order' ||
-    issueType === 'courier-destination-food' ||
-    issueType === 'courier-destination-p2p';
-
-  const ongoingOrder =
-    issueType === 'consumer-delivered-food-order' ||
-    'consumer-going-pickup-food' ||
-    'consumer-ongoing-food' ||
-    'consumer-arrived-food-order' ||
-    'consumer-delivered-p2p-order' ||
-    'consumer-going-pickup-p2p' ||
-    'consumer-ongoing-p2p' ||
-    'consumer-arrived-p2p-order';
-
   // handlers
   const finishHandler = () => {
-    if (ongoingDelivery) {
-      navigation.replace('OngoingDeliveryNavigator', {
-        screen: 'OngoingDelivery',
-        params: { orderId },
-      });
-    } else if (ongoingOrder) {
-      navigation.replace('OngoingOrder', { orderId });
-    }
+    navigation.replace('OngoingDeliveryNavigator', {
+      screen: 'OngoingDelivery',
+      params: { orderId },
+    });
   };
-  console.log(issueType);
+  console.log('delivery problem feedback');
   return (
     <FeedbackView
       header={t('Aguarde enquanto estamos analisando o seu problema.')}

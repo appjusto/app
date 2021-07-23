@@ -3,7 +3,6 @@ import React from 'react';
 import Chat from '../../../common/screens/Chat';
 import { defaultScreenOptions } from '../../../common/screens/options';
 import { ReportIssue } from '../../../common/screens/ReportIssue';
-import { DeliveryProblemFeedback } from '../../../courier/approved/ongoing/DeliveryProblemFeedback';
 import OrderCanceled from '../../../courier/approved/ongoing/OrderCanceled';
 import { t } from '../../../strings';
 import { OngoingOrderDeclined } from '../common/OngoingOrderDeclined';
@@ -17,6 +16,7 @@ import OngoingOrderFeedback from './OngoingOrderFeedback';
 import { OngoingOrderProblem } from './OngoingOrderProblem';
 import { OrderConfirming } from './OrderConfirming';
 import { OrderNoMatch } from './OrderNoMatch';
+import { OrderProblemFeedback } from './OrderProblemFeedback';
 import { OngoingOrderNavigatorParamList } from './types';
 
 const Stack = createStackNavigator<OngoingOrderNavigatorParamList>();
@@ -65,8 +65,8 @@ export const OngoingOrderNavigator = () => {
         options={{ title: t('Tive um problema') }}
       />
       <Stack.Screen
-        name="DeliveryProblemFeedback"
-        component={DeliveryProblemFeedback}
+        name="OrderProblemFeedback"
+        component={OrderProblemFeedback}
         options={{ title: t('Tive um problema') }}
       />
       <Stack.Screen

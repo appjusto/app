@@ -40,13 +40,12 @@ export type OngoingOrderNavigatorParamList = {
     orderId: string;
     chatFrom?: ChatMessageUser;
   };
-  DeliveryProblemFeedback: {
-    issueType: IssueType;
-    orderId: string;
-  };
   OngoingOrderDeclined: {
     orderId: string;
     paymentMethodId?: string;
+  };
+  OrderProblemFeedback: {
+    orderId: string;
   };
 } & ReportIssueParamList &
   ProfilePaymentMethodsParamList &
