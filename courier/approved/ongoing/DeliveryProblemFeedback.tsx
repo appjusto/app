@@ -3,7 +3,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
-import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import { colors, padding } from '../../../common/styles';
 import { OngoingOrderNavigatorParamList } from '../../../consumer/v2/ongoing/types';
@@ -36,21 +35,6 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
   // params
   const { issueType, orderId } = route.params;
 
-  const feedbackHeaderTitle = (() => {
-    if (issueType === 'courier-drops-food-delivery' || issueType === 'courier-drops-p2p-delivery') {
-      return t('Você foi removido do pedido');
-    } else {
-      return t('Aguarde enquanto estamos analisando o seu problema.');
-    }
-  })();
-  const feedbackDescription = (() => {
-    if (issueType === 'courier-drops-food-delivery' || issueType === 'courier-drops-p2p-delivery') {
-      return t('Como o pedido não foi retirado, você não receberá nada do valor da entrega.');
-    } else {
-      return t('Em breve entraremos em contato com você para relatar a resolução do seu problema.');
-    }
-  })();
-
   const ongoingDelivery =
     issueType === 'courier-pickup-food-delivery' ||
     issueType === 'courier-pickup-p2p-delivery' ||
@@ -58,9 +42,6 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
     issueType === 'courier-delivering-p2p-order' ||
     issueType === 'courier-destination-food' ||
     issueType === 'courier-destination-p2p';
-
-  const droppedDelivery =
-    issueType === 'courier-drops-food-delivery' || issueType === 'courier-drops-p2p-delivery';
 
   const ongoingOrder =
     issueType === 'consumer-delivered-food-order' ||
@@ -74,9 +55,7 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
 
   // handlers
   const finishHandler = () => {
-    if (droppedDelivery) {
-      navigation.replace('MainNavigator', { screen: 'Home' });
-    } else if (ongoingDelivery) {
+    if (ongoingDelivery) {
       navigation.replace('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: { orderId },
@@ -88,10 +67,12 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
   console.log(issueType);
   return (
     <FeedbackView
-      header={feedbackHeaderTitle}
-      icon={droppedDelivery ? <IconConeYellow /> : <IconMotocycle />}
+      header={t('Aguarde enquanto estamos analisando o seu problema.')}
+      icon={<IconMotocycle />}
       background={colors.grey50}
-      description={feedbackDescription}
+      description={t(
+        'Em breve entraremos em contato com você para relatar a resolução do seu problema.'
+      )}
     >
       <DefaultButton
         title={t('Voltar')}

@@ -50,10 +50,7 @@ export const CourierDropsOrder = ({ navigation, route }: Props) => {
         setLoading(true);
         await api.order().dropOrder(orderId, selectedIssue, comment);
         console.log('dropOrder called');
-        navigation.replace('DeliveryProblemFeedback', {
-          orderId,
-          issueType,
-        });
+        navigation.replace('DropOrderFeedback');
       } catch (error) {
         setLoading(false);
         dispatch(showToast(t('Não foi possível enviar o comentário'), 'error'));
