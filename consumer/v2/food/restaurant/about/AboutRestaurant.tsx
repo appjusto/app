@@ -28,7 +28,6 @@ export const AboutRestaurant = ({ route }: Props) => {
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
-
   return (
     <ScrollView style={{ ...screens.default }} scrollIndicatorInsets={{ right: 1 }}>
       <RestaurantHeader restaurant={restaurant} />
@@ -91,8 +90,8 @@ export const AboutRestaurant = ({ route }: Props) => {
             {t(', ')}
             {restaurant.businessAddress.number}
           </Text>
-          {/* neighborhood hard coded for now... we need this field in the admin */}
-          <Text style={{ ...texts.sm, color: colors.grey700 }}>Bairro</Text>
+          {/* neighborhood hard coded for now... we need this field in restaurant.businessAddress */}
+          {/* <Text style={{ ...texts.sm, color: colors.grey700 }}>Bairro</Text> */}
           <Text style={{ ...texts.sm, color: colors.grey700 }}>
             {restaurant.businessAddress.city}
             {t(', ')}

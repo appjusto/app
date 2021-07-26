@@ -23,7 +23,7 @@ export const CourierDeliveryInfo = ({ order, onChat, onProblem, delivering }: Pr
   return (
     <View style={{ marginHorizontal: padding }}>
       <Text style={[texts.xs, { color: colors.green600 }]}>{t('Pedido de')}</Text>
-      <Text style={delivering ? { ...texts.lg } : { ...texts.md }}>
+      <Text style={{ ...texts.lg }}>
         {!isEmpty(order.consumer.name) ? order.consumer.name : t('Cliente')}
       </Text>
       <View
@@ -34,7 +34,7 @@ export const CourierDeliveryInfo = ({ order, onChat, onProblem, delivering }: Pr
             <RoundedText
               leftIcon={<Feather name="message-circle" size={12} style={{ marginRight: 4 }} />}
             >
-              {t('Iniciar chat')}
+              {t('Chat com cliente')}
             </RoundedText>
           </View>
         </TouchableOpacity>
