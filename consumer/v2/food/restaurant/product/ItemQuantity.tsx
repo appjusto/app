@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, TouchableOpacity, View, ViewProps } from 'react-native';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import { QuantityButton } from '../../../../../common/components/buttons/QuantityButton';
-import { padding } from '../../../../../common/styles';
+import { halfPadding, padding } from '../../../../../common/styles';
 
 interface Props extends ViewProps {
   value: number;
@@ -47,7 +47,12 @@ export const ItemQuantity = ({
         </TouchableOpacity>
       </View>
       <View style={{ marginLeft: padding, flex: 1 }}>
-        <DefaultButton disabled={disabled} title={title} onPress={onSubmit} />
+        <DefaultButton
+          disabled={disabled}
+          title={title}
+          onPress={onSubmit}
+          style={{ paddingHorizontal: halfPadding }}
+        />
       </View>
     </View>
   );
