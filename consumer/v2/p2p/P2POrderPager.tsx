@@ -246,7 +246,7 @@ export default function ({
             <DefaultInput
               style={{ marginTop: 12 }}
               value={destinationInstructions}
-              title={t('Instruções para entrega')}
+              title={t('Instruções para retirada')}
               placeholder={t('Quem irá atender o/a entregador/a, etc.')}
               onChangeText={(text) => setDestinationInstructions(text)}
               blurOnSubmit
