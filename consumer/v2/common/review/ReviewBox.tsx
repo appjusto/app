@@ -2,9 +2,6 @@ import { ReviewType } from '@appjusto/types';
 import React from 'react';
 import { Text, TextInputProps, View } from 'react-native';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
-import SingleHeader from '../../../../common/components/texts/SingleHeader';
-import HR from '../../../../common/components/views/HR';
-import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ThumbSelector } from './ThumbSelector';
@@ -36,14 +33,14 @@ export const ReviewBox = ({
         review={review}
         onReviewChange={onReviewChange}
       />
-      <HR height={padding} />
+      {/* <HR height={padding} />
       <ThumbSelector title={t('O que achou do valor do frete?')} />
       <HR height={padding} />
       <ThumbSelector title={t('O que achou do valor dos produtos?')} />
-      <HR height={padding} />
+      <HR height={padding} /> */}
       <View>
-        <SingleHeader title={t('Deixe um comentário')} />
-        <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
+        {/* <SingleHeader title={t('Deixe um comentário')} /> */}
+        <View style={{ paddingHorizontal: padding, paddingBottom: halfPadding }}>
           <Text style={{ ...texts.md, color: colors.grey700, paddingVertical: halfPadding }}>
             {t(
               'Se preferir, descreva a sua experiência para outros clientes. Sua avaliação será anônima.'
@@ -59,14 +56,25 @@ export const ReviewBox = ({
             style={{ height: 80 }}
           />
         </View>
-        <HR height={padding} />
-        <SingleHeader title={t('Qual a probabilidade de indicar o AppJusto?')} />
-        <View style={{ paddingHorizontal: padding }}>
+        {/* <HR height={padding} />
+        <SingleHeader title={t('Qual a probabilidade de indicar o AppJusto?')} /> */}
+        {/* <View style={{ paddingHorizontal: padding }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingBottom: halfPadding,
+            }}
+          >
+            <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Pouco provável')}</Text>
+            <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Muito provável')}</Text>
+          </View>
           <HomeShareCard
             title="Divulgue o AppJusto"
             subtitle="Compartilhe esse movimento por uma economia mais justa nas suas redes"
           />
-        </View>
+        </View> */}
       </View>
     </View>
   );
