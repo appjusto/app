@@ -31,6 +31,8 @@ export const ItemComplements = ({ product, selectedComplements, onComplementTogg
           />
           {group.items?.map((complement) => {
             const selected = Boolean(selectedComplements.find((c) => c.id === complement.id));
+            const groupMaximum = group.maximum;
+            const complementMaximum = complement.maximum;
             return (
               <ProductComplementListItem
                 key={complement.id}
@@ -38,6 +40,8 @@ export const ItemComplements = ({ product, selectedComplements, onComplementTogg
                 selected={selected}
                 disabled={!selected && !helpers.canAddComplement(group, selectedComplements)}
                 onToggle={(selected) => onComplementToggle(group, complement, selected)}
+                groupMaximum={groupMaximum}
+                complementMaximum={complementMaximum ?? 1}
               />
             );
           })}
