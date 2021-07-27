@@ -55,25 +55,30 @@ export const OngoingOrderProblem = ({ navigation, route }: Props) => {
       if (status === 'confirmed' || status === 'preparing' || status === 'ready') {
         navigateToReportIssue('consumer-going-pickup-food', orderId);
       }
-      // 'arrived-pickup' cases are missing
       if (dispatchingState === 'going-pickup' || dispatchingState === 'arrived-pickup') {
         navigateToReportIssue('consumer-going-pickup-food', orderId);
       } else if (dispatchingState === 'going-destination') {
         navigateToReportIssue('consumer-ongoing-food', orderId);
       } else if (dispatchingState === 'arrived-destination') {
         navigateToReportIssue('consumer-arrived-food-order', orderId);
+      } else {
+        // courier drops order cases
+        navigateToReportIssue('consumer-going-pickup-food', orderId);
       }
-    } else if (type === 'p2p') {
+    }
+    if (type === 'p2p') {
       if (status === 'delivered') {
         navigateToReportIssue('consumer-delivered-p2p-order', orderId);
       }
-      // 'arrived-pickup' cases are missing
       if (dispatchingState === 'going-pickup' || dispatchingState === 'arrived-pickup') {
         navigateToReportIssue('consumer-going-pickup-p2p', orderId);
       } else if (dispatchingState === 'going-destination') {
         navigateToReportIssue('consumer-ongoing-p2p', orderId);
       } else if (dispatchingState === 'arrived-destination') {
         navigateToReportIssue('consumer-arrived-p2p-order', orderId);
+      } else {
+        // courier drops order cases
+        navigateToReportIssue('consumer-going-pickup-food', orderId);
       }
     }
   };
