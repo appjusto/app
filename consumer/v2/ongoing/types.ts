@@ -38,7 +38,6 @@ export type OngoingOrderNavigatorParamList = {
   };
   OngoingOrderProblem: {
     orderId: string;
-    chatFrom?: ChatMessageUser;
   };
   OngoingOrderDeclined: {
     orderId: string;

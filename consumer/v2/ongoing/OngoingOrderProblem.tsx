@@ -24,12 +24,9 @@ type Props = {
 
 export const OngoingOrderProblem = ({ navigation, route }: Props) => {
   // params
-  const { orderId, chatFrom } = route.params;
+  const { orderId } = route.params;
   // screen state
   const order = useObserveOrder(orderId);
-
-  // add the chat logic to this screen (maybe put the openChat function in a helper file)
-
   if (!order) {
     // showing the indicator until the order is loaded
     return (
