@@ -18,6 +18,8 @@ interface Props {
 }
 
 export const ItemComplements = ({ product, selectedComplements, onComplementToggle }: Props) => {
+  // state
+  const [quantity, setQuantity] = React.useState(0);
   if (!product.complementsEnabled) return null;
   return (
     <View>
@@ -40,8 +42,9 @@ export const ItemComplements = ({ product, selectedComplements, onComplementTogg
                 selected={selected}
                 disabled={!selected && !helpers.canAddComplement(group, selectedComplements)}
                 onToggle={(selected) => onComplementToggle(group, complement, selected)}
-                groupMaximum={groupMaximum}
-                complementMaximum={complementMaximum ?? 1}
+                onIncrement={() => null}
+                onDecrement={() => null}
+                quantity={quantity}
               />
             );
           })}

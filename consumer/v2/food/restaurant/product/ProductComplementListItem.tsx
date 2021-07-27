@@ -1,20 +1,22 @@
 import { Complement, WithId } from '@appjusto/types';
 import React from 'react';
-import { Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Text, TouchableWithoutFeedback, View } from 'react-native';
 import { QuantityButton } from '../../../../../common/components/buttons/QuantityButton';
 import { useProductComplementImageURI } from '../../../../../common/store/api/business/hooks/useProductComplementImageURI';
 import { useContextBusinessId } from '../../../../../common/store/context/business';
 import { colors, padding, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { ListItemImage } from '../../common/ListItemImage';
+import { ComplementQuantity } from './ComplementQuantity';
 
 interface Props {
   complement: WithId<Complement>;
   selected: boolean;
   disabled: boolean;
   onToggle: (selected: boolean) => void;
-  groupMaximum: number;
-  complementMaximum: number;
+  onIncrement: () => void;
+  onDecrement: () => void;
+  quantity: number;
 }
 
 export const ProductComplementListItem = ({
@@ -22,8 +24,9 @@ export const ProductComplementListItem = ({
   selected,
   disabled,
   onToggle,
-  groupMaximum,
-  complementMaximum,
+  onIncrement,
+  onDecrement,
+  quantity,
 }: Props) => {
   // context
   const businessId = useContextBusinessId();
@@ -40,10 +43,8 @@ export const ProductComplementListItem = ({
         <View
           style={{
             flexDirection: 'row',
-            // paddingHorizontal: padding,
             paddingTop: 12,
             paddingBottom: 4,
-            // alignContent: 'center',
             alignItems: 'center',
             borderTopWidth: 1,
             borderStyle: 'solid',
@@ -74,13 +75,11 @@ export const ProductComplementListItem = ({
           ) : null}
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <TouchableOpacity style={{ paddingRight: padding }}>
-            <QuantityButton sign="minus" />
-          </TouchableOpacity>
-          <Text style={{ ...texts.md }}>0</Text>
-          <TouchableOpacity style={{ paddingLeft: padding }}>
-            <QuantityButton sign="plus" />
-          </TouchableOpacity>
+          <ComplementQuantity
+            onIncrement={onIncrement}
+            onDecrement={onDecrement}
+            quantity={quantity}
+          />
         </View>
       </View>
     </TouchableWithoutFeedback>
