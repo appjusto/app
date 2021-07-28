@@ -72,7 +72,7 @@ export const CourierDropsOrder = ({ navigation, route }: Props) => {
   return (
     <View style={{ ...screens.default }}>
       <ReportIssueView
-        title={t('Porque você precisa desistir da entrega?')}
+        title={t('Por que você precisa desistir da entrega?')}
         inputHeader={t(
           'Você pode usar o espaço abaixo para detalhar mais sua recusa, dessa forma conseguiremos melhorar nossos serviços:'
         )}
