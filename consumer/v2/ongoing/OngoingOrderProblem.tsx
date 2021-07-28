@@ -59,7 +59,6 @@ export const OngoingOrderProblem = ({ navigation, route }: Props) => {
       } else if (dispatchingState === 'arrived-destination') {
         navigateToReportIssue('consumer-arrived-food-order', orderId);
       } else {
-        // courier drops order cases
         navigateToReportIssue('consumer-going-pickup-food', orderId);
       }
     }
@@ -74,8 +73,7 @@ export const OngoingOrderProblem = ({ navigation, route }: Props) => {
       } else if (dispatchingState === 'arrived-destination') {
         navigateToReportIssue('consumer-arrived-p2p-order', orderId);
       } else {
-        // courier drops order cases
-        navigateToReportIssue('consumer-going-pickup-food', orderId);
+        navigateToReportIssue('consumer-going-pickup-p2p', orderId);
       }
     }
   };
