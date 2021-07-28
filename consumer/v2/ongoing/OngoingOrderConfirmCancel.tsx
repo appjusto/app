@@ -1,7 +1,7 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, SafeAreaView, Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
@@ -114,7 +114,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
         <Text style={{ ...texts.sm, textAlign: 'center' }}>
           {t('Deseja confirmar o cancelamento mesmo com a cobrança dos valores do pedido?')}
         </Text>
-        <SafeAreaView
+        <View
           style={{
             marginTop: 24,
             flexDirection: 'row',
@@ -129,7 +129,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
           <View style={{ width: '48%' }}>
             <DefaultButton title={t('Confirmar')} onPress={cancelOrderHandler} />
           </View>
-        </SafeAreaView>
+        </View>
       </PaddedView>
     </ScrollView>
   );
