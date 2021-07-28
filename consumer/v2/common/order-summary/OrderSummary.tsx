@@ -1,5 +1,5 @@
 import { Fare, Order, WithId } from '@appjusto/types';
-import { Feather } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { ScrollView, Switch, Text, View } from 'react-native';
@@ -131,7 +131,7 @@ export const OrderSummary = ({
       {order.type === 'food' && (
         <View style={{ flex: 1, marginHorizontal: padding, marginBottom: padding }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
-            <Feather name="share-2" size={14} style={{ marginRight: 4 }} />
+            <Ionicons name="share-social-outline" size={16} style={{ marginRight: 4 }} />
             <Text style={{ ...texts.sm, color: colors.black }}>
               {t('Compartilhar dados com o restaurante')}
             </Text>

@@ -1,4 +1,4 @@
-import { Feather } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
@@ -62,7 +62,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
       title: restaurant?.name ?? '',
       headerRight: () => (
         <TouchableOpacity onPress={shareRestaurant}>
-          <Feather name="share-2" size={20} style={{ paddingRight: 12 }} />
+          <Ionicons name="share-social-outline" size={24} style={{ paddingRight: 12 }} />
         </TouchableOpacity>
       ),
     });

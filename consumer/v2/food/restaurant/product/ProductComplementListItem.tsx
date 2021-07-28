@@ -7,7 +7,6 @@ import { useContextBusinessId } from '../../../../../common/store/context/busine
 import { colors, padding, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { ListItemImage } from '../../common/ListItemImage';
-import { ComplementQuantity } from './ComplementQuantity';
 
 interface Props {
   complement: WithId<Complement>;
@@ -74,13 +73,13 @@ export const ProductComplementListItem = ({
             </View>
           ) : null}
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <ComplementQuantity
             onIncrement={onIncrement}
             onDecrement={onDecrement}
             quantity={quantity}
           />
-        </View>
+        </View> */}
       </View>
     </TouchableWithoutFeedback>
   );

@@ -60,6 +60,7 @@ export const FilterSelector = ({ style, onFilterOpen }: Props) => {
                 style={{
                   ...texts.sm,
                   color: colors.black,
+                  paddingBottom: 4,
                 }}
               >
                 {item.title}
