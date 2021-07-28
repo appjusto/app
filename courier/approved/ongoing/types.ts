@@ -32,6 +32,7 @@ export type OngoingDeliveryNavigatorParamList = {
   };
   DropOrderFeedback: undefined;
   CallCourier: undefined;
+  OrderNull: undefined;
 } & ChatParamList &
   ReportIssueParamList &
   OrderCanceledParamList;

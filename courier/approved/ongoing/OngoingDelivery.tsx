@@ -100,7 +100,7 @@ export default function ({ navigation, route }: Props) {
   React.useEffect(() => {
     if (order === undefined) return;
     if (order === null) {
-      navigation.replace('OrderCanceled', { orderId });
+      navigation.replace('OrderNull');
     } else if (order.status === 'delivered') {
       navigation.replace('DeliveryCompleted', { orderId, fee: order.fare!.courier.value });
     } else if (order.status === 'canceled') {

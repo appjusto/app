@@ -14,6 +14,7 @@ import { DeliveryProblemFeedback } from './DeliveryProblemFeedback';
 import { NoCodeDelivery } from './NoCodeDelivery';
 import OngoingDelivery from './OngoingDelivery';
 import OrderCanceled from './OrderCanceled';
+import { OrderNull } from './OrderNull';
 import { OngoingDeliveryNavigatorParamList } from './types';
 
 const Stack = createStackNavigator<OngoingDeliveryNavigatorParamList>();
@@ -34,6 +35,11 @@ export default function () {
       <Stack.Screen
         name="OrderCanceled"
         component={OrderCanceled}
+        options={{ title: t('Corrida cancelada') }}
+      />
+      <Stack.Screen
+        name="OrderNull"
+        component={OrderNull}
         options={{ title: t('Corrida cancelada') }}
       />
       <Stack.Screen
