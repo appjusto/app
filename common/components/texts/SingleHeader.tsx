@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View, ViewProps } from 'react-native';
-import { halfPadding, padding, texts } from '../../styles';
+import { halfPadding, texts } from '../../styles';
 import Pill from '../views/Pill';
 
 interface Props extends ViewProps {
@@ -15,8 +15,7 @@ export default function ({ title, textTransform = 'none' }: Props) {
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: halfPadding,
-        width: '100%',
-        paddingRight: padding,
+        maxWidth: '90%',
       }}
     >
       <Pill />
