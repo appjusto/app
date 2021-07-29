@@ -9,12 +9,9 @@ import {
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../../common/app/context';
-import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../../../common/components/texts/DoubleHeader';
 import FeedbackView from '../../../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../../../common/icons/icon-cone-yellow';
-import { IconShareGreen } from '../../../../../common/icons/icon-share-green';
-import HomeCard from '../../../../../common/screens/home/cards/HomeCard';
 import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 // import { distanceBetweenLatLng } from '../../../../common/store/api/helpers';
 import { getCurrentLocation } from '../../../../../common/store/consumer/selectors';
@@ -26,7 +23,7 @@ import { RestaurantListSection } from './types';
 interface Props extends SectionListProps<BusinessAlgolia, RestaurantListSection> {
   loading?: boolean;
   onSelect: (id: string) => void;
-  onRecommend: () => void;
+  onRecommend?: () => void;
 }
 
 export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...props }: Props) => {
@@ -38,21 +35,21 @@ export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...pr
   return (
     <SectionList
       style={{ ...screens.default, paddingBottom: padding }}
-      ListFooterComponent={
-        loading ? null : (
-          <PaddedView style={{ marginTop: padding }}>
-            <TouchableOpacity onPress={onRecommend}>
-              <HomeCard
-                icon={<IconShareGreen />}
-                title={t('Indique um restaurante')}
-                subtitle={t(
-                  'Ainda não encontrou o restaurante que queria por aqui? Manda pra gente!'
-                )}
-              />
-            </TouchableOpacity>
-          </PaddedView>
-        )
-      }
+      // ListFooterComponent={
+      //   loading ? null : (
+      //     <PaddedView style={{ marginTop: padding }}>
+      //       <TouchableOpacity onPress={onRecommend}>
+      //         <HomeCard
+      //           icon={<IconShareGreen />}
+      //           title={t('Indique um restaurante')}
+      //           subtitle={t(
+      //             'Ainda não encontrou o restaurante que queria por aqui? Manda pra gente!'
+      //           )}
+      //         />
+      //       </TouchableOpacity>
+      //     </PaddedView>
+      //   )
+      // }
       ListEmptyComponent={
         loading ? (
           <View style={{ ...screens.centered, marginTop: padding }}>
