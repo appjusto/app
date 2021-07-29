@@ -65,7 +65,8 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
             {`${t('O valor de')} ${formatCurrency(cancellationInfo.costs)} não será reembolsado.`}
           </Text>
         </View>
-        {order.type === 'food' ? (
+        {/* hiding while we can't call restaurants from the app */}
+        {/* {order.type === 'food' ? (
           <View>
             <Text style={{ ...texts.sm, marginTop: padding, color: colors.grey700 }}>
               {t(
@@ -87,7 +88,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
               )}
             </Text>
           </View>
-        )}
+        )} */}
       </PaddedView>
       <View style={{ flex: 1 }} />
       <PaddedView>

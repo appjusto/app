@@ -9,9 +9,10 @@ type Props = {
   description?: string;
   children?: React.ReactNode | React.ReactNode[];
   background?: string;
+  value?: string;
 };
 
-export default ({ header, description, icon, children, background }: Props) => {
+export default ({ header, description, icon, children, background, value }: Props) => {
   return (
     <PaddedView style={[screens.default, { backgroundColor: background }]}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -22,6 +23,11 @@ export default ({ header, description, icon, children, background }: Props) => {
             <Text style={{ ...texts.sm, color: colors.grey700, textAlign: 'center' }}>
               {description}
             </Text>
+          ) : null}
+          {value ? (
+            <View>
+              <Text style={{ ...texts.x2l, textAlign: 'center' }}>{value}</Text>
+            </View>
           ) : null}
         </View>
       </View>

@@ -7,6 +7,7 @@ import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, padding, screens } from '../../../common/styles';
+import { formatCurrency } from '../../../common/utils/formatters';
 import { OngoingOrderNavigatorParamList } from '../../../consumer/v2/ongoing/types';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -52,6 +53,8 @@ export default ({ navigation, route }: Props) => {
         order!.type === 'food' ? t('restaurante') : t('cliente')
       }`}
       icon={<IconConeYellow />}
+      description={t('Como você já iniciou o pedido, você receberá: ')}
+      value={formatCurrency(order.fare!.courier.value)}
     >
       <View style={{ marginBottom: padding }}>
         <DefaultButton
