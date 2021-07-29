@@ -50,7 +50,7 @@ export const WithdrawOrderModal = ({
           style={{
             marginHorizontal: padding,
             backgroundColor: colors.white,
-            padding: 24,
+            padding,
           }}
         >
           <View style={{ alignItems: 'flex-end' }}>
@@ -79,11 +79,11 @@ export const WithdrawOrderModal = ({
               <Text style={{ ...texts.xl, color: colors.grey700 }}>{t('Pedido Nº')}</Text>
               <Text style={{ ...texts.x4l }}>{order.code}</Text>
             </View>
-            <View style={{ marginTop: padding, alignItems: 'center', marginBottom: 24 }}>
+            <View style={{ marginTop: padding, alignItems: 'center', marginBottom: padding }}>
               <Text style={{ ...texts.xl, color: colors.grey700 }}>{t('Cliente')}</Text>
               <Text style={{ ...texts.x4l }}>{order.consumer.name}</Text>
             </View>
-            <View style={{ width: '100%', paddingBottom: padding }}>
+            <View style={{ width: '100%' }}>
               <DefaultButton
                 title={order.status === 'dispatching' ? t('Recebi o pedido') : t('Aguarde')}
                 onPress={onWithdrawal}
