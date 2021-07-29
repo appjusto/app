@@ -23,9 +23,9 @@ export const OngoingOrderStatus = ({ order }: Props) => {
       description = t('Aguarde enquanto o restaurante confirma seu pedido.');
     } else if (status === 'preparing') {
       header = t('Pedido em preparo');
-      description = t(
-        'O restaurante começou a preparar seu pedido e logo estará prontinho para você.'
-      );
+      description = `${order.business!.name} ${t(
+        'começou a preparar seu pedido e logo estará prontinho para você.'
+      )}`;
     } else if (status === 'ready') {
       if (dispatchingStatus === 'matching' || dispatchingStatus === 'matched') {
         header = t('Pronto para entrega');
@@ -34,7 +34,7 @@ export const OngoingOrderStatus = ({ order }: Props) => {
         header = t('Pronto para entrega');
         description = t('Estamos procurando um/a entregador/a para o seu pedido');
         if (dispatchingState === 'going-pickup') {
-          header = t('Indo para o restaurante');
+          header = `${t('Indo para')} ${order.business!.name}`;
           description = `${order.courier!.name} ${t('já está indo pegar o pedido.')}`;
         } else if (dispatchingState === 'arrived-pickup') {
           header = t('Aguardando retirada');

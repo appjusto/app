@@ -132,6 +132,12 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
         </View>
       ) : (
         <View style={{ marginTop: halfPadding }}>
+          {dispatchingState === 'going-pickup' || dispatchingState === 'arrived-pickup' ? (
+            <Text style={[texts.md, { color: colors.grey700 }]} numberOfLines={2}>
+              {order.business!.name}
+            </Text>
+          ) : null}
+
           <Text style={[texts.xl]} numberOfLines={2}>
             {nextPlace?.address.main}
           </Text>
