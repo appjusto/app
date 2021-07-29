@@ -1,7 +1,6 @@
 import { Feather } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
-import Constants from 'expo-constants';
 import React, { useMemo } from 'react';
 import { Image, Linking, SectionList, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -14,6 +13,7 @@ import FeedbackView from '../../../../common/components/views/FeedbackView';
 import ShowIf from '../../../../common/components/views/ShowIf';
 import { IconIuguLogo } from '../../../../common/icons/icon-iugu-logo';
 import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
+import { defaultScreenOptions } from '../../../../common/screens/options';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
@@ -79,7 +79,6 @@ export default function ({ navigation, route }: Props) {
     Linking.openURL('https://appjusto.freshdesk.com/support/solutions/articles/67000665752');
   };
   // UI
-  const paddingTop = Constants.statusBarHeight;
   if (sections.length === 0) {
     return (
       <FeedbackView
@@ -92,7 +91,7 @@ export default function ({ navigation, route }: Props) {
   }
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen
         name="DeliveryHistory"
         options={{ title: 'Suas corridas' }}

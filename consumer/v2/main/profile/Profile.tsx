@@ -5,6 +5,7 @@ import React, { useContext } from 'react';
 import { Alert, Linking, ScrollView, View } from 'react-native';
 import { ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
+import { defaultScreenOptions } from '../../../../common/screens/options';
 import { screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { AppJustoFreshdeskConsumerURL } from '../../../../strings/values';
@@ -51,7 +52,7 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen
         name="Profile"
         options={{ title: 'Seus dados' }}

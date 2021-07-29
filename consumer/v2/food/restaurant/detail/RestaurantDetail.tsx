@@ -61,8 +61,8 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
     navigation.setOptions({
       title: restaurant?.name ?? '',
       headerRight: () => (
-        <TouchableOpacity onPress={shareRestaurant}>
-          <Ionicons name="share-social-outline" size={24} style={{ paddingRight: 12 }} />
+        <TouchableOpacity onPress={shareRestaurant} style={{ paddingRight: 12 }}>
+          <Ionicons name="share-social-outline" size={24} />
         </TouchableOpacity>
       ),
     });
