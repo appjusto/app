@@ -1,11 +1,9 @@
 import { Fleet } from '@appjusto/types';
 import React from 'react';
-import { Share, Text, TouchableOpacity, View } from 'react-native';
+import { Share, Text, View } from 'react-native';
 import DefaultButton from '../../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../../../common/components/texts/RoundedText';
-import { IconShare } from '../../../../../../common/icons/icon-share';
-import HomeCard from '../../../../../../common/screens/home/cards/HomeCard';
 import { borders, colors, halfPadding, padding, texts } from '../../../../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../../../../common/utils/formatters';
 import { t } from '../../../../../../strings';
@@ -111,7 +109,7 @@ export const CourierFleetCard = ({ fleet, listItem, onPress }: Props) => {
           {formatDistance(fleet.maxDistanceToOrigin)}
         </RoundedText>
       </View>
-      {listItem ? (
+      {/* {listItem ? (
         <DefaultButton
           title={t('Detalhes da frota')}
           secondary
@@ -128,7 +126,15 @@ export const CourierFleetCard = ({ fleet, listItem, onPress }: Props) => {
             />
           </TouchableOpacity>
         </View>
-      )}
+      )} */}
+      {listItem ? (
+        <DefaultButton
+          title={t('Detalhes da frota')}
+          secondary
+          style={{ marginTop: padding }}
+          onPress={onPress}
+        />
+      ) : null}
     </PaddedView>
   );
 };
