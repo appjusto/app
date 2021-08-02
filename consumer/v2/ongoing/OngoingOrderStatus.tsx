@@ -19,7 +19,7 @@ export const OngoingOrderStatus = ({ order }: Props) => {
 
   if (type === 'food') {
     if (status === 'confirmed') {
-      header = t('Pedido aprovado!');
+      header = t('Aguardando restaurante');
       description = t('Aguarde enquanto o restaurante confirma seu pedido.');
     } else if (status === 'preparing') {
       header = t('Pedido em preparo');
