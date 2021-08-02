@@ -72,8 +72,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
         {/* hiding while we can't call restaurants from the app */}
         {/* {order.type === 'food' ? (
           <View>
-            {/* hiding this until it is possible to call the restaurant */}
-            {/* <Text
+            <Text
               style={{
                 ...texts.sm,
                 marginTop: padding,
@@ -84,14 +83,14 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
               {t(
                 'Recomendamos que entre em contato com o restaurante para verificar se ainda é possível cancelar sem o prejuízo dos produtos.'
               )}
-            </Text> */}
-            {/* hiding this until it is possible to call the restaurant */}
-            {/* <DefaultButton
+            </Text>
+
+            <DefaultButton
               title={t('Ligar para o restaurante')}
               secondary
               onPress={() => null}
               style={{ marginTop: 24 }}
-            /> */}
+            />
           </View>
         ) : (
           <View>

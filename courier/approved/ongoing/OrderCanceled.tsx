@@ -50,9 +50,6 @@ export default ({ navigation, route }: Props) => {
   return (
     <FeedbackView
       header={t('Esse pedido foi cancelado')}
-      // header={`${t('Esse pedido foi cancelado pelo')} ${
-      //   order!.type === 'food' ? t('restaurante') : t('cliente')
-      // }`}
       icon={<IconConeYellow />}
       description={t('Como você já iniciou o pedido, você receberá: ')}
       value={formatCurrency(order.fare!.courier.value)}
