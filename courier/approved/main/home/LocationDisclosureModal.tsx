@@ -11,7 +11,6 @@ export const LocationDisclosureModal = (props: ModalProps) => {
   // state
   const {
     status: foregroundStatus,
-    request: requestForeground,
     get: getForeground,
   } = useLocationPermission('foreground', true);
   const {
@@ -50,11 +49,6 @@ export const LocationDisclosureModal = (props: ModalProps) => {
         'Você precisa permitir que o AppJusto saiba sua localização o tempo todo para que possamos enviar corridas próximas à você e acompanhar as entregas. Isso também pode ocorrer com o aplicativo fechado ou sem uso no momento. Nós só coletamos e utilizamos sua localização caso você esteja disponível para aceitar corridas.'
       )}
       dismissButtonTitle={t('Ok, entendi')}
-      visible={
-        foregroundStatus !== undefined &&
-        backgroundStatus !== undefined &&
-        (foregroundStatus !== 'granted' || backgroundStatus !== 'granted')
-      }
       onDismiss={modalHandler}
       {...props}
     />

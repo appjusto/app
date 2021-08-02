@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import useNotificationToken from '../../../../common/hooks/useNotificationToken';
 import { IconHomeCourierRequests } from '../../../../common/icons/icon-home-courier-requests';
+import { useLocationPermission } from '../../../../common/location/useLocationPermission';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
@@ -18,7 +19,7 @@ import { getOrders } from '../../../../common/store/order/selectors';
 import { colors, padding, screens } from '../../../../common/styles';
 import {
   startLocationUpdatesTask,
-  stopLocationUpdatesTask,
+  stopLocationUpdatesTask
 } from '../../../../common/utils/location';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
@@ -42,12 +43,22 @@ export default function ({ navigation }: Props) {
   // redux store
   const courier = useSelector(getCourier)!;
   const ongoingOrders = useSelector(getOrders);
-  const requests = useobservePendingOrderRequests(courier.id);
   const { status } = courier;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
   // state
-  useNotificationToken();
+  const requests = useobservePendingOrderRequests(courier.id);
+  const {
+    status: foregroundStatus,
+  } = useLocationPermission('foreground');
+  const {
+    status: backgroundStatus,
+  } = useLocationPermission('background');
+  const locationDisclosureVisible =
+    foregroundStatus !== undefined &&
+    backgroundStatus !== undefined &&
+    (foregroundStatus !== 'granted' || backgroundStatus !== 'granted');
   // side effects
+  useNotificationToken();
   // tracking
   useSegmentScreen('Home');
   React.useEffect(() => {
@@ -123,7 +134,7 @@ export default function ({ navigation }: Props) {
           <ModalChooser />
         </PaddedView>
       </ScrollView>
-      <LocationDisclosureModal />
+      {locationDisclosureVisible ? <LocationDisclosureModal visible /> : null}
     </View>
   );
 }
