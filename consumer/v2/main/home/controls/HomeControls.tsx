@@ -2,11 +2,9 @@ import { OrderType } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
-import ShowIf from '../../../../../common/components/views/ShowIf';
-import useTallerDevice from '../../../../../common/hooks/useTallerDevice';
 import { IconIllustrationPizza } from '../../../../../common/icons/icon-illustration-pizza';
 import { IconSmallUser } from '../../../../../common/icons/icon-small-user';
-import { colors, doublePadding, halfPadding, padding, texts } from '../../../../../common/styles';
+import { colors, padding, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { HomeControlItem } from './HomeControlItem';
 
@@ -15,31 +13,24 @@ type Props = {
 };
 
 export const HomeControls = ({ onStartOrderPress }: Props) => {
-  // context
-  const tallerDevice = useTallerDevice();
-
   return (
     <PaddedView style={{ backgroundColor: colors.green500 }}>
-      <ShowIf test={tallerDevice}>
-        {() => (
-          <Text
-            style={[
-              texts.x2l,
-              {
-                paddingBottom: padding,
-              },
-            ]}
-          >
-            {t('Um delivery aberto, transparente e consciente.')}
-          </Text>
-        )}
-      </ShowIf>
-
+      <Text
+        style={[
+          texts.x2l,
+          {
+            paddingBottom: padding,
+            paddingTop: padding,
+          },
+        ]}
+      >
+        {t('Um delivery aberto, transparente e consciente.')}
+      </Text>
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
-          marginBottom: tallerDevice ? doublePadding : halfPadding,
+          paddingBottom: padding,
         }}
       >
         <HomeControlItem

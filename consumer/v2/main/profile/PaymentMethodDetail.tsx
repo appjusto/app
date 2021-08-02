@@ -9,7 +9,7 @@ import PaddedView from '../../../../common/components/containers/PaddedView';
 import LabeledText from '../../../../common/components/texts/LabeledText';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
-import { colors, padding, screens } from '../../../../common/styles';
+import { padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ProfileParamList } from './types';
 
@@ -63,12 +63,11 @@ export default function ({ route, navigation }: Props) {
       <DefaultButton
         style={{
           marginTop: padding,
-          backgroundColor: colors.grey700,
-          borderColor: colors.grey700,
         }}
         title={t('Excluir cartão')}
         onPress={deletePaymentMethodHandler}
         activityIndicator={isLoading}
+        grey
       />
     </PaddedView>
   );

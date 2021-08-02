@@ -32,6 +32,9 @@ const QrCodePix = require('./icons/qr-code-pix.png');
 const iconBoxPhoto = require('./icons/icon-boxphoto.png');
 const iconHouse = require('./icons/icon-boxhouse.png');
 const iconCheckGreen = require('./icons/icon-check-green.png');
+const iconHomeFocused = require('./icons/icon-home-focused.png');
+const iconOrdersFocused = require('./icons/icon-orders-focused.png');
+const iconUserFocused = require('./icons/icon-user-focused.png');
 
 export const checklistTick = iconChecklistTick;
 export const home = iconHome;
@@ -67,6 +70,9 @@ export const QrCode = QrCodePix;
 export const box = iconBoxPhoto;
 export const house = iconHouse;
 export const greenCheck = iconCheckGreen;
+export const homeFocused = iconHomeFocused;
+export const ordersFocused = iconOrdersFocused;
+export const userFocused = iconUserFocused;
 
 export default [
   checklistTick,
@@ -103,4 +109,7 @@ export default [
   box,
   house,
   greenCheck,
+  homeFocused,
+  ordersFocused,
+  userFocused,
 ];

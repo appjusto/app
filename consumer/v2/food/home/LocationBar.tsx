@@ -98,7 +98,7 @@ export const LocationBar = () => {
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         {/* <Feather name="navigation" size={10} /> */}
         <MaterialIcons name="gps-fixed" size={16} />
-        <View style={{ flexShrink: 1 }}>
+        <View style={{ width: '85%' }}>
           <Text style={{ ...texts.xs, marginLeft: halfPadding, flexWrap: 'wrap' }}>
             {currentPlace?.address ? formatAddress(currentPlace.address) : ''}
           </Text>

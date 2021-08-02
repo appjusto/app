@@ -35,13 +35,11 @@ export default function ({ place, title, onEdit }: Props) {
           <TouchableOpacity onPress={onEdit}>
             <Feather
               name="edit-3"
-              size={14}
+              size={12}
               style={{
                 ...borders.default,
                 borderColor: colors.grey50,
                 padding: 8,
-                width: 32,
-                height: 32,
               }}
             />
           </TouchableOpacity>

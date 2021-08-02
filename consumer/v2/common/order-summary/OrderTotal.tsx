@@ -59,7 +59,7 @@ export const OrderTotal = ({ total, switchValue, onSwitchValueChange, cpf, setCp
         style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: colors.white }}
       >
         <Switch
-          trackColor={{ false: colors.grey500, true: colors.white }}
+          trackColor={{ false: colors.grey500, true: colors.grey500 }}
           thumbColor={switchValue ? colors.green500 : colors.yellow}
           ios_backgroundColor={colors.white}
           onValueChange={onSwitchValueChange}

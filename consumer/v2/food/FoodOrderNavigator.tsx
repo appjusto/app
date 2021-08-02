@@ -5,6 +5,7 @@ import { BusinessProvider } from '../../../common/store/context/business';
 import { t } from '../../../strings';
 import { AddressComplete } from '../common/AddressComplete';
 import { FoodOrderHome } from './home/FoodOrderHome';
+import { RecommendRestaurant } from './restaurant/recommend/RecommendRestaurant';
 import RestaurantNavigator from './restaurant/RestaurantNavigator';
 import { FilterScreen } from './search/filter/FilterScreen';
 import RestaurantSearch from './search/RestaurantSearch';
@@ -18,6 +19,11 @@ export const FoodOrderNavigator = () => {
         name="FoodOrderHome"
         component={FoodOrderHome}
         options={{ title: t('Restaurantes') }}
+      />
+      <Stack.Screen
+        name="RecommendRestaurant"
+        component={RecommendRestaurant}
+        options={{ title: t('Indicar restaurante') }}
       />
       <Stack.Screen
         name="AddressComplete"

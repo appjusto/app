@@ -82,7 +82,7 @@ export const Onboarding = ({ navigation, route }: Props) => {
   // UI
   return (
     <View style={{ ...screens.default }}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} scrollIndicatorInsets={{ right: 1 }}>
         <PagerView ref={pagerView} style={{ flex: 1 }} onPageScroll={onPageScroll}>
           {steps.map(({ icon, header, body }, index) => (
             <View key={index} style={[{ paddingHorizontal: padding, flex: 1 }, styles.bigScreen]}>

@@ -26,14 +26,14 @@ export const DeliveryConfirmation = ({
   confirmation,
 }: Props) => {
   return (
-    <View style={{ backgroundColor: colors.white, paddingTop: padding, flex: 1 }}>
+    <View style={{ backgroundColor: colors.white, paddingTop: halfPadding, flex: 1 }}>
       <View style={{ flex: 1 }}>
         <SingleHeader title={t('Confirmação da entrega')} />
         {/* <View style={{ paddingHorizontal: padding, paddingTop: halfPadding }}>
           <HorizontalSelect data={data} selected={selected} onSelect={onSelect} />
         </View> */}
 
-        <View style={{ paddingTop: padding, paddingHorizontal: padding }}>
+        <View style={{ paddingTop: halfPadding, paddingHorizontal: padding }}>
           <Text style={{ ...texts.xs, color: colors.grey700 }}>
             {t('O entregador pedirá os 3 primeiros dígitos do seu CPF para confirmar a entrega.')}
           </Text>
@@ -83,7 +83,7 @@ export const DeliveryConfirmation = ({
         <PaddedView style={{ backgroundColor: colors.grey50, flex: 1 }}>
           <View style={{ flexDirection: 'row' }}>
             <IconFastFood />
-            <View style={{ marginLeft: padding, maxWidth: '82%' }}>
+            <View style={{ marginLeft: padding, width: '75%' }}>
               <Text style={{ ...texts.sm }}>
                 {t('Lembre-se: o entregador não deve cobrar nada ao entregar seu pedido')}
               </Text>

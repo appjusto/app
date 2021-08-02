@@ -13,7 +13,11 @@ export const AboutNoScore = () => {
   // tracking
   useSegmentScreen('About no score');
   return (
-    <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView
+      style={{ ...screens.config }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
       <PaddedView>
         <Text style={{ ...texts.x2l }}>
           {t('Não bloqueamos de forma automática, e nem temos Score para entregadores/as')}

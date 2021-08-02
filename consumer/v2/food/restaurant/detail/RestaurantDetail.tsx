@@ -1,8 +1,9 @@
+import { Ionicons } from '@expo/vector-icons';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, SectionList, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, SectionList, Share, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
@@ -13,8 +14,9 @@ import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { useContextBusiness } from '../../../../../common/store/context/business';
 import { useContextMenu } from '../../../../../common/store/context/menu';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
-import { colors, halfPadding, padding, screens } from '../../../../../common/styles';
+import { colors, halfPadding, screens } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
+import { AppJustoSiteURL } from '../../../../../strings/values';
 import { LoggedNavigatorParamList } from '../../../types';
 import { RestaurantHeader } from '../../common/RestaurantHeader';
 import { FoodOrderNavigatorParamList } from '../../types';
@@ -41,10 +43,28 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   const menu = useContextMenu();
   // redux
   const consumer = useSelector(getConsumer);
+
   // side effects
   React.useLayoutEffect(() => {
+    const shareRestaurant = () => {
+      //this needs the deeplinks Italo appointed in the backlog (notion)
+      try {
+        Share.share({
+          message: `Pedi em ${
+            restaurant!.name
+          } usando o AppJusto, uma plataforma de delivery mais justa para clientes, entregadores e restaurantes. Peça também e faça parte desse movimento!`,
+          title: 'AppJusto',
+          url: AppJustoSiteURL,
+        });
+      } catch (error) {}
+    };
     navigation.setOptions({
       title: restaurant?.name ?? '',
+      headerRight: () => (
+        <TouchableOpacity onPress={shareRestaurant} style={{ paddingRight: 12 }}>
+          <Ionicons name="share-social-outline" size={24} />
+        </TouchableOpacity>
+      ),
     });
   }, [navigation, restaurant]);
   console.log(consumer?.id);
@@ -63,6 +83,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   return (
     <View style={{ ...screens.default }}>
       <SectionList
+        scrollIndicatorInsets={{ right: 1 }}
         style={{ flex: 1 }}
         keyExtractor={(item) => item.id}
         sections={sections}
@@ -78,8 +99,8 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
         }
         renderSectionHeader={({ section }) => {
           return !isEmpty(section.data) ? (
-            <View style={{ marginTop: padding }}>
-              <SingleHeader title={section.title} />
+            <View style={{ marginTop: halfPadding }}>
+              <SingleHeader title={section.title} textTransform="capitalize" />
             </View>
           ) : null;
         }}

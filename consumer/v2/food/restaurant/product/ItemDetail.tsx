@@ -280,16 +280,16 @@ export const ItemDetail = ({ navigation, route }: Props) => {
       >
         <View style={{ flex: 1 }}>
           <View style={{ paddingHorizontal: padding, marginBottom: 24 }}>
-            <View style={{ width: '100%', height: 240, overflow: 'hidden' }}>
-              {imageURI && (
+            {imageURI ? (
+              <View style={{ width: '100%', height: 240, overflow: 'hidden' }}>
                 <Image
                   source={{ uri: imageURI }}
                   style={{ width: '100%', height: 240 }}
                   borderRadius={8}
                   resizeMode="cover"
                 />
-              )}
-            </View>
+              </View>
+            ) : null}
             <View style={{ marginTop: padding }}>
               <Text style={{ ...texts.xl }}>{product?.name ?? ''}</Text>
               <Text style={{ ...texts.sm, color: colors.grey700, marginVertical: 4 }}>
@@ -302,7 +302,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
               </Text>
             </View>
           </View>
-          {tallerDevice ? <View style={{ flex: 1 }} /> : null}
+          {tallerDevice && imageURI ? <View style={{ flex: 1 }} /> : null}
           {getActionsUI()}
         </View>
       </KeyboardAwareScrollView>

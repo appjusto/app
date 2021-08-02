@@ -48,7 +48,7 @@ export const ProductListItem = ({ product, showRestaurantName, complements }: Pr
         }}
       >
         <View style={{ width: '60%' }}>
-          <Text style={{ ...texts.sm }}>{product.name}</Text>
+          <Text style={{ ...texts.sm, textTransform: 'capitalize' }}>{product.name}</Text>
           <Text style={{ ...texts.xs, color: colors.grey700, marginVertical: 4 }} numberOfLines={2}>
             {product.description}
           </Text>
@@ -61,9 +61,11 @@ export const ProductListItem = ({ product, showRestaurantName, complements }: Pr
             <Text style={{ ...texts.xs, color: colors.green600 }}>{businessName}</Text>
           )}
         </View>
-        <View>
-          <ListItemImage uri={imageURI} height={80} width={80} />
-        </View>
+        {imageURI ? (
+          <View>
+            <ListItemImage uri={imageURI} height={80} width={80} />
+          </View>
+        ) : null}
       </View>
     </View>
   );

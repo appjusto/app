@@ -18,10 +18,10 @@ interface Props extends ViewProps {
 const { width } = Dimensions.get('window');
 const trackHeight = 88;
 const thumbSize = 114;
-const center = (width - thumbSize) * 0.5;
+const center = (width - thumbSize) * 0.44;
 const marginHorizontal = 0;
 const leftmost = (center - marginHorizontal) * -1;
-const rightmost = center - marginHorizontal - 30;
+const rightmost = center - marginHorizontal - 5;
 const threshold = 30;
 
 export const AcceptControl = ({ onAccept, onReject, style, ...props }: Props) => {

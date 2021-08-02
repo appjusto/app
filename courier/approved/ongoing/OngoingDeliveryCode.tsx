@@ -31,7 +31,7 @@ export const OngoingDeliveryCode = ({
   return dispatchingState && dispatchingState === 'arrived-destination' ? (
     <View>
       <HR height={padding} />
-      <View style={{ paddingTop: halfPadding, paddingBottom: padding }}>
+      <View style={{ paddingBottom: halfPadding }}>
         <SingleHeader title={t('Código de confirmação')} />
         <View style={{ paddingHorizontal: padding }}>
           <Text style={{ ...texts.sm, marginBottom: padding }}>

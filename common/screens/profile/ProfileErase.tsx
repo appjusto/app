@@ -4,7 +4,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext, useState } from 'react';
 import { Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { ProfileParamList } from '../../../consumer/v2/main/profile/types';
 import { CourierProfileParamList } from '../../../courier/approved/main/profile/types';
@@ -70,6 +69,7 @@ export default function ({ navigation }: Props) {
       style={{ ...screens.config }}
       keyboardShouldPersistTaps="never"
       contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
     >
       <PaddedView style={{ flex: 1 }}>
         <View>
@@ -135,7 +135,7 @@ export default function ({ navigation }: Props) {
         </View>
         <View style={{ flex: 1 }} />
         <View style={{ marginTop: padding }}>
-          <SafeAreaView>
+          <View>
             <DefaultButton
               style={{ width: '100%', marginBottom: 8 }}
               title={t('Manter minha conta')}
@@ -144,13 +144,12 @@ export default function ({ navigation }: Props) {
             />
             <DefaultButton
               title={t('Tenho certeza, pode excluir')}
-              style={{ marginBottom: 16 }}
               onPress={eraseHandler}
               disabled={busy}
               activityIndicator={busy}
-              secondary
+              grey
             />
-          </SafeAreaView>
+          </View>
         </View>
       </PaddedView>
     </KeyboardAwareScrollView>

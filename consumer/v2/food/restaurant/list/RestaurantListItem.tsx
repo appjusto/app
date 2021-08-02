@@ -31,7 +31,7 @@ export const RestaurantListItem = ({ restaurant, cuisine, distance, secondary }:
           paddingTop: halfPadding,
         }}
       >
-        <View style={{ justifyContent: 'center' }}>
+        <View style={{ justifyContent: 'center', width: '75%' }}>
           <Text style={{ ...texts.sm }}>{restaurant.name}</Text>
           <Text style={{ ...texts.xs, color: secondary ? colors.grey700 : colors.green600 }}>
             {t(cuisine ?? '')}

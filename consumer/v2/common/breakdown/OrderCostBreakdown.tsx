@@ -2,10 +2,9 @@ import { Fare, Order } from '@appjusto/types';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Text, View } from 'react-native';
-import PaddedView from '../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { getOrderTotal } from '../../../../common/store/api/order/helpers';
-import { colors, padding, texts } from '../../../../common/styles';
+import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 
@@ -19,7 +18,7 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems }: Props) =>
   return (
     <View style={{ flex: 1 }}>
       <SingleHeader title={t('Entenda os valores')} />
-      <PaddedView>
+      <View style={{ paddingTop: halfPadding, paddingBottom: padding, paddingHorizontal: padding }}>
         <Text style={{ ...texts.xs, color: colors.grey700 }}>
           {t('Somos transparentes do início ao fim da entrega')}
         </Text>
@@ -55,7 +54,7 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems }: Props) =>
             </View>
           ) : null}
         </View>
-      </PaddedView>
+      </View>
     </View>
   );
 };

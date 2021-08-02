@@ -79,120 +79,118 @@ export default function ({ navigation, route }: Props) {
   const maxDistance = formatDistance(fleet.maxDistance);
   const maxDistanceOrigin = formatDistance(fleet.maxDistanceToOrigin);
   return (
-    <View style={[screens.config]}>
-      <ScrollView>
-        <PaddedView>
-          <Text style={[texts.x2l]}>{fleet.name}</Text>
-          <Text style={{ ...texts.xs, color: colors.green600, marginTop: 8 }}>{participants}</Text>
-          <Text style={{ ...texts.xs, color: colors.grey700, marginTop: 8 }}>
-            {fleet.description}
-          </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 32,
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <Text style={{ ...texts.md }}>{t('Pagamento Mínimo')}</Text>
-            <RoundedText>{minFee}</RoundedText>
-          </View>
-          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
-            {t(
-              'Valor que entregadores/as dessa frota receberão ao percorrer a Distância Inicial Mínima.'
-            )}
-          </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 32,
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <Text style={{ ...texts.md }}>{t('Distância Inicial Mínima')}</Text>
-            <RoundedText>{minDistance}</RoundedText>
-          </View>
-          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
-            {t(
-              'Distância para o Pagamento Mínimo. Abaixo dessa distância, entregadores/as dessa frota receberão o Pagamento Mínimo. Acima dessa distância, entregadores/as receberão um Valor Adicional por Km Rodado.'
-            )}
-          </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 32,
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <Text style={{ ...texts.md }}>{t('Valor Adicional por Km Rodado')}</Text>
-            <RoundedText>{additionalPerKm}</RoundedText>
-          </View>
-          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
-            {t(
-              'Valor adicional por Km que entregadores/as dessa frota receberão ao percorrer uma distância acima da Distância Inicial Mínima.'
-            )}
-          </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 32,
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <Text style={{ ...texts.md }}>{t('Distância Máxima para Entrega')}</Text>
-            <RoundedText>{maxDistance}</RoundedText>
-          </View>
-          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
-            {t(
-              'Distância máxima em Km que entregadores/as dessa frota poderão percorrer para fazer uma entrega. Pedidos recebidos com distância máxima acima não serão exibidos.'
-            )}
-          </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 32,
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <Text style={{ ...texts.md }}>{t('Distância Máxima até a Origem')}</Text>
-            <RoundedText>{maxDistanceOrigin}</RoundedText>
-          </View>
-          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
-            {t(
-              'Distância máxima em km da posição atual até a origem do pedido que essa frota poderá percorrer. Pedidos recebidos com origem acima não serão exibidos.'
-            )}
-          </Text>
-        </PaddedView>
-        <ShowIf test={flavor === 'courier'}>
-          {() => (
-            <>
-              <GainSimulator
-                fee={fleet.minimumFee}
-                distance={fleet.distanceThreshold}
-                additional={fleet.additionalPerKmAfterThreshold}
-              />
-              <PaddedView>
-                {/* TO-DO: only used when choosing fleet;
-                should be hidden when coming from home'Ver detalhes';
-                should behave differently when coming from consumer
-                 */}
-                {courier.fleet!.id !== fleet.id && (
-                  <DefaultButton
-                    title={t('Ingressar nessa frota')}
-                    onPress={confirmFleet}
-                    style={{ marginTop: 16 }}
-                  />
-                )}
-              </PaddedView>
-            </>
+    <ScrollView
+      style={{ ...screens.config }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
+      <PaddedView>
+        <Text style={[texts.x2l]}>{fleet.name}</Text>
+        <Text style={{ ...texts.xs, color: colors.green600, marginTop: 8 }}>{participants}</Text>
+        <Text style={{ ...texts.xs, color: colors.grey700, marginTop: 8 }}>
+          {fleet.description}
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 32,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ ...texts.md }}>{t('Pagamento Mínimo')}</Text>
+          <RoundedText>{minFee}</RoundedText>
+        </View>
+        <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
+          {t(
+            'Valor que entregadores/as dessa frota receberão ao percorrer a Distância Inicial Mínima.'
           )}
-        </ShowIf>
-      </ScrollView>
-    </View>
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 32,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ ...texts.md }}>{t('Distância Inicial Mínima')}</Text>
+          <RoundedText>{minDistance}</RoundedText>
+        </View>
+        <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
+          {t(
+            'Distância para o Pagamento Mínimo. Abaixo dessa distância, entregadores/as dessa frota receberão o Pagamento Mínimo. Acima dessa distância, entregadores/as receberão um Valor Adicional por Km Rodado.'
+          )}
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 32,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ ...texts.md }}>{t('Valor Adicional por Km Rodado')}</Text>
+          <RoundedText>{additionalPerKm}</RoundedText>
+        </View>
+        <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
+          {t(
+            'Valor adicional por Km que entregadores/as dessa frota receberão ao percorrer uma distância acima da Distância Inicial Mínima.'
+          )}
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 32,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ ...texts.md }}>{t('Distância Máxima para Entrega')}</Text>
+          <RoundedText>{maxDistance}</RoundedText>
+        </View>
+        <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
+          {t(
+            'Distância máxima em Km que entregadores/as dessa frota poderão percorrer para fazer uma entrega. Pedidos recebidos com distância máxima acima não serão exibidos.'
+          )}
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 32,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ ...texts.md }}>{t('Distância Máxima até a Origem')}</Text>
+          <RoundedText>{maxDistanceOrigin}</RoundedText>
+        </View>
+        <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
+          {t(
+            'Distância máxima em km da posição atual até a origem do pedido que essa frota poderá percorrer. Pedidos recebidos com origem acima não serão exibidos.'
+          )}
+        </Text>
+      </PaddedView>
+      <ShowIf test={flavor === 'courier'}>
+        {() => (
+          <>
+            <GainSimulator
+              fee={fleet.minimumFee}
+              distance={fleet.distanceThreshold}
+              additional={fleet.additionalPerKmAfterThreshold}
+            />
+            <PaddedView>
+              {courier.fleet!.id !== fleet.id && (
+                <DefaultButton
+                  title={t('Ingressar nessa frota')}
+                  onPress={confirmFleet}
+                  style={{ marginTop: 16 }}
+                />
+              )}
+            </PaddedView>
+          </>
+        )}
+      </ShowIf>
+    </ScrollView>
   );
 }

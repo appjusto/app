@@ -39,7 +39,6 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
     console.log('OrderConfirming', order.status);
     if (order.status === 'canceled') {
       navigation.replace('OrderCanceled', { orderId });
-      // just p2p for now
     } else if (order.status === 'confirmed') {
       navigation.replace('OngoingOrder', {
         orderId,
@@ -125,9 +124,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
           title={t('Cancelar pedido')}
           secondary
           style={{ marginHorizontal: padding, marginTop: 24 }}
-          onPress={() =>
-            navigation.navigate('OngoingOrderCancelOrder', { orderId, acknowledgedCosts: 0 })
-          }
+          onPress={() => navigation.navigate('OngoingOrderConfirmCancel', { orderId })}
         />
       </View>
     </SafeAreaView>
@@ -138,22 +135,22 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
       icon={<IconMotocycle />}
       background={colors.white}
     >
-      <DefaultButton
-        title={t('Cancelar pedido')}
-        onPress={() => navigation.navigate('OngoingOrderConfirmCancel', { orderId })}
-        style={{
-          ...borders.default,
-          marginBottom: padding,
-          borderColor: colors.black,
-          backgroundColor: 'white',
-        }}
-      />
-      {order.type === 'p2p' && (
+      {order.type === 'food' && (
         <DefaultButton
-          title={t('Voltar para o início')}
-          onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
+          title={t('Cancelar pedido')}
+          onPress={() => navigation.navigate('OngoingOrderConfirmCancel', { orderId })}
+          style={{
+            ...borders.default,
+            marginBottom: padding,
+            borderColor: colors.black,
+            backgroundColor: 'white',
+          }}
         />
       )}
+      <DefaultButton
+        title={t('Voltar para o início')}
+        onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
+      />
     </FeedbackView>
   );
 };

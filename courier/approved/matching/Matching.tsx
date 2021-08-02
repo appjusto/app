@@ -98,7 +98,11 @@ export default function ({ navigation, route }: Props) {
   };
   // UI
   return (
-    <ScrollView style={[screens.default]} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView
+      style={[screens.default]}
+      contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
       <View style={{ flex: 1 }}>
         {/* header */}
         <View style={{ alignItems: 'center', backgroundColor: colors.green500 }}>

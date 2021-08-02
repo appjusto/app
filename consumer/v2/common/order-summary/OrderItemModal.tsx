@@ -6,7 +6,7 @@ import { ApiContext } from '../../../../common/app/context';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
 import * as helpers from '../../../../common/store/api/order/helpers';
-import { borders, colors, padding, texts } from '../../../../common/styles';
+import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import { ItemQuantity } from '../../food/restaurant/product/ItemQuantity';
@@ -75,14 +75,18 @@ export const OrderItemModal = ({ item, order, onModalClose, onEditItemPress, ...
           <Text style={{ ...texts.xl }}>{item.product.name}</Text>
           {item.complements?.map((complement) => (
             <Text
-              style={{ ...texts.sm, color: colors.grey700, marginTop: padding }}
+              style={{ ...texts.sm, color: colors.grey700, paddingTop: 4 }}
               key={complement.complementId}
             >
               {complement.name}
             </Text>
           ))}
-          <Text style={{ ...texts.sm, color: colors.grey700 }}>{item.notes}</Text>
-          <View style={{ flexDirection: 'row', marginTop: 24 }}>
+          {item.notes ? (
+            <Text style={{ ...texts.sm, color: colors.grey700, paddingTop: halfPadding }}>
+              {item.notes}
+            </Text>
+          ) : null}
+          <View style={{ flexDirection: 'row', paddingVertical: padding }}>
             <TouchableOpacity onPress={() => onEditItemPress(item.product.id, item.id)}>
               <RoundedText>{t('Revisar detalhes do item')}</RoundedText>
             </TouchableOpacity>
@@ -90,7 +94,7 @@ export const OrderItemModal = ({ item, order, onModalClose, onEditItemPress, ...
               <RoundedText color={colors.red}>{t('Remover')}</RoundedText>
             </TouchableOpacity>
           </View>
-          <View style={{ flex: 1 }} />
+          {/* <View style={{ flex: 1 }} /> */}
           <View>
             <HR />
             <ItemQuantity

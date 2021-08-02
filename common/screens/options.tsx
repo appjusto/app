@@ -1,10 +1,18 @@
+import { StackNavigationOptions } from '@react-navigation/stack';
 import React from 'react';
+import { Platform } from 'react-native';
 import { BackButton } from '../components/views/BackButton';
-import { colors } from '../styles';
+import { colors, padding, texts } from '../styles';
 
-export const defaultScreenOptions = {
+export const defaultScreenOptions: StackNavigationOptions = {
   headerBackImage: () => <BackButton />,
   headerBackTitleVisible: false,
+  headerTitleStyle: {
+    ...texts.md,
+    paddingHorizontal: padding,
+    fontSize: Platform.OS === 'android' ? 18 : 16,
+  },
+  headerTitleAlign: 'center',
   headerStyle: {
     backgroundColor: colors.white,
     shadowOpacity: 0,

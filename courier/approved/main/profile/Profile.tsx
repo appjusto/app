@@ -5,6 +5,7 @@ import React from 'react';
 import { Alert, Linking, ScrollView, View } from 'react-native';
 import { ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
+import { defaultScreenOptions } from '../../../../common/screens/options';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -54,13 +55,13 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen
         name="Profile"
         options={{ title: 'Seus dados' }}
         children={() => (
           <View style={[screens.config]}>
-            <ScrollView>
+            <ScrollView scrollIndicatorInsets={{ right: 1 }}>
               <ConfigItem
                 title={t('Dados pessoais')}
                 subtitle={t('Seu nome, sobrenome, CPF e número do celular')}
@@ -98,7 +99,7 @@ export default function ({ navigation }: Props) {
               />
               <ConfigItem
                 title={t('Central de ajuda')}
-                subtitle={t('Tire suas dúvidas sobre a plataforma')}
+                subtitle={t('Tire suas dúvidas ou envie uma mensagem')}
                 onPress={() => Linking.openURL(AppJustoFreshdeskCourierURL)}
               />
               <ConfigItem

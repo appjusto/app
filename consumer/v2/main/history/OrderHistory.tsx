@@ -12,6 +12,7 @@ import ConfigItem from '../../../../common/components/views/ConfigItem';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
 import StatusBadge from '../../../../common/components/views/StatusBadge';
 import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
+import { defaultScreenOptions } from '../../../../common/screens/options';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
 import {
   getOrdersWithFilter,
@@ -123,7 +124,7 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen
         name="OrderHistory"
         options={{ title: 'Seus pedidos' }}

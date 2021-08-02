@@ -13,9 +13,20 @@ interface Props {
   selected: boolean;
   disabled: boolean;
   onToggle: (selected: boolean) => void;
+  onIncrement: () => void;
+  onDecrement: () => void;
+  quantity: number;
 }
 
-export const ProductComplementListItem = ({ complement, selected, disabled, onToggle }: Props) => {
+export const ProductComplementListItem = ({
+  complement,
+  selected,
+  disabled,
+  onToggle,
+  onIncrement,
+  onDecrement,
+  quantity,
+}: Props) => {
   // context
   const businessId = useContextBusinessId();
   // state
@@ -27,43 +38,48 @@ export const ProductComplementListItem = ({ complement, selected, disabled, onTo
         if (!disabled) onToggle(!selected);
       }}
     >
-      <View
-        style={{
-          flexDirection: 'row',
-          paddingHorizontal: padding,
-          paddingVertical: 12,
-          // alignContent: 'center',
-          alignItems: 'center',
-          borderTopWidth: 1,
-          borderStyle: 'solid',
-          borderColor: colors.grey50,
-        }}
-      >
-        <View>
-          <QuantityButton
-            sign={selected ? 'minus' : 'plus'}
-            size="small"
-            selected={selected}
-            disabled={disabled}
-          />
-        </View>
-        <View style={{ flex: 1, paddingHorizontal: padding }}>
-          <Text style={{ ...texts.sm }}>{complement.name}</Text>
-          {complement.description ? (
-            <Text
-              style={{ ...texts.sm, color: colors.grey700, marginTop: 4, flexWrap: 'wrap' }}
-              numberOfLines={2}
-            >
-              {complement.description}
-            </Text>
-          ) : null}
-          <Text style={{ ...texts.sm, marginTop: 4 }}>{formatCurrency(complement.price)}</Text>
-        </View>
-        {imageURI ? (
+      <View style={{ paddingHorizontal: padding, paddingBottom: 12 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            paddingTop: 12,
+            paddingBottom: 4,
+            alignItems: 'center',
+            borderTopWidth: 1,
+            borderStyle: 'solid',
+            borderColor: colors.grey50,
+          }}
+        >
           <View>
-            <ListItemImage uri={imageURI} height={96} width={96} />
+            <QuantityButton
+              sign={selected ? 'minus' : 'plus'}
+              size="small"
+              selected={selected}
+              disabled={disabled}
+            />
           </View>
-        ) : null}
+          <View style={{ flex: 1, paddingHorizontal: padding }}>
+            <Text style={{ ...texts.sm }}>{complement.name}</Text>
+            {complement.description ? (
+              <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 4, flexWrap: 'wrap' }}>
+                {complement.description}
+              </Text>
+            ) : null}
+            <Text style={{ ...texts.sm, marginTop: 4 }}>{formatCurrency(complement.price)}</Text>
+          </View>
+          {imageURI ? (
+            <View>
+              <ListItemImage uri={imageURI} height={96} width={96} />
+            </View>
+          ) : null}
+        </View>
+        {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <ComplementQuantity
+            onIncrement={onIncrement}
+            onDecrement={onDecrement}
+            quantity={quantity}
+          />
+        </View> */}
       </View>
     </TouchableWithoutFeedback>
   );

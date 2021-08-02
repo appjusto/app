@@ -34,9 +34,7 @@ export const LocationDisclosureModal = (props: ModalProps) => {
   }, [backgroundStatus, foregroundStatus, navigation, getBackground, getForeground]);
   // handlers
   const modalHandler = () => {
-    if (foregroundStatus !== 'granted') {
-      requestForeground();
-    } else if (backgroundStatus !== 'granted') {
+    if (foregroundStatus === 'granted') {
       requestBackground();
     } else {
       Linking.openSettings();

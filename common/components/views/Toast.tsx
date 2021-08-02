@@ -41,7 +41,7 @@ export default function () {
     <Animated.View
       style={{
         position: 'absolute',
-        bottom: Platform.OS === 'android' ? 0 : halfPadding,
+        bottom: Platform.OS === 'android' ? 0 : 4,
         opacity,
         width: '100%',
         minHeight: 48,

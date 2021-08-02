@@ -1,7 +1,7 @@
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TouchableOpacity, TouchableOpacityProps, View, ViewProps } from 'react-native';
-import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
+import { borders, colors, padding, texts } from '../../../common/styles';
 
 export interface DefaultButtonProps extends TouchableOpacityProps, ViewProps {
   title: string;
@@ -29,7 +29,7 @@ export default function ({
             flexDirection: 'row',
             ...borders.default,
             paddingHorizontal: padding,
-            paddingVertical: 14,
+            paddingVertical: 12,
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor,
@@ -40,7 +40,7 @@ export default function ({
       >
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={{ ...texts.sm, color }}>{title}</Text>
-          <Feather name="arrow-right" size={14} style={{ marginLeft: halfPadding }} />
+          <Feather name="arrow-right" size={14} style={{ marginLeft: 4, paddingTop: 4 }} />
         </View>
       </View>
     </TouchableOpacity>

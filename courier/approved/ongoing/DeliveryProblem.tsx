@@ -2,7 +2,7 @@ import { Flavor, IssueType } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Linking, ScrollView, View } from 'react-native';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, screens } from '../../../common/styles';
@@ -113,7 +113,11 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
     );
   }
   return (
-    <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView
+      style={{ ...screens.config }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
       <PaddedView style={{ flex: 1 }}>
         {order.dispatchingState === 'going-pickup' ||
         order.dispatchingState === 'arrived-pickup' ? (
@@ -136,6 +140,13 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
           title={t('Preciso falar com o restaurante')}
           subtitle={t('Abrir chat direto com o restaurante')}
           onPress={() => openChatWithRestaurant()}
+          situation="chat"
+        />
+        {/* open whatsapp chat */}
+        <DeliveryProblemCard
+          title={t('Preciso falar com o AppJusto')}
+          subtitle={t('Abrir chat no WhatsApp')}
+          onPress={() => Linking.openURL('https://wa.me/551197821-0274')}
           situation="chat"
         />
         {/* commented for now. will be added back later */}

@@ -17,7 +17,7 @@ export const BankData = ({ courier, navigateToProfileBank }: Props) => {
     <View>
       <SingleHeader title={t('Dados bancários')} />
       <Text
-        style={{ ...texts.xs, color: colors.grey700, paddingHorizontal: padding, paddingTop: 12 }}
+        style={{ ...texts.xs, color: colors.grey700, paddingHorizontal: padding, paddingTop: 4 }}
       >
         {t('Confirme seus dados bancários para transferência')}
       </Text>

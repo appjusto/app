@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';
 import { IconMotocycleCentered } from '../../../icons/icon-motocycle-centered';
-import { IconRequest } from '../../../icons/icon-requests';
+import { IconRequestSmall } from '../../../icons/icon-requests-small';
 import { getFlavor } from '../../../store/config/selectors';
 import { borders, colors, padding, texts } from '../../../styles';
 import { MessagesCard } from './MessagesCard';
@@ -27,7 +27,7 @@ export default function ({ order, onPress }: Props) {
       if (status === 'confirming') {
         title = t('Aguarde enquanto criamos seu pedido...');
       } else if (status === 'confirmed') {
-        title = t('Aguarde enquanto o restaurante confirma seu pedido.');
+        title = `${t('Aguarde enquanto')} ${order.business!.name} ${t('confirma seu pedido')}`;
       } else if (status === 'declined') {
         title = t('Problema no pagamento');
         detail = t('Selecione outra forma de pagamento');
@@ -58,7 +58,7 @@ export default function ({ order, onPress }: Props) {
           } else if (dispatchingState === 'going-destination') {
             detail = `${t('À caminho de')} ${order.destination!.address.main}`;
           } else if (dispatchingState === 'arrived-destination') {
-            detail = 'Entregador/a chegou para entrega';
+            detail = `${order.courier!.name} ${t('chegou para entrega')}`;
           }
         }
         if (dispatchingStatus === 'no-match') {
@@ -115,7 +115,11 @@ export default function ({ order, onPress }: Props) {
   return (
     <TouchableOpacity onPress={() => onPress(order)}>
       <View
-        style={{ ...borders.default, borderColor: colors.black, backgroundColor: colors.yellow }}
+        style={{
+          ...borders.default,
+          borderColor: colors.darkYellow,
+          backgroundColor: colors.yellow,
+        }}
       >
         <View>
           <MessagesCard
@@ -128,13 +132,8 @@ export default function ({ order, onPress }: Props) {
               flexDirection: 'row',
               alignItems: 'center',
             }}
-            half
           >
-            {order.type === 'food' ? (
-              <IconRequest width={64} height={80} />
-            ) : (
-              <IconMotocycleCentered />
-            )}
+            {flavor === 'courier' ? <IconMotocycleCentered /> : <IconRequestSmall />}
             <View style={{ marginLeft: padding, maxWidth: '80%' }}>
               <View
                 style={{
@@ -151,7 +150,6 @@ export default function ({ order, onPress }: Props) {
                   <Text
                     style={{
                       ...texts.xs,
-                      color: colors.grey700,
                       flexWrap: 'wrap',
                       maxWidth: '97%',
                     }}

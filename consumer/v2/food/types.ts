@@ -8,6 +8,7 @@ export type FoodOrderNavigatorParamList = {
     place?: Place;
   };
   RestaurantSearch: undefined;
+  RecommendRestaurant: undefined;
   RestaurantNavigator: {
     restaurantId: string;
     orderId?: string;

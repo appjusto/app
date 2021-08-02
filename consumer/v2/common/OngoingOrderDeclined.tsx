@@ -31,27 +31,6 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   // screen state
   const order = useObserveOrder(orderId);
   const [isLoading, setLoading] = React.useState(false);
-  // handlers
-  const reviewOrderHandler = () => {
-    if (!order) return;
-    if (order.type === 'p2p') {
-      navigation.replace('P2POrderNavigator', {
-        screen: 'CreateOrderP2P',
-        params: {
-          orderId: order.id,
-        },
-      });
-    } else {
-      navigation.replace('FoodOrderNavigator', {
-        screen: 'RestaurantNavigator',
-        params: {
-          restaurantId: order.business!.id,
-          orderId: order.id,
-          screen: 'FoodOrderCheckout',
-        },
-      });
-    }
-  };
   // effects
   React.useEffect(() => {
     if (paymentMethodId) {
@@ -81,19 +60,60 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
     );
   }
   // handlers
-  const changePaymentHandler = () => {
-    navigation.navigate('ProfilePaymentMethods', {
-      returnScreen: 'OngoingOrderDeclined',
-    });
+  const reviewOrderHandler = () => {
+    if (!order) return;
+    if (order.type === 'p2p') {
+      navigation.replace('P2POrderNavigator', {
+        screen: 'CreateOrderP2P',
+        params: {
+          orderId: order.id,
+        },
+      });
+    } else {
+      navigation.replace('FoodOrderNavigator', {
+        screen: 'RestaurantNavigator',
+        params: {
+          restaurantId: order.business!.id,
+          orderId: order.id,
+          screen: 'FoodOrderCheckout',
+        },
+      });
+    }
   };
+  const { dispatchingStatus } = order;
+  const changePaymentHandler = () => {
+    if (dispatchingStatus === 'declined') {
+      navigation.navigate('ProfilePaymentMethods', {
+        returnScreen: 'OngoingOrderDeclined',
+        courierFee: order.fare!.courier.value,
+        fleetName: order.fare!.fleet.name,
+      });
+    } else navigation.navigate('ProfilePaymentMethods', { returnScreen: 'OngoingOrderDeclined' });
+  };
+  const header = (() => {
+    if (dispatchingStatus === 'declined') return t('Problemas no pagamento do entregador');
+    else return t('Problemas no pagamento');
+  })();
+  const description = (() => {
+    if (dispatchingStatus === 'declined')
+      return t(
+        'O pedido está pronto, porém não conseguimos efetuar a cobrança destinada à entrega. Altere a forma de pagamento para continuar.'
+      );
+    else
+      return t(
+        'Não conseguimos efetuar a cobrança na forma de pagamento escolhida. Por favor, altere a forma de pagamento e tente novamente.'
+      );
+  })();
   // UI
   return (
-    <ScrollView style={{ ...screens.default }} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView
+      style={{ ...screens.default }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
       <FeedbackView
-        header={t('Problemas no pagamento')}
-        description={t(
-          'Não conseguimos efetuar a cobrança na forma de pagamento escolhida. Por favor, altere a forma de pagamento e tente novamente.'
-        )}
+        header={header}
+        description={description}
         icon={<IconConeYellow />}
         background={colors.white}
       >

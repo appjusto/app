@@ -60,7 +60,7 @@ export default function ({ navigation }: Props) {
   // UI
   return (
     <View style={[screens.config, screens.headless]}>
-      <ScrollView>
+      <ScrollView scrollIndicatorInsets={{ right: 1 }}>
         <HomeControls
           onFleetDetail={() =>
             navigation.navigate('ProfileNavigator', {

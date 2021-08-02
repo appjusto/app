@@ -153,6 +153,7 @@ export default function ({
             keyboardShouldPersistTaps="always"
             style={{ flex: 1 }}
             contentContainerStyle={{ flex: 1 }}
+            scrollIndicatorInsets={{ right: 1 }}
           >
             <Pressable
               onPress={() => {
@@ -216,6 +217,7 @@ export default function ({
             keyboardShouldPersistTaps="always"
             style={{ flex: 1 }}
             contentContainerStyle={{ flex: 1 }}
+            scrollIndicatorInsets={{ right: 1 }}
           >
             <Pressable
               onPress={() => {
@@ -244,7 +246,7 @@ export default function ({
             <DefaultInput
               style={{ marginTop: 12 }}
               value={destinationInstructions}
-              title={t('Instruções para entrega')}
+              title={t('Instruções para retirada')}
               placeholder={t('Quem irá atender o/a entregador/a, etc.')}
               onChangeText={(text) => setDestinationInstructions(text)}
               blurOnSubmit
@@ -289,6 +291,7 @@ export default function ({
             <OrderSummary
               order={order!}
               selectedPaymentMethodId={selectedPaymentMethodId}
+              activityIndicator={isLoading}
               waiting={isLoading}
               showMap={!isDeviceTaller}
               onEditStep={setPage}

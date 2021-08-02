@@ -1,7 +1,7 @@
 import { Flavor } from '@appjusto/types';
 import React, { useEffect, useState } from 'react';
 import { Image, ImageURISource, View } from 'react-native';
-import * as icons from '../../../assets/icons';
+import { IconChat } from '../../icons/icon-chat';
 import { useBusinessLogoURI } from '../../store/api/business/hooks/useBusinessLogoURI';
 import useCourierSelfie from '../../store/api/courier/hooks/useCourierSelfie';
 import { colors } from '../../styles';
@@ -12,7 +12,7 @@ type Props = {
   size?: number;
 };
 
-export default function ({ flavor = 'courier', id, size = 64 }: Props) {
+export default function ({ flavor = 'courier', id, size = 40 }: Props) {
   // state
   const [selfie, setSelfie] = useState<ImageURISource>();
   const currentSelfieQuery = useCourierSelfie(id, '160x160');
@@ -35,13 +35,23 @@ export default function ({ flavor = 'courier', id, size = 64 }: Props) {
     }
   }, [currentLogoQuery.data, flavor]);
 
-  const imageSource = (() => {
-    if (flavor === 'consumer') return icons.user;
-    else if (flavor === 'business') return logo ?? icons.user;
-    else if (flavor === 'courier') return selfie ?? icons.user;
-  })();
-
   // UI
+  const roundedImageUI = () => {
+    if (flavor === 'consumer') return <IconChat />;
+    else if (flavor === 'business') {
+      if (logo) {
+        return (
+          <Image source={logo} style={{ height: size, width: size, borderRadius: size / 2 }} />
+        );
+      } else return <IconChat />;
+    } else if (flavor === 'courier') {
+      if (selfie) {
+        return (
+          <Image source={selfie} style={{ height: size, width: size, borderRadius: size / 2 }} />
+        );
+      } else return <IconChat />;
+    }
+  };
   return (
     <View
       style={{
@@ -56,7 +66,7 @@ export default function ({ flavor = 'courier', id, size = 64 }: Props) {
         borderRadius: size / 2,
       }}
     >
-      <Image source={imageSource} style={{ height: size, width: size, borderRadius: size / 2 }} />
+      {roundedImageUI()}
     </View>
   );
 }

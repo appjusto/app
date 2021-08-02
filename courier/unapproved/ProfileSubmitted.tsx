@@ -79,7 +79,7 @@ export default function ({ navigation }: Props) {
   // UI
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView style={{ ...screens.config }}>
+      <ScrollView style={{ ...screens.config }} scrollIndicatorInsets={{ right: 1 }}>
         <View
           style={{
             backgroundColor: colors.green500,

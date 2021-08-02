@@ -23,9 +23,10 @@ import { RestaurantListSection } from './types';
 interface Props extends SectionListProps<BusinessAlgolia, RestaurantListSection> {
   loading?: boolean;
   onSelect: (id: string) => void;
+  onRecommend?: () => void;
 }
 
-export const RestaurantList = ({ sections, loading, onSelect, ...props }: Props) => {
+export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...props }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   // redux
@@ -34,10 +35,25 @@ export const RestaurantList = ({ sections, loading, onSelect, ...props }: Props)
   return (
     <SectionList
       style={{ ...screens.default, paddingBottom: padding }}
+      // ListFooterComponent={
+      //   loading ? null : (
+      //     <PaddedView style={{ marginTop: padding }}>
+      //       <TouchableOpacity onPress={onRecommend}>
+      //         <HomeCard
+      //           icon={<IconShareGreen />}
+      //           title={t('Indique um restaurante')}
+      //           subtitle={t(
+      //             'Ainda não encontrou o restaurante que queria por aqui? Manda pra gente!'
+      //           )}
+      //         />
+      //       </TouchableOpacity>
+      //     </PaddedView>
+      //   )
+      // }
       ListEmptyComponent={
         loading ? (
           <View style={{ ...screens.centered, marginTop: padding }}>
-            <ActivityIndicator size="small" color={colors.green500} />
+            <ActivityIndicator size="large" color={colors.green500} />
           </View>
         ) : (
           <FeedbackView

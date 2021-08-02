@@ -50,7 +50,7 @@ export const WithdrawOrderModal = ({
           style={{
             marginHorizontal: padding,
             backgroundColor: colors.white,
-            padding: 24,
+            padding,
           }}
         >
           <View style={{ alignItems: 'flex-end' }}>
@@ -73,13 +73,13 @@ export const WithdrawOrderModal = ({
               <IconOngoingRequest />
             </View>
             <Text style={{ ...texts.xl, color: colors.grey700 }}>{title}</Text>
-            <Text style={{ ...texts.x2l }}>{order.business?.name}</Text>
+            <Text style={{ ...texts.x2l, textAlign: 'center' }}>{order.business?.name}</Text>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>{subTitle}</Text>
-            <View style={{ marginTop: 24, alignItems: 'center' }}>
+            <View style={{ marginTop: padding, alignItems: 'center' }}>
               <Text style={{ ...texts.xl, color: colors.grey700 }}>{t('Pedido Nº')}</Text>
               <Text style={{ ...texts.x4l }}>{order.code}</Text>
             </View>
-            <View style={{ marginTop: 24, alignItems: 'center', marginBottom: 48 }}>
+            <View style={{ marginTop: padding, alignItems: 'center', marginBottom: padding }}>
               <Text style={{ ...texts.xl, color: colors.grey700 }}>{t('Cliente')}</Text>
               <Text style={{ ...texts.x4l }}>{order.consumer.name}</Text>
             </View>

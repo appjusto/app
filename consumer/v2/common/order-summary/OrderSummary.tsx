@@ -1,5 +1,5 @@
 import { Fare, Order, WithId } from '@appjusto/types';
-import { Feather } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { ScrollView, Switch, Text, View } from 'react-native';
@@ -107,7 +107,7 @@ export const OrderSummary = ({
 
   // UI
   return (
-    <ScrollView style={{ flex: 1, paddingBottom: 24 }}>
+    <ScrollView style={{ flex: 1, paddingBottom: 24 }} scrollIndicatorInsets={{ right: 1 }}>
       {showMap && (
         <View style={{ height: 160 }}>
           <OrderMap order={order} ratio={360 / 160} />
@@ -125,13 +125,13 @@ export const OrderSummary = ({
             onEditItemPress={onEditItemPress!}
             onAddItemsPress={onAddItemsPress!}
           />
-          <OrderAdditionalInfo value={additionalInfo} onAddInfo={onAddInfo} />
+          <OrderAdditionalInfo value={additionalInfo!} onAddInfo={onAddInfo!} />
         </View>
       )}
       {order.type === 'food' && (
         <View style={{ flex: 1, marginHorizontal: padding, marginBottom: padding }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
-            <Feather name="share-2" size={14} style={{ marginRight: 4 }} />
+            <Ionicons name="share-social-outline" size={16} style={{ marginRight: 4 }} />
             <Text style={{ ...texts.sm, color: colors.black }}>
               {t('Compartilhar dados com o restaurante')}
             </Text>
@@ -143,7 +143,7 @@ export const OrderSummary = ({
           </Text>
           <View style={{ marginTop: halfPadding, flexDirection: 'row', alignItems: 'center' }}>
             <Switch
-              trackColor={{ false: colors.grey500, true: colors.white }}
+              trackColor={{ false: colors.grey500, true: colors.grey500 }}
               thumbColor={shareDataWithBusiness ? colors.green500 : colors.yellow}
               ios_backgroundColor={colors.white}
               onValueChange={onShareData}

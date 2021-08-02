@@ -18,6 +18,8 @@ interface Props {
 }
 
 export const ItemComplements = ({ product, selectedComplements, onComplementToggle }: Props) => {
+  // state
+  const [quantity, setQuantity] = React.useState(0);
   if (!product.complementsEnabled) return null;
   return (
     <View>
@@ -25,12 +27,14 @@ export const ItemComplements = ({ product, selectedComplements, onComplementTogg
         <View key={group.id}>
           <SingleHeader title={group.name} />
           <ItemComplementRequiredLabel
-            style={{ marginLeft: padding, marginVertical: halfPadding }}
+            style={{ marginLeft: padding, marginBottom: halfPadding }}
             group={group}
             totalSelected={helpers.totalComplementsInGroup(group, selectedComplements)}
           />
           {group.items?.map((complement) => {
             const selected = Boolean(selectedComplements.find((c) => c.id === complement.id));
+            const groupMaximum = group.maximum;
+            const complementMaximum = complement.maximum;
             return (
               <ProductComplementListItem
                 key={complement.id}
@@ -38,6 +42,9 @@ export const ItemComplements = ({ product, selectedComplements, onComplementTogg
                 selected={selected}
                 disabled={!selected && !helpers.canAddComplement(group, selectedComplements)}
                 onToggle={(selected) => onComplementToggle(group, complement, selected)}
+                onIncrement={() => null}
+                onDecrement={() => null}
+                quantity={quantity}
               />
             );
           })}

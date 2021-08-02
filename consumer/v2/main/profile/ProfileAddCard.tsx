@@ -98,7 +98,11 @@ export default function ({ navigation, route }: Props) {
   const surnameRef = React.useRef<TextInput>(null);
   // UI
   return (
-    <ScrollView style={screens.config} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView
+      style={screens.config}
+      contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1, padding }}>
           <PatternInput

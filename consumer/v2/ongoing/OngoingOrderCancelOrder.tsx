@@ -62,7 +62,7 @@ export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
   return (
     <View style={{ ...screens.default }}>
       <ReportIssueView
-        title={t('Porque você está cancelando seu pedido?')}
+        title={t('Por que você está cancelando seu pedido?')}
         inputHeader={t('Você pode usar o espaço abaixo para detalhar mais seu problema:')}
         comment={rejectionComment}
         setComment={(text) => setRejectionComment(text)}

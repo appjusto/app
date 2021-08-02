@@ -122,6 +122,7 @@ export default function ({ navigation }: Props) {
           loading={loadingRestaurants}
           refreshing={refreshing}
           onRefresh={() => refreshRestaurants()}
+          // onRecommend={() => null}
         />
       )}
       {kind === 'product' && (

@@ -143,7 +143,7 @@ export default function ({ navigation, route }: Props) {
   // UI
   return (
     <View style={[screens.config, screens.headless]}>
-      <ScrollView>
+      <ScrollView scrollIndicatorInsets={{ right: 1 }}>
         {/* header */}
         <PaddedView>
           <Text style={{ ...texts.x2l, marginBottom: 24, marginTop: halfPadding }}>

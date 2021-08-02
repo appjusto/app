@@ -5,6 +5,7 @@ import React, { useContext } from 'react';
 import { Alert, Linking, ScrollView, View } from 'react-native';
 import { ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
+import { defaultScreenOptions } from '../../../../common/screens/options';
 import { screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { AppJustoFreshdeskConsumerURL } from '../../../../strings/values';
@@ -51,13 +52,13 @@ export default function ({ navigation }: Props) {
 
   // UI
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen
         name="Profile"
         options={{ title: 'Seus dados' }}
         children={() => (
           <View style={{ ...screens.config }}>
-            <ScrollView>
+            <ScrollView scrollIndicatorInsets={{ right: 1 }}>
               <ConfigItem
                 title={t('Seus dados')}
                 subtitle={t('Edite seus dados pessoais')}
@@ -72,7 +73,7 @@ export default function ({ navigation }: Props) {
               />
               <ConfigItem
                 title={t('Central de ajuda')}
-                subtitle={t('Tire suas dúvidas sobre a plataforma')}
+                subtitle={t('Tire suas dúvidas ou envie uma mensagem')}
                 onPress={() => Linking.openURL(AppJustoFreshdeskConsumerURL)}
               />
               <ConfigItem

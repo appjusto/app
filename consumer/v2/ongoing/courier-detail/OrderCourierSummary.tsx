@@ -25,7 +25,7 @@ export const OrderCourierSummary = ({ courier }: Props) => {
         }}
       >
         <View>
-          <RoundedProfileImg flavor="courier" id={courier.id} />
+          <RoundedProfileImg flavor="courier" id={courier.id} size={64} />
         </View>
         <View style={{ marginLeft: 12 }}>
           <Text style={{ ...texts.md }}>{courier.name}</Text>

@@ -15,11 +15,11 @@ export const FoodOrderItemsInfo = ({ order }: Props) => {
   return order.type === 'food' ? (
     <View style={{ flex: 1 }}>
       <HR height={padding} />
-      <DeliveredItems order={order} />
+      <View style={{ paddingTop: halfPadding }}>
+        <DeliveredItems order={order} />
+      </View>
       {order.additionalInfo ? (
-        <View
-          style={{ paddingHorizontal: padding, paddingTop: halfPadding, paddingBottom: padding }}
-        >
+        <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Feather name="info" size={14} />
             <Text style={{ ...texts.sm, marginLeft: 4 }}>{t('Informações adicionais')}</Text>
