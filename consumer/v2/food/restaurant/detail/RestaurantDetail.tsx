@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
@@ -60,11 +59,11 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
     };
     navigation.setOptions({
       title: restaurant?.name ?? '',
-      headerRight: () => (
-        <TouchableOpacity onPress={shareRestaurant} style={{ paddingRight: 12 }}>
-          <Ionicons name="share-social-outline" size={24} />
-        </TouchableOpacity>
-      ),
+      // headerRight: () => (
+      //   <TouchableOpacity onPress={shareRestaurant} style={{ paddingRight: 12 }}>
+      //     <Ionicons name="share-social-outline" size={24} />
+      //   </TouchableOpacity>
+      // ),
     });
   }, [navigation, restaurant]);
   console.log(consumer?.id);
