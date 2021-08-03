@@ -2,14 +2,14 @@ import React from 'react';
 import { OrderCancellation } from '../../../../../../types';
 import { ApiContext } from '../../../../app/context';
 
-export const useOrderCancellationInfo = (id: string) => {
+export const useOrderCancellationInfo = (orderId: string) => {
   const api = React.useContext(ApiContext);
   const [cancellationInfo, setCancellationInfo] = React.useState<OrderCancellation>();
   React.useEffect(() => {
-    if (!id) return;
+    if (!orderId) return;
     (async () => {
-      setCancellationInfo(await api.order().fetchOrderCancellation(id));
+      setCancellationInfo(await api.order().fetchOrderCancellation(orderId));
     })();
-  }, [id, api]);
+  }, [orderId, api]);
   return cancellationInfo;
 };
