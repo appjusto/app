@@ -13,6 +13,7 @@ import {
   MatchOrderPayload,
   NextDispatchingStatePayload,
   Order,
+  OrderCancellation,
   OrderConfirmation,
   OrderIssue,
   OrderItem,
@@ -184,6 +185,11 @@ export default class OrderApi {
     await this.refs
       .getOrderIssuesRef(orderId)
       .add({ ...issue, createdOn: timestamp } as OrderIssue);
+  }
+
+  async fetchOrderCancellation(id: string) {
+    const doc = this.refs.getOrderCancellationRef(id);
+    return documentAs<OrderCancellation>(await doc.get());
   }
 
   // callables
