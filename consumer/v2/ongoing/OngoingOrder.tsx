@@ -96,12 +96,10 @@ export default function ({ navigation, route }: Props) {
     else if (order.status === 'declined' || order.dispatchingStatus === 'declined') {
       navigation.replace('OngoingOrderDeclined', { orderId });
     }
-    // we will need to navigate to OrderCanceled when the order is cancelled by
-    // a restaurant or courier
-    // else if (order.status === 'canceled') {
-    //   navigation.replace('OrderCanceled', { orderId });
-    // }
-    else if (order.dispatchingStatus === 'no-match') {
+    // when the order is cancelled by the restaurant
+    else if (order.status === 'canceled') {
+      navigation.replace('OrderCanceled', { orderId });
+    } else if (order.dispatchingStatus === 'no-match') {
       navigation.navigate('OngoingOrderNoMatch', { orderId });
     }
   }, [navigation, order, orderId]);

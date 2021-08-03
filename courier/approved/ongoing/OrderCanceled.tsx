@@ -2,10 +2,12 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { getFlavor } from '../../../common/store/config/selectors';
 import { colors, padding, screens } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { OngoingOrderNavigatorParamList } from '../../../consumer/v2/ongoing/types';
@@ -39,6 +41,9 @@ export default ({ navigation, route }: Props) => {
   const { orderId } = route.params;
   // screen state
   const order = useObserveOrder(orderId);
+  const flavor = useSelector(getFlavor);
+  // const cancellationInfo = useOrderCancellationInfo(orderId);
+
   // UI
   if (!order) {
     return (
@@ -47,12 +52,21 @@ export default ({ navigation, route }: Props) => {
       </View>
     );
   }
+  // helpers
+  // console.log(cancellationInfo);
+  const description =
+    flavor === 'courier'
+      ? // ? t('Como você já iniciou o pedido, você receberá: ')
+        undefined
+      : t('Seu pedido foi cancelado pelo restaurante');
+
+  const value = flavor === 'courier' ? formatCurrency(order.fare!.courier.value) : undefined;
   return (
     <FeedbackView
       header={t('Esse pedido foi cancelado')}
       icon={<IconConeYellow />}
-      description={t('Como você já iniciou o pedido, você receberá: ')}
-      value={formatCurrency(order.fare!.courier.value)}
+      description={description}
+      // value={value}
     >
       <View style={{ marginBottom: padding }}>
         <DefaultButton
