@@ -8,7 +8,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View,
+  View
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,6 +22,7 @@ import ShowIf from '../../components/views/ShowIf';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { IconMotoCycleBig } from '../../icons/icon-motocycle-big';
+import { useLocationPermission } from '../../location/useLocationPermission';
 import { track, useSegmentScreen } from '../../store/api/track';
 import { getExtra, getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
@@ -39,13 +40,13 @@ type Props = {
   route: ScreenRouteProp;
 };
 
+const { height } = Dimensions.get('window');
+const tallerDevice = height > 640;
+
 export default function ({ navigation, route }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  // const tallerDevice = useTallerDevice();
-  const { height } = Dimensions.get('window');
-  const tallerDevice = height > 640;
   // redux store
   const busy = useSelector(getUIBusy);
   const flavor = useSelector(getFlavor);
@@ -53,6 +54,16 @@ export default function ({ navigation, route }: Props) {
   // state
   const [email, setEmail] = useState('');
   const [acceptedTerms, setAcceptTerms] = useState(false);
+  const {
+    status: foregroundStatus,
+  } = useLocationPermission('foreground');
+  const {
+    status: backgroundStatus,
+  } = useLocationPermission('background');
+  const locationDisclosureVisible =
+    foregroundStatus !== undefined &&
+    backgroundStatus !== undefined &&
+    (foregroundStatus !== 'granted' || backgroundStatus !== 'granted');
   // side effects
   useSegmentScreen('Welcome');
   // handlers
@@ -181,7 +192,7 @@ export default function ({ navigation, route }: Props) {
             />
           </View>
 
-          {flavor === 'courier' && <LocationDisclosureModal />}
+          {flavor === 'courier' && locationDisclosureVisible ? <LocationDisclosureModal visible /> : null}
         </View>
       </KeyboardAwareScrollView>
     </View>

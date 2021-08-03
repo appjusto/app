@@ -39,8 +39,6 @@ export const LocationDisclosureModal = (props: ModalProps) => {
       Linking.openSettings();
     }
   };
-  console.log('foregroundStatus', foregroundStatus);
-  console.log('backgroundStatus', backgroundStatus);
   // UI
   return (
     <DefaultModal
