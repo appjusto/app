@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import useNotificationToken from '../../../../common/hooks/useNotificationToken';
 import { IconHomeCourierRequests } from '../../../../common/icons/icon-home-courier-requests';
-import { useLocationPermission } from '../../../../common/location/useLocationPermission';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
@@ -47,16 +46,6 @@ export default function ({ navigation }: Props) {
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
   // state
   const requests = useobservePendingOrderRequests(courier.id);
-  const {
-    status: foregroundStatus,
-  } = useLocationPermission('foreground');
-  const {
-    status: backgroundStatus,
-  } = useLocationPermission('background');
-  const locationDisclosureVisible =
-    foregroundStatus !== undefined &&
-    backgroundStatus !== undefined &&
-    (foregroundStatus !== 'granted' || backgroundStatus !== 'granted');
   // side effects
   useNotificationToken();
   // tracking
@@ -134,7 +123,7 @@ export default function ({ navigation }: Props) {
           <ModalChooser />
         </PaddedView>
       </ScrollView>
-      {locationDisclosureVisible ? <LocationDisclosureModal visible /> : null}
+      <LocationDisclosureModal />
     </View>
   );
 }

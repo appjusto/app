@@ -22,7 +22,6 @@ import ShowIf from '../../components/views/ShowIf';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { IconMotoCycleBig } from '../../icons/icon-motocycle-big';
-import { useLocationPermission } from '../../location/useLocationPermission';
 import { track, useSegmentScreen } from '../../store/api/track';
 import { getExtra, getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
@@ -54,16 +53,6 @@ export default function ({ navigation, route }: Props) {
   // state
   const [email, setEmail] = useState('');
   const [acceptedTerms, setAcceptTerms] = useState(false);
-  const {
-    status: foregroundStatus,
-  } = useLocationPermission('foreground');
-  const {
-    status: backgroundStatus,
-  } = useLocationPermission('background');
-  const locationDisclosureVisible =
-    foregroundStatus !== undefined &&
-    backgroundStatus !== undefined &&
-    (foregroundStatus !== 'granted' || backgroundStatus !== 'granted');
   // side effects
   useSegmentScreen('Welcome');
   // handlers
@@ -192,7 +181,7 @@ export default function ({ navigation, route }: Props) {
             />
           </View>
 
-          {flavor === 'courier' && locationDisclosureVisible ? <LocationDisclosureModal visible /> : null}
+          {flavor === 'courier' ? <LocationDisclosureModal /> : null}
         </View>
       </KeyboardAwareScrollView>
     </View>

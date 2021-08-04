@@ -18,6 +18,10 @@ export const LocationDisclosureModal = (props: ModalProps) => {
     request: requestBackground,
     get: getBackground,
   } = useLocationPermission('background');
+  const visible =
+    foregroundStatus !== undefined &&
+    backgroundStatus !== undefined &&
+    (foregroundStatus !== 'granted' || backgroundStatus !== 'granted');
   // side effects
   // update permission when window is focused
   React.useEffect(() => {
@@ -48,6 +52,7 @@ export const LocationDisclosureModal = (props: ModalProps) => {
       )}
       dismissButtonTitle={t('Ok, entendi')}
       onDismiss={modalHandler}
+      visible={visible}
       {...props}
     />
   );
