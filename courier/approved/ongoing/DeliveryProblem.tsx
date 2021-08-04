@@ -129,14 +129,6 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
             situation="drop"
           />
         ) : null}
-        {/* {order.status === 'dispatching' ? (
-          <DeliveryProblemCard
-            title={t('Tive um problema com o pedido')}
-            subtitle={t('Se você já estiver com o pedido em mãos e teve um problema')}
-            onPress={deliveryProblemHandler}
-            situation="courier-problem"
-          />
-        ) : null} */}
         <DeliveryProblemCard
           title={t('Tive um problema com o pedido')}
           subtitle={t('Se você já estiver com o pedido em mãos e teve um problema')}
