@@ -1,4 +1,4 @@
-// import * as Segment from 'expo-analytics-segment';
+import * as Segment from 'expo-analytics-segment';
 import Constants from 'expo-constants';
 import * as Sentry from 'sentry-expo';
 import { AnalyticsConfig } from '../../config/types';
@@ -12,7 +12,7 @@ export function init(props: AnalyticsConfig) {
     enableInExpoDevelopment: true,
     debug: environment !== 'live',
     environment,
-    release: Constants.manifest.revisionId,
+    release: Constants.manifest?.revisionId,
   });
 
   const {
@@ -28,16 +28,15 @@ export function init(props: AnalyticsConfig) {
     !segmentCourieriOSKey
   )
     return;
-  console.log('Segment.initialize');
-  // Segment.initialize(
-  //   flavor === 'consumer'
-  //     ? {
-  //         androidWriteKey: segmentConsumerAndroidKey,
-  //         iosWriteKey: segmentConsumeriOSKey,
-  //       }
-  //     : {
-  //         androidWriteKey: segmentCourierAndroidKey,
-  //         iosWriteKey: segmentCourieriOSKey,
-  //       }
-  // );
+  Segment.initialize(
+    flavor === 'consumer'
+      ? {
+          androidWriteKey: segmentConsumerAndroidKey,
+          iosWriteKey: segmentConsumeriOSKey,
+        }
+      : {
+          androidWriteKey: segmentCourierAndroidKey,
+          iosWriteKey: segmentCourieriOSKey,
+        }
+  );
 }
