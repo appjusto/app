@@ -77,7 +77,7 @@
     "expo-splash-screen": "~0.11.2",
     "expo-task-manager": "~9.2.2",
     "expo-updates": "~0.8.0",
-    "firebase": "8.2.3",
+    "firebase": "^8.8.1",
     "geofirestore": "^4.2.1",
     "geokit": "^1.1.0",
     "i18n-js": "^3.7.1",
@@ -91,6 +91,7 @@
     "react-native-gesture-handler": "~1.10.2",
     "react-native-keyboard-aware-scroll-view": "^0.9.3",
     "react-native-maps": "0.28.0",
+    "react-native-pager-view": "5.0.12",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
     "react-native-svg": "12.1.1",
@@ -102,8 +103,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "sentry-expo": "^4.0.0",
-    "react-native-pager-view": "5.0.12"
+    "sentry-expo": "^4.0.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",

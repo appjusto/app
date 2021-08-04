@@ -32,8 +32,6 @@ export interface AlgoliaConfig {
 export interface FirebaseConfig {
   apiKey: string;
   authDomain: string;
-  databaseURL: string;
-  functionsURL: string;
   region: string;
   projectId: string;
   storageBucket: string;
@@ -41,8 +39,7 @@ export interface FirebaseConfig {
   appId: string;
   emulator: {
     enabled: boolean;
-    databaseURL: string;
-    functionsURL: string;
+    host?: string;
   };
   measurementId: string;
 }

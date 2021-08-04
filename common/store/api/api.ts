@@ -39,19 +39,21 @@ export default class Api {
   private _search: SearchApi;
 
   constructor(extra: Extra) {
+    const emulated = extra.firebase.emulator.enabled && extra.firebase.emulator.host;
     const app = firebase.initializeApp(extra.firebase);
-
     this.authentication = app.auth();
     this.firestore = app.firestore();
     this.functions = app.functions(extra.firebase.region);
-    this.storage = app.storage();
 
-    if (extra.firebase.emulator.enabled) {
-      this.firestore.settings({
-        host: extra.firebase.emulator.databaseURL,
-        ssl: false,
-      });
-      this.functions.useFunctionsEmulator(extra.firebase.emulator.functionsURL);
+    if (emulated) {
+      const host = extra.firebase.emulator.host!;
+      this.authentication.useEmulator(`http://${host}:9099`);
+      this.functions.useEmulator(host, 5001);
+      this.firestore.useEmulator(host, 8080);
+      this.storage = app.storage('gs://default-bucket');
+      this.storage.useEmulator(host, 9199);
+    } else {
+      this.storage = app.storage();
     }
 
     this._refs = new FirebaseRefs(this.functions, this.firestore);

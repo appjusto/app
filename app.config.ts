@@ -9,7 +9,6 @@ const {
   FIREBASE_API_KEY,
   FIREBASE_REGION,
   FIREBASE_PROJECT_ID,
-  FIREBASE_DATABASE_NAME,
   FIREBASE_MESSAGING_SENDER_ID,
   FIREBASE_CONSUMER_APP_ID,
   FIREBASE_CONSUMER_MEASUREMENT_ID,
@@ -193,16 +192,13 @@ const extra = (): Extra => ({
     apiKey: FIREBASE_API_KEY!, // it will be filled in runtime according with user's OS
     authDomain: `${FIREBASE_PROJECT_ID}.firebaseapp.com`,
     region: FIREBASE_REGION!,
-    databaseURL: `https://${FIREBASE_DATABASE_NAME}.firebaseio.com`,
-    functionsURL: `https://${FIREBASE_REGION}-${FIREBASE_PROJECT_ID}.cloudfunctions.net`,
     projectId: FIREBASE_PROJECT_ID!,
     storageBucket: `${FIREBASE_PROJECT_ID}.appspot.com`,
     messagingSenderId: FIREBASE_MESSAGING_SENDER_ID!,
     appId: flavor === 'consumer' ? FIREBASE_CONSUMER_APP_ID! : FIREBASE_COURIER_APP_ID!,
     emulator: {
       enabled: process.env.FIREBASE_EMULATOR === 'true',
-      databaseURL: `${FIREBASE_EMULATOR_HOST}:8080`,
-      functionsURL: `http://${FIREBASE_EMULATOR_HOST}:5001`,
+      host: FIREBASE_EMULATOR_HOST,
     },
     measurementId:
       flavor === 'consumer' ? FIREBASE_CONSUMER_MEASUREMENT_ID! : FIREBASE_COURIER_MEASUREMENT_ID!,
