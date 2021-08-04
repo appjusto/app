@@ -49,12 +49,8 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
     (delayed?: boolean) => openChat(businessId!, 'business', delayed),
     [openChat, businessId]
   );
-  const navigateToAction = (
-    screen: 'ReportIssue' | 'CourierDropsOrder',
-    issueType: IssueType,
-    orderId: string
-  ) => {
-    navigation.navigate(screen, {
+  const navigateToAction = (issueType: IssueType, orderId: string) => {
+    navigation.navigate('ReportIssue', {
       issueType,
       orderId,
     });
@@ -62,9 +58,15 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
   const refuseDeliveryHandler = () => {
     if (!order) return;
     if (order.type === 'food') {
-      navigateToAction('CourierDropsOrder', 'courier-drops-food-delivery', orderId);
+      navigation.replace('CourierDropsOrder', {
+        issueType: 'courier-drops-food-delivery',
+        orderId,
+      });
     } else {
-      navigateToAction('CourierDropsOrder', 'courier-drops-p2p-delivery', orderId);
+      navigation.replace('CourierDropsOrder', {
+        issueType: 'courier-drops-p2p-delivery',
+        orderId,
+      });
     }
   };
 
@@ -75,23 +77,22 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
         order.dispatchingState === 'going-pickup' ||
         order.dispatchingState === 'arrived-pickup'
       ) {
-        // when courier clicks in "problem" button in the modal
-        navigateToAction('ReportIssue', 'courier-pickup-food-delivery', orderId);
+        navigateToAction('courier-pickup-food-delivery', orderId);
       } else if (order.dispatchingState === 'going-destination') {
-        navigateToAction('ReportIssue', 'courier-delivering-food-order', orderId);
+        navigateToAction('courier-delivering-food-order', orderId);
       } else if (order.dispatchingState === 'arrived-destination') {
-        navigateToAction('ReportIssue', 'courier-destination-food', orderId);
+        navigateToAction('courier-destination-food', orderId);
       }
     } else if (order.type === 'p2p') {
       if (
         order.dispatchingState === 'going-pickup' ||
         order.dispatchingState === 'arrived-pickup'
       ) {
-        navigateToAction('ReportIssue', 'courier-pickup-p2p-delivery', orderId);
+        navigateToAction('courier-pickup-p2p-delivery', orderId);
       } else if (order.dispatchingState === 'going-destination') {
-        navigateToAction('ReportIssue', 'courier-delivering-p2p-order', orderId);
+        navigateToAction('courier-delivering-p2p-order', orderId);
       } else if (order.dispatchingState === 'arrived-destination') {
-        navigateToAction('ReportIssue', 'courier-destination-p2p', orderId);
+        navigateToAction('courier-destination-p2p', orderId);
       }
     }
   };
@@ -128,14 +129,20 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
             situation="drop"
           />
         ) : null}
-        {order.status === 'dispatching' ? (
+        {/* {order.status === 'dispatching' ? (
           <DeliveryProblemCard
             title={t('Tive um problema com o pedido')}
             subtitle={t('Se você já estiver com o pedido em mãos e teve um problema')}
             onPress={deliveryProblemHandler}
             situation="courier-problem"
           />
-        ) : null}
+        ) : null} */}
+        <DeliveryProblemCard
+          title={t('Tive um problema com o pedido')}
+          subtitle={t('Se você já estiver com o pedido em mãos e teve um problema')}
+          onPress={deliveryProblemHandler}
+          situation="courier-problem"
+        />
         <DeliveryProblemCard
           title={t('Preciso falar com o restaurante')}
           subtitle={t('Abrir chat direto com o restaurante')}
