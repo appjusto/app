@@ -1,10 +1,18 @@
 import {
   CourierOrderRequest,
+  FetchAccountInformationPayload,
+  FetchAccountInformationResponse,
+  FetchAdvanceSimulationPayload,
+  FetchReceivablesPayload,
   FetchTotalCouriersNearbyPayload,
   LatLng,
   Review,
   VerifyCourierProfilePayload,
 } from '@appjusto/types';
+import {
+  IuguMarketplaceAccountAdvanceSimulation,
+  IuguMarketplaceAccountReceivables,
+} from '@appjusto/types/payment/iugu';
 import Constants from 'expo-constants';
 import firebase from 'firebase';
 import * as Sentry from 'sentry-expo';
@@ -93,6 +101,35 @@ export default class CourierApi {
       meta: { version: Constants.nativeBuildVersion },
     };
     return (await this.refs.getFetchTotalCouriersNearbyCallable()(payload)).data;
+  }
+  async fetchAccountInformation(accountId: string): Promise<FetchAccountInformationResponse> {
+    const payload: FetchAccountInformationPayload = {
+      accountType: 'courier',
+      accountId,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    console.log('fetchAccountInformation', payload);
+    return (await this.refs.getFetchAccountInformationCallable()(payload)).data;
+  }
+  async fetchReceivables(accountId: string): Promise<IuguMarketplaceAccountReceivables> {
+    const payload: FetchReceivablesPayload = {
+      accountType: 'courier',
+      accountId,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getFetchReceivablesCallable()(payload)).data;
+  }
+  async fetchAdvanceSimulation(
+    accountId: string,
+    ids: number[]
+  ): Promise<IuguMarketplaceAccountAdvanceSimulation> {
+    const payload: FetchAdvanceSimulationPayload = {
+      accountType: 'courier',
+      accountId,
+      ids,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getFetchAdvanceSimulationCallable()(payload)).data;
   }
   // storage
   // selfie
