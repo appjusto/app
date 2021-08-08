@@ -8,15 +8,18 @@ interface Props extends ViewProps {
   textTransform?: 'none' | 'capitalize';
 }
 
-export default function ({ title, textTransform = 'none' }: Props) {
+export default function ({ title, style, textTransform = 'none' }: Props) {
   return (
     <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: halfPadding,
-        maxWidth: '90%',
-      }}
+      style={[
+        {
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingVertical: halfPadding,
+          // maxWidth: '90%',
+        },
+        style,
+      ]}
     >
       <Pill />
       <Text

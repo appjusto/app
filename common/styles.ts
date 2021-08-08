@@ -18,9 +18,10 @@ export const colors = {
   red: '#DC3545',
 };
 
-export const doublePadding = 32;
-export const padding = 16;
-export const halfPadding = padding / 2;
+export const halfPadding = 8;
+export const padding = halfPadding * 2;
+export const biggerPadding = halfPadding * 3;
+export const doublePadding = padding * 2;
 
 export const screens = StyleSheet.create({
   default: {
