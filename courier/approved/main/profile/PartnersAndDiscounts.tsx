@@ -44,19 +44,21 @@ export const PartnersAndDiscounts = ({ navigation }: Props) => {
           </Text>
           <View style={{ paddingVertical: padding }}>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {t('Atendimento médico e odontológico')}
+              {t('\u00B7 Atendimento médico e odontológico')}
             </Text>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {t('Exames, curativos e medicamentos')}
+              {t('\u00B7 Exames, curativos e medicamentos')}
             </Text>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {t('Renda garantida em caso de afastamento')}
+              {t('\u00B7 Renda garantida em caso de afastamento')}
             </Text>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {t('Indenização em caso de invalidez')}
+              {t('\u00B7 Indenização em caso de invalidez')}
             </Text>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Seguro de vida')}</Text>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Auxílio funeral')}</Text>
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('\u00B7 Seguro de vida')}</Text>
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>
+              {t('\u00B7 Auxílio funeral')}
+            </Text>
           </View>
           <DefaultButton
             title={t('Quero meu desconto')}
@@ -77,22 +79,22 @@ export const PartnersAndDiscounts = ({ navigation }: Props) => {
           </Text>
           <View style={{ paddingTop: padding }}>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {t('Subconta ativa: R$ 0,50/Mês*')}
+              {t('\u00B7 Subconta ativa: R$ 0,50/Mês*')}
             </Text>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {t('Cartão de crédito: 2,21% + R$ 0,09 por transação')}
+              {t('\u00B7 Cartão de crédito: 2,21% + R$ 0,09 por transação')}
             </Text>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {t('Antecipação do recebimento: 2,5%**')}
+              {t('\u00B7 Antecipação do recebimento: 2,5%**')}
             </Text>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {t('PIX: 0,99% por transação')}
+              {t('\u00B7 PIX: 0,99% por transação')}
             </Text>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {t('4 TEDs gratuitas por mês')}
+              {t('\u00B7 4 TEDs gratuitas por mês')}
             </Text>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {t('TED adicional: R$ 2,00')}
+              {t('\u00B7 TED adicional: R$ 2,00')}
             </Text>
             <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 24 }}>
               {t('* Somente se houver movimentação no mês;')}
