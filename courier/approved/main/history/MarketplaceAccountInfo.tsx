@@ -37,25 +37,18 @@ export const MarketplaceAccountInfo = () => {
   const info = useMarketplaceAccountInfo();
   // handlers
   const withdrawHandler = () => null;
-  // const advanceHandler = () =>
-  //   navigation.navigate('DeliveriesNavigator', {
-  //     screen: 'Receivables',
-  //     params: {
-  //       receivableBalance: info!.receivable_balance,
-  //     },
-  //   });
   const advanceHandler = () =>
     navigation.navigate('DeliveriesNavigator', {
       screen: 'Receivables',
       params: {
-        receivableBalance: undefined,
+        receivableBalance: info!.receivable_balance,
       },
     });
   // UI
   return (
     <View>
       <PaddedView>
-        {info !== undefined ? (
+        {info === undefined ? (
           <ActivityIndicator size="large" color={colors.green500} />
         ) : (
           <View>
@@ -86,8 +79,7 @@ export const MarketplaceAccountInfo = () => {
                     {t('Disponível para saque')}
                   </Text>
                 </View>
-                {/* <Text style={{ ...texts.x4l }}>{info.balance_available_for_withdraw}</Text> */}
-                <Text style={{ ...texts.x4l }}>{t('R$ 50,00')}</Text>
+                <Text style={{ ...texts.x4l }}>{info.balance_available_for_withdraw}</Text>
                 <DefaultButton
                   style={{ marginTop: padding }}
                   title={t('Transferir para conta')}
@@ -117,8 +109,7 @@ export const MarketplaceAccountInfo = () => {
                     {t('Em faturamento')}
                   </Text>
                 </View>
-                {/* <Text style={{ ...texts.x4l }}>{info.receivable_balance}</Text> */}
-                <Text style={{ ...texts.x4l }}>{t('R$ 20,00')}</Text>
+                <Text style={{ ...texts.x4l }}>{info.receivable_balance}</Text>
                 <DefaultButton
                   style={{ marginTop: padding }}
                   title={t('Antecipar valores')}

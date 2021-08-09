@@ -7,7 +7,7 @@ export type DeliveriesNavigatorParamList = {
     orderId: string;
   };
   Receivables: {
-    receivableBalance?: string; // for tests
+    receivableBalance: string;
   };
   AdvanceReceivables: {
     ids: number[];
