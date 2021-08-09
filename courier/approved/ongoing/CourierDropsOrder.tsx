@@ -41,8 +41,6 @@ export const CourierDropsOrder = ({ navigation, route }: Props) => {
   const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
   const [isLoading, setLoading] = React.useState(false);
   // handlers
-  // this handler, just for tests, is  navigating
-  //to the DeliveryProblemFeedback. Will use navigation.replace in the end
   const dropOrderHandler = () => {
     if (!selectedIssue) return;
     (async () => {
