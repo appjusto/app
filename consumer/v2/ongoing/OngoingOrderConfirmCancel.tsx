@@ -34,7 +34,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
   console.log(cancellationInfo);
   // handlers
   const cancelOrderHandler = React.useCallback(() => {
-    navigation.navigate('OngoingOrderCancelOrder', {
+    navigation.replace('OngoingOrderCancelOrder', {
       orderId,
       acknowledgedCosts: cancellationInfo!.costs,
       issueType:

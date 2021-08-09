@@ -7,6 +7,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useOrderCancellationInfo } from '../../../common/store/api/order/hooks/useOrderCancellationInfo';
 import { getFlavor } from '../../../common/store/config/selectors';
 import { colors, padding, screens } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
@@ -41,11 +42,10 @@ export default ({ navigation, route }: Props) => {
   const { orderId } = route.params;
   // screen state
   const order = useObserveOrder(orderId);
+  const cancelInfo = useOrderCancellationInfo(orderId);
   const flavor = useSelector(getFlavor);
-  // const cancellationInfo = useOrderCancellationInfo(orderId);
-
   // UI
-  if (!order) {
+  if (!order || !cancelInfo) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -53,20 +53,29 @@ export default ({ navigation, route }: Props) => {
     );
   }
   // helpers
-  // console.log(cancellationInfo);
-  const description =
-    flavor === 'courier'
-      ? // ? t('Como você já iniciou o pedido, você receberá: ')
-        undefined
-      : t('Seu pedido foi cancelado pelo restaurante');
-
-  const value = flavor === 'courier' ? formatCurrency(order.fare!.courier.value) : undefined;
+  const courierFeeRefunded = cancelInfo.params.refund.includes('delivery');
+  const description = (() => {
+    if (flavor === 'courier') {
+      if (courierFeeRefunded) return undefined;
+      else return t('Como você já iniciou o pedido, você receberá: ');
+    }
+    if (flavor === 'consumer') {
+      return `${t('Esse pedido foi cancelado por')} ${order.business!.name}${t(
+        '. A cobrança será estornada.'
+      )}`;
+    }
+  })();
+  const value = (() => {
+    if (flavor === 'courier' && !courierFeeRefunded)
+      return formatCurrency(order.fare!.courier.value);
+    else return undefined;
+  })();
   return (
     <FeedbackView
       header={t('Esse pedido foi cancelado')}
       icon={<IconConeYellow />}
       description={description}
-      // value={value}
+      value={value}
     >
       <View style={{ marginBottom: padding }}>
         <DefaultButton
