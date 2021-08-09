@@ -1,11 +1,15 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Linking, ScrollView, Text, View } from 'react-native';
+import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
+import { IconIuguLogo } from '../../../../common/icons/icon-iugu-logo';
 import { IconIza } from '../../../../common/icons/icon-iza';
+import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { AppJustoIzaURL } from '../../../../strings/values';
 import { CourierProfileParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<CourierProfileParamList, 'PartnersAndDiscounts'>;
@@ -38,7 +42,7 @@ export const PartnersAndDiscounts = ({ navigation }: Props) => {
               '20% de desconto no seguro pessoal. Você conta com R$ 30 mil de proteção financeira para utilizar em caso de acidentes (qualquer acidente, e não só durante entregas, ok?).'
             )}
           </Text>
-          <View style={{ paddingTop: padding }}>
+          <View style={{ paddingVertical: padding }}>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
               {t('Atendimento médico e odontológico')}
             </Text>
@@ -54,7 +58,61 @@ export const PartnersAndDiscounts = ({ navigation }: Props) => {
             <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Seguro de vida')}</Text>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Auxílio funeral')}</Text>
           </View>
+          <DefaultButton
+            title={t('Quero meu desconto')}
+            onPress={() => Linking.openURL(AppJustoIzaURL)}
+          />
         </PaddedView>
+        <PaddedView
+          style={{ ...borders.default, marginTop: halfPadding, backgroundColor: colors.white }}
+        >
+          <RoundedText>{t('Pagamentos')}</RoundedText>
+          <View style={{ paddingTop: 24, paddingBottom: padding }}>
+            <IconIuguLogo />
+          </View>
+          <Text style={{ ...texts.xs }}>
+            {t(
+              'Operador financeiro que faz o processamento e gestão das cobranças através da plataforma AppJusto. Veja as condições negociadas:'
+            )}
+          </Text>
+          <View style={{ paddingTop: padding }}>
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>
+              {t('Subconta ativa: R$ 0,50/Mês*')}
+            </Text>
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>
+              {t('Cartão de crédito: 2,21% + R$ 0,09 por transação')}
+            </Text>
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>
+              {t('Antecipação do recebimento: 2,5%**')}
+            </Text>
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>
+              {t('PIX: 0,99% por transação')}
+            </Text>
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>
+              {t('4 TEDs gratuitas por mês')}
+            </Text>
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>
+              {t('TED adicional: R$ 2,00')}
+            </Text>
+            <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 24 }}>
+              {t('* Somente se houver movimentação no mês;')}
+            </Text>
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>
+              {t('** % referente 30 dias, cobrada proporcional ao número de dias.')}
+            </Text>
+          </View>
+        </PaddedView>
+        <View style={{ paddingVertical: 24 }}>
+          <Text style={{ ...texts.sm }}>
+            {t(
+              'E quanto mais a plataforma crescer, mais conseguiremos melhorar essas condições! Divulgue e ajude o AppJusto a crescer. Vai ser bom para você, vai ser bom para todos.'
+            )}
+          </Text>
+        </View>
+        <HomeShareCard
+          title="Divulgue o AppJusto"
+          subtitle="Compartilhe esse movimento por uma economia mais justa."
+        />
       </PaddedView>
     </ScrollView>
   );
