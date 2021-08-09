@@ -1,4 +1,5 @@
 import {
+  AdvanceReceivablesPayload,
   CourierOrderRequest,
   FetchAccountInformationPayload,
   FetchAccountInformationResponse,
@@ -6,6 +7,7 @@ import {
   FetchReceivablesPayload,
   FetchTotalCouriersNearbyPayload,
   LatLng,
+  RequestWithdrawPayload,
   Review,
   VerifyCourierProfilePayload,
 } from '@appjusto/types';
@@ -111,6 +113,15 @@ export default class CourierApi {
     console.log('fetchAccountInformation', payload);
     return (await this.refs.getFetchAccountInformationCallable()(payload)).data;
   }
+  async requestWithdraw(accountId: string, amount: number): Promise<any> {
+    const payload: RequestWithdrawPayload = {
+      accountType: 'courier',
+      accountId,
+      amount,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getRequestWithdrawCallable()(payload)).data;
+  }
   async fetchReceivables(accountId: string): Promise<IuguMarketplaceAccountReceivables> {
     const payload: FetchReceivablesPayload = {
       accountType: 'courier',
@@ -130,6 +141,15 @@ export default class CourierApi {
       meta: { version: Constants.nativeBuildVersion },
     };
     return (await this.refs.getFetchAdvanceSimulationCallable()(payload)).data;
+  }
+  async advanceReceivables(accountId: string, ids: number[]): Promise<any> {
+    const payload: AdvanceReceivablesPayload = {
+      accountType: 'courier',
+      accountId,
+      ids,
+      meta: { version: Constants.nativeBuildVersion },
+    };
+    return (await this.refs.getAdvanceReceivablesCallable()(payload)).data;
   }
   // storage
   // selfie

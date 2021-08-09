@@ -12,6 +12,8 @@ export default class FirebaseRefs {
     this.functions.httpsCallable('fetchAccountInformation');
   getFetchReceivablesCallable = () => this.functions.httpsCallable('fetchReceivables');
   getFetchAdvanceSimulationCallable = () => this.functions.httpsCallable('fetchAdvanceSimulation');
+  getRequestWithdrawCallable = () => this.functions.httpsCallable('requestWithdraw');
+  getAdvanceReceivablesCallable = () => this.functions.httpsCallable('advanceReceivables');
   getDeleteAccountCallable = () => this.functions.httpsCallable('deleteAccount');
   getServerTimeCallable = () => this.functions.httpsCallable('getServerTime');
   // consumer

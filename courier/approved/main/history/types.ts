@@ -12,4 +12,12 @@ export type DeliveriesNavigatorParamList = {
   AdvanceReceivables: {
     ids: number[];
   };
+  RequestWithdrawFeedback: {
+    header: string;
+    description: string;
+  };
+  AdvanceReceivablesFeedback: {
+    header: string;
+    description: string;
+  };
 };

@@ -76,12 +76,12 @@ export const useAuth = (): [AuthState, firebase.User | undefined | null] => {
     const link = extractAuthLink(deepLink);
     console.log(deepLink);
     console.log(link);
-    Sentry.Native.captureMessage('Deeplink', {
-      extra: {
-        deepLink,
-        link,
-      },
-    });
+    // Sentry.Native.captureMessage('Deeplink', {
+    //   extra: {
+    //     deepLink,
+    //     link,
+    //   },
+    // });
 
     if (link === null || !isSignInWithEmailLink(api)(link)) {
       setAuthState(AuthState.Unsigned);

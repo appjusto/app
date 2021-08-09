@@ -2,10 +2,15 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Text, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import * as Sentry from 'sentry-expo';
+import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import CheckField from '../../../../../common/components/buttons/CheckField';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { useAdvanceSimulation } from '../../../../../common/store/api/courier/account/useAdvanceSimulation';
+import { getCourier } from '../../../../../common/store/courier/selectors';
+import { showToast } from '../../../../../common/store/ui/actions';
 import {
   biggerPadding,
   borders,
@@ -25,13 +30,33 @@ type Props = {
   route: ScreenRoute;
 };
 
-export const AdvanceReceivables = ({ route }: Props) => {
+export const AdvanceReceivables = ({ navigation, route }: Props) => {
+  // context
+  const api = React.useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
+  // redux
+  const courier = useSelector(getCourier)!;
   // state
   const [accepted, setAccepted] = React.useState(false);
+  const [requesting, setRequesting] = React.useState(false);
   // side effects
   const simulation = useAdvanceSimulation(route.params.ids);
   // handlers
-  const confirmHandler = () => null;
+  const confirmHandler = async () => {
+    setRequesting(true);
+    try {
+      const result = await api.courier().advanceReceivables(courier.id, route.params.ids);
+      console.log(result);
+      navigation.replace('RequestWithdrawFeedback', {
+        header: t('Antecipação realizada com sucesso!'),
+        description: t('O valor será transferido para sua conta em até 1 dia útil.'),
+      });
+    } catch (error) {
+      Sentry.Native.captureException(error);
+      dispatch(showToast('Não foi possível realizar a requisição. Tente novamente.', 'error'));
+      setRequesting(false);
+    }
+  };
   // UI
   return (
     <View style={{ ...screens.config }}>
@@ -84,7 +109,8 @@ export const AdvanceReceivables = ({ route }: Props) => {
             style={{ marginTop: biggerPadding }}
             title={t('Confirmar antecipação')}
             onPress={confirmHandler}
-            disabled={!accepted}
+            activityIndicator={requesting}
+            disabled={!accepted || requesting}
           />
         </PaddedView>
       ) : null}

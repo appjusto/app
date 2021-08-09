@@ -34,7 +34,7 @@ export const Receivables = ({ navigation, route }: Props) => {
   // side effects
   const receivables = useReceivables();
   // handlers
-  const advanceHandler = () => navigation.navigate('AdvanceReceivables', { ids: selected });
+  const advanceHandler = () => navigation.replace('AdvanceReceivables', { ids: selected });
   // UI
   return (
     <View style={{ ...screens.config }}>

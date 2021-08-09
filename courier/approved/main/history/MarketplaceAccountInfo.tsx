@@ -3,10 +3,15 @@ import { CompositeNavigationProp, RouteProp, useNavigation } from '@react-naviga
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import * as Sentry from 'sentry-expo';
+import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { IconWalletSmall } from '../../../../common/icons/icon-wallet-small';
 import { useMarketplaceAccountInfo } from '../../../../common/store/api/courier/account/useMarketplaceAccountInfo';
+import { getCourier } from '../../../../common/store/courier/selectors';
+import { showToast } from '../../../../common/store/ui/actions';
 import {
   borders,
   colors,
@@ -33,10 +38,40 @@ type Props = {
 export const MarketplaceAccountInfo = () => {
   // context
   const navigation = useNavigation<ScreenNavigationProp>();
+  const api = React.useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
+  // redux
+  const courier = useSelector(getCourier)!;
+  // state
+  const [withdrawing, setWithdrawing] = React.useState(false);
   // side effects
   const info = useMarketplaceAccountInfo();
+  const amount = info
+    ? parseFloat(info.balance_available_for_withdraw.replace(',', '.').replace(/[^0-9.]/g, ''))
+    : 0;
+  const minimum = 5;
   // handlers
-  const withdrawHandler = () => null;
+  const withdrawHandler = async () => {
+    if (!amount) return;
+    setWithdrawing(true);
+    try {
+      const result = await api.courier().requestWithdraw(courier.id, amount);
+      console.log(result);
+      setWithdrawing(false);
+      navigation.navigate('DeliveriesNavigator', {
+        screen: 'RequestWithdrawFeedback',
+        params: {
+          header: t('Requisição realizada com sucesso!'),
+          description: t('O valor será transferido para sua conta em até 1 dia útil.'),
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      Sentry.Native.captureException(error);
+      dispatch(showToast('Não foi possível realizar a requisição. Tente novamente.', 'error'));
+      setWithdrawing(false);
+    }
+  };
   const advanceHandler = () =>
     navigation.navigate('DeliveriesNavigator', {
       screen: 'Receivables',
@@ -83,6 +118,8 @@ export const MarketplaceAccountInfo = () => {
                 <DefaultButton
                   style={{ marginTop: padding }}
                   title={t('Transferir para conta')}
+                  activityIndicator={withdrawing}
+                  disabled={amount < minimum || withdrawing}
                   onPress={withdrawHandler}
                 />
               </View>

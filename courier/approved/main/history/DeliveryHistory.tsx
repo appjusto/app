@@ -47,11 +47,8 @@ export default function ({ navigation, route }: Props) {
   const orders = useObserveOrders(options);
   const yearsWithOrders = getYearsWithOrders(orders);
   const monthsWithOrdersInYears = getMonthsWithOrdersInYear(orders);
-
-  // screen state
-  // data structure
-  // [ { title: '2020', data: [ { monthName: 'Agosto', deliveries: 3, courierFee: 100 }] }]
   const sections = React.useMemo(() => {
+    // [ { title: '2020', data: [ { monthName: 'Agosto', deliveries: 3, courierFee: 100 }] }]
     return yearsWithOrders.map((year) => {
       const monthsInYear = monthsWithOrdersInYears(year);
 
@@ -71,16 +68,12 @@ export default function ({ navigation, route }: Props) {
   // UI
   if (sections.length === 0) {
     return (
-      <View>
-        {/* test only */}
-        {/* <MarketplaceAccountInfo /> */}
-        <FeedbackView
-          header={t('Seu histórico está vazio')}
-          description={t('Você ainda não fez nenhuma corrida')}
-          icon={<IconMotocycle />}
-          background={colors.grey50}
-        />
-      </View>
+      <FeedbackView
+        header={t('Seu histórico está vazio')}
+        description={t('Você ainda não fez nenhuma corrida')}
+        icon={<IconMotocycle />}
+        background={colors.grey50}
+      />
     );
   }
 
