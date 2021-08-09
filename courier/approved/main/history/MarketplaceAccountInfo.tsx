@@ -1,11 +1,20 @@
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
+import { IconWalletSmall } from '../../../../common/icons/icon-wallet-small';
 import { useMarketplaceAccountInfo } from '../../../../common/store/api/courier/account/useMarketplaceAccountInfo';
-import { borders, colors, padding, texts } from '../../../../common/styles';
+import {
+  borders,
+  colors,
+  doublePadding,
+  halfPadding,
+  padding,
+  texts,
+} from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
@@ -28,21 +37,34 @@ export const MarketplaceAccountInfo = () => {
   const info = useMarketplaceAccountInfo();
   // handlers
   const withdrawHandler = () => null;
+  // const advanceHandler = () =>
+  //   navigation.navigate('DeliveriesNavigator', {
+  //     screen: 'Receivables',
+  //     params: {
+  //       receivableBalance: info!.receivable_balance,
+  //     },
+  //   });
   const advanceHandler = () =>
     navigation.navigate('DeliveriesNavigator', {
       screen: 'Receivables',
       params: {
-        receivableBalance: info!.receivable_balance,
+        receivableBalance: undefined,
       },
     });
   // UI
   return (
     <View>
       <PaddedView>
-        {info === undefined ? (
+        {info !== undefined ? (
           <ActivityIndicator size="large" color={colors.green500} />
         ) : (
           <View>
+            <View
+              style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: doublePadding }}
+            >
+              <IconWalletSmall />
+              <Text style={{ ...texts.md, marginLeft: halfPadding }}>{t('Saldo em')}</Text>
+            </View>
             <PaddedView
               style={{
                 ...borders.default,
@@ -51,12 +73,21 @@ export const MarketplaceAccountInfo = () => {
               }}
             >
               <View>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ ...texts.sm, color: colors.grey700 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Ionicons name="checkmark-circle-outline" size={20} color={colors.grey700} />
+                  <Text
+                    style={{
+                      ...texts.sm,
+                      color: colors.grey700,
+                      marginLeft: halfPadding,
+                      paddingBottom: 2,
+                    }}
+                  >
                     {t('Disponível para saque')}
                   </Text>
                 </View>
-                <Text style={{ ...texts.x4l }}>{info.balance_available_for_withdraw}</Text>
+                {/* <Text style={{ ...texts.x4l }}>{info.balance_available_for_withdraw}</Text> */}
+                <Text style={{ ...texts.x4l }}>{t('R$ 50,00')}</Text>
                 <DefaultButton
                   style={{ marginTop: padding }}
                   title={t('Transferir para conta')}
@@ -73,14 +104,26 @@ export const MarketplaceAccountInfo = () => {
               }}
             >
               <View>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Em faturamento')}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <MaterialIcons name="timer" size={20} color={colors.grey700} />
+                  <Text
+                    style={{
+                      ...texts.sm,
+                      color: colors.grey700,
+                      marginLeft: halfPadding,
+                      paddingBottom: 2,
+                    }}
+                  >
+                    {t('Em faturamento')}
+                  </Text>
                 </View>
-                <Text style={{ ...texts.x4l }}>{info.receivable_balance}</Text>
+                {/* <Text style={{ ...texts.x4l }}>{info.receivable_balance}</Text> */}
+                <Text style={{ ...texts.x4l }}>{t('R$ 20,00')}</Text>
                 <DefaultButton
                   style={{ marginTop: padding }}
                   title={t('Antecipar valores')}
                   onPress={advanceHandler}
+                  secondary
                 />
               </View>
             </PaddedView>

@@ -40,11 +40,12 @@ export const Receivables = ({ navigation, route }: Props) => {
     <View style={{ ...screens.config }}>
       <PaddedView>
         <Text style={{ ...texts.sm }}>
-          Você pode escolher individualmente os valores das corridas que deseja antecipar.
+          {t('Você pode escolher individualmente os valores das corridas que deseja antecipar')}
         </Text>
         <Text style={{ ...texts.sm, marginTop: padding }}>
-          Para realizar a antecipação, será cobrada uma taxa de 0.0% + R$ 0.00 pela operação
-          financeira. Nada desse dinheiro não ficará com o AppJusto.
+          {t(
+            'Para realizar a antecipação, será cobrada uma taxa de 0.0% + R$ 0.00 pela operação financeira. Nada desse dinheiro não ficará com o AppJusto.'
+          )}
         </Text>
         <PaddedView
           style={{
