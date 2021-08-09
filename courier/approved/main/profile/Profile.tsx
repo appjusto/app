@@ -103,6 +103,15 @@ export default function ({ navigation }: Props) {
                 onPress={() => Linking.openURL(AppJustoFreshdeskCourierURL)}
               />
               <ConfigItem
+                title={t('Descontos em parceiros')}
+                subtitle={t(
+                  'Veja as negociações coletivas que o AppJusto conseguir para a categoria'
+                )}
+                onPress={() =>
+                  navigation.navigate('ProfileNavigator', { screen: 'PartnersAndDiscounts' })
+                }
+              />
+              <ConfigItem
                 title={t('Sobre o AppJusto')}
                 subtitle={t('Acesse nossas páginas')}
                 onPress={() =>

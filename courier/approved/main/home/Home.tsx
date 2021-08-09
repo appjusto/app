@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import useNotificationToken from '../../../../common/hooks/useNotificationToken';
 import { IconHomeCourierRequests } from '../../../../common/icons/icon-home-courier-requests';
+import { IconPartners } from '../../../../common/icons/icon-partners';
 import { useLocationPermission } from '../../../../common/location/useLocationPermission';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
@@ -19,7 +20,7 @@ import { getOrders } from '../../../../common/store/order/selectors';
 import { colors, padding, screens } from '../../../../common/styles';
 import {
   startLocationUpdatesTask,
-  stopLocationUpdatesTask
+  stopLocationUpdatesTask,
 } from '../../../../common/utils/location';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
@@ -47,12 +48,8 @@ export default function ({ navigation }: Props) {
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
   // state
   const requests = useobservePendingOrderRequests(courier.id);
-  const {
-    status: foregroundStatus,
-  } = useLocationPermission('foreground');
-  const {
-    status: backgroundStatus,
-  } = useLocationPermission('background');
+  const { status: foregroundStatus } = useLocationPermission('foreground');
+  const { status: backgroundStatus } = useLocationPermission('background');
   const locationDisclosureVisible =
     foregroundStatus !== undefined &&
     backgroundStatus !== undefined &&
@@ -130,6 +127,21 @@ export default function ({ navigation }: Props) {
               title="Divulgue o AppJusto"
               subtitle="Compartilhe esse movimento por uma economia mais justa."
             />
+          </View>
+          <View style={{ marginBottom: padding }}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('ProfileNavigator', { screen: 'PartnersAndDiscounts' })
+              }
+            >
+              <HomeCard
+                icon={<IconPartners />}
+                title={t('Parceiros com descontos')}
+                subtitle={t(
+                  'Veja as negociações coletivas que o AppJusto conseguir para a categoria'
+                )}
+              />
+            </TouchableOpacity>
           </View>
           <ModalChooser />
         </PaddedView>
