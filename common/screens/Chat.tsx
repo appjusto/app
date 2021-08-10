@@ -97,7 +97,6 @@ export default function ({ route }: Props) {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={[screens.default]}
-      // keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : -172}
       keyboardVerticalOffset={Platform.OS === 'ios' ? (tallerDevice ? 60 : 40) : -172}
     >
       <FlatList

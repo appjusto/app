@@ -52,8 +52,9 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const [reviewType, setReviewType] = React.useState<ReviewType>();
   const [comment, setComment] = React.useState('');
   const review = useCourierReview(orderId, order?.courier?.id);
-  const [isLoading, setLoading] = React.useState(false);
+  const [reviewLoading, setReviewLoading] = React.useState(false);
   const [reviewSent, setReviewSent] = React.useState(false);
+  const [tipLoading, setTipLoading] = React.useState(false);
 
   if (!order) {
     return (
@@ -65,18 +66,18 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
 
   // handlers
   const tipHandler = async () => {
-    setLoading(true);
+    setTipLoading(true);
     try {
       if (tip > 0) await api.order().tipCourier(order.id, tip);
       dispatch(showToast(t('Caixinha enviada!')));
     } catch (error) {
       dispatch(showToast(t('Não foi possível enviar a caixinha'), 'error'));
     }
-    setLoading(false);
+    setTipLoading(false);
   };
 
   const reviewHandler = async () => {
-    setLoading(true);
+    setReviewLoading(true);
     try {
       if (reviewType) {
         await api.courier().addReview(order.courier!.id, {
@@ -89,7 +90,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
     } catch (error) {
       dispatch(showToast(t('Não foi possível enviar a avaliação'), 'error'));
     }
-    setLoading(false);
+    setReviewLoading(false);
   };
 
   // const placeOrderHandler = () => {
@@ -170,8 +171,8 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
                 }
                 onPress={reviewHandler}
                 style={{ margin: padding, marginTop: 0 }}
-                activityIndicator={isLoading}
-                disabled={isLoading || !!review?.type || reviewSent}
+                activityIndicator={reviewLoading}
+                disabled={reviewLoading || !!review?.type || reviewSent}
               />
               <HR height={padding} />
               <View>
@@ -180,6 +181,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
                   tip={tip}
                   onChange={(value) => setTip(value)}
                   onConfirm={tipHandler}
+                  isLoading={tipLoading}
                 />
               </View>
               <HR height={padding} />
