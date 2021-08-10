@@ -1,14 +1,6 @@
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import {
-  ActivityIndicator,
-  Animated,
-  Dimensions,
-  LayoutAnimation,
-  Text,
-  View,
-  ViewProps,
-} from 'react-native';
+import { Animated, Dimensions, LayoutAnimation, Text, View, ViewProps } from 'react-native';
 import {
   GestureEvent,
   PanGestureHandler,
@@ -93,16 +85,7 @@ export const StatusControl = ({
                 style={{ marginLeft: 10 }}
               />
             </View>
-          ) : (
-            <View
-              style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}
-            >
-              <Text style={[texts.sm, { marginRight: 10, color: colors.grey700 }]}>
-                {t('Aguarde')}
-              </Text>
-              <ActivityIndicator size="small" color={colors.grey700} />
-            </View>
-          )}
+          ) : null}
         </View>
         {/* thumb */}
         <PanGestureHandler onGestureEvent={onGestureEvent} onEnded={onGestureEnded}>
