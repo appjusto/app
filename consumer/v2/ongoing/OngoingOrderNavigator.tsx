@@ -47,7 +47,7 @@ export const OngoingOrderNavigator = () => {
       <Stack.Screen
         name="OrderCanceled"
         component={OrderCanceled}
-        options={{ title: t('Pedido em andamento') }}
+        options={{ title: t('Pedido cancelado') }}
       />
       <Stack.Screen
         name="OngoingOrderConfirmCancel"

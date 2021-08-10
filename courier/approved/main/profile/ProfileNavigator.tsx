@@ -11,6 +11,7 @@ import SelectBank from './bank/SelectBank';
 import AllFleets from './fleet/AllFleets';
 import ChooseFleet from './fleet/ChooseFleet';
 import CreateFleet from './fleet/CreateFleet';
+import { PartnersAndDiscounts } from './PartnersAndDiscounts';
 import ProfilePhotos from './photos/ProfilePhotos';
 import ProfileCompany from './ProfileCompany';
 import ProfileEdit from './ProfileEdit';
@@ -49,6 +50,11 @@ export default function () {
         name="AboutApp"
         component={AboutApp}
         options={{ title: t('Sobre o AppJusto') }}
+      />
+      <Stack.Screen
+        name="PartnersAndDiscounts"
+        component={PartnersAndDiscounts}
+        options={{ title: t('Descontos em parceiros') }}
       />
       <Stack.Screen
         name="ChooseFleet"

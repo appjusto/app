@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import useNotificationToken from '../../../../common/hooks/useNotificationToken';
 import { IconHomeCourierRequests } from '../../../../common/icons/icon-home-courier-requests';
+import { IconPartners } from '../../../../common/icons/icon-partners';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
@@ -18,7 +19,7 @@ import { getOrders } from '../../../../common/store/order/selectors';
 import { colors, padding, screens } from '../../../../common/styles';
 import {
   startLocationUpdatesTask,
-  stopLocationUpdatesTask
+  stopLocationUpdatesTask,
 } from '../../../../common/utils/location';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
@@ -119,6 +120,21 @@ export default function ({ navigation }: Props) {
               title="Divulgue o AppJusto"
               subtitle="Compartilhe esse movimento por uma economia mais justa."
             />
+          </View>
+          <View style={{ marginBottom: padding }}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('ProfileNavigator', { screen: 'PartnersAndDiscounts' })
+              }
+            >
+              <HomeCard
+                icon={<IconPartners />}
+                title={t('Parceiros com descontos')}
+                subtitle={t(
+                  'Veja as negociações coletivas que o AppJusto conseguir para a categoria'
+                )}
+              />
+            </TouchableOpacity>
           </View>
           <ModalChooser />
         </PaddedView>

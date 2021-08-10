@@ -5,3 +5,4 @@ export const AppJustoFreshdeskCourierURL =
 export const AppJustoFreshdeskConsumerURL = 'https://appjusto.freshdesk.com/support/home';
 export const AppJustoInstagramURL = 'https://www.instagram.com/appjusto/';
 export const AppJustoWhatsAppURL = 'https://wa.me/551197215-9106';
+export const AppJustoIzaURL = 'https://seguro.iza.com.vc/appjusto';

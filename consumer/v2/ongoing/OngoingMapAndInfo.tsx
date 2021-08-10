@@ -26,12 +26,16 @@ export const OngoingMapAndInfo = ({
     <View>
       <OrderMap order={order} ratio={240 / 160} />
       <MessagesCard orderId={order.id} onPress={onOpenChat} />
-      <DeliveryInfo order={order} onCourierDetail={onCourierDetail} />
-      <DefaultButton
-        title={t('Abrir chat com o entregador')}
-        onPress={() => onChatWithCourier()}
-        style={{ marginHorizontal: padding, marginBottom: padding }}
-      />
+      {order.dispatchingStatus === 'outsourced' ? null : (
+        <View>
+          <DeliveryInfo order={order} onCourierDetail={onCourierDetail} />
+          <DefaultButton
+            title={t('Abrir chat com o entregador')}
+            onPress={() => onChatWithCourier()}
+            style={{ marginHorizontal: padding, marginBottom: padding }}
+          />
+        </View>
+      )}
       <HR height={padding} />
     </View>
   ) : null;
