@@ -1,10 +1,7 @@
 {
   "build": {
-    "base": {
-      "developmentClient": false
-    },
     "courier-base": {
-      "extends": "base",
+      "developmentClient": false,
       "env": {
         "FLAVOR": "courier"
       }
@@ -43,7 +40,7 @@
       }
     },
     "consumer-base": {
-      "extends": "base",
+      "developmentClient": false,
       "env": {
         "FLAVOR": "consumer"
       }
