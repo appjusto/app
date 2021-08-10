@@ -2,12 +2,20 @@ import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, SectionList, Share, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Platform,
+  SectionList,
+  Share,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';
 import HR from '../../../../../common/components/views/HR';
+import useTallerDevice from '../../../../../common/hooks/useTallerDevice';
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { useContextBusiness } from '../../../../../common/store/context/business';
@@ -40,6 +48,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   const restaurant = useContextBusiness();
   const activeOrder = useContextActiveOrder();
   const menu = useContextMenu();
+  const tallerDevice = useTallerDevice();
   // redux
   const consumer = useSelector(getConsumer);
 
@@ -122,7 +131,10 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
         </PaddedView>
       ) : null}
       {consumer && restaurant.status === 'open' && restaurant.enabled ? (
-        <TouchableOpacity onPress={() => navigation.navigate('FoodOrderCheckout')}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('FoodOrderCheckout')}
+          style={{ paddingBottom: Platform.OS === 'ios' && tallerDevice ? halfPadding : 0 }}
+        >
           <HR />
           <CartButton order={activeOrder} />
         </TouchableOpacity>

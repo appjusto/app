@@ -10,6 +10,7 @@ import DefaultButton from '../components/buttons/DefaultButton';
 import PaddedView from '../components/containers/PaddedView';
 import RoundedProfileImg from '../components/icons/RoundedProfileImg';
 import DefaultInput from '../components/inputs/DefaultInput';
+import useTallerDevice from '../hooks/useTallerDevice';
 import { useObserveOrder } from '../store/api/order/hooks/useObserveOrder';
 import { unreadMessages, useObserveOrderChat } from '../store/api/order/hooks/useObserveOrderChat';
 import { useSegmentScreen } from '../store/api/track';
@@ -37,6 +38,7 @@ export default function ({ route }: Props) {
   const { orderId, counterpartId, counterpartFlavor } = route.params;
   // context
   const api = React.useContext(ApiContext);
+  const tallerDevice = useTallerDevice();
   // app state
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser)!;
@@ -95,7 +97,8 @@ export default function ({ route }: Props) {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={[screens.default]}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : -172}
+      // keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : -172}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? (tallerDevice ? 60 : 40) : -172}
     >
       <FlatList
         keyboardShouldPersistTaps="never"

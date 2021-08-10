@@ -6,6 +6,7 @@ import { ScrollView, Switch, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import HR from '../../../../common/components/views/HR';
+import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import OrderMap from '../../../../common/screens/orders/OrderMap';
 import { OrderAdditionalInfo } from '../../../../common/screens/orders/summary/OrderAdditionaInfo';
 import { showToast } from '../../../../common/store/ui/actions';
@@ -69,6 +70,7 @@ export const OrderSummary = ({
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  const tallerDevice = useTallerDevice();
   // state
   const [quotes, setQuotes] = React.useState<Fare[]>();
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
@@ -113,7 +115,7 @@ export const OrderSummary = ({
           <OrderMap order={order} ratio={360 / 160} />
         </View>
       )}
-      <View>
+      <View style={{ paddingTop: tallerDevice ? padding : 0 }}>
         <OrderPlacesSummary order={order} onEditStep={onEditStep} />
       </View>
 
