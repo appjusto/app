@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import * as icons from '../../../assets/icons';
 import { useObserveOngoingOrders } from '../../../common/store/api/order/hooks/useObserveOngoingOrders';
+import { getCourier } from '../../../common/store/courier/selectors';
 import { getUser } from '../../../common/store/user/selectors';
 import { halfPadding, padding, texts } from '../../../common/styles';
 import { useNotificationHandler } from '../../../consumer/v2/main/useNotificationHandler';
@@ -27,10 +28,11 @@ const Tab = createBottomTabNavigator<MainParamList>();
 export default function ({ navigation }: Props) {
   // redux store
   const user = useSelector(getUser);
+  const courier = useSelector(getCourier)!;
   // handlers
   const handler = React.useCallback(
     (data: PushMessageData, clicked?: boolean, remove?: () => void) => {
-      if (data.action === 'order-request') {
+      if (data.action === 'order-request' && courier.status !== 'dispatching') {
         Sentry.Native.captureMessage('Push received', {
           extra: {
             action: data.action,
@@ -67,7 +69,7 @@ export default function ({ navigation }: Props) {
         }
       }
     },
-    [navigation]
+    [navigation, courier.status]
   );
   // side effects
   // subscribe for observing ongoing orders
