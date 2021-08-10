@@ -1,9 +1,85 @@
 {
   "build": {
-    "release": {},
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
+    "base": {
+      "developmentClient": false
+    },
+    "courier-base": {
+      "extends": "base",
+      "env": {
+        "FLAVOR": "courier"
+      }
+    },
+    "courier-dev": {
+      "extends": "courier-base",
+      "env": {
+        "ENV": "dev"
+      },
+      "releaseChannel": "dev",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "courier-staging": {
+      "extends": "courier-base",
+      "env": {
+        "ENV": "staging"
+      },
+      "releaseChannel": "staging",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "courier-live": {
+      "extends": "courier-base",
+      "env": {
+        "ENV": "live"
+      },
+      "releaseChannel": "live-v0",
+      "distribution": "store",
+      "android": {
+        "buildType": "app-bundle"
+      }
+    },
+    "consumer-base": {
+      "extends": "base",
+      "env": {
+        "FLAVOR": "consumer"
+      }
+    },
+    "consumer-dev": {
+      "extends": "consumer-base",
+      "env": {
+        "ENV": "dev"
+      },
+      "releaseChannel": "dev",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "consumer-staging": {
+      "extends": "consumer-base",
+      "env": {
+        "ENV": "staging"
+      },
+      "releaseChannel": "staging",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "consumer-live": {
+      "extends": "consumer-base",
+      "env": {
+        "ENV": "live"
+      },
+      "releaseChannel": "live-v0",
+      "distribution": "store",
+      "android": {
+        "buildType": "app-bundle"
+      }
     }
   }
 }
