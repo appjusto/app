@@ -22,6 +22,12 @@ export default class BusinessApi {
     if (snapshot.empty) return null;
     return documentAs<Business>(snapshot.docs[0]);
   }
+  async fetchBusinessWithSlug(slug: string) {
+    const ref = this.refs.getBusinessesRef().where('slug', '==', slug).limit(1);
+    const snapshot = await ref.get();
+    if (snapshot.empty) return null;
+    return documentAs<Business>(snapshot.docs[0]);
+  }
   observeBusiness(businessId: string, resultHandler: (business: WithId<Business>) => void) {
     const ref = this.refs.getBusinessRef(businessId);
     const unsubscribe = ref.onSnapshot(

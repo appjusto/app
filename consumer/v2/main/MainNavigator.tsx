@@ -57,11 +57,13 @@ export const MainNavigator = () => {
   const action = useDeeplinkAction();
   React.useEffect(() => {
     if (!action) return;
-    if (action.screen === 'restaurant-detail' && action.params?.code) {
-      api
-        .business()
-        .fetchBusinessWithCode(action.params.code)
-        .then((business) => {
+    if (action.screen === 'restaurant-detail') {
+      let promise = null;
+      if (action.params?.slug) promise = api.business().fetchBusinessWithSlug(action.params.slug);
+      else if (action.params?.code)
+        promise = api.business().fetchBusinessWithCode(action.params.code);
+      if (promise)
+        promise.then((business) => {
           if (business) {
             navigation.navigate('FoodOrderNavigator', {
               screen: 'RestaurantNavigator',
