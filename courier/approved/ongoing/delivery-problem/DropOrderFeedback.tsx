@@ -1,4 +1,3 @@
-import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
@@ -7,12 +6,8 @@ import { IconConeYellow } from '../../../../common/icons/icon-cone-yellow';
 import { colors, padding } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
-import { OngoingDeliveryNavigatorParamList } from '../types';
 
-type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<OngoingDeliveryNavigatorParamList, 'DropOrderFeedback'>,
-  StackNavigationProp<ApprovedParamList>
->;
+type ScreenNavigationProp = StackNavigationProp<ApprovedParamList, 'DropOrderFeedback'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

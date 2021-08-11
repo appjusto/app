@@ -9,6 +9,7 @@ import PaymentNavigator from './main/payment/PaymentNavigator';
 import ProfileNavigator from './main/profile/ProfileNavigator';
 import MatchingNavigator from './matching/MatchingNavigator';
 import { RejectedMatchingFeedback } from './matching/RejectedMatchingFeedback';
+import { DropOrderFeedback } from './ongoing/delivery-problem/DropOrderFeedback';
 import { DeliveryProblemFeedback } from './ongoing/DeliveryProblemFeedback';
 import OngoingDeliveryNavigator from './ongoing/OngoingDeliveryNavigator';
 import { ApprovedParamList } from './types';
@@ -55,6 +56,11 @@ export default function () {
       <Stack.Screen
         name="DeliveryProblemFeedback"
         component={DeliveryProblemFeedback}
+        options={{ title: t('Tive um problema') }}
+      />
+      <Stack.Screen
+        name="DropOrderFeedback"
+        component={DropOrderFeedback}
         options={{ title: t('Tive um problema') }}
       />
       <Stack.Screen
