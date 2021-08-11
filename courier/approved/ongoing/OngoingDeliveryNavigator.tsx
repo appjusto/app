@@ -7,7 +7,6 @@ import { t } from '../../../strings';
 import { CallCourier } from './CallCourier';
 import CancelOngoingDelivery from './CancelOngoingDelivery';
 import { CourierDropsOrder } from './CourierDropsOrder';
-import { DropOrderFeedback } from './delivery-problem/DropOrderFeedback';
 import DeliveryCompleted from './DeliveryCompleted';
 import { DeliveryProblem } from './DeliveryProblem';
 import { DeliveryProblemFeedback } from './DeliveryProblemFeedback';
@@ -70,11 +69,6 @@ export default function () {
       <Stack.Screen
         name="CourierDropsOrder"
         component={CourierDropsOrder}
-        options={{ title: t('Tive um problema') }}
-      />
-      <Stack.Screen
-        name="DropOrderFeedback"
-        component={DropOrderFeedback}
         options={{ title: t('Tive um problema') }}
       />
       <Stack.Screen

@@ -19,5 +19,6 @@ export type ApprovedParamList = {
     issueType: IssueType;
     orderId: string;
   };
+  DropOrderFeedback: undefined;
   RejectedMatchingFeedback: undefined;
 } & PermissionDeniedParamList;
