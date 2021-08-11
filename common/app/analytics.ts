@@ -21,22 +21,16 @@ export function init(props: AnalyticsConfig) {
     segmentCourierAndroidKey,
     segmentCourieriOSKey,
   } = props;
-  if (
-    !segmentConsumerAndroidKey ||
-    !segmentConsumeriOSKey ||
-    !segmentCourierAndroidKey ||
-    !segmentCourieriOSKey
-  )
-    return;
-  Segment.initialize(
-    flavor === 'consumer'
-      ? {
-          androidWriteKey: segmentConsumerAndroidKey,
-          iosWriteKey: segmentConsumeriOSKey,
-        }
-      : {
-          androidWriteKey: segmentCourierAndroidKey,
-          iosWriteKey: segmentCourieriOSKey,
-        }
-  );
+  if (flavor === 'consumer' && segmentConsumerAndroidKey && segmentConsumeriOSKey) {
+    Segment.initialize({
+      androidWriteKey: segmentConsumerAndroidKey,
+      iosWriteKey: segmentConsumeriOSKey,
+    });
+  }
+  if (flavor === 'courier' && segmentCourierAndroidKey && segmentCourieriOSKey) {
+    Segment.initialize({
+      androidWriteKey: segmentCourierAndroidKey,
+      iosWriteKey: segmentCourieriOSKey,
+    });
+  }
 }
