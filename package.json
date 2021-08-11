@@ -29,7 +29,7 @@
     "publish-consumer:dev": "ENV=dev npm run prepare-publish && npm version ${VERSION:-patch} && FLAVOR=consumer RELEASE_CHANNEL=dev npm run publish",
     "publish-consumer:staging": "ENV=staging npm run prepare-publish && FLAVOR=consumer RELEASE_CHANNEL=staging npm run publish",
     "publish-consumer:live": "ENV=live npm run prepare-publish && FLAVOR=consumer RELEASE_CHANNEL=live-v0 npm run publish",
-    "build": "npm run prepare-publish && eas build --platform $PLATFORM --profile $FLAVOR-$ENV",
+    "build": "npm run prepare-publish && npm run install-remote-types && eas build --platform $PLATFORM --profile $FLAVOR-$ENV && npm install-local-types",
     "build-android": "PLATFORM=android npm run build",
     "build-android-courier:dev": "FLAVOR=courier ENV=dev PLATFORM=android npm run build-android",
     "build-android-courier:staging": "FLAVOR=courier ENV=staging PLATFORM=android npm run build-android",
@@ -44,6 +44,8 @@
     "build-ios-consumer:dev": "FLAVOR=consumer ENV=dev PLATFORM=ios npm run build-ios",
     "build-ios-consumer:staging": "FLAVOR=consumer ENV=staging PLATFORM=ios npm run build-ios",
     "build-ios-consumer:live": "FLAVOR=consumer ENV=live PLATFORM=ios npm run build-ios",
+    "install-local-types": "npm uninstall @appjusto/types && npm install ../types && git add . && git commit -m 'Updating @appjusto/types'",
+    "install-remote-types": "npm uninstall @appjusto/types && npm install @appjusto/types && git add . && git commit -m 'Updating @appjusto/types'",
     "clear-cache": "watchman watch-del-all && rm -rf node_modules/ && rm -f package-lock.json && npm install --legacy-peer-deps",
     "version": "node ./version-inc && git add version.json",
     "postversion": "git push && git push --tags && git fetch"
