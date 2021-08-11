@@ -44,9 +44,6 @@ export default (context: ConfigContext): ExpoConfig => {
       resizeMode: 'cover',
       backgroundColor: '#78e08f',
     },
-    notification: {
-      icon: './assets/notification-icon.png',
-    },
     updates: {
       fallbackToCacheTimeout: 1000 * (flavor === 'courier' ? 120 : 10),
     },
@@ -55,6 +52,16 @@ export default (context: ConfigContext): ExpoConfig => {
     android: android(),
     extra: extra(),
     hooks: hooks(),
+    plugins: [
+      [
+        'expo-notifications',
+        {
+          icon: './assets/notification-icon.png',
+          sounds: ['./assets/sounds/order-request.wav'],
+          mode: environment === 'live' ? 'production' : 'development',
+        },
+      ],
+    ],
   };
   // console.log(config);
   return config;

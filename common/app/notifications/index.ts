@@ -27,6 +27,7 @@ export const init = async () => {
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
       bypassDnd: true,
       lightColor: colors.green100,
+      sound: 'order-request.wav',
     });
     await Notifications.setNotificationChannelAsync('order-update', {
       name: t('Atualizações do pedido'),
