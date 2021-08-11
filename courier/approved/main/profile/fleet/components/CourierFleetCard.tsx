@@ -1,12 +1,14 @@
 import { Fleet, WithId } from '@appjusto/types';
 import React from 'react';
 import { Share, Text, TouchableOpacity, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../../../common/components/texts/RoundedText';
 import { IconShare } from '../../../../../../common/icons/icon-share';
 import HomeCard from '../../../../../../common/screens/home/cards/HomeCard';
 import { borders, colors, halfPadding, padding, texts } from '../../../../../../common/styles';
+import { getExtra } from '../../../../../../common/utils/config';
 import { formatCurrency, formatDistance } from '../../../../../../common/utils/formatters';
 import { t } from '../../../../../../strings';
 
@@ -17,12 +19,14 @@ type Props = {
 };
 
 export const CourierFleetCard = ({ fleet, listItem, onPress }: Props) => {
+  const extra = useSelector(getExtra);
+  const domain = `${extra.environment.charAt(0)}.deeplink.appjusto.com.br`;
   const shareFleetHandler = React.useCallback(() => {
     try {
       Share.share({
         message: `Eu faço parte da ${fleet.name} no AppJusto, app criado para combater a exploração dos entregadores. Faça parte dessa frota também!`,
         title: 'AppJusto',
-        url: `https://l.deeplink.appjusto.com.br/courier/f?id=${fleet.id}`,
+        url: `https://${domain}/courier/f?id=${fleet.id}`,
       });
     } catch (error) {}
   }, [fleet]);
