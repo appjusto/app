@@ -2,6 +2,7 @@ import * as Linking from 'expo-linking';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../app/context';
+import { track } from '../store/api/track';
 
 export default function () {
   const dispatch = useDispatch<AppDispatch>();
@@ -12,10 +13,16 @@ export default function () {
   // once
   React.useEffect(() => {
     Linking.getInitialURL().then((value) => {
+      track('Initial Deeplink', {
+        url: value,
+      });
       setDeeplink(value);
     });
     const handler: Linking.URLListener = (ev) => {
       setDeeplink(ev.url);
+      track('Deeplink changed', {
+        url: ev.url,
+      });
     };
     Linking.addEventListener('url', handler);
 

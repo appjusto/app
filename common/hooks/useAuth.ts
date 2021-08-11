@@ -66,6 +66,10 @@ export const useAuth = (): [AuthState, firebase.User | undefined | null] => {
   }, [deepLink]);
 
   React.useEffect(() => {
+    track('Deeplink', {
+      authState,
+      deepLink,
+    });
     if (authState !== AuthState.CheckingDeeplink) return;
     // undefined means useDeeplink hasnt finished yet
     if (deepLink === undefined) return;
@@ -76,8 +80,6 @@ export const useAuth = (): [AuthState, firebase.User | undefined | null] => {
     }
     const link = extractAuthLink(deepLink);
     track('Deeplink', {
-      authState,
-      deepLink,
       link,
     });
 
