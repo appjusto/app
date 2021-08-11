@@ -52,16 +52,19 @@ export default (context: ConfigContext): ExpoConfig => {
     android: android(),
     extra: extra(),
     hooks: hooks(),
-    plugins: [
-      [
-        'expo-notifications',
-        {
-          icon: './assets/notification-icon.png',
-          sounds: ['./assets/sounds/order_request.wav'],
-          mode: environment === 'live' ? 'production' : 'development',
-        },
-      ],
-    ],
+    plugins:
+      flavor === 'courier'
+        ? [
+            [
+              'expo-notifications',
+              {
+                icon: './assets/notification-icon.png',
+                sounds: ['./assets/sounds/order_request.wav'],
+                mode: environment === 'live' ? 'production' : 'development',
+              },
+            ],
+          ]
+        : undefined,
   };
   // console.log(config);
   return config;
