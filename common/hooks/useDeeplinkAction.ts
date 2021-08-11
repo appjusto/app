@@ -4,7 +4,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { getFlavor } from '../store/config/selectors';
 
-export type DeeplinkScreen = 'restaurant-detail';
+export type DeeplinkScreen = 'restaurant-detail' | 'fleet-detail';
 export interface DeeplinkAction {
   screen: DeeplinkScreen;
   params: Linking.QueryParams | null;
@@ -24,6 +24,11 @@ export const useDeeplinkAction = () => {
     if (path === 'consumer/r') {
       setAction({
         screen: 'restaurant-detail',
+        params: queryParams,
+      });
+    } else if (path === 'courier/f') {
+      setAction({
+        screen: 'fleet-detail',
         params: queryParams,
       });
     }
