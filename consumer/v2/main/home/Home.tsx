@@ -33,9 +33,9 @@ export default function ({ navigation }: Props) {
   const ongoingOrders = useSelector(getOrders);
   // UI
   return (
-    <View style={{ flex: 1 }}>
+    <View style={[screens.headless, screens.config]}>
       {/* <StatusBar /> */}
-      <ScrollView scrollIndicatorInsets={{ right: 1 }} style={[screens.headless, screens.config]}>
+      <ScrollView scrollIndicatorInsets={{ right: 1 }}>
         <HomeControls
           onStartOrderPress={(type) => {
             if (type === 'food') {
