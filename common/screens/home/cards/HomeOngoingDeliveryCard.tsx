@@ -48,8 +48,8 @@ export default function ({ order, onPress }: Props) {
         } else if (dispatchingStatus === 'matched') {
           title = t('Corrida em andamento');
         } else if (dispatchingStatus === 'no-match') {
-          title = t('Sem entregadores disponíveis');
-          detail = t('Enviaremos um entregador de outra rede para finalizar o pedido');
+          title = t('Sem entregadores/as na região');
+          detail = t('Clique para tentar novamente');
         }
       } else if (status === 'dispatching') {
         title = t('Corrida em andamento');
