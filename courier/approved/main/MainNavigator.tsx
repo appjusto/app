@@ -6,6 +6,7 @@ import { Dimensions, Image, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import * as icons from '../../../assets/icons';
+import { useDeeplinkAction } from '../../../common/hooks/useDeeplinkAction';
 import { useObserveOngoingOrders } from '../../../common/store/api/order/hooks/useObserveOngoingOrders';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { getUser } from '../../../common/store/user/selectors';
@@ -79,6 +80,19 @@ export default function ({ navigation }: Props) {
   useNotificationHandler('order-update', handler);
   useNotificationHandler('order-chat', handler);
   const { width } = Dimensions.get('window');
+  // fleet deeplink
+  const action = useDeeplinkAction();
+  React.useEffect(() => {
+    if (!action) return;
+    if (action.screen === 'fleet-detail') {
+      if (action.params?.id) {
+        navigation.navigate('ProfileNavigator', {
+          screen: 'FleetDetail',
+          params: { fleetId: action.params.id },
+        });
+      }
+    }
+  });
   // UI
   return (
     <Tab.Navigator

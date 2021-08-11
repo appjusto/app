@@ -30,6 +30,10 @@ export default function ({ navigation, route }: Props) {
   // side effects
   // tracking
   useSegmentScreen('Choose Fleet');
+  // handlers
+  const navigateFleetDetail = (fleetId: string) => {
+    navigation.navigate('FleetDetail', { fleetId });
+  };
   // UI
   if (!fleet) {
     return (
@@ -54,7 +58,7 @@ export default function ({ navigation, route }: Props) {
               {`${t('Você está nessa frota desde')} ${formatDate(courier.fleet!.joinedOn)} `}
             </Text>
           )}
-          <CourierFleetCard fleet={fleet} />
+          <CourierFleetCard fleet={fleet} listItem onPress={() => navigateFleetDetail(fleet.id)} />
           <View style={{ marginTop: 24 }}>
             <DefaultButton
               title={t('Veja todas as frotas disponíveis')}
