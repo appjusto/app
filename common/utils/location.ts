@@ -51,7 +51,10 @@ const locationTaskExecutor =
         locations: result.locations,
       });
     }
-    const location = result.locations.sort((a, b) => b.timestamp - a.timestamp).find(() => true)!;
+    const location = result.locations
+      .slice()
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .find(() => true)!;
     const { latitude, longitude } = location.coords;
     const coordinates = new firebase.firestore.GeoPoint(latitude, longitude);
 
