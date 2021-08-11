@@ -29,7 +29,7 @@
     "publish-consumer:dev": "ENV=dev npm run prepare-publish && npm version ${VERSION:-patch} && FLAVOR=consumer RELEASE_CHANNEL=dev npm run publish",
     "publish-consumer:staging": "ENV=staging npm run prepare-publish && FLAVOR=consumer RELEASE_CHANNEL=staging npm run publish",
     "publish-consumer:live": "ENV=live npm run prepare-publish && FLAVOR=consumer RELEASE_CHANNEL=live-v0 npm run publish",
-    "build": "npm run prepare-publish && npm run install-remote-types && eas build --platform $PLATFORM --profile $FLAVOR-$ENV && npm install-local-types",
+    "build": "npm run prepare-publish && npm run install-remote-types && eas build --no-wait --platform $PLATFORM --profile $FLAVOR-$ENV && npm install-local-types",
     "build-android": "PLATFORM=android npm run build",
     "build-android-courier:dev": "FLAVOR=courier ENV=dev PLATFORM=android npm run build-android",
     "build-android-courier:staging": "FLAVOR=courier ENV=staging PLATFORM=android npm run build-android",
