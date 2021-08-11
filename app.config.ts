@@ -57,7 +57,7 @@ export default (context: ConfigContext): ExpoConfig => {
         'expo-notifications',
         {
           icon: './assets/notification-icon.png',
-          sounds: ['./assets/sounds/order-request.wav'],
+          sounds: ['./assets/sounds/order_request.wav'],
           mode: environment === 'live' ? 'production' : 'development',
         },
       ],
