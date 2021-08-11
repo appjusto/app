@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../app/context';
+import { track } from '../store/api/track';
 import {
   getSignInEmail,
   isSignInWithEmailLink,
@@ -74,14 +75,11 @@ export const useAuth = (): [AuthState, firebase.User | undefined | null] => {
       return;
     }
     const link = extractAuthLink(deepLink);
-    console.log(deepLink);
-    console.log(link);
-    // Sentry.Native.captureMessage('Deeplink', {
-    //   extra: {
-    //     deepLink,
-    //     link,
-    //   },
-    // });
+    track('Deeplink', {
+      authState,
+      deepLink,
+      link,
+    });
 
     if (link === null || !isSignInWithEmailLink(api)(link)) {
       setAuthState(AuthState.Unsigned);

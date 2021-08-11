@@ -6,6 +6,7 @@ import * as Sentry from 'sentry-expo';
 import { t } from '../../strings';
 import { AppStore } from '../app/context';
 import Api from '../store/api/api';
+import { track } from '../store/api/track';
 import { getConsumer } from '../store/consumer/selectors';
 import { getCourier } from '../store/courier/selectors';
 
@@ -46,10 +47,8 @@ const locationTaskExecutor =
     }
     const result = body.data as LocationUpdateResult;
     if (result.locations.length > 1) {
-      Sentry.Native.captureMessage('Deffered locations', {
-        extra: {
-          locations: result.locations,
-        },
+      track('Deffered locations', {
+        locations: result.locations,
       });
     }
     const location = result.locations.sort((a, b) => b.timestamp - a.timestamp).find(() => true)!;

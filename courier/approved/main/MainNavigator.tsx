@@ -4,10 +4,10 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Dimensions, Image, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import * as Sentry from 'sentry-expo';
 import * as icons from '../../../assets/icons';
 import { useDeeplinkAction } from '../../../common/hooks/useDeeplinkAction';
 import { useObserveOngoingOrders } from '../../../common/store/api/order/hooks/useObserveOngoingOrders';
+import { track } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { getUser } from '../../../common/store/user/selectors';
 import { halfPadding, padding, texts } from '../../../common/styles';
@@ -34,11 +34,9 @@ export default function ({ navigation }: Props) {
   const handler = React.useCallback(
     (data: PushMessageData, clicked?: boolean, remove?: () => void) => {
       if (data.action === 'order-request' && courier.status !== 'dispatching') {
-        Sentry.Native.captureMessage('Push received', {
-          extra: {
-            action: data.action,
-            orderId: data.orderId,
-          },
+        track('Push received', {
+          action: data.action,
+          orderId: data.orderId,
         });
         remove!();
         navigation.navigate('MatchingNavigator', {

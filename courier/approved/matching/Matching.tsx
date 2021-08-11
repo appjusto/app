@@ -4,14 +4,13 @@ import * as Location from 'expo-location';
 import React from 'react';
 import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import * as Sentry from 'sentry-expo';
 import * as icons from '../../../assets/icons';
 import { ApiContext } from '../../../common/app/context';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { useObserveOrderRequest } from '../../../common/store/api/courier/hooks/useObserveOrderRequest';
 import { distanceBetweenLatLng } from '../../../common/store/api/helpers';
-import { useSegmentScreen } from '../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { colors, doublePadding, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency, formatDistance, formatTime } from '../../../common/utils/formatters';
@@ -48,12 +47,10 @@ export default function ({ navigation, route }: Props) {
     (async () => {
       const position = await Location.getCurrentPositionAsync();
       const currentDistanceToOrigin = distanceBetweenLatLng(position.coords, origin);
-      Sentry.Native.captureMessage('Matching', {
-        extra: {
-          orderId,
-          distanceToOrigin,
-          currentDistanceToOrigin,
-        },
+      track('Matching', {
+        orderId,
+        distanceToOrigin,
+        currentDistanceToOrigin,
       });
       setDistance(currentDistanceToOrigin);
       setLoading(false);
