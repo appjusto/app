@@ -57,7 +57,7 @@ export default function ({ navigation, route }: Props) {
     if (!order) return;
     if (
       order.dispatchingState === 'arrived-pickup' &&
-      order.type === 'food' &&
+      // order.type === 'food' &&
       (order.status === 'ready' || order.status === 'dispatching')
     ) {
       setModalOpen(true);
