@@ -21,21 +21,26 @@ export const WithdrawOrderModal = ({
   onModalClose,
   ...props
 }: Props) => {
+  const { status, type } = order;
   const title = (() => {
-    if (order.status === 'dispatching') {
+    if (status === 'dispatching') {
       return t('Retire o pedido');
-    } else if (order.status === 'ready') {
+    } else if (status === 'ready') {
       return t('Aguardando retirada');
     } else {
       return t('Aguarde');
     }
   })();
   const subTitle = (() => {
-    if (order.status === 'dispatching' || order.status === 'ready') {
+    if (status === 'dispatching' || status === 'ready') {
       return t('Mostre essa tela para o restaurante');
     } else {
       return t('O pedido está sendo finalizado');
     }
+  })();
+  const name = (() => {
+    if (type === 'food') return order.business?.name;
+    else return order.origin?.address.main;
   })();
   return (
     <Modal transparent {...props}>
@@ -73,12 +78,46 @@ export const WithdrawOrderModal = ({
               <IconOngoingRequest />
             </View>
             <Text style={{ ...texts.xl, color: colors.grey700 }}>{title}</Text>
-            <Text style={{ ...texts.x2l, textAlign: 'center' }}>{order.business?.name}</Text>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{subTitle}</Text>
-            <View style={{ marginTop: padding, alignItems: 'center' }}>
-              <Text style={{ ...texts.xl, color: colors.grey700 }}>{t('Pedido Nº')}</Text>
-              <Text style={{ ...texts.x4l }}>{order.code}</Text>
-            </View>
+            <Text style={{ ...texts.x2l, textAlign: 'center' }}>{name}</Text>
+            {type === 'p2p' ? (
+              <View>
+                {order.origin?.additionalInfo ? (
+                  <Text style={{ ...texts.x2l, color: colors.grey700, textAlign: 'center' }}>
+                    {order.origin.additionalInfo}
+                  </Text>
+                ) : null}
+                {order.origin?.intructions ? (
+                  <Text style={{ ...texts.sm, color: colors.grey700 }}>
+                    {order.origin.intructions}
+                  </Text>
+                ) : null}
+              </View>
+            ) : (
+              <View>
+                <Text style={{ ...texts.sm, color: colors.grey700 }}>{subTitle}</Text>
+                <View style={{ marginTop: padding, alignItems: 'center' }}>
+                  <Text style={{ ...texts.xl, color: colors.grey700 }}>{t('Pedido Nº')}</Text>
+                  <Text style={{ ...texts.x4l }}>{order.code}</Text>
+                </View>
+              </View>
+            )}
+            {/* {type === 'p2p' && order.origin?.additionalInfo ? (
+              <Text style={{ ...texts.sm, color: colors.grey700 }}>
+                {order.origin.additionalInfo}
+              </Text>
+            ) : null}
+            {type === 'p2p' && order.origin?.intructions ? (
+              <Text style={{ ...texts.sm, color: colors.grey700 }}>{order.origin.intructions}</Text>
+            ) : null} */}
+            {/* {type === 'food' ? (
+              <Text style={{ ...texts.sm, color: colors.grey700 }}>{subTitle}</Text>
+            ) : null} */}
+            {/* {type === 'food' ? (
+              <View style={{ marginTop: padding, alignItems: 'center' }}>
+                <Text style={{ ...texts.xl, color: colors.grey700 }}>{t('Pedido Nº')}</Text>
+                <Text style={{ ...texts.x4l }}>{order.code}</Text>
+              </View>
+            ) : null} */}
             <View style={{ marginTop: padding, alignItems: 'center', marginBottom: padding }}>
               <Text style={{ ...texts.xl, color: colors.grey700 }}>{t('Cliente')}</Text>
               <Text style={{ ...texts.x4l }}>{order.consumer.name}</Text>
