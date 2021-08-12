@@ -16,4 +16,3 @@ web-report/
 # Project
 *.env
 .tmp/*
-google-services*.json

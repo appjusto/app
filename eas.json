@@ -6,6 +6,18 @@
         "FLAVOR": "courier"
       }
     },
+    "courier-local": {
+      "developmentClient": true,
+      "env": {
+        "ENV": "dev",
+        "FLAVOR": "courier"
+      },
+      "releaseChannel": "dev",
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      }
+    },
     "courier-dev": {
       "extends": "courier-base",
       "env": {
@@ -43,6 +55,18 @@
       "developmentClient": false,
       "env": {
         "FLAVOR": "consumer"
+      }
+    },
+    "consumer-local": {
+      "developmentClient": true,
+      "env": {
+        "ENV": "dev",
+        "FLAVOR": "consumer"
+      },
+      "releaseChannel": "dev",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
       }
     },
     "consumer-dev": {
