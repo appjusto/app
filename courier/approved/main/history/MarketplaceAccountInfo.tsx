@@ -76,6 +76,7 @@ export const MarketplaceAccountInfo = () => {
         receivableBalance: info!.receivable_balance,
       },
     });
+  console.log(info);
   // UI
   return (
     <View>
@@ -101,7 +102,6 @@ export const MarketplaceAccountInfo = () => {
               <Text
                 style={{
                   ...texts.sm,
-                  color: colors.grey700,
                   marginLeft: halfPadding,
                   paddingBottom: 2,
                 }}
@@ -125,6 +125,16 @@ export const MarketplaceAccountInfo = () => {
               disabled={availableForWithdraw < minimum || withdrawing}
               onPress={withdrawHandler}
             />
+            <Text
+              style={{
+                ...texts.xs,
+                color: colors.grey700,
+                paddingTop: halfPadding,
+                textAlign: 'center',
+              }}
+            >
+              {t('Valor mínimo de R$ 5,00 para transferência')}
+            </Text>
           </View>
         </PaddedView>
         <PaddedView
@@ -161,7 +171,7 @@ export const MarketplaceAccountInfo = () => {
             <DefaultButton
               style={{ marginTop: padding }}
               title={t('Antecipar valores')}
-              disabled={receivableBalance === 0}
+              // disabled={receivableBalance === 0}
               onPress={advanceHandler}
               secondary
             />

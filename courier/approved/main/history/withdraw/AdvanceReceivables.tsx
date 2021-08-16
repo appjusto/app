@@ -63,8 +63,9 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
       {simulation ? (
         <PaddedView>
           <Text style={{ ...texts.sm }}>
-            Para realizar a antecipação, será cobrada uma taxa de 0.0% + R$ 0.00 pela operação
-            financeira.
+            {t(
+              'Para realizar a antecipação, será cobrada uma taxa de 0.0% + R$ 0.00 pela operação financeira.'
+            )}
           </Text>
           <Text style={{ ...texts.sm, color: colors.grey700, marginTop: biggerPadding }}>
             {t('Você selecionou')}
