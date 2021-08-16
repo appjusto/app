@@ -80,13 +80,12 @@ export default class BusinessApi {
     );
     return unsubscribe;
   }
-  observeProductComplementsGroups(
+  observeComplementsGroups(
     businessId: string,
-    productId: string,
     resultHandler: (products: WithId<ComplementGroup>[]) => void
   ) {
     const unsubscribe = this.refs
-      .getBusinessProductComplementsGroupsRef(businessId, productId)
+      .getBusinessComplementsGroupsRef(businessId)
       .where('enabled', '==', true)
       .onSnapshot(
         (snapshot) => resultHandler(documentsAs<ComplementGroup>(snapshot.docs)),
@@ -97,13 +96,9 @@ export default class BusinessApi {
       );
     return unsubscribe;
   }
-  observeProductComplements(
-    businessId: string,
-    productId: string,
-    resultHandler: (products: WithId<Complement>[]) => void
-  ) {
+  observeComplements(businessId: string, resultHandler: (products: WithId<Complement>[]) => void) {
     const unsubscribe = this.refs
-      .getBusinessProductComplementsRef(businessId, productId)
+      .getBusinessComplementsRef(businessId)
       .where('enabled', '==', true)
       .onSnapshot(
         (snapshot) => resultHandler(documentsAs<Complement>(snapshot.docs)),
@@ -114,8 +109,12 @@ export default class BusinessApi {
       );
     return unsubscribe;
   }
-  observeMenuOrdering(businessId: string, resultHandler: (products: WithId<Ordering>) => void) {
-    const unsubscribe = this.refs.getBusinessMenuOrderingRef(businessId).onSnapshot(
+  observeMenuOrdering(
+    businessId: string,
+    resultHandler: (products: WithId<Ordering>) => void,
+    menuId?: string
+  ) {
+    const unsubscribe = this.refs.getBusinessMenuOrderingRef(businessId, menuId).onSnapshot(
       (snapshot) => resultHandler(documentAs<Ordering>(snapshot)),
       (error) => {
         console.log(error);

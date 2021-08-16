@@ -69,14 +69,14 @@ export default class FirebaseRefs {
     this.getBusinessRef(businessId).collection('products');
   getBusinessProductRef = (businessId: string, id: string) =>
     this.getBusinessProductsRef(businessId).doc(id);
-  getBusinessProductComplementsGroupsRef = (businessId: string, productId: string) =>
-    this.getBusinessProductRef(businessId, productId).collection('complementsgroups');
-  getBusinessProductComplementGroupRef = (businessId: string, productId: string, groupId: string) =>
-    this.getBusinessProductComplementsGroupsRef(businessId, productId).doc(groupId);
-  getBusinessProductComplementsRef = (businessId: string, productId: string) =>
-    this.getBusinessProductRef(businessId, productId).collection('complements');
-  getBusinessProductComplementRef = (businessId: string, productId: string, complementId: string) =>
-    this.getBusinessProductComplementsRef(businessId, productId).doc(complementId);
+  getBusinessComplementsGroupsRef = (businessId: string) =>
+    this.getBusinessRef(businessId).collection('complementsgroups');
+  getBusinessComplementGroupRef = (businessId: string, groupId: string) =>
+    this.getBusinessComplementsGroupsRef(businessId).doc(groupId);
+  getBusinessComplementsRef = (businessId: string) =>
+    this.getBusinessRef(businessId).collection('complements');
+  getBusinessProductComplementRef = (businessId: string, complementId: string) =>
+    this.getBusinessComplementsRef(businessId).doc(complementId);
   getBusinessMenuOrderingRef = (businessId: string, menuId: string = 'default') =>
     this.getBusinessRef(businessId).collection('menu').doc(menuId);
 

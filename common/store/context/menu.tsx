@@ -1,10 +1,12 @@
-import { Category, Ordering, WithId } from '@appjusto/types';
+import { Category, ComplementGroup, WithId } from '@appjusto/types';
 import React from 'react';
 import { useMenu } from '../api/business/hooks/useMenu';
 
 interface Value {
-  menu: WithId<Category>[] | undefined;
-  ordering: Ordering | undefined;
+  categoriesWithProducts: WithId<Category>[] | undefined;
+  groupsWithComplements: WithId<ComplementGroup>[] | undefined;
+  getProductCategory: (productId: string) => WithId<Category> | undefined;
+  getComplementGroup: (complementId: string) => WithId<ComplementGroup> | undefined;
 }
 
 const MenuContext = React.createContext<Value | undefined>(undefined);
@@ -19,10 +21,18 @@ export const MenuProvider = ({ businessId, children }: Props) => {
   return <MenuContext.Provider value={value}>{children}</MenuContext.Provider>;
 };
 
-export const useContextMenu = () => {
-  return React.useContext(MenuContext)!.menu;
+export const useContextCategoriesWithProducts = () => {
+  return React.useContext(MenuContext)!.categoriesWithProducts;
 };
 
-export const useContextMenuOrdering = () => {
-  return React.useContext(MenuContext)!.ordering;
+export const useContextGroupsWithComplements = () => {
+  return React.useContext(MenuContext)!.groupsWithComplements;
+};
+
+export const useContextGetProductCategory = () => {
+  return React.useContext(MenuContext)!.getProductCategory;
+};
+
+export const useContextGetComplementGroup = () => {
+  return React.useContext(MenuContext)!.getComplementGroup;
 };

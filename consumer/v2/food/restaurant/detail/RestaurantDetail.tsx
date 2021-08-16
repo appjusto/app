@@ -19,7 +19,7 @@ import useTallerDevice from '../../../../../common/hooks/useTallerDevice';
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { useContextBusiness } from '../../../../../common/store/context/business';
-import { useContextMenu } from '../../../../../common/store/context/menu';
+import { useContextCategoriesWithProducts } from '../../../../../common/store/context/menu';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { colors, halfPadding, screens } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
@@ -47,7 +47,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   // context
   const restaurant = useContextBusiness();
   const activeOrder = useContextActiveOrder();
-  const menu = useContextMenu();
+  const categoriesWithProducts = useContextCategoriesWithProducts();
   const tallerDevice = useTallerDevice();
   // redux
   const consumer = useSelector(getConsumer);
@@ -78,7 +78,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   console.log(consumer?.id);
   // UI
   const sections =
-    menu?.map((category) => ({
+    categoriesWithProducts?.map((category) => ({
       title: category.name,
       data: category.items ?? [],
     })) ?? [];
