@@ -75,7 +75,7 @@ export default class FirebaseRefs {
     this.getBusinessComplementsGroupsRef(businessId).doc(groupId);
   getBusinessComplementsRef = (businessId: string) =>
     this.getBusinessRef(businessId).collection('complements');
-  getBusinessProductComplementRef = (businessId: string, complementId: string) =>
+  getBusinessComplementRef = (businessId: string, complementId: string) =>
     this.getBusinessComplementsRef(businessId).doc(complementId);
   getBusinessMenuOrderingRef = (businessId: string, menuId: string = 'default') =>
     this.getBusinessRef(businessId).collection('menu').doc(menuId);
@@ -143,8 +143,6 @@ export default class FirebaseRefs {
     `${this.getBusinessStoragePath(businessId)}/cover_1008x360.jpg`;
   getProductsStoragePath = (businessId: string) =>
     `${this.getBusinessStoragePath(businessId)}/products`;
-  getProductUploadStoragePath = (businessId: string, productId: string, size: string) =>
-    `${this.getProductsStoragePath(businessId)}/${productId}_${size}.jpg`;
   getProductImageStoragePath = (businessId: string, productId: string, size: string) =>
     `${this.getProductsStoragePath(businessId)}/${productId}_${size}.jpg`;
   getComplementsStoragePath = (businessId: string) =>
