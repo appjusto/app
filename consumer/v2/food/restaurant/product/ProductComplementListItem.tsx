@@ -4,9 +4,10 @@ import { Text, TouchableWithoutFeedback, View } from 'react-native';
 import { QuantityButton } from '../../../../../common/components/buttons/QuantityButton';
 import { useProductComplementImageURI } from '../../../../../common/store/api/business/hooks/useProductComplementImageURI';
 import { useContextBusinessId } from '../../../../../common/store/context/business';
-import { colors, padding, texts } from '../../../../../common/styles';
+import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { ListItemImage } from '../../common/ListItemImage';
+import { ComplementQuantity } from './ComplementQuantity';
 
 interface Props {
   complement: WithId<Complement>;
@@ -50,15 +51,17 @@ export const ProductComplementListItem = ({
             borderColor: colors.grey50,
           }}
         >
-          <View>
-            <QuantityButton
-              sign={selected ? 'minus' : 'plus'}
-              size="small"
-              selected={selected}
-              disabled={disabled}
-            />
-          </View>
-          <View style={{ flex: 1, paddingHorizontal: padding }}>
+          {!complement.maximum || complement.maximum <= 1 ? (
+            <View style={{ marginRight: padding }}>
+              <QuantityButton
+                sign={selected ? 'minus' : 'plus'}
+                size="small"
+                selected={selected}
+                disabled={disabled}
+              />
+            </View>
+          ) : null}
+          <View style={{ flex: 1 }}>
             <Text style={{ ...texts.sm }}>{complement.name}</Text>
             {complement.description ? (
               <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 4, flexWrap: 'wrap' }}>
@@ -73,13 +76,15 @@ export const ProductComplementListItem = ({
             </View>
           ) : null}
         </View>
-        {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <ComplementQuantity
-            onIncrement={onIncrement}
-            onDecrement={onDecrement}
-            quantity={quantity}
-          />
-        </View> */}
+        {complement.maximum! > 1 ? (
+          <View style={{ flexDirection: 'row', alignItems: 'center', paddingTop: halfPadding }}>
+            <ComplementQuantity
+              onIncrement={onIncrement}
+              onDecrement={onDecrement}
+              quantity={quantity}
+            />
+          </View>
+        ) : null}
       </View>
     </TouchableWithoutFeedback>
   );
