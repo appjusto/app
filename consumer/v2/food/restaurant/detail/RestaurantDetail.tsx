@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
@@ -7,6 +8,7 @@ import {
   Platform,
   SectionList,
   Share,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -21,9 +23,9 @@ import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { useContextBusiness } from '../../../../../common/store/context/business';
 import { useContextCategoriesWithProducts } from '../../../../../common/store/context/menu';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
-import { colors, halfPadding, screens } from '../../../../../common/styles';
+import { borders, colors, halfPadding, screens, texts } from '../../../../../common/styles';
+import { getExtra } from '../../../../../common/utils/config';
 import { t } from '../../../../../strings';
-import { AppJustoSiteURL } from '../../../../../strings/values';
 import { LoggedNavigatorParamList } from '../../../types';
 import { RestaurantHeader } from '../../common/RestaurantHeader';
 import { FoodOrderNavigatorParamList } from '../../types';
@@ -45,34 +47,35 @@ type Props = {
 
 export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   // context
-  const restaurant = useContextBusiness();
+  const restaurant = useContextBusiness()!;
   const activeOrder = useContextActiveOrder();
   const categoriesWithProducts = useContextCategoriesWithProducts();
   const tallerDevice = useTallerDevice();
   // redux
   const consumer = useSelector(getConsumer);
+  const extra = useSelector(getExtra);
+  const domain = `${extra.environment.charAt(0)}.deeplink.appjusto.com.br`;
+
+  // handler
+  const shareRestaurant = React.useCallback(() => {
+    try {
+      Share.share({
+        message: `Pedi em ${
+          restaurant!.name
+        } usando o AppJusto, uma plataforma de delivery mais justa para clientes, entregadores e restaurantes. Peça também e faça parte desse movimento!`,
+        title: 'AppJusto',
+        url: restaurant.slug
+          ? `https://${domain}/consumer/r?id=${restaurant.slug}`
+          : `https://${domain}/consumer/r?id=${restaurant.code}`,
+      });
+    } catch (error) {}
+  }, [restaurant, domain]);
 
   // side effects
+  // setting the restaurant.name in the header
   React.useLayoutEffect(() => {
-    const shareRestaurant = () => {
-      //this needs the deeplinks Italo appointed in the backlog (notion)
-      try {
-        Share.share({
-          message: `Pedi em ${
-            restaurant!.name
-          } usando o AppJusto, uma plataforma de delivery mais justa para clientes, entregadores e restaurantes. Peça também e faça parte desse movimento!`,
-          title: 'AppJusto',
-          url: AppJustoSiteURL,
-        });
-      } catch (error) {}
-    };
     navigation.setOptions({
       title: restaurant?.name ?? '',
-      // headerRight: () => (
-      //   <TouchableOpacity onPress={shareRestaurant} style={{ paddingRight: 12 }}>
-      //     <Ionicons name="share-social-outline" size={24} />
-      //   </TouchableOpacity>
-      // ),
     });
   }, [navigation, restaurant]);
   console.log(consumer?.id);
@@ -103,6 +106,38 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
               onPress={() => navigation.navigate('AboutRestaurant')}
               canNavigate
             />
+            <TouchableOpacity
+              style={{ paddingHorizontal: 12, paddingTop: 12 }}
+              onPress={shareRestaurant}
+            >
+              <PaddedView
+                half
+                style={{
+                  flexDirection: 'row',
+                  backgroundColor: colors.grey50,
+                  ...borders.default,
+                  borderColor: colors.grey50,
+                  alignItems: 'center',
+                }}
+              >
+                <View
+                  style={{
+                    marginRight: halfPadding,
+                    backgroundColor: colors.green500,
+                    height: 24,
+                    width: 24,
+                    borderRadius: 12,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Ionicons name="share-social-outline" size={14} />
+                </View>
+                <Text style={{ ...texts.xs }}>
+                  {t('Compartilhe esse restaurante com seus amigos!')}
+                </Text>
+              </PaddedView>
+            </TouchableOpacity>
           </View>
         }
         renderSectionHeader={({ section }) => {

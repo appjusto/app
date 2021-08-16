@@ -101,23 +101,6 @@ export const WithdrawOrderModal = ({
                 </View>
               </View>
             )}
-            {/* {type === 'p2p' && order.origin?.additionalInfo ? (
-              <Text style={{ ...texts.sm, color: colors.grey700 }}>
-                {order.origin.additionalInfo}
-              </Text>
-            ) : null}
-            {type === 'p2p' && order.origin?.intructions ? (
-              <Text style={{ ...texts.sm, color: colors.grey700 }}>{order.origin.intructions}</Text>
-            ) : null} */}
-            {/* {type === 'food' ? (
-              <Text style={{ ...texts.sm, color: colors.grey700 }}>{subTitle}</Text>
-            ) : null} */}
-            {/* {type === 'food' ? (
-              <View style={{ marginTop: padding, alignItems: 'center' }}>
-                <Text style={{ ...texts.xl, color: colors.grey700 }}>{t('Pedido Nº')}</Text>
-                <Text style={{ ...texts.x4l }}>{order.code}</Text>
-              </View>
-            ) : null} */}
             <View style={{ marginTop: padding, alignItems: 'center', marginBottom: padding }}>
               <Text style={{ ...texts.xl, color: colors.grey700 }}>{t('Cliente')}</Text>
               <Text style={{ ...texts.x4l }}>{order.consumer.name}</Text>
