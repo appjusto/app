@@ -92,6 +92,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   // screen state
   const [quantity, setQuantity] = React.useState(1);
   const [complements, setComplements] = React.useState<WithId<Complement>[]>([]);
+  const [complementQuantity, setComplementQuantity] = React.useState(0);
   const [notes, setNotes] = React.useState<string>('');
   const orderItem = React.useMemo(() => {
     if (!product) return undefined;
@@ -221,6 +222,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
                 else setComplements(complements.filter((c) => c.id !== complement.id));
               }
             }}
+            complementQuantity={complementQuantity}
           />
           <HR style={{ marginTop: halfPadding }} />
           <View style={{ padding: 12 }}>

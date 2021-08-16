@@ -82,6 +82,7 @@ export const ProductComplementListItem = ({
               onIncrement={onIncrement}
               onDecrement={onDecrement}
               quantity={quantity}
+              selected={selected}
             />
           </View>
         ) : null}

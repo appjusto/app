@@ -15,11 +15,16 @@ interface Props {
     complement: WithId<Complement>,
     selected: boolean
   ) => void;
+  complementQuantity: number;
 }
 
-export const ItemComplements = ({ product, selectedComplements, onComplementToggle }: Props) => {
+export const ItemComplements = ({
+  product,
+  selectedComplements,
+  onComplementToggle,
+  complementQuantity,
+}: Props) => {
   // state
-  const [quantity, setQuantity] = React.useState(0);
   if (!product.complementsEnabled) return null;
   return (
     <View>
@@ -33,8 +38,6 @@ export const ItemComplements = ({ product, selectedComplements, onComplementTogg
           />
           {group.items?.map((complement) => {
             const selected = Boolean(selectedComplements.find((c) => c.id === complement.id));
-            const groupMaximum = group.maximum;
-            const complementMaximum = complement.maximum;
             return (
               <ProductComplementListItem
                 key={complement.id}
@@ -44,7 +47,7 @@ export const ItemComplements = ({ product, selectedComplements, onComplementTogg
                 onToggle={(selected) => onComplementToggle(group, complement, selected)}
                 onIncrement={() => null}
                 onDecrement={() => null}
-                quantity={quantity}
+                quantity={complementQuantity}
               />
             );
           })}

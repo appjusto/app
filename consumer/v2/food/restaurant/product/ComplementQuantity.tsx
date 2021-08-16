@@ -7,17 +7,18 @@ type Props = {
   onIncrement: () => void;
   onDecrement: () => void;
   quantity: number;
+  selected: boolean;
 };
 
-export const ComplementQuantity = ({ onIncrement, onDecrement, quantity }: Props) => {
+export const ComplementQuantity = ({ onIncrement, onDecrement, quantity, selected }: Props) => {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <TouchableOpacity style={{ paddingRight: halfPadding }} onPress={onIncrement}>
-        <QuantityButton sign="minus" />
+        <QuantityButton sign="minus" selected={selected} />
       </TouchableOpacity>
       <Text style={{ ...texts.md }}>{quantity}</Text>
       <TouchableOpacity style={{ paddingLeft: halfPadding }} onPress={onDecrement}>
-        <QuantityButton sign="plus" />
+        <QuantityButton sign="plus" selected={selected} />
       </TouchableOpacity>
     </View>
   );
