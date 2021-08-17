@@ -5,6 +5,7 @@ import React from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
+import useNotificationToken from '../../../../common/hooks/useNotificationToken';
 import { IconLogin } from '../../../../common/icons/icon-login';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import { HomeCouriersNearbyCard } from '../../../../common/screens/home/cards/HomeCouriersNearbyCard';
@@ -31,6 +32,8 @@ export default function ({ navigation }: Props) {
   // redux store
   const consumer = useSelector(getConsumer);
   const ongoingOrders = useSelector(getOrders);
+  // side effects
+  useNotificationToken();
   // UI
   return (
     <View style={[screens.headless, screens.config]}>

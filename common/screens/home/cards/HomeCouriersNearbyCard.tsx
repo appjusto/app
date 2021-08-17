@@ -18,7 +18,7 @@ export const HomeCouriersNearbyCard = () => {
   // redux
   const consumer = useSelector(getConsumer);
   // state
-  const { coords } = useLastKnownLocation();
+  const { coords } = useLastKnownLocation(!!consumer);
   const [availableCouriers, setAvailableCouriers] = React.useState(0);
   // callbacks
   const fetchTotalCouriersNearby = React.useCallback(async () => {
@@ -47,7 +47,7 @@ export const HomeCouriersNearbyCard = () => {
     return () => navigation.removeListener('focus', fetchTotalCouriersNearby);
   });
   // UI
-  if (!consumer) return null;
+  if (!consumer || !coords) return null;
   return (
     <TouchableOpacity onPress={fetchTotalCouriersNearby}>
       <HomeCard
