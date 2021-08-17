@@ -170,7 +170,6 @@ export const MarketplaceAccountInfo = () => {
             <DefaultButton
               style={{ marginTop: padding }}
               title={t('Antecipar valores')}
-              // disabled={receivableBalance === 0}
               onPress={advanceHandler}
               secondary
             />
