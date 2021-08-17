@@ -31,7 +31,7 @@ export const DeliveredItems = ({ order }: Props) => {
                 <View style={{ flexDirection: 'row', marginVertical: 4 }}>
                   <Text
                     style={{ ...texts.xs, color: colors.green500 }}
-                  >{`${item.quantity}x `}</Text>
+                  >{`${complement.quantity}x `}</Text>
                   <Text style={{ ...texts.xs, color: colors.grey700 }}>
                     {formatCurrency(complement.price)}
                   </Text>
