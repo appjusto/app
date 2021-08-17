@@ -33,7 +33,6 @@ export const Receivables = ({ navigation, route }: Props) => {
   const [selected, setSelected] = React.useState<number[]>([]);
   // side effects
   const receivables = useReceivables();
-  console.log(route.params.receivableBalance);
   // handlers
   const advanceHandler = () => navigation.replace('AdvanceReceivables', { ids: selected });
   // UI

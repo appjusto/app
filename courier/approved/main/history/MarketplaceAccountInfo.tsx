@@ -76,7 +76,6 @@ export const MarketplaceAccountInfo = () => {
         receivableBalance: info!.receivable_balance,
       },
     });
-  console.log(info);
   // UI
   return (
     <View>
