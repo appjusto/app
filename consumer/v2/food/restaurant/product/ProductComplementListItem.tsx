@@ -62,7 +62,7 @@ export const ProductComplementListItem = ({
                 sign={selected ? 'minus' : 'plus'}
                 size="small"
                 selected={selected}
-                disabled={!canAdd}
+                disabled={!canAdd && !selected}
               />
             </View>
           ) : null}
