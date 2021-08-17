@@ -1,4 +1,10 @@
-import { Complement, OrderItem, OrderItemComplement, WithId } from '@appjusto/types';
+import {
+  Complement,
+  ComplementGroup,
+  OrderItem,
+  OrderItemComplement,
+  WithId,
+} from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -139,7 +145,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     );
   }
   // helpers
-  const addComplement = (complement: WithId<Complement>) => {
+  const addComplement = (group: WithId<ComplementGroup>, complement: WithId<Complement>) => {
     setComplements([
       ...complements,
       {
@@ -147,6 +153,10 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         complementId: complement.id,
         price: complement.price,
         groupName: getComplementGroup(complement.id)?.name ?? '',
+        group: {
+          id: group.id,
+          name: group.name,
+        },
         quantity: 1,
       },
     ]);
@@ -155,9 +165,9 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     setComplements(complements.filter((c) => c.complementId !== complementId));
   };
   const updateComplementQuantity = (complementId: string, delta: number) => {
+    console.log('updateComplementQuantity', complementId, delta);
     const index = complements.findIndex((c) => c.complementId === complementId);
     const complement = complements[index];
-    console.log('updateComplementQuantity', complement);
     const quantity = complement.quantity + delta;
     if (quantity === 0) removeComplement(complementId);
     else {
@@ -227,14 +237,18 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         <View style={{ flex: 1 }}>
           <ItemComplements
             product={product}
-            getTotalComplements={() => helpers.totalComplements(complements)}
+            getTotalComplements={(group: WithId<ComplementGroup>) =>
+              helpers.totalComplements(group, complements)
+            }
             getComplementQuantity={(complementId: string) =>
               complements.find((c) => c.complementId === complementId)?.quantity ?? 0
             }
             canAddComplement={(group) => helpers.canAddComplement(group, complements)}
             onComplementToggle={(group, complement, selected) => {
+              console.log('onComplementToggle', helpers.canAddComplement(group, complements));
               if (!selected) removeComplement(complement.id);
-              else if (helpers.canAddComplement(group, complements)) addComplement(complement);
+              else if (helpers.canAddComplement(group, complements))
+                addComplement(group, complement);
             }}
             onComplementIncrement={(complementId) => updateComplementQuantity(complementId, 1)}
             onComplementDecrement={(complementId) => updateComplementQuantity(complementId, -1)}

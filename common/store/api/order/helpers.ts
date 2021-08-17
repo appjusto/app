@@ -1,4 +1,11 @@
-import { ComplementGroup, Order, OrderItem, OrderItemComplement, Product } from '@appjusto/types';
+import {
+  ComplementGroup,
+  Order,
+  OrderItem,
+  OrderItemComplement,
+  Product,
+  WithId,
+} from '@appjusto/types';
 import { isEmpty } from 'lodash';
 import { distanceBetweenLatLng } from '../helpers';
 
@@ -63,23 +70,24 @@ export const getItemTotal = (item: OrderItem) => {
 
 // complements
 
-// export const totalComplementsInGroup = (
-//   group: ComplementGroup,
-//   complements: OrderItemComplement[]
-// ) =>
-//   intersection(
-//     complements.map((c) => c.complementId),
-//     (group.items ?? []).map((c) => c.id)
-//   ).length;
+export const totalComplements = (
+  group: WithId<ComplementGroup>,
+  complements: OrderItemComplement[]
+) =>
+  complements
+    .filter((c) => c.group.id === group.id)
+    .reduce((total, complement) => total + complement.quantity, 0);
 
-export const totalComplements = (complements: OrderItemComplement[]) =>
-  complements.reduce((total, complement) => total + (complement.quantity ?? 1), 0);
+export const canAddComplement = (
+  group: WithId<ComplementGroup>,
+  complements: OrderItemComplement[]
+) => totalComplements(group, complements) < group.maximum;
 
-export const canAddComplement = (group: ComplementGroup, complements: OrderItemComplement[]) =>
-  totalComplements(complements) < group.maximum;
-
-export const hasSatisfiedGroup = (group: ComplementGroup, complements: OrderItemComplement[]) => {
-  const total = totalComplements(complements);
+export const hasSatisfiedGroup = (
+  group: WithId<ComplementGroup>,
+  complements: OrderItemComplement[]
+) => {
+  const total = totalComplements(group, complements);
   return total >= group.minimum && total <= group.maximum;
 };
 

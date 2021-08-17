@@ -8,7 +8,7 @@ import { ProductComplementListItem } from './ProductComplementListItem';
 
 interface Props {
   product: WithId<Product>;
-  getTotalComplements: () => number;
+  getTotalComplements: (group: WithId<ComplementGroup>) => number;
   getComplementQuantity: (complementId: string) => number;
   canAddComplement: (group: WithId<ComplementGroup>) => boolean;
   onComplementToggle: (
@@ -39,7 +39,7 @@ export const ItemComplements = ({
           <ItemComplementRequiredLabel
             style={{ marginLeft: padding, marginBottom: halfPadding }}
             group={group}
-            totalSelected={getTotalComplements()}
+            totalSelected={getTotalComplements(group)}
           />
           {group.items?.map((complement) => {
             return (
@@ -50,8 +50,16 @@ export const ItemComplements = ({
                 getComplementQuantity={getComplementQuantity}
                 canAddComplement={(group) => canAddComplement(group)}
                 onToggle={(selected) => onComplementToggle(group, complement, selected)}
-                onIncrement={() => onComplementIncrement(complement.id)}
-                onDecrement={() => onComplementDecrement(complement.id)}
+                onIncrement={() =>
+                  getComplementQuantity(complement.id) > 0
+                    ? onComplementIncrement(complement.id)
+                    : onComplementToggle(group, complement, true)
+                }
+                onDecrement={() =>
+                  getComplementQuantity(complement.id) > 0
+                    ? onComplementDecrement(complement.id)
+                    : onComplementToggle(group, complement, false)
+                }
               />
             );
           })}

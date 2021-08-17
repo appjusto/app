@@ -84,7 +84,7 @@ export const ProductComplementListItem = ({
         {maximum > 1 ? (
           <View style={{ flexDirection: 'row', alignItems: 'center', paddingTop: halfPadding }}>
             <ComplementQuantity
-              onIncrement={() => (quantity === 0 ? onToggle(true) : onIncrement())}
+              onIncrement={onIncrement}
               onDecrement={onDecrement}
               quantity={quantity}
               incrementDisabled={!canAdd}

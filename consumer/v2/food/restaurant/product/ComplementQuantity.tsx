@@ -22,7 +22,13 @@ export const ComplementQuantity = ({
         <QuantityButton sign="minus" disabled={quantity === 0} />
       </TouchableOpacity>
       <Text style={{ ...texts.md }}>{quantity}</Text>
-      <TouchableOpacity style={{ paddingLeft: halfPadding }} onPress={onIncrement}>
+      <TouchableOpacity
+        style={{ paddingLeft: halfPadding }}
+        onPress={() => {
+          console.log('onIncrement');
+          if (!incrementDisabled) onIncrement();
+        }}
+      >
         <QuantityButton sign="plus" selected={quantity > 0} disabled={incrementDisabled} />
       </TouchableOpacity>
     </View>
