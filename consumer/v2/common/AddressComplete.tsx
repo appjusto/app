@@ -64,7 +64,6 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   const [additionalInfo, setAdditionalInfo] = React.useState(value?.additionalInfo ?? '');
   const [autocompletePredictions, setAutoCompletePredictions] = React.useState<Address[]>([]);
   const [selectedAddress, setSelectedAddress] = React.useState<Address | null>(null);
-  console.log(autocompletePredictions);
   const sections: SectionListData<Address>[] = React.useMemo(() => {
     let sections: SectionListData<Address>[] = [];
     sections = [

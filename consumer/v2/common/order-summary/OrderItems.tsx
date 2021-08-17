@@ -55,7 +55,7 @@ export const OrderItems = ({ order, onEditItemPress, onAddItemsPress }: Props) =
                   <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
                     <Text
                       style={{ ...texts.xs, color: colors.green600 }}
-                    >{`${item.quantity}x `}</Text>
+                    >{`${complement.quantity}x `}</Text>
                     <Text style={{ ...texts.xs, color: colors.grey700 }}>
                       {formatCurrency(complement.price)}
                     </Text>

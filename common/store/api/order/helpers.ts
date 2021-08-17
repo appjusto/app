@@ -1,5 +1,12 @@
-import { Complement, ComplementGroup, Order, OrderItem, Product, WithId } from '@appjusto/types';
-import { intersection, isEmpty } from 'lodash';
+import {
+  ComplementGroup,
+  Order,
+  OrderItem,
+  OrderItemComplement,
+  Product,
+  WithId,
+} from '@appjusto/types';
+import { isEmpty } from 'lodash';
 import { distanceBetweenLatLng } from '../helpers';
 
 // items
@@ -55,7 +62,7 @@ const mergeItems = (a: OrderItem, b: OrderItem): OrderItem => ({
 
 export const getItemTotal = (item: OrderItem) => {
   const complemementsTotal = (item.complements ?? []).reduce(
-    (total, complement) => total + complement.price,
+    (total, complement) => total + complement.price * (complement.quantity ?? 1),
     0
   );
   return item.quantity * (item.product.price + complemementsTotal);
@@ -63,24 +70,28 @@ export const getItemTotal = (item: OrderItem) => {
 
 // complements
 
-export const totalComplementsInGroup = (
-  group: ComplementGroup,
-  complements: WithId<Complement>[]
+export const totalComplements = (
+  group: WithId<ComplementGroup>,
+  complements: OrderItemComplement[]
 ) =>
-  intersection(
-    complements.map((c) => c.id),
-    (group.items ?? []).map((c) => c.id)
-  ).length;
+  complements
+    .filter((c) => c.group.id === group.id)
+    .reduce((total, complement) => total + complement.quantity, 0);
 
-export const canAddComplement = (group: ComplementGroup, complements: WithId<Complement>[]) =>
-  totalComplementsInGroup(group, complements) < group.maximum;
+export const canAddComplement = (
+  group: WithId<ComplementGroup>,
+  complements: OrderItemComplement[]
+) => totalComplements(group, complements) < group.maximum;
 
-export const hasSatisfiedGroup = (group: ComplementGroup, complements: WithId<Complement>[]) => {
-  const total = totalComplementsInGroup(group, complements);
+export const hasSatisfiedGroup = (
+  group: WithId<ComplementGroup>,
+  complements: OrderItemComplement[]
+) => {
+  const total = totalComplements(group, complements);
   return total >= group.minimum && total <= group.maximum;
 };
 
-export const hasSatisfiedAllGroups = (product: Product, complements: WithId<Complement>[]) =>
+export const hasSatisfiedAllGroups = (product: Product, complements: OrderItemComplement[]) =>
   product.complementsGroups?.every((group) => hasSatisfiedGroup(group, complements)) ?? true;
 
 // total

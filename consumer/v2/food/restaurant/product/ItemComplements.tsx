@@ -2,24 +2,34 @@ import { Complement, ComplementGroup, Product, WithId } from '@appjusto/types';
 import React from 'react';
 import { View } from 'react-native';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';
-import * as helpers from '../../../../../common/store/api/order/helpers';
 import { halfPadding, padding } from '../../../../../common/styles';
 import { ItemComplementRequiredLabel } from './ItemComplementRequiredLabel';
 import { ProductComplementListItem } from './ProductComplementListItem';
 
 interface Props {
   product: WithId<Product>;
-  selectedComplements: WithId<Complement>[];
+  getTotalComplements: (group: WithId<ComplementGroup>) => number;
+  getComplementQuantity: (complementId: string) => number;
+  canAddComplement: (group: WithId<ComplementGroup>) => boolean;
   onComplementToggle: (
     group: WithId<ComplementGroup>,
     complement: WithId<Complement>,
     selected: boolean
   ) => void;
+  onComplementIncrement: (complementId: string) => void;
+  onComplementDecrement: (complementId: string) => void;
 }
 
-export const ItemComplements = ({ product, selectedComplements, onComplementToggle }: Props) => {
-  // state
-  const [quantity, setQuantity] = React.useState(0);
+export const ItemComplements = ({
+  product,
+  getTotalComplements,
+  getComplementQuantity,
+  canAddComplement,
+  onComplementToggle,
+  onComplementIncrement,
+  onComplementDecrement,
+}: Props) => {
+  // UI
   if (!product.complementsEnabled) return null;
   return (
     <View>
@@ -29,22 +39,27 @@ export const ItemComplements = ({ product, selectedComplements, onComplementTogg
           <ItemComplementRequiredLabel
             style={{ marginLeft: padding, marginBottom: halfPadding }}
             group={group}
-            totalSelected={helpers.totalComplementsInGroup(group, selectedComplements)}
+            totalSelected={getTotalComplements(group)}
           />
           {group.items?.map((complement) => {
-            const selected = Boolean(selectedComplements.find((c) => c.id === complement.id));
-            const groupMaximum = group.maximum;
-            const complementMaximum = complement.maximum;
             return (
               <ProductComplementListItem
                 key={complement.id}
+                group={group}
                 complement={complement}
-                selected={selected}
-                disabled={!selected && !helpers.canAddComplement(group, selectedComplements)}
+                getComplementQuantity={getComplementQuantity}
+                canAddComplement={(group) => canAddComplement(group)}
                 onToggle={(selected) => onComplementToggle(group, complement, selected)}
-                onIncrement={() => null}
-                onDecrement={() => null}
-                quantity={quantity}
+                onIncrement={() =>
+                  getComplementQuantity(complement.id) > 0
+                    ? onComplementIncrement(complement.id)
+                    : onComplementToggle(group, complement, true)
+                }
+                onDecrement={() =>
+                  getComplementQuantity(complement.id) > 0
+                    ? onComplementDecrement(complement.id)
+                    : onComplementToggle(group, complement, false)
+                }
               />
             );
           })}
