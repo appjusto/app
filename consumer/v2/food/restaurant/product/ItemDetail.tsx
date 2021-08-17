@@ -91,8 +91,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const { data: imageURI } = useProductImageURI(businessId, productId, '1008x720');
   // screen state
   const [quantity, setQuantity] = React.useState(1);
-  const [complements, setComplements] = React.useState<WithId<Complement>[]>([]);
-  const [complementQuantity, setComplementQuantity] = React.useState(0);
+  const [complements, setComplements] = React.useState<OrderItemComplement[]>([]);
   const [notes, setNotes] = React.useState<string>('');
   const orderItem = React.useMemo(() => {
     if (!product) return undefined;
@@ -106,15 +105,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
       },
       quantity,
       notes,
-      complements: complements.map(
-        (complement) =>
-          ({
-            name: complement.name,
-            complementId: complement.id,
-            price: complement.price,
-            groupName: getComplementGroup(complement.id)?.name ?? '',
-          } as OrderItemComplement)
-      ),
+      complements,
     } as OrderItem;
   }, [product, itemId, quantity, notes, complements]);
   const canAddItemToOrder = React.useMemo(() => {
@@ -135,16 +126,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     if (!product) return;
     const item = activeOrder.items?.find((i) => i.id === itemId);
     if (!item) return;
-    // get ids of added complements
-    const complementsIds = item.complements?.map((complement) => complement.complementId) ?? [];
-    // get complements from product using ids
-    const itemComplements = (product.complementsGroups ?? []).reduce<WithId<Complement>[]>(
-      (result, group) => {
-        return [...result, ...(group.items ?? []).filter((c) => complementsIds.includes(c.id))];
-      },
-      []
-    );
-    setComplements(itemComplements);
+    setComplements(item.complements ?? []);
     setQuantity(item.quantity);
     setNotes(item.notes ?? '');
   }, [itemId, activeOrder, product]);
@@ -156,8 +138,38 @@ export const ItemDetail = ({ navigation, route }: Props) => {
       </View>
     );
   }
+  // helpers
+  const addComplement = (complement: WithId<Complement>) => {
+    setComplements([
+      ...complements,
+      {
+        name: complement.name,
+        complementId: complement.id,
+        price: complement.price,
+        groupName: getComplementGroup(complement.id)?.name ?? '',
+        quantity: 1,
+      },
+    ]);
+  };
+  const removeComplement = (complementId: string) => {
+    setComplements(complements.filter((c) => c.complementId !== complementId));
+  };
+  const updateComplementQuantity = (complementId: string, delta: number) => {
+    const index = complements.findIndex((c) => c.complementId === complementId);
+    const complement = complements[index];
+    console.log('updateComplementQuantity', complement);
+    const quantity = complement.quantity + delta;
+    if (quantity === 0) removeComplement(complementId);
+    else {
+      setComplements([
+        ...complements.slice(0, index),
+        { ...complement, quantity },
+        ...complements.slice(index + 1),
+      ]);
+    }
+  };
   // handlers
-  const addItemToOrder = () => {
+  const updateOrder = () => {
     (async () => {
       if (!orderItem) return;
       if (!activeOrder) {
@@ -215,14 +227,17 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         <View style={{ flex: 1 }}>
           <ItemComplements
             product={product}
-            selectedComplements={complements}
+            getTotalComplements={() => helpers.totalComplements(complements)}
+            getComplementQuantity={(complementId: string) =>
+              complements.find((c) => c.complementId === complementId)?.quantity ?? 0
+            }
+            canAddComplement={(group) => helpers.canAddComplement(group, complements)}
             onComplementToggle={(group, complement, selected) => {
-              if (!selected || helpers.canAddComplement(group, complements)) {
-                if (selected) setComplements([...complements, complement]);
-                else setComplements(complements.filter((c) => c.id !== complement.id));
-              }
+              if (!selected) removeComplement(complement.id);
+              else if (helpers.canAddComplement(group, complements)) addComplement(complement);
             }}
-            complementQuantity={complementQuantity}
+            onComplementIncrement={(complementId) => updateComplementQuantity(complementId, 1)}
+            onComplementDecrement={(complementId) => updateComplementQuantity(complementId, -1)}
           />
           <HR style={{ marginTop: halfPadding }} />
           <View style={{ padding: 12 }}>
@@ -318,7 +333,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
               title={`${t('Adicionar')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
               disabled={!canAddItemToOrder}
               onChange={(value) => setQuantity(value)}
-              onSubmit={addItemToOrder}
+              onSubmit={updateOrder}
             />
           </PaddedView>
         </View>

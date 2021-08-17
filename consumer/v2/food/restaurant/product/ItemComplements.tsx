@@ -2,29 +2,34 @@ import { Complement, ComplementGroup, Product, WithId } from '@appjusto/types';
 import React from 'react';
 import { View } from 'react-native';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';
-import * as helpers from '../../../../../common/store/api/order/helpers';
 import { halfPadding, padding } from '../../../../../common/styles';
 import { ItemComplementRequiredLabel } from './ItemComplementRequiredLabel';
 import { ProductComplementListItem } from './ProductComplementListItem';
 
 interface Props {
   product: WithId<Product>;
-  selectedComplements: WithId<Complement>[];
+  getTotalComplements: () => number;
+  getComplementQuantity: (complementId: string) => number;
+  canAddComplement: (group: WithId<ComplementGroup>) => boolean;
   onComplementToggle: (
     group: WithId<ComplementGroup>,
     complement: WithId<Complement>,
     selected: boolean
   ) => void;
-  complementQuantity: number;
+  onComplementIncrement: (complementId: string) => void;
+  onComplementDecrement: (complementId: string) => void;
 }
 
 export const ItemComplements = ({
   product,
-  selectedComplements,
+  getTotalComplements,
+  getComplementQuantity,
+  canAddComplement,
   onComplementToggle,
-  complementQuantity,
+  onComplementIncrement,
+  onComplementDecrement,
 }: Props) => {
-  // state
+  // UI
   if (!product.complementsEnabled) return null;
   return (
     <View>
@@ -34,20 +39,19 @@ export const ItemComplements = ({
           <ItemComplementRequiredLabel
             style={{ marginLeft: padding, marginBottom: halfPadding }}
             group={group}
-            totalSelected={helpers.totalComplementsInGroup(group, selectedComplements)}
+            totalSelected={getTotalComplements()}
           />
           {group.items?.map((complement) => {
-            const selected = Boolean(selectedComplements.find((c) => c.id === complement.id));
             return (
               <ProductComplementListItem
                 key={complement.id}
+                group={group}
                 complement={complement}
-                selected={selected}
-                disabled={!selected && !helpers.canAddComplement(group, selectedComplements)}
+                getComplementQuantity={getComplementQuantity}
+                canAddComplement={(group) => canAddComplement(group)}
                 onToggle={(selected) => onComplementToggle(group, complement, selected)}
-                onIncrement={() => null}
-                onDecrement={() => null}
-                quantity={complementQuantity}
+                onIncrement={() => onComplementIncrement(complement.id)}
+                onDecrement={() => onComplementDecrement(complement.id)}
               />
             );
           })}
