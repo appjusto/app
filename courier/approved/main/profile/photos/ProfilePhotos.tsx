@@ -66,7 +66,7 @@ export default function ({ navigation }: Props) {
   type ChangeImageType = typeof setNewSelfie;
 
   const size = courier.situation === 'approved' ? '1024x1024' : undefined;
-  const currentSelfieQuery = useCourierSelfie(size);
+  const currentSelfieQuery = useCourierSelfie(courier.id, size);
   const uploadSelfie = useMutation(
     (localUri: string) => api.courier().uploadSelfie(courier.id, localUri),
     {
@@ -76,7 +76,7 @@ export default function ({ navigation }: Props) {
     }
   );
 
-  const currentDocumentImageQuery = useCourierDocumentImage(courier.id);
+  const currentDocumentImageQuery = useCourierDocumentImage(courier.id, size);
   const uploadDocumentImage = useMutation(
     (localUri: string) => api.courier().uploadDocumentImage(courier.id, localUri),
     {
@@ -163,7 +163,6 @@ export default function ({ navigation }: Props) {
         }
       }
     );
-
   // UI
   return (
     <ScrollView
