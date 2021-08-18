@@ -79,7 +79,6 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
       title: restaurant?.name ?? '',
     });
   }, [navigation, restaurant]);
-  console.log(consumer?.id);
   // UI
   const sections =
     categoriesWithProducts?.map((category) => ({

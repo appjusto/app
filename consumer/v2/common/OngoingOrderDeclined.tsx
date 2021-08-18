@@ -29,9 +29,10 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   // screen state
-  const order = useObserveOrder(orderId);
+  const order = useObserveOrder(orderId)!;
   const [isLoading, setLoading] = React.useState(false);
   // effects
+  const { dispatchingStatus } = order;
   React.useEffect(() => {
     if (paymentMethodId) {
       navigation.setParams({
@@ -41,9 +42,10 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
       (async () => {
         setLoading(true);
         try {
-          api.order().updateOrderCallable(orderId, { payableWith: 'credit_card', paymentMethodId });
+          await api
+            .order()
+            .updateOrderCallable(orderId, { payableWith: 'credit_card', paymentMethodId });
           setLoading(false);
-          navigation.navigate('OngoingOrder', { orderId });
         } catch (error) {
           setLoading(false);
           // TODO: show toast
@@ -51,6 +53,11 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
       })();
     }
   }, [paymentMethodId, orderId, navigation, api]);
+  // navigating to OngoingOrder after the user changes his payment method
+  // and the matching is restarted
+  React.useEffect(() => {
+    if (dispatchingStatus === 'matching') navigation.navigate('OngoingOrder', { orderId });
+  }, [dispatchingStatus, orderId, navigation]);
   // UI
   if (!order || isLoading) {
     return (
@@ -80,7 +87,6 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
       });
     }
   };
-  const { dispatchingStatus } = order;
   const changePaymentHandler = () => {
     if (dispatchingStatus === 'declined') {
       navigation.navigate('ProfilePaymentMethods', {
@@ -104,6 +110,7 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
         'Não conseguimos efetuar a cobrança na forma de pagamento escolhida. Por favor, altere a forma de pagamento e tente novamente.'
       );
   })();
+  console.log(dispatchingStatus, 'DISPATCHING STATUS');
   // UI
   return (
     <ScrollView
