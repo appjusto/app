@@ -1,9 +1,10 @@
 import { Business } from '@appjusto/types';
-import { useLoggedContextGetServerTime, useLoggedContextPlatformParams } from '../../LoggedContext';
+import { usePlatformParamsContext } from '../../../../common/contexts/PlatformParamsContext';
+import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
 
 export const useBusinessIsAcceptingOrders = (business?: Business) => {
-  const platformParams = useLoggedContextPlatformParams();
-  const getServerTime = useLoggedContextGetServerTime();
+  const platformParams = usePlatformParamsContext();
+  const getServerTime = useContextGetSeverTime();
   if (!platformParams) return false;
   if (!getServerTime) return false;
   if (!business) return false;

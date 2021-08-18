@@ -8,6 +8,7 @@ import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import CheckField from '../../../../../common/components/buttons/CheckField';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
+import { usePlatformParamsContext } from '../../../../../common/contexts/PlatformParamsContext';
 import { useAdvanceSimulation } from '../../../../../common/store/api/courier/account/useAdvanceSimulation';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { showToast } from '../../../../../common/store/ui/actions';
@@ -34,6 +35,7 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  const platformParams = usePlatformParamsContext();
   // redux
   const courier = useSelector(getCourier)!;
   // state
@@ -43,6 +45,15 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
   const simulation = useAdvanceSimulation(route.params.ids);
   // handlers
   const confirmHandler = async () => {
+    if (
+      (platformParams?.courier.restrictWithdrawTo.length ?? 0) > 0 &&
+      !platformParams?.courier.restrictWithdrawTo.includes(courier.id)
+    ) {
+      dispatch(
+        showToast('A antecipação de recebíveis pelo App está limitada durante os testes.', 'error')
+      );
+      return;
+    }
     setRequesting(true);
     try {
       const result = await api.courier().advanceReceivables(courier.id, route.params.ids);

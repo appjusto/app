@@ -9,6 +9,7 @@ import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import HR from '../../../../common/components/views/HR';
+import { usePlatformParamsContext } from '../../../../common/contexts/PlatformParamsContext';
 import { IconWalletSmall } from '../../../../common/icons/icon-wallet-small';
 import { useMarketplaceAccountInfo } from '../../../../common/store/api/courier/account/useMarketplaceAccountInfo';
 import { getCourier } from '../../../../common/store/courier/selectors';
@@ -38,6 +39,7 @@ export const MarketplaceAccountInfo = () => {
   const navigation = useNavigation<ScreenNavigationProp>();
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  const platformParams = usePlatformParamsContext();
   // redux
   const courier = useSelector(getCourier)!;
   // state
@@ -45,11 +47,18 @@ export const MarketplaceAccountInfo = () => {
   // side effects
   const info = useMarketplaceAccountInfo();
   const availableForWithdraw = info ? convertBalance(info.balance_available_for_withdraw) : 0;
-  const receivableBalance = info ? convertBalance(info.receivable_balance) : 0;
+  // const receivableBalance = info ? convertBalance(info.receivable_balance) : 0;
   const minimum = 5;
   // handlers
   const withdrawHandler = async () => {
     if (!availableForWithdraw) return;
+    if (
+      (platformParams?.courier.restrictWithdrawTo.length ?? 0) > 0 &&
+      !platformParams?.courier.restrictWithdrawTo.includes(courier.id)
+    ) {
+      dispatch(showToast('A transferência pelo App está limitada durante os testes.', 'error'));
+      return;
+    }
     setWithdrawing(true);
     try {
       const result = await api.courier().requestWithdraw(courier.id, availableForWithdraw);

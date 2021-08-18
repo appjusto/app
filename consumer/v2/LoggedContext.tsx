@@ -1,34 +1,15 @@
-import { PlatformParams } from '@appjusto/types';
 import React from 'react';
-import { usePlatformParams } from '../../common/utils/platform/usePlatformParams';
-import { useServerTime } from '../../common/utils/platform/useServerTime';
+import { PlatformParamsContextProvider } from '../../common/contexts/PlatformParamsContext';
+import { GetServerTimeContextProvider } from '../../common/contexts/ServerTimeContext';
 
-interface Result {
-  platformParams: PlatformParams | undefined;
-  getServerTime: () => Date;
-}
-
-const LoggedContext = React.createContext<Result | undefined>(undefined);
-
-interface LoggedContextProps {
+interface Props {
   children: React.ReactNode;
 }
 
-export const LoggedContextProvider = (props: LoggedContextProps) => {
-  const platformParams = usePlatformParams();
-  const getServerTime = useServerTime();
-  const result = { platformParams, getServerTime };
-  return <LoggedContext.Provider value={result}>{props.children}</LoggedContext.Provider>;
-};
-
-export const useLoggedContextGetServerTime = () => {
-  const context = React.useContext(LoggedContext);
-  if (!context) return null;
-  return context.getServerTime;
-};
-
-export const useLoggedContextPlatformParams = () => {
-  const context = React.useContext(LoggedContext);
-  if (!context) return null;
-  return context.platformParams;
+export const LoggedContextProvider = (props: Props) => {
+  return (
+    <PlatformParamsContextProvider>
+      <GetServerTimeContextProvider>{props.children}</GetServerTimeContextProvider>
+    </PlatformParamsContextProvider>
+  );
 };
