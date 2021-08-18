@@ -1,4 +1,5 @@
 import { ConsumerProfile } from '@appjusto/types';
+import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { trim } from 'lodash';
@@ -53,6 +54,7 @@ export default function ({ navigation, route }: Props) {
   const [surname, setSurname] = React.useState(consumer.surname ?? '');
   const [cpf, setCpf] = React.useState(consumer.cpf! ?? '');
   const [phone, setPhone] = React.useState(consumer.phone! ?? '');
+  const [focusedField, setFocusedField] = React.useState<string>();
   const [isLoading, setLoading] = React.useState(false);
   const updatedConsumer: Partial<ConsumerProfile> = {
     name: name.trim(),
@@ -154,7 +156,22 @@ export default function ({ navigation, route }: Props) {
             blurOnSubmit={false}
             onSubmitEditing={() => phoneRef.current?.focus()}
             onChangeText={(text) => setCpf(trim(text))}
+            onFocus={() => setFocusedField('cpf')}
+            onBlur={() => setFocusedField(undefined)}
           />
+          {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
+            <Text
+              style={{
+                ...texts.sm,
+                ...texts.bold,
+                color: colors.grey700,
+                marginTop: padding,
+                marginLeft: 6,
+              }}
+            >
+              {t('O CPF digitado não é válido.')}
+            </Text>
+          )}
           <PatternInput
             ref={phoneRef}
             style={{ marginTop: padding }}

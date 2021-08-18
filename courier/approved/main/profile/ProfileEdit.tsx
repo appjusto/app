@@ -155,7 +155,15 @@ export default function ({ navigation, route }: Props) {
             editable={!profileApproved}
           />
           {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
-            <Text style={{ ...texts.sm, ...texts.bold, color: colors.grey700, marginTop: padding }}>
+            <Text
+              style={{
+                ...texts.sm,
+                ...texts.bold,
+                color: colors.grey700,
+                marginTop: padding,
+                marginLeft: 6,
+              }}
+            >
               {t('O CPF digitado não é válido.')}
             </Text>
           )}
