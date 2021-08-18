@@ -6,7 +6,8 @@ import { version, versionCode } from './version.json';
 const {
   FLAVOR,
   ENVIRONMENT,
-  FIREBASE_API_KEY,
+  FIREBASE_API_KEY_ANDROID,
+  FIREBASE_API_KEY_IOS,
   FIREBASE_REGION,
   FIREBASE_PROJECT_ID,
   FIREBASE_MESSAGING_SENDER_ID,
@@ -199,7 +200,8 @@ const extra = (): Extra => ({
   bundleIdentifier: appBundlePackage(),
   androidPackage: appBundlePackage(),
   firebase: {
-    apiKey: FIREBASE_API_KEY!, // it will be filled in runtime according with user's OS
+    apiKeyAndroid: FIREBASE_API_KEY_ANDROID!,
+    apiKeyiOS: FIREBASE_API_KEY_IOS!,
     authDomain: `${FIREBASE_PROJECT_ID}.firebaseapp.com`,
     region: FIREBASE_REGION!,
     projectId: FIREBASE_PROJECT_ID!,

@@ -3,6 +3,7 @@ import { CourierProfile, DeleteAccountPayload } from '@appjusto/types';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import 'firebase/functions';
+import { Platform } from 'react-native';
 import { Extra } from '../../../config/types';
 import AuthApi from './auth';
 import BusinessApi from './business';
@@ -40,7 +41,9 @@ export default class Api {
 
   constructor(extra: Extra) {
     const emulated = extra.firebase.emulator.enabled && extra.firebase.emulator.host;
-    const app = firebase.initializeApp(extra.firebase);
+    const apiKey =
+      Platform.OS === 'android' ? extra.firebase.apiKeyAndroid : extra.firebase.apiKeyiOS;
+    const app = firebase.initializeApp({ ...extra.firebase, apiKey });
     this.authentication = app.auth();
     this.firestore = app.firestore();
     this.functions = app.functions(extra.firebase.region);

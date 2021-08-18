@@ -30,7 +30,8 @@ export interface AlgoliaConfig {
 }
 
 export interface FirebaseConfig {
-  apiKey: string;
+  apiKeyAndroid: string;
+  apiKeyiOS: string;
   authDomain: string;
   region: string;
   projectId: string;
