@@ -57,19 +57,20 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   const domain = `${extra.environment.charAt(0)}.deeplink.appjusto.com.br`;
 
   // handler
-  const shareRestaurant = React.useCallback(() => {
+  const shareRestaurantHandler = async () => {
+    const shareUrl = restaurant.slug
+      ? `https://${domain}/consumer/r?id=${restaurant.slug}`
+      : `https://${domain}/consumer/r?id=${restaurant.code}`;
     try {
       Share.share({
         message: `Pedi em ${
           restaurant!.name
-        } usando o AppJusto, uma plataforma de delivery mais justa para clientes, entregadores e restaurantes. Peça também e faça parte desse movimento!`,
+        } usando o AppJusto, uma plataforma de delivery mais justa para clientes, entregadores e restaurantes. Peça também e faça parte desse movimento: ${shareUrl}`,
         title: 'AppJusto',
-        url: restaurant.slug
-          ? `https://${domain}/consumer/r?id=${restaurant.slug}`
-          : `https://${domain}/consumer/r?id=${restaurant.code}`,
+        url: shareUrl,
       });
     } catch (error) {}
-  }, [restaurant, domain]);
+  };
 
   // side effects
   // setting the restaurant.name in the header
@@ -108,7 +109,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
             />
             <TouchableOpacity
               style={{ paddingHorizontal: 12, paddingTop: 12 }}
-              onPress={shareRestaurant}
+              onPress={shareRestaurantHandler}
             >
               <PaddedView
                 half
