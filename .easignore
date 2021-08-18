@@ -14,5 +14,7 @@ web-report/
 .DS_Store
 
 # Project
-*.env
+.dev.env
+.staging.env
+.live.env
 .tmp/*
