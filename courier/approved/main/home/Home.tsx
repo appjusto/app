@@ -131,7 +131,7 @@ export default function ({ navigation }: Props) {
                 icon={<IconPartners />}
                 title={t('Parceiros com descontos')}
                 subtitle={t(
-                  'Veja as negociações coletivas que o AppJusto conseguir para a categoria'
+                  'Veja as negociações coletivas que o AppJusto conseguiu para a categoria'
                 )}
               />
             </TouchableOpacity>
