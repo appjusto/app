@@ -36,7 +36,7 @@ export default class CourierApi {
   ): firebase.Unsubscribe {
     const unsubscribe = this.refs
       .getCourierRequestsRef(courierId)
-      .where('situation', '==', 'pending')
+      .where('situation', 'in', ['pending', 'viewed'])
       .orderBy('createdOn', 'desc')
       .onSnapshot(
         (querySnapshot) => resultHandler(documentsAs<CourierOrderRequest>(querySnapshot.docs)),
