@@ -29,10 +29,10 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   // screen state
-  const order = useObserveOrder(orderId)!;
+  const order = useObserveOrder(orderId);
   const [isLoading, setLoading] = React.useState(false);
   // effects
-  const { dispatchingStatus } = order;
+  const dispatchingStatus = order?.dispatchingStatus;
   React.useEffect(() => {
     if (paymentMethodId) {
       navigation.setParams({
@@ -45,7 +45,6 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
           await api
             .order()
             .updateOrderCallable(orderId, { payableWith: 'credit_card', paymentMethodId });
-          setLoading(false);
         } catch (error) {
           setLoading(false);
           // TODO: show toast
