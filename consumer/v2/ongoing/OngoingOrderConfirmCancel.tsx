@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
+import { useObserveBusiness } from '../../../common/store/api/business/hooks/useObserveBusiness';
 import { useGetCancellationInfo } from '../../../common/store/api/order/hooks/useGetCancellationInfo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, doublePadding, padding, screens, texts } from '../../../common/styles';
@@ -31,7 +32,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
   //  state
   const order = useObserveOrder(orderId);
   const cancellationInfo = useGetCancellationInfo(orderId);
-  console.log(cancellationInfo);
+  const business = useObserveBusiness(order?.business?.id);
   // handlers
   const cancelOrderHandler = React.useCallback(() => {
     navigation.replace('OngoingOrderCancelOrder', {
