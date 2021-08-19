@@ -2,7 +2,7 @@ import { Business, WithId } from '@appjusto/types';
 import React from 'react';
 import { ApiContext } from '../../../../app/context';
 
-export const useBusiness = (businessId: string) => {
+export const useObserveBusiness = (businessId?: string) => {
   // context
   const api = React.useContext(ApiContext);
   // state
