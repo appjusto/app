@@ -57,7 +57,7 @@
     "classic-build-android-consumer": "FLAVOR=consumer EXPO_RELEASE_CHANNEL=${EXPO_RELEASE_CHANNEL:-$ENV} npm run classic-build-android",
     "classic-build-android-consumer:dev": "ENV=dev npm run classic-build-android-consumer",
     "classic-build-android-consumer:staging": "ENV=staging EXPO_RELEASE_CHANNEL=staging-v5 npm run classic-build-android-consumer",
-    "classic-build-android-consumer:live": "ENV=live EXPO_RELEASE_CHANNEL=${EXPO_RELEASE_CHANNEL:live-v5} EXPO_BUILD_TYPE=app-bundle npm run classic-build-android-courier",
+    "classic-build-android-consumer:live": "ENV=live EXPO_RELEASE_CHANNEL=live-v5 EXPO_BUILD_TYPE=app-bundle npm run classic-build-android-consumer",
     "classic-build-ios-consumer:staging": "ENV=staging npm run prepare-publish && FLAVOR=consumer expo build:ios -t archive --release-channel staging-v5",
     "classic-build-ios-consumer:live": "ENV=live npm run prepare-publish && FLAVOR=consumer expo build:ios -t archive --release-channel live-v5",
     "install-local-types": "npm uninstall @appjusto/types && npm install ../types",
