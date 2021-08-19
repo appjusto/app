@@ -45,11 +45,7 @@ export const OrderAvailableFleets = ({
           }}
         >
           <Text style={{ ...texts.md, ...texts.bold }}>{t('Escolha a frota')}</Text>
-          {isLoading ? (
-            <View style={screens.centered}>
-              <ActivityIndicator size="small" color={colors.green500} />
-            </View>
-          ) : quotes?.length ? (
+          {isLoading ? null : quotes?.length ? (
             <Text style={{ ...texts.xs, color: colors.grey700 }}>
               {t('Exibindo ')}
               {quotes?.length ?? 0}
