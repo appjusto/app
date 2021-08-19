@@ -71,21 +71,25 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
           marginBottom: padding,
         }}
       >
-        <DefaultButton
-          title={t('Tentar novamente')}
-          onPress={tryAgainHandler}
-          activityIndicator={isLoading}
-          disabled={isLoading}
-          secondary
-        />
+        <View style={{ width: '49%' }}>
+          <DefaultButton
+            title={t('Tentar novamente')}
+            onPress={tryAgainHandler}
+            activityIndicator={isLoading}
+            disabled={isLoading}
+            secondary
+          />
+        </View>
 
-        <DefaultButton
-          title={t('Cancelar pedido')}
-          onPress={() => navigation.navigate('OngoingOrderConfirmCancel', { orderId })}
-          activityIndicator={isLoading}
-          disabled={isLoading}
-          secondary
-        />
+        <View style={{ width: '49%' }}>
+          <DefaultButton
+            title={t('Cancelar pedido')}
+            onPress={() => navigation.navigate('OngoingOrderConfirmCancel', { orderId })}
+            activityIndicator={isLoading}
+            disabled={isLoading}
+            secondary
+          />
+        </View>
       </View>
       <DefaultButton
         title={t('Voltar para o início')}

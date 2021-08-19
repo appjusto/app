@@ -50,6 +50,9 @@ export default function ({ order, onPress }: Props) {
         } else if (dispatchingStatus === 'no-match') {
           title = t('Sem entregadores/as na região');
           detail = t('Clique para tentar novamente');
+        } else if (dispatchingStatus === 'declined') {
+          title = t('Problema no pagamento');
+          detail = t('Selecione outra forma de pagamento');
         }
       } else if (status === 'dispatching') {
         title = t('Corrida em andamento');
