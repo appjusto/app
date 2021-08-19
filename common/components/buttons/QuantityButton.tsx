@@ -27,10 +27,14 @@ export const QuantityButton = ({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: selected ? colors.green500 : colors.white,
-        borderColor: disabled ? colors.grey500 : colors.black,
+        borderColor: disabled && !selected ? colors.grey500 : colors.black,
       }}
     >
-      <Feather name={sign} size={dimension / 2} color={disabled ? colors.grey500 : colors.black} />
+      <Feather
+        name={sign}
+        size={dimension / 2}
+        color={disabled && !selected ? colors.grey500 : colors.black}
+      />
     </View>
   );
 };
