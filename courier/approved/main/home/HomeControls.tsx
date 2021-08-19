@@ -38,7 +38,6 @@ export default function ({ onFleetDetail }: Props) {
   const courier = useSelector(getCourier)!;
   const status = courier!.status;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
-  const [switchValue, setSwitchValue] = React.useState(working);
   // handlers
   const toggleWorking = () => {
     if (status === 'dispatching') {
@@ -56,7 +55,6 @@ export default function ({ onFleetDetail }: Props) {
       return;
     }
     dispatch(updateProfile(api)(courier.id, { status: newStatus }));
-    setSwitchValue(!switchValue);
   };
 
   // UI
@@ -109,7 +107,7 @@ export default function ({ onFleetDetail }: Props) {
                 thumbColor={working ? colors.green500 : colors.black}
                 ios_backgroundColor={colors.white}
                 onValueChange={toggleWorking}
-                value={switchValue}
+                value={working}
               />
             </View>
           </View>
