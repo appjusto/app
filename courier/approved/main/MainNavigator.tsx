@@ -90,7 +90,7 @@ export default function ({ navigation }: Props) {
         });
       }
     }
-  });
+  }, [action, navigation]);
   // UI
   return (
     <Tab.Navigator
