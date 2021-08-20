@@ -44,7 +44,7 @@ export const Receivables = ({ navigation, route }: Props) => {
         </Text>
         <Text style={{ ...texts.sm, marginTop: padding }}>
           {t(
-            'Para realizar a antecipação, será cobrada uma taxa de 0.0% + R$ 0.00 pela operação financeira. Nada desse dinheiro não ficará com o AppJusto.'
+            'Para realizar a antecipação, a iugu cobra uma taxa de 2.5% ao mês pela operação financeira. Nada desse dinheiro ficará com o AppJusto.'
           )}
         </Text>
         <PaddedView
