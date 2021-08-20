@@ -60,8 +60,8 @@ export default ({ navigation, route }: Props) => {
       else return t('Como você já iniciou o pedido, você receberá: ');
     }
     if (flavor === 'consumer') {
-      return `${t('Esse pedido foi cancelado por')} ${order.business!.name}${t(
-        '. A cobrança será estornada.'
+      return `${t('Esse pedido foi cancelado por')} ${order.business!.name}. ${t(
+        'A cobrança será estornada.'
       )}`;
     }
   })();
@@ -72,7 +72,7 @@ export default ({ navigation, route }: Props) => {
   })();
   return (
     <FeedbackView
-      header={t('Esse pedido foi cancelado')}
+      header={`${t('Esse pedido foi cancelado:')} \n${cancelInfo.issue?.title ?? ''}`}
       icon={<IconConeYellow />}
       description={description}
       value={value}
