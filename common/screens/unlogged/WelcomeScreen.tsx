@@ -8,7 +8,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View
+  View,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
@@ -40,7 +40,7 @@ type Props = {
 };
 
 const { height } = Dimensions.get('window');
-const tallerDevice = height > 640;
+const tallerDevice = height > 680;
 
 export default function ({ navigation, route }: Props) {
   // context
@@ -96,7 +96,7 @@ export default function ({ navigation, route }: Props) {
         <View style={{ flex: 1, paddingHorizontal: padding }}>
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <>
-              <ShowIf test={tallerDevice && flavor === 'consumer'}>
+              <ShowIf test={flavor === 'consumer'}>
                 {() => (
                   <View
                     style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}
@@ -107,7 +107,7 @@ export default function ({ navigation, route }: Props) {
                   </View>
                 )}
               </ShowIf>
-              <ShowIf test={tallerDevice && flavor === 'courier'}>
+              <ShowIf test={flavor === 'courier'}>
                 {() => (
                   <View
                     style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}

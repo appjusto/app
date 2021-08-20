@@ -10,7 +10,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { nanoid } from 'nanoid/non-secure';
 import React from 'react';
-import { ActivityIndicator, Image, Platform, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../../common/app/context';
@@ -338,7 +338,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         </View>
       </KeyboardAwareScrollView>
       {!isOutOfRange && isAcceptingOrders ? (
-        <View style={{ paddingBottom: Platform.OS === 'ios' && tallerDevice ? halfPadding : 0 }}>
+        <View>
           <HR />
           <PaddedView>
             <ItemQuantity

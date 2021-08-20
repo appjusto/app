@@ -65,7 +65,7 @@ export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) =>
             justifyContent: 'space-between',
           }}
         >
-          <View>
+          <View style={{ width: '78%' }}>
             <Text style={{ ...texts.xl }}>{restaurant.name}</Text>
             <Text style={{ ...texts.xs, color: colors.green600 }}>{cuisine?.name}</Text>
             <Text style={{ ...texts.xs, color: colors.grey700 }}>

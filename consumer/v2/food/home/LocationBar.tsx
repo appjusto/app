@@ -90,21 +90,21 @@ export const LocationBar = () => {
         height: 42,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
         paddingHorizontal: 12,
         borderRadius: 32,
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        {/* <Feather name="navigation" size={10} /> */}
         <MaterialIcons name="gps-fixed" size={16} />
-        <View style={{ width: '85%' }}>
-          <Text style={{ ...texts.xs, marginLeft: halfPadding, flexWrap: 'wrap' }}>
+        <View style={{ width: '80%', marginLeft: halfPadding }}>
+          <Text style={{ ...texts.xs, flexWrap: 'wrap' }}>
             {currentPlace?.address ? formatAddress(currentPlace.address) : ''}
           </Text>
         </View>
       </View>
-      <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Trocar')}</Text>
+      <View style={{ alignItems: 'flex-end' }}>
+        <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Trocar')}</Text>
+      </View>
     </View>
   );
 };

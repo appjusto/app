@@ -3,15 +3,7 @@ import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import {
-  ActivityIndicator,
-  Platform,
-  SectionList,
-  Share,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ActivityIndicator, SectionList, Share, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
@@ -142,7 +134,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
         }
         renderSectionHeader={({ section }) => {
           return !isEmpty(section.data) ? (
-            <View style={{ marginTop: halfPadding }}>
+            <View style={{ marginTop: halfPadding, paddingRight: 12 }}>
               <SingleHeader title={section.title} textTransform="capitalize" />
             </View>
           ) : null;
@@ -166,10 +158,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
         </PaddedView>
       ) : null}
       {consumer && restaurant.status === 'open' && restaurant.enabled ? (
-        <TouchableOpacity
-          onPress={() => navigation.navigate('FoodOrderCheckout')}
-          style={{ paddingBottom: Platform.OS === 'ios' && tallerDevice ? halfPadding : 0 }}
-        >
+        <TouchableOpacity onPress={() => navigation.navigate('FoodOrderCheckout')}>
           <HR />
           <CartButton order={activeOrder} />
         </TouchableOpacity>
