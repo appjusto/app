@@ -1,7 +1,8 @@
+import { Feather } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 import CheckField from '../../../../../common/components/buttons/CheckField';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
@@ -37,32 +38,55 @@ export const Receivables = ({ navigation, route }: Props) => {
   const advanceHandler = () => navigation.replace('AdvanceReceivables', { ids: selected });
   // UI
   return (
-    <View style={{ ...screens.config }}>
-      <PaddedView>
-        <Text style={{ ...texts.sm }}>
-          {t('Você pode escolher individualmente os valores das corridas que deseja antecipar')}
-        </Text>
-        <Text style={{ ...texts.sm, marginTop: padding }}>
-          {t(
-            'Para realizar a antecipação, será cobrada uma taxa de 0.0% + R$ 0.00 pela operação financeira. Nada desse dinheiro não ficará com o AppJusto.'
-          )}
-        </Text>
-        <PaddedView
-          style={{
-            marginTop: padding,
-            backgroundColor: colors.white,
-            ...borders.default,
-            borderColor: colors.white,
-          }}
-        >
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {t('Disponível para adiantamento')}
+    <ScrollView style={{ ...screens.config }}>
+      <View>
+        <View style={{ backgroundColor: colors.white, padding }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: padding }}>
+            <Feather name="info" size={14} />
+            <Text style={{ ...texts.md, marginLeft: halfPadding }}>
+              {t('Informações sobre a antecipação:')}
             </Text>
           </View>
-          <Text style={{ ...texts.x4l }}>{route.params.receivableBalance}</Text>
+          <Text style={{ ...texts.sm }}>
+            {t('O AppJusto não fica com nada do valor do seu trabalho.')}
+          </Text>
+          <Text style={{ ...texts.sm, marginTop: padding }}>
+            {t('Os pagamentos das suas corridas são processados com segurança pela iugu.')}
+          </Text>
+          <Text style={{ ...texts.sm, marginTop: padding }}>
+            {t(
+              'O prazo padrão para faturar os pagamentos é de 30 dias. Se quiser, você pode antecipar valores pagando uma taxa de até 2.5% por operação.'
+            )}
+          </Text>
+          <Text style={{ ...texts.sm, marginTop: padding }}>
+            {t(
+              'Funciona assim: se quiser antecipar no primeiro dia útil após a corrida, você pagará o valor cheio de 2.5%. Mas a taxa diminui a cada dia.'
+            )}
+          </Text>
+          <Text style={{ ...texts.sm, marginTop: padding }}>
+            {t('Se você esperar 15 dias, por exemplo, ela fica em 1.25%.')}
+          </Text>
+        </View>
+
+        <HR height={padding} />
+        <PaddedView>
+          <PaddedView
+            style={{
+              marginTop: padding,
+              backgroundColor: colors.white,
+              ...borders.default,
+              borderColor: colors.white,
+            }}
+          >
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ ...texts.sm, color: colors.grey700 }}>
+                {t('Disponível para adiantamento')}
+              </Text>
+            </View>
+            <Text style={{ ...texts.x4l }}>{route.params.receivableBalance}</Text>
+          </PaddedView>
         </PaddedView>
-      </PaddedView>
+      </View>
       {!receivables ? <ActivityIndicator size="large" color={colors.green500} /> : null}
       {receivables && receivables.totalItems > 0 ? (
         <View>
@@ -72,58 +96,49 @@ export const Receivables = ({ navigation, route }: Props) => {
               'Selecione as corridas que quiser antecipar:'
             )}`}
           />
-          <FlatList
-            data={receivables.items}
-            keyExtractor={(item) => `${item.id}`}
-            renderItem={({ item }) => (
-              <Pressable
-                onPress={() =>
-                  setSelected((values) =>
-                    values.includes(item.id)
-                      ? values.filter((id) => id !== item.id)
-                      : [...values, item.id]
-                  )
-                }
-              >
-                <View style={{ flex: 1, backgroundColor: colors.white }}>
-                  <PaddedView style={{ flex: 1 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-                      <CheckField checked={selected.includes(item.id)} />
-                      <View style={{ marginLeft: halfPadding }}>
-                        <Text style={{ ...texts.sm }}>{item.client_share}</Text>
-                        <Text
-                          style={{ ...texts.sm, color: colors.grey500, marginTop: halfPadding }}
-                        >
-                          {formatDate(new Date(item.scheduled_date))}
-                        </Text>
-                      </View>
+          <PaddedView style={{ backgroundColor: colors.grey500 }}>
+            <CheckField
+              checked={selected.length === receivables.totalItems}
+              text={t('Selecionar todas')}
+              onPress={() => setSelected(receivables.items.map((r) => r.id))}
+            />
+          </PaddedView>
+          {receivables.items.map((item) => (
+            <Pressable
+              key={item.id}
+              onPress={() =>
+                setSelected((values) =>
+                  values.includes(item.id)
+                    ? values.filter((id) => id !== item.id)
+                    : [...values, item.id]
+                )
+              }
+            >
+              <View style={{ flex: 1, backgroundColor: colors.white }}>
+                <PaddedView style={{ flex: 1 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                    <CheckField checked={selected.includes(item.id)} />
+                    <View style={{ marginLeft: halfPadding }}>
+                      <Text style={{ ...texts.sm }}>{item.client_share}</Text>
+                      <Text style={{ ...texts.sm, color: colors.grey500, marginTop: halfPadding }}>
+                        {formatDate(new Date(item.scheduled_date))}
+                      </Text>
                     </View>
-                  </PaddedView>
-                  <HR color={colors.grey500} />
-                </View>
-              </Pressable>
-            )}
-            ListHeaderComponent={
-              <PaddedView style={{ backgroundColor: colors.grey500 }}>
-                <CheckField
-                  checked={selected.length === receivables.totalItems}
-                  text={t('Selecionar todas')}
-                  onPress={() => setSelected(receivables.items.map((r) => r.id))}
-                />
-              </PaddedView>
-            }
-            ListFooterComponent={
-              <PaddedView>
-                <DefaultButton
-                  title={t('Avançar')}
-                  onPress={advanceHandler}
-                  disabled={selected.length === 0}
-                />
-              </PaddedView>
-            }
-          />
+                  </View>
+                </PaddedView>
+                <HR color={colors.grey500} />
+              </View>
+            </Pressable>
+          ))}
+          <PaddedView>
+            <DefaultButton
+              title={t('Avançar')}
+              onPress={advanceHandler}
+              disabled={selected.length === 0}
+            />
+          </PaddedView>
         </View>
       ) : null}
-    </View>
+    </ScrollView>
   );
 };
