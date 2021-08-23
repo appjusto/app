@@ -109,7 +109,6 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
         'Não conseguimos efetuar a cobrança na forma de pagamento escolhida. Por favor, altere a forma de pagamento e tente novamente.'
       );
   })();
-  console.log(dispatchingStatus, 'DISPATCHING STATUS');
   // UI
   return (
     <ScrollView
@@ -123,7 +122,9 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
         icon={<IconConeYellow />}
         background={colors.white}
       >
-        <DefaultButton title={t('Alterar forma de pagamento')} onPress={changePaymentHandler} />
+        {order.dispatchingStatus === 'declined' ? (
+          <DefaultButton title={t('Alterar forma de pagamento')} onPress={changePaymentHandler} />
+        ) : null}
         {order.status === 'declined' ? (
           <View style={{ paddingVertical: padding }}>
             <DefaultButton

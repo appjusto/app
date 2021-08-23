@@ -55,15 +55,23 @@ export default function ({ navigation }: Props) {
         <PaddedView>
           <HomeOngoingDeliveries
             orders={ongoingOrders}
-            onPress={(order, chatFrom) =>
-              navigation.navigate('OngoingOrderNavigator', {
-                screen: 'OngoingOrder',
-                params: {
-                  orderId: order.id,
-                  chatFrom,
-                },
-              })
-            }
+            onPress={(order, chatFrom) => {
+              if (order.status === 'declined')
+                navigation.navigate('OngoingOrderNavigator', {
+                  screen: 'OngoingOrderDeclined',
+                  params: {
+                    orderId: order.id,
+                  },
+                });
+              else
+                navigation.navigate('OngoingOrderNavigator', {
+                  screen: 'OngoingOrder',
+                  params: {
+                    orderId: order.id,
+                    chatFrom,
+                  },
+                });
+            }}
           />
           {!consumer ? (
             <TouchableOpacity onPress={() => navigation.navigate('WelcomeScreen')}>
