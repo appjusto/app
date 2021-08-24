@@ -37,6 +37,10 @@ export const useSearch = <T extends object>(
     [search]
   );
   // side effects
+  // clearing cache
+  React.useEffect(() => {
+    api.search().clearCache();
+  }, [api]);
   // debounce search when search input changes
   React.useEffect(() => {
     if (!enabled) return;

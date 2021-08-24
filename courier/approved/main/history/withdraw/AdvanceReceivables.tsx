@@ -75,7 +75,7 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
         <PaddedView>
           <Text style={{ ...texts.sm }}>
             {t(
-              'Para realizar a antecipação, será cobrada uma taxa de 0.0% + R$ 0.00 pela operação financeira.'
+              'Para realizar a antecipação, a iugu cobra uma taxa de 2.5% ao mês pela operação financeira. Nada desse dinheiro ficará com o AppJusto.'
             )}
           </Text>
           <Text style={{ ...texts.sm, color: colors.grey700, marginTop: biggerPadding }}>
