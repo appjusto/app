@@ -48,8 +48,8 @@ export default function ({ navigation, route }: Props) {
   const [modalOpen, setModalOpen] = React.useState(false);
   const consumerId = order?.consumer.id;
   const businessId = order?.business?.id;
-  const delayBeforeCompletingDelivery =
-    usePlatformParamsContext()?.courier.delayBeforeCompletingDelivery ?? 60 * 1000;
+  const delayBeforeAdvancing =
+    usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60 * 1000;
   // side effects
   // tracking
   useSegmentScreen('Ongoing Delivery');
@@ -135,7 +135,7 @@ export default function ({ navigation, route }: Props) {
           await api.order().nextDispatchingState(orderId);
           setTimeout(() => {
             setLoading(false);
-          }, delayBeforeCompletingDelivery);
+          }, delayBeforeAdvancing);
         }
       } catch (error) {
         setLoading(false);
