@@ -8,6 +8,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
+import { usePlatformParamsContext } from '../../../common/contexts/PlatformParamsContext';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
@@ -47,6 +48,8 @@ export default function ({ navigation, route }: Props) {
   const [modalOpen, setModalOpen] = React.useState(false);
   const consumerId = order?.consumer.id;
   const businessId = order?.business?.id;
+  const delayBeforeCompletingDelivery =
+    usePlatformParamsContext()?.courier.delayBeforeCompletingDelivery ?? 60 * 1000;
   // side effects
   // tracking
   useSegmentScreen('Ongoing Delivery');
@@ -132,7 +135,7 @@ export default function ({ navigation, route }: Props) {
           await api.order().nextDispatchingState(orderId);
           setTimeout(() => {
             setLoading(false);
-          }, 15000);
+          }, delayBeforeCompletingDelivery);
         }
       } catch (error) {
         setLoading(false);
