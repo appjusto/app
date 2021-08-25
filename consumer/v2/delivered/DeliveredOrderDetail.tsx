@@ -1,4 +1,4 @@
-import { ReviewType } from '@appjusto/types';
+import { Flavor, ReviewType } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -55,17 +55,27 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const [reviewLoading, setReviewLoading] = React.useState(false);
   const [reviewSent, setReviewSent] = React.useState(false);
   const [tipLoading, setTipLoading] = React.useState(false);
+  const showChatButton = true;
 
-  if (!order) {
-    return (
-      <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green500} />
-      </View>
-    );
-  }
+  // helpers
+  const openChat = React.useCallback(
+    (counterpartId: string, counterpartFlavor: Flavor) => {
+      navigation.navigate('OngoingOrderChat', {
+        orderId,
+        counterpartId,
+        counterpartFlavor,
+      }); // make this screen accessible here
+    },
+    [navigation, orderId]
+  );
+  const openChatWithRestaurant = React.useCallback(
+    () => openChat(order?.business?.id!, 'business'),
+    [openChat, order?.business?.id]
+  );
 
   // handlers
   const tipHandler = async () => {
+    if (!order) return;
     setTipLoading(true);
     try {
       if (tip > 0) await api.order().tipCourier(order.id, tip);
@@ -77,6 +87,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   };
 
   const reviewHandler = async () => {
+    if (!order) return;
     setReviewLoading(true);
     try {
       if (reviewType) {
@@ -98,7 +109,13 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   //     navigation.navigate('CreateOrderP2P', { orderId });
   //   }
   // };
-
+  if (!order) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <KeyboardAwareScrollView
       style={{ ...screens.default }}
@@ -188,6 +205,14 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
             </View>
           ) : null}
           <PaddedView>
+            {showChatButton ? (
+              <DefaultButton
+                title={t('Abrir chat com restaurante')}
+                onPress={() => openChatWithRestaurant()}
+                style={{ marginBottom: padding }}
+              />
+            ) : null}
+
             <DefaultButton
               title={t('Relatar problema')}
               onPress={() =>
