@@ -4,6 +4,7 @@ import * as Location from 'expo-location';
 import React from 'react';
 import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
+import * as Sentry from 'sentry-expo';
 import * as icons from '../../../assets/icons';
 import { ApiContext } from '../../../common/app/context';
 import RoundedText from '../../../common/components/texts/RoundedText';
@@ -45,14 +46,18 @@ export default function ({ navigation, route }: Props) {
   // side effects
   React.useEffect(() => {
     (async () => {
-      const position = await Location.getCurrentPositionAsync();
-      const currentDistanceToOrigin = distanceBetweenLatLng(position.coords, origin);
-      track('Matching', {
-        orderId,
-        distanceToOrigin,
-        currentDistanceToOrigin,
-      });
-      setDistance(currentDistanceToOrigin);
+      try {
+        const position = await Location.getCurrentPositionAsync();
+        const currentDistanceToOrigin = distanceBetweenLatLng(position.coords, origin);
+        setDistance(currentDistanceToOrigin);
+        track('Matching', {
+          orderId,
+          distanceToOrigin,
+          currentDistanceToOrigin,
+        });
+      } catch (error) {
+        Sentry.Native.captureException(error);
+      }
       setLoading(false);
     })();
   }, [distanceToOrigin, orderId, origin]);
