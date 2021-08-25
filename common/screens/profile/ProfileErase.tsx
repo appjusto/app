@@ -1,7 +1,7 @@
 import { DeleteAccountPayload } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import { Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
@@ -36,19 +36,19 @@ type Props = {
 
 export default function ({ navigation }: Props) {
   // context
-  const api = useContext(ApiContext);
+  const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // app state
   const busy = useSelector(getUIBusy);
   // screen state
-  const [survey, setSurvey] = useState({
+  const [survey, setSurvey] = React.useState({
     notWorkingOnMyRegion: false,
     didntFindWhatINeeded: false,
     pricesHigherThanAlternatives: false,
     didntLikeApp: false,
     didntFeelSafe: false,
     ratherUseAnotherApp: false,
-  } as Partial<DeleteAccountPayload>);
+  } as DeleteAccountPayload);
   // side effects
   // tracking
   useSegmentScreen('Profile Erase');
