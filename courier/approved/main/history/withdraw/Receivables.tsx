@@ -68,11 +68,9 @@ export const Receivables = ({ navigation, route }: Props) => {
           </Text>
         </View>
 
-        <HR height={padding} />
         <PaddedView>
           <PaddedView
             style={{
-              marginTop: padding,
               backgroundColor: colors.white,
               ...borders.default,
               borderColor: colors.white,
