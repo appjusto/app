@@ -87,9 +87,10 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const currentPlace = useSelector(getCurrentPlace);
   // state
   const location = useSelector(getCurrentLocation);
+  const destination = activeOrder?.destination?.location ?? location;
   const distance =
-    location && business?.businessAddress?.latlng
-      ? distanceBetweenLatLng(location, business.businessAddress.latlng)
+    destination && business?.businessAddress?.latlng
+      ? distanceBetweenLatLng(destination, business.businessAddress.latlng)
       : 0;
   const isOutOfRange = (business?.deliveryRange ?? 0) < (distance ?? 0);
   const isAcceptingOrders = useBusinessIsAcceptingOrders(business);
