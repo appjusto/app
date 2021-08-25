@@ -160,11 +160,11 @@ export default function ({ navigation, route }: Props) {
     if (!dispatchingState || dispatchingState === 'going-pickup') {
       return t('Cheguei para Retirada');
     } else if (dispatchingState === 'arrived-pickup') {
-      return t('Saí para a Entrega');
+      return t('Sair para a Entrega');
     } else if (dispatchingState === 'going-destination') {
       return t('Cheguei para Entrega');
     } else if (dispatchingState === 'arrived-destination') {
-      return t('Confirmar entrega');
+      return t('Finalizar Entrega');
     }
     return '';
   })();
