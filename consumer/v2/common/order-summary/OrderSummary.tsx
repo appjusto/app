@@ -92,21 +92,19 @@ export const OrderSummary = ({
   }, [quotes]);
 
   // handlers
-  const getOrderQuotesHandler = React.useCallback(async () => {
+  const getOrderQuotesHandler = async () => {
     if (!order.origin?.location || !order.route?.distance) {
       if (order.route?.issue) dispatch(showToast(order.route.issue, 'error'));
       return;
     }
-    (async () => {
-      setQuotes(undefined);
-      try {
-        setQuotes(await api.order().getOrderQuotes(order.id));
-      } catch (error) {
-        dispatch(showToast(error.toString(), 'error'));
-      }
-    })();
-  }, [order, dispatch, api]);
-  console.log(selectedFare?.total, 'VALOR TOTAL');
+    setQuotes(undefined);
+    try {
+      setQuotes(await api.order().getOrderQuotes(order.id));
+    } catch (error) {
+      dispatch(showToast(error.toString(), 'error'));
+    }
+  };
+
   // UI
   return (
     <ScrollView style={{ flex: 1, paddingBottom: 24 }} scrollIndicatorInsets={{ right: 1 }}>
