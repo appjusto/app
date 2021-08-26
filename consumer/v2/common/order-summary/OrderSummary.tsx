@@ -2,7 +2,7 @@ import { Fare, Order, WithId } from '@appjusto/types';
 import { Ionicons } from '@expo/vector-icons';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { ScrollView, Switch, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Switch, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import HR from '../../../../common/components/views/HR';
@@ -10,7 +10,7 @@ import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import OrderMap from '../../../../common/screens/orders/OrderMap';
 import { OrderAdditionalInfo } from '../../../../common/screens/orders/summary/OrderAdditionaInfo';
 import { showToast } from '../../../../common/store/ui/actions';
-import { colors, halfPadding, padding, texts } from '../../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { Step } from '../../p2p/types';
 import { OrderCostBreakdown } from '../breakdown/OrderCostBreakdown';
@@ -106,7 +106,7 @@ export const OrderSummary = ({
       }
     })();
   }, [order, dispatch, api]);
-
+  console.log(selectedFare?.total, 'VALOR TOTAL');
   // UI
   return (
     <ScrollView style={{ flex: 1, paddingBottom: 24 }} scrollIndicatorInsets={{ right: 1 }}>
@@ -172,14 +172,19 @@ export const OrderSummary = ({
       <OrderCostBreakdown order={order} selectedFare={selectedFare!} />
 
       <HR height={padding} />
-
-      <OrderTotal
-        total={selectedFare?.total ?? 0}
-        switchValue={wantsCpf}
-        onSwitchValueChange={onSwitchValueChange}
-        cpf={cpf}
-        setCpf={setCpf}
-      />
+      {quotes === undefined ? (
+        <View style={screens.centered}>
+          <ActivityIndicator size="large" color={colors.green500} />
+        </View>
+      ) : (
+        <OrderTotal
+          total={selectedFare?.total ?? 0}
+          switchValue={wantsCpf}
+          onSwitchValueChange={onSwitchValueChange}
+          cpf={cpf}
+          setCpf={setCpf}
+        />
+      )}
 
       <HR height={padding} />
 
