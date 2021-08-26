@@ -40,7 +40,8 @@ export default function ({ navigation, route }: Props) {
   const courier = useSelector(getCourier)!;
   // state
   const request = useObserveOrderRequest(courier.id, orderId);
-  const canAccept = request?.situation === 'pending' || request?.situation === 'viewed';
+  const situation = request?.situation;
+  const canAccept = situation === 'pending' || situation === 'viewed';
   const [distance, setDistance] = React.useState(distanceToOrigin);
   const [isLoading, setLoading] = React.useState(true);
   // side effects
@@ -61,11 +62,22 @@ export default function ({ navigation, route }: Props) {
       setLoading(false);
     })();
   }, [distanceToOrigin, orderId, origin]);
+  // navigating when situation changes
   React.useEffect(() => {
-    if (request?.situation === 'expired') {
+    if (situation == 'accepted') {
+      navigation.replace('OngoingDeliveryNavigator', {
+        screen: 'OngoingDelivery',
+        params: {
+          orderId,
+        },
+      });
+    } else if (situation === 'expired') {
       navigation.replace('MatchingError');
+    } else if (situation === 'rejected') {
+      navigation.popToTop();
     }
-  }, [navigation, request]);
+  }, [navigation, situation]);
+  // updating request to viewed
   React.useEffect(() => {
     api.courier().viewOrderRequest(courier.id, orderId);
   }, [api, courier.id, orderId]);
@@ -84,14 +96,7 @@ export default function ({ navigation, route }: Props) {
     try {
       setLoading(true);
       await api.order().matchOrder(orderId);
-      navigation.replace('OngoingDeliveryNavigator', {
-        screen: 'OngoingDelivery',
-        params: {
-          orderId,
-        },
-      });
     } catch (error) {
-      setLoading(false);
       navigation.replace('MatchingError');
     }
   };
