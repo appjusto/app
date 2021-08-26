@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import HR from '../../../common/components/views/HR';
+import { useChatisEnabled } from '../../../common/hooks/useChatIsEnabled';
 import { IconOrderDone } from '../../../common/icons/icon-order-done';
 import { useCourierReview } from '../../../common/store/api/courier/hooks/useCourierReview';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
@@ -45,6 +46,7 @@ export default ({ navigation, route }: Props) => {
   const [comment, setComment] = React.useState('');
   const [tip, setTip] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
+  const showChatButton = useChatisEnabled(order!);
 
   // helpers
   const openChat = React.useCallback(
@@ -196,12 +198,14 @@ export default ({ navigation, route }: Props) => {
       ) : null}
       {/* actions */}
       <View style={{ paddingHorizontal: padding }}>
-        <DefaultButton
-          title={t('Abrir chat com restaurante')}
-          onPress={() => openChatWithRestaurant()}
-          style={{ marginTop: padding }}
-          secondary
-        />
+        {showChatButton ? (
+          <DefaultButton
+            title={t('Abrir chat com restaurante')}
+            onPress={() => openChatWithRestaurant()}
+            style={{ marginTop: padding }}
+            secondary
+          />
+        ) : null}
         <DefaultButton
           title={t('Finalizar')}
           onPress={finishHandler}

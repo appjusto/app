@@ -1,5 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
+import Chat from '../../../common/screens/Chat';
 import { defaultScreenOptions } from '../../../common/screens/options';
 import { ReportIssue } from '../../../common/screens/ReportIssue';
 import { t } from '../../../strings';
@@ -21,6 +22,7 @@ export const DeliveredOrderNavigator = () => {
         component={ReportIssue}
         options={{ title: t('Relatar problema') }}
       />
+      <Stack.Screen name="DeliveredOrderChat" component={Chat} options={{ title: t('Chat') }} />
     </Stack.Navigator>
   );
 };

@@ -11,6 +11,7 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import HR from '../../../common/components/views/HR';
+import { useChatisEnabled } from '../../../common/hooks/useChatIsEnabled';
 import OrderMap from '../../../common/screens/orders/OrderMap';
 import PlaceSummary from '../../../common/screens/orders/summary/PlaceSummary';
 import { useCourierReview } from '../../../common/store/api/courier/hooks/useCourierReview';
@@ -55,12 +56,12 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const [reviewLoading, setReviewLoading] = React.useState(false);
   const [reviewSent, setReviewSent] = React.useState(false);
   const [tipLoading, setTipLoading] = React.useState(false);
-  const showChatButton = true;
+  const showChatButton = useChatisEnabled(order!);
 
   // helpers
   const openChat = React.useCallback(
     (counterpartId: string, counterpartFlavor: Flavor) => {
-      navigation.navigate('OngoingOrderChat', {
+      navigation.navigate('DeliveredOrderChat', {
         orderId,
         counterpartId,
         counterpartFlavor,
@@ -104,11 +105,6 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
     setReviewLoading(false);
   };
 
-  // const placeOrderHandler = () => {
-  //   if (order.type === 'p2p') {
-  //     navigation.navigate('CreateOrderP2P', { orderId });
-  //   }
-  // };
   if (!order) {
     return (
       <View style={screens.centered}>
@@ -144,11 +140,9 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
           </RoundedText>
         </View>
       </PaddedView>
-      {/* <HR height={padding} /> */}
       {order.type === 'food' && (
         <View>
           <DeliveredItems order={order} />
-          {/* <HR height={padding} /> */}
         </View>
       )}
       {order.status !== 'canceled' ? (
@@ -225,10 +219,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
             />
           </PaddedView>
         </View>
-      ) : // <PaddedView>
-      //   <DefaultButton title={t('Refazer pedido')} onPress={placeOrderHandler} />
-      // </PaddedView>
-      null}
+      ) : null}
     </KeyboardAwareScrollView>
   );
 };
