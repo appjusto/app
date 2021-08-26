@@ -118,12 +118,25 @@ const ios = () => ({
           NSLocationAlwaysAndWhenInUseUsageDescription:
             'Precisamos da sua localização para enviar corridas próximas e monitorar a entrega.',
         },
-  associatedDomains: [`applinks:${environment.charAt(0)}.deeplink.appjusto.com.br`].concat(
-    environment === 'live' ? ['applinks:link.appjusto.com.br'] : []
-  ),
+  associatedDomains: [`applinks:${environment.charAt(0)}.deeplink.appjusto.com.br`].concat([
+    `applinks:${environment === 'live' ? '' : `${environment}.`}appjusto.com.br`,
+  ]),
   config: {
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
   },
+});
+
+const intentFilter = (host: string, pathPrefix: string) => ({
+  action: 'VIEW',
+  autoVerify: false,
+  data: [
+    {
+      scheme: 'https',
+      host,
+      pathPrefix,
+    },
+  ],
+  category: ['BROWSABLE', 'DEFAULT'],
 });
 
 const android = () =>
@@ -141,36 +154,29 @@ const android = () =>
         softwareKeyboardLayoutMode: 'pan',
         permissions: permissions(),
         intentFilters: [
-          {
-            action: 'VIEW',
-            autoVerify: false,
-            data: [
-              {
-                scheme: 'https',
-                host: `${environment.charAt(0)}.deeplink.appjusto.com.br`,
-                pathPrefix: `/${flavor}`,
-              },
-            ],
-            category: ['BROWSABLE', 'DEFAULT'],
-          },
-        ].concat(
-          environment === 'live'
-            ? [
-                {
-                  action: 'VIEW',
-                  autoVerify: false,
-                  data: [
-                    {
-                      scheme: 'https',
-                      host: 'link.appjusto.com.br',
-                      pathPrefix: `/${flavor}`,
-                    },
-                  ],
-                  category: ['BROWSABLE', 'DEFAULT'],
-                },
-              ]
-            : []
-        ),
+          intentFilter(`${environment.charAt(0)}.deeplink.appjusto.com.br`, `/${flavor}`),
+        ]
+          .concat([
+            intentFilter(
+              `${environment === 'live' ? '' : `${environment}.`}appjusto.com.br`,
+              `/${flavor}`
+            ),
+          ])
+          .concat(
+            flavor === 'consumer'
+              ? [
+                  intentFilter(
+                    `${environment === 'live' ? '' : `${environment}.`}appjusto.com.br`,
+                    `/restaurante`
+                  ),
+                ]
+              : [
+                  intentFilter(
+                    `${environment === 'live' ? '' : `${environment}.`}appjusto.com.br`,
+                    `/frota`
+                  ),
+                ]
+          ),
         config: {
           googleMaps: {
             apiKey: GOOGLE_MAPS_API_KEY,
