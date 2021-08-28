@@ -1,4 +1,5 @@
 import { MaterialIcons } from '@expo/vector-icons';
+import firebase from 'firebase';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -48,24 +49,6 @@ export const LocationBar = () => {
     // select from current location
     else if (coords) {
       dispatch(updateCurrentLocation(coords));
-    } else {
-      // Instituto Tomie Ohtake
-      // dispatch(
-      //   updateCurrentLocation({
-      //     latitude: -23.560631640364686,
-      //     longitude: -46.69466297049767,
-      //   })
-      // );
-      // dispatch(
-      //   updateCurrentPlace({
-      //     address: {
-      //       main: 'Pinheiros',
-      //       secondary: '',
-      //       description: '',
-      //     },
-      //     location: coords,
-      //   })
-      // );
     }
     if (currentLocation && !currentPlace) {
       (async () => {
@@ -80,6 +63,14 @@ export const LocationBar = () => {
       })();
     }
   }, [consumer, currentPlace, coords, currentLocation, api, dispatch]);
+  // update consumer's location
+  React.useEffect(() => {
+    if (!consumer?.id) return;
+    if (!coords) return;
+    const { latitude, longitude } = coords;
+    const coordinates = new firebase.firestore.GeoPoint(latitude, longitude);
+    api.profile().updateLocation(consumer.id, coordinates);
+  }, [consumer?.id, coords, api]);
   // UI
   return (
     <View
