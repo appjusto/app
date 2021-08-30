@@ -1,9 +1,11 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { isEmpty } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
+import { Fare } from '../../../../../../types';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
@@ -11,7 +13,11 @@ import { isConsumerProfileComplete } from '../../../../../common/store/courier/v
 import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, screens } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
+import { OrderCostBreakdown } from '../../../common/breakdown/OrderCostBreakdown';
+import { OrderAvailableFleets } from '../../../common/order-summary/OrderAvailableFleets';
+import { OrderPayment } from '../../../common/order-summary/OrderPayment';
 import { OrderSummary } from '../../../common/order-summary/OrderSummary';
+import { OrderTotal } from '../../../common/order-summary/OrderTotal';
 import { LoggedNavigatorParamList } from '../../../types';
 import { FoodOrderNavigatorParamList } from '../../types';
 import { RestaurantNavigatorParamList } from '../types';
@@ -51,8 +57,24 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
   const [wantsCpf, setWantsCpf] = React.useState(false);
   const [shareDataWithBusiness, setShareDataWithBusiness] = React.useState(false);
+  const [quotes, setQuotes] = React.useState<Fare[]>();
+  const [selectedFare, setSelectedFare] = React.useState<Fare>();
+  const canSubmit = React.useMemo(() => {
+    return selectedPaymentMethodId !== undefined && selectedFare !== undefined && !isLoading;
+  }, [selectedPaymentMethodId, selectedFare, isLoading]);
 
   // side effects
+  // whenever order changes
+  // update quotes
+  React.useEffect(() => {
+    getOrderQuotesHandler();
+  }, [order]);
+  // whenever quotes are updated
+  // select first fare and subscribe to involved fleets updates
+  React.useEffect(() => {
+    if (!quotes || isEmpty(quotes)) return;
+    setSelectedFare(quotes[0]);
+  }, [quotes]);
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
     if (params?.destination) {
@@ -88,6 +110,19 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
   }, [consumer.name, order, api]);
   // handlers
+  const getOrderQuotesHandler = async () => {
+    if (!order) return;
+    if (!order.origin?.location || !order.route?.distance) {
+      if (order.route?.issue) dispatch(showToast(order.route.issue, 'error'));
+      return;
+    }
+    setQuotes(undefined);
+    try {
+      setQuotes(await api.order().getOrderQuotes(order.id));
+    } catch (error) {
+      dispatch(showToast(error.toString(), 'error'));
+    }
+  };
   const placeOrderHandler = async (fleetId: string) => {
     if (!order) return;
     if (!selectedPaymentMethodId) return;
@@ -168,10 +203,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       keyboardShouldPersistTaps="never"
     >
       <OrderSummary
-        activityIndicator={isLoading}
         order={order}
-        selectedPaymentMethodId={selectedPaymentMethodId}
-        waiting={isLoading}
         showMap={Boolean(order.route)}
         onEditStep={() => {
           navigation.navigate('OrderDestination', {
@@ -183,21 +215,47 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           navigation.navigate('ItemDetail', { productId, itemId });
         }}
         onAddItemsPress={() => navigation.navigate('RestaurantDetail')}
-        placeOrder={placeOrderHandler}
-        navigateToFillPaymentInfo={navigateToFillPaymentInfo}
-        navigateFleetDetail={navigateFleetDetail}
-        navigateToPixPayment={(total, fleetId) =>
-          navigation.navigate('PayWithPix', { orderId: order.id!, total, fleetId })
-        }
-        navigateToAboutCharges={() => navigation.navigate('AboutCharges')}
         additionalInfo={orderAdditionalInfo}
         onAddInfo={(text) => setOrderAdditionalInfo(text)}
-        wantsCpf={wantsCpf}
-        onSwitchValueChange={() => setWantsCpf(!wantsCpf)}
-        cpf={cpf}
-        setCpf={(text) => setCpf(text)}
         shareDataWithBusiness={shareDataWithBusiness}
         onShareData={() => setShareDataWithBusiness(!shareDataWithBusiness)}
+        availableFleets={
+          <OrderAvailableFleets
+            quotes={quotes}
+            selectedFare={selectedFare}
+            onFareSelect={(fare) => setSelectedFare(fare)}
+            onFleetSelect={navigateFleetDetail}
+            onRetry={getOrderQuotesHandler}
+            order={order}
+          />
+        }
+        costBreakdown={<OrderCostBreakdown order={order} selectedFare={selectedFare!} />}
+        totalCost={
+          quotes === undefined ? (
+            <View style={screens.centered}>
+              <ActivityIndicator size="large" color={colors.green500} />
+            </View>
+          ) : (
+            <OrderTotal
+              total={selectedFare?.total ?? 0}
+              switchValue={wantsCpf}
+              onSwitchValueChange={() => setWantsCpf(!wantsCpf)}
+              cpf={cpf}
+              setCpf={setCpf}
+            />
+          )
+        }
+        payment={
+          <OrderPayment
+            selectedPaymentMethodId={selectedPaymentMethodId}
+            onEditPaymentMethod={navigateToFillPaymentInfo}
+            isSubmitEnabled={canSubmit}
+            onSubmit={() => placeOrderHandler(selectedFare?.fleet?.id!)}
+            activityIndicator={isLoading}
+            navigateToPixPayment={() => null}
+            navigateToAboutCharges={() => navigation.navigate('AboutCharges')}
+          />
+        }
       />
       <DestinationModal
         modalVisible={destinationModalVisible}
@@ -207,6 +265,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         onConfirmAddress={() => {
           setDestinationModalVisible(false);
           setConfirmedDestination(true);
+          placeOrderHandler(selectedFare?.fleet?.id!);
         }}
         order={order}
         onEditAddress={() => {

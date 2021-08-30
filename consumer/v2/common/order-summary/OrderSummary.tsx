@@ -1,109 +1,51 @@
-import { Fare, Order, WithId } from '@appjusto/types';
+import { Order, WithId } from '@appjusto/types';
 import { Ionicons } from '@expo/vector-icons';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, ScrollView, Switch, Text, View } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { ApiContext, AppDispatch } from '../../../../common/app/context';
+import { ScrollView, Switch, Text, View } from 'react-native';
 import HR from '../../../../common/components/views/HR';
 import useTallerDevice from '../../../../common/hooks/useTallerDevice';
 import OrderMap from '../../../../common/screens/orders/OrderMap';
 import { OrderAdditionalInfo } from '../../../../common/screens/orders/summary/OrderAdditionaInfo';
-import { showToast } from '../../../../common/store/ui/actions';
-import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { Step } from '../../p2p/types';
-import { OrderCostBreakdown } from '../breakdown/OrderCostBreakdown';
-import { OrderAvailableFleets } from './OrderAvailableFleets';
 import { OrderItems } from './OrderItems';
-import { OrderPayment } from './OrderPayment';
 import { OrderPlacesSummary } from './OrderPlacesSummary';
-import { OrderTotal } from './OrderTotal';
 
 type Props = {
   order: WithId<Order>;
-  selectedPaymentMethodId?: string;
-  waiting: boolean;
   showMap: boolean;
   onEditStep: (step: Step) => void;
   onEditItemPress?: (productId: string, itemId: string) => void;
   onAddItemsPress?: () => void;
-  placeOrder: (fleetId: string) => void;
-  navigateToFillPaymentInfo: () => void;
-  navigateFleetDetail: (fleetId: string) => void;
-  navigateToPixPayment: (total: number, fleetId: string) => void;
-  navigateToAboutCharges: () => void;
   additionalInfo?: string;
   onAddInfo?: (text: string) => void;
-  cpf: string;
-  setCpf: (value: string) => void;
-  wantsCpf: boolean;
-  onSwitchValueChange: (value: boolean) => void;
   shareDataWithBusiness?: boolean;
   onShareData?: (value: boolean) => void;
-  activityIndicator: boolean;
+  availableFleets: React.ReactNode;
+  costBreakdown: React.ReactNode;
+  totalCost: React.ReactNode;
+  payment: React.ReactNode;
 };
 
 export const OrderSummary = ({
   order,
-  selectedPaymentMethodId,
-  waiting,
   showMap,
   onEditStep,
   onEditItemPress,
   onAddItemsPress,
-  placeOrder,
-  navigateToFillPaymentInfo,
-  navigateFleetDetail,
-  navigateToPixPayment,
-  navigateToAboutCharges,
   additionalInfo,
   onAddInfo,
-  cpf,
-  setCpf,
-  wantsCpf,
-  onSwitchValueChange,
-  activityIndicator,
   shareDataWithBusiness,
   onShareData,
+  availableFleets,
+  costBreakdown,
+  totalCost,
+  payment,
 }: Props) => {
   // context
-  const api = React.useContext(ApiContext);
-  const dispatch = useDispatch<AppDispatch>();
   const tallerDevice = useTallerDevice();
-  // state
-  const [quotes, setQuotes] = React.useState<Fare[]>();
-  const [selectedFare, setSelectedFare] = React.useState<Fare>();
-  // const [additionalInfo, setAdditionalInfo] = React.useState('');
-  const canSubmit = React.useMemo(() => {
-    return selectedPaymentMethodId !== undefined && selectedFare !== undefined && !waiting;
-  }, [selectedPaymentMethodId, selectedFare, waiting]);
-  // side effects
-  // whenever order changes
-  // update quotes
-  React.useEffect(() => {
-    getOrderQuotesHandler();
-  }, [order]);
-  // whenever quotes are updated
-  // select first fare and subscribe to involved fleets updates
-  React.useEffect(() => {
-    if (!quotes || isEmpty(quotes)) return;
-    setSelectedFare(quotes[0]);
-  }, [quotes]);
-
-  // handlers
-  const getOrderQuotesHandler = async () => {
-    if (!order.origin?.location || !order.route?.distance) {
-      if (order.route?.issue) dispatch(showToast(order.route.issue, 'error'));
-      return;
-    }
-    setQuotes(undefined);
-    try {
-      setQuotes(await api.order().getOrderQuotes(order.id));
-    } catch (error) {
-      dispatch(showToast(error.toString(), 'error'));
-    }
-  };
 
   // UI
   return (
@@ -156,45 +98,19 @@ export const OrderSummary = ({
 
       <HR height={padding} />
 
-      <OrderAvailableFleets
-        quotes={quotes}
-        selectedFare={selectedFare}
-        onFareSelect={(fare) => setSelectedFare(fare)}
-        onFleetSelect={navigateFleetDetail}
-        onRetry={getOrderQuotesHandler}
-        order={order}
-      />
+      {availableFleets}
 
       <HR height={padding} />
 
-      <OrderCostBreakdown order={order} selectedFare={selectedFare!} />
-
-      <HR height={padding} />
-      {quotes === undefined ? (
-        <View style={screens.centered}>
-          <ActivityIndicator size="large" color={colors.green500} />
-        </View>
-      ) : (
-        <OrderTotal
-          total={selectedFare?.total ?? 0}
-          switchValue={wantsCpf}
-          onSwitchValueChange={onSwitchValueChange}
-          cpf={cpf}
-          setCpf={setCpf}
-        />
-      )}
+      {costBreakdown}
 
       <HR height={padding} />
 
-      <OrderPayment
-        selectedPaymentMethodId={selectedPaymentMethodId}
-        onEditPaymentMethod={navigateToFillPaymentInfo}
-        isSubmitEnabled={canSubmit}
-        onSubmit={() => placeOrder(selectedFare?.fleet?.id!)}
-        activityIndicator={activityIndicator}
-        navigateToPixPayment={() => null}
-        navigateToAboutCharges={navigateToAboutCharges}
-      />
+      {totalCost}
+
+      <HR height={padding} />
+
+      {payment}
     </ScrollView>
   );
 };

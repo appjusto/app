@@ -65,7 +65,7 @@ export const DestinationModal = ({
           <HR style={{ marginTop: 24 }} />
           <DefaultButton
             style={{ marginTop: halfPadding, marginBottom: padding }}
-            title={t('Confirmar endereço de entrega')}
+            title={t('Fazer pedido')}
             onPress={onConfirmAddress}
           />
         </PaddedView>
