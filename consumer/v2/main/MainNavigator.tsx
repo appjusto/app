@@ -3,11 +3,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as Linking from 'expo-linking';
-import { useURL } from 'expo-linking';
 import React from 'react';
 import { Dimensions, Image, Text, View } from 'react-native';
 import * as icons from '../../../assets/icons';
 import { ApiContext } from '../../../common/app/context';
+import useDeepLink from '../../../common/hooks/useDeepLink';
 import { track } from '../../../common/store/api/track';
 import { halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -56,7 +56,7 @@ export const MainNavigator = () => {
   );
   useNotificationHandler('order-update', handler);
   useNotificationHandler('order-chat', handler);
-  const deeplink = useURL();
+  const deeplink = useDeepLink();
   React.useEffect(() => {
     if (!deeplink) return;
     track('Deeplink navigator', {
