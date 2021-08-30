@@ -20,14 +20,14 @@ type Props = {
 
 export const CourierFleetCard = ({ fleet, listItem, onPress }: Props) => {
   const extra = useSelector(getExtra);
-  const domain = `${extra.environment.charAt(0)}.deeplink.appjusto.com.br`;
+  const domain = `${extra.environment === 'live' ? '' : `${extra.environment}.`}appjusto.com.br`;
+  const fleetDeeplink = `https://${domain}/f/${fleet.id}`;
   const shareFleetHandler = async () => {
-    const shareUrl = `https://${domain}/courier/f?id=${fleet.id}`;
     try {
       Share.share({
-        message: `Eu faço parte da ${fleet.name} no AppJusto, app criado para combater a exploração dos entregadores. Faça parte dessa frota também: ${shareUrl}`,
+        message: `Eu faço parte da ${fleet.name} no AppJusto, app criado para combater a exploração dos entregadores. Faça parte dessa frota também: ${fleetDeeplink}`,
         title: 'AppJusto',
-        url: shareUrl,
+        url: fleetDeeplink,
       });
     } catch (error) {}
   };

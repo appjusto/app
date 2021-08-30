@@ -1,11 +1,12 @@
 import { OrderMatchPushMessageData, PushMessageData } from '@appjusto/types';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StackNavigationProp } from '@react-navigation/stack';
+import * as Linking from 'expo-linking';
+import { useURL } from 'expo-linking';
 import React from 'react';
 import { Dimensions, Image, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../assets/icons';
-import { useDeeplinkAction } from '../../../common/hooks/useDeeplinkAction';
 import { useObserveOngoingOrders } from '../../../common/store/api/order/hooks/useObserveOngoingOrders';
 import { track } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
@@ -79,18 +80,19 @@ export default function ({ navigation }: Props) {
   useNotificationHandler('order-chat', handler);
   const { width } = Dimensions.get('window');
   // fleet deeplink
-  const action = useDeeplinkAction();
+  const deeplink = useURL();
   React.useEffect(() => {
-    if (!action) return;
-    if (action.screen === 'fleet-detail') {
-      if (action.params?.id) {
-        navigation.navigate('ProfileNavigator', {
-          screen: 'FleetDetail',
-          params: { fleetId: action.params.id },
-        });
-      }
-    }
-  }, [action, navigation]);
+    if (!deeplink) return;
+    const parsedURL = Linking.parse(deeplink);
+    if (!parsedURL?.path) return;
+    const r = /\/f\/([-a-zA-Z]+)/.exec(parsedURL.path);
+    if (!r) return;
+    const [_, fleetId] = r;
+    navigation.navigate('ProfileNavigator', {
+      screen: 'FleetDetail',
+      params: { fleetId },
+    });
+  }, [deeplink, navigation]);
   // UI
   return (
     <Tab.Navigator

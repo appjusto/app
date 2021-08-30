@@ -46,24 +46,9 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   // redux
   const consumer = useSelector(getConsumer);
   const extra = useSelector(getExtra);
-  const domain = `${extra.environment.charAt(0)}.deeplink.appjusto.com.br`;
-
-  // handler
-  const shareRestaurantHandler = async () => {
-    const shareUrl = restaurant.slug
-      ? `https://${domain}/consumer/r?id=${restaurant.slug}`
-      : `https://${domain}/consumer/r?id=${restaurant.code}`;
-    try {
-      Share.share({
-        message: `Pedi em ${
-          restaurant!.name
-        } usando o AppJusto, uma plataforma de delivery mais justa para clientes, entregadores e restaurantes. Peça também e faça parte desse movimento: ${shareUrl}`,
-        title: 'AppJusto',
-        url: shareUrl,
-      });
-    } catch (error) {}
-  };
-
+  //
+  const domain = `${extra.environment === 'live' ? '' : `${extra.environment}.`}appjusto.com.br`;
+  const businessDeeplink = `https://${domain}/r/${restaurant.slug ?? restaurant.code}`;
   // side effects
   // setting the restaurant.name in the header
   React.useLayoutEffect(() => {
@@ -71,6 +56,19 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
       title: restaurant?.name ?? '',
     });
   }, [navigation, restaurant]);
+  // handlers
+  const shareRestaurantHandler = async () => {
+    try {
+      Share.share({
+        message: `Pedi em ${
+          restaurant!.name
+        } usando o AppJusto, uma plataforma de delivery mais justa para clientes, entregadores e restaurantes. Peça também e faça parte desse movimento: ${businessDeeplink}`,
+        title: 'AppJusto',
+        url: businessDeeplink,
+      });
+    } catch (error) {}
+  };
+
   // UI
   const sections =
     categoriesWithProducts?.map((category) => ({

@@ -147,22 +147,12 @@ const intentFilters = () =>
   ]
     .concat(
       flavor === 'consumer'
-        ? [
-            intentFilter(
-              `${environment === 'live' ? '' : `${environment}.`}appjusto.com.br`,
-              `/restaurante`
-            ),
-          ]
+        ? [intentFilter(`${environment === 'live' ? '' : `${environment}.`}appjusto.com.br`, `/r`)]
         : []
     )
     .concat(
       flavor === 'courier'
-        ? [
-            intentFilter(
-              `${environment === 'live' ? '' : `${environment}.`}appjusto.com.br`,
-              `/frota`
-            ),
-          ]
+        ? [intentFilter(`${environment === 'live' ? '' : `${environment}.`}appjusto.com.br`, `/f`)]
         : []
     );
 

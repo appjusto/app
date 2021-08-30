@@ -7,6 +7,7 @@ import {
   Product,
   WithId,
 } from '@appjusto/types';
+import firebase from 'firebase';
 import * as Sentry from 'sentry-expo';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
@@ -16,15 +17,14 @@ export default class BusinessApi {
   constructor(private refs: FirebaseRefs, private files: FilesApi) {}
 
   // firestore
-  async fetchBusinessWithCode(code: string) {
-    const ref = this.refs.getBusinessesRef().where('code', '==', code).limit(1);
-    const snapshot = await ref.get();
-    if (snapshot.empty) return null;
-    return documentAs<Business>(snapshot.docs[0]);
-  }
-  async fetchBusinessWithSlug(slug: string) {
-    const ref = this.refs.getBusinessesRef().where('slug', '==', slug).limit(1);
-    const snapshot = await ref.get();
+  async fetchBusiness(value: string) {
+    const ref = this.refs.getBusinessesRef();
+    let query: firebase.firestore.Query<firebase.firestore.DocumentData> | null = null;
+    // check if it's code
+    const r = /[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{7}/.exec(value);
+    if (!r) query = ref.where('slug', '==', value);
+    else query = ref.where('code', '==', value);
+    const snapshot = await query.get();
     if (snapshot.empty) return null;
     return documentAs<Business>(snapshot.docs[0]);
   }

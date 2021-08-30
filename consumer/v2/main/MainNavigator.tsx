@@ -2,11 +2,12 @@ import { PushMessageData } from '@appjusto/types';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
+import * as Linking from 'expo-linking';
+import { useURL } from 'expo-linking';
 import React from 'react';
 import { Dimensions, Image, Text, View } from 'react-native';
 import * as icons from '../../../assets/icons';
 import { ApiContext } from '../../../common/app/context';
-import { useDeeplinkAction } from '../../../common/hooks/useDeeplinkAction';
 import { halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
@@ -54,28 +55,29 @@ export const MainNavigator = () => {
   );
   useNotificationHandler('order-update', handler);
   useNotificationHandler('order-chat', handler);
-  const action = useDeeplinkAction();
+  const deeplink = useURL();
   React.useEffect(() => {
-    if (!action) return;
-    if (action.screen === 'restaurant-detail') {
-      let promise = null;
-      if (action.params?.slug) promise = api.business().fetchBusinessWithSlug(action.params.slug);
-      else if (action.params?.code)
-        promise = api.business().fetchBusinessWithCode(action.params.code);
-      if (promise)
-        promise.then((business) => {
-          if (business) {
-            navigation.navigate('FoodOrderNavigator', {
-              screen: 'RestaurantNavigator',
-              params: {
-                restaurantId: business.id,
-                screen: 'RestaurantDetail',
-              },
-            });
-          }
-        });
-    }
-  }, [action, api, navigation]);
+    if (!deeplink) return;
+    const parsedURL = Linking.parse(deeplink);
+    if (!parsedURL?.path) return;
+    const r = /\/r\/([-a-zA-Z]+)/.exec(parsedURL.path);
+    if (!r) return;
+    const [_, value] = r;
+    api
+      .business()
+      .fetchBusiness(value)
+      .then((business) => {
+        if (business) {
+          navigation.navigate('FoodOrderNavigator', {
+            screen: 'RestaurantNavigator',
+            params: {
+              restaurantId: business.id,
+              screen: 'RestaurantDetail',
+            },
+          });
+        }
+      });
+  }, [deeplink, api, navigation]);
   const { width } = Dimensions.get('window');
   // UI
   return (
