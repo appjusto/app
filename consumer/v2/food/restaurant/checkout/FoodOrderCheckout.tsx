@@ -126,10 +126,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const placeOrderHandler = async (fleetId: string) => {
     if (!order) return;
     if (!selectedPaymentMethodId) return;
-    if (!confirmedDestination) {
-      setDestinationModalVisible(true);
-      return;
-    }
     if (wantsCpf && !cpf) {
       dispatch(
         showToast(
@@ -146,6 +142,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
     try {
       setLoading(true);
+      setConfirmedDestination(true);
       await api.order().placeOrder(
         order.id,
         fleetId,
@@ -250,7 +247,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             selectedPaymentMethodId={selectedPaymentMethodId}
             onEditPaymentMethod={navigateToFillPaymentInfo}
             isSubmitEnabled={canSubmit}
-            onSubmit={() => placeOrderHandler(selectedFare?.fleet?.id!)}
+            onSubmit={() => setDestinationModalVisible(true)}
             activityIndicator={isLoading}
             navigateToPixPayment={() => null}
             navigateToAboutCharges={() => navigation.navigate('AboutCharges')}
@@ -258,15 +255,12 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         }
       />
       <DestinationModal
+        activityIndicator={isLoading}
         modalVisible={destinationModalVisible}
         onModalClose={() => {
           setDestinationModalVisible(false);
         }}
-        onConfirmAddress={() => {
-          setDestinationModalVisible(false);
-          setConfirmedDestination(true);
-          placeOrderHandler(selectedFare?.fleet?.id!);
-        }}
+        onConfirmAddress={() => placeOrderHandler(selectedFare?.fleet?.id!)}
         order={order}
         onEditAddress={() => {
           navigation.navigate('OrderDestination', {
