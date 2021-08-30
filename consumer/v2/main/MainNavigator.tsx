@@ -8,6 +8,7 @@ import React from 'react';
 import { Dimensions, Image, Text, View } from 'react-native';
 import * as icons from '../../../assets/icons';
 import { ApiContext } from '../../../common/app/context';
+import { track } from '../../../common/store/api/track';
 import { halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
@@ -58,11 +59,20 @@ export const MainNavigator = () => {
   const deeplink = useURL();
   React.useEffect(() => {
     if (!deeplink) return;
+    track('Deeplink navigator', {
+      deeplink,
+    });
     const parsedURL = Linking.parse(deeplink);
     if (!parsedURL?.path) return;
+    track('Deeplink navigator', {
+      parsedURL: parsedURL.path,
+    });
     const r = /\/r\/([-a-zA-Z]+)/.exec(parsedURL.path);
     if (!r) return;
     const [_, value] = r;
+    track('Deeplink navigator', {
+      value,
+    });
     api
       .business()
       .fetchBusiness(value)
