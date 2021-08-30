@@ -10,7 +10,6 @@ export const useBusinessIsAcceptingOrders = (business?: Business) => {
   if (!business) return false;
   if (!business.enabled) return false;
   if (business.status !== 'open') return false;
-  if (!platformParams) return false;
   if (!business.keepAlive) return false;
   const keepAlive = (business.keepAlive as firebase.firestore.Timestamp).toDate();
   return (
