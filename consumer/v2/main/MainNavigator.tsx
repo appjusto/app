@@ -67,7 +67,7 @@ export const MainNavigator = () => {
     track('Deeplink navigator', {
       parsedURL: parsedURL.path,
     });
-    const r = /\/r\/([-a-zA-Z]+)/.exec(parsedURL.path);
+    const r = /\/r\/([-a-zA-Z0-9]+)/.exec(parsedURL.path);
     if (!r) return;
     const [_, value] = r;
     track('Deeplink navigator', {
