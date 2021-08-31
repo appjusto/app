@@ -2,13 +2,9 @@ import { PushMessageData } from '@appjusto/types';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
-import * as Linking from 'expo-linking';
 import React from 'react';
 import { Dimensions, Image, Text, View } from 'react-native';
 import * as icons from '../../../assets/icons';
-import { ApiContext } from '../../../common/app/context';
-import useDeepLink from '../../../common/hooks/useDeepLink';
-import { track } from '../../../common/store/api/track';
 import { halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
@@ -25,7 +21,6 @@ const Tab = createBottomTabNavigator<MainNavigatorParamList>();
 export const MainNavigator = () => {
   // context
   const navigation = useNavigation<ScreenNavigationProp>();
-  const api = React.useContext(ApiContext);
   // handlers
   const handler = React.useCallback(
     (data: PushMessageData, clicked?: boolean, remove?: () => void) => {
@@ -56,38 +51,7 @@ export const MainNavigator = () => {
   );
   useNotificationHandler('order-update', handler);
   useNotificationHandler('order-chat', handler);
-  const deeplink = useDeepLink();
-  React.useEffect(() => {
-    if (!deeplink) return;
-    track('Deeplink navigator', {
-      deeplink,
-    });
-    const parsedURL = Linking.parse(deeplink);
-    if (!parsedURL?.path) return;
-    track('Deeplink navigator', {
-      parsedURL: parsedURL.path,
-    });
-    const r = /\/r\/([-a-zA-Z0-9]+)/.exec(parsedURL.path);
-    if (!r) return;
-    const [_, value] = r;
-    track('Deeplink navigator', {
-      value,
-    });
-    api
-      .business()
-      .fetchBusiness(value)
-      .then((business) => {
-        if (business) {
-          navigation.navigate('FoodOrderNavigator', {
-            screen: 'RestaurantNavigator',
-            params: {
-              restaurantId: business.id,
-              screen: 'RestaurantDetail',
-            },
-          });
-        }
-      });
-  }, [deeplink, api, navigation]);
+
   const { width } = Dimensions.get('window');
   // UI
   return (

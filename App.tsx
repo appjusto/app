@@ -28,7 +28,7 @@ const App = () => {
   React.useEffect(() => {
     // debug only
     if (Platform.OS === 'android' && getExtra().environment !== 'live') {
-      ToastAndroid.show('Testing mode ' + Constants.manifest.revisionId ?? '', ToastAndroid.LONG);
+      ToastAndroid.show('Testing mode ' + Constants.manifest?.revisionId ?? '', ToastAndroid.LONG);
     }
   }, []);
   return (

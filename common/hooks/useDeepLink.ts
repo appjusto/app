@@ -1,14 +1,10 @@
 import * as Linking from 'expo-linking';
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../app/context';
 import { track } from '../store/api/track';
 
-export default function () {
-  const dispatch = useDispatch<AppDispatch>();
+export const useDeeplink = () => {
   // state
   const [deeplink, setDeeplink] = React.useState<string | null>();
-
   // side effects
   // once
   React.useEffect(() => {
@@ -27,7 +23,7 @@ export default function () {
     Linking.addEventListener('url', handler);
 
     return () => Linking.removeEventListener('url', handler);
-  }, [dispatch]);
+  }, []);
 
   return deeplink;
-}
+};
