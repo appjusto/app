@@ -88,9 +88,15 @@ export default function ({ navigation, route }: Props) {
   const accountParser = selectedBank?.accountPattern
     ? numbersAndLettersParser(selectedBank?.accountPattern)
     : undefined;
-  const accountFormatter = selectedBank?.accountPattern
-    ? hyphenFormatter(selectedBank?.accountPattern.indexOf('-'))
-    : undefined;
+  const newCefSavingsPattern = '999999999999-D';
+  const accountFormatter =
+    type === 'Nova Poupança'
+      ? hyphenFormatter(newCefSavingsPattern.indexOf('-'))
+      : selectedBank?.accountPattern
+      ? hyphenFormatter(selectedBank?.accountPattern.indexOf('-'))
+      : undefined;
+  const accountMask =
+    type === 'Nova Poupança' ? newCefSavingsPattern : selectedBank?.accountPattern;
   //handlers
   const submitBankHandler = async () => {
     if (!selectedBank || !agency || !account || !type) {
@@ -202,40 +208,52 @@ export default function ({ navigation, route }: Props) {
                     <View>
                       <RadioButton
                         title={t('001 – Conta Corrente')}
-                        onPress={() => null}
-                        checked={false}
+                        onPress={() => {
+                          if (!profileApproved) setType('Corrente');
+                        }}
+                        checked={type === 'Corrente'}
                         style={{ marginBottom: halfPadding }}
                       />
                       <RadioButton
                         title={t('002 – Conta Simples')}
-                        onPress={() => null}
-                        checked={false}
+                        onPress={() => {
+                          if (!profileApproved) setType('Simples');
+                        }}
+                        checked={type === 'Simples'}
                         style={{ marginBottom: halfPadding }}
                       />
                       <RadioButton
                         title={t('013 – Conta Poupança')}
-                        onPress={() => null}
-                        checked={false}
+                        onPress={() => {
+                          if (!profileApproved) setType('Poupança');
+                        }}
+                        checked={type === 'Poupança'}
                         style={{ marginBottom: halfPadding }}
                       />
                       <RadioButton
                         title={t('1288 – Conta Poupança (novo formato)')}
-                        onPress={() => null}
-                        checked={false}
+                        onPress={() => {
+                          if (!profileApproved) setType('Nova Poupança');
+                        }}
+                        checked={type === 'Nova Poupança'}
                       />
                     </View>
                   ) : (
                     <View>
                       <RadioButton
                         title={t('003 – Conta Corrente')}
-                        onPress={() => null}
-                        checked={false}
+                        onPress={() => {
+                          if (!profileApproved) setType('Corrente');
+                        }}
+                        checked={type === 'Corrente'}
                         style={{ marginBottom: halfPadding }}
                       />
                       <RadioButton
                         title={t('022 – Conta Poupança')}
-                        onPress={() => null}
-                        checked={false}
+                        onPress={() => {
+                          if (!profileApproved) setType('Poupança');
+                        }}
+                        checked={type === 'Poupança'}
                       />
                     </View>
                   )}
@@ -278,7 +296,7 @@ export default function ({ navigation, route }: Props) {
                     : t('Número da conta')
                 }
                 value={account}
-                mask={selectedBank?.accountPattern}
+                mask={accountMask}
                 parser={accountParser}
                 formatter={accountFormatter}
                 editable={!profileApproved}
