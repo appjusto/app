@@ -3,6 +3,7 @@ import { ReportIssueParamList } from '../../../common/screens/ReportIssue';
 import { OrderCanceledParamList } from '../../../courier/approved/ongoing/OrderCanceled';
 import { ProfileAddCardParamList } from '../main/profile/ProfileAddCard';
 import { ProfilePaymentMethodsParamList } from '../main/profile/ProfilePaymentMethods';
+import { MainNavigatorParamList } from '../main/types';
 
 export type OngoingOrderNavigatorParamList = {
   OngoingOrderConfirming: {
@@ -49,4 +50,5 @@ export type OngoingOrderNavigatorParamList = {
 } & ReportIssueParamList &
   ProfilePaymentMethodsParamList &
   OrderCanceledParamList &
-  ProfileAddCardParamList;
+  ProfileAddCardParamList &
+  MainNavigatorParamList;

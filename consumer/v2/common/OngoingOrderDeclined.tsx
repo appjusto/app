@@ -97,6 +97,7 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   };
   const header = (() => {
     if (dispatchingStatus === 'declined') return t('Problemas no pagamento do entregador');
+    if (order.status === 'canceled') return t('Esse pedido foi cancelado');
     else return t('Problemas no pagamento');
   })();
   const description = (() => {
@@ -104,6 +105,7 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
       return t(
         'O pedido está pronto, porém não conseguimos efetuar a cobrança destinada à entrega. Altere a forma de pagamento para continuar.'
       );
+    if (order.status === 'canceled') return '';
     else
       return t(
         'Não conseguimos efetuar a cobrança na forma de pagamento escolhida. Por favor, altere a forma de pagamento e tente novamente.'
@@ -123,7 +125,9 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
         background={colors.white}
       >
         {order.dispatchingStatus === 'declined' ? (
-          <DefaultButton title={t('Alterar forma de pagamento')} onPress={changePaymentHandler} />
+          <View>
+            <DefaultButton title={t('Alterar forma de pagamento')} onPress={changePaymentHandler} />
+          </View>
         ) : null}
         {order.status === 'declined' ? (
           <View style={{ paddingVertical: padding }}>
@@ -131,6 +135,15 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
               title={t('Revisar pedido')}
               secondary
               onPress={() => reviewOrderHandler()}
+            />
+          </View>
+        ) : null}
+        {order.status === 'canceled' ? (
+          <View style={{ paddingVertical: padding }}>
+            <DefaultButton
+              title={t('Voltar para o início')}
+              secondary
+              onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
             />
           </View>
         ) : null}
