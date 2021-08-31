@@ -85,7 +85,7 @@ export default function ({ navigation }: Props) {
     if (!deeplink) return;
     const parsedURL = Linking.parse(deeplink);
     if (!parsedURL?.path) return;
-    const r = /\/f\/([-a-zA-Z0-9]+)/.exec(parsedURL.path);
+    const r = /f\/([-a-zA-Z0-9]+)/.exec(parsedURL.path);
     if (!r) return;
     const [_, fleetId] = r;
     navigation.navigate('ProfileNavigator', {
