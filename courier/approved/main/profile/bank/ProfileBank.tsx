@@ -111,6 +111,7 @@ export default function ({ navigation, route }: Props) {
     );
     navigation.goBack();
   };
+  console.log(selectedBank);
   // UI
   return (
     <View style={{ ...screens.config }}>
@@ -148,7 +149,7 @@ export default function ({ navigation, route }: Props) {
               />
             </View>
           </View>
-          <View style={{ marginTop: halfPadding, flex: 1 }}>
+          <View style={{ flex: 1 }}>
             <Pressable
               onPress={() => {
                 if (!profileApproved) navigation.navigate('SelectBank');
@@ -191,6 +192,74 @@ export default function ({ navigation, route }: Props) {
                 }
               }}
             />
+            <View style={{ marginTop: padding }}>
+              <Text style={{ marginBottom: padding, ...texts.sm, color: colors.grey700 }}>
+                {t('Selecione o tipo da sua conta:')}
+              </Text>
+              {selectedBank?.name === 'Caixa Econômica' ? (
+                <View>
+                  {personType === 'Pessoa Física' ? (
+                    <View>
+                      <RadioButton
+                        title={t('001 – Conta Corrente')}
+                        onPress={() => null}
+                        checked={false}
+                        style={{ marginBottom: halfPadding }}
+                      />
+                      <RadioButton
+                        title={t('002 – Conta Simples')}
+                        onPress={() => null}
+                        checked={false}
+                        style={{ marginBottom: halfPadding }}
+                      />
+                      <RadioButton
+                        title={t('013 – Conta Poupança')}
+                        onPress={() => null}
+                        checked={false}
+                        style={{ marginBottom: halfPadding }}
+                      />
+                      <RadioButton
+                        title={t('1288 – Conta Poupança (novo formato)')}
+                        onPress={() => null}
+                        checked={false}
+                      />
+                    </View>
+                  ) : (
+                    <View>
+                      <RadioButton
+                        title={t('003 – Conta Corrente')}
+                        onPress={() => null}
+                        checked={false}
+                        style={{ marginBottom: halfPadding }}
+                      />
+                      <RadioButton
+                        title={t('022 – Conta Poupança')}
+                        onPress={() => null}
+                        checked={false}
+                      />
+                    </View>
+                  )}
+                </View>
+              ) : (
+                <View>
+                  <RadioButton
+                    title={t('Conta-Corrente')}
+                    onPress={() => {
+                      if (!profileApproved) setType('Corrente');
+                    }}
+                    checked={type === 'Corrente'}
+                    style={{ marginBottom: halfPadding }}
+                  />
+                  <RadioButton
+                    title={t('Poupança')}
+                    onPress={() => {
+                      if (!profileApproved) setType('Poupança');
+                    }}
+                    checked={type === 'Poupança'}
+                  />
+                </View>
+              )}
+            </View>
             <View
               style={{
                 marginTop: padding,
@@ -229,56 +298,6 @@ export default function ({ navigation, route }: Props) {
                   }
                 }}
               />
-            </View>
-            <View style={{ marginTop: padding }}>
-              <Text style={{ marginBottom: padding, ...texts.sm, color: colors.grey700 }}>
-                {t('Selecione o tipo da sua conta:')}
-              </Text>
-              {selectedBank?.name === 'Caixa Econômica' ? (
-                <View style={{ marginBottom: padding }}>
-                  <RadioButton
-                    title={t('001 – Conta Corrente')}
-                    onPress={() => null}
-                    checked={false}
-                    style={{ marginBottom: halfPadding }}
-                  />
-                  <RadioButton
-                    title={t('002 – Conta Simples')}
-                    onPress={() => null}
-                    checked={false}
-                    style={{ marginBottom: halfPadding }}
-                  />
-                  <RadioButton
-                    title={t('013 – Conta Poupança')}
-                    onPress={() => null}
-                    checked={false}
-                    style={{ marginBottom: halfPadding }}
-                  />
-                  <RadioButton
-                    title={t('1288 – Conta Poupança (novo formato)')}
-                    onPress={() => null}
-                    checked={false}
-                  />
-                </View>
-              ) : (
-                <View>
-                  <RadioButton
-                    title={t('Conta-Corrente')}
-                    onPress={() => {
-                      if (!profileApproved) setType('Corrente');
-                    }}
-                    checked={type === 'Corrente'}
-                    style={{ marginBottom: halfPadding }}
-                  />
-                  <RadioButton
-                    title={t('Poupança')}
-                    onPress={() => {
-                      if (!profileApproved) setType('Poupança');
-                    }}
-                    checked={type === 'Poupança'}
-                  />
-                </View>
-              )}
             </View>
           </View>
           <View style={{ flex: 1 }} />
