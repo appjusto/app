@@ -15,6 +15,7 @@ type Props = {
   order: Order;
   onEditAddress: () => void;
   onConfirmAddress: () => void;
+  activityIndicator: boolean;
 };
 
 export const DestinationModal = ({
@@ -23,6 +24,7 @@ export const DestinationModal = ({
   order,
   onEditAddress,
   onConfirmAddress,
+  activityIndicator,
 }: Props) => {
   return (
     <Modal transparent visible={modalVisible} animationType="slide">
@@ -65,8 +67,9 @@ export const DestinationModal = ({
           <HR style={{ marginTop: 24 }} />
           <DefaultButton
             style={{ marginTop: halfPadding, marginBottom: padding }}
-            title={t('Confirmar endereço de entrega')}
+            title={t('Fazer pedido')}
             onPress={onConfirmAddress}
+            activityIndicator={activityIndicator}
           />
         </PaddedView>
       </View>

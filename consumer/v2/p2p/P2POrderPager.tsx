@@ -1,7 +1,8 @@
-import { Order, Place, WithId } from '@appjusto/types';
+import { Fare, Order, Place, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import {
+  ActivityIndicator,
   NativeSyntheticEvent,
   Pressable,
   Text,
@@ -17,9 +18,13 @@ import { StepControl } from '../../../common/components/controls/step-control/St
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../common/components/texts/LabeledText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
-import { padding, screens, texts } from '../../../common/styles';
+import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import { OrderCostBreakdown } from '../common/breakdown/OrderCostBreakdown';
+import { OrderAvailableFleets } from '../common/order-summary/OrderAvailableFleets';
+import { OrderPayment } from '../common/order-summary/OrderPayment';
 import { OrderSummary } from '../common/order-summary/OrderSummary';
+import { OrderTotal } from '../common/order-summary/OrderTotal';
 import { Step } from './types';
 
 type Props = {
@@ -30,13 +35,19 @@ type Props = {
   navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleetId: string) => void;
   navigateToTransportableItems: () => void;
-  placeOrder: (fleetId: string) => Promise<void>;
+  onSubmit: () => void;
   navigateToPixPayment: (total: number, fleetId: string) => void;
   navigateToAboutCharges: () => void;
   cpf: string;
   setCpf: (value: string) => void;
   wantsCpf: boolean;
   onSwitchValueChange: (value: boolean) => void;
+  canSubmit: boolean;
+  quotes: Fare[] | undefined;
+  selectedFare: Fare | undefined;
+  onFareSelect: (fare: Fare) => void;
+  onRetry: () => void;
+  total: number;
 };
 
 export default function ({
@@ -47,13 +58,19 @@ export default function ({
   navigateToFillPaymentInfo,
   navigateFleetDetail,
   navigateToTransportableItems,
-  placeOrder,
+  onSubmit,
   navigateToPixPayment,
   navigateToAboutCharges,
   cpf,
   setCpf,
   wantsCpf,
   onSwitchValueChange,
+  canSubmit,
+  quotes,
+  selectedFare,
+  onFareSelect,
+  onRetry,
+  total,
 }: Props) {
   // params
   const { origin, destination } = order ?? {};
@@ -136,7 +153,6 @@ export default function ({
   };
   // UI
   const isDeviceTaller = useTallerDevice();
-  // const verticalPadding = isDeviceTaller ? doublePadding : padding;
   return (
     <View style={{ ...screens.default }}>
       <StepControl
@@ -290,20 +306,45 @@ export default function ({
           {order?.route ? (
             <OrderSummary
               order={order!}
-              selectedPaymentMethodId={selectedPaymentMethodId}
-              activityIndicator={isLoading}
-              waiting={isLoading}
               showMap={!isDeviceTaller}
               onEditStep={setPage}
-              placeOrder={placeOrder}
-              navigateToFillPaymentInfo={navigateToFillPaymentInfo}
-              navigateFleetDetail={navigateFleetDetail}
-              navigateToPixPayment={navigateToPixPayment}
-              navigateToAboutCharges={navigateToAboutCharges}
-              wantsCpf={wantsCpf}
-              onSwitchValueChange={onSwitchValueChange}
-              cpf={cpf}
-              setCpf={(text) => setCpf(text)}
+              payment={
+                <OrderPayment
+                  selectedPaymentMethodId={selectedPaymentMethodId}
+                  onEditPaymentMethod={navigateToFillPaymentInfo}
+                  isSubmitEnabled={canSubmit}
+                  onSubmit={onSubmit}
+                  activityIndicator={isLoading}
+                  navigateToPixPayment={() => navigateToPixPayment}
+                  navigateToAboutCharges={navigateToAboutCharges}
+                />
+              }
+              availableFleets={
+                <OrderAvailableFleets
+                  quotes={quotes}
+                  selectedFare={selectedFare}
+                  onFareSelect={onFareSelect}
+                  onFleetSelect={navigateFleetDetail}
+                  onRetry={onRetry}
+                  order={order}
+                />
+              }
+              costBreakdown={<OrderCostBreakdown order={order} selectedFare={selectedFare!} />}
+              totalCost={
+                quotes === undefined ? (
+                  <View style={screens.centered}>
+                    <ActivityIndicator size="large" color={colors.green500} />
+                  </View>
+                ) : (
+                  <OrderTotal
+                    total={total}
+                    switchValue={wantsCpf}
+                    onSwitchValueChange={onSwitchValueChange}
+                    cpf={cpf}
+                    setCpf={setCpf}
+                  />
+                )
+              }
             />
           ) : null}
         </View>

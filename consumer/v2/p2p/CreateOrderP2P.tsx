@@ -1,6 +1,7 @@
-import { Place } from '@appjusto/types';
+import { Fare, Place } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { isEmpty } from 'lodash';
 import React from 'react';
 import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -45,7 +46,23 @@ export default function ({ navigation, route }: Props) {
   const [isLoading, setLoading] = React.useState(false);
   const [cpf, setCpf] = React.useState(consumer?.cpf ?? '');
   const [wantsCpf, setWantsCpf] = React.useState(false);
+  const [quotes, setQuotes] = React.useState<Fare[]>();
+  const [selectedFare, setSelectedFare] = React.useState<Fare>();
+  const canSubmit = React.useMemo(() => {
+    return selectedPaymentMethodId !== undefined && selectedFare !== undefined && !isLoading;
+  }, [selectedPaymentMethodId, selectedFare, isLoading]);
   // side effects
+  // whenever order changes
+  // update quotes
+  React.useEffect(() => {
+    getOrderQuotesHandler();
+  }, [order]);
+  // whenever quotes are updated
+  // select first fare and subscribe to involved fleets updates
+  React.useEffect(() => {
+    if (!quotes || isEmpty(quotes)) return;
+    setSelectedFare(quotes[0]);
+  }, [quotes]);
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
     console.log('CreateOrderP2P useEffect; params: ', params);
@@ -90,6 +107,19 @@ export default function ({ navigation, route }: Props) {
     }
   }, [api, consumer, dispatch, navigation, order, orderId, params]);
   // handlers
+  const getOrderQuotesHandler = async () => {
+    if (!order) return;
+    if (!order.origin?.location || !order.route?.distance) {
+      if (order.route?.issue) dispatch(showToast(order.route.issue, 'error'));
+      return;
+    }
+    setQuotes(undefined);
+    try {
+      setQuotes(await api.order().getOrderQuotes(order.id));
+    } catch (error) {
+      dispatch(showToast(error.toString(), 'error'));
+    }
+  };
   // navigate to 'AddressComplete' to enter address
   const navigateToAddressComplete = React.useCallback(
     (returnParam: string, value?: Place) => {
@@ -113,14 +143,6 @@ export default function ({ navigation, route }: Props) {
       navigation.navigate('ProfilePaymentMethods', { returnScreen: 'CreateOrderP2P' });
     }
   }, [consumer, navigation, selectedPaymentMethodId]);
-  // navigate to FleetDetail
-  const navigateFleetDetail = (fleetId: string) => {
-    navigation.navigate('FleetDetail', { fleetId });
-  };
-  // navigate to TransportableItems
-  const navigateToTransportableItems = React.useCallback(() => {
-    navigation.navigate('TransportableItems');
-  }, [navigation]);
   // confirm order
   const placeOrderHandler = async (fleetId: string) => {
     if (!orderId) return;
@@ -177,9 +199,13 @@ export default function ({ navigation, route }: Props) {
         selectedPaymentMethodId={selectedPaymentMethodId}
         navigateToAddressComplete={navigateToAddressComplete}
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
-        navigateFleetDetail={navigateFleetDetail}
-        navigateToTransportableItems={navigateToTransportableItems}
-        placeOrder={placeOrderHandler}
+        navigateFleetDetail={(fleetId: string) => {
+          navigation.navigate('FleetDetail', { fleetId });
+        }}
+        navigateToTransportableItems={() => {
+          navigation.navigate('TransportableItems');
+        }}
+        onSubmit={() => placeOrderHandler(selectedFare?.fleet?.id!)}
         navigateToPixPayment={(total, fleetId) =>
           navigation.navigate('PayWithPix', { orderId: orderId!, total, fleetId })
         }
@@ -188,6 +214,12 @@ export default function ({ navigation, route }: Props) {
         onSwitchValueChange={() => setWantsCpf(!wantsCpf)}
         cpf={cpf}
         setCpf={(text) => setCpf(text)}
+        canSubmit={canSubmit}
+        quotes={quotes}
+        selectedFare={selectedFare}
+        onFareSelect={(fare) => setSelectedFare(fare)}
+        onRetry={getOrderQuotesHandler}
+        total={selectedFare?.total ?? 0}
       />
     </View>
   );
