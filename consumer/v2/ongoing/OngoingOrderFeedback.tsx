@@ -46,7 +46,7 @@ export default ({ navigation, route }: Props) => {
   const [comment, setComment] = React.useState('');
   const [tip, setTip] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
-  const showChatButton = useChatisEnabled(order!);
+  const showChatButton = useChatisEnabled(order);
 
   // helpers
   const openChat = React.useCallback(

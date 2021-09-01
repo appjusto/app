@@ -56,7 +56,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const [reviewLoading, setReviewLoading] = React.useState(false);
   const [reviewSent, setReviewSent] = React.useState(false);
   const [tipLoading, setTipLoading] = React.useState(false);
-  const showChatButton = useChatisEnabled(order!);
+  const showChatButton = useChatisEnabled(order);
 
   // helpers
   const openChat = React.useCallback(
@@ -120,106 +120,122 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
       enableAutomaticScroll
       keyboardOpeningTime={0}
       keyboardShouldPersistTaps="never"
+      contentContainerStyle={{ flexGrow: 1 }}
     >
-      <OrderMap order={order} ratio={360 / 160} />
-      {order.status === 'canceled' ? (
-        <View>
-          <SingleHeader title={t('Pedido cancelado')} />
-          <HR height={padding} />
-        </View>
-      ) : null}
-      <PaddedView>
-        <PlaceSummary title={t('Retirada')} place={order.origin!} />
-        <PlaceSummary title={t('Entrega')} place={order.destination!} />
-        <View style={{ marginTop: halfPadding }}>
-          <RoundedText>
-            {separateWithDot(
-              formatDistance(order.route?.distance ?? 0),
-              formatDuration(order.route?.duration ?? 0)
-            )}
-          </RoundedText>
-        </View>
-      </PaddedView>
-      {order.type === 'food' && (
-        <View>
-          <DeliveredItems order={order} />
-        </View>
-      )}
-      {order.status !== 'canceled' ? (
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingRight: padding,
-              paddingBottom: halfPadding,
-            }}
-          >
-            <SingleHeader title={t('Total pago')} />
-            <Text style={{ ...texts.xl }}>
-              {formatCurrency((order.fare?.total ?? 0) + (order.tip?.value ?? 0))}
-            </Text>
+      <View style={{ flex: 1 }}>
+        <OrderMap order={order} ratio={360 / 160} />
+        {order.status === 'canceled' ? (
+          <View>
+            <SingleHeader title={t('Pedido cancelado')} />
+            <HR height={padding} />
           </View>
-          <HR height={padding} />
-          <View style={{ paddingTop: halfPadding }}>
-            <OrderCostBreakdown order={order} selectedFare={order.fare} />
+        ) : null}
+        <PaddedView>
+          <PlaceSummary title={t('Retirada')} place={order.origin!} />
+          <PlaceSummary title={t('Entrega')} place={order.destination!} />
+          <View style={{ marginTop: halfPadding }}>
+            <RoundedText>
+              {separateWithDot(
+                formatDistance(order.route?.distance ?? 0),
+                formatDuration(order.route?.duration ?? 0)
+              )}
+            </RoundedText>
           </View>
-          <HR height={padding} />
-          {order.courier ? (
-            <View>
-              <ReviewBox
-                review={review?.type ?? reviewType}
-                comment={review?.comment ?? comment}
-                editable={!review}
-                focusable={!!review}
-                onReviewChange={(type) => setReviewType(type)}
-                onCommentChange={(value) => setComment(value)}
-              />
-              <DefaultButton
-                title={
-                  review?.type || reviewSent ? t('Avaliação enviada') : t('Avaliar entregador/a')
-                }
-                onPress={reviewHandler}
-                style={{ margin: padding, marginTop: 0 }}
-                activityIndicator={reviewLoading}
-                disabled={reviewLoading || !!review?.type || reviewSent}
-              />
-              <HR height={padding} />
+        </PaddedView>
+        {order.type === 'food' && (
+          <View>
+            <DeliveredItems order={order} />
+          </View>
+        )}
+        {order.status !== 'canceled' ? (
+          <View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingRight: padding,
+                paddingBottom: halfPadding,
+              }}
+            >
+              <SingleHeader title={t('Total pago')} />
+              <Text style={{ ...texts.xl }}>
+                {formatCurrency((order.fare?.total ?? 0) + (order.tip?.value ?? 0))}
+              </Text>
+            </View>
+            <HR height={padding} />
+            <View style={{ paddingTop: halfPadding }}>
+              <OrderCostBreakdown order={order} selectedFare={order.fare} />
+            </View>
+            <HR height={padding} />
+            {order.courier ? (
               <View>
-                <TipControl
-                  order={order}
-                  tip={tip}
-                  onChange={(value) => setTip(value)}
-                  onConfirm={tipHandler}
-                  isLoading={tipLoading}
+                <ReviewBox
+                  review={review?.type ?? reviewType}
+                  comment={review?.comment ?? comment}
+                  editable={!review}
+                  focusable={!!review}
+                  onReviewChange={(type) => setReviewType(type)}
+                  onCommentChange={(value) => setComment(value)}
+                />
+                <DefaultButton
+                  title={
+                    review?.type || reviewSent ? t('Avaliação enviada') : t('Avaliar entregador/a')
+                  }
+                  onPress={reviewHandler}
+                  style={{ margin: padding, marginTop: 0 }}
+                  activityIndicator={reviewLoading}
+                  disabled={reviewLoading || !!review?.type || reviewSent}
+                />
+                <HR height={padding} />
+                <View>
+                  <TipControl
+                    order={order}
+                    tip={tip}
+                    onChange={(value) => setTip(value)}
+                    onConfirm={tipHandler}
+                    isLoading={tipLoading}
+                  />
+                </View>
+                <HR height={padding} />
+              </View>
+            ) : null}
+            <PaddedView>
+              {showChatButton ? (
+                <DefaultButton
+                  title={t('Abrir chat com restaurante')}
+                  onPress={() => openChatWithRestaurant()}
+                  style={{ marginBottom: padding }}
+                />
+              ) : null}
+
+              <DefaultButton
+                title={t('Relatar problema')}
+                onPress={() =>
+                  navigation.navigate('ReportIssue', {
+                    orderId: order.id,
+                    issueType: 'consumer-delivery-problem',
+                  })
+                }
+                secondary
+              />
+            </PaddedView>
+          </View>
+        ) : (
+          <PaddedView style={{ flex: 1 }}>
+            {showChatButton ? (
+              <View style={{ flex: 1 }}>
+                <View style={{ flex: 1 }} />
+                <DefaultButton
+                  title={t('Abrir chat com restaurante')}
+                  onPress={() => openChatWithRestaurant()}
+                  style={{ marginBottom: padding }}
                 />
               </View>
-              <HR height={padding} />
-            </View>
-          ) : null}
-          <PaddedView>
-            {showChatButton ? (
-              <DefaultButton
-                title={t('Abrir chat com restaurante')}
-                onPress={() => openChatWithRestaurant()}
-                style={{ marginBottom: padding }}
-              />
             ) : null}
-
-            <DefaultButton
-              title={t('Relatar problema')}
-              onPress={() =>
-                navigation.navigate('ReportIssue', {
-                  orderId: order.id,
-                  issueType: 'consumer-delivery-problem',
-                })
-              }
-              secondary
-            />
           </PaddedView>
-        </View>
-      ) : null}
+        )}
+      </View>
     </KeyboardAwareScrollView>
   );
 };

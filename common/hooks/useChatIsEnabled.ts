@@ -1,7 +1,7 @@
 import { Order, WithId } from '../../../types';
 import { useContextGetSeverTime } from '../contexts/ServerTimeContext';
 
-export const useChatisEnabled = (order?: WithId<Order>) => {
+export const useChatisEnabled = (order?: WithId<Order> | null) => {
   const getServerTime = useContextGetSeverTime();
   if (!order) return false;
   if (!getServerTime) return false;
