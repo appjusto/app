@@ -1,10 +1,11 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Linking, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
+import { phoneFormatter } from '../../../common/components/inputs/pattern-input/formatters';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { useObserveBusiness } from '../../../common/store/api/business/hooks/useObserveBusiness';
 import { useGetCancellationInfo } from '../../../common/store/api/order/hooks/useGetCancellationInfo';
@@ -48,8 +49,10 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
   React.useEffect(() => {
     if (cancellationInfo?.costs === 0) cancelOrderHandler();
   }, [cancelOrderHandler, cancellationInfo]);
+  //helpers
+  const formattedPhone = phoneFormatter(business?.phone);
   // UI
-  if (!order || cancellationInfo === undefined || cancellationInfo.costs === 0) {
+  if (!order || cancellationInfo === undefined || cancellationInfo.costs === 0 || !business) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -62,6 +65,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
     >
+      <View style={{ flex: 1 }} />
       <PaddedView style={{ flex: 1 }}>
         <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: doublePadding }}>
           <IconConeYellow />
@@ -70,8 +74,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
             {`${t('O valor de')} ${formatCurrency(cancellationInfo.costs)} não será reembolsado.`}
           </Text>
         </View>
-        {/* hiding while we can't call restaurants from the app */}
-        {/* {order.type === 'food' ? (
+        {order.type === 'food' ? (
           <View>
             <Text
               style={{
@@ -89,26 +92,11 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
             <DefaultButton
               title={t('Ligar para o restaurante')}
               secondary
-              onPress={() => null}
+              onPress={() => Linking.openURL(`tel:${formattedPhone}`)}
               style={{ marginTop: 24 }}
             />
           </View>
-        ) : (
-          <View>
-            <Text
-              style={{
-                ...texts.sm,
-                marginTop: padding,
-                color: colors.grey700,
-                textAlign: 'center',
-              }}
-            >
-              {t(
-                'Depois que o/a entregador/a inicia a corrida não é mais possível fazer o cancelamento da corrida.'
-              )}
-            </Text>
-          </View>
-        )} */}
+        ) : null}
       </PaddedView>
       <View style={{ flex: 1 }} />
       <PaddedView>
