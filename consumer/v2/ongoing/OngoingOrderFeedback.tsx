@@ -1,4 +1,4 @@
-import { ReviewType } from '@appjusto/types';
+import { Flavor, ReviewType } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import HR from '../../../common/components/views/HR';
+import { useChatisEnabled } from '../../../common/hooks/useChatIsEnabled';
 import { IconOrderDone } from '../../../common/icons/icon-order-done';
 import { useCourierReview } from '../../../common/store/api/courier/hooks/useCourierReview';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
@@ -45,17 +46,26 @@ export default ({ navigation, route }: Props) => {
   const [comment, setComment] = React.useState('');
   const [tip, setTip] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
+  const showChatButton = useChatisEnabled(order);
 
-  if (!order) {
-    return (
-      <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green500} />
-      </View>
-    );
-  }
-
-  //handler
+  // helpers
+  const openChat = React.useCallback(
+    (counterpartId: string, counterpartFlavor: Flavor) => {
+      navigation.navigate('OngoingOrderChat', {
+        orderId,
+        counterpartId,
+        counterpartFlavor,
+      });
+    },
+    [navigation, orderId]
+  );
+  const openChatWithRestaurant = React.useCallback(
+    () => openChat(order?.business?.id!, 'business'),
+    [openChat, order?.business?.id]
+  );
+  //handlers
   const finishHandler = async () => {
+    if (!order) return;
     setLoading(true);
     try {
       if (reviewType) {
@@ -74,6 +84,7 @@ export default ({ navigation, route }: Props) => {
     setLoading(false);
   };
   const issueHandler = () => {
+    if (!order) return;
     if (order.type === 'food') {
       navigation.navigate('ReportIssue', {
         orderId: order.id,
@@ -87,6 +98,13 @@ export default ({ navigation, route }: Props) => {
     }
   };
   // UI
+  if (!order) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <KeyboardAwareScrollView
       style={{ ...screens.default, ...screens.headless }}
@@ -180,6 +198,14 @@ export default ({ navigation, route }: Props) => {
       ) : null}
       {/* actions */}
       <View style={{ paddingHorizontal: padding }}>
+        {showChatButton ? (
+          <DefaultButton
+            title={t('Abrir chat com restaurante')}
+            onPress={() => openChatWithRestaurant()}
+            style={{ marginTop: padding }}
+            secondary
+          />
+        ) : null}
         <DefaultButton
           title={t('Finalizar')}
           onPress={finishHandler}
