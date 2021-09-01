@@ -143,14 +143,6 @@ export default function ({ navigation, route }: Props) {
       navigation.navigate('ProfilePaymentMethods', { returnScreen: 'CreateOrderP2P' });
     }
   }, [consumer, navigation, selectedPaymentMethodId]);
-  // navigate to FleetDetail
-  const navigateFleetDetail = (fleetId: string) => {
-    navigation.navigate('FleetDetail', { fleetId });
-  };
-  // navigate to TransportableItems
-  const navigateToTransportableItems = React.useCallback(() => {
-    navigation.navigate('TransportableItems');
-  }, [navigation]);
   // confirm order
   const placeOrderHandler = async (fleetId: string) => {
     if (!orderId) return;
@@ -207,8 +199,12 @@ export default function ({ navigation, route }: Props) {
         selectedPaymentMethodId={selectedPaymentMethodId}
         navigateToAddressComplete={navigateToAddressComplete}
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
-        navigateFleetDetail={navigateFleetDetail}
-        navigateToTransportableItems={navigateToTransportableItems}
+        navigateFleetDetail={(fleetId: string) => {
+          navigation.navigate('FleetDetail', { fleetId });
+        }}
+        navigateToTransportableItems={() => {
+          navigation.navigate('TransportableItems');
+        }}
         onSubmit={() => placeOrderHandler(selectedFare?.fleet?.id!)}
         navigateToPixPayment={(total, fleetId) =>
           navigation.navigate('PayWithPix', { orderId: orderId!, total, fleetId })

@@ -52,7 +52,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   );
   const [isLoading, setLoading] = React.useState(false);
   const [destinationModalVisible, setDestinationModalVisible] = React.useState(false);
-  const [confirmedDestination, setConfirmedDestination] = React.useState(false);
   const [orderAdditionalInfo, setOrderAdditionalInfo] = React.useState('');
   const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
   const [wantsCpf, setWantsCpf] = React.useState(false);
@@ -80,7 +79,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     if (params?.destination) {
       if (order) {
         api.order().updateOrder(order.id, { destination: params.destination });
-        setConfirmedDestination(true);
       }
       navigation.setParams({
         destination: undefined,
@@ -137,12 +135,16 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       return;
     }
     if (wantsCpf && cpf.length !== 11) {
-      dispatch(showToast(t('CPF preenchido incorretamente. Por favor confira novamente'), 'error'));
+      dispatch(
+        showToast(
+          t('CPF preenchido incorretamente. Por favor confira o número do seu documento'),
+          'error'
+        )
+      );
       return;
     }
     try {
       setLoading(true);
-      setConfirmedDestination(true);
       await api.order().placeOrder(
         order.id,
         fleetId,
@@ -178,10 +180,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       navigation.navigate('ProfilePaymentMethods', { returnScreen: 'FoodOrderCheckout' });
     }
   }, [consumer, navigation, selectedPaymentMethodId]);
-  // navigate to FleetDetail
-  const navigateFleetDetail = (fleetId: string) => {
-    navigation.navigate('FleetDetail', { fleetId });
-  };
   // UI
   if (!order) {
     return (
@@ -221,7 +219,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             quotes={quotes}
             selectedFare={selectedFare}
             onFareSelect={(fare) => setSelectedFare(fare)}
-            onFleetSelect={navigateFleetDetail}
+            onFleetSelect={(fleetId: string) => {
+              navigation.navigate('FleetDetail', { fleetId });
+            }}
             onRetry={getOrderQuotesHandler}
             order={order}
           />
