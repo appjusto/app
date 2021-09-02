@@ -8,6 +8,7 @@ interface Props extends TextProps {
   backgroundColor?: string;
   leftIcon?: React.ReactNode;
   noBorder?: boolean;
+  quote?: boolean;
 }
 
 export default function ({
@@ -16,6 +17,7 @@ export default function ({
   children,
   leftIcon,
   noBorder,
+  quote,
   style,
   ...props
 }: Props) {
@@ -32,7 +34,7 @@ export default function ({
             paddingHorizontal: halfPadding,
             ...borders.default,
             borderRadius: 32,
-            borderColor: noBorder ? colors.grey50 : tintColor,
+            borderColor: noBorder ? colors.grey50 : quote ? colors.green500 : tintColor,
             backgroundColor: bg ?? colors.white,
           },
           style,
@@ -40,7 +42,9 @@ export default function ({
         {...props}
       >
         {leftIcon}
-        <Text style={[texts.xs, { textAlign: 'center', color: tintColor }]}>{children}</Text>
+        <Text style={[texts.xs, { textAlign: 'center', color: tintColor, paddingBottom: 2 }]}>
+          {children}
+        </Text>
       </View>
     </View>
   );
