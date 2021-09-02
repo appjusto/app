@@ -1,6 +1,6 @@
+import { OrderConfirmation } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { OrderConfirmation } from '../../../../types';
 import { HorizontalSelectItem } from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../common/components/texts/SingleHeader';

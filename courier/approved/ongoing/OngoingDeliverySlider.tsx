@@ -1,6 +1,6 @@
+import { Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { View } from 'react-native';
-import { Order, WithId } from '../../../../types';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import { padding } from '../../../common/styles';
 import { t } from '../../../strings';

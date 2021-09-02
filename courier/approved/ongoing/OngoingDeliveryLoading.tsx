@@ -1,6 +1,6 @@
+import { DispatchingState } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { DispatchingState } from '../../../../types';
 import { IconLoading } from '../../../common/icons/icon-loading';
 import { colors, halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';

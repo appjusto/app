@@ -1,5 +1,5 @@
+import { Order, WithId } from '@appjusto/types';
 import firebase from 'firebase';
-import { Order, WithId } from '../../../types';
 import { useContextGetSeverTime } from '../contexts/ServerTimeContext';
 
 export const useChatisEnabled = (order?: WithId<Order> | null) => {

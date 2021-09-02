@@ -1,6 +1,6 @@
+import { ChatMessageUser, Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { View } from 'react-native';
-import { ChatMessageUser, Order, WithId } from '../../../../types';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import HR from '../../../common/components/views/HR';
 import { MessagesCard } from '../../../common/screens/home/cards/MessagesCard';

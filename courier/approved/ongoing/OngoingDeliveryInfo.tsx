@@ -1,7 +1,7 @@
+import { Order, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { Order, WithId } from '../../../../types';
 import { pinPackage, pinPackageWhite } from '../../../assets/icons';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';

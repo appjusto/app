@@ -1,7 +1,7 @@
+import { Order, WithId } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Modal, ModalProps, Text, TouchableOpacity, View } from 'react-native';
-import { Order, WithId } from '../../../../types';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import { IconOngoingRequest } from '../../../common/icons/icon-ongoingRequest';
 import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';

@@ -1,7 +1,7 @@
+import { ChatMessageUser, Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { ChatMessageUser, Order, WithId } from '../../../../types';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { IconMessageReceived } from '../../../common/icons/icon-message-received';

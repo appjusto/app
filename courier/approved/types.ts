@@ -1,4 +1,4 @@
-import { IssueType } from '../../../types';
+import { IssueType } from '@appjusto/types';
 import { PermissionDeniedParamList } from '../../common/screens/PermissionDenied';
 import { NestedNavigatorParams } from '../../common/types';
 import { DeliveriesNavigatorParamList } from './main/history/types';

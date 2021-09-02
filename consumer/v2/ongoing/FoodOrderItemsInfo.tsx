@@ -1,7 +1,7 @@
+import { Order, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { Order, WithId } from '../../../../types';
 import HR from '../../../common/components/views/HR';
 import { colors, halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';

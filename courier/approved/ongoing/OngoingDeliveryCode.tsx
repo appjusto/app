@@ -1,6 +1,6 @@
+import { DispatchingState } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { DispatchingState } from '../../../../types';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../common/components/texts/SingleHeader';

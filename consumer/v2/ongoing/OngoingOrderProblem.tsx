@@ -1,8 +1,8 @@
+import { IssueType } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, Linking, ScrollView, View } from 'react-native';
-import { IssueType } from '../../../../types';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, screens } from '../../../common/styles';

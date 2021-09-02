@@ -10,7 +10,7 @@ import {
   signInWithEmailLink,
 } from '../store/user/actions';
 import { getUser } from '../store/user/selectors';
-import { useDeeplink } from './useDeeplink';
+import { useDeeplink } from './useDeepLink';
 
 export enum AuthState {
   CheckingPreviousSession = 'checking-previous-sesssion',
@@ -35,7 +35,7 @@ export const useAuth = (): [AuthState, firebase.User | undefined | null] => {
   // state
   const user = useSelector(getUser);
   const [authState, setAuthState] = React.useState<AuthState>(AuthState.CheckingPreviousSession);
-  const deepLink = useDeeplink();
+  const deeplink = useDeeplink();
 
   // side effects
   // subscribe once to be notified whenever the user changes (capture by the next effect)
@@ -63,18 +63,18 @@ export const useAuth = (): [AuthState, firebase.User | undefined | null] => {
       }
       return state;
     });
-  }, [deepLink]);
+  }, [deeplink]);
 
   React.useEffect(() => {
     if (authState !== AuthState.CheckingDeeplink) return;
     // undefined means useDeeplink hasnt finished yet
-    if (deepLink === undefined) return;
+    if (deeplink === undefined) return;
     // null means there's no deeplink
-    if (deepLink === null) {
+    if (deeplink === null) {
       setAuthState(AuthState.Unsigned);
       return;
     }
-    const link = extractAuthLink(deepLink);
+    const link = extractAuthLink(deeplink);
 
     if (link === null || !isSignInWithEmailLink(api)(link)) {
       setAuthState(AuthState.Unsigned);
@@ -98,7 +98,7 @@ export const useAuth = (): [AuthState, firebase.User | undefined | null] => {
         setAuthState(AuthState.InvalidCredentials);
       }
     });
-  }, [deepLink, authState, api]);
+  }, [deeplink, authState, api]);
 
   return [authState, user];
 };

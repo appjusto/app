@@ -1,5 +1,5 @@
+import { OrderCancellation } from '@appjusto/types';
 import React from 'react';
-import { OrderCancellation } from '../../../../../../types';
 import { ApiContext } from '../../../../app/context';
 
 export const useOrderCancellationInfo = (orderId: string) => {

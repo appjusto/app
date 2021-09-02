@@ -1,7 +1,7 @@
+import { ReviewType } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { TouchableWithoutFeedback, View } from 'react-native';
-import { ReviewType } from '../../../../../types';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { borders, colors, padding } from '../../../../common/styles';

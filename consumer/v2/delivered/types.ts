@@ -1,4 +1,4 @@
-import { Flavor } from '../../../../types';
+import { Flavor } from '@appjusto/types';
 import { ReportIssueParamList } from '../../../common/screens/ReportIssue';
 
 export type DeliveredOrderNavigatorParamList = {

@@ -1,9 +1,9 @@
+import { Issue, WithId } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { Issue, WithId } from '../../../../types';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import { ReportIssueView } from '../../../common/components/views/ReportIssueView';

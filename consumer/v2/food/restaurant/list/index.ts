@@ -1,4 +1,4 @@
-import { BusinessAlgolia } from '../../../../../../types';
+import { BusinessAlgolia } from '@appjusto/types';
 import { t } from '../../../../../strings';
 import { RestaurantListSection } from './types';
 

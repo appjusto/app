@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import * as Linking from 'expo-linking';
 import React from 'react';
 import { ApiContext } from '../app/context';
-import { useDeeplink } from './useDeeplink';
+import { useDeeplink } from './useDeepLink';
 
 export const useBusinessDeeplink = () => {
   // context

@@ -1,6 +1,6 @@
+import { ChatMessageUser, Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { View } from 'react-native';
-import { ChatMessageUser, Order, WithId } from '../../../../types';
 import { StatusAndMessages } from '../../../common/screens/orders/ongoing/StatusAndMessages';
 import OrderMap from '../../../common/screens/orders/OrderMap';
 import { RouteIcons } from './RouteIcons';

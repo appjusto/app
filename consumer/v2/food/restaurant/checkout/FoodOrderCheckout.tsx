@@ -1,3 +1,4 @@
+import { Fare } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
@@ -5,7 +6,6 @@ import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
-import { Fare } from '../../../../../../types';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
