@@ -110,7 +110,7 @@ export default function ({ navigation, route }: Props) {
         } else if (type === 'Poupança') {
           return '013';
         } else if (type === 'Nova Poupança') {
-          return '003';
+          return '1288';
         }
       }
     } else return undefined;
