@@ -88,15 +88,37 @@ export default function ({ navigation, route }: Props) {
   const accountParser = selectedBank?.accountPattern
     ? numbersAndLettersParser(selectedBank?.accountPattern)
     : undefined;
-  const newCefSavingsPattern = '999999999999-D';
-  const accountFormatter =
-    type === 'Nova Poupança'
-      ? hyphenFormatter(newCefSavingsPattern.indexOf('-'))
-      : selectedBank?.accountPattern
-      ? hyphenFormatter(selectedBank?.accountPattern.indexOf('-'))
-      : undefined;
-  const accountMask =
-    type === 'Nova Poupança' ? newCefSavingsPattern : selectedBank?.accountPattern;
+  const newCEFPattern = '99999999-D'; // removed the first 3 digits (account type). should come from data.ts
+  const accountFormatter = selectedBank?.accountPattern
+    ? hyphenFormatter(selectedBank?.accountPattern.indexOf('-'))
+    : undefined;
+  // const newAccountFormatter = (() => {
+  //   if (!selectedBank) return;
+  //   const formattedAcount = hyphenFormatter(selectedBank?.accountPattern.indexOf('-'));
+  //   if (selectedBank.accountPattern) {
+  //     if (selectedBank.code === '104') {
+  //       if (personType === 'Pessoa Jurídica') {
+  //         if (type === 'Corrente') {
+  //           return '003' + formattedAcount;
+  //         } else if (type === 'Poupança') {
+  //           return '022' + formattedAcount;
+  //         }
+  //       }
+  //       if (personType === 'Pessoa Física') {
+  //         if (type === 'Corrente') {
+  //           return '001' + formattedAcount;
+  //         } else if (type === 'Simples') {
+  //           return '002' + formattedAcount;
+  //         } else if (type === 'Poupança') {
+  //           return '013' + formattedAcount;
+  //         } else if (type === 'Nova Poupança') {
+  //           return '003' + formattedAcount;
+  //         }
+  //       }
+  //     } else return formattedAcount;
+  //   } else return undefined;
+  // })();
+  const accountMask = selectedBank?.code === '104' ? newCEFPattern : selectedBank?.accountPattern;
   //handlers
   const submitBankHandler = async () => {
     if (!selectedBank || !agency || !account || !type) {
@@ -202,7 +224,7 @@ export default function ({ navigation, route }: Props) {
               <Text style={{ marginBottom: padding, ...texts.sm, color: colors.grey700 }}>
                 {t('Selecione o tipo da sua conta:')}
               </Text>
-              {selectedBank?.name === 'Caixa Econômica' ? (
+              {selectedBank?.code === '104' ? (
                 <View>
                   {personType === 'Pessoa Física' ? (
                     <View>
