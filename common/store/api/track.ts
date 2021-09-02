@@ -10,6 +10,11 @@ export const track = (name: string, props?: Props) => {
   else Segment.trackWithProperties(name, props);
 };
 
+export const screen = (name: string, props?: Props) => {
+  if (!props) Segment.screen(name);
+  else Segment.screenWithProperties(name, props);
+};
+
 export const useTrack = (name: string, props?: Props) => {
   React.useEffect(() => {
     track(name, props);
@@ -18,7 +23,6 @@ export const useTrack = (name: string, props?: Props) => {
 
 export const useSegmentScreen = (name: string, props?: Props) => {
   React.useEffect(() => {
-    if (!props) Segment.screen(name);
-    else Segment.screenWithProperties(name, props);
+    screen(name, props);
   }, [name, props]);
 };

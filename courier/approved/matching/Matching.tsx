@@ -11,7 +11,7 @@ import RoundedText from '../../../common/components/texts/RoundedText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { useObserveOrderRequest } from '../../../common/store/api/courier/hooks/useObserveOrderRequest';
 import { distanceBetweenLatLng } from '../../../common/store/api/helpers';
-import { track, useSegmentScreen } from '../../../common/store/api/track';
+import { screen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { colors, doublePadding, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency, formatDistance, formatTime } from '../../../common/utils/formatters';
@@ -51,7 +51,7 @@ export default function ({ navigation, route }: Props) {
         const position = await Location.getCurrentPositionAsync();
         const currentDistanceToOrigin = distanceBetweenLatLng(position.coords, origin);
         setDistance(currentDistanceToOrigin);
-        track('Matching', {
+        screen('Matching', {
           orderId,
           distanceToOrigin,
           currentDistanceToOrigin,
@@ -82,7 +82,6 @@ export default function ({ navigation, route }: Props) {
     api.courier().viewOrderRequest(courier.id, orderId);
   }, [api, courier.id, orderId]);
   // tracking
-  useSegmentScreen('Matching');
   const tallerDevice = useTallerDevice();
   // UI
   if (isLoading)

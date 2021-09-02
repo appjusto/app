@@ -1,8 +1,8 @@
+import firebase from 'firebase';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../app/context';
-import { track } from '../store/api/track';
 import {
   getSignInEmail,
   isSignInWithEmailLink,
@@ -10,7 +10,7 @@ import {
   signInWithEmailLink,
 } from '../store/user/actions';
 import { getUser } from '../store/user/selectors';
-import useDeepLink from './useDeepLink';
+import { useDeeplink } from './useDeeplink';
 
 export enum AuthState {
   CheckingPreviousSession = 'checking-previous-sesssion',
@@ -35,7 +35,7 @@ export const useAuth = (): [AuthState, firebase.User | undefined | null] => {
   // state
   const user = useSelector(getUser);
   const [authState, setAuthState] = React.useState<AuthState>(AuthState.CheckingPreviousSession);
-  const deepLink = useDeepLink();
+  const deepLink = useDeeplink();
 
   // side effects
   // subscribe once to be notified whenever the user changes (capture by the next effect)
@@ -66,10 +66,6 @@ export const useAuth = (): [AuthState, firebase.User | undefined | null] => {
   }, [deepLink]);
 
   React.useEffect(() => {
-    track('Deeplink', {
-      authState,
-      deepLink,
-    });
     if (authState !== AuthState.CheckingDeeplink) return;
     // undefined means useDeeplink hasnt finished yet
     if (deepLink === undefined) return;
@@ -79,9 +75,6 @@ export const useAuth = (): [AuthState, firebase.User | undefined | null] => {
       return;
     }
     const link = extractAuthLink(deepLink);
-    track('Deeplink', {
-      link,
-    });
 
     if (link === null || !isSignInWithEmailLink(api)(link)) {
       setAuthState(AuthState.Unsigned);

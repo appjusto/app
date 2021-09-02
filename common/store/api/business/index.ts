@@ -21,7 +21,7 @@ export default class BusinessApi {
     const ref = this.refs.getBusinessesRef();
     let query: firebase.firestore.Query<firebase.firestore.DocumentData> | null = null;
     // check if it's code
-    const r = /[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{7}/.exec(value);
+    const r = /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{7}$/.exec(value);
     if (!r) query = ref.where('slug', '==', value);
     else query = ref.where('code', '==', value);
     const snapshot = await query.get();

@@ -38,12 +38,15 @@ type Props = {
 
 export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   // context
-  const restaurant = useContextBusiness()!;
+  const restaurant = useContextBusiness();
   const activeOrder = useContextActiveOrder();
   const categoriesWithProducts = useContextCategoriesWithProducts();
   // redux
   const consumer = useSelector(getConsumer);
   const extra = useSelector(getExtra);
+  //
+  const domain = `${extra.environment === 'live' ? '' : `${extra.environment}.`}appjusto.com.br`;
+  const businessDeeplink = `https://${domain}/r/${restaurant?.slug ?? restaurant?.code}`;
   // side effects
   // setting the restaurant.name in the header
   React.useLayoutEffect(() => {
@@ -51,13 +54,6 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
       title: restaurant?.name ?? '',
     });
   }, [navigation, restaurant]);
-  // helpers
-  const domain = `${extra.environment === 'live' ? '' : `${extra.environment}.`}appjusto.com.br`;
-  const businessDeeplink = (() => {
-    if (!restaurant) return;
-    if (restaurant.slug) return `https://${domain}/r/${restaurant.slug}`;
-    else return `https://${domain}/r/${restaurant.code}`;
-  })();
   // handlers
   const shareRestaurantHandler = async () => {
     try {
