@@ -9,7 +9,6 @@ import DefaultButton from '../../../../../common/components/buttons/DefaultButto
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';
 import HR from '../../../../../common/components/views/HR';
-import useTallerDevice from '../../../../../common/hooks/useTallerDevice';
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { useContextBusiness } from '../../../../../common/store/context/business';
@@ -42,13 +41,9 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   const restaurant = useContextBusiness()!;
   const activeOrder = useContextActiveOrder();
   const categoriesWithProducts = useContextCategoriesWithProducts();
-  const tallerDevice = useTallerDevice();
   // redux
   const consumer = useSelector(getConsumer);
   const extra = useSelector(getExtra);
-  //
-  const domain = `${extra.environment === 'live' ? '' : `${extra.environment}.`}appjusto.com.br`;
-  const businessDeeplink = `https://${domain}/r/${restaurant.slug ?? restaurant.code}`;
   // side effects
   // setting the restaurant.name in the header
   React.useLayoutEffect(() => {
@@ -56,6 +51,13 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
       title: restaurant?.name ?? '',
     });
   }, [navigation, restaurant]);
+  // helpers
+  const domain = `${extra.environment === 'live' ? '' : `${extra.environment}.`}appjusto.com.br`;
+  const businessDeeplink = (() => {
+    if (!restaurant) return;
+    if (restaurant.slug) return `https://${domain}/r/${restaurant.slug}`;
+    else return `https://${domain}/r/${restaurant.code}`;
+  })();
   // handlers
   const shareRestaurantHandler = async () => {
     try {
