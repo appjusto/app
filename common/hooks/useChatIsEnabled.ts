@@ -1,3 +1,4 @@
+import firebase from 'firebase';
 import { Order, WithId } from '../../../types';
 import { useContextGetSeverTime } from '../contexts/ServerTimeContext';
 
@@ -8,11 +9,11 @@ export const useChatisEnabled = (order?: WithId<Order> | null) => {
   const { status } = order;
   let time;
   if (status === 'delivered') time = order.deliveredOn;
-  else if (status === 'canceled') time = order.createdOn;
+  else if (status === 'canceled') time = order.updatedOn;
   return (
     ['preparing', 'ready', 'dispatching'].includes(status) ||
     (['delivered', 'canceled'].includes(status) &&
       getServerTime().getTime() - (time as firebase.firestore.Timestamp).toDate().getTime() <
-        3600000)
+        60 * 60 * 1000)
   );
 };
