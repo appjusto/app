@@ -92,32 +92,29 @@ export default function ({ navigation, route }: Props) {
   const accountFormatter = selectedBank?.accountPattern
     ? hyphenFormatter(selectedBank?.accountPattern.indexOf('-'))
     : undefined;
-  // const newAccountFormatter = (() => {
-  //   if (!selectedBank) return;
-  //   const formattedAcount = hyphenFormatter(selectedBank?.accountPattern.indexOf('-'));
-  //   if (selectedBank.accountPattern) {
-  //     if (selectedBank.code === '104') {
-  //       if (personType === 'Pessoa Jurídica') {
-  //         if (type === 'Corrente') {
-  //           return '003' + formattedAcount;
-  //         } else if (type === 'Poupança') {
-  //           return '022' + formattedAcount;
-  //         }
-  //       }
-  //       if (personType === 'Pessoa Física') {
-  //         if (type === 'Corrente') {
-  //           return '001' + formattedAcount;
-  //         } else if (type === 'Simples') {
-  //           return '002' + formattedAcount;
-  //         } else if (type === 'Poupança') {
-  //           return '013' + formattedAcount;
-  //         } else if (type === 'Nova Poupança') {
-  //           return '003' + formattedAcount;
-  //         }
-  //       }
-  //     } else return formattedAcount;
-  //   } else return undefined;
-  // })();
+  const cefAccountCode = (() => {
+    if (!selectedBank) return;
+    if (selectedBank.code === '104') {
+      if (personType === 'Pessoa Jurídica') {
+        if (type === 'Corrente') {
+          return '003';
+        } else if (type === 'Poupança') {
+          return '022';
+        }
+      }
+      if (personType === 'Pessoa Física') {
+        if (type === 'Corrente') {
+          return '001';
+        } else if (type === 'Simples') {
+          return '002';
+        } else if (type === 'Poupança') {
+          return '013';
+        } else if (type === 'Nova Poupança') {
+          return '003';
+        }
+      }
+    } else return undefined;
+  })();
   const accountMask = selectedBank?.code === '104' ? newCEFPattern : selectedBank?.accountPattern;
   //handlers
   const submitBankHandler = async () => {
@@ -132,14 +129,16 @@ export default function ({ navigation, route }: Props) {
           agency,
           agencyFormatted: agencyFormatter!(agency),
           account,
-          accountFormatted: accountFormatter!(account),
+          accountFormatted:
+            selectedBank.code === '104'
+              ? cefAccountCode + accountFormatter!(account)
+              : accountFormatter!(account),
           personType,
         },
       })
     );
     navigation.goBack();
   };
-  console.log(selectedBank);
   // UI
   return (
     <View style={{ ...screens.config }}>
