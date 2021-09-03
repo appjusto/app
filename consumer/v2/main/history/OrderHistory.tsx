@@ -1,5 +1,3 @@
-import { Order, WithId } from '@appjusto/types';
-import { MaterialIcons } from '@expo/vector-icons';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
@@ -8,26 +6,22 @@ import { Image, SectionList, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/containers/PaddedView';
+import RoundedText from '../../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
-import StatusBadge from '../../../../common/components/views/StatusBadge';
+import ShowIf from '../../../../common/components/views/ShowIf';
 import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
 import {
+  getMonthsWithOrdersInYear,
   getOrdersWithFilter,
-  getOrderTime,
   getYearsWithOrders,
-  isOrderOngoing,
+  summarizeOrders,
 } from '../../../../common/store/order/selectors';
 import { getUser } from '../../../../common/store/user/selectors';
-import { colors, padding, screens, texts } from '../../../../common/styles';
-import {
-  formatAddress,
-  formatDate,
-  formatTime,
-  separateWithDot,
-} from '../../../../common/utils/formatters';
+import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { getMonthName } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
@@ -51,67 +45,24 @@ export default function ({ navigation, route }: Props) {
   const options = React.useMemo(() => ({ consumerId: user?.uid }), [user?.uid]);
   const orders = useObserveOrders(options);
   const yearsWithOrders = getYearsWithOrders(orders);
-  const sections = React.useMemo(() => {
-    // data structure
-    // [ { title: '2020', data: [ { monthName: 'Agosto', deliveries: 3, courierFee: 100 }] }]
+  const monthsWithOrdersInYears = getMonthsWithOrdersInYear(orders);
+  const months = React.useMemo(() => {
     return yearsWithOrders.map((year) => {
-      const ordersInYear = getOrdersWithFilter(orders, year);
+      const monthsInYear = monthsWithOrdersInYears(year);
 
       return {
         title: String(year),
-        data: ordersInYear,
+        data: monthsInYear.map((month) => ({
+          key: `${year}-${month}`,
+          year,
+          month,
+          ...summarizeOrders(getOrdersWithFilter(orders, year, month)),
+        })),
       };
     });
-  }, [orders, yearsWithOrders]);
+  }, [yearsWithOrders, monthsWithOrdersInYears, orders]);
 
-  // handlers
-  const orderSelectHandler = (order: WithId<Order>) => {
-    const orderId = order.id;
-    const { type, status } = order;
-    if (status === 'quote') {
-      if (type === 'p2p') {
-        navigation.navigate('P2POrderNavigator', { screen: 'CreateOrderP2P', params: { orderId } });
-      } else {
-        navigation.navigate('FoodOrderNavigator', {
-          screen: 'RestaurantNavigator',
-          initial: false,
-          params: {
-            restaurantId: order.business!.id,
-            screen: 'RestaurantDetail',
-          },
-        });
-      }
-    } else if (status === 'confirming') {
-      navigation.navigate('OngoingOrderNavigator', {
-        screen: 'OngoingOrderConfirming',
-        params: {
-          orderId,
-        },
-      });
-    } else if (isOrderOngoing(order)) {
-      navigation.navigate('OngoingOrderNavigator', {
-        screen: 'OngoingOrder',
-        params: {
-          orderId,
-        },
-      });
-    } else if (status === 'delivered') {
-      navigation.navigate('DeliveredOrderNavigator', {
-        screen: 'DeliveredOrderDetail',
-        params: {
-          orderId,
-        },
-      });
-    } else if (status === 'canceled') {
-      navigation.navigate('DeliveredOrderNavigator', {
-        screen: 'DeliveredOrderDetail',
-        params: {
-          orderId,
-        },
-      });
-    }
-  };
-  if (sections.length === 0) {
+  if (months.length === 0) {
     return (
       <FeedbackView
         header={t('Seu histórico está vazio')}
@@ -132,10 +83,8 @@ export default function ({ navigation, route }: Props) {
           <View style={[screens.config]}>
             <SectionList
               style={{ flex: 1 }}
-              contentContainerStyle={{ flexGrow: 1 }}
-              sections={sections}
-              keyExtractor={(item) => item.id}
-              stickySectionHeadersEnabled={false}
+              sections={months}
+              keyExtractor={(item) => item.key}
               renderSectionHeader={({ section }) => (
                 <PaddedView
                   style={{
@@ -149,26 +98,33 @@ export default function ({ navigation, route }: Props) {
                 </PaddedView>
               )}
               renderItem={({ item }) => {
-                const time = getOrderTime(item);
-                const title =
-                  item.type === 'food'
-                    ? item.business?.name ?? ''
-                    : formatAddress(item.origin!.address);
-                const subtitle = separateWithDot(formatDate(time), formatTime(time));
+                const title = getMonthName(item.month);
+                const ordersPlaced =
+                  item.delivered > 1 ? t(' pedidos realizados') : t(' pedido realizado');
+                const subtitle = item.delivered + ordersPlaced;
                 return (
                   <ConfigItem
                     title={title}
                     subtitle={subtitle}
-                    onPress={() => orderSelectHandler(item)}
-                    leftIcon={
-                      item.type === 'food' ? (
-                        <MaterialIcons name="fastfood" size={16} />
-                      ) : (
-                        <MaterialIcons name="local-mall" size={16} />
-                      )
+                    onPress={() =>
+                      navigation.navigate('DeliveredOrderNavigator', {
+                        screen: 'OrderHistoryByMonth',
+                        params: {
+                          year: item.year,
+                          month: item.month,
+                        },
+                      })
                     }
                   >
-                    <StatusBadge order={item} />
+                    <ShowIf test={item.ongoing > 0}>
+                      {() => (
+                        <View style={{ marginTop: halfPadding }}>
+                          <RoundedText backgroundColor={colors.yellow}>
+                            {t('Pedido em andamento')}
+                          </RoundedText>
+                        </View>
+                      )}
+                    </ShowIf>
                   </ConfigItem>
                 );
               }}
