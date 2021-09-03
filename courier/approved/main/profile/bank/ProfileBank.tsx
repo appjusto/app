@@ -15,7 +15,6 @@ import { hyphenFormatter } from '../../../../../common/components/inputs/pattern
 import { numbersAndLettersParser } from '../../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../../common/components/inputs/PatternInput';
 import LabeledText from '../../../../../common/components/texts/LabeledText';
-import { DefaultModal } from '../../../../../common/components/views/DefaultModal';
 import useBanks from '../../../../../common/store/api/platform/hooks/useBanks';
 import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
@@ -48,7 +47,6 @@ export default function ({ navigation, route }: Props) {
   const [selectedBank, setSelectedBank] = React.useState<Bank>();
   const [agency, setAgency] = React.useState('');
   const [account, setAccount] = React.useState('');
-  const [warning, setWarning] = React.useState<string>();
   const [personType, setPersonType] = React.useState<BankAccountPersonType>('Pessoa Física');
   const canSubmit = selectedBank && !isEmpty(agency) && !isEmpty(account) && type && personType;
   const profileApproved = courier.situation === 'approved';
@@ -71,11 +69,6 @@ export default function ({ navigation, route }: Props) {
     }
   }, [banks, courier]);
   React.useEffect(() => {
-    if (!selectedBank) return;
-    if (bankAccount?.name === selectedBank.name) return; // no need to alert during update
-    setWarning(selectedBank.warning);
-  }, [bankAccount?.name, selectedBank]);
-  React.useEffect(() => {
     const { bank } = route.params ?? {};
     if (bank) setSelectedBank(bank);
   }, [route.params]);
@@ -92,6 +85,29 @@ export default function ({ navigation, route }: Props) {
   const accountFormatter = selectedBank?.accountPattern
     ? hyphenFormatter(selectedBank?.accountPattern.indexOf('-'))
     : undefined;
+  const cefAccountCode = (() => {
+    if (!selectedBank) return;
+    if (selectedBank.code === '104') {
+      if (personType === 'Pessoa Jurídica') {
+        if (type === 'Corrente') {
+          return '003';
+        } else if (type === 'Poupança') {
+          return '022';
+        }
+      } else if (personType === 'Pessoa Física') {
+        if (type === 'Corrente') {
+          return '001';
+        } else if (type === 'Simples') {
+          return '002';
+        } else if (type === 'Poupança') {
+          return '013';
+        } else if (type === 'Nova Poupança') {
+          return '1288';
+        }
+      }
+    } else return undefined;
+  })();
+  const accountMask = selectedBank?.accountPattern;
   //handlers
   const submitBankHandler = async () => {
     if (!selectedBank || !agency || !account || !type) {
@@ -104,15 +120,17 @@ export default function ({ navigation, route }: Props) {
           name: selectedBank.name,
           agency,
           agencyFormatted: agencyFormatter!(agency),
-          account,
-          accountFormatted: accountFormatter!(account),
+          account: selectedBank.code === '104' ? cefAccountCode + account : account,
+          accountFormatted:
+            selectedBank.code === '104'
+              ? cefAccountCode + accountFormatter!(account)
+              : accountFormatter!(account),
           personType,
         },
       })
     );
     navigation.goBack();
   };
-
   // UI
   return (
     <View style={{ ...screens.config }}>
@@ -150,7 +168,7 @@ export default function ({ navigation, route }: Props) {
               />
             </View>
           </View>
-          <View style={{ marginTop: halfPadding, flex: 1 }}>
+          <View style={{ flex: 1 }}>
             <Pressable
               onPress={() => {
                 if (!profileApproved) navigation.navigate('SelectBank');
@@ -193,6 +211,86 @@ export default function ({ navigation, route }: Props) {
                 }
               }}
             />
+            <View style={{ marginTop: padding }}>
+              <Text style={{ marginBottom: padding, ...texts.sm, color: colors.grey700 }}>
+                {t('Selecione o tipo da sua conta:')}
+              </Text>
+              {selectedBank?.code === '104' ? (
+                <View>
+                  {personType === 'Pessoa Física' ? (
+                    <View>
+                      <RadioButton
+                        title={t('001 – Conta Corrente')}
+                        onPress={() => {
+                          if (!profileApproved) setType('Corrente');
+                        }}
+                        checked={type === 'Corrente'}
+                        style={{ marginBottom: halfPadding }}
+                      />
+                      <RadioButton
+                        title={t('002 – Conta Simples')}
+                        onPress={() => {
+                          if (!profileApproved) setType('Simples');
+                        }}
+                        checked={type === 'Simples'}
+                        style={{ marginBottom: halfPadding }}
+                      />
+                      <RadioButton
+                        title={t('013 – Conta Poupança')}
+                        onPress={() => {
+                          if (!profileApproved) setType('Poupança');
+                        }}
+                        checked={type === 'Poupança'}
+                        style={{ marginBottom: halfPadding }}
+                      />
+                      <RadioButton
+                        title={t('1288 – Conta Poupança (novo formato)')}
+                        onPress={() => {
+                          if (!profileApproved) setType('Nova Poupança');
+                        }}
+                        checked={type === 'Nova Poupança'}
+                      />
+                    </View>
+                  ) : (
+                    <View>
+                      <RadioButton
+                        title={t('003 – Conta Corrente')}
+                        onPress={() => {
+                          if (!profileApproved) setType('Corrente');
+                        }}
+                        checked={type === 'Corrente'}
+                        style={{ marginBottom: halfPadding }}
+                      />
+                      <RadioButton
+                        title={t('022 – Conta Poupança')}
+                        onPress={() => {
+                          if (!profileApproved) setType('Poupança');
+                        }}
+                        checked={type === 'Poupança'}
+                      />
+                    </View>
+                  )}
+                </View>
+              ) : (
+                <View>
+                  <RadioButton
+                    title={t('Conta-Corrente')}
+                    onPress={() => {
+                      if (!profileApproved) setType('Corrente');
+                    }}
+                    checked={type === 'Corrente'}
+                    style={{ marginBottom: halfPadding }}
+                  />
+                  <RadioButton
+                    title={t('Poupança')}
+                    onPress={() => {
+                      if (!profileApproved) setType('Poupança');
+                    }}
+                    checked={type === 'Poupança'}
+                  />
+                </View>
+              )}
+            </View>
             <View
               style={{
                 marginTop: padding,
@@ -211,7 +309,7 @@ export default function ({ navigation, route }: Props) {
                     : t('Número da conta')
                 }
                 value={account}
-                mask={selectedBank?.accountPattern}
+                mask={accountMask}
                 parser={accountParser}
                 formatter={accountFormatter}
                 editable={!profileApproved}
@@ -232,24 +330,6 @@ export default function ({ navigation, route }: Props) {
                 }}
               />
             </View>
-            <View style={{ marginTop: padding }}>
-              <RadioButton
-                title={t('Conta-Corrente')}
-                onPress={() => {
-                  if (!profileApproved) setType('Corrente');
-                }}
-                checked={type === 'Corrente'}
-              />
-              <View style={{ marginTop: halfPadding }}>
-                <RadioButton
-                  title={t('Poupança')}
-                  onPress={() => {
-                    if (!profileApproved) setType('Poupança');
-                  }}
-                  checked={type === 'Poupança'}
-                />
-              </View>
-            </View>
           </View>
           <View style={{ flex: 1 }} />
           {!profileApproved && (
@@ -264,15 +344,6 @@ export default function ({ navigation, route }: Props) {
           )}
         </PaddedView>
       </KeyboardAwareScrollView>
-      <DefaultModal
-        header={t('Atenção')}
-        body={warning ?? ''}
-        dismissButtonTitle={t('Ok, entendi')}
-        onDismiss={() => {
-          setWarning(undefined);
-        }}
-        visible={warning !== undefined}
-      />
     </View>
   );
 }
