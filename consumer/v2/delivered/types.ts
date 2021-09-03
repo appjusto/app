@@ -10,4 +10,8 @@ export type DeliveredOrderNavigatorParamList = {
     counterpartId: string;
     counterpartFlavor: Flavor;
   };
+  OrderHistoryByMonth: {
+    year: number;
+    month: number;
+  };
 } & ReportIssueParamList;

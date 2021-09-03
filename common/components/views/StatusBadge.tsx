@@ -1,12 +1,13 @@
 import { DispatchingState, Order, OrderStatus } from '@appjusto/types';
 import React from 'react';
+import { TouchableOpacity, View } from 'react-native';
 import { t } from '../../../strings';
 import { isOrderOngoing } from '../../store/order/selectors';
-import { colors } from '../../styles';
+import { colors, halfPadding } from '../../styles';
 import RoundedText from '../texts/RoundedText';
 
 const getStatusLabel = (status: OrderStatus, dispatchingState: DispatchingState) => {
-  if (status === 'quote') return t('Cotação');
+  if (status === 'quote') return t('Continuar pedido');
   if (status === 'confirming') return t('Confirmando...');
   if (status === 'confirmed') return t('Confirmado');
   if (status === 'preparing') return t('Preparando');
@@ -22,16 +23,34 @@ const getStatusLabel = (status: OrderStatus, dispatchingState: DispatchingState)
 
 type Props = {
   order: Order;
+  onRemove?: () => void;
 };
 
-export default function ({ order }: Props) {
+export default function ({ order, onRemove }: Props) {
   const { status, dispatchingState } = order;
   let backgroundColor = colors.white;
+  let color = colors.black;
+  let noBorder = false;
   if (isOrderOngoing(order)) backgroundColor = colors.yellow;
-  else if (status === 'canceled') backgroundColor = colors.lightRed;
-  return (
-    <RoundedText backgroundColor={backgroundColor}>
-      {getStatusLabel(status, dispatchingState)}
+  else if (status === 'canceled') {
+    backgroundColor = colors.grey700;
+    color = colors.white;
+  } else if (status === 'quote') {
+    backgroundColor = colors.green500;
+    noBorder = true;
+  }
+  return status !== 'quote' ? (
+    <RoundedText backgroundColor={backgroundColor} color={color} noBorder={noBorder}>
+      {getStatusLabel(status, dispatchingState!)}
     </RoundedText>
+  ) : (
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <RoundedText backgroundColor={backgroundColor} color={color} quote>
+        {getStatusLabel(status, dispatchingState!)}
+      </RoundedText>
+      <TouchableOpacity onPress={onRemove} style={{ marginLeft: halfPadding }}>
+        <RoundedText color={colors.red}>{t('Remover')}</RoundedText>
+      </TouchableOpacity>
+    </View>
   );
 }
