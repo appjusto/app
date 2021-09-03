@@ -5,7 +5,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { FlatList, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { Order, WithId } from '../../../../../types';
+import { Order, OrderStatus, WithId } from '../../../../../types';
 import { ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import StatusBadge from '../../../../common/components/views/StatusBadge';
@@ -50,7 +50,23 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
   // app state
   const user = useSelector(getUser);
   // screen state
-  const options = React.useMemo(() => ({ consumerId: user?.uid }), [user?.uid]);
+  const options = React.useMemo(
+    () => ({
+      consumerId: user?.uid,
+      statuses: [
+        'quote',
+        'confirming',
+        'confirmed',
+        'declined',
+        'dispatching',
+        'preparing',
+        'ready',
+        'delivered',
+        'canceled',
+      ] as OrderStatus[],
+    }),
+    [user?.uid]
+  );
   const orders = useObserveOrders(options);
   const filteredOrders = getOrdersWithFilter(orders, year, month);
   // side effects
