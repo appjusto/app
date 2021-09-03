@@ -47,7 +47,6 @@ export default function ({ navigation, route }: Props) {
   const [selectedBank, setSelectedBank] = React.useState<Bank>();
   const [agency, setAgency] = React.useState('');
   const [account, setAccount] = React.useState('');
-  const [warning, setWarning] = React.useState<string>(); // remove later
   const [personType, setPersonType] = React.useState<BankAccountPersonType>('Pessoa Física');
   const canSubmit = selectedBank && !isEmpty(agency) && !isEmpty(account) && type && personType;
   const profileApproved = courier.situation === 'approved';
@@ -70,11 +69,6 @@ export default function ({ navigation, route }: Props) {
     }
   }, [banks, courier]);
   React.useEffect(() => {
-    if (!selectedBank) return;
-    if (bankAccount?.name === selectedBank.name) return; // no need to alert during update
-    setWarning(selectedBank.warning); // remove later
-  }, [bankAccount?.name, selectedBank]);
-  React.useEffect(() => {
     const { bank } = route.params ?? {};
     if (bank) setSelectedBank(bank);
   }, [route.params]);
@@ -88,7 +82,6 @@ export default function ({ navigation, route }: Props) {
   const accountParser = selectedBank?.accountPattern
     ? numbersAndLettersParser(selectedBank?.accountPattern)
     : undefined;
-  const newCEFPattern = '99999999-D'; // removed the first 3 digits (account type). should come from data.ts
   const accountFormatter = selectedBank?.accountPattern
     ? hyphenFormatter(selectedBank?.accountPattern.indexOf('-'))
     : undefined;
@@ -101,8 +94,7 @@ export default function ({ navigation, route }: Props) {
         } else if (type === 'Poupança') {
           return '022';
         }
-      }
-      if (personType === 'Pessoa Física') {
+      } else if (personType === 'Pessoa Física') {
         if (type === 'Corrente') {
           return '001';
         } else if (type === 'Simples') {
@@ -115,7 +107,7 @@ export default function ({ navigation, route }: Props) {
       }
     } else return undefined;
   })();
-  const accountMask = selectedBank?.code === '104' ? newCEFPattern : selectedBank?.accountPattern;
+  const accountMask = selectedBank?.accountPattern;
   //handlers
   const submitBankHandler = async () => {
     if (!selectedBank || !agency || !account || !type) {
@@ -128,7 +120,7 @@ export default function ({ navigation, route }: Props) {
           name: selectedBank.name,
           agency,
           agencyFormatted: agencyFormatter!(agency),
-          account,
+          account: selectedBank.code === '104' ? cefAccountCode + account : account,
           accountFormatted:
             selectedBank.code === '104'
               ? cefAccountCode + accountFormatter!(account)
@@ -352,15 +344,6 @@ export default function ({ navigation, route }: Props) {
           )}
         </PaddedView>
       </KeyboardAwareScrollView>
-      {/* <DefaultModal
-        header={t('Atenção')}
-        body={warning ?? ''}
-        dismissButtonTitle={t('Ok, entendi')}
-        onDismiss={() => {
-          setWarning(undefined);
-        }}
-        visible={warning !== undefined}
-      /> */}
     </View>
   );
 }
