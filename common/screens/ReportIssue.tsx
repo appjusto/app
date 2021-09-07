@@ -56,6 +56,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
   const [comment, setComment] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
+  const [issueSent, setIssueSent] = React.useState(false);
   // side effects
   // tracking
   useSegmentScreen('Report issue', {
@@ -84,6 +85,8 @@ export const ReportIssue = ({ route, navigation }: Props) => {
           flavor,
           comment,
         });
+        setIssueSent(true);
+        setLoading(false);
         if (flavor === 'courier') {
           navigation.replace('DeliveryProblemFeedback', {
             issueType,
@@ -92,7 +95,6 @@ export const ReportIssue = ({ route, navigation }: Props) => {
         } else {
           navigation.replace('OrderProblemFeedback', { orderId });
         }
-        setLoading(false);
       } catch (error) {
         dispatch(showToast(t('Não foi possível enviar a reclamação. Tente novamente.'), 'error'));
       }
@@ -114,7 +116,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
         inputHeader={t('Você pode detalhar mais seu problema:')}
         comment={comment}
         setComment={(text) => setComment(text)}
-        disabled={!selectedIssue || isLoading}
+        disabled={!selectedIssue || isLoading || issueSent}
         onSendIssue={issueHandler}
         isLoading={isLoading}
       >

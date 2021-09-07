@@ -15,6 +15,7 @@ import { OngoingOrderConfirmCancel } from './OngoingOrderConfirmCancel';
 import OngoingOrderFeedback from './OngoingOrderFeedback';
 import { OngoingOrderProblem } from './OngoingOrderProblem';
 import { OrderConfirming } from './OrderConfirming';
+import { OrderExpired } from './OrderExpired';
 import { OrderNoMatch } from './OrderNoMatch';
 import { OrderProblemFeedback } from './OrderProblemFeedback';
 import { OngoingOrderNavigatorParamList } from './types';
@@ -43,6 +44,11 @@ export const OngoingOrderNavigator = () => {
         name="OngoingOrder"
         component={OngoingOrder}
         options={{ title: t('Pedido em andamento') }}
+      />
+      <Stack.Screen
+        name="OrderExpired"
+        component={OrderExpired}
+        options={{ title: t('Pedido cancelado') }}
       />
       <Stack.Screen
         name="OrderCanceled"
