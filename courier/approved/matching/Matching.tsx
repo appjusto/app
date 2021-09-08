@@ -62,9 +62,11 @@ export default function ({ navigation, route }: Props) {
       setLoading(false);
     })();
   }, [distanceToOrigin, orderId, origin]);
-  // navigating when situation changes
+  // when situation changes
   React.useEffect(() => {
-    if (situation == 'accepted') {
+    if (situation === 'pending') {
+      api.courier().viewOrderRequest(courier.id, orderId);
+    } else if (situation == 'accepted') {
       navigation.replace('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: {
@@ -76,11 +78,7 @@ export default function ({ navigation, route }: Props) {
     } else if (situation === 'rejected') {
       navigation.popToTop();
     }
-  }, [navigation, situation]);
-  // updating request to viewed
-  React.useEffect(() => {
-    api.courier().viewOrderRequest(courier.id, orderId);
-  }, [api, courier.id, orderId]);
+  }, [situation, orderId, courier.id, api, navigation]);
   // tracking
   const tallerDevice = useTallerDevice();
   // UI
