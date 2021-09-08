@@ -1,3 +1,4 @@
+import { OrderCancellation } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -42,37 +43,51 @@ export default ({ navigation, route }: Props) => {
   const { orderId } = route.params;
   // screen state
   const order = useObserveOrder(orderId);
-  const cancelInfo = useOrderCancellationInfo(orderId);
+  const cancellationInfo = useOrderCancellationInfo(orderId);
   const flavor = useSelector(getFlavor);
+  const [cancelInfo, setCancelInfo] = React.useState<OrderCancellation | undefined | null>(
+    undefined
+  );
+
+  // side effects
+  React.useEffect(() => {
+    if (!orderId) return;
+    if (cancellationInfo) setCancelInfo(cancellationInfo);
+    else setCancelInfo(null);
+  }, [cancellationInfo, orderId]);
   // UI
-  if (!order || !cancelInfo) {
+  if (!order || cancelInfo === undefined) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
-  // helpers
-  const courierFeeRefunded = cancelInfo.params.refund.includes('delivery');
   const description = (() => {
-    if (flavor === 'courier') {
-      if (courierFeeRefunded) return undefined;
-      else return t('Como você já iniciou o pedido, você receberá: ');
-    }
-    if (flavor === 'consumer') {
-      return `${t('Esse pedido foi cancelado por')} ${order.business!.name}. ${t(
-        'A cobrança será estornada.'
-      )}`;
-    }
+    if (cancelInfo) {
+      if (flavor === 'courier') {
+        if (cancelInfo.params.refund.includes('delivery')) return undefined;
+        else return t('Como você já iniciou o pedido, você receberá: ');
+      } else if (flavor === 'consumer') {
+        return `${t('Esse pedido foi cancelado por')} ${order.business!.name}. ${t(
+          'A cobrança será estornada.'
+        )}`;
+      }
+    } else return undefined;
   })();
   const value = (() => {
-    if (flavor === 'courier' && !courierFeeRefunded)
-      return formatCurrency(order.fare!.courier.value);
-    else return undefined;
+    if (cancelInfo) {
+      if (flavor === 'courier' && !cancelInfo.params.refund.includes('delivery'))
+        return formatCurrency(order.fare!.courier.value);
+    } else return undefined;
   })();
   return (
     <FeedbackView
-      header={`${t('Esse pedido foi cancelado:')} \n${cancelInfo.issue?.title ?? ''}`}
+      header={
+        !cancelInfo
+          ? t('Esse pedido foi cancelado')
+          : `${t('Esse pedido foi cancelado:')} \n${cancelInfo.issue?.title ?? ''}`
+      }
       icon={<IconConeYellow />}
       description={description}
       value={value}
