@@ -50,9 +50,9 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
     if (cancellationInfo?.costs === 0) cancelOrderHandler();
   }, [cancelOrderHandler, cancellationInfo]);
   //helpers
-  const formattedPhone = phoneFormatter(business?.phone);
+  const businessPhone = phoneFormatter(business?.phone);
   // UI
-  if (!order || cancellationInfo === undefined || cancellationInfo.costs === 0 || !business) {
+  if (!order || !cancellationInfo || cancellationInfo.costs === 0) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -88,13 +88,14 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
                 'Recomendamos que entre em contato com o restaurante para verificar se ainda é possível cancelar sem o prejuízo dos produtos.'
               )}
             </Text>
-
-            <DefaultButton
-              title={t('Ligar para o restaurante')}
-              secondary
-              onPress={() => Linking.openURL(`tel:${formattedPhone}`)}
-              style={{ marginTop: 24 }}
-            />
+            {businessPhone ? (
+              <DefaultButton
+                title={t('Ligar para o restaurante')}
+                secondary
+                onPress={() => Linking.openURL(`tel:${businessPhone}`)}
+                style={{ marginTop: 24 }}
+              />
+            ) : null}
           </View>
         ) : null}
       </PaddedView>
