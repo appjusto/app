@@ -191,7 +191,7 @@ const permissions = () =>
         'READ_EXTERNAL_STORAGE',
         'WRITE_EXTERNAL_STORAGE',
         'VIBRATE',
-        'RECORD_AUDIO',
+        // 'RECORD_AUDIO',
       ];
 
 const extra = (): Extra => ({
