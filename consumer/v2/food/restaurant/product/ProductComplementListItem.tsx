@@ -50,7 +50,7 @@ export const ProductComplementListItem = ({
             flexDirection: 'row',
             paddingTop: 12,
             paddingBottom: 4,
-            alignItems: maximum > 1 ? 'flex-start' : 'center',
+            alignItems: 'center',
             borderTopWidth: 1,
             borderStyle: 'solid',
             borderColor: colors.grey50,
@@ -74,7 +74,9 @@ export const ProductComplementListItem = ({
               </Text>
             ) : null}
             {complement.price > 0 ? (
-              <Text style={{ ...texts.sm, marginTop: 4 }}>{formatCurrency(complement.price)}</Text>
+              <Text style={{ ...texts.sm, marginTop: 4 }}>
+                + {formatCurrency(complement.price)}
+              </Text>
             ) : null}
           </View>
           {imageURI ? (
