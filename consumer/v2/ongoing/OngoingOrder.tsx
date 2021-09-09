@@ -98,7 +98,9 @@ export default function ({ navigation, route }: Props) {
     }
     // when a restaurant cancels an order
     else if (order.status === 'canceled') {
-      navigation.replace('OrderCanceled', { orderId });
+      if (order.type === 'food') {
+        navigation.replace('OrderCanceled', { orderId });
+      }
     } else if (order.dispatchingStatus === 'no-match') {
       navigation.navigate('OngoingOrderNoMatch', { orderId });
     } else if (order.dispatchingStatus === 'declined') {

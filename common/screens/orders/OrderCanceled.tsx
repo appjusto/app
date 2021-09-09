@@ -12,9 +12,10 @@ import { getFlavor } from '../../../common/store/config/selectors';
 import { colors, padding, screens } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { OngoingOrderNavigatorParamList } from '../../../consumer/v2/ongoing/types';
+import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
+import { OngoingDeliveryNavigatorParamList } from '../../../courier/approved/ongoing/types';
+import { ApprovedParamList } from '../../../courier/approved/types';
 import { t } from '../../../strings';
-import { ApprovedParamList } from '../types';
-import { OngoingDeliveryNavigatorParamList } from './types';
 
 export type OrderCanceledParamList = {
   OrderCanceled: {
@@ -27,7 +28,7 @@ type ScreenNavigationProp = CompositeNavigationProp<
     OngoingDeliveryNavigatorParamList & OngoingOrderNavigatorParamList,
     'OrderCanceled'
   >,
-  StackNavigationProp<ApprovedParamList>
+  StackNavigationProp<ApprovedParamList & LoggedNavigatorParamList>
 >;
 
 type ScreenRouteProp = RouteProp<OrderCanceledParamList, 'OrderCanceled'>;

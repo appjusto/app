@@ -1,7 +1,7 @@
 import { ChatMessageUser, IssueType } from '@appjusto/types';
 import { ChatParamList } from '../../../common/screens/Chat';
+import { OrderCanceledParamList } from '../../../common/screens/orders/OrderCanceled';
 import { ReportIssueParamList } from '../../../common/screens/ReportIssue';
-import { OrderCanceledParamList } from './OrderCanceled';
 
 export type OngoingDeliveryNavigatorParamList = {
   OngoingDelivery: {
