@@ -11,12 +11,18 @@ import { getCourier } from '../../../../common/store/courier/selectors';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
-export default function () {
+type Props = {
+  modalVisible: boolean;
+  onPress: () => void;
+};
+
+export const ModalChooser = ({ modalVisible, onPress }: Props) => {
   // context
   const api = useContext(ApiContext);
   // redux store
   const courier = useSelector(getCourier)!;
   const { mode } = courier;
+
   // side effects
   React.useEffect(() => {
     if (!mode) api.profile().updateProfile(courier.id, { mode: 'motorcycle' });
@@ -28,7 +34,7 @@ export default function () {
 
   // UI
   return (
-    <Modal transparent animationType="slide" visible>
+    <Modal transparent animationType="slide" visible={modalVisible}>
       <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0, 0, 0, 0.8)' }}>
         <PaddedView
           style={{ ...borders.default, backgroundColor: colors.white, borderColor: colors.grey50 }}
@@ -75,9 +81,9 @@ export default function () {
               icon={icons.onFootSmall}
             />
           </View>
-          <DefaultButton title={t('Continuar')} style={{ marginTop: padding }} />
+          <DefaultButton title={t('Continuar')} style={{ marginTop: padding }} onPress={onPress} />
         </PaddedView>
       </View>
     </Modal>
   );
-}
+};

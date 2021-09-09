@@ -28,7 +28,6 @@ import { FreshDeskCard } from './FreshDeskCard';
 import HomeControls from './HomeControls';
 import HomeDeliveriesSummary from './HomeDeliveriesSummary';
 import { LocationDisclosureModal } from './LocationDisclosureModal';
-import ModalChooser from './ModalChooser';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<MainParamList, 'Home'>,
@@ -137,7 +136,6 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           </View>
-          <ModalChooser />
         </PaddedView>
       </ScrollView>
       <LocationDisclosureModal />
