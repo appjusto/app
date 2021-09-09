@@ -2,14 +2,13 @@ import { useNavigation } from '@react-navigation/native';
 import * as Linking from 'expo-linking';
 import React from 'react';
 import { ApiContext } from '../app/context';
-import { useDeeplink } from './useDeepLink';
 
 export const useBusinessDeeplink = () => {
   // context
   const api = React.useContext(ApiContext);
   const navigation = useNavigation();
   // side effects
-  const deeplink = useDeeplink();
+  const deeplink = Linking.useURL();
   React.useEffect(() => {
     if (!deeplink) return;
     const parsedURL = Linking.parse(deeplink);

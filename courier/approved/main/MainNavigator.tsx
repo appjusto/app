@@ -2,7 +2,6 @@ import { OrderMatchPushMessageData, PushMessageData } from '@appjusto/types';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as Linking from 'expo-linking';
-import { useURL } from 'expo-linking';
 import React from 'react';
 import { Dimensions, Image, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -80,7 +79,7 @@ export default function ({ navigation }: Props) {
   useNotificationHandler('order-chat', handler);
   const { width } = Dimensions.get('window');
   // fleet deeplink
-  const deeplink = useURL();
+  const deeplink = Linking.useURL();
   React.useEffect(() => {
     if (!deeplink) return;
     const parsedURL = Linking.parse(deeplink);
