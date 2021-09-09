@@ -101,12 +101,7 @@ export default function ({ navigation }: Props) {
               })
             }
           />
-          <TouchableOpacity
-            onPress={() => navigation.navigate('MainNavigator', { screen: 'DeliveryHistory' })}
-          >
-            <HomeDeliveriesSummary />
-          </TouchableOpacity>
-          <View style={{ marginVertical: padding }}>
+          <View style={{ marginBottom: padding }}>
             <FreshDeskCard
               onPress={() =>
                 Linking.openURL(
@@ -121,7 +116,13 @@ export default function ({ navigation }: Props) {
               subtitle="Compartilhe esse movimento por uma economia mais justa."
             />
           </View>
-          <View style={{ marginBottom: padding }}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('MainNavigator', { screen: 'DeliveryHistory' })}
+            style={{ marginBottom: padding }}
+          >
+            <HomeDeliveriesSummary />
+          </TouchableOpacity>
+          <View>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('ProfileNavigator', { screen: 'PartnersAndDiscounts' })
