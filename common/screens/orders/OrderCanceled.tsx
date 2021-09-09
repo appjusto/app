@@ -14,9 +14,9 @@ import { colors, padding, screens } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { OngoingOrderNavigatorParamList } from '../../../consumer/v2/ongoing/types';
 import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
+import { OngoingDeliveryNavigatorParamList } from '../../../courier/approved/ongoing/types';
+import { ApprovedParamList } from '../../../courier/approved/types';
 import { t } from '../../../strings';
-import { ApprovedParamList } from '../types';
-import { OngoingDeliveryNavigatorParamList } from './types';
 
 export type OrderCanceledParamList = {
   OrderCanceled: {
@@ -65,16 +65,18 @@ export default ({ navigation, route }: Props) => {
     );
   }
   const description = (() => {
-    if (cancelInfo) {
-      if (flavor === 'courier') {
+    if (flavor === 'courier') {
+      if (cancelInfo) {
         if (cancelInfo.params.refund.includes('delivery')) return undefined;
-        else return t('Como você já iniciou o pedido, você receberá: ');
-      } else if (flavor === 'consumer') {
+      } else return t('Como você já iniciou o pedido, você receberá: ');
+    }
+    if (flavor === 'consumer') {
+      if (order.type === 'food') {
         return `${t('Esse pedido foi cancelado por')} ${order.business!.name}. ${t(
           'A cobrança será estornada.'
         )}`;
-      }
-    } else return undefined;
+      } else return undefined;
+    }
   })();
   const value = (() => {
     if (cancelInfo) {

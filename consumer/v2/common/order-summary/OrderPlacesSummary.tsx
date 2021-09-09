@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const OrderPlacesSummary = ({ order, onEditStep }: Props) => {
-  const { origin, destination, route } = order;
+  const { origin, destination, route, arrivals } = order;
   return (
     <PaddedView>
       {origin && (
@@ -31,11 +31,11 @@ export const OrderPlacesSummary = ({ order, onEditStep }: Props) => {
           onEdit={() => onEditStep(Step.Destination)}
         />
       )}
-      {route?.distance && destination?.estimatedTimeOfArrival ? (
+      {route?.distance && arrivals?.destination?.estimate ? (
         <RoundedText>
           {separateWithDot(
             formatDistance(route.distance),
-            `${t('Previsão:')} ${getETAWithMargin(destination.estimatedTimeOfArrival)}`
+            `${t('Previsão:')} ${getETAWithMargin(arrivals.destination.estimate)}`
           )}
         </RoundedText>
       ) : null}

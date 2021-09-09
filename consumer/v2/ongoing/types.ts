@@ -1,6 +1,6 @@
 import { ChatMessageUser, Flavor, IssueType } from '@appjusto/types';
+import { OrderCanceledParamList } from '../../../common/screens/orders/OrderCanceled';
 import { ReportIssueParamList } from '../../../common/screens/ReportIssue';
-import { OrderCanceledParamList } from '../../../courier/approved/ongoing/OrderCanceled';
 import { ProfileAddCardParamList } from '../main/profile/ProfileAddCard';
 import { ProfilePaymentMethodsParamList } from '../main/profile/ProfilePaymentMethods';
 import { MainNavigatorParamList } from '../main/types';

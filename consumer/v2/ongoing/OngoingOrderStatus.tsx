@@ -133,14 +133,13 @@ export const OngoingOrderStatus = ({ order }: Props) => {
       >
         {description}
       </Text>
-      {order.destination?.estimatedTimeOfArrival &&
-        order.dispatchingState !== 'arrived-destination' && (
-          <View style={{ marginTop: padding }}>
-            <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>{`${t(
-              'Previsão de entrega: '
-            )} ${getETAWithMargin(order.destination.estimatedTimeOfArrival)}`}</RoundedText>
-          </View>
-        )}
+      {order.arrivals?.destination?.estimate && order.dispatchingState !== 'arrived-destination' && (
+        <View style={{ marginTop: padding }}>
+          <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>{`${t(
+            'Previsão de entrega: '
+          )} ${getETAWithMargin(order.arrivals.destination.estimate)}`}</RoundedText>
+        </View>
+      )}
     </View>
   );
 };

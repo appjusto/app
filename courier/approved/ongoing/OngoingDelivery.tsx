@@ -49,7 +49,7 @@ export default function ({ navigation, route }: Props) {
   const consumerId = order?.consumer.id;
   const businessId = order?.business?.id;
   const delayBeforeAdvancing =
-    usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60 * 1000;
+    (usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60) * 1000;
   // side effects
   // tracking
   useSegmentScreen('Ongoing Delivery');
