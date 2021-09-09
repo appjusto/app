@@ -60,9 +60,11 @@ export default ({ navigation, route }: Props) => {
       else return t('Como você já iniciou o pedido, você receberá: ');
     }
     if (flavor === 'consumer') {
-      return `${t('Esse pedido foi cancelado por')} ${order.business!.name}. ${t(
-        'A cobrança será estornada.'
-      )}`;
+      if (order.type === 'food') {
+        return `${t('Esse pedido foi cancelado por')} ${order.business!.name}. ${t(
+          'A cobrança será estornada.'
+        )}`;
+      } else return undefined;
     }
   })();
   const value = (() => {
