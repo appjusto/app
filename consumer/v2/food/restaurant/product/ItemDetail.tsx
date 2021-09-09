@@ -18,7 +18,6 @@ import DefaultButton from '../../../../../common/components/buttons/DefaultButto
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import HR from '../../../../../common/components/views/HR';
-import useTallerDevice from '../../../../../common/hooks/useTallerDevice';
 import { IconSemaphoreSmall } from '../../../../../common/icons/icon-semaphore-small';
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
 import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
@@ -79,7 +78,6 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const business = useContextBusiness();
   const businessId = useContextBusinessId();
   const activeOrder = useContextActiveOrder();
-  const tallerDevice = useTallerDevice();
   const getProductCategory = useContextGetProductCategory();
   const getComplementGroup = useContextGetComplementGroup();
   // redux store
@@ -114,7 +112,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
       notes,
       complements,
     } as OrderItem;
-  }, [product, itemId, quantity, notes, complements]);
+  }, [product, itemId, quantity, notes, complements, getProductCategory]);
   const canAddItemToOrder = React.useMemo(() => {
     if (!product) return false;
     return helpers.hasSatisfiedAllGroups(product, complements);
@@ -311,7 +309,12 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         keyboardShouldPersistTaps="never"
       >
         <View style={{ flex: 1 }}>
-          <View style={{ paddingHorizontal: padding, marginBottom: 24 }}>
+          <View
+            style={{
+              paddingHorizontal: padding,
+              marginBottom: !isOutOfRange && isAcceptingOrders ? 24 : undefined,
+            }}
+          >
             {imageURI ? (
               <View style={{ width: '100%', height: 240, overflow: 'hidden' }}>
                 <Image
@@ -334,8 +337,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
               </Text>
             </View>
           </View>
-          {tallerDevice && imageURI ? <View style={{ flex: 1 }} /> : null}
-          {getActionsUI()}
+          <View style={{ flex: 1, justifyContent: 'center' }}>{getActionsUI()}</View>
         </View>
       </KeyboardAwareScrollView>
       {!isOutOfRange && isAcceptingOrders ? (
