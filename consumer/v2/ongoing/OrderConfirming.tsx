@@ -43,8 +43,6 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
       navigation.replace('OngoingOrder', {
         orderId,
       });
-    } else if (order.status === 'expired') {
-      navigation.replace('OrderExpired');
     } else if (order.status === 'declined') {
       // when payment is not approved
       navigation.replace('OngoingOrderDeclined', { orderId });

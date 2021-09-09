@@ -2,11 +2,13 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { OngoingOrderNavigatorParamList } from '../ongoing/types';
@@ -28,6 +30,7 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   const { orderId, paymentMethodId } = route.params;
   // context
   const api = React.useContext(ApiContext);
+  const dispatch = useDispatch();
   // screen state
   const order = useObserveOrder(orderId);
   const [isLoading, setLoading] = React.useState(false);
@@ -47,11 +50,13 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
             .updateOrderCallable(orderId, { payableWith: 'credit_card', paymentMethodId });
         } catch (error) {
           setLoading(false);
-          // TODO: show toast
+          dispatch(
+            showToast(t('Não foi possível alterar a forma de pagamento. Tente novamente.'), 'error')
+          );
         }
       })();
     }
-  }, [paymentMethodId, orderId, navigation, api]);
+  }, [paymentMethodId, orderId, navigation, api, dispatch]);
   // navigating to OngoingOrder after the user changes his payment method
   // and the matching is restarted
   React.useEffect(() => {
