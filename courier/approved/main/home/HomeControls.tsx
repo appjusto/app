@@ -17,6 +17,7 @@ import { formatCurrency, formatDistance } from '../../../../common/utils/formatt
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
+import { ModalChooser } from './ModalChooser';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<MainParamList, 'Home'>,
@@ -38,6 +39,8 @@ export default function ({ onFleetDetail }: Props) {
   const courier = useSelector(getCourier)!;
   const status = courier!.status;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
+  // state
+  const [modalVisible, setModalVisible] = React.useState(false);
   // handlers
   const toggleWorking = () => {
     if (status === 'dispatching') {
@@ -55,100 +58,104 @@ export default function ({ onFleetDetail }: Props) {
       return;
     }
     dispatch(updateProfile(api)(courier.id, { status: newStatus }));
+    if (newStatus === 'available') setModalVisible(true);
   };
 
   // UI
   return (
-    <PaddedView style={[{ backgroundColor: working ? colors.green500 : colors.darkYellow }]}>
-      <Text
-        style={[
-          texts.x2l,
-          {
-            paddingBottom: halfPadding,
-            paddingTop: halfPadding,
-          },
-        ]}
-      >
-        {`${t('Olá')}, ${courier.name ?? 'entregador/a'}. ${t(
-          'Faça suas corridas com segurança.'
-        )}`}
-      </Text>
-      {/* controls */}
-      <View>
-        <Text style={{ marginBottom: 4 }}>ID: #{courier.code}</Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
+    <View>
+      <PaddedView style={[{ backgroundColor: working ? colors.green500 : colors.darkYellow }]}>
+        <Text
+          style={[
+            texts.x2l,
+            {
+              paddingBottom: halfPadding,
+              paddingTop: halfPadding,
+            },
+          ]}
         >
-          <View style={styles.controlItem}>
-            {working ? <IconMotocycleCentered flipped /> : <IconMotocycleCentered />}
-            <Text style={[texts.sm, { paddingTop: 4 }]}>
-              {working ? t('Disponível para corridas') : t('Indisponível para corridas')}
-            </Text>
-            <Text style={[texts.xs, { paddingTop: halfPadding }]}>
-              {t('Mantenha ativado para aceitar corridas.')}
-            </Text>
-            <View
-              style={{
-                ...borders.default,
-                backgroundColor: colors.white,
-                marginTop: padding,
-                borderColor: colors.black,
-                borderWidth: 2,
-                borderRadius: 32,
-                alignSelf: 'flex-start',
-              }}
-            >
-              <Switch
-                style={{ alignSelf: 'flex-start' }}
-                trackColor={{ false: colors.white, true: colors.white }}
-                thumbColor={working ? colors.green500 : colors.black}
-                ios_backgroundColor={colors.white}
-                onValueChange={toggleWorking}
-                value={working}
-              />
-            </View>
-          </View>
-          <View style={[styles.controlItem, { backgroundColor: colors.white }]}>
-            <Text
-              style={{
-                ...texts.sm,
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginBottom: 12,
-              }}
-            >
-              {t('Frota')} {courier.fleet?.name}
-            </Text>
-            <View style={[styles.priceTag]}>
-              <Text style={[texts.xs]}>{t('R$')}</Text>
-              <Text style={[texts.x40l]}>
-                {formatCurrency(courier.fleet?.minimumFee ?? 0, {
-                  unit: '',
-                  strip_insignificant_zeros: false,
-                })}
+          {`${t('Olá')}, ${courier.name ?? 'entregador/a'}. ${t(
+            'Faça suas corridas com segurança.'
+          )}`}
+        </Text>
+        {/* controls */}
+        <View>
+          <Text style={{ marginBottom: 4 }}>ID: #{courier.code}</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
+          >
+            <View style={styles.controlItem}>
+              {working ? <IconMotocycleCentered flipped /> : <IconMotocycleCentered />}
+              <Text style={[texts.sm, { paddingTop: 4 }]}>
+                {working ? t('Disponível para corridas') : t('Indisponível para corridas')}
               </Text>
-            </View>
-            <Text style={[texts.xs, { marginTop: padding, color: colors.grey700 }]}>
-              {`+ ${formatCurrency(
-                courier.fleet?.additionalPerKmAfterThreshold ?? 0
-              )} km/adicional`}
-            </Text>
-            <Text style={[texts.xs, { color: colors.grey700 }]}>
-              {t('Distância mínima')} {formatDistance(courier.fleet!.distanceThreshold)}
-            </Text>
-            <View style={{ flex: 1 }} />
-            <TouchableOpacity onPress={() => onFleetDetail()}>
-              <View style={{ marginTop: padding, alignItems: 'flex-start' }}>
-                <RoundedText>{t('Mudar de frota')}</RoundedText>
+              <Text style={[texts.xs, { paddingTop: halfPadding }]}>
+                {t('Mantenha ativado para aceitar corridas.')}
+              </Text>
+              <View
+                style={{
+                  ...borders.default,
+                  backgroundColor: colors.white,
+                  marginTop: padding,
+                  borderColor: colors.black,
+                  borderWidth: 2,
+                  borderRadius: 32,
+                  alignSelf: 'flex-start',
+                }}
+              >
+                <Switch
+                  style={{ alignSelf: 'flex-start' }}
+                  trackColor={{ false: colors.white, true: colors.white }}
+                  thumbColor={working ? colors.green500 : colors.black}
+                  ios_backgroundColor={colors.white}
+                  onValueChange={toggleWorking}
+                  value={working}
+                />
               </View>
-            </TouchableOpacity>
+            </View>
+            <View style={[styles.controlItem, { backgroundColor: colors.white }]}>
+              <Text
+                style={{
+                  ...texts.sm,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 12,
+                }}
+              >
+                {t('Frota')} {courier.fleet?.name}
+              </Text>
+              <View style={[styles.priceTag]}>
+                <Text style={[texts.xs]}>{t('R$')}</Text>
+                <Text style={[texts.x40l]}>
+                  {formatCurrency(courier.fleet?.minimumFee ?? 0, {
+                    unit: '',
+                    strip_insignificant_zeros: false,
+                  })}
+                </Text>
+              </View>
+              <Text style={[texts.xs, { marginTop: padding, color: colors.grey700 }]}>
+                {`+ ${formatCurrency(
+                  courier.fleet?.additionalPerKmAfterThreshold ?? 0
+                )} km/adicional`}
+              </Text>
+              <Text style={[texts.xs, { color: colors.grey700 }]}>
+                {t('Distância mínima')} {formatDistance(courier.fleet!.distanceThreshold)}
+              </Text>
+              <View style={{ flex: 1 }} />
+              <TouchableOpacity onPress={() => onFleetDetail()}>
+                <View style={{ marginTop: padding, alignItems: 'flex-start' }}>
+                  <RoundedText>{t('Mudar de frota')}</RoundedText>
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
-    </PaddedView>
+      </PaddedView>
+      <ModalChooser modalVisible={modalVisible} onPress={() => setModalVisible(false)} />
+    </View>
   );
 }
 

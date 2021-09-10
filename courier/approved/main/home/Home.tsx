@@ -28,7 +28,6 @@ import { FreshDeskCard } from './FreshDeskCard';
 import HomeControls from './HomeControls';
 import HomeDeliveriesSummary from './HomeDeliveriesSummary';
 import { LocationDisclosureModal } from './LocationDisclosureModal';
-import ModalChooser from './ModalChooser';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<MainParamList, 'Home'>,
@@ -101,12 +100,7 @@ export default function ({ navigation }: Props) {
               })
             }
           />
-          <TouchableOpacity
-            onPress={() => navigation.navigate('MainNavigator', { screen: 'DeliveryHistory' })}
-          >
-            <HomeDeliveriesSummary />
-          </TouchableOpacity>
-          <View style={{ marginVertical: padding }}>
+          <View style={{ marginBottom: padding }}>
             <FreshDeskCard
               onPress={() =>
                 Linking.openURL(
@@ -121,7 +115,13 @@ export default function ({ navigation }: Props) {
               subtitle="Compartilhe esse movimento por uma economia mais justa."
             />
           </View>
-          <View style={{ marginBottom: padding }}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('MainNavigator', { screen: 'DeliveryHistory' })}
+            style={{ marginBottom: padding }}
+          >
+            <HomeDeliveriesSummary />
+          </TouchableOpacity>
+          <View>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('ProfileNavigator', { screen: 'PartnersAndDiscounts' })
@@ -136,7 +136,6 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           </View>
-          <ModalChooser />
         </PaddedView>
       </ScrollView>
       <LocationDisclosureModal />
