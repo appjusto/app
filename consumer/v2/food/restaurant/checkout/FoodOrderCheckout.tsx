@@ -195,7 +195,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       enableOnAndroid
       enableAutomaticScroll
       keyboardOpeningTime={0}
-      keyboardShouldPersistTaps="never"
+      keyboardShouldPersistTaps="handled"
     >
       <OrderSummary
         order={order}

@@ -37,6 +37,7 @@ export default function ({ navigation }: Props) {
   return (
     <View style={{ ...screens.config }}>
       <FlatList
+        keyboardShouldPersistTaps="handled"
         data={fleets}
         ListHeaderComponent={
           <View style={{ marginBottom: 32, paddingHorizontal: padding, paddingTop: padding }}>

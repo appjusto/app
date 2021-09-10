@@ -83,6 +83,7 @@ export default function ({ navigation, route }: Props) {
       style={{ ...screens.config }}
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
+      keyboardShouldPersistTaps="handled"
     >
       <PaddedView>
         <Text style={[texts.x2l]}>{fleet.name}</Text>

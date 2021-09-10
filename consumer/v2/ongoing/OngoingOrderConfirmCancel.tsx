@@ -64,6 +64,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
       style={{ ...screens.config }}
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
+      keyboardShouldPersistTaps="handled"
     >
       <View style={{ flex: 1 }} />
       <PaddedView style={{ flex: 1 }}>

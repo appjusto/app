@@ -119,7 +119,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
       enableOnAndroid
       enableAutomaticScroll
       keyboardOpeningTime={0}
-      keyboardShouldPersistTaps="never"
+      keyboardShouldPersistTaps="handled"
       contentContainerStyle={{ flexGrow: 1 }}
     >
       <View style={{ flex: 1 }}>

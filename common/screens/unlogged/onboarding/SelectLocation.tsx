@@ -50,6 +50,7 @@ export const SelectLocation = ({ navigation, route }: Props) => {
         <>
           {/* states */}
           <FlatList
+            keyboardShouldPersistTaps="handled"
             data={states}
             renderItem={({ item }) => {
               return (

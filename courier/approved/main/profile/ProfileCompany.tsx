@@ -107,7 +107,7 @@ export default function ({ navigation, route }: Props) {
       enableAutomaticScroll
       keyboardOpeningTime={0}
       style={{ ...screens.config }}
-      keyboardShouldPersistTaps="never"
+      keyboardShouldPersistTaps="handled"
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
     >
@@ -189,7 +189,7 @@ export default function ({ navigation, route }: Props) {
             placeholder={t('Sem complemento')}
             maxLength={9}
             keyboardType="default"
-            returnKeyType="done"
+            returnKeyType="next"
             blurOnSubmit
             onChangeText={setAdditional}
           />
@@ -200,7 +200,7 @@ export default function ({ navigation, route }: Props) {
             title={t('Cidade')}
             placeholder={t('Cidade')}
             value={city}
-            returnKeyType="done"
+            returnKeyType="next"
             onChangeText={setCity}
             keyboardType="default"
           />
@@ -210,7 +210,7 @@ export default function ({ navigation, route }: Props) {
             placeholder={t('UF')}
             value={state}
             maxLength={2}
-            returnKeyType="done"
+            returnKeyType="next"
             onChangeText={setState}
             keyboardType="default"
           />

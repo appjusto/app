@@ -79,9 +79,9 @@ export const OngoingOrderCourierDetail = ({ navigation, route }: Props) => {
               }
             />
           </View>
-          <View style={{ marginLeft: halfPadding, flex: 7 }}>
+          {/* <View style={{ marginLeft: halfPadding, flex: 7 }}>
             <DefaultButton title={t('Ligar')} onPress={() => null} secondary />
-          </View>
+          </View> */}
         </View>
         <Text
           style={{

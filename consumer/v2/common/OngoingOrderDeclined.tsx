@@ -128,6 +128,7 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
       style={{ ...screens.default }}
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
+      keyboardShouldPersistTaps="handled"
     >
       <FeedbackView
         header={header}

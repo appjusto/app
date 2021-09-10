@@ -49,7 +49,11 @@ export const OrderSummary = ({
 
   // UI
   return (
-    <ScrollView style={{ flex: 1, paddingBottom: 24 }} scrollIndicatorInsets={{ right: 1 }}>
+    <ScrollView
+      style={{ flex: 1, paddingBottom: 24 }}
+      scrollIndicatorInsets={{ right: 1 }}
+      keyboardShouldPersistTaps="handled"
+    >
       {showMap && (
         <View style={{ height: 160 }}>
           <OrderMap order={order} ratio={360 / 160} />

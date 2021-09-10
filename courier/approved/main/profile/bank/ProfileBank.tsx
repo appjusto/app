@@ -139,7 +139,7 @@ export default function ({ navigation, route }: Props) {
         enableAutomaticScroll
         keyboardOpeningTime={0}
         style={{ flex: 1 }}
-        keyboardShouldPersistTaps="never"
+        keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ flexGrow: 1 }}
         scrollIndicatorInsets={{ right: 1 }}
       >
@@ -316,7 +316,7 @@ export default function ({ navigation, route }: Props) {
                 keyboardType={
                   (selectedBank?.accountPattern.indexOf('X') ?? -1) > -1 ? 'default' : 'number-pad'
                 }
-                returnKeyType="done"
+                returnKeyType="next"
                 blurOnSubmit
                 onChangeText={(text) => setAccount(text)}
                 onBlur={() => {

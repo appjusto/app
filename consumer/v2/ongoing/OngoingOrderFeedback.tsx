@@ -112,7 +112,7 @@ export default ({ navigation, route }: Props) => {
       enableOnAndroid
       enableAutomaticScroll
       keyboardOpeningTime={0}
-      keyboardShouldPersistTaps="never"
+      keyboardShouldPersistTaps="handled"
     >
       {/* header */}
       <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>

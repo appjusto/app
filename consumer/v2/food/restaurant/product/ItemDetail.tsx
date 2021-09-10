@@ -306,7 +306,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         style={{ flex: 1 }}
         contentContainerStyle={{ flexGrow: 1 }}
         scrollIndicatorInsets={{ right: 1 }}
-        keyboardShouldPersistTaps="never"
+        keyboardShouldPersistTaps="handled"
       >
         <View style={{ flex: 1 }}>
           <View

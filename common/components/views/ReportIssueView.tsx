@@ -37,7 +37,7 @@ export const ReportIssueView = ({
       enableAutomaticScroll
       keyboardOpeningTime={0}
       style={{ ...screens.config }}
-      keyboardShouldPersistTaps="never"
+      keyboardShouldPersistTaps="handled"
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
     >
@@ -61,6 +61,7 @@ export const ReportIssueView = ({
           onChangeText={setComment}
           textAlignVertical="top"
           blurOnSubmit
+          returnKeyType="next"
         />
       </PaddedView>
       <View style={{ flex: 1 }} />

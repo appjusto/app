@@ -166,7 +166,7 @@ export default function ({
         {/* origin */}
         <View style={{ flex: 1, paddingHorizontal: padding }}>
           <KeyboardAwareScrollView
-            keyboardShouldPersistTaps="always"
+            keyboardShouldPersistTaps="handled"
             style={{ flex: 1 }}
             contentContainerStyle={{ flex: 1 }}
             scrollIndicatorInsets={{ right: 1 }}
@@ -230,7 +230,7 @@ export default function ({
         {/* destination */}
         <View style={{ flex: 1, paddingHorizontal: padding }}>
           <KeyboardAwareScrollView
-            keyboardShouldPersistTaps="always"
+            keyboardShouldPersistTaps="handled"
             style={{ flex: 1 }}
             contentContainerStyle={{ flex: 1 }}
             scrollIndicatorInsets={{ right: 1 }}

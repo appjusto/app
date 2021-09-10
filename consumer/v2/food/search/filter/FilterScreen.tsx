@@ -68,7 +68,11 @@ export const FilterScreen = ({ navigation }: Props) => {
   const selectedClassifications = filters.filter((f) => f.type === 'classification');
   // UI
   return (
-    <ScrollView style={{ ...screens.default }} scrollIndicatorInsets={{ right: 1 }}>
+    <ScrollView
+      style={{ ...screens.default }}
+      scrollIndicatorInsets={{ right: 1 }}
+      keyboardShouldPersistTaps="handled"
+    >
       {/* order by */}
       <View>
         <SingleHeader title={t('Ordernar por')} />

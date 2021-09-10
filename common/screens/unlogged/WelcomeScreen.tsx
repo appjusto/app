@@ -92,6 +92,7 @@ export default function ({ navigation, route }: Props) {
         style={{ flex: 1 }}
         contentContainerStyle={{ flexGrow: 1 }}
         scrollIndicatorInsets={{ right: 1 }}
+        keyboardShouldPersistTaps="handled"
       >
         <View style={{ flex: 1, paddingHorizontal: padding }}>
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>

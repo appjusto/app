@@ -144,7 +144,7 @@ export default function ({ navigation, route }: Props) {
       enableOnAndroid
       enableAutomaticScroll
       keyboardOpeningTime={0}
-      keyboardShouldPersistTaps="never"
+      keyboardShouldPersistTaps="handled"
     >
       <View style={{ flex: 1 }}>
         {/* top */}

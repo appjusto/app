@@ -84,7 +84,7 @@ export default function ({ navigation, route }: Props) {
 
   // UI
   return (
-    <ScrollView scrollIndicatorInsets={{ right: 1 }}>
+    <ScrollView scrollIndicatorInsets={{ right: 1 }} keyboardShouldPersistTaps="handled">
       <View style={{ ...screens.config }}>
         <PaddedView>
           <Text style={{ ...texts.x2l }}>{t('Criar nova frota')}</Text>
@@ -114,7 +114,7 @@ export default function ({ navigation, route }: Props) {
             value={description}
             maxLength={140}
             numberOfLines={3}
-            returnKeyType="done"
+            returnKeyType="next"
             blurOnSubmit
             onChangeText={setDescription}
           />

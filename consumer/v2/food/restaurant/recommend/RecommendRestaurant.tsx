@@ -42,7 +42,7 @@ export const RecommendRestaurant = ({ navigation }: Props) => {
       enableAutomaticScroll
       keyboardOpeningTime={0}
       style={{ ...screens.config }}
-      keyboardShouldPersistTaps="never"
+      keyboardShouldPersistTaps="handled"
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
     >
@@ -100,7 +100,7 @@ export const RecommendRestaurant = ({ navigation }: Props) => {
             parser={numbersOnlyParser}
             formatter={phoneFormatter}
             keyboardType="number-pad"
-            returnKeyType="done"
+            returnKeyType="next"
             blurOnSubmit
             onChangeText={(text) => setPhone(trim(text))}
           />
