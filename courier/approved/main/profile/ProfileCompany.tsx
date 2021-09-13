@@ -122,7 +122,11 @@ export default function ({ navigation, route }: Props) {
             title={t('Não tem MEI? Clique aqui e saiba mais')}
             grey
             style={{ marginTop: 24 }}
-            onPress={() => null}
+            onPress={() =>
+              Linking.openURL(
+                'https://appjusto.freshdesk.com/support/solutions/articles/67000681987'
+              )
+            }
           />
         ) : null} */}
         <PatternInput
