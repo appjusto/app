@@ -25,7 +25,7 @@ import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getExtra } from '../../../../common/store/config/selectors';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { companyInfoSet } from '../../../../common/store/courier/validators';
-import { colors, padding, screens, texts } from '../../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { CourierProfileParamList } from './types';
 
@@ -112,7 +112,21 @@ export default function ({ navigation, route }: Props) {
       scrollIndicatorInsets={{ right: 1 }}
     >
       <PaddedView style={{ flex: 1 }}>
+        <Text style={{ ...texts.x2l }}>{t('Dados da empresa')}</Text>
+        <Text style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}>
+          {t('Preencha com os dados do seu MEI ou empresa')}
+        </Text>
+        {/* commented while we wait for the correct link */}
+        {/* {courier.situation !== 'approved' ? (
+          <DefaultButton
+            title={t('Não tem MEI? Clique aqui e saiba mais')}
+            grey
+            style={{ marginTop: 24 }}
+            onPress={() => null}
+          />
+        ) : null} */}
         <PatternInput
+          style={{ marginTop: 24 }}
           mask={cnpjMask}
           parser={numbersOnlyParser}
           formatter={cnpjFormatter}
