@@ -4,6 +4,7 @@ import {
   Complement,
   ComplementGroup,
   Ordering,
+  Place,
   Product,
   WithId,
 } from '@appjusto/types';
@@ -39,6 +40,14 @@ export default class BusinessApi {
     );
     return unsubscribe;
   }
+  // recommendations
+  async addRecomendation(recommendedBusiness: Place) {
+    await this.refs.getRecommendationsRef().add({
+      ...recommendedBusiness,
+      createdOn: firebase.firestore.FieldValue.serverTimestamp(),
+    } as Place);
+  }
+
   // menu
   observeCategories(businessId: string, resultHandler: (categories: WithId<Category>[]) => void) {
     const unsubscribe = this.refs

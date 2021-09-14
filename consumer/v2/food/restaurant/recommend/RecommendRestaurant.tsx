@@ -4,6 +4,8 @@ import { trim } from 'lodash';
 import React from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useDispatch } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
@@ -12,6 +14,7 @@ import { numbersOnlyParser } from '../../../../../common/components/inputs/patte
 import PatternInput from '../../../../../common/components/inputs/PatternInput';
 import LabeledText from '../../../../../common/components/texts/LabeledText';
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
+import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, halfPadding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { LoggedNavigatorParamList } from '../../../types';
@@ -32,11 +35,15 @@ type Props = {
 export const RecommendRestaurant = ({ navigation, route }: Props) => {
   // params
   const { place } = route.params ?? {};
+  // context
+  const api = React.useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
   // screen state
   const [name, setName] = React.useState<string | undefined>();
   const [city, setCity] = React.useState<string>('');
   const [instagram, setInstagram] = React.useState<string>('');
   const [phone, setPhone] = React.useState<string>('');
+  const [isLoading, setLoading] = React.useState(false);
   // refs
   const cityRef = React.useRef<TextInput>(null);
   const instagramRef = React.useRef<TextInput>(null);
@@ -46,7 +53,18 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
     if (place) setName(place.address.main);
   }, [place]);
   // handler
-  const onSendRecommendation = () => null;
+  const sendRecommendationHandler = () => {
+    if (!place) return;
+    (async () => {
+      try {
+        setLoading(true);
+        await api.business().addRecomendation(place);
+        setLoading(false);
+      } catch (error) {
+        dispatch(showToast(t('Não foi possível enviar a recomendação. Tente novamente.'), 'error'));
+      }
+    })();
+  };
   return (
     <KeyboardAwareScrollView
       enableOnAndroid
@@ -122,7 +140,7 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
         <View style={{ flex: 1 }} />
         <DefaultButton
           title={t('Indicar restaurante')}
-          onPress={onSendRecommendation}
+          onPress={sendRecommendationHandler}
           disabled={!place}
         />
       </PaddedView>
