@@ -31,7 +31,7 @@ import { P2POrderNavigatorParamList } from '../p2p/types';
 
 export type AddressCompleteParamList = {
   AddressComplete: {
-    returnScreen: 'CreateOrderP2P' | 'FoodOrderHome';
+    returnScreen: 'CreateOrderP2P' | 'FoodOrderHome' | 'RecommendRestaurant';
     returnParam: string;
     value?: Place;
   };
@@ -71,12 +71,15 @@ export const AddressComplete = ({ navigation, route }: Props) => {
       { title: t('Resultados da busca'), data: autocompletePredictions, key: 'search-results' },
     ];
     const addresses = (consumer?.favoritePlaces ?? []).map((place) => place.address);
-    sections = [
-      ...sections,
-      { title: t('Últimos endereços utilizados'), data: addresses, key: 'last-used-address' },
-    ];
+    sections =
+      returnScreen !== 'RecommendRestaurant'
+        ? [
+            ...sections,
+            { title: t('Últimos endereços utilizados'), data: addresses, key: 'last-used-address' },
+          ]
+        : [...sections];
     return sections;
-  }, [autocompletePredictions, consumer?.favoritePlaces]);
+  }, [autocompletePredictions, consumer?.favoritePlaces, returnScreen]);
   // helpers
   // using cancel token to allow canceling ongoing requests after unmounting
   const createCancelToken = useAxiosCancelToken();
@@ -134,6 +137,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
       Keyboard.dismiss();
       setAutoCompletePredictions([]); // clearing predictions hides the modal
       setSelectedAddress(item);
+      console.log(item); // remove later
       const favoritePlace = consumer?.favoritePlaces?.find(
         (p) => p.address.description === item.description
       );
@@ -157,21 +161,32 @@ export const AddressComplete = ({ navigation, route }: Props) => {
         ref={searchInputRef}
         defaultValue={searchText}
         value={searchText}
-        title={t('Endereço com número')}
-        placeholder={t('Ex: Av. Paulista 1578')}
+        title={
+          returnScreen !== 'RecommendRestaurant'
+            ? t('Endereço com número')
+            : t('Nome do restaurante')
+        }
+        placeholder={
+          returnScreen !== 'RecommendRestaurant'
+            ? t('Ex: Av. Paulista 1578')
+            : t('Qual restaurante você quer indicar?')
+        }
         onChangeText={textChangeHandler}
         style={{ marginBottom: padding }}
         autoCorrect={false}
       />
-      <DefaultInput
-        defaultValue={additionalInfo}
-        value={additionalInfo}
-        title={t('Complemento (se houver)')}
-        placeholder={t('Apartamento, sala, loja')}
-        onChangeText={setAdditionalInfo}
-        style={{ marginBottom: padding }}
-        autoCorrect={false}
-      />
+      {returnScreen !== 'RecommendRestaurant' ? (
+        <DefaultInput
+          defaultValue={additionalInfo}
+          value={additionalInfo}
+          title={t('Complemento (se houver)')}
+          placeholder={t('Apartamento, sala, loja')}
+          onChangeText={setAdditionalInfo}
+          style={{ marginBottom: padding }}
+          autoCorrect={false}
+        />
+      ) : null}
+
       <SectionList
         stickySectionHeadersEnabled={false}
         style={{ flex: 1 }}
@@ -181,8 +196,10 @@ export const AddressComplete = ({ navigation, route }: Props) => {
         renderSectionHeader={({ section }) => {
           if (section.key === 'search-results' && isLoading)
             return <ActivityIndicator size="small" color={colors.black} />;
-          if (section.data.length > 0)
-            return <Text style={{ ...texts.xs, color: colors.grey700 }}>{section.title}</Text>;
+          if (section.data.length > 0) {
+            if (returnScreen !== 'RecommendRestaurant')
+              return <Text style={{ ...texts.xs, color: colors.grey700 }}>{section.title}</Text>;
+          }
           return null;
         }}
         renderItem={({ item }) => (
@@ -203,7 +220,11 @@ export const AddressComplete = ({ navigation, route }: Props) => {
       />
       <SafeAreaView>
         <DefaultButton
-          title={t('Confirmar endereço')}
+          title={
+            returnScreen !== 'RecommendRestaurant'
+              ? t('Confirmar endereço')
+              : t('Indicar restaurante')
+          }
           onPress={completeHandler}
           activityIndicator={isLoading}
           disabled={isLoading || !selectedAddress}

@@ -1,8 +1,8 @@
-import { CompositeNavigationProp } from '@react-navigation/core';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { trim } from 'lodash';
 import React from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
@@ -10,6 +10,7 @@ import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import { phoneFormatter } from '../../../../../common/components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../../common/components/inputs/PatternInput';
+import LabeledText from '../../../../../common/components/texts/LabeledText';
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
 import { colors, halfPadding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
@@ -21,11 +22,16 @@ type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<LoggedNavigatorParamList & UnloggedParamList>
 >;
 
+type ScreenRouteProp = RouteProp<FoodOrderNavigatorParamList, 'RecommendRestaurant'>;
+
 type Props = {
   navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 };
 
-export const RecommendRestaurant = ({ navigation }: Props) => {
+export const RecommendRestaurant = ({ navigation, route }: Props) => {
+  // params
+  const { place } = route.params ?? {};
   // screen state
   const [name, setName] = React.useState<string>('');
   const [city, setCity] = React.useState<string>('');
@@ -54,19 +60,33 @@ export const RecommendRestaurant = ({ navigation }: Props) => {
           )}
         </Text>
         <View style={{ marginTop: 32, flex: 1 }}>
-          <DefaultInput
-            ref={nameRef}
-            // style={{ marginTop: padding }}
-            title={t('Nome do restaurante')}
-            placeholder={t('Qual o restaurante que você quer indicar?')}
-            value={name}
-            returnKeyType="next"
-            blurOnSubmit={false}
-            onChangeText={(text) => setName(text)}
-            onSubmitEditing={() => cityRef.current?.focus()}
-            keyboardType="default"
-            // maxLength={30}
-          />
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('AddressComplete', {
+                returnScreen: 'RecommendRestaurant',
+                returnParam: 'restaurant',
+              })
+            }
+          >
+            <LabeledText
+              title={t('Nome do restaurante')}
+              placeholder={t('Qual restaurante você quer indicar?')}
+            ></LabeledText>
+            {/* <DefaultInput
+              ref={nameRef}
+              // style={{ marginTop: padding }}
+              title={t('Nome do restaurante')}
+              placeholder={t('Qual o restaurante que você quer indicar?')}
+              value={name}
+              returnKeyType="next"
+              blurOnSubmit={false}
+              onChangeText={(text) => setName(text)}
+              onSubmitEditing={() => cityRef.current?.focus()}
+              keyboardType="default"
+              // maxLength={30}
+            /> */}
+          </TouchableOpacity>
+
           <DefaultInput
             ref={cityRef}
             style={{ marginTop: 12 }}
