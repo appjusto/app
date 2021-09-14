@@ -36,6 +36,9 @@ export default class FirebaseRefs {
   getCompleteDeliveryCallable = () => this.functions.httpsCallable('completeDelivery');
 
   // firestore
+  // recommendations
+  getRecommendationsRef = () => this.firestore.collection('recommendations'); // not created yet
+
   // platform
   getPlatformRef = () => this.firestore.collection('platform');
 

@@ -137,7 +137,6 @@ export const AddressComplete = ({ navigation, route }: Props) => {
       Keyboard.dismiss();
       setAutoCompletePredictions([]); // clearing predictions hides the modal
       setSelectedAddress(item);
-      console.log(item); // remove later
       const favoritePlace = consumer?.favoritePlaces?.find(
         (p) => p.address.description === item.description
       );
@@ -150,7 +149,10 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   const completeHandler = React.useCallback(() => {
     if (!selectedAddress) return;
     // create a place object when user confirm without selecting from suggestion list
-    const place: Place = { address: selectedAddress, additionalInfo };
+    const place: Place =
+      returnScreen !== 'RecommendRestaurant'
+        ? { address: selectedAddress, additionalInfo }
+        : { address: selectedAddress };
     navigation.navigate(returnScreen, { [returnParam]: place });
   }, [selectedAddress, additionalInfo, navigation, returnScreen, returnParam]);
 

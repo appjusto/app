@@ -33,15 +33,20 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
   // params
   const { place } = route.params ?? {};
   // screen state
-  const [name, setName] = React.useState<string>('');
+  const [name, setName] = React.useState<string | undefined>();
   const [city, setCity] = React.useState<string>('');
   const [instagram, setInstagram] = React.useState<string>('');
   const [phone, setPhone] = React.useState<string>('');
   // refs
-  const nameRef = React.useRef<TextInput>(null);
   const cityRef = React.useRef<TextInput>(null);
   const instagramRef = React.useRef<TextInput>(null);
   const phoneRef = React.useRef<TextInput>(null);
+  //side effects
+  React.useEffect(() => {
+    if (place) setName(place.address.main);
+  }, [place]);
+  // handler
+  const onSendRecommendation = () => null;
   return (
     <KeyboardAwareScrollView
       enableOnAndroid
@@ -64,29 +69,18 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
             onPress={() =>
               navigation.navigate('AddressComplete', {
                 returnScreen: 'RecommendRestaurant',
-                returnParam: 'restaurant',
+                returnParam: 'place',
               })
             }
           >
             <LabeledText
               title={t('Nome do restaurante')}
               placeholder={t('Qual restaurante você quer indicar?')}
-            ></LabeledText>
-            {/* <DefaultInput
-              ref={nameRef}
-              // style={{ marginTop: padding }}
-              title={t('Nome do restaurante')}
-              placeholder={t('Qual o restaurante que você quer indicar?')}
-              value={name}
-              returnKeyType="next"
-              blurOnSubmit={false}
-              onChangeText={(text) => setName(text)}
-              onSubmitEditing={() => cityRef.current?.focus()}
-              keyboardType="default"
-              // maxLength={30}
-            /> */}
+              style={{ height: 54 }}
+            >
+              {name}
+            </LabeledText>
           </TouchableOpacity>
-
           <DefaultInput
             ref={cityRef}
             style={{ marginTop: 12 }}
@@ -126,7 +120,11 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
           />
         </View>
         <View style={{ flex: 1 }} />
-        <DefaultButton title={t('Indicar restaurante')} />
+        <DefaultButton
+          title={t('Indicar restaurante')}
+          onPress={onSendRecommendation}
+          disabled={!place}
+        />
       </PaddedView>
     </KeyboardAwareScrollView>
   );
