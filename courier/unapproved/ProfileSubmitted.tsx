@@ -22,7 +22,7 @@ import { useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../common/styles';
 import { t } from '../../strings';
-import { AppJustoFreshdeskCourierURL, AppJustoWhatsAppURL } from '../../strings/values';
+import { AppJustoFreshdeskCourierURL, AppJustoWhatsAppCourierURL } from '../../strings/values';
 import { UnapprovedParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<UnapprovedParamList, 'ProfileSubmitted'>;
@@ -119,7 +119,7 @@ export default function ({ navigation }: Props) {
                       <DefaultButton
                         secondary
                         title={t('Adicionar')}
-                        onPress={() => Linking.openURL(AppJustoWhatsAppURL)}
+                        onPress={() => Linking.openURL(AppJustoWhatsAppCourierURL)}
                         style={{ marginTop: padding }}
                       />
                     )}

@@ -7,6 +7,7 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, screens } from '../../../common/styles';
 import { t } from '../../../strings';
+import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
 import { ApprovedParamList } from '../types';
 import { DeliveryProblemCard } from './delivery-problem/DeliveryProblemCard';
 import { OngoingDeliveryNavigatorParamList } from './types';
@@ -145,7 +146,7 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
         <DeliveryProblemCard
           title={t('Preciso falar com o AppJusto')}
           subtitle={t('Abrir chat no WhatsApp')}
-          onPress={() => Linking.openURL('https://wa.me/551197821-0274')}
+          onPress={() => Linking.openURL(AppJustoAssistanceWhatsAppURL)}
           situation="chat"
         />
         {/* commented for now. will be added back later */}

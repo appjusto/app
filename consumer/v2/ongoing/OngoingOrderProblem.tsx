@@ -8,6 +8,7 @@ import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserv
 import { colors, screens } from '../../../common/styles';
 import { DeliveryProblemCard } from '../../../courier/approved/ongoing/delivery-problem/DeliveryProblemCard';
 import { t } from '../../../strings';
+import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
 import { LoggedNavigatorParamList } from '../types';
 import { OngoingOrderNavigatorParamList } from './types';
 
@@ -95,7 +96,7 @@ export const OngoingOrderProblem = ({ navigation, route }: Props) => {
         <DeliveryProblemCard
           title={t('Preciso falar com o AppJusto')}
           subtitle={t('Abrir chat no WhatsApp')}
-          onPress={() => Linking.openURL('https://wa.me/551197821-0274')}
+          onPress={() => Linking.openURL(AppJustoAssistanceWhatsAppURL)}
           situation="chat"
         />
         {/* commented for now. will be added back later when we have this feature */}
