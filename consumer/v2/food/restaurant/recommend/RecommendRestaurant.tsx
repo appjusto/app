@@ -40,12 +40,11 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   // screen state
   const [name, setName] = React.useState<string | undefined>();
-  const [city, setCity] = React.useState<string>('');
   const [instagram, setInstagram] = React.useState<string>('');
   const [phone, setPhone] = React.useState<string>('');
   const [isLoading, setLoading] = React.useState(false);
   // refs
-  const cityRef = React.useRef<TextInput>(null);
+  // const cityRef = React.useRef<TextInput>(null);
   const instagramRef = React.useRef<TextInput>(null);
   const phoneRef = React.useRef<TextInput>(null);
   //side effects
@@ -58,8 +57,11 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
     (async () => {
       try {
         setLoading(true);
-        await api.business().addRecomendation(place);
+        await api.business().addRecomendation(place, instagram, phone);
         setLoading(false);
+        dispatch(
+          showToast(t('Recomendação enviada. Muito obrigado pela contribuição!'), 'success')
+        );
       } catch (error) {
         dispatch(showToast(t('Não foi possível enviar a recomendação. Tente novamente.'), 'error'));
       }
@@ -99,18 +101,6 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
               {name}
             </LabeledText>
           </TouchableOpacity>
-          <DefaultInput
-            ref={cityRef}
-            style={{ marginTop: 12 }}
-            title={t('Cidade')}
-            placeholder={t('Digite a cidade do restaurante')}
-            value={city}
-            returnKeyType="next"
-            blurOnSubmit={false}
-            onChangeText={(text) => setCity(text)}
-            onSubmitEditing={() => instagramRef.current?.focus()}
-            keyboardType="default"
-          />
           <DefaultInput
             ref={instagramRef}
             style={{ marginTop: 12 }}
