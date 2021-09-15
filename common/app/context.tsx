@@ -4,6 +4,7 @@ import React, { ReactNode } from 'react';
 import { Platform, UIManager } from 'react-native';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
+import { domains } from '../../app.config';
 import Toast from '../components/views/Toast';
 import { createStore } from '../store';
 import Api from '../store/api/api';
@@ -29,9 +30,8 @@ export interface Props {
 }
 
 export const AppContext = ({ children }: Props) => {
-  const { environment } = extra;
   const linking = {
-    prefixes: [`https://${environment.charAt(0)}.deeplink.appjusto.com.br`],
+    prefixes: [`https://${domains.deeplink}`],
   };
 
   // https://reactnative.dev/docs/layoutanimation.html

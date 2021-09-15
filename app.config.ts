@@ -31,6 +31,12 @@ const {
 const flavor: Flavor = FLAVOR as Flavor;
 const environment: Environment = ENVIRONMENT as Environment;
 
+export const domains = {
+  base: `${environment === 'live' ? '' : `${environment}.`}appjusto.com.br`,
+  deeplink: `${environment.charAt(0)}.deeplink.appjusto.com.br`,
+  fallback: `${environment === 'live' ? '' : `${environment}.`}login.appjusto.com.br`,
+};
+
 export default (context: ConfigContext): ExpoConfig => {
   const config: ExpoConfig = {
     name: name(),
@@ -119,8 +125,9 @@ const ios = () => ({
             'Precisamos da sua localização para enviar corridas próximas e monitorar a entrega.',
         },
   associatedDomains: [
-    `applinks:${environment.charAt(0)}.deeplink.appjusto.com.br`,
-    `applinks:${environment === 'live' ? '' : `${environment}.`}appjusto.com.br`,
+    `applinks:${domains.base}`,
+    `applinks:${domains.deeplink}`,
+    `applinks:${domains.fallback}`,
   ],
   config: {
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
@@ -142,19 +149,12 @@ const intentFilter = (host: string, pathPrefix: string) => ({
 
 const intentFilters = () =>
   [
-    intentFilter(`${environment.charAt(0)}.deeplink.appjusto.com.br`, `/${flavor}`),
-    intentFilter(`${environment === 'live' ? '' : `${environment}.`}appjusto.com.br`, `/${flavor}`),
+    intentFilter(`${domains.base}`, `/${flavor}`),
+    intentFilter(`${domains.deeplink}`, `/${flavor}`),
+    intentFilter(`${domains.fallback}`, `/${flavor}`),
   ]
-    .concat(
-      flavor === 'consumer'
-        ? [intentFilter(`${environment === 'live' ? '' : `${environment}.`}appjusto.com.br`, `/r`)]
-        : []
-    )
-    .concat(
-      flavor === 'courier'
-        ? [intentFilter(`${environment === 'live' ? '' : `${environment}.`}appjusto.com.br`, `/f`)]
-        : []
-    );
+    .concat(flavor === 'consumer' ? [intentFilter(`${domains.base}`, `/r`)] : [])
+    .concat(flavor === 'courier' ? [intentFilter(`${domains.base}`, `/f`)] : []);
 
 const android = () =>
   ((

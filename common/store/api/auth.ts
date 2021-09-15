@@ -1,6 +1,7 @@
 import { DeleteAccountPayload } from '@appjusto/types';
 import Constants from 'expo-constants';
 import firebase from 'firebase';
+import { domains } from '../../../app.config';
 // import * as Sentry from 'sentry-expo';
 import { Environment, Extra } from '../../../config/types';
 import FirebaseRefs from './FirebaseRefs';
@@ -14,7 +15,6 @@ export default class AuthApi {
 
   async sendSignInLinkToEmail(email: string, environment: Environment): Promise<void> {
     this.auth.languageCode = 'pt'; // i18n
-    const domain = `${environment.charAt(0)}.deeplink.appjusto.com.br`;
     try {
       await this.refs.getPlatformLoginLogsRef().add({
         email,
@@ -24,18 +24,18 @@ export default class AuthApi {
     } catch (error) {
       // Sentry.Native.captureException(error);
     }
-
+    const url = `https://${domains.fallback}/${this.extra.flavor}/join`;
     return this.auth.sendSignInLinkToEmail(email, {
-      url: `https://${domain}/${this.extra.flavor}/join`,
+      url,
       handleCodeInApp: true,
       iOS: {
         bundleId: this.extra.bundleIdentifier,
       },
       android: {
         packageName: this.extra.androidPackage,
-        installApp: true,
+        installApp: false,
       },
-      dynamicLinkDomain: domain,
+      dynamicLinkDomain: `${domains.deeplink}`,
     });
   }
 

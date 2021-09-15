@@ -5,6 +5,7 @@ import { isEmpty } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, SectionList, Share, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
+import { domains } from '../../../../../app.config';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';
@@ -45,8 +46,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   const consumer = useSelector(getConsumer);
   const extra = useSelector(getExtra);
   //
-  const domain = `${extra.environment === 'live' ? '' : `${extra.environment}.`}appjusto.com.br`;
-  const businessDeeplink = `https://${domain}/r/${restaurant?.slug ?? restaurant?.code}`;
+  const businessDeeplink = `https://${domains.base}/r/${restaurant?.slug ?? restaurant?.code}`;
   // side effects
   // setting the restaurant.name in the header
   React.useLayoutEffect(() => {
