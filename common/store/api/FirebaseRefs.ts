@@ -37,7 +37,7 @@ export default class FirebaseRefs {
 
   // firestore
   // recommendations
-  getRecommendationsRef = () => this.firestore.collection('recommendations'); // not created yet
+  getRecommendationsRef = () => this.firestore.collection('recommendations');
 
   // platform
   getPlatformRef = () => this.firestore.collection('platform');

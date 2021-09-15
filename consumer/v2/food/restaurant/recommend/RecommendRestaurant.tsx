@@ -62,9 +62,11 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
         dispatch(
           showToast(t('Recomendação enviada. Muito obrigado pela contribuição!'), 'success')
         );
+        navigation.navigate('FoodOrderHome');
       } catch (error) {
         dispatch(showToast(t('Não foi possível enviar a recomendação. Tente novamente.'), 'error'));
       }
+      setLoading(false);
     })();
   };
   return (
@@ -116,7 +118,7 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
           <PatternInput
             ref={phoneRef}
             style={{ marginTop: 12 }}
-            title={t('Telefone (se souber')}
+            title={t('Telefone (se souber)')}
             value={phone}
             placeholder={t('Se souber o telefone, conta pra gente')}
             parser={numbersOnlyParser}
@@ -132,6 +134,7 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
           title={t('Indicar restaurante')}
           onPress={sendRecommendationHandler}
           disabled={!place}
+          activityIndicator={isLoading}
         />
       </PaddedView>
     </KeyboardAwareScrollView>

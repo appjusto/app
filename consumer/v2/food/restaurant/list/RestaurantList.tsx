@@ -40,7 +40,7 @@ export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...pr
       style={{ ...screens.default, paddingBottom: padding }}
       ListFooterComponent={
         loading ? null : (
-          <PaddedView style={{ marginTop: padding }}>
+          <PaddedView style={{ marginVertical: padding }}>
             <TouchableOpacity onPress={onRecommend}>
               <HomeCard
                 icon={<IconShareGreen />}
