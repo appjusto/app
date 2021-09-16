@@ -198,7 +198,7 @@ export default ({ navigation, route }: Props) => {
       ) : null}
       {/* actions */}
       <View style={{ paddingHorizontal: padding }}>
-        {showChatButton ? (
+        {showChatButton && order.type === 'food' ? (
           <DefaultButton
             title={t('Abrir chat com restaurante')}
             onPress={() => openChatWithRestaurant()}
