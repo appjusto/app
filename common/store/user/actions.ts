@@ -8,7 +8,6 @@ import {
 } from '@appjusto/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Sentry from 'sentry-expo';
-import { Environment } from '../../../config/types';
 import { AppDispatch } from '../../app/context';
 import Api from '../api/api';
 import { awaitWithFeedback } from '../ui/actions';
@@ -24,16 +23,15 @@ export const observeAuthState = (api: Api) => (dispatch: AppDispatch) => {
   return unsubscribe;
 };
 
-export const signInWithEmail =
-  (api: Api) => (email: string, environment: Environment) => async (dispatch: AppDispatch) => {
-    try {
-      AsyncStorage.setItem('email', email);
-    } catch (error) {
-      console.log(error);
-      Sentry.Native.captureException(error);
-    }
-    return dispatch(awaitWithFeedback(api.auth().sendSignInLinkToEmail(email, environment)));
-  };
+export const signInWithEmail = (api: Api) => (email: string) => async (dispatch: AppDispatch) => {
+  try {
+    AsyncStorage.setItem('email', email);
+  } catch (error) {
+    console.log(error);
+    Sentry.Native.captureException(error);
+  }
+  return dispatch(awaitWithFeedback(api.auth().sendSignInLinkToEmail(email)));
+};
 
 export const getSignInEmail = () => {
   try {

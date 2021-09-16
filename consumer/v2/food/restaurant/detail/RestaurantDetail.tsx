@@ -5,7 +5,6 @@ import { isEmpty } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, SectionList, Share, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { domains } from '../../../../../app.config';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';
@@ -17,6 +16,7 @@ import { useContextCategoriesWithProducts } from '../../../../../common/store/co
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { borders, colors, halfPadding, screens, texts } from '../../../../../common/styles';
 import { getExtra } from '../../../../../common/utils/config';
+import { getBaseDomain } from '../../../../../common/utils/domains';
 import { t } from '../../../../../strings';
 import { LoggedNavigatorParamList } from '../../../types';
 import { RestaurantHeader } from '../../common/RestaurantHeader';
@@ -46,7 +46,9 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   const consumer = useSelector(getConsumer);
   const extra = useSelector(getExtra);
   //
-  const businessDeeplink = `https://${domains.base}/r/${restaurant?.slug ?? restaurant?.code}`;
+  const businessDeeplink = `https://${getBaseDomain(extra.environment)}/r/${
+    restaurant?.slug ?? restaurant?.code
+  }`;
   // side effects
   // setting the restaurant.name in the header
   React.useLayoutEffect(() => {

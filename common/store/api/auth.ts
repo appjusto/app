@@ -1,9 +1,9 @@
 import { DeleteAccountPayload } from '@appjusto/types';
 import Constants from 'expo-constants';
 import firebase from 'firebase';
-import { domains } from '../../../app.config';
 // import * as Sentry from 'sentry-expo';
-import { Environment, Extra } from '../../../config/types';
+import { Extra } from '../../../config/types';
+import { getDeeplinkDomain, getFallbackDomain } from '../../utils/domains';
 import FirebaseRefs from './FirebaseRefs';
 
 export default class AuthApi {
@@ -13,7 +13,7 @@ export default class AuthApi {
     return this.auth.onAuthStateChanged(handler);
   }
 
-  async sendSignInLinkToEmail(email: string, environment: Environment): Promise<void> {
+  async sendSignInLinkToEmail(email: string): Promise<void> {
     this.auth.languageCode = 'pt'; // i18n
     try {
       await this.refs.getPlatformLoginLogsRef().add({
@@ -24,7 +24,8 @@ export default class AuthApi {
     } catch (error) {
       // Sentry.Native.captureException(error);
     }
-    const url = `https://${domains.fallback}/${this.extra.flavor}/join`;
+    const { environment, flavor } = this.extra;
+    const url = `https://${getFallbackDomain(environment)}/${flavor}/join`;
     return this.auth.sendSignInLinkToEmail(email, {
       url,
       handleCodeInApp: true,
@@ -35,7 +36,7 @@ export default class AuthApi {
         packageName: this.extra.androidPackage,
         installApp: false,
       },
-      dynamicLinkDomain: `${domains.deeplink}`,
+      dynamicLinkDomain: getDeeplinkDomain(environment),
     });
   }
 

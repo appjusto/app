@@ -23,7 +23,7 @@ import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { IconMotoCycleBig } from '../../icons/icon-motocycle-big';
 import { track, useSegmentScreen } from '../../store/api/track';
-import { getExtra, getFlavor } from '../../store/config/selectors';
+import { getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
 import { signInWithEmail } from '../../store/user/actions';
@@ -49,7 +49,6 @@ export default function ({ navigation, route }: Props) {
   // redux store
   const busy = useSelector(getUIBusy);
   const flavor = useSelector(getFlavor);
-  const extra = useSelector(getExtra);
   // state
   const [email, setEmail] = useState('');
   const [acceptedTerms, setAcceptTerms] = useState(false);
@@ -68,14 +67,14 @@ export default function ({ navigation, route }: Props) {
     }
     track('Signing in', { email });
     try {
-      await dispatch(signInWithEmail(api)(email.trim(), extra.environment));
+      await dispatch(signInWithEmail(api)(email.trim()));
     } catch (error) {
       dispatch(
         showToast(t('Não foi possível registrar. Verifique seu e-mail e tente novamente.'), 'error')
       );
     }
     navigation.navigate('SignInFeedback', { email });
-  }, [acceptedTerms, api, dispatch, email, extra.environment, navigation]);
+  }, [acceptedTerms, api, dispatch, email, navigation]);
 
   const welcomeMessage =
     flavor === 'consumer'

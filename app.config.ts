@@ -31,11 +31,14 @@ const {
 const flavor: Flavor = FLAVOR as Flavor;
 const environment: Environment = ENVIRONMENT as Environment;
 
-export const domains = {
-  base: `${environment === 'live' ? '' : `${environment}.`}appjusto.com.br`,
-  deeplink: `${environment.charAt(0)}.deeplink.appjusto.com.br`,
-  fallback: `${environment === 'live' ? '' : `${environment}.`}login.appjusto.com.br`,
-};
+const getBaseDomain = (environment: Environment) =>
+  `${environment === 'live' ? '' : `${environment}.`}appjusto.com.br`;
+
+const getDeeplinkDomain = (environment: Environment) =>
+  `${environment.charAt(0)}.deeplink.appjusto.com.br`;
+
+const getFallbackDomain = (environment: Environment) =>
+  `${environment === 'live' ? '' : `${environment}.`}login.appjusto.com.br`;
 
 export default (context: ConfigContext): ExpoConfig => {
   const config: ExpoConfig = {
@@ -125,9 +128,9 @@ const ios = () => ({
             'Precisamos da sua localização para enviar corridas próximas e monitorar a entrega.',
         },
   associatedDomains: [
-    `applinks:${domains.base}`,
-    `applinks:${domains.deeplink}`,
-    `applinks:${domains.fallback}`,
+    `applinks:${getBaseDomain(environment)}`,
+    `applinks:${getDeeplinkDomain(environment)}`,
+    `applinks:${getFallbackDomain(environment)}`,
   ],
   config: {
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
@@ -149,12 +152,12 @@ const intentFilter = (host: string, pathPrefix: string) => ({
 
 const intentFilters = () =>
   [
-    intentFilter(`${domains.base}`, `/${flavor}`),
-    intentFilter(`${domains.deeplink}`, `/${flavor}`),
-    intentFilter(`${domains.fallback}`, `/${flavor}`),
+    intentFilter(getBaseDomain(environment), `/${flavor}`),
+    intentFilter(getDeeplinkDomain(environment), `/${flavor}`),
+    intentFilter(getFallbackDomain(environment), `/${flavor}`),
   ]
-    .concat(flavor === 'consumer' ? [intentFilter(`${domains.base}`, `/r`)] : [])
-    .concat(flavor === 'courier' ? [intentFilter(`${domains.base}`, `/f`)] : []);
+    .concat(flavor === 'consumer' ? [intentFilter(getBaseDomain(environment), `/r`)] : [])
+    .concat(flavor === 'courier' ? [intentFilter(getBaseDomain(environment), `/f`)] : []);
 
 const android = () =>
   ((

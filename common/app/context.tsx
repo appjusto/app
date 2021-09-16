@@ -4,11 +4,11 @@ import React, { ReactNode } from 'react';
 import { Platform, UIManager } from 'react-native';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
-import { domains } from '../../app.config';
 import Toast from '../components/views/Toast';
 import { createStore } from '../store';
 import Api from '../store/api/api';
 import { getExtra } from '../utils/config';
+import { getDeeplinkDomain } from '../utils/domains';
 import { defineLocationUpdatesTask } from '../utils/location';
 import * as analytics from './analytics';
 import NotificationContainer from './notifications/NotificationContainer';
@@ -31,7 +31,7 @@ export interface Props {
 
 export const AppContext = ({ children }: Props) => {
   const linking = {
-    prefixes: [`https://${domains.deeplink}`],
+    prefixes: [`https://${getDeeplinkDomain(extra.environment)}`],
   };
 
   // https://reactnative.dev/docs/layoutanimation.html
