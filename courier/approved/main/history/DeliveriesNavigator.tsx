@@ -9,6 +9,7 @@ import { DeliveriesNavigatorParamList } from './types';
 import { AdvanceReceivables } from './withdraw/AdvanceReceivables';
 import { Receivables } from './withdraw/Receivables';
 import { WithdrawFeedback } from './withdraw/WithdrawFeedback';
+import { Withdraws } from './withdraw/Withdraws';
 
 const Stack = createStackNavigator<DeliveriesNavigatorParamList>();
 export default function () {
@@ -35,6 +36,11 @@ export default function () {
         name="AdvanceReceivables"
         component={AdvanceReceivables}
         options={{ title: t('Confirmar antecipação') }}
+      />
+      <Stack.Screen
+        name="Withdraws"
+        component={Withdraws}
+        options={{ title: t('Transferência') }}
       />
       <Stack.Screen
         name="RequestWithdrawFeedback"

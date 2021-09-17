@@ -106,7 +106,7 @@ export const MarketplaceAccountInfo = () => {
         >
           <View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Ionicons name="checkmark-circle-outline" size={20} color={colors.grey700} />
+              <Ionicons name="checkmark-circle-outline" size={20} color={colors.black} />
               <Text
                 style={{
                   ...texts.sm,
@@ -130,8 +130,16 @@ export const MarketplaceAccountInfo = () => {
               style={{ marginTop: padding }}
               title={t('Transferir para conta')}
               activityIndicator={withdrawing}
-              disabled={availableForWithdraw < minimum || withdrawing}
-              onPress={withdrawHandler}
+              // disabled={availableForWithdraw < minimum || withdrawing}
+              // onPress={withdrawHandler}
+              onPress={() =>
+                navigation.navigate('DeliveriesNavigator', {
+                  screen: 'Withdraws',
+                  params: {
+                    balanceForWithdraw: convertBalance(info!.balance_available_for_withdraw),
+                  },
+                })
+              }
             />
             <Text
               style={{
