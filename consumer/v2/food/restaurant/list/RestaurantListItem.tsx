@@ -2,7 +2,6 @@ import { BusinessAlgolia } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
-import HR from '../../../../../common/components/views/HR';
 import { useBusinessLogoURI } from '../../../../../common/store/api/business/hooks/useBusinessLogoURI';
 import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
 import { formatDistance } from '../../../../../common/utils/formatters';
@@ -21,7 +20,13 @@ export const RestaurantListItem = ({ restaurant, cuisine, distance, secondary }:
   const outOfRange = (restaurant.deliveryRange ?? 0) < (distance ?? 0);
   return (
     <View style={{ justifyContent: 'center' }}>
-      <HR />
+      <View
+        style={{
+          borderTopColor: secondary ? colors.white : colors.grey50,
+          borderTopWidth: 1,
+          paddingTop: halfPadding,
+        }}
+      />
       <View
         style={{
           flexDirection: 'row',

@@ -2,6 +2,7 @@ import { BusinessAlgolia } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
+import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
@@ -12,6 +13,7 @@ import {
 } from '../../../../common/store/consumer/actions';
 import { getConsumer, getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import { SearchFilter } from '../../../../common/store/consumer/types';
+import { colors, padding } from '../../../../common/styles';
 import { LoggedNavigatorParamList } from '../../types';
 import { sectionsFromResults } from '../restaurant/list';
 import { RestaurantList } from '../restaurant/list/RestaurantList';
@@ -66,23 +68,25 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     <RestaurantList
       sections={sectionsFromResults(restaurants)}
       ListHeaderComponent={
-        <FoodOrderHomeHeader
-          selectedCuisineId={filters.find(() => true)?.value}
-          onLocationPress={() => {
-            navigation.navigate('AddressComplete', {
-              returnParam: 'place',
-              returnScreen: 'FoodOrderHome',
-            });
-          }}
-          onSearchPress={() => {
-            navigation.navigate('RestaurantSearch');
-          }}
-          onCuisineSelect={(cuisine) => {
-            setFilters(cuisine ? [{ type: 'cuisine', value: cuisine.name }] : []);
-          }}
-          consumer={consumer}
-          onLogin={() => navigation.replace('WelcomeScreen')}
-        />
+        <View style={{ backgroundColor: colors.white, paddingBottom: padding }}>
+          <FoodOrderHomeHeader
+            selectedCuisineId={filters.find(() => true)?.value}
+            onLocationPress={() => {
+              navigation.navigate('AddressComplete', {
+                returnParam: 'place',
+                returnScreen: 'FoodOrderHome',
+              });
+            }}
+            onSearchPress={() => {
+              navigation.navigate('RestaurantSearch');
+            }}
+            onCuisineSelect={(cuisine) => {
+              setFilters(cuisine ? [{ type: 'cuisine', value: cuisine.name }] : []);
+            }}
+            consumer={consumer}
+            onLogin={() => navigation.replace('WelcomeScreen')}
+          />
+        </View>
       }
       onSelect={(restaurantId) => {
         navigation.push('RestaurantNavigator', {
