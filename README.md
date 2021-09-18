@@ -94,3 +94,9 @@ FLAVOR=courier expo build:android -t apk
 # courier android app-bundle
 FLAVOR=courier expo build:android -t app-bundle
 ```
+
+# 7. Bulding with eas
+
+```bash
+cat .dev.env | grep "=" | awk -F "=" '{print "--name="$1" --value="$2}' | FLAVOR=courier xargs -n2 eas secret:create --force
+```
