@@ -31,7 +31,7 @@
     "publish-consumer:dev": "ENV=dev npm run prepare-env && FLAVOR=consumer EXPO_RELEASE_CHANNEL=dev npm run publish",
     "publish-consumer:staging": "ENV=staging npm run prepare-env && FLAVOR=consumer EXPO_RELEASE_CHANNEL=staging-v5 npm run publish",
     "publish-consumer:live": "ENV=live npm run prepare-env && FLAVOR=consumer EXPO_RELEASE_CHANNEL=live-v5 npm run publish",
-    "build": "npm run prepare-env && npm run install-remote-types && EAS_NO_VCS=1 eas build --no-wait --platform $EAS_PLATFORM --profile $EAS_PROFILE && npm run install-local-types && git add . && git commit -m 'Update after build'",
+    "build": "npm run prepare-env && npm run install-remote-types && EAS_NO_VCS=1 eas build --no-wait --platform $EAS_PLATFORM --profile $EAS_PROFILE && npm run install-local-types",
     "build-android": "EAS_PLATFORM=android EAS_PROFILE=$FLAVOR-$ENV npm run build",
     "build-android-courier:local": "FLAVOR=courier ENV=dev EAS_PROFILE=courier-local npm run build",
     "build-android-courier:dev": "FLAVOR=courier ENV=dev npm run build-android",
