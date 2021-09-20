@@ -9,9 +9,9 @@ import { borders, colors, halfPadding, padding, texts } from '../../../common/st
 import { t } from '../../../strings';
 
 type Props = {
-  data: HorizontalSelectItem[];
-  selected: HorizontalSelectItem;
-  onSelect: (value: HorizontalSelectItem) => void;
+  data?: HorizontalSelectItem[];
+  selected?: HorizontalSelectItem;
+  onSelect?: (value: HorizontalSelectItem) => void;
   switchValue: boolean;
   onChangeCodeDelivery: (value: boolean) => void;
   confirmation: OrderConfirmation | undefined;

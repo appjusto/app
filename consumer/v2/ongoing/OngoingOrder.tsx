@@ -5,7 +5,6 @@ import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import { HorizontalSelectItem } from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import HR from '../../../common/components/views/HR';
 import useNotificationToken from '../../../common/hooks/useNotificationToken';
@@ -43,11 +42,6 @@ export default function ({ navigation, route }: Props) {
   const courierId = order?.courier?.id;
   const businessId = order?.business?.id;
   useNotificationToken();
-  const codeFeedbackData: HorizontalSelectItem[] = [
-    { title: t('Encontrar com o entregador'), id: '1' },
-    { title: t('Deixar na portaria'), id: '2' },
-  ];
-  const [codeFeedback, setCodeFeedback] = React.useState<HorizontalSelectItem>(codeFeedbackData[0]);
   const [wantsCode, setWantsCode] = React.useState(false);
   // tracking
   useSegmentScreen('Ongoing Delivery');
@@ -149,7 +143,7 @@ export default function ({ navigation, route }: Props) {
       <View style={{ flex: 1 }}>
         {/* top */}
         <OngoingOrderStatus order={order} />
-        {order.status !== 'dispatching' && <HR height={padding} />}
+        {order.status !== 'dispatching' ? <HR height={padding} /> : null}
         <OngoingMapAndInfo
           order={order}
           onCourierDetail={navigateToCourierDetail}
@@ -157,9 +151,6 @@ export default function ({ navigation, route }: Props) {
           onOpenChat={(from) => openChat(from.id, from.agent)}
         />
         <DeliveryConfirmation
-          data={codeFeedbackData}
-          selected={codeFeedback}
-          onSelect={setCodeFeedback}
           switchValue={wantsCode}
           onChangeCodeDelivery={() => setWantsCode(!wantsCode)}
           confirmation={confirmation}
