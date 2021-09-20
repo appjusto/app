@@ -4,9 +4,8 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { toNumber, trim } from 'lodash';
 import React from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Linking, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
@@ -27,6 +26,7 @@ import { getCourier } from '../../../../common/store/courier/selectors';
 import { companyInfoSet } from '../../../../common/store/courier/validators';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { AppJustoMEIURL } from '../../../../strings/values';
 import { CourierProfileParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<CourierProfileParamList, 'ProfileCompany'>;
@@ -116,19 +116,6 @@ export default function ({ navigation, route }: Props) {
         <Text style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}>
           {t('Preencha com os dados do seu MEI ou empresa')}
         </Text>
-        {/* commented while we wait for the correct link */}
-        {/* {courier.situation !== 'approved' ? (
-          <DefaultButton
-            title={t('Não tem MEI? Clique aqui e saiba mais')}
-            grey
-            style={{ marginTop: 24 }}
-            onPress={() =>
-              Linking.openURL(
-                'https://appjusto.freshdesk.com/support/solutions/articles/67000681987'
-              )
-            }
-          />
-        ) : null} */}
         <PatternInput
           style={{ marginTop: 24 }}
           mask={cnpjMask}
@@ -239,15 +226,22 @@ export default function ({ navigation, route }: Props) {
           </Text>
         )}
         <View style={{ flex: 1 }} />
-        <SafeAreaView>
+        <View style={{ marginTop: padding }}>
           <DefaultButton
-            // style={{ marginVertical: padding }}
             title={courier.situation === 'approved' ? t('Atualizar') : t('Avançar')}
             onPress={updateProfileHandler}
             disabled={!canSubmit || isLoading}
             activityIndicator={isLoading}
           />
-        </SafeAreaView>
+          {courier.situation !== 'approved' ? (
+            <DefaultButton
+              title={t('Não tem MEI? Clique aqui e saiba mais')}
+              grey
+              style={{ marginTop: padding }}
+              onPress={() => Linking.openURL(AppJustoMEIURL)}
+            />
+          ) : null}
+        </View>
       </PaddedView>
     </KeyboardAwareScrollView>
   );
