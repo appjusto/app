@@ -135,14 +135,16 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
             </View>
           ) : null;
         }}
-        renderItem={({ item }) => {
-          return (
+        renderItem={({ item, index }) => {
+          const available = item.availability?.map((item) => item.checked);
+          const schedule = item.availability?.map((product) => product.schedule);
+          return available || available === undefined ? (
             <TouchableOpacity
               onPress={() => navigation.navigate('ItemDetail', { productId: item.id })}
             >
               <ProductListItem key={item.id} product={item} complements={item.complementsEnabled} />
             </TouchableOpacity>
-          );
+          ) : null;
         }}
       />
       {!consumer ? (
