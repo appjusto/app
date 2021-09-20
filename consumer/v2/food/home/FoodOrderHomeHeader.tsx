@@ -45,10 +45,12 @@ export const FoodOrderHomeHeader = ({
         </TouchableOpacity>
       ) : null}
       {/* search */}
-      <DoubleHeader
-        title={t('Já sabe o que quer?')}
-        subtitle={t('Então vai direto no seu prato ou restaurante preferido')}
-      />
+      <View style={{ paddingTop: halfPadding }}>
+        <DoubleHeader
+          title={t('Já sabe o que quer?')}
+          subtitle={t('Então vai direto no seu prato ou restaurante preferido')}
+        />
+      </View>
       <View style={{ marginTop: 24, paddingHorizontal: 12, marginBottom: halfPadding }}>
         <TouchableWithoutFeedback onPress={onSearchPress}>
           <View>
