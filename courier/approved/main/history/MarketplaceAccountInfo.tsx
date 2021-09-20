@@ -136,7 +136,9 @@ export const MarketplaceAccountInfo = () => {
                 navigation.navigate('DeliveriesNavigator', {
                   screen: 'Withdraws',
                   params: {
-                    balanceForWithdraw: convertBalance(info!.balance_available_for_withdraw),
+                    balanceForWithdraw: info
+                      ? convertBalance(info.balance_available_for_withdraw)
+                      : undefined,
                   },
                 })
               }
