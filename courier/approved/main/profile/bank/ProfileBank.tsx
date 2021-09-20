@@ -19,6 +19,7 @@ import useBanks from '../../../../../common/store/api/platform/hooks/useBanks';
 import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { bankAccountSet } from '../../../../../common/store/courier/validators';
+import { showToast } from '../../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../../common/store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
@@ -113,6 +114,12 @@ export default function ({ navigation, route }: Props) {
   //handlers
   const submitBankHandler = async () => {
     if (!selectedBank || !agency || !account || !type) {
+      return;
+    }
+    if (selectedBank.code === '341' && agencyFormatter!(agency) === '0500') {
+      dispatch(
+        showToast('A iugu ainda não aceita contas Itaú - iti. Escolha outra, por favor.', 'error')
+      );
       return;
     }
     await dispatch(
