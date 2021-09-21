@@ -1,13 +1,13 @@
 import { BusinessSchedule, ScheduleObject } from '@appjusto/types';
-import { toNumber } from 'lodash';
+import { isEmpty, toNumber } from 'lodash';
 import { formatTime } from '../../../utils/formatters';
 
 export const isAvailable = (schedule: BusinessSchedule | undefined, date: Date) => {
   if (!schedule) return true;
-
   const day = date.getDay();
   const index = day === 0 ? 6 : day - 1;
   const daySchedule = schedule[index];
+  if (isEmpty(daySchedule.schedule)) return true;
   return (
     daySchedule.checked &&
     daySchedule.schedule.find((value) => {
