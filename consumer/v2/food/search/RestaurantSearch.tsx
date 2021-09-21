@@ -142,7 +142,11 @@ export default function ({ navigation }: Props) {
                 });
               }}
             >
-              <ProductListItem product={item} showRestaurantName />
+              <ProductListItem
+                product={{ ...item, id: item.objectID }}
+                business={item.business}
+                showRestaurantName
+              />
             </TouchableOpacity>
           )}
           ListEmptyComponent={

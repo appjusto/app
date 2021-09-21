@@ -22,7 +22,7 @@ import { IconSemaphoreSmall } from '../../../../../common/icons/icon-semaphore-s
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
 import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
-import { getBusinessNextOpeningDay } from '../../../../../common/store/api/business/selectors';
+import { getNextAvailableDate } from '../../../../../common/store/api/business/selectors';
 import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 import * as helpers from '../../../../../common/store/api/order/helpers';
 import {
@@ -274,6 +274,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           <View style={{ flex: 1 }} />
         </View>
       );
+    const nextOpeningDay = getNextAvailableDate(business.schedules, new Date());
     return (
       <View
         style={{
@@ -286,12 +287,12 @@ export const ItemDetail = ({ navigation, route }: Props) => {
       >
         <Feather name="clock" size={26} />
         <Text style={texts.sm}>{t('Desculpe, estamos fechados agora')}</Text>
-        {getBusinessNextOpeningDay(business) ? (
+        {nextOpeningDay ? (
           <>
             <Text style={{ ...texts.xs, color: colors.grey700 }}>
-              {`${t('Abriremos')} ${getBusinessNextOpeningDay(business)![0]} ${t('às')}`}
+              {`${t('Abriremos')} ${nextOpeningDay![0]} ${t('às')}`}
             </Text>
-            <Text style={texts.x2l}>{formatHour(getBusinessNextOpeningDay(business)![1])}</Text>
+            <Text style={texts.x2l}>{formatHour(nextOpeningDay![1])}</Text>
           </>
         ) : null}
       </View>
