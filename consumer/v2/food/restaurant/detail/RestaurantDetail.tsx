@@ -1,6 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import dayjs from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, SectionList, Share, Text, TouchableOpacity, View } from 'react-native';
@@ -23,6 +26,8 @@ import { FoodOrderNavigatorParamList } from '../../types';
 import { ProductListItem } from '../product/ProductListItem';
 import { RestaurantNavigatorParamList } from '../types';
 import { CartButton } from './CartButton';
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<RestaurantNavigatorParamList, 'RestaurantDetail'>,
@@ -135,16 +140,38 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
             </View>
           ) : null;
         }}
-        renderItem={({ item, index }) => {
-          const available = item.availability?.map((item) => item.checked);
-          const schedule = item.availability?.map((product) => product.schedule);
-          return available || available === undefined ? (
+        renderItem={({ item }) => {
+          const touchableItem = (
             <TouchableOpacity
               onPress={() => navigation.navigate('ItemDetail', { productId: item.id })}
             >
               <ProductListItem key={item.id} product={item} complements={item.complementsEnabled} />
             </TouchableOpacity>
-          ) : null;
+          );
+          const available = item.availability?.map((item) => item.checked);
+          const itemSchedules = item.availability?.map((product) => product.schedule);
+          if (available) {
+            const today = new Date();
+            const dayIndex = today.getDay() - 1;
+            const daySchedule = itemSchedules![dayIndex];
+            let n = 0;
+            let shouldShow = false;
+            while (daySchedule.length > n && shouldShow === false) {
+              const period = daySchedule[n];
+              const startHour = parseInt(period.from.slice(0, 2));
+              const startMinute = parseInt(period.from.slice(2, 4));
+              const endHour = parseInt(period.to.slice(0, 2));
+              const endMinute = parseInt(period.to.slice(2, 4));
+              shouldShow =
+                dayjs().hour(startHour).minute(startMinute).isSameOrBefore(today) &&
+                dayjs().hour(endHour).minute(endMinute).isSameOrAfter(today);
+              n++;
+            }
+            if (isEmpty(daySchedule)) return touchableItem; // available for the whole day
+            return shouldShow ? touchableItem : null; // available in a period of time in that day
+          } else if (available === undefined) {
+            return touchableItem; // always available
+          } else return null;
         }}
       />
       {!consumer ? (
