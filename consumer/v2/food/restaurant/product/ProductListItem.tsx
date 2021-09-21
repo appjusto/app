@@ -1,32 +1,39 @@
-import { Product, ProductAlgolia, WithId } from '@appjusto/types';
+import { BusinessSchedule } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
-import { useContextBusiness } from '../../../../../common/store/context/business';
+import { isAvailable } from '../../../../../common/store/api/business/selectors';
 import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import { ListItemImage } from '../list/ListItemImage';
 
 interface Props {
-  product: ProductAlgolia | WithId<Product>;
+  product: {
+    id: string;
+    name: string;
+    price: number;
+    description?: string;
+    availability?: BusinessSchedule;
+  };
+  business: {
+    id: string;
+    name?: string;
+  };
+  hasComplements?: boolean;
   showRestaurantName?: boolean;
-  complements?: boolean;
 }
 
-const isAlgoliaProduct = (product: ProductAlgolia | WithId<Product>): product is ProductAlgolia => {
-  return (product as ProductAlgolia).objectID !== undefined;
-};
-
-export const ProductListItem = ({ product, showRestaurantName, complements }: Props) => {
-  // state
-  const business = useContextBusiness();
-  const businessId = isAlgoliaProduct(product) ? product.business.id : business?.id;
-  const productId = isAlgoliaProduct(product) ? product.objectID : product.id;
-  const businessName = isAlgoliaProduct(product) ? product.business.name : business?.name;
-  const { data: imageURI } = useProductImageURI(businessId!, productId);
-
+export const ProductListItem = ({
+  product,
+  business,
+  hasComplements,
+  showRestaurantName,
+}: Props) => {
+  const { data: imageURI } = useProductImageURI(business.id, product.id);
+  const available = isAvailable(product.availability, new Date());
   // UI
+  if (!available) return null;
   return (
     <View
       style={{
@@ -50,16 +57,16 @@ export const ProductListItem = ({ product, showRestaurantName, complements }: Pr
         <View style={{ width: '60%' }}>
           <Text style={{ ...texts.sm, textTransform: 'capitalize' }}>{product.name}</Text>
           <Text style={{ ...texts.xs, color: colors.grey700, marginVertical: 4 }} numberOfLines={2}>
-            {product.description}
+            {product.description ?? ''}
           </Text>
           <Text style={{ ...texts.sm }}>
-            {complements
+            {hasComplements
               ? `${t('A partir de ')} ${formatCurrency(product.price)}`
               : formatCurrency(product.price)}
           </Text>
-          {showRestaurantName && businessName && (
-            <Text style={{ ...texts.xs, color: colors.green600 }}>{businessName}</Text>
-          )}
+          {showRestaurantName && business.name ? (
+            <Text style={{ ...texts.xs, color: colors.green600 }}>{business.name}</Text>
+          ) : null}
         </View>
         {imageURI ? (
           <View>
