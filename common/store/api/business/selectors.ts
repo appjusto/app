@@ -7,13 +7,13 @@ export const isAvailable = (schedule: BusinessSchedule | undefined, date: Date) 
   const day = date.getDay();
   const index = day === 0 ? 6 : day - 1;
   const daySchedule = schedule[index];
-  if (isEmpty(daySchedule.schedule)) return true;
   return (
     daySchedule.checked &&
-    daySchedule.schedule.find((value) => {
+    (daySchedule.schedule.find((value) => {
       const time = toNumber(formatTime(date, 'raw'));
       return time > toNumber(value.from) && time < toNumber(value.to);
-    })
+    }) ||
+      isEmpty(daySchedule.schedule))
   );
 };
 
