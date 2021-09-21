@@ -1,8 +1,5 @@
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import dayjs from 'dayjs';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, SectionList, TouchableOpacity, View } from 'react-native';
@@ -24,9 +21,6 @@ import { ProductListItem } from '../product/ProductListItem';
 import { RestaurantNavigatorParamList } from '../types';
 import { CartButton } from './CartButton';
 import { RestaurantDetailHeader } from './RestaurantDetailHeader';
-
-dayjs.extend(isSameOrBefore);
-dayjs.extend(isSameOrAfter);
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<RestaurantNavigatorParamList, 'RestaurantDetail'>,
