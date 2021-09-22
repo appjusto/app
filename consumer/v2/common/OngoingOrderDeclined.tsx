@@ -63,10 +63,10 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
     if (dispatchingStatus === 'matching') navigation.navigate('OngoingOrder', { orderId });
   }, [dispatchingStatus, orderId, navigation]);
   // status === 'declined' and the user does not add a new card
-  // after 1 hour, the status turns into 'expired'
+  // after 1 hour, the status turns into 'canceled'
   React.useEffect(() => {
     if (!order) return;
-    if (order.status === 'expired') navigation.navigate('OrderCanceled', { orderId });
+    if (order.status === 'canceled') navigation.navigate('OrderCanceled', { orderId });
   }, [navigation, order, orderId]);
   // UI
   if (!order || isLoading) {
