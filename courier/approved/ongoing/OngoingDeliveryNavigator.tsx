@@ -2,6 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import Chat from '../../../common/screens/Chat';
 import { defaultScreenOptions } from '../../../common/screens/options';
+import OrderCanceled from '../../../common/screens/orders/OrderCanceled';
 import { ReportIssue } from '../../../common/screens/ReportIssue';
 import { t } from '../../../strings';
 import { CallCourier } from './CallCourier';
@@ -12,7 +13,6 @@ import { DeliveryProblem } from './DeliveryProblem';
 import { DeliveryProblemFeedback } from './DeliveryProblemFeedback';
 import { NoCodeDelivery } from './NoCodeDelivery';
 import OngoingDelivery from './OngoingDelivery';
-import OrderCanceled from './OrderCanceled';
 import { OrderNull } from './OrderNull';
 import { OngoingDeliveryNavigatorParamList } from './types';
 

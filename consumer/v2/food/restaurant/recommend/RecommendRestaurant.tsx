@@ -1,16 +1,20 @@
-import { CompositeNavigationProp } from '@react-navigation/core';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { trim } from 'lodash';
 import React from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useDispatch } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import { phoneFormatter } from '../../../../../common/components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../../common/components/inputs/PatternInput';
+import LabeledText from '../../../../../common/components/texts/LabeledText';
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
+import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, halfPadding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { LoggedNavigatorParamList } from '../../../types';
@@ -21,28 +25,57 @@ type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<LoggedNavigatorParamList & UnloggedParamList>
 >;
 
+type ScreenRouteProp = RouteProp<FoodOrderNavigatorParamList, 'RecommendRestaurant'>;
+
 type Props = {
   navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 };
 
-export const RecommendRestaurant = ({ navigation }: Props) => {
+export const RecommendRestaurant = ({ navigation, route }: Props) => {
+  // params
+  const { place } = route.params ?? {};
+  // context
+  const api = React.useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
   // screen state
-  const [name, setName] = React.useState<string>('');
-  const [city, setCity] = React.useState<string>('');
+  const [name, setName] = React.useState<string | undefined>();
   const [instagram, setInstagram] = React.useState<string>('');
   const [phone, setPhone] = React.useState<string>('');
+  const [isLoading, setLoading] = React.useState(false);
   // refs
-  const nameRef = React.useRef<TextInput>(null);
-  const cityRef = React.useRef<TextInput>(null);
+  // const cityRef = React.useRef<TextInput>(null);
   const instagramRef = React.useRef<TextInput>(null);
   const phoneRef = React.useRef<TextInput>(null);
+  //side effects
+  React.useEffect(() => {
+    if (place) setName(place.address.main);
+  }, [place]);
+  // handler
+  const sendRecommendationHandler = () => {
+    if (!place) return;
+    (async () => {
+      try {
+        setLoading(true);
+        await api.business().addRecomendation(place, instagram, phone);
+        setLoading(false);
+        dispatch(
+          showToast(t('Recomendação enviada. Muito obrigado pela contribuição!'), 'success')
+        );
+        navigation.navigate('FoodOrderHome');
+      } catch (error) {
+        dispatch(showToast(t('Não foi possível enviar a recomendação. Tente novamente.'), 'error'));
+      }
+      setLoading(false);
+    })();
+  };
   return (
     <KeyboardAwareScrollView
       enableOnAndroid
       enableAutomaticScroll
       keyboardOpeningTime={0}
       style={{ ...screens.config }}
-      keyboardShouldPersistTaps="never"
+      keyboardShouldPersistTaps="handled"
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
     >
@@ -54,31 +87,22 @@ export const RecommendRestaurant = ({ navigation }: Props) => {
           )}
         </Text>
         <View style={{ marginTop: 32, flex: 1 }}>
-          <DefaultInput
-            ref={nameRef}
-            // style={{ marginTop: padding }}
-            title={t('Nome do restaurante')}
-            placeholder={t('Qual o restaurante que você quer indicar?')}
-            value={name}
-            returnKeyType="next"
-            blurOnSubmit={false}
-            onChangeText={(text) => setName(text)}
-            onSubmitEditing={() => cityRef.current?.focus()}
-            keyboardType="default"
-            // maxLength={30}
-          />
-          <DefaultInput
-            ref={cityRef}
-            style={{ marginTop: 12 }}
-            title={t('Cidade')}
-            placeholder={t('Digite a cidade do restaurante')}
-            value={city}
-            returnKeyType="next"
-            blurOnSubmit={false}
-            onChangeText={(text) => setCity(text)}
-            onSubmitEditing={() => instagramRef.current?.focus()}
-            keyboardType="default"
-          />
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('AddressComplete', {
+                returnScreen: 'RecommendRestaurant',
+                returnParam: 'place',
+              })
+            }
+          >
+            <LabeledText
+              title={t('Nome do restaurante')}
+              placeholder={t('Qual restaurante você quer indicar?')}
+              style={{ height: 54 }}
+            >
+              {name}
+            </LabeledText>
+          </TouchableOpacity>
           <DefaultInput
             ref={instagramRef}
             style={{ marginTop: 12 }}
@@ -94,19 +118,24 @@ export const RecommendRestaurant = ({ navigation }: Props) => {
           <PatternInput
             ref={phoneRef}
             style={{ marginTop: 12 }}
-            title={t('Telefone (se souber')}
+            title={t('Telefone (se souber)')}
             value={phone}
             placeholder={t('Se souber o telefone, conta pra gente')}
             parser={numbersOnlyParser}
             formatter={phoneFormatter}
             keyboardType="number-pad"
-            returnKeyType="done"
+            returnKeyType="next"
             blurOnSubmit
             onChangeText={(text) => setPhone(trim(text))}
           />
         </View>
         <View style={{ flex: 1 }} />
-        <DefaultButton title={t('Indicar restaurante')} />
+        <DefaultButton
+          title={t('Indicar restaurante')}
+          onPress={sendRecommendationHandler}
+          disabled={!place}
+          activityIndicator={isLoading}
+        />
       </PaddedView>
     </KeyboardAwareScrollView>
   );

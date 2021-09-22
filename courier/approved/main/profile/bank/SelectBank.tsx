@@ -46,6 +46,7 @@ export default function ({ navigation, route }: Props) {
         autoCapitalize="words"
       />
       <FlatList
+        keyboardShouldPersistTaps="handled"
         data={filteredBanks}
         renderItem={({ item }) => {
           return (

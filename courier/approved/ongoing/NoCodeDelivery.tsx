@@ -114,6 +114,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
       style={{ ...screens.default }}
       contentContainerStyle={{ flex: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
+      keyboardShouldPersistTaps="handled"
     >
       <PaddedView style={{ flex: 1 }}>
         <DefaultInput

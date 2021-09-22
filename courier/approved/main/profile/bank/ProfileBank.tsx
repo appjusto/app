@@ -19,11 +19,13 @@ import useBanks from '../../../../../common/store/api/platform/hooks/useBanks';
 import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { bankAccountSet } from '../../../../../common/store/courier/validators';
+import { showToast } from '../../../../../common/store/ui/actions';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { updateProfile } from '../../../../../common/store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { CourierProfileParamList } from '../types';
+import { BankModal } from './BankModal';
 
 type ScreenNavigationProp = StackNavigationProp<CourierProfileParamList, 'ProfileBank'>;
 type ScreenRouteProp = RouteProp<CourierProfileParamList, 'ProfileBank'>;
@@ -48,6 +50,7 @@ export default function ({ navigation, route }: Props) {
   const [agency, setAgency] = React.useState('');
   const [account, setAccount] = React.useState('');
   const [personType, setPersonType] = React.useState<BankAccountPersonType>('Pessoa Física');
+  const [modalVisible, setModalVisible] = React.useState(false);
   const canSubmit = selectedBank && !isEmpty(agency) && !isEmpty(account) && type && personType;
   const profileApproved = courier.situation === 'approved';
   // refs
@@ -113,6 +116,12 @@ export default function ({ navigation, route }: Props) {
     if (!selectedBank || !agency || !account || !type) {
       return;
     }
+    if (selectedBank.code === '341' && agencyFormatter!(agency) === '0500') {
+      dispatch(
+        showToast('A iugu ainda não aceita contas Itaú - iti. Escolha outra, por favor.', 'error')
+      );
+      return;
+    }
     await dispatch(
       updateProfile(api)(courier!.id!, {
         bankAccount: {
@@ -139,7 +148,7 @@ export default function ({ navigation, route }: Props) {
         enableAutomaticScroll
         keyboardOpeningTime={0}
         style={{ flex: 1 }}
-        keyboardShouldPersistTaps="never"
+        keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ flexGrow: 1 }}
         scrollIndicatorInsets={{ right: 1 }}
       >
@@ -162,7 +171,10 @@ export default function ({ navigation, route }: Props) {
               <RadioButton
                 title={t('Pessoa Jurídica')}
                 onPress={() => {
-                  if (!profileApproved) setPersonType('Pessoa Jurídica');
+                  if (!profileApproved) {
+                    setPersonType('Pessoa Jurídica');
+                    setModalVisible(true);
+                  }
                 }}
                 checked={personType === 'Pessoa Jurídica'}
               />
@@ -316,7 +328,7 @@ export default function ({ navigation, route }: Props) {
                 keyboardType={
                   (selectedBank?.accountPattern.indexOf('X') ?? -1) > -1 ? 'default' : 'number-pad'
                 }
-                returnKeyType="done"
+                returnKeyType="next"
                 blurOnSubmit
                 onChangeText={(text) => setAccount(text)}
                 onBlur={() => {
@@ -342,6 +354,7 @@ export default function ({ navigation, route }: Props) {
               />
             </SafeAreaView>
           )}
+          <BankModal modalVisible={modalVisible} onModalClose={() => setModalVisible(false)} />
         </PaddedView>
       </KeyboardAwareScrollView>
     </View>

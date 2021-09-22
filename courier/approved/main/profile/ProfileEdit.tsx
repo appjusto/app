@@ -83,7 +83,7 @@ export default function ({ navigation, route }: Props) {
       enableAutomaticScroll
       keyboardOpeningTime={0}
       style={{ ...screens.config }}
-      keyboardShouldPersistTaps="never"
+      keyboardShouldPersistTaps="handled"
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
     >

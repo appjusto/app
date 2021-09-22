@@ -4,9 +4,8 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { toNumber, trim } from 'lodash';
 import React from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Linking, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
@@ -25,8 +24,9 @@ import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getExtra } from '../../../../common/store/config/selectors';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { companyInfoSet } from '../../../../common/store/courier/validators';
-import { colors, padding, screens, texts } from '../../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { AppJustoMEIURL } from '../../../../strings/values';
 import { CourierProfileParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<CourierProfileParamList, 'ProfileCompany'>;
@@ -107,12 +107,17 @@ export default function ({ navigation, route }: Props) {
       enableAutomaticScroll
       keyboardOpeningTime={0}
       style={{ ...screens.config }}
-      keyboardShouldPersistTaps="never"
+      keyboardShouldPersistTaps="handled"
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
     >
       <PaddedView style={{ flex: 1 }}>
+        <Text style={{ ...texts.x2l }}>{t('Dados da empresa')}</Text>
+        <Text style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}>
+          {t('Preencha com os dados do seu MEI ou empresa')}
+        </Text>
         <PatternInput
+          style={{ marginTop: 24 }}
           mask={cnpjMask}
           parser={numbersOnlyParser}
           formatter={cnpjFormatter}
@@ -189,7 +194,7 @@ export default function ({ navigation, route }: Props) {
             placeholder={t('Sem complemento')}
             maxLength={9}
             keyboardType="default"
-            returnKeyType="done"
+            returnKeyType="next"
             blurOnSubmit
             onChangeText={setAdditional}
           />
@@ -200,7 +205,7 @@ export default function ({ navigation, route }: Props) {
             title={t('Cidade')}
             placeholder={t('Cidade')}
             value={city}
-            returnKeyType="done"
+            returnKeyType="next"
             onChangeText={setCity}
             keyboardType="default"
           />
@@ -210,7 +215,7 @@ export default function ({ navigation, route }: Props) {
             placeholder={t('UF')}
             value={state}
             maxLength={2}
-            returnKeyType="done"
+            returnKeyType="next"
             onChangeText={setState}
             keyboardType="default"
           />
@@ -221,15 +226,22 @@ export default function ({ navigation, route }: Props) {
           </Text>
         )}
         <View style={{ flex: 1 }} />
-        <SafeAreaView>
+        <View style={{ marginTop: padding }}>
           <DefaultButton
-            // style={{ marginVertical: padding }}
             title={courier.situation === 'approved' ? t('Atualizar') : t('Avançar')}
             onPress={updateProfileHandler}
             disabled={!canSubmit || isLoading}
             activityIndicator={isLoading}
           />
-        </SafeAreaView>
+          {courier.situation !== 'approved' ? (
+            <DefaultButton
+              title={t('Não tem MEI? Clique aqui e saiba mais')}
+              grey
+              style={{ marginTop: padding }}
+              onPress={() => Linking.openURL(AppJustoMEIURL)}
+            />
+          ) : null}
+        </View>
       </PaddedView>
     </KeyboardAwareScrollView>
   );

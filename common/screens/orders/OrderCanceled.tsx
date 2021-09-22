@@ -1,3 +1,4 @@
+import { OrderCancellation } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -12,9 +13,10 @@ import { getFlavor } from '../../../common/store/config/selectors';
 import { colors, padding, screens } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { OngoingOrderNavigatorParamList } from '../../../consumer/v2/ongoing/types';
+import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
+import { OngoingDeliveryNavigatorParamList } from '../../../courier/approved/ongoing/types';
+import { ApprovedParamList } from '../../../courier/approved/types';
 import { t } from '../../../strings';
-import { ApprovedParamList } from '../types';
-import { OngoingDeliveryNavigatorParamList } from './types';
 
 export type OrderCanceledParamList = {
   OrderCanceled: {
@@ -27,7 +29,7 @@ type ScreenNavigationProp = CompositeNavigationProp<
     OngoingDeliveryNavigatorParamList & OngoingOrderNavigatorParamList,
     'OrderCanceled'
   >,
-  StackNavigationProp<ApprovedParamList>
+  StackNavigationProp<ApprovedParamList & LoggedNavigatorParamList>
 >;
 
 type ScreenRouteProp = RouteProp<OrderCanceledParamList, 'OrderCanceled'>;
@@ -42,22 +44,31 @@ export default ({ navigation, route }: Props) => {
   const { orderId } = route.params;
   // screen state
   const order = useObserveOrder(orderId);
-  const cancelInfo = useOrderCancellationInfo(orderId);
+  const cancellationInfo = useOrderCancellationInfo(orderId);
   const flavor = useSelector(getFlavor);
+  const [cancelInfo, setCancelInfo] = React.useState<OrderCancellation | undefined | null>(
+    undefined
+  );
+
+  // side effects
+  React.useEffect(() => {
+    if (!orderId) return;
+    if (cancellationInfo) setCancelInfo(cancellationInfo);
+    else setCancelInfo(null);
+  }, [cancellationInfo, orderId]);
   // UI
-  if (!order || !cancelInfo) {
+  if (!order || cancelInfo === undefined) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
-  // helpers
-  const courierFeeRefunded = cancelInfo.params.refund.includes('delivery');
   const description = (() => {
     if (flavor === 'courier') {
-      if (courierFeeRefunded) return undefined;
-      else return t('Como você já iniciou o pedido, você receberá: ');
+      if (cancelInfo) {
+        if (cancelInfo.params.refund.includes('delivery')) return undefined;
+      } else return t('Como você já iniciou o pedido, você receberá: ');
     }
     if (flavor === 'consumer') {
       if (order.type === 'food') {
@@ -68,13 +79,18 @@ export default ({ navigation, route }: Props) => {
     }
   })();
   const value = (() => {
-    if (flavor === 'courier' && !courierFeeRefunded)
-      return formatCurrency(order.fare!.courier.value);
-    else return undefined;
+    if (cancelInfo) {
+      if (flavor === 'courier' && !cancelInfo.params.refund.includes('delivery'))
+        return formatCurrency(order.fare!.courier.value);
+    } else return undefined;
   })();
   return (
     <FeedbackView
-      header={`${t('Esse pedido foi cancelado:')} \n${cancelInfo.issue?.title ?? ''}`}
+      header={
+        !cancelInfo
+          ? t('Esse pedido foi cancelado')
+          : `${t('Esse pedido foi cancelado:')} \n${cancelInfo.issue?.title ?? ''}`
+      }
       icon={<IconConeYellow />}
       description={description}
       value={value}

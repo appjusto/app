@@ -69,7 +69,7 @@ export default function ({ route, navigation }: Props) {
   return (
     <View style={screens.config}>
       <KeyboardAwareScrollView
-        keyboardShouldPersistTaps="always"
+        keyboardShouldPersistTaps="handled"
         scrollIndicatorInsets={{ right: 1 }}
       >
         <PaddedView>

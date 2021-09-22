@@ -102,6 +102,7 @@ export default function ({ navigation, route }: Props) {
       style={screens.config}
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
+      keyboardShouldPersistTaps="handled"
     >
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1, padding }}>
@@ -198,7 +199,7 @@ export default function ({ navigation, route }: Props) {
               textContentType="familyName"
               autoCompleteType="name"
               autoCapitalize="characters"
-              returnKeyType="done"
+              returnKeyType="next"
               blurOnSubmit
               onChangeText={setSurname}
             />

@@ -73,7 +73,11 @@ export const ProductComplementListItem = ({
                 {complement.description}
               </Text>
             ) : null}
-            <Text style={{ ...texts.sm, marginTop: 4 }}>{formatCurrency(complement.price)}</Text>
+            {complement.price > 0 ? (
+              <Text style={{ ...texts.sm, marginTop: 4 }}>
+                + {formatCurrency(complement.price)}
+              </Text>
+            ) : null}
           </View>
           {imageURI ? (
             <View>

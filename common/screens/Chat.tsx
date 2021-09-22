@@ -100,7 +100,7 @@ export default function ({ route }: Props) {
       keyboardVerticalOffset={Platform.OS === 'ios' ? (tallerDevice ? 60 : 40) : -172}
     >
       <FlatList
-        keyboardShouldPersistTaps="never"
+        keyboardShouldPersistTaps="handled"
         data={chat}
         keyExtractor={(item) => item.id}
         style={{ backgroundColor: colors.grey500 }}

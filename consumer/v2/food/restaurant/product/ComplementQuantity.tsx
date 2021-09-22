@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { QuantityButton } from '../../../../../common/components/buttons/QuantityButton';
-import { halfPadding, texts } from '../../../../../common/styles';
+import { padding, texts } from '../../../../../common/styles';
 
 type Props = {
   onIncrement: () => void;
@@ -18,12 +18,12 @@ export const ComplementQuantity = ({
 }: Props) => {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <TouchableOpacity style={{ paddingRight: halfPadding }} onPress={onDecrement}>
+      <TouchableOpacity style={{ paddingRight: padding }} onPress={onDecrement}>
         <QuantityButton sign="minus" disabled={quantity === 0} />
       </TouchableOpacity>
       <Text style={{ ...texts.md }}>{quantity}</Text>
       <TouchableOpacity
-        style={{ paddingLeft: halfPadding }}
+        style={{ paddingLeft: padding }}
         onPress={() => {
           console.log('onIncrement');
           if (!incrementDisabled) onIncrement();

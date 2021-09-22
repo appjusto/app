@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { t } from '../../../strings';
-import { colors, texts } from '../../styles';
+import { colors, padding, texts } from '../../styles';
 import Pill from '../views/Pill';
 
 type Props = {
@@ -12,10 +12,15 @@ type Props = {
 
 export default function ({ title, subtitle, secondary, ...props }: Props) {
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 24, flex: 1 }} {...props}>
+    <View
+      style={{ flexDirection: 'row', alignItems: 'center', marginTop: padding, flex: 1 }}
+      {...props}
+    >
       <Pill tall color={secondary ? colors.grey700 : colors.green500} />
       <View style={{ marginLeft: 12 }}>
-        <Text style={{ ...texts.xl, color: secondary ? colors.grey700 : colors.black }}>
+        <Text
+          style={{ ...texts.xl, color: secondary ? colors.grey700 : colors.black, ...texts.bold }}
+        >
           {t(title)}
         </Text>
         <Text style={{ ...texts.xs, color: colors.grey700 }}>{t(subtitle)}</Text>

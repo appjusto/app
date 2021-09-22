@@ -7,3 +7,5 @@ export const AppJustoInstagramURL = 'https://www.instagram.com/appjusto/';
 export const AppJustoWhatsAppCourierURL = 'https://wa.me/551197215-9106';
 export const AppJustoAssistanceWhatsAppURL = 'https://wa.me/551197821-0274';
 export const AppJustoIzaURL = 'https://seguro.iza.com.vc/appjusto';
+export const AppJustoMEIURL =
+  'https://appjusto.freshdesk.com/support/solutions/articles/67000681987';

@@ -6,7 +6,6 @@ import { ApiContext, AppDispatch } from '../../common/app/context';
 import { defaultScreenOptions } from '../../common/screens/options';
 import ProfileBlocked from '../../common/screens/profile/ProfileBlocked';
 import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
-import { RegistrationSubmitted } from '../../common/screens/unlogged/onboarding/RegistrationSubmitted';
 import { SelectLocation } from '../../common/screens/unlogged/onboarding/SelectLocation';
 import { useObserveOngoingOrders } from '../../common/store/api/order/hooks/useObserveOngoingOrders';
 import { getFlavor } from '../../common/store/config/selectors';
@@ -53,12 +52,8 @@ export const LoggedNavigator = () => {
     );
   }
   const { situation, onboarded } = consumer;
-  let initialRouteName:
-    | 'MainNavigator'
-    | 'RegistrationSubmitted'
-    | 'ConsumerOnboarding'
-    | 'ProfileBlocked'
-    | undefined = undefined;
+  let initialRouteName: 'MainNavigator' | 'ConsumerOnboarding' | 'ProfileBlocked' | undefined =
+    undefined;
   if (
     situation === 'blocked' ||
     situation === 'deleted' ||
@@ -69,7 +64,7 @@ export const LoggedNavigator = () => {
   } else if (situation === 'approved') {
     initialRouteName = 'MainNavigator';
   } else if (onboarded) {
-    initialRouteName = 'RegistrationSubmitted';
+    initialRouteName = 'MainNavigator';
   } else {
     initialRouteName = 'ConsumerOnboarding';
   }
@@ -86,11 +81,6 @@ export const LoggedNavigator = () => {
           name="SelectLocation"
           component={SelectLocation}
           options={{ title: t('Informe sua localização') }}
-        />
-        <Stack.Screen
-          name="RegistrationSubmitted"
-          component={RegistrationSubmitted}
-          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="MainNavigator"

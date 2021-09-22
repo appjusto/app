@@ -9,9 +9,9 @@ import { borders, colors, halfPadding, padding, texts } from '../../../common/st
 import { t } from '../../../strings';
 
 type Props = {
-  data: HorizontalSelectItem[];
-  selected: HorizontalSelectItem;
-  onSelect: (value: HorizontalSelectItem) => void;
+  data?: HorizontalSelectItem[];
+  selected?: HorizontalSelectItem;
+  onSelect?: (value: HorizontalSelectItem) => void;
   switchValue: boolean;
   onChangeCodeDelivery: (value: boolean) => void;
   confirmation: OrderConfirmation | undefined;
@@ -89,7 +89,7 @@ export const DeliveryConfirmation = ({
               </Text>
               <Text style={{ ...texts.xs, marginTop: halfPadding, color: colors.grey700 }}>
                 {t(
-                  'O seu pedido já foi pago e não necessita de nenhuma pagamento adicional. Se isso acontecer, relate o problema para nós.'
+                  'Não é necessário nenhum pagamento adicional no momento da entrega. Se isso acontecer, relate o problema para nós.'
                 )}
               </Text>
             </View>

@@ -6,18 +6,21 @@ import {
   NativeSyntheticEvent,
   Pressable,
   Text,
+  TextInput,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 // import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
 import PagerView, { ViewPagerOnPageScrollEventData } from 'react-native-pager-view';
-import { ApiContext } from '../../../common/app/context';
+import { useDispatch } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import { StepControl } from '../../../common/components/controls/step-control/StepControl';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import LabeledText from '../../../common/components/texts/LabeledText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
+import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { OrderCostBreakdown } from '../common/breakdown/OrderCostBreakdown';
@@ -76,6 +79,7 @@ export default function ({
   const { origin, destination } = order ?? {};
   // context
   const api = React.useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
   // state
   const [step, setStep] = React.useState(Step.Origin);
   const [originAdditionalInfo, setOriginAdditionalInfo] = React.useState(
@@ -100,6 +104,8 @@ export default function ({
   }, [order]);
   // refs
   const pagerView = React.useRef<PagerView>(null);
+  const originDescriptionRef = React.useRef<TextInput>(null);
+  const destinationDescriptionRef = React.useRef<TextInput>(null);
   // helpers
   const stepReady = (value: Step): boolean => {
     if (value === Step.Origin) return true; // always enabled
@@ -121,6 +127,16 @@ export default function ({
     if (stepReady(nextStep)) {
       if (step === Step.Origin) {
         if (!origin) return;
+        if (!originInstructions) {
+          dispatch(
+            showToast(
+              'Insira uma descrição curta para facilitar a retirada pelo entregador',
+              'error'
+            )
+          );
+          originDescriptionRef.current?.focus();
+          return;
+        }
         api.order().updateOrder(order!.id, {
           origin: {
             ...origin,
@@ -130,6 +146,11 @@ export default function ({
         });
       } else if (step === Step.Destination) {
         if (!destination) return;
+        if (!destinationInstructions) {
+          dispatch(showToast('Insira uma descrição curta para agilizar a entrega', 'error'));
+          destinationDescriptionRef.current?.focus();
+          return;
+        }
         api.order().updateOrder(order!.id, {
           destination: {
             ...destination,
@@ -166,7 +187,7 @@ export default function ({
         {/* origin */}
         <View style={{ flex: 1, paddingHorizontal: padding }}>
           <KeyboardAwareScrollView
-            keyboardShouldPersistTaps="always"
+            keyboardShouldPersistTaps="handled"
             style={{ flex: 1 }}
             contentContainerStyle={{ flex: 1 }}
             scrollIndicatorInsets={{ right: 1 }}
@@ -191,6 +212,7 @@ export default function ({
             />
 
             <DefaultInput
+              ref={originDescriptionRef}
               style={{ marginTop: 12 }}
               value={originInstructions}
               title={t('Instruções para entrega')}
@@ -199,7 +221,6 @@ export default function ({
               editable={Boolean(origin)}
               blurOnSubmit
               multiline
-              // numberOfLines={3}
             />
 
             <TouchableWithoutFeedback onPress={navigateToTransportableItems}>
@@ -230,7 +251,7 @@ export default function ({
         {/* destination */}
         <View style={{ flex: 1, paddingHorizontal: padding }}>
           <KeyboardAwareScrollView
-            keyboardShouldPersistTaps="always"
+            keyboardShouldPersistTaps="handled"
             style={{ flex: 1 }}
             contentContainerStyle={{ flex: 1 }}
             scrollIndicatorInsets={{ right: 1 }}
@@ -260,6 +281,7 @@ export default function ({
             />
 
             <DefaultInput
+              ref={destinationDescriptionRef}
               style={{ marginTop: 12 }}
               value={destinationInstructions}
               title={t('Instruções para entrega')}

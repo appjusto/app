@@ -84,6 +84,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
           flavor,
           comment,
         });
+        setLoading(false);
         if (flavor === 'courier') {
           navigation.replace('DeliveryProblemFeedback', {
             issueType,
@@ -92,7 +93,6 @@ export const ReportIssue = ({ route, navigation }: Props) => {
         } else {
           navigation.replace('OrderProblemFeedback', { orderId });
         }
-        setLoading(false);
       } catch (error) {
         dispatch(showToast(t('Não foi possível enviar a reclamação. Tente novamente.'), 'error'));
       }
