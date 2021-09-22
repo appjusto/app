@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
@@ -69,63 +69,66 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
     }
   };
   // UI
+  if (!simulation) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <View style={{ ...screens.config }}>
-      {simulation ? (
-        <PaddedView>
-          <Text style={{ ...texts.sm }}>
-            {t(
-              'Para realizar a antecipação, a iugu cobra uma taxa de 2.5% ao mês pela operação financeira. Nada desse dinheiro ficará com o AppJusto.'
-            )}
-          </Text>
-          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: biggerPadding }}>
-            {t('Você selecionou')}
-          </Text>
-          <Text style={{ ...texts.x2l }}>{`${simulation.transactions.length} ${t(
-            'corridas'
-          )}`}</Text>
-          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: biggerPadding }}>
-            {t('Total a adiantar')}
-          </Text>
-          <Text style={{ ...texts.x2l, color: colors.green600 }}>
-            {`+ ${simulation.total.advanced_value}`}
-          </Text>
-          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: biggerPadding }}>
-            {t('Total de taxas de adiantamento')}
-          </Text>
-          <Text style={{ ...texts.x2l, color: colors.red }}>
-            {`+ ${simulation.total.advance_fee}`}
-          </Text>
-          <PaddedView
-            style={{
-              marginTop: padding,
-              backgroundColor: colors.white,
-              ...borders.default,
-              borderColor: colors.white,
-            }}
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={{ ...texts.sm, color: colors.grey700 }}>
-                {t('Total a receber no adiantamento')}
-              </Text>
-            </View>
-            <Text style={{ ...texts.x4l }}>{simulation.total.received_value}</Text>
-          </PaddedView>
-          <CheckField
-            style={{ marginTop: biggerPadding }}
-            checked={accepted}
-            text="Estou de acordo com as taxas cobradas para o adiantamento do valor"
-            onPress={() => setAccepted(!accepted)}
-          />
-          <DefaultButton
-            style={{ marginTop: biggerPadding }}
-            title={t('Confirmar antecipação')}
-            onPress={confirmHandler}
-            activityIndicator={requesting}
-            disabled={!accepted || requesting}
-          />
+      <PaddedView>
+        <Text style={{ ...texts.sm }}>
+          {t(
+            'Para realizar a antecipação, a iugu cobra uma taxa de 2.5% ao mês pela operação financeira. Nada desse dinheiro ficará com o AppJusto.'
+          )}
+        </Text>
+        <Text style={{ ...texts.sm, color: colors.grey700, marginTop: biggerPadding }}>
+          {t('Você selecionou')}
+        </Text>
+        <Text style={{ ...texts.x2l }}>{`${simulation.transactions.length} ${t('corridas')}`}</Text>
+        <Text style={{ ...texts.sm, color: colors.grey700, marginTop: biggerPadding }}>
+          {t('Total a adiantar')}
+        </Text>
+        <Text style={{ ...texts.x2l, color: colors.green600 }}>
+          {`+ ${simulation.total.advanced_value}`}
+        </Text>
+        <Text style={{ ...texts.sm, color: colors.grey700, marginTop: biggerPadding }}>
+          {t('Total de taxas de adiantamento')}
+        </Text>
+        <Text style={{ ...texts.x2l, color: colors.red }}>
+          {`+ ${simulation.total.advance_fee}`}
+        </Text>
+        <PaddedView
+          style={{
+            marginTop: padding,
+            backgroundColor: colors.white,
+            ...borders.default,
+            borderColor: colors.white,
+          }}
+        >
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>
+              {t('Total a receber no adiantamento')}
+            </Text>
+          </View>
+          <Text style={{ ...texts.x4l }}>{simulation.total.received_value}</Text>
         </PaddedView>
-      ) : null}
+        <CheckField
+          style={{ marginTop: biggerPadding }}
+          checked={accepted}
+          text="Estou de acordo com as taxas cobradas para o adiantamento do valor"
+          onPress={() => setAccepted(!accepted)}
+        />
+        <DefaultButton
+          style={{ marginTop: biggerPadding }}
+          title={t('Confirmar antecipação')}
+          onPress={confirmHandler}
+          activityIndicator={requesting}
+          disabled={!accepted || requesting}
+        />
+      </PaddedView>
     </View>
   );
 };
