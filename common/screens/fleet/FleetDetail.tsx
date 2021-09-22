@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import firebase from 'firebase';
 import { omit } from 'lodash';
 import React, { useContext } from 'react';
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RestaurantNavigatorParamList } from '../../../consumer/v2/food/restaurant/types';
 import { P2POrderNavigatorParamList } from '../../../consumer/v2/p2p/types';
@@ -63,6 +63,7 @@ export default function ({ navigation, route }: Props) {
   }
   // handlers
   const confirmFleet = () => {
+    Keyboard.dismiss();
     api.profile().updateProfile(courier.id, {
       fleet: {
         ...(omit(fleet, ['partipantsOnline', 'situation']) as CourierFleet),

@@ -4,7 +4,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { trim } from 'lodash';
 import React from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Keyboard, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
@@ -65,6 +65,7 @@ export default function ({ navigation, route }: Props) {
   const canSubmit = consumerInfoSet(updatedConsumer);
   // handlers
   const updateProfileHandler = async () => {
+    Keyboard.dismiss();
     try {
       setLoading(true);
       api.profile().updateProfile(consumer.id, updatedConsumer);

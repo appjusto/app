@@ -10,7 +10,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { nanoid } from 'nanoid/non-secure';
 import React from 'react';
-import { ActivityIndicator, Image, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Keyboard, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../../common/app/context';
@@ -180,6 +180,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   // handlers
   const updateOrder = () => {
     (async () => {
+      Keyboard.dismiss();
       if (!orderItem) return;
       if (!activeOrder) {
         api.order().createFoodOrder(business, consumer!, [orderItem], currentPlace ?? null);

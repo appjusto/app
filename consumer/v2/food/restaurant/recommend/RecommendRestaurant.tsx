@@ -2,7 +2,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { trim } from 'lodash';
 import React from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
@@ -53,6 +53,7 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
   }, [place]);
   // handler
   const sendRecommendationHandler = () => {
+    Keyboard.dismiss();
     if (!place) return;
     (async () => {
       try {

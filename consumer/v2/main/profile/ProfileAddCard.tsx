@@ -3,7 +3,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty, toNumber, trim } from 'lodash';
 import React from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Keyboard, Text, TextInput, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
@@ -68,6 +68,7 @@ export default function ({ navigation, route }: Props) {
   // UI handlers
   const createCancelToken = useAxiosCancelToken();
   const saveCardHandler = async () => {
+    Keyboard.dismiss();
     try {
       setLoading(true);
       const result = await api.consumer().saveCard(

@@ -3,6 +3,7 @@ import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import {
   ActivityIndicator,
+  Keyboard,
   NativeSyntheticEvent,
   Pressable,
   Text,
@@ -124,6 +125,7 @@ export default function ({
   // when user press next button
   const nextStepHandler = async (): Promise<void> => {
     const nextStep: Step = step + 1;
+    Keyboard.dismiss();
     if (stepReady(nextStep)) {
       if (step === Step.Origin) {
         if (!origin) return;

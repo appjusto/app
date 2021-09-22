@@ -3,7 +3,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { Keyboard, Pressable, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
@@ -113,6 +113,7 @@ export default function ({ navigation, route }: Props) {
   const accountMask = selectedBank?.accountPattern;
   //handlers
   const submitBankHandler = async () => {
+    Keyboard.dismiss();
     if (!selectedBank || !agency || !account || !type) {
       return;
     }
@@ -337,7 +338,7 @@ export default function ({ navigation, route }: Props) {
                       selectedBank!.accountPattern,
                       true
                     )(account);
-                    setAccount(paddedAccount);
+                    setAccount(paddedAccount); // isso n deve estar aparecendo
                   }
                 }}
               />

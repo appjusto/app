@@ -3,7 +3,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -65,6 +65,7 @@ export default ({ navigation, route }: Props) => {
   );
   //handlers
   const finishHandler = async () => {
+    Keyboard.dismiss();
     if (!order) return;
     setLoading(true);
     try {
@@ -84,6 +85,7 @@ export default ({ navigation, route }: Props) => {
     setLoading(false);
   };
   const issueHandler = () => {
+    Keyboard.dismiss();
     if (!order) return;
     if (order.type === 'food') {
       navigation.navigate('ReportIssue', {

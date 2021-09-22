@@ -2,7 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { ScrollView, Text, TextInput, View } from 'react-native';
+import { Keyboard, ScrollView, Text, TextInput, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
@@ -57,6 +57,7 @@ export default function ({ navigation, route }: Props) {
   }, []);
   // handlers
   const createFleetHandler = async () => {
+    Keyboard.dismiss();
     try {
       setLoading(true);
       const fleet = await api.fleet().createFleet({

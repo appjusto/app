@@ -4,7 +4,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { trim } from 'lodash';
 import React from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Keyboard, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
@@ -69,6 +69,7 @@ export default function ({ navigation, route }: Props) {
   const phoneRef = React.useRef<TextInput>(null);
   // handlers
   const updateProfileHandler = async () => {
+    Keyboard.dismiss();
     try {
       await dispatch(updateProfile(api)(courier.id, updatedCourier));
       navigation.goBack();

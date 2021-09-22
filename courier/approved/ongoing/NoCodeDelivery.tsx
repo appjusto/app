@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Image,
   ImageURISource,
+  Keyboard,
   ScrollView,
   StyleSheet,
   Text,
@@ -89,6 +90,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
     }
   };
   const confirmHandler = () => {
+    Keyboard.dismiss();
     if (!frontPhoto || !packagePhoto || !name) return;
     (async () => {
       try {

@@ -144,6 +144,7 @@ export default function ({ navigation, route }: Props) {
     })();
   };
   const codeDeliveryHandler = () => {
+    Keyboard.dismiss();
     (async () => {
       setLoading(true);
       try {

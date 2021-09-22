@@ -2,7 +2,7 @@ import { Flavor, ReviewType } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -77,6 +77,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   // handlers
   const tipHandler = async () => {
     if (!order) return;
+    Keyboard.dismiss();
     setTipLoading(true);
     try {
       if (tip > 0) await api.order().tipCourier(order.id, tip);
@@ -89,6 +90,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
 
   const reviewHandler = async () => {
     if (!order) return;
+    Keyboard.dismiss();
     setReviewLoading(true);
     try {
       if (reviewType) {

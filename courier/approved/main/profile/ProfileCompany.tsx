@@ -4,7 +4,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { toNumber, trim } from 'lodash';
 import React from 'react';
-import { Linking, Text, TextInput, View } from 'react-native';
+import { Keyboard, Linking, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../common/app/context';
@@ -94,6 +94,7 @@ export default function ({ navigation, route }: Props) {
 
   // handlers
   const updateProfileHandler = async () => {
+    Keyboard.dismiss();
     setLoading(true);
     await api.profile().updateProfile(courier.id, { company });
     setLoading(false);

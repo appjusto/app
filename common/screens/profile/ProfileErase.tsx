@@ -2,7 +2,7 @@ import { DeleteAccountPayload } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Keyboard, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { ProfileParamList } from '../../../consumer/v2/main/profile/types';
@@ -54,6 +54,7 @@ export default function ({ navigation }: Props) {
   useSegmentScreen('Profile Erase');
   // handlers
   const eraseHandler = async () => {
+    Keyboard.dismiss();
     try {
       await dispatch(deleteAccount(api)(survey));
     } catch (error) {
