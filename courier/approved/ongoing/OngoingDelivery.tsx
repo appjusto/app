@@ -128,14 +128,15 @@ export default function ({ navigation, route }: Props) {
           Keyboard.dismiss();
           await api.order().completeDelivery(orderId, code);
           setLoading(false);
-        } else if (order.dispatchingState === 'going-destination') {
-          await api.order().nextDispatchingState(orderId);
-          setLoading(false);
         } else {
           await api.order().nextDispatchingState(orderId);
-          setTimeout(() => {
+          if (order.dispatchingState === 'going-destination') {
             setLoading(false);
-          }, delayBeforeAdvancing);
+          } else {
+            setTimeout(() => {
+              setLoading(false);
+            }, delayBeforeAdvancing);
+          }
         }
       } catch (error) {
         setLoading(false);
