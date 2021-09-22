@@ -34,7 +34,7 @@ export const ModalChooser = ({ modalVisible, onPress }: Props) => {
 
   // UI
   return (
-    <Modal transparent animationType="slide" visible={modalVisible}>
+    <Modal transparent visible={modalVisible}>
       <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0, 0, 0, 0.8)' }}>
         <PaddedView
           style={{ ...borders.default, backgroundColor: colors.white, borderColor: colors.grey50 }}
