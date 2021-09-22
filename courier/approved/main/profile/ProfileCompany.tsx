@@ -111,6 +111,7 @@ export default function ({ navigation, route }: Props) {
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
+      extraScrollHeight={64}
     >
       <PaddedView style={{ flex: 1 }}>
         <Text style={{ ...texts.x2l }}>{t('Dados da empresa')}</Text>
