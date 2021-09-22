@@ -13,7 +13,12 @@ import { getCourier } from '../../../../common/store/courier/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
-import { formatCurrency, formatDistance } from '../../../../common/utils/formatters';
+import {
+  formatCurrency,
+  formatDate,
+  formatDistance,
+  formatTime,
+} from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
@@ -92,9 +97,13 @@ export default function ({ onFleetDetail }: Props) {
               <Text style={[texts.sm, { paddingTop: 4 }]}>
                 {working ? t('Disponível para corridas') : t('Indisponível para corridas')}
               </Text>
-              <Text style={[texts.xs, { paddingTop: halfPadding }]}>
-                {t('Mantenha ativado para aceitar corridas.')}
-              </Text>
+              {courier.updatedOn ? (
+                <Text style={[texts.xs, { paddingTop: halfPadding }]}>
+                  {`${t('Última atualização:')} ${formatDate(courier.updatedOn)} ${formatTime(
+                    courier.updatedOn
+                  )}`}
+                </Text>
+              ) : null}
               <View
                 style={{
                   ...borders.default,
