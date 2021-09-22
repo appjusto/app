@@ -8,12 +8,12 @@ export const isAvailable = (schedule: BusinessSchedule | undefined, date: Date) 
   const index = day === 0 ? 6 : day - 1;
   const daySchedule = schedule[index];
   return (
-    daySchedule.checked &&
-    (daySchedule.schedule.find((value) => {
-      const time = toNumber(formatTime(date, 'raw'));
-      return time >= toNumber(value.from) && time <= toNumber(value.to);
-    }) ||
-      isEmpty(daySchedule.schedule))
+    (daySchedule.checked &&
+      daySchedule.schedule.find((value) => {
+        const time = toNumber(formatTime(date, 'raw'));
+        return time >= toNumber(value.from) && time <= toNumber(value.to);
+      })) ||
+    (daySchedule.checked && isEmpty(daySchedule.schedule))
   );
 };
 
