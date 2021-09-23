@@ -98,7 +98,7 @@ export default function ({ onFleetDetail }: Props) {
               {working ? t('Disponível para corridas') : t('Indisponível para corridas')}
             </Text>
             <Text style={[texts.xs, { paddingTop: halfPadding }]}>
-              {updatedOn
+              {working && updatedOn
                 ? `${t('Última atualização:')} ${formatDate(updatedOn)} ${formatTime(updatedOn)}`
                 : t('Mantenha ativado para aceitar corridas.')}
             </Text>
