@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import * as Linking from 'expo-linking';
 import React from 'react';
 import { ApiContext } from '../app/context';
+import { track } from '../store/api/track';
 
 export const useBusinessDeeplink = () => {
   // context
@@ -11,6 +12,9 @@ export const useBusinessDeeplink = () => {
   const deeplink = Linking.useURL();
   React.useEffect(() => {
     if (!deeplink) return;
+    track('Business deeplink', {
+      deeplink,
+    });
     const parsedURL = Linking.parse(deeplink);
     if (!parsedURL?.path) return;
     const r = /r\/([-a-zA-Z0-9]+)/.exec(parsedURL.path);
@@ -20,6 +24,7 @@ export const useBusinessDeeplink = () => {
       .business()
       .fetchBusiness(value)
       .then((business) => {
+        track('Business fetch', { business });
         if (business) {
           navigation.navigate('FoodOrderNavigator', {
             screen: 'RestaurantNavigator',
