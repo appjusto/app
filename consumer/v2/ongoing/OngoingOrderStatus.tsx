@@ -102,6 +102,9 @@ export const OngoingOrderStatus = ({ order }: Props) => {
         description = `${order.courier?.name ?? 'O entregador'} ${t(
           'já está no local de entrega.'
         )}`;
+      } else if (dispatchingStatus === 'outsourced') {
+        header = t('Entrega em andamento');
+        description = t('A entrega está sendo realizada por um entregador externo');
       }
     } else if (status === 'delivered') {
       header = t('Pedido entregue!');

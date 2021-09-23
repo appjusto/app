@@ -92,6 +92,8 @@ export default function ({ order, onPress }: Props) {
           detail = `${t('À caminho de')} ${order.destination!.address.main}`;
         } else if (dispatchingState === 'arrived-destination') {
           detail = 'Aguardando entrega';
+        } else if (dispatchingStatus === 'outsourced') {
+          detail = t('A entrega está sendo realizada por um entregador externo');
         }
       }
       if (dispatchingStatus === 'no-match') {
