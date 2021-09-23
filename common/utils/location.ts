@@ -45,12 +45,13 @@ const locationTaskExecutor =
       Sentry.Native.captureException(body.error);
       return;
     }
+    const state = store.getState();
+    const profile = getCourier(state) ?? getConsumer(state);
     const result = body.data as LocationUpdateResult;
-    if (result.locations.length > 1) {
-      track('Deffered locations', {
-        locations: result.locations,
-      });
-    }
+    track('Deffered locations', {
+      id: profile?.id,
+      locations: result.locations.length,
+    });
     const location = result.locations
       .slice()
       .sort((a, b) => b.timestamp - a.timestamp)
@@ -58,9 +59,11 @@ const locationTaskExecutor =
     const { latitude, longitude } = location.coords;
     const coordinates = new firebase.firestore.GeoPoint(latitude, longitude);
 
-    const state = store.getState();
-    const profile = getCourier(state) ?? getConsumer(state);
-    if (profile?.id) api.profile().updateLocation(profile.id, coordinates);
+    if (profile?.id)
+      api
+        .profile()
+        .updateLocation(profile.id, coordinates)
+        .then(() => null);
   };
 
 export const defineLocationUpdatesTask = (store: AppStore, api: Api) => {
