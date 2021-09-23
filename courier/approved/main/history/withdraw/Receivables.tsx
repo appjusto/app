@@ -37,6 +37,13 @@ export const Receivables = ({ navigation, route }: Props) => {
   // handlers
   const advanceHandler = () => navigation.replace('AdvanceReceivables', { ids: selected });
   // UI
+  if (!receivables) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <ScrollView style={{ ...screens.config }}>
       <View>
