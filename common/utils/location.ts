@@ -15,8 +15,8 @@ const TASK_FETCH_LOCATION = 'TASK_FETCH_LOCATION';
 export const startLocationUpdatesTask = () => {
   return Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
     accuracy: Location.Accuracy.Highest,
-    timeInterval: 5000, // Minimum time to wait between each update in milliseconds. Default value depends on accuracy option. (Android only)
-    distanceInterval: 5, // Receive updates only when the location has changed by at least this distance in meters. Default value may depend on accuracy option.
+    timeInterval: 1000, // Minimum time to wait between each update in milliseconds. Default value depends on accuracy option. (Android only)
+    distanceInterval: 1, // Receive updates only when the location has changed by at least this distance in meters. Default value may depend on accuracy option.
     // deferredUpdatesInterval: 5000, // Minimum time interval in milliseconds that must pass since last reported location before all later locations are reported in a batched update. Defaults to 0.
     // deferredUpdatesDistance: 5, // The distance in meters that must occur between last reported location and the current location before deferred locations are reported. Defaults to 0.
     foregroundService: {
@@ -48,9 +48,10 @@ const locationTaskExecutor =
     const state = store.getState();
     const profile = getCourier(state) ?? getConsumer(state);
     const result = body.data as LocationUpdateResult;
-    track('Deffered locations', {
+    track('Location updates', {
       id: profile?.id,
-      locations: result.locations.length,
+      locations: result.locations,
+      length: result.locations.length,
     });
     const location = result.locations
       .slice()

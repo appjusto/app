@@ -43,6 +43,11 @@ export default function ({ onFleetDetail }: Props) {
   const courier = useSelector(getCourier)!;
   const status = courier!.status;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
+  const [updatedOn, setUpdatedOn] = React.useState(courier.updatedOn);
+  // side effects
+  React.useEffect(() => {
+    if (courier.updatedOn) setUpdatedOn(courier.updatedOn);
+  }, [courier.updatedOn]);
   // handlers
   const toggleWorking = () => {
     if (status === 'dispatching') {
@@ -92,13 +97,11 @@ export default function ({ onFleetDetail }: Props) {
             <Text style={[texts.sm, { paddingTop: 4 }]}>
               {working ? t('Disponível para corridas') : t('Indisponível para corridas')}
             </Text>
-            {courier.updatedOn ? (
-              <Text style={[texts.xs, { paddingTop: halfPadding }]}>
-                {`${t('Última atualização:')} ${formatDate(courier.updatedOn)} ${formatTime(
-                  courier.updatedOn
-                )}`}
-              </Text>
-            ) : null}
+            <Text style={[texts.xs, { paddingTop: halfPadding }]}>
+              {updatedOn
+                ? `${t('Última atualização:')} ${formatDate(updatedOn)} ${formatTime(updatedOn)}`
+                : t('Mantenha ativado para aceitar corridas.')}
+            </Text>
             <View
               style={{
                 ...borders.default,
