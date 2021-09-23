@@ -14,7 +14,10 @@ import { showToast } from '../../../../common/store/ui/actions';
 import { updateProfile } from '../../../../common/store/user/actions';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import {
-  formatCurrency, formatDate, formatDistance, formatTime
+  formatCurrency,
+  formatDate,
+  formatDistance,
+  formatTime,
 } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
@@ -100,7 +103,7 @@ export default function ({ onFleetDetail }: Props) {
                 {working ? t('Disponível para corridas') : t('Indisponível para corridas')}
               </Text>
               <Text style={[texts.xs, { paddingTop: halfPadding }]}>
-                {updatedOn
+                {working && updatedOn
                   ? `${t('Última atualização:')} ${formatDate(updatedOn)} ${formatTime(updatedOn)}`
                   : t('Mantenha ativado para aceitar corridas.')}
               </Text>
