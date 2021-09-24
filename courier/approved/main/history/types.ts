@@ -1,3 +1,5 @@
+import { FetchAccountInformationResponse } from '@appjusto/types';
+
 export type DeliveriesNavigatorParamList = {
   DeliveryHistoryByMonth: {
     year: number;
@@ -11,6 +13,9 @@ export type DeliveriesNavigatorParamList = {
   };
   AdvanceReceivables: {
     ids: number[];
+  };
+  Withdraws: {
+    info?: FetchAccountInformationResponse;
   };
   RequestWithdrawFeedback: {
     header: string;
