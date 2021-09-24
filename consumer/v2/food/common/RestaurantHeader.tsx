@@ -42,14 +42,14 @@ export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) =>
       <TouchableOpacity onPress={onPress}>
         <View>
           <View style={{ height: 120, width: '100%', borderRadius: 8 }}>
-            {coverURI && (
+            {coverURI ? (
               <Image
                 source={{ uri: coverURI }}
                 style={{ height: 120, width: '100%' }}
                 borderRadius={8}
                 resizeMode="cover"
               />
-            )}
+            ) : null}
           </View>
           {canNavigate && (
             <View style={{ position: 'absolute', right: halfPadding, bottom: halfPadding }}>
@@ -72,9 +72,11 @@ export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) =>
               {separateWithDot(formatDistance(distance), formatDuration(averagePreparationTime))}
             </Text>
           </View>
-          <View>
-            <ListItemImage uri={logo} height={64} width={64} />
-          </View>
+          {logo ? (
+            <View>
+              <ListItemImage uri={logo} height={64} width={64} />
+            </View>
+          ) : null}
         </View>
       </TouchableOpacity>
     </View>
