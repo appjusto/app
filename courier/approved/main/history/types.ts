@@ -12,6 +12,9 @@ export type DeliveriesNavigatorParamList = {
   AdvanceReceivables: {
     ids: number[];
   };
+  Withdraws: {
+    balanceForWithdraw?: number;
+  };
   RequestWithdrawFeedback: {
     header: string;
     description: string;
