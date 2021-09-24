@@ -46,7 +46,6 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     results: restaurants,
     isLoading,
     refetch,
-    fetchNextPage,
   } = useSearch<BusinessAlgolia>(true, 'restaurant', 'distance', filters, currentLocation, '');
   const [refreshing, setRefreshing] = React.useState(false);
   // side effects
@@ -94,7 +93,6 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
           screen: 'RestaurantDetail',
         });
       }}
-      onEndReached={() => fetchNextPage()}
       loading={isLoading}
       refreshing={refreshing}
       onRefresh={() => refresh()}
