@@ -1,6 +1,5 @@
 import React from 'react';
 import { Image, View } from 'react-native';
-import { borders, colors } from '../../../../../common/styles';
 
 interface Props {
   uri: string | undefined | null;
@@ -14,9 +13,6 @@ export const ListItemImage = ({ uri, height, width }: Props) => {
       style={{
         width,
         height,
-        backgroundColor: colors.grey50,
-        ...borders.default,
-        borderColor: colors.white,
         overflow: 'hidden',
       }}
     >

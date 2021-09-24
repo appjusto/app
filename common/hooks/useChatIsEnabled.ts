@@ -6,6 +6,7 @@ export const useChatisEnabled = (order?: WithId<Order> | null) => {
   const getServerTime = useContextGetSeverTime();
   if (!order) return false;
   if (!getServerTime) return false;
+  if (order.type === 'p2p') return false;
   const { status } = order;
   let time;
   if (status === 'delivered') time = order.deliveredOn;
