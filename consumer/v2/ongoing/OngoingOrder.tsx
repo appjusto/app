@@ -158,7 +158,7 @@ export default function ({ navigation, route }: Props) {
           />
         ) : null}
         <FoodOrderItemsInfo order={order} />
-        <HR height={padding} />
+        {order.dispatchingStatus !== 'outsourced' ? <HR height={padding} /> : null}
         <View style={{ paddingTop: halfPadding }}>
           <OrderCostBreakdown order={order} selectedFare={order.fare} />
         </View>

@@ -116,7 +116,6 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
       return t(
         'O pedido está pronto, porém não conseguimos efetuar a cobrança destinada à entrega. Altere a forma de pagamento para continuar.'
       );
-    if (order.status === 'canceled') return '';
     else
       return t(
         'Não conseguimos efetuar a cobrança na forma de pagamento escolhida. Por favor, altere a forma de pagamento e tente novamente.'
