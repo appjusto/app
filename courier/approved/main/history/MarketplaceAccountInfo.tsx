@@ -179,6 +179,7 @@ export const MarketplaceAccountInfo = () => {
               style={{ marginTop: padding }}
               title={t('Antecipar valores')}
               onPress={advanceHandler}
+              disabled={!!info}
               secondary
             />
           </View>
