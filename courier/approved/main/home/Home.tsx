@@ -6,7 +6,7 @@ import React from 'react';
 import { Linking, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import useNotificationToken from '../../../../common/hooks/useNotificationToken';
+import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconHomeCourierRequests } from '../../../../common/icons/icon-home-courier-requests';
 import { IconPartners } from '../../../../common/icons/icon-partners';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
