@@ -3,16 +3,17 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import * as Location from 'expo-location';
 import React from 'react';
 import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import * as icons from '../../../assets/icons';
-import { ApiContext } from '../../../common/app/context';
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { useObserveOrderRequest } from '../../../common/store/api/courier/hooks/useObserveOrderRequest';
 import { distanceBetweenLatLng } from '../../../common/store/api/helpers';
 import { screen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
+import { showToast } from '../../../common/store/ui/actions';
 import { colors, doublePadding, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency, formatDistance, formatTime } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
@@ -36,6 +37,7 @@ export default function ({ navigation, route }: Props) {
   const { matchRequest } = route.params;
   const { orderId, origin, distanceToOrigin } = matchRequest;
   // context
+  const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
   const courier = useSelector(getCourier)!;
   // state
@@ -57,6 +59,12 @@ export default function ({ navigation, route }: Props) {
           currentDistanceToOrigin,
         });
       } catch (error) {
+        dispatch(
+          showToast(
+            t('Não foi possível obter sua localização atual. Verifque suas configurações.'),
+            'error'
+          )
+        );
         Sentry.Native.captureException(error);
       }
       setLoading(false);
