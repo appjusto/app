@@ -4,7 +4,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
@@ -71,10 +70,10 @@ export const MarketplaceAccountInfo = () => {
           description: t('O valor será transferido para sua conta em até 1 dia útil.'),
         },
       });
-    } catch (error) {
-      console.log(error);
-      Sentry.Native.captureException(error);
-      dispatch(showToast('Não foi possível realizar a requisição. Tente novamente.', 'error'));
+    } catch (error: any) {
+      // console.log(error);
+      // Sentry.Native.captureException(error);
+      dispatch(showToast(error.toString(), 'error'));
       setWithdrawing(false);
     }
   };
