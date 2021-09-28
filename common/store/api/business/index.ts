@@ -42,9 +42,15 @@ export default class BusinessApi {
     return unsubscribe;
   }
   // recommendations
-  async addRecomendation(recommendedBusiness: Place, instagram?: string, phone?: string) {
+  async addRecomendation(
+    recommendedBusiness: Place,
+    consumerId: string,
+    instagram?: string,
+    phone?: string
+  ) {
     await this.refs.getRecommendationsRef().add({
       recommendedBusiness,
+      consumerId,
       instagram,
       phone,
       createdOn: firebase.firestore.FieldValue.serverTimestamp(),

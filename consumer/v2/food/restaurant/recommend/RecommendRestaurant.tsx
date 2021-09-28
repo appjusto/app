@@ -2,9 +2,9 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { trim } from 'lodash';
 import React from 'react';
-import { Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
@@ -14,6 +14,7 @@ import { numbersOnlyParser } from '../../../../../common/components/inputs/patte
 import PatternInput from '../../../../../common/components/inputs/PatternInput';
 import LabeledText from '../../../../../common/components/texts/LabeledText';
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
+import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, halfPadding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
@@ -38,6 +39,8 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  // redux
+  const consumer = useSelector(getConsumer);
   // screen state
   const [name, setName] = React.useState<string | undefined>();
   const [instagram, setInstagram] = React.useState<string>('');
@@ -55,10 +58,11 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
   const sendRecommendationHandler = () => {
     Keyboard.dismiss();
     if (!place) return;
+    if (!consumer) return;
     (async () => {
       try {
         setLoading(true);
-        await api.business().addRecomendation(place, instagram, phone);
+        await api.business().addRecomendation(place, consumer.id, instagram, phone);
         setLoading(false);
         dispatch(
           showToast(t('Recomendação enviada. Muito obrigado pela contribuição!'), 'success')
@@ -70,6 +74,14 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
       setLoading(false);
     })();
   };
+  // UI
+  if (!consumer) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <KeyboardAwareScrollView
       enableOnAndroid
