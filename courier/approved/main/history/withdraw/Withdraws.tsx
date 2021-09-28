@@ -9,6 +9,7 @@ import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { usePlatformParamsContext } from '../../../../../common/contexts/PlatformParamsContext';
+import { useTotalWithdrawsThisMonth } from '../../../../../common/store/api/courier/account/useTotalWithdrawsThisMonth';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { showToast } from '../../../../../common/store/ui/actions';
 import {
@@ -45,6 +46,8 @@ export const Withdraws = ({ navigation, route }: Props) => {
   // helpers
   const availableForWithdraw = info ? convertBalance(info.balance_available_for_withdraw) : 0;
   const minimum = 5;
+  // const withdrawsThisMonth = await api.courier().fetchTotalWithdrawsThisMonth(courier.id)
+  const withdrawsThisMonth = useTotalWithdrawsThisMonth(courier.id);
   // handler
   const withdrawHandler = async () => {
     if (!availableForWithdraw) return;
@@ -71,7 +74,8 @@ export const Withdraws = ({ navigation, route }: Props) => {
       setWithdrawing(false);
     }
   };
-  console.log(info);
+  console.log(courier.id);
+  console.log(withdrawsThisMonth);
   //UI
   return (
     <ScrollView

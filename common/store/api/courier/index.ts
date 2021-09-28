@@ -7,6 +7,7 @@ import {
   FetchReceivablesPayload,
   FetchTotalCouriersNearbyPayload,
   LatLng,
+  MarketplaceAccountInfo,
   RequestWithdrawPayload,
   Review,
   VerifyCourierProfilePayload,
@@ -129,6 +130,22 @@ export default class CourierApi {
       meta: { version: Constants.nativeBuildVersion },
     };
     return (await this.refs.getFetchReceivablesCallable()(payload)).data;
+  }
+  async fetchTotalWithdrawsThisMonth(accountId: string) {
+    const now = new Date();
+    const firstDayOfMonth = firebase.firestore.Timestamp.fromDate(
+      new Date(now.getUTCFullYear(), now.getUTCMonth(), 1)
+    );
+    const marketPlaceRef = this.refs.getCourierMarketplaceRef(accountId);
+    const marketPlaceSnapshot = await marketPlaceRef.get();
+    const marketplace = marketPlaceSnapshot.data() as MarketplaceAccountInfo;
+    const accountExternalId = marketplace.tokens!.account_id;
+    const withdrawsRef = this.refs.getWithdrawsRef();
+    const withdrawsQuery = withdrawsRef
+      .where('accountExternalId', '==', accountExternalId)
+      .where('createdOn', '>=', firstDayOfMonth);
+    const withdrawsSnapshot = await withdrawsQuery.get();
+    return withdrawsSnapshot.size;
   }
   async fetchAdvanceSimulation(
     accountId: string,
