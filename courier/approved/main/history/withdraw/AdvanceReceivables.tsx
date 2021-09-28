@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
@@ -77,11 +77,11 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
     );
   }
   return (
-    <View style={{ ...screens.config }}>
-      <PaddedView>
+    <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
+      <PaddedView style={{ flex: 1 }}>
         <Text style={{ ...texts.sm }}>
           {t(
-            'Para realizar a antecipação, a iugu cobra uma taxa de 2.5% ao mês pela operação financeira. Nada desse dinheiro ficará com o AppJusto.'
+            'Para realizar a antecipação, será cobrada uma taxa de 0.0% + R$ 0.00 pela operação financeira. '
           )}
         </Text>
         <Text style={{ ...texts.sm, color: colors.grey700, marginTop: biggerPadding }}>
@@ -115,8 +115,8 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
           </View>
           <Text style={{ ...texts.x4l }}>{simulation.total.received_value}</Text>
         </PaddedView>
+        <View style={{ flex: 1 }} />
         <CheckField
-          style={{ marginTop: biggerPadding }}
           checked={accepted}
           text="Estou de acordo com as taxas cobradas para o adiantamento do valor"
           onPress={() => setAccepted(!accepted)}
@@ -129,6 +129,6 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
           disabled={!accepted || requesting}
         />
       </PaddedView>
-    </View>
+    </ScrollView>
   );
 };
