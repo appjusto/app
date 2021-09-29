@@ -2,7 +2,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { trim } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
@@ -58,11 +58,10 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
   const sendRecommendationHandler = () => {
     Keyboard.dismiss();
     if (!place) return;
-    if (!consumer) return;
     (async () => {
       try {
         setLoading(true);
-        await api.business().addRecomendation(place, consumer.id, instagram, phone);
+        await api.business().addRecomendation(place, consumer?.id, instagram, phone);
         setLoading(false);
         dispatch(
           showToast(t('Recomendação enviada. Muito obrigado pela contribuição!'), 'success')
@@ -75,13 +74,6 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
     })();
   };
   // UI
-  if (!consumer) {
-    return (
-      <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green500} />
-      </View>
-    );
-  }
   return (
     <KeyboardAwareScrollView
       enableOnAndroid
