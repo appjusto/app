@@ -136,7 +136,6 @@ export default function ({
               'error'
             )
           );
-          originDescriptionRef.current?.focus();
           return;
         }
         api.order().updateOrder(order!.id, {
@@ -150,7 +149,6 @@ export default function ({
         if (!destination) return;
         if (!destinationInstructions) {
           dispatch(showToast('Insira uma descrição curta para agilizar a entrega', 'error'));
-          destinationDescriptionRef.current?.focus();
           return;
         }
         api.order().updateOrder(order!.id, {

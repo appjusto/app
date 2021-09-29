@@ -3,7 +3,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
@@ -122,6 +122,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
   };
   const placeOrderHandler = async (fleetId: string) => {
+    Keyboard.dismiss();
     if (!order) return;
     if (!selectedPaymentMethodId) return;
     if (wantsCpf && !cpf) {

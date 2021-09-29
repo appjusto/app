@@ -2,7 +2,7 @@ import { Issue, IssueType, WithId } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeliveredOrderNavigatorParamList } from '../../consumer/v2/delivered/types';
 import { OngoingOrderNavigatorParamList } from '../../consumer/v2/ongoing/types';
@@ -76,6 +76,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   const issueHandler = () => {
     if (!selectedIssue) return;
     (async () => {
+      Keyboard.dismiss();
       try {
         setLoading(true);
         await api.order().createIssue(orderId, {

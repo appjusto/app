@@ -2,7 +2,7 @@ import { Issue, WithId } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RadioButton from '../../../common/components/buttons/RadioButton';
@@ -38,6 +38,7 @@ export const RejectedMatching = ({ navigation, route }: Props) => {
   const [isLoading, setLoading] = React.useState(false);
   // handler
   const issueHandler = () => {
+    Keyboard.dismiss();
     if (!selectedIssue) return;
     (async () => {
       try {

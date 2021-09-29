@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { View } from 'react-native';
+import { Keyboard, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
@@ -33,6 +33,7 @@ export default function ({ route, navigation }: Props) {
   const [isLoading, setLoading] = React.useState(false);
   // UI handlers
   const deletePaymentMethodHandler = async () => {
+    Keyboard.dismiss();
     try {
       setLoading(true);
       await api.consumer().deletePaymentMethod(paymentData.id);

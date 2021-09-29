@@ -1,7 +1,7 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import CheckField from '../../../common/components/buttons/CheckField';
@@ -60,6 +60,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
 
   // handlers
   const placeOrderWithPix = async () => {
+    Keyboard.dismiss();
     try {
       setLoading(true);
       await api.profile().updateProfile(consumer.id, { pix: pixKey });
