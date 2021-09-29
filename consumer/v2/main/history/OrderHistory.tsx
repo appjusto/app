@@ -101,8 +101,13 @@ export default function ({ navigation, route }: Props) {
                 const title = getMonthName(item.month);
                 const ordersPlaced =
                   item.delivered > 1 ? t(' pedidos realizados') : t(' pedido realizado');
-                const subtitle = item.delivered + ordersPlaced;
-                return (
+                const ordersCanceled =
+                  item.canceled > 1 ? t(' pedidos cancelados') : t(' pedidos realizados');
+                const subtitle =
+                  item.delivered >= 1
+                    ? item.delivered + ordersPlaced
+                    : item.canceled + ordersCanceled;
+                return item.delivered >= 1 || item.canceled >= 1 ? (
                   <ConfigItem
                     title={title}
                     subtitle={subtitle}
@@ -126,7 +131,7 @@ export default function ({ navigation, route }: Props) {
                       )}
                     </ShowIf>
                   </ConfigItem>
-                );
+                ) : null;
               }}
             />
           </View>

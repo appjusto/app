@@ -22,8 +22,10 @@ import {
   formatAddress,
   formatDate,
   formatTime,
+  getMonthName,
   separateWithDot,
 } from '../../../../common/utils/formatters';
+import { t } from '../../../../strings';
 import { DeliveredOrderNavigatorParamList } from '../../delivered/types';
 import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
@@ -70,6 +72,11 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
   const orders = useObserveOrders(options);
   const filteredOrders = getOrdersWithFilter(orders, year, month);
   // side effects
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: `${t('Pedidos em ')}${getMonthName(month)}`,
+    });
+  }, [navigation]);
   // tracking
   useSegmentScreen('Order History by Month');
   // handlers
