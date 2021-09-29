@@ -1,5 +1,6 @@
 import {
   Business,
+  BusinessRecommendation,
   Category,
   Complement,
   ComplementGroup,
@@ -8,7 +9,6 @@ import {
   Product,
   WithId,
 } from '@appjusto/types';
-import { BusinessRecommendation } from '@appjusto/types/business';
 import firebase from 'firebase';
 import * as Sentry from 'sentry-expo';
 import FilesApi from '../files';
