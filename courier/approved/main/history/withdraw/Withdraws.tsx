@@ -1,6 +1,7 @@
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
+import dayjs from 'dayjs';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -46,8 +47,8 @@ export const Withdraws = ({ navigation, route }: Props) => {
   // helpers
   const availableForWithdraw = info ? convertBalance(info.balance_available_for_withdraw) : 0;
   const minimum = 5;
-  // const withdrawsThisMonth = await api.courier().fetchTotalWithdrawsThisMonth(courier.id)
   const withdrawsThisMonth = useTotalWithdrawsThisMonth(courier.id);
+  const lastDayofThisMonth = dayjs().endOf('month').format('DD/MM/YYYY');
   // handler
   const withdrawHandler = async () => {
     if (!availableForWithdraw) return;
@@ -74,8 +75,6 @@ export const Withdraws = ({ navigation, route }: Props) => {
       setWithdrawing(false);
     }
   };
-  console.log(courier.id);
-  console.log(withdrawsThisMonth);
   //UI
   return (
     <ScrollView
@@ -136,17 +135,25 @@ export const Withdraws = ({ navigation, route }: Props) => {
             ) : (
               <Text style={{ ...texts.x4l }}>{info.balance_available_for_withdraw}</Text>
             )}
-            {/* TODO: fetch the "withdraws total" and "withdraw deadline" and add them below  */}
-            <Text
-              style={{
-                ...texts.xs,
-                color: colors.grey700,
-                paddingTop: halfPadding,
-                textAlign: 'center',
-              }}
-            >
-              {t('Você possui PLACEHOLDER saques grátis até')} {t('PLACEHOLDER DATA')}
-            </Text>
+            {withdrawsThisMonth === undefined ? (
+              <ActivityIndicator
+                style={{ marginVertical: 6 }}
+                size="small"
+                color={colors.green500}
+              />
+            ) : (
+              <Text
+                style={{
+                  ...texts.xs,
+                  color: colors.grey700,
+                  paddingTop: halfPadding,
+                  textAlign: 'center',
+                }}
+              >
+                {t('Você possui')} {withdrawsThisMonth} {t('saques grátis até')}{' '}
+                {lastDayofThisMonth}
+              </Text>
+            )}
           </View>
         </PaddedView>
         <View style={{ flex: 1 }} />
