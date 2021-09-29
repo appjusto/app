@@ -98,12 +98,6 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   // refs
   const searchInputRef = React.useRef<TextInput>();
   // side effects
-  // // changing the header title if we are recommending a business
-  // React.useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     title: t('Indicar restaurante'),
-  //   });
-  // }, [navigation]);
   // auto focus on input
   React.useEffect(() => {
     searchInputRef.current?.focus();
