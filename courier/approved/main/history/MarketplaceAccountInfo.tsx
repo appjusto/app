@@ -88,7 +88,7 @@ export const MarketplaceAccountInfo = () => {
             <DefaultButton
               style={{ marginTop: padding }}
               title={t('Transferir para conta')}
-              // disabled={availableForWithdraw < minimum}
+              disabled={availableForWithdraw < minimum}
               onPress={() =>
                 navigation.navigate('DeliveriesNavigator', {
                   screen: 'Withdraws',
@@ -145,6 +145,7 @@ export const MarketplaceAccountInfo = () => {
               style={{ marginTop: padding }}
               title={t('Antecipar valores')}
               onPress={advanceHandler}
+              disabled={!info}
               secondary
             />
           </View>

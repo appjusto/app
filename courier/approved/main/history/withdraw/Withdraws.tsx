@@ -21,6 +21,7 @@ import {
   screens,
   texts,
 } from '../../../../../common/styles';
+import { formatDate } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import { convertBalance } from '../MarketplaceAccountInfo';
 import { DeliveriesNavigatorParamList } from '../types';
@@ -49,6 +50,9 @@ export const Withdraws = ({ navigation, route }: Props) => {
   const minimum = 5;
   const withdrawsThisMonth = useTotalWithdrawsThisMonth(courier.id);
   const lastDayofThisMonth = dayjs().endOf('month').format('DD/MM/YYYY');
+  const date = new Date();
+  const firstDay = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+  const firstDayNextMonth = formatDate(firstDay);
   // handler
   const withdrawHandler = async () => {
     if (!availableForWithdraw) return;
@@ -141,7 +145,7 @@ export const Withdraws = ({ navigation, route }: Props) => {
                 size="small"
                 color={colors.green500}
               />
-            ) : (
+            ) : withdrawsThisMonth === 0 ? (
               <Text
                 style={{
                   ...texts.xs,
@@ -153,6 +157,21 @@ export const Withdraws = ({ navigation, route }: Props) => {
                 {t('Você possui')} {withdrawsThisMonth} {t('saques grátis até')}{' '}
                 {lastDayofThisMonth}
               </Text>
+            ) : (
+              <Text
+                style={{
+                  ...texts.xs,
+                  color: colors.red,
+                  paddingTop: halfPadding,
+                  textAlign: 'center',
+                }}
+              >
+                {t('Você não possui mais saques grátis disponíveis. Espere até o dia ')}
+                {firstDayNextMonth}{' '}
+                {t(
+                  'para renovar seus 4 saques grátis, ou entre em contato com nosso suporte e solicite um saque adicional.'
+                )}
+              </Text>
             )}
           </View>
         </PaddedView>
@@ -161,7 +180,9 @@ export const Withdraws = ({ navigation, route }: Props) => {
           style={{ marginTop: padding }}
           title={t('Confirmar transferência')}
           activityIndicator={withdrawing}
-          disabled={availableForWithdraw < minimum || withdrawing}
+          disabled={
+            availableForWithdraw < minimum || withdrawing || withdrawsThisMonth === undefined
+          }
           onPress={withdrawHandler}
         />
       </PaddedView>
