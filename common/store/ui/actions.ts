@@ -8,7 +8,10 @@ export const BUSY = 'BUSY';
 export const showToast =
   (message: string, type: ToastType = 'success', autoHide: boolean = true) =>
   (dispatch: AppDispatch) => {
-    dispatch({ type: SHOW_TOAST, payload: { message, type, autoHide } });
+    dispatch({
+      type: SHOW_TOAST,
+      payload: { message: message.replace('Error: ', ''), type, autoHide },
+    });
   };
 
 export const hideToast = () => (dispatch: AppDispatch) => {
