@@ -85,6 +85,13 @@ export const OngoingOrderProblem = ({ navigation, route }: Props) => {
       scrollIndicatorInsets={{ right: 1 }}
     >
       <PaddedView style={{ flex: 1 }}>
+        {/* change destination */}
+        <DeliveryProblemCard
+          title={t('Alterar destino')}
+          subtitle={t('Mude o endereço da entrega')}
+          onPress={() => null}
+          situation="consumer-problem"
+        />
         {/* goes to a screen with a ReportIssueView */}
         <DeliveryProblemCard
           title={t('Problema com o pedido')}

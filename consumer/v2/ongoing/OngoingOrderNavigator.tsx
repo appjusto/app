@@ -8,6 +8,7 @@ import { t } from '../../../strings';
 import { OngoingOrderDeclined } from '../common/OngoingOrderDeclined';
 import ProfileAddCard from '../main/profile/ProfileAddCard';
 import ProfilePaymentMethods from '../main/profile/ProfilePaymentMethods';
+import { ChangeRoute } from './ChangeRoute';
 import { OngoingOrderCourierDetail } from './courier-detail/OngoingOrderCourierDetail';
 import OngoingOrder from './OngoingOrder';
 import { OngoingOrderCancelOrder } from './OngoingOrderCancelOrder';
@@ -63,6 +64,11 @@ export const OngoingOrderNavigator = () => {
         name="OngoingOrderProblem"
         component={OngoingOrderProblem}
         options={{ title: t('Tive um problema') }}
+      />
+      <Stack.Screen
+        name="ChangeRoute"
+        component={ChangeRoute}
+        options={{ title: t('Alterar endereço') }}
       />
       <Stack.Screen
         name="OrderProblemFeedback"
