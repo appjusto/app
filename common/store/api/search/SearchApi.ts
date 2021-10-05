@@ -1,7 +1,7 @@
-import { Fleet } from '@appjusto/types';
+import { Environment, Fleet } from '@appjusto/types';
 import algoliasearch, { SearchClient, SearchIndex } from 'algoliasearch/lite';
 import { LatLng } from 'react-native-maps';
-import { AlgoliaConfig, Environment } from '../../../../config/types';
+import { AlgoliaConfig } from '../../../../config/types';
 import { SearchFilter, SearchKind, SearchOrder } from '../../consumer/types';
 
 export default class SearchApi {

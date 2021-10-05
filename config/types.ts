@@ -1,6 +1,4 @@
-import { Flavor } from '@appjusto/types';
-
-export type Environment = 'dev' | 'staging' | 'live';
+import { Environment, Flavor } from '@appjusto/types';
 
 export interface Extra {
   flavor: Flavor;

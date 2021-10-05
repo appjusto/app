@@ -1,4 +1,18 @@
-# 1. Clone repo and install dependecies
+# 1. Install & configure system dependencies
+
+## 1.1 Node 14.17 & NPM 6.14
+
+Recommended using [NVM](https://github.com/nvm-sh/nvm).
+
+## 1.2 Expo
+
+[Expo docs](https://docs.expo.dev/get-started/installation/)
+
+```bash
+npm install --global expo-cli
+```
+
+# 2. Clone repo and install dependecies
 
 ```bash
 git clone git@github.com:appjusto/app.git
@@ -34,15 +48,16 @@ ENVIRONMENT=
 # 3. Running locally
 
 ```bash
-# using firebase cloud
-FLAVOR=<consumer | courier> expo start -c
-
-# using firabase local emulator (also running expo with tunnel)
-FLAVOR=<consumer | courier> FIREBASE_EMULATOR=true expo start --tunnel -c
+# running consumer connected to firebase cloud
+npm run start-consumer:community
+# running courier connected to firebase cloud
+npm run start-courier:community
+# running consumer connected to local emulator
+npm run start-consumer:local
 
 # Deeplink testing
-xcrun simctl openurl booted "exp://<local-ip-address>:19000/--/?link=<link>"
-adb shell am start -a "android.intent.action.VIEW" -d "exp://<local-ip-address>:19000/--/?link=<link>"
+xcrun simctl openurl booted "exp://127.0.0.1:19000/--/?link=<link>"
+adb shell am start -a "android.intent.action.VIEW" -d "exp://127.0.0.1:19000/--/?link=<link>"
 ```
 
 # 4. Publishing

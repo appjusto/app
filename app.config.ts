@@ -1,7 +1,7 @@
-import { Flavor } from '@appjusto/types';
+import { Environment, Flavor } from '@appjusto/types';
 import { ConfigContext, ExpoConfig } from '@expo/config';
 import 'dotenv/config';
-import { Environment, Extra } from './config/types';
+import { Extra } from './config/types';
 import { version, versionCode } from './version.json';
 const {
   FLAVOR,
@@ -85,6 +85,7 @@ const name = () => {
   if (flavor === 'courier') name = 'AppJusto Entregador';
   if (environment === 'dev') return `(D) ${name}`;
   else if (environment === 'staging') return `(S) ${name}`;
+  else if (environment === 'community') return `(C) ${name}`;
   return name;
 };
 
