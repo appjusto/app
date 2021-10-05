@@ -4,6 +4,7 @@ import FleetDetail from '../../../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { t } from '../../../../strings';
 import { AddressComplete } from '../../common/AddressComplete';
+import { AvailableFleets } from '../../common/AvailableFleets';
 import { PayWithPix } from '../../common/PayWithPix';
 import ProfileAddCard from '../../main/profile/ProfileAddCard';
 import ProfileEdit from '../../main/profile/ProfileEdit';
@@ -39,6 +40,11 @@ export default function () {
         name="FoodOrderCheckout"
         component={FoodOrderCheckout}
         options={{ title: t('Sua sacola') }}
+      />
+      <Stack.Screen
+        name="AvailableFleets"
+        component={AvailableFleets}
+        options={{ title: t('Frotas disponíveis') }}
       />
       <Stack.Screen
         name="ProfileEdit"

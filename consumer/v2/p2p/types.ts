@@ -15,6 +15,7 @@ export type P2POrderNavigatorParamList = {
   };
   TransportableItems: undefined;
   AboutCharges: undefined;
+  AvailableFleets: undefined;
 } & AddressCompleteParamList &
   PixParamList &
   FleetDetailParamList &
