@@ -18,6 +18,7 @@ interface Props {
   onFleetSelect: (fleetId: string) => void;
   onRetry: () => void;
   order: WithId<Order>;
+  navigateToAvailableFleets: () => void;
 }
 
 export const OrderAvailableFleets = ({
@@ -27,7 +28,9 @@ export const OrderAvailableFleets = ({
   onFleetSelect,
   onRetry,
   order,
+  navigateToAvailableFleets,
 }: Props) => {
+  // helpers
   const isLoading = quotes === undefined;
   const fleets = (quotes ?? []).map((quote) => quote.fleet);
   // UI
@@ -92,75 +95,81 @@ export const OrderAvailableFleets = ({
                     />
                   )}
                 </ShowIf>
-                {!isEmpty(quotes)
-                  ? quotes.map((item) => {
-                      return (
-                        <View key={item.fleet.id} style={{ marginBottom: padding }}>
-                          <FleetListItem
-                            item={item}
-                            selectedFare={selectedFare?.fleet.id === item.fleet.id}
-                            onFareSelect={onFareSelect}
-                            onFleetDetail={onFleetSelect}
-                          />
-                        </View>
-                      );
-                    })
-                  : null}
-                <View style={{ marginBottom: padding }}>
-                  <DefaultButton secondary title={t('Ver todas as frotas disponíveis')} />
-                </View>
-                {/* <ShowIf test={!isEmpty(quotes)}>
+                <ShowIf test={!isEmpty(quotes)}>
                   {() => (
-                    <FlatList
-                      showsHorizontalScrollIndicator={false}
-                      data={quotes}
-                      keyExtractor={(item) => item.fleet.id!}
-                      renderItem={({ item }) => {
+                    <View style={{ marginBottom: padding }}>
+                      {quotes.map((item) => {
                         return (
-                          <View>
-                            <TouchableOpacity onPress={() => onFareSelect(item)}>
-                              <PaddedView
-                                style={{
-                                  width: 156,
-                                  backgroundColor:
-                                    selectedFare?.fleet.id === item.fleet.id
-                                      ? colors.green100
-                                      : colors.white,
-                                  ...borders.default,
-                                  borderWidth: 2,
-                                  borderColor: colors.black,
-                                  marginRight: halfPadding,
-                                }}
-                              >
-                                <Text numberOfLines={2} style={[texts.sm, texts.bold]}>
-                                  {item.fleet.name}
-                                </Text>
-                                <Text style={[texts.xs, { marginTop: padding }]}>
-                                  {t('Entregadores')}
-                                </Text>
-                                <Text style={[texts.xs, texts.bold]}>
-                                  {`${
-                                    fleets.find((fleet) => fleet.id === item.fleet.id)
-                                      ?.participantsOnline ?? 0
-                                  } ${t('ativos agora')}`}
-                                </Text>
-                                <Text style={[texts.xl, texts.bold, { marginTop: padding }]}>
-                                  {formatCurrency(item.courier.value)}
-                                </Text>
-                                <TouchableOpacity onPress={() => onFleetSelect(item.fleet.id)}>
-                                  <View style={{ marginTop: padding }}>
-                                    <RoundedText>{t('Ver detalhes')}</RoundedText>
-                                  </View>
-                                </TouchableOpacity>
-                              </PaddedView>
-                            </TouchableOpacity>
+                          <View key={item.fleet.id} style={{ marginBottom: padding }}>
+                            <FleetListItem
+                              item={item}
+                              selectedFare={selectedFare?.fleet.id === item.fleet.id}
+                              onFareSelect={() => onFareSelect(item)}
+                              onFleetDetail={() => onFleetSelect(item.fleet.id)}
+                            />
                           </View>
                         );
-                      }}
-                      horizontal
-                    />
+                      })}
+                      {quotes.length >= 3 ? (
+                        <DefaultButton secondary title={t('Ver todas as frotas disponíveis')} />
+                      ) : null}
+                      {/* remove this after tests */}
+                      <DefaultButton
+                        secondary
+                        title={t('Ver todas as frotas disponíveis')}
+                        onPress={navigateToAvailableFleets}
+                      />
+                    </View>
+                    // <FlatList
+                    //   showsHorizontalScrollIndicator={false}
+                    //   data={quotes}
+                    //   keyExtractor={(item) => item.fleet.id!}
+                    //   renderItem={({ item }) => {
+                    //     return (
+                    //       <View>
+                    //         <TouchableOpacity onPress={() => onFareSelect(item)}>
+                    //           <PaddedView
+                    //             style={{
+                    //               width: 156,
+                    //               backgroundColor:
+                    //                 selectedFare?.fleet.id === item.fleet.id
+                    //                   ? colors.green100
+                    //                   : colors.white,
+                    //               ...borders.default,
+                    //               borderWidth: 2,
+                    //               borderColor: colors.black,
+                    //               marginRight: halfPadding,
+                    //             }}
+                    //           >
+                    //             <Text numberOfLines={2} style={[texts.sm, texts.bold]}>
+                    //               {item.fleet.name}
+                    //             </Text>
+                    //             <Text style={[texts.xs, { marginTop: padding }]}>
+                    //               {t('Entregadores')}
+                    //             </Text>
+                    //             <Text style={[texts.xs, texts.bold]}>
+                    //               {`${
+                    //                 fleets.find((fleet) => fleet.id === item.fleet.id)
+                    //                   ?.participantsOnline ?? 0
+                    //               } ${t('ativos agora')}`}
+                    //             </Text>
+                    //             <Text style={[texts.xl, texts.bold, { marginTop: padding }]}>
+                    //               {formatCurrency(item.courier.value)}
+                    //             </Text>
+                    //             <TouchableOpacity onPress={() => onFleetSelect(item.fleet.id)}>
+                    //               <View style={{ marginTop: padding }}>
+                    //                 <RoundedText>{t('Ver detalhes')}</RoundedText>
+                    //               </View>
+                    //             </TouchableOpacity>
+                    //           </PaddedView>
+                    //         </TouchableOpacity>
+                    //       </View>
+                    //     );
+                    //   }}
+                    //   horizontal
+                    // />
                   )}
-                </ShowIf> */}
+                </ShowIf>
               </View>
             )}
           </View>

@@ -9,6 +9,7 @@ import { borders, colors, padding, screens, texts } from '../../../common/styles
 import { t } from '../../../strings';
 import { RestaurantNavigatorParamList } from '../food/restaurant/types';
 import { P2POrderNavigatorParamList } from '../p2p/types';
+import { FleetListItem } from './FleetListItem';
 
 type ScreenNavigationProp = StackNavigationProp<
   P2POrderNavigatorParamList & RestaurantNavigatorParamList,
@@ -25,6 +26,8 @@ type Props = {
 };
 
 export const AvailableFleets = ({ navigation, route }: Props) => {
+  // params
+  const { quotes } = route.params ?? {};
   return (
     <ScrollView
       style={{ ...screens.default }}
@@ -33,15 +36,28 @@ export const AvailableFleets = ({ navigation, route }: Props) => {
       keyboardShouldPersistTaps="handled"
     >
       <PaddedView style={{ flex: 1 }}>
+        {quotes.map((item) => {
+          return (
+            <View key={item.fleet.id} style={{ marginBottom: padding }}>
+              <FleetListItem
+                item={item}
+                selectedFare={false}
+                // selectedFare={selectedFare?.fleet.id === item.fleet.id}
+                // onFareSelect={() => onFareSelect(item)}
+                // onFleetDetail={() => onFleetSelect(item.fleet.id)}
+              />
+            </View>
+          );
+        })}
         <View>
           <Text style={{ ...texts.x2l }}>
             {t('Você escolhe a frota e o entregador fica com todo o dinheiro da entrega')}
           </Text>
-          <Text style={{ ...texts.sm, marginTop: padding, color: colors.grey700 }}>
+          {/* <Text style={{ ...texts.sm, marginTop: padding, color: colors.grey700 }}>
             {t(
               'Você pode selecionar mais de uma frota ao mesmo tempo. O valor final será definido após o aceite da corrida. Frotas disponíveis agora:'
             )}
-          </Text>
+          </Text> */}
         </View>
         <PaddedView style={{ ...borders.default, borderWidth: 2, backgroundColor: colors.grey50 }}>
           <Text style={{ ...texts.lg, ...texts.bold }}>{t('Nome da frota')}</Text>

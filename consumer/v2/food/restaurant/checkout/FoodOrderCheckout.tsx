@@ -225,6 +225,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             }}
             onRetry={getOrderQuotesHandler}
             order={order}
+            navigateToAvailableFleets={() => navigation.navigate('AvailableFleets', { quotes })}
           />
         }
         costBreakdown={<OrderCostBreakdown order={order} selectedFare={selectedFare!} />}

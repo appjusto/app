@@ -1,4 +1,4 @@
-import { Place } from '@appjusto/types';
+import { Fare, Place } from '@appjusto/types';
 import { FleetDetailParamList } from '../../../../common/screens/fleet/FleetDetail';
 import { PixParamList } from '../../common/PayWithPix';
 import { ProfileAddCardParamList } from '../../main/profile/ProfileAddCard';
@@ -22,7 +22,9 @@ export type RestaurantNavigatorParamList = {
     value?: Place | null;
   };
   AboutCharges: undefined;
-  AvailableFleets: undefined;
+  AvailableFleets: {
+    quotes?: Fare[];
+  };
 } & PixParamList &
   FleetDetailParamList &
   ProfilePaymentMethodsParamList &
