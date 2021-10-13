@@ -10,8 +10,8 @@ import { t } from '../../../strings';
 interface Props {
   item: Fare;
   selectedFare: boolean;
-  onFareSelect: (fare: Fare) => void;
-  onFleetDetail: (fleetId: string) => void;
+  onFareSelect?: (fare: Fare) => void; // remove "?" later
+  onFleetDetail?: (fleetId: string) => void; // remove "?" later
 }
 
 export const FleetListItem = ({ item, selectedFare, onFareSelect, onFleetDetail }: Props) => {
@@ -24,13 +24,6 @@ export const FleetListItem = ({ item, selectedFare, onFareSelect, onFleetDetail 
     else if (participants > 1) return 'pessoas agora';
   })();
   const text = separateWithDot(total, participantsOnline);
-  // o que o componente deve receber/saber:
-  // uma Fare (item)
-  // uma função para selecionar essa frota/item específica
-  // nome da frota - item.fleet.name
-  // total de participantes online ????
-  // valor da frota selecionada
-  // uma função para ver os detalhes da frota
   return (
     <TouchableOpacity onPress={() => onFareSelect}>
       <PaddedView
