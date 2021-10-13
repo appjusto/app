@@ -28,6 +28,7 @@ import { t } from '../../../strings';
 import { OrderCostBreakdown } from '../common/breakdown/OrderCostBreakdown';
 import { DeliveredItems } from '../common/DeliveredItems';
 import { ReviewBox } from '../common/review/ReviewBox';
+import { ThumbSelector } from '../common/review/ThumbSelector';
 import TipControl from '../common/TipControl';
 import { DeliveredOrderNavigatorParamList } from './types';
 
@@ -57,6 +58,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const [reviewSent, setReviewSent] = React.useState(false);
   const [tipLoading, setTipLoading] = React.useState(false);
   const showChatButton = useChatisEnabled(order);
+  console.log(review);
 
   // helpers
   const openChat = React.useCallback(
@@ -100,6 +102,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
           comment,
         });
         setReviewSent(true);
+        dispatch(showToast(t('Avaliação enviada com sucesso!'), 'success'));
       }
     } catch (error) {
       dispatch(showToast(t('Não foi possível enviar a avaliação'), 'error'));
@@ -172,23 +175,45 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
             <HR height={padding} />
             {order.courier ? (
               <View>
-                <ReviewBox
-                  review={review?.type ?? reviewType}
-                  comment={review?.comment ?? comment}
-                  editable={!review}
-                  focusable={!!review}
-                  onReviewChange={(type) => setReviewType(type)}
-                  onCommentChange={(value) => setComment(value)}
-                />
-                <DefaultButton
-                  title={
-                    review?.type || reviewSent ? t('Avaliação enviada') : t('Avaliar entregador/a')
-                  }
-                  onPress={reviewHandler}
-                  style={{ margin: padding, marginTop: 0 }}
-                  activityIndicator={reviewLoading}
-                  disabled={reviewLoading || !!review?.type || reviewSent}
-                />
+                {review ? (
+                  <View>
+                    <ThumbSelector
+                      title={t('Como foi a sua experiência com o entregador?')}
+                      review={review.type}
+                    />
+                    {review.comment ? (
+                      <Text
+                        style={{
+                          marginBottom: padding,
+                          ...texts.md,
+                          ...texts.bold,
+                          paddingHorizontal: padding,
+                        }}
+                      >
+                        "{review.comment}"
+                      </Text>
+                    ) : null}
+                  </View>
+                ) : (
+                  <View>
+                    <ReviewBox
+                      reviewType={reviewType}
+                      comment={comment}
+                      editable={!review || !reviewSent}
+                      focusable={!!review}
+                      onReviewChange={(type) => setReviewType(type)}
+                      onCommentChange={(value) => setComment(value)}
+                    />
+                    <DefaultButton
+                      title={t('Avaliar entregador/a')}
+                      onPress={reviewHandler}
+                      style={{ margin: padding, marginTop: 0 }}
+                      activityIndicator={reviewLoading}
+                      disabled={reviewLoading || reviewSent || !reviewType}
+                    />
+                  </View>
+                )}
+
                 <HR height={padding} />
                 <View>
                   <TipControl

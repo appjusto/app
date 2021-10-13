@@ -224,7 +224,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
             <Text style={{ ...texts.sm, marginTop: halfPadding }}>
               {t('Restaurante fora da área de entrega')}
             </Text>
-            <Text style={{ ...texts.xs, color: colors.grey700 }}>
+            <Text style={{ ...texts.xs, color: colors.grey700, textAlign: 'center' }}>
               {t(
                 'Infelizmente ainda não atendemos seu endereço, mas você pode continuar explorando o cardápio'
               )}
