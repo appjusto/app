@@ -108,7 +108,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
   }, [consumer.name, order, api]);
   // handlers
-  const getOrderQuotesHandler = async () => {
+  const getOrderQuotesHandler = React.useCallback(async () => {
     if (!order) return;
     if (!order.origin?.location || !order.route?.distance) {
       if (order.route?.issue) dispatch(showToast(order.route.issue, 'error'));
@@ -120,7 +120,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     } catch (error) {
       dispatch(showToast(error.toString(), 'error'));
     }
-  };
+  }, [order, api, dispatch]);
   const placeOrderHandler = async (fleetId: string) => {
     Keyboard.dismiss();
     if (!order) return;
@@ -225,7 +225,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             }}
             onRetry={getOrderQuotesHandler}
             order={order}
-            navigateToAvailableFleets={() => navigation.navigate('AvailableFleets', { quotes })}
+            navigateToAvailableFleets={() =>
+              navigation.navigate('AvailableFleets', { orderId: order.id })
+            }
           />
         }
         costBreakdown={<OrderCostBreakdown order={order} selectedFare={selectedFare!} />}

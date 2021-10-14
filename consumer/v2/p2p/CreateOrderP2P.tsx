@@ -107,7 +107,7 @@ export default function ({ navigation, route }: Props) {
     }
   }, [api, consumer, dispatch, navigation, order, orderId, params]);
   // handlers
-  const getOrderQuotesHandler = async () => {
+  const getOrderQuotesHandler = React.useCallback(async () => {
     if (!order) return;
     if (!order.origin?.location || !order.route?.distance) {
       if (order.route?.issue) dispatch(showToast(order.route.issue, 'error'));
@@ -119,7 +119,7 @@ export default function ({ navigation, route }: Props) {
     } catch (error) {
       dispatch(showToast(error.toString(), 'error'));
     }
-  };
+  }, [order, api, dispatch]);
   // navigate to 'AddressComplete' to enter address
   const navigateToAddressComplete = React.useCallback(
     (returnParam: string, value?: Place) => {

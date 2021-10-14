@@ -1,11 +1,14 @@
+import { Fare } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import RoundedText from '../../../common/components/texts/RoundedText';
-import { borders, colors, padding, screens, texts } from '../../../common/styles';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { showToast } from '../../../common/store/ui/actions';
+import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { RestaurantNavigatorParamList } from '../food/restaurant/types';
 import { P2POrderNavigatorParamList } from '../p2p/types';
@@ -27,7 +30,47 @@ type Props = {
 
 export const AvailableFleets = ({ navigation, route }: Props) => {
   // params
-  const { quotes } = route.params ?? {};
+  const { orderId } = route.params;
+  // context
+  const api = React.useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
+  // state
+  const order = useObserveOrder(orderId);
+  const [quotes, setQuotes] = React.useState<Fare[]>();
+  const [selectedFare, setSelectedFare] = React.useState<Fare>();
+  // side effects
+  // update quotes if order changes
+  React.useEffect(() => {
+    getOrderQuotesHandler();
+  }, [order]);
+  // select first fare and subscribe to involved fleets updates
+  // React.useEffect(() => {
+  //   if (!quotes || isEmpty(quotes)) return;
+  //   setSelectedFare(quotes[0]);
+  // }, [quotes]);
+  // handlers
+  const getOrderQuotesHandler = React.useCallback(async () => {
+    if (!order) return;
+    if (!order.origin?.location || !order.route?.distance) {
+      if (order.route?.issue) dispatch(showToast(order.route.issue, 'error'));
+      return;
+    }
+    setQuotes(undefined);
+    try {
+      setQuotes(await api.order().getOrderQuotes(order.id));
+    } catch (error: any) {
+      dispatch(showToast(error.toString(), 'error'));
+    }
+  }, [order, api, dispatch]);
+  // UI
+  // UI
+  if (!order || !quotes) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <ScrollView
       style={{ ...screens.default }}
@@ -36,19 +79,6 @@ export const AvailableFleets = ({ navigation, route }: Props) => {
       keyboardShouldPersistTaps="handled"
     >
       <PaddedView style={{ flex: 1 }}>
-        {quotes.map((item) => {
-          return (
-            <View key={item.fleet.id} style={{ marginBottom: padding }}>
-              <FleetListItem
-                item={item}
-                selectedFare={false}
-                // selectedFare={selectedFare?.fleet.id === item.fleet.id}
-                // onFareSelect={() => onFareSelect(item)}
-                // onFleetDetail={() => onFleetSelect(item.fleet.id)}
-              />
-            </View>
-          );
-        })}
         <View>
           <Text style={{ ...texts.x2l }}>
             {t('Você escolhe a frota e o entregador fica com todo o dinheiro da entrega')}
@@ -59,21 +89,20 @@ export const AvailableFleets = ({ navigation, route }: Props) => {
             )}
           </Text> */}
         </View>
-        <PaddedView style={{ ...borders.default, borderWidth: 2, backgroundColor: colors.grey50 }}>
-          <Text style={{ ...texts.lg, ...texts.bold }}>{t('Nome da frota')}</Text>
-          <View
-            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
-          >
-            <View>
-              <Text style={{ ...texts.sm, marginRight: 2 }}>{t('R$ 10,00')}</Text>
-              <Text style={{ ...texts.sm, marginRight: 2 }}>\u00B7</Text>
-              <Text style={{ ...texts.sm, marginRight: 2 }}>{t('48 pessoas agora')}</Text>
-            </View>
-            <TouchableOpacity style={{ position: 'absolute' }} onPress={() => null}>
-              <RoundedText>{t('Ver detalhes')}</RoundedText>
-            </TouchableOpacity>
-          </View>
-        </PaddedView>
+        <View style={{ marginTop: padding }}>
+          {quotes.map((item) => {
+            return (
+              <View key={item.fleet.id} style={{ marginBottom: padding }}>
+                <FleetListItem
+                  item={item}
+                  selectedFare={selectedFare?.fleet.id === item.fleet.id}
+                  onFareSelect={() => setSelectedFare(item)}
+                  onFleetDetail={() => null}
+                />
+              </View>
+            );
+          })}
+        </View>
       </PaddedView>
     </ScrollView>
   );
