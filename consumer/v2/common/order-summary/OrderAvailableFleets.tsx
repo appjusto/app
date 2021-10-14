@@ -33,6 +33,9 @@ export const OrderAvailableFleets = ({
   // helpers
   const isLoading = quotes === undefined;
   const fleets = (quotes ?? []).map((quote) => quote.fleet);
+  const orderedFares = (quotes ?? [])
+    .sort((a, b) => b.fleet.participantsOnline - a.fleet.participantsOnline)
+    .slice(0, 2);
   // UI
   return (
     <View>
@@ -98,7 +101,7 @@ export const OrderAvailableFleets = ({
                 <ShowIf test={!isEmpty(quotes)}>
                   {() => (
                     <View style={{ marginBottom: padding }}>
-                      {quotes.map((item) => {
+                      {orderedFares.map((item) => {
                         return (
                           <View key={item.fleet.id} style={{ marginBottom: padding }}>
                             <FleetListItem
@@ -111,12 +114,16 @@ export const OrderAvailableFleets = ({
                         );
                       })}
                       {quotes.length >= 3 ? (
-                        <DefaultButton secondary title={t('Ver todas as frotas disponíveis')} />
+                        <DefaultButton
+                          secondary
+                          title={`${t('Ver todas as')} ${quotes.length} ${t('frotas disponíveis')}`}
+                          onPress={navigateToAvailableFleets}
+                        />
                       ) : null}
-                      {/* remove this after tests */}
+                      {/*TODO: remove this after tests */}
                       <DefaultButton
                         secondary
-                        title={t('Ver todas as frotas disponíveis')}
+                        title={`${t('Ver todas as frotas')} ${quotes.length} ${t('disponíveis')}`}
                         onPress={navigateToAvailableFleets}
                       />
                     </View>
