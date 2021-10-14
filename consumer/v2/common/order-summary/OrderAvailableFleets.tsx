@@ -32,7 +32,7 @@ export const OrderAvailableFleets = ({
 }: Props) => {
   // helpers
   const isLoading = quotes === undefined;
-  const fleets = (quotes ?? []).map((quote) => quote.fleet);
+  // const fleets = (quotes ?? []).map((quote) => quote.fleet);
   const orderedFares = (quotes ?? [])
     .sort((a, b) => b.fleet.participantsOnline - a.fleet.participantsOnline)
     .slice(0, 2);
@@ -44,24 +44,11 @@ export const OrderAvailableFleets = ({
         <PaddedView
           style={{
             flex: 1,
-            // flexDirection: 'row',
-            // justifyContent: 'space-between',
-            // alignItems: 'center',
           }}
         >
           <Text style={{ ...texts.md, ...texts.bold }}>
             {t('Escolha a frota para a sua entrega')}
           </Text>
-          {/* {isLoading ? null : quotes?.length ? (
-            <Text style={{ ...texts.xs, color: colors.grey700 }}>
-              {t('Exibindo ')}
-              {quotes?.length ?? 0}
-            </Text>
-          ) : (
-            <Text style={{ ...texts.xs, color: colors.grey700 }}>
-              {t('Sem frotas disponíveis')}
-            </Text>
-          )} */}
         </PaddedView>
       </View>
       <View style={{ paddingHorizontal: padding }}>
@@ -127,54 +114,6 @@ export const OrderAvailableFleets = ({
                         onPress={navigateToAvailableFleets}
                       />
                     </View>
-                    // <FlatList
-                    //   showsHorizontalScrollIndicator={false}
-                    //   data={quotes}
-                    //   keyExtractor={(item) => item.fleet.id!}
-                    //   renderItem={({ item }) => {
-                    //     return (
-                    //       <View>
-                    //         <TouchableOpacity onPress={() => onFareSelect(item)}>
-                    //           <PaddedView
-                    //             style={{
-                    //               width: 156,
-                    //               backgroundColor:
-                    //                 selectedFare?.fleet.id === item.fleet.id
-                    //                   ? colors.green100
-                    //                   : colors.white,
-                    //               ...borders.default,
-                    //               borderWidth: 2,
-                    //               borderColor: colors.black,
-                    //               marginRight: halfPadding,
-                    //             }}
-                    //           >
-                    //             <Text numberOfLines={2} style={[texts.sm, texts.bold]}>
-                    //               {item.fleet.name}
-                    //             </Text>
-                    //             <Text style={[texts.xs, { marginTop: padding }]}>
-                    //               {t('Entregadores')}
-                    //             </Text>
-                    //             <Text style={[texts.xs, texts.bold]}>
-                    //               {`${
-                    //                 fleets.find((fleet) => fleet.id === item.fleet.id)
-                    //                   ?.participantsOnline ?? 0
-                    //               } ${t('ativos agora')}`}
-                    //             </Text>
-                    //             <Text style={[texts.xl, texts.bold, { marginTop: padding }]}>
-                    //               {formatCurrency(item.courier.value)}
-                    //             </Text>
-                    //             <TouchableOpacity onPress={() => onFleetSelect(item.fleet.id)}>
-                    //               <View style={{ marginTop: padding }}>
-                    //                 <RoundedText>{t('Ver detalhes')}</RoundedText>
-                    //               </View>
-                    //             </TouchableOpacity>
-                    //           </PaddedView>
-                    //         </TouchableOpacity>
-                    //       </View>
-                    //     );
-                    //   }}
-                    //   horizontal
-                    // />
                   )}
                 </ShowIf>
               </View>
