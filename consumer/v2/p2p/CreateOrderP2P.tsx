@@ -106,6 +106,11 @@ export default function ({ navigation, route }: Props) {
       });
     }
   }, [api, consumer, dispatch, navigation, order, orderId, params]);
+  // if the order status becomes 'expired'
+  React.useEffect(() => {
+    if (!order) return;
+    if (order.status === 'expired') navigation.navigate('MainNavigator', { screen: 'Home' });
+  }, [order, navigation]);
   // handlers
   const getOrderQuotesHandler = async () => {
     if (!order) return;

@@ -107,6 +107,11 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       });
     }
   }, [consumer.name, order, api]);
+  // if the order status becomes 'expired'
+  React.useEffect(() => {
+    if (!order) return;
+    if (order.status === 'expired') navigation.navigate('MainNavigator', { screen: 'Home' });
+  }, [order, navigation]);
   // handlers
   const getOrderQuotesHandler = async () => {
     if (!order) return;
