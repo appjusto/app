@@ -21,6 +21,7 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import useAxiosCancelToken from '../../../common/hooks/useAxiosCancelToken';
 import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { formatAddress } from '../../../common/utils/formatters';
@@ -119,7 +120,8 @@ export const AddressComplete = ({ navigation, route }: Props) => {
       setSearchText(formatAddress(selectedAddress));
     }
   }, [selectedAddress]);
-
+  // tracking
+  useSegmentScreen('AddressComplete');
   // handlers
   // fires whenever use change the input text
   const textChangeHandler = React.useCallback(
@@ -146,6 +148,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
 
   // confirm button callback
   const completeHandler = React.useCallback(() => {
+    track('consumer selecting address');
     if (!selectedAddress) return;
     // create a place object when user confirm without selecting from suggestion list
     const place: Place =

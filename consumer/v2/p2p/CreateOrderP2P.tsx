@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { isConsumerProfileComplete } from '../../../common/store/courier/validators';
 import { showToast } from '../../../common/store/ui/actions';
@@ -111,6 +112,8 @@ export default function ({ navigation, route }: Props) {
     if (!order) return;
     if (order.status === 'expired') navigation.navigate('MainNavigator', { screen: 'Home' });
   }, [order, navigation]);
+  // tracking
+  useSegmentScreen('CreateOrderP2P');
   // handlers
   const getOrderQuotesHandler = async () => {
     if (!order) return;
@@ -128,6 +131,7 @@ export default function ({ navigation, route }: Props) {
   // navigate to 'AddressComplete' to enter address
   const navigateToAddressComplete = React.useCallback(
     (returnParam: string, value?: Place) => {
+      track('navigating to AddressComplete');
       navigation.navigate('AddressComplete', {
         returnScreen: 'CreateOrderP2P',
         returnParam,
@@ -138,6 +142,7 @@ export default function ({ navigation, route }: Props) {
   );
   // navigate to ProfileAddCard or ProfilePaymentMethods to add or select payment method
   const navigateToFillPaymentInfo = React.useCallback(() => {
+    track('adding payment info');
     // if user has no payment method, go direct to 'AddCard' screen
     if (!isConsumerProfileComplete(consumer)) {
       const returnScreen = !selectedPaymentMethodId ? 'ProfileAddCard' : 'CreateOrderP2P';
@@ -150,6 +155,7 @@ export default function ({ navigation, route }: Props) {
   }, [consumer, navigation, selectedPaymentMethodId]);
   // confirm order
   const placeOrderHandler = async (fleetId: string) => {
+    track('placing order');
     if (!orderId) return;
     if (!selectedPaymentMethodId) return;
     if (wantsCpf && !cpf) {
@@ -205,16 +211,22 @@ export default function ({ navigation, route }: Props) {
         navigateToAddressComplete={navigateToAddressComplete}
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         navigateFleetDetail={(fleetId: string) => {
+          track('navigating to FleetDetail');
           navigation.navigate('FleetDetail', { fleetId });
         }}
         navigateToTransportableItems={() => {
+          track('navigating to TransportableItems');
           navigation.navigate('TransportableItems');
         }}
         onSubmit={() => placeOrderHandler(selectedFare?.fleet?.id!)}
-        navigateToPixPayment={(total, fleetId) =>
-          navigation.navigate('PayWithPix', { orderId: orderId!, total, fleetId })
-        }
-        navigateToAboutCharges={() => navigation.navigate('AboutCharges')}
+        navigateToPixPayment={(total, fleetId) => {
+          track('navigating to PixPayment');
+          navigation.navigate('PayWithPix', { orderId: orderId!, total, fleetId });
+        }}
+        navigateToAboutCharges={() => {
+          track('navigating to AboutCharges');
+          navigation.navigate('AboutCharges');
+        }}
         wantsCpf={wantsCpf}
         onSwitchValueChange={() => setWantsCpf(!wantsCpf)}
         cpf={cpf}

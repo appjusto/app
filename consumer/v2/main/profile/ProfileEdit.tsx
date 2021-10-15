@@ -19,6 +19,7 @@ import {
 } from '../../../../common/components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { consumerInfoSet } from '../../../../common/store/consumer/validators';
 import { isConsumerProfileComplete } from '../../../../common/store/courier/validators';
@@ -63,12 +64,15 @@ export default function ({ navigation, route }: Props) {
     phone: phone.trim(),
   };
   const canSubmit = consumerInfoSet(updatedConsumer);
+  // tracking
+  useSegmentScreen('ProfileEdit');
   // handlers
   const updateProfileHandler = async () => {
     Keyboard.dismiss();
     try {
       setLoading(true);
       api.profile().updateProfile(consumer.id, updatedConsumer);
+      track('consumer updated profile');
       setLoading(false);
       if (returnScreen) navigation.navigate(returnScreen, { returnScreen: returnNextScreen });
       else navigation.goBack();
