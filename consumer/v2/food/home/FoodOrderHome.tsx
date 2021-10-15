@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
 import { useSearch } from '../../../../common/store/api/search/useSearch';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import {
   updateCurrentLocation,
   updateCurrentPlace,
@@ -55,11 +56,14 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
       dispatch(updateCurrentPlace(place));
     }
   }, [dispatch, place]);
+  // tracking
+  useSegmentScreen('FoodOrderHome');
   // handlers
   const refresh = async () => {
     setRefreshing(true);
     await api.search().clearCache();
     await refetch();
+    track('refreshing restaurant list');
     setRefreshing(false);
   };
   // UI
@@ -71,23 +75,30 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
           <FoodOrderHomeHeader
             selectedCuisineId={filters.find(() => true)?.value}
             onLocationPress={() => {
+              track('navigating to change location');
               navigation.navigate('AddressComplete', {
                 returnParam: 'place',
                 returnScreen: 'FoodOrderHome',
               });
             }}
             onSearchPress={() => {
+              track('navigating to RestaurantSearch');
               navigation.navigate('RestaurantSearch');
             }}
             onCuisineSelect={(cuisine) => {
               setFilters(cuisine ? [{ type: 'cuisine', value: cuisine.name }] : []);
+              track('filtering restaurant list by cuisine');
             }}
             consumer={consumer}
-            onLogin={() => navigation.replace('WelcomeScreen')}
+            onLogin={() => {
+              track('navigating to login');
+              navigation.replace('WelcomeScreen');
+            }}
           />
         </View>
       }
       onSelect={(restaurantId) => {
+        track('clicked on a restaurant');
         navigation.push('RestaurantNavigator', {
           restaurantId,
           screen: 'RestaurantDetail',
@@ -96,7 +107,10 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
       loading={isLoading}
       refreshing={refreshing}
       onRefresh={() => refresh()}
-      onRecommend={() => navigation.navigate('RecommendRestaurant')}
+      onRecommend={() => {
+        track('navigating to RecommendRestaurant');
+        navigation.navigate('RecommendRestaurant');
+      }}
     />
   );
 };
