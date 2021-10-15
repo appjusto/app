@@ -1,7 +1,6 @@
 import { ChatMessageUser, Flavor } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { track } from 'expo-analytics-segment';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -11,7 +10,7 @@ import HR from '../../../common/components/views/HR';
 import { useNotificationToken } from '../../../common/hooks/useNotificationToken';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useObserveOrderConfirmation } from '../../../common/store/api/order/hooks/useObserveOrderConfirmation';
-import { useSegmentScreen } from '../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { colors, halfPadding, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { OrderCostBreakdown } from '../common/breakdown/OrderCostBreakdown';

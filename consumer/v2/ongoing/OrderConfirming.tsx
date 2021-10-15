@@ -1,6 +1,5 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { track } from 'expo-analytics-segment';
 import React from 'react';
 import { ActivityIndicator, Image, Linking, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -13,7 +12,7 @@ import { IconLoadingBig } from '../../../common/icons/icon -loading-big';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import { IconPixLogo } from '../../../common/icons/icon-pix-logo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
-import { useSegmentScreen } from '../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { DeliveryProblemCard } from '../../../courier/approved/ongoing/delivery-problem/DeliveryProblemCard';

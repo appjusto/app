@@ -14,7 +14,7 @@ import { ApiContext, AppDispatch } from '../app/context';
 import RadioButton from '../components/buttons/RadioButton';
 import { ReportIssueView } from '../components/views/ReportIssueView';
 import useIssues from '../store/api/platform/hooks/useIssues';
-import { useSegmentScreen } from '../store/api/track';
+import { track, useSegmentScreen } from '../store/api/track';
 import { getFlavor } from '../store/config/selectors';
 import { showToast } from '../store/ui/actions';
 import { getUser } from '../store/user/selectors';
@@ -74,6 +74,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   })();
   // handlers
   const issueHandler = () => {
+    track('reporting issue');
     if (!selectedIssue) return;
     (async () => {
       Keyboard.dismiss();

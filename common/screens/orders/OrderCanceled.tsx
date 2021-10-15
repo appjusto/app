@@ -17,6 +17,7 @@ import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
 import { OngoingDeliveryNavigatorParamList } from '../../../courier/approved/ongoing/types';
 import { ApprovedParamList } from '../../../courier/approved/types';
 import { t } from '../../../strings';
+import { track, useSegmentScreen } from '../../store/api/track';
 
 export type OrderCanceledParamList = {
   OrderCanceled: {
@@ -64,6 +65,8 @@ export default ({ navigation, route }: Props) => {
       </View>
     );
   }
+  // tracking
+  useSegmentScreen('OrderCanceled');
   const description = (() => {
     if (flavor === 'courier') {
       if (cancelInfo) {
@@ -98,7 +101,10 @@ export default ({ navigation, route }: Props) => {
       <View style={{ marginBottom: padding }}>
         <DefaultButton
           title={t('Voltar para o início')}
-          onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
+          onPress={() => {
+            track('navigating to home screen');
+            navigation.replace('MainNavigator', { screen: 'Home' });
+          }}
           secondary
         />
       </View>

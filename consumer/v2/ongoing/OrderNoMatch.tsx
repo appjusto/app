@@ -1,6 +1,5 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { track } from 'expo-analytics-segment';
 import React from 'react';
 import { View } from 'react-native';
 import * as Sentry from 'sentry-expo';
@@ -9,7 +8,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
-import { useSegmentScreen } from '../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { padding } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';

@@ -16,6 +16,7 @@ import {
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
 import useAxiosCancelToken from '../../../../common/hooks/useAxiosCancelToken';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { showToast } from '../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -65,9 +66,12 @@ export default function ({ navigation, route }: Props) {
     !isEmpty(cvv) &&
     !isEmpty(name) &&
     !isEmpty(surname);
+  // tracking
+  useSegmentScreen('ProfileAddCard');
   // UI handlers
   const createCancelToken = useAxiosCancelToken();
   const saveCardHandler = async () => {
+    track('saving new card');
     Keyboard.dismiss();
     try {
       setLoading(true);

@@ -13,7 +13,7 @@ import DefaultInput from '../components/inputs/DefaultInput';
 import useTallerDevice from '../hooks/useTallerDevice';
 import { useObserveOrder } from '../store/api/order/hooks/useObserveOrder';
 import { unreadMessages, useObserveOrderChat } from '../store/api/order/hooks/useObserveOrderChat';
-import { useSegmentScreen } from '../store/api/track';
+import { track, useSegmentScreen } from '../store/api/track';
 import { getFlavor } from '../store/config/selectors';
 import { getUser } from '../store/user/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../styles';
@@ -70,6 +70,7 @@ export default function ({ route }: Props) {
   }
   // UI handlers
   const sendMessageHandler = () => {
+    track('sending chat message');
     if (!inputText) return;
     const to: { agent: Flavor; id: string } = {
       agent: counterpartFlavor,
