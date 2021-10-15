@@ -13,6 +13,7 @@ import { HomeCouriersNearbyCard } from '../../../../common/screens/home/cards/Ho
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
 import { padding, screens } from '../../../../common/styles';
@@ -36,6 +37,13 @@ export default function ({ navigation }: Props) {
   // side effects
   useNotificationToken();
   useBusinessDeeplink();
+  //tracking
+  useSegmentScreen('Home');
+  // handler
+  const navigateToWelcomeScreen = () => {
+    track('navigating to login');
+    navigation.navigate('WelcomeScreen');
+  };
   // UI
   return (
     <View style={[screens.headless, screens.config]}>
@@ -44,12 +52,14 @@ export default function ({ navigation }: Props) {
         <HomeControls
           onStartOrderPress={(type) => {
             if (type === 'food') {
+              track('navigating to FoodOrderHome');
               navigation.navigate('FoodOrderNavigator', { screen: 'FoodOrderHome' });
             } else {
               if (consumer) {
+                track('navigating to CreateOrderP2P');
                 navigation.navigate('P2POrderNavigator', { screen: 'CreateOrderP2P' });
               } else {
-                navigation.navigate('WelcomeScreen');
+                navigateToWelcomeScreen();
               }
             }
           }}
@@ -58,14 +68,16 @@ export default function ({ navigation }: Props) {
           <HomeOngoingDeliveries
             orders={ongoingOrders}
             onPress={(order, chatFrom) => {
-              if (order.status === 'declined')
+              if (order.status === 'declined') {
+                track('navigating to OrderDeclined');
                 navigation.navigate('OngoingOrderNavigator', {
                   screen: 'OngoingOrderDeclined',
                   params: {
                     orderId: order.id,
                   },
                 });
-              else
+              } else {
+                track('navigating to OngoingOrder');
                 navigation.navigate('OngoingOrderNavigator', {
                   screen: 'OngoingOrder',
                   params: {
@@ -73,10 +85,11 @@ export default function ({ navigation }: Props) {
                     chatFrom,
                   },
                 });
+              }
             }}
           />
           {!consumer ? (
-            <TouchableOpacity onPress={() => navigation.navigate('WelcomeScreen')}>
+            <TouchableOpacity onPress={navigateToWelcomeScreen}>
               <HomeCard
                 icon={<IconLogin />}
                 title={t('Crie uma conta ou faça o login')}
@@ -85,7 +98,6 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           ) : null}
-          {/* ítalo wants to also show the HomeCouriersNearbyCard for unlogged consumers */}
           <HomeCouriersNearbyCard />
           <View style={{ marginTop: padding }}>
             <HomeShareCard

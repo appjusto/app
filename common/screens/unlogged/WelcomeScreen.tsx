@@ -53,6 +53,7 @@ export default function ({ navigation, route }: Props) {
   const [email, setEmail] = useState('');
   const [acceptedTerms, setAcceptTerms] = useState(false);
   // side effects
+  // tracking
   useSegmentScreen('Welcome');
   // handlers
   const signInHandler = useCallback(async () => {

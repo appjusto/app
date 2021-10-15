@@ -6,7 +6,7 @@ import { t } from '../../../strings';
 import PaddedView from '../../components/containers/PaddedView';
 import { AuthState, useAuth } from '../../hooks/useAuth';
 import { IconMotocycle } from '../../icons/icon-motocycle';
-import { useSegmentScreen } from '../../store/api/track';
+import { track, useSegmentScreen } from '../../store/api/track';
 import { colors, padding, screens, texts } from '../../styles';
 import { UnloggedParamList } from './types';
 
@@ -41,7 +41,13 @@ export default ({ navigation }: Props) => {
           <Text style={{ ...texts.sm, color: colors.grey700, textAlign: 'center' }}>
             {t('Continue o acesso clicando no link enviado.')}
           </Text>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={{ alignItems: 'center' }}>
+          <TouchableOpacity
+            onPress={() => {
+              track('navigating back to WelcomeScreen');
+              navigation.goBack();
+            }}
+            style={{ alignItems: 'center' }}
+          >
             <>
               <Text style={{ marginTop: padding, ...texts.xs, color: colors.green600 }}>
                 {t('Não recebeu? Preencha seu e-mail novamente.')}
