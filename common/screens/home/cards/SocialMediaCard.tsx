@@ -4,6 +4,7 @@ import { t } from '../../../../strings';
 import { AppJustoInstagramURL, AppJustoWhatsAppCourierURL } from '../../../../strings/values';
 import { IconInstagram } from '../../../icons/icon-instagram';
 import { IconWhatsapp } from '../../../icons/icon-whatsapp';
+import { track } from '../../../store/api/track';
 import HomeCard from './HomeCard';
 
 type Props = {
@@ -20,8 +21,14 @@ export const SocialMediaCard = ({ app }: Props) => {
     <TouchableOpacity
       onPress={
         app === 'instagram'
-          ? () => Linking.openURL(AppJustoInstagramURL)
-          : () => Linking.openURL(AppJustoWhatsAppCourierURL)
+          ? () => {
+              track('opening appJusto instragram');
+              Linking.openURL(AppJustoInstagramURL);
+            }
+          : () => {
+              track('opening appJusto whatsapp');
+              Linking.openURL(AppJustoWhatsAppCourierURL);
+            }
       }
     >
       <HomeCard

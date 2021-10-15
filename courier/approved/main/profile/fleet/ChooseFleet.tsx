@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import useObserveFleet from '../../../../../common/store/api/fleet/hooks/useObserveFleet';
-import { useSegmentScreen } from '../../../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { formatDate } from '../../../../../common/utils/formatters';
@@ -29,9 +29,10 @@ export default function ({ navigation, route }: Props) {
   const fleet = useObserveFleet(courier.fleet!.id);
   // side effects
   // tracking
-  useSegmentScreen('Choose Fleet');
+  useSegmentScreen('ChooseFleet');
   // handlers
   const navigateFleetDetail = (fleetId: string) => {
+    track('courier navigating to FleetDetail');
     navigation.navigate('FleetDetail', { fleetId });
   };
   // UI
@@ -62,12 +63,18 @@ export default function ({ navigation, route }: Props) {
           <View style={{ marginTop: 24 }}>
             <DefaultButton
               title={t('Veja todas as frotas disponíveis')}
-              onPress={() => navigation.navigate('AllFleets')}
+              onPress={() => {
+                track('navigating to AllFleets');
+                navigation.navigate('AllFleets');
+              }}
             />
             <DefaultButton
               style={{ marginTop: padding }}
               title={t('Criar uma nova frota')}
-              onPress={() => navigation.navigate('CreateFleet')}
+              onPress={() => {
+                track('navigating to CreateFleet');
+                navigation.navigate('CreateFleet');
+              }}
               secondary
             />
           </View>

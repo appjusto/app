@@ -14,7 +14,7 @@ import ConfigItem from '../../common/components/views/ConfigItem';
 import useLastKnownLocation from '../../common/location/useLastKnownLocation';
 import useCourierDocumentImage from '../../common/store/api/courier/hooks/useCourierDocumentImage';
 import useCourierSelfie from '../../common/store/api/courier/hooks/useCourierSelfie';
-import { useSegmentScreen } from '../../common/store/api/track';
+import { track, useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
 import {
   bankAccountSet,
@@ -109,6 +109,7 @@ export default function ({ navigation, route }: Props) {
     (async () => {
       try {
         await dispatch(updateProfile(api)(courier.id, { situation: 'submitted' }));
+        track('courier submitted profile');
       } catch (error) {
         Sentry.Native.captureException(error);
         dispatch(showToast(error.toString(), 'error'));
@@ -134,7 +135,10 @@ export default function ({ navigation, route }: Props) {
         {
           text: t('Confirmar'),
           style: 'destructive',
-          onPress: () => api.signOut(),
+          onPress: () => {
+            track('courier logged out');
+            api.signOut();
+          },
         },
       ]
     );

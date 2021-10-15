@@ -51,7 +51,7 @@ export default function ({ navigation }: Props) {
   } as DeleteAccountPayload);
   // side effects
   // tracking
-  useSegmentScreen('Profile Erase');
+  useSegmentScreen('ProfileErase');
   // handlers
   const eraseHandler = async () => {
     Keyboard.dismiss();

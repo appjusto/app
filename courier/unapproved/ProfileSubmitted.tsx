@@ -18,7 +18,7 @@ import { IconMotocycleBeta } from '../../common/icons/icon-motocycle-beta';
 import HomeShareCard from '../../common/screens/home/cards/HomeShareCard';
 import { SocialMediaCard } from '../../common/screens/home/cards/SocialMediaCard';
 import * as config from '../../common/screens/unlogged/onboarding/config';
-import { useSegmentScreen } from '../../common/store/api/track';
+import { track, useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../common/styles';
 import { t } from '../../strings';
@@ -119,7 +119,10 @@ export default function ({ navigation }: Props) {
                       <DefaultButton
                         secondary
                         title={t('Adicionar')}
-                        onPress={() => Linking.openURL(AppJustoWhatsAppCourierURL)}
+                        onPress={() => {
+                          track('courier clicked to add appJusto to his/hers whatsapp contacts');
+                          Linking.openURL(AppJustoWhatsAppCourierURL);
+                        }}
                         style={{ marginTop: padding }}
                       />
                     )}
@@ -172,37 +175,58 @@ export default function ({ navigation }: Props) {
           <ConfigItem
             title={t('Sobre o período de testes')}
             subtitle={t('Saiba como acontecerão os testes')}
-            onPress={() => navigation.navigate('AboutTests')}
+            onPress={() => {
+              track('navigating to AboutTests');
+              navigation.navigate('AboutTests');
+            }}
           />
           <ConfigItem
             title={t('Autonomia e preço justo')}
             subtitle={t('Veja como você define o preço')}
-            onPress={() => navigation.navigate('AboutAutonomy')}
+            onPress={() => {
+              track('navigating to AboutAutonomy');
+              navigation.navigate('AboutAutonomy');
+            }}
           />
           <ConfigItem
             title={t('Transparência')}
             subtitle={t('Saiba sobre os valores recebidos ')}
-            onPress={() => navigation.navigate('AboutTransparency')}
+            onPress={() => {
+              track('navigating to AboutTransparency');
+              navigation.navigate('AboutTransparency');
+            }}
           />
           <ConfigItem
             title={t('Sem bloqueios automáticos')}
             subtitle={t('Entenda o motivo de não termos Score')}
-            onPress={() => navigation.navigate('AboutNoScore')}
+            onPress={() => {
+              track('navigating to AboutNoScore');
+              navigation.navigate('AboutNoScore');
+            }}
           />
           <ConfigItem
             title={t('Fique disponível para corridas')}
             subtitle={t('Saiba como ajudar o movimento')}
-            onPress={() => navigation.navigate('AboutBeAvailable')}
+            onPress={() => {
+              track('navigating to AboutBeAvailable');
+              navigation.navigate('AboutBeAvailable');
+            }}
           />
           <ConfigItem
             title={t('Central de Ajuda')}
             subtitle={t('Conheças as regras e saiba mais sobre o AppJusto')}
-            onPress={() => Linking.openURL(AppJustoFreshdeskCourierURL)}
+            onPress={() => {
+              track('opening AppJustoFreshdeskCourierURL');
+              Linking.openURL(AppJustoFreshdeskCourierURL);
+            }}
           />
           <ConfigItem
             title={t('Sobre o AppJusto')}
             subtitle={t('Acesse nossas páginas')}
-            onPress={() => navigation.navigate('AboutApp')}
+            onPress={() => {
+              track('navigating to AboutApp');
+              navigation.navigate('AboutApp');
+            }}
           />
         </View>
         <PaddedView>

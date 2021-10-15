@@ -52,7 +52,7 @@ export default function ({ navigation, route }: Props) {
   const fleet = useObserveFleet(fleetId);
   // side effects
   // tracking
-  useSegmentScreen('Fleet Detail', { fleetId });
+  useSegmentScreen('FleetDetail', { fleetId });
   // UI
   if (!fleet) {
     return (
