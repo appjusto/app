@@ -70,7 +70,6 @@ export default function ({ route }: Props) {
   }
   // UI handlers
   const sendMessageHandler = () => {
-    track('sending chat message');
     if (!inputText) return;
     const to: { agent: Flavor; id: string } = {
       agent: counterpartFlavor,
@@ -82,6 +81,7 @@ export default function ({ route }: Props) {
       message: inputText.trim(),
     });
     setInputText('');
+    track('sending chat message');
   };
   const getName = (from: string) => {
     if (from === order.consumer.id) return order.consumer.name ?? t('Cliente');

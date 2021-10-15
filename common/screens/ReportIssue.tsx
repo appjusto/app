@@ -74,7 +74,6 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   })();
   // handlers
   const issueHandler = () => {
-    track('reporting issue');
     if (!selectedIssue) return;
     (async () => {
       Keyboard.dismiss();
@@ -86,6 +85,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
           flavor,
           comment,
         });
+        track('reporting issue');
         setLoading(false);
         if (flavor === 'courier') {
           navigation.replace('DeliveryProblemFeedback', {
@@ -100,7 +100,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
       }
     })();
   };
-  console.log(issueType);
+
   // UI
   if (!issues) {
     return (
