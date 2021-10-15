@@ -1,5 +1,6 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { track } from 'expo-analytics-segment';
 import React from 'react';
 import { ActivityIndicator, Image, Linking, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -12,6 +13,7 @@ import { IconLoadingBig } from '../../../common/icons/icon -loading-big';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import { IconPixLogo } from '../../../common/icons/icon-pix-logo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { DeliveryProblemCard } from '../../../courier/approved/ongoing/delivery-problem/DeliveryProblemCard';
@@ -61,6 +63,13 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
     }
   }, [navigation, order, orderId]);
   console.log(orderId);
+  // tracking
+  useSegmentScreen('OrderConfirming');
+  // handlers
+  const navigateToCancelOrder = () => {
+    track('clicked to navigate to cancel order screen');
+    navigation.navigate('OngoingOrderConfirmCancel', { orderId });
+  };
   // UI
   if (!order) {
     // showing the indicator until the order is loaded
@@ -139,7 +148,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
           title={t('Cancelar pedido')}
           secondary
           style={{ marginHorizontal: padding, marginTop: 24 }}
-          onPress={() => navigation.navigate('OngoingOrderConfirmCancel', { orderId })}
+          onPress={navigateToCancelOrder}
         />
       </View>
     </SafeAreaView>
@@ -152,7 +161,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
     >
       <DefaultButton
         title={t('Cancelar pedido')}
-        onPress={() => navigation.navigate('OngoingOrderConfirmCancel', { orderId })}
+        onPress={navigateToCancelOrder}
         style={{
           ...borders.default,
           marginBottom: padding,
@@ -162,7 +171,10 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
       />
       <DefaultButton
         title={t('Voltar para o início')}
-        onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
+        onPress={() => {
+          track('clicked to navigate to home screen');
+          navigation.replace('MainNavigator', { screen: 'Home' });
+        }}
       />
     </FeedbackView>
   ) : (
@@ -176,15 +188,14 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
         <DeliveryProblemCard
           title={t('Preciso falar com o AppJusto')}
           subtitle={t('Abrir chat no WhatsApp')}
-          onPress={() => Linking.openURL('https://wa.me/551197821-0274')}
+          onPress={() => {
+            track('clicked to open chat with backoffice');
+            Linking.openURL('https://wa.me/551197821-0274');
+          }}
           situation="chat"
         />
       </View>
-      <DefaultButton
-        title={t('Cancelar pedido')}
-        onPress={() => navigation.navigate('OngoingOrderConfirmCancel', { orderId })}
-        secondary
-      />
+      <DefaultButton title={t('Cancelar pedido')} onPress={navigateToCancelOrder} secondary />
     </FeedbackView>
   );
 };

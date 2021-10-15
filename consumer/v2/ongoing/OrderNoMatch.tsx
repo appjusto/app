@@ -1,5 +1,6 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { track } from 'expo-analytics-segment';
 import React from 'react';
 import { View } from 'react-native';
 import * as Sentry from 'sentry-expo';
@@ -8,6 +9,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { padding } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
@@ -41,6 +43,7 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
   }, [order, orderId, navigation]);
   // handlers
   const tryAgainHandler = async () => {
+    track('clicked to try to find a courier to the order again');
     try {
       setLoading(true);
       await api.order().updateOrder(orderId, { dispatchingStatus: 'matching' });
@@ -54,6 +57,8 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
       Sentry.Native.captureException(error);
     }
   };
+  //tracking
+  useSegmentScreen('OrderNoMatch');
   // UI
   return (
     <FeedbackView
@@ -84,7 +89,10 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
         <View style={{ width: '49%' }}>
           <DefaultButton
             title={t('Cancelar pedido')}
-            onPress={() => navigation.navigate('OngoingOrderConfirmCancel', { orderId })}
+            onPress={() => {
+              track('clicked to navigate to cancel order');
+              navigation.navigate('OngoingOrderConfirmCancel', { orderId });
+            }}
             activityIndicator={isLoading}
             disabled={isLoading}
             secondary
@@ -93,7 +101,10 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
       </View>
       <DefaultButton
         title={t('Voltar para o início')}
-        onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
+        onPress={() => {
+          track('clicked to navigate to home screen');
+          navigation.replace('MainNavigator', { screen: 'Home' });
+        }}
       />
     </FeedbackView>
   );
