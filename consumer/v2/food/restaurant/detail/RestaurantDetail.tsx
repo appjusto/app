@@ -9,6 +9,7 @@ import PaddedView from '../../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';
 import HR from '../../../../../common/components/views/HR';
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
+import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { useContextBusiness } from '../../../../../common/store/context/business';
 import { useContextCategoriesWithProducts } from '../../../../../common/store/context/menu';
@@ -41,8 +42,6 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
   const categoriesWithProducts = useContextCategoriesWithProducts();
   // redux
   const consumer = useSelector(getConsumer);
-
-  //
   // side effects
   // setting the restaurant.name in the header
   React.useLayoutEffect(() => {
@@ -50,8 +49,8 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
       title: restaurant?.name ?? '',
     });
   }, [navigation, restaurant]);
-  // handlers
-
+  // tracking
+  useSegmentScreen('RestaurantDetail');
   // UI
   const sections =
     categoriesWithProducts?.map((category) => ({
@@ -75,7 +74,10 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
         ListHeaderComponent={
           <RestaurantDetailHeader
             restaurant={restaurant}
-            onAboutPress={() => navigation.navigate('AboutRestaurant')}
+            onAboutPress={() => {
+              track('navigating to AboutRestaurant');
+              navigation.navigate('AboutRestaurant');
+            }}
           />
         }
         renderSectionHeader={({ section }) => {
@@ -87,7 +89,10 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
         }}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate('ItemDetail', { productId: item.id })}
+            onPress={() => {
+              track('clicked on a product');
+              navigation.navigate('ItemDetail', { productId: item.id });
+            }}
           >
             <ProductListItem
               key={item.id}
@@ -102,12 +107,20 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
         <PaddedView>
           <DefaultButton
             title={t('Faça login para pedir')}
-            onPress={() => navigation.replace('WelcomeScreen')}
+            onPress={() => {
+              track('unlogged consumer navigating to login');
+              navigation.replace('WelcomeScreen');
+            }}
           />
         </PaddedView>
       ) : null}
       {consumer && restaurant.status === 'open' && restaurant.enabled ? (
-        <TouchableOpacity onPress={() => navigation.navigate('FoodOrderCheckout')}>
+        <TouchableOpacity
+          onPress={() => {
+            track('navigating to FoodOrderCheckout to place order');
+            navigation.navigate('FoodOrderCheckout');
+          }}
+        >
           <HR />
           <CartButton order={activeOrder} />
         </TouchableOpacity>

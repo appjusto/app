@@ -71,7 +71,6 @@ export default function ({ navigation, route }: Props) {
   // UI handlers
   const createCancelToken = useAxiosCancelToken();
   const saveCardHandler = async () => {
-    track('saving new card');
     Keyboard.dismiss();
     try {
       setLoading(true);
@@ -86,6 +85,7 @@ export default function ({ navigation, route }: Props) {
         },
         createCancelToken()
       );
+      track('saving new card');
       setLoading(false);
       if (returnScreen) {
         navigation.navigate(returnScreen, { paymentMethodId: result.paymentMethodId });

@@ -43,7 +43,7 @@ export default function () {
       <Stack.Screen
         name="ProfileEdit"
         component={ProfileEdit}
-        options={{ title: t('Sua sacola') }}
+        options={{ title: t('Dados pessoais') }}
       />
       <Stack.Screen
         name="ProfileAddCard"
