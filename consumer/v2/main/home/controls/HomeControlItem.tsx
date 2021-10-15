@@ -5,7 +5,7 @@ import { borders, colors, halfPadding, padding, texts } from '../../../../../com
 interface Props {
   title: string;
   subtitle: string;
-  icon: React.ReactNode;
+  icon: React.ReactNode | React.FC;
   onPress: () => void;
 }
 

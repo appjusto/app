@@ -3,7 +3,8 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { IconIllustrationPizza } from '../../../../../common/icons/icon-illustration-pizza';
-import { IconSmallUser } from '../../../../../common/icons/icon-small-user';
+import { Lottie } from '../../../../../common/lottie';
+import deliveryJson from '../../../../../common/lottie/icons-json/delivery.json';
 import { colors, padding, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { HomeControlItem } from './HomeControlItem';
@@ -42,7 +43,8 @@ export const HomeControls = ({ onStartOrderPress }: Props) => {
         <HomeControlItem
           title={t('Encomendas')}
           subtitle={t('Peça para buscar ou entregar um pacote')}
-          icon={<IconSmallUser />}
+          icon={<Lottie animationObject={deliveryJson} />}
+          // icon={<IconSmallUser />}
           onPress={() => onStartOrderPress('p2p')}
         />
       </View>

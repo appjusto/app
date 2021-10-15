@@ -136,7 +136,8 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "sentry-expo": "^4.0.0"
+    "sentry-expo": "^4.0.0",
+    "lottie-react-native": "4.0.2"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
