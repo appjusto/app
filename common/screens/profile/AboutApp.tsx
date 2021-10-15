@@ -15,6 +15,7 @@ import { ApiContext, AppDispatch } from '../../app/context';
 import PaddedView from '../../components/containers/PaddedView';
 import ConfigItem from '../../components/views/ConfigItem';
 import { IconVersion } from '../../icons/icon-version';
+import { track, useSegmentScreen } from '../../store/api/track';
 import { showToast } from '../../store/ui/actions';
 import { screens } from '../../styles';
 import HomeCard from '../home/cards/HomeCard';
@@ -41,6 +42,8 @@ export const AboutApp = ({ navigation }: Props) => {
     api.search().clearCache();
     dispatch(showToast('Clearing algolia cache...', 'success'));
   };
+  // tracking
+  useSegmentScreen('AboutApp');
   // UI
   const appVersion = `${t('Versão:')} ${Constants.nativeAppVersion} / ${
     Constants.manifest.version
@@ -61,12 +64,18 @@ export const AboutApp = ({ navigation }: Props) => {
         <ConfigItem
           title={t('Site oficial')}
           subtitle={t('Acesse nosso site')}
-          onPress={() => Linking.openURL(AppJustoSiteURL)}
+          onPress={() => {
+            track('consumer opened our site');
+            Linking.openURL(AppJustoSiteURL);
+          }}
         />
         <ConfigItem
           title={t('Código aberto')}
           subtitle={t('Acesse o repositório com o código no GitHub')}
-          onPress={() => Linking.openURL(AppJustoGithubURL)}
+          onPress={() => {
+            track('consumer opened our github page');
+            Linking.openURL(AppJustoGithubURL);
+          }}
         />
       </View>
       <View style={{ flex: 1 }} />

@@ -13,7 +13,7 @@ import { ApiContext, AppDispatch } from '../../app/context';
 import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import PaddedView from '../../components/containers/PaddedView';
-import { useSegmentScreen } from '../../store/api/track';
+import { track, useSegmentScreen } from '../../store/api/track';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
 import { deleteAccount } from '../../store/user/actions';
@@ -57,6 +57,7 @@ export default function ({ navigation }: Props) {
     Keyboard.dismiss();
     try {
       await dispatch(deleteAccount(api)(survey));
+      track('user deleted account');
     } catch (error) {
       dispatch(showToast(error.toString(), 'error'));
     }
@@ -141,7 +142,10 @@ export default function ({ navigation }: Props) {
               style={{ width: '100%', marginBottom: 8 }}
               title={t('Manter minha conta')}
               disabled={busy}
-              onPress={() => navigation.goBack()}
+              onPress={() => {
+                track('consumer is not going to delete account anymore');
+                navigation.goBack();
+              }}
             />
             <DefaultButton
               title={t('Tenho certeza, pode excluir')}
