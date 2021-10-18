@@ -10,7 +10,7 @@ import { t } from '../../../strings';
 interface Props {
   item: Fare;
   selectedFare: boolean;
-  onFareSelect?: (fare: Fare) => void; // TODO: remove "?" later
+  onFareSelect: (fare: Fare) => void;
   onFleetDetail: (fleetId: string) => void;
 }
 
@@ -25,7 +25,7 @@ export const FleetListItem = ({ item, selectedFare, onFareSelect, onFleetDetail 
   })();
   const text = separateWithDot(total, participantsOnline);
   return (
-    <TouchableOpacity onPress={(item) => onFareSelect}>
+    <TouchableOpacity onPress={() => onFareSelect(item)}>
       <PaddedView
         style={{
           ...borders.default,

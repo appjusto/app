@@ -1,4 +1,4 @@
-import { Place } from '@appjusto/types';
+import { Fare, Place } from '@appjusto/types';
 import { FleetDetailParamList } from '../../../common/screens/fleet/FleetDetail';
 import { AddressCompleteParamList } from '../common/AddressComplete';
 import { PixParamList } from '../common/PayWithPix';
@@ -12,10 +12,15 @@ export type P2POrderNavigatorParamList = {
     origin?: Place;
     destination?: Place;
     paymentMethodId?: string;
+    returningFare?: Fare;
   };
   TransportableItems: undefined;
   AboutCharges: undefined;
-  AvailableFleets: undefined;
+  AvailableFleets: {
+    orderId: string;
+    selectedFare: Fare;
+    returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
+  };
 } & AddressCompleteParamList &
   PixParamList &
   FleetDetailParamList &

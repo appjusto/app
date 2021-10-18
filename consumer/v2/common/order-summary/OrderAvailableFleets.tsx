@@ -94,7 +94,7 @@ export const OrderAvailableFleets = ({
                             <FleetListItem
                               item={item}
                               selectedFare={selectedFare?.fleet.id === item.fleet.id}
-                              onFareSelect={() => onFareSelect(item)}
+                              onFareSelect={(item) => onFareSelect(item)}
                               onFleetDetail={() => onFleetSelect(item.fleet.id)}
                             />
                           </View>

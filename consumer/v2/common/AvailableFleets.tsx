@@ -28,11 +28,17 @@ type Props = {
 
 export const AvailableFleets = ({ navigation, route }: Props) => {
   // params
-  const { orderId } = route.params;
+  const { orderId, selectedFare, returnScreen } = route.params;
   // state
   const order = useObserveOrder(orderId);
-  const [selectedFare, setSelectedFare] = React.useState<Fare>();
+  const [fare, setFare] = React.useState<Fare>(selectedFare);
   const quotes = useQuotes(orderId);
+  // handlers
+  const navigateToReturnScreen = () => {
+    if (returnScreen === 'FoodOrderCheckout')
+      navigation.navigate('FoodOrderCheckout', { returningFare: fare });
+    else navigation.navigate('CreateOrderP2P', { returningFare: fare });
+  };
   // UI
   if (!order || !quotes) {
     return (
@@ -41,7 +47,6 @@ export const AvailableFleets = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  console.log(quotes);
   return (
     <ScrollView
       style={{ ...screens.default }}
@@ -66,9 +71,14 @@ export const AvailableFleets = ({ navigation, route }: Props) => {
               <View key={item.fleet.id} style={{ marginBottom: padding }}>
                 <FleetListItem
                   item={item}
-                  selectedFare={selectedFare?.fleet.id === item.fleet.id}
-                  onFareSelect={(item) => setSelectedFare(item)}
-                  onFleetDetail={() => null}
+                  selectedFare={fare?.fleet.id === item.fleet.id}
+                  onFareSelect={(item) => {
+                    setFare(item);
+                    navigateToReturnScreen();
+                  }}
+                  onFleetDetail={() =>
+                    navigation.navigate('FleetDetail', { fleetId: item.fleet.id })
+                  }
                 />
               </View>
             );

@@ -74,6 +74,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     if (!quotes || isEmpty(quotes)) return;
     setSelectedFare(quotes[0]);
   }, [quotes]);
+  // getting the selected fare in the AvailableFleets screen;
+  React.useEffect(() => {
+    if (params?.returningFare) setSelectedFare(params.returningFare);
+  }, [params]);
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
     if (params?.destination) {
@@ -181,6 +185,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       navigation.navigate('ProfilePaymentMethods', { returnScreen: 'FoodOrderCheckout' });
     }
   }, [consumer, navigation, selectedPaymentMethodId]);
+
   // UI
   if (!order) {
     return (
@@ -226,7 +231,11 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             onRetry={getOrderQuotesHandler}
             order={order}
             navigateToAvailableFleets={() =>
-              navigation.navigate('AvailableFleets', { orderId: order.id })
+              navigation.navigate('AvailableFleets', {
+                orderId: order.id,
+                selectedFare: selectedFare!,
+                returnScreen: 'FoodOrderCheckout',
+              })
             }
           />
         }
