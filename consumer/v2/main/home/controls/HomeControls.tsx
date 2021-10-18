@@ -43,7 +43,15 @@ export const HomeControls = ({ onStartOrderPress }: Props) => {
         <HomeControlItem
           title={t('Encomendas')}
           subtitle={t('Peça para buscar ou entregar um pacote')}
-          icon={<Lottie animationObject={deliveryJson} />}
+          icon={
+            <Lottie
+              animationObject={deliveryJson}
+              styleProp={{
+                width: 100,
+                height: 100,
+              }}
+            />
+          }
           // icon={<IconSmallUser />}
           onPress={() => onStartOrderPress('p2p')}
         />

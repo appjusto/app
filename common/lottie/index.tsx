@@ -1,8 +1,11 @@
 import LottieView from 'lottie-react-native';
 import React, { useEffect, useRef } from 'react';
+import { StyleProp, ViewStyle } from 'react-native';
 
 interface Props {
   animationObject: AnimationObject;
+  styleProp: StyleProp<ViewStyle>;
+  loopProp?: boolean;
 }
 
 interface AnimationObject {
@@ -19,7 +22,7 @@ interface AnimationObject {
 }
 
 // TODO: Pass properties.
-export const Lottie = ({ animationObject }: Props) => {
+export const Lottie = ({ animationObject, styleProp, loopProp = false }: Props) => {
   const animationRef = useRef<LottieView>(null);
 
   useEffect(() => {
@@ -27,14 +30,6 @@ export const Lottie = ({ animationObject }: Props) => {
   }, []);
 
   return (
-    <LottieView
-      ref={animationRef}
-      loop
-      style={{
-        width: 100,
-        height: 100,
-      }}
-      source={animationObject}
-    />
+    <LottieView ref={animationRef} loop={loopProp} style={styleProp} source={animationObject} />
   );
 };
