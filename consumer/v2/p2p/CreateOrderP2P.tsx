@@ -63,6 +63,10 @@ export default function ({ navigation, route }: Props) {
     if (!quotes || isEmpty(quotes)) return;
     setSelectedFare(quotes[0]);
   }, [quotes]);
+  // getting the selected fare in the AvailableFleets screen;
+  React.useEffect(() => {
+    if (params?.returningFare) setSelectedFare(params.returningFare);
+  }, [params]);
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
     console.log('CreateOrderP2P useEffect; params: ', params);
@@ -218,6 +222,13 @@ export default function ({ navigation, route }: Props) {
         quotes={quotes}
         selectedFare={selectedFare}
         onFareSelect={(fare) => setSelectedFare(fare)}
+        navigateToAvailableFleets={() =>
+          navigation.navigate('AvailableFleets', {
+            orderId: order.id,
+            selectedFare: selectedFare!,
+            returnScreen: 'CreateOrderP2P',
+          })
+        }
         onRetry={getOrderQuotesHandler}
         total={selectedFare?.total ?? 0}
       />
