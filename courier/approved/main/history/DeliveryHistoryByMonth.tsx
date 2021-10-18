@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import StatusBadge from '../../../../common/components/views/StatusBadge';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
-import { useSegmentScreen } from '../../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import {
   getOrdersWithFilter,
   getOrderTime,
@@ -52,10 +52,11 @@ export default function ({ navigation, route }: Props) {
   const filteredOrders = getOrdersWithFilter(orders, year, month);
   // side effects
   // tracking
-  useSegmentScreen('Delivery History by Month');
+  useSegmentScreen('DeliveryHistoryByMonth');
   // handlers
   const orderPressHandler = useCallback((order: WithId<Order>) => {
     if (isOrderOngoing(order)) {
+      track('navigating to OngoingDelivery');
       navigation.navigate('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: {
@@ -63,6 +64,7 @@ export default function ({ navigation, route }: Props) {
         },
       });
     } else {
+      track('navigating to DeliverySummary');
       navigation.navigate('DeliverySummary', { orderId: order.id! });
     }
   }, []);

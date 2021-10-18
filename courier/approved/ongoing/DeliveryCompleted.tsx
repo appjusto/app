@@ -8,7 +8,7 @@ import HorizontalSelect, {
 } from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
-import { useSegmentScreen } from '../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
@@ -39,7 +39,7 @@ export default function ({ navigation, route }: Props) {
   );
   // side effects
   // tracking
-  useSegmentScreen('Delivery Completed');
+  useSegmentScreen('DeliveryCompleted');
   // handlers
   // TODO: add a handler to send client feedback to database
   // UI
@@ -64,7 +64,10 @@ export default function ({ navigation, route }: Props) {
       </View>
       <DefaultButton
         title={t('Finalizar')}
-        onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
+        onPress={() => {
+          track('navigating Home');
+          navigation.replace('MainNavigator', { screen: 'Home' });
+        }}
         style={{ marginTop: padding }}
       />
     </PaddedView>

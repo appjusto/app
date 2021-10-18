@@ -3,6 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconCall } from '../../../common/icons/icon-call';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -20,6 +21,8 @@ type Props = {
 };
 
 export const CallCourier = () => {
+  // tracking
+  useSegmentScreen('CallCourier');
   return (
     <FeedbackView
       header={t('Vamos ligar para você')}

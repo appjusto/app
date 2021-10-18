@@ -58,7 +58,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   const [isLoading, setLoading] = React.useState(false);
   // side effects
   // tracking
-  useSegmentScreen('Report issue', {
+  useSegmentScreen('ReportIssue', {
     issueType,
   });
 

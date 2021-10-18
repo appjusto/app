@@ -22,6 +22,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -53,11 +54,21 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
   const [description, setDescription] = React.useState('');
   const [packagePhoto, setPackagePhoto] = React.useState<ImageURISource | undefined | null>();
   const [frontPhoto, setFrontPhoto] = React.useState<ImageURISource | undefined | null>();
-  const uploadPODPackage = useMutation((localUri: string) =>
-    api.courier().uploadPODPackage(orderId, order!.courier!.id, localUri)
+  const uploadPODPackage = useMutation(
+    (localUri: string) => api.courier().uploadPODPackage(orderId, order!.courier!.id, localUri),
+    {
+      onSuccess: () => {
+        track('courier uploaded POD package photo');
+      },
+    }
   );
-  const uploadPODFront = useMutation((localUri: string) =>
-    api.courier().uploadPODFront(orderId, order!.courier!.id, localUri)
+  const uploadPODFront = useMutation(
+    (localUri: string) => api.courier().uploadPODFront(orderId, order!.courier!.id, localUri),
+    {
+      onSuccess: () => {
+        track('courier uploaded POD front photo');
+      },
+    }
   );
   // side effects
   //upload POD package photo
@@ -74,6 +85,8 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
   }, [frontPhoto]);
   //refs
   const descriptionRef = React.useRef<TextInput>(null);
+  // tracking
+  useSegmentScreen('NoCodeDelivery');
   // UI handlers
   const photoHandler = async (type: 'package' | 'front', aspect: [number, number]) => {
     const { granted } = await ImagePicker.requestCameraPermissionsAsync();
@@ -96,6 +109,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
       try {
         setLoading(true);
         await api.order().completeDelivery(orderId, undefined, name, description);
+        track('courier completed a no code delivery');
         setLoading(false);
       } catch (error) {
         setLoading(false);
