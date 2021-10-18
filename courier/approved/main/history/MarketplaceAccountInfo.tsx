@@ -11,6 +11,7 @@ import HR from '../../../../common/components/views/HR';
 import { usePlatformParamsContext } from '../../../../common/contexts/PlatformParamsContext';
 import { IconWalletSmall } from '../../../../common/icons/icon-wallet-small';
 import { useMarketplaceAccountInfo } from '../../../../common/store/api/courier/account/useMarketplaceAccountInfo';
+import { track } from '../../../../common/store/api/track';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
@@ -61,6 +62,7 @@ export const MarketplaceAccountInfo = () => {
     setWithdrawing(true);
     try {
       const result = await api.courier().requestWithdraw(courier.id, availableForWithdraw);
+      track('courier requested withdraw');
       console.log(result);
       setWithdrawing(false);
       navigation.navigate('DeliveriesNavigator', {
@@ -77,13 +79,15 @@ export const MarketplaceAccountInfo = () => {
       setWithdrawing(false);
     }
   };
-  const advanceHandler = () =>
+  const advanceHandler = () => {
+    track('navigating to Receivables');
     navigation.navigate('DeliveriesNavigator', {
       screen: 'Receivables',
       params: {
         receivableBalance: info!.receivable_balance,
       },
     });
+  };
   // UI
   return (
     <View>
