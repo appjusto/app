@@ -77,7 +77,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   // getting the selected fare in the AvailableFleets screen;
   React.useEffect(() => {
     if (params?.returningFare) setSelectedFare(params.returningFare);
-  }, [params]);
+  }, [params?.returningFare]);
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
     if (params?.destination) {

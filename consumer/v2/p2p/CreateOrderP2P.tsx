@@ -66,7 +66,7 @@ export default function ({ navigation, route }: Props) {
   // getting the selected fare in the AvailableFleets screen;
   React.useEffect(() => {
     if (params?.returningFare) setSelectedFare(params.returningFare);
-  }, [params]);
+  }, [params?.returningFare]);
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
     console.log('CreateOrderP2P useEffect; params: ', params);
