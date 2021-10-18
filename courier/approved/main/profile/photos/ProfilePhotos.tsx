@@ -95,7 +95,7 @@ export default function ({ navigation }: Props) {
 
   // side effects
   // tracking
-  useSegmentScreen('Profile Photos');
+  useSegmentScreen('ProfilePhotos');
   // when current selfie is loaded, update state
   React.useEffect(() => {
     if (currentSelfieQuery.data) {

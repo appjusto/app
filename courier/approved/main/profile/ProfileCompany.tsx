@@ -74,7 +74,7 @@ export default function ({ navigation, route }: Props) {
   const additionalRef = React.useRef<TextInput>(null);
   // side effects
   // tracking
-  useSegmentScreen('Profile Company');
+  useSegmentScreen('ProfileCompany');
   // updating fields after cep query
   React.useEffect(() => {
     if (cep.length === 8 && cepRef.current?.isFocused()) {
