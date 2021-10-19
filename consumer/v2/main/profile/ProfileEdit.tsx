@@ -69,14 +69,19 @@ export default function ({ navigation, route }: Props) {
   // handlers
   const updateProfileHandler = async () => {
     Keyboard.dismiss();
-    try {
-      setLoading(true);
-      api.profile().updateProfile(consumer.id, updatedConsumer);
-      setLoading(false);
-      if (returnScreen) navigation.navigate(returnScreen, { returnScreen: returnNextScreen });
-      else navigation.goBack();
-    } catch (error) {
-      dispatch(showToast(t('Não foi possível atualizar o perfil.'), 'error'));
+    if (orders) {
+      console.log('cliquei');
+      navigation.navigate('RequestProfileEdit');
+    } else {
+      try {
+        setLoading(true);
+        api.profile().updateProfile(consumer.id, updatedConsumer);
+        setLoading(false);
+        if (returnScreen) navigation.navigate(returnScreen, { returnScreen: returnNextScreen });
+        else navigation.goBack();
+      } catch (error) {
+        dispatch(showToast(t('Não foi possível atualizar o perfil.'), 'error'));
+      }
     }
   };
   // refs
@@ -90,6 +95,17 @@ export default function ({ navigation, route }: Props) {
       if (!orders) return t('Atualizar');
       else return t('Atualizar dados');
     } else return t('Salvar e avançar');
+  })();
+  const title = (() => {
+    if (isProfileComplete) return t('Seus dados');
+    else return t('Finalize seu cadastro');
+  })();
+  const subtitle = (() => {
+    if (isProfileComplete) return t('Edite seus dados:');
+    else
+      return t(
+        'Seus dados pessoais serão usados somente para a criação das faturas e receber atendimento quando for necessário.'
+      );
   })();
   // UI
   return (
@@ -110,21 +126,19 @@ export default function ({ navigation, route }: Props) {
               paddingBottom: halfPadding,
             }}
           >
-            {isProfileComplete ? t('Seus dados') : t('Finalize seu cadastro')}
+            {title}
           </Text>
-          <Text
-            style={{
-              ...texts.sm,
-              color: colors.grey700,
-              paddingBottom: padding,
-            }}
-          >
-            {isProfileComplete
-              ? t('Edite seus dados pessoais:')
-              : t(
-                  'Seus dados pessoais serão usados somente para a criação das faturas e receber atendimento quando for necessário.'
-                )}
-          </Text>
+          {orders ? null : (
+            <Text
+              style={{
+                ...texts.sm,
+                color: colors.grey700,
+                paddingBottom: padding,
+              }}
+            >
+              {subtitle}
+            </Text>
+          )}
           <DefaultInput title={t('E-mail')} value={consumer.email} editable={false} />
           <DefaultInput
             ref={nameRef}

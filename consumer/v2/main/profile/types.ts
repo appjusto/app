@@ -13,6 +13,7 @@ export type ProfileParamList = {
   };
   Terms: undefined;
   AboutApp: undefined;
+  RequestProfileEdit: undefined;
 } & ProfileEraseParamList &
   ProfilePaymentMethodsParamList &
   ProfileAddCardParamList;
