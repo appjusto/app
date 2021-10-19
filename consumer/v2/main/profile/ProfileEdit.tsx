@@ -19,6 +19,7 @@ import {
 } from '../../../../common/components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
+import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { consumerInfoSet } from '../../../../common/store/consumer/validators';
 import { isConsumerProfileComplete } from '../../../../common/store/courier/validators';
@@ -49,6 +50,8 @@ export default function ({ navigation, route }: Props) {
   // app state
   const consumer = useSelector(getConsumer)!;
   const isProfileComplete = isConsumerProfileComplete(consumer);
+  const options = React.useMemo(() => ({ consumerId: consumer.id }), [consumer.id]);
+  const orders = useObserveOrders(options);
   // state
   const [name, setName] = React.useState<string>(consumer.name ?? '');
   const [surname, setSurname] = React.useState(consumer.surname ?? '');
@@ -81,7 +84,13 @@ export default function ({ navigation, route }: Props) {
   const surnameRef = React.useRef<TextInput>(null);
   const cpfRef = React.useRef<TextInput>(null);
   const phoneRef = React.useRef<TextInput>(null);
-
+  // helpers
+  const buttonTitle = (() => {
+    if (isProfileComplete) {
+      if (!orders) return t('Atualizar');
+      else return t('Atualizar dados');
+    } else return t('Salvar e avançar');
+  })();
   // UI
   return (
     <View style={screens.config}>
@@ -129,6 +138,7 @@ export default function ({ navigation, route }: Props) {
             onSubmitEditing={() => surnameRef.current?.focus()}
             keyboardType="default"
             maxLength={30}
+            editable={!orders}
           />
           <DefaultInput
             ref={surnameRef}
@@ -142,6 +152,7 @@ export default function ({ navigation, route }: Props) {
             onSubmitEditing={() => cpfRef.current?.focus()}
             keyboardType="default"
             maxLength={30}
+            editable={!orders}
           />
           <PatternInput
             ref={cpfRef}
@@ -159,6 +170,7 @@ export default function ({ navigation, route }: Props) {
             onChangeText={(text) => setCpf(trim(text))}
             onFocus={() => setFocusedField('cpf')}
             onBlur={() => setFocusedField(undefined)}
+            editable={!orders}
           />
           {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
             <Text
@@ -186,11 +198,12 @@ export default function ({ navigation, route }: Props) {
             returnKeyType="next"
             blurOnSubmit
             onChangeText={(text) => setPhone(trim(text))}
+            editable={!orders}
           />
           <View style={{ flex: 1 }} />
           <View style={{ paddingVertical: padding }}>
             <DefaultButton
-              title={isProfileComplete ? t('Atualizar') : t('Salvar e avançar')}
+              title={buttonTitle}
               onPress={updateProfileHandler}
               disabled={!canSubmit || isLoading}
               activityIndicator={isLoading}
