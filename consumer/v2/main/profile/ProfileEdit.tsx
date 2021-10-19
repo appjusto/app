@@ -71,7 +71,19 @@ export default function ({ navigation, route }: Props) {
     Keyboard.dismiss();
     if (orders) {
       console.log('cliquei');
-      navigation.navigate('RequestProfileEdit');
+      navigation.replace('RequestProfileEdit');
+      // check if there is already an "edit request" in place
+      // if there is one, show a toast
+      // if (editRequest) {
+      //   dispatch(
+      //     showToast(
+      //       t(
+      //         'Você já tem uma solicitação de alteração de dados sendo analisada. Aguarde a conclusão do processo para efetuar uma nova solicitação'
+      //       ),
+      //       'error'
+      //     )
+      //   );
+      // }
     } else {
       try {
         setLoading(true);
