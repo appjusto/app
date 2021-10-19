@@ -20,6 +20,7 @@ import {
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
+import { track } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { consumerInfoSet } from '../../../../common/store/consumer/validators';
 import { isConsumerProfileComplete } from '../../../../common/store/courier/validators';
@@ -71,6 +72,7 @@ export default function ({ navigation, route }: Props) {
     Keyboard.dismiss();
     if (orders) {
       console.log('cliquei');
+      track('navigating to RequestProfileEdit');
       navigation.replace('RequestProfileEdit');
       // check if there is already an "edit request" in place
       // if there is one, show a toast

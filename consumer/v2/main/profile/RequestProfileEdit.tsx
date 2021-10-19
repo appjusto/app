@@ -1,11 +1,13 @@
+import { Feather } from '@expo/vector-icons';
 import * as cpfutils from '@fnando/cpf';
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { trim } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
@@ -19,7 +21,9 @@ import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-
 import PatternInput from '../../../../common/components/inputs/PatternInput';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
 import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
+import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
+import { showToast } from '../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ProfileParamList } from './types';
@@ -33,6 +37,9 @@ type Props = {
 };
 
 export const RequestProfileEdit = ({ navigation, route }: Props) => {
+  // context
+  const dispatch = useDispatch<AppDispatch>();
+  const api = React.useContext(ApiContext);
   // app state
   const consumer = useSelector(getConsumer)!;
   // state
@@ -42,12 +49,38 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   const [phone, setPhone] = React.useState(consumer.phone! ?? '');
   const [focusedField, setFocusedField] = React.useState<string>();
   const [requestSent, setRequestSent] = React.useState(false);
+  const [isLoading, setLoading] = React.useState(false);
   // refs
   const nameRef = React.useRef<TextInput>(null);
   const surnameRef = React.useRef<TextInput>(null);
   const cpfRef = React.useRef<TextInput>(null);
   const phoneRef = React.useRef<TextInput>(null);
-  //TODO: rememeber Keyboard.dismiss() in the handler
+  //tracking
+  useSegmentScreen('RequestProfileEdit');
+  // helpers
+  // const updatedConsumer: Partial<ConsumerProfile> = {
+  //   name: name.trim(),
+  //   surname: surname.trim(),
+  //   cpf: cpf.trim(),
+  //   phone: phone.trim(),
+  // };
+  // handlers
+  const changeProfileHandler = async () => {
+    Keyboard.dismiss();
+    try {
+      setLoading(true);
+      //do something
+      setLoading(false);
+      setRequestSent(true);
+    } catch (error: any) {
+      dispatch(
+        showToast(
+          t('Não foi realizar a operação nesse momento. Tente novamente mais tarde'),
+          'error'
+        )
+      );
+    }
+  };
   //UI
   if (!consumer) {
     return (
@@ -163,9 +196,23 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
           blurOnSubmit
           onChangeText={(text) => setPhone(trim(text))}
         />
-        <View style={{ flex: 1 }} />
-        <DefaultButton title={t('Atualizar dados')} />
       </PaddedView>
+      <View style={{ flex: 1 }} />
+      <View style={{ flex: 1, backgroundColor: colors.white, padding }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: padding }}>
+          <Feather name="info" size={14} />
+          <Text style={{ ...texts.md, marginLeft: halfPadding }}>
+            {t('Informações sobre a alteração de dados')}
+          </Text>
+        </View>
+        <Text style={{ ...texts.xs }}>
+          {t(
+            'Por motivos de segurança, depois que o cliente realiza o primeiro pedido, a alteração de dados pessoais somente é realizada após análise da nossa equipe. Você será notificado assim que a mudança for efetivada.'
+          )}
+        </Text>
+        <View style={{ flex: 1 }} />
+        <DefaultButton title={t('Solicitar alteração')} onPress={changeProfileHandler} />
+      </View>
     </KeyboardAwareScrollView>
   );
 };
