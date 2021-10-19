@@ -21,7 +21,7 @@ import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-
 import PatternInput from '../../../../common/components/inputs/PatternInput';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
 import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
-import { useSegmentScreen } from '../../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
@@ -70,6 +70,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
     try {
       setLoading(true);
       //do something
+      track('profile edit requested');
       setLoading(false);
       setRequestSent(true);
     } catch (error: any) {
