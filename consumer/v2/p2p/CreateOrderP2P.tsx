@@ -64,6 +64,10 @@ export default function ({ navigation, route }: Props) {
     if (!quotes || isEmpty(quotes)) return;
     setSelectedFare(quotes[0]);
   }, [quotes]);
+  // getting the selected fare in the AvailableFleets screen;
+  React.useEffect(() => {
+    if (params?.returningFare) setSelectedFare(params.returningFare);
+  }, [params?.returningFare]);
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
     console.log('CreateOrderP2P useEffect; params: ', params);
@@ -115,7 +119,7 @@ export default function ({ navigation, route }: Props) {
   // tracking
   useSegmentScreen('CreateOrderP2P');
   // handlers
-  const getOrderQuotesHandler = async () => {
+  const getOrderQuotesHandler = React.useCallback(async () => {
     if (!order) return;
     if (!order.origin?.location || !order.route?.distance) {
       if (order.route?.issue) dispatch(showToast(order.route.issue, 'error'));
@@ -127,7 +131,7 @@ export default function ({ navigation, route }: Props) {
     } catch (error) {
       dispatch(showToast(error.toString(), 'error'));
     }
-  };
+  }, [order, api, dispatch]);
   // navigate to 'AddressComplete' to enter address
   const navigateToAddressComplete = React.useCallback(
     (returnParam: string, value?: Place) => {
@@ -235,6 +239,13 @@ export default function ({ navigation, route }: Props) {
         quotes={quotes}
         selectedFare={selectedFare}
         onFareSelect={(fare) => setSelectedFare(fare)}
+        navigateToAvailableFleets={() =>
+          navigation.navigate('AvailableFleets', {
+            orderId: order.id,
+            selectedFare: selectedFare!,
+            returnScreen: 'CreateOrderP2P',
+          })
+        }
         onRetry={getOrderQuotesHandler}
         total={selectedFare?.total ?? 0}
       />

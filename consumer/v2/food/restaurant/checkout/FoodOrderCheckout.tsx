@@ -75,6 +75,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     if (!quotes || isEmpty(quotes)) return;
     setSelectedFare(quotes[0]);
   }, [quotes]);
+  // getting the selected fare in the AvailableFleets screen;
+  React.useEffect(() => {
+    if (params?.returningFare) setSelectedFare(params.returningFare);
+  }, [params?.returningFare]);
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
     if (params?.destination) {
@@ -116,7 +120,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   // tracking
   useSegmentScreen('FoodOrderCheckout');
   // handlers
-  const getOrderQuotesHandler = async () => {
+  const getOrderQuotesHandler = React.useCallback(async () => {
     if (!order) return;
     if (!order.origin?.location || !order.route?.distance) {
       if (order.route?.issue) dispatch(showToast(order.route.issue, 'error'));
@@ -128,7 +132,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     } catch (error) {
       dispatch(showToast(error.toString(), 'error'));
     }
-  };
+  }, [order, api, dispatch]);
   const placeOrderHandler = async (fleetId: string) => {
     Keyboard.dismiss();
     if (!order) return;
@@ -191,6 +195,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       navigation.navigate('ProfilePaymentMethods', { returnScreen: 'FoodOrderCheckout' });
     }
   }, [consumer, navigation, selectedPaymentMethodId]);
+
   // UI
   if (!order) {
     return (
@@ -247,6 +252,13 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             }}
             onRetry={getOrderQuotesHandler}
             order={order}
+            navigateToAvailableFleets={() =>
+              navigation.navigate('AvailableFleets', {
+                orderId: order.id,
+                selectedFare: selectedFare!,
+                returnScreen: 'FoodOrderCheckout',
+              })
+            }
           />
         }
         costBreakdown={<OrderCostBreakdown order={order} selectedFare={selectedFare!} />}
