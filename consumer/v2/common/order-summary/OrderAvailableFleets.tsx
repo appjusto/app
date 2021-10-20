@@ -32,10 +32,9 @@ export const OrderAvailableFleets = ({
 }: Props) => {
   // helpers
   const isLoading = quotes === undefined;
-  // const fleets = (quotes ?? []).map((quote) => quote.fleet);
   const orderedFares = (quotes ?? [])
     .sort((a, b) => b.fleet.participantsOnline - a.fleet.participantsOnline)
-    .slice(0, 2);
+    .slice(0, 3);
   // UI
   return (
     <View>
@@ -107,12 +106,6 @@ export const OrderAvailableFleets = ({
                           onPress={navigateToAvailableFleets}
                         />
                       ) : null}
-                      {/*TODO: remove this after tests */}
-                      <DefaultButton
-                        secondary
-                        title={`${t('Ver todas as frotas')} ${quotes.length} ${t('disponíveis')}`}
-                        onPress={navigateToAvailableFleets}
-                      />
                     </View>
                   )}
                 </ShowIf>

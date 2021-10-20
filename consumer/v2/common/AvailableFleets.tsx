@@ -33,12 +33,6 @@ export const AvailableFleets = ({ navigation, route }: Props) => {
   const order = useObserveOrder(orderId);
   const [fare, setFare] = React.useState<Fare>(selectedFare);
   const quotes = useQuotes(orderId);
-  // handlers
-  const navigateToReturnScreen = () => {
-    if (returnScreen === 'FoodOrderCheckout')
-      navigation.navigate('FoodOrderCheckout', { returningFare: fare });
-    else navigation.navigate('CreateOrderP2P', { returningFare: fare });
-  };
   // UI
   if (!order || !quotes) {
     return (
@@ -72,9 +66,9 @@ export const AvailableFleets = ({ navigation, route }: Props) => {
                 <FleetListItem
                   item={item}
                   selectedFare={fare?.fleet.id === item.fleet.id}
-                  onFareSelect={(item) => {
-                    setFare(item);
-                    navigateToReturnScreen();
+                  onFareSelect={(fare) => {
+                    setFare(fare);
+                    navigation.navigate(returnScreen, { returningFare: fare });
                   }}
                   onFleetDetail={() =>
                     navigation.navigate('FleetDetail', { fleetId: item.fleet.id })
