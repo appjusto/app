@@ -105,11 +105,12 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
       : courierInfoSet(updatedUser as Partial<CourierProfile> | undefined);
   const isProfileApproved =
     flavor === 'consumer' ? isConsumerProfileComplete(consumer) : courier.situation === 'approved';
+  const hasOrdered = orders.length;
 
   const buttonTitle = (() => {
     if (flavor === 'consumer') {
       if (isProfileApproved) {
-        if (!orders) return t('Atualizar');
+        if (!hasOrdered) return t('Atualizar');
         else return t('Atualizar dados');
       } else return t('Salvar e avançar');
     } else {
@@ -134,14 +135,14 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
     }
   })();
 
-  const editable = flavor === 'consumer' ? !orders : !isProfileApproved;
+  const editable = flavor === 'consumer' ? !hasOrdered : !isProfileApproved;
 
   // handler
   const updateProfileHandler = async () => {
     Keyboard.dismiss();
     try {
       if (flavor === 'consumer') {
-        if (orders) {
+        if (hasOrdered) {
           track('navigating to RequestProfileEdit');
           navigation.replace('RequestProfileEdit');
         } else {
