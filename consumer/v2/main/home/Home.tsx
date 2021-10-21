@@ -13,6 +13,7 @@ import { HomeCouriersNearbyCard } from '../../../../common/screens/home/cards/Ho
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
+import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
 import { padding, screens } from '../../../../common/styles';
@@ -36,6 +37,7 @@ export default function ({ navigation }: Props) {
   // side effects
   useNotificationToken();
   useBusinessDeeplink();
+  useSegmentScreen('Home');
   // UI
   return (
     <View style={[screens.headless, screens.config]}>
