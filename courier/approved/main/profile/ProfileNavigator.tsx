@@ -6,6 +6,7 @@ import { AboutApp } from '../../../../common/screens/profile/AboutApp';
 import { CommonProfileEdit } from '../../../../common/screens/profile/CommonProfileEdit';
 import ProfileErase from '../../../../common/screens/profile/ProfileErase';
 import Terms from '../../../../common/screens/unlogged/Terms';
+import { RequestProfileEdit } from '../../../../consumer/v2/main/profile/RequestProfileEdit';
 import { t } from '../../../../strings';
 import ProfileBank from './bank/ProfileBank';
 import SelectBank from './bank/SelectBank';
@@ -26,6 +27,11 @@ export default function () {
       <Stack.Screen
         name="ProfileEdit"
         component={ProfileEdit}
+        options={{ title: t('Dados pessoais') }}
+      />
+      <Stack.Screen
+        name="RequestProfileEdit"
+        component={RequestProfileEdit}
         options={{ title: t('Dados pessoais') }}
       />
       <Stack.Screen

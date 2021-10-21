@@ -4,7 +4,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { trim } from 'lodash';
 import React from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Keyboard, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { RestaurantNavigatorParamList } from '../../../consumer/v2/food/restaurant/types';
@@ -27,15 +27,22 @@ import {
 } from '../../components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../components/inputs/pattern-input/parsers';
 import PatternInput from '../../components/inputs/PatternInput';
+import { useObserveOrders } from '../../store/api/order/hooks/useObserveOrders';
+import { track, useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
 import { getConsumer } from '../../store/consumer/selectors';
 import { consumerInfoSet } from '../../store/consumer/validators';
 import { getCourier } from '../../store/courier/selectors';
-import { courierInfoSet } from '../../store/courier/validators';
+import { courierInfoSet, isConsumerProfileComplete } from '../../store/courier/validators';
+import { showToast } from '../../store/ui/actions';
+import { updateProfile } from '../../store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../styles';
 
 export type ProfileEditParamList = {
-  CommonProfileEdit: undefined;
+  CommonProfileEdit: {
+    returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P' | 'ProfileAddCard';
+    returnNextScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P';
+  };
 };
 
 type ScreenNavigationProp = CompositeNavigationProp<
@@ -55,15 +62,17 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-export const CommonProfileEdit = ({ route }: Props) => {
+export const CommonProfileEdit = ({ route, navigation }: Props) => {
+  // params
+  const { returnScreen, returnNextScreen } = route.params ?? {};
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
   // app state
   const flavor = useSelector(getFlavor);
-  const consumer = useSelector(getConsumer);
-  const courier = useSelector(getCourier);
-  const profile = flavor === 'consumer' ? consumer! : courier!;
+  const consumer = useSelector(getConsumer)!;
+  const courier = useSelector(getCourier)!;
+  const profile = flavor === 'consumer' ? consumer : courier;
   // state
   const [name, setName] = React.useState<string>(profile.name ?? '');
   const [surname, setSurname] = React.useState(profile.surname ?? '');
@@ -71,28 +80,96 @@ export const CommonProfileEdit = ({ route }: Props) => {
   const [phone, setPhone] = React.useState(profile.phone! ?? '');
   const [focusedField, setFocusedField] = React.useState<string>();
   const [isLoading, setLoading] = React.useState(false);
+  const options = React.useMemo(() => ({ consumerId: consumer.id }), [consumer.id]);
+  const orders = useObserveOrders(options);
+
+  // tracking
+  useSegmentScreen('CommonProfileEdit');
+
+  // refs
+  const nameRef = React.useRef<TextInput>(null);
+  const surnameRef = React.useRef<TextInput>(null);
+  const cpfRef = React.useRef<TextInput>(null);
+  const phoneRef = React.useRef<TextInput>(null);
+
   // helpers
-  const updatedUser: Partial<CourierProfile> | Partial<ConsumerProfile> = {
+  const updatedUser = {
     name: name.trim(),
     surname: surname.trim(),
     cpf: cpf.trim(),
     phone: phone.trim(),
   };
   const canSubmit =
-    flavor === 'consumer' ? consumerInfoSet(updatedUser) : courierInfoSet(updatedUser); // fix typescript complaint
-  // consumer
-  // const isProfileComplete = isConsumerProfileComplete(consumer);
-  // const options = React.useMemo(() => ({ consumerId: consumer.id }), [consumer.id]);
-  // const orders = useObserveOrders(options);
+    flavor === 'consumer'
+      ? consumerInfoSet(updatedUser as Partial<ConsumerProfile> | undefined)
+      : courierInfoSet(updatedUser as Partial<CourierProfile> | undefined);
+  const isProfileApproved =
+    flavor === 'consumer' ? isConsumerProfileComplete(consumer) : courier.situation === 'approved';
 
-  // courier
-  // const canSubmit = courierInfoSet(updatedCourier);
-  // const profileApproved = courier.situation === 'approved';
-  // refs
-  const nameRef = React.useRef<TextInput>(null);
-  const surnameRef = React.useRef<TextInput>(null);
-  const cpfRef = React.useRef<TextInput>(null);
-  const phoneRef = React.useRef<TextInput>(null);
+  const buttonTitle = (() => {
+    if (flavor === 'consumer') {
+      if (isProfileApproved) {
+        if (!orders) return t('Atualizar');
+        else return t('Atualizar dados');
+      } else return t('Salvar e avançar');
+    } else {
+      if (isProfileApproved) {
+        return t('Atualizar dados');
+      } else return t('Salvar e avançar');
+    }
+  })();
+  const title = (() => {
+    if (isProfileApproved) return t('Seus dados:');
+    else return t('Finalize seu cadastro');
+  })();
+  const subtitle = (() => {
+    if (flavor === 'consumer') {
+      if (isProfileApproved) return t('Edite seus dados:');
+      else
+        return t(
+          'Seus dados pessoais serão usados somente para a criação das faturas e receber atendimento quando for necessário.'
+        );
+    } else {
+      return undefined;
+    }
+  })();
+
+  const editable = flavor === 'consumer' ? !orders : !isProfileApproved;
+
+  // handler
+  const updateProfileHandler = async () => {
+    Keyboard.dismiss();
+    try {
+      if (flavor === 'consumer') {
+        if (orders) {
+          track('navigating to RequestProfileEdit');
+          navigation.replace('RequestProfileEdit');
+        } else {
+          setLoading(true);
+          api.profile().updateProfile(consumer.id, updatedUser);
+          track('profile updated');
+          setLoading(false);
+          if (returnScreen) navigation.navigate(returnScreen, { returnScreen: returnNextScreen });
+          else navigation.goBack();
+        }
+      } else if (flavor === 'courier') {
+        if (isProfileApproved) {
+          track('navigating to RequestProfileEdit');
+          navigation.replace('RequestProfileEdit');
+        } else {
+          setLoading(true);
+          await dispatch(updateProfile(api)(courier.id, updatedUser));
+          track('profile updated');
+          setLoading(false);
+          navigation.goBack();
+        }
+      }
+    } catch (error) {
+      dispatch(
+        showToast(t('Não foi possível atualizar o perfil. Tente novamente mais tarde.'), 'error')
+      );
+    }
+  };
   // UI
   return (
     <KeyboardAwareScrollView
@@ -105,16 +182,14 @@ export const CommonProfileEdit = ({ route }: Props) => {
       scrollIndicatorInsets={{ right: 1 }}
     >
       <PaddedView>
-        {/* TODO: this string should be dynamic and work for all cases */}
         <Text
           style={{
             ...texts.x2l,
             paddingBottom: halfPadding,
           }}
         >
-          {t('Seus dados')}
+          {title}
         </Text>
-        {/* TODO: this string should be dynamic and work for all cases */}
         <Text
           style={{
             ...texts.sm,
@@ -122,7 +197,7 @@ export const CommonProfileEdit = ({ route }: Props) => {
             paddingBottom: padding,
           }}
         >
-          {t('Edite seus dados pessoais:')}
+          {subtitle}
         </Text>
         <DefaultInput title={t('E-mail')} value={profile.email} editable={false} />
         <DefaultInput
@@ -137,7 +212,7 @@ export const CommonProfileEdit = ({ route }: Props) => {
           onSubmitEditing={() => surnameRef.current?.focus()}
           keyboardType="default"
           maxLength={30}
-          // editable={!orders}
+          editable={editable}
         />
         <DefaultInput
           ref={surnameRef}
@@ -151,7 +226,7 @@ export const CommonProfileEdit = ({ route }: Props) => {
           onSubmitEditing={() => cpfRef.current?.focus()}
           keyboardType="default"
           maxLength={30}
-          // editable={!orders}
+          editable={editable}
         />
         <PatternInput
           ref={cpfRef}
@@ -169,7 +244,7 @@ export const CommonProfileEdit = ({ route }: Props) => {
           onChangeText={(text) => setCpf(trim(text))}
           onFocus={() => setFocusedField('cpf')}
           onBlur={() => setFocusedField(undefined)}
-          // editable={!orders}
+          editable={editable}
         />
         {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
           <Text
@@ -197,13 +272,13 @@ export const CommonProfileEdit = ({ route }: Props) => {
           returnKeyType="next"
           blurOnSubmit
           onChangeText={(text) => setPhone(trim(text))}
-          // editable={!orders}
+          editable={editable}
         />
         <View style={{ flex: 1 }} />
         <View style={{ paddingVertical: padding }}>
           <DefaultButton
-            title={t('Escolha um título')}
-            onPress={() => null}
+            title={buttonTitle}
+            onPress={updateProfileHandler}
             disabled={!canSubmit || isLoading}
             activityIndicator={isLoading}
           />
