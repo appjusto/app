@@ -105,8 +105,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
       : courierInfoSet(updatedUser as Partial<CourierProfile> | undefined);
   const isProfileApproved =
     flavor === 'consumer' ? isConsumerProfileComplete(consumer) : courier.situation === 'approved';
-  const hasOrdered = orders.length;
-
+  const hasOrdered = orders.filter((order) => order.status === 'delivered').length > 0;
   const buttonTitle = (() => {
     if (flavor === 'consumer') {
       if (isProfileApproved) {
@@ -134,7 +133,6 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
       return undefined;
     }
   })();
-
   const editable = flavor === 'consumer' ? !hasOrdered : !isProfileApproved;
 
   // handler
