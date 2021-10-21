@@ -7,7 +7,6 @@ import { t } from '../../../../strings';
 import { AddressComplete } from '../../common/AddressComplete';
 import { PayWithPix } from '../../common/PayWithPix';
 import ProfileAddCard from '../../main/profile/ProfileAddCard';
-import ProfileEdit from '../../main/profile/ProfileEdit';
 import ProfilePaymentMethods from '../../main/profile/ProfilePaymentMethods';
 import { AboutCharges } from '../../p2p/AboutCharges';
 import { AboutRestaurant } from './about/AboutRestaurant';
@@ -40,12 +39,6 @@ export default function () {
         name="FoodOrderCheckout"
         component={FoodOrderCheckout}
         options={{ title: t('Sua sacola') }}
-      />
-      {/* TODO: delete this screen after finishing the new one */}
-      <Stack.Screen
-        name="ProfileEdit"
-        component={ProfileEdit}
-        options={{ title: t('Sua sacola') }} //TODO: check if this title is right
       />
       <Stack.Screen
         name="CommonProfileEdit"

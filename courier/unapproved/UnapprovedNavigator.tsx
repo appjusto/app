@@ -18,7 +18,6 @@ import ChooseFleet from '../approved/main/profile/fleet/ChooseFleet';
 import CreateFleet from '../approved/main/profile/fleet/CreateFleet';
 import ProfilePhotos from '../approved/main/profile/photos/ProfilePhotos';
 import ProfileCompany from '../approved/main/profile/ProfileCompany';
-import ProfileEdit from '../approved/main/profile/ProfileEdit';
 import { AboutAutonomy } from './AboutAutonomy';
 import { AboutBeAvailable } from './AboutBeAvailable';
 import { AboutNoScore } from './AboutNoScore';
@@ -46,12 +45,6 @@ export default function () {
         name="ProfilePending"
         component={ProfilePending}
         options={{ headerShown: false }}
-      />
-      {/* TODO: delete this screen after finishing the new one */}
-      <Stack.Screen
-        name="ProfileEdit"
-        component={ProfileEdit}
-        options={{ title: t('Dados pessoais') }}
       />
       <Stack.Screen
         name="CommonProfileEdit"

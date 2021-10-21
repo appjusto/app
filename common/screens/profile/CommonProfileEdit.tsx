@@ -39,7 +39,7 @@ import { updateProfile } from '../../store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../styles';
 
 export type ProfileEditParamList = {
-  CommonProfileEdit: {
+  CommonProfileEdit?: {
     returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P' | 'ProfileAddCard';
     returnNextScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P';
   };
@@ -53,7 +53,7 @@ type ScreenNavigationProp = CompositeNavigationProp<
       CourierProfileParamList,
     'CommonProfileEdit'
   >,
-  StackNavigationProp<ApprovedParamList & UnapprovedParamList & LoggedNavigatorParamList>
+  StackNavigationProp<LoggedNavigatorParamList & ApprovedParamList & UnapprovedParamList>
 >;
 type ScreenRouteProp = RouteProp<ProfileEditParamList, 'CommonProfileEdit'>;
 
@@ -124,7 +124,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   })();
   const subtitle = (() => {
     if (flavor === 'consumer') {
-      if (isProfileApproved) return t('Edite seus dados:');
+      if (!isProfileApproved) return t('Edite seus dados:');
       else
         return t(
           'Seus dados pessoais serão usados somente para a criação das faturas e receber atendimento quando for necessário.'
@@ -181,7 +181,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
     >
-      <PaddedView>
+      <PaddedView style={{ flex: 1 }}>
         <Text
           style={{
             ...texts.x2l,

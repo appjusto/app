@@ -5,7 +5,6 @@ import { ProfileEraseParamList } from '../../../../common/screens/profile/Profil
 
 export type CourierProfileParamList = {
   Profile: undefined;
-  ProfileEdit: undefined;
   RequestProfileEdit: undefined;
   ProfileCompany: undefined;
   ProfilePhotos: undefined;

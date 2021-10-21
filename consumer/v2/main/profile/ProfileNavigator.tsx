@@ -8,7 +8,6 @@ import Terms from '../../../../common/screens/unlogged/Terms';
 import { t } from '../../../../strings';
 import PaymentMethodDetail from './PaymentMethodDetail';
 import ProfileAddCard from './ProfileAddCard';
-import ProfileEdit from './ProfileEdit';
 import ProfilePaymentMethods from './ProfilePaymentMethods';
 import { RequestProfileEdit } from './RequestProfileEdit';
 import { ProfileParamList } from './types';
@@ -16,13 +15,10 @@ import { ProfileParamList } from './types';
 const Stack = createStackNavigator<ProfileParamList>();
 export default function () {
   return (
-    <Stack.Navigator initialRouteName="ProfileEdit" screenOptions={{ ...defaultScreenOptions }}>
-      {/* TODO: delete this screen after finishing the new one */}
-      <Stack.Screen
-        name="ProfileEdit"
-        component={ProfileEdit}
-        options={{ title: t('Dados pessoais') }}
-      />
+    <Stack.Navigator
+      initialRouteName="CommonProfileEdit"
+      screenOptions={{ ...defaultScreenOptions }}
+    >
       <Stack.Screen
         name="CommonProfileEdit"
         component={CommonProfileEdit}

@@ -16,19 +16,12 @@ import CreateFleet from './fleet/CreateFleet';
 import { PartnersAndDiscounts } from './PartnersAndDiscounts';
 import ProfilePhotos from './photos/ProfilePhotos';
 import ProfileCompany from './ProfileCompany';
-import ProfileEdit from './ProfileEdit';
 import { CourierProfileParamList } from './types';
 
 const Stack = createStackNavigator<CourierProfileParamList>();
 export default function () {
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
-      {/* TODO: delete this screen after finishing the new one */}
-      <Stack.Screen
-        name="ProfileEdit"
-        component={ProfileEdit}
-        options={{ title: t('Dados pessoais') }}
-      />
       <Stack.Screen
         name="RequestProfileEdit"
         component={RequestProfileEdit}
