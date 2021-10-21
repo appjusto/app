@@ -35,7 +35,6 @@ import { consumerInfoSet } from '../../store/consumer/validators';
 import { getCourier } from '../../store/courier/selectors';
 import { courierInfoSet, isConsumerProfileComplete } from '../../store/courier/validators';
 import { showToast } from '../../store/ui/actions';
-import { updateProfile } from '../../store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../styles';
 
 export type ProfileEditParamList = {
@@ -106,6 +105,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const isProfileApproved =
     flavor === 'consumer' ? isConsumerProfileComplete(consumer) : courier.situation === 'approved';
   const hasOrdered = orders.filter((order) => order.status === 'delivered').length > 0;
+
   const buttonTitle = (() => {
     if (flavor === 'consumer') {
       if (isProfileApproved) {
@@ -133,35 +133,22 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
       return undefined;
     }
   })();
+
   const editable = flavor === 'consumer' ? !hasOrdered : !isProfileApproved;
 
   // handler
   const updateProfileHandler = async () => {
     Keyboard.dismiss();
     try {
-      if (flavor === 'consumer') {
-        if (hasOrdered) {
-          track('navigating to RequestProfileEdit');
-          navigation.replace('RequestProfileEdit');
-        } else {
-          setLoading(true);
-          api.profile().updateProfile(consumer.id, updatedUser);
-          track('profile updated');
-          setLoading(false);
-          if (returnScreen) navigation.navigate(returnScreen, { returnScreen: returnNextScreen });
-          else navigation.goBack();
-        }
-      } else if (flavor === 'courier') {
-        if (isProfileApproved) {
-          track('navigating to RequestProfileEdit');
-          navigation.replace('RequestProfileEdit');
-        } else {
-          setLoading(true);
-          await dispatch(updateProfile(api)(courier.id, updatedUser));
-          track('profile updated');
-          setLoading(false);
-          navigation.goBack();
-        }
+      if (!editable) {
+        navigation.replace('RequestProfileEdit');
+      } else {
+        setLoading(true);
+        api.profile().updateProfile(profile.id, updatedUser);
+        track('profile updated');
+        setLoading(false);
+        if (returnScreen) navigation.navigate(returnScreen, { returnScreen: returnNextScreen });
+        else navigation.goBack();
       }
     } catch (error) {
       dispatch(
