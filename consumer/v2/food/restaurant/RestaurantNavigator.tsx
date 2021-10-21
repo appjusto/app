@@ -2,6 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import FleetDetail from '../../../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../../../common/screens/options';
+import { CommonProfileEdit } from '../../../../common/screens/profile/CommonProfileEdit';
 import { t } from '../../../../strings';
 import { AddressComplete } from '../../common/AddressComplete';
 import { PayWithPix } from '../../common/PayWithPix';
@@ -40,10 +41,16 @@ export default function () {
         component={FoodOrderCheckout}
         options={{ title: t('Sua sacola') }}
       />
+      {/* TODO: delete this screen after finishing the new one */}
       <Stack.Screen
         name="ProfileEdit"
         component={ProfileEdit}
-        options={{ title: t('Sua sacola') }}
+        options={{ title: t('Sua sacola') }} //TODO: check if this title is right
+      />
+      <Stack.Screen
+        name="CommonProfileEdit"
+        component={CommonProfileEdit}
+        options={{ title: t('Sua sacola') }} //TODO: check if this title is right
       />
       <Stack.Screen
         name="ProfileAddCard"

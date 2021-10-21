@@ -3,6 +3,7 @@ import React from 'react';
 import FleetDetail from '../../../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { AboutApp } from '../../../../common/screens/profile/AboutApp';
+import { CommonProfileEdit } from '../../../../common/screens/profile/CommonProfileEdit';
 import ProfileErase from '../../../../common/screens/profile/ProfileErase';
 import Terms from '../../../../common/screens/unlogged/Terms';
 import { t } from '../../../../strings';
@@ -21,9 +22,15 @@ const Stack = createStackNavigator<CourierProfileParamList>();
 export default function () {
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
+      {/* TODO: delete this screen after finishing the new one */}
       <Stack.Screen
         name="ProfileEdit"
         component={ProfileEdit}
+        options={{ title: t('Dados pessoais') }}
+      />
+      <Stack.Screen
+        name="CommonProfileEdit"
+        component={CommonProfileEdit}
         options={{ title: t('Dados pessoais') }}
       />
       <Stack.Screen

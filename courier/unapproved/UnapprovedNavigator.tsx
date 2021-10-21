@@ -5,6 +5,7 @@ import FleetDetail from '../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../common/screens/options';
 import { PermissionDenied } from '../../common/screens/PermissionDenied';
 import { AboutApp } from '../../common/screens/profile/AboutApp';
+import { CommonProfileEdit } from '../../common/screens/profile/CommonProfileEdit';
 import ProfileBlocked from '../../common/screens/profile/ProfileBlocked';
 import ProfileErase from '../../common/screens/profile/ProfileErase';
 import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
@@ -46,9 +47,15 @@ export default function () {
         component={ProfilePending}
         options={{ headerShown: false }}
       />
+      {/* TODO: delete this screen after finishing the new one */}
       <Stack.Screen
         name="ProfileEdit"
         component={ProfileEdit}
+        options={{ title: t('Dados pessoais') }}
+      />
+      <Stack.Screen
+        name="CommonProfileEdit"
+        component={CommonProfileEdit}
         options={{ title: t('Dados pessoais') }}
       />
       <Stack.Screen

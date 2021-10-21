@@ -1,4 +1,5 @@
 import { IuguCustomerPaymentMethod } from '@appjusto/types/payment/iugu';
+import { ProfileEditParamList } from '../../../../common/screens/profile/CommonProfileEdit';
 import { ProfileEraseParamList } from '../../../../common/screens/profile/ProfileErase';
 import { ProfileAddCardParamList } from './ProfileAddCard';
 import { ProfilePaymentMethodsParamList } from './ProfilePaymentMethods';
@@ -16,4 +17,5 @@ export type ProfileParamList = {
   RequestProfileEdit: undefined;
 } & ProfileEraseParamList &
   ProfilePaymentMethodsParamList &
-  ProfileAddCardParamList;
+  ProfileAddCardParamList &
+  ProfileEditParamList;
