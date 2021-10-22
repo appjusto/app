@@ -85,7 +85,9 @@ export const ReportIssue = ({ route, navigation }: Props) => {
           flavor,
           comment,
         });
-        track('reporting issue');
+        track('Reported issue', {
+          issue: selectedIssue,
+        });
         setLoading(false);
         if (flavor === 'courier') {
           navigation.replace('DeliveryProblemFeedback', {

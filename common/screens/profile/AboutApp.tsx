@@ -46,7 +46,7 @@ export const AboutApp = ({ navigation }: Props) => {
   useSegmentScreen('AboutApp');
   // UI
   const appVersion = `${t('Versão:')} ${Constants.nativeAppVersion} / ${
-    Constants.manifest.version
+    Constants.manifest?.version
   }`;
   const brand = Device.brand ?? Device.manufacturer ?? '';
   const model = Device.modelName ?? Device.modelId ?? Device.productName ?? '';
@@ -65,7 +65,7 @@ export const AboutApp = ({ navigation }: Props) => {
           title={t('Site oficial')}
           subtitle={t('Acesse nosso site')}
           onPress={() => {
-            track('consumer opened our site');
+            track('Opened AppJusto website');
             Linking.openURL(AppJustoSiteURL);
           }}
         />
@@ -73,7 +73,7 @@ export const AboutApp = ({ navigation }: Props) => {
           title={t('Código aberto')}
           subtitle={t('Acesse o repositório com o código no GitHub')}
           onPress={() => {
-            track('consumer opened our github page');
+            track('Opened AppJusto github page');
             Linking.openURL(AppJustoGithubURL);
           }}
         />

@@ -57,8 +57,8 @@ export default function ({ navigation }: Props) {
     Keyboard.dismiss();
     try {
       await dispatch(deleteAccount(api)(survey));
-      track('user deleted account');
-    } catch (error) {
+      track('Deleted account');
+    } catch (error: any) {
       dispatch(showToast(error.toString(), 'error'));
     }
   };
@@ -143,7 +143,6 @@ export default function ({ navigation }: Props) {
               title={t('Manter minha conta')}
               disabled={busy}
               onPress={() => {
-                track('consumer is not going to delete account anymore');
                 navigation.goBack();
               }}
             />

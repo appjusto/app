@@ -22,11 +22,11 @@ export const SocialMediaCard = ({ app }: Props) => {
       onPress={
         app === 'instagram'
           ? () => {
-              track('opening appJusto instragram');
+              track('Opened AppJusto instagram');
               Linking.openURL(AppJustoInstagramURL);
             }
           : () => {
-              track('opening appJusto whatsapp');
+              track('Opened AppJusto whatsapp');
               Linking.openURL(AppJustoWhatsAppCourierURL);
             }
       }

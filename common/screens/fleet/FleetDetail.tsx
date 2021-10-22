@@ -64,13 +64,16 @@ export default function ({ navigation, route }: Props) {
   // handlers
   const confirmFleet = () => {
     Keyboard.dismiss();
+    track('Changed fleet', {
+      current: courier.fleet,
+      new: fleet,
+    });
     api.profile().updateProfile(courier.id, {
       fleet: {
         ...(omit(fleet, ['partipantsOnline', 'situation']) as CourierFleet),
         joinedOn: firebase.firestore.FieldValue.serverTimestamp(),
       },
     });
-    track('courier joined fleet');
     navigation.navigate('ChooseFleet');
   };
   // UI

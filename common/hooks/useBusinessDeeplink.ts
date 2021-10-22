@@ -16,7 +16,7 @@ export const useBusinessDeeplink = () => {
     if (!parsedURL?.path) return;
     const r = /r\/([-a-zA-Z0-9]+)/.exec(parsedURL.path);
     if (!r) return;
-    track('Business deeplink', {
+    track('Opened business deeplink', {
       deeplink,
     });
     const [_, value] = r;

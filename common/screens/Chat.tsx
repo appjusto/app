@@ -13,7 +13,7 @@ import DefaultInput from '../components/inputs/DefaultInput';
 import useTallerDevice from '../hooks/useTallerDevice';
 import { useObserveOrder } from '../store/api/order/hooks/useObserveOrder';
 import { unreadMessages, useObserveOrderChat } from '../store/api/order/hooks/useObserveOrderChat';
-import { track, useSegmentScreen } from '../store/api/track';
+import { useSegmentScreen } from '../store/api/track';
 import { getFlavor } from '../store/config/selectors';
 import { getUser } from '../store/user/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../styles';
@@ -49,7 +49,10 @@ export default function ({ route }: Props) {
   const [inputText, setInputText] = React.useState('');
   // side effects
   // tracking
-  useSegmentScreen('Chat');
+  useSegmentScreen('Chat', {
+    flavor,
+    counterpartFlavor,
+  });
   React.useEffect(() => {
     if (unread.length > 0) {
       api.order().updateReadMessages(
@@ -81,7 +84,6 @@ export default function ({ route }: Props) {
       message: inputText.trim(),
     });
     setInputText('');
-    track('sending chat message');
   };
   const getName = (from: string) => {
     if (from === order.consumer.id) return order.consumer.name ?? t('Cliente');

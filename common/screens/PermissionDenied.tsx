@@ -25,7 +25,7 @@ export const PermissionDenied = ({ route }: Props) => {
   const { title, subtitle } = route.params;
   // handlers
   const openSettings = (): void => {
-    track('opening app settings on device');
+    track('Opened device settings');
     Linking.openSettings();
   };
   // side effects
