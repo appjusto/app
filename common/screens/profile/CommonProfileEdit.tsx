@@ -133,13 +133,12 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   })();
 
   const editable = flavor === 'consumer' ? !hasOrdered : !isProfileApproved;
-
+  console.log(consumer.id);
   // handler
   const updateProfileHandler = async () => {
     Keyboard.dismiss();
     try {
-      // TODO: change this to !editable later
-      if (editable) {
+      if (!editable) {
         navigation.replace('RequestProfileEdit');
       } else {
         setLoading(true);
