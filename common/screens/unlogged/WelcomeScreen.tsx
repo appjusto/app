@@ -22,7 +22,7 @@ import ShowIf from '../../components/views/ShowIf';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { IconMotoCycleBig } from '../../icons/icon-motocycle-big';
-import { track, useSegmentScreen } from '../../store/api/track';
+import { useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
@@ -66,7 +66,6 @@ export default function ({ navigation, route }: Props) {
       dispatch(showToast(t('Digite um e-mail válido.'), 'error'));
       return;
     }
-    track('Signing in', { email });
     try {
       await dispatch(signInWithEmail(api)(email.trim()));
     } catch (error) {

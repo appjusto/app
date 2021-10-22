@@ -13,7 +13,7 @@ import { HomeCouriersNearbyCard } from '../../../../common/screens/home/cards/Ho
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
-import { track, useSegmentScreen } from '../../../../common/store/api/track';
+import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
 import { padding, screens } from '../../../../common/styles';
@@ -41,7 +41,6 @@ export default function ({ navigation }: Props) {
   useSegmentScreen('Home');
   // handler
   const navigateToWelcomeScreen = () => {
-    track('navigating to login');
     navigation.navigate('WelcomeScreen');
   };
   // UI
@@ -52,11 +51,9 @@ export default function ({ navigation }: Props) {
         <HomeControls
           onStartOrderPress={(type) => {
             if (type === 'food') {
-              track('navigating to FoodOrderHome');
               navigation.navigate('FoodOrderNavigator', { screen: 'FoodOrderHome' });
             } else {
               if (consumer) {
-                track('navigating to CreateOrderP2P');
                 navigation.navigate('P2POrderNavigator', { screen: 'CreateOrderP2P' });
               } else {
                 navigateToWelcomeScreen();
@@ -69,7 +66,6 @@ export default function ({ navigation }: Props) {
             orders={ongoingOrders}
             onPress={(order, chatFrom) => {
               if (order.status === 'declined') {
-                track('navigating to OrderDeclined');
                 navigation.navigate('OngoingOrderNavigator', {
                   screen: 'OngoingOrderDeclined',
                   params: {
@@ -77,7 +73,6 @@ export default function ({ navigation }: Props) {
                   },
                 });
               } else {
-                track('navigating to OngoingOrder');
                 navigation.navigate('OngoingOrderNavigator', {
                   screen: 'OngoingOrder',
                   params: {

@@ -18,12 +18,14 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-export default ({ navigation }: Props) => {
+export default ({ navigation, route }: Props) => {
   // state
   const [authState] = useAuth();
   // side effects
   // tracking
-  useSegmentScreen('Sign in Feedback');
+  useSegmentScreen('Sign in Feedback', {
+    email: route.params.email,
+  });
   // UI
   if (authState === AuthState.SignedIn) {
     return null;
