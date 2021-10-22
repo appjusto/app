@@ -1,46 +1,9 @@
-import creditCardType from 'credit-card-type';
-import React, { createContext, useCallback, useContext } from 'react';
-
-interface ICreditCardContextData {
+export interface ICreditCardContextData {
   getType(creditCardNumber: string): CreditCardType;
   isAllowed(creditCardType: CreditCardType): boolean;
 }
 
-const CreditCardContext = createContext<ICreditCardContextData>({} as ICreditCardContextData);
-CreditCardContext.displayName = 'CreditCardContext';
-
-export const CreditCardProvider: React.FC = ({ children }) => {
-  // state
-
-  const getType = useCallback((creditCardNumber: string) => {
-    const typeCard = creditCardType(creditCardNumber);
-    if (typeCard.length !== 1) {
-      return CreditCardType.unknown;
-    }
-
-    const type = typeCard[0].type;
-
-    if (Object.keys(creditCardTypeParse).includes(type)) {
-      return creditCardTypeParse[type];
-    }
-    return CreditCardType.unknown;
-  }, []);
-
-  const isAllowed = useCallback((creditCardType: CreditCardType) => {
-    return allowedCreditCardTypes.includes(creditCardType);
-  }, []);
-
-  const value: ICreditCardContextData = { getType, isAllowed };
-  // console.log('CreditCardProvider', value.order?.id);
-  return <CreditCardContext.Provider value={value}>{children}</CreditCardContext.Provider>;
-};
-
-export const useContextCreditCard: ICreditCardContextData = () => {
-  const context = useContext(CreditCardContext);
-  return context;
-};
-
-enum CreditCardType {
+export enum CreditCardType {
   american_express,
   diners_club,
   discover,
@@ -56,7 +19,7 @@ enum CreditCardType {
   unknown,
 }
 
-const creditCardTypeParse: Record<string, CreditCardType> = {
+export const creditCardTypeParse: Record<string, CreditCardType> = {
   'american-express': CreditCardType.american_express,
   'diners-club': CreditCardType.diners_club,
   'discover': CreditCardType.discover,
@@ -72,7 +35,7 @@ const creditCardTypeParse: Record<string, CreditCardType> = {
   'unknown': CreditCardType.unknown,
 };
 
-const allowedCreditCardTypes: CreditCardType[] = [
+export const allowedCreditCardTypes: CreditCardType[] = [
   CreditCardType.diners_club,
   CreditCardType.elo,
   CreditCardType.mastercard,
