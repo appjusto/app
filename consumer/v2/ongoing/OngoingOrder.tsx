@@ -1,4 +1,4 @@
-import { Flavor } from '@appjusto/types';
+import { ChatMessageUser, Flavor } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -10,7 +10,7 @@ import HR from '../../../common/components/views/HR';
 import { useNotificationToken } from '../../../common/hooks/useNotificationToken';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useObserveOrderConfirmation } from '../../../common/store/api/order/hooks/useObserveOrderConfirmation';
-import { useSegmentScreen } from '../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { colors, halfPadding, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { OrderCostBreakdown } from '../common/breakdown/OrderCostBreakdown';
@@ -62,13 +62,23 @@ export default function ({ navigation, route }: Props) {
     [navigation, orderId]
   );
   const openChatWithCourier = React.useCallback(
-    (delayed?: boolean) => openChat(courierId!, 'courier', delayed),
+    (delayed?: boolean) => {
+      track('chat with courier');
+      openChat(courierId!, 'courier', delayed);
+    },
     [openChat, courierId]
   );
   const openChatWithRestaurant = React.useCallback(
-    (delayed?: boolean) => openChat(businessId!, 'business', delayed),
+    (delayed?: boolean) => {
+      track('chat with business');
+      openChat(businessId!, 'business', delayed);
+    },
     [openChat, businessId]
   );
+  const openChatHandler = (from: ChatMessageUser) => {
+    track('clicked to open chat');
+    openChat(from.id, from.agent);
+  };
   // side effects
   // whenever params changes
   // open chat if there's a new message
@@ -113,15 +123,20 @@ export default function ({ navigation, route }: Props) {
   }
   // UI handlers
 
-  const navigateToOrderProblem = () =>
+  const navigateToOrderProblem = () => {
+    track('clicked to report a problem');
     navigation.navigate('OngoingOrderProblem', {
       orderId: order.id,
     });
+  };
   const navigateToConfirmCancel = () => {
+    track('clicked to navigate to cancel order');
     navigation.navigate('OngoingOrderConfirmCancel', { orderId });
   };
-  const navigateToCourierDetail = () =>
+  const navigateToCourierDetail = () => {
+    track('clicked to navigate to courier detail');
     navigation.navigate('OngoingOrderCourierDetail', { orderId });
+  };
   // const navigateToChangeRoute = () =>
   //   navigation.navigate('P2POrderNavigator', {
   //     screen: 'CreateOrderP2P',
@@ -148,12 +163,15 @@ export default function ({ navigation, route }: Props) {
           order={order}
           onCourierDetail={navigateToCourierDetail}
           onChatWithCourier={openChatWithCourier}
-          onOpenChat={(from) => openChat(from.id, from.agent)}
+          onOpenChat={openChatHandler}
         />
         {order.dispatchingStatus !== 'outsourced' ? (
           <DeliveryConfirmation
             switchValue={wantsCode}
-            onChangeCodeDelivery={() => setWantsCode(!wantsCode)}
+            onChangeCodeDelivery={() => {
+              track('changed code delivery preferences');
+              setWantsCode(!wantsCode);
+            }}
             confirmation={confirmation}
           />
         ) : null}
@@ -168,7 +186,7 @@ export default function ({ navigation, route }: Props) {
             order={order}
             navigateToReportIssue={navigateToOrderProblem}
             navigateToConfirmCancel={navigateToConfirmCancel}
-            onMessageReceived={(from) => openChat(from.id, from.agent)}
+            onMessageReceived={openChatHandler}
           />
           <HR />
           {order.type === 'food' ? (

@@ -10,6 +10,7 @@ import DefaultButton from '../../../../../common/components/buttons/DefaultButto
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { usePlatformParamsContext } from '../../../../../common/contexts/PlatformParamsContext';
 import { useAdvanceSimulation } from '../../../../../common/store/api/courier/account/useAdvanceSimulation';
+import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { showToast } from '../../../../../common/store/ui/actions';
 import {
@@ -43,6 +44,8 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
   const [requesting, setRequesting] = React.useState(false);
   // side effects
   const simulation = useAdvanceSimulation(route.params.ids);
+  // tracking
+  useSegmentScreen('AdvanceReceivables');
   // handlers
   const confirmHandler = async () => {
     if (
@@ -57,6 +60,7 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
     setRequesting(true);
     try {
       const result = await api.courier().advanceReceivables(courier.id, route.params.ids);
+      track('courier advanced receivables');
       console.log(result);
       navigation.replace('RequestWithdrawFeedback', {
         header: t('Antecipação realizada com sucesso!'),

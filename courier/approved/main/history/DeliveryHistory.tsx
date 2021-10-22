@@ -12,7 +12,7 @@ import ShowIf from '../../../../common/components/views/ShowIf';
 import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
-import { useSegmentScreen } from '../../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import {
   getMonthsWithOrdersInYear,
   getOrdersWithFilter,
@@ -64,7 +64,7 @@ export default function ({ navigation, route }: Props) {
     });
   }, [yearsWithOrders]);
   // tracking
-  useSegmentScreen('Delivery History');
+  useSegmentScreen('DeliveryHistory');
   // UI
   if (sections.length === 0) {
     return (
@@ -112,15 +112,16 @@ export default function ({ navigation, route }: Props) {
                   <ConfigItem
                     title={title}
                     subtitle={subtitle}
-                    onPress={() =>
+                    onPress={() => {
+                      track('navigating to DeliveryHistoryByMonth');
                       navigation.navigate('DeliveriesNavigator', {
                         screen: 'DeliveryHistoryByMonth',
                         params: {
                           year: item.year,
                           month: item.month,
                         },
-                      })
-                    }
+                      });
+                    }}
                   >
                     <ShowIf test={item.ongoing > 0}>
                       {() => (

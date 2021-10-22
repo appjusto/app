@@ -5,6 +5,7 @@ import React from 'react';
 import { ActivityIndicator, Linking, ScrollView, View } from 'react-native';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { colors, screens } from '../../../common/styles';
 import { DeliveryProblemCard } from '../../../courier/approved/ongoing/delivery-problem/DeliveryProblemCard';
 import { t } from '../../../strings';
@@ -28,6 +29,8 @@ export const OngoingOrderProblem = ({ navigation, route }: Props) => {
   const { orderId } = route.params;
   // screen state
   const order = useObserveOrder(orderId);
+  // tracking
+  useSegmentScreen('OngoingOrderProblem');
   if (!order) {
     // showing the indicator until the order is loaded
     return (
@@ -36,7 +39,6 @@ export const OngoingOrderProblem = ({ navigation, route }: Props) => {
       </View>
     );
   }
-
   // handlers and helpers
   const { type, dispatchingState, status } = order;
   const navigateToReportIssue = (issueType: IssueType, orderId: string) => {
@@ -46,6 +48,7 @@ export const OngoingOrderProblem = ({ navigation, route }: Props) => {
     });
   };
   const reportIssueHandler = () => {
+    track('clicked to report issue');
     if (type === 'food') {
       if (status === 'delivered') {
         navigateToReportIssue('consumer-delivered-food-order', orderId);
@@ -96,7 +99,10 @@ export const OngoingOrderProblem = ({ navigation, route }: Props) => {
         <DeliveryProblemCard
           title={t('Preciso falar com o AppJusto')}
           subtitle={t('Abrir chat no WhatsApp')}
-          onPress={() => Linking.openURL(AppJustoAssistanceWhatsAppURL)}
+          onPress={() => {
+            track('opening whatsapp chat with backoffice');
+            Linking.openURL(AppJustoAssistanceWhatsAppURL);
+          }}
           situation="chat"
         />
         {/* commented for now. will be added back later when we have this feature */}

@@ -8,6 +8,7 @@ import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import { ReportIssueView } from '../../../common/components/views/ReportIssueView';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -36,6 +37,8 @@ export const RejectedMatching = ({ navigation, route }: Props) => {
   const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
   const [comment, setComment] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
+  // tracking
+  useSegmentScreen('RejectedMatching');
   // handler
   const issueHandler = () => {
     Keyboard.dismiss();
@@ -44,6 +47,7 @@ export const RejectedMatching = ({ navigation, route }: Props) => {
       try {
         setLoading(true);
         await api.order().rejectOrder(orderId, selectedIssue!, comment);
+        track('courier sent rejected matching reason');
         navigation.replace('RejectedMatchingFeedback');
         setLoading(false);
       } catch (error) {

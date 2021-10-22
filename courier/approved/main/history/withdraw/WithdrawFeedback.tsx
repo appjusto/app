@@ -4,6 +4,7 @@ import React from 'react';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../../../common/components/views/FeedbackView';
 import { IconMotocycle } from '../../../../../common/icons/icon-motocycle';
+import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { colors, padding } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { DeliveriesNavigatorParamList } from '../types';
@@ -20,6 +21,8 @@ type Props = {
 };
 
 export const WithdrawFeedback = ({ navigation, route }: Props) => {
+  // tracking
+  useSegmentScreen('WithdrawFeedback');
   return (
     <FeedbackView
       header={route.params.header}

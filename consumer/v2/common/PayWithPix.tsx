@@ -11,6 +11,7 @@ import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import Pill from '../../../common/components/views/Pill';
 import { IconPixLogo } from '../../../common/icons/icon-pix-logo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens, texts } from '../../../common/styles';
@@ -57,7 +58,8 @@ export const PayWithPix = ({ navigation, route }: Props) => {
     if (!cpfKey) setPixKey('');
     if (cpfKey) setPixKey(consumer.cpf!);
   }, [cpfKey, consumer.cpf]);
-
+  // tracking
+  useSegmentScreen('PayWithPix');
   // handlers
   const placeOrderWithPix = async () => {
     Keyboard.dismiss();
@@ -73,6 +75,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
         },
         false
       );
+      track('placing order with Pix payment');
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {
         screen: 'OngoingOrderConfirming',

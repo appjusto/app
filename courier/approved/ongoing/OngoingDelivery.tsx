@@ -10,7 +10,7 @@ import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import { usePlatformParamsContext } from '../../../common/contexts/PlatformParamsContext';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
-import { useSegmentScreen } from '../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -52,7 +52,7 @@ export default function ({ navigation, route }: Props) {
     (usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60) * 1000;
   // side effects
   // tracking
-  useSegmentScreen('Ongoing Delivery');
+  useSegmentScreen('OngoingDelivery');
   // keeping screen awake
   useKeepAwake();
   // modal
@@ -83,11 +83,17 @@ export default function ({ navigation, route }: Props) {
     [navigation, orderId]
   );
   const openChatWithConsumer = React.useCallback(
-    (delayed?: boolean) => openChat(consumerId!, 'consumer', delayed),
+    (delayed?: boolean) => {
+      track('opening chat with consumer');
+      openChat(consumerId!, 'consumer', delayed);
+    },
     [openChat, consumerId]
   );
   const openChatWithRestaurant = React.useCallback(
-    (delayed?: boolean) => openChat(businessId!, 'business', delayed),
+    (delayed?: boolean) => {
+      track('opening chat with restaurant');
+      openChat(businessId!, 'business', delayed);
+    },
     [openChat, businessId]
   );
   // whenever params updates
@@ -127,9 +133,11 @@ export default function ({ navigation, route }: Props) {
         if (order.dispatchingState === 'arrived-destination') {
           Keyboard.dismiss();
           await api.order().completeDelivery(orderId, code);
+          track('courier completed delivery');
           setLoading(false);
         } else {
           await api.order().nextDispatchingState(orderId);
+          track('courier advanced a step');
           if (order.dispatchingState === 'going-destination') {
             setLoading(false);
           } else {
@@ -150,12 +158,17 @@ export default function ({ navigation, route }: Props) {
       setLoading(true);
       try {
         await api.order().completeDelivery(orderId, code);
+        track('courier entered code to complete delivery');
         setLoading(false);
       } catch (error) {
         dispatch(showToast(error.toString(), 'error'));
         setLoading(false);
       }
     })();
+  };
+  const navigateToDeliveryProblem = () => {
+    track('navigating to DeliveryProblem');
+    navigation.navigate('DeliveryProblem', { orderId });
   };
   // UI
   const { type, dispatchingState } = order;
@@ -193,15 +206,12 @@ export default function ({ navigation, route }: Props) {
         <CourierDeliveryInfo
           order={order}
           onChat={() => openChatWithConsumer()}
-          onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
+          onProblem={navigateToDeliveryProblem}
         />
         {/* center*/}
         <OngoingDeliveryMap order={order} onOpenChat={(from) => openChat(from.id, from.agent)} />
         {/* bottom*/}
-        <OngoingDeliveryInfo
-          order={order}
-          onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
-        />
+        <OngoingDeliveryInfo order={order} onProblem={navigateToDeliveryProblem} />
         <OngoingDeliveryLoading dispatchingState={dispatchingState} />
         {/* Status slider */}
         <OngoingDeliverySlider
@@ -231,7 +241,10 @@ export default function ({ navigation, route }: Props) {
           buttonTitle={t('Confirmar entrega')}
           onDelivery={codeDeliveryHandler}
           isLoading={isLoading}
-          onNoCodeDelivery={() => navigation.navigate('NoCodeDelivery', { orderId })}
+          onNoCodeDelivery={() => {
+            track('navigating to NoCodeDelivery');
+            navigation.navigate('NoCodeDelivery', { orderId });
+          }}
           dispatchingState={dispatchingState}
         />
         {/* withdrawal modal */}
@@ -243,7 +256,7 @@ export default function ({ navigation, route }: Props) {
             setModalOpen(false);
           }}
           onIssue={() => {
-            navigation.navigate('DeliveryProblem', { orderId });
+            navigateToDeliveryProblem();
             setModalOpen(false);
           }}
           onModalClose={() => setModalOpen(false)}

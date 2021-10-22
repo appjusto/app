@@ -1,10 +1,13 @@
 import React from 'react';
 import { Text } from 'react-native';
 import PaddedView from '../../../common/components/containers/PaddedView';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
 export const AboutCharges = () => {
+  // tracking
+  useSegmentScreen('AboutCharges');
   return (
     <PaddedView style={{ ...screens.config }}>
       <Text style={{ ...texts.x2l, marginBottom: 24 }}>

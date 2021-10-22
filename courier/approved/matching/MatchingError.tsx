@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
-import { useSegmentScreen } from '../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -23,7 +23,7 @@ type Props = {
 export default ({ navigation }: Props) => {
   // side effects
   // tracking
-  useSegmentScreen('Matching Error');
+  useSegmentScreen('MatchingError');
   // UI
   return (
     <View style={{ ...screens.default }}>
@@ -33,7 +33,10 @@ export default ({ navigation }: Props) => {
       >
         <DefaultButton
           title={t('Voltar para o início')}
-          onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
+          onPress={() => {
+            track('navigating Home');
+            navigation.replace('MainNavigator', { screen: 'Home' });
+          }}
           secondary
           style={{ marginBottom: padding }}
         />

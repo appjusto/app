@@ -10,7 +10,7 @@ import { ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import StatusBadge from '../../../../common/components/views/StatusBadge';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
-import { useSegmentScreen } from '../../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import {
   getOrdersWithFilter,
   getOrderTime,
@@ -85,8 +85,10 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
     const { type, status } = order;
     if (status === 'quote') {
       if (type === 'p2p') {
+        track('consumer is proceeding with a p2p order that was in quote');
         navigation.navigate('P2POrderNavigator', { screen: 'CreateOrderP2P', params: { orderId } });
       } else {
+        track('consumer is proceeding with a food order that was in quote');
         navigation.navigate('FoodOrderNavigator', {
           screen: 'RestaurantNavigator',
           initial: false,
@@ -97,6 +99,7 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
         });
       }
     } else if (status === 'confirming') {
+      track('navigating to OrderConfirming');
       navigation.navigate('OngoingOrderNavigator', {
         screen: 'OngoingOrderConfirming',
         params: {
@@ -104,6 +107,7 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
         },
       });
     } else if (isOrderOngoing(order)) {
+      track('navigating to OngoingOrder');
       navigation.navigate('OngoingOrderNavigator', {
         screen: 'OngoingOrder',
         params: {
@@ -111,6 +115,7 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
         },
       });
     } else if (status === 'delivered') {
+      track('navigating to DeliveredOrderDetail');
       navigation.navigate('DeliveredOrderNavigator', {
         screen: 'DeliveredOrderDetail',
         params: {
@@ -118,6 +123,7 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
         },
       });
     } else if (status === 'canceled') {
+      track('navigating to DeliveredOrderDetail to check a canceled order');
       navigation.navigate('DeliveredOrderNavigator', {
         screen: 'DeliveredOrderDetail',
         params: {
@@ -129,6 +135,7 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
   const removeItemHandler = (orderId: string) => {
     (async () => {
       api.order().deleteOrder(orderId);
+      track('deleted order in quote that was being listed in history');
     })();
   };
   return (

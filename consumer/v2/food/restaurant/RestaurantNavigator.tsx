@@ -5,6 +5,7 @@ import { defaultScreenOptions } from '../../../../common/screens/options';
 import { CommonProfileEdit } from '../../../../common/screens/profile/CommonProfileEdit';
 import { t } from '../../../../strings';
 import { AddressComplete } from '../../common/AddressComplete';
+import { AvailableFleets } from '../../common/AvailableFleets';
 import { PayWithPix } from '../../common/PayWithPix';
 import ProfileAddCard from '../../main/profile/ProfileAddCard';
 import ProfilePaymentMethods from '../../main/profile/ProfilePaymentMethods';
@@ -44,6 +45,11 @@ export default function () {
         name="CommonProfileEdit"
         component={CommonProfileEdit}
         options={{ title: t('Sua sacola') }} //TODO: check if this title is right
+      />
+      <Stack.Screen
+        name="AvailableFleets"
+        component={AvailableFleets}
+        options={{ title: t('Frotas disponíveis') }}
       />
       <Stack.Screen
         name="ProfileAddCard"

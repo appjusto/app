@@ -14,7 +14,7 @@ import { ApiContext, AppDispatch } from '../app/context';
 import RadioButton from '../components/buttons/RadioButton';
 import { ReportIssueView } from '../components/views/ReportIssueView';
 import useIssues from '../store/api/platform/hooks/useIssues';
-import { useSegmentScreen } from '../store/api/track';
+import { track, useSegmentScreen } from '../store/api/track';
 import { getFlavor } from '../store/config/selectors';
 import { showToast } from '../store/ui/actions';
 import { getUser } from '../store/user/selectors';
@@ -58,7 +58,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   const [isLoading, setLoading] = React.useState(false);
   // side effects
   // tracking
-  useSegmentScreen('Report issue', {
+  useSegmentScreen('ReportIssue', {
     issueType,
   });
 
@@ -85,6 +85,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
           flavor,
           comment,
         });
+        track('reporting issue');
         setLoading(false);
         if (flavor === 'courier') {
           navigation.replace('DeliveryProblemFeedback', {
@@ -99,7 +100,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
       }
     })();
   };
-  console.log(issueType);
+
   // UI
   if (!issues) {
     return (

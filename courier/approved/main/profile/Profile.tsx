@@ -6,7 +6,7 @@ import { Alert, Linking, ScrollView, View } from 'react-native';
 import { ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import { defaultScreenOptions } from '../../../../common/screens/options';
-import { useSegmentScreen } from '../../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { AppJustoFreshdeskCourierURL } from '../../../../strings/values';
@@ -47,7 +47,10 @@ export default function ({ navigation }: Props) {
         {
           text: t('Confirmar'),
           style: 'destructive',
-          onPress: () => api.signOut(),
+          onPress: () => {
+            track('courier signing out');
+            api.signOut();
+          },
         },
       ]
     );
@@ -72,60 +75,74 @@ export default function ({ navigation }: Props) {
               <ConfigItem
                 title={t('Fotos e documentos')}
                 subtitle={t('Sua selfie e imagem do seu documento')}
-                onPress={() => navigation.navigate('ProfileNavigator', { screen: 'ProfilePhotos' })}
+                onPress={() => {
+                  track('navigating to ProfilePhotos');
+                  navigation.navigate('ProfileNavigator', { screen: 'ProfilePhotos' });
+                }}
               />
               <ConfigItem
                 title={t('Dados da sua empresa')}
                 subtitle={t('CNPJ, Razão social e endereço da sua empresa')}
-                onPress={() =>
-                  navigation.navigate('ProfileNavigator', { screen: 'ProfileCompany' })
-                }
+                onPress={() => {
+                  track('navigating to ProfileCompany');
+                  navigation.navigate('ProfileNavigator', { screen: 'ProfileCompany' });
+                }}
               />
               <ConfigItem
                 title={t('Dados bancários')}
                 subtitle={t('Banco, agência e conta corrente da sua empresa')}
-                onPress={() =>
+                onPress={() => {
+                  track('navigating to ProfileBank');
                   navigation.navigate('ProfileNavigator', {
                     screen: 'ProfileBank',
-                  })
-                }
+                  });
+                }}
               />
               <ConfigItem
                 title={t('Escolha sua frota')}
                 subtitle={t('Escolha a frota que você faz parte')}
-                onPress={() =>
+                onPress={() => {
+                  track('navigating to ChooseFleet');
                   navigation.navigate('ProfileNavigator', {
                     screen: 'ChooseFleet',
-                  })
-                }
+                  });
+                }}
               />
               <ConfigItem
                 title={t('Central de ajuda')}
                 subtitle={t('Tire suas dúvidas ou envie uma mensagem')}
-                onPress={() => Linking.openURL(AppJustoFreshdeskCourierURL)}
+                onPress={() => {
+                  track('opening courier freshdesk url');
+                  Linking.openURL(AppJustoFreshdeskCourierURL);
+                }}
               />
               <ConfigItem
                 title={t('Descontos em parceiros')}
                 subtitle={t(
                   'Veja as negociações coletivas que o AppJusto conseguir para a categoria'
                 )}
-                onPress={() =>
-                  navigation.navigate('ProfileNavigator', { screen: 'PartnersAndDiscounts' })
-                }
+                onPress={() => {
+                  track('navigating to PartnersAndDiscounts');
+                  navigation.navigate('ProfileNavigator', { screen: 'PartnersAndDiscounts' });
+                }}
               />
               <ConfigItem
                 title={t('Sobre o AppJusto')}
                 subtitle={t('Acesse nossas páginas')}
-                onPress={() =>
+                onPress={() => {
+                  track('navigating to AboutApp');
                   navigation.navigate('ProfileNavigator', {
                     screen: 'AboutApp',
-                  })
-                }
+                  });
+                }}
               />
               <ConfigItem
                 title={t('Termos de uso e política de privacidade')}
                 subtitle={t('Leia os termos de uso do AppJusto')}
-                onPress={() => navigation.navigate('ProfileNavigator', { screen: 'Terms' })}
+                onPress={() => {
+                  track('navigating to Terms');
+                  navigation.navigate('ProfileNavigator', { screen: 'Terms' });
+                }}
               />
               <ConfigItem
                 title={t('Sair do App')}
@@ -140,7 +157,10 @@ export default function ({ navigation }: Props) {
                   'Todos os seus dados serão apagados do nosso sistema e você não fará mais parte do AppJusto'
                 )}
                 bottomBorder={false}
-                onPress={() => navigation.navigate('ProfileNavigator', { screen: 'ProfileErase' })}
+                onPress={() => {
+                  track('navigating to ProfileErase');
+                  navigation.navigate('ProfileNavigator', { screen: 'ProfileErase' });
+                }}
               />
             </ScrollView>
           </View>

@@ -11,7 +11,7 @@ type ScreenNavigationProp = StackNavigationProp<UnapprovedParamList, 'AboutAuton
 
 export const AboutAutonomy = () => {
   // tracking
-  useSegmentScreen('About autonomy');
+  useSegmentScreen('AboutAutonomy');
   return (
     <ScrollView
       style={{ ...screens.config }}

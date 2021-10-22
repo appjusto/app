@@ -8,7 +8,7 @@ import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import { ReportIssueView } from '../../../common/components/views/ReportIssueView';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
-import { useSegmentScreen, useTrack } from '../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -39,11 +39,11 @@ export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
   const [isLoading, setLoading] = React.useState(false);
 
   // tracking
-  useSegmentScreen('OngoingOrder CancelOrder');
-  useTrack('OngoingOrder CancelOrder');
+  useSegmentScreen('OngoingOrderCancelOrder');
   // handlers
   const cancelHandler = () => {
     (async () => {
+      track('clicked in cancel order button');
       Keyboard.dismiss();
       try {
         setLoading(true);

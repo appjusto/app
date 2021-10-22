@@ -13,6 +13,7 @@ import { useChatisEnabled } from '../../../common/hooks/useChatIsEnabled';
 import { IconOrderDone } from '../../../common/icons/icon-order-done';
 import { useCourierReview } from '../../../common/store/api/courier/hooks/useCourierReview';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -47,7 +48,8 @@ export default ({ navigation, route }: Props) => {
   const [tip, setTip] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
   const showChatButton = useChatisEnabled(order);
-
+  // tracking
+  useSegmentScreen('OngoingOrderFeedback');
   // helpers
   const openChat = React.useCallback(
     (counterpartId: string, counterpartFlavor: Flavor) => {
@@ -59,10 +61,10 @@ export default ({ navigation, route }: Props) => {
     },
     [navigation, orderId]
   );
-  const openChatWithRestaurant = React.useCallback(
-    () => openChat(order?.business?.id!, 'business'),
-    [openChat, order?.business?.id]
-  );
+  const openChatWithRestaurant = React.useCallback(() => {
+    track('opening chat with restaurant');
+    openChat(order?.business?.id!, 'business');
+  }, [openChat, order?.business?.id]);
   //handlers
   const finishHandler = async () => {
     Keyboard.dismiss();
@@ -70,13 +72,17 @@ export default ({ navigation, route }: Props) => {
     setLoading(true);
     try {
       if (reviewType) {
+        track('sending courier review');
         await api.courier().addReview(order.courier!.id, {
           type: reviewType,
           orderId,
           comment,
         });
       }
-      if (tip > 0) await api.order().tipCourier(order.id, tip);
+      if (tip > 0) {
+        track('sending tip');
+        await api.order().tipCourier(order.id, tip);
+      }
       navigation.navigate('MainNavigator', { screen: 'Home' });
     } catch (error) {
       // find a better error message
@@ -85,6 +91,7 @@ export default ({ navigation, route }: Props) => {
     setLoading(false);
   };
   const issueHandler = () => {
+    track('reporting issue');
     Keyboard.dismiss();
     if (!order) return;
     if (order.type === 'food') {
@@ -189,7 +196,7 @@ export default ({ navigation, route }: Props) => {
           <HR height={padding} />
           {/* review */}
           <ReviewBox
-            review={review?.type ?? reviewType}
+            reviewType={review?.type ?? reviewType}
             comment={review?.comment ?? comment}
             focusable={!!review}
             onReviewChange={(type) => setReviewType(type)}
@@ -230,14 +237,15 @@ export default ({ navigation, route }: Props) => {
           <View style={{ width: '49%' }}>
             <DefaultButton
               title={t('Detalhes da corrida')}
-              onPress={() =>
+              onPress={() => {
+                track('navigating to DeliveredOrderDetail');
                 navigation.navigate('DeliveredOrderNavigator', {
                   screen: 'DeliveredOrderDetail',
                   params: {
                     orderId,
                   },
-                })
-              }
+                });
+              }}
               secondary
             />
           </View>

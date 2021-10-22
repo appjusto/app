@@ -7,6 +7,7 @@ import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
+import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { isConsumerProfileComplete } from '../../../../../common/store/courier/validators';
@@ -74,6 +75,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     if (!quotes || isEmpty(quotes)) return;
     setSelectedFare(quotes[0]);
   }, [quotes]);
+  // getting the selected fare in the AvailableFleets screen;
+  React.useEffect(() => {
+    if (params?.returningFare) setSelectedFare(params.returningFare);
+  }, [params?.returningFare]);
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
     if (params?.destination) {
@@ -112,8 +117,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     if (!order) return;
     if (order.status === 'expired') navigation.navigate('MainNavigator', { screen: 'Home' });
   }, [order, navigation]);
+  // tracking
+  useSegmentScreen('FoodOrderCheckout');
   // handlers
-  const getOrderQuotesHandler = async () => {
+  const getOrderQuotesHandler = React.useCallback(async () => {
     if (!order) return;
     if (!order.origin?.location || !order.route?.distance) {
       if (order.route?.issue) dispatch(showToast(order.route.issue, 'error'));
@@ -125,7 +132,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     } catch (error) {
       dispatch(showToast(error.toString(), 'error'));
     }
-  };
+  }, [order, api, dispatch]);
   const placeOrderHandler = async (fleetId: string) => {
     Keyboard.dismiss();
     if (!order) return;
@@ -162,6 +169,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         orderAdditionalInfo,
         shareDataWithBusiness
       );
+      track('consumer placed a food order');
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {
         screen: 'OngoingOrderConfirming',
@@ -176,6 +184,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   };
   // navigate to ProfileAddCard or ProfilePaymentMethods to add or select payment method
   const navigateToFillPaymentInfo = React.useCallback(() => {
+    track('navigating to add payment method');
     // if user has no payment method, go direct to 'AddCard' screen
     if (!isConsumerProfileComplete(consumer)) {
       const returnScreen = !selectedPaymentMethodId ? 'ProfileAddCard' : 'FoodOrderCheckout';
@@ -189,6 +198,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       navigation.navigate('ProfilePaymentMethods', { returnScreen: 'FoodOrderCheckout' });
     }
   }, [consumer, navigation, selectedPaymentMethodId]);
+
   // UI
   if (!order) {
     return (
@@ -210,29 +220,48 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         order={order}
         showMap={Boolean(order.route)}
         onEditStep={() => {
+          track('consumer changed destination');
           navigation.navigate('OrderDestination', {
             returnScreen: 'FoodOrderCheckout',
             returnParam: 'destination',
           });
         }}
         onEditItemPress={(productId, itemId) => {
+          track('editing items in order');
           navigation.navigate('ItemDetail', { productId, itemId });
         }}
-        onAddItemsPress={() => navigation.navigate('RestaurantDetail')}
+        onAddItemsPress={() => {
+          track('consumer is going to add more items to the order');
+          navigation.navigate('RestaurantDetail');
+        }}
         additionalInfo={orderAdditionalInfo}
         onAddInfo={(text) => setOrderAdditionalInfo(text)}
         shareDataWithBusiness={shareDataWithBusiness}
-        onShareData={() => setShareDataWithBusiness(!shareDataWithBusiness)}
+        onShareData={() => {
+          setShareDataWithBusiness(!shareDataWithBusiness);
+          track('consumer changed share data with business preferences');
+        }}
         availableFleets={
           <OrderAvailableFleets
             quotes={quotes}
             selectedFare={selectedFare}
-            onFareSelect={(fare) => setSelectedFare(fare)}
+            onFareSelect={(fare) => {
+              setSelectedFare(fare);
+              track('consumer selected fare');
+            }}
             onFleetSelect={(fleetId: string) => {
+              track('navigating to view fleet details');
               navigation.navigate('FleetDetail', { fleetId });
             }}
             onRetry={getOrderQuotesHandler}
             order={order}
+            navigateToAvailableFleets={() =>
+              navigation.navigate('AvailableFleets', {
+                orderId: order.id,
+                selectedFare: selectedFare!,
+                returnScreen: 'FoodOrderCheckout',
+              })
+            }
           />
         }
         costBreakdown={<OrderCostBreakdown order={order} selectedFare={selectedFare!} />}
@@ -245,7 +274,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             <OrderTotal
               total={selectedFare?.total ?? 0}
               switchValue={wantsCpf}
-              onSwitchValueChange={() => setWantsCpf(!wantsCpf)}
+              onSwitchValueChange={() => {
+                setWantsCpf(!wantsCpf);
+                track('consumer changed cpf in invoice preferences');
+              }}
               cpf={cpf}
               setCpf={setCpf}
             />
@@ -259,7 +291,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             onSubmit={() => setDestinationModalVisible(true)}
             activityIndicator={isLoading}
             navigateToPixPayment={() => null}
-            navigateToAboutCharges={() => navigation.navigate('AboutCharges')}
+            navigateToAboutCharges={() => {
+              track('navigating to AboutCharges');
+              navigation.navigate('AboutCharges');
+            }}
           />
         }
       />
@@ -272,6 +307,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         onConfirmAddress={() => placeOrderHandler(selectedFare?.fleet?.id!)}
         order={order}
         onEditAddress={() => {
+          track('consumer is changing destination');
           navigation.navigate('OrderDestination', {
             returnScreen: 'FoodOrderCheckout',
             returnParam: 'destination',

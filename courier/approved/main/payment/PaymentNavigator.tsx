@@ -12,7 +12,6 @@ const Stack = createStackNavigator<PaymentNavigatorParamList>();
 export default function () {
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
-      {/* change to dynamic name */}
       <Stack.Screen name="Payment" component={Payment} options={{ title: t('Adiantar valores') }} />
       <Stack.Screen
         name="ProfileBank"

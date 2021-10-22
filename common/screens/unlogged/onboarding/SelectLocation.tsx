@@ -11,6 +11,7 @@ import {
   IBGECity,
   IBGEState,
 } from '../../../store/api/externals/ibge';
+import { track, useSegmentScreen } from '../../../store/api/track';
 import { padding, screens, texts } from '../../../styles';
 import { removeAccents } from '../../../utils/formatters';
 
@@ -43,6 +44,8 @@ export const SelectLocation = ({ navigation, route }: Props) => {
       }
     })();
   }, [navigation, route.params]);
+  // tracking
+  useSegmentScreen('SelectLocation');
   // UI
   return (
     <View style={{ ...screens.lightGrey, paddingTop: padding }}>
@@ -55,7 +58,10 @@ export const SelectLocation = ({ navigation, route }: Props) => {
             renderItem={({ item }) => {
               return (
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('ConsumerOnboarding', { state: item.sigla })}
+                  onPress={() => {
+                    track('state selected');
+                    navigation.navigate('ConsumerOnboarding', { state: item.sigla });
+                  }}
                 >
                   <View
                     style={{
@@ -87,7 +93,10 @@ export const SelectLocation = ({ navigation, route }: Props) => {
             renderItem={({ item }) => {
               return (
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('ConsumerOnboarding', { city: item.nome })}
+                  onPress={() => {
+                    track('city selected');
+                    navigation.navigate('ConsumerOnboarding', { city: item.nome });
+                  }}
                 >
                   <View
                     style={{

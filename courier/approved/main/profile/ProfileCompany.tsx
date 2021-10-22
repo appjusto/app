@@ -20,7 +20,7 @@ import {
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
 import * as viacep from '../../../../common/store/api/externals/viacep';
-import { useSegmentScreen } from '../../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { getExtra } from '../../../../common/store/config/selectors';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { companyInfoSet } from '../../../../common/store/courier/validators';
@@ -74,7 +74,7 @@ export default function ({ navigation, route }: Props) {
   const additionalRef = React.useRef<TextInput>(null);
   // side effects
   // tracking
-  useSegmentScreen('Profile Company');
+  useSegmentScreen('ProfileCompany');
   // updating fields after cep query
   React.useEffect(() => {
     if (cep.length === 8 && cepRef.current?.isFocused()) {
@@ -97,6 +97,7 @@ export default function ({ navigation, route }: Props) {
     Keyboard.dismiss();
     setLoading(true);
     await api.profile().updateProfile(courier.id, { company });
+    track('courier updated profile with company info');
     setLoading(false);
     navigation.goBack();
   };
@@ -240,7 +241,10 @@ export default function ({ navigation, route }: Props) {
               title={t('Não tem MEI? Clique aqui e saiba mais')}
               grey
               style={{ marginTop: padding }}
-              onPress={() => Linking.openURL(AppJustoMEIURL)}
+              onPress={() => {
+                track('courier opened MEI url');
+                Linking.openURL(AppJustoMEIURL);
+              }}
             />
           ) : null}
         </View>

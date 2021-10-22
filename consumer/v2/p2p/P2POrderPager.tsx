@@ -52,6 +52,7 @@ type Props = {
   onFareSelect: (fare: Fare) => void;
   onRetry: () => void;
   total: number;
+  navigateToAvailableFleets: () => void;
 };
 
 export default function ({
@@ -75,6 +76,7 @@ export default function ({
   onFareSelect,
   onRetry,
   total,
+  navigateToAvailableFleets,
 }: Props) {
   // params
   const { origin, destination } = order ?? {};
@@ -349,6 +351,7 @@ export default function ({
                   onFleetSelect={navigateFleetDetail}
                   onRetry={onRetry}
                   order={order}
+                  navigateToAvailableFleets={navigateToAvailableFleets}
                 />
               }
               costBreakdown={<OrderCostBreakdown order={order} selectedFare={selectedFare!} />}

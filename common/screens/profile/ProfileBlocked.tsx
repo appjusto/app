@@ -31,7 +31,7 @@ export default function ({ navigation }: Props) {
   const profile = flavor === 'consumer' ? consumer : courier;
   // side effects
   // tracking
-  useSegmentScreen('Profile Blocked');
+  useSegmentScreen('ProfileBlocked');
   // adapting to situation changes
   React.useEffect(() => {
     if (profile?.situation === 'pending') navigation.replace('ProfilePending');

@@ -17,6 +17,7 @@ import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../../common/icons/icon-cone-yellow';
 import { useSearch } from '../../../../common/store/api/search/useSearch';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import {
   getCurrentLocation,
   getSearchFilters,
@@ -72,17 +73,21 @@ export default function ({ navigation }: Props) {
   React.useEffect(() => {
     searchInputRef.current?.focus();
   }, []);
+  // tracking
+  useSegmentScreen('RestaurantSearch');
   // handlers
   const refreshRestaurants = async () => {
     setRefreshing(true);
     await api.search().clearCache();
     await refetchRestaurants();
+    track("refreshing restaurant's list");
     setRefreshing(false);
   };
   const refreshProducts = async () => {
     setRefreshing(true);
     await api.search().clearCache();
     await refetchProducts();
+    track("refreshing product's list");
     setRefreshing(false);
   };
 
@@ -111,14 +116,23 @@ export default function ({ navigation }: Props) {
         </View>
       </PaddedView>
       <PaddedView vertical={false}>
-        <FilterSelector onFilterOpen={() => navigation.navigate('FilterScreen')} />
+        <FilterSelector
+          onFilterOpen={() => {
+            track('navigating to FilterScreen');
+            navigation.navigate('FilterScreen');
+          }}
+        />
       </PaddedView>
       {kind === 'restaurant' && (
         <RestaurantList
           sections={sectionsFromResults(restaurants)}
-          onSelect={(restaurantId) =>
-            navigation.navigate('RestaurantNavigator', { restaurantId, screen: 'RestaurantDetail' })
-          }
+          onSelect={(restaurantId) => {
+            track('selected a restaurant from search results');
+            navigation.navigate('RestaurantNavigator', {
+              restaurantId,
+              screen: 'RestaurantDetail',
+            });
+          }}
           loading={loadingRestaurants}
           refreshing={refreshing}
           onRefresh={() => refreshRestaurants()}
@@ -132,6 +146,7 @@ export default function ({ navigation }: Props) {
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => {
+                track('selected a product from search results');
                 navigation.navigate('RestaurantNavigator', {
                   initial: false,
                   screen: 'ItemDetail',

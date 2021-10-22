@@ -20,7 +20,7 @@ import {
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
-import { track } from '../../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { consumerInfoSet } from '../../../../common/store/consumer/validators';
 import { isConsumerProfileComplete } from '../../../../common/store/courier/validators';
@@ -67,35 +67,20 @@ export default function ({ navigation, route }: Props) {
     phone: phone.trim(),
   };
   const canSubmit = consumerInfoSet(updatedConsumer);
+  // tracking
+  useSegmentScreen('ProfileEdit');
   // handlers
   const updateProfileHandler = async () => {
     Keyboard.dismiss();
-    if (orders) {
-      console.log('cliquei');
-      track('navigating to RequestProfileEdit');
-      navigation.replace('RequestProfileEdit');
-      // check if there is already an "edit request" in place
-      // if there is one, show a toast
-      // if (editRequest) {
-      //   dispatch(
-      //     showToast(
-      //       t(
-      //         'Você já tem uma solicitação de alteração de dados sendo analisada. Aguarde a conclusão do processo para efetuar uma nova solicitação'
-      //       ),
-      //       'error'
-      //     )
-      //   );
-      // }
-    } else {
-      try {
-        setLoading(true);
-        api.profile().updateProfile(consumer.id, updatedConsumer);
-        setLoading(false);
-        if (returnScreen) navigation.navigate(returnScreen, { returnScreen: returnNextScreen });
-        else navigation.goBack();
-      } catch (error) {
-        dispatch(showToast(t('Não foi possível atualizar o perfil.'), 'error'));
-      }
+    try {
+      setLoading(true);
+      api.profile().updateProfile(consumer.id, updatedConsumer);
+      track('consumer updated profile');
+      setLoading(false);
+      if (returnScreen) navigation.navigate(returnScreen, { returnScreen: returnNextScreen });
+      else navigation.goBack();
+    } catch (error) {
+      dispatch(showToast(t('Não foi possível atualizar o perfil.'), 'error'));
     }
   };
   // refs

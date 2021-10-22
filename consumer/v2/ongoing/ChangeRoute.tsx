@@ -1,10 +1,10 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import LabeledText from '../../../common/components/texts/LabeledText';
-import { colors, halfPadding, screens, texts } from '../../../common/styles';
+import { screens } from '../../../common/styles';
 import { t } from '../../../strings';
 
 export const ChangeRoute = () => {
@@ -19,12 +19,12 @@ export const ChangeRoute = () => {
       scrollIndicatorInsets={{ right: 1 }}
     >
       <PaddedView style={{ flex: 1 }}>
-        <Text style={{ ...texts.x2l }}>{t('Indique um restaurante')}</Text>
+        {/* <Text style={{ ...texts.x2l }}>{t('Indique um restaurante')}</Text>
         <Text style={{ ...texts.sm, paddingTop: halfPadding, color: colors.grey700 }}>
           {t(
             'Estamos em constante expansão e queremos conhecer os seus restaurantes preferidos! Manda pra gente e vamos entrar em contato com eles.'
           )}
-        </Text>
+        </Text> */}
         <View style={{ marginTop: 32, flex: 1 }}>
           <TouchableOpacity onPress={() => null}>
             <LabeledText

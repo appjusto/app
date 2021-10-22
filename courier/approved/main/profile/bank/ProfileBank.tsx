@@ -16,7 +16,7 @@ import { numbersAndLettersParser } from '../../../../../common/components/inputs
 import PatternInput from '../../../../../common/components/inputs/PatternInput';
 import LabeledText from '../../../../../common/components/texts/LabeledText';
 import useBanks from '../../../../../common/store/api/platform/hooks/useBanks';
-import { useSegmentScreen } from '../../../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { bankAccountSet } from '../../../../../common/store/courier/validators';
 import { showToast } from '../../../../../common/store/ui/actions';
@@ -57,7 +57,7 @@ export default function ({ navigation, route }: Props) {
   const accountRef = React.useRef<TextInput>(null);
   // side effects
   // tracking
-  useSegmentScreen('Profile Bank');
+  useSegmentScreen('ProfileBank');
   // checking initial bank information
   React.useEffect(() => {
     if (bankAccount && bankAccountSet(bankAccount)) {
@@ -139,6 +139,7 @@ export default function ({ navigation, route }: Props) {
         },
       })
     );
+    track('courier updated profile with bak info');
     navigation.goBack();
   };
   // UI

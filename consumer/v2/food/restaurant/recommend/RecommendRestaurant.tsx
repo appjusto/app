@@ -14,6 +14,7 @@ import { numbersOnlyParser } from '../../../../../common/components/inputs/patte
 import PatternInput from '../../../../../common/components/inputs/PatternInput';
 import LabeledText from '../../../../../common/components/texts/LabeledText';
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
+import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, halfPadding, screens, texts } from '../../../../../common/styles';
@@ -54,6 +55,8 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
   React.useEffect(() => {
     if (place) setName(place.address.main);
   }, [place]);
+  // tracking
+  useSegmentScreen('RecommendRestaurant');
   // handler
   const sendRecommendationHandler = () => {
     Keyboard.dismiss();
@@ -62,6 +65,7 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
       try {
         setLoading(true);
         await api.business().addRecomendation(place, consumer?.id, instagram, phone);
+        track('consumer sent a restaurant recommendation to database');
         setLoading(false);
         dispatch(
           showToast(t('Recomendação enviada. Muito obrigado pela contribuição!'), 'success')
@@ -93,12 +97,13 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
         </Text>
         <View style={{ marginTop: 32, flex: 1 }}>
           <TouchableOpacity
-            onPress={() =>
+            onPress={() => {
+              track("navigating to AddressComplete to find a restaurant's address");
               navigation.navigate('AddressComplete', {
                 returnScreen: 'RecommendRestaurant',
                 returnParam: 'place',
-              })
-            }
+              });
+            }}
           >
             <LabeledText
               title={t('Nome do restaurante')}

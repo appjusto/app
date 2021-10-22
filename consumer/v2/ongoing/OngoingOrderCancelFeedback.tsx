@@ -4,6 +4,7 @@ import React from 'react';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { colors } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
@@ -20,6 +21,8 @@ type Props = {
 };
 
 export const OngoingOrderCancelFeedback = ({ navigation, route }: Props) => {
+  // tracking
+  useSegmentScreen('OngoingOrderCancelFeedback');
   return (
     <FeedbackView
       header={t('Obrigado pelas informações. Seu pedido foi cancelado.')}
@@ -29,7 +32,10 @@ export const OngoingOrderCancelFeedback = ({ navigation, route }: Props) => {
     >
       <DefaultButton
         title={t('Voltar para o início')}
-        onPress={() => navigation.navigate('MainNavigator', { screen: 'Home' })}
+        onPress={() => {
+          track('navigating to home screen');
+          navigation.navigate('MainNavigator', { screen: 'Home' });
+        }}
       />
     </FeedbackView>
   );

@@ -17,7 +17,7 @@ import PaddedView from '../../components/containers/PaddedView';
 import RoundedText from '../../components/texts/RoundedText';
 import ShowIf from '../../components/views/ShowIf';
 import useObserveFleet from '../../store/api/fleet/hooks/useObserveFleet';
-import { useSegmentScreen } from '../../store/api/track';
+import { track, useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
 import { getCourier } from '../../store/courier/selectors';
 import { colors, screens, texts } from '../../styles';
@@ -52,7 +52,7 @@ export default function ({ navigation, route }: Props) {
   const fleet = useObserveFleet(fleetId);
   // side effects
   // tracking
-  useSegmentScreen('Fleet Detail', { fleetId });
+  useSegmentScreen('FleetDetail', { fleetId });
   // UI
   if (!fleet) {
     return (
@@ -70,6 +70,7 @@ export default function ({ navigation, route }: Props) {
         joinedOn: firebase.firestore.FieldValue.serverTimestamp(),
       },
     });
+    track('courier joined fleet');
     navigation.navigate('ChooseFleet');
   };
   // UI

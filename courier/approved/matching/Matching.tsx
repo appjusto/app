@@ -1,5 +1,6 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { track } from 'expo-analytics-segment';
 import * as Location from 'expo-location';
 import React from 'react';
 import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
@@ -11,7 +12,7 @@ import RoundedText from '../../../common/components/texts/RoundedText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { useObserveOrderRequest } from '../../../common/store/api/courier/hooks/useObserveOrderRequest';
 import { distanceBetweenLatLng } from '../../../common/store/api/helpers';
-import { screen } from '../../../common/store/api/track';
+import { screen, useSegmentScreen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, doublePadding, padding, screens, texts } from '../../../common/styles';
@@ -74,7 +75,7 @@ export default function ({ navigation, route }: Props) {
   React.useEffect(() => {
     if (situation === 'pending') {
       api.courier().viewOrderRequest(courier.id, orderId);
-    } else if (situation == 'accepted') {
+    } else if (situation === 'accepted') {
       navigation.replace('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: {
@@ -88,6 +89,7 @@ export default function ({ navigation, route }: Props) {
     }
   }, [situation, orderId, courier.id, api, navigation]);
   // tracking
+  useSegmentScreen('Matching');
   const tallerDevice = useTallerDevice();
   // UI
   if (isLoading)
@@ -101,11 +103,13 @@ export default function ({ navigation, route }: Props) {
     try {
       setLoading(true);
       await api.order().matchOrder(orderId);
+      track('courier matched order');
     } catch (error) {
       navigation.replace('MatchingError');
     }
   };
   const rejectHandler = () => {
+    track('courier rejected matching');
     navigation.replace('RejectedMatching', { orderId });
   };
   // UI

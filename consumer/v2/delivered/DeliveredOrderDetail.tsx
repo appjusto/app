@@ -16,6 +16,7 @@ import OrderMap from '../../../common/screens/orders/OrderMap';
 import PlaceSummary from '../../../common/screens/orders/summary/PlaceSummary';
 import { useCourierReview } from '../../../common/store/api/courier/hooks/useCourierReview';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import {
@@ -58,7 +59,9 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const [reviewSent, setReviewSent] = React.useState(false);
   const [tipLoading, setTipLoading] = React.useState(false);
   const showChatButton = useChatisEnabled(order);
-  console.log(review);
+
+  // tracking
+  useSegmentScreen('DeliveredOrderDetail');
 
   // helpers
   const openChat = React.useCallback(
@@ -71,10 +74,10 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
     },
     [navigation, orderId]
   );
-  const openChatWithRestaurant = React.useCallback(
-    () => openChat(order?.business?.id!, 'business'),
-    [openChat, order?.business?.id]
-  );
+  const openChatWithRestaurant = React.useCallback(() => {
+    track('opening chat with restaurant');
+    openChat(order?.business?.id!, 'business');
+  }, [openChat, order?.business?.id]);
 
   // handlers
   const tipHandler = async () => {
@@ -83,6 +86,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
     setTipLoading(true);
     try {
       if (tip > 0) await api.order().tipCourier(order.id, tip);
+      track('consumer sent tip to courier');
       dispatch(showToast(t('Caixinha enviada!')));
     } catch (error) {
       dispatch(showToast(t('Não foi possível enviar a caixinha'), 'error'));
@@ -102,6 +106,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
           comment,
         });
         setReviewSent(true);
+        track('consumer reviewed courier');
         dispatch(showToast(t('Avaliação enviada com sucesso!'), 'success'));
       }
     } catch (error) {
@@ -238,12 +243,13 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
 
               <DefaultButton
                 title={t('Relatar problema')}
-                onPress={() =>
+                onPress={() => {
+                  track('navigating to ReportIssue');
                   navigation.navigate('ReportIssue', {
                     orderId: order.id,
                     issueType: 'consumer-delivery-problem',
-                  })
-                }
+                  });
+                }}
                 secondary
               />
             </PaddedView>

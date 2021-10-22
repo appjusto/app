@@ -20,7 +20,7 @@ import {
 } from '../../../../common/components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
-import { useSegmentScreen } from '../../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { courierInfoSet } from '../../../../common/store/courier/validators';
 import { showToast } from '../../../../common/store/ui/actions';
@@ -62,7 +62,7 @@ export default function ({ navigation, route }: Props) {
   const profileApproved = courier.situation === 'approved';
   // side effects
   // tracking
-  useSegmentScreen('Profile Edit');
+  useSegmentScreen('courier ProfileEdit');
   // refs
   const surnameRef = React.useRef<TextInput>(null);
   const cpfRef = React.useRef<TextInput>(null);
@@ -72,6 +72,7 @@ export default function ({ navigation, route }: Props) {
     Keyboard.dismiss();
     try {
       await dispatch(updateProfile(api)(courier.id, updatedCourier));
+      track('courier updated profile');
       navigation.goBack();
     } catch (error) {
       dispatch(showToast(t('Não foi possível atualizar seu perfil.'), 'error'));

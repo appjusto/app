@@ -11,6 +11,7 @@ import { UnapprovedParamList } from '../../../../courier/unapproved/types';
 import { t } from '../../../../strings';
 import { ApiContext } from '../../../app/context';
 import DefaultButton from '../../../components/buttons/DefaultButton';
+import { track, useSegmentScreen } from '../../../store/api/track';
 import { getFlavor } from '../../../store/config/selectors';
 import { getConsumer } from '../../../store/consumer/selectors';
 import { getCourier } from '../../../store/courier/selectors';
@@ -46,6 +47,8 @@ export const Onboarding = ({ navigation, route }: Props) => {
   const pagerView = React.useRef<PagerView>(null);
   const { height } = Dimensions.get('window');
   const tallerDevice = height > 640;
+  // tracking
+  useSegmentScreen('Onboarding');
   // handlers
   const advanceHandler = async () => {
     if (step + 1 < steps.length) {
@@ -55,9 +58,11 @@ export const Onboarding = ({ navigation, route }: Props) => {
       try {
         if (flavor === 'courier') {
           await api.profile().updateProfile(user.uid, { onboarded: true });
+          track('courier onboarded');
           navigation.replace('ProfilePending');
         } else {
           await api.profile().updateProfile(user.uid, { onboarded: true });
+          track('consumer onboarded');
           navigation.replace('MainNavigator', { screen: 'Home' });
         }
       } catch (error) {

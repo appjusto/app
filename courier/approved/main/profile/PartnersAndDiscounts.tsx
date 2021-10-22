@@ -7,6 +7,7 @@ import RoundedText from '../../../../common/components/texts/RoundedText';
 import { IconIuguLogo } from '../../../../common/icons/icon-iugu-logo';
 import { IconIza } from '../../../../common/icons/icon-iza';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { AppJustoIzaURL } from '../../../../strings/values';
@@ -19,6 +20,8 @@ type Props = {
 };
 
 export const PartnersAndDiscounts = ({ navigation }: Props) => {
+  // tracking
+  useSegmentScreen('PartnersAndDiscounts');
   return (
     <ScrollView
       style={{ ...screens.config }}
@@ -62,7 +65,10 @@ export const PartnersAndDiscounts = ({ navigation }: Props) => {
           </View>
           <DefaultButton
             title={t('Quero meu desconto')}
-            onPress={() => Linking.openURL(AppJustoIzaURL)}
+            onPress={() => {
+              track('opened Iza url');
+              Linking.openURL(AppJustoIzaURL);
+            }}
           />
         </PaddedView>
         <PaddedView

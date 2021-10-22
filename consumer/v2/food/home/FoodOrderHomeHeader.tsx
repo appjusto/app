@@ -7,6 +7,7 @@ import { IconLogin } from '../../../../common/icons/icon-login';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { CuisineSelector } from './CuisineSelector';
 import { LocationBar } from './LocationBar';
 
 type Props = {
@@ -75,10 +76,10 @@ export const FoodOrderHomeHeader = ({
         </TouchableWithoutFeedback>
       </View>
       {/* by cuisine */}
-      {/* <CuisineSelector
+      <CuisineSelector
         selectedCuisineId={selectedCuisineId}
         onSelect={(cuisine) => onCuisineSelect(cuisine)}
-      /> */}
+      />
     </View>
   );
 };

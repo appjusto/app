@@ -47,6 +47,10 @@ export default function ({ navigation }: Props) {
         });
       } else if (data.action === 'order-update') {
         if (clicked) {
+          track('Push received', {
+            action: data.action,
+            orderId: data.orderId,
+          });
           remove!();
           navigation.navigate('OngoingDeliveryNavigator', {
             screen: 'OngoingDelivery',
@@ -57,6 +61,10 @@ export default function ({ navigation }: Props) {
         }
       } else if (data.action === 'order-chat') {
         if (clicked) {
+          track('Push received', {
+            action: data.action,
+            orderId: data.orderId,
+          });
           remove!();
           navigation.navigate('OngoingDeliveryNavigator', {
             screen: 'OngoingDelivery',
@@ -87,6 +95,7 @@ export default function ({ navigation }: Props) {
     const r = /f\/([-a-zA-Z0-9]+)/.exec(parsedURL.path);
     if (!r) return;
     const [_, fleetId] = r;
+    track('courier is navigating to FleetDetail via deeplink');
     navigation.navigate('ProfileNavigator', {
       screen: 'FleetDetail',
       params: { fleetId },

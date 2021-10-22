@@ -6,6 +6,7 @@ import { Alert, Linking, ScrollView, View } from 'react-native';
 import { ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import { defaultScreenOptions } from '../../../../common/screens/options';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { AppJustoFreshdeskConsumerURL } from '../../../../strings/values';
@@ -28,7 +29,8 @@ const Stack = createStackNavigator();
 export default function ({ navigation }: Props) {
   // context
   const api = useContext(ApiContext);
-
+  // tracking
+  useSegmentScreen('consumer Profile');
   // handlers
   const confirmLogout = () => {
     Alert.alert(
@@ -44,7 +46,10 @@ export default function ({ navigation }: Props) {
         {
           text: t('Confirmar'),
           style: 'destructive',
-          onPress: () => api.signOut(),
+          onPress: () => {
+            track('signing out');
+            api.signOut();
+          },
         },
       ]
     );
@@ -69,28 +74,36 @@ export default function ({ navigation }: Props) {
               <ConfigItem
                 title={t('Formas de pagamento')}
                 subtitle={t('Edite suas formas de pagamento')}
-                onPress={() =>
-                  navigation.navigate('ProfileNavigator', { screen: 'ProfilePaymentMethods' })
-                }
+                onPress={() => {
+                  track('navigating to ProfilePaymentMethods');
+                  navigation.navigate('ProfileNavigator', { screen: 'ProfilePaymentMethods' });
+                }}
               />
               <ConfigItem
                 title={t('Central de ajuda')}
                 subtitle={t('Tire suas dúvidas ou envie uma mensagem')}
-                onPress={() => Linking.openURL(AppJustoFreshdeskConsumerURL)}
+                onPress={() => {
+                  track('opening FreshdeskConsumerURL');
+                  Linking.openURL(AppJustoFreshdeskConsumerURL);
+                }}
               />
               <ConfigItem
                 title={t('Sobre o AppJusto')}
                 subtitle={t('Acesse nossas páginas')}
-                onPress={() =>
+                onPress={() => {
+                  track('navigating to AboutApp');
                   navigation.navigate('ProfileNavigator', {
                     screen: 'AboutApp',
-                  })
-                }
+                  });
+                }}
               />
               <ConfigItem
                 title={t('Termos de uso e política de privacidade')}
                 subtitle={t('Leia os termos de uso do AppJusto')}
-                onPress={() => navigation.navigate('ProfileNavigator', { screen: 'Terms' })}
+                onPress={() => {
+                  track('navigating to Terms');
+                  navigation.navigate('ProfileNavigator', { screen: 'Terms' });
+                }}
               />
               <ConfigItem
                 title={t('Sair do App')}
