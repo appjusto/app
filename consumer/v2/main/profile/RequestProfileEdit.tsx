@@ -1,3 +1,4 @@
+import { UserProfile } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import * as cpfutils from '@fnando/cpf';
 import { RouteProp } from '@react-navigation/core';
@@ -20,9 +21,12 @@ import {
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
+import { useRequestedProfileChanges } from '../../../../common/hooks/useRequestedProfileChanges';
 import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
 import { track, useSegmentScreen } from '../../../../common/store/api/track';
+import { getFlavor } from '../../../../common/store/config/selectors';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
+import { getCourier } from '../../../../common/store/courier/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -41,7 +45,10 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
   // app state
+  const flavor = useSelector(getFlavor);
   const consumer = useSelector(getConsumer)!;
+  const courier = useSelector(getCourier)!;
+  const user = flavor === 'consumer' ? consumer : courier;
   // state
   const [name, setName] = React.useState<string>(consumer.name ?? '');
   const [surname, setSurname] = React.useState(consumer.surname ?? '');
@@ -50,6 +57,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   const [focusedField, setFocusedField] = React.useState<string>();
   const [requestSent, setRequestSent] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
+  const requestedChanges = useRequestedProfileChanges(user.id);
   // refs
   const nameRef = React.useRef<TextInput>(null);
   const surnameRef = React.useRef<TextInput>(null);
@@ -58,18 +66,19 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   //tracking
   useSegmentScreen('RequestProfileEdit');
   // helpers
-  // const updatedConsumer: Partial<ConsumerProfile> = {
-  //   name: name.trim(),
-  //   surname: surname.trim(),
-  //   cpf: cpf.trim(),
-  //   phone: phone.trim(),
-  // };
+  const userChanges: Partial<UserProfile> = {
+    name: name.trim(),
+    surname: surname.trim(),
+    cpf: cpf.trim(),
+    phone: phone.trim(),
+  };
+  const canEdit = requestedChanges?.length === 0;
   // handlers
   const changeProfileHandler = async () => {
     Keyboard.dismiss();
     try {
       setLoading(true);
-      //do something
+      await api.user().requestProfileChange(user.id, userChanges);
       track('profile edit requested');
       setLoading(false);
       setRequestSent(true);
@@ -82,8 +91,10 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
       );
     }
   };
+  console.log(requestedChanges);
+  console.log(userChanges);
   //UI
-  if (!consumer) {
+  if (requestedChanges === undefined) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -139,6 +150,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
           onSubmitEditing={() => surnameRef.current?.focus()}
           keyboardType="default"
           maxLength={30}
+          editable={canEdit}
         />
         <DefaultInput
           ref={surnameRef}
@@ -152,6 +164,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
           onSubmitEditing={() => cpfRef.current?.focus()}
           keyboardType="default"
           maxLength={30}
+          editable={canEdit}
         />
         <PatternInput
           ref={cpfRef}
@@ -169,6 +182,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
           onChangeText={(text) => setCpf(trim(text))}
           onFocus={() => setFocusedField('cpf')}
           onBlur={() => setFocusedField(undefined)}
+          editable={canEdit}
         />
         {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
           <Text
@@ -196,6 +210,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
           returnKeyType="next"
           blurOnSubmit
           onChangeText={(text) => setPhone(trim(text))}
+          editable={canEdit}
         />
       </PaddedView>
       <View style={{ flex: 1 }} />

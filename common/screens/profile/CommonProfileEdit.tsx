@@ -1,4 +1,4 @@
-import { ConsumerProfile, CourierProfile } from '@appjusto/types';
+import { UserProfile } from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -92,16 +92,14 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const phoneRef = React.useRef<TextInput>(null);
 
   // helpers
-  const updatedUser = {
+  const updatedUser: Partial<UserProfile> = {
     name: name.trim(),
     surname: surname.trim(),
     cpf: cpf.trim(),
     phone: phone.trim(),
   };
   const canSubmit =
-    flavor === 'consumer'
-      ? consumerInfoSet(updatedUser as Partial<ConsumerProfile> | undefined)
-      : courierInfoSet(updatedUser as Partial<CourierProfile> | undefined);
+    flavor === 'consumer' ? consumerInfoSet(updatedUser) : courierInfoSet(updatedUser);
   const isProfileApproved =
     flavor === 'consumer' ? isConsumerProfileComplete(consumer) : courier.situation === 'approved';
   const hasOrdered = orders.filter((order) => order.status === 'delivered').length > 0;
@@ -140,11 +138,12 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const updateProfileHandler = async () => {
     Keyboard.dismiss();
     try {
-      if (!editable) {
+      // TODO: change this to !editable later
+      if (editable) {
         navigation.replace('RequestProfileEdit');
       } else {
         setLoading(true);
-        api.profile().updateProfile(profile.id, updatedUser);
+        await api.profile().updateProfile(profile.id, updatedUser);
         track('profile updated');
         setLoading(false);
         if (returnScreen) navigation.navigate(returnScreen, { returnScreen: returnNextScreen });
