@@ -1,43 +1,57 @@
 import creditCardType from 'credit-card-type';
 import React, { createContext, ReactNode, useCallback, useContext } from 'react';
-import { allowedCreditCardTypes, CreditCardType, creditCardTypeParse } from './config';
+import {
+  allowedCreditCardTypes,
+  creditCardFlagPNGParse,
+  creditCardFlagPNGParse2,
+  CreditCardType,
+  creditCardTypeParse,
+  ICreditCardContextData
+} from './config';
 
-interface ICreditCardContextData {
-  getType(creditCardNumber: string): CreditCardType;
-  isAllowed(creditCardType: CreditCardType): boolean;
-}
-
-const CreditCardContext = createContext<ICreditCardContextData>({} as ICreditCardContextData);
-CreditCardContext.displayName = 'CreditCardContext';
+const CreditCardFancyContext = createContext<ICreditCardContextData>({} as ICreditCardContextData);
+CreditCardFancyContext.displayName = 'CreditCardContext';
 
 export function CreditCardProvider({ children }: { children: ReactNode }) {
   const getType = useCallback((creditCardNumber: string) => {
     const typeCard = creditCardType(creditCardNumber);
     if (typeCard.length !== 1) {
       console.log('Tipo ainda nao definido');
-      return CreditCardType.unknown;
+      //return CreditCardType.not_defined;
+      return 'not-defined';
     }
 
     const type = typeCard[0].type;
 
     if (Object.keys(creditCardTypeParse).includes(type)) {
-      console.log('Tipo: ' + creditCardTypeParse[type]);
-      return creditCardTypeParse[type];
+      console.log('Tipo: ' + type);
+      //return creditCardTypeParse[type];
+      return type;
     }
     console.log('Nao foi possivel definir um tipo');
-    return CreditCardType.unknown;
+    //return CreditCardType.unknown;
+    return 'unknown';
+  }, []);
+
+  const getFlagPNG = useCallback((creditCardType: string) => {
+    if (Object.keys(creditCardFlagPNGParse2).includes(creditCardType)) {
+      return creditCardFlagPNGParse2[creditCardType];
+    }
+    return creditCardFlagPNGParse[CreditCardType.unknown];
   }, []);
 
   const isAllowed = useCallback((creditCardType: CreditCardType) => {
     return allowedCreditCardTypes.includes(creditCardType);
   }, []);
 
-  const value: ICreditCardContextData = { getType, isAllowed };
+  const value: ICreditCardContextData = { getType, isAllowed, getFlagPNG };
 
-  return <CreditCardContext.Provider value={value}>{children}</CreditCardContext.Provider>;
+  return (
+    <CreditCardFancyContext.Provider value={value}>{children}</CreditCardFancyContext.Provider>
+  );
 }
 
-export function useContextCreditCard() {
-  const context = useContext(CreditCardContext);
+export function useContextCreditCardFancy() {
+  const context = useContext(CreditCardFancyContext);
   return context;
 }

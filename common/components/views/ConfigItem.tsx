@@ -30,10 +30,10 @@ export default function ({
         style={[
           bottomBorder
             ? {
-                borderBottomColor: colors.grey500,
-                borderStyle: 'solid',
-                borderBottomWidth: 1,
-              }
+              borderBottomColor: colors.grey500,
+              borderStyle: 'solid',
+              borderBottomWidth: 1,
+            }
             : null,
         ]}
       >
