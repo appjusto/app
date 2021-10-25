@@ -69,9 +69,9 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const api = React.useContext(ApiContext);
   // app state
   const flavor = useSelector(getFlavor);
-  const consumer = useSelector(getConsumer)!;
-  const courier = useSelector(getCourier)!;
-  const profile = flavor === 'consumer' ? consumer : courier;
+  const consumer = useSelector(getConsumer);
+  const courier = useSelector(getCourier);
+  const profile = flavor === 'consumer' ? consumer! : courier!;
   // state
   const [name, setName] = React.useState<string>(profile.name ?? '');
   const [surname, setSurname] = React.useState(profile.surname ?? '');
@@ -79,7 +79,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const [phone, setPhone] = React.useState(profile.phone! ?? '');
   const [focusedField, setFocusedField] = React.useState<string>();
   const [isLoading, setLoading] = React.useState(false);
-  const options = React.useMemo(() => ({ consumerId: consumer.id }), [consumer.id]);
+  const options = React.useMemo(() => ({ consumerId: consumer?.id }), [consumer?.id]);
   const orders = useObserveOrders(options);
 
   // tracking
@@ -101,7 +101,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const canSubmit =
     flavor === 'consumer' ? consumerInfoSet(updatedUser) : courierInfoSet(updatedUser);
   const isProfileApproved =
-    flavor === 'consumer' ? isConsumerProfileComplete(consumer) : courier.situation === 'approved';
+    flavor === 'consumer' ? isConsumerProfileComplete(consumer) : courier!.situation === 'approved';
   const hasOrdered = orders.filter((order) => order.status === 'delivered').length > 0;
 
   const buttonTitle = (() => {
@@ -109,7 +109,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
       if (isProfileApproved) {
         if (!hasOrdered) return t('Atualizar');
         else return t('Atualizar dados');
-      } else return t('Salvar e avançar');
+      } else return t('Salvar');
     } else {
       if (isProfileApproved) {
         return t('Atualizar dados');
@@ -118,7 +118,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   })();
   const title = (() => {
     if (isProfileApproved) return t('Seus dados:');
-    else return t('Finalize seu cadastro');
+    else return t('Finalize seu cadastro:');
   })();
   const subtitle = (() => {
     if (flavor === 'consumer') {
@@ -133,7 +133,6 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   })();
 
   const editable = flavor === 'consumer' ? !hasOrdered : !isProfileApproved;
-  console.log(consumer.id);
   // handler
   const updateProfileHandler = async () => {
     Keyboard.dismiss();
@@ -174,16 +173,24 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
         >
           {title}
         </Text>
-        <Text
-          style={{
-            ...texts.sm,
-            color: colors.grey700,
-            paddingBottom: padding,
-          }}
-        >
-          {subtitle}
-        </Text>
-        <DefaultInput title={t('E-mail')} value={profile.email} editable={false} />
+        {subtitle ? (
+          <Text
+            style={{
+              ...texts.sm,
+              color: colors.grey700,
+              paddingBottom: halfPadding,
+            }}
+          >
+            {subtitle}
+          </Text>
+        ) : null}
+
+        <DefaultInput
+          title={t('E-mail')}
+          value={profile.email}
+          editable={false}
+          style={{ marginTop: halfPadding }}
+        />
         <DefaultInput
           ref={nameRef}
           style={{ marginTop: padding }}
@@ -258,13 +265,14 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           onChangeText={(text) => setPhone(trim(text))}
           editable={editable}
         />
-        <View style={{ flex: 1 }} />
-        <View style={{ paddingVertical: padding }}>
+        <View style={{ flex: 1 }}>
+          <View style={{ flex: 1 }} />
           <DefaultButton
             title={buttonTitle}
             onPress={updateProfileHandler}
             disabled={!canSubmit || isLoading}
             activityIndicator={isLoading}
+            style={{ marginTop: padding }}
           />
         </View>
       </PaddedView>

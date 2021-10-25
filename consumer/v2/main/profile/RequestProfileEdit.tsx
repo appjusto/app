@@ -46,14 +46,14 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   const api = React.useContext(ApiContext);
   // app state
   const flavor = useSelector(getFlavor);
-  const consumer = useSelector(getConsumer)!;
-  const courier = useSelector(getCourier)!;
-  const user = flavor === 'consumer' ? consumer : courier;
+  const consumer = useSelector(getConsumer);
+  const courier = useSelector(getCourier);
+  const user = flavor === 'consumer' ? consumer! : courier!;
   // state
-  const [name, setName] = React.useState<string>(consumer.name ?? '');
-  const [surname, setSurname] = React.useState(consumer.surname ?? '');
-  const [cpf, setCpf] = React.useState(consumer.cpf! ?? '');
-  const [phone, setPhone] = React.useState(consumer.phone! ?? '');
+  const [name, setName] = React.useState<string>(user.name ?? '');
+  const [surname, setSurname] = React.useState(user.surname ?? '');
+  const [cpf, setCpf] = React.useState(user.cpf! ?? '');
+  const [phone, setPhone] = React.useState(user.phone! ?? '');
   const [focusedField, setFocusedField] = React.useState<string>();
   const [requestSent, setRequestSent] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
@@ -73,6 +73,16 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
     phone: phone.trim(),
   };
   const canEdit = requestedChanges?.length === 0;
+  const description = (() => {
+    if (flavor === 'consumer') {
+      return t(
+        'Por motivos de segurança, depois que o cliente realiza o primeiro pedido, a alteração de dados pessoais somente é realizada após análise da nossa equipe.'
+      );
+    } else
+      return t(
+        'Por motivos de segurança, alterações nos dados de entregadores já aprovados somente podem ser realizadas após análise da nossa equipe.'
+      );
+  })();
   // handlers
   const changeProfileHandler = async () => {
     Keyboard.dismiss();
@@ -110,157 +120,162 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
     );
   }
   return (
-    <KeyboardAwareScrollView
-      style={{ ...screens.config }}
-      enableOnAndroid
-      enableAutomaticScroll
-      keyboardOpeningTime={0}
-      keyboardShouldPersistTaps="handled"
-      contentContainerStyle={{ flexGrow: 1 }}
-      scrollIndicatorInsets={{ right: 1 }}
-    >
-      <View style={{ flex: 1 }}>
-        {canEdit ? (
-          <View style={{ paddingHorizontal: padding, paddingTop: padding }}>
-            <Text
-              style={{
-                ...texts.x2l,
-                paddingBottom: halfPadding,
-              }}
-            >
-              {t('Seus dados')}
-            </Text>
-            <Text
-              style={{
-                ...texts.sm,
-                color: colors.grey700,
-                paddingBottom: padding,
-              }}
-            >
-              {t('Edite seus dados pessoais:')}
-            </Text>
-          </View>
-        ) : (
-          <PaddedView style={{ backgroundColor: colors.white, marginBottom: padding }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
-              <Feather name="info" size={14} />
-              <Text style={{ ...texts.md, marginLeft: halfPadding, color: colors.red }}>
-                {t('Alteração em análise')}
+    <View style={{ ...screens.config }}>
+      <KeyboardAwareScrollView
+        style={{ ...screens.config }}
+        enableOnAndroid
+        enableAutomaticScroll
+        keyboardOpeningTime={0}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ flexGrow: 1 }}
+        scrollIndicatorInsets={{ right: 1 }}
+      >
+        <View style={{ flex: 1 }}>
+          {canEdit ? (
+            <View style={{ paddingHorizontal: padding, paddingTop: padding }}>
+              <Text
+                style={{
+                  ...texts.x2l,
+                  paddingBottom: halfPadding,
+                }}
+              >
+                {t('Seus dados')}
+              </Text>
+              <Text
+                style={{
+                  ...texts.sm,
+                  color: colors.grey700,
+                  paddingBottom: padding,
+                }}
+              >
+                {t('Edite seus dados pessoais:')}
               </Text>
             </View>
-            <Text style={{ ...texts.xs }}>
-              {t(
-                'Você já possui uma solicitação de alteração de dados em andamento. Aguarde enquanto analisamos a requisição para realizar uma nova.'
-              )}
-            </Text>
-          </PaddedView>
-        )}
-        <View style={{ flex: 1, paddingHorizontal: padding }}>
-          <DefaultInput
-            ref={nameRef}
-            title={t('Nome')}
-            placeholder={t('Digite seu nome')}
-            value={name}
-            returnKeyType="next"
-            blurOnSubmit={false}
-            onChangeText={(text) => setName(text)}
-            onSubmitEditing={() => surnameRef.current?.focus()}
-            keyboardType="default"
-            maxLength={30}
-            editable={canEdit}
-          />
-          <DefaultInput
-            ref={surnameRef}
-            style={{ marginTop: padding }}
-            title={t('Sobrenome')}
-            placeholder={t('Digite seu sobrenome')}
-            value={surname}
-            returnKeyType="next"
-            blurOnSubmit={false}
-            onChangeText={(text) => setSurname(text)}
-            onSubmitEditing={() => cpfRef.current?.focus()}
-            keyboardType="default"
-            maxLength={30}
-            editable={canEdit}
-          />
-          <PatternInput
-            ref={cpfRef}
-            style={{ marginTop: padding }}
-            title={t('CPF')}
-            value={cpf}
-            placeholder={t('Seu CPF, apenas números')}
-            mask={cpfMask}
-            parser={numbersOnlyParser}
-            formatter={cpfFormatter}
-            keyboardType="number-pad"
-            returnKeyType="default"
-            blurOnSubmit={false}
-            onSubmitEditing={() => phoneRef.current?.focus()}
-            onChangeText={(text) => setCpf(trim(text))}
-            onFocus={() => setFocusedField('cpf')}
-            onBlur={() => setFocusedField(undefined)}
-            editable={canEdit}
-          />
-          {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
-            <Text
-              style={{
-                ...texts.sm,
-                ...texts.bold,
-                color: colors.grey700,
-                marginTop: padding,
-                marginLeft: 6,
-              }}
-            >
-              {t('O CPF digitado não é válido.')}
-            </Text>
+          ) : (
+            <PaddedView style={{ backgroundColor: colors.white, marginBottom: padding }}>
+              <View
+                style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}
+              >
+                <Feather name="info" size={14} />
+                <Text style={{ ...texts.md, marginLeft: halfPadding, color: colors.red }}>
+                  {t('Alteração em análise')}
+                </Text>
+              </View>
+              <Text style={{ ...texts.xs }}>
+                {t(
+                  'Você já possui uma solicitação de alteração de dados em andamento. Aguarde enquanto analisamos a requisição para realizar uma nova.'
+                )}
+              </Text>
+            </PaddedView>
           )}
-          <PatternInput
-            ref={phoneRef}
-            style={{ marginTop: padding }}
-            title={t('Celular')}
-            value={phone}
-            placeholder={t('Número do seu celular')}
-            mask={phoneMask}
-            parser={numbersOnlyParser}
-            formatter={phoneFormatter}
-            keyboardType="number-pad"
-            returnKeyType="next"
-            blurOnSubmit
-            onChangeText={(text) => setPhone(trim(text))}
-            editable={canEdit}
-          />
-        </View>
-      </View>
-      <View style={{ flex: 1 }} />
-      {canEdit ? (
-        <PaddedView style={{ flex: 1, backgroundColor: colors.white }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: padding }}>
-            <Feather name="info" size={14} />
-            <Text style={{ ...texts.md, marginLeft: halfPadding }}>
-              {t('Informações sobre a alteração de dados')}
-            </Text>
-          </View>
-          <Text style={{ ...texts.xs }}>
-            {t(
-              'Por motivos de segurança, depois que o cliente realiza o primeiro pedido, a alteração de dados pessoais somente é realizada após análise da nossa equipe. Você será notificado assim que a mudança for efetivada.'
+          <View style={{ flex: 1, paddingHorizontal: padding }}>
+            <DefaultInput
+              ref={nameRef}
+              title={t('Nome')}
+              placeholder={t('Digite seu nome')}
+              value={name}
+              returnKeyType="next"
+              blurOnSubmit={false}
+              onChangeText={(text) => setName(text)}
+              onSubmitEditing={() => surnameRef.current?.focus()}
+              keyboardType="default"
+              maxLength={30}
+              editable={canEdit}
+            />
+            <DefaultInput
+              ref={surnameRef}
+              style={{ marginTop: padding }}
+              title={t('Sobrenome')}
+              placeholder={t('Digite seu sobrenome')}
+              value={surname}
+              returnKeyType="next"
+              blurOnSubmit={false}
+              onChangeText={(text) => setSurname(text)}
+              onSubmitEditing={() => cpfRef.current?.focus()}
+              keyboardType="default"
+              maxLength={30}
+              editable={canEdit}
+            />
+            <PatternInput
+              ref={cpfRef}
+              style={{ marginTop: padding }}
+              title={t('CPF')}
+              value={cpf}
+              placeholder={t('Seu CPF, apenas números')}
+              mask={cpfMask}
+              parser={numbersOnlyParser}
+              formatter={cpfFormatter}
+              keyboardType="number-pad"
+              returnKeyType="default"
+              blurOnSubmit={false}
+              onSubmitEditing={() => phoneRef.current?.focus()}
+              onChangeText={(text) => setCpf(trim(text))}
+              onFocus={() => setFocusedField('cpf')}
+              onBlur={() => setFocusedField(undefined)}
+              editable={canEdit}
+            />
+            {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
+              <Text
+                style={{
+                  ...texts.sm,
+                  ...texts.bold,
+                  color: colors.grey700,
+                  marginTop: padding,
+                  marginLeft: 6,
+                }}
+              >
+                {t('O CPF digitado não é válido.')}
+              </Text>
             )}
-          </Text>
-          <View style={{ flex: 1 }} />
-          <DefaultButton
-            title={t('Solicitar alteração')}
-            onPress={changeProfileHandler}
-            disabled={!canEdit}
-          />
-        </PaddedView>
-      ) : (
-        <PaddedView>
-          <DefaultButton
-            title={t('Solicitar alteração')}
-            onPress={changeProfileHandler}
-            disabled={!canEdit}
-          />
-        </PaddedView>
-      )}
-    </KeyboardAwareScrollView>
+            <PatternInput
+              ref={phoneRef}
+              style={{ marginTop: padding }}
+              title={t('Celular')}
+              value={phone}
+              placeholder={t('Número do seu celular')}
+              mask={phoneMask}
+              parser={numbersOnlyParser}
+              formatter={phoneFormatter}
+              keyboardType="number-pad"
+              returnKeyType="next"
+              blurOnSubmit
+              onChangeText={(text) => setPhone(trim(text))}
+              editable={canEdit}
+            />
+          </View>
+        </View>
+        {canEdit ? (
+          <View style={{ flex: 1 }}>
+            <View style={{ flex: 1 }} />
+            <PaddedView style={{ flex: 1, backgroundColor: colors.white }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: padding }}>
+                <Feather name="info" size={14} />
+                <Text style={{ ...texts.md, marginLeft: halfPadding }}>
+                  {t('Informações sobre a alteração de dados')}
+                </Text>
+              </View>
+              <Text style={{ ...texts.xs, marginBottom: padding }}>{description}</Text>
+              <View style={{ flex: 1 }} />
+              <DefaultButton
+                title={t('Solicitar alteração')}
+                onPress={changeProfileHandler}
+                disabled={!canEdit}
+              />
+            </PaddedView>
+          </View>
+        ) : (
+          <View style={{ flex: 1 }}>
+            <View style={{ flex: 1 }} />
+            <PaddedView>
+              <DefaultButton
+                title={t('Solicitar alteração')}
+                onPress={changeProfileHandler}
+                disabled={!canEdit}
+              />
+            </PaddedView>
+          </View>
+        )}
+      </KeyboardAwareScrollView>
+    </View>
   );
 };
