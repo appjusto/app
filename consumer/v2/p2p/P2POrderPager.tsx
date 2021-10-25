@@ -110,16 +110,33 @@ export default function ({
   const originDescriptionRef = React.useRef<TextInput>(null);
   const destinationDescriptionRef = React.useRef<TextInput>(null);
   // helpers
+  const showInstructionsWarning = (variant: 'origin' | 'destination') => {
+    if (variant === 'origin') {
+      dispatch(
+        showToast('Insira uma descrição curta para facilitar a retirada pelo entregador', 'error')
+      );
+    } else {
+      dispatch(showToast('Insira uma descrição curta para agilizar a entrega', 'error'));
+    }
+  };
   const stepReady = (value: Step): boolean => {
     if (value === Step.Origin) return true; // always enabled
-    if (value === Step.Destination) return Boolean(origin?.address.description); // only if origin is known
-    if (value === Step.Confirmation) return Boolean(destination?.address.description) && !!order; // only if order has been created
+    if (value === Step.Destination) return Boolean(origin?.address.description); // only if origin is known and user has entered instructions
+    if (value === Step.Confirmation) return Boolean(destination?.address.description) && !!order; // only if order has been created and user has entered instructions
     if (value === Step.ConfirmingOrder) return Boolean(selectedPaymentMethodId);
     return false; // should never happen
   };
   const setPage = (index: number): void => {
     if (stepReady(index)) {
-      pagerView?.current?.setPage(index);
+      if (index === 1) {
+        if (!originInstructions) {
+          showInstructionsWarning('origin');
+        } else pagerView?.current?.setPage(index);
+      } else if (index === 2) {
+        if (!destinationInstructions) {
+          showInstructionsWarning('destination');
+        } else pagerView?.current?.setPage(index);
+      } else pagerView?.current?.setPage(index);
     }
   };
   const nextPage = (): void => setPage(step + 1);
@@ -132,12 +149,7 @@ export default function ({
       if (step === Step.Origin) {
         if (!origin) return;
         if (!originInstructions) {
-          dispatch(
-            showToast(
-              'Insira uma descrição curta para facilitar a retirada pelo entregador',
-              'error'
-            )
-          );
+          showInstructionsWarning('origin');
           return;
         }
         api.order().updateOrder(order!.id, {
@@ -150,7 +162,7 @@ export default function ({
       } else if (step === Step.Destination) {
         if (!destination) return;
         if (!destinationInstructions) {
-          dispatch(showToast('Insira uma descrição curta para agilizar a entrega', 'error'));
+          showInstructionsWarning('destination');
           return;
         }
         api.order().updateOrder(order!.id, {
