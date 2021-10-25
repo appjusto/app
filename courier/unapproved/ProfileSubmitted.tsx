@@ -22,7 +22,7 @@ import { track, useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../common/styles';
 import { t } from '../../strings';
-import { AppJustoFreshdeskCourierURL, AppJustoWhatsAppCourierURL } from '../../strings/values';
+import { AppJustoAssistanceWhatsAppURL, AppJustoFreshdeskCourierURL } from '../../strings/values';
 import { UnapprovedParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<UnapprovedParamList, 'ProfileSubmitted'>;
@@ -121,7 +121,7 @@ export default function ({ navigation }: Props) {
                         title={t('Adicionar')}
                         onPress={() => {
                           track('courier clicked to add appJusto to his/hers whatsapp contacts');
-                          Linking.openURL(AppJustoWhatsAppCourierURL);
+                          Linking.openURL(AppJustoAssistanceWhatsAppURL);
                         }}
                         style={{ marginTop: padding }}
                       />

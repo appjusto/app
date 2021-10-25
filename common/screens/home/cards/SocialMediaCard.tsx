@@ -1,7 +1,7 @@
 import React from 'react';
 import { Linking, TouchableOpacity } from 'react-native';
 import { t } from '../../../../strings';
-import { AppJustoInstagramURL, AppJustoWhatsAppCourierURL } from '../../../../strings/values';
+import { AppJustoAssistanceWhatsAppURL, AppJustoInstagramURL } from '../../../../strings/values';
 import { IconInstagram } from '../../../icons/icon-instagram';
 import { IconWhatsapp } from '../../../icons/icon-whatsapp';
 import { track } from '../../../store/api/track';
@@ -27,7 +27,7 @@ export const SocialMediaCard = ({ app }: Props) => {
             }
           : () => {
               track('Opened AppJusto whatsapp');
-              Linking.openURL(AppJustoWhatsAppCourierURL);
+              Linking.openURL(AppJustoAssistanceWhatsAppURL);
             }
       }
     >
