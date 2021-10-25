@@ -67,10 +67,9 @@ export default function ({ navigation }: Props) {
               <ConfigItem
                 title={t('Seus dados')}
                 subtitle={t('Edite seus dados pessoais')}
-                onPress={() => {
-                  track('navigating to ProfileEdit');
-                  navigation.navigate('ProfileNavigator', { screen: 'ProfileEdit' });
-                }}
+                onPress={() =>
+                  navigation.navigate('ProfileNavigator', { screen: 'CommonProfileEdit' })
+                }
               />
               <ConfigItem
                 title={t('Formas de pagamento')}

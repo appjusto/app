@@ -2,12 +2,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import FleetDetail from '../../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../../common/screens/options';
+import { CommonProfileEdit } from '../../../common/screens/profile/CommonProfileEdit';
 import { t } from '../../../strings';
 import { AddressComplete } from '../common/AddressComplete';
 import { AvailableFleets } from '../common/AvailableFleets';
 import { PayWithPix } from '../common/PayWithPix';
 import ProfileAddCard from '../main/profile/ProfileAddCard';
-import ProfileEdit from '../main/profile/ProfileEdit';
 import ProfilePaymentMethods from '../main/profile/ProfilePaymentMethods';
 import { AboutCharges } from './AboutCharges';
 import CreateOrderP2P from './CreateOrderP2P';
@@ -35,8 +35,8 @@ export const P2POrderNavigator = () => {
         options={{ title: t('Sobre as encomendas') }}
       />
       <Stack.Screen
-        name="ProfileEdit"
-        component={ProfileEdit}
+        name="CommonProfileEdit"
+        component={CommonProfileEdit}
         options={{ title: t('Adicionar cartão') }}
       />
       <Stack.Screen

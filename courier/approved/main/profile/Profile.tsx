@@ -68,10 +68,9 @@ export default function ({ navigation }: Props) {
               <ConfigItem
                 title={t('Dados pessoais')}
                 subtitle={t('Seu nome, sobrenome, CPF e número do celular')}
-                onPress={() => {
-                  track('navigating to ProfileEdit');
-                  navigation.navigate('ProfileNavigator', { screen: 'ProfileEdit' });
-                }}
+                onPress={() =>
+                  navigation.navigate('ProfileNavigator', { screen: 'CommonProfileEdit' })
+                }
               />
               <ConfigItem
                 title={t('Fotos e documentos')}

@@ -5,6 +5,7 @@ import FleetDetail from '../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../common/screens/options';
 import { PermissionDenied } from '../../common/screens/PermissionDenied';
 import { AboutApp } from '../../common/screens/profile/AboutApp';
+import { CommonProfileEdit } from '../../common/screens/profile/CommonProfileEdit';
 import ProfileBlocked from '../../common/screens/profile/ProfileBlocked';
 import ProfileErase from '../../common/screens/profile/ProfileErase';
 import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
@@ -17,7 +18,6 @@ import ChooseFleet from '../approved/main/profile/fleet/ChooseFleet';
 import CreateFleet from '../approved/main/profile/fleet/CreateFleet';
 import ProfilePhotos from '../approved/main/profile/photos/ProfilePhotos';
 import ProfileCompany from '../approved/main/profile/ProfileCompany';
-import ProfileEdit from '../approved/main/profile/ProfileEdit';
 import { AboutAutonomy } from './AboutAutonomy';
 import { AboutBeAvailable } from './AboutBeAvailable';
 import { AboutNoScore } from './AboutNoScore';
@@ -47,8 +47,8 @@ export default function () {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="ProfileEdit"
-        component={ProfileEdit}
+        name="CommonProfileEdit"
+        component={CommonProfileEdit}
         options={{ title: t('Dados pessoais') }}
       />
       <Stack.Screen

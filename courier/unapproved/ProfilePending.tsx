@@ -181,7 +181,7 @@ export default function ({ navigation, route }: Props) {
         <ConfigItem
           title={t('Seus dados')}
           subtitle={t('Preencha seus dados pessoais')}
-          onPress={() => navigation.navigate('ProfileEdit')}
+          onPress={() => navigation.navigate('CommonProfileEdit')}
           checked={courierInfoSet(courier)}
         />
         <ConfigItem

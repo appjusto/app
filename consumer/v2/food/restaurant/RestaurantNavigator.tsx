@@ -2,12 +2,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import FleetDetail from '../../../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../../../common/screens/options';
+import { CommonProfileEdit } from '../../../../common/screens/profile/CommonProfileEdit';
 import { t } from '../../../../strings';
 import { AddressComplete } from '../../common/AddressComplete';
 import { AvailableFleets } from '../../common/AvailableFleets';
 import { PayWithPix } from '../../common/PayWithPix';
 import ProfileAddCard from '../../main/profile/ProfileAddCard';
-import ProfileEdit from '../../main/profile/ProfileEdit';
 import ProfilePaymentMethods from '../../main/profile/ProfilePaymentMethods';
 import { AboutCharges } from '../../p2p/AboutCharges';
 import { AboutRestaurant } from './about/AboutRestaurant';
@@ -42,14 +42,14 @@ export default function () {
         options={{ title: t('Sua sacola') }}
       />
       <Stack.Screen
+        name="CommonProfileEdit"
+        component={CommonProfileEdit}
+        options={{ title: t('Sua sacola') }} //TODO: check if this title is right
+      />
+      <Stack.Screen
         name="AvailableFleets"
         component={AvailableFleets}
         options={{ title: t('Frotas disponíveis') }}
-      />
-      <Stack.Screen
-        name="ProfileEdit"
-        component={ProfileEdit}
-        options={{ title: t('Dados pessoais') }}
       />
       <Stack.Screen
         name="ProfileAddCard"
