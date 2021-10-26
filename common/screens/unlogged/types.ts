@@ -8,6 +8,5 @@ export type UnloggedParamList = {
   SignInFeedback: {
     email: string;
   };
-  // ConsumerRegistration: undefined;
   Terms: undefined;
 };
