@@ -1,7 +1,7 @@
 import creditCardType from 'credit-card-type';
 import React, { createContext, ReactNode, useCallback, useContext } from 'react';
 import {
-  allowedCreditCardTypes,
+  ALLOWED_CREDIT_CARD_TYPES,
   creditCardFlagPNGParse,
   creditCardFlagPNGParse2,
   CreditCardType,
@@ -41,7 +41,7 @@ export function CreditCardProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const isAllowed = useCallback((creditCardType: CreditCardType) => {
-    return allowedCreditCardTypes.includes(creditCardType);
+    return ALLOWED_CREDIT_CARD_TYPES.includes(creditCardType);
   }, []);
 
   const value: ICreditCardContextData = { getType, isAllowed, getFlagPNG };

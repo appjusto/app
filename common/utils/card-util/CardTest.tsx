@@ -1,28 +1,53 @@
-import React from 'react';
-import { Image, SafeAreaView, StyleSheet, TextInput } from 'react-native';
+import { toNumber } from 'lodash';
+import React, { useCallback } from 'react';
+import { Image, SafeAreaView, StyleSheet } from 'react-native';
+import { t } from '../../../strings';
+import { cardFormatter, cardMask } from '../../components/inputs/pattern-input/formatters';
+import { numbersOnlyParser } from '../../components/inputs/pattern-input/parsers';
+import PatternInput from '../../components/inputs/PatternInput';
 import { useContextCreditCardFancy } from './CreditCardFancyContex';
+
 const iconGenericFlag = require('../../../assets/icons/credit-card-flag-generic.png');
 
 const UselessTextInput = () => {
-  const [text, onChangeText] = React.useState('');
-
   //const [number, onChangeNumber] = React.useState(null);
+
+  const [number, setNumber] = React.useState('');
   const { getType, isAllowed, getFlagPNG } = useContextCreditCardFancy();
   const [image, setImage] = React.useState(iconGenericFlag);
 
-  const teste = (test: any) => {
-    onChangeText(test);
-    //console.log(isAllowed(test));
-    const type = getType(test);
-    //console.log(isAllowed(type));
-    const png = getFlagPNG(type);
-    setImage(png);
-    console.log(png);
-  };
+  const onChangeNumber = useCallback(
+    (text: any) => {
+      if (isNaN(toNumber(text))) return;
+
+      setNumber(text);
+
+      const type = getType(text);
+      const png = getFlagPNG(type);
+      setImage(png);
+      console.log(png);
+    },
+    [setNumber, getType, getFlagPNG]
+  );
+
   return (
     <SafeAreaView>
-      <TextInput style={styles.input} onChangeText={teste} value={text} keyboardType="numeric" />
-      <Image source={image} />
+      <PatternInput
+        title={t('Número do cartão')}
+        value={number}
+        placeholder={t('0000 0000 0000 0000')}
+        mask={cardMask}
+        parser={numbersOnlyParser}
+        formatter={cardFormatter}
+        keyboardType="number-pad"
+        textContentType="creditCardNumber"
+        autoCompleteType="cc-number"
+        returnKeyType="next"
+        blurOnSubmit={false}
+        onChangeText={onChangeNumber}
+        trailing={<Image source={image} />}
+      // onSubmitEditing={() => expirationMonthRef.current?.focus()}
+      />
     </SafeAreaView>
   );
 };

@@ -1,4 +1,5 @@
 const iconVisaFlag = require('../../../assets/icons/credit-card-flag-visa.png');
+//const iconTestFlag = require('../../../assets/icons/credit-card-flag-generic.png');
 const iconGenericFlag = require('../../../assets/icons/credit-card-flag-generic.png');
 
 export interface ICreditCardContextData {
@@ -42,7 +43,7 @@ export const creditCardTypeParse: Record<string, CreditCardType> = {
   'not-defined': CreditCardType.not_defined,
 };
 
-export const creditCardFlagPNGParse: Record<any[CreditCardType], any> = {
+export const creditCardFlagPNGParse: Record<CreditCardType, any> = {
   [CreditCardType.american_express]: iconGenericFlag,
   [CreditCardType.diners_club]: iconGenericFlag,
   [CreditCardType.discover]: iconGenericFlag,
@@ -76,7 +77,7 @@ export const creditCardFlagPNGParse2: Record<string, any> = {
   'not-defined': iconGenericFlag,
 };
 
-export const allowedCreditCardTypes: CreditCardType[] = [
+export const ALLOWED_CREDIT_CARD_TYPES: CreditCardType[] = [
   CreditCardType.diners_club,
   CreditCardType.elo,
   CreditCardType.mastercard,
