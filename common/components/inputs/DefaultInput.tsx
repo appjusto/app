@@ -6,10 +6,14 @@ import PaddedView from '../containers/PaddedView';
 export interface DefaultInputProps extends TextInputProps {
   title?: string;
   children?: ReactNode;
+  trailing?: ReactNode;
 }
 
 export default React.forwardRef(
-  ({ title, children, editable = true, style, ...props }: DefaultInputProps, externalRef) => {
+  (
+    { title, children, editable = true, style, trailing, ...props }: DefaultInputProps,
+    externalRef
+  ) => {
     const internalRef = useRef<TextInput>(null);
     const ref = (externalRef as React.RefObject<TextInput>) || internalRef;
     const focus = useCallback(() => {
@@ -46,16 +50,21 @@ export default React.forwardRef(
               </Text>
             </TouchableWithoutFeedback>
           )}
-          <TextInput
-            ref={ref}
-            style={{
-              ...texts.md,
-              color: editable ? colors.grey700 : colors.grey500,
-              width: '100%',
-            }}
-            editable={editable}
-            {...props}
-          />
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ flex: 1 }}>
+              <TextInput
+                ref={ref}
+                style={{
+                  ...texts.md,
+                  color: editable ? colors.grey700 : colors.grey500,
+                  width: '100%',
+                }}
+                editable={editable}
+                {...props}
+              />
+            </View>
+            {trailing}
+          </View>
         </View>
         {children}
       </PaddedView>
