@@ -13,7 +13,6 @@ import { observeProfile } from '../../common/store/user/actions';
 import { getUser } from '../../common/store/user/selectors';
 import { colors, screens } from '../../common/styles';
 import { t } from '../../strings';
-import { BlockedNavigator } from './BlockedNavigator';
 import { DeliveredOrderNavigator } from './delivered/DeliveredOrderNavigator';
 import { FoodOrderNavigator } from './food/FoodOrderNavigator';
 import { LoggedContextProvider } from './LoggedContext';
@@ -23,6 +22,7 @@ import { OngoingOrderCancelFeedback } from './ongoing/OngoingOrderCancelFeedback
 import { OngoingOrderNavigator } from './ongoing/OngoingOrderNavigator';
 import { P2POrderNavigator } from './p2p/P2POrderNavigator';
 import { LoggedNavigatorParamList } from './types';
+import { UnapprovedConsumerNavigator } from './UnapprovedConsumerNavigator';
 
 const Stack = createStackNavigator<LoggedNavigatorParamList>();
 
@@ -67,7 +67,7 @@ export const LoggedNavigator = () => {
     situation === 'rejected' ||
     situation === 'invalid'
   ) {
-    return <BlockedNavigator />;
+    return <UnapprovedConsumerNavigator />;
   }
   return (
     <LoggedContextProvider>
