@@ -15,10 +15,10 @@ const Stack = createStackNavigator<UnapprovedConsumerParamsList>(); // TODO: add
 
 export const UnapprovedConsumerNavigator = () => {
   // redux
-  const consumer = useSelector(getConsumer);
+  const consumer = useSelector(getConsumer)!;
   // helpers
   let initialRouteName: 'ProfileBlocked' | 'CommonProfileProblems' | undefined = undefined;
-  if (consumer?.situation === 'blocked') initialRouteName = 'ProfileBlocked';
+  if (consumer.situation === 'blocked') initialRouteName = 'ProfileBlocked';
   else initialRouteName = 'CommonProfileProblems';
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions} initialRouteName={initialRouteName}>

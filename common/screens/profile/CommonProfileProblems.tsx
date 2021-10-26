@@ -40,7 +40,7 @@ export const CommonProfileProblems = ({ navigation }: Props) => {
   const [isLoading, setLoading] = React.useState(false);
   // side effects
   // tracking
-  useSegmentScreen('CommonProfileRejected');
+  useSegmentScreen('CommonProfileProblems');
   // adapting to courier situation changes
   // React.useEffect(() => {
   //   if (flavor === 'courier' && courier?.situation === 'pending')
@@ -64,7 +64,7 @@ export const CommonProfileProblems = ({ navigation }: Props) => {
     else if (situation === 'invalid') t('Seu cadastro está inválido :(');
   })();
   // handler
-  const updateProfileHandler = () => {
+  const updateCourierProfileHandler = () => {
     (async () => {
       if (!courier) return;
       try {
@@ -84,7 +84,7 @@ export const CommonProfileProblems = ({ navigation }: Props) => {
       {flavor === 'courier' ? (
         <DefaultButton
           title={t('Editar cadastro')}
-          onPress={updateProfileHandler}
+          onPress={updateCourierProfileHandler}
           secondary
           activityIndicator={isLoading}
           disabled={isLoading}

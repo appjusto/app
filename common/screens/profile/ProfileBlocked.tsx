@@ -40,6 +40,7 @@ export default function ({ navigation }: Props) {
   // tracking
   useSegmentScreen('ProfileBlocked');
   // adapting to situation changes
+  //TODO: LET THE NAVIGATOR HANDLE THIS
   React.useEffect(() => {
     if (flavor === 'courier' && courier?.situation === 'pending')
       navigation.replace('ProfilePending');
