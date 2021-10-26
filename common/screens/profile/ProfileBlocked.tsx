@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Linking, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { UnapprovedParamsList } from '../../../consumer/v2/UnapprovedNavigator';
+import { BlockedParamsList } from '../../../consumer/v2/BlockedNavigator';
 import { DeliveryProblemCard } from '../../../courier/approved/ongoing/delivery-problem/DeliveryProblemCard';
 import { UnapprovedParamList } from '../../../courier/unapproved/types';
 import { t } from '../../../strings';
@@ -17,10 +17,10 @@ import { getCourier } from '../../store/courier/selectors';
 import { padding } from '../../styles';
 
 type ScreenNavigationProp = StackNavigationProp<
-  UnapprovedParamList & UnapprovedParamsList,
+  UnapprovedParamList & BlockedParamsList,
   'ProfileBlocked'
 >;
-type ScreenRouteProp = RouteProp<UnapprovedParamList & UnapprovedParamsList, 'ProfileBlocked'>;
+type ScreenRouteProp = RouteProp<UnapprovedParamList & BlockedParamsList, 'ProfileBlocked'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
