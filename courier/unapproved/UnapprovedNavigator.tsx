@@ -6,6 +6,7 @@ import { defaultScreenOptions } from '../../common/screens/options';
 import { PermissionDenied } from '../../common/screens/PermissionDenied';
 import { AboutApp } from '../../common/screens/profile/AboutApp';
 import { CommonProfileEdit } from '../../common/screens/profile/CommonProfileEdit';
+import { CommonProfileProblems } from '../../common/screens/profile/CommonProfileProblems';
 import ProfileBlocked from '../../common/screens/profile/ProfileBlocked';
 import ProfileErase from '../../common/screens/profile/ProfileErase';
 import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
@@ -126,9 +127,15 @@ export default function () {
         component={AboutApp}
         options={{ title: t('Sobre o AppJusto') }}
       />
+      {/* TODO: REMOVE THIS SCREEN */}
       <Stack.Screen
         name="ProfileRejected"
         component={ProfileRejected}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="CommonProfileProblems"
+        component={CommonProfileProblems}
         options={{ headerShown: false }}
       />
       <Stack.Screen

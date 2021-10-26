@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { UnapprovedConsumerParamsList } from '../../../consumer/v2/UnapprovedConsumerNavigator';
 import { DeliveryProblemCard } from '../../../courier/approved/ongoing/delivery-problem/DeliveryProblemCard';
+import { UnapprovedParamList } from '../../../courier/unapproved/types';
 import { t } from '../../../strings';
 import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
 import { ApiContext, AppDispatch } from '../../app/context';
@@ -19,15 +20,15 @@ import { showToast } from '../../store/ui/actions';
 import { padding } from '../../styles';
 
 type ScreenNavigationProp = StackNavigationProp<
-  UnapprovedConsumerParamsList,
-  'CommonProfileRejected'
+  UnapprovedConsumerParamsList & UnapprovedParamList,
+  'CommonProfileProblems'
 >;
 
 type Props = {
   navigation: ScreenNavigationProp;
 };
 
-export const CommonProfileRejected = ({ navigation }: Props) => {
+export const CommonProfileProblems = ({ navigation }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -49,11 +50,18 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
   //     navigation.replace('ProfileSubmitted');
   // }, [courier?.situation, navigation, flavor]);
   // helpers
+  const profile = flavor === 'consumer' ? consumer! : courier!;
   const description = (() => {
     if (flavor === 'courier') {
       if (courier?.profileIssues?.join) return courier.profileIssues?.join('\n');
       else return t('Entre em contato com nosso suporte.');
     } else return t('Entre em contato com nosso suporte.');
+  })();
+  const header = (() => {
+    const { situation } = profile;
+    if (situation === 'rejected') return t('Seu cadastro foi recusado :(');
+    else if (situation === 'deleted') return t('Seu cadastro foi deletado :(');
+    else if (situation === 'invalid') t('Seu cadastro está inválido :(');
   })();
   // handler
   const updateProfileHandler = () => {
@@ -72,11 +80,7 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
     })();
   };
   return (
-    <FeedbackView
-      header={t('Seu cadastro foi recusado :(')}
-      description={description}
-      icon={<IconConeYellow />}
-    >
+    <FeedbackView header={header} description={description} icon={<IconConeYellow />}>
       {flavor === 'courier' ? (
         <DefaultButton
           title={t('Editar cadastro')}
