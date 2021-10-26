@@ -1,22 +1,26 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
+import { Linking, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
+import { UnapprovedParamsList } from '../../../consumer/v2/UnapprovedNavigator';
+import { DeliveryProblemCard } from '../../../courier/approved/ongoing/delivery-problem/DeliveryProblemCard';
 import { UnapprovedParamList } from '../../../courier/unapproved/types';
 import { t } from '../../../strings';
+import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
 import FeedbackView from '../../components/views/FeedbackView';
 import { IconConeYellow } from '../../icons/icon-cone-yellow';
-import { useSegmentScreen } from '../../store/api/track';
+import { track, useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
 import { getConsumer } from '../../store/consumer/selectors';
 import { getCourier } from '../../store/courier/selectors';
+import { padding } from '../../styles';
 
 type ScreenNavigationProp = StackNavigationProp<
-  UnapprovedParamList & LoggedNavigatorParamList,
+  UnapprovedParamList & UnapprovedParamsList,
   'ProfileBlocked'
 >;
-type ScreenRouteProp = RouteProp<UnapprovedParamList & LoggedNavigatorParamList, 'ProfileBlocked'>;
+type ScreenRouteProp = RouteProp<UnapprovedParamList & UnapprovedParamsList, 'ProfileBlocked'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -34,15 +38,29 @@ export default function ({ navigation }: Props) {
   useSegmentScreen('ProfileBlocked');
   // adapting to situation changes
   React.useEffect(() => {
-    if (profile?.situation === 'pending') navigation.replace('ProfilePending');
-    else if (profile?.situation === 'submitted') navigation.replace('ProfileSubmitted');
-  }, [profile?.situation, navigation]);
+    if (flavor === 'courier' && courier?.situation === 'pending')
+      navigation.replace('ProfilePending');
+    else if (flavor === 'courier' && courier?.situation === 'submitted')
+      navigation.replace('ProfileSubmitted');
+  }, [courier?.situation, navigation, flavor]);
   // UI
   return (
     <FeedbackView
       header={t('Seu cadastro está bloqueado :(')}
       description={profile?.profileIssues?.join('\n') ?? t('Entre em contato com nosso suporte.')}
       icon={<IconConeYellow />}
-    />
+    >
+      <View style={{ marginBottom: padding }}>
+        <DeliveryProblemCard
+          title={t('Falar com o AppJusto')}
+          subtitle={t('Abrir chat no WhatsApp')}
+          onPress={() => {
+            track('opening whatsapp chat with backoffice');
+            Linking.openURL(AppJustoAssistanceWhatsAppURL);
+          }}
+          situation="chat"
+        />
+      </View>
+    </FeedbackView>
   );
 }
