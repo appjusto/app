@@ -55,11 +55,11 @@ export const LoggedNavigator = () => {
   let initialRouteName: 'MainNavigator' | 'ConsumerOnboarding' | undefined = undefined;
   if (situation === 'approved') {
     initialRouteName = 'MainNavigator';
+  } else if (onboarded) {
+    initialRouteName = 'MainNavigator';
   } else if (!onboarded) {
     initialRouteName = 'ConsumerOnboarding';
   }
-
-  if (!initialRouteName) return null;
 
   if (
     situation === 'blocked' ||
