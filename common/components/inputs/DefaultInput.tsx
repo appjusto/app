@@ -7,11 +7,20 @@ export interface DefaultInputProps extends TextInputProps {
   title?: string;
   children?: ReactNode;
   trailing?: ReactNode;
+  errorMessage?: string;
 }
 
 export default React.forwardRef(
   (
-    { title, children, editable = true, style, trailing, ...props }: DefaultInputProps,
+    {
+      title,
+      children,
+      editable = true,
+      style,
+      trailing,
+      errorMessage,
+      ...props
+    }: DefaultInputProps,
     externalRef
   ) => {
     const internalRef = useRef<TextInput>(null);
@@ -23,51 +32,54 @@ export default React.forwardRef(
       // }
     }, [ref]);
     return (
-      <PaddedView
-        half
-        style={[
-          {
-            ...borders.default,
-            backgroundColor: 'white',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-          },
-          style,
-        ]}
-      >
-        <View style={{ flex: 1 }}>
-          {title && (
-            <TouchableWithoutFeedback onPress={focus}>
-              <Text
-                style={{
-                  ...texts.xs,
-                  color: colors.green600,
-                  width: '100%',
-                }}
-              >
-                {title}
-              </Text>
-            </TouchableWithoutFeedback>
-          )}
-          <View style={{ flexDirection: 'row' }}>
-            <View style={{ flex: 1 }}>
-              <TextInput
-                ref={ref}
-                style={{
-                  ...texts.md,
-                  color: editable ? colors.grey700 : colors.grey500,
-                  width: '100%',
-                }}
-                editable={editable}
-                {...props}
-              />
+      <>
+        <PaddedView
+          half
+          style={[
+            {
+              ...borders.default,
+              backgroundColor: 'white',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+            },
+            style,
+          ]}
+        >
+          <View style={{ flex: 1 }}>
+            {title && (
+              <TouchableWithoutFeedback onPress={focus}>
+                <Text
+                  style={{
+                    ...texts.xs,
+                    color: colors.green600,
+                    width: '100%',
+                  }}
+                >
+                  {title}
+                </Text>
+              </TouchableWithoutFeedback>
+            )}
+            <View style={{ flexDirection: 'row' }}>
+              <View style={{ flex: 1 }}>
+                <TextInput
+                  ref={ref}
+                  style={{
+                    ...texts.md,
+                    color: editable ? colors.grey700 : colors.grey500,
+                    width: '100%',
+                  }}
+                  editable={editable}
+                  {...props}
+                />
+              </View>
+              {trailing}
             </View>
-            {trailing}
           </View>
-        </View>
-        {children}
-      </PaddedView>
+          {children}
+        </PaddedView>
+        {!!errorMessage && <Text>{errorMessage}</Text>}
+      </>
     );
   }
 );
