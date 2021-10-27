@@ -6,8 +6,6 @@ import { defaultScreenOptions } from '../../common/screens/options';
 import { PermissionDenied } from '../../common/screens/PermissionDenied';
 import { AboutApp } from '../../common/screens/profile/AboutApp';
 import { CommonProfileEdit } from '../../common/screens/profile/CommonProfileEdit';
-import { CommonProfileProblems } from '../../common/screens/profile/CommonProfileProblems';
-import ProfileBlocked from '../../common/screens/profile/ProfileBlocked';
 import ProfileErase from '../../common/screens/profile/ProfileErase';
 import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
 import { getCourier } from '../../common/store/courier/selectors';
@@ -25,18 +23,21 @@ import { AboutNoScore } from './AboutNoScore';
 import { AboutTests } from './AboutTests';
 import { AboutTransparency } from './AboutTransparency';
 import ProfilePending from './ProfilePending';
-import ProfileRejected from './ProfileRejected';
 import ProfileSubmitted from './ProfileSubmitted';
 import { UnapprovedParamList } from './types';
 
 const Stack = createStackNavigator<UnapprovedParamList>();
 export default function () {
   const courier = useSelector(getCourier)!;
+  const { onboarded, situation } = courier;
+  let initialRouteName: 'ProfilePending' | 'CourierOnboarding' | 'ProfileSubmitted' | undefined =
+    undefined;
+  if (onboarded) initialRouteName = 'ProfilePending';
+  else if (situation === 'submitted' || situation === 'invalid')
+    initialRouteName = 'ProfileSubmitted';
+  else initialRouteName = 'CourierOnboarding';
   return (
-    <Stack.Navigator
-      screenOptions={defaultScreenOptions}
-      initialRouteName={courier.onboarded ? 'ProfilePending' : 'CourierOnboarding'}
-    >
+    <Stack.Navigator screenOptions={defaultScreenOptions} initialRouteName={initialRouteName}>
       <Stack.Screen
         name="CourierOnboarding"
         component={Onboarding}
@@ -126,22 +127,6 @@ export default function () {
         name="AboutApp"
         component={AboutApp}
         options={{ title: t('Sobre o AppJusto') }}
-      />
-      {/* TODO: REMOVE THIS SCREEN */}
-      <Stack.Screen
-        name="ProfileRejected"
-        component={ProfileRejected}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="CommonProfileProblems"
-        component={CommonProfileProblems}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="ProfileBlocked"
-        component={ProfileBlocked}
-        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ProfileErase"

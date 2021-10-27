@@ -56,10 +56,6 @@ export default function ({ navigation }: Props) {
       setTimeout(() => {
         navigation.replace('ProfilePending');
       }, 100);
-    } else if (courier.situation === 'rejected') {
-      setTimeout(() => {
-        navigation.replace('ProfileRejected');
-      }, 100);
     }
   }, [courier, navigation, api]);
   // handlers

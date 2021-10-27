@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { UnapprovedConsumerParamsList } from '../../../consumer/v2/UnapprovedConsumerNavigator';
 import { DeliveryProblemCard } from '../../../courier/approved/ongoing/delivery-problem/DeliveryProblemCard';
-import { UnapprovedParamList } from '../../../courier/unapproved/types';
+import { ProfileIssuesParamsList } from '../../../courier/ProfileIssuesNavigator';
 import { t } from '../../../strings';
 import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
 import { ApiContext, AppDispatch } from '../../app/context';
@@ -20,15 +20,15 @@ import { showToast } from '../../store/ui/actions';
 import { padding } from '../../styles';
 
 type ScreenNavigationProp = StackNavigationProp<
-  UnapprovedConsumerParamsList & UnapprovedParamList,
-  'CommonProfileProblems'
+  UnapprovedConsumerParamsList & ProfileIssuesParamsList,
+  'CommonProfileRejected'
 >;
 
 type Props = {
   navigation: ScreenNavigationProp;
 };
 
-export const CommonProfileProblems = ({ navigation }: Props) => {
+export const CommonProfileRejected = ({ navigation }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -40,28 +40,12 @@ export const CommonProfileProblems = ({ navigation }: Props) => {
   const [isLoading, setLoading] = React.useState(false);
   // side effects
   // tracking
-  useSegmentScreen('CommonProfileProblems');
-  // adapting to courier situation changes
-  // React.useEffect(() => {
-  //   if (flavor === 'courier' && courier?.situation === 'pending')
-  //     //TODO: MAKE THE NAVIGATOR HANDLE THIS
-  //     navigation.replace('ProfilePending');
-  //   else if (flavor === 'courier' && courier?.situation === 'submitted')
-  //     navigation.replace('ProfileSubmitted');
-  // }, [courier?.situation, navigation, flavor]);
+  useSegmentScreen('CommonProfileRejected');
   // helpers
-  const profile = flavor === 'consumer' ? consumer! : courier!;
+  const profile = flavor === 'courier' ? courier! : consumer!;
   const description = (() => {
-    if (flavor === 'courier') {
-      if (courier?.profileIssues?.join) return courier.profileIssues?.join('\n');
-      else return t('Entre em contato com nosso suporte.');
-    } else return t('Entre em contato com nosso suporte.');
-  })();
-  const header = (() => {
-    const { situation } = profile;
-    if (situation === 'rejected') return t('Seu cadastro foi recusado :(');
-    else if (situation === 'deleted') return t('Seu cadastro foi deletado :(');
-    else if (situation === 'invalid') t('Seu cadastro está inválido :(');
+    if (profile.profileIssues) return profile.profileIssues.join('\n');
+    else return t('Entre em contato com nosso suporte.');
   })();
   // handler
   const updateCourierProfileHandler = () => {
@@ -80,7 +64,11 @@ export const CommonProfileProblems = ({ navigation }: Props) => {
     })();
   };
   return (
-    <FeedbackView header={header} description={description} icon={<IconConeYellow />}>
+    <FeedbackView
+      header={t('Seu cadastro foi recusado :(')}
+      description={description}
+      icon={<IconConeYellow />}
+    >
       {flavor === 'courier' ? (
         <DefaultButton
           title={t('Editar cadastro')}

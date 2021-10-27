@@ -1,10 +1,9 @@
-import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Linking, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { UnapprovedConsumerParamsList } from '../../../consumer/v2/UnapprovedConsumerNavigator';
 import { DeliveryProblemCard } from '../../../courier/approved/ongoing/delivery-problem/DeliveryProblemCard';
+import { ProfileIssuesParamsList } from '../../../courier/ProfileIssuesNavigator';
 import { UnapprovedParamList } from '../../../courier/unapproved/types';
 import { t } from '../../../strings';
 import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
@@ -17,17 +16,12 @@ import { getCourier } from '../../store/courier/selectors';
 import { padding } from '../../styles';
 
 type ScreenNavigationProp = StackNavigationProp<
-  UnapprovedParamList & UnapprovedConsumerParamsList,
-  'ProfileBlocked'
->;
-type ScreenRouteProp = RouteProp<
-  UnapprovedParamList & UnapprovedConsumerParamsList,
+  UnapprovedParamList & ProfileIssuesParamsList,
   'ProfileBlocked'
 >;
 
 type Props = {
   navigation: ScreenNavigationProp;
-  route: ScreenRouteProp;
 };
 
 export default function ({ navigation }: Props) {
@@ -39,14 +33,6 @@ export default function ({ navigation }: Props) {
   // side effects
   // tracking
   useSegmentScreen('ProfileBlocked');
-  // adapting to situation changes
-  //TODO: LET THE NAVIGATOR HANDLE THIS
-  React.useEffect(() => {
-    if (flavor === 'courier' && courier?.situation === 'pending')
-      navigation.replace('ProfilePending');
-    else if (flavor === 'courier' && courier?.situation === 'submitted')
-      navigation.replace('ProfileSubmitted');
-  }, [courier?.situation, navigation, flavor]);
   // UI
   return (
     <FeedbackView

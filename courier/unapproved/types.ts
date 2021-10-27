@@ -4,9 +4,6 @@ import { CourierProfileParamList } from '../approved/main/profile/types';
 export type UnapprovedParamList = {
   ProfilePending: undefined;
   ProfileSubmitted: undefined;
-  ProfileRejected: undefined; // TODO: REMOVE THIS
-  CommonProfileProblems: undefined;
-  ProfileBlocked: undefined;
   CourierOnboarding: undefined;
   AboutTests: undefined;
   AboutAutonomy: undefined;
