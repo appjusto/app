@@ -24,9 +24,9 @@ export type ProfilePaymentMethodsParamList = {
 
 type ScreenNavigationProp = StackNavigationProp<
   ProfileParamList &
-    RestaurantNavigatorParamList &
-    P2POrderNavigatorParamList &
-    OngoingOrderNavigatorParamList,
+  RestaurantNavigatorParamList &
+  P2POrderNavigatorParamList &
+  OngoingOrderNavigatorParamList,
   'ProfilePaymentMethods'
 >;
 type ScreenRouteProp = RouteProp<ProfilePaymentMethodsParamList, 'ProfilePaymentMethods'>;
@@ -101,7 +101,7 @@ export default function ({ navigation, route }: Props) {
         ListFooterComponent={() => (
           <ConfigItem
             title={t('Adicionar novo cartão de crédito')}
-            subtitle={t('Aceitamos as bandeiras Visa, Mastercard, Amex, Elo e Diners')}
+            subtitle={t('Aceitamos as bandeiras Visa, Mastercard, Elo e Diners')}
             onPress={() => {
               if (returnScreen) navigation.navigate('ProfileAddCard', { returnScreen });
               else navigation.navigate('ProfileAddCard');
