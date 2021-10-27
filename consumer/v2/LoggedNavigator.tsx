@@ -61,12 +61,7 @@ export const LoggedNavigator = () => {
     initialRouteName = 'ConsumerOnboarding';
   }
 
-  if (
-    situation === 'blocked' ||
-    situation === 'deleted' ||
-    situation === 'rejected' ||
-    situation === 'invalid'
-  ) {
+  if (situation === 'blocked' || situation === 'deleted' || situation === 'rejected') {
     return <UnapprovedConsumerNavigator />;
   }
   return (
