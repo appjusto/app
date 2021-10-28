@@ -70,7 +70,7 @@ export default function ({ navigation, route }: Props) {
         setPersonType(bankAccount!.personType);
       }
     }
-  }, [banks, courier]);
+  }, [banks, courier, bankAccount]);
   React.useEffect(() => {
     const { bank } = route.params ?? {};
     if (bank) setSelectedBank(bank);

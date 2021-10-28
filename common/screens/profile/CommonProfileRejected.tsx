@@ -69,6 +69,17 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
       description={description}
       icon={<IconConeYellow />}
     >
+      <View>
+        <DeliveryProblemCard
+          title={t('Falar com o AppJusto')}
+          subtitle={t('Abrir chat no WhatsApp')}
+          onPress={() => {
+            track('opening whatsapp chat with backoffice');
+            Linking.openURL(AppJustoAssistanceWhatsAppURL);
+          }}
+          situation="chat"
+        />
+      </View>
       {flavor === 'courier' ? (
         <DefaultButton
           title={t('Editar cadastro')}
@@ -76,20 +87,9 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
           secondary
           activityIndicator={isLoading}
           disabled={isLoading}
+          style={{ marginTop: padding }}
         />
-      ) : (
-        <View style={{ marginBottom: padding }}>
-          <DeliveryProblemCard
-            title={t('Falar com o AppJusto')}
-            subtitle={t('Abrir chat no WhatsApp')}
-            onPress={() => {
-              track('opening whatsapp chat with backoffice');
-              Linking.openURL(AppJustoAssistanceWhatsAppURL);
-            }}
-            situation="chat"
-          />
-        </View>
-      )}
+      ) : null}
     </FeedbackView>
   );
 };

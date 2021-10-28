@@ -95,6 +95,7 @@ export default function ({ navigation, route }: Props) {
       try {
         await dispatch(updateProfile(api)(courier.id, { situation: 'submitted' }));
         track('courier submitted profile');
+        navigation.replace('ProfileSubmitted');
       } catch (error: any) {
         Sentry.Native.captureException(error);
         dispatch(showToast(error.toString(), 'error'));

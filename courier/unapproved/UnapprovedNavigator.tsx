@@ -32,8 +32,8 @@ export default function () {
   const { onboarded, situation } = courier;
   let initialRouteName: 'ProfilePending' | 'CourierOnboarding' | 'ProfileSubmitted' | undefined =
     undefined;
-  if (onboarded) initialRouteName = 'ProfilePending';
-  else if (situation === 'submitted' || situation === 'invalid')
+  if (situation === 'pending' && onboarded) initialRouteName = 'ProfilePending';
+  else if (situation === 'submitted' || situation === 'invalid' || situation === 'verified')
     initialRouteName = 'ProfileSubmitted';
   else initialRouteName = 'CourierOnboarding';
   return (
