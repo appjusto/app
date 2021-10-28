@@ -145,7 +145,7 @@ export const Withdraws = ({ navigation, route }: Props) => {
                 size="small"
                 color={colors.green500}
               />
-            ) : withdrawsThisMonth === 0 ? (
+            ) : withdrawsThisMonth < 4 ? (
               <Text
                 style={{
                   ...texts.xs,
