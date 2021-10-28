@@ -62,7 +62,7 @@ export default ({ navigation, route }: Props) => {
     [navigation, orderId]
   );
   const openChatWithRestaurant = React.useCallback(() => {
-    track('opening chat with restaurant');
+    track('consumer opening chat with restaurant after order is delivered');
     openChat(order?.business?.id!, 'business');
   }, [openChat, order?.business?.id]);
   //handlers
@@ -91,7 +91,6 @@ export default ({ navigation, route }: Props) => {
     setLoading(false);
   };
   const issueHandler = () => {
-    track('reporting issue');
     Keyboard.dismiss();
     if (!order) return;
     if (order.type === 'food') {
@@ -238,7 +237,6 @@ export default ({ navigation, route }: Props) => {
             <DefaultButton
               title={t('Detalhes da corrida')}
               onPress={() => {
-                track('navigating to DeliveredOrderDetail');
                 navigation.navigate('DeliveredOrderNavigator', {
                   screen: 'DeliveredOrderDetail',
                   params: {

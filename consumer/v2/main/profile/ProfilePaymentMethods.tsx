@@ -5,7 +5,7 @@ import { FlatList, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
-import { track, useSegmentScreen } from '../../../../common/store/api/track';
+import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { colors, padding, screens, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
@@ -57,10 +57,8 @@ export default function ({ navigation, route }: Props) {
             subtitle={`Cartão de crédito\n${item.data.brand}`}
             onPress={() => {
               if (returnScreen) {
-                track('navigating to return screen with new payment method');
                 navigation.navigate(returnScreen, { paymentMethodId: item.id });
               } else {
-                track('navigating to PaymentMethodDetail');
                 navigation.navigate('PaymentMethodDetail', {
                   paymentData: item,
                 });
@@ -109,7 +107,6 @@ export default function ({ navigation, route }: Props) {
             title={t('Adicionar novo cartão de crédito')}
             subtitle={t('Aceitamos as bandeiras Visa, Mastercard, Amex, Elo e Diners')}
             onPress={() => {
-              track('navigating to ProfileAddCard');
               if (returnScreen) navigation.navigate('ProfileAddCard', { returnScreen });
               else navigation.navigate('ProfileAddCard');
             }}

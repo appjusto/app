@@ -9,7 +9,7 @@ import PaddedView from '../../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';
 import HR from '../../../../../common/components/views/HR';
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
-import { track, useSegmentScreen } from '../../../../../common/store/api/track';
+import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { useContextBusiness } from '../../../../../common/store/context/business';
 import { useContextCategoriesWithProducts } from '../../../../../common/store/context/menu';
@@ -75,7 +75,6 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
           <RestaurantDetailHeader
             restaurant={restaurant}
             onAboutPress={() => {
-              track('navigating to AboutRestaurant');
               navigation.navigate('AboutRestaurant');
             }}
           />
@@ -90,7 +89,6 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => {
-              track('clicked on a product');
               navigation.navigate('ItemDetail', { productId: item.id });
             }}
           >
@@ -108,7 +106,6 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
           <DefaultButton
             title={t('Faça login para pedir')}
             onPress={() => {
-              track('unlogged consumer navigating to login');
               navigation.replace('WelcomeScreen');
             }}
           />
@@ -117,7 +114,6 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
       {consumer && restaurant.status === 'open' && restaurant.enabled ? (
         <TouchableOpacity
           onPress={() => {
-            track('navigating to FoodOrderCheckout to place order');
             navigation.navigate('FoodOrderCheckout');
           }}
         >

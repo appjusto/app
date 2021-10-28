@@ -160,10 +160,8 @@ export default function ({ navigation }: Props) {
           // cancel action
         } else if (buttonIndex === 1) {
           pickFromGallery(changeImage, aspect);
-          track('courier is picking image from image gallery');
         } else if (buttonIndex === 0) {
           pickFromCamera(changeImage, aspect);
-          track('courier is picking image from camera');
         }
       }
     );

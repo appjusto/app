@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import { useSearchFleets } from '../../../../../common/store/api/search/useSearchFleets';
-import { track, useSegmentScreen } from '../../../../../common/store/api/track';
+import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { CourierProfileParamList } from '../types';
@@ -24,7 +24,6 @@ export default function ({ navigation }: Props) {
   useSegmentScreen('AllFleets');
   // handlers
   const navigateFleetDetail = (fleetId: string) => {
-    track('navigating to FleetDetail');
     navigation.navigate('FleetDetail', { fleetId });
   };
   // UI

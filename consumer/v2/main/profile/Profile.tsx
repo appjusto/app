@@ -75,7 +75,6 @@ export default function ({ navigation }: Props) {
                 title={t('Formas de pagamento')}
                 subtitle={t('Edite suas formas de pagamento')}
                 onPress={() => {
-                  track('navigating to ProfilePaymentMethods');
                   navigation.navigate('ProfileNavigator', { screen: 'ProfilePaymentMethods' });
                 }}
               />
@@ -91,7 +90,6 @@ export default function ({ navigation }: Props) {
                 title={t('Sobre o AppJusto')}
                 subtitle={t('Acesse nossas páginas')}
                 onPress={() => {
-                  track('navigating to AboutApp');
                   navigation.navigate('ProfileNavigator', {
                     screen: 'AboutApp',
                   });
@@ -101,7 +99,6 @@ export default function ({ navigation }: Props) {
                 title={t('Termos de uso e política de privacidade')}
                 subtitle={t('Leia os termos de uso do AppJusto')}
                 onPress={() => {
-                  track('navigating to Terms');
                   navigation.navigate('ProfileNavigator', { screen: 'Terms' });
                 }}
               />

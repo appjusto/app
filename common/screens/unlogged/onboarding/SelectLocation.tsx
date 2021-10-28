@@ -11,7 +11,7 @@ import {
   IBGECity,
   IBGEState,
 } from '../../../store/api/externals/ibge';
-import { track, useSegmentScreen } from '../../../store/api/track';
+import { useSegmentScreen } from '../../../store/api/track';
 import { padding, screens, texts } from '../../../styles';
 import { removeAccents } from '../../../utils/formatters';
 
@@ -59,7 +59,6 @@ export const SelectLocation = ({ navigation, route }: Props) => {
               return (
                 <TouchableOpacity
                   onPress={() => {
-                    track('state selected');
                     navigation.navigate('ConsumerOnboarding', { state: item.sigla });
                   }}
                 >
@@ -94,7 +93,6 @@ export const SelectLocation = ({ navigation, route }: Props) => {
               return (
                 <TouchableOpacity
                   onPress={() => {
-                    track('city selected');
                     navigation.navigate('ConsumerOnboarding', { city: item.nome });
                   }}
                 >

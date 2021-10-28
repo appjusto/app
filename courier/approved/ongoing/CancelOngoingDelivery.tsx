@@ -10,7 +10,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
-import { track, useSegmentScreen } from '../../../common/store/api/track';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -57,7 +57,6 @@ export default function ({ route, navigation }: Props) {
       try {
         setLoading(true);
         await api.order().rejectOrder(orderId, selectedReason!, rejectionComment);
-        track('courier canceled ongoing delivery');
         navigation.replace('MainNavigator', { screen: 'Home' });
       } catch (error) {
         setLoading(false);

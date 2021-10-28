@@ -54,7 +54,6 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
       try {
         setLoading(true);
         await api.profile().updateProfile(courier.id, { situation: 'pending' });
-        track('courier situation updated to pending');
         setLoading(false);
       } catch (error: any) {
         setLoading(false);

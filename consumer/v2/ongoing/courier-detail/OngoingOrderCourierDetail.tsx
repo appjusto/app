@@ -74,7 +74,7 @@ export const OngoingOrderCourierDetail = ({ navigation, route }: Props) => {
             <DefaultButton
               title={t('Abrir chat')}
               onPress={() => {
-                track('opening chat with courier');
+                track('consumer opening chat with courier');
                 navigation.navigate('OngoingOrderChat', {
                   orderId,
                   counterpartId: order.courier!.id,

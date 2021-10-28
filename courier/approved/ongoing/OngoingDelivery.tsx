@@ -84,14 +84,14 @@ export default function ({ navigation, route }: Props) {
   );
   const openChatWithConsumer = React.useCallback(
     (delayed?: boolean) => {
-      track('opening chat with consumer');
+      track('courier opening chat with consumer');
       openChat(consumerId!, 'consumer', delayed);
     },
     [openChat, consumerId]
   );
   const openChatWithRestaurant = React.useCallback(
     (delayed?: boolean) => {
-      track('opening chat with restaurant');
+      track('courier opening chat with restaurant');
       openChat(businessId!, 'business', delayed);
     },
     [openChat, businessId]
@@ -137,7 +137,6 @@ export default function ({ navigation, route }: Props) {
           setLoading(false);
         } else {
           await api.order().nextDispatchingState(orderId);
-          track('courier advanced a step');
           if (order.dispatchingState === 'going-destination') {
             setLoading(false);
           } else {
@@ -158,7 +157,6 @@ export default function ({ navigation, route }: Props) {
       setLoading(true);
       try {
         await api.order().completeDelivery(orderId, code);
-        track('courier entered code to complete delivery');
         setLoading(false);
       } catch (error) {
         dispatch(showToast(error.toString(), 'error'));
@@ -167,7 +165,6 @@ export default function ({ navigation, route }: Props) {
     })();
   };
   const navigateToDeliveryProblem = () => {
-    track('navigating to DeliveryProblem');
     navigation.navigate('DeliveryProblem', { orderId });
   };
   // UI
@@ -242,7 +239,6 @@ export default function ({ navigation, route }: Props) {
           onDelivery={codeDeliveryHandler}
           isLoading={isLoading}
           onNoCodeDelivery={() => {
-            track('navigating to NoCodeDelivery');
             navigation.navigate('NoCodeDelivery', { orderId });
           }}
           dispatchingState={dispatchingState}

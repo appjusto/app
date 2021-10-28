@@ -80,7 +80,6 @@ export const MarketplaceAccountInfo = () => {
     }
   };
   const advanceHandler = () => {
-    track('navigating to Receivables');
     navigation.navigate('DeliveriesNavigator', {
       screen: 'Receivables',
       params: {

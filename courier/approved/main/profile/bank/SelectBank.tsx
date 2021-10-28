@@ -5,7 +5,7 @@ import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import useBanks from '../../../../../common/store/api/platform/hooks/useBanks';
-import { track, useSegmentScreen } from '../../../../../common/store/api/track';
+import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { CourierProfileParamList } from '../types';
@@ -52,7 +52,6 @@ export default function ({ navigation, route }: Props) {
           return (
             <TouchableOpacity
               onPress={() => {
-                track('courier selected a bank');
                 navigation.navigate('ProfileBank', { bank: item });
               }}
             >

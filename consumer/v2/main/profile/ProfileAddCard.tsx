@@ -16,7 +16,7 @@ import {
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
 import useAxiosCancelToken from '../../../../common/hooks/useAxiosCancelToken';
-import { track, useSegmentScreen } from '../../../../common/store/api/track';
+import { useSegmentScreen } from '../../../../common/store/api/track';
 import { showToast } from '../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -81,7 +81,6 @@ export default function ({ navigation, route }: Props) {
         },
         createCancelToken()
       );
-      track('saving new card');
       setLoading(false);
       if (returnScreen) {
         navigation.navigate(returnScreen, { paymentMethodId: result.paymentMethodId });

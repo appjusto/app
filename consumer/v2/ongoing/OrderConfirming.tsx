@@ -66,7 +66,6 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
   useSegmentScreen('OrderConfirming');
   // handlers
   const navigateToCancelOrder = () => {
-    track('clicked to navigate to cancel order screen');
     navigation.navigate('OngoingOrderConfirmCancel', { orderId });
   };
   // UI
@@ -171,7 +170,6 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
       <DefaultButton
         title={t('Voltar para o início')}
         onPress={() => {
-          track('clicked to navigate to home screen');
           navigation.replace('MainNavigator', { screen: 'Home' });
         }}
       />

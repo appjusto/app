@@ -76,7 +76,6 @@ export default function ({ navigation }: Props) {
                 title={t('Fotos e documentos')}
                 subtitle={t('Sua selfie e imagem do seu documento')}
                 onPress={() => {
-                  track('navigating to ProfilePhotos');
                   navigation.navigate('ProfileNavigator', { screen: 'ProfilePhotos' });
                 }}
               />
@@ -84,7 +83,6 @@ export default function ({ navigation }: Props) {
                 title={t('Dados da sua empresa')}
                 subtitle={t('CNPJ, Razão social e endereço da sua empresa')}
                 onPress={() => {
-                  track('navigating to ProfileCompany');
                   navigation.navigate('ProfileNavigator', { screen: 'ProfileCompany' });
                 }}
               />
@@ -92,7 +90,6 @@ export default function ({ navigation }: Props) {
                 title={t('Dados bancários')}
                 subtitle={t('Banco, agência e conta corrente da sua empresa')}
                 onPress={() => {
-                  track('navigating to ProfileBank');
                   navigation.navigate('ProfileNavigator', {
                     screen: 'ProfileBank',
                   });
@@ -102,7 +99,6 @@ export default function ({ navigation }: Props) {
                 title={t('Escolha sua frota')}
                 subtitle={t('Escolha a frota que você faz parte')}
                 onPress={() => {
-                  track('navigating to ChooseFleet');
                   navigation.navigate('ProfileNavigator', {
                     screen: 'ChooseFleet',
                   });
@@ -112,7 +108,6 @@ export default function ({ navigation }: Props) {
                 title={t('Central de ajuda')}
                 subtitle={t('Tire suas dúvidas ou envie uma mensagem')}
                 onPress={() => {
-                  track('opening courier freshdesk url');
                   Linking.openURL(AppJustoFreshdeskCourierURL);
                 }}
               />
@@ -122,7 +117,6 @@ export default function ({ navigation }: Props) {
                   'Veja as negociações coletivas que o AppJusto conseguir para a categoria'
                 )}
                 onPress={() => {
-                  track('navigating to PartnersAndDiscounts');
                   navigation.navigate('ProfileNavigator', { screen: 'PartnersAndDiscounts' });
                 }}
               />
@@ -130,7 +124,6 @@ export default function ({ navigation }: Props) {
                 title={t('Sobre o AppJusto')}
                 subtitle={t('Acesse nossas páginas')}
                 onPress={() => {
-                  track('navigating to AboutApp');
                   navigation.navigate('ProfileNavigator', {
                     screen: 'AboutApp',
                   });
@@ -140,7 +133,6 @@ export default function ({ navigation }: Props) {
                 title={t('Termos de uso e política de privacidade')}
                 subtitle={t('Leia os termos de uso do AppJusto')}
                 onPress={() => {
-                  track('navigating to Terms');
                   navigation.navigate('ProfileNavigator', { screen: 'Terms' });
                 }}
               />
@@ -158,7 +150,6 @@ export default function ({ navigation }: Props) {
                 )}
                 bottomBorder={false}
                 onPress={() => {
-                  track('navigating to ProfileErase');
                   navigation.navigate('ProfileNavigator', { screen: 'ProfileErase' });
                 }}
               />

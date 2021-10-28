@@ -242,7 +242,6 @@ export default function ({ navigation, route }: Props) {
               grey
               style={{ marginTop: padding }}
               onPress={() => {
-                track('courier opened MEI url');
                 Linking.openURL(AppJustoMEIURL);
               }}
             />

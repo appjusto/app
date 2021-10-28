@@ -8,7 +8,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
-import { track, useSegmentScreen } from '../../../common/store/api/track';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -81,7 +81,6 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   }
   // handlers
   const reviewOrderHandler = () => {
-    track('clicked on review order button');
     if (!order) return;
     if (order.type === 'p2p') {
       navigation.replace('P2POrderNavigator', {
@@ -102,7 +101,6 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
     }
   };
   const changePaymentHandler = () => {
-    track('clicked to change payment method');
     if (dispatchingStatus === 'declined') {
       navigation.navigate('ProfilePaymentMethods', {
         returnScreen: 'OngoingOrderDeclined',
@@ -160,7 +158,6 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
               title={t('Voltar para o início')}
               secondary
               onPress={() => {
-                track('clicked to navigate back to home screen');
                 navigation.replace('MainNavigator', { screen: 'Home' });
               }}
             />

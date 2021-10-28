@@ -48,7 +48,6 @@ export const OngoingOrderProblem = ({ navigation, route }: Props) => {
     });
   };
   const reportIssueHandler = () => {
-    track('clicked to report issue');
     if (type === 'food') {
       if (status === 'delivered') {
         navigateToReportIssue('consumer-delivered-food-order', orderId);

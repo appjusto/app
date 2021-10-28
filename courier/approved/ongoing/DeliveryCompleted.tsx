@@ -8,7 +8,7 @@ import HorizontalSelect, {
 } from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
-import { track, useSegmentScreen } from '../../../common/store/api/track';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
@@ -65,7 +65,6 @@ export default function ({ navigation, route }: Props) {
       <DefaultButton
         title={t('Finalizar')}
         onPress={() => {
-          track('navigating Home');
           navigation.replace('MainNavigator', { screen: 'Home' });
         }}
         style={{ marginTop: padding }}

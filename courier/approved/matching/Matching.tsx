@@ -1,6 +1,5 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { track } from 'expo-analytics-segment';
 import * as Location from 'expo-location';
 import React from 'react';
 import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
@@ -103,13 +102,11 @@ export default function ({ navigation, route }: Props) {
     try {
       setLoading(true);
       await api.order().matchOrder(orderId);
-      track('courier matched order');
     } catch (error) {
       navigation.replace('MatchingError');
     }
   };
   const rejectHandler = () => {
-    track('courier rejected matching');
     navigation.replace('RejectedMatching', { orderId });
   };
   // UI

@@ -89,7 +89,6 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
           <DefaultButton
             title={t('Cancelar pedido')}
             onPress={() => {
-              track('clicked to navigate to cancel order');
               navigation.navigate('OngoingOrderConfirmCancel', { orderId });
             }}
             activityIndicator={isLoading}
@@ -101,7 +100,6 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
       <DefaultButton
         title={t('Voltar para o início')}
         onPress={() => {
-          track('clicked to navigate to home screen');
           navigation.replace('MainNavigator', { screen: 'Home' });
         }}
       />

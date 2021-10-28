@@ -64,7 +64,6 @@ export default function ({ navigation }: Props) {
       <ScrollView scrollIndicatorInsets={{ right: 1 }}>
         <HomeControls
           onFleetDetail={() => {
-            track('navigating to ChooseFleet');
             navigation.navigate('ProfileNavigator', {
               screen: 'ChooseFleet',
               params: {
@@ -77,7 +76,6 @@ export default function ({ navigation }: Props) {
           {requests.length > 0 ? (
             <TouchableOpacity
               onPress={() => {
-                track('navigating to OrderRequests');
                 navigation.navigate('MatchingNavigator', {
                   screen: 'OrderRequests',
                 });
@@ -97,7 +95,6 @@ export default function ({ navigation }: Props) {
           <HomeOngoingDeliveries
             orders={ongoingOrders}
             onPress={(order, chatFrom) => {
-              track('navigating to OngoingDelivery to open a chat message');
               navigation.navigate('OngoingDeliveryNavigator', {
                 screen: 'OngoingDelivery',
                 params: { orderId: order.id, chatFrom },
@@ -122,7 +119,6 @@ export default function ({ navigation }: Props) {
           </View>
           <TouchableOpacity
             onPress={() => {
-              track('navigating to DeliveryHistory');
               navigation.navigate('MainNavigator', { screen: 'DeliveryHistory' });
             }}
             style={{ marginBottom: padding }}
@@ -132,7 +128,6 @@ export default function ({ navigation }: Props) {
           <View>
             <TouchableOpacity
               onPress={() => {
-                track('navigating to PartnersAndDiscounts');
                 navigation.navigate('ProfileNavigator', { screen: 'PartnersAndDiscounts' });
               }}
             >

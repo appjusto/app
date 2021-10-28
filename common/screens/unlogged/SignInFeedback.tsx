@@ -6,7 +6,7 @@ import { t } from '../../../strings';
 import PaddedView from '../../components/containers/PaddedView';
 import { AuthState, useAuth } from '../../hooks/useAuth';
 import { IconMotocycle } from '../../icons/icon-motocycle';
-import { track, useSegmentScreen } from '../../store/api/track';
+import { useSegmentScreen } from '../../store/api/track';
 import { colors, padding, screens, texts } from '../../styles';
 import { UnloggedParamList } from './types';
 
@@ -45,7 +45,6 @@ export default ({ navigation, route }: Props) => {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              track('navigating back to WelcomeScreen');
               navigation.goBack();
             }}
             style={{ alignItems: 'center' }}

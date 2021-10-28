@@ -135,7 +135,6 @@ export default function ({ navigation, route }: Props) {
   // navigate to 'AddressComplete' to enter address
   const navigateToAddressComplete = React.useCallback(
     (returnParam: string, value?: Place) => {
-      track('navigating to AddressComplete');
       navigation.navigate('AddressComplete', {
         returnScreen: 'CreateOrderP2P',
         returnParam,
@@ -218,20 +217,16 @@ export default function ({ navigation, route }: Props) {
         navigateToAddressComplete={navigateToAddressComplete}
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         navigateFleetDetail={(fleetId: string) => {
-          track('navigating to FleetDetail');
           navigation.navigate('FleetDetail', { fleetId });
         }}
         navigateToTransportableItems={() => {
-          track('navigating to TransportableItems');
           navigation.navigate('TransportableItems');
         }}
         onSubmit={() => placeOrderHandler(selectedFare?.fleet?.id!)}
         navigateToPixPayment={(total, fleetId) => {
-          track('navigating to PixPayment');
           navigation.navigate('PayWithPix', { orderId: orderId!, total, fleetId });
         }}
         navigateToAboutCharges={() => {
-          track('navigating to AboutCharges');
           navigation.navigate('AboutCharges');
         }}
         wantsCpf={wantsCpf}

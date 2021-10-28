@@ -37,7 +37,6 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
   const business = useObserveBusiness(order?.business?.id);
   // handlers
   const cancelOrderHandler = React.useCallback(() => {
-    track('clicked to navigate to cancel order screen');
     navigation.replace('OngoingOrderCancelOrder', {
       orderId,
       acknowledgedCosts: cancellationInfo!.costs,
@@ -125,7 +124,6 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
             <DefaultButton
               title={t('Voltar')}
               onPress={() => {
-                track('navigating back to last screen');
                 navigation.goBack();
               }}
               grey

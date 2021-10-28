@@ -99,7 +99,6 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
         });
       }
     } else if (status === 'confirming') {
-      track('navigating to OrderConfirming');
       navigation.navigate('OngoingOrderNavigator', {
         screen: 'OngoingOrderConfirming',
         params: {
@@ -107,7 +106,6 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
         },
       });
     } else if (isOrderOngoing(order)) {
-      track('navigating to OngoingOrder');
       navigation.navigate('OngoingOrderNavigator', {
         screen: 'OngoingOrder',
         params: {
@@ -115,7 +113,6 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
         },
       });
     } else if (status === 'delivered') {
-      track('navigating to DeliveredOrderDetail');
       navigation.navigate('DeliveredOrderNavigator', {
         screen: 'DeliveredOrderDetail',
         params: {
@@ -123,7 +120,6 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
         },
       });
     } else if (status === 'canceled') {
-      track('navigating to DeliveredOrderDetail to check a canceled order');
       navigation.navigate('DeliveredOrderNavigator', {
         screen: 'DeliveredOrderDetail',
         params: {

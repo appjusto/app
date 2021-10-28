@@ -244,7 +244,6 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
               <DefaultButton
                 title={t('Relatar problema')}
                 onPress={() => {
-                  track('navigating to ReportIssue');
                   navigation.navigate('ReportIssue', {
                     orderId: order.id,
                     issueType: 'consumer-delivery-problem',

@@ -51,7 +51,7 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
   //handlers
   const openChatWithRestaurant = React.useCallback(
     (delayed?: boolean) => {
-      track('opening chat with restaurant');
+      track('courier opening chat with restaurant');
       openChat(businessId!, 'business', delayed);
     },
     [openChat, businessId]
@@ -64,7 +64,6 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
   };
   const refuseDeliveryHandler = () => {
     if (!order) return;
-    track('navigating to CourierDropsOrder');
     if (order.type === 'food') {
       navigation.replace('CourierDropsOrder', {
         issueType: 'courier-drops-food-delivery',
@@ -80,7 +79,6 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
 
   const deliveryProblemHandler = () => {
     if (!order) return;
-    track('navigating to ReportIssue');
     if (order.type === 'food') {
       if (
         order.dispatchingState === 'going-pickup' ||

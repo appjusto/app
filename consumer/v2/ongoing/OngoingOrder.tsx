@@ -63,20 +63,20 @@ export default function ({ navigation, route }: Props) {
   );
   const openChatWithCourier = React.useCallback(
     (delayed?: boolean) => {
-      track('chat with courier');
+      track('consumer chat with courier');
       openChat(courierId!, 'courier', delayed);
     },
     [openChat, courierId]
   );
   const openChatWithRestaurant = React.useCallback(
     (delayed?: boolean) => {
-      track('chat with business');
+      track('consumer chat with business');
       openChat(businessId!, 'business', delayed);
     },
     [openChat, businessId]
   );
   const openChatHandler = (from: ChatMessageUser) => {
-    track('clicked to open chat');
+    track('consumer clicked to open chat');
     openChat(from.id, from.agent);
   };
   // side effects
@@ -124,17 +124,14 @@ export default function ({ navigation, route }: Props) {
   // UI handlers
 
   const navigateToOrderProblem = () => {
-    track('clicked to report a problem');
     navigation.navigate('OngoingOrderProblem', {
       orderId: order.id,
     });
   };
   const navigateToConfirmCancel = () => {
-    track('clicked to navigate to cancel order');
     navigation.navigate('OngoingOrderConfirmCancel', { orderId });
   };
   const navigateToCourierDetail = () => {
-    track('clicked to navigate to courier detail');
     navigation.navigate('OngoingOrderCourierDetail', { orderId });
   };
   // const navigateToChangeRoute = () =>

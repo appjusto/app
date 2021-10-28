@@ -80,14 +80,12 @@ export default function ({ navigation }: Props) {
     setRefreshing(true);
     await api.search().clearCache();
     await refetchRestaurants();
-    track("refreshing restaurant's list");
     setRefreshing(false);
   };
   const refreshProducts = async () => {
     setRefreshing(true);
     await api.search().clearCache();
     await refetchProducts();
-    track("refreshing product's list");
     setRefreshing(false);
   };
 
@@ -118,7 +116,6 @@ export default function ({ navigation }: Props) {
       <PaddedView vertical={false}>
         <FilterSelector
           onFilterOpen={() => {
-            track('navigating to FilterScreen');
             navigation.navigate('FilterScreen');
           }}
         />

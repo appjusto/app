@@ -4,7 +4,7 @@ import React from 'react';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
-import { track, useSegmentScreen } from '../../../common/store/api/track';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, padding } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
@@ -39,7 +39,6 @@ export const OrderProblemFeedback = ({ navigation, route }: Props) => {
       <DefaultButton
         title={t('Voltar')}
         onPress={() => {
-          track('navigating back to OngoingOrder');
           navigation.replace('OngoingOrder', { orderId });
         }}
         style={{ paddingBottom: padding }}

@@ -5,7 +5,7 @@ import { Text } from 'react-native';
 import { t } from '../../strings';
 import DefaultButton from '../components/buttons/DefaultButton';
 import PaddedView from '../components/containers/PaddedView';
-import { track, useSegmentScreen } from '../store/api/track';
+import { useSegmentScreen } from '../store/api/track';
 import { borders, colors, padding, screens, texts } from '../styles';
 
 export type PermissionDeniedParamList = {
@@ -25,7 +25,6 @@ export const PermissionDenied = ({ route }: Props) => {
   const { title, subtitle } = route.params;
   // handlers
   const openSettings = (): void => {
-    track('Opened device settings');
     Linking.openSettings();
   };
   // side effects

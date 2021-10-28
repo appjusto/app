@@ -18,7 +18,7 @@ import { IconMotocycleBeta } from '../../common/icons/icon-motocycle-beta';
 import HomeShareCard from '../../common/screens/home/cards/HomeShareCard';
 import { SocialMediaCard } from '../../common/screens/home/cards/SocialMediaCard';
 import * as config from '../../common/screens/unlogged/onboarding/config';
-import { track, useSegmentScreen } from '../../common/store/api/track';
+import { useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../common/styles';
 import { t } from '../../strings';
@@ -107,7 +107,6 @@ export default function ({ navigation }: Props) {
                         secondary
                         title={t('Adicionar')}
                         onPress={() => {
-                          track('courier clicked to add appJusto to his/hers whatsapp contacts');
                           Linking.openURL(AppJustoAssistanceWhatsAppURL);
                         }}
                         style={{ marginTop: padding }}
@@ -163,7 +162,6 @@ export default function ({ navigation }: Props) {
             title={t('Sobre o período de testes')}
             subtitle={t('Saiba como acontecerão os testes')}
             onPress={() => {
-              track('navigating to AboutTests');
               navigation.navigate('AboutTests');
             }}
           />
@@ -171,7 +169,6 @@ export default function ({ navigation }: Props) {
             title={t('Autonomia e preço justo')}
             subtitle={t('Veja como você define o preço')}
             onPress={() => {
-              track('navigating to AboutAutonomy');
               navigation.navigate('AboutAutonomy');
             }}
           />
@@ -179,7 +176,6 @@ export default function ({ navigation }: Props) {
             title={t('Transparência')}
             subtitle={t('Saiba sobre os valores recebidos ')}
             onPress={() => {
-              track('navigating to AboutTransparency');
               navigation.navigate('AboutTransparency');
             }}
           />
@@ -187,7 +183,6 @@ export default function ({ navigation }: Props) {
             title={t('Sem bloqueios automáticos')}
             subtitle={t('Entenda o motivo de não termos Score')}
             onPress={() => {
-              track('navigating to AboutNoScore');
               navigation.navigate('AboutNoScore');
             }}
           />
@@ -195,7 +190,6 @@ export default function ({ navigation }: Props) {
             title={t('Fique disponível para corridas')}
             subtitle={t('Saiba como ajudar o movimento')}
             onPress={() => {
-              track('navigating to AboutBeAvailable');
               navigation.navigate('AboutBeAvailable');
             }}
           />
@@ -203,7 +197,6 @@ export default function ({ navigation }: Props) {
             title={t('Central de Ajuda')}
             subtitle={t('Conheças as regras e saiba mais sobre o AppJusto')}
             onPress={() => {
-              track('opening AppJustoFreshdeskCourierURL');
               Linking.openURL(AppJustoFreshdeskCourierURL);
             }}
           />
@@ -211,7 +204,6 @@ export default function ({ navigation }: Props) {
             title={t('Sobre o AppJusto')}
             subtitle={t('Acesse nossas páginas')}
             onPress={() => {
-              track('navigating to AboutApp');
               navigation.navigate('AboutApp');
             }}
           />

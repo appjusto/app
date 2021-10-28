@@ -98,7 +98,6 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
         <View style={{ marginTop: 32, flex: 1 }}>
           <TouchableOpacity
             onPress={() => {
-              track("navigating to AddressComplete to find a restaurant's address");
               navigation.navigate('AddressComplete', {
                 returnScreen: 'RecommendRestaurant',
                 returnParam: 'place',
