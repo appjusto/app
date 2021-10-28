@@ -42,6 +42,7 @@ export default React.forwardRef(
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'flex-start',
+              borderColor: errorMessage ? colors.red : colors.grey500,
             },
             style,
           ]}
@@ -78,7 +79,7 @@ export default React.forwardRef(
           </View>
           {children}
         </PaddedView>
-        {!!errorMessage && <Text>{errorMessage}</Text>}
+        {!!errorMessage && <Text style={{ ...texts.xs, color: colors.red }}>{errorMessage}</Text>}
       </>
     );
   }

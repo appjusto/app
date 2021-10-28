@@ -2,8 +2,8 @@ import { Feather } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty, toNumber, trim } from 'lodash';
-import React from 'react';
-import { Keyboard, Text, TextInput, View } from 'react-native';
+import React, { useCallback } from 'react';
+import { Image, Keyboard, Text, TextInput, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
@@ -11,7 +11,7 @@ import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import {
   cardFormatter,
-  cardMask,
+  cardMask
 } from '../../../../common/components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
@@ -19,6 +19,11 @@ import useAxiosCancelToken from '../../../../common/hooks/useAxiosCancelToken';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { showToast } from '../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { CreditCardType } from '../../../../common/utils/credit-card/CreditCard';
+import {
+  getCreditCard,
+  isAllowed
+} from '../../../../common/utils/credit-card/CreditCardImplementation';
 import { t } from '../../../../strings';
 import { RestaurantNavigatorParamList } from '../../food/restaurant/types';
 import { OngoingOrderNavigatorParamList } from '../../ongoing/types';
@@ -33,9 +38,9 @@ export type ProfileAddCardParamList = {
 
 type ScreenNavigationProp = StackNavigationProp<
   ProfileParamList &
-    RestaurantNavigatorParamList &
-    P2POrderNavigatorParamList &
-    OngoingOrderNavigatorParamList,
+  RestaurantNavigatorParamList &
+  P2POrderNavigatorParamList &
+  OngoingOrderNavigatorParamList,
   'ProfileAddCard'
 >;
 type ScreenRouteProp = RouteProp<ProfileAddCardParamList, 'ProfileAddCard'>;
@@ -53,6 +58,8 @@ export default function ({ navigation, route }: Props) {
   const dispatch = useDispatch<AppDispatch>();
   // state
   const [number, setNumber] = React.useState('');
+  const [numberError, setNumberError] = React.useState('');
+  const [image, setImage] = React.useState<any>();
   const [month, setMonth] = React.useState('');
   const [year, setYear] = React.useState('');
   const [cvv, setCVV] = React.useState('');
@@ -90,6 +97,24 @@ export default function ({ navigation, route }: Props) {
       dispatch(showToast(error.toString(), 'error'));
     }
   };
+  const onChangeNumber = useCallback(
+    (text: string) => {
+      if (isNaN(toNumber(text))) return;
+
+      setNumber(text);
+
+      const { label, type, icon } = getCreditCard(text);
+
+      if (!isAllowed(type) && type !== CreditCardType.undefined) {
+        setNumberError(`Não aceitamos a bandeira ${label}`);
+      } else {
+        setNumberError('');
+      }
+
+      setImage(icon);
+    },
+    [setNumber, setNumberError]
+  );
   // refs
   const expirationMonthRef = React.useRef<TextInput>(null);
   const expirationYearRef = React.useRef<TextInput>(null);
@@ -118,9 +143,9 @@ export default function ({ navigation, route }: Props) {
             autoCompleteType="cc-number"
             returnKeyType="next"
             blurOnSubmit={false}
-            onChangeText={(text) => {
-              if (!isNaN(toNumber(text))) setNumber(text);
-            }}
+            onChangeText={onChangeNumber}
+            trailing={image && <Image source={image} />}
+            errorMessage={numberError}
             onSubmitEditing={() => expirationMonthRef.current?.focus()}
           />
           <View style={{ flexDirection: 'row', marginTop: padding }}>
