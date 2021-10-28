@@ -62,21 +62,6 @@ export default function ({ navigation, route }: Props) {
   // side effects
   // tracking
   useSegmentScreen('Profile Pending');
-  // once
-  React.useEffect(() => {
-    // although this screen is named 'ProfilePending', it's also the first screen of UnapprovedNavigator
-    // which means that it will be shown if courier is rejected. so, if that's the case,
-    // we navigate to ProfileRejected after a short delay to make sure it will work on all devices
-    if (situation === 'submitted' || situation === 'verified' || situation === 'invalid') {
-      setTimeout(() => {
-        navigation.replace('ProfileSubmitted');
-      }, 100);
-    } else if (situation === 'rejected') {
-      setTimeout(() => {
-        navigation.replace('ProfileRejected');
-      }, 100);
-    }
-  }, [situation, navigation]);
   // when location changes
   React.useEffect(() => {
     if (!coords) return;
@@ -110,7 +95,8 @@ export default function ({ navigation, route }: Props) {
       try {
         await dispatch(updateProfile(api)(courier.id, { situation: 'submitted' }));
         track('courier submitted profile');
-      } catch (error) {
+        navigation.replace('ProfileSubmitted');
+      } catch (error: any) {
         Sentry.Native.captureException(error);
         dispatch(showToast(error.toString(), 'error'));
       }

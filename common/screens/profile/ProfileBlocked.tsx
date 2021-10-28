@@ -1,10 +1,9 @@
-import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Linking, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { BlockedParamsList } from '../../../consumer/v2/BlockedNavigator';
 import { DeliveryProblemCard } from '../../../courier/approved/ongoing/delivery-problem/DeliveryProblemCard';
+import { ProfileIssuesParamsList } from '../../../courier/ProfileIssuesNavigator';
 import { UnapprovedParamList } from '../../../courier/unapproved/types';
 import { t } from '../../../strings';
 import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
@@ -14,17 +13,14 @@ import { track, useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
 import { getConsumer } from '../../store/consumer/selectors';
 import { getCourier } from '../../store/courier/selectors';
-import { padding } from '../../styles';
 
 type ScreenNavigationProp = StackNavigationProp<
-  UnapprovedParamList & BlockedParamsList,
+  UnapprovedParamList & ProfileIssuesParamsList,
   'ProfileBlocked'
 >;
-type ScreenRouteProp = RouteProp<UnapprovedParamList & BlockedParamsList, 'ProfileBlocked'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
-  route: ScreenRouteProp;
 };
 
 export default function ({ navigation }: Props) {
@@ -32,25 +28,24 @@ export default function ({ navigation }: Props) {
   const consumer = useSelector(getConsumer);
   const courier = useSelector(getCourier);
   const flavor = useSelector(getFlavor);
-  const profile = flavor === 'consumer' ? consumer : courier;
+  const profile = flavor === 'consumer' ? consumer! : courier!;
   // side effects
   // tracking
   useSegmentScreen('ProfileBlocked');
-  // adapting to situation changes
-  React.useEffect(() => {
-    if (flavor === 'courier' && courier?.situation === 'pending')
-      navigation.replace('ProfilePending');
-    else if (flavor === 'courier' && courier?.situation === 'submitted')
-      navigation.replace('ProfileSubmitted');
-  }, [courier?.situation, navigation, flavor]);
+  // helpers
+  const header = (() => {
+    if (flavor === 'courier' && profile.situation === 'deleted')
+      return t('Seu cadastro foi deletado :(');
+    else return t('Seu cadastro está bloqueado :(');
+  })();
   // UI
   return (
     <FeedbackView
-      header={t('Seu cadastro está bloqueado :(')}
+      header={header}
       description={profile?.profileIssues?.join('\n') ?? t('Entre em contato com nosso suporte.')}
       icon={<IconConeYellow />}
     >
-      <View style={{ marginBottom: padding }}>
+      <View>
         <DeliveryProblemCard
           title={t('Falar com o AppJusto')}
           subtitle={t('Abrir chat no WhatsApp')}
