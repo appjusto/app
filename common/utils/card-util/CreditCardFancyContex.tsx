@@ -2,8 +2,8 @@ import creditCardType from 'credit-card-type';
 import React, { createContext, ReactNode, useCallback, useContext } from 'react';
 import {
   ALLOWED_CREDIT_CARD_TYPES,
-  creditCardFlagPNGParse,
-  creditCardFlagPNGParse2,
+  CreditCardContent,
+  creditCardToContent,
   CreditCardType,
   creditCardTypeParse,
   ICreditCardContextData
@@ -17,34 +17,36 @@ export function CreditCardProvider({ children }: { children: ReactNode }) {
     const typeCard = creditCardType(creditCardNumber);
     if (typeCard.length !== 1) {
       console.log('Tipo ainda nao definido');
-      //return CreditCardType.not_defined;
-      return 'not-defined';
+      return CreditCardType.not_defined;
+      //return 'not-defined';
     }
 
     const type = typeCard[0].type;
 
     if (Object.keys(creditCardTypeParse).includes(type)) {
       console.log('Tipo: ' + type);
-      //return creditCardTypeParse[type];
-      return type;
+      return creditCardTypeParse[type];
     }
     console.log('Nao foi possivel definir um tipo');
-    //return CreditCardType.unknown;
-    return 'unknown';
+    return CreditCardType.unknown;
+    //return 'unknown';
   }, []);
 
-  const getFlagPNG = useCallback((creditCardType: string) => {
-    if (Object.keys(creditCardFlagPNGParse2).includes(creditCardType)) {
-      return creditCardFlagPNGParse2[creditCardType];
+  const getContent = useCallback((creditCardType: CreditCardType): CreditCardContent => {
+    // console.log(Object.keys(creditCardFlagPNGParse));
+    const type = CreditCardType[creditCardType];
+    console.log(CreditCardType[creditCardType] === 'visa');
+    if (Object.keys(creditCardToContent).includes(type)) {
+      return creditCardToContent['american_express'];
     }
-    return creditCardFlagPNGParse[CreditCardType.unknown];
+    return creditCardToContent['unknown'];
   }, []);
 
   const isAllowed = useCallback((creditCardType: CreditCardType) => {
     return ALLOWED_CREDIT_CARD_TYPES.includes(creditCardType);
   }, []);
 
-  const value: ICreditCardContextData = { getType, isAllowed, getFlagPNG };
+  const value: ICreditCardContextData = { getType, isAllowed, getContent };
 
   return (
     <CreditCardFancyContext.Provider value={value}>{children}</CreditCardFancyContext.Provider>

@@ -13,7 +13,8 @@ const UselessTextInput = () => {
   //const [number, onChangeNumber] = React.useState(null);
 
   const [number, setNumber] = React.useState('');
-  const { getType, isAllowed, getFlagPNG } = useContextCreditCardFancy();
+  const [numberError, setNumberError] = React.useState('');
+  const { getType, isAllowed, getContent } = useContextCreditCardFancy();
   const [image, setImage] = React.useState(iconGenericFlag);
 
   const onChangeNumber = useCallback(
@@ -23,11 +24,17 @@ const UselessTextInput = () => {
       setNumber(text);
 
       const type = getType(text);
-      const png = getFlagPNG(type);
-      setImage(png);
-      console.log(png);
+      const typeContent = getContent(type);
+
+      if (!isAllowed(type)) {
+        setNumberError(`Não aceitamos a bandeira ${typeContent.niceType}`);
+      } else {
+        setNumberError('');
+      }
+
+      setImage(typeContent.png);
     },
-    [setNumber, getType, getFlagPNG]
+    [setNumber, getType, getContent, isAllowed, setNumberError]
   );
 
   return (
@@ -46,6 +53,8 @@ const UselessTextInput = () => {
         blurOnSubmit={false}
         onChangeText={onChangeNumber}
         trailing={<Image source={image} />}
+        errorMessage={numberError}
+
       // onSubmitEditing={() => expirationMonthRef.current?.focus()}
       />
     </SafeAreaView>

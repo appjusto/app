@@ -3,10 +3,9 @@ const iconVisaFlag = require('../../../assets/icons/credit-card-flag-visa.png');
 const iconGenericFlag = require('../../../assets/icons/credit-card-flag-generic.png');
 
 export interface ICreditCardContextData {
-  //getType(creditCardNumber: string): CreditCardType;
-  getType(creditCardNumber: string): string;
+  getType(creditCardNumber: string): CreditCardType;
   isAllowed(creditCardType: CreditCardType): boolean;
-  getFlagPNG(creditCardType: string): any;
+  getContent(creditCardType: CreditCardType): any;
 }
 
 export enum CreditCardType {
@@ -26,6 +25,30 @@ export enum CreditCardType {
   not_defined,
 }
 
+export interface CreditCardContent {
+  png: any;
+  niceType: string;
+}
+
+type typeToContent = Record<keyof typeof CreditCardType, CreditCardContent>;
+
+export const creditCardToContent: typeToContent = {
+  american_express: { png: iconGenericFlag, niceType: 'American Express' },
+  diners_club: { png: iconGenericFlag, niceType: 'Diners Club' },
+  discover: { png: iconGenericFlag, niceType: 'Discover' },
+  elo: { png: iconGenericFlag, niceType: 'Elo' },
+  hiper: { png: iconGenericFlag, niceType: 'Hiper' },
+  hipercard: { png: iconGenericFlag, niceType: 'Hipercard' },
+  jcb: { png: iconGenericFlag, niceType: 'JCB' },
+  maestro: { png: iconGenericFlag, niceType: 'Maestro' },
+  mastercard: { png: iconGenericFlag, niceType: 'Master Card' },
+  mir: { png: iconGenericFlag, niceType: 'MIR' },
+  unionpay: { png: iconGenericFlag, niceType: 'Unionpay' },
+  visa: { png: iconVisaFlag, niceType: 'Visa' },
+  unknown: { png: iconGenericFlag, niceType: '' },
+  not_defined: { png: iconGenericFlag, niceType: '' },
+};
+
 export const creditCardTypeParse: Record<string, CreditCardType> = {
   'american-express': CreditCardType.american_express,
   'diners-club': CreditCardType.diners_club,
@@ -43,44 +66,10 @@ export const creditCardTypeParse: Record<string, CreditCardType> = {
   'not-defined': CreditCardType.not_defined,
 };
 
-export const creditCardFlagPNGParse: Record<CreditCardType, any> = {
-  [CreditCardType.american_express]: iconGenericFlag,
-  [CreditCardType.diners_club]: iconGenericFlag,
-  [CreditCardType.discover]: iconGenericFlag,
-  [CreditCardType.elo]: iconGenericFlag,
-  [CreditCardType.hiper]: iconGenericFlag,
-  [CreditCardType.hipercard]: iconGenericFlag,
-  [CreditCardType.jcb]: iconGenericFlag,
-  [CreditCardType.maestro]: iconGenericFlag,
-  [CreditCardType.mastercard]: iconGenericFlag,
-  [CreditCardType.mir]: iconGenericFlag,
-  [CreditCardType.unionpay]: iconGenericFlag,
-  [CreditCardType.visa]: iconVisaFlag,
-  [CreditCardType.unknown]: iconGenericFlag,
-  [CreditCardType.not_defined]: iconGenericFlag,
-};
-
-export const creditCardFlagPNGParse2: Record<string, any> = {
-  'american-express': iconGenericFlag,
-  'diners-club': iconGenericFlag,
-  'discover': iconGenericFlag,
-  'elo': iconGenericFlag,
-  'hiper': iconGenericFlag,
-  'hipercard': iconGenericFlag,
-  'jcb': iconGenericFlag,
-  'maestro': iconGenericFlag,
-  'mastercard': iconGenericFlag,
-  'mir': iconGenericFlag,
-  'unionpay': iconGenericFlag,
-  'visa': iconVisaFlag,
-  'unknown': iconGenericFlag,
-  'not-defined': iconGenericFlag,
-};
-
 export const ALLOWED_CREDIT_CARD_TYPES: CreditCardType[] = [
   CreditCardType.diners_club,
   CreditCardType.elo,
   CreditCardType.mastercard,
-  CreditCardType.visa,
+  //CreditCardType.visa,
   CreditCardType.not_defined,
 ];
