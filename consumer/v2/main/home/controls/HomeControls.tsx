@@ -5,8 +5,6 @@ import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { IconIllustrationPizza } from '../../../../../common/icons/icon-illustration-pizza';
 import { IconSmallUser } from '../../../../../common/icons/icon-small-user';
 import { colors, padding, texts } from '../../../../../common/styles';
-import UselessTextInput from '../../../../../common/utils/card-util/CardTest';
-import { CreditCardProvider } from '../../../../../common/utils/card-util/CreditCardFancyContex';
 import { t } from '../../../../../strings';
 import { HomeControlItem } from './HomeControlItem';
 
@@ -48,9 +46,6 @@ export const HomeControls = ({ onStartOrderPress }: Props) => {
           onPress={() => onStartOrderPress('p2p')}
         />
       </View>
-      <CreditCardProvider>
-        <UselessTextInput />
-      </CreditCardProvider>
     </PaddedView>
   );
 };
