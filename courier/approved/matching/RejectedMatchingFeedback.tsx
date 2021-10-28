@@ -4,6 +4,7 @@ import React from 'react';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, padding } from '../../../common/styles';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -19,6 +20,8 @@ type Props = {
 };
 
 export const RejectedMatchingFeedback = ({ navigation }: Props) => {
+  // tracking
+  useSegmentScreen('RejectedMatchingFeedback');
   return (
     <FeedbackView
       header={t('Obrigado pelas informações')}

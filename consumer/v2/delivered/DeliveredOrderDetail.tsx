@@ -16,6 +16,7 @@ import OrderMap from '../../../common/screens/orders/OrderMap';
 import PlaceSummary from '../../../common/screens/orders/summary/PlaceSummary';
 import { useCourierReview } from '../../../common/store/api/courier/hooks/useCourierReview';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import {
@@ -28,6 +29,7 @@ import { t } from '../../../strings';
 import { OrderCostBreakdown } from '../common/breakdown/OrderCostBreakdown';
 import { DeliveredItems } from '../common/DeliveredItems';
 import { ReviewBox } from '../common/review/ReviewBox';
+import { ThumbSelector } from '../common/review/ThumbSelector';
 import TipControl from '../common/TipControl';
 import { DeliveredOrderNavigatorParamList } from './types';
 
@@ -58,6 +60,9 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const [tipLoading, setTipLoading] = React.useState(false);
   const showChatButton = useChatisEnabled(order);
 
+  // tracking
+  useSegmentScreen('DeliveredOrderDetail');
+
   // helpers
   const openChat = React.useCallback(
     (counterpartId: string, counterpartFlavor: Flavor) => {
@@ -69,10 +74,10 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
     },
     [navigation, orderId]
   );
-  const openChatWithRestaurant = React.useCallback(
-    () => openChat(order?.business?.id!, 'business'),
-    [openChat, order?.business?.id]
-  );
+  const openChatWithRestaurant = React.useCallback(() => {
+    track('opening chat with restaurant');
+    openChat(order?.business?.id!, 'business');
+  }, [openChat, order?.business?.id]);
 
   // handlers
   const tipHandler = async () => {
@@ -81,6 +86,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
     setTipLoading(true);
     try {
       if (tip > 0) await api.order().tipCourier(order.id, tip);
+      track('consumer sent tip to courier');
       dispatch(showToast(t('Caixinha enviada!')));
     } catch (error) {
       dispatch(showToast(t('Não foi possível enviar a caixinha'), 'error'));
@@ -100,6 +106,8 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
           comment,
         });
         setReviewSent(true);
+        track('consumer reviewed courier');
+        dispatch(showToast(t('Avaliação enviada com sucesso!'), 'success'));
       }
     } catch (error) {
       dispatch(showToast(t('Não foi possível enviar a avaliação'), 'error'));
@@ -172,23 +180,45 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
             <HR height={padding} />
             {order.courier ? (
               <View>
-                <ReviewBox
-                  review={review?.type ?? reviewType}
-                  comment={review?.comment ?? comment}
-                  editable={!review}
-                  focusable={!!review}
-                  onReviewChange={(type) => setReviewType(type)}
-                  onCommentChange={(value) => setComment(value)}
-                />
-                <DefaultButton
-                  title={
-                    review?.type || reviewSent ? t('Avaliação enviada') : t('Avaliar entregador/a')
-                  }
-                  onPress={reviewHandler}
-                  style={{ margin: padding, marginTop: 0 }}
-                  activityIndicator={reviewLoading}
-                  disabled={reviewLoading || !!review?.type || reviewSent}
-                />
+                {review ? (
+                  <View>
+                    <ThumbSelector
+                      title={t('Como foi a sua experiência com o entregador?')}
+                      review={review.type}
+                    />
+                    {review.comment ? (
+                      <Text
+                        style={{
+                          marginBottom: padding,
+                          ...texts.md,
+                          ...texts.bold,
+                          paddingHorizontal: padding,
+                        }}
+                      >
+                        "{review.comment}"
+                      </Text>
+                    ) : null}
+                  </View>
+                ) : (
+                  <View>
+                    <ReviewBox
+                      reviewType={reviewType}
+                      comment={comment}
+                      editable={!review || !reviewSent}
+                      focusable={!!review}
+                      onReviewChange={(type) => setReviewType(type)}
+                      onCommentChange={(value) => setComment(value)}
+                    />
+                    <DefaultButton
+                      title={t('Avaliar entregador/a')}
+                      onPress={reviewHandler}
+                      style={{ margin: padding, marginTop: 0 }}
+                      activityIndicator={reviewLoading}
+                      disabled={reviewLoading || reviewSent || !reviewType}
+                    />
+                  </View>
+                )}
+
                 <HR height={padding} />
                 <View>
                   <TipControl
@@ -213,12 +243,12 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
 
               <DefaultButton
                 title={t('Relatar problema')}
-                onPress={() =>
+                onPress={() => {
                   navigation.navigate('ReportIssue', {
                     orderId: order.id,
                     issueType: 'consumer-delivery-problem',
-                  })
-                }
+                  });
+                }}
                 secondary
               />
             </PaddedView>

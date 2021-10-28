@@ -9,6 +9,7 @@ import PaddedView from '../../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';
 import HR from '../../../../../common/components/views/HR';
 import { useReceivables } from '../../../../../common/store/api/courier/account/useReceivables';
+import { useSegmentScreen } from '../../../../../common/store/api/track';
 import {
   borders,
   colors,
@@ -34,8 +35,12 @@ export const Receivables = ({ navigation, route }: Props) => {
   const [selected, setSelected] = React.useState<number[]>([]);
   // side effects
   const receivables = useReceivables();
+  // tracking
+  useSegmentScreen('Receivables');
   // handlers
-  const advanceHandler = () => navigation.replace('AdvanceReceivables', { ids: selected });
+  const advanceHandler = () => {
+    navigation.replace('AdvanceReceivables', { ids: selected });
+  };
   // UI
   if (!receivables) {
     return (

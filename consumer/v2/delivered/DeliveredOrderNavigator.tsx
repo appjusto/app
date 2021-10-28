@@ -23,11 +23,7 @@ export const DeliveredOrderNavigator = () => {
         component={ReportIssue}
         options={{ title: t('Relatar problema') }}
       />
-      <Stack.Screen
-        name="OrderHistoryByMonth"
-        component={OrderHistoryByMonth}
-        options={{ title: t('Pedidos em') }}
-      />
+      <Stack.Screen name="OrderHistoryByMonth" component={OrderHistoryByMonth} />
       <Stack.Screen name="DeliveredOrderChat" component={Chat} options={{ title: t('Chat') }} />
     </Stack.Navigator>
   );

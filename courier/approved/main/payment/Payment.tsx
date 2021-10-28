@@ -9,6 +9,7 @@ import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import HR from '../../../../common/components/views/HR';
+import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { colors, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -30,7 +31,8 @@ export const Payment = ({ navigation, route }: Props) => {
   const courier = useSelector(getCourier)!;
   // screen state
   const [agreed, setAgreed] = React.useState(false);
-
+  // tracking
+  useSegmentScreen('Payment');
   if (!courier)
     return (
       <View style={screens.centered}>

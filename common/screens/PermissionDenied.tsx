@@ -29,7 +29,7 @@ export const PermissionDenied = ({ route }: Props) => {
   };
   // side effects
   // tracking
-  useSegmentScreen('Permission Denied', { title });
+  useSegmentScreen('PermissionDenied', { title });
   // UI
   return (
     <PaddedView style={{ ...screens.config, paddingTop: padding }}>

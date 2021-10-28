@@ -12,7 +12,7 @@ type ScreenNavigationProp = StackNavigationProp<UnapprovedParamList, 'AboutBeAva
 
 export const AboutBeAvailable = () => {
   // tracking
-  useSegmentScreen('About be available');
+  useSegmentScreen('AboutBeAvailable');
   return (
     <ScrollView
       style={{ ...screens.config }}

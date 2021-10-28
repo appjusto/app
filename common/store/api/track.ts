@@ -1,18 +1,19 @@
 import * as Segment from 'expo-analytics-segment';
 import React from 'react';
+import { getExtra } from '../../utils/config';
+
+const { flavor } = getExtra();
 
 interface Props {
   [key: string]: any;
 }
 
-export const track = (name: string, props?: Props) => {
-  if (!props) Segment.track(name);
-  else Segment.trackWithProperties(name, props);
+export const track = (name: string, props: Props = {}) => {
+  Segment.trackWithProperties(name, { ...props, flavor });
 };
 
-export const screen = (name: string, props?: Props) => {
-  if (!props) Segment.screen(name);
-  else Segment.screenWithProperties(name, props);
+export const screen = (name: string, props: Props = {}) => {
+  Segment.screenWithProperties(name, { ...props, flavor });
 };
 
 export const useTrack = (name: string, props?: Props) => {

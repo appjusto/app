@@ -1,7 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { defaultScreenOptions } from '../../../common/screens/options';
-import { ReportIssue } from '../../../common/screens/ReportIssue';
 import { t } from '../../../strings';
 import Matching from './Matching';
 import MatchingError from './MatchingError';
@@ -23,12 +22,6 @@ export default function () {
         name="MatchingError"
         component={MatchingError}
         options={{ headerShown: false }}
-      />
-      {/* remove this screen after */}
-      <Stack.Screen
-        name="RefuseDelivery"
-        component={ReportIssue}
-        options={{ title: t('Recusou o pedido') }}
       />
       <Stack.Screen
         name="RejectedMatching"

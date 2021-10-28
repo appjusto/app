@@ -22,7 +22,7 @@ import ShowIf from '../../components/views/ShowIf';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { IconMotoCycleBig } from '../../icons/icon-motocycle-big';
-import { track, useSegmentScreen } from '../../store/api/track';
+import { useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
@@ -53,6 +53,7 @@ export default function ({ navigation, route }: Props) {
   const [email, setEmail] = useState('');
   const [acceptedTerms, setAcceptTerms] = useState(false);
   // side effects
+  // tracking
   useSegmentScreen('Welcome');
   // handlers
   const signInHandler = useCallback(async () => {
@@ -65,7 +66,6 @@ export default function ({ navigation, route }: Props) {
       dispatch(showToast(t('Digite um e-mail válido.'), 'error'));
       return;
     }
-    track('Signing in', { email });
     try {
       await dispatch(signInWithEmail(api)(email.trim()));
     } catch (error) {
@@ -142,6 +142,13 @@ export default function ({ navigation, route }: Props) {
                 blurOnSubmit
                 autoCapitalize="none"
               />
+              <ShowIf test={email.length > 5 && validateEmail(email).status !== 'ok'}>
+                {() => (
+                  <Text style={{ ...texts.sm, color: colors.red, marginTop: halfPadding }}>
+                    {t('O e-mail digitado não é válido')}
+                  </Text>
+                )}
+              </ShowIf>
             </View>
             <View
               style={{
@@ -149,7 +156,6 @@ export default function ({ navigation, route }: Props) {
                 alignItems: tallerDevice ? 'center' : 'flex-start',
                 justifyContent: 'space-between',
                 marginTop: padding,
-                // flex: 1,
               }}
             >
               <View>

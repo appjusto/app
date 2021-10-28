@@ -8,6 +8,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -68,6 +69,8 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
     if (!order) return;
     if (order.status === 'canceled') navigation.navigate('OrderCanceled', { orderId });
   }, [navigation, order, orderId]);
+  // tracking
+  useSegmentScreen('OngoingOrderDeclined');
   // UI
   if (!order || isLoading) {
     return (
@@ -154,7 +157,9 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
             <DefaultButton
               title={t('Voltar para o início')}
               secondary
-              onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
+              onPress={() => {
+                navigation.replace('MainNavigator', { screen: 'Home' });
+              }}
             />
           </View>
         ) : null}

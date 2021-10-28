@@ -64,6 +64,11 @@ export const OngoingOrderNavigator = () => {
         component={OngoingOrderProblem}
         options={{ title: t('Tive um problema') }}
       />
+      {/* <Stack.Screen
+        name="ChangeRoute"
+        component={ChangeRoute}
+        options={{ title: t('Alterar endereço') }}
+      /> */}
       <Stack.Screen
         name="OrderProblemFeedback"
         component={OrderProblemFeedback}

@@ -10,6 +10,7 @@ import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { useObserveBusiness } from '../../../common/store/api/business/hooks/useObserveBusiness';
 import { useGetCancellationInfo } from '../../../common/store/api/order/hooks/useGetCancellationInfo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { colors, doublePadding, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
@@ -49,6 +50,8 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
   React.useEffect(() => {
     if (cancellationInfo?.costs === 0) cancelOrderHandler();
   }, [cancelOrderHandler, cancellationInfo]);
+  // tracking
+  useSegmentScreen('OngoingOrderConfirmCancel');
   //helpers
   const businessPhone = phoneFormatter(business?.phone);
   // UI
@@ -93,7 +96,10 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
               <DefaultButton
                 title={t('Ligar para o restaurante')}
                 secondary
-                onPress={() => Linking.openURL(`tel:${businessPhone}`)}
+                onPress={() => {
+                  track('calling restaurant');
+                  Linking.openURL(`tel:${businessPhone}`);
+                }}
                 style={{ marginTop: 24 }}
               />
             ) : null}
@@ -115,7 +121,13 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
           }}
         >
           <View style={{ width: '48%' }}>
-            <DefaultButton title={t('Voltar')} onPress={() => navigation.goBack()} grey />
+            <DefaultButton
+              title={t('Voltar')}
+              onPress={() => {
+                navigation.goBack();
+              }}
+              grey
+            />
           </View>
           <View style={{ width: '48%' }}>
             <DefaultButton title={t('Confirmar')} onPress={cancelOrderHandler} />

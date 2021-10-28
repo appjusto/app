@@ -5,6 +5,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Dimensions, Image, Text, View } from 'react-native';
 import * as icons from '../../../assets/icons';
+import { track } from '../../../common/store/api/track';
 import { halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
@@ -27,6 +28,7 @@ export const MainNavigator = () => {
       if (data.action === 'order-update') {
         if (clicked) {
           remove!();
+          track('consumer clicked in order-update push');
           navigation.navigate('OngoingOrderNavigator', {
             screen: 'OngoingOrder',
             params: {
@@ -37,6 +39,7 @@ export const MainNavigator = () => {
       } else if (data.action === 'order-chat') {
         if (clicked) {
           remove!();
+          track('consumer clicked in order-chat push');
           navigation.navigate('OngoingOrderNavigator', {
             screen: 'OngoingOrder',
             params: {

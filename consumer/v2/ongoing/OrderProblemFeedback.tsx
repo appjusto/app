@@ -4,6 +4,7 @@ import React from 'react';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, padding } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
@@ -23,8 +24,9 @@ type Props = {
 export const OrderProblemFeedback = ({ navigation, route }: Props) => {
   // params
   const { orderId } = route.params;
+  // tracking
+  useSegmentScreen('OrderProblemFeedback');
   // UI
-  console.log('ORDER PROBLEM FEEDBACK');
   return (
     <FeedbackView
       header={t('Aguarde enquanto estamos analisando o seu problema.')}
@@ -36,7 +38,9 @@ export const OrderProblemFeedback = ({ navigation, route }: Props) => {
     >
       <DefaultButton
         title={t('Voltar')}
-        onPress={() => navigation.replace('OngoingOrder', { orderId })}
+        onPress={() => {
+          navigation.replace('OngoingOrder', { orderId });
+        }}
         style={{ paddingBottom: padding }}
       />
     </FeedbackView>

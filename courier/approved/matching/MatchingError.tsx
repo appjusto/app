@@ -23,7 +23,7 @@ type Props = {
 export default ({ navigation }: Props) => {
   // side effects
   // tracking
-  useSegmentScreen('Matching Error');
+  useSegmentScreen('MatchingError');
   // UI
   return (
     <View style={{ ...screens.default }}>
@@ -33,7 +33,9 @@ export default ({ navigation }: Props) => {
       >
         <DefaultButton
           title={t('Voltar para o início')}
-          onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
+          onPress={() => {
+            navigation.replace('MainNavigator', { screen: 'Home' });
+          }}
           secondary
           style={{ marginBottom: padding }}
         />

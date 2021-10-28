@@ -28,7 +28,7 @@ export const FoodOrderNavigator = () => {
       <Stack.Screen
         name="AddressComplete"
         component={AddressComplete}
-        options={{ title: t('Endereço de entrega') }}
+        options={{ title: t('Indicar restaurante') }}
       />
       <Stack.Screen
         name="RestaurantSearch"

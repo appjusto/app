@@ -1,14 +1,16 @@
 import { Issue, WithId } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { track } from 'expo-analytics-segment';
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import { ReportIssueView } from '../../../common/components/views/ReportIssueView';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -40,14 +42,17 @@ export const CourierDropsOrder = ({ navigation, route }: Props) => {
   const [comment, setComment] = React.useState('');
   const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
   const [isLoading, setLoading] = React.useState(false);
+  // tracking
+  useSegmentScreen('CourierDropsOrder');
   // handlers
   const dropOrderHandler = () => {
+    Keyboard.dismiss();
     if (!selectedIssue) return;
     (async () => {
       try {
         setLoading(true);
         await api.order().dropOrder(orderId, selectedIssue, comment);
-        console.log('dropOrder called');
+        track('courier dropped order');
         navigation.replace('DropOrderFeedback');
       } catch (error) {
         setLoading(false);
@@ -55,7 +60,7 @@ export const CourierDropsOrder = ({ navigation, route }: Props) => {
       }
     })();
   };
-  console.log(order?.dispatchingStatus);
+
   // UI
   if (!issues) {
     return (

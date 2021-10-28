@@ -64,7 +64,7 @@ export default function ({ navigation, route }: Props) {
     });
   }, [yearsWithOrders]);
   // tracking
-  useSegmentScreen('Delivery History');
+  useSegmentScreen('DeliveryHistory');
   // UI
   if (sections.length === 0) {
     return (

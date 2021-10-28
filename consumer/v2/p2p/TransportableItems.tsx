@@ -1,10 +1,13 @@
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import PaddedView from '../../../common/components/containers/PaddedView';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
 export const TransportableItems = () => {
+  // tracking
+  useSegmentScreen('TransportableItems');
   return (
     <ScrollView style={{ ...screens.config }} scrollIndicatorInsets={{ right: 1 }}>
       <PaddedView>

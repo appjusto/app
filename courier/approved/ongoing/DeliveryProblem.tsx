@@ -5,6 +5,7 @@ import React from 'react';
 import { ActivityIndicator, Linking, ScrollView, View } from 'react-native';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { colors, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
@@ -45,9 +46,14 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
     },
     [navigation, orderId]
   );
+  // tracking
+  useSegmentScreen('DeliveryProblem');
   //handlers
   const openChatWithRestaurant = React.useCallback(
-    (delayed?: boolean) => openChat(businessId!, 'business', delayed),
+    (delayed?: boolean) => {
+      track('courier opening chat with restaurant');
+      openChat(businessId!, 'business', delayed);
+    },
     [openChat, businessId]
   );
   const navigateToAction = (issueType: IssueType, orderId: string) => {
@@ -146,7 +152,10 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
         <DeliveryProblemCard
           title={t('Preciso falar com o AppJusto')}
           subtitle={t('Abrir chat no WhatsApp')}
-          onPress={() => Linking.openURL(AppJustoAssistanceWhatsAppURL)}
+          onPress={() => {
+            track('opening appJusto whatsapp');
+            Linking.openURL(AppJustoAssistanceWhatsAppURL);
+          }}
           situation="chat"
         />
         {/* commented for now. will be added back later */}

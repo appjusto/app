@@ -29,7 +29,7 @@ export default function ({ navigation, route }: Props) {
   const fleet = useObserveFleet(courier.fleet!.id);
   // side effects
   // tracking
-  useSegmentScreen('Choose Fleet');
+  useSegmentScreen('ChooseFleet');
   // handlers
   const navigateFleetDetail = (fleetId: string) => {
     navigation.navigate('FleetDetail', { fleetId });
@@ -62,12 +62,16 @@ export default function ({ navigation, route }: Props) {
           <View style={{ marginTop: 24 }}>
             <DefaultButton
               title={t('Veja todas as frotas disponíveis')}
-              onPress={() => navigation.navigate('AllFleets')}
+              onPress={() => {
+                navigation.navigate('AllFleets');
+              }}
             />
             <DefaultButton
               style={{ marginTop: padding }}
               title={t('Criar uma nova frota')}
-              onPress={() => navigation.navigate('CreateFleet')}
+              onPress={() => {
+                navigation.navigate('CreateFleet');
+              }}
               secondary
             />
           </View>

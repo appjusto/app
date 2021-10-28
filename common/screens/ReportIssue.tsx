@@ -2,7 +2,7 @@ import { Issue, IssueType, WithId } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeliveredOrderNavigatorParamList } from '../../consumer/v2/delivered/types';
 import { OngoingOrderNavigatorParamList } from '../../consumer/v2/ongoing/types';
@@ -14,7 +14,7 @@ import { ApiContext, AppDispatch } from '../app/context';
 import RadioButton from '../components/buttons/RadioButton';
 import { ReportIssueView } from '../components/views/ReportIssueView';
 import useIssues from '../store/api/platform/hooks/useIssues';
-import { useSegmentScreen } from '../store/api/track';
+import { track, useSegmentScreen } from '../store/api/track';
 import { getFlavor } from '../store/config/selectors';
 import { showToast } from '../store/ui/actions';
 import { getUser } from '../store/user/selectors';
@@ -58,7 +58,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   const [isLoading, setLoading] = React.useState(false);
   // side effects
   // tracking
-  useSegmentScreen('Report issue', {
+  useSegmentScreen('ReportIssue', {
     issueType,
   });
 
@@ -76,6 +76,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   const issueHandler = () => {
     if (!selectedIssue) return;
     (async () => {
+      Keyboard.dismiss();
       try {
         setLoading(true);
         await api.order().createIssue(orderId, {
@@ -83,6 +84,9 @@ export const ReportIssue = ({ route, navigation }: Props) => {
           createdBy: user.uid,
           flavor,
           comment,
+        });
+        track('Reported issue', {
+          issue: selectedIssue,
         });
         setLoading(false);
         if (flavor === 'courier') {
@@ -98,7 +102,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
       }
     })();
   };
-  console.log(issueType);
+
   // UI
   if (!issues) {
     return (

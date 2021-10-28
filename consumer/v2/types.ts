@@ -5,13 +5,13 @@ import { ProfileParamList } from './main/profile/types';
 import { MainNavigatorParamList } from './main/types';
 import { OngoingOrderNavigatorParamList } from './ongoing/types';
 import { P2POrderNavigatorParamList } from './p2p/types';
+import { UnapprovedConsumerParamsList } from './UnapprovedConsumerNavigator';
 
 export type LoggedNavigatorParamList = {
   ConsumerOnboarding?: {
     state?: string;
     city?: string;
   };
-  ProfileBlocked: undefined;
   SelectLocation:
     | {
         mode: 'states';
@@ -27,4 +27,5 @@ export type LoggedNavigatorParamList = {
   DeliveredOrderNavigator: NestedNavigatorParams<DeliveredOrderNavigatorParamList>;
   ProfileNavigator: NestedNavigatorParams<ProfileParamList>;
   OngoingOrderCancelFeedback: undefined;
+  UnapprovedConsumerNavigator: UnapprovedConsumerParamsList;
 };

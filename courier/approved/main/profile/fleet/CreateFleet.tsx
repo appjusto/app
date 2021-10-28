@@ -10,7 +10,7 @@ import DefaultButton from '../../../../../common/components/buttons/DefaultButto
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import HR from '../../../../../common/components/views/HR';
-import { useSegmentScreen } from '../../../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
@@ -50,7 +50,7 @@ export default function ({ navigation, route }: Props) {
   const descriptionRef = React.useRef<TextInput>(null);
   // side effects
   // tracking
-  useSegmentScreen('Create Fleet');
+  useSegmentScreen('CreateFleet');
   // initial focus
   React.useEffect(() => {
     nameRef.current?.focus();
@@ -73,6 +73,7 @@ export default function ({ navigation, route }: Props) {
         participantsOnline: 0,
       });
       api.search().clearCache();
+      track('courier created fleet');
       dispatch(showToast(t('Frota criada com sucesso!')));
       navigation.replace('FleetDetail', { fleetId: fleet.id });
     } catch (error) {

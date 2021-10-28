@@ -33,7 +33,6 @@ export const MarketplaceAccountInfo = () => {
   const navigation = useNavigation<ScreenNavigationProp>();
   // side effects
   const info = useMarketplaceAccountInfo();
-  // helpers
   const availableForWithdraw = info ? convertBalance(info.balance_available_for_withdraw) : 0;
   const minimum = 5;
   // handlers

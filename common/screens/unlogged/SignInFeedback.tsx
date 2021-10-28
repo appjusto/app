@@ -18,12 +18,14 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-export default ({ navigation }: Props) => {
+export default ({ navigation, route }: Props) => {
   // state
   const [authState] = useAuth();
   // side effects
   // tracking
-  useSegmentScreen('Sign in Feedback');
+  useSegmentScreen('Sign in Feedback', {
+    email: route.params.email,
+  });
   // UI
   if (authState === AuthState.SignedIn) {
     return null;
@@ -41,7 +43,12 @@ export default ({ navigation }: Props) => {
           <Text style={{ ...texts.sm, color: colors.grey700, textAlign: 'center' }}>
             {t('Continue o acesso clicando no link enviado.')}
           </Text>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={{ alignItems: 'center' }}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={{ alignItems: 'center' }}
+          >
             <>
               <Text style={{ marginTop: padding, ...texts.xs, color: colors.green600 }}>
                 {t('Não recebeu? Preencha seu e-mail novamente.')}

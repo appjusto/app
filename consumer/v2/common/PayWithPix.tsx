@@ -1,7 +1,7 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import CheckField from '../../../common/components/buttons/CheckField';
@@ -11,6 +11,7 @@ import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import Pill from '../../../common/components/views/Pill';
 import { IconPixLogo } from '../../../common/icons/icon-pix-logo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens, texts } from '../../../common/styles';
@@ -57,9 +58,11 @@ export const PayWithPix = ({ navigation, route }: Props) => {
     if (!cpfKey) setPixKey('');
     if (cpfKey) setPixKey(consumer.cpf!);
   }, [cpfKey, consumer.cpf]);
-
+  // tracking
+  useSegmentScreen('PayWithPix');
   // handlers
   const placeOrderWithPix = async () => {
+    Keyboard.dismiss();
     try {
       setLoading(true);
       await api.profile().updateProfile(consumer.id, { pix: pixKey });
@@ -72,6 +75,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
         },
         false
       );
+      track('placing order with Pix payment');
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {
         screen: 'OngoingOrderConfirming',

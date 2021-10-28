@@ -35,7 +35,7 @@ export default function ({ navigation, route }: Props) {
   const order = useObserveOrder(orderId);
   // side effects
   // tracking
-  useSegmentScreen('Delivery Summary');
+  useSegmentScreen('DeliverySummary');
   if (!order) {
     // showing the indicator until the order is loaded
     return (

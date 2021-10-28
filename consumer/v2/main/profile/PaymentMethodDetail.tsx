@@ -1,12 +1,13 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { View } from 'react-native';
+import { Keyboard, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import LabeledText from '../../../../common/components/texts/LabeledText';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { padding, screens } from '../../../../common/styles';
@@ -31,11 +32,15 @@ export default function ({ route, navigation }: Props) {
   const consumer = useSelector(getConsumer)!;
   // state
   const [isLoading, setLoading] = React.useState(false);
+  // tracking
+  useSegmentScreen('PayementMethodDetail');
   // UI handlers
   const deletePaymentMethodHandler = async () => {
+    Keyboard.dismiss();
     try {
       setLoading(true);
       await api.consumer().deletePaymentMethod(paymentData.id);
+      track('consumer deleted a payment method');
       setLoading(false);
     } catch (error) {
       dispatch(showToast(error.toString(), 'error'));

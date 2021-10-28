@@ -6,7 +6,6 @@ import * as Sentry from 'sentry-expo';
 import { t } from '../../strings';
 import { AppStore } from '../app/context';
 import Api from '../store/api/api';
-import { track } from '../store/api/track';
 import { getConsumer } from '../store/consumer/selectors';
 import { getCourier } from '../store/courier/selectors';
 
@@ -48,11 +47,11 @@ const locationTaskExecutor =
     const state = store.getState();
     const profile = getCourier(state) ?? getConsumer(state);
     const result = body.data as LocationUpdateResult;
-    track('Location updates', {
-      id: profile?.id,
-      locations: result.locations,
-      length: result.locations.length,
-    });
+    // track('Location updates', {
+    //   id: profile?.id,
+    //   locations: result.locations,
+    //   length: result.locations.length,
+    // });
     const location = result.locations
       .slice()
       .sort((a, b) => b.timestamp - a.timestamp)

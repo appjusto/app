@@ -3,8 +3,10 @@ import React from 'react';
 import FleetDetail from '../../../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { AboutApp } from '../../../../common/screens/profile/AboutApp';
+import { CommonProfileEdit } from '../../../../common/screens/profile/CommonProfileEdit';
 import ProfileErase from '../../../../common/screens/profile/ProfileErase';
 import Terms from '../../../../common/screens/unlogged/Terms';
+import { RequestProfileEdit } from '../../../../consumer/v2/main/profile/RequestProfileEdit';
 import { t } from '../../../../strings';
 import ProfileBank from './bank/ProfileBank';
 import SelectBank from './bank/SelectBank';
@@ -14,7 +16,6 @@ import CreateFleet from './fleet/CreateFleet';
 import { PartnersAndDiscounts } from './PartnersAndDiscounts';
 import ProfilePhotos from './photos/ProfilePhotos';
 import ProfileCompany from './ProfileCompany';
-import ProfileEdit from './ProfileEdit';
 import { CourierProfileParamList } from './types';
 
 const Stack = createStackNavigator<CourierProfileParamList>();
@@ -22,8 +23,13 @@ export default function () {
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen
-        name="ProfileEdit"
-        component={ProfileEdit}
+        name="RequestProfileEdit"
+        component={RequestProfileEdit}
+        options={{ title: t('Dados pessoais') }}
+      />
+      <Stack.Screen
+        name="CommonProfileEdit"
+        component={CommonProfileEdit}
         options={{ title: t('Dados pessoais') }}
       />
       <Stack.Screen

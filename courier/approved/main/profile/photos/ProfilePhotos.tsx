@@ -14,7 +14,7 @@ import RoundedText from '../../../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../../../common/components/views/ConfigItem';
 import useCourierDocumentImage from '../../../../../common/store/api/courier/hooks/useCourierDocumentImage';
 import useCourierSelfie from '../../../../../common/store/api/courier/hooks/useCourierSelfie';
-import { useSegmentScreen } from '../../../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { colors, halfPadding, padding, screens } from '../../../../../common/styles';
@@ -71,6 +71,7 @@ export default function ({ navigation }: Props) {
     (localUri: string) => api.courier().uploadSelfie(courier.id, localUri),
     {
       onSuccess: () => {
+        track('courier uploaded selfie');
         currentSelfieQuery.refetch();
       },
     }
@@ -81,6 +82,7 @@ export default function ({ navigation }: Props) {
     (localUri: string) => api.courier().uploadDocumentImage(courier.id, localUri),
     {
       onSuccess: () => {
+        track('courier uploaded document image');
         currentDocumentImageQuery.refetch();
       },
     }
@@ -93,7 +95,7 @@ export default function ({ navigation }: Props) {
 
   // side effects
   // tracking
-  useSegmentScreen('Profile Photos');
+  useSegmentScreen('ProfilePhotos');
   // when current selfie is loaded, update state
   React.useEffect(() => {
     if (currentSelfieQuery.data) {

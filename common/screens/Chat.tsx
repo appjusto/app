@@ -49,7 +49,10 @@ export default function ({ route }: Props) {
   const [inputText, setInputText] = React.useState('');
   // side effects
   // tracking
-  useSegmentScreen('Chat');
+  useSegmentScreen('Chat', {
+    flavor,
+    counterpartFlavor,
+  });
   React.useEffect(() => {
     if (unread.length > 0) {
       api.order().updateReadMessages(

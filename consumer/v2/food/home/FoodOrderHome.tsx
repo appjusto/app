@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
 import { useSearch } from '../../../../common/store/api/search/useSearch';
+import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
   updateCurrentLocation,
   updateCurrentPlace,
@@ -55,6 +56,8 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
       dispatch(updateCurrentPlace(place));
     }
   }, [dispatch, place]);
+  // tracking
+  useSegmentScreen('FoodOrderHome');
   // handlers
   const refresh = async () => {
     setRefreshing(true);
@@ -83,7 +86,9 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
               setFilters(cuisine ? [{ type: 'cuisine', value: cuisine.name }] : []);
             }}
             consumer={consumer}
-            onLogin={() => navigation.replace('WelcomeScreen')}
+            onLogin={() => {
+              navigation.replace('WelcomeScreen');
+            }}
           />
         </View>
       }
@@ -96,7 +101,9 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
       loading={isLoading}
       refreshing={refreshing}
       onRefresh={() => refresh()}
-      onRecommend={() => navigation.navigate('RecommendRestaurant')}
+      onRecommend={() => {
+        navigation.navigate('RecommendRestaurant');
+      }}
     />
   );
 };

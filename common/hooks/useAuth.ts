@@ -4,7 +4,6 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../app/context';
-import { track } from '../store/api/track';
 import {
   getSignInEmail,
   isSignInWithEmailLink,
@@ -71,9 +70,9 @@ export const useAuth = (): [AuthState, firebase.User | undefined | null] => {
     // undefined means useDeeplink hasnt finished yet
     if (deeplink === undefined) return;
     // null means there's no deeplink
-    track('Deeplink changed', {
-      deeplink,
-    });
+    // track('Deeplink changed', {
+    //   deeplink,
+    // });
     if (deeplink === null) {
       setAuthState(AuthState.Unsigned);
       return;

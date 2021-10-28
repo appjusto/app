@@ -40,6 +40,7 @@ export type OngoingOrderNavigatorParamList = {
   OngoingOrderProblem: {
     orderId: string;
   };
+  ChangeRoute: undefined;
   OngoingOrderDeclined: {
     orderId: string;
     paymentMethodId?: string;
