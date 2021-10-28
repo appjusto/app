@@ -130,7 +130,7 @@ export default function ({ navigation, route }: Props) {
           name: selectedBank.name,
           agency,
           agencyFormatted: agencyFormatter!(agency),
-          account: selectedBank.code === '104' ? cefAccountCode + account : account,
+          account,
           accountFormatted:
             selectedBank.code === '104'
               ? cefAccountCode + accountFormatter!(account)
@@ -339,7 +339,7 @@ export default function ({ navigation, route }: Props) {
                       selectedBank!.accountPattern,
                       true
                     )(account);
-                    setAccount(paddedAccount); // isso n deve estar aparecendo
+                    setAccount(paddedAccount);
                   }
                 }}
               />
