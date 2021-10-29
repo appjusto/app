@@ -154,7 +154,7 @@ export const Withdraws = ({ navigation, route }: Props) => {
                   textAlign: 'center',
                 }}
               >
-                {t('Você possui')} {withdrawsThisMonth} {t('saques grátis até')}{' '}
+                {t('Você possui')} {4 - withdrawsThisMonth} {t('saques grátis até')}{' '}
                 {lastDayofThisMonth}
               </Text>
             ) : (
@@ -181,7 +181,10 @@ export const Withdraws = ({ navigation, route }: Props) => {
           title={t('Confirmar transferência')}
           activityIndicator={withdrawing}
           disabled={
-            availableForWithdraw < minimum || withdrawing || withdrawsThisMonth === undefined
+            availableForWithdraw < minimum ||
+            withdrawing ||
+            withdrawsThisMonth === undefined ||
+            withdrawsThisMonth >= 4
           }
           onPress={withdrawHandler}
         />
