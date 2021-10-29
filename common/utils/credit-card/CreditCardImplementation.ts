@@ -131,6 +131,6 @@ const _creditCards: Record<CreditCardTypeStrings, ICreditCard> = {
   undefined: {
     type: CreditCardType.undefined,
     label: '',
-    icon: iconGenericFlag,
+    icon: undefined,
   },
 };
