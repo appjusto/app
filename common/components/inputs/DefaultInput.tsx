@@ -32,7 +32,7 @@ export default React.forwardRef(
       // }
     }, [ref]);
     return (
-      <>
+      <View style={[{ flexDirection: 'column' }, style]}>
         <PaddedView
           half
           style={[
@@ -42,9 +42,8 @@ export default React.forwardRef(
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'flex-start',
-              borderColor: errorMessage ? colors.red : colors.grey500,
+              borderColor: errorMessage ? colors.red : borders.default.borderColor,
             },
-            style,
           ]}
         >
           <View style={{ flex: 1 }}>
@@ -80,7 +79,7 @@ export default React.forwardRef(
           {children}
         </PaddedView>
         {!!errorMessage && <Text style={{ ...texts.xs, color: colors.red }}>{errorMessage}</Text>}
-      </>
+      </View>
     );
   }
 );
