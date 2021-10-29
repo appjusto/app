@@ -83,12 +83,7 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
   return (
     <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
       <PaddedView style={{ flex: 1 }}>
-        <Text style={{ ...texts.sm }}>
-          {t(
-            'Para realizar a antecipação, será cobrada uma taxa de 0.0% + R$ 0.00 pela operação financeira. '
-          )}
-        </Text>
-        <Text style={{ ...texts.sm, color: colors.grey700, marginTop: biggerPadding }}>
+        <Text style={{ ...texts.sm, color: colors.grey700, marginTop: padding }}>
           {t('Você selecionou')}
         </Text>
         <Text style={{ ...texts.x2l }}>{`${simulation.transactions.length} ${t('corridas')}`}</Text>
