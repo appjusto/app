@@ -59,6 +59,8 @@ export default function ({ navigation, route }: Props) {
   // state
   const [number, setNumber] = React.useState('');
   const [numberError, setNumberError] = React.useState('');
+  const [yearError, setYearError] = React.useState('');
+  const [monthError, setMonthError] = React.useState('');
   const [image, setImage] = React.useState<any>();
   const [month, setMonth] = React.useState('');
   const [year, setYear] = React.useState('');
@@ -115,6 +117,40 @@ export default function ({ navigation, route }: Props) {
     },
     [setNumber, setNumberError]
   );
+  const onChangeYear = useCallback(
+    (yearString: string) => {
+      const yearNumber = toNumber(yearString);
+      if (isNaN(yearNumber)) return;
+
+      setYear(yearString);
+
+      const currentYear = new Date().getFullYear();
+      // TODO: Get upperbound limit year
+
+      if (currentYear > yearNumber && yearString.length === 4) {
+        setYearError('Digite um ano válido');
+      } else {
+        setYearError('');
+      }
+    },
+    [setYear, setYearError]
+  );
+  const onChangeMonth = useCallback(
+    (monthString: string) => {
+      const monthNumber = toNumber(monthString);
+      if (isNaN(monthNumber)) return;
+
+      setMonth(monthString);
+
+      // TODO: Dont show error when input is empty or only one zero
+      if ((monthNumber < 1 || monthNumber > 12) && monthString.length === 2) {
+        setMonthError('Digite um mês válido');
+      } else {
+        setMonthError('');
+      }
+    },
+    [setMonth, setMonthError]
+  );
   // refs
   const expirationMonthRef = React.useRef<TextInput>(null);
   const expirationYearRef = React.useRef<TextInput>(null);
@@ -160,9 +196,8 @@ export default function ({ navigation, route }: Props) {
               returnKeyType="next"
               autoCompleteType="cc-exp-month"
               blurOnSubmit={false}
-              onChangeText={(text) => {
-                if (!isNaN(toNumber(text))) setMonth(text);
-              }}
+              onChangeText={onChangeMonth}
+              errorMessage={monthError}
               onSubmitEditing={() => expirationYearRef.current?.focus()}
             />
             <DefaultInput
@@ -176,9 +211,8 @@ export default function ({ navigation, route }: Props) {
               returnKeyType="next"
               autoCompleteType="cc-exp-year"
               blurOnSubmit={false}
-              onChangeText={(text) => {
-                if (!isNaN(toNumber(text))) setYear(text);
-              }}
+              onChangeText={onChangeYear}
+              errorMessage={yearError}
               onSubmitEditing={() => cvvRef.current?.focus()}
             />
             <DefaultInput
@@ -237,7 +271,7 @@ export default function ({ navigation, route }: Props) {
             style={{ paddingVertical: padding }}
             title={t('Salvar')}
             onPress={saveCardHandler}
-            disabled={!canSubmit || isLoading}
+            disabled={!canSubmit || isLoading || !!numberError || !!monthError || !!yearError}
             activityIndicator={isLoading}
           />
         </View>
