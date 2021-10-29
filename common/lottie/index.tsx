@@ -22,7 +22,7 @@ interface AnimationObject {
 }
 
 // TODO: Pass properties.
-export const Lottie = ({ animationObject, styleProp, loopProp = false }: Props) => {
+export const Lottie = ({ animationObject, styleProp, loopProp = true }: Props) => {
   const animationRef = useRef<LottieView>(null);
 
   useEffect(() => {

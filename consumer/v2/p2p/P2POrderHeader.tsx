@@ -8,6 +8,8 @@ import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import OrderMap from '../../../common/screens/orders/OrderMap';
 import { colors, halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import courierJson from '../../../common/lottie/icons-json/delivery.json';
+import { Lottie } from '../../../common/lottie';
 
 type Props = {
   order?: Order;
@@ -37,7 +39,13 @@ export const P2POrderHeader = ({ order }: Props) => {
             vertical={false}
           >
             <Text style={{ ...texts.x2l }}>{t('Detalhes do\nPedido')}</Text>
-            <IconMotocycle />
+            <Lottie
+              animationObject={courierJson}
+              styleProp={{
+                width: 100,
+                height: 100,
+              }}
+            />
           </PaddedView>
         )}
       </ShowIf>

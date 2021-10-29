@@ -4,7 +4,7 @@ import { Text, View } from 'react-native';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { IconIllustrationPizza } from '../../../../../common/icons/icon-illustration-pizza';
 import { Lottie } from '../../../../../common/lottie';
-import deliveryJson from '../../../../../common/lottie/icons-json/delivery.json';
+import deliveryJson from '../../../../../common/lottie/icons-json/client.json';
 import { colors, padding, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { HomeControlItem } from './HomeControlItem';
