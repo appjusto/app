@@ -3,7 +3,7 @@ import { Feather } from '@expo/vector-icons';
 import * as cpfutils from '@fnando/cpf';
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { trim } from 'lodash';
+import { isEmpty, trim } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Keyboard, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -51,9 +51,9 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   const user = flavor === 'consumer' ? consumer! : courier!;
   // state
   const [name, setName] = React.useState<string>(user.name ?? '');
-  const [surname, setSurname] = React.useState(user.surname ?? '');
-  const [cpf, setCpf] = React.useState(user.cpf! ?? '');
-  const [phone, setPhone] = React.useState(user.phone! ?? '');
+  const [surname, setSurname] = React.useState<string>(user.surname ?? '');
+  const [cpf, setCpf] = React.useState<string>(user.cpf! ?? '');
+  const [phone, setPhone] = React.useState<string>(user.phone! ?? '');
   const [focusedField, setFocusedField] = React.useState<string>();
   const [requestSent, setRequestSent] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
@@ -66,12 +66,6 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   //tracking
   useSegmentScreen('RequestProfileEdit');
   // helpers
-  const userChanges: Partial<UserProfile> = {
-    name: name.trim(),
-    surname: surname.trim(),
-    cpf: cpf.trim(),
-    phone: phone.trim(),
-  };
   const canEdit = requestedChanges?.length === 0;
   const description = (() => {
     if (flavor === 'consumer') {
@@ -87,6 +81,12 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   const changeProfileHandler = async () => {
     Keyboard.dismiss();
     try {
+      const userChanges: Partial<UserProfile> = {};
+      if (name !== user.name) userChanges.name = name;
+      if (surname !== user.surname) userChanges.surname = surname;
+      if (cpf !== user.cpf) userChanges.cpf = cpfFormatter(cpf);
+      if (phone !== user.phone) userChanges.phone = phoneFormatter(phone);
+      if (isEmpty(userChanges)) return;
       setLoading(true);
       await api.user().requestProfileChange(user.id, userChanges);
       track('profile edit requested');
