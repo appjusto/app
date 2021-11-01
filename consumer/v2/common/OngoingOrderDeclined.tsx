@@ -110,9 +110,10 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
     } else navigation.navigate('ProfilePaymentMethods', { returnScreen: 'OngoingOrderDeclined' });
   };
   const header = (() => {
-    if (dispatchingStatus === 'declined') return t('Problemas no pagamento do entregador');
+    if (dispatchingStatus === 'declined')
+      return `${t('Problemas no pagamento do entregador')}${order.issue ?? ''}`;
     if (order.status === 'canceled') return t('Esse pedido foi cancelado');
-    else return t('Problemas no pagamento');
+    else return `${t('Problemas no pagamento\n')}${order.issue ?? ''}`;
   })();
   const description = (() => {
     if (dispatchingStatus === 'declined')
@@ -121,9 +122,10 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
       );
     else
       return t(
-        'Não conseguimos efetuar a cobrança na forma de pagamento escolhida. Por favor, altere a forma de pagamento e tente novamente.'
+        'Não conseguimos efetuar a cobrança. Por favor, altere a forma de pagamento e tente novamente.'
       );
   })();
+  console.log(order.issue);
   // UI
   return (
     <ScrollView
