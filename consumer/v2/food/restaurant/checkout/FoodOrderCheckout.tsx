@@ -170,6 +170,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         shareDataWithBusiness
       );
       track('consumer placed a food order');
+      setDestinationModalVisible(false);
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {
         screen: 'OngoingOrderConfirming',
