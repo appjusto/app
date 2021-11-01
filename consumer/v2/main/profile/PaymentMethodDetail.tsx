@@ -8,7 +8,7 @@ import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import LabeledText from '../../../../common/components/texts/LabeledText';
 import { track, useSegmentScreen } from '../../../../common/store/api/track';
-import { getConsumer } from '../../../../common/store/consumer/selectors';
+import { getOrders } from '../../../../common/store/order/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -29,7 +29,7 @@ export default function ({ route, navigation }: Props) {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // redux store
-  const consumer = useSelector(getConsumer)!;
+  const ongoingOrders = useSelector(getOrders);
   // state
   const [isLoading, setLoading] = React.useState(false);
   // tracking
@@ -37,17 +37,24 @@ export default function ({ route, navigation }: Props) {
   // UI handlers
   const deletePaymentMethodHandler = async () => {
     Keyboard.dismiss();
-    try {
-      setLoading(true);
-      await api.consumer().deletePaymentMethod(paymentData.id);
-      track('consumer deleted a payment method');
-      setLoading(false);
-    } catch (error) {
-      dispatch(showToast(error.toString(), 'error'));
-    }
-    navigation.goBack();
+    if (ongoingOrders.length > 0) {
+      try {
+        setLoading(true);
+        await api.consumer().deletePaymentMethod(paymentData.id);
+        track('consumer deleted a payment method');
+        setLoading(false);
+      } catch (error) {
+        dispatch(showToast(error.toString(), 'error'));
+      }
+      navigation.goBack();
+    } else
+      dispatch(
+        showToast(
+          'Não é possível remover uma forma de pagamento com um pedido em andamento.',
+          'error'
+        )
+      );
   };
-
   return (
     <PaddedView style={{ ...screens.config, flex: 1 }}>
       <LabeledText title={t('Número do cartão')} disabled>

@@ -50,7 +50,8 @@ export default ({ navigation, route }: Props) => {
   const [cancelInfo, setCancelInfo] = React.useState<OrderCancellation | undefined | null>(
     undefined
   );
-
+  // tracking
+  useSegmentScreen('OrderCanceled');
   // side effects
   React.useEffect(() => {
     if (!orderId) return;
@@ -65,8 +66,7 @@ export default ({ navigation, route }: Props) => {
       </View>
     );
   }
-  // tracking
-  useSegmentScreen('OrderCanceled');
+
   const description = (() => {
     if (flavor === 'courier') {
       if (cancelInfo) {
