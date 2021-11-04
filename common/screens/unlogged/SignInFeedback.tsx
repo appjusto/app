@@ -2,10 +2,11 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { Lottie } from '../../../common/lottie';
+import loadingJson from '../../../common/lottie/icons-json/loading.json';
 import { t } from '../../../strings';
 import PaddedView from '../../components/containers/PaddedView';
 import { AuthState, useAuth } from '../../hooks/useAuth';
-import { IconMotocycle } from '../../icons/icon-motocycle';
 import { useSegmentScreen } from '../../store/api/track';
 import { colors, padding, screens, texts } from '../../styles';
 import { UnloggedParamList } from './types';
@@ -36,7 +37,13 @@ export default ({ navigation }: Props) => {
             {t('Enviamos uma confirmação para o seu e-mail.')}
           </Text>
           <View style={{ height: 114, width: 114, marginTop: 22, marginBottom: 16 }}>
-            <IconMotocycle />
+            <Lottie
+              animationObject={loadingJson}
+              styleProp={{
+                width: 100,
+                height: 100,
+              }}
+            />
           </View>
           <Text style={{ ...texts.sm, color: colors.grey700, textAlign: 'center' }}>
             {t('Continue o acesso clicando no link enviado.')}

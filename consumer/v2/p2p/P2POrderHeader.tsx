@@ -5,11 +5,11 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import ShowIf from '../../../common/components/views/ShowIf';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
+import { Lottie } from '../../../common/lottie';
+import courierJson from '../../../common/lottie/icons-json/delivery.json';
 import OrderMap from '../../../common/screens/orders/OrderMap';
 import { colors, halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
-import courierJson from '../../../common/lottie/icons-json/delivery.json';
-import { Lottie } from '../../../common/lottie';
 
 type Props = {
   order?: Order;

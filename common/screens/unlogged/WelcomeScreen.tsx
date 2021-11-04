@@ -8,10 +8,12 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View,
+  View
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
+import { Lottie } from '../../../common/lottie';
+import courierJson from '../../../common/lottie/icons-json/delivery.json';
 import { LocationDisclosureModal } from '../../../courier/approved/main/home/LocationDisclosureModal';
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
@@ -21,7 +23,6 @@ import DefaultInput from '../../components/inputs/DefaultInput';
 import ShowIf from '../../components/views/ShowIf';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
-import { IconMotoCycleBig } from '../../icons/icon-motocycle-big';
 import { track, useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
@@ -30,6 +31,7 @@ import { signInWithEmail } from '../../store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../styles';
 import { validateEmail } from '../../utils/validators';
 import { UnloggedParamList } from './types';
+
 
 type ScreenNavigationProp = StackNavigationProp<UnloggedParamList, 'WelcomeScreen'>;
 type ScreenRouteProp = RouteProp<UnloggedParamList, 'WelcomeScreen'>;
@@ -112,7 +114,13 @@ export default function ({ navigation, route }: Props) {
                   <View
                     style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}
                   >
-                    <IconMotoCycleBig />
+                    <Lottie
+                      animationObject={courierJson}
+                      styleProp={{
+                        width: 100,
+                        height: 100,
+                      }}
+                    />
                   </View>
                 )}
               </ShowIf>
