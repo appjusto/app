@@ -48,6 +48,18 @@ export const MainNavigator = () => {
             },
           });
         }
+      } else if (data.action === 'navigate-business') {
+        if (clicked) {
+          remove!();
+          track('consumer clicked in navigate-business push');
+          navigation.navigate('FoodOrderNavigator', {
+            screen: 'RestaurantNavigator',
+            params: {
+              restaurantId: data.businessId,
+              screen: 'RestaurantDetail',
+            },
+          });
+        }
       }
     },
     [navigation]
