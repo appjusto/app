@@ -74,7 +74,7 @@ export default class Api {
     this._maps = new MapsApi(extra.googleMapsApiKey);
     this._business = new BusinessApi(this._refs, this._files);
     this._search = new SearchApi(extra.algolia, extra.environment);
-    this._user = new UserApi(this._refs);
+    this._user = new UserApi(this._refs, extra.flavor);
   }
 
   auth() {
