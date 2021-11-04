@@ -152,7 +152,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
               </Text>
             </View>
           ) : (
-            <PaddedView style={{ backgroundColor: colors.white, marginBottom: padding }}>
+            <PaddedView style={{ marginBottom: padding }}>
               <View
                 style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}
               >
