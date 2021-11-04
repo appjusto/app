@@ -1,9 +1,20 @@
 import creditCardType from 'credit-card-type';
+import {
+  creditCardAmexIcon,
+  creditCardDinersIcon,
+  creditCardDiscoverIcon,
+  creditCardEloIcon,
+  creditCardHipercardIcon,
+  creditCardHiperIcon,
+  creditCardJcbIcon,
+  creditCardMaestroIcon,
+  creditCardMastercardIcon,
+  creditCardMirIcon,
+  creditCardUnionpayIcon,
+  creditCardVisaIcon
+} from '../../../assets/icons/credit-card';
 import { CreditCardType, CreditCardTypeStrings, ICreditCard } from './CreditCard';
 import { GetCreditCard, GetType, IsAllowed, StringToCreditCardType } from './ICreditCardRepository';
-
-const iconVisaFlag = require('../../../assets/icons/credit-card-flag-visa.png');
-const iconGenericFlag = require('../../../assets/icons/credit-card-flag-generic.png');
 
 const ALLOWED_CREDIT_CARD_TYPES: CreditCardType[] = [
   CreditCardType.diners_club,
@@ -66,67 +77,66 @@ export const isAllowed: IsAllowed = (creditCardType: CreditCardType): boolean =>
   return ALLOWED_CREDIT_CARD_TYPES.includes(creditCardType);
 };
 
-// TODO: Implement all credit card type icon.
 const _creditCards: Record<CreditCardTypeStrings, ICreditCard> = {
   american_express: {
     type: CreditCardType.american_express,
     label: 'American Express',
-    icon: iconGenericFlag,
+    icon: creditCardAmexIcon,
   },
   diners_club: {
     type: CreditCardType.diners_club,
     label: 'Diners Club',
-    icon: iconGenericFlag,
+    icon: creditCardDinersIcon,
   },
   discover: {
     type: CreditCardType.discover,
     label: 'Discover',
-    icon: iconGenericFlag,
+    icon: creditCardDiscoverIcon,
   },
   elo: {
     type: CreditCardType.elo,
     label: 'Elo',
-    icon: iconGenericFlag,
+    icon: creditCardEloIcon,
   },
   hiper: {
     type: CreditCardType.hiper,
     label: 'Hiper',
-    icon: iconGenericFlag,
+    icon: creditCardHiperIcon,
   },
   hipercard: {
     type: CreditCardType.hipercard,
     label: 'Hipercard',
-    icon: iconGenericFlag,
+    icon: creditCardHipercardIcon,
   },
   jcb: {
     type: CreditCardType.jcb,
     label: 'JCB',
-    icon: iconGenericFlag,
+    icon: creditCardJcbIcon,
   },
   maestro: {
     type: CreditCardType.maestro,
     label: 'Maestro',
-    icon: iconGenericFlag,
+    icon: creditCardMaestroIcon,
   },
   mastercard: {
     type: CreditCardType.mastercard,
     label: 'Mastercard',
-    icon: iconGenericFlag,
+    icon: creditCardMastercardIcon,
   },
   mir: {
     type: CreditCardType.mir,
     label: 'Mir',
-    icon: iconGenericFlag,
+    icon: creditCardMirIcon,
   },
   unionpay: {
     type: CreditCardType.unionpay,
     label: 'Union Pay',
-    icon: iconGenericFlag,
+    icon: creditCardUnionpayIcon,
   },
   visa: {
     type: CreditCardType.visa,
     label: 'Visa',
-    icon: iconVisaFlag,
+    icon: creditCardVisaIcon,
   },
   undefined: {
     type: CreditCardType.undefined,
