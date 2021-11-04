@@ -58,9 +58,9 @@ const _getType: GetType = (creditCardNumber: string): CreditCardType => {
 };
 
 /**
- * Returns .
+ * Returns credit card metadata from creditCardNumber.
  *
- * @param creditCardType - credit card type.
+ * @param creditCardNumber - credit card number.
  */
 export const getCreditCard: GetCreditCard = (creditCardNumber: string): ICreditCard => {
   const type = CreditCardType[_getType(creditCardNumber)] as CreditCardTypeStrings;
