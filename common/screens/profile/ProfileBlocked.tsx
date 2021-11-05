@@ -42,7 +42,7 @@ export default function ({ navigation }: Props) {
   return (
     <FeedbackView
       header={header}
-      description={profile?.profileIssues?.join('\n') ?? t('Entre em contato com nosso suporte.')}
+      description={t('Entre em contato com nosso suporte.')}
       icon={<IconConeYellow />}
     >
       <View>
