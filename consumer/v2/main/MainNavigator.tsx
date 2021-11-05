@@ -66,6 +66,7 @@ export const MainNavigator = () => {
   );
   useNotificationHandler('order-update', handler);
   useNotificationHandler('order-chat', handler);
+  useNotificationHandler('navigate-business', handler);
 
   const { width } = Dimensions.get('window');
   // UI
