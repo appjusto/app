@@ -13,6 +13,7 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { Lottie } from '../../../common/lottie';
+import deliveryJson from '../../../common/lottie/icons-json/client.json';
 import courierJson from '../../../common/lottie/icons-json/delivery.json';
 import { LocationDisclosureModal } from '../../../courier/approved/main/home/LocationDisclosureModal';
 import { t } from '../../../strings';
@@ -21,7 +22,6 @@ import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import DefaultInput from '../../components/inputs/DefaultInput';
 import ShowIf from '../../components/views/ShowIf';
-import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { track, useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
@@ -104,7 +104,13 @@ export default function ({ navigation, route }: Props) {
                     style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}
                   >
                     <View style={{ top: -16 }}>
-                      <IconIllustrationIntro />
+                      <Lottie
+                        animationObject={deliveryJson}
+                        styleProp={{
+                          width: 200,
+                          height: 200,
+                        }}
+                      />
                     </View>
                   </View>
                 )}
@@ -117,8 +123,8 @@ export default function ({ navigation, route }: Props) {
                     <Lottie
                       animationObject={courierJson}
                       styleProp={{
-                        width: 100,
-                        height: 100,
+                        width: 200,
+                        height: 200,
                       }}
                     />
                   </View>

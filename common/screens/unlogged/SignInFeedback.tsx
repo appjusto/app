@@ -36,12 +36,12 @@ export default ({ navigation }: Props) => {
           <Text style={{ ...texts.x2l, textAlign: 'center' }}>
             {t('Enviamos uma confirmação para o seu e-mail.')}
           </Text>
-          <View style={{ height: 114, width: 114, marginTop: 22, marginBottom: 16 }}>
+          <View style={{ height: 150, width: 150, marginTop: 20, marginBottom: 10 }}>
             <Lottie
               animationObject={loadingJson}
               styleProp={{
-                width: 100,
-                height: 100,
+                width: 150,
+                height: 150,
               }}
             />
           </View>
