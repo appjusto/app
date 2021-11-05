@@ -38,7 +38,7 @@ const stringToCreditCardType: StringToCreditCardType = {
  */
 const _getType: GetType = (creditCardNumber: string): CreditCardType => {
   const typeCard = creditCardType(creditCardNumber);
-  const type = typeCard?.at(0)?.type;
+  const type = typeCard[0]?.type;
 
   if (typeCard.length === 1 && type && Object.keys(stringToCreditCardType).includes(type)) {
     return stringToCreditCardType[type];
