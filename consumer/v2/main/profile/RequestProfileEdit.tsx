@@ -50,10 +50,10 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   const courier = useSelector(getCourier);
   const user = flavor === 'consumer' ? consumer! : courier!;
   // state
-  const [name, setName] = React.useState<string>(user.name ?? '');
-  const [surname, setSurname] = React.useState<string>(user.surname ?? '');
-  const [cpf, setCpf] = React.useState<string>(user.cpf! ?? '');
-  const [phone, setPhone] = React.useState<string>(user.phone! ?? '');
+  const [name, setName] = React.useState<string | undefined>(user.name);
+  const [surname, setSurname] = React.useState<string | undefined>(user.surname);
+  const [cpf, setCpf] = React.useState<string | undefined>(user.cpf);
+  const [phone, setPhone] = React.useState<string | undefined>(user.phone);
   const [focusedField, setFocusedField] = React.useState<string>();
   const [requestSent, setRequestSent] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
@@ -82,11 +82,11 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
     Keyboard.dismiss();
     try {
       const userChanges: Partial<UserProfile> = {};
-      if (name !== user.name) userChanges.name = name.trim();
-      if (surname !== user.surname) userChanges.surname = surname.trim();
-      if (cpf !== user.cpf) userChanges.cpf = cpf.trim();
-      if (phone !== user.phone) userChanges.phone = phone.trim();
       if (isEmpty(userChanges)) return;
+      if (name && name !== user.name) userChanges.name = name.trim();
+      if (surname && surname !== user.surname) userChanges.surname = surname.trim();
+      if (cpf && cpf !== user.cpf) userChanges.cpf = cpf.trim();
+      if (phone && phone !== user.phone) userChanges.phone = phone.trim();
       setLoading(true);
       await api.user().requestProfileChange(user.id, userChanges);
       track('profile edit requested');
@@ -95,14 +95,16 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
     } catch (error: any) {
       dispatch(
         showToast(
-          t('Não foi realizar a operação nesse momento. Tente novamente mais tarde'),
+          t('Não foi possível realizar a operação nesse momento. Tente novamente mais tarde'),
           'error'
         )
       );
     }
   };
+  // helpers
+  const userData = user.name && user.surname && user.cpf && user.phone;
   //UI
-  if (requestedChanges === undefined) {
+  if (requestedChanges === undefined || !userData) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -214,7 +216,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
               onBlur={() => setFocusedField(undefined)}
               editable={canEdit}
             />
-            {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
+            {cpf && cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
               <Text
                 style={{
                   ...texts.sm,
