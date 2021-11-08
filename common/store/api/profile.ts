@@ -1,4 +1,5 @@
 import { ConsumerProfile, CourierProfile, Flavor, UserProfile, WithId } from '@appjusto/types';
+import Constants from 'expo-constants';
 import firebase from 'firebase';
 import * as geofirestore from 'geofirestore';
 import * as Sentry from 'sentry-expo';
@@ -64,8 +65,15 @@ export default class ProfileApi {
   // update profile
   updateProfile(id: string, changes: Partial<CourierProfile> | Partial<ConsumerProfile>) {
     console.log('updating profile...');
+    const appVersion = `${Constants.nativeAppVersion}${
+      Constants.manifest ? ` / ${Constants.manifest.version}` : ''
+    }`;
     return this.getProfileRef(id).set(
-      { ...changes, updatedOn: firebase.firestore.FieldValue.serverTimestamp() } as UserProfile,
+      {
+        ...changes,
+        appVersion,
+        updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+      } as UserProfile,
       { merge: true }
     );
   }
