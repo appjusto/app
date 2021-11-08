@@ -128,12 +128,15 @@ export default function ({ navigation, route }: Props) {
   // UI handlers
   const nextDispatchingStateHandler = () => {
     (async () => {
-      setLoading(true);
       try {
+        setLoading(true);
         if (order.dispatchingState === 'arrived-destination') {
           Keyboard.dismiss();
           await api.order().completeDelivery(orderId, code);
           track('courier completed delivery');
+          setLoading(false);
+        } else if (order.dispatchingState === 'going-pickup') {
+          await api.order().nextDispatchingState(orderId);
           setLoading(false);
         } else {
           await api.order().nextDispatchingState(orderId);
