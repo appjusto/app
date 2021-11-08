@@ -1,11 +1,9 @@
 import { Fare, Order, WithId } from '@appjusto/types';
-import { isEmpty } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import Pill from '../../../../common/components/views/Pill';
-import ShowIf from '../../../../common/components/views/ShowIf';
 import { colors, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { FleetListItem } from '../FleetListItem';
@@ -61,54 +59,40 @@ export const OrderAvailableFleets = ({
               <RouteIssueCard />
             ) : (
               <View>
-                {quotes?.length ? (
+                {quotes.length === 1 && quotes[0].fleet.participantsOnline === 0 ? (
                   <Text style={{ ...texts.xs, color: colors.grey700, marginBottom: 12 }}>
                     {t(
-                      'Frotas podem ter preços e características diferentes. \nParticipantes recebem o valor total definido pela frota.'
+                      'Estamos com poucos entregadores no momento. Sua entrega poderá ser feita por uma empresa parceira'
                     )}
                   </Text>
                 ) : (
                   <Text style={{ ...texts.xs, color: colors.grey700, marginBottom: 12 }}>
                     {t(
-                      'Infelizmente estamos sem entregadores disponíveis...\n Tente novamente em alguns minutos.'
+                      'Frotas podem ter preços e características diferentes. \nParticipantes recebem o valor total definido pela frota.'
                     )}
                   </Text>
                 )}
-                <ShowIf test={isEmpty(quotes)}>
-                  {() => (
-                    <DefaultButton
-                      title={t('Procurar frotas disponíveis')}
-                      onPress={onRetry}
-                      activityIndicator={isLoading}
-                      disabled={isLoading}
-                    />
-                  )}
-                </ShowIf>
-                <ShowIf test={!isEmpty(quotes)}>
-                  {() => (
-                    <View style={{ marginBottom: padding }}>
-                      {orderedFares.map((item) => {
-                        return (
-                          <View key={item.fleet.id} style={{ marginBottom: padding }}>
-                            <FleetListItem
-                              item={item}
-                              selectedFare={selectedFare?.fleet.id === item.fleet.id}
-                              onFareSelect={(item) => onFareSelect(item)}
-                              onFleetDetail={() => onFleetSelect(item.fleet.id)}
-                            />
-                          </View>
-                        );
-                      })}
-                      {quotes.length >= 3 ? (
-                        <DefaultButton
-                          secondary
-                          title={`${t('Ver todas as')} ${quotes.length} ${t('frotas disponíveis')}`}
-                          onPress={navigateToAvailableFleets}
+                <View style={{ marginBottom: padding }}>
+                  {orderedFares.map((item) => {
+                    return (
+                      <View key={item.fleet.id} style={{ marginBottom: padding }}>
+                        <FleetListItem
+                          item={item}
+                          selectedFare={selectedFare?.fleet.id === item.fleet.id}
+                          onFareSelect={(item) => onFareSelect(item)}
+                          onFleetDetail={() => onFleetSelect(item.fleet.id)}
                         />
-                      ) : null}
-                    </View>
-                  )}
-                </ShowIf>
+                      </View>
+                    );
+                  })}
+                  {quotes.length >= 3 ? (
+                    <DefaultButton
+                      secondary
+                      title={`${t('Ver todas as')} ${quotes.length} ${t('frotas disponíveis')}`}
+                      onPress={navigateToAvailableFleets}
+                    />
+                  ) : null}
+                </View>
               </View>
             )}
           </View>
