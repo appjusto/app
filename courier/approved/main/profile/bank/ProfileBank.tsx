@@ -132,9 +132,11 @@ export default function ({ navigation, route }: Props) {
           agencyFormatted: agencyFormatter!(agency),
           account,
           accountFormatted:
-            selectedBank.code === '104'
+            selectedBank.code !== '104'
+              ? accountFormatter!(account)
+              : personType === 'Pessoa Física' && type === 'Nova Poupança'
               ? cefAccountCode + accountFormatter!(account)
-              : accountFormatter!(account),
+              : cefAccountCode + '0' + accountFormatter!(account),
           personType,
         },
       })
@@ -150,7 +152,7 @@ export default function ({ navigation, route }: Props) {
         enableAutomaticScroll
         keyboardOpeningTime={0}
         style={{ flex: 1 }}
-        keyboardShouldPersistTaps="never"
+        keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ flexGrow: 1 }}
         scrollIndicatorInsets={{ right: 1 }}
       >
