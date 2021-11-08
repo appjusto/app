@@ -1,9 +1,9 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import firebase from 'firebase';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
+import { useUpdateLocation } from '../../../../common/hooks/useUpdateLocation';
 import useLastKnownLocation from '../../../../common/location/useLastKnownLocation';
 import {
   updateCurrentLocation,
@@ -64,13 +64,7 @@ export const LocationBar = () => {
     }
   }, [consumer, currentPlace, coords, currentLocation, api, dispatch]);
   // update consumer's location
-  React.useEffect(() => {
-    if (!consumer?.id) return;
-    if (!coords) return;
-    const { latitude, longitude } = coords;
-    const coordinates = new firebase.firestore.GeoPoint(latitude, longitude);
-    api.profile().updateLocation(consumer.id, coordinates);
-  }, [consumer?.id, coords, api]);
+  useUpdateLocation(consumer!.id, coords);
   // UI
   return (
     <View

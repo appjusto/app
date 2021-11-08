@@ -3,6 +3,8 @@ import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../common/app/context';
+import { useUpdateLocation } from '../../common/hooks/useUpdateLocation';
+import useLastKnownLocation from '../../common/location/useLastKnownLocation';
 import { defaultScreenOptions } from '../../common/screens/options';
 import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
 import { SelectLocation } from '../../common/screens/unlogged/onboarding/SelectLocation';
@@ -35,6 +37,8 @@ export const LoggedNavigator = () => {
   const user = useSelector(getUser);
   const consumer = useSelector(getConsumer);
   const uid = user?.uid;
+  // state
+  const { coords } = useLastKnownLocation();
   // side effects
   // subscribe for profile changes
   React.useEffect(() => {
@@ -43,6 +47,8 @@ export const LoggedNavigator = () => {
   // subscribe for observing ongoing orders
   const options = React.useMemo(() => ({ consumerId: uid }), [uid]);
   useObserveOngoingOrders(options);
+  // update consumer's location
+  useUpdateLocation(consumer!.id, coords);
   // UI
   if (!consumer?.situation) {
     return (
