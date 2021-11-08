@@ -82,10 +82,10 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
     Keyboard.dismiss();
     try {
       const userChanges: Partial<UserProfile> = {};
-      if (name !== user.name) userChanges.name = name;
-      if (surname !== user.surname) userChanges.surname = surname;
-      if (cpf !== user.cpf) userChanges.cpf = cpfFormatter(cpf);
-      if (phone !== user.phone) userChanges.phone = phoneFormatter(phone);
+      if (name !== user.name) userChanges.name = name.trim();
+      if (surname !== user.surname) userChanges.surname = surname.trim();
+      if (cpf !== user.cpf) userChanges.cpf = cpf.trim();
+      if (phone !== user.phone) userChanges.phone = phone.trim();
       if (isEmpty(userChanges)) return;
       setLoading(true);
       await api.user().requestProfileChange(user.id, userChanges);
