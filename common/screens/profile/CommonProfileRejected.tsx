@@ -44,8 +44,13 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
   // helpers
   const profile = flavor === 'courier' ? courier! : consumer!;
   const description = (() => {
-    if (profile.profileIssues) return profile.profileIssues.join('\n');
-    else return t('Entre em contato com nosso suporte.');
+    if (profile.profileIssues) {
+      if (profile.profileIssuesMessage) {
+        return `${profile.profileIssues.join('\n')}'\n'${t('Mensagem:')} ${
+          profile.profileIssuesMessage
+        }`;
+      } else return profile.profileIssues.join('\n');
+    } else return t('Entre em contato com nosso suporte.');
   })();
   // handler
   const updateCourierProfileHandler = () => {
