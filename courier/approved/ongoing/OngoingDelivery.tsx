@@ -137,13 +137,9 @@ export default function ({ navigation, route }: Props) {
           setLoading(false);
         } else {
           await api.order().nextDispatchingState(orderId);
-          if (order.dispatchingState === 'going-destination') {
+          setTimeout(() => {
             setLoading(false);
-          } else {
-            setTimeout(() => {
-              setLoading(false);
-            }, delayBeforeAdvancing);
-          }
+          }, delayBeforeAdvancing);
         }
       } catch (error) {
         setLoading(false);
