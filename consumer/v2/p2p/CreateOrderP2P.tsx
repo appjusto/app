@@ -164,6 +164,7 @@ export default function ({ navigation, route }: Props) {
     track('placing order');
     if (!orderId) return;
     if (!selectedPaymentMethodId) return;
+    if (!consumer) return;
     if (wantsCpf && !cpf) {
       dispatch(
         showToast(
@@ -192,7 +193,8 @@ export default function ({ navigation, route }: Props) {
           payableWith: 'credit_card',
           paymentMethodId: selectedPaymentMethodId,
         },
-        wantsCpf
+        wantsCpf,
+        consumer.coordinates
       );
 
       setLoading(false);

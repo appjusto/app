@@ -10,6 +10,7 @@ import {
   GetCancellationInfoResult,
   GetOrderQuotesPayload,
   Issue,
+  LatLng,
   MatchOrderPayload,
   NextDispatchingStatePayload,
   Order,
@@ -207,6 +208,7 @@ export default class OrderApi {
     fleetId: string,
     payment: PlaceOrderPayloadPayment,
     invoiceWithCPF: boolean,
+    coordinates?: LatLng,
     additionalInfo?: string,
     wantToShareData?: boolean
   ) {
@@ -215,6 +217,7 @@ export default class OrderApi {
       fleetId,
       payment,
       invoiceWithCPF,
+      coordinates,
       additionalInfo,
       wantToShareData,
       meta: { version: Constants.nativeBuildVersion },

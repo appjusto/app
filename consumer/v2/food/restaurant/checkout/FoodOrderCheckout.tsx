@@ -166,6 +166,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           paymentMethodId: selectedPaymentMethodId,
         },
         wantsCpf,
+        consumer.coordinates,
         orderAdditionalInfo,
         shareDataWithBusiness
       );
@@ -207,6 +208,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       </View>
     );
   }
+  console.log(consumer.coordinates);
   return (
     <KeyboardAwareScrollView
       style={{ ...screens.default }}
