@@ -3,7 +3,7 @@ import { Feather } from '@expo/vector-icons';
 import * as cpfutils from '@fnando/cpf';
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { isEmpty, trim } from 'lodash';
+import { trim } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Keyboard, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -50,10 +50,10 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   const courier = useSelector(getCourier);
   const user = flavor === 'consumer' ? consumer! : courier!;
   // state
-  const [name, setName] = React.useState<string | undefined>(user.name);
-  const [surname, setSurname] = React.useState<string | undefined>(user.surname);
-  const [cpf, setCpf] = React.useState<string | undefined>(user.cpf);
-  const [phone, setPhone] = React.useState<string | undefined>(user.phone);
+  const [name, setName] = React.useState<string>();
+  const [surname, setSurname] = React.useState<string>();
+  const [cpf, setCpf] = React.useState<string>();
+  const [phone, setPhone] = React.useState<string>();
   const [focusedField, setFocusedField] = React.useState<string>();
   const [requestSent, setRequestSent] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
@@ -67,6 +67,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   useSegmentScreen('RequestProfileEdit');
   // helpers
   const canEdit = requestedChanges?.length === 0;
+  const disabledButton = !name && !surname && !cpf && !phone;
   const description = (() => {
     if (flavor === 'consumer') {
       return t(
@@ -77,16 +78,16 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
         'Por motivos de segurança, alterações nos dados de entregadores já aprovados somente podem ser realizadas após análise da nossa equipe.'
       );
   })();
+  const userData = user.name && user.surname && user.cpf && user.phone;
+  const userChanges: Partial<UserProfile> = {};
   // handlers
   const changeProfileHandler = async () => {
     Keyboard.dismiss();
     try {
-      const userChanges: Partial<UserProfile> = {};
-      if (isEmpty(userChanges)) return;
-      if (name && name !== user.name) userChanges.name = name.trim();
-      if (surname && surname !== user.surname) userChanges.surname = surname.trim();
-      if (cpf && cpf !== user.cpf) userChanges.cpf = cpf.trim();
-      if (phone && phone !== user.phone) userChanges.phone = phone.trim();
+      if (name) userChanges.name = name;
+      if (surname) userChanges.surname = surname;
+      if (cpf) userChanges.cpf = cpf;
+      if (phone) userChanges.phone = phone;
       setLoading(true);
       await api.user().requestProfileChange(user.id, userChanges);
       track('profile edit requested');
@@ -95,14 +96,12 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
     } catch (error: any) {
       dispatch(
         showToast(
-          t('Não foi possível realizar a operação nesse momento. Tente novamente mais tarde'),
+          t('Não foi realizar a operação nesse momento. Tente novamente mais tarde'),
           'error'
         )
       );
     }
   };
-  // helpers
-  const userData = user.name && user.surname && user.cpf && user.phone;
   //UI
   if (requestedChanges === undefined || !userData) {
     return (
@@ -174,7 +173,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
             <DefaultInput
               ref={nameRef}
               title={t('Nome')}
-              placeholder={t('Digite seu nome')}
+              placeholder={user.name}
               value={name}
               returnKeyType="next"
               blurOnSubmit={false}
@@ -188,7 +187,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
               ref={surnameRef}
               style={{ marginTop: padding }}
               title={t('Sobrenome')}
-              placeholder={t('Digite seu sobrenome')}
+              placeholder={user.surname}
               value={surname}
               returnKeyType="next"
               blurOnSubmit={false}
@@ -203,7 +202,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
               style={{ marginTop: padding }}
               title={t('CPF')}
               value={cpf}
-              placeholder={t('Seu CPF, apenas números')}
+              placeholder={cpfFormatter(user.cpf)}
               mask={cpfMask}
               parser={numbersOnlyParser}
               formatter={cpfFormatter}
@@ -234,7 +233,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
               style={{ marginTop: padding }}
               title={t('Celular')}
               value={phone}
-              placeholder={t('Número do seu celular')}
+              placeholder={phoneFormatter(user.phone)}
               mask={phoneMask}
               parser={numbersOnlyParser}
               formatter={phoneFormatter}
@@ -261,22 +260,11 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
               <DefaultButton
                 title={t('Solicitar alteração')}
                 onPress={changeProfileHandler}
-                disabled={!canEdit}
+                disabled={!canEdit || disabledButton}
               />
             </PaddedView>
           </View>
-        ) : (
-          <View style={{ flex: 1 }}>
-            <View style={{ flex: 1 }} />
-            <PaddedView>
-              <DefaultButton
-                title={t('Solicitar alteração')}
-                onPress={changeProfileHandler}
-                disabled={!canEdit}
-              />
-            </PaddedView>
-          </View>
-        )}
+        ) : null}
       </KeyboardAwareScrollView>
     </View>
   );
