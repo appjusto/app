@@ -50,22 +50,6 @@ export default function ({ navigation, route }: Props) {
   const businessId = order?.business?.id;
   const delayBeforeAdvancing =
     (usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60) * 1000;
-  // side effects
-  // tracking
-  useSegmentScreen('OngoingDelivery');
-  // keeping screen awake
-  useKeepAwake();
-  // modal
-  React.useEffect(() => {
-    if (!order) return;
-    if (
-      order.dispatchingState === 'arrived-pickup' &&
-      // order.type === 'food' &&
-      (order.status === 'ready' || order.status === 'dispatching')
-    ) {
-      setModalOpen(true);
-    }
-  }, [order]);
   // helpers
   const openChat = React.useCallback(
     (counterpartId: string, counterpartFlavor: Flavor, delayed?: boolean) => {
@@ -96,6 +80,33 @@ export default function ({ navigation, route }: Props) {
     },
     [openChat, businessId]
   );
+  // side effects
+  // tracking
+  useSegmentScreen('OngoingDelivery');
+  // keeping screen awake
+  useKeepAwake();
+  // modal
+  React.useEffect(() => {
+    if (!order) return;
+    if (
+      order.dispatchingState === 'arrived-pickup' &&
+      // order.type === 'food' &&
+      (order.status === 'ready' || order.status === 'dispatching')
+    ) {
+      setModalOpen(true);
+    }
+  }, [order]);
+  // setLoading true and then setLoading(false) after delayBeforeAdvancing
+  // when dispatchingState === 'going-pickup' to avoid sliding too early
+  React.useEffect(() => {
+    if (!order) return;
+    if (order.dispatchingState === 'going-pickup') {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, delayBeforeAdvancing);
+    }
+  }, [order, delayBeforeAdvancing]);
   // whenever params updates
   // open chat if there's a new message
   React.useEffect(() => {
@@ -129,16 +140,16 @@ export default function ({ navigation, route }: Props) {
   const nextDispatchingStateHandler = () => {
     (async () => {
       try {
-        setLoading(true);
-        if (order.dispatchingState === 'arrived-destination') {
+        if (order.dispatchingState === 'going-destination') {
+          await api.order().nextDispatchingState(orderId);
+        } else if (order.dispatchingState === 'arrived-destination') {
           Keyboard.dismiss();
+          setLoading(true);
           await api.order().completeDelivery(orderId, code);
           track('courier completed delivery');
           setLoading(false);
-        } else if (order.dispatchingState === 'going-pickup') {
-          await api.order().nextDispatchingState(orderId);
-          setLoading(false);
         } else {
+          setLoading(true);
           await api.order().nextDispatchingState(orderId);
           setTimeout(() => {
             setLoading(false);
