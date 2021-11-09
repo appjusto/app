@@ -55,7 +55,7 @@ export const CourierStatusHighlight = ({ order, confirmation }: Props) => {
     if (type === 'food') {
       if (dispatchingState === 'arrived-pickup') {
         if (status === 'preparing') {
-          title = t('Aguardando pedido ficar pronto');
+          title = `${t('Aguardando pedido ficar pronto. Código do pedido: ')}${code}`;
           message = t('Confirme sua saída somente após receber o pedido');
         } else if (status === 'ready') {
           title = t('Pedido pronto!');

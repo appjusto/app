@@ -59,6 +59,8 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
       navigation.replace('OngoingOrderDeclined', { orderId });
     } else if (order.dispatchingStatus === 'no-match') {
       navigation.navigate('OngoingOrderNoMatch', { orderId });
+    } else if (order.dispatchingStatus === 'outsourced') {
+      navigation.replace('OngoingOrder', { orderId });
     }
   }, [navigation, order, orderId]);
   console.log(orderId);
