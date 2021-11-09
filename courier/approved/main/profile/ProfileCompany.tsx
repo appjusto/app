@@ -136,6 +136,7 @@ export default function ({ navigation, route }: Props) {
             if (!isNaN(toNumber(text))) setCNPJ(text);
           }}
           onSubmitEditing={() => nameRef.current?.focus()}
+          editable={courier.situation !== 'approved'}
         />
         <DefaultInput
           ref={nameRef}
@@ -149,6 +150,7 @@ export default function ({ navigation, route }: Props) {
           onSubmitEditing={() => cepRef.current?.focus()}
           keyboardType="default"
           autoCapitalize="characters"
+          editable={courier.situation !== 'approved'}
         />
         <PatternInput
           mask={cepMask}
@@ -164,6 +166,7 @@ export default function ({ navigation, route }: Props) {
             if (!isNaN(toNumber(text))) setCEP(text);
           }}
           keyboardType="decimal-pad"
+          editable={courier.situation !== 'approved'}
         />
         <DefaultInput
           style={{ marginTop: padding }}
@@ -175,6 +178,7 @@ export default function ({ navigation, route }: Props) {
           onChangeText={setAddress}
           onSubmitEditing={() => numberRef.current?.focus()}
           keyboardType="default"
+          editable={courier.situation !== 'approved'}
         />
         <View style={{ flexDirection: 'row', marginTop: padding }}>
           <DefaultInput
@@ -188,6 +192,7 @@ export default function ({ navigation, route }: Props) {
             blurOnSubmit={false}
             onChangeText={setNumber}
             onSubmitEditing={() => additionalRef.current?.focus()}
+            editable={courier.situation !== 'approved'}
           />
           <DefaultInput
             ref={additionalRef}
@@ -200,6 +205,7 @@ export default function ({ navigation, route }: Props) {
             returnKeyType="next"
             blurOnSubmit
             onChangeText={setAdditional}
+            editable={courier.situation !== 'approved'}
           />
         </View>
         <View style={{ flexDirection: 'row', marginTop: padding }}>
@@ -211,6 +217,7 @@ export default function ({ navigation, route }: Props) {
             returnKeyType="next"
             onChangeText={setCity}
             keyboardType="default"
+            editable={courier.situation !== 'approved'}
           />
           <DefaultInput
             style={{ flex: 1, marginLeft: padding }}
@@ -221,6 +228,7 @@ export default function ({ navigation, route }: Props) {
             returnKeyType="next"
             onChangeText={setState}
             keyboardType="default"
+            editable={courier.situation !== 'approved'}
           />
         </View>
         {cnpj.length > 0 && !cnpjutils.isValid(cnpj) && focusedField !== 'cnpj' && (
@@ -229,14 +237,14 @@ export default function ({ navigation, route }: Props) {
           </Text>
         )}
         <View style={{ flex: 1 }} />
-        <View style={{ marginTop: padding }}>
-          <DefaultButton
-            title={courier.situation === 'approved' ? t('Atualizar') : t('Avançar')}
-            onPress={updateProfileHandler}
-            disabled={!canSubmit || isLoading}
-            activityIndicator={isLoading}
-          />
-          {courier.situation !== 'approved' ? (
+        {courier.situation !== 'approved' ? (
+          <View style={{ marginTop: padding }}>
+            <DefaultButton
+              title={t('Avançar')}
+              onPress={updateProfileHandler}
+              disabled={!canSubmit || isLoading}
+              activityIndicator={isLoading}
+            />
             <DefaultButton
               title={t('Não tem MEI? Clique aqui e saiba mais')}
               grey
@@ -245,8 +253,8 @@ export default function ({ navigation, route }: Props) {
                 Linking.openURL(AppJustoMEIURL);
               }}
             />
-          ) : null}
-        </View>
+          </View>
+        ) : null}
       </PaddedView>
     </KeyboardAwareScrollView>
   );
