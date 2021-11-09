@@ -79,8 +79,13 @@ export const OngoingOrderStatus = ({ order }: Props) => {
     }
   } else if (type === 'p2p') {
     if (status === 'confirmed') {
-      header = t('Pedido aprovado!');
-      description = t('Aguarde enquanto procuramos um/a entregador/a para você.');
+      if (dispatchingStatus === 'outsourced') {
+        header = t('Entrega em andamento');
+        description = t('A entrega está sendo realizada por um entregador externo');
+      } else {
+        header = t('Pedido aprovado!');
+        description = t('Aguarde enquanto procuramos um/a entregador/a para você.');
+      }
     } else if (status === 'dispatching') {
       if (dispatchingState === 'going-pickup') {
         header = t('Indo para a coleta');
