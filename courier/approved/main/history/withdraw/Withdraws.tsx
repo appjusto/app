@@ -68,7 +68,7 @@ export const Withdraws = ({ navigation, route }: Props) => {
       const result = await api.courier().requestWithdraw(courier.id, availableForWithdraw);
       console.log(result);
       setWithdrawing(false);
-      navigation.navigate('RequestWithdrawFeedback', {
+      navigation.replace('RequestWithdrawFeedback', {
         header: t('Requisição realizada com sucesso!'),
         description: t('O valor será transferido para sua conta em até 1 dia útil.'),
       });
