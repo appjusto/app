@@ -38,10 +38,11 @@ export const RouteIcons = ({ order }: Props) => {
             width: 64,
             ...borders.default,
             borderRadius: 32,
-            borderColor: colors.grey50,
+            borderColor: colors.black,
+            borderWidth: 2,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: colors.white,
+            backgroundColor: colors.grey500,
           }}
         >
           <Image source={icons.googleMaps} height={29} width={29} />
@@ -54,11 +55,12 @@ export const RouteIcons = ({ order }: Props) => {
             width: 64,
             ...borders.default,
             borderRadius: 32,
-            borderColor: colors.grey50,
+            borderColor: colors.black,
+            borderWidth: 2,
             justifyContent: 'center',
             alignItems: 'center',
             marginLeft: 24,
-            backgroundColor: colors.white,
+            backgroundColor: colors.grey500,
           }}
         >
           <Image source={icons.waze} height={32} width={29} />
