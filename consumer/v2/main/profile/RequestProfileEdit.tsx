@@ -54,7 +54,6 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   const [surname, setSurname] = React.useState<string>();
   const [cpf, setCpf] = React.useState<string>();
   const [phone, setPhone] = React.useState<string>();
-  const [focusedField, setFocusedField] = React.useState<string>();
   const [requestSent, setRequestSent] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
   const requestedChanges = useRequestedProfileChanges(user.id);
@@ -86,7 +85,13 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
     try {
       if (name) userChanges.name = name;
       if (surname) userChanges.surname = surname;
-      if (cpf) userChanges.cpf = cpf;
+      if (cpf) {
+        if (cpf.length > 0 && cpfutils.isValid(cpf)) userChanges.cpf = cpf;
+        else {
+          dispatch(showToast(t('O cpf digitado não é válido'), 'error'));
+          return;
+        }
+      }
       if (phone) userChanges.phone = phone;
       setLoading(true);
       await api.user().requestProfileChange(user.id, userChanges);
@@ -211,23 +216,8 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
               blurOnSubmit={false}
               onSubmitEditing={() => phoneRef.current?.focus()}
               onChangeText={(text) => setCpf(trim(text))}
-              onFocus={() => setFocusedField('cpf')}
-              onBlur={() => setFocusedField(undefined)}
               editable={canEdit}
             />
-            {cpf && cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
-              <Text
-                style={{
-                  ...texts.sm,
-                  ...texts.bold,
-                  color: colors.grey700,
-                  marginTop: padding,
-                  marginLeft: 6,
-                }}
-              >
-                {t('O CPF digitado não é válido.')}
-              </Text>
-            )}
             <PatternInput
               ref={phoneRef}
               style={{ marginTop: padding }}
