@@ -84,12 +84,11 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
     Keyboard.dismiss();
     try {
       if (name) userChanges.name = name;
-      if (surname) userChanges.surname = surname;
-      if (cpf) {
+      else if (surname) userChanges.surname = surname;
+      else if (cpf) {
         if (cpf.length > 0 && cpfutils.isValid(cpf)) userChanges.cpf = cpf;
         else return;
-      }
-      if (phone) userChanges.phone = phone;
+      } else if (phone) userChanges.phone = phone;
       setLoading(true);
       await api.user().requestProfileChange(user.id, userChanges);
       track('profile edit requested');

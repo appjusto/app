@@ -14,4 +14,7 @@ export type DeliveredOrderNavigatorParamList = {
     year: number;
     month: number;
   };
+  OrderProblemFeedback: {
+    orderId: string;
+  };
 } & ReportIssueParamList;

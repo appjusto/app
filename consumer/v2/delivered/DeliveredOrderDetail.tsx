@@ -58,6 +58,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const [reviewLoading, setReviewLoading] = React.useState(false);
   const [reviewSent, setReviewSent] = React.useState(false);
   const [tipLoading, setTipLoading] = React.useState(false);
+  const [tipSent, setTipSent] = React.useState(false);
   const showChatButton = useChatisEnabled(order);
 
   // tracking
@@ -83,23 +84,26 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const tipHandler = async () => {
     if (!order) return;
     Keyboard.dismiss();
-    setTipLoading(true);
     try {
+      setTipLoading(true);
       if (tip > 0) await api.order().tipCourier(order.id, tip);
       track('consumer sent tip to courier');
       dispatch(showToast(t('Caixinha enviada!')));
+      setTipSent(true);
+      setTipLoading(false);
     } catch (error) {
       dispatch(showToast(t('Não foi possível enviar a caixinha'), 'error'));
+      setTipLoading(false);
     }
-    setTipLoading(false);
   };
 
   const reviewHandler = async () => {
     if (!order) return;
     Keyboard.dismiss();
-    setReviewLoading(true);
+
     try {
       if (reviewType) {
+        setReviewLoading(true);
         await api.courier().addReview(order.courier!.id, {
           type: reviewType,
           orderId,
@@ -108,11 +112,12 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
         setReviewSent(true);
         track('consumer reviewed courier');
         dispatch(showToast(t('Avaliação enviada com sucesso!'), 'success'));
+        setReviewLoading(false);
       }
     } catch (error) {
       dispatch(showToast(t('Não foi possível enviar a avaliação'), 'error'));
+      setReviewLoading(false);
     }
-    setReviewLoading(false);
   };
 
   if (!order) {
@@ -210,7 +215,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
                       onCommentChange={(value) => setComment(value)}
                     />
                     <DefaultButton
-                      title={t('Avaliar entregador/a')}
+                      title={reviewSent ? t('Avaliação enviada') : t('Avaliar entregador/a')}
                       onPress={reviewHandler}
                       style={{ margin: padding, marginTop: 0 }}
                       activityIndicator={reviewLoading}
@@ -227,6 +232,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
                     onChange={(value) => setTip(value)}
                     onConfirm={tipHandler}
                     isLoading={tipLoading}
+                    tipSent={tipSent}
                   />
                 </View>
                 <HR height={padding} />
