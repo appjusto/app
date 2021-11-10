@@ -15,8 +15,11 @@ export const useMenu = (businessId: string) => {
   return {
     categoriesWithProducts,
     groupsWithComplements,
-    getProductCategory: (productId: string) => getParent(productsOrdering!, categories, productId),
+    getProductCategory: (productId: string) =>
+      productsOrdering ? getParent(productsOrdering, categories, productId) : undefined,
     getComplementGroup: (complementId: string) =>
-      getParent(complementsOrdering!, complementsGroups, complementId),
+      complementsOrdering
+        ? getParent(complementsOrdering, complementsGroups, complementId)
+        : undefined,
   };
 };
