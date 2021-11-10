@@ -7,6 +7,7 @@ import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
+import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { getConsumer } from '../../../common/store/consumer/selectors';
@@ -39,6 +40,7 @@ export default function ({ navigation, route }: Props) {
   // redux store
   const consumer = useSelector(getConsumer);
   // state
+  const { coords } = useLastKnownLocation();
   const [orderId, setOrderId] = React.useState<string>();
   const order = useObserveOrder(orderId)!;
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
@@ -85,7 +87,7 @@ export default function ({ navigation, route }: Props) {
             const newOrder = await api.order().createOrderP2P(consumer!, params.origin!);
             setLoading(false);
             setOrderId(newOrder.id);
-          } catch (error) {
+          } catch (error: any) {
             console.log(error);
             Sentry.Native.captureException(error);
             dispatch(showToast(error.toString(), 'error'));
@@ -128,7 +130,7 @@ export default function ({ navigation, route }: Props) {
     setQuotes(undefined);
     try {
       setQuotes(await api.order().getOrderQuotes(order.id));
-    } catch (error) {
+    } catch (error: any) {
       dispatch(showToast(error.toString(), 'error'));
     }
   }, [order, api, dispatch]);
@@ -194,7 +196,7 @@ export default function ({ navigation, route }: Props) {
           paymentMethodId: selectedPaymentMethodId,
         },
         wantsCpf,
-        consumer.coordinates
+        coords
       );
 
       setLoading(false);
@@ -202,7 +204,7 @@ export default function ({ navigation, route }: Props) {
         screen: 'OngoingOrderConfirming',
         params: { orderId },
       });
-    } catch (error) {
+    } catch (error: any) {
       console.warn(error.toString());
       dispatch(showToast(error.toString(), 'error'));
     }

@@ -7,6 +7,7 @@ import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
+import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
@@ -48,6 +49,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   // redux store
   const consumer = useSelector(getConsumer)!;
   // state
+  const { coords } = useLastKnownLocation();
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
     consumer.paymentChannel?.mostRecentPaymentMethodId
   );
@@ -129,7 +131,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     setQuotes(undefined);
     try {
       setQuotes(await api.order().getOrderQuotes(order.id));
-    } catch (error) {
+    } catch (error: any) {
       dispatch(showToast(error.toString(), 'error'));
     }
   }, [order, api, dispatch]);
@@ -166,7 +168,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           paymentMethodId: selectedPaymentMethodId,
         },
         wantsCpf,
-        consumer.coordinates,
+        coords,
         orderAdditionalInfo,
         shareDataWithBusiness
       );
@@ -179,7 +181,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           orderId: order.id,
         },
       });
-    } catch (error) {
+    } catch (error: any) {
       setLoading(false);
       dispatch(showToast(error.toString(), 'error'));
     }
