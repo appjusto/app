@@ -51,7 +51,8 @@ export default class OrderApi {
       dispatchingStatus: 'idle',
       business: {
         id: business.id,
-        name: business.name,
+        name: business.name!,
+        cusine: business.cuisine!,
       },
       consumer: {
         id: consumer.id,
