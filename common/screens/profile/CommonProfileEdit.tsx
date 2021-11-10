@@ -242,7 +242,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
             style={{
               ...texts.sm,
               ...texts.bold,
-              color: colors.grey700,
+              color: colors.red,
               marginTop: padding,
               marginLeft: 6,
             }}

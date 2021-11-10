@@ -50,10 +50,10 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   const courier = useSelector(getCourier);
   const user = flavor === 'consumer' ? consumer! : courier!;
   // state
-  const [name, setName] = React.useState<string>();
-  const [surname, setSurname] = React.useState<string>();
-  const [cpf, setCpf] = React.useState<string>();
-  const [phone, setPhone] = React.useState<string>();
+  const [name, setName] = React.useState<string>('');
+  const [surname, setSurname] = React.useState<string>('');
+  const [cpf, setCpf] = React.useState<string>('');
+  const [phone, setPhone] = React.useState<string>('');
   const [requestSent, setRequestSent] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
   const requestedChanges = useRequestedProfileChanges(user.id);
@@ -87,10 +87,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
       if (surname) userChanges.surname = surname;
       if (cpf) {
         if (cpf.length > 0 && cpfutils.isValid(cpf)) userChanges.cpf = cpf;
-        else {
-          dispatch(showToast(t('O cpf digitado não é válido'), 'error'));
-          return;
-        }
+        else return;
       }
       if (phone) userChanges.phone = phone;
       setLoading(true);
@@ -218,6 +215,19 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
               onChangeText={(text) => setCpf(trim(text))}
               editable={canEdit}
             />
+            {cpf.length > 0 && !cpfutils.isValid(cpf) ? (
+              <Text
+                style={{
+                  ...texts.sm,
+                  ...texts.bold,
+                  color: colors.red,
+                  marginTop: padding,
+                  marginLeft: 6,
+                }}
+              >
+                {t('O CPF digitado não é válido.')}
+              </Text>
+            ) : null}
             <PatternInput
               ref={phoneRef}
               style={{ marginTop: padding }}
