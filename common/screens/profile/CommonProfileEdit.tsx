@@ -237,7 +237,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           onBlur={() => setFocusedField(undefined)}
           editable={editable}
         />
-        {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' && (
+        {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' ? (
           <Text
             style={{
               ...texts.sm,
@@ -249,7 +249,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           >
             {t('O CPF digitado não é válido.')}
           </Text>
-        )}
+        ) : null}
         <PatternInput
           ref={phoneRef}
           style={{ marginTop: padding }}
