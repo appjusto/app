@@ -4,7 +4,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { toNumber, trim } from 'lodash';
 import React from 'react';
-import { Keyboard, Linking, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Linking, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../common/app/context';
@@ -101,8 +101,14 @@ export default function ({ navigation, route }: Props) {
     setLoading(false);
     navigation.goBack();
   };
-
   // UI
+  if (!courier) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <KeyboardAwareScrollView
       enableOnAndroid
