@@ -86,7 +86,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const currentPlace = useSelector(getCurrentPlace);
   // state
   const location = useSelector(getCurrentLocation);
-  const destination = activeOrder?.destination?.location ?? location;
+  const destination = activeOrder?.destination?.location ?? currentPlace?.location ?? location;
   const distance =
     destination && business?.businessAddress?.latlng
       ? distanceBetweenLatLng(destination, business.businessAddress.latlng)
