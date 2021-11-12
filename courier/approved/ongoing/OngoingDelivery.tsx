@@ -41,15 +41,18 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  // screen state
+  const delayBeforeAdvancing =
+    (usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60) * 1000;
+  // redux
   const order = useObserveOrder(orderId);
+  const consumerId = order?.consumer.id;
+  const businessId = order?.business?.id;
+  const dispatchingState = order?.dispatchingState;
+  // screen state
   const [code, setCode] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
-  const consumerId = order?.consumer.id;
-  const businessId = order?.business?.id;
-  const delayBeforeAdvancing =
-    (usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60) * 1000;
+  const [previousDispatchingState, setPreviousDispatchingState] = React.useState(dispatchingState);
   // helpers
   const openChat = React.useCallback(
     (counterpartId: string, counterpartFlavor: Flavor, delayed?: boolean) => {
@@ -88,25 +91,18 @@ export default function ({ navigation, route }: Props) {
   // modal
   React.useEffect(() => {
     if (!order) return;
-    if (
-      order.dispatchingState === 'arrived-pickup' &&
-      // order.type === 'food' &&
-      (order.status === 'ready' || order.status === 'dispatching')
-    ) {
-      setModalOpen(true);
+    if (previousDispatchingState !== dispatchingState) {
+      if (dispatchingState === 'going-pickup') {
+        setLoading(true);
+        setTimeout(() => {
+          setLoading(false);
+        }, delayBeforeAdvancing);
+      } else if (dispatchingState === 'arrived-pickup') {
+        setModalOpen(true);
+      }
+      setPreviousDispatchingState(dispatchingState);
     }
-  }, [order]);
-  // setLoading true and then setLoading(false) after delayBeforeAdvancing
-  // when dispatchingState === 'going-pickup' to avoid sliding too early
-  React.useEffect(() => {
-    if (!order) return;
-    if (order.dispatchingState === 'going-pickup') {
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-      }, delayBeforeAdvancing);
-    }
-  }, [order, delayBeforeAdvancing]);
+  }, [dispatchingState, previousDispatchingState, delayBeforeAdvancing]);
   // whenever params updates
   // open chat if there's a new message
   React.useEffect(() => {
@@ -155,7 +151,7 @@ export default function ({ navigation, route }: Props) {
             setLoading(false);
           }, delayBeforeAdvancing);
         }
-      } catch (error) {
+      } catch (error: any) {
         setLoading(false);
         dispatch(showToast(error.toString(), 'error'));
       }
@@ -168,7 +164,7 @@ export default function ({ navigation, route }: Props) {
       try {
         await api.order().completeDelivery(orderId, code);
         setLoading(false);
-      } catch (error) {
+      } catch (error: any) {
         dispatch(showToast(error.toString(), 'error'));
         setLoading(false);
       }
@@ -178,8 +174,9 @@ export default function ({ navigation, route }: Props) {
     navigation.navigate('DeliveryProblem', { orderId });
   };
   // UI
-  const { type, dispatchingState } = order;
-  const nextStepDisabled = isLoading || (type === 'food' && dispatchingState === 'arrived-pickup');
+  const { type } = order;
+  const nextStepDisabled =
+    isLoading || (type === 'food' && previousDispatchingState === 'arrived-pickup');
   const nextStepLabel = (() => {
     const dispatchingState = order?.dispatchingState;
     if (!dispatchingState || dispatchingState === 'going-pickup') {
@@ -194,7 +191,7 @@ export default function ({ navigation, route }: Props) {
     return '';
   })();
   const sliderColor = (() => {
-    if (!dispatchingState || dispatchingState === 'going-pickup') {
+    if (!previousDispatchingState || previousDispatchingState === 'going-pickup') {
       return colors.green500;
     } else return colors.darkYellow;
   })();
@@ -219,7 +216,7 @@ export default function ({ navigation, route }: Props) {
         <OngoingDeliveryMap order={order} onOpenChat={(from) => openChat(from.id, from.agent)} />
         {/* bottom*/}
         <OngoingDeliveryInfo order={order} onProblem={navigateToDeliveryProblem} />
-        <OngoingDeliveryLoading dispatchingState={dispatchingState} />
+        <OngoingDeliveryLoading dispatchingState={previousDispatchingState} />
         {/* Status slider */}
         <OngoingDeliverySlider
           order={order}
@@ -231,7 +228,7 @@ export default function ({ navigation, route }: Props) {
           sliderColor={sliderColor}
         />
         {/* chat with restaurant */}
-        {type === 'food' && dispatchingState ? (
+        {type === 'food' && previousDispatchingState ? (
           <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
             <DefaultButton
               title={t('Abrir chat com o restaurante')}
@@ -251,7 +248,7 @@ export default function ({ navigation, route }: Props) {
           onNoCodeDelivery={() => {
             navigation.navigate('NoCodeDelivery', { orderId });
           }}
-          dispatchingState={dispatchingState}
+          dispatchingState={previousDispatchingState}
         />
         {/* withdrawal modal */}
         <WithdrawOrderModal
