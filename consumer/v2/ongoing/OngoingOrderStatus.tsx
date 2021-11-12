@@ -27,7 +27,10 @@ export const OngoingOrderStatus = ({ order }: Props) => {
         'começou a preparar seu pedido e logo estará prontinho para você.'
       )}`;
     } else if (status === 'ready') {
-      if (dispatchingStatus === 'matching' || dispatchingStatus === 'matched') {
+      if (dispatchingStatus === 'outsourced') {
+        header = t('Entrega em andamento');
+        description = t('A entrega está sendo realizada por um entregador externo');
+      } else if (dispatchingStatus === 'matching' || dispatchingStatus === 'matched') {
         header = t('Pronto para entrega');
         description = t('Estamos procurando um/a entregador/a para o seu pedido');
       } else if (dispatchingStatus === 'confirmed') {
