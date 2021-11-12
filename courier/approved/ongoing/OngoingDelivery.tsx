@@ -140,7 +140,12 @@ export default function ({ navigation, route }: Props) {
   const nextDispatchingStateHandler = () => {
     (async () => {
       try {
-        if (order.dispatchingState === 'going-destination') {
+        if (order.dispatchingState === 'arrived-pickup') {
+          await api.order().nextDispatchingState(orderId);
+          setTimeout(() => {
+            setLoading(false);
+          }, delayBeforeAdvancing);
+        } else if (order.dispatchingState === 'going-destination') {
           await api.order().nextDispatchingState(orderId);
         } else if (order.dispatchingState === 'arrived-destination') {
           Keyboard.dismiss();
