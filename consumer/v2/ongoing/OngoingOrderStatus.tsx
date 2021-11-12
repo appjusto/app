@@ -29,7 +29,9 @@ export const OngoingOrderStatus = ({ order }: Props) => {
     } else if (status === 'ready') {
       if (dispatchingStatus === 'outsourced') {
         header = t('Entrega em andamento');
-        description = t('A entrega está sendo realizada por um entregador externo');
+        description = t(
+          'A entrega está sendo feita por um entregador alocado por fora do sistema e não será possível acompanhar seu deslocamento'
+        );
       } else if (dispatchingStatus === 'matching' || dispatchingStatus === 'matched') {
         header = t('Pronto para entrega');
         description = t('Estamos procurando um/a entregador/a para o seu pedido');
@@ -51,7 +53,9 @@ export const OngoingOrderStatus = ({ order }: Props) => {
     } else if (status === 'dispatching') {
       if (dispatchingStatus === 'outsourced') {
         header = t('Entrega em andamento');
-        description = t('A entrega está sendo realizada por um entregador externo');
+        description = t(
+          'A entrega está sendo feita por um entregador alocado por fora do sistema e não será possível acompanhar seu deslocamento'
+        );
       } else {
         if (dispatchingState === 'arrived-pickup') {
           header = t('Retirada efetuada');
@@ -84,7 +88,9 @@ export const OngoingOrderStatus = ({ order }: Props) => {
     if (status === 'confirmed') {
       if (dispatchingStatus === 'outsourced') {
         header = t('Entrega em andamento');
-        description = t('A entrega está sendo realizada por um entregador externo');
+        description = t(
+          'A entrega está sendo feita por um entregador alocado por fora do sistema e não será possível acompanhar seu deslocamento'
+        );
       } else {
         header = t('Pedido aprovado!');
         description = t('Aguarde enquanto procuramos um/a entregador/a para você.');
@@ -112,7 +118,9 @@ export const OngoingOrderStatus = ({ order }: Props) => {
         )}`;
       } else if (dispatchingStatus === 'outsourced') {
         header = t('Entrega em andamento');
-        description = t('A entrega está sendo realizada por um entregador externo');
+        description = t(
+          'A entrega está sendo feita por um entregador alocado por fora do sistema e não será possível acompanhar seu deslocamento'
+        );
       }
     } else if (status === 'delivered') {
       header = t('Pedido entregue!');
