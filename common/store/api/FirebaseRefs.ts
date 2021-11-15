@@ -86,12 +86,6 @@ export default class FirebaseRefs {
   getBusinessMenuOrderingRef = (businessId: string, menuId: string = 'default') =>
     this.getBusinessRef(businessId).collection('menu').doc(menuId);
 
-  // business private subcollections and docs
-  getBusinessPrivateRef = (id: string) => this.getBusinessesRef().doc(id).collection('private');
-  getBusinessBankAccountRef = (id: string) => this.getBusinessPrivateRef(id).doc('bank');
-  getBusinessPrivateStatisticsRef = (id: string) =>
-    this.getBusinessPrivateRef(id).doc('statistics');
-
   // managers
   getManagersRef = () => this.firestore.collection('managers');
   getManagerRef = (managerId: string) => this.firestore.collection('managers').doc(managerId);
@@ -121,8 +115,6 @@ export default class FirebaseRefs {
   getCourierRef = (id: string) => this.getCouriersRef().doc(id);
   getCourierReviewsRef = (id: string) => this.getCourierRef(id).collection('reviews');
   getCourierRequestsRef = (id: string) => this.getCourierRef(id).collection('requests');
-  getCourierPrivateRef = (id: string) => this.getCourierRef(id).collection('private');
-  getCourierMarketplaceRef = (id: string) => this.getCourierPrivateRef(id).doc('marketplace');
   getCourierOrderRequestsRef = (courierId: string, orderId: string) =>
     this.getCourierRequestsRef(courierId).doc(orderId);
 
