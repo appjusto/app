@@ -6,7 +6,7 @@ import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { useBusinessDeeplink } from '../../../../common/hooks/useBusinessDeeplink';
-import useNotificationToken from '../../../../common/hooks/useNotificationToken';
+import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconLogin } from '../../../../common/icons/icon-login';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import { HomeCouriersNearbyCard } from '../../../../common/screens/home/cards/HomeCouriersNearbyCard';
@@ -37,7 +37,12 @@ export default function ({ navigation }: Props) {
   // side effects
   useNotificationToken();
   useBusinessDeeplink();
+  //tracking
   useSegmentScreen('Home');
+  // handler
+  const navigateToWelcomeScreen = () => {
+    navigation.navigate('WelcomeScreen');
+  };
   // UI
   return (
     <View style={[screens.headless, screens.config]}>
@@ -51,7 +56,7 @@ export default function ({ navigation }: Props) {
               if (consumer) {
                 navigation.navigate('P2POrderNavigator', { screen: 'CreateOrderP2P' });
               } else {
-                navigation.navigate('WelcomeScreen');
+                navigateToWelcomeScreen();
               }
             }
           }}
@@ -60,14 +65,14 @@ export default function ({ navigation }: Props) {
           <HomeOngoingDeliveries
             orders={ongoingOrders}
             onPress={(order, chatFrom) => {
-              if (order.status === 'declined')
+              if (order.status === 'declined') {
                 navigation.navigate('OngoingOrderNavigator', {
                   screen: 'OngoingOrderDeclined',
                   params: {
                     orderId: order.id,
                   },
                 });
-              else
+              } else {
                 navigation.navigate('OngoingOrderNavigator', {
                   screen: 'OngoingOrder',
                   params: {
@@ -75,10 +80,11 @@ export default function ({ navigation }: Props) {
                     chatFrom,
                   },
                 });
+              }
             }}
           />
           {!consumer ? (
-            <TouchableOpacity onPress={() => navigation.navigate('WelcomeScreen')}>
+            <TouchableOpacity onPress={navigateToWelcomeScreen}>
               <HomeCard
                 icon={<IconLogin />}
                 title={t('Crie uma conta ou faça o login')}
@@ -87,7 +93,6 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           ) : null}
-          {/* ítalo wants to also show the HomeCouriersNearbyCard for unlogged consumers */}
           <HomeCouriersNearbyCard />
           <View style={{ marginTop: padding }}>
             <HomeShareCard

@@ -2,13 +2,13 @@ import { Issue, WithId } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import { ReportIssueView } from '../../../common/components/views/ReportIssueView';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
-import { useSegmentScreen, useTrack } from '../../../common/store/api/track';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -39,11 +39,11 @@ export const OngoingOrderCancelOrder = ({ route, navigation }: Props) => {
   const [isLoading, setLoading] = React.useState(false);
 
   // tracking
-  useSegmentScreen('OngoingOrder CancelOrder');
-  useTrack('OngoingOrder CancelOrder');
+  useSegmentScreen('OngoingOrderCancelOrder');
   // handlers
   const cancelHandler = () => {
     (async () => {
+      Keyboard.dismiss();
       try {
         setLoading(true);
         await api.order().cancelOrder(orderId, acknowledgedCosts, selectedReason, rejectionComment);

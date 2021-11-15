@@ -2,11 +2,12 @@ import { CourierStatus } from '@appjusto/types';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { track } from 'expo-analytics-segment';
 import React from 'react';
 import { Linking, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import useNotificationToken from '../../../../common/hooks/useNotificationToken';
+import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconHomeCourierRequests } from '../../../../common/icons/icon-home-courier-requests';
 import { IconPartners } from '../../../../common/icons/icon-partners';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
@@ -62,23 +63,23 @@ export default function ({ navigation }: Props) {
     <View style={[screens.config, screens.headless]}>
       <ScrollView scrollIndicatorInsets={{ right: 1 }}>
         <HomeControls
-          onFleetDetail={() =>
+          onFleetDetail={() => {
             navigation.navigate('ProfileNavigator', {
               screen: 'ChooseFleet',
               params: {
                 fleetId: courier.fleet!.id,
               },
-            })
-          }
+            });
+          }}
         />
         <PaddedView>
           {requests.length > 0 ? (
             <TouchableOpacity
-              onPress={() =>
+              onPress={() => {
                 navigation.navigate('MatchingNavigator', {
                   screen: 'OrderRequests',
-                })
-              }
+                });
+              }}
             >
               <View style={{ marginVertical: padding }}>
                 <HomeCard
@@ -93,20 +94,21 @@ export default function ({ navigation }: Props) {
           ) : null}
           <HomeOngoingDeliveries
             orders={ongoingOrders}
-            onPress={(order, chatFrom) =>
+            onPress={(order, chatFrom) => {
               navigation.navigate('OngoingDeliveryNavigator', {
                 screen: 'OngoingDelivery',
                 params: { orderId: order.id, chatFrom },
-              })
-            }
+              });
+            }}
           />
           <View style={{ marginBottom: padding }}>
             <FreshDeskCard
-              onPress={() =>
+              onPress={() => {
+                track('opening freshdesk url');
                 Linking.openURL(
                   'https://appjusto.freshdesk.com/support/solutions/folders/67000533349'
-                )
-              }
+                );
+              }}
             />
           </View>
           <View style={{ marginBottom: padding }}>
@@ -116,16 +118,18 @@ export default function ({ navigation }: Props) {
             />
           </View>
           <TouchableOpacity
-            onPress={() => navigation.navigate('MainNavigator', { screen: 'DeliveryHistory' })}
+            onPress={() => {
+              navigation.navigate('MainNavigator', { screen: 'DeliveryHistory' });
+            }}
             style={{ marginBottom: padding }}
           >
             <HomeDeliveriesSummary />
           </TouchableOpacity>
           <View>
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('ProfileNavigator', { screen: 'PartnersAndDiscounts' })
-              }
+              onPress={() => {
+                navigation.navigate('ProfileNavigator', { screen: 'PartnersAndDiscounts' });
+              }}
             >
               <HomeCard
                 icon={<IconPartners />}

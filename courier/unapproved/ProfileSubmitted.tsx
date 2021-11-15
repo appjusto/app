@@ -13,7 +13,7 @@ import DefaultButton from '../../common/components/buttons/DefaultButton';
 import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
 import HR from '../../common/components/views/HR';
-import useNotificationToken from '../../common/hooks/useNotificationToken';
+import { useNotificationToken } from '../../common/hooks/useNotificationToken';
 import { IconMotocycleBeta } from '../../common/icons/icon-motocycle-beta';
 import HomeShareCard from '../../common/screens/home/cards/HomeShareCard';
 import { SocialMediaCard } from '../../common/screens/home/cards/SocialMediaCard';
@@ -22,7 +22,7 @@ import { useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../common/styles';
 import { t } from '../../strings';
-import { AppJustoFreshdeskCourierURL, AppJustoWhatsAppCourierURL } from '../../strings/values';
+import { AppJustoAssistanceWhatsAppURL, AppJustoFreshdeskCourierURL } from '../../strings/values';
 import { UnapprovedParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<UnapprovedParamList, 'ProfileSubmitted'>;
@@ -49,19 +49,6 @@ export default function ({ navigation }: Props) {
   // side effects
   // tracking
   useSegmentScreen('Profile Submitted');
-  React.useEffect(() => {
-    if (courier.situation === 'submitted') {
-      // api.courier().verifyProfile();
-    } else if (courier.situation === 'pending') {
-      setTimeout(() => {
-        navigation.replace('ProfilePending');
-      }, 100);
-    } else if (courier.situation === 'rejected') {
-      setTimeout(() => {
-        navigation.replace('ProfileRejected');
-      }, 100);
-    }
-  }, [courier, navigation, api]);
   // handlers
   const onPageScroll = (ev: NativeSyntheticEvent<ViewPagerOnPageScrollEventData>) => {
     const { nativeEvent } = ev;
@@ -119,7 +106,9 @@ export default function ({ navigation }: Props) {
                       <DefaultButton
                         secondary
                         title={t('Adicionar')}
-                        onPress={() => Linking.openURL(AppJustoWhatsAppCourierURL)}
+                        onPress={() => {
+                          Linking.openURL(AppJustoAssistanceWhatsAppURL);
+                        }}
                         style={{ marginTop: padding }}
                       />
                     )}
@@ -172,37 +161,51 @@ export default function ({ navigation }: Props) {
           <ConfigItem
             title={t('Sobre o período de testes')}
             subtitle={t('Saiba como acontecerão os testes')}
-            onPress={() => navigation.navigate('AboutTests')}
+            onPress={() => {
+              navigation.navigate('AboutTests');
+            }}
           />
           <ConfigItem
             title={t('Autonomia e preço justo')}
             subtitle={t('Veja como você define o preço')}
-            onPress={() => navigation.navigate('AboutAutonomy')}
+            onPress={() => {
+              navigation.navigate('AboutAutonomy');
+            }}
           />
           <ConfigItem
             title={t('Transparência')}
             subtitle={t('Saiba sobre os valores recebidos ')}
-            onPress={() => navigation.navigate('AboutTransparency')}
+            onPress={() => {
+              navigation.navigate('AboutTransparency');
+            }}
           />
           <ConfigItem
             title={t('Sem bloqueios automáticos')}
             subtitle={t('Entenda o motivo de não termos Score')}
-            onPress={() => navigation.navigate('AboutNoScore')}
+            onPress={() => {
+              navigation.navigate('AboutNoScore');
+            }}
           />
           <ConfigItem
             title={t('Fique disponível para corridas')}
             subtitle={t('Saiba como ajudar o movimento')}
-            onPress={() => navigation.navigate('AboutBeAvailable')}
+            onPress={() => {
+              navigation.navigate('AboutBeAvailable');
+            }}
           />
           <ConfigItem
             title={t('Central de Ajuda')}
             subtitle={t('Conheças as regras e saiba mais sobre o AppJusto')}
-            onPress={() => Linking.openURL(AppJustoFreshdeskCourierURL)}
+            onPress={() => {
+              Linking.openURL(AppJustoFreshdeskCourierURL);
+            }}
           />
           <ConfigItem
             title={t('Sobre o AppJusto')}
             subtitle={t('Acesse nossas páginas')}
-            onPress={() => navigation.navigate('AboutApp')}
+            onPress={() => {
+              navigation.navigate('AboutApp');
+            }}
           />
         </View>
         <PaddedView>

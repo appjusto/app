@@ -4,7 +4,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { toNumber, trim } from 'lodash';
 import React from 'react';
-import { Keyboard, Linking, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Linking, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../common/app/context';
@@ -20,7 +20,7 @@ import {
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
 import * as viacep from '../../../../common/store/api/externals/viacep';
-import { useSegmentScreen } from '../../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { getExtra } from '../../../../common/store/config/selectors';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { companyInfoSet } from '../../../../common/store/courier/validators';
@@ -74,7 +74,7 @@ export default function ({ navigation, route }: Props) {
   const additionalRef = React.useRef<TextInput>(null);
   // side effects
   // tracking
-  useSegmentScreen('Profile Company');
+  useSegmentScreen('ProfileCompany');
   // updating fields after cep query
   React.useEffect(() => {
     if (cep.length === 8 && cepRef.current?.isFocused()) {
@@ -97,11 +97,18 @@ export default function ({ navigation, route }: Props) {
     Keyboard.dismiss();
     setLoading(true);
     await api.profile().updateProfile(courier.id, { company });
+    track('courier updated profile with company info');
     setLoading(false);
     navigation.goBack();
   };
-
   // UI
+  if (!courier) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <KeyboardAwareScrollView
       enableOnAndroid
@@ -135,6 +142,7 @@ export default function ({ navigation, route }: Props) {
             if (!isNaN(toNumber(text))) setCNPJ(text);
           }}
           onSubmitEditing={() => nameRef.current?.focus()}
+          editable={courier.situation !== 'approved'}
         />
         <DefaultInput
           ref={nameRef}
@@ -148,6 +156,7 @@ export default function ({ navigation, route }: Props) {
           onSubmitEditing={() => cepRef.current?.focus()}
           keyboardType="default"
           autoCapitalize="characters"
+          editable={courier.situation !== 'approved'}
         />
         <PatternInput
           mask={cepMask}
@@ -163,6 +172,7 @@ export default function ({ navigation, route }: Props) {
             if (!isNaN(toNumber(text))) setCEP(text);
           }}
           keyboardType="decimal-pad"
+          editable={courier.situation !== 'approved'}
         />
         <DefaultInput
           style={{ marginTop: padding }}
@@ -174,6 +184,7 @@ export default function ({ navigation, route }: Props) {
           onChangeText={setAddress}
           onSubmitEditing={() => numberRef.current?.focus()}
           keyboardType="default"
+          editable={courier.situation !== 'approved'}
         />
         <View style={{ flexDirection: 'row', marginTop: padding }}>
           <DefaultInput
@@ -187,6 +198,7 @@ export default function ({ navigation, route }: Props) {
             blurOnSubmit={false}
             onChangeText={setNumber}
             onSubmitEditing={() => additionalRef.current?.focus()}
+            editable={courier.situation !== 'approved'}
           />
           <DefaultInput
             ref={additionalRef}
@@ -199,6 +211,7 @@ export default function ({ navigation, route }: Props) {
             returnKeyType="next"
             blurOnSubmit
             onChangeText={setAdditional}
+            editable={courier.situation !== 'approved'}
           />
         </View>
         <View style={{ flexDirection: 'row', marginTop: padding }}>
@@ -210,6 +223,7 @@ export default function ({ navigation, route }: Props) {
             returnKeyType="next"
             onChangeText={setCity}
             keyboardType="default"
+            editable={courier.situation !== 'approved'}
           />
           <DefaultInput
             style={{ flex: 1, marginLeft: padding }}
@@ -220,6 +234,7 @@ export default function ({ navigation, route }: Props) {
             returnKeyType="next"
             onChangeText={setState}
             keyboardType="default"
+            editable={courier.situation !== 'approved'}
           />
         </View>
         {cnpj.length > 0 && !cnpjutils.isValid(cnpj) && focusedField !== 'cnpj' && (
@@ -228,22 +243,24 @@ export default function ({ navigation, route }: Props) {
           </Text>
         )}
         <View style={{ flex: 1 }} />
-        <View style={{ marginTop: padding }}>
-          <DefaultButton
-            title={courier.situation === 'approved' ? t('Atualizar') : t('Avançar')}
-            onPress={updateProfileHandler}
-            disabled={!canSubmit || isLoading}
-            activityIndicator={isLoading}
-          />
-          {courier.situation !== 'approved' ? (
+        {courier.situation !== 'approved' ? (
+          <View style={{ marginTop: padding }}>
+            <DefaultButton
+              title={t('Avançar')}
+              onPress={updateProfileHandler}
+              disabled={!canSubmit || isLoading}
+              activityIndicator={isLoading}
+            />
             <DefaultButton
               title={t('Não tem MEI? Clique aqui e saiba mais')}
               grey
               style={{ marginTop: padding }}
-              onPress={() => Linking.openURL(AppJustoMEIURL)}
+              onPress={() => {
+                Linking.openURL(AppJustoMEIURL);
+              }}
             />
-          ) : null}
-        </View>
+          </View>
+        ) : null}
       </PaddedView>
     </KeyboardAwareScrollView>
   );

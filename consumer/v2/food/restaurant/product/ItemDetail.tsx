@@ -25,6 +25,7 @@ import { useProductImageURI } from '../../../../../common/store/api/business/hoo
 import { getNextAvailableDate } from '../../../../../common/store/api/business/selectors';
 import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 import * as helpers from '../../../../../common/store/api/order/helpers';
+import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import {
   getConsumer,
   getCurrentLocation,
@@ -85,7 +86,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const currentPlace = useSelector(getCurrentPlace);
   // state
   const location = useSelector(getCurrentLocation);
-  const destination = activeOrder?.destination?.location ?? location;
+  const destination = activeOrder?.destination?.location ?? currentPlace?.location ?? location;
   const distance =
     destination && business?.businessAddress?.latlng
       ? distanceBetweenLatLng(destination, business.businessAddress.latlng)
@@ -135,6 +136,8 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     setQuantity(item.quantity);
     setNotes(item.notes ?? '');
   }, [itemId, activeOrder, product]);
+  // tracking
+  useSegmentScreen('ItemDetail');
   // UI
   if (!product || !business) {
     return (
@@ -184,6 +187,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
       if (!orderItem) return;
       if (!activeOrder) {
         api.order().createFoodOrder(business, consumer!, [orderItem], currentPlace ?? null);
+        track('consumer created food order in database');
       } else {
         const updatedOrder = !itemId
           ? helpers.addItemToOrder(activeOrder, orderItem)
@@ -191,6 +195,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           ? helpers.updateItem(activeOrder, orderItem)
           : helpers.removeItem(activeOrder, orderItem);
         api.order().updateOrder(activeOrder.id, updatedOrder);
+        track('consumer updated items in order');
       }
       navigation.pop();
     })();
@@ -224,7 +229,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
             <Text style={{ ...texts.sm, marginTop: halfPadding }}>
               {t('Restaurante fora da área de entrega')}
             </Text>
-            <Text style={{ ...texts.xs, color: colors.grey700 }}>
+            <Text style={{ ...texts.xs, color: colors.grey700, textAlign: 'center' }}>
               {t(
                 'Infelizmente ainda não atendemos seu endereço, mas você pode continuar explorando o cardápio'
               )}

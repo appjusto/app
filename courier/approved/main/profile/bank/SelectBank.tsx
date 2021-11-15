@@ -32,7 +32,7 @@ export default function ({ navigation, route }: Props) {
   }, [banks, bankSearch]);
   // side effects
   // tracking
-  useSegmentScreen('Select Bank');
+  useSegmentScreen('SelectBank');
   // UI
   return (
     <PaddedView style={{ ...screens.lightGrey }}>

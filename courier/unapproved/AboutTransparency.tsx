@@ -11,7 +11,7 @@ type ScreenNavigationProp = StackNavigationProp<UnapprovedParamList, 'AboutTrans
 
 export const AboutTransparency = () => {
   // tracking
-  useSegmentScreen('About transparency');
+  useSegmentScreen('AboutTransparency');
   return (
     <ScrollView
       style={{ ...screens.config }}

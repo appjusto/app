@@ -8,6 +8,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -68,6 +69,8 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
     if (!order) return;
     if (order.status === 'canceled') navigation.navigate('OrderCanceled', { orderId });
   }, [navigation, order, orderId]);
+  // tracking
+  useSegmentScreen('OngoingOrderDeclined');
   // UI
   if (!order || isLoading) {
     return (
@@ -107,21 +110,22 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
     } else navigation.navigate('ProfilePaymentMethods', { returnScreen: 'OngoingOrderDeclined' });
   };
   const header = (() => {
-    if (dispatchingStatus === 'declined') return t('Problemas no pagamento do entregador');
+    if (dispatchingStatus === 'declined')
+      return `${t('Problemas no pagamento do entregador')}${order.issue ?? ''}`;
     if (order.status === 'canceled') return t('Esse pedido foi cancelado');
-    else return t('Problemas no pagamento');
+    else return `${t('Problemas no pagamento\n')}${order.issue ?? ''}`;
   })();
   const description = (() => {
     if (dispatchingStatus === 'declined')
       return t(
         'O pedido está pronto, porém não conseguimos efetuar a cobrança destinada à entrega. Altere a forma de pagamento para continuar.'
       );
-    if (order.status === 'canceled') return '';
     else
       return t(
-        'Não conseguimos efetuar a cobrança na forma de pagamento escolhida. Por favor, altere a forma de pagamento e tente novamente.'
+        'Não conseguimos efetuar a cobrança. Por favor, altere a forma de pagamento e tente novamente.'
       );
   })();
+  console.log(order.issue);
   // UI
   return (
     <ScrollView
@@ -155,7 +159,9 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
             <DefaultButton
               title={t('Voltar para o início')}
               secondary
-              onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
+              onPress={() => {
+                navigation.replace('MainNavigator', { screen: 'Home' });
+              }}
             />
           </View>
         ) : null}

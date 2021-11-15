@@ -7,7 +7,7 @@ import { ApiContext, AppDispatch } from '../../common/app/context';
 import DefaultButton from '../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../common/icons/icon-cone-yellow';
-import { useSegmentScreen } from '../../common/store/api/track';
+import { track, useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
 import { showToast } from '../../common/store/ui/actions';
 import { t } from '../../strings';
@@ -31,7 +31,7 @@ export default function ({ navigation }: Props) {
   const [isLoading, setLoading] = React.useState(false);
   // side effects
   // tracking
-  useSegmentScreen('Profile Rejected');
+  useSegmentScreen('ProfileRejected');
   // adapting to situation changes
   React.useEffect(() => {
     if (courier.situation === 'pending') navigation.replace('ProfilePending');
@@ -43,6 +43,7 @@ export default function ({ navigation }: Props) {
       try {
         setLoading(true);
         await api.profile().updateProfile(courier.id, { situation: 'pending' });
+        track('courier situation updated to pending');
         setLoading(false);
       } catch (error) {
         setLoading(false);

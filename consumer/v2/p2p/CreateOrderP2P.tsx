@@ -7,7 +7,9 @@ import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
+import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { isConsumerProfileComplete } from '../../../common/store/courier/validators';
 import { showToast } from '../../../common/store/ui/actions';
@@ -38,6 +40,7 @@ export default function ({ navigation, route }: Props) {
   // redux store
   const consumer = useSelector(getConsumer);
   // state
+  const { coords } = useLastKnownLocation();
   const [orderId, setOrderId] = React.useState<string>();
   const order = useObserveOrder(orderId)!;
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
@@ -63,6 +66,10 @@ export default function ({ navigation, route }: Props) {
     if (!quotes || isEmpty(quotes)) return;
     setSelectedFare(quotes[0]);
   }, [quotes]);
+  // getting the selected fare in the AvailableFleets screen;
+  React.useEffect(() => {
+    if (params?.returningFare) setSelectedFare(params.returningFare);
+  }, [params?.returningFare]);
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
     console.log('CreateOrderP2P useEffect; params: ', params);
@@ -80,7 +87,7 @@ export default function ({ navigation, route }: Props) {
             const newOrder = await api.order().createOrderP2P(consumer!, params.origin!);
             setLoading(false);
             setOrderId(newOrder.id);
-          } catch (error) {
+          } catch (error: any) {
             console.log(error);
             Sentry.Native.captureException(error);
             dispatch(showToast(error.toString(), 'error'));
@@ -106,8 +113,15 @@ export default function ({ navigation, route }: Props) {
       });
     }
   }, [api, consumer, dispatch, navigation, order, orderId, params]);
+  // if the order status becomes 'expired'
+  React.useEffect(() => {
+    if (!order) return;
+    if (order.status === 'expired') navigation.navigate('MainNavigator', { screen: 'Home' });
+  }, [order, navigation]);
+  // tracking
+  useSegmentScreen('CreateOrderP2P');
   // handlers
-  const getOrderQuotesHandler = async () => {
+  const getOrderQuotesHandler = React.useCallback(async () => {
     if (!order) return;
     if (!order.origin?.location || !order.route?.distance) {
       if (order.route?.issue) dispatch(showToast(order.route.issue, 'error'));
@@ -116,10 +130,10 @@ export default function ({ navigation, route }: Props) {
     setQuotes(undefined);
     try {
       setQuotes(await api.order().getOrderQuotes(order.id));
-    } catch (error) {
+    } catch (error: any) {
       dispatch(showToast(error.toString(), 'error'));
     }
-  };
+  }, [order, api, dispatch]);
   // navigate to 'AddressComplete' to enter address
   const navigateToAddressComplete = React.useCallback(
     (returnParam: string, value?: Place) => {
@@ -133,10 +147,14 @@ export default function ({ navigation, route }: Props) {
   );
   // navigate to ProfileAddCard or ProfilePaymentMethods to add or select payment method
   const navigateToFillPaymentInfo = React.useCallback(() => {
+    track('adding payment info');
     // if user has no payment method, go direct to 'AddCard' screen
     if (!isConsumerProfileComplete(consumer)) {
       const returnScreen = !selectedPaymentMethodId ? 'ProfileAddCard' : 'CreateOrderP2P';
-      navigation.navigate('ProfileEdit', { returnScreen, returnNextScreen: 'CreateOrderP2P' });
+      navigation.navigate('CommonProfileEdit', {
+        returnScreen,
+        returnNextScreen: 'CreateOrderP2P',
+      });
     } else if (!selectedPaymentMethodId) {
       navigation.navigate('ProfileAddCard', { returnScreen: 'CreateOrderP2P' });
     } else {
@@ -145,8 +163,10 @@ export default function ({ navigation, route }: Props) {
   }, [consumer, navigation, selectedPaymentMethodId]);
   // confirm order
   const placeOrderHandler = async (fleetId: string) => {
+    track('placing order');
     if (!orderId) return;
     if (!selectedPaymentMethodId) return;
+    if (!consumer) return;
     if (wantsCpf && !cpf) {
       dispatch(
         showToast(
@@ -175,7 +195,8 @@ export default function ({ navigation, route }: Props) {
           payableWith: 'credit_card',
           paymentMethodId: selectedPaymentMethodId,
         },
-        wantsCpf
+        wantsCpf,
+        coords
       );
 
       setLoading(false);
@@ -183,7 +204,7 @@ export default function ({ navigation, route }: Props) {
         screen: 'OngoingOrderConfirming',
         params: { orderId },
       });
-    } catch (error) {
+    } catch (error: any) {
       console.warn(error.toString());
       dispatch(showToast(error.toString(), 'error'));
     }
@@ -206,10 +227,12 @@ export default function ({ navigation, route }: Props) {
           navigation.navigate('TransportableItems');
         }}
         onSubmit={() => placeOrderHandler(selectedFare?.fleet?.id!)}
-        navigateToPixPayment={(total, fleetId) =>
-          navigation.navigate('PayWithPix', { orderId: orderId!, total, fleetId })
-        }
-        navigateToAboutCharges={() => navigation.navigate('AboutCharges')}
+        navigateToPixPayment={(total, fleetId) => {
+          navigation.navigate('PayWithPix', { orderId: orderId!, total, fleetId });
+        }}
+        navigateToAboutCharges={() => {
+          navigation.navigate('AboutCharges');
+        }}
         wantsCpf={wantsCpf}
         onSwitchValueChange={() => setWantsCpf(!wantsCpf)}
         cpf={cpf}
@@ -218,6 +241,13 @@ export default function ({ navigation, route }: Props) {
         quotes={quotes}
         selectedFare={selectedFare}
         onFareSelect={(fare) => setSelectedFare(fare)}
+        navigateToAvailableFleets={() =>
+          navigation.navigate('AvailableFleets', {
+            orderId: order.id,
+            selectedFare: selectedFare!,
+            returnScreen: 'CreateOrderP2P',
+          })
+        }
         onRetry={getOrderQuotesHandler}
         total={selectedFare?.total ?? 0}
       />

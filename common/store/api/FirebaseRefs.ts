@@ -39,6 +39,9 @@ export default class FirebaseRefs {
   // recommendations
   getRecommendationsRef = () => this.firestore.collection('recommendations');
 
+  // withdraws
+  getWithdrawsRef = () => this.firestore.collection('withdraws');
+
   // platform
   getPlatformRef = () => this.firestore.collection('platform');
 
@@ -108,11 +111,18 @@ export default class FirebaseRefs {
   getConsumersRef = () => this.firestore.collection('consumers');
   getConsumerRef = (id: string) => this.getConsumersRef().doc(id);
 
+  // users
+  getUsersRef = () => this.firestore.collection('users');
+  getUsersSubcollectionsRef = () => this.getUsersRef().doc('subcollections');
+  getUsersChangesRef = () => this.getUsersSubcollectionsRef().collection('changes');
+
   // couriers
   getCouriersRef = () => this.firestore.collection('couriers');
   getCourierRef = (id: string) => this.getCouriersRef().doc(id);
   getCourierReviewsRef = (id: string) => this.getCourierRef(id).collection('reviews');
   getCourierRequestsRef = (id: string) => this.getCourierRef(id).collection('requests');
+  getCourierPrivateRef = (id: string) => this.getCourierRef(id).collection('private');
+  getCourierMarketplaceRef = (id: string) => this.getCourierPrivateRef(id).doc('marketplace');
   getCourierOrderRequestsRef = (courierId: string, orderId: string) =>
     this.getCourierRequestsRef(courierId).doc(orderId);
 

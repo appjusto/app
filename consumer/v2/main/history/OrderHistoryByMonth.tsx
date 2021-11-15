@@ -10,7 +10,7 @@ import { ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import StatusBadge from '../../../../common/components/views/StatusBadge';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
-import { useSegmentScreen } from '../../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import {
   getOrdersWithFilter,
   getOrderTime,
@@ -22,8 +22,10 @@ import {
   formatAddress,
   formatDate,
   formatTime,
+  getMonthName,
   separateWithDot,
 } from '../../../../common/utils/formatters';
+import { t } from '../../../../strings';
 import { DeliveredOrderNavigatorParamList } from '../../delivered/types';
 import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
@@ -70,6 +72,11 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
   const orders = useObserveOrders(options);
   const filteredOrders = getOrdersWithFilter(orders, year, month);
   // side effects
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: `${t('Pedidos em ')}${getMonthName(month)}`,
+    });
+  }, [navigation]);
   // tracking
   useSegmentScreen('Order History by Month');
   // handlers
@@ -78,8 +85,10 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
     const { type, status } = order;
     if (status === 'quote') {
       if (type === 'p2p') {
+        track('consumer is proceeding with a p2p order that was in quote');
         navigation.navigate('P2POrderNavigator', { screen: 'CreateOrderP2P', params: { orderId } });
       } else {
+        track('consumer is proceeding with a food order that was in quote');
         navigation.navigate('FoodOrderNavigator', {
           screen: 'RestaurantNavigator',
           initial: false,
@@ -122,6 +131,7 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
   const removeItemHandler = (orderId: string) => {
     (async () => {
       api.order().deleteOrder(orderId);
+      track('deleted order in quote that was being listed in history');
     })();
   };
   return (

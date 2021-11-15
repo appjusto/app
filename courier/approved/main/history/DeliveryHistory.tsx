@@ -64,7 +64,7 @@ export default function ({ navigation, route }: Props) {
     });
   }, [yearsWithOrders]);
   // tracking
-  useSegmentScreen('Delivery History');
+  useSegmentScreen('DeliveryHistory');
   // UI
   if (sections.length === 0) {
     return (
@@ -102,16 +102,12 @@ export default function ({ navigation, route }: Props) {
               )}
               renderItem={({ item }) => {
                 const title = getMonthName(item.month);
-                const subtitle =
-                  item.delivered +
-                  t(' corridas finalizadas') +
-                  '\n' +
-                  t('Total recebido: ') +
-                  formatCurrency(item.courierFee);
+                const subtitle = item.delivered + t(' corridas finalizadas');
                 return (
                   <ConfigItem
                     title={title}
                     subtitle={subtitle}
+                    description={t('Total recebido: ') + formatCurrency(item.courierFee)}
                     onPress={() =>
                       navigation.navigate('DeliveriesNavigator', {
                         screen: 'DeliveryHistoryByMonth',

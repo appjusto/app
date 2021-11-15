@@ -13,6 +13,7 @@ import ShowIf from '../../../../common/components/views/ShowIf';
 import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
+import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
   getMonthsWithOrdersInYear,
   getOrdersWithFilter,
@@ -62,6 +63,9 @@ export default function ({ navigation, route }: Props) {
     });
   }, [yearsWithOrders, monthsWithOrdersInYears, orders]);
 
+  // tracking
+  useSegmentScreen('OrderHistory');
+
   if (months.length === 0) {
     return (
       <FeedbackView
@@ -101,20 +105,25 @@ export default function ({ navigation, route }: Props) {
                 const title = getMonthName(item.month);
                 const ordersPlaced =
                   item.delivered > 1 ? t(' pedidos realizados') : t(' pedido realizado');
-                const subtitle = item.delivered + ordersPlaced;
-                return (
+                const ordersCanceled =
+                  item.canceled > 1 ? t(' pedidos cancelados') : t(' pedidos realizados');
+                const subtitle =
+                  item.delivered >= 1
+                    ? item.delivered + ordersPlaced
+                    : item.canceled + ordersCanceled;
+                return item.delivered >= 1 || item.canceled >= 1 ? (
                   <ConfigItem
                     title={title}
                     subtitle={subtitle}
-                    onPress={() =>
+                    onPress={() => {
                       navigation.navigate('DeliveredOrderNavigator', {
                         screen: 'OrderHistoryByMonth',
                         params: {
                           year: item.year,
                           month: item.month,
                         },
-                      })
-                    }
+                      });
+                    }}
                   >
                     <ShowIf test={item.ongoing > 0}>
                       {() => (
@@ -126,7 +135,7 @@ export default function ({ navigation, route }: Props) {
                       )}
                     </ShowIf>
                   </ConfigItem>
-                );
+                ) : null;
               }}
             />
           </View>

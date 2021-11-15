@@ -32,7 +32,11 @@ export default class PlatformApi {
   }
 
   async fetchCuisines() {
-    const querySnapshot = await this.refs.getCuisinesRef().orderBy('order', 'asc').get();
+    const querySnapshot = await this.refs
+      .getCuisinesRef()
+      .where('enabled', '==', true)
+      .orderBy('order', 'asc')
+      .get();
     return documentsAs<Cuisine>(querySnapshot.docs);
   }
 

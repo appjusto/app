@@ -4,14 +4,13 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext, useState } from 'react';
 import { ActivityIndicator, Keyboard, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -35,8 +34,6 @@ export default function ({ route, navigation }: Props) {
   // context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  // app state
-  const courier = useSelector(getCourier)!;
   // state
   const issues = useIssues('courier-cancel');
   const [selectedReason, setSelectedReason] = useState<WithId<Issue>>();
@@ -44,7 +41,7 @@ export default function ({ route, navigation }: Props) {
   const [isLoading, setLoading] = React.useState(false);
   // side effects
   // tracking
-  useSegmentScreen('Cancel Ongoing Delivery');
+  useSegmentScreen('CancelOngoingDelivery');
   // UI
   if (!issues) {
     return (

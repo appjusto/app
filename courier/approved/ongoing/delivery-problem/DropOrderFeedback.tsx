@@ -3,6 +3,7 @@ import React from 'react';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../../common/icons/icon-cone-yellow';
+import { useSegmentScreen } from '../../../../common/store/api/track';
 import { colors, padding } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
@@ -14,6 +15,8 @@ type Props = {
 };
 
 export const DropOrderFeedback = ({ navigation }: Props) => {
+  // tracking
+  useSegmentScreen('DropOrderFeedback');
   return (
     <FeedbackView
       header={t('Você foi removido do pedido')}
@@ -23,7 +26,9 @@ export const DropOrderFeedback = ({ navigation }: Props) => {
     >
       <DefaultButton
         title={t('Voltar')}
-        onPress={() => navigation.navigate('MainNavigator', { screen: 'Home' })}
+        onPress={() => {
+          navigation.navigate('MainNavigator', { screen: 'Home' });
+        }}
         style={{ paddingBottom: padding }}
       />
     </FeedbackView>

@@ -130,6 +130,18 @@ export default class CourierApi {
     };
     return (await this.refs.getFetchReceivablesCallable()(payload)).data;
   }
+  async fetchTotalWithdrawsThisMonth(accountId: string) {
+    const now = new Date();
+    const firstDayOfMonth = firebase.firestore.Timestamp.fromDate(
+      new Date(now.getUTCFullYear(), now.getUTCMonth(), 1)
+    );
+    const withdrawsRef = this.refs.getWithdrawsRef();
+    const withdrawsQuery = withdrawsRef
+      .where('accountId', '==', accountId)
+      .where('createdOn', '>=', firstDayOfMonth);
+    const withdrawsSnapshot = await withdrawsQuery.get();
+    return withdrawsSnapshot.size;
+  }
   async fetchAdvanceSimulation(
     accountId: string,
     ids: number[]

@@ -11,6 +11,7 @@ import SingleHeader from '../../../../../common/components/texts/SingleHeader';
 import HR from '../../../../../common/components/views/HR';
 import useCuisines from '../../../../../common/store/api/platform/hooks/useCuisines';
 import { useFoodClassifications } from '../../../../../common/store/api/platform/hooks/useFoodClassifications';
+import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import {
   updateSearchFilters,
   updateSearchOrder,
@@ -66,6 +67,8 @@ export const FilterScreen = ({ navigation }: Props) => {
   const classifications = useFoodClassifications();
   const selectedCuisines = filters.filter((f) => f.type === 'cuisine');
   const selectedClassifications = filters.filter((f) => f.type === 'classification');
+  // tracking
+  useSegmentScreen('FilterScreen');
   // UI
   return (
     <ScrollView
@@ -102,6 +105,7 @@ export const FilterScreen = ({ navigation }: Props) => {
                 <TouchableWithoutFeedback
                   key={cuisine.id}
                   onPress={() => {
+                    track('updating restaurant search filters');
                     if (!selected)
                       dispatch(
                         updateSearchFilters([...filters, { type: 'cuisine', value: cuisine.name }])
@@ -139,6 +143,7 @@ export const FilterScreen = ({ navigation }: Props) => {
                   <CheckField
                     text={classification.name}
                     onPress={() => {
+                      track('updating product search filters');
                       if (!selected)
                         dispatch(
                           updateSearchFilters([

@@ -18,6 +18,7 @@ import IuguApi from './payment/iugu';
 import PlatformApi from './platform';
 import ProfileApi from './profile';
 import SearchApi from './search/SearchApi';
+import UserApi from './users';
 
 export default class Api {
   private authentication: firebase.auth.Auth;
@@ -38,6 +39,7 @@ export default class Api {
   private _iugu: IuguApi;
   private _business: BusinessApi;
   private _search: SearchApi;
+  private _user: UserApi;
 
   constructor(extra: Extra) {
     const emulated = extra.firebase.emulator.enabled && extra.firebase.emulator.host;
@@ -72,6 +74,7 @@ export default class Api {
     this._maps = new MapsApi(extra.googleMapsApiKey);
     this._business = new BusinessApi(this._refs, this._files);
     this._search = new SearchApi(extra.algolia, extra.environment);
+    this._user = new UserApi(this._refs, extra.flavor);
   }
 
   auth() {
@@ -116,6 +119,10 @@ export default class Api {
 
   search() {
     return this._search;
+  }
+
+  user() {
+    return this._user;
   }
 
   async signOut() {

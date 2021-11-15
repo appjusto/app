@@ -14,7 +14,7 @@ import ConfigItem from '../../common/components/views/ConfigItem';
 import useLastKnownLocation from '../../common/location/useLastKnownLocation';
 import useCourierDocumentImage from '../../common/store/api/courier/hooks/useCourierDocumentImage';
 import useCourierSelfie from '../../common/store/api/courier/hooks/useCourierSelfie';
-import { useSegmentScreen } from '../../common/store/api/track';
+import { track, useSegmentScreen } from '../../common/store/api/track';
 import { getCourier } from '../../common/store/courier/selectors';
 import {
   bankAccountSet,
@@ -62,21 +62,6 @@ export default function ({ navigation, route }: Props) {
   // side effects
   // tracking
   useSegmentScreen('Profile Pending');
-  // once
-  React.useEffect(() => {
-    // although this screen is named 'ProfilePending', it's also the first screen of UnapprovedNavigator
-    // which means that it will be shown if courier is rejected. so, if that's the case,
-    // we navigate to ProfileRejected after a short delay to make sure it will work on all devices
-    if (situation === 'submitted' || situation === 'verified' || situation === 'invalid') {
-      setTimeout(() => {
-        navigation.replace('ProfileSubmitted');
-      }, 100);
-    } else if (situation === 'rejected') {
-      setTimeout(() => {
-        navigation.replace('ProfileRejected');
-      }, 100);
-    }
-  }, [situation, navigation]);
   // when location changes
   React.useEffect(() => {
     if (!coords) return;
@@ -109,7 +94,9 @@ export default function ({ navigation, route }: Props) {
     (async () => {
       try {
         await dispatch(updateProfile(api)(courier.id, { situation: 'submitted' }));
-      } catch (error) {
+        track('courier submitted profile');
+        navigation.replace('ProfileSubmitted');
+      } catch (error: any) {
         Sentry.Native.captureException(error);
         dispatch(showToast(error.toString(), 'error'));
       }
@@ -134,7 +121,10 @@ export default function ({ navigation, route }: Props) {
         {
           text: t('Confirmar'),
           style: 'destructive',
-          onPress: () => api.signOut(),
+          onPress: () => {
+            track('courier logged out');
+            api.signOut();
+          },
         },
       ]
     );
@@ -177,7 +167,7 @@ export default function ({ navigation, route }: Props) {
         <ConfigItem
           title={t('Seus dados')}
           subtitle={t('Preencha seus dados pessoais')}
-          onPress={() => navigation.navigate('ProfileEdit')}
+          onPress={() => navigation.navigate('CommonProfileEdit')}
           checked={courierInfoSet(courier)}
         />
         <ConfigItem

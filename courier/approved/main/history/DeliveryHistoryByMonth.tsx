@@ -52,7 +52,7 @@ export default function ({ navigation, route }: Props) {
   const filteredOrders = getOrdersWithFilter(orders, year, month);
   // side effects
   // tracking
-  useSegmentScreen('Delivery History by Month');
+  useSegmentScreen('DeliveryHistoryByMonth');
   // handlers
   const orderPressHandler = useCallback((order: WithId<Order>) => {
     if (isOrderOngoing(order)) {

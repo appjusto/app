@@ -20,6 +20,8 @@ if (__DEV__) {
     'Note: Native Sentry SDK is disabled',
     'Attempt to invoke interface method',
     'Non-serializable values were found',
+    // 'Sentry Logger [Warn]:',
+    'No DSN provided',
   ]);
 }
 

@@ -3,8 +3,8 @@ import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../common/app/context';
+import { useUpdateLocation } from '../../common/location/useUpdateLocation';
 import { defaultScreenOptions } from '../../common/screens/options';
-import ProfileBlocked from '../../common/screens/profile/ProfileBlocked';
 import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
 import { SelectLocation } from '../../common/screens/unlogged/onboarding/SelectLocation';
 import { useObserveOngoingOrders } from '../../common/store/api/order/hooks/useObserveOngoingOrders';
@@ -23,6 +23,7 @@ import { OngoingOrderCancelFeedback } from './ongoing/OngoingOrderCancelFeedback
 import { OngoingOrderNavigator } from './ongoing/OngoingOrderNavigator';
 import { P2POrderNavigator } from './p2p/P2POrderNavigator';
 import { LoggedNavigatorParamList } from './types';
+import { UnapprovedConsumerNavigator } from './UnapprovedConsumerNavigator';
 
 const Stack = createStackNavigator<LoggedNavigatorParamList>();
 
@@ -40,6 +41,8 @@ export const LoggedNavigator = () => {
   React.useEffect(() => {
     if (uid) return dispatch(observeProfile(api)(flavor, uid));
   }, [dispatch, api, flavor, uid]);
+  // update location
+  useUpdateLocation();
   // subscribe for observing ongoing orders
   const options = React.useMemo(() => ({ consumerId: uid }), [uid]);
   useObserveOngoingOrders(options);
@@ -52,23 +55,18 @@ export const LoggedNavigator = () => {
     );
   }
   const { situation, onboarded } = consumer;
-  let initialRouteName: 'MainNavigator' | 'ConsumerOnboarding' | 'ProfileBlocked' | undefined =
-    undefined;
-  if (
-    situation === 'blocked' ||
-    situation === 'deleted' ||
-    situation === 'rejected' ||
-    situation === 'invalid'
-  ) {
-    initialRouteName = 'ProfileBlocked';
-  } else if (situation === 'approved') {
+  let initialRouteName: 'MainNavigator' | 'ConsumerOnboarding' | undefined = undefined;
+  if (situation === 'approved') {
     initialRouteName = 'MainNavigator';
   } else if (onboarded) {
     initialRouteName = 'MainNavigator';
-  } else {
+  } else if (!onboarded) {
     initialRouteName = 'ConsumerOnboarding';
   }
-  if (!initialRouteName) return null;
+
+  if (situation === 'blocked' || situation === 'deleted' || situation === 'rejected') {
+    return <UnapprovedConsumerNavigator />;
+  }
   return (
     <LoggedContextProvider>
       <Stack.Navigator screenOptions={defaultScreenOptions} initialRouteName={initialRouteName}>
@@ -116,11 +114,6 @@ export const LoggedNavigator = () => {
           name="OngoingOrderCancelFeedback"
           component={OngoingOrderCancelFeedback}
           options={{ title: t('Pedido cancelado') }}
-        />
-        <Stack.Screen
-          name="ProfileBlocked"
-          component={ProfileBlocked}
-          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </LoggedContextProvider>

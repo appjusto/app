@@ -4,6 +4,7 @@ import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { useContextBusiness } from '../../../../../common/store/context/business';
 import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
 import { formatCurrency, formatHour } from '../../../../../common/utils/formatters';
@@ -20,7 +21,10 @@ type Props = {
 };
 
 export const AboutRestaurant = ({ route }: Props) => {
+  // context
   const restaurant = useContextBusiness();
+  // tracking
+  useSegmentScreen('AboutRestaurant');
 
   if (!restaurant || !restaurant.businessAddress)
     return (

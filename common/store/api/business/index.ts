@@ -1,5 +1,6 @@
 import {
   Business,
+  BusinessRecommendation,
   Category,
   Complement,
   ComplementGroup,
@@ -8,7 +9,6 @@ import {
   Product,
   WithId,
 } from '@appjusto/types';
-import { BusinessRecommendation } from '@appjusto/types/business';
 import firebase from 'firebase';
 import * as Sentry from 'sentry-expo';
 import FilesApi from '../files';
@@ -42,11 +42,17 @@ export default class BusinessApi {
     return unsubscribe;
   }
   // recommendations
-  async addRecomendation(recommendedBusiness: Place, instagram?: string, phone?: string) {
+  async addRecomendation(
+    recommendedBusiness: Place,
+    consumerId?: string,
+    instagram?: string,
+    phone?: string
+  ) {
     await this.refs.getRecommendationsRef().add({
       recommendedBusiness,
-      instagram,
-      phone,
+      consumerId: consumerId ?? null,
+      instagram: instagram ?? null,
+      phone: phone ?? null,
       createdOn: firebase.firestore.FieldValue.serverTimestamp(),
     } as BusinessRecommendation);
   }

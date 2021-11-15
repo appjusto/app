@@ -21,7 +21,7 @@ export default function ({ navigation }: Props) {
   const { fleets, fetchNextPage } = useSearchFleets(fleetSearch);
   // side effects
   // tracking
-  useSegmentScreen('All Fleets');
+  useSegmentScreen('AllFleets');
   // handlers
   const navigateFleetDetail = (fleetId: string) => {
     navigation.navigate('FleetDetail', { fleetId });

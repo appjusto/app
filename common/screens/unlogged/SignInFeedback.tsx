@@ -43,7 +43,12 @@ export default ({ navigation, route }: Props) => {
           <Text style={{ ...texts.sm, color: colors.grey700, textAlign: 'center' }}>
             {t('Continue o acesso clicando no link enviado.')}
           </Text>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={{ alignItems: 'center' }}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={{ alignItems: 'center' }}
+          >
             <>
               <Text style={{ marginTop: padding, ...texts.xs, color: colors.green600 }}>
                 {t('Não recebeu? Preencha seu e-mail novamente.')}

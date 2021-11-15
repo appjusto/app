@@ -1,7 +1,7 @@
-import { Flavor } from '@appjusto/types';
+import { Environment, Flavor } from '@appjusto/types';
 import { ConfigContext, ExpoConfig } from '@expo/config';
 import 'dotenv/config';
-import { Environment, Extra } from './config/types';
+import { Extra } from './config/types';
 import { version, versionCode } from './version.json';
 const {
   FLAVOR,
@@ -54,6 +54,9 @@ export default (context: ConfigContext): ExpoConfig => {
       resizeMode: 'cover',
       backgroundColor: '#78e08f',
     },
+    notification: {
+      icon: './assets/notification-icon.png',
+    },
     updates: {
       fallbackToCacheTimeout: 1000 * (flavor === 'courier' ? 120 : 10),
     },
@@ -85,6 +88,7 @@ const name = () => {
   if (flavor === 'courier') name = 'AppJusto Entregador';
   if (environment === 'dev') return `(D) ${name}`;
   else if (environment === 'staging') return `(S) ${name}`;
+  else if (environment === 'community') return `(C) ${name}`;
   return name;
 };
 
@@ -105,8 +109,9 @@ const appBundlePackage = () => {
 };
 
 const icon = (platform: 'ios' | 'android') => {
-  if (environment === 'live') return `./assets/icon-${flavor}-${platform}.png`;
-  return `./assets/icon-${flavor}-${environment}.png`;
+  if ((['dev', 'staging'] as Environment[]).includes(environment))
+    return `./assets/icon-${flavor}-${environment}.png`;
+  return `./assets/icon-${flavor}-${platform}.png`;
 };
 
 const ios = () => ({

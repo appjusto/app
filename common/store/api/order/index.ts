@@ -10,6 +10,7 @@ import {
   GetCancellationInfoResult,
   GetOrderQuotesPayload,
   Issue,
+  LatLng,
   MatchOrderPayload,
   NextDispatchingStatePayload,
   Order,
@@ -50,7 +51,8 @@ export default class OrderApi {
       dispatchingStatus: 'idle',
       business: {
         id: business.id,
-        name: business.name,
+        name: business.name!,
+        cusine: business.cuisine!,
       },
       consumer: {
         id: consumer.id,
@@ -207,6 +209,7 @@ export default class OrderApi {
     fleetId: string,
     payment: PlaceOrderPayloadPayment,
     invoiceWithCPF: boolean,
+    coordinates?: LatLng,
     additionalInfo?: string,
     wantToShareData?: boolean
   ) {
@@ -215,6 +218,7 @@ export default class OrderApi {
       fleetId,
       payment,
       invoiceWithCPF,
+      coordinates,
       additionalInfo,
       wantToShareData,
       meta: { version: Constants.nativeBuildVersion },

@@ -13,9 +13,10 @@ import { t } from '../../../strings';
 type Props = {
   order: Order;
   tip: number;
-  isLoading?: boolean;
   onChange: (value: number) => void;
+  isLoading?: boolean;
   onConfirm?: () => void;
+  tipSent?: boolean;
 };
 
 const data: HorizontalSelectItem[] = [
@@ -28,7 +29,7 @@ const data: HorizontalSelectItem[] = [
   { id: '30', title: formatCurrency(3000), data: 3000 },
 ];
 
-export default function ({ order, tip, isLoading = false, onChange, onConfirm }: Props) {
+export default function ({ order, tip, isLoading = false, onChange, onConfirm, tipSent }: Props) {
   const alreadyTipped = Boolean(order.tip?.value);
   const selectedtip =
     data.find((item) => item.data === order.tip?.value || (!alreadyTipped && item.data === tip)) ??
@@ -63,13 +64,13 @@ export default function ({ order, tip, isLoading = false, onChange, onConfirm }:
           <DefaultButton
             style={{ marginTop: padding }}
             title={
-              alreadyTipped
+              alreadyTipped || tipSent
                 ? t('Caixinha enviada')
                 : selectedtip.title !== 'Sem caixinha'
                 ? `${t('Pagar ')} ${selectedtip.title} ${t('de')} ${t('caixinha')}`
                 : t('Escolha um valor')
             }
-            disabled={alreadyTipped || selectedtip.data === 0 || isLoading}
+            disabled={alreadyTipped || selectedtip.data === 0 || isLoading || tipSent}
             activityIndicator={isLoading}
             onPress={() => onConfirm()}
           />

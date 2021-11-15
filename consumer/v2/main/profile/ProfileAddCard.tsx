@@ -16,6 +16,7 @@ import {
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
 import useAxiosCancelToken from '../../../../common/hooks/useAxiosCancelToken';
+import { useSegmentScreen } from '../../../../common/store/api/track';
 import { showToast } from '../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -55,30 +56,28 @@ export default function ({ navigation, route }: Props) {
   const [month, setMonth] = React.useState('');
   const [year, setYear] = React.useState('');
   const [cvv, setCVV] = React.useState('');
-  const [name, setName] = React.useState('');
-  const [surname, setSurname] = React.useState('');
+  const [fullName, setFullName] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
   const canSubmit =
-    !isEmpty(number) &&
-    !isEmpty(month) &&
-    !isEmpty(year) &&
-    !isEmpty(cvv) &&
-    !isEmpty(name) &&
-    !isEmpty(surname);
+    !isEmpty(number) && !isEmpty(month) && !isEmpty(year) && !isEmpty(cvv) && !isEmpty(fullName);
+  // tracking
+  useSegmentScreen('ProfileAddCard');
   // UI handlers
   const createCancelToken = useAxiosCancelToken();
   const saveCardHandler = async () => {
     Keyboard.dismiss();
     try {
       setLoading(true);
+      const firstName = trim(fullName.split(' ', 1).toString());
+      const lastName = trim(fullName.split(' ').splice(1).join(' '));
       const result = await api.consumer().saveCard(
         {
           number,
           month,
           year,
           verification_value: cvv,
-          first_name: trim(name),
-          last_name: trim(surname),
+          first_name: firstName,
+          last_name: lastName,
         },
         createCancelToken()
       );
@@ -86,7 +85,7 @@ export default function ({ navigation, route }: Props) {
       if (returnScreen) {
         navigation.navigate(returnScreen, { paymentMethodId: result.paymentMethodId });
       } else navigation.pop();
-    } catch (error) {
+    } catch (error: any) {
       setLoading(false);
       dispatch(showToast(error.toString(), 'error'));
     }
@@ -95,8 +94,8 @@ export default function ({ navigation, route }: Props) {
   const expirationMonthRef = React.useRef<TextInput>(null);
   const expirationYearRef = React.useRef<TextInput>(null);
   const cvvRef = React.useRef<TextInput>(null);
-  const nameRef = React.useRef<TextInput>(null);
-  const surnameRef = React.useRef<TextInput>(null);
+  const fullNameRef = React.useRef<TextInput>(null);
+
   // UI
   return (
     <ScrollView
@@ -171,40 +170,23 @@ export default function ({ navigation, route }: Props) {
               onChangeText={(text) => {
                 if (!isNaN(toNumber(text))) setCVV(text);
               }}
-              onSubmitEditing={() => nameRef.current?.focus()}
+              onSubmitEditing={() => fullNameRef.current?.focus()}
             />
           </View>
-          <View style={{ flexDirection: 'row', marginTop: padding }}>
-            <DefaultInput
-              ref={nameRef}
-              style={{ flex: 1, marginRight: padding }}
-              title={t('Nome ')}
-              value={name}
-              placeholder={t('Conforme cartão')}
-              keyboardType="default"
-              returnKeyType="next"
-              textContentType="givenName"
-              autoCompleteType="name"
-              autoCapitalize="characters"
-              blurOnSubmit={false}
-              onChangeText={setName}
-              onSubmitEditing={() => surnameRef.current?.focus()}
-            />
-            <DefaultInput
-              ref={surnameRef}
-              style={{ flex: 1 }}
-              title={t('Sobrenome')}
-              value={surname}
-              placeholder={t('Conforme cartão')}
-              keyboardType="default"
-              textContentType="familyName"
-              autoCompleteType="name"
-              autoCapitalize="characters"
-              returnKeyType="next"
-              blurOnSubmit
-              onChangeText={setSurname}
-            />
-          </View>
+          <DefaultInput
+            ref={fullNameRef}
+            style={{ width: '100%', marginTop: padding }}
+            title={t('Nome')}
+            value={fullName}
+            placeholder={t('Conforme cartão')}
+            keyboardType="default"
+            returnKeyType="next"
+            textContentType="givenName"
+            autoCompleteType="name"
+            autoCapitalize="characters"
+            blurOnSubmit
+            onChangeText={setFullName}
+          />
         </View>
 
         <View style={{ flex: 1 }} />

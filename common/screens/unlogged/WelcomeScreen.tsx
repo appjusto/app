@@ -53,6 +53,7 @@ export default function ({ navigation, route }: Props) {
   const [email, setEmail] = useState('');
   const [acceptedTerms, setAcceptTerms] = useState(false);
   // side effects
+  // tracking
   useSegmentScreen('Welcome');
   // handlers
   const signInHandler = useCallback(async () => {
@@ -141,6 +142,13 @@ export default function ({ navigation, route }: Props) {
                 blurOnSubmit
                 autoCapitalize="none"
               />
+              <ShowIf test={email.length > 5 && validateEmail(email).status !== 'ok'}>
+                {() => (
+                  <Text style={{ ...texts.sm, color: colors.red, marginTop: halfPadding }}>
+                    {t('O e-mail digitado não é válido')}
+                  </Text>
+                )}
+              </ShowIf>
             </View>
             <View
               style={{
@@ -148,7 +156,6 @@ export default function ({ navigation, route }: Props) {
                 alignItems: tallerDevice ? 'center' : 'flex-start',
                 justifyContent: 'space-between',
                 marginTop: padding,
-                // flex: 1,
               }}
             >
               <View>

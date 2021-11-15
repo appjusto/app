@@ -13,6 +13,7 @@ type Props = {
   bottomBorder?: boolean;
   onPress: () => void;
   leftIcon?: React.ReactNode;
+  description?: string;
 };
 
 export default function ({
@@ -23,6 +24,7 @@ export default function ({
   bottomBorder = true,
   onPress,
   leftIcon,
+  description,
 }: Props) {
   return (
     <TouchableOpacity onPress={onPress}>
@@ -65,6 +67,17 @@ export default function ({
                 >
                   {subtitle}
                 </Text>
+                {description ? (
+                  <Text
+                    style={{
+                      ...texts.sm,
+                      color: colors.black,
+                      flexWrap: 'wrap',
+                    }}
+                  >
+                    {description}
+                  </Text>
+                ) : null}
               </View>
               <View style={{ marginLeft: padding }}>
                 <ArrowBox />

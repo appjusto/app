@@ -17,6 +17,7 @@ import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
 import { OngoingDeliveryNavigatorParamList } from '../../../courier/approved/ongoing/types';
 import { ApprovedParamList } from '../../../courier/approved/types';
 import { t } from '../../../strings';
+import { useSegmentScreen } from '../../store/api/track';
 
 export type OrderCanceledParamList = {
   OrderCanceled: {
@@ -49,7 +50,8 @@ export default ({ navigation, route }: Props) => {
   const [cancelInfo, setCancelInfo] = React.useState<OrderCancellation | undefined | null>(
     undefined
   );
-
+  // tracking
+  useSegmentScreen('OrderCanceled');
   // side effects
   React.useEffect(() => {
     if (!orderId) return;
@@ -64,6 +66,7 @@ export default ({ navigation, route }: Props) => {
       </View>
     );
   }
+
   const description = (() => {
     if (flavor === 'courier') {
       if (cancelInfo) {
@@ -98,7 +101,9 @@ export default ({ navigation, route }: Props) => {
       <View style={{ marginBottom: padding }}>
         <DefaultButton
           title={t('Voltar para o início')}
-          onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
+          onPress={() => {
+            navigation.replace('MainNavigator', { screen: 'Home' });
+          }}
           secondary
         />
       </View>

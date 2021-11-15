@@ -14,10 +14,21 @@ import { getConsumer } from '../store/consumer/selectors';
 import { getCourier } from '../store/courier/selectors';
 import { getUser } from '../store/user/selectors';
 
-type ErrorType = 'permission-denied' | 'not-a-device';
+type ErrorType = 'permission-denied' | 'not-a-device' | 'unknown-error';
 type Returntype = [string | null, boolean, boolean, ErrorType | null];
 
-export default function (): Returntype {
+const getPushToken = (retries: number): Promise<string> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      resolve((await getExpoPushTokenAsync()).data);
+    } catch (error) {
+      if (retries === 0) reject(error);
+      else setTimeout(async () => resolve(await getPushToken(retries - 1)), 1000);
+    }
+  });
+};
+
+export const useNotificationToken = (): Returntype => {
   // context
   const api = React.useContext(ApiContext);
   // redux
@@ -44,8 +55,9 @@ export default function (): Returntype {
     }
     if (finalStatus === 'granted') {
       try {
-        setToken((await getExpoPushTokenAsync()).data);
+        setToken(await getPushToken(5));
       } catch (error) {
+        setError('unknown-error');
         console.log('Error while calling Notifications.getExpoPushTokenAsync()');
         console.log(error);
         Sentry.Native.captureException(error);
@@ -74,4 +86,4 @@ export default function (): Returntype {
   }, [token, user?.uid, shouldDeleteToken, shouldUpdateToken, api]);
 
   return [token, shouldDeleteToken, shouldUpdateToken, error];
-}
+};

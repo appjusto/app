@@ -5,7 +5,7 @@ import FleetDetail from '../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../common/screens/options';
 import { PermissionDenied } from '../../common/screens/PermissionDenied';
 import { AboutApp } from '../../common/screens/profile/AboutApp';
-import ProfileBlocked from '../../common/screens/profile/ProfileBlocked';
+import { CommonProfileEdit } from '../../common/screens/profile/CommonProfileEdit';
 import ProfileErase from '../../common/screens/profile/ProfileErase';
 import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
 import { getCourier } from '../../common/store/courier/selectors';
@@ -17,25 +17,27 @@ import ChooseFleet from '../approved/main/profile/fleet/ChooseFleet';
 import CreateFleet from '../approved/main/profile/fleet/CreateFleet';
 import ProfilePhotos from '../approved/main/profile/photos/ProfilePhotos';
 import ProfileCompany from '../approved/main/profile/ProfileCompany';
-import ProfileEdit from '../approved/main/profile/ProfileEdit';
 import { AboutAutonomy } from './AboutAutonomy';
 import { AboutBeAvailable } from './AboutBeAvailable';
 import { AboutNoScore } from './AboutNoScore';
 import { AboutTests } from './AboutTests';
 import { AboutTransparency } from './AboutTransparency';
 import ProfilePending from './ProfilePending';
-import ProfileRejected from './ProfileRejected';
 import ProfileSubmitted from './ProfileSubmitted';
 import { UnapprovedParamList } from './types';
 
 const Stack = createStackNavigator<UnapprovedParamList>();
 export default function () {
   const courier = useSelector(getCourier)!;
+  const { onboarded, situation } = courier;
+  let initialRouteName: 'ProfilePending' | 'CourierOnboarding' | 'ProfileSubmitted' | undefined =
+    undefined;
+  if (situation === 'pending' && onboarded) initialRouteName = 'ProfilePending';
+  else if (situation === 'submitted' || situation === 'invalid' || situation === 'verified')
+    initialRouteName = 'ProfileSubmitted';
+  else initialRouteName = 'CourierOnboarding';
   return (
-    <Stack.Navigator
-      screenOptions={defaultScreenOptions}
-      initialRouteName={courier.onboarded ? 'ProfilePending' : 'CourierOnboarding'}
-    >
+    <Stack.Navigator screenOptions={defaultScreenOptions} initialRouteName={initialRouteName}>
       <Stack.Screen
         name="CourierOnboarding"
         component={Onboarding}
@@ -47,8 +49,8 @@ export default function () {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="ProfileEdit"
-        component={ProfileEdit}
+        name="CommonProfileEdit"
+        component={CommonProfileEdit}
         options={{ title: t('Dados pessoais') }}
       />
       <Stack.Screen
@@ -125,16 +127,6 @@ export default function () {
         name="AboutApp"
         component={AboutApp}
         options={{ title: t('Sobre o AppJusto') }}
-      />
-      <Stack.Screen
-        name="ProfileRejected"
-        component={ProfileRejected}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="ProfileBlocked"
-        component={ProfileBlocked}
-        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ProfileErase"

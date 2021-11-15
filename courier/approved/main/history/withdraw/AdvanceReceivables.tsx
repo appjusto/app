@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
@@ -10,6 +10,7 @@ import DefaultButton from '../../../../../common/components/buttons/DefaultButto
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { usePlatformParamsContext } from '../../../../../common/contexts/PlatformParamsContext';
 import { useAdvanceSimulation } from '../../../../../common/store/api/courier/account/useAdvanceSimulation';
+import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { showToast } from '../../../../../common/store/ui/actions';
 import {
@@ -43,6 +44,8 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
   const [requesting, setRequesting] = React.useState(false);
   // side effects
   const simulation = useAdvanceSimulation(route.params.ids);
+  // tracking
+  useSegmentScreen('AdvanceReceivables');
   // handlers
   const confirmHandler = async () => {
     if (
@@ -57,6 +60,7 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
     setRequesting(true);
     try {
       const result = await api.courier().advanceReceivables(courier.id, route.params.ids);
+      track('courier advanced receivables');
       console.log(result);
       navigation.replace('RequestWithdrawFeedback', {
         header: t('Antecipação realizada com sucesso!'),
@@ -77,14 +81,9 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
     );
   }
   return (
-    <View style={{ ...screens.config }}>
-      <PaddedView>
-        <Text style={{ ...texts.sm }}>
-          {t(
-            'Para realizar a antecipação, a iugu cobra uma taxa de 2.5% ao mês pela operação financeira. Nada desse dinheiro ficará com o AppJusto.'
-          )}
-        </Text>
-        <Text style={{ ...texts.sm, color: colors.grey700, marginTop: biggerPadding }}>
+    <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
+      <PaddedView style={{ flex: 1 }}>
+        <Text style={{ ...texts.sm, color: colors.grey700, marginTop: padding }}>
           {t('Você selecionou')}
         </Text>
         <Text style={{ ...texts.x2l }}>{`${simulation.transactions.length} ${t('corridas')}`}</Text>
@@ -115,8 +114,8 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
           </View>
           <Text style={{ ...texts.x4l }}>{simulation.total.received_value}</Text>
         </PaddedView>
+        <View style={{ flex: 1 }} />
         <CheckField
-          style={{ marginTop: biggerPadding }}
           checked={accepted}
           text="Estou de acordo com as taxas cobradas para o adiantamento do valor"
           onPress={() => setAccepted(!accepted)}
@@ -129,6 +128,6 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
           disabled={!accepted || requesting}
         />
       </PaddedView>
-    </View>
+    </ScrollView>
   );
 };

@@ -4,6 +4,7 @@ import React from 'react';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconMotocycle } from '../../../common/icons/icon-motocycle';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, padding } from '../../../common/styles';
 import { OngoingOrderNavigatorParamList } from '../../../consumer/v2/ongoing/types';
 import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
@@ -34,6 +35,8 @@ type Props = {
 export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
   // params
   const { issueType, orderId } = route.params;
+  // tracking
+  useSegmentScreen('DeliveryProblemFeedback');
   // handlers
   const finishHandler = () => {
     navigation.replace('OngoingDeliveryNavigator', {
@@ -41,7 +44,7 @@ export const DeliveryProblemFeedback = ({ navigation, route }: Props) => {
       params: { orderId },
     });
   };
-  console.log('delivery problem feedback');
+  // UI
   return (
     <FeedbackView
       header={t('Aguarde enquanto estamos analisando o seu problema.')}

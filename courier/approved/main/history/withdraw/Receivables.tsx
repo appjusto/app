@@ -1,4 +1,4 @@
-import { Feather } from '@expo/vector-icons';
+import { Feather, Ionicons } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -9,6 +9,7 @@ import PaddedView from '../../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';
 import HR from '../../../../../common/components/views/HR';
 import { useReceivables } from '../../../../../common/store/api/courier/account/useReceivables';
+import { useSegmentScreen } from '../../../../../common/store/api/track';
 import {
   borders,
   colors,
@@ -34,8 +35,12 @@ export const Receivables = ({ navigation, route }: Props) => {
   const [selected, setSelected] = React.useState<number[]>([]);
   // side effects
   const receivables = useReceivables();
+  // tracking
+  useSegmentScreen('Receivables');
   // handlers
-  const advanceHandler = () => navigation.replace('AdvanceReceivables', { ids: selected });
+  const advanceHandler = () => {
+    navigation.replace('AdvanceReceivables', { ids: selected });
+  };
   // UI
   if (!receivables) {
     return (
@@ -47,33 +52,29 @@ export const Receivables = ({ navigation, route }: Props) => {
   return (
     <ScrollView style={{ ...screens.config }}>
       <View>
-        <View style={{ backgroundColor: colors.white, padding }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: padding }}>
-            <Feather name="info" size={14} />
-            <Text style={{ ...texts.md, marginLeft: halfPadding }}>
-              {t('Informações sobre a antecipação:')}
-            </Text>
-          </View>
+        <PaddedView>
           <Text style={{ ...texts.sm }}>
-            {t('O AppJusto não fica com nada do valor do seu trabalho.')}
-          </Text>
-          <Text style={{ ...texts.sm, marginTop: padding }}>
-            {t('Os pagamentos das suas corridas são processados com segurança pela iugu.')}
-          </Text>
-          <Text style={{ ...texts.sm, marginTop: padding }}>
             {t(
-              'O prazo padrão para faturar os pagamentos é de 30 dias. Se quiser, você pode antecipar valores pagando uma taxa de até 2.5% por operação.'
+              'O AppJusto não fica com nada do valor do seu trabalho. Todas os pagamentos são processados com segurança pela operadora financeira Iugu.'
             )}
           </Text>
-          <Text style={{ ...texts.sm, marginTop: padding }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginBottom: padding,
+              marginTop: 24,
+            }}
+          >
+            <Feather name="info" size={14} />
+            <Text style={{ ...texts.md, marginLeft: halfPadding }}>{t('Como funciona')}</Text>
+          </View>
+          <Text style={{ ...texts.sm, paddingBottom: halfPadding }}>
             {t(
-              'Funciona assim: se quiser antecipar no primeiro dia útil após a corrida, você pagará o valor cheio de 2.5%. Mas a taxa diminui a cada dia.'
+              'O prazo padrão para processar os pagamentos é de 30 dias. Para antecipar, você paga uma taxa de até 2.5% por operação. Funciona assim: se for antecipar no primeiro dia útil após a corrida, você pagará o valor cheio de 2.5%, e a taxa diminui proporcionalmente a cada dia que passa. Se você esperar 15 dias, por exemplo, pagará 1.25%.'
             )}
           </Text>
-          <Text style={{ ...texts.sm, marginTop: padding }}>
-            {t('Se você esperar 15 dias, por exemplo, ela fica em 1.25%.')}
-          </Text>
-        </View>
+        </PaddedView>
 
         <PaddedView>
           <PaddedView
@@ -83,8 +84,9 @@ export const Receivables = ({ navigation, route }: Props) => {
               borderColor: colors.white,
             }}
           >
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={{ ...texts.sm, color: colors.grey700 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons name="checkmark-circle-outline" size={20} color={colors.grey700} />
+              <Text style={{ ...texts.sm, color: colors.grey700, marginLeft: halfPadding }}>
                 {t('Disponível para adiantamento')}
               </Text>
             </View>
@@ -101,7 +103,7 @@ export const Receivables = ({ navigation, route }: Props) => {
               'Selecione as corridas que quiser antecipar:'
             )}`}
           />
-          <PaddedView style={{ backgroundColor: colors.grey500 }}>
+          <PaddedView style={{ backgroundColor: colors.white }}>
             <CheckField
               checked={selected.length === receivables.totalItems}
               text={t('Selecionar todas')}
@@ -119,7 +121,7 @@ export const Receivables = ({ navigation, route }: Props) => {
                 )
               }
             >
-              <View style={{ flex: 1, backgroundColor: colors.white }}>
+              <View style={{ flex: 1, backgroundColor: colors.grey50 }}>
                 <PaddedView style={{ flex: 1 }}>
                   <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
                     <CheckField checked={selected.includes(item.id)} />

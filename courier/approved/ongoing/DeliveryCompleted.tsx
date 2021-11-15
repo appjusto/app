@@ -39,7 +39,7 @@ export default function ({ navigation, route }: Props) {
   );
   // side effects
   // tracking
-  useSegmentScreen('Delivery Completed');
+  useSegmentScreen('DeliveryCompleted');
   // handlers
   // TODO: add a handler to send client feedback to database
   // UI
@@ -64,7 +64,9 @@ export default function ({ navigation, route }: Props) {
       </View>
       <DefaultButton
         title={t('Finalizar')}
-        onPress={() => navigation.replace('MainNavigator', { screen: 'Home' })}
+        onPress={() => {
+          navigation.replace('MainNavigator', { screen: 'Home' });
+        }}
         style={{ marginTop: padding }}
       />
     </PaddedView>

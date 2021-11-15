@@ -67,12 +67,13 @@ export const summarizeOrders = memoize((orders: WithId<Order>[]) =>
   orders.reduce(
     (result, order) => ({
       delivered: order.status === 'delivered' ? result.delivered + 1 : result.delivered,
+      canceled: order.status === 'canceled' ? result.canceled + 1 : result.canceled,
       ongoing: isOrderOngoing(order) ? result.ongoing + 1 : result.ongoing,
       courierFee:
         order.status === 'delivered'
           ? result.courierFee + (order.fare?.courier.value ?? 0) + (order.tip?.value ?? 0)
           : result.courierFee,
     }),
-    { delivered: 0, ongoing: 0, courierFee: 0 }
+    { delivered: 0, canceled: 0, ongoing: 0, courierFee: 0 }
   )
 );

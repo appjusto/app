@@ -5,6 +5,7 @@ import { FlatList, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
+import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { colors, padding, screens, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
@@ -42,6 +43,8 @@ export default function ({ navigation, route }: Props) {
   // redux
   const consumer = useSelector(getConsumer);
   const cards = consumer?.paymentChannel?.methods ?? [];
+  // tracking
+  useSegmentScreen('ProfilePaymentMethods');
   // UI
   return (
     <View style={{ ...screens.config }}>
@@ -53,8 +56,9 @@ export default function ({ navigation, route }: Props) {
             title={item.data.display_number}
             subtitle={`Cartão de crédito\n${item.data.brand}`}
             onPress={() => {
-              if (returnScreen) navigation.navigate(returnScreen, { paymentMethodId: item.id });
-              else {
+              if (returnScreen) {
+                navigation.navigate(returnScreen, { paymentMethodId: item.id });
+              } else {
                 navigation.navigate('PaymentMethodDetail', {
                   paymentData: item,
                 });

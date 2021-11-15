@@ -21,6 +21,7 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import useAxiosCancelToken from '../../../common/hooks/useAxiosCancelToken';
 import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { formatAddress } from '../../../common/utils/formatters';
@@ -98,12 +99,6 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   // refs
   const searchInputRef = React.useRef<TextInput>();
   // side effects
-  // changing the header title if we are recommending a business
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      title: t('Indicar restaurante'),
-    });
-  }, [navigation]);
   // auto focus on input
   React.useEffect(() => {
     searchInputRef.current?.focus();
@@ -125,7 +120,8 @@ export const AddressComplete = ({ navigation, route }: Props) => {
       setSearchText(formatAddress(selectedAddress));
     }
   }, [selectedAddress]);
-
+  // tracking
+  useSegmentScreen('AddressComplete');
   // handlers
   // fires whenever use change the input text
   const textChangeHandler = React.useCallback(

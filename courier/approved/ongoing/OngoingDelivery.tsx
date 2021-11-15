@@ -10,7 +10,7 @@ import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import { usePlatformParamsContext } from '../../../common/contexts/PlatformParamsContext';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
-import { useSegmentScreen } from '../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -41,31 +41,18 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  // screen state
+  const delayBeforeAdvancing =
+    (usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60) * 1000;
+  // redux
   const order = useObserveOrder(orderId);
+  const consumerId = order?.consumer.id;
+  const businessId = order?.business?.id;
+  const dispatchingState = order?.dispatchingState;
+  // screen state
   const [code, setCode] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
-  const consumerId = order?.consumer.id;
-  const businessId = order?.business?.id;
-  const delayBeforeAdvancing =
-    (usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60) * 1000;
-  // side effects
-  // tracking
-  useSegmentScreen('Ongoing Delivery');
-  // keeping screen awake
-  useKeepAwake();
-  // modal
-  React.useEffect(() => {
-    if (!order) return;
-    if (
-      order.dispatchingState === 'arrived-pickup' &&
-      // order.type === 'food' &&
-      (order.status === 'ready' || order.status === 'dispatching')
-    ) {
-      setModalOpen(true);
-    }
-  }, [order]);
+  const [previousDispatchingState, setPreviousDispatchingState] = React.useState(dispatchingState);
   // helpers
   const openChat = React.useCallback(
     (counterpartId: string, counterpartFlavor: Flavor, delayed?: boolean) => {
@@ -83,13 +70,39 @@ export default function ({ navigation, route }: Props) {
     [navigation, orderId]
   );
   const openChatWithConsumer = React.useCallback(
-    (delayed?: boolean) => openChat(consumerId!, 'consumer', delayed),
+    (delayed?: boolean) => {
+      track('courier opening chat with consumer');
+      openChat(consumerId!, 'consumer', delayed);
+    },
     [openChat, consumerId]
   );
   const openChatWithRestaurant = React.useCallback(
-    (delayed?: boolean) => openChat(businessId!, 'business', delayed),
+    (delayed?: boolean) => {
+      track('courier opening chat with restaurant');
+      openChat(businessId!, 'business', delayed);
+    },
     [openChat, businessId]
   );
+  // side effects
+  // tracking
+  useSegmentScreen('OngoingDelivery');
+  // keeping screen awake
+  useKeepAwake();
+  // modal
+  React.useEffect(() => {
+    if (!order) return;
+    if (previousDispatchingState !== dispatchingState) {
+      if (dispatchingState === 'going-pickup') {
+        setLoading(true);
+        setTimeout(() => {
+          setLoading(false);
+        }, delayBeforeAdvancing);
+      } else if (dispatchingState === 'arrived-pickup') {
+        setModalOpen(true);
+      }
+      setPreviousDispatchingState(dispatchingState);
+    }
+  }, [dispatchingState, previousDispatchingState, delayBeforeAdvancing]);
   // whenever params updates
   // open chat if there's a new message
   React.useEffect(() => {
@@ -122,23 +135,23 @@ export default function ({ navigation, route }: Props) {
   // UI handlers
   const nextDispatchingStateHandler = () => {
     (async () => {
-      setLoading(true);
       try {
-        if (order.dispatchingState === 'arrived-destination') {
+        if (order.dispatchingState === 'going-destination') {
+          await api.order().nextDispatchingState(orderId);
+        } else if (order.dispatchingState === 'arrived-destination') {
           Keyboard.dismiss();
+          setLoading(true);
           await api.order().completeDelivery(orderId, code);
+          track('courier completed delivery');
           setLoading(false);
         } else {
+          setLoading(true);
           await api.order().nextDispatchingState(orderId);
-          if (order.dispatchingState === 'going-destination') {
+          setTimeout(() => {
             setLoading(false);
-          } else {
-            setTimeout(() => {
-              setLoading(false);
-            }, delayBeforeAdvancing);
-          }
+          }, delayBeforeAdvancing);
         }
-      } catch (error) {
+      } catch (error: any) {
         setLoading(false);
         dispatch(showToast(error.toString(), 'error'));
       }
@@ -151,15 +164,19 @@ export default function ({ navigation, route }: Props) {
       try {
         await api.order().completeDelivery(orderId, code);
         setLoading(false);
-      } catch (error) {
+      } catch (error: any) {
         dispatch(showToast(error.toString(), 'error'));
         setLoading(false);
       }
     })();
   };
+  const navigateToDeliveryProblem = () => {
+    navigation.navigate('DeliveryProblem', { orderId });
+  };
   // UI
-  const { type, dispatchingState } = order;
-  const nextStepDisabled = isLoading || (type === 'food' && dispatchingState === 'arrived-pickup');
+  const { type } = order;
+  const nextStepDisabled =
+    isLoading || (type === 'food' && previousDispatchingState === 'arrived-pickup');
   const nextStepLabel = (() => {
     const dispatchingState = order?.dispatchingState;
     if (!dispatchingState || dispatchingState === 'going-pickup') {
@@ -174,7 +191,7 @@ export default function ({ navigation, route }: Props) {
     return '';
   })();
   const sliderColor = (() => {
-    if (!dispatchingState || dispatchingState === 'going-pickup') {
+    if (!previousDispatchingState || previousDispatchingState === 'going-pickup') {
       return colors.green500;
     } else return colors.darkYellow;
   })();
@@ -193,16 +210,13 @@ export default function ({ navigation, route }: Props) {
         <CourierDeliveryInfo
           order={order}
           onChat={() => openChatWithConsumer()}
-          onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
+          onProblem={navigateToDeliveryProblem}
         />
         {/* center*/}
         <OngoingDeliveryMap order={order} onOpenChat={(from) => openChat(from.id, from.agent)} />
         {/* bottom*/}
-        <OngoingDeliveryInfo
-          order={order}
-          onProblem={() => navigation.navigate('DeliveryProblem', { orderId })}
-        />
-        <OngoingDeliveryLoading dispatchingState={dispatchingState} />
+        <OngoingDeliveryInfo order={order} onProblem={navigateToDeliveryProblem} />
+        <OngoingDeliveryLoading dispatchingState={previousDispatchingState} />
         {/* Status slider */}
         <OngoingDeliverySlider
           order={order}
@@ -214,7 +228,7 @@ export default function ({ navigation, route }: Props) {
           sliderColor={sliderColor}
         />
         {/* chat with restaurant */}
-        {type === 'food' && dispatchingState ? (
+        {type === 'food' && previousDispatchingState ? (
           <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
             <DefaultButton
               title={t('Abrir chat com o restaurante')}
@@ -231,8 +245,10 @@ export default function ({ navigation, route }: Props) {
           buttonTitle={t('Confirmar entrega')}
           onDelivery={codeDeliveryHandler}
           isLoading={isLoading}
-          onNoCodeDelivery={() => navigation.navigate('NoCodeDelivery', { orderId })}
-          dispatchingState={dispatchingState}
+          onNoCodeDelivery={() => {
+            navigation.navigate('NoCodeDelivery', { orderId });
+          }}
+          dispatchingState={previousDispatchingState}
         />
         {/* withdrawal modal */}
         <WithdrawOrderModal
@@ -243,7 +259,7 @@ export default function ({ navigation, route }: Props) {
             setModalOpen(false);
           }}
           onIssue={() => {
-            navigation.navigate('DeliveryProblem', { orderId });
+            navigateToDeliveryProblem();
             setModalOpen(false);
           }}
           onModalClose={() => setModalOpen(false)}

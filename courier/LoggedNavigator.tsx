@@ -8,6 +8,7 @@ import { observeProfile } from '../common/store/user/actions';
 import { getUser } from '../common/store/user/selectors';
 import { colors, screens } from '../common/styles';
 import ApprovedNavigator from './approved/ApprovedNavigator';
+import { ProfileIssuesNavigator } from './ProfileIssuesNavigator';
 import UnapprovedNavigator from './unapproved/UnapprovedNavigator';
 
 export default function () {
@@ -27,6 +28,9 @@ export default function () {
     if (!courierId) return;
     return dispatch(observeProfile(api)(flavor, courierId));
   }, [api, dispatch, flavor, courierId]);
+  // helpers
+  const profileIssues =
+    situation === 'blocked' || situation === 'deleted' || situation === 'rejected';
   // UI
   if (!situation) {
     // showing the indicator until the profile is loaded
@@ -37,6 +41,8 @@ export default function () {
     );
   } else if (situation === 'approved') {
     return <ApprovedNavigator />;
+  } else if (profileIssues) {
+    return <ProfileIssuesNavigator />;
   }
   return <UnapprovedNavigator />;
 }

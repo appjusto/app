@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../common/components/views/ConfigItem';
 import { useobservePendingOrderRequests } from '../../../common/store/api/courier/hooks/useobservePendingOrderRequests';
+import { useSegmentScreen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { screens } from '../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../common/utils/formatters';
@@ -30,6 +31,8 @@ export default function ({ navigation, route }: Props) {
   const courier = useSelector(getCourier)!;
   // state
   const requests = useobservePendingOrderRequests(courier.id);
+  // tracking
+  useSegmentScreen('OrderRequests');
   return (
     <View style={{ ...screens.config }}>
       <FlatList
