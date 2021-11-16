@@ -93,7 +93,7 @@ export const FilterScreen = ({ navigation }: Props) => {
         </PaddedView>
       </View>
       {/* restaurants */}
-      {kind === 'restaurant' && cuisines && (
+      {kind === 'restaurant' && cuisines ? (
         <View>
           <SingleHeader title={t('Categorias')} />
           <HR height={1} />
@@ -127,9 +127,9 @@ export const FilterScreen = ({ navigation }: Props) => {
             })}
           </PaddedView>
         </View>
-      )}
+      ) : null}
       {/* product */}
-      {kind === 'product' && classifications && (
+      {kind === 'product' && classifications ? (
         <View>
           <SingleHeader title={t('Classificações especiais')} />
           <HR height={1} />
@@ -165,7 +165,7 @@ export const FilterScreen = ({ navigation }: Props) => {
             })}
           </PaddedView>
         </View>
-      )}
+      ) : null}
     </ScrollView>
   );
 };

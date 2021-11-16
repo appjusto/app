@@ -111,7 +111,7 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   };
   const header = (() => {
     if (dispatchingStatus === 'declined')
-      return `${t('Problemas no pagamento do entregador')}${order.issue ?? ''}`;
+      return `${t('Problemas no pagamento do entregador\n')}${order.issue ?? ''}`;
     if (order.status === 'canceled') return t('Esse pedido foi cancelado');
     else return `${t('Problemas no pagamento\n')}${order.issue ?? ''}`;
   })();
@@ -125,7 +125,6 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
         'Não conseguimos efetuar a cobrança. Por favor, altere a forma de pagamento e tente novamente.'
       );
   })();
-  console.log(order.issue);
   // UI
   return (
     <ScrollView
