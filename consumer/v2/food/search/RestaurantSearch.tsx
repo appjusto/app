@@ -68,7 +68,14 @@ export default function ({ navigation }: Props) {
     results: products,
     refetch: refetchProducts,
     isLoading: loadingProducts,
-  } = useSearch<ProductAlgolia>(kind === 'product', kind, order, filters, currentLocation, search);
+  } = useSearch<ProductAlgolia>(
+    kind === 'product',
+    'product',
+    order,
+    filters,
+    currentLocation,
+    search
+  );
   // initial focus
   React.useEffect(() => {
     searchInputRef.current?.focus();
@@ -120,7 +127,7 @@ export default function ({ navigation }: Props) {
           }}
         />
       </PaddedView>
-      {kind === 'restaurant' && (
+      {kind === 'restaurant' ? (
         <RestaurantList
           sections={sectionsFromResults(restaurants)}
           onSelect={(restaurantId) => {
@@ -135,8 +142,8 @@ export default function ({ navigation }: Props) {
           onRefresh={() => refreshRestaurants()}
           // onRecommend={() => null}
         />
-      )}
-      {kind === 'product' && (
+      ) : null}
+      {kind === 'product' ? (
         <FlatList
           data={products}
           keyExtractor={(item) => item.objectID}
@@ -178,7 +185,7 @@ export default function ({ navigation }: Props) {
           refreshing={refreshing}
           onRefresh={() => refreshProducts()}
         />
-      )}
+      ) : null}
     </View>
   );
 }
