@@ -71,7 +71,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
         orderId,
         counterpartId,
         counterpartFlavor,
-      }); // make this screen accessible here
+      });
     },
     [navigation, orderId]
   );
@@ -79,8 +79,20 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
     track('opening chat with restaurant');
     openChat(order?.business?.id!, 'business');
   }, [openChat, order?.business?.id]);
+  const openChatWithCourier = React.useCallback(() => {
+    track('consumer chat with courier');
+    openChat(order?.courier?.id!, 'courier');
+  }, [openChat, order?.courier?.id]);
 
   // handlers
+  const openChatHandler = () => {
+    if (!order) return;
+    if (order.type === 'food') {
+      openChatWithRestaurant();
+    } else if (order.type === 'p2p') {
+      openChatWithCourier();
+    }
+  };
   const tipHandler = async () => {
     if (!order) return;
     Keyboard.dismiss();
@@ -157,11 +169,11 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
             </RoundedText>
           </View>
         </PaddedView>
-        {order.type === 'food' && (
+        {order.type === 'food' ? (
           <View>
             <DeliveredItems order={order} />
           </View>
-        )}
+        ) : null}
         {order.status !== 'canceled' ? (
           <View>
             <View
@@ -241,8 +253,12 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
             <PaddedView>
               {showChatButton ? (
                 <DefaultButton
-                  title={t('Abrir chat com restaurante')}
-                  onPress={() => openChatWithRestaurant()}
+                  title={
+                    order.type === 'food'
+                      ? t('Abrir chat com restaurante')
+                      : t('Abrir chat com o entregador')
+                  }
+                  onPress={openChatHandler}
                   style={{ marginBottom: padding }}
                 />
               ) : null}

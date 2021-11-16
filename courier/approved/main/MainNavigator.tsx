@@ -74,6 +74,22 @@ export default function ({ navigation }: Props) {
             },
           });
         }
+      } else if (data.action === 'after-delivery-chat') {
+        // if (clicked) {
+        //   track('Push received', {
+        //     action: data.action,
+        //     orderId: data.orderId,
+        //   });
+        //   remove!();
+        //   navigation.navigate('DeliveriesNavigator', {
+        //     screen: 'Chat',
+        //     params: {
+        //       orderId: data.orderId,
+        //       counterpartId: ,
+        //       counterpartFlavor: ,
+        //     }
+        //   });
+        // }
       }
     },
     [navigation, courier.status]
