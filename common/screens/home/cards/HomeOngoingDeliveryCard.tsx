@@ -24,7 +24,7 @@ export default function ({ order, onPress }: Props) {
   let detail = '';
   if (flavor === 'consumer') {
     if (type === 'food') {
-      if (status === 'confirming') {
+      if (status === 'confirming' || status === 'charged') {
         title = t('Aguarde enquanto criamos seu pedido...');
       } else if (status === 'confirmed') {
         title = `${t('Aguarde enquanto')} ${order.business!.name} ${t('confirma seu pedido')}`;
@@ -74,7 +74,7 @@ export default function ({ order, onPress }: Props) {
       }
     }
     if (type === 'p2p') {
-      if (status === 'confirming') {
+      if (status === 'confirming' || status === 'charged') {
         title = t('Aguarde enquanto criamos seu pedido...');
       } else if (status === 'confirmed') {
         title = t('Procurando entregador/a próximo a');

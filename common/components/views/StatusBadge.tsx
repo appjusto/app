@@ -8,7 +8,7 @@ import RoundedText from '../texts/RoundedText';
 
 const getStatusLabel = (status: OrderStatus, dispatchingState: DispatchingState) => {
   if (status === 'quote') return t('Continuar pedido');
-  if (status === 'confirming') return t('Confirmando...');
+  if (status === 'confirming' || status === 'charged') return t('Confirmando...');
   if (status === 'confirmed') return t('Confirmado');
   if (status === 'preparing') return t('Preparando');
   if (status === 'delivered') return t('Entregue');

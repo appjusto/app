@@ -58,6 +58,7 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
       statuses: [
         'quote',
         'confirming',
+        'charged',
         'confirmed',
         'declined',
         'dispatching',
@@ -98,7 +99,7 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
           },
         });
       }
-    } else if (status === 'confirming') {
+    } else if (status === 'confirming' || status === 'charged') {
       navigation.navigate('OngoingOrderNavigator', {
         screen: 'OngoingOrderConfirming',
         params: {
