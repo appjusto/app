@@ -36,6 +36,7 @@ export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...pr
   // UI
   return (
     <SectionList
+      keyboardShouldPersistTaps="handled"
       style={{ ...screens.default, paddingBottom: padding }}
       ListFooterComponent={
         loading ? null : (

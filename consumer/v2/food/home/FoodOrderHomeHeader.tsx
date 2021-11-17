@@ -12,7 +12,7 @@ import { LocationBar } from './LocationBar';
 
 type Props = {
   selectedCuisineId?: string;
-  onLocationPress: () => void;
+  onChangePlace: () => void;
   onSearchPress: () => void;
   onCuisineSelect: (cuisine: WithId<Cuisine> | null) => void;
   consumer: WithId<ConsumerProfile> | undefined;
@@ -21,7 +21,7 @@ type Props = {
 
 export const FoodOrderHomeHeader = ({
   selectedCuisineId,
-  onLocationPress,
+  onChangePlace,
   onSearchPress,
   onCuisineSelect,
   consumer,
@@ -29,11 +29,9 @@ export const FoodOrderHomeHeader = ({
 }: Props) => {
   return (
     <View>
-      <TouchableWithoutFeedback onPress={onLocationPress}>
-        <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>
-          <LocationBar />
-        </View>
-      </TouchableWithoutFeedback>
+      <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>
+        <LocationBar onChangePlace={onChangePlace} />
+      </View>
       {/* login */}
       {!consumer ? (
         <TouchableOpacity onPress={onLogin} style={{ marginTop: 24, paddingHorizontal: padding }}>
