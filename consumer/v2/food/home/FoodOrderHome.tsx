@@ -73,7 +73,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
         <View style={{ backgroundColor: colors.white, paddingBottom: padding }}>
           <FoodOrderHomeHeader
             selectedCuisineId={filters.find(() => true)?.value}
-            onLocationPress={() => {
+            onChangePlace={() => {
               navigation.navigate('AddressComplete', {
                 returnParam: 'place',
                 returnScreen: 'FoodOrderHome',
