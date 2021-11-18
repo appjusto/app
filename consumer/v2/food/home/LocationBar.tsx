@@ -76,9 +76,11 @@ export const LocationBar = ({ onChangePlace }: Props) => {
               <ActivityIndicator size="small" color={colors.green500} />
             </View>
           ) : (
-            <Text style={{ ...texts.xs, flexWrap: 'wrap' }}>
-              {currentPlace?.address ? formatAddress(currentPlace.address) : ''}
-            </Text>
+            <TouchableOpacity onPress={onChangePlace}>
+              <Text style={{ ...texts.xs, flexWrap: 'wrap' }}>
+                {currentPlace?.address ? formatAddress(currentPlace.address) : ''}
+              </Text>
+            </TouchableOpacity>
           )}
         </View>
       </View>
