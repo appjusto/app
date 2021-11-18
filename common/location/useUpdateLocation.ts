@@ -2,6 +2,7 @@ import firebase from 'firebase';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../app/context';
+import { AuthState, useAuth } from '../hooks/useAuth';
 import { updateCurrentLocation, updateCurrentPlace } from '../store/consumer/actions';
 import { getConsumer, getCurrentLocation, getCurrentPlace } from '../store/consumer/selectors';
 import useLastKnownLocation from './useLastKnownLocation';
@@ -11,15 +12,19 @@ export const useUpdateLocation = () => {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // redux store
+  const [authState] = useAuth();
   const consumer = useSelector(getConsumer);
   const currentPlace = useSelector(getCurrentPlace);
   const currentLocation = useSelector(getCurrentLocation);
   // state
   const { coords } = useLastKnownLocation();
-  // geocode only currentAddress is undefined
+  // effect to update currentPlace and currentLocation
   React.useEffect(() => {
+    // avoid updating during initialization
+    if (!consumer && authState !== AuthState.Unsigned) return;
+    // when currentPlace is set we may need only to update currentLocation
     if (currentPlace) {
-      // when address is selected using AdressComplete we need to fetch location
+      // this will happen when we use AddressComplete to set the place
       if (!currentLocation) {
         (async () => {
           const latlng = await api.maps().googleGeocode(currentPlace.address.description);
@@ -28,8 +33,8 @@ export const useUpdateLocation = () => {
       }
       return;
     }
-    // select last used place if exists
     const lastPlace = consumer?.favoritePlaces?.find(() => true);
+    // select last used place if exists
     if (lastPlace) {
       dispatch(updateCurrentPlace(lastPlace));
       dispatch(updateCurrentLocation(lastPlace.location!));
@@ -38,19 +43,19 @@ export const useUpdateLocation = () => {
     else if (coords) {
       dispatch(updateCurrentLocation(coords));
     }
-    if (currentLocation && !currentPlace) {
-      (async () => {
-        const address = await api.maps().googleReverseGeocode(currentLocation);
-        if (address)
-          dispatch(
-            updateCurrentPlace({
-              address,
-              location: coords,
-            })
-          );
-      })();
-    }
-  }, [consumer, currentPlace, coords, currentLocation, api, dispatch]);
+    // avoid updating if we did it already or we don't have the currentLoation
+    if (currentPlace || !currentLocation) return;
+    (async () => {
+      const address = await api.maps().googleReverseGeocode(currentLocation);
+      if (address)
+        dispatch(
+          updateCurrentPlace({
+            address,
+            location: coords,
+          })
+        );
+    })();
+  }, [authState, consumer, currentPlace, coords, currentLocation, api, dispatch]);
   // update consumer's location
   React.useEffect(() => {
     if (!consumer?.id) return;
