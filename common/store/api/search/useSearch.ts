@@ -65,8 +65,8 @@ export const useSearch = <T extends object>(
     if (!coords) return;
     if (!response) return;
     const hasNextPage = response.page + 1 < response.nbPages;
-    if (hasNextPage) debouncedSearch(coords, name, filters, response.page + 1);
-  }, [name, coords, response, debouncedSearch, filters]);
+    if (hasNextPage) search(coords, name, filters, response.page + 1);
+  }, [name, coords, response, search, filters]);
 
   const refetch = () => {
     if (name === undefined) return;
