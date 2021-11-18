@@ -47,6 +47,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     results: restaurants,
     isLoading,
     refetch,
+    fetchNextPage,
   } = useSearch<BusinessAlgolia>(true, 'restaurant', 'distance', filters, currentLocation, '');
   const [refreshing, setRefreshing] = React.useState(false);
   // side effects
@@ -69,6 +70,10 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   return (
     <RestaurantList
       sections={sectionsFromResults(restaurants)}
+      onEndReached={() => {
+        fetchNextPage();
+      }}
+      onEndReachedThreshold={0.7}
       ListHeaderComponent={
         <View style={{ backgroundColor: colors.white, paddingBottom: padding }}>
           <FoodOrderHomeHeader
