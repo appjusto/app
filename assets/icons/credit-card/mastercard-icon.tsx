@@ -3,7 +3,14 @@ import Svg, { Path, SvgProps } from 'react-native-svg';
 
 export const MasterCardIcon = (props: SvgProps) => {
   return (
-    <Svg width={24} height={25} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <Svg
+      width={24}
+      height={24}
+      fill="none"
+      viewBox="0 0 780 500"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
       <Path
         d="M40,0h700c22.092,0,40,17.909,40,40v420c0,22.092-17.908,40-40,40H40c-22.091,0-40-17.908-40-40V40   C0,17.909,17.909,0,40,0z"
         fill="#16366F"
