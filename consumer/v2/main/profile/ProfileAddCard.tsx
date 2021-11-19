@@ -3,7 +3,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty, toNumber, trim } from 'lodash';
 import React, { useCallback } from 'react';
-import { Image, Keyboard, Text, TextInput, View } from 'react-native';
+import { Keyboard, Text, TextInput, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
@@ -61,7 +61,7 @@ export default function ({ navigation, route }: Props) {
   const [numberError, setNumberError] = React.useState('');
   const [yearError, setYearError] = React.useState('');
   const [monthError, setMonthError] = React.useState('');
-  const [image, setImage] = React.useState<any>();
+  const [CreditCardIcon, setCreditCardIcon] = React.useState<React.ReactNode | undefined>();
   const [month, setMonth] = React.useState('');
   const [year, setYear] = React.useState('');
   const [cvv, setCVV] = React.useState('');
@@ -105,7 +105,7 @@ export default function ({ navigation, route }: Props) {
 
       setNumber(text);
 
-      const { label, type, icon } = getCreditCard(text);
+      const { label, type, icon: creditCardIcon } = getCreditCard(text);
 
       if (!isAllowed(type) && type !== CreditCardType.undefined) {
         setNumberError(`Não aceitamos a bandeira ${label}`);
@@ -113,7 +113,7 @@ export default function ({ navigation, route }: Props) {
         setNumberError('');
       }
 
-      setImage(icon);
+      setCreditCardIcon(creditCardIcon);
     },
     [setNumber, setNumberError]
   );
@@ -180,7 +180,7 @@ export default function ({ navigation, route }: Props) {
             returnKeyType="next"
             blurOnSubmit={false}
             onChangeText={onChangeNumber}
-            trailing={image && <Image source={image} />}
+            trailing={CreditCardIcon}
             errorMessage={numberError}
             onSubmitEditing={() => expirationMonthRef.current?.focus()}
           />

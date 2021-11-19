@@ -72,7 +72,6 @@ const _creditCards: Record<CreditCardTypeStrings, ICreditCard> = {
   american_express: {
     type: CreditCardType.american_express,
     label: 'American Express',
-    icon: undefined,
   },
   diners_club: {
     type: CreditCardType.diners_club,
@@ -82,7 +81,6 @@ const _creditCards: Record<CreditCardTypeStrings, ICreditCard> = {
   discover: {
     type: CreditCardType.discover,
     label: 'Discover',
-    icon: undefined,
   },
   elo: {
     type: CreditCardType.elo,
@@ -92,22 +90,18 @@ const _creditCards: Record<CreditCardTypeStrings, ICreditCard> = {
   hiper: {
     type: CreditCardType.hiper,
     label: 'Hiper',
-    icon: undefined,
   },
   hipercard: {
     type: CreditCardType.hipercard,
     label: 'Hipercard',
-    icon: undefined,
   },
   jcb: {
     type: CreditCardType.jcb,
     label: 'JCB',
-    icon: undefined,
   },
   maestro: {
     type: CreditCardType.maestro,
     label: 'Maestro',
-    icon: undefined,
   },
   mastercard: {
     type: CreditCardType.mastercard,
@@ -117,12 +111,10 @@ const _creditCards: Record<CreditCardTypeStrings, ICreditCard> = {
   mir: {
     type: CreditCardType.mir,
     label: 'Mir',
-    icon: undefined,
   },
   unionpay: {
     type: CreditCardType.unionpay,
     label: 'Union Pay',
-    icon: undefined,
   },
   visa: {
     type: CreditCardType.visa,
@@ -132,6 +124,5 @@ const _creditCards: Record<CreditCardTypeStrings, ICreditCard> = {
   undefined: {
     type: CreditCardType.undefined,
     label: '',
-    icon: undefined,
   },
 };

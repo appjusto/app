@@ -1,9 +1,11 @@
+import { ReactNode } from 'react';
+
 export interface ICreditCard {
   type: CreditCardType;
 
   label: string;
 
-  icon: any;
+  icon?: ReactNode;
 }
 
 export enum CreditCardType {
