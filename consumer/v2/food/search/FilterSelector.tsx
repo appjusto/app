@@ -2,7 +2,7 @@ import React from 'react';
 import { FlatList, Text, TouchableWithoutFeedback, View, ViewProps } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../../../common/app/context';
-import { updateSearchKind } from '../../../../common/store/consumer/actions';
+import { updateSearchFilters, updateSearchKind } from '../../../../common/store/consumer/actions';
 import { getSearchKind } from '../../../../common/store/consumer/selectors';
 import { SearchKind } from '../../../../common/store/consumer/types';
 import { borders, colors, halfPadding, texts } from '../../../../common/styles';
@@ -40,6 +40,7 @@ export const FilterSelector = ({ style, onFilterOpen }: Props) => {
           <TouchableWithoutFeedback
             onPress={() => {
               dispatch(updateSearchKind(item.kind));
+              dispatch(updateSearchFilters([]));
             }}
           >
             <View
