@@ -95,7 +95,6 @@ export default function ({ navigation }: Props) {
     await refetchProducts();
     setRefreshing(false);
   };
-
   //UI
   return (
     <View style={{ ...screens.default }}>
