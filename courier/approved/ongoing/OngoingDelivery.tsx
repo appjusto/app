@@ -21,6 +21,7 @@ import { OngoingDeliveryInfo } from './OngoingDeliveryInfo';
 import { OngoingDeliveryLoading } from './OngoingDeliveryLoading';
 import { OngoingDeliveryMap } from './OngoingDeliveryMap';
 import { OngoingDeliverySlider } from './OngoingDeliverySlider';
+import { RouteButtons } from './RouteButtons';
 import { OngoingDeliveryNavigatorParamList } from './types';
 import { WithdrawOrderModal } from './WithdrawOrderModal';
 
@@ -216,6 +217,7 @@ export default function ({ navigation, route }: Props) {
         <OngoingDeliveryMap order={order} onOpenChat={(from) => openChat(from.id, from.agent)} />
         {/* bottom*/}
         <OngoingDeliveryInfo order={order} onProblem={navigateToDeliveryProblem} />
+        <RouteButtons order={order} />
         <OngoingDeliveryLoading dispatchingState={previousDispatchingState} />
         {/* Status slider */}
         <OngoingDeliverySlider
