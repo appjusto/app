@@ -4,7 +4,7 @@ import { Share, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Business, WithId } from '../../../../../../types';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
-import { borders, colors, halfPadding, texts } from '../../../../../common/styles';
+import { borders, colors, halfPadding, padding, texts } from '../../../../../common/styles';
 import { getExtra } from '../../../../../common/utils/config';
 import { getBaseDomain } from '../../../../../common/utils/domains';
 import { t } from '../../../../../strings';
@@ -13,16 +13,22 @@ import { RestaurantHeader } from '../../common/RestaurantHeader';
 interface Props {
   restaurant: WithId<Business>;
   onAboutPress: () => void;
+  onHeaderMessagePress: () => void;
 }
 
-export const RestaurantDetailHeader = ({ restaurant, onAboutPress }: Props) => {
+export const RestaurantDetailHeader = ({
+  restaurant,
+  onAboutPress,
+  onHeaderMessagePress,
+}: Props) => {
   // redux
   const extra = useSelector(getExtra);
   // helpers
-  const domain = `${extra.environment === 'live' ? '' : `${extra.environment}.`}appjusto.com.br`;
   const businessDeeplink = `https://${getBaseDomain(extra.environment)}/r/${
     restaurant?.slug ?? restaurant?.code
   }`;
+  // just for now
+  const [showHeaderMessage] = React.useState(true);
   // handlers
   const shareRestaurantHandler = async () => {
     try {
@@ -37,7 +43,7 @@ export const RestaurantDetailHeader = ({ restaurant, onAboutPress }: Props) => {
   };
   // UI
   return (
-    <View style={{ marginBottom: halfPadding }}>
+    <View>
       <RestaurantHeader restaurant={restaurant} onPress={onAboutPress} canNavigate />
       <TouchableOpacity
         style={{ paddingHorizontal: 12, paddingTop: 12 }}
@@ -69,6 +75,26 @@ export const RestaurantDetailHeader = ({ restaurant, onAboutPress }: Props) => {
           <Text style={{ ...texts.xs }}>{t('Compartilhe esse restaurante com seus amigos!')}</Text>
         </PaddedView>
       </TouchableOpacity>
+      {showHeaderMessage ? (
+        <TouchableOpacity
+          style={{
+            paddingHorizontal: padding,
+            paddingTop: padding,
+          }}
+          onPress={onHeaderMessagePress}
+        >
+          <Text style={{ ...texts.sm }}>{t('Título da mensagem')}</Text>
+          <Text
+            style={{ ...texts.xs, flexWrap: 'wrap', color: colors.grey700, paddingVertical: 4 }}
+            numberOfLines={2}
+          >
+            {t(
+              'Descrição da mensagem que será exibida em até 2 linhas e o restante ficará escondido com reticências como esparamos que o flexWrap faça'
+            )}
+          </Text>
+          <Text style={{ ...texts.sm }}>{t('Ler mais')}</Text>
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 };

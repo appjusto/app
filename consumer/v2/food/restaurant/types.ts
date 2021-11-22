@@ -7,6 +7,7 @@ import { ProfileParamList } from '../../main/profile/types';
 
 export type RestaurantNavigatorParamList = {
   RestaurantDetail: undefined;
+  RestaurantHeaderMessage: undefined;
   AboutRestaurant: undefined;
   ItemDetail: {
     productId: string;

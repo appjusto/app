@@ -11,6 +11,7 @@ import ProfileAddCard from '../../main/profile/ProfileAddCard';
 import ProfilePaymentMethods from '../../main/profile/ProfilePaymentMethods';
 import { AboutCharges } from '../../p2p/AboutCharges';
 import { AboutRestaurant } from './about/AboutRestaurant';
+import { RestaurantHeaderMessage } from './about/RestaurantHeaderMessage';
 import { FoodOrderCheckout } from './checkout/FoodOrderCheckout';
 import { RestaurantDetail } from './detail/RestaurantDetail';
 import { ItemDetail } from './product/ItemDetail';
@@ -26,6 +27,7 @@ export default function () {
         component={RestaurantDetail}
         options={{ title: t('Saber mais') }}
       />
+      <Stack.Screen name="RestaurantHeaderMessage" component={RestaurantHeaderMessage} />
       <Stack.Screen
         name="AboutRestaurant"
         component={AboutRestaurant}
@@ -44,7 +46,7 @@ export default function () {
       <Stack.Screen
         name="CommonProfileEdit"
         component={CommonProfileEdit}
-        options={{ title: t('Sua sacola') }} //TODO: check if this title is right
+        options={{ title: t('Seus dados') }}
       />
       <Stack.Screen
         name="AvailableFleets"

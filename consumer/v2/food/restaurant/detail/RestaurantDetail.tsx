@@ -77,6 +77,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
             onAboutPress={() => {
               navigation.navigate('AboutRestaurant');
             }}
+            onHeaderMessagePress={() => navigation.navigate('RestaurantHeaderMessage')}
           />
         }
         renderSectionHeader={({ section }) => {
