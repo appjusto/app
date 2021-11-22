@@ -136,7 +136,7 @@ export const FilterScreen = ({ navigation }: Props) => {
           <PaddedView>
             {classifications?.map((classification) => {
               const selected =
-                selectedClassifications.find((item) => item.value === classification.id) !==
+                selectedClassifications.find((item) => item.value === classification.name) !==
                 undefined;
               return (
                 <View key={classification.id} style={{ marginTop: halfPadding }}>
@@ -148,13 +148,13 @@ export const FilterScreen = ({ navigation }: Props) => {
                         dispatch(
                           updateSearchFilters([
                             ...filters,
-                            { type: 'classification', value: classification.id },
+                            { type: 'classification', value: classification.name },
                           ])
                         );
                       else
                         dispatch(
                           updateSearchFilters(
-                            filters.filter((item) => item.value !== classification.id)
+                            filters.filter((item) => item.value !== classification.name)
                           )
                         );
                     }}
