@@ -31,9 +31,9 @@ import { useObserveOrders } from '../../store/api/order/hooks/useObserveOrders';
 import { track, useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
 import { getConsumer } from '../../store/consumer/selectors';
-import { consumerInfoSet } from '../../store/consumer/validators';
+import { isConsumerProfileComplete } from '../../store/consumer/validators';
 import { getCourier } from '../../store/courier/selectors';
-import { courierInfoSet, isConsumerProfileComplete } from '../../store/courier/validators';
+import { courierInfoSet } from '../../store/courier/validators';
 import { showToast } from '../../store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../styles';
 
@@ -75,8 +75,8 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   // state
   const [name, setName] = React.useState<string>(profile.name ?? '');
   const [surname, setSurname] = React.useState(profile.surname ?? '');
-  const [cpf, setCpf] = React.useState(profile.cpf! ?? '');
-  const [phone, setPhone] = React.useState(profile.phone! ?? '');
+  const [cpf, setCpf] = React.useState(profile.cpf ?? '');
+  const [phone, setPhone] = React.useState(profile.phone ?? '');
   const [focusedField, setFocusedField] = React.useState<string>();
   const [isLoading, setLoading] = React.useState(false);
   const options = React.useMemo(() => ({ consumerId: consumer?.id }), [consumer?.id]);
@@ -99,10 +99,11 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
     phone: phone.trim(),
   };
   const canSubmit =
-    flavor === 'consumer' ? consumerInfoSet(updatedUser) : courierInfoSet(updatedUser);
+    flavor === 'consumer' ? isConsumerProfileComplete(updatedUser) : courierInfoSet(updatedUser);
   const isProfileApproved =
     flavor === 'consumer' ? isConsumerProfileComplete(consumer) : courier!.situation === 'approved';
   const hasOrdered = orders.filter((order) => order.status === 'delivered').length > 0;
+  const editable = flavor === 'consumer' ? !hasOrdered : !isProfileApproved;
 
   const buttonTitle = (() => {
     if (flavor === 'consumer') {
@@ -132,7 +133,6 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
     }
   })();
 
-  const editable = flavor === 'consumer' ? !hasOrdered : !isProfileApproved;
   // handler
   const updateProfileHandler = async () => {
     Keyboard.dismiss();
@@ -144,10 +144,18 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
         await api.profile().updateProfile(profile.id, updatedUser);
         track('profile updated');
         setLoading(false);
-        if (returnScreen) navigation.navigate(returnScreen, { returnScreen: returnNextScreen });
-        else navigation.goBack();
+        if (flavor === 'consumer' && !api.auth().getPhoneNumber()) {
+          navigation.navigate('PhoneVerificationScreen', {
+            phone: updatedUser.phone!,
+            returnScreen,
+            returnNextScreen,
+          });
+        } else if (returnScreen) {
+          navigation.navigate(returnScreen, { returnScreen: returnNextScreen });
+        } else navigation.goBack();
       }
     } catch (error) {
+      console.error(error);
       dispatch(
         showToast(t('Não foi possível atualizar o perfil. Tente novamente mais tarde.'), 'error')
       );

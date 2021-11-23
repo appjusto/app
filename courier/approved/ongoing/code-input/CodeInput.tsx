@@ -1,19 +1,19 @@
 import React from 'react';
-import { Keyboard, TextInput, View } from 'react-native';
+import { Keyboard, TextInput, View, ViewProps } from 'react-native';
 import { DigitInput } from './DigitInput';
+import { useRefs } from './useRefs';
 
-interface Props {
+interface Props extends ViewProps {
   value: string;
   onChange: (text: string) => void;
+  length?: number;
 }
 
-export const CodeInput = ({ value, onChange }: Props) => {
+export const CodeInput = ({ value, onChange, length = 3, style, ...props }: Props) => {
   // state
-  const values = [value.charAt(0), value.charAt(1), value.charAt(2)];
+  const values = value.split('');
   // refs
-  const firstInputRef = React.useRef<TextInput>(null);
-  const secondInputRef = React.useRef<TextInput>(null);
-  const thirdInputRef = React.useRef<TextInput>(null);
+  const refs = useRefs<TextInput>().slice(0, length);
   // UI handlers
   const updateValues = (
     char: string,
@@ -33,41 +33,35 @@ export const CodeInput = ({ value, onChange }: Props) => {
   // UI
   return (
     <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        width: '100%',
-        height: 60,
-      }}
+      style={[
+        {
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          height: 60,
+        },
+        style,
+      ]}
+      {...props}
     >
-      <DigitInput
-        ref={firstInputRef}
-        value={values[0]}
-        blurOnSubmit={false}
-        returnKeyType="next"
-        onChangeText={(char) => updateValues(char, 0, secondInputRef)}
-        onSubmitEditing={() => secondInputRef.current?.focus()}
-        importantForAutofill="no"
-      />
-      <View style={{ flex: 0.1 }} />
-      <DigitInput
-        ref={secondInputRef}
-        value={values[1]}
-        blurOnSubmit={false}
-        returnKeyType="next"
-        onChangeText={(char) => updateValues(char, 1, thirdInputRef, firstInputRef)}
-        onSubmitEditing={() => thirdInputRef.current?.focus()}
-        importantForAutofill="no"
-      />
-      <View style={{ flex: 0.1 }} />
-      <DigitInput
-        ref={thirdInputRef}
-        value={values[2]}
-        returnKeyType="done"
-        onChangeText={(char) => updateValues(char, 2, undefined, secondInputRef)}
-        importantForAutofill="no"
-      />
+      {refs.map((ref, index) => (
+        <View style={{ flex: 1, flexDirection: 'row' }} key={`input-${index}`}>
+          {index > 0 ? <View style={{ flex: 0.1 }} /> : null}
+          <DigitInput
+            ref={ref}
+            value={values[index]}
+            blurOnSubmit={false}
+            returnKeyType={index + 1 === refs.length ? 'done' : 'next'}
+            onChangeText={(char) => updateValues(char, index, refs[index + 1], refs[index - 1])}
+            onSubmitEditing={() => {
+              if (index + 1 < refs.length) refs[index + 1]?.current?.focus();
+            }}
+            importantForAutofill="no"
+            maxLength={1}
+          />
+        </View>
+      ))}
     </View>
   );
 };

@@ -10,8 +10,8 @@ import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
+import { isConsumerProfileComplete } from '../../../../../common/store/consumer/validators';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
-import { isConsumerProfileComplete } from '../../../../../common/store/courier/validators';
 import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, screens } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
@@ -189,7 +189,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   // navigate to ProfileAddCard or ProfilePaymentMethods to add or select payment method
   const navigateToFillPaymentInfo = React.useCallback(() => {
     // if user has no payment method, go direct to 'AddCard' screen
-    if (!isConsumerProfileComplete(consumer)) {
+    if (!isConsumerProfileComplete(consumer) || !api.auth().getPhoneNumber()) {
       const returnScreen = !selectedPaymentMethodId ? 'ProfileAddCard' : 'FoodOrderCheckout';
       navigation.navigate('CommonProfileEdit', {
         returnScreen,

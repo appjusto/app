@@ -18,6 +18,7 @@ export const COURIER_PROFILE_UPDATED = 'COURIER_PROFILE_UPDATED';
 
 export const observeAuthState = (api: Api) => (dispatch: AppDispatch) => {
   const unsubscribe = api.auth().observeAuthState((user) => {
+    console.log(user);
     dispatch({ type: USER_AUTH_STATE_CHANGED, payload: user });
   });
   return unsubscribe;

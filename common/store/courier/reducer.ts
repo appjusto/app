@@ -13,7 +13,7 @@ export default function (state: CourierState = initialState, action: AnyAction):
       return { ...state, courier };
     }
     case USER_AUTH_STATE_CHANGED: {
-      if (!payload?.profile) return { ...state, courier: undefined };
+      if (!payload) return { ...state, courier: undefined };
       return state;
     }
     default:

@@ -17,7 +17,7 @@ export const DigitInput = React.forwardRef(
             {
               ...texts.sm,
               fontSize: 36,
-              lineHeight: 36,
+              lineHeight: 42,
               textAlign: 'center',
               height: 60,
             },
