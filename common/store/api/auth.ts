@@ -7,14 +7,16 @@ import { getDeeplinkDomain, getFallbackDomain } from '../../utils/domains';
 import FirebaseRefs from './FirebaseRefs';
 
 export default class AuthApi {
-  constructor(private refs: FirebaseRefs, private auth: firebase.auth.Auth, private extra: Extra) {}
+  constructor(private refs: FirebaseRefs, private auth: firebase.auth.Auth, private extra: Extra) {
+    this.auth.languageCode = 'pt';
+  }
 
   observeAuthState(handler: (a: firebase.User | null) => any): firebase.Unsubscribe {
     return this.auth.onAuthStateChanged(handler);
   }
 
+  // email sign in
   async sendSignInLinkToEmail(email: string): Promise<void> {
-    this.auth.languageCode = 'pt'; // i18n
     try {
       await this.refs.getPlatformLoginLogsRef().add({
         email,
@@ -50,12 +52,20 @@ export default class AuthApi {
     return userCredential.user;
   }
 
+  linkCredential(credential: firebase.auth.AuthCredential) {
+    return this.auth.currentUser!.linkWithCredential(credential);
+  }
+
   getUserId() {
     return this.auth.currentUser?.uid;
   }
 
   getEmail() {
     return this.auth.currentUser?.email;
+  }
+
+  getPhoneNumber() {
+    return this.auth.currentUser?.phoneNumber;
   }
 
   signOut() {

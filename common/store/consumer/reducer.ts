@@ -28,7 +28,7 @@ export default function (state: ConsumerState = initialState, action: AnyAction)
       return { ...state, consumer };
     }
     case USER_AUTH_STATE_CHANGED: {
-      if (!payload?.profile) return { ...state, consumer: undefined };
+      if (!payload) return { ...state, consumer: undefined };
       return state;
     }
     case UPDATE_CURRENT_LOCATION: {
