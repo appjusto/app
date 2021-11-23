@@ -67,6 +67,8 @@ export default class FirebaseRefs {
   getBusinessRef = (id: string) => this.getBusinessesRef().doc(id);
 
   // business menu
+  getBusinessMenuMessageRef = (businessId: string) =>
+    this.getBusinessRef(businessId).collection('menu').doc('message');
   getBusinessCategoriesRef = (businessId: string) =>
     this.getBusinessRef(businessId).collection('categories');
   getBusinessCategoryRef = (businessId: string, categoryId: string) =>
