@@ -4,6 +4,7 @@ import { Share, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Business, WithId } from '../../../../../../types';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
+import { useBusinessMenuMessage } from '../../../../../common/store/api/business/hooks/useBusinessMenuMessage';
 import { borders, colors, halfPadding, padding, texts } from '../../../../../common/styles';
 import { getExtra } from '../../../../../common/utils/config';
 import { getBaseDomain } from '../../../../../common/utils/domains';
@@ -21,14 +22,14 @@ export const RestaurantDetailHeader = ({
   onAboutPress,
   onHeaderMessagePress,
 }: Props) => {
+  // context
+  const message = useBusinessMenuMessage(restaurant.id);
   // redux
   const extra = useSelector(getExtra);
   // helpers
   const businessDeeplink = `https://${getBaseDomain(extra.environment)}/r/${
     restaurant?.slug ?? restaurant?.code
   }`;
-  // just for now
-  const [showHeaderMessage] = React.useState(true);
   // handlers
   const shareRestaurantHandler = async () => {
     try {
@@ -75,7 +76,7 @@ export const RestaurantDetailHeader = ({
           <Text style={{ ...texts.xs }}>{t('Compartilhe esse restaurante com seus amigos!')}</Text>
         </PaddedView>
       </TouchableOpacity>
-      {showHeaderMessage ? (
+      {message !== undefined ? (
         <TouchableOpacity
           style={{
             paddingHorizontal: padding,
@@ -83,14 +84,12 @@ export const RestaurantDetailHeader = ({
           }}
           onPress={onHeaderMessagePress}
         >
-          <Text style={{ ...texts.sm }}>{t('Título da mensagem')}</Text>
+          <Text style={{ ...texts.sm }}>{message.title}</Text>
           <Text
             style={{ ...texts.xs, flexWrap: 'wrap', color: colors.grey700, paddingVertical: 4 }}
             numberOfLines={2}
           >
-            {t(
-              'Descrição da mensagem que será exibida em até 2 linhas e o restante ficará escondido com reticências como esparamos que o flexWrap faça'
-            )}
+            {message.description}
           </Text>
           <Text style={{ ...texts.sm }}>{t('Ler mais')}</Text>
         </TouchableOpacity>

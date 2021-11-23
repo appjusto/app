@@ -1,5 +1,6 @@
 import {
   Business,
+  BusinessMenuMessage,
   BusinessRecommendation,
   Category,
   Complement,
@@ -140,6 +141,10 @@ export default class BusinessApi {
       }
     );
     return unsubscribe;
+  }
+  async fetchBusinessMenuMessage(businessId: string) {
+    const snapshot = await this.refs.getBusinessMenuMessageRef(businessId).get();
+    return snapshot.data() as BusinessMenuMessage;
   }
   // storage
   fetchBusinessLogoURI(businessId: string) {
