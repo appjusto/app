@@ -15,10 +15,17 @@ type Props = {
 export default function ({ cuisine, selected }: Props) {
   const { data: imageURI } = useCuisineImageURI(cuisine.imagePath);
   return (
-    <View style={{ height: 120, width: 120, borderRadius: 8, marginRight: halfPadding }}>
+    <View
+      style={{
+        height: 154,
+        width: 120,
+        borderRadius: 8,
+        marginRight: halfPadding,
+      }}
+    >
       <ListItemImage uri={imageURI} height={120} width={120} />
-      <View style={{ position: 'absolute', left: 4, bottom: 4 }}>
-        <RoundedText backgroundColor={selected ? colors.green500 : colors.white}>
+      <View style={{ paddingTop: 4 }}>
+        <RoundedText backgroundColor={selected ? colors.green500 : colors.grey50} noBorder>
           {t(cuisine.name)}
         </RoundedText>
       </View>
