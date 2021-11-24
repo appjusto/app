@@ -11,6 +11,7 @@ export type FoodOrderNavigatorParamList = {
   RecommendRestaurant?: {
     place?: Place;
   };
+  RecommendationFeedback: undefined;
   RestaurantNavigator: {
     restaurantId: string;
     orderId?: string;

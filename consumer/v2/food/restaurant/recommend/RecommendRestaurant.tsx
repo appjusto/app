@@ -46,11 +46,12 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
   const [name, setName] = React.useState<string | undefined>();
   const [instagram, setInstagram] = React.useState<string>('');
   const [phone, setPhone] = React.useState<string>('');
+  const [owner, setOwner] = React.useState<string>('');
   const [isLoading, setLoading] = React.useState(false);
   // refs
-  // const cityRef = React.useRef<TextInput>(null);
   const instagramRef = React.useRef<TextInput>(null);
   const phoneRef = React.useRef<TextInput>(null);
+  const ownerRef = React.useRef<TextInput>(null);
   //side effects
   React.useEffect(() => {
     if (place) setName(place.address.main);
@@ -64,13 +65,10 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
     (async () => {
       try {
         setLoading(true);
-        await api.business().addRecomendation(place, consumer?.id, instagram, phone);
+        await api.business().addRecomendation(place, consumer?.id, instagram, phone, owner);
         track('consumer sent a restaurant recommendation to database');
         setLoading(false);
-        dispatch(
-          showToast(t('Recomendação enviada. Muito obrigado pela contribuição!'), 'success')
-        );
-        navigation.navigate('FoodOrderHome');
+        navigation.navigate('RecommendationFeedback');
       } catch (error) {
         dispatch(showToast(t('Não foi possível enviar a recomendação. Tente novamente.'), 'error'));
       }
@@ -105,8 +103,8 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
             }}
           >
             <LabeledText
-              title={t('Nome do restaurante')}
-              placeholder={t('Qual restaurante você quer indicar?')}
+              title={t('Qual o restaurante?')}
+              placeholder={t('Nome do restaurante')}
               style={{ height: 54 }}
             >
               {name}
@@ -115,8 +113,8 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
           <DefaultInput
             ref={instagramRef}
             style={{ marginTop: 12 }}
-            title={t('Instagram (se souber)')}
-            placeholder={t('Se souber o Instagram, conta pra gente')}
+            title={t('Sabe o Instagram?')}
+            placeholder={t('@instagram')}
             value={instagram}
             returnKeyType="next"
             blurOnSubmit={false}
@@ -127,15 +125,26 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
           <PatternInput
             ref={phoneRef}
             style={{ marginTop: 12 }}
-            title={t('Telefone (se souber)')}
+            title={t('Sabe o telefone?')}
             value={phone}
-            placeholder={t('Se souber o telefone, conta pra gente')}
+            placeholder={t('Telefone do restaurante')}
             parser={numbersOnlyParser}
             formatter={phoneFormatter}
             keyboardType="number-pad"
             returnKeyType="next"
-            blurOnSubmit
+            blurOnSubmit={false}
             onChangeText={(text) => setPhone(trim(text))}
+          />
+          <DefaultInput
+            ref={ownerRef}
+            style={{ marginTop: 12 }}
+            title={t('Sabe o nome do dono ou gerente?')}
+            placeholder={t('Faz toda a diferença pra parceria')}
+            value={owner}
+            returnKeyType="next"
+            blurOnSubmit
+            onChangeText={(text) => setOwner(text)}
+            keyboardType="default"
           />
         </View>
         <View style={{ flex: 1 }} />
