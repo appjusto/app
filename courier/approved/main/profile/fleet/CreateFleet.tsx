@@ -13,7 +13,7 @@ import HR from '../../../../../common/components/views/HR';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { showToast } from '../../../../../common/store/ui/actions';
-import { colors, padding, screens, texts } from '../../../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import { CourierProfileParamList } from '../types';
@@ -33,6 +33,8 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  // uncomment when platformParams.matching.minActiveCouriersInFleet gets published
+  // const platformParams = usePlatformParamsContext();
   // redux store
   const courier = useSelector(getCourier)!;
   // screen state
@@ -83,14 +85,42 @@ export default function ({ navigation, route }: Props) {
       dispatch(showToast(t('Não foi possível criar a frota.'), 'error'));
     }
   };
-
+  // helper
+  // uncomment when platformParams.matching.minActiveCouriersInFleet gets published
+  // const participants =
+  //   (platformParams?.matching.minActiveCouriersInFleet ?? 0) > 1
+  //     ? 'participantes ativos'
+  //     : 'participante ativo';
   // UI
+  // uncomment when platformParams.matching.minActiveCouriersInFleet gets published
+  // if (!platformParams) {
+  //   return (
+  //     <View style={screens.centered}>
+  //       <ActivityIndicator size="large" color={colors.green500} />
+  //     </View>
+  //   );
+  // }
   return (
     <ScrollView scrollIndicatorInsets={{ right: 1 }} keyboardShouldPersistTaps="handled">
       <View style={{ ...screens.config }}>
         <PaddedView>
           <Text style={{ ...texts.x2l }}>{t('Criar nova frota')}</Text>
-          <Text style={{ ...texts.sm, color: colors.grey700, marginVertical: 8 }}>
+          {/* uncomment when platformParams.matching.minActiveCouriersInFleet gets published */}
+          {/* <View style={{ marginBottom: halfPadding, marginTop: padding }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <Feather name="info" size={14} />
+              <Text style={{ ...texts.md, marginLeft: halfPadding }}>{t('Importante')}</Text>
+            </View>
+            <Text style={{ ...texts.md, marginTop: 4 }}>{`${t('Apenas frotas com ')}${
+              platformParams.matching.minActiveCouriersInFleet + ' ' + participants
+            }${t(' naquele momento irão receber pedidos')}`}</Text>
+          </View> */}
+          <Text style={{ ...texts.sm, color: colors.grey700, marginVertical: halfPadding }}>
             {t('Preencha as informações da sua frota')}
           </Text>
           <DefaultInput
