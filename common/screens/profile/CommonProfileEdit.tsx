@@ -271,7 +271,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           returnKeyType="next"
           blurOnSubmit
           onChangeText={(text) => setPhone(trim(text))}
-          editable={editable}
+          editable={editable && !api.auth().getPhoneNumber()}
         />
         <View style={{ flex: 1 }}>
           <View style={{ flex: 1 }} />
