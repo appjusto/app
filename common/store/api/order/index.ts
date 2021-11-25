@@ -24,7 +24,7 @@ import {
   RejectOrderPayload,
   TipCourierPayload,
   UpdateOrderPayload,
-  WithId,
+  WithId
 } from '@appjusto/types';
 import Constants from 'expo-constants';
 import firebase from 'firebase';
@@ -269,6 +269,28 @@ export default class OrderApi {
     return (await this.refs.getTipCourierCallable()(payload)).data;
   }
 
+  async getMostRecentRestaurants(consumerId: string) {
+    const querySnapshot = await this.refs
+      .getOrdersRef()
+      .orderBy('createdOn', 'desc')
+      .where('status', '==', 'delivered')
+      .where('consumer.id', '==', consumerId)
+      .limit(3)
+      .get();
+    const queryIds = querySnapshot.docs.map((doc) => doc.id);
+    const ordersQuery = await this.refs
+      .getOrdersRef()
+      .where(firebase.firestore.FieldPath.documentId(), 'in', queryIds)
+      .get();
+    const orders = ordersQuery.docs.map((doc) => doc.data() as WithId<Order>);
+    const orderBusinessesIds = orders.map((order) => order?.business?.id);
+    const lastRestsQuerySnapshot = await this.refs
+      .getBusinessesRef()
+      .where(firebase.firestore.FieldPath.documentId(), 'in', orderBusinessesIds)
+      .where('status', '==', 'open')
+      .get();
+    return documentsAs<WithId<Business>>(lastRestsQuerySnapshot.docs);
+  }
   // courier
   async matchOrder(orderId: string) {
     const payload: MatchOrderPayload = {

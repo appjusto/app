@@ -2,10 +2,11 @@ import { BusinessAlgolia } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
+import { useLastRestaurants } from '../../../../common/store/api/order/hooks/useLastRestaurants';
 import { useSearch } from '../../../../common/store/api/search/useSearch';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
@@ -14,7 +15,7 @@ import {
 } from '../../../../common/store/consumer/actions';
 import { getConsumer, getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import { SearchFilter } from '../../../../common/store/consumer/types';
-import { colors, padding } from '../../../../common/styles';
+import { colors, padding, screens } from '../../../../common/styles';
 import { LoggedNavigatorParamList } from '../../types';
 import { sectionsFromResults } from '../restaurant/list';
 import { RestaurantList } from '../restaurant/list/RestaurantList';
@@ -50,6 +51,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     fetchNextPage,
   } = useSearch<BusinessAlgolia>(true, 'restaurant', 'distance', filters, currentLocation, '');
   const [refreshing, setRefreshing] = React.useState(false);
+  const lastRestaurants = useLastRestaurants(consumer?.id);
   // side effects
   React.useEffect(() => {
     if (place) {
@@ -67,6 +69,13 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     setRefreshing(false);
   };
   // UI
+  if (lastRestaurants === null) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <RestaurantList
       sections={sectionsFromResults(restaurants)}
