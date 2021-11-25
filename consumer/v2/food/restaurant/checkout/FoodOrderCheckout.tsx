@@ -138,9 +138,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       dispatch(showToast(error.toString(), 'error'));
     }
   }, [order, api, dispatch]);
-  const placeOrderHandler = async (fleetId: string) => {
+  const placeOrderHandler = async () => {
     Keyboard.dismiss();
     if (!order) return;
+    if (!selectedFare) return;
     if (!selectedPaymentMethodId) return;
     if (!phoneVerified) {
       navigation.navigate('PhoneVerificationScreen', {
@@ -173,7 +174,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       setLoading(true);
       await api.order().placeOrder(
         order.id,
-        fleetId,
+        selectedFare!.fleet.id,
         {
           payableWith: 'credit_card',
           paymentMethodId: selectedPaymentMethodId,
@@ -298,7 +299,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             isSubmitEnabled={canSubmit}
             activityIndicator={isLoading}
             onEditPaymentMethod={navigateToFillPaymentInfo}
-            onSubmit={() => setDestinationModalVisible(true)}
+            onSubmit={() => {
+              if (phoneVerified) setDestinationModalVisible(true);
+              else placeOrderHandler();
+            }}
             navigateToAboutCharges={() => {
               navigation.navigate('AboutCharges');
             }}
@@ -311,7 +315,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         onModalClose={() => {
           setDestinationModalVisible(false);
         }}
-        onConfirmAddress={() => placeOrderHandler(selectedFare?.fleet?.id!)}
+        onConfirmAddress={() => placeOrderHandler()}
         order={order}
         onEditAddress={() => {
           navigation.navigate('OrderDestination', {
