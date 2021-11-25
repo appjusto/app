@@ -109,7 +109,8 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
     Keyboard.dismiss();
     try {
       if (!editable) {
-        navigation.replace('RequestProfileEdit');
+        if (!phoneVerified) navigation.replace('PhoneVerificationScreen', { phone });
+        else navigation.replace('RequestProfileEdit');
       } else {
         setLoading(true);
         await api.profile().updateProfile(profile.id, updatedUser);
