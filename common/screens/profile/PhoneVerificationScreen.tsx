@@ -5,6 +5,7 @@ import firebase from 'firebase';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
+import * as Sentry from 'sentry-expo';
 import { RestaurantNavigatorParamList } from '../../../consumer/v2/food/restaurant/types';
 import { ProfileParamList } from '../../../consumer/v2/main/profile/types';
 import { P2POrderNavigatorParamList } from '../../../consumer/v2/p2p/types';
@@ -86,7 +87,8 @@ export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
         setVerificationId(id);
         setState('phone-number-verified');
       })
-      .catch(() => {
+      .catch((error) => {
+        Sentry.Native.captureException(error);
         setError(t('Não foi possível verificar o telefone. Edite seu perfil e tente novamente.'));
         setState('unrecoverable-error');
       });
