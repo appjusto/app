@@ -271,20 +271,21 @@ export default class OrderApi {
     return (await this.refs.getTipCourierCallable()(payload)).data;
   }
 
-  async getMostRecentRestaurants(consumerId: string) {
+  async getMostRecentRestaurants(consumerId: string, limit: number = 3) {
     const ordersSnapshot = await this.refs
       .getOrdersRef()
       .orderBy('createdOn', 'desc')
       .where('type', '==', 'food' as OrderType)
       .where('status', '==', 'delivered' as OrderStatus)
       .where('consumer.id', '==', consumerId)
-      .limit(10) // we fetch more than we need to have some latitude for consumers whose order to the same restaurant
+      .limit(limit * 3) // we fetch more than we need to have some latitude for consumers whose order to the same restaurant
       .get();
     const businessIds = documentsAs<Order>(ordersSnapshot.docs).map((order) => order.business!.id);
     const lastRestsQuerySnapshot = await this.refs
       .getBusinessesRef()
       .where(firebase.firestore.FieldPath.documentId(), 'in', businessIds)
       .where('status', '==', 'open')
+      .limit(limit)
       .get();
     return documentsAs<WithId<Business>>(lastRestsQuerySnapshot.docs);
   }
