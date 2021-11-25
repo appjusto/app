@@ -29,6 +29,7 @@ import { numbersOnlyParser } from '../../components/inputs/pattern-input/parsers
 import PatternInput from '../../components/inputs/PatternInput';
 import { useObserveOrders } from '../../store/api/order/hooks/useObserveOrders';
 import { track, useSegmentScreen } from '../../store/api/track';
+import { usePhoneVerified } from '../../store/common/hooks/usePhoneVerified';
 import { getFlavor } from '../../store/config/selectors';
 import { getConsumer } from '../../store/consumer/selectors';
 import { isConsumerProfileComplete } from '../../store/consumer/validators';
@@ -67,11 +68,20 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
-  // app state
+  // refs
+  const nameRef = React.useRef<TextInput>(null);
+  const surnameRef = React.useRef<TextInput>(null);
+  const cpfRef = React.useRef<TextInput>(null);
+  const phoneRef = React.useRef<TextInput>(null);
+  // redux
   const flavor = useSelector(getFlavor);
   const consumer = useSelector(getConsumer);
   const courier = useSelector(getCourier);
   const profile = flavor === 'consumer' ? consumer! : courier!;
+  const phoneVerified = usePhoneVerified();
+  const options = React.useMemo(() => ({ consumerId: consumer?.id }), [consumer?.id]);
+  const orders = useObserveOrders(options);
+  const hasOrdered = orders.filter((order) => order.status === 'delivered').length > 0;
   // state
   const [name, setName] = React.useState<string>(profile.name ?? '');
   const [surname, setSurname] = React.useState(profile.surname ?? '');
@@ -79,36 +89,55 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const [phone, setPhone] = React.useState(profile.phone ?? '');
   const [focusedField, setFocusedField] = React.useState<string>();
   const [isLoading, setLoading] = React.useState(false);
-  const options = React.useMemo(() => ({ consumerId: consumer?.id }), [consumer?.id]);
-  const orders = useObserveOrders(options);
-
-  // tracking
-  useSegmentScreen('CommonProfileEdit');
-
-  // refs
-  const nameRef = React.useRef<TextInput>(null);
-  const surnameRef = React.useRef<TextInput>(null);
-  const cpfRef = React.useRef<TextInput>(null);
-  const phoneRef = React.useRef<TextInput>(null);
-
-  // helpers
   const updatedUser: Partial<UserProfile> = {
     name: name.trim(),
     surname: surname.trim(),
     cpf: cpf.trim(),
     phone: phone.trim(),
   };
+  // side effects
+  // tracking
+  useSegmentScreen('CommonProfileEdit');
+  // helpers
   const canSubmit =
     flavor === 'consumer' ? isConsumerProfileComplete(updatedUser) : courierInfoSet(updatedUser);
   const isProfileApproved =
     flavor === 'consumer' ? isConsumerProfileComplete(consumer) : courier!.situation === 'approved';
-  const hasOrdered = orders.filter((order) => order.status === 'delivered').length > 0;
   const editable = flavor === 'consumer' ? !hasOrdered : !isProfileApproved;
-
+  // handlers
+  const updateProfileHandler = async () => {
+    Keyboard.dismiss();
+    try {
+      if (!editable) {
+        navigation.replace('RequestProfileEdit');
+      } else {
+        setLoading(true);
+        await api.profile().updateProfile(profile.id, updatedUser);
+        track('profile updated');
+        setLoading(false);
+        if (flavor === 'consumer' && !phoneVerified) {
+          navigation.navigate('PhoneVerificationScreen', {
+            phone: updatedUser.phone!,
+            returnScreen,
+            returnNextScreen,
+          });
+        } else if (returnScreen) {
+          navigation.navigate(returnScreen, { returnScreen: returnNextScreen });
+        } else navigation.goBack();
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        showToast(t('Não foi possível atualizar o perfil. Tente novamente mais tarde.'), 'error')
+      );
+    }
+  };
+  // UI
   const buttonTitle = (() => {
     if (flavor === 'consumer') {
       if (isProfileApproved) {
-        if (!hasOrdered) return t('Atualizar');
+        if (!phoneVerified) return t('Verificar telefone');
+        else if (!hasOrdered) return t('Atualizar');
         else return t('Atualizar dados');
       } else return t('Salvar');
     } else {
@@ -132,36 +161,6 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
       return undefined;
     }
   })();
-
-  // handler
-  const updateProfileHandler = async () => {
-    Keyboard.dismiss();
-    try {
-      if (!editable) {
-        navigation.replace('RequestProfileEdit');
-      } else {
-        setLoading(true);
-        await api.profile().updateProfile(profile.id, updatedUser);
-        track('profile updated');
-        setLoading(false);
-        if (flavor === 'consumer' && !api.auth().getPhoneNumber()) {
-          navigation.navigate('PhoneVerificationScreen', {
-            phone: updatedUser.phone!,
-            returnScreen,
-            returnNextScreen,
-          });
-        } else if (returnScreen) {
-          navigation.navigate(returnScreen, { returnScreen: returnNextScreen });
-        } else navigation.goBack();
-      }
-    } catch (error) {
-      console.error(error);
-      dispatch(
-        showToast(t('Não foi possível atualizar o perfil. Tente novamente mais tarde.'), 'error')
-      );
-    }
-  };
-  // UI
   return (
     <KeyboardAwareScrollView
       enableOnAndroid
@@ -271,7 +270,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           returnKeyType="next"
           blurOnSubmit
           onChangeText={(text) => setPhone(trim(text))}
-          editable={editable && !api.auth().getPhoneNumber()}
+          editable={editable}
         />
         <View style={{ flex: 1 }}>
           <View style={{ flex: 1 }} />

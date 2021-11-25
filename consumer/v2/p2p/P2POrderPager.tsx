@@ -64,7 +64,6 @@ export default function ({
   navigateFleetDetail,
   navigateToTransportableItems,
   onSubmit,
-  navigateToPixPayment,
   navigateToAboutCharges,
   cpf,
   setCpf,
@@ -351,7 +350,6 @@ export default function ({
                   isSubmitEnabled={canSubmit}
                   onSubmit={onSubmit}
                   activityIndicator={isLoading}
-                  navigateToPixPayment={() => navigateToPixPayment}
                   navigateToAboutCharges={navigateToAboutCharges}
                 />
               }

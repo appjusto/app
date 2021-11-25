@@ -3,6 +3,7 @@ import React from 'react';
 import FleetDetail from '../../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../../common/screens/options';
 import { CommonProfileEdit } from '../../../common/screens/profile/CommonProfileEdit';
+import { PhoneVerificationScreen } from '../../../common/screens/profile/PhoneVerificationScreen';
 import { t } from '../../../strings';
 import { AddressComplete } from '../common/AddressComplete';
 import { AvailableFleets } from '../common/AvailableFleets';
@@ -38,6 +39,11 @@ export const P2POrderNavigator = () => {
         name="CommonProfileEdit"
         component={CommonProfileEdit}
         options={{ title: t('Adicionar cartão') }}
+      />
+      <Stack.Screen
+        name="PhoneVerificationScreen"
+        component={PhoneVerificationScreen}
+        options={{ title: t('Verificação de telefone') }}
       />
       <Stack.Screen
         name="ProfileAddCard"

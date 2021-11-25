@@ -52,8 +52,9 @@ export default class AuthApi {
     return userCredential.user;
   }
 
-  linkCredential(credential: firebase.auth.AuthCredential) {
-    return this.auth.currentUser!.linkWithCredential(credential);
+  async linkCredential(credential: firebase.auth.AuthCredential) {
+    if (this.getPhoneNumber()) await this.auth.currentUser!.unlink('phone');
+    await this.auth.currentUser!.linkWithCredential(credential);
   }
 
   getUserId() {
