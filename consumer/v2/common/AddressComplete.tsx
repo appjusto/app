@@ -12,7 +12,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../common/app/context';
@@ -74,9 +74,9 @@ export const AddressComplete = ({ navigation, route }: Props) => {
     sections =
       returnScreen !== 'RecommendRestaurant'
         ? [
-            ...sections,
-            { title: t('Últimos endereços utilizados'), data: addresses, key: 'last-used-address' },
-          ]
+          ...sections,
+          { title: t('Últimos endereços utilizados'), data: addresses, key: 'last-used-address' },
+        ]
         : [...sections];
     return sections;
   }, [autocompletePredictions, consumer?.favoritePlaces, returnScreen]);
@@ -120,6 +120,12 @@ export const AddressComplete = ({ navigation, route }: Props) => {
       setSearchText(formatAddress(selectedAddress));
     }
   }, [selectedAddress]);
+  // change title in the page
+  React.useEffect(() => {
+    navigation.setOptions({
+      title: returnScreen !== 'RecommendRestaurant' ? 'Confirmar endereço' : 'Indicar restaurante'
+    })
+  }, [navigation, returnScreen])
   // tracking
   useSegmentScreen('AddressComplete');
   // handlers
@@ -135,7 +141,31 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   // when user select item from list
   const selectItemHandler = React.useCallback(
     (item: Address) => {
-      Keyboard.dismiss();
+      //when user on select address screen
+      if (returnScreen !== 'RecommendRestaurant') {
+        //contains postal code regex
+        const containsPostalCode = /^[0-9]{5}-[0-9]{3}$/
+        //if user enters postal code, retrieves the address information
+        if (containsPostalCode.test(item.main == undefined ? '' : item?.main)) {
+          const message = item.secondary?.split(" - ");
+          const first = message?.shift();
+          const second = message?.join(" - ");
+          item.main = first + ', ';
+          item.secondary = second;
+        }
+        else {
+          //contains a number regex
+          const containsNumber = /^.*[0-9]+.*$/;
+          //verifies if selected address has number
+          if (containsNumber.test(item.main == undefined ? '' : item?.main)) Keyboard.dismiss();
+          else {
+            //if full address catch only street name
+            const message = item.main?.split(" - ");
+            const first = message?.shift();
+            item.main = first + ', ';
+          }
+        }
+      } else Keyboard.dismiss();
       setAutoCompletePredictions([]); // clearing predictions hides the modal
       setSelectedAddress(item);
       const favoritePlace = consumer?.favoritePlaces?.find(
@@ -166,12 +196,12 @@ export const AddressComplete = ({ navigation, route }: Props) => {
         value={searchText}
         title={
           returnScreen !== 'RecommendRestaurant'
-            ? t('Endereço com número')
+            ? t('Endereço com número, ou CEP')
             : t('Nome do restaurante')
         }
         placeholder={
           returnScreen !== 'RecommendRestaurant'
-            ? t('Ex: Av. Paulista 1578')
+            ? t('Ex: Av. Paulista, 1578')
             : t('Qual restaurante você quer indicar?')
         }
         onChangeText={textChangeHandler}
