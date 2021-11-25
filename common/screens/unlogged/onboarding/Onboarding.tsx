@@ -17,6 +17,7 @@ import { getConsumer } from '../../../store/consumer/selectors';
 import { getCourier } from '../../../store/courier/selectors';
 import { getUser } from '../../../store/user/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../styles';
+import { runPromise } from '../../../utils/runPromise';
 import * as config from './config';
 
 type ScreenNavigationProp = StackNavigationProp<
@@ -56,15 +57,13 @@ export const Onboarding = ({ navigation, route }: Props) => {
     } else {
       setLoading(true);
       try {
+        await runPromise(api.profile().updateProfile(user.uid, { onboarded: true }), 5, 1000);
         if (flavor === 'courier') {
-          await api.profile().updateProfile(user.uid, { onboarded: true });
           navigation.replace('ProfilePending');
         } else {
-          await api.profile().updateProfile(user.uid, { onboarded: true });
           navigation.replace('MainNavigator', { screen: 'Home' });
         }
       } catch (error) {
-        console.log(flavor === 'courier' ? courier : consumer);
         Sentry.Native.captureException(error);
       }
       setLoading(false);
