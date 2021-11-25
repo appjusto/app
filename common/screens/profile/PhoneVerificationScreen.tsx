@@ -103,12 +103,21 @@ export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
         setState('success');
       } catch (err: any) {
         let message: string = err.message;
-        if (message.indexOf('SMS code has expired') > 0)
-          message = t('O código expirou. Clique em "Enviar novamente" para tentar novamente.');
-        if (message.indexOf('phone auth credential is invalid') > 0)
-          message = t('O código não é valido. Clique em "Enviar novamente" para tentar novamente.');
+        if (message.indexOf('linked to one identity') > 0) {
+          message = t(
+            'Esse número já está associado à uma outra conta. Edite seu perfil e tente novamente.'
+          );
+          setState('unrecoverable-error');
+        } else {
+          if (message.indexOf('SMS code has expired') > 0)
+            message = t('O código expirou. Clique em "Enviar novamente" para tentar novamente.');
+          else if (message.indexOf('phone auth credential is invalid') > 0)
+            message = t(
+              'O código não é valido. Clique em "Enviar novamente" para tentar novamente.'
+            );
+          setState('error');
+        }
         setError(message);
-        setState('error');
       }
     })();
   };
