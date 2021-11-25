@@ -24,12 +24,16 @@ export const CodeInput = ({ value, onChange, length = 3, style, ...props }: Prop
     onChange([...values.slice(0, index), char, ...values.slice(index + 1)].join(''));
     if (char) {
       if (nextInputRef?.current) nextInputRef.current.focus();
+      else Keyboard.dismiss();
     } else if (previousInputRef?.current) {
       previousInputRef.current.focus();
     } else {
       Keyboard.dismiss();
     }
   };
+  React.useEffect(() => {
+    refs.find(() => true)?.current?.focus();
+  }, []);
   // UI
   return (
     <View
@@ -56,6 +60,7 @@ export const CodeInput = ({ value, onChange, length = 3, style, ...props }: Prop
             onChangeText={(char) => updateValues(char, index, refs[index + 1], refs[index - 1])}
             onSubmitEditing={() => {
               if (index + 1 < refs.length) refs[index + 1]?.current?.focus();
+              else Keyboard.dismiss();
             }}
             importantForAutofill="no"
             maxLength={1}
