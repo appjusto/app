@@ -6,7 +6,7 @@ export const useLastRestaurants = (consumerId?: string) => {
   // context
   const api = React.useContext(ApiContext);
   // state
-  const [lastRests, setLastRests] = React.useState<WithId<Business>[] | null>(null);
+  const [lastRests, setLastRests] = React.useState<WithId<Business>[]>([]);
   // side-effects
   // fetching the last orders
   React.useEffect(() => {

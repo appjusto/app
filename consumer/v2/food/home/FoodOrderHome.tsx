@@ -2,7 +2,7 @@ import { BusinessAlgolia } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
@@ -15,7 +15,7 @@ import {
 } from '../../../../common/store/consumer/actions';
 import { getConsumer, getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import { SearchFilter } from '../../../../common/store/consumer/types';
-import { colors, padding, screens } from '../../../../common/styles';
+import { colors, padding } from '../../../../common/styles';
 import { LoggedNavigatorParamList } from '../../types';
 import { sectionsFromResults } from '../restaurant/list';
 import { RestaurantList } from '../restaurant/list/RestaurantList';
@@ -51,7 +51,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     fetchNextPage,
   } = useSearch<BusinessAlgolia>(true, 'restaurant', 'distance', filters, currentLocation, '');
   const [refreshing, setRefreshing] = React.useState(false);
-  const lastRestaurants = useLastRestaurants(consumer?.id);
+  const mostRecentRestaurants = useLastRestaurants(consumer?.id);
   // side effects
   React.useEffect(() => {
     if (place) {
@@ -69,13 +69,6 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     setRefreshing(false);
   };
   // UI
-  if (lastRestaurants === null) {
-    return (
-      <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green500} />
-      </View>
-    );
-  }
   return (
     <RestaurantList
       sections={sectionsFromResults(restaurants)}
@@ -86,6 +79,12 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
       ListHeaderComponent={
         <View style={{ backgroundColor: colors.white, paddingBottom: padding }}>
           <FoodOrderHomeHeader
+            onSelectRestaurant={(restaurantId) => {
+              navigation.push('RestaurantNavigator', {
+                restaurantId,
+                screen: 'RestaurantDetail',
+              });
+            }}
             selectedCuisineId={filters.find(() => true)?.value}
             onChangePlace={() => {
               navigation.navigate('AddressComplete', {
@@ -103,6 +102,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
             onLogin={() => {
               navigation.replace('WelcomeScreen');
             }}
+            recentRestaurants={mostRecentRestaurants}
           />
         </View>
       }

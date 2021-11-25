@@ -1,4 +1,4 @@
-import { BusinessAlgolia } from '@appjusto/types';
+import { Business, BusinessAlgolia, WithId } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
@@ -9,14 +9,15 @@ import { t } from '../../../../../strings';
 import { ListItemImage } from './ListItemImage';
 
 type Props = {
-  restaurant: BusinessAlgolia;
+  id: string;
+  restaurant: BusinessAlgolia | WithId<Business>;
   cuisine: string | undefined;
   distance: number | undefined;
   secondary?: boolean;
 };
 
-export const RestaurantListItem = ({ restaurant, cuisine, distance, secondary }: Props) => {
-  const { data: logo } = useBusinessLogoURI(restaurant.objectID);
+export const RestaurantListItem = ({ id, restaurant, cuisine, distance, secondary }: Props) => {
+  const { data: logo } = useBusinessLogoURI(id);
   const outOfRange = (restaurant.deliveryRange ?? 0) < (distance ?? 0);
   return (
     <View style={{ justifyContent: 'center' }}>
