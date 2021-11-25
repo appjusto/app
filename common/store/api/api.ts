@@ -77,6 +77,10 @@ export default class Api {
     this._user = new UserApi(this._refs, extra.flavor);
   }
 
+  getFirebaseOptions() {
+    return firebase.app().options;
+  }
+
   auth() {
     return this._auth;
   }

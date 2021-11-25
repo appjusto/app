@@ -1,4 +1,5 @@
 import { Fare, Place } from '@appjusto/types';
+import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
@@ -10,8 +11,9 @@ import { ApiContext, AppDispatch } from '../../../common/app/context';
 import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
+import { usePhoneVerified } from '../../../common/store/common/hooks/usePhoneVerified';
 import { getConsumer } from '../../../common/store/consumer/selectors';
-import { isConsumerProfileComplete } from '../../../common/store/courier/validators';
+import { isConsumerProfileComplete } from '../../../common/store/consumer/validators';
 import { showToast } from '../../../common/store/ui/actions';
 import { screens } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -38,16 +40,17 @@ export default function ({ navigation, route }: Props) {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // redux store
-  const consumer = useSelector(getConsumer);
+  const consumer = useSelector(getConsumer)!;
+  const phoneVerified = usePhoneVerified();
   // state
   const { coords } = useLastKnownLocation();
   const [orderId, setOrderId] = React.useState<string>();
   const order = useObserveOrder(orderId)!;
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
-    consumer?.paymentChannel?.mostRecentPaymentMethodId
+    consumer.paymentChannel?.mostRecentPaymentMethodId
   );
   const [isLoading, setLoading] = React.useState(false);
-  const [cpf, setCpf] = React.useState(consumer?.cpf ?? '');
+  const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
   const [wantsCpf, setWantsCpf] = React.useState(false);
   const [quotes, setQuotes] = React.useState<Fare[]>();
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
@@ -166,18 +169,25 @@ export default function ({ navigation, route }: Props) {
     track('placing order');
     if (!orderId) return;
     if (!selectedPaymentMethodId) return;
-    if (!consumer) return;
-    if (wantsCpf && !cpf) {
-      dispatch(
-        showToast(
-          t(
-            'Preencha o campo com o CPF para que ele seja adicionado na nota. Se não quer adicionar o CPF, desmarque a opção'
-          )
-        )
-      );
+    if (!phoneVerified) {
+      navigation.navigate('PhoneVerificationScreen', {
+        phone: consumer.phone!,
+        returnScreen: 'CreateOrderP2P',
+      });
       return;
     }
-    if (wantsCpf && cpf.length !== 11) {
+    if (wantsCpf) {
+      if (!cpf) {
+        dispatch(
+          showToast(
+            t(
+              'Preencha o campo com o CPF para que ele seja adicionado na nota. Se não quer adicionar o CPF, desmarque a opção'
+            )
+          )
+        );
+        return;
+      }
+    } else if (!cpfutils.isValid(cpf)) {
       dispatch(
         showToast(
           t('CPF preenchido incorretamente. Por favor confira o número do seu documento'),

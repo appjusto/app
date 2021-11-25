@@ -5,31 +5,32 @@ import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
+import { usePhoneVerified } from '../../../../common/store/common/hooks/usePhoneVerified';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
-import { isConsumerProfileComplete } from '../../../../common/store/courier/validators';
+import { isConsumerProfileComplete } from '../../../../common/store/consumer/validators';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
 interface Props {
   selectedPaymentMethodId?: string;
   isSubmitEnabled: boolean;
+  activityIndicator: boolean;
   onEditPaymentMethod: () => void;
   onSubmit: () => void;
-  activityIndicator: boolean;
-  navigateToPixPayment: () => void;
   navigateToAboutCharges: () => void;
 }
 
 export const OrderPayment = ({
   selectedPaymentMethodId,
   isSubmitEnabled,
+  activityIndicator,
   onEditPaymentMethod,
   onSubmit,
-  activityIndicator,
-  navigateToPixPayment,
   navigateToAboutCharges,
 }: Props) => {
+  // redux
   const consumer = useSelector(getConsumer)!;
+  const phoneVerified = usePhoneVerified();
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
   return (
     <View>
@@ -81,7 +82,7 @@ export const OrderPayment = ({
         {isConsumerProfileComplete(consumer) && selectedPaymentMethod ? (
           <DefaultButton
             style={{ marginVertical: padding }}
-            title={t('Confirmar pedido')}
+            title={phoneVerified ? t('Confirmar pedido') : t('Verificar telefone')}
             onPress={onSubmit}
             disabled={!isSubmitEnabled}
             activityIndicator={activityIndicator}

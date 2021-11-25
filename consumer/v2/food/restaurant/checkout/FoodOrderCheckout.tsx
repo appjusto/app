@@ -1,4 +1,5 @@
 import { Fare } from '@appjusto/types';
+import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
@@ -9,9 +10,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
+import { usePhoneVerified } from '../../../../../common/store/common/hooks/usePhoneVerified';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
+import { isConsumerProfileComplete } from '../../../../../common/store/consumer/validators';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
-import { isConsumerProfileComplete } from '../../../../../common/store/courier/validators';
 import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, screens } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
@@ -48,6 +50,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   // redux store
   const consumer = useSelector(getConsumer)!;
+  const phoneVerified = usePhoneVerified();
   // state
   const { coords } = useLastKnownLocation();
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
@@ -139,24 +142,32 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     Keyboard.dismiss();
     if (!order) return;
     if (!selectedPaymentMethodId) return;
-    if (wantsCpf && !cpf) {
-      dispatch(
-        showToast(
-          t(
-            'Preencha o campo com o CPF para que ele seja adicionado na nota. Se não quer adicionar o CPF, desmarque a opção'
-          )
-        )
-      );
+    if (!phoneVerified) {
+      navigation.navigate('PhoneVerificationScreen', {
+        phone: consumer.phone!,
+        returnScreen: 'FoodOrderCheckout',
+      });
       return;
     }
-    if (wantsCpf && cpf.length !== 11) {
-      dispatch(
-        showToast(
-          t('CPF preenchido incorretamente. Por favor confira o número do seu documento'),
-          'error'
-        )
-      );
-      return;
+    if (wantsCpf) {
+      if (!cpf) {
+        dispatch(
+          showToast(
+            t(
+              'Preencha o campo com o CPF para que ele seja adicionado na nota. Se não quer adicionar o CPF, desmarque a opção'
+            )
+          )
+        );
+        return;
+      } else if (!cpfutils.isValid(cpf)) {
+        dispatch(
+          showToast(
+            t('CPF preenchido incorretamente. Por favor confira o número do seu documento'),
+            'error'
+          )
+        );
+        return;
+      }
     }
     try {
       setLoading(true);
@@ -284,11 +295,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         payment={
           <OrderPayment
             selectedPaymentMethodId={selectedPaymentMethodId}
-            onEditPaymentMethod={navigateToFillPaymentInfo}
             isSubmitEnabled={canSubmit}
-            onSubmit={() => setDestinationModalVisible(true)}
             activityIndicator={isLoading}
-            navigateToPixPayment={() => null}
+            onEditPaymentMethod={navigateToFillPaymentInfo}
+            onSubmit={() => setDestinationModalVisible(true)}
             navigateToAboutCharges={() => {
               navigation.navigate('AboutCharges');
             }}

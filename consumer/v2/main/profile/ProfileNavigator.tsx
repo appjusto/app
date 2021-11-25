@@ -3,6 +3,7 @@ import React from 'react';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { AboutApp } from '../../../../common/screens/profile/AboutApp';
 import { CommonProfileEdit } from '../../../../common/screens/profile/CommonProfileEdit';
+import { PhoneVerificationScreen } from '../../../../common/screens/profile/PhoneVerificationScreen';
 import ProfileErase from '../../../../common/screens/profile/ProfileErase';
 import Terms from '../../../../common/screens/unlogged/Terms';
 import { t } from '../../../../strings';
@@ -28,6 +29,11 @@ export default function () {
         name="RequestProfileEdit"
         component={RequestProfileEdit}
         options={{ title: t('Dados pessoais') }}
+      />
+      <Stack.Screen
+        name="PhoneVerificationScreen"
+        component={PhoneVerificationScreen}
+        options={{ title: t('Verificação de telefone') }}
       />
       <Stack.Screen
         name="ProfilePaymentMethods"
