@@ -3,7 +3,7 @@ import {
   ComplementGroup,
   OrderItem,
   OrderItemComplement,
-  WithId,
+  WithId
 } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
@@ -29,15 +29,15 @@ import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import {
   getConsumer,
   getCurrentLocation,
-  getCurrentPlace,
+  getCurrentPlace
 } from '../../../../../common/store/consumer/selectors';
 import {
   useContextBusiness,
-  useContextBusinessId,
+  useContextBusinessId
 } from '../../../../../common/store/context/business';
 import {
   useContextGetComplementGroup,
-  useContextGetProductCategory,
+  useContextGetProductCategory
 } from '../../../../../common/store/context/menu';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import {
@@ -46,7 +46,7 @@ import {
   halfPadding,
   padding,
   screens,
-  texts,
+  texts
 } from '../../../../../common/styles';
 import { formatCurrency, formatHour } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
@@ -91,6 +91,8 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     destination && business?.businessAddress?.latlng
       ? distanceBetweenLatLng(destination, business.businessAddress.latlng)
       : 0;
+  const distanceBetweenLocationAndDestination =
+    location && destination ? distanceBetweenLatLng(location, destination) : 0;
   const isOutOfRange = (business?.deliveryRange ?? 0) < (distance ?? 0);
   const isAcceptingOrders = useBusinessIsAcceptingOrders(business);
   const product = useProduct(businessId, productId);
@@ -186,17 +188,25 @@ export const ItemDetail = ({ navigation, route }: Props) => {
       Keyboard.dismiss();
       if (!orderItem) return;
       if (!activeOrder) {
+        console.log(
+          `distanceBetweenLocationAndDestination: ${distanceBetweenLocationAndDestination}`
+        );
+        if (distanceBetweenLocationAndDestination > 2) {
+          // showModaldestination
+        }
+
         api.order().createFoodOrder(business, consumer!, [orderItem], currentPlace ?? null);
         track('consumer created food order in database');
       } else {
         const updatedOrder = !itemId
           ? helpers.addItemToOrder(activeOrder, orderItem)
           : quantity > 0
-          ? helpers.updateItem(activeOrder, orderItem)
-          : helpers.removeItem(activeOrder, orderItem);
+            ? helpers.updateItem(activeOrder, orderItem)
+            : helpers.removeItem(activeOrder, orderItem);
         api.order().updateOrder(activeOrder.id, updatedOrder);
         track('consumer updated items in order');
       }
+
       navigation.pop();
     })();
   };
