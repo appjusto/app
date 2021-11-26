@@ -280,7 +280,7 @@ export default class OrderApi {
       .where('consumer.id', '==', consumerId)
       .limit(limit * 3) // we fetch more than we need to have some latitude for consumers whose order to the same restaurant
       .get();
-    if (!ordersSnapshot.empty) return [];
+    if (ordersSnapshot.empty) return [];
     const businessIds = documentsAs<Order>(ordersSnapshot.docs).map((order) => order.business!.id);
     const lastRestsQuerySnapshot = await this.refs
       .getBusinessesRef()
