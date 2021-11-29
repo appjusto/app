@@ -19,6 +19,7 @@ import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import HR from '../../../../../common/components/views/HR';
 import { IconSemaphoreSmall } from '../../../../../common/icons/icon-semaphore-small';
+import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
 import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
@@ -26,11 +27,7 @@ import { getNextAvailableDate } from '../../../../../common/store/api/business/s
 import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 import * as helpers from '../../../../../common/store/api/order/helpers';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
-import {
-  getConsumer,
-  getCurrentLocation,
-  getCurrentPlace
-} from '../../../../../common/store/consumer/selectors';
+import { getConsumer, getCurrentPlace } from '../../../../../common/store/consumer/selectors';
 import {
   useContextBusiness,
   useContextBusinessId
@@ -85,14 +82,18 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const consumer = useSelector(getConsumer);
   const currentPlace = useSelector(getCurrentPlace);
   // state
-  const location = useSelector(getCurrentLocation);
-  const destination = activeOrder?.destination?.location ?? currentPlace?.location ?? location;
+
+  const { coords } = useLastKnownLocation();
+
+  const destination = activeOrder?.destination?.location;
+  const location = coords ?? currentPlace?.location;
   const distance =
     destination && business?.businessAddress?.latlng
       ? distanceBetweenLatLng(destination, business.businessAddress.latlng)
       : 0;
-  const distanceBetweenLocationAndDestination =
+  const distanceBetweenLocationAndDestinationMeters =
     location && destination ? distanceBetweenLatLng(location, destination) : 0;
+  const bottomLimitWarningModalShowMeters = 2000;
   const isOutOfRange = (business?.deliveryRange ?? 0) < (distance ?? 0);
   const isAcceptingOrders = useBusinessIsAcceptingOrders(business);
   const product = useProduct(businessId, productId);
@@ -134,6 +135,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     if (!product) return;
     const item = activeOrder.items?.find((i) => i.id === itemId);
     if (!item) return;
+
     setComplements(item.complements ?? []);
     setQuantity(item.quantity);
     setNotes(item.notes ?? '');
@@ -187,14 +189,23 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     (async () => {
       Keyboard.dismiss();
       if (!orderItem) return;
-      if (!activeOrder) {
-        console.log(
-          `distanceBetweenLocationAndDestination: ${distanceBetweenLocationAndDestination}`
-        );
-        if (distanceBetweenLocationAndDestination > 2) {
-          // showModaldestination
-        }
 
+      //Log test
+      // console.log(`location = (${location?.latitude}, ${location?.longitude})`);
+      // console.log(`destination = (${destination?.latitude}, ${destination?.longitude})`);
+
+      if ((activeOrder?.items?.length ?? 0) === 0) {
+        //0 itens na sacola
+        console.log(
+          `distanceBetweenLocationAndDestination 2: ${distanceBetweenLocationAndDestinationMeters}`
+        );
+        if (distanceBetweenLocationAndDestinationMeters > bottomLimitWarningModalShowMeters) {
+          // showModaldestination
+          console.log('Local de destino nao corresponde com sua localizacao atual');
+        }
+      }
+
+      if (!activeOrder) {
         api.order().createFoodOrder(business, consumer!, [orderItem], currentPlace ?? null);
         track('consumer created food order in database');
       } else {
