@@ -18,6 +18,7 @@ import {
   OrderConfirmation,
   OrderIssue,
   OrderItem,
+  OrderStatus,
   Place,
   PlaceOrderPayload,
   PlaceOrderPayloadPayment,
@@ -95,6 +96,15 @@ export default class OrderApi {
   }
   async deleteOrder(orderId: string) {
     return this.refs.getOrderRef(orderId).delete();
+  }
+
+  async fetchTotalOrdersDelivered(options: ObserveOrdersOptions) {
+    const { consumerId, courierId } = options;
+    let query = this.refs.getOrdersRef().where('status', '==', 'delivered' as OrderStatus);
+    if (consumerId) query = query.where('consumer.id', '==', consumerId);
+    if (courierId) query = query.where('courier.id', '==', courierId);
+    const snapshot = await query.get();
+    return snapshot.size;
   }
 
   // both courier & customers
