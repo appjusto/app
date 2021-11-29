@@ -97,9 +97,11 @@ export const FoodOrderHomeHeader = ({
           />
           <View style={{ paddingTop: padding }}>
             {recentRestaurants.map((restaurant) => (
-              <TouchableOpacity onPress={() => onSelectRestaurant(restaurant.id)}>
+              <TouchableOpacity
+                onPress={() => onSelectRestaurant(restaurant.id)}
+                key={restaurant.id}
+              >
                 <RestaurantListItem
-                  key={restaurant.id}
                   id={restaurant.id}
                   restaurant={restaurant}
                   cuisine={restaurant.cuisine}
