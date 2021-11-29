@@ -6,6 +6,7 @@ import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
+import { useLastRestaurants } from '../../../../common/store/api/order/hooks/useLastRestaurants';
 import { useSearch } from '../../../../common/store/api/search/useSearch';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
@@ -50,6 +51,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     fetchNextPage,
   } = useSearch<BusinessAlgolia>(true, 'restaurant', 'distance', filters, currentLocation, '');
   const [refreshing, setRefreshing] = React.useState(false);
+  const mostRecentRestaurants = useLastRestaurants(consumer?.id);
   // side effects
   React.useEffect(() => {
     if (place) {
@@ -77,6 +79,12 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
       ListHeaderComponent={
         <View style={{ backgroundColor: colors.white, paddingBottom: padding }}>
           <FoodOrderHomeHeader
+            onSelectRestaurant={(restaurantId) => {
+              navigation.push('RestaurantNavigator', {
+                restaurantId,
+                screen: 'RestaurantDetail',
+              });
+            }}
             selectedCuisineId={filters.find(() => true)?.value}
             onChangePlace={() => {
               navigation.navigate('AddressComplete', {
@@ -94,6 +102,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
             onLogin={() => {
               navigation.replace('WelcomeScreen');
             }}
+            recentRestaurants={mostRecentRestaurants}
           />
         </View>
       }

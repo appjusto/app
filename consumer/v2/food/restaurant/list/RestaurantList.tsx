@@ -103,6 +103,7 @@ export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...pr
           >
             <TouchableOpacity onPress={() => onSelect(item.objectID)}>
               <RestaurantListItem
+                id={item.objectID}
                 restaurant={item}
                 cuisine={item.cuisine}
                 secondary={section.data.find(() => true)?.status === 'closed'}

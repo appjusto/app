@@ -19,6 +19,7 @@ import {
   OrderIssue,
   OrderItem,
   OrderStatus,
+  OrderType,
   Place,
   PlaceOrderPayload,
   PlaceOrderPayloadPayment,
@@ -279,6 +280,25 @@ export default class OrderApi {
     return (await this.refs.getTipCourierCallable()(payload)).data;
   }
 
+  async getMostRecentRestaurants(consumerId: string, limit: number = 3) {
+    const ordersSnapshot = await this.refs
+      .getOrdersRef()
+      .orderBy('createdOn', 'desc')
+      .where('type', '==', 'food' as OrderType)
+      .where('status', '==', 'delivered' as OrderStatus)
+      .where('consumer.id', '==', consumerId)
+      .limit(limit * 3) // we fetch more than we need to have some latitude for consumers whose order to the same restaurant
+      .get();
+    if (ordersSnapshot.empty) return [];
+    const businessIds = documentsAs<Order>(ordersSnapshot.docs).map((order) => order.business!.id);
+    const lastRestsQuerySnapshot = await this.refs
+      .getBusinessesRef()
+      .where(firebase.firestore.FieldPath.documentId(), 'in', businessIds)
+      .where('status', '==', 'open')
+      .limit(limit)
+      .get();
+    return documentsAs<Business>(lastRestsQuerySnapshot.docs);
+  }
   // courier
   async matchOrder(orderId: string) {
     const payload: MatchOrderPayload = {
