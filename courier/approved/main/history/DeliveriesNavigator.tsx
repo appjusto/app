@@ -1,5 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
+import Chat from '../../../../common/screens/Chat';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { getMonthName } from '../../../../common/utils/formatters/datetime';
 import { t } from '../../../../strings';
@@ -27,6 +28,7 @@ export default function () {
         component={DeliverySummary}
         options={{ title: t('Corrida finalizada') }}
       />
+      <Stack.Screen name="Chat" component={Chat} options={{ title: t('Conversa') }} />
       <Stack.Screen
         name="Receivables"
         component={Receivables}

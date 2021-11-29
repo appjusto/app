@@ -1,4 +1,5 @@
 import { FetchAccountInformationResponse } from '@appjusto/types';
+import { ChatParamList } from '../../../../common/screens/Chat';
 
 export type DeliveriesNavigatorParamList = {
   DeliveryHistoryByMonth: {
@@ -25,4 +26,4 @@ export type DeliveriesNavigatorParamList = {
     header: string;
     description: string;
   };
-};
+} & ChatParamList;

@@ -62,17 +62,27 @@ export default function ({ navigation }: Props) {
       } else if (data.action === 'order-chat') {
         if (clicked) {
           track('Push received', {
-            action: data.action,
-            orderId: data.orderId,
+            ...data,
           });
           remove!();
-          navigation.navigate('OngoingDeliveryNavigator', {
-            screen: 'OngoingDelivery',
-            params: {
-              orderId: data.orderId,
-              chatFrom: data.from,
-            },
-          });
+          if (data.orderStatus === 'delivered') {
+            navigation.navigate('DeliveriesNavigator', {
+              screen: 'Chat',
+              params: {
+                orderId: data.orderId,
+                counterpartId: data.from.id,
+                counterpartFlavor: 'consumer',
+              },
+            });
+          } else {
+            navigation.navigate('OngoingDeliveryNavigator', {
+              screen: 'OngoingDelivery',
+              params: {
+                orderId: data.orderId,
+                chatFrom: data.from,
+              },
+            });
+          }
         }
       }
     },

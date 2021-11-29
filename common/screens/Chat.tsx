@@ -82,6 +82,7 @@ export default function ({ route }: Props) {
       from: { agent: flavor, id: user.uid },
       to,
       message: inputText.trim(),
+      orderStatus: order.status,
     });
     setInputText('');
   };

@@ -40,13 +40,23 @@ export const MainNavigator = () => {
         if (clicked) {
           remove!();
           track('consumer clicked in order-chat push');
-          navigation.navigate('OngoingOrderNavigator', {
-            screen: 'OngoingOrder',
-            params: {
-              orderId: data.orderId,
-              chatFrom: data.from,
-            },
-          });
+          if (data.orderStatus === 'delivered') {
+            navigation.navigate('DeliveredOrderNavigator', {
+              screen: 'DeliveredOrderChat',
+              params: {
+                orderId: data.orderId,
+                counterpartId: data.from.id,
+                counterpartFlavor: 'courier',
+              },
+            });
+          } else
+            navigation.navigate('OngoingOrderNavigator', {
+              screen: 'OngoingOrder',
+              params: {
+                orderId: data.orderId,
+                chatFrom: data.from,
+              },
+            });
         }
       } else if (data.action === 'navigate-business') {
         if (clicked) {
