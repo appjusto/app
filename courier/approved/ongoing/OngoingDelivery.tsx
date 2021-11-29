@@ -102,7 +102,7 @@ export default function ({ navigation, route }: Props) {
       }
       setPreviousDispatchingState(dispatchingState);
     }
-  }, [dispatchingState, previousDispatchingState, delayBeforeAdvancing]);
+  }, [dispatchingState, previousDispatchingState, delayBeforeAdvancing, order]);
   // whenever params updates
   // open chat if there's a new message
   React.useEffect(() => {
