@@ -32,7 +32,7 @@ export const AvailableFleets = ({ navigation, route }: Props) => {
   // state
   const order = useObserveOrder(orderId);
   const [fare, setFare] = React.useState<Fare>(selectedFare);
-  const quotes = useQuotes(orderId);
+  const { quotes } = useQuotes(orderId);
   // UI
   if (!order || !quotes) {
     return (
