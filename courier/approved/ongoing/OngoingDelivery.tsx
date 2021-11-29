@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import { usePlatformParamsContext } from '../../../common/contexts/PlatformParamsContext';
+import { useShouldDelayBeforeAdvancing } from '../../../common/hooks/useShouldDelayBeforeAdvancing';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
@@ -55,6 +56,7 @@ export default function ({ navigation, route }: Props) {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [previousDispatchingState, setPreviousDispatchingState] = React.useState(dispatchingState);
   // helpers
+  const shouldDelayBeforeAdvancing = useShouldDelayBeforeAdvancing(order);
   const openChat = React.useCallback(
     (counterpartId: string, counterpartFlavor: Flavor, delayed?: boolean) => {
       setTimeout(
@@ -91,9 +93,8 @@ export default function ({ navigation, route }: Props) {
   useKeepAwake();
   // modal
   React.useEffect(() => {
-    if (!order) return;
     if (previousDispatchingState !== dispatchingState) {
-      if (dispatchingState === 'going-pickup') {
+      if (dispatchingState === 'going-pickup' && shouldDelayBeforeAdvancing) {
         setLoading(true);
         setTimeout(() => {
           setLoading(false);
@@ -103,7 +104,12 @@ export default function ({ navigation, route }: Props) {
       }
       setPreviousDispatchingState(dispatchingState);
     }
-  }, [dispatchingState, previousDispatchingState, delayBeforeAdvancing, order]);
+  }, [
+    dispatchingState,
+    previousDispatchingState,
+    delayBeforeAdvancing,
+    shouldDelayBeforeAdvancing,
+  ]);
   // whenever params updates
   // open chat if there's a new message
   React.useEffect(() => {
