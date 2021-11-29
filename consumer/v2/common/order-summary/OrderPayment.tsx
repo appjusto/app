@@ -5,9 +5,8 @@ import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
-import { usePhoneVerified } from '../../../../common/store/common/hooks/usePhoneVerified';
+import { useProfileSummary } from '../../../../common/store/common/hooks/useProfileSummary';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
-import { isConsumerProfileComplete } from '../../../../common/store/consumer/validators';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
@@ -30,7 +29,7 @@ export const OrderPayment = ({
 }: Props) => {
   // redux
   const consumer = useSelector(getConsumer)!;
-  const phoneVerified = usePhoneVerified();
+  const { profileComplete, shouldVerifyPhone } = useProfileSummary();
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
   return (
     <View>
@@ -79,10 +78,10 @@ export const OrderPayment = ({
           </View>
         )}
 
-        {isConsumerProfileComplete(consumer) && selectedPaymentMethod ? (
+        {profileComplete && selectedPaymentMethod ? (
           <DefaultButton
             style={{ marginVertical: padding }}
-            title={phoneVerified ? t('Confirmar pedido') : t('Verificar telefone')}
+            title={shouldVerifyPhone ? t('Verificar telefone') : t('Confirmar pedido')}
             onPress={onSubmit}
             disabled={!isSubmitEnabled}
             activityIndicator={activityIndicator}
@@ -90,9 +89,7 @@ export const OrderPayment = ({
         ) : (
           <DefaultButton
             title={
-              !isConsumerProfileComplete(consumer)
-                ? t('Completar cadastro')
-                : t('Escolher uma forma de pagamento')
+              !profileComplete ? t('Completar cadastro') : t('Escolher uma forma de pagamento')
             }
             onPress={onEditPaymentMethod}
             secondary

@@ -11,7 +11,7 @@ import { ApiContext, AppDispatch } from '../../../common/app/context';
 import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
-import { usePhoneVerified } from '../../../common/store/common/hooks/usePhoneVerified';
+import { useProfileSummary } from '../../../common/store/common/hooks/useProfileSummary';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { isConsumerProfileComplete } from '../../../common/store/consumer/validators';
 import { showToast } from '../../../common/store/ui/actions';
@@ -41,8 +41,8 @@ export default function ({ navigation, route }: Props) {
   const dispatch = useDispatch<AppDispatch>();
   // redux store
   const consumer = useSelector(getConsumer)!;
-  const phoneVerified = usePhoneVerified();
   // state
+  const { shouldVerifyPhone } = useProfileSummary();
   const { coords } = useLastKnownLocation();
   const [orderId, setOrderId] = React.useState<string>();
   const order = useObserveOrder(orderId)!;
@@ -169,7 +169,7 @@ export default function ({ navigation, route }: Props) {
     track('placing order');
     if (!orderId) return;
     if (!selectedPaymentMethodId) return;
-    if (!phoneVerified) {
+    if (shouldVerifyPhone) {
       navigation.navigate('PhoneVerificationScreen', {
         phone: consumer.phone!,
         returnScreen: 'CreateOrderP2P',

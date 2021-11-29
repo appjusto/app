@@ -11,7 +11,7 @@ import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
 import { useQuotes } from '../../../../../common/store/api/order/hooks/useQuotes';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
-import { usePhoneVerified } from '../../../../../common/store/common/hooks/usePhoneVerified';
+import { useProfileSummary } from '../../../../../common/store/common/hooks/useProfileSummary';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { isConsumerProfileComplete } from '../../../../../common/store/consumer/validators';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
@@ -51,8 +51,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   // redux store
   const consumer = useSelector(getConsumer)!;
-  const phoneVerified = usePhoneVerified();
   // state
+  const { shouldVerifyPhone } = useProfileSummary();
   const { coords } = useLastKnownLocation();
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
     consumer.paymentChannel?.mostRecentPaymentMethodId
@@ -127,7 +127,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     if (!order) return;
     if (!selectedFare) return;
     if (!selectedPaymentMethodId) return;
-    if (!phoneVerified) {
+    if (shouldVerifyPhone) {
       navigation.navigate('PhoneVerificationScreen', {
         phone: consumer.phone!,
         returnScreen: 'FoodOrderCheckout',
@@ -284,7 +284,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             activityIndicator={isLoading}
             onEditPaymentMethod={navigateToFillPaymentInfo}
             onSubmit={() => {
-              if (phoneVerified) setDestinationModalVisible(true);
+              if (!shouldVerifyPhone) setDestinationModalVisible(true);
               else placeOrderHandler();
             }}
             navigateToAboutCharges={() => {

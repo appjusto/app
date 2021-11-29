@@ -27,9 +27,8 @@ import {
 } from '../../components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../components/inputs/pattern-input/parsers';
 import PatternInput from '../../components/inputs/PatternInput';
-import { useObserveOrders } from '../../store/api/order/hooks/useObserveOrders';
 import { track, useSegmentScreen } from '../../store/api/track';
-import { usePhoneVerified } from '../../store/common/hooks/usePhoneVerified';
+import { useProfileSummary } from '../../store/common/hooks/useProfileSummary';
 import { getFlavor } from '../../store/config/selectors';
 import { getConsumer } from '../../store/consumer/selectors';
 import { isConsumerProfileComplete } from '../../store/consumer/validators';
@@ -78,11 +77,9 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const consumer = useSelector(getConsumer);
   const courier = useSelector(getCourier);
   const profile = flavor === 'consumer' ? consumer! : courier!;
-  const phoneVerified = usePhoneVerified();
-  const options = React.useMemo(() => ({ consumerId: consumer?.id }), [consumer?.id]);
-  const orders = useObserveOrders(options);
-  const hasOrdered = orders.filter((order) => order.status === 'delivered').length > 0;
   // state
+  const { profileComplete, canUpdateProfile, phoneVerified, shouldVerifyPhone, hasOrdered } =
+    useProfileSummary();
   const [name, setName] = React.useState<string>(profile.name ?? '');
   const [surname, setSurname] = React.useState(profile.surname ?? '');
   const [cpf, setCpf] = React.useState(profile.cpf ?? '');
@@ -101,22 +98,19 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   // helpers
   const canSubmit =
     flavor === 'consumer' ? isConsumerProfileComplete(updatedUser) : courierInfoSet(updatedUser);
-  const isProfileApproved =
-    flavor === 'consumer' ? isConsumerProfileComplete(consumer) : courier!.situation === 'approved';
-  const editable = flavor === 'consumer' ? !hasOrdered : !isProfileApproved;
   // handlers
   const updateProfileHandler = async () => {
     Keyboard.dismiss();
     try {
-      if (!editable) {
-        if (!phoneVerified) navigation.replace('PhoneVerificationScreen', { phone });
+      if (!canUpdateProfile) {
+        if (shouldVerifyPhone) navigation.replace('PhoneVerificationScreen', { phone });
         else navigation.replace('RequestProfileEdit');
       } else {
         setLoading(true);
         await api.profile().updateProfile(profile.id, updatedUser);
         track('profile updated');
         setLoading(false);
-        if (flavor === 'consumer' && !phoneVerified) {
+        if (shouldVerifyPhone) {
           navigation.navigate('PhoneVerificationScreen', {
             phone: updatedUser.phone!,
             returnScreen,
@@ -136,24 +130,24 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   // UI
   const buttonTitle = (() => {
     if (flavor === 'consumer') {
-      if (isProfileApproved) {
-        if (!phoneVerified) return t('Verificar telefone');
+      if (profileComplete) {
+        if (shouldVerifyPhone && !phoneVerified) return t('Verificar telefone');
         else if (!hasOrdered) return t('Atualizar');
         else return t('Atualizar dados');
       } else return t('Salvar');
     } else {
-      if (isProfileApproved) {
+      if (profileComplete) {
         return t('Atualizar dados');
       } else return t('Salvar e avançar');
     }
   })();
   const title = (() => {
-    if (isProfileApproved) return t('Seus dados:');
+    if (profileComplete) return t('Seus dados:');
     else return t('Finalize seu cadastro:');
   })();
   const subtitle = (() => {
     if (flavor === 'consumer') {
-      if (!isProfileApproved) return t('Edite seus dados:');
+      if (!profileComplete) return t('Edite seus dados:');
       else
         return t(
           'Seus dados pessoais serão usados somente para a criação das faturas e receber atendimento quando for necessário.'
@@ -211,7 +205,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           onSubmitEditing={() => surnameRef.current?.focus()}
           keyboardType="default"
           maxLength={30}
-          editable={editable}
+          editable={canUpdateProfile}
         />
         <DefaultInput
           ref={surnameRef}
@@ -225,7 +219,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           onSubmitEditing={() => cpfRef.current?.focus()}
           keyboardType="default"
           maxLength={30}
-          editable={editable}
+          editable={canUpdateProfile}
         />
         <PatternInput
           ref={cpfRef}
@@ -243,7 +237,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           onChangeText={(text) => setCpf(trim(text))}
           onFocus={() => setFocusedField('cpf')}
           onBlur={() => setFocusedField(undefined)}
-          editable={editable}
+          editable={canUpdateProfile}
         />
         {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' ? (
           <Text
@@ -271,7 +265,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           returnKeyType="next"
           blurOnSubmit
           onChangeText={(text) => setPhone(trim(text))}
-          editable={editable}
+          editable={canUpdateProfile}
         />
         <View style={{ flex: 1 }}>
           <View style={{ flex: 1 }} />
