@@ -5,7 +5,7 @@ import { ApiContext, AppDispatch } from '../../../../app/context';
 import { showToast } from '../../../ui/actions';
 import { useObserveOrder } from './useObserveOrder';
 
-export const useQuotes = (orderId: string) => {
+export const useQuotes = (orderId?: string) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -31,5 +31,5 @@ export const useQuotes = (orderId: string) => {
   React.useEffect(() => {
     getOrderQuotes();
   }, [order, getOrderQuotes]);
-  return quotes;
+  return { quotes, getOrderQuotes };
 };

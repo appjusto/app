@@ -9,6 +9,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
+import { useQuotes } from '../../../../../common/store/api/order/hooks/useQuotes';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { usePhoneVerified } from '../../../../../common/store/common/hooks/usePhoneVerified';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
@@ -62,28 +63,19 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
   const [wantsCpf, setWantsCpf] = React.useState(false);
   const [shareDataWithBusiness, setShareDataWithBusiness] = React.useState(false);
-  const [quotes, setQuotes] = React.useState<Fare[]>();
+  const { quotes, getOrderQuotes } = useQuotes(order?.id);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
   const canSubmit = React.useMemo(() => {
     return selectedPaymentMethodId !== undefined && selectedFare !== undefined && !isLoading;
   }, [selectedPaymentMethodId, selectedFare, isLoading]);
 
   // side effects
-  // whenever order changes
-  // update quotes
-  React.useEffect(() => {
-    getOrderQuotesHandler();
-  }, [order]);
   // whenever quotes are updated
-  // select first fare and subscribe to involved fleets updates
+  // select first fare
   React.useEffect(() => {
     if (!quotes || isEmpty(quotes)) return;
     setSelectedFare(quotes[0]);
   }, [quotes]);
-  // getting the selected fare in the AvailableFleets screen;
-  React.useEffect(() => {
-    if (params?.returningFare) setSelectedFare(params.returningFare);
-  }, [params?.returningFare]);
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
     if (params?.destination) {
@@ -100,12 +92,15 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         paymentMethodId: undefined,
       });
     }
+    // from AvailableFleets screen
+    if (params?.returningFare) {
+      setSelectedFare(params.returningFare);
+      navigation.setParams({
+        returningFare: undefined,
+      });
+    }
   }, [api, navigation, order, params]);
-  // check if order is empty to pop this screen
-  React.useEffect(() => {
-    if (order?.items?.length === 0) navigation.pop();
-  }, [order, navigation]);
-  // uploads the consumer name in his first order
+  // update consumer's name in his first order
   React.useEffect(() => {
     if (!order) return;
     if (consumer.name && consumer.name !== order.consumer.name) {
@@ -117,27 +112,16 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       });
     }
   }, [consumer.name, order, api]);
-  // if the order status becomes 'expired'
+  // return to Home if order status becomes 'expired' or all items are removed from it
   React.useEffect(() => {
     if (!order) return;
-    if (order.status === 'expired') navigation.navigate('MainNavigator', { screen: 'Home' });
+    if (order.status === 'expired' || order.items?.length === 0) {
+      navigation.navigate('MainNavigator', { screen: 'Home' });
+    }
   }, [order, navigation]);
   // tracking
   useSegmentScreen('FoodOrderCheckout');
   // handlers
-  const getOrderQuotesHandler = React.useCallback(async () => {
-    if (!order) return;
-    if (!order.origin?.location || !order.route?.distance) {
-      if (order.route?.issue) dispatch(showToast(order.route.issue, 'error'));
-      return;
-    }
-    setQuotes(undefined);
-    try {
-      setQuotes(await api.order().getOrderQuotes(order.id));
-    } catch (error: any) {
-      dispatch(showToast(error.toString(), 'error'));
-    }
-  }, [order, api, dispatch]);
   const placeOrderHandler = async () => {
     Keyboard.dismiss();
     if (!order) return;
@@ -263,7 +247,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             onFleetSelect={(fleetId: string) => {
               navigation.navigate('FleetDetail', { fleetId });
             }}
-            onRetry={getOrderQuotesHandler}
+            onRetry={getOrderQuotes}
             order={order}
             navigateToAvailableFleets={() =>
               navigation.navigate('AvailableFleets', {
