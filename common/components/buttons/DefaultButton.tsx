@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   ActivityIndicator,
+  ImageSourcePropType,
   Text,
   TouchableOpacity,
   TouchableOpacityProps,
@@ -12,7 +13,7 @@ import { borders, colors, padding, texts } from '../../styles';
 export interface DefaultButtonProps extends TouchableOpacityProps, ViewProps {
   title: string;
   activityIndicator?: boolean;
-  icon?: React.ReactNode;
+  icon?: React.ReactNode | ImageSourcePropType;
   secondary?: boolean;
   children?: React.ReactNode | React.ReactNode[];
   grey?: boolean;
