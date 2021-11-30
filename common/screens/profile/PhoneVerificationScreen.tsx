@@ -149,7 +149,7 @@ export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
           </Text>
           <Text style={{ ...texts.sm, color: colors.grey700, marginTop: padding }}>
             {t(
-              'Os números de telefone que os usuários fornecem para autenticação serão enviados e armazenados pelo Google para melhorar o seu sistema de prevenção de abuso e spam, incluindo, mas não limitando-se ao Firebase.'
+              'Os números de telefone que os usuários fornecem para autenticação serão enviados e armazenados pelo Google para melhorar o seu sistema de prevenção de abuso e spam.'
             )}
           </Text>
           <Text style={{ ...texts.sm, color: colors.grey700, marginTop: padding }}>
