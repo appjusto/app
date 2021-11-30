@@ -2,7 +2,7 @@ import { Feather } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty, toNumber, trim } from 'lodash';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
@@ -11,7 +11,7 @@ import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import {
   cardFormatter,
-  cardMask,
+  cardMask
 } from '../../../../common/components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../common/components/inputs/PatternInput';
@@ -19,6 +19,11 @@ import useAxiosCancelToken from '../../../../common/hooks/useAxiosCancelToken';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { showToast } from '../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { CreditCardType } from '../../../../common/utils/credit-card/CreditCard';
+import {
+  getCreditCard,
+  isAllowed
+} from '../../../../common/utils/credit-card/CreditCardImplementation';
 import { t } from '../../../../strings';
 import { RestaurantNavigatorParamList } from '../../food/restaurant/types';
 import { OngoingOrderNavigatorParamList } from '../../ongoing/types';
@@ -33,9 +38,9 @@ export type ProfileAddCardParamList = {
 
 type ScreenNavigationProp = StackNavigationProp<
   ProfileParamList &
-    RestaurantNavigatorParamList &
-    P2POrderNavigatorParamList &
-    OngoingOrderNavigatorParamList,
+  RestaurantNavigatorParamList &
+  P2POrderNavigatorParamList &
+  OngoingOrderNavigatorParamList,
   'ProfileAddCard'
 >;
 type ScreenRouteProp = RouteProp<ProfileAddCardParamList, 'ProfileAddCard'>;
@@ -53,6 +58,10 @@ export default function ({ navigation, route }: Props) {
   const dispatch = useDispatch<AppDispatch>();
   // state
   const [number, setNumber] = React.useState('');
+  const [numberError, setNumberError] = React.useState('');
+  const [yearError, setYearError] = React.useState('');
+  const [monthError, setMonthError] = React.useState('');
+  const [CreditCardIcon, setCreditCardIcon] = React.useState<React.ReactNode | undefined>();
   const [month, setMonth] = React.useState('');
   const [year, setYear] = React.useState('');
   const [cvv, setCVV] = React.useState('');
@@ -90,6 +99,58 @@ export default function ({ navigation, route }: Props) {
       dispatch(showToast(error.toString(), 'error'));
     }
   };
+  const onChangeNumber = useCallback(
+    (text: string) => {
+      if (isNaN(toNumber(text))) return;
+
+      setNumber(text);
+
+      const { label, type, icon: creditCardIcon } = getCreditCard(text);
+
+      if (!isAllowed(type) && type !== CreditCardType.undefined) {
+        setNumberError(`Não aceitamos a bandeira ${label}`);
+      } else {
+        setNumberError('');
+      }
+
+      setCreditCardIcon(creditCardIcon);
+    },
+    [setNumber, setNumberError]
+  );
+  const onChangeYear = useCallback(
+    (yearString: string) => {
+      const yearNumber = toNumber(yearString);
+      if (isNaN(yearNumber)) return;
+
+      setYear(yearString);
+
+      const currentYear = new Date().getFullYear();
+      // TODO: Get upperbound limit year
+
+      if (currentYear > yearNumber && yearString.length === 4) {
+        setYearError('Digite um ano válido');
+      } else {
+        setYearError('');
+      }
+    },
+    [setYear, setYearError]
+  );
+  const onChangeMonth = useCallback(
+    (monthString: string) => {
+      const monthNumber = toNumber(monthString);
+      if (isNaN(monthNumber)) return;
+
+      setMonth(monthString);
+
+      // TODO: Dont show error when input is empty or only one zero
+      if ((monthNumber < 1 || monthNumber > 12) && monthString.length === 2) {
+        setMonthError('Digite um mês válido');
+      } else {
+        setMonthError('');
+      }
+    },
+    [setMonth, setMonthError]
+  );
   // refs
   const expirationMonthRef = React.useRef<TextInput>(null);
   const expirationYearRef = React.useRef<TextInput>(null);
@@ -118,9 +179,9 @@ export default function ({ navigation, route }: Props) {
             autoCompleteType="cc-number"
             returnKeyType="next"
             blurOnSubmit={false}
-            onChangeText={(text) => {
-              if (!isNaN(toNumber(text))) setNumber(text);
-            }}
+            onChangeText={onChangeNumber}
+            trailing={CreditCardIcon}
+            errorMessage={numberError}
             onSubmitEditing={() => expirationMonthRef.current?.focus()}
           />
           <View style={{ flexDirection: 'row', marginTop: padding }}>
@@ -135,9 +196,8 @@ export default function ({ navigation, route }: Props) {
               returnKeyType="next"
               autoCompleteType="cc-exp-month"
               blurOnSubmit={false}
-              onChangeText={(text) => {
-                if (!isNaN(toNumber(text))) setMonth(text);
-              }}
+              onChangeText={onChangeMonth}
+              errorMessage={monthError}
               onSubmitEditing={() => expirationYearRef.current?.focus()}
             />
             <DefaultInput
@@ -151,9 +211,8 @@ export default function ({ navigation, route }: Props) {
               returnKeyType="next"
               autoCompleteType="cc-exp-year"
               blurOnSubmit={false}
-              onChangeText={(text) => {
-                if (!isNaN(toNumber(text))) setYear(text);
-              }}
+              onChangeText={onChangeYear}
+              errorMessage={yearError}
               onSubmitEditing={() => cvvRef.current?.focus()}
             />
             <DefaultInput
@@ -212,7 +271,7 @@ export default function ({ navigation, route }: Props) {
             style={{ paddingVertical: padding }}
             title={t('Salvar')}
             onPress={saveCardHandler}
-            disabled={!canSubmit || isLoading}
+            disabled={!canSubmit || isLoading || !!numberError || !!monthError || !!yearError}
             activityIndicator={isLoading}
           />
         </View>
