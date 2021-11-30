@@ -141,7 +141,6 @@ export default function ({ navigation }: Props) {
                 subtitle={t(
                   'Todos os seus dados serão apagados do nosso sistema e você não fará mais parte do AppJusto'
                 )}
-                bottomBorder={false}
                 onPress={() => {
                   navigation.navigate('ProfileNavigator', { screen: 'ProfileErase' });
                 }}
@@ -151,6 +150,7 @@ export default function ({ navigation }: Props) {
                 subtitle={t(
                   'Desconecte-se do aplicativo. Para retornar, você precisará confirmar seu e-mail cadastrado'
                 )}
+                bottomBorder={false}
                 onPress={confirmLogout}
               />
             </ScrollView>
