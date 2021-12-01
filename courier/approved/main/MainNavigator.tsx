@@ -34,7 +34,7 @@ export default function ({ navigation }: Props) {
   const handler = React.useCallback(
     (data: PushMessageData, clicked?: boolean, remove?: () => void) => {
       if (data.action === 'order-request' && courier.status !== 'dispatching') {
-        track('Push received', {
+        track('Push clicked by courier', {
           action: data.action,
           orderId: data.orderId,
         });
@@ -47,7 +47,7 @@ export default function ({ navigation }: Props) {
         });
       } else if (data.action === 'order-update') {
         if (clicked) {
-          track('Push received', {
+          track('Push clicked by courier', {
             action: data.action,
             orderId: data.orderId,
           });
@@ -61,7 +61,7 @@ export default function ({ navigation }: Props) {
         }
       } else if (data.action === 'order-chat') {
         if (clicked) {
-          track('Push received', {
+          track('Push clicked by courier', {
             ...data,
           });
           remove!();

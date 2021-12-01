@@ -28,7 +28,10 @@ export const MainNavigator = () => {
       if (data.action === 'order-update') {
         if (clicked) {
           remove!();
-          track('consumer clicked in order-update push');
+          track('consumer clicked in order-update push', {
+            action: data.action,
+            orderId: data.orderId,
+          });
           navigation.navigate('OngoingOrderNavigator', {
             screen: 'OngoingOrder',
             params: {
@@ -39,7 +42,10 @@ export const MainNavigator = () => {
       } else if (data.action === 'order-chat') {
         if (clicked) {
           remove!();
-          track('consumer clicked in order-chat push');
+          track('consumer clicked in order-chat push', {
+            action: data.action,
+            orderId: data.orderId,
+          });
           if (data.orderStatus === 'delivered') {
             navigation.navigate('DeliveredOrderNavigator', {
               screen: 'DeliveredOrderChat',
@@ -61,7 +67,9 @@ export const MainNavigator = () => {
       } else if (data.action === 'navigate-business') {
         if (clicked) {
           remove!();
-          track('consumer clicked in navigate-business push');
+          track('consumer clicked in navigate-business push', {
+            action: data.action,
+          });
           navigation.navigate('FoodOrderNavigator', {
             screen: 'RestaurantNavigator',
             params: {
