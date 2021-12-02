@@ -10,7 +10,7 @@ import { useSearch } from '../../../../common/store/api/search/useSearch';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
   updateCurrentLocation,
-  updateCurrentPlace,
+  updateCurrentPlace
 } from '../../../../common/store/consumer/actions';
 import { getConsumer, getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import { SearchFilter } from '../../../../common/store/consumer/types';
@@ -69,7 +69,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   // UI
   return (
     <RestaurantList
-      sections={sectionsFromResults(restaurants)}
+      sections={sectionsFromResults(restaurants, currentLocation)}
       onEndReached={() => {
         fetchNextPage();
       }}

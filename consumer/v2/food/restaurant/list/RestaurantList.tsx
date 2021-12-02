@@ -5,7 +5,7 @@ import {
   SectionList,
   SectionListProps,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../../common/app/context';

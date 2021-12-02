@@ -41,7 +41,7 @@ export const RestaurantListItem = ({ restaurant, cuisine, distance, secondary }:
           <Text style={{ ...texts.xs, color: secondary ? colors.grey700 : colors.green600 }}>
             {t(cuisine ?? '')}
           </Text>
-          {distance && !outOfRange ? (
+          {distance ? (
             <Text style={{ ...texts.xs, color: secondary ? colors.green600 : colors.grey700 }}>
               {formatDistance(distance)}
             </Text>

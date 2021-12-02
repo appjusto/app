@@ -1,10 +1,20 @@
-import { BusinessAlgolia } from '@appjusto/types';
+import { BusinessAlgolia, LatLng } from '@appjusto/types';
+import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 import { t } from '../../../../../strings';
 import { RestaurantListSection } from './types';
 
-export const sectionsFromResults = (items: BusinessAlgolia[] | undefined) => {
-  const open = (items ?? []).filter((restaurant) => restaurant.status === 'open');
-  const closed = (items ?? []).filter((restaurant) => restaurant.status === 'closed');
+//order restaurants depending on wether distance is under restaurant delivery range
+const restaurantsInRange = (status: string, items?: BusinessAlgolia[], currentLocation?: LatLng) => {
+  const restaurantsInRange = (items ?? []).filter((restaurant) => restaurant.status === status
+    && (restaurant.deliveryRange ?? 0) >= (currentLocation && restaurant.businessAddress?.latlng ? distanceBetweenLatLng(currentLocation, restaurant.businessAddress.latlng) : 0));
+  const restaurantsOutOfRange = (items ?? []).filter((restaurant) => restaurant.status === status
+    && (restaurant.deliveryRange ?? 0) < (currentLocation && restaurant.businessAddress?.latlng ? distanceBetweenLatLng(currentLocation, restaurant.businessAddress.latlng) : 0));
+  return restaurantsInRange.concat(restaurantsOutOfRange);
+}
+
+export const sectionsFromResults = (items?: BusinessAlgolia[], currentLocation?: LatLng) => {
+  const open = restaurantsInRange("open", items, currentLocation);
+  const closed = restaurantsInRange("closed", items, currentLocation);
   let sections: RestaurantListSection[] = [];
   if (open.length > 0) {
     sections = [
