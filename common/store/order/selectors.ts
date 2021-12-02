@@ -14,7 +14,10 @@ export const getOrderById = createSelector(getOrderState, (orderState) =>
 export const getOrders = (state: State) => getOrderState(state).orders;
 
 export const getOrderTime = (order: WithId<Order>) => {
-  const time = order.deliveredOn ?? order.confirmedOn ?? order.createdOn;
+  const deliveredOn = order.timestamps.delivered ?? order.deliveredOn;
+  const confirmedOn = order.timestamps.confirmed ?? order.confirmedOn;
+  const createdOn = order.timestamps.quote ?? order.createdOn;
+  const time = deliveredOn ?? confirmedOn ?? createdOn;
   if (time) return (time as firebase.firestore.Timestamp).toDate();
   return new Date();
 };
