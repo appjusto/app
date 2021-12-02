@@ -53,6 +53,7 @@ import { RestaurantNavigatorParamList } from '../types';
 import { useBusinessIsAcceptingOrders } from '../useBusinessIsAcceptingOrders';
 import { ItemComplements } from './ItemComplements';
 import { ItemQuantity } from './ItemQuantity';
+import { LocationDistantFromDestinationModal } from './LocationDistantFromDestinationModal';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<RestaurantNavigatorParamList, 'ItemDetail'>,
@@ -102,6 +103,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const [quantity, setQuantity] = React.useState(1);
   const [complements, setComplements] = React.useState<OrderItemComplement[]>([]);
   const [notes, setNotes] = React.useState<string>('');
+  const [modalVisible, setModalVisible] = React.useState(false);
   const orderItem = React.useMemo(() => {
     if (!product) return undefined;
     return {
@@ -117,6 +119,14 @@ export const ItemDetail = ({ navigation, route }: Props) => {
       complements,
     } as OrderItem;
   }, [product, itemId, quantity, notes, complements, getProductCategory]);
+
+  const isLocationDistantFromDestination = React.useMemo(
+    (): boolean =>
+      (activeOrder?.items?.length ?? 0) === 0 &&
+      distanceBetweenLocationAndDestinationMeters > bottomLimitWarningModalShowMeters,
+    [activeOrder, distanceBetweenLocationAndDestinationMeters, bottomLimitWarningModalShowMeters]
+  );
+
   const canAddItemToOrder = React.useMemo(() => {
     if (!product) return false;
     return helpers.hasSatisfiedAllGroups(product, complements);
@@ -140,6 +150,11 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     setQuantity(item.quantity);
     setNotes(item.notes ?? '');
   }, [itemId, activeOrder, product]);
+  React.useEffect(() => {
+    if (!activeOrder) {
+      api.order().createFoodOrder(business!, consumer!, [], currentPlace ?? null);
+    }
+  }, []);
   // tracking
   useSegmentScreen('ItemDetail');
   // UI
@@ -185,25 +200,20 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     }
   };
   // handlers
+  const handleAddItemToOrder = () => {
+    Keyboard.dismiss();
+    if (isLocationDistantFromDestination) {
+      setModalVisible(true);
+    } else {
+      updateOrder();
+    }
+  };
+
   const updateOrder = () => {
     (async () => {
-      Keyboard.dismiss();
       if (!orderItem) return;
 
-      //Log test
-      // console.log(`location = (${location?.latitude}, ${location?.longitude})`);
-      // console.log(`destination = (${destination?.latitude}, ${destination?.longitude})`);
-
-      if ((activeOrder?.items?.length ?? 0) === 0) {
-        //0 itens na sacola
-        console.log(
-          `distanceBetweenLocationAndDestination 2: ${distanceBetweenLocationAndDestinationMeters}`
-        );
-        if (distanceBetweenLocationAndDestinationMeters > bottomLimitWarningModalShowMeters) {
-          // showModaldestination
-          console.log('Local de destino nao corresponde com sua localizacao atual');
-        }
-      }
+      console.log(activeOrder?.items);
 
       if (!activeOrder) {
         api.order().createFoodOrder(business, consumer!, [orderItem], currentPlace ?? null);
@@ -378,11 +388,17 @@ export const ItemDetail = ({ navigation, route }: Props) => {
               title={`${t('Adicionar')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
               disabled={!canAddItemToOrder}
               onChange={(value) => setQuantity(value)}
-              onSubmit={updateOrder}
+              onSubmit={handleAddItemToOrder}
             />
           </PaddedView>
         </View>
       ) : null}
+      <LocationDistantFromDestinationModal
+        modalVisible={modalVisible}
+        onModalClose={() => setModalVisible(false)}
+        positiveAnswer={updateOrder}
+        negativeAnswer={() => setModalVisible(false)}
+      />
     </View>
   );
 };
