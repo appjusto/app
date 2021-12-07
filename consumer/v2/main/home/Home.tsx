@@ -100,6 +100,7 @@ export default function ({ navigation }: Props) {
               subtitle="Compartilhe esse movimento por uma economia mais justa"
             />
           </View>
+          {/* <MaintenanceModal visible modalKind="upgrade" /> */}
         </PaddedView>
       </ScrollView>
     </View>

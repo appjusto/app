@@ -1,8 +1,9 @@
 import { Order, WithId } from '@appjusto/types';
+import { t } from 'i18n-js';
 import React from 'react';
-import { Image, Linking, TouchableOpacity, View } from 'react-native';
+import { Image, Linking, Text, TouchableOpacity, View } from 'react-native';
 import * as icons from '../../../assets/icons';
-import { borders, colors, halfPadding } from '../../../common/styles';
+import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
 import { getNavigationLinkTo, NavigationApp } from './navigation';
 
 interface Props {
@@ -28,42 +29,47 @@ export const RouteIcons = ({ order }: Props) => {
         flex: 1,
         position: 'absolute',
         top: halfPadding,
-        right: halfPadding,
+        right: padding,
+        left: padding,
       }}
     >
       <TouchableOpacity onPress={() => routeHandler('google-maps')}>
         <View
           style={{
-            height: 64,
-            width: 64,
+            height: 40,
+            // width: 64,
             ...borders.default,
-            borderRadius: 32,
+            // borderRadius: 32,
             borderColor: colors.black,
-            borderWidth: 2,
+            // borderWidth: 2,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: colors.grey500,
+            // backgroundColor: colors.grey500,
+            paddingHorizontal: padding,
           }}
         >
-          <Image source={icons.googleMaps} height={29} width={29} />
+          <Image source={icons.googleMaps} height={24} width={24} />
+          <Text style={{ ...texts.xs, marginLeft: halfPadding }}>{t('Abrir no Maps')}</Text>
         </View>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => routeHandler('waze')}>
         <View
           style={{
-            height: 64,
-            width: 64,
+            height: 40,
+            // width: 64,
             ...borders.default,
-            borderRadius: 32,
+            // borderRadius: 32,
             borderColor: colors.black,
-            borderWidth: 2,
+            // borderWidth: 2,
             justifyContent: 'center',
             alignItems: 'center',
-            marginLeft: 24,
-            backgroundColor: colors.grey500,
+            marginLeft: halfPadding,
+            // backgroundColor: colors.grey500,
+            paddingHorizontal: padding,
           }}
         >
-          <Image source={icons.waze} height={32} width={29} />
+          <Image source={icons.waze} height={24} width={24} />
+          <Text style={{ ...texts.xs, marginLeft: halfPadding }}>{t('Abrir no Waze')}</Text>
         </View>
       </TouchableOpacity>
     </View>
