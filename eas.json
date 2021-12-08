@@ -1,106 +1,28 @@
 {
   "build": {
-    "courier-base": {
-      "developmentClient": false,
+    "courier-live-internal": {
       "env": {
-        "FLAVOR": "courier"
-      }
-    },
-    "courier-local": {
-      "developmentClient": true,
-      "env": {
-        "ENV": "dev",
-        "FLAVOR": "courier"
-      },
-      "releaseChannel": "dev",
-      "distribution": "internal",
-      "ios": {
-        "simulator": true
-      }
-    },
-    "courier-dev": {
-      "extends": "courier-base",
-      "env": {
-        "ENV": "dev"
-      },
-      "releaseChannel": "dev",
-      "distribution": "internal",
-      "android": {
-        "buildType": "apk"
-      }
-    },
-    "courier-staging": {
-      "extends": "courier-base",
-      "env": {
-        "ENV": "staging"
-      },
-      "releaseChannel": "staging",
-      "distribution": "internal",
-      "android": {
-        "buildType": "apk"
-      }
-    },
-    "courier-live": {
-      "extends": "courier-base",
-      "env": {
+        "FLAVOR": "courier",
         "ENV": "live"
       },
-      "releaseChannel": "live-v0",
+      "releaseChannel": "live-v6",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "expoCli": "expo-cli@5.0.0-rc.3"
+    },
+    "courier-live-store": {
+      "env": {
+        "FLAVOR": "courier",
+        "ENV": "live"
+      },
+      "releaseChannel": "live-v6",
       "distribution": "store",
       "android": {
         "buildType": "app-bundle"
-      }
-    },
-    "consumer-base": {
-      "developmentClient": false,
-      "env": {
-        "FLAVOR": "consumer"
-      }
-    },
-    "consumer-local": {
-      "developmentClient": true,
-      "env": {
-        "ENV": "dev",
-        "FLAVOR": "consumer"
       },
-      "releaseChannel": "dev",
-      "distribution": "internal",
-      "android": {
-        "buildType": "apk"
-      }
-    },
-    "consumer-dev": {
-      "extends": "consumer-base",
-      "env": {
-        "ENV": "dev"
-      },
-      "releaseChannel": "dev",
-      "distribution": "internal",
-      "android": {
-        "buildType": "apk"
-      }
-    },
-    "consumer-staging": {
-      "extends": "consumer-base",
-      "env": {
-        "ENV": "staging"
-      },
-      "releaseChannel": "staging",
-      "distribution": "internal",
-      "android": {
-        "buildType": "apk"
-      }
-    },
-    "consumer-live": {
-      "extends": "consumer-base",
-      "env": {
-        "ENV": "live"
-      },
-      "releaseChannel": "live-v0",
-      "distribution": "store",
-      "android": {
-        "buildType": "app-bundle"
-      }
+      "expoCli": "expo-cli@5.0.0-rc.3"
     }
   }
 }

@@ -75,9 +75,11 @@ export default ({ navigation, route }: Props) => {
     }
     if (flavor === 'consumer') {
       if (order.type === 'food') {
-        return `${t('Esse pedido foi cancelado por')} ${order.business!.name}. ${t(
-          'A cobrança será estornada.'
-        )}`;
+        if (cancellationInfo && cancellationInfo.canceledBy === 'business') {
+          return `${t('Esse pedido foi cancelado por')} ${order.business!.name}. ${t(
+            'A cobrança será estornada.'
+          )}`;
+        } else return t('Esse pedido foi cancelado. A cobrança será estornada.');
       } else return undefined;
     }
   })();
@@ -87,17 +89,15 @@ export default ({ navigation, route }: Props) => {
         return formatCurrency(order.fare!.courier.value);
     } else return undefined;
   })();
+  const header = (() => {
+    if (cancelInfo) {
+      if (cancelInfo.issue && cancelInfo.issue.id === 'agent-order-cancel-fraud-prevention') {
+        return t('Esse pedido foi cancelado');
+      } else return `${t('Esse pedido foi cancelado:')} \n${cancelInfo.issue?.title ?? ''}`;
+    } else t('Esse pedido foi cancelado');
+  })();
   return (
-    <FeedbackView
-      header={
-        !cancelInfo
-          ? t('Esse pedido foi cancelado')
-          : `${t('Esse pedido foi cancelado:')} \n${cancelInfo.issue?.title ?? ''}`
-      }
-      icon={<IconConeYellow />}
-      description={description}
-      value={value}
-    >
+    <FeedbackView header={header} icon={<IconConeYellow />} description={description} value={value}>
       <View style={{ marginBottom: padding }}>
         <DefaultButton
           title={t('Voltar para o início')}

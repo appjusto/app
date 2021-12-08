@@ -13,6 +13,8 @@ interface Props {
 
 export const CartButton = ({ order }: Props) => {
   if (!order?.items?.length) return null;
+  const totalQuantity = order.items.reduce((total, item) => total + item.quantity, 0);
+  const itens = totalQuantity > 1 ? t('itens') : t('item');
   return (
     <View style={{ paddingHorizontal: 12, paddingVertical: halfPadding }}>
       <View
@@ -26,7 +28,7 @@ export const CartButton = ({ order }: Props) => {
           borderRadius: 8,
         }}
       >
-        <RoundedText>{`${order.items?.length ?? 0} ${t('itens')}`}</RoundedText>
+        <RoundedText>{`${totalQuantity ?? 0} ${itens}`}</RoundedText>
         <Text style={{ ...texts.sm }}>{t('Ver sacola')}</Text>
         <Text style={{ ...texts.sm }}>{formatCurrency(getOrderTotal(order))}</Text>
       </View>

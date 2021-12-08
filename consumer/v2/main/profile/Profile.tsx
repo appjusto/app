@@ -103,19 +103,19 @@ export default function ({ navigation }: Props) {
                 }}
               />
               <ConfigItem
-                title={t('Sair do App')}
-                subtitle={t(
-                  'Desconecte-se do aplicativo. Para retornar, você precisará confirmar seu e-mail cadastrado'
-                )}
-                onPress={confirmLogout}
-              />
-              <ConfigItem
                 title={t('Excluir minha conta')}
                 subtitle={t(
                   'Todos os seus dados serão apagados do nosso sistema e você não fará mais parte do AppJusto'
                 )}
-                bottomBorder={false}
                 onPress={() => navigation.navigate('ProfileNavigator', { screen: 'ProfileErase' })}
+              />
+              <ConfigItem
+                title={t('Sair do App')}
+                subtitle={t(
+                  'Desconecte-se do aplicativo. Para retornar, você precisará confirmar seu e-mail cadastrado'
+                )}
+                bottomBorder={false}
+                onPress={confirmLogout}
               />
             </ScrollView>
           </View>

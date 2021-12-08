@@ -32,6 +32,7 @@ import Constants from 'expo-constants';
 import firebase from 'firebase';
 import { isEmpty } from 'lodash';
 import * as Sentry from 'sentry-expo';
+import { fetchPublicIP } from '../externals/ipify';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';
 import { ObserveOrdersOptions } from './types';
@@ -47,7 +48,7 @@ export default class OrderApi {
     items: OrderItem[] = [],
     destination: Place | null = null
   ) {
-    const payload: Order = {
+    const payload: Partial<Order> = {
       type: 'food',
       status: 'quote',
       dispatchingStatus: 'idle',
@@ -78,7 +79,7 @@ export default class OrderApi {
     return documentAs<Order>(await order.get());
   }
   async createOrderP2P(consumer: WithId<ConsumerProfile>, origin: Place) {
-    const payload: Order = {
+    const payload: Partial<Order> = {
       type: 'p2p',
       status: 'quote',
       dispatchingStatus: 'idle',
@@ -224,6 +225,12 @@ export default class OrderApi {
     additionalInfo?: string,
     wantToShareData?: boolean
   ) {
+    let ip: string | undefined;
+    try {
+      ip = await fetchPublicIP();
+    } catch (error) {
+      Sentry.Native.captureException(error);
+    }
     const payload: PlaceOrderPayload = {
       orderId,
       fleetId,
@@ -232,8 +239,9 @@ export default class OrderApi {
       coordinates,
       additionalInfo,
       wantToShareData,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: Constants.nativeBuildVersion, ip },
     };
+
     return (await this.refs.getPlaceOrderCallable()(payload)).data;
   }
 
