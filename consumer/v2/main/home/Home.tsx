@@ -8,8 +8,8 @@ import PaddedView from '../../../../common/components/containers/PaddedView';
 import { useBusinessDeeplink } from '../../../../common/hooks/useBusinessDeeplink';
 import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconLogin } from '../../../../common/icons/icon-login';
+import { CrowdFundingCard } from '../../../../common/screens/home/cards/CrowdFundingCard';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
-import { HomeCouriersNearbyCard } from '../../../../common/screens/home/cards/HomeCouriersNearbyCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
@@ -93,7 +93,9 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           ) : null}
-          <HomeCouriersNearbyCard />
+          {/* <HomeCouriersNearbyCard /> */}
+          {!consumer ? <View style={{ height: padding }} /> : null}
+          <CrowdFundingCard />
           <View style={{ marginTop: padding }}>
             <HomeShareCard
               title="Divulgue o AppJusto"

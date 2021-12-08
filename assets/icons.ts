@@ -35,6 +35,7 @@ const iconCheckGreen = require('./icons/icon-check-green.png');
 const iconHomeFocused = require('./icons/icon-home-focused.png');
 const iconOrdersFocused = require('./icons/icon-orders-focused.png');
 const iconUserFocused = require('./icons/icon-user-focused.png');
+const iconCrowdFunding = require('./icons/crowd-funding.png');
 
 export const checklistTick = iconChecklistTick;
 export const home = iconHome;
@@ -73,6 +74,7 @@ export const greenCheck = iconCheckGreen;
 export const homeFocused = iconHomeFocused;
 export const ordersFocused = iconOrdersFocused;
 export const userFocused = iconUserFocused;
+export const crowdFunding = iconCrowdFunding;
 
 export default [
   checklistTick,
@@ -112,4 +114,5 @@ export default [
   homeFocused,
   ordersFocused,
   userFocused,
+  crowdFunding,
 ];
