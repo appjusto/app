@@ -134,6 +134,7 @@ export default function ({ navigation, route }: Props) {
   const navigateToCourierDetail = () => {
     navigation.navigate('OngoingOrderCourierDetail', { orderId });
   };
+  console.log(orderId);
   // const navigateToChangeRoute = () =>
   //   navigation.navigate('P2POrderNavigator', {
   //     screen: 'CreateOrderP2P',

@@ -143,9 +143,9 @@ export default function ({ navigation, route }: Props) {
   const nextDispatchingStateHandler = () => {
     (async () => {
       try {
-        if (order.dispatchingState === 'going-destination') {
+        if (dispatchingState === 'going-pickup' || dispatchingState === 'going-destination') {
           await api.order().nextDispatchingState(orderId);
-        } else if (order.dispatchingState === 'arrived-destination') {
+        } else if (dispatchingState === 'arrived-destination') {
           Keyboard.dismiss();
           setLoading(true);
           await api.order().completeDelivery(orderId, code);
