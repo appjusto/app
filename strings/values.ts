@@ -9,3 +9,6 @@ export const AppJustoAssistanceWhatsAppURL = 'https://wa.me/551197821-0274';
 export const AppJustoIzaURL = 'https://seguro.iza.com.vc/appjusto';
 export const AppJustoMEIURL =
   'https://appjusto.freshdesk.com/support/solutions/articles/67000681987';
+export const AppJustoGooglePlay =
+  'https://play.google.com/store/apps/details?id=br.com.appjusto.consumer.live'; // replace with correct link
+export const AppJustoAppStore = 'https://apps.apple.com/br/app/appjusto/id1569067601'; // replace with correct link
