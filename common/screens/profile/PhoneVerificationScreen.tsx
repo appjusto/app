@@ -88,6 +88,7 @@ export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
         setState('phone-number-verified');
       })
       .catch((error) => {
+        console.error(error);
         Sentry.Native.captureException(error);
         setError(t('Não foi possível verificar o telefone. Edite seu perfil e tente novamente.'));
         setState('unrecoverable-error');
