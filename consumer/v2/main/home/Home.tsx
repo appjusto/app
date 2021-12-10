@@ -8,6 +8,7 @@ import PaddedView from '../../../../common/components/containers/PaddedView';
 import { useBusinessDeeplink } from '../../../../common/hooks/useBusinessDeeplink';
 import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconLogin } from '../../../../common/icons/icon-login';
+import { useUpdateLocation } from '../../../../common/location/useUpdateLocation';
 import { CrowdFundingCard } from '../../../../common/screens/home/cards/CrowdFundingCard';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
@@ -35,6 +36,7 @@ export default function ({ navigation }: Props) {
   const consumer = useSelector(getConsumer);
   const ongoingOrders = useSelector(getOrders);
   // side effects
+  useUpdateLocation();
   useNotificationToken();
   useBusinessDeeplink();
   //tracking
