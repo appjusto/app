@@ -9,7 +9,7 @@ export const useShouldDelayBeforeAdvancing = (order?: WithId<Order> | null) => {
   const getServerTime = useContextGetSeverTime();
   if (!getServerTime) return false;
   if (!order) return false;
-  const { dispatchingStartedOn } = order;
+  const dispatchingStartedOn = order.timestamps?.dispatching ?? order.dispatchingStartedOn;
   return (
     getServerTime().getTime() -
       (dispatchingStartedOn as firebase.firestore.Timestamp).toDate().getTime() <

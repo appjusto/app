@@ -142,7 +142,7 @@ export default function ({ navigation, route }: Props) {
   const nextDispatchingStateHandler = () => {
     (async () => {
       try {
-        if (dispatchingState === 'going-pickup' || dispatchingState === 'going-destination') {
+        if (dispatchingState === 'going-destination') {
           await api.order().nextDispatchingState(orderId);
         } else if (dispatchingState === 'arrived-destination') {
           Keyboard.dismiss();
@@ -201,6 +201,7 @@ export default function ({ navigation, route }: Props) {
       return colors.green500;
     } else return colors.darkYellow;
   })();
+  console.log(shouldDelayBeforeAdvancing);
   return (
     <KeyboardAwareScrollView
       enableOnAndroid
