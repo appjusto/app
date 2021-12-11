@@ -17,7 +17,6 @@ import { getConsumer } from '../../../store/consumer/selectors';
 import { getCourier } from '../../../store/courier/selectors';
 import { getUser } from '../../../store/user/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../styles';
-import { runPromise } from '../../../utils/runPromise';
 import * as config from './config';
 
 type ScreenNavigationProp = StackNavigationProp<
@@ -57,7 +56,7 @@ export const Onboarding = ({ navigation, route }: Props) => {
     } else {
       setLoading(true);
       try {
-        await runPromise(api.profile().updateProfile(user.uid, { onboarded: true }), 5, 1000);
+        await api.profile().updateProfile(user.uid, { onboarded: true });
         if (flavor === 'courier') {
           navigation.replace('ProfilePending');
         } else {

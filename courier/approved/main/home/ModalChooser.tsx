@@ -25,11 +25,11 @@ export const ModalChooser = ({ modalVisible, onPress }: Props) => {
 
   // side effects
   React.useEffect(() => {
-    if (!mode) api.profile().updateProfile(courier.id, { mode: 'motorcycle' });
+    if (!mode) api.profile().updateProfile(courier.id, { mode: 'motorcycle' }).then(null);
   }, []);
   // UI handlers
   const modeChangeHandler = (value: CourierMode) => {
-    api.profile().updateProfile(courier.id, { mode: value });
+    api.profile().updateProfile(courier.id, { mode: value }).then(null);
   };
 
   // UI

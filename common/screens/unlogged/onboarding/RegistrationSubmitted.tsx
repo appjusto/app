@@ -50,7 +50,7 @@ export const RegistrationSubmitted = ({ navigation, route }: Props) => {
   // side effects
   // submit profile
   React.useEffect(() => {
-    api.profile().updateProfile(consumer.id, { situation: 'submitted' });
+    api.profile().updateProfile(consumer.id, { situation: 'submitted' }).then(null);
   }, [api, consumer.id]);
   // update city statistics
   React.useEffect(() => {

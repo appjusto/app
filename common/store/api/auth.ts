@@ -42,6 +42,11 @@ export default class AuthApi {
     });
   }
 
+  async signInWithEmailAndPassword(email: string, password: string) {
+    const userCredential = await this.auth.signInWithEmailAndPassword(email, password);
+    return userCredential.user;
+  }
+
   isSignInWithEmailLink(link: string | null): boolean {
     if (!link) return false;
     return this.auth.isSignInWithEmailLink(link);

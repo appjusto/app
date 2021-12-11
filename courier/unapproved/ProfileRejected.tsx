@@ -45,7 +45,7 @@ export default function ({ navigation }: Props) {
         await api.profile().updateProfile(courier.id, { situation: 'pending' });
         track('courier situation updated to pending');
         setLoading(false);
-      } catch (error) {
+      } catch (error: any) {
         setLoading(false);
         Sentry.Native.captureException(error);
         dispatch(showToast(error.toString(), 'error'));

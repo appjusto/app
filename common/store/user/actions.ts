@@ -34,6 +34,10 @@ export const signInWithEmail = (api: Api) => (email: string) => async (dispatch:
   return dispatch(awaitWithFeedback(api.auth().sendSignInLinkToEmail(email)));
 };
 
+export const signInWithEmailAndPassword =
+  (api: Api) => (email: string, password: string) => async (dispatch: AppDispatch) =>
+    dispatch(awaitWithFeedback(api.auth().signInWithEmailAndPassword(email, password)));
+
 export const getSignInEmail = () => {
   try {
     return AsyncStorage.getItem('email');
