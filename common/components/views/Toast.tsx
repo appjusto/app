@@ -15,7 +15,7 @@ export default function () {
   const dispatch = useDispatch();
 
   // state
-  const { message, type, autoHide } = useSelector(getToast);
+  const { message, type, autoHide, keyboardIsOpen } = useSelector(getToast);
   const [opacity] = useState(new Animated.Value(0));
 
   // UI
@@ -41,7 +41,7 @@ export default function () {
     <Animated.View
       style={{
         position: 'absolute',
-        bottom: Platform.OS === 'android' ? 0 : 4,
+        bottom: keyboardIsOpen === false ? (Platform.OS === 'android' ? 0 : 4) : (Platform.OS === 'android' ? 328 : 332),
         opacity,
         width: '100%',
         minHeight: 48,
