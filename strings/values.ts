@@ -12,3 +12,4 @@ export const AppJustoMEIURL =
 export const AppJustoGooglePlay =
   'https://play.google.com/store/apps/details?id=br.com.appjusto.consumer.live'; // replace with correct link
 export const AppJustoAppStore = 'https://apps.apple.com/br/app/appjusto/id1569067601'; // replace with correct link
+export const AppJustoLanding = 'https://appjusto.com.br/';
