@@ -8,9 +8,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import { usePlatformParamsContext } from '../../../common/contexts/PlatformParamsContext';
-import { useShouldDelayBeforeAdvancing } from '../../../common/hooks/useShouldDelayBeforeAdvancing';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useOrderBlockCourierNextStep } from '../../../common/store/api/order/hooks/useOrderBlockCourierNextStep';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
@@ -42,8 +41,6 @@ export default function ({ navigation, route }: Props) {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  const delayBeforeAdvancing =
-    (usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60) * 1000;
   // redux
   const order = useObserveOrder(orderId);
   const consumerId = order?.consumer.id;
@@ -55,7 +52,7 @@ export default function ({ navigation, route }: Props) {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [previousDispatchingState, setPreviousDispatchingState] = React.useState(dispatchingState);
   // helpers
-  const shouldDelayBeforeAdvancing = useShouldDelayBeforeAdvancing(order);
+  const shouldBlockNextStep = useOrderBlockCourierNextStep(orderId);
   const openChat = React.useCallback(
     (counterpartId: string, counterpartFlavor: Flavor, delayed?: boolean) => {
       setTimeout(
@@ -93,22 +90,12 @@ export default function ({ navigation, route }: Props) {
   // modal
   React.useEffect(() => {
     if (previousDispatchingState !== dispatchingState) {
-      if (dispatchingState === 'going-pickup' && shouldDelayBeforeAdvancing) {
-        setLoading(true);
-        setTimeout(() => {
-          setLoading(false);
-        }, delayBeforeAdvancing);
-      } else if (dispatchingState === 'arrived-pickup') {
+      if (dispatchingState === 'arrived-pickup') {
         setModalOpen(true);
       }
       setPreviousDispatchingState(dispatchingState);
     }
-  }, [
-    dispatchingState,
-    previousDispatchingState,
-    delayBeforeAdvancing,
-    shouldDelayBeforeAdvancing,
-  ]);
+  }, [dispatchingState, previousDispatchingState]);
   // whenever params updates
   // open chat if there's a new message
   React.useEffect(() => {
@@ -142,24 +129,18 @@ export default function ({ navigation, route }: Props) {
   const nextDispatchingStateHandler = () => {
     (async () => {
       try {
-        if (dispatchingState === 'going-destination') {
-          await api.order().nextDispatchingState(orderId);
-        } else if (dispatchingState === 'arrived-destination') {
+        setLoading(true);
+        if (dispatchingState === 'arrived-destination') {
           Keyboard.dismiss();
-          setLoading(true);
           await api.order().completeDelivery(orderId, code);
           track('courier completed delivery');
-          setLoading(false);
         } else {
-          setLoading(true);
           await api.order().nextDispatchingState(orderId);
-          setTimeout(() => {
-            setLoading(false);
-          }, delayBeforeAdvancing);
         }
       } catch (error: any) {
-        setLoading(false);
         dispatch(showToast(error.toString(), 'error'));
+      } finally {
+        setLoading(false);
       }
     })();
   };
@@ -181,8 +162,9 @@ export default function ({ navigation, route }: Props) {
   };
   // UI
   const { type } = order;
-  const nextStepDisabled =
-    isLoading || (type === 'food' && previousDispatchingState === 'arrived-pickup');
+  // const nextStepDisabled =
+  //   isLoading || (type === 'food' && previousDispatchingState === 'arrived-pickup');
+  const nextStepDisabled = isLoading || shouldBlockNextStep;
   const nextStepLabel = (() => {
     const dispatchingState = order?.dispatchingState;
     if (!dispatchingState || dispatchingState === 'going-pickup') {
