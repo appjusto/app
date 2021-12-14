@@ -7,7 +7,7 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
@@ -22,7 +22,7 @@ import {
   getCurrentLocation,
   getSearchFilters,
   getSearchKind,
-  getSearchOrder,
+  getSearchOrder
 } from '../../../../common/store/consumer/selectors';
 import { colors, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -128,7 +128,7 @@ export default function ({ navigation }: Props) {
       </PaddedView>
       {kind === 'restaurant' ? (
         <RestaurantList
-          sections={sectionsFromResults(restaurants)}
+          sections={sectionsFromResults(restaurants, currentLocation)}
           onSelect={(restaurantId) => {
             track('selected a restaurant from search results');
             navigation.navigate('RestaurantNavigator', {
@@ -139,7 +139,7 @@ export default function ({ navigation }: Props) {
           loading={loadingRestaurants}
           refreshing={refreshing}
           onRefresh={() => refreshRestaurants()}
-          // onRecommend={() => null}
+        // onRecommend={() => null}
         />
       ) : null}
       {kind === 'product' ? (
