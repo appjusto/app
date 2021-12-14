@@ -141,27 +141,20 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   // when user select item from list
   const selectItemHandler = React.useCallback(
     (item: Address) => {
-      //when user on select address screen
+      //when the user is selecting an address
       if (returnScreen !== 'RecommendRestaurant') {
-        //contains postal code regex
-        const containsPostalCode = /^[0-9]{5}-[0-9]{3}$/;
-        //if user enters postal code, retrieves the address information
-        if (containsPostalCode.test(item.main == undefined ? '' : item?.main)) {
-          const message = item.secondary?.split(' - ');
-          const first = message?.shift();
-          const second = message?.join(' - ');
-          item.main = first + ', ';
-          item.secondary = second;
+        //if user enters only postal code, retrieves the address information
+        const enteredPostalCode = /^[0-9]{5}-[0-9]{3}$/;
+        if (enteredPostalCode.test(item.main === undefined ? '' : item?.main)) {
+          item.main = item.secondary?.split(' - ').shift() + ', ';
+          item.secondary = item.secondary?.split(' - ').join(' - ');
         } else {
-          //contains a number regex
-          const containsNumber = /^.*[0-9]+.*$/;
-          //verifies if selected address has number
-          if (containsNumber.test(item.main === undefined ? '' : item?.main)) Keyboard.dismiss();
+          //number regex
+          const entersNumber = /^.*[0-9]+.*$/;
+          //verifies if the selected address has a number and dismisses keyboard
+          if (entersNumber.test(item.main === undefined ? '' : item?.main)) Keyboard.dismiss();
           else {
-            //if full address catch only street name
-            const message = item.main?.split(' - ');
-            const first = message?.shift();
-            item.main = first + ', ';
+            item.main = item.main?.split(' - ').shift() + ', ';
           }
         }
       } else Keyboard.dismiss();
@@ -195,7 +188,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
         value={searchText}
         title={
           returnScreen !== 'RecommendRestaurant'
-            ? t('Endereço com número, ou CEP')
+            ? t('Endereço com número')
             : t('Nome do restaurante')
         }
         placeholder={
