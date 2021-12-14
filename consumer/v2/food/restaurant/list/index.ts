@@ -3,18 +3,34 @@ import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 import { t } from '../../../../../strings';
 import { RestaurantListSection } from './types';
 
-//order restaurants depending on wether distance is under restaurant delivery range
-const restaurantsInRange = (status: string, items?: BusinessAlgolia[], currentLocation?: LatLng) => {
-  const restaurantsInRange = (items ?? []).filter((restaurant) => restaurant.status === status
-    && (restaurant.deliveryRange ?? 0) >= (currentLocation && restaurant.businessAddress?.latlng ? distanceBetweenLatLng(currentLocation, restaurant.businessAddress.latlng) : 0));
-  const restaurantsOutOfRange = (items ?? []).filter((restaurant) => restaurant.status === status
-    && (restaurant.deliveryRange ?? 0) < (currentLocation && restaurant.businessAddress?.latlng ? distanceBetweenLatLng(currentLocation, restaurant.businessAddress.latlng) : 0));
-  return restaurantsInRange.concat(restaurantsOutOfRange);
-}
+//order restaurants depending on wether distance is inside restaurant delivery range
+const restaurantsInRange = (
+  status: string,
+  items?: BusinessAlgolia[],
+  currentLocation?: LatLng
+) => {
+  const inRange = (items ?? []).filter(
+    (restaurant) =>
+      restaurant.status === status &&
+      (restaurant.deliveryRange ?? 0) >=
+        (currentLocation && restaurant.businessAddress?.latlng
+          ? distanceBetweenLatLng(currentLocation, restaurant.businessAddress.latlng)
+          : 0)
+  );
+  const outOfRange = (items ?? []).filter(
+    (restaurant) =>
+      restaurant.status === status &&
+      (restaurant.deliveryRange ?? 0) <
+        (currentLocation && restaurant.businessAddress?.latlng
+          ? distanceBetweenLatLng(currentLocation, restaurant.businessAddress.latlng)
+          : 0)
+  );
+  return inRange.concat(outOfRange);
+};
 
 export const sectionsFromResults = (items?: BusinessAlgolia[], currentLocation?: LatLng) => {
-  const open = restaurantsInRange("open", items, currentLocation);
-  const closed = restaurantsInRange("closed", items, currentLocation);
+  const open = restaurantsInRange('open', items, currentLocation);
+  const closed = restaurantsInRange('closed', items, currentLocation);
   let sections: RestaurantListSection[] = [];
   if (open.length > 0) {
     sections = [
