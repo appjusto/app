@@ -201,7 +201,6 @@ export default function ({ navigation, route }: Props) {
       return colors.green500;
     } else return colors.darkYellow;
   })();
-  console.log(shouldDelayBeforeAdvancing);
   return (
     <KeyboardAwareScrollView
       enableOnAndroid
