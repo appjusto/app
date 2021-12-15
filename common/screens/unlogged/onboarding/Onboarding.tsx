@@ -64,9 +64,9 @@ export const Onboarding = ({ navigation, route }: Props) => {
           navigation.replace('MainNavigator', { screen: 'Home' });
         }
       } catch (error) {
+        setLoading(false);
         Sentry.Native.captureException(error);
       }
-      setLoading(false);
     }
   };
   const onPageScroll = (ev: NativeSyntheticEvent<ViewPagerOnPageScrollEventData>) => {

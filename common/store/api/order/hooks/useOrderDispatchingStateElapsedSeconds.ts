@@ -18,16 +18,18 @@ export const useOrderDispatchingStateElapsedSeconds = (
   // setting up interval to keep elapsed time updated
   React.useEffect(() => {
     const interval = setInterval(() => setTick((value) => value + 1), 1000);
-    () => clearInterval(interval);
+    return () => clearInterval(interval);
   }, []);
   // observing dispatchingState
   React.useEffect(() => {
-    api.order().observeOrderDispatchingStateTimestamp(orderId, dispatchingState, (change) => {
-      if (change) {
-        setTimestmap((change.timestamp as firebase.firestore.Timestamp).toDate());
-      }
-    });
-  }, [api]);
+    return api
+      .order()
+      .observeOrderDispatchingStateTimestamp(orderId, dispatchingState, (change) => {
+        if (change) {
+          setTimestmap((change.timestamp as firebase.firestore.Timestamp).toDate());
+        }
+      });
+  }, [api, orderId, dispatchingState]);
   // calculating elapsed time every tick or when timestamp changes
   React.useEffect(() => {
     if (!timestamp) return;
