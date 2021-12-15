@@ -7,7 +7,8 @@ import { useOrderDispatchingStateElapsedSeconds } from './useOrderDispatchingSta
 export const useOrderBlockCourierNextStep = (orderId: string) => {
   // context
   const api = React.useContext(ApiContext);
-  const delayBeforeAdvancing = usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60;
+  const delayBeforeAdvancing =
+    (usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60) * 1000;
   // state
   const secondsSinceGoingPickup = useOrderDispatchingStateElapsedSeconds(orderId, 'going-pickup');
   const secondsSinceGoingDestination = useOrderDispatchingStateElapsedSeconds(
