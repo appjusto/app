@@ -16,6 +16,8 @@ export const useOrderBlockCourierNextStep = (orderId: string) => {
   );
   const order = useObserveOrder(orderId);
   const [blockNextStep, setBlockNextStep] = React.useState(false);
+  console.log('pickup', secondsSinceGoingPickup);
+  console.log('destination', secondsSinceGoingDestination);
   // side effects
   React.useEffect(() => {
     if (!delayBeforeAdvancing) return;
