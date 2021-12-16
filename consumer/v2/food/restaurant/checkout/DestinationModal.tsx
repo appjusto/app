@@ -69,6 +69,7 @@ export const DestinationModal = ({
             style={{ marginTop: halfPadding, marginBottom: padding }}
             title={t('Fazer pedido')}
             onPress={onConfirmAddress}
+            disabled={activityIndicator}
             activityIndicator={activityIndicator}
           />
         </PaddedView>
