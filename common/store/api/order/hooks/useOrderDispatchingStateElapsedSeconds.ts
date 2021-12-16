@@ -17,7 +17,7 @@ export const useOrderDispatchingStateElapsedSeconds = (
   // side effects
   // setting up interval to keep elapsed time updated
   React.useEffect(() => {
-    const interval = setInterval(() => setTick((value) => value + 1), 1000);
+    const interval = setInterval(() => setTick((value) => value + 5), 5000);
     return () => clearInterval(interval);
   }, []);
   // observing dispatchingState
