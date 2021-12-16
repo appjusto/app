@@ -180,7 +180,7 @@ const android = () =>
         intentFilters: intentFilters(),
         config: {
           googleMaps: {
-            apiKey: GOOGLE_MAPS_API_KEY,
+            apiKey: FIREBASE_API_KEY_ANDROID,
           },
         },
       },
