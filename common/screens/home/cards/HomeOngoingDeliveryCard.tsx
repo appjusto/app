@@ -53,6 +53,9 @@ export default function ({ order, onPress }: Props) {
         } else if (dispatchingStatus === 'declined') {
           title = t('Problema no pagamento');
           detail = t('Selecione outra forma de pagamento');
+        } else if (dispatchingStatus === 'outsourced') {
+          title = t('Corrida em andamento');
+          detail = t('A entrega está sendo realizada por um entregador externo');
         }
       } else if (status === 'dispatching') {
         title = t('Corrida em andamento');
