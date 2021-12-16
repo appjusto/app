@@ -102,6 +102,7 @@ export default class FirebaseRefs {
   getOrderCancellationRef = (orderId: string) =>
     this.getOrderPrivateRef(orderId).doc('cancellation');
   getOrderConfirmationRef = (id: string) => this.getOrderPrivateRef(id).doc('confirmation');
+  getOrderLogsRef = (id: string) => this.getOrderRef(id).collection('logs');
 
   // consumers
   getConsumersRef = () => this.firestore.collection('consumers');

@@ -4,6 +4,7 @@ import {
   ChatMessage,
   CompleteDeliveryPayload,
   ConsumerProfile,
+  DispatchingState,
   DropOrderPayload,
   Fare,
   GetCancellationInfoPayload,
@@ -15,6 +16,7 @@ import {
   NextDispatchingStatePayload,
   Order,
   OrderCancellation,
+  OrderChange,
   OrderConfirmation,
   OrderIssue,
   OrderItem,
@@ -172,6 +174,30 @@ export default class OrderApi {
       (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
       (error) => console.log(error)
     );
+    // returns the unsubscribe function
+    return unsubscribe;
+  }
+
+  observeOrderDispatchingStateTimestamp(
+    orderId: string,
+    dispatchingState: DispatchingState,
+    resultHandler: (change: OrderChange | null) => void
+  ): firebase.Unsubscribe {
+    const unsubscribe = this.refs
+      .getOrderLogsRef(orderId)
+      .where('after.dispatchingState', '==', dispatchingState)
+      .orderBy('timestamp', 'desc')
+      .limit(1)
+      .onSnapshot(
+        (querySnapshot) => {
+          if (querySnapshot.empty) resultHandler(null);
+          else resultHandler(documentsAs<OrderChange>(querySnapshot.docs).find(() => true)!);
+        },
+        (error) => {
+          console.log(error);
+          Sentry.Native.captureException(error);
+        }
+      );
     // returns the unsubscribe function
     return unsubscribe;
   }

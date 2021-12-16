@@ -10,6 +10,7 @@ import PaddedView from '../../../../common/components/containers/PaddedView';
 import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconHomeCourierRequests } from '../../../../common/icons/icon-home-courier-requests';
 import { IconPartners } from '../../../../common/icons/icon-partners';
+import { CrowdFundingCard } from '../../../../common/screens/home/cards/CrowdFundingCard';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
@@ -101,6 +102,17 @@ export default function ({ navigation }: Props) {
               });
             }}
           />
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('MainNavigator', { screen: 'DeliveryHistory' });
+            }}
+            style={{ marginBottom: padding }}
+          >
+            <HomeDeliveriesSummary />
+          </TouchableOpacity>
+          <View style={{ marginBottom: padding }}>
+            <CrowdFundingCard />
+          </View>
           <View style={{ marginBottom: padding }}>
             <FreshDeskCard
               onPress={() => {
@@ -117,14 +129,6 @@ export default function ({ navigation }: Props) {
               subtitle="Compartilhe esse movimento por uma economia mais justa."
             />
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('MainNavigator', { screen: 'DeliveryHistory' });
-            }}
-            style={{ marginBottom: padding }}
-          >
-            <HomeDeliveriesSummary />
-          </TouchableOpacity>
           <View>
             <TouchableOpacity
               onPress={() => {
