@@ -68,12 +68,15 @@ export default function ({ navigation, route }: Props) {
       current: courier.fleet,
       new: fleet,
     });
-    api.profile().updateProfile(courier.id, {
-      fleet: {
-        ...(omit(fleet, ['partipantsOnline', 'situation']) as CourierFleet),
-        joinedOn: firebase.firestore.FieldValue.serverTimestamp(),
-      },
-    });
+    api
+      .profile()
+      .updateProfile(courier.id, {
+        fleet: {
+          ...(omit(fleet, ['partipantsOnline', 'situation']) as CourierFleet),
+          joinedOn: firebase.firestore.FieldValue.serverTimestamp(),
+        },
+      })
+      .then(null);
     navigation.navigate('ChooseFleet');
   };
   // UI

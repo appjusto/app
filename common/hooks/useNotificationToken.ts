@@ -78,10 +78,13 @@ export const useNotificationToken = (): Returntype => {
   React.useEffect(() => {
     if (!user?.uid) return;
     if (shouldDeleteToken || shouldUpdateToken) {
-      api.profile().updateProfile(user.uid, {
-        notificationToken: shouldUpdateToken ? token : null,
-        updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-      });
+      api
+        .profile()
+        .updateProfile(user.uid, {
+          notificationToken: shouldUpdateToken ? token : null,
+          updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+        })
+        .then(null);
     }
   }, [token, user?.uid, shouldDeleteToken, shouldUpdateToken, api]);
 

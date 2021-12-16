@@ -62,6 +62,6 @@ export const useUpdateLocation = () => {
     if (!coords) return;
     const { latitude, longitude } = coords;
     const coordinates = new firebase.firestore.GeoPoint(latitude, longitude);
-    api.profile().updateLocation(consumer.id, coordinates);
+    api.profile().updateLocation(consumer.id, coordinates).then(null);
   }, [consumer?.id, coords, api]);
 };

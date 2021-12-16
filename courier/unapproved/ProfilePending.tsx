@@ -70,7 +70,8 @@ export default function ({ navigation, route }: Props) {
       .updateLocation(
         courier.id,
         new firebase.firestore.GeoPoint(coords.latitude, coords.longitude)
-      );
+      )
+      .then(null);
   }, [api, coords, courier.id]);
 
   // whenever state updates

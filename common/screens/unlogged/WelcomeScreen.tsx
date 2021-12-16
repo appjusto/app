@@ -1,13 +1,13 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useCallback, useContext, useState } from 'react';
+import React from 'react';
 import {
   Dimensions,
   Keyboard,
   Platform,
+  Pressable,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -26,7 +26,7 @@ import { useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
-import { signInWithEmail } from '../../store/user/actions';
+import { signInWithEmail, signInWithEmailAndPassword } from '../../store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../styles';
 import { validateEmail } from '../../utils/validators';
 import { UnloggedParamList } from './types';
@@ -44,19 +44,21 @@ const tallerDevice = height > 680;
 
 export default function ({ navigation, route }: Props) {
   // context
-  const api = useContext(ApiContext);
+  const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // redux store
   const busy = useSelector(getUIBusy);
   const flavor = useSelector(getFlavor);
   // state
-  const [email, setEmail] = useState('');
-  const [acceptedTerms, setAcceptTerms] = useState(false);
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [isPasswordShown, setPasswordShown] = React.useState(false);
+  const [acceptedTerms, setAcceptTerms] = React.useState(false);
   // side effects
   // tracking
   useSegmentScreen('Welcome');
   // handlers
-  const signInHandler = useCallback(async () => {
+  const signInHandler = async () => {
     Keyboard.dismiss();
     if (!acceptedTerms) {
       dispatch(showToast(t('Você precisa aceitar os termos para criar sua conta.'), 'error'));
@@ -67,7 +69,12 @@ export default function ({ navigation, route }: Props) {
       return;
     }
     try {
-      await dispatch(signInWithEmail(api)(email.trim()));
+      if (!isPasswordShown) {
+        await dispatch(signInWithEmail(api)(email.trim()));
+        navigation.navigate('SignInFeedback', { email });
+      } else {
+        await dispatch(signInWithEmailAndPassword(api)(email.trim(), password.trim()));
+      }
       navigation.navigate('SignInFeedback', { email });
     } catch (error) {
       console.error(error);
@@ -75,7 +82,7 @@ export default function ({ navigation, route }: Props) {
         showToast(t('Não foi possível registrar. Verifique seu e-mail e tente novamente.'), 'error')
       );
     }
-  }, [acceptedTerms, api, dispatch, email, navigation]);
+  };
 
   const welcomeMessage =
     flavor === 'consumer'
@@ -95,7 +102,11 @@ export default function ({ navigation, route }: Props) {
         keyboardShouldPersistTaps="handled"
       >
         <View style={{ flex: 1, paddingHorizontal: padding }}>
-          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <Pressable
+            onPressIn={() => Keyboard.dismiss()}
+            delayLongPress={2000}
+            onLongPress={() => setPasswordShown(!isPasswordShown)}
+          >
             <>
               <ShowIf test={flavor === 'consumer'}>
                 {() => (
@@ -129,7 +140,7 @@ export default function ({ navigation, route }: Props) {
                 </Text>
               </View>
             </>
-          </TouchableWithoutFeedback>
+          </Pressable>
 
           <View style={{ flex: 1 }}>
             <View style={{ marginTop: padding }}>
@@ -150,6 +161,18 @@ export default function ({ navigation, route }: Props) {
                   </Text>
                 )}
               </ShowIf>
+              {isPasswordShown ? (
+                <DefaultInput
+                  style={{ marginTop: padding }}
+                  value={password}
+                  title={t('Senha')}
+                  placeholder={t('Digite sua senha')}
+                  onChangeText={setPassword}
+                  keyboardType="visible-password"
+                  blurOnSubmit
+                  autoCapitalize="none"
+                />
+              ) : null}
             </View>
             <View
               style={{
