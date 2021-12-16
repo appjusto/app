@@ -5,7 +5,6 @@ export interface Extra {
   bundleIdentifier: string;
   androidPackage: string;
   firebase: FirebaseConfig;
-  googleMapsApiKey: string;
   analytics: AnalyticsConfig;
   iugu: {
     accountId: string;

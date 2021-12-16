@@ -16,7 +16,6 @@ const {
   FIREBASE_COURIER_APP_ID,
   FIREBASE_COURIER_MEASUREMENT_ID,
   FIREBASE_EMULATOR_HOST,
-  GOOGLE_MAPS_API_KEY,
   SEGMENT_CONSUMER_IOS_KEY,
   SEGMENT_CONSUMER_ANDROID_KEY,
   SEGMENT_COURIER_IOS_KEY,
@@ -138,7 +137,7 @@ const ios = () => ({
     `applinks:${getFallbackDomain(environment)}`,
   ],
   config: {
-    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: FIREBASE_API_KEY_IOS,
   },
 });
 
@@ -223,7 +222,6 @@ const extra = (): Extra => ({
     measurementId:
       flavor === 'consumer' ? FIREBASE_CONSUMER_MEASUREMENT_ID! : FIREBASE_COURIER_MEASUREMENT_ID!,
   },
-  googleMapsApiKey: GOOGLE_MAPS_API_KEY!,
   analytics: {
     segmentConsumerAndroidKey: SEGMENT_CONSUMER_ANDROID_KEY!,
     segmentConsumeriOSKey: SEGMENT_CONSUMER_IOS_KEY!,
