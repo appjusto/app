@@ -8,7 +8,7 @@ export const useChatisEnabled = (order?: WithId<Order> | null) => {
   if (!getServerTime) return false;
   const { status } = order;
   let time;
-  if (status === 'delivered') time = order.deliveredOn;
+  if (status === 'delivered') time = order.timestamps?.delivered ?? order.deliveredOn;
   else if (status === 'canceled') time = order.updatedOn;
   return (
     ['preparing', 'ready', 'dispatching'].includes(status) ||
