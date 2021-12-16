@@ -70,6 +70,7 @@ export const DestinationModal = ({
             title={t('Fazer pedido')}
             onPress={onConfirmAddress}
             activityIndicator={activityIndicator}
+            disabled={activityIndicator}
           />
         </PaddedView>
       </View>
