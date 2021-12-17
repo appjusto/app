@@ -44,26 +44,21 @@ export const LoggedNavigator = () => {
   const options = React.useMemo(() => ({ consumerId: uid }), [uid]);
   useObserveOngoingOrders(options);
   // UI
-  if (!consumer?.situation) {
+  const situation = consumer?.situation;
+  if (!situation || situation === 'pending') {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
-  const { situation, onboarded } = consumer;
-  let initialRouteName: 'MainNavigator' | 'ConsumerOnboarding' | undefined = undefined;
-  if (situation === 'approved') {
-    initialRouteName = 'MainNavigator';
-  } else if (onboarded) {
-    initialRouteName = 'MainNavigator';
-  } else if (!onboarded) {
-    initialRouteName = 'ConsumerOnboarding';
-  }
-
   if (situation === 'blocked' || situation === 'deleted' || situation === 'rejected') {
     return <UnapprovedConsumerNavigator />;
   }
+  const { onboarded } = consumer;
+  // const maintenance = true;
+  // const initialRouteName = maintenance ? 'MaintenanceScreen' : !onboarded ? 'ConsumerOnboarding' : 'MainNavigator';
+  const initialRouteName = !onboarded ? 'ConsumerOnboarding' : 'MainNavigator';
   return (
     <LoggedContextProvider>
       <Stack.Navigator screenOptions={defaultScreenOptions} initialRouteName={initialRouteName}>
