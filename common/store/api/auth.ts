@@ -1,9 +1,9 @@
 import { DeleteAccountPayload } from '@appjusto/types';
-import Constants from 'expo-constants';
 import firebase from 'firebase';
 // import * as Sentry from 'sentry-expo';
 import { Extra } from '../../../config/types';
 import { getDeeplinkDomain, getFallbackDomain } from '../../utils/domains';
+import { getAppVersion } from '../../utils/version';
 import FirebaseRefs from './FirebaseRefs';
 
 export default class AuthApi {
@@ -81,7 +81,7 @@ export default class AuthApi {
   deleteAccount(payload: Partial<DeleteAccountPayload>) {
     return this.refs.getDeleteAccountCallable()({
       ...payload,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     });
   }
 }

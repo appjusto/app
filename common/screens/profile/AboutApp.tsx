@@ -1,5 +1,4 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import React, { useContext } from 'react';
 import { Linking, Platform, Pressable, View } from 'react-native';
@@ -18,6 +17,7 @@ import { IconVersion } from '../../icons/icon-version';
 import { track, useSegmentScreen } from '../../store/api/track';
 import { showToast } from '../../store/ui/actions';
 import { screens } from '../../styles';
+import { getNativeAndManifestVersion } from '../../utils/version';
 import HomeCard from '../home/cards/HomeCard';
 
 export type AboutAppParamList = {
@@ -45,9 +45,7 @@ export const AboutApp = ({ navigation }: Props) => {
   // tracking
   useSegmentScreen('AboutApp');
   // UI
-  const appVersion = `${t('Versão:')} ${Constants.nativeAppVersion} / ${
-    Constants.manifest?.version
-  }`;
+  const appVersion = `${t('Versão:')} ${getNativeAndManifestVersion()}`;
   const brand = Device.brand ?? Device.manufacturer ?? '';
   const model = Device.modelName ?? Device.modelId ?? Device.productName ?? '';
   const os = `${brand} ${model} ${Device.osVersion} ${

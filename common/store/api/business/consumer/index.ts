@@ -1,8 +1,8 @@
 import { DeletePaymentMethodPayload, SavePaymentTokenPayload } from '@appjusto/types';
 import { IuguCreatePaymentTokenData } from '@appjusto/types/payment/iugu';
 import { CancelToken } from 'axios';
-import Constants from 'expo-constants';
 import { t } from '../../../../../strings';
+import { getAppVersion } from '../../../../utils/version';
 import FirebaseRefs from '../../FirebaseRefs';
 import IuguApi from '../../payment/iugu';
 
@@ -21,7 +21,7 @@ export default class ConsumerApi {
     if (!paymentToken) throw new Error(t('Não foi possível salvar o cartão de crédito.'));
     const payload: SavePaymentTokenPayload = {
       paymentToken,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     const result = await this.refs.getSavePaymentTokenCallable()(payload);
     return result.data;
@@ -30,7 +30,7 @@ export default class ConsumerApi {
   async deletePaymentMethod(paymentMethodId: string) {
     const payload: DeletePaymentMethodPayload = {
       paymentMethodId,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     return (await this.refs.getDeletePaymentMethodCallable()(payload)).data;
   }
