@@ -7,6 +7,7 @@ import React from 'react';
 import { Linking, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
+import { MaintenanceModal } from '../../../../common/components/views/MaintenanceModal';
 import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconHomeCourierRequests } from '../../../../common/icons/icon-home-courier-requests';
 import { IconPartners } from '../../../../common/icons/icon-partners';
@@ -23,6 +24,7 @@ import {
   startLocationUpdatesTask,
   stopLocationUpdatesTask,
 } from '../../../../common/utils/location';
+import { usePlatformAccess } from '../../../../common/utils/platform/usePlatformAccess';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
@@ -46,6 +48,10 @@ export default function ({ navigation }: Props) {
   const ongoingOrders = useSelector(getOrders);
   const { status } = courier;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
+  // context
+  const modalData = usePlatformAccess();
+  // screen state
+  const [maintenanceModalVisible] = React.useState(modalData?.maintenance.active);
   // state
   const requests = useobservePendingOrderRequests(courier.id);
   // side effects
@@ -144,7 +150,7 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           </View>
-          {/* <MaintenanceModal visible modalKind="upgrade" /> */}
+          <MaintenanceModal modalData={modalData} visible={maintenanceModalVisible} />
         </PaddedView>
       </ScrollView>
       <LocationDisclosureModal />
