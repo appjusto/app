@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
+import * as Sentry from 'sentry-expo';
 import { LocationDisclosureModal } from '../../../courier/approved/main/home/LocationDisclosureModal';
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
@@ -78,6 +79,7 @@ export default function ({ navigation, route }: Props) {
       navigation.navigate('SignInFeedback', { email });
     } catch (error) {
       console.error(error);
+      Sentry.Native.captureException(error);
       dispatch(
         showToast(t('Não foi possível registrar. Verifique seu e-mail e tente novamente.'), 'error')
       );

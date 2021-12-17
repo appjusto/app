@@ -25,12 +25,7 @@ export const observeAuthState = (api: Api) => (dispatch: AppDispatch) => {
 };
 
 export const signInWithEmail = (api: Api) => (email: string) => async (dispatch: AppDispatch) => {
-  try {
-    AsyncStorage.setItem('email', email);
-  } catch (error) {
-    console.log(error);
-    Sentry.Native.captureException(error);
-  }
+  AsyncStorage.setItem('email', email);
   return dispatch(awaitWithFeedback(api.auth().sendSignInLinkToEmail(email)));
 };
 
