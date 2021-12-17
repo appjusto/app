@@ -17,5 +17,5 @@ export const isCurrentVersionAllowed = (minVersion: string) => {
   if (!current || !min) return true;
   if (parseInt(current[0]) < parseInt(min[0])) return false;
   if (parseInt(current[1]) < parseInt(min[1])) return false;
-  return parseInt(current[2]) > parseInt(min[2]);
+  return parseInt(current[2]) >= parseInt(min[2]);
 };
