@@ -15,9 +15,9 @@ import {
   IuguMarketplaceAccountAdvanceSimulation,
   IuguMarketplaceAccountReceivables,
 } from '@appjusto/types/payment/iugu';
-import Constants from 'expo-constants';
 import firebase from 'firebase';
 import * as Sentry from 'sentry-expo';
+import { getAppVersion } from '../../../utils/version';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';
@@ -89,7 +89,7 @@ export default class CourierApi {
   // callables
   async verifyProfile() {
     const payload: VerifyCourierProfilePayload = {
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     return this.refs.getVerifyProfileCallable()(payload);
   }
@@ -100,7 +100,7 @@ export default class CourierApi {
     const payload: FetchTotalCouriersNearbyPayload = {
       location,
       distance,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     return (await this.refs.getFetchTotalCouriersNearbyCallable()(payload)).data;
   }
@@ -108,7 +108,7 @@ export default class CourierApi {
     const payload: FetchAccountInformationPayload = {
       accountType: 'courier',
       accountId,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     console.log('fetchAccountInformation', payload);
     return (await this.refs.getFetchAccountInformationCallable()(payload)).data;
@@ -118,7 +118,7 @@ export default class CourierApi {
       accountType: 'courier',
       accountId,
       amount,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     return (await this.refs.getRequestWithdrawCallable()(payload)).data;
   }
@@ -126,7 +126,7 @@ export default class CourierApi {
     const payload: FetchReceivablesPayload = {
       accountType: 'courier',
       accountId,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     return (await this.refs.getFetchReceivablesCallable()(payload)).data;
   }
@@ -150,7 +150,7 @@ export default class CourierApi {
       accountType: 'courier',
       accountId,
       ids,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     return (await this.refs.getFetchAdvanceSimulationCallable()(payload)).data;
   }
@@ -159,7 +159,7 @@ export default class CourierApi {
       accountType: 'courier',
       accountId,
       ids,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     return (await this.refs.getAdvanceReceivablesCallable()(payload)).data;
   }

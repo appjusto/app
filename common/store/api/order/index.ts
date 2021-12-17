@@ -30,10 +30,10 @@ import {
   UpdateOrderPayload,
   WithId,
 } from '@appjusto/types';
-import Constants from 'expo-constants';
 import firebase from 'firebase';
 import { isEmpty } from 'lodash';
 import * as Sentry from 'sentry-expo';
+import { getAppVersion } from '../../../utils/version';
 import { fetchPublicIP } from '../externals/ipify';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';
@@ -237,7 +237,7 @@ export default class OrderApi {
   async getOrderQuotes(orderId: string) {
     const payload: GetOrderQuotesPayload = {
       orderId,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     return (await this.refs.getGetOrderQuotesCallable()(payload)).data as Fare[];
   }
@@ -265,7 +265,7 @@ export default class OrderApi {
       coordinates,
       additionalInfo,
       wantToShareData,
-      meta: { version: Constants.nativeBuildVersion, ip },
+      meta: { version: getAppVersion(), ip },
     };
 
     return (await this.refs.getPlaceOrderCallable()(payload)).data;
@@ -275,7 +275,7 @@ export default class OrderApi {
     const payload: UpdateOrderPayload = {
       orderId,
       payment,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     return (await this.refs.getUpdateOrderCallable()(payload)).data;
   }
@@ -283,7 +283,7 @@ export default class OrderApi {
   async getCancellationInfo(orderId: string) {
     const payload: GetCancellationInfoPayload = {
       orderId,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     return (await this.refs.getCancellationInfoCallable()(payload))
       .data as GetCancellationInfoResult;
@@ -300,7 +300,7 @@ export default class OrderApi {
       acknowledgedCosts,
       cancellation,
       comment,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     return (await this.refs.getCancelOrderCallable()(payload)).data;
   }
@@ -309,7 +309,7 @@ export default class OrderApi {
     const payload: TipCourierPayload = {
       orderId,
       tip,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     return (await this.refs.getTipCourierCallable()(payload)).data;
   }
@@ -337,7 +337,7 @@ export default class OrderApi {
   async matchOrder(orderId: string) {
     const payload: MatchOrderPayload = {
       orderId,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     return (await this.refs.getMatchOrderCallable()(payload)).data;
   }
@@ -347,7 +347,7 @@ export default class OrderApi {
       orderId,
       issue,
       comment,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     return (await this.refs.getRejectOrderCallable()(payload)).data;
   }
@@ -357,7 +357,7 @@ export default class OrderApi {
       orderId,
       issue,
       comment,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     return (await this.refs.getDropOrderCallable()(payload)).data;
   }
@@ -365,7 +365,7 @@ export default class OrderApi {
   async nextDispatchingState(orderId: string) {
     const payload: NextDispatchingStatePayload = {
       orderId,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     return (await this.refs.getNextDispatchingStateCallable()(payload)).data;
   }
@@ -381,7 +381,7 @@ export default class OrderApi {
       handshakeResponse,
       deliveredTo,
       comment,
-      meta: { version: Constants.nativeBuildVersion },
+      meta: { version: getAppVersion() },
     };
     return (await this.refs.getCompleteDeliveryCallable()(payload)).data;
   }
