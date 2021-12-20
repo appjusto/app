@@ -38,7 +38,7 @@ export default function ({ navigation }: Props) {
   const consumer = useSelector(getConsumer);
   const ongoingOrders = useSelector(getOrders);
   // context
-  const modalData = usePlatformAccess();
+  const modalData = consumer ? usePlatformAccess() : undefined;
   // screen state
   const [maintenanceModalVisible] = React.useState(modalData?.maintenance.active);
   // side effects

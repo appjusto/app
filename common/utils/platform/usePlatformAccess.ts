@@ -9,6 +9,7 @@ export const usePlatformAccess = () => {
     (async () => {
       setPlatformAccess(await api.platform().fetchPlatformAccess());
     })();
+    return () => setPlatformAccess(undefined);
   }, [api]);
   return platformAccess;
 };

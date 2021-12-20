@@ -49,7 +49,7 @@ export default function ({ navigation }: Props) {
   const { status } = courier;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
   // context
-  const modalData = usePlatformAccess();
+  const modalData = courier ? usePlatformAccess() : undefined;
   // screen state
   const [maintenanceModalVisible] = React.useState(modalData?.maintenance.active);
   // state

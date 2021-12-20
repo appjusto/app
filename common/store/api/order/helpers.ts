@@ -8,10 +8,12 @@ import {
 } from '@appjusto/types';
 import { isEmpty } from 'lodash';
 import { distanceBetweenLatLng } from '../helpers';
+import { track } from '../track';
 
 // items
 
 export const addItemToOrder = (order: Order, item: OrderItem): Order => {
+  track('user added one item to the order');
   if (!order?.items) return { ...order, items: [{ ...item }] };
   // searching for items for the same product that could be merged into one item
   const index = order.items.findIndex(
@@ -46,6 +48,7 @@ export const updateItem = (order: Order, item: OrderItem): Order => {
 
 export const removeItem = (order: Order, item: OrderItem): Order => {
   if (!order.items) return order;
+  track('user removed one item from the order');
   const index = order.items?.findIndex((i) => i.id === item.id);
   if (index === -1) return order;
   return {
