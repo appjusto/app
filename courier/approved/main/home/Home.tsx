@@ -150,7 +150,9 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           </View>
-          <MaintenanceModal modalData={modalData} visible={maintenanceModalVisible} />
+          {courier ? (
+            <MaintenanceModal modalData={modalData} visible={maintenanceModalVisible} />
+          ) : null}
         </PaddedView>
       </ScrollView>
       <LocationDisclosureModal />

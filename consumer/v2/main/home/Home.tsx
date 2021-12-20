@@ -110,7 +110,9 @@ export default function ({ navigation }: Props) {
               subtitle="Compartilhe esse movimento por uma economia mais justa"
             />
           </View>
-          <MaintenanceModal modalData={modalData} visible={maintenanceModalVisible} />
+          {consumer ? (
+            <MaintenanceModal modalData={modalData} visible={maintenanceModalVisible} />
+          ) : null}
         </PaddedView>
       </ScrollView>
     </View>
