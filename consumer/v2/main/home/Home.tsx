@@ -39,8 +39,6 @@ export default function ({ navigation }: Props) {
   const ongoingOrders = useSelector(getOrders);
   // context
   const modalData = consumer ? usePlatformAccess() : undefined;
-  // screen state
-  const [maintenanceModalVisible] = React.useState(modalData?.maintenance.active);
   // side effects
   useUpdateLocation();
   useNotificationToken();
@@ -110,9 +108,7 @@ export default function ({ navigation }: Props) {
               subtitle="Compartilhe esse movimento por uma economia mais justa"
             />
           </View>
-          {consumer ? (
-            <MaintenanceModal modalData={modalData} visible={maintenanceModalVisible} />
-          ) : null}
+          <MaintenanceModal modalData={modalData} />
         </PaddedView>
       </ScrollView>
     </View>

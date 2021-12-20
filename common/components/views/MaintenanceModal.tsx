@@ -9,7 +9,7 @@ export interface MaintenanceModalProps extends ModalProps {
 }
 
 export const MaintenanceModal = ({ modalData, ...props }: MaintenanceModalProps) => {
-  return (
+  return modalData?.maintenance.active ? (
     <Modal transparent {...props}>
       <View
         style={{
@@ -44,5 +44,5 @@ export const MaintenanceModal = ({ modalData, ...props }: MaintenanceModalProps)
         </View>
       </View>
     </Modal>
-  );
+  ) : null;
 };

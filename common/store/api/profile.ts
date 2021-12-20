@@ -40,7 +40,6 @@ export default class ProfileApi {
   ): firebase.Unsubscribe {
     const unsubscribe = this.getProfileRef(id).onSnapshot(
       async (snapshot) => {
-        console.log('not error');
         // ensure profile exists
         if (!snapshot.exists) {
           const unsub = this.getProfileRef(id).onSnapshot(
