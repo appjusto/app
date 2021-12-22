@@ -5,6 +5,7 @@ import React from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
+import { MaintenanceModal } from '../../../../common/components/views/MaintenanceModal';
 import { useBusinessDeeplink } from '../../../../common/hooks/useBusinessDeeplink';
 import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconLogin } from '../../../../common/icons/icon-login';
@@ -18,6 +19,7 @@ import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
 import { padding, screens } from '../../../../common/styles';
+import { usePlatformAccess } from '../../../../common/utils/platform/usePlatformAccess';
 import { t } from '../../../../strings';
 import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
@@ -35,6 +37,8 @@ export default function ({ navigation }: Props) {
   // redux store
   const consumer = useSelector(getConsumer);
   const ongoingOrders = useSelector(getOrders);
+  // context
+  const modalData = consumer ? usePlatformAccess() : undefined;
   // side effects
   useUpdateLocation();
   useNotificationToken();
@@ -104,6 +108,7 @@ export default function ({ navigation }: Props) {
               subtitle="Compartilhe esse movimento por uma economia mais justa"
             />
           </View>
+          <MaintenanceModal modalData={modalData} />
         </PaddedView>
       </ScrollView>
     </View>

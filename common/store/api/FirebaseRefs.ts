@@ -52,6 +52,7 @@ export default class FirebaseRefs {
   getPlatformCityStatisticsRef = (name: string) => this.getPlatformCitiesStatisticsRef().doc(name);
   getPlatformDatasRef = () => this.getPlatformRef().doc('data');
   getPlatformLogsRef = () => this.getPlatformRef().doc('logs');
+  getPlatformAccessRef = () => this.getPlatformRef().doc('access');
 
   // platform data subcollections
   getBanksRef = () => this.getPlatformDatasRef().collection('banks');
