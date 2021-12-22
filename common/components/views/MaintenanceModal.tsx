@@ -1,16 +1,16 @@
-import { PlatformAccess } from '@appjusto/types';
 import React from 'react';
-import { Modal, ModalProps, Text, View } from 'react-native';
+import { Modal, ModalProps, Pressable, Text, View } from 'react-native';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { colors, doublePadding, halfPadding, texts } from '../../styles';
+import { usePlatformAccess } from '../../utils/platform/usePlatformAccess';
 
-export interface MaintenanceModalProps extends ModalProps {
-  modalData?: PlatformAccess;
-}
-
-export const MaintenanceModal = ({ modalData, ...props }: MaintenanceModalProps) => {
-  return modalData?.maintenance.active ? (
-    <Modal transparent {...props}>
+export const MaintenanceModal = (props: ModalProps) => {
+  const platformAccess = usePlatformAccess();
+  // screen state
+  const [modalVisible, setModalVisible] = React.useState(true);
+  // UI
+  return platformAccess?.maintenance.active ? (
+    <Modal transparent {...props} visible={modalVisible}>
       <View
         style={{
           flex: 1,
@@ -28,13 +28,15 @@ export const MaintenanceModal = ({ modalData, ...props }: MaintenanceModalProps)
           }}
         >
           <View style={{ alignItems: 'center', marginBottom: 24 }}>
-            <IconLogoGreen />
+            <Pressable delayLongPress={3000} onLongPress={() => setModalVisible(false)}>
+              <IconLogoGreen />
+            </Pressable>
           </View>
           <Text style={{ ...texts.xl, textAlign: 'center' }}>
-            {modalData?.maintenance.header ?? ''}
+            {platformAccess.maintenance.header ?? ''}
           </Text>
-          {modalData?.maintenance.body?.length
-            ? modalData.maintenance.body.map((text) => (
+          {platformAccess.maintenance.body?.length
+            ? platformAccess.maintenance.body.map((text) => (
                 <Text key={text} style={{ ...texts.md, marginTop: 24, textAlign: 'center' }}>
                   {text}
                 </Text>

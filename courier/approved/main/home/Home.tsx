@@ -24,7 +24,6 @@ import {
   startLocationUpdatesTask,
   stopLocationUpdatesTask,
 } from '../../../../common/utils/location';
-import { usePlatformAccess } from '../../../../common/utils/platform/usePlatformAccess';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
@@ -48,8 +47,6 @@ export default function ({ navigation }: Props) {
   const ongoingOrders = useSelector(getOrders);
   const { status } = courier;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
-  // context
-  const modalData = courier ? usePlatformAccess() : undefined;
   // state
   const requests = useobservePendingOrderRequests(courier.id);
   // side effects
@@ -148,7 +145,7 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           </View>
-          <MaintenanceModal modalData={modalData} />
+          <MaintenanceModal />
         </PaddedView>
       </ScrollView>
       <LocationDisclosureModal />

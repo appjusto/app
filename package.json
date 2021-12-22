@@ -69,7 +69,7 @@
     "postversion": "git push && git push --tags && git fetch"
   },
   "dependencies": {
-    "@appjusto/types": "^3.30.1",
+    "@appjusto/types": "^3.30.2",
     "@expo/react-native-action-sheet": "^3.8.0",
     "@expo/vector-icons": "^12.0.0",
     "@fnando/cnpj": "^1.0.2",

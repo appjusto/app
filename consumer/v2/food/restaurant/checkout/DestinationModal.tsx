@@ -71,6 +71,7 @@ export const DestinationModal = ({
             onPress={onConfirmAddress}
             disabled={activityIndicator}
             activityIndicator={activityIndicator}
+            disabled={activityIndicator}
           />
         </PaddedView>
       </View>

@@ -51,6 +51,7 @@ export const removeItem = (order: Order, item: OrderItem): Order => {
   track('user removed one item from the order');
   const index = order.items?.findIndex((i) => i.id === item.id);
   if (index === -1) return order;
+  track('user removed one item from the order');
   return {
     ...order,
     items: [...order.items.slice(0, index), ...order.items.slice(index + 1)],
