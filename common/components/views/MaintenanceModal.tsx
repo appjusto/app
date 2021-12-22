@@ -1,6 +1,6 @@
 import { PlatformAccess } from '@appjusto/types';
 import React from 'react';
-import { Modal, ModalProps, Text, View } from 'react-native';
+import { Modal, ModalProps, Pressable, Text, View } from 'react-native';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { colors, doublePadding, halfPadding, texts } from '../../styles';
 
@@ -9,8 +9,10 @@ export interface MaintenanceModalProps extends ModalProps {
 }
 
 export const MaintenanceModal = ({ modalData, ...props }: MaintenanceModalProps) => {
+  // screen state
+  const [modalVisible, setModalVisible] = React.useState(true);
   return modalData?.maintenance.active ? (
-    <Modal transparent {...props}>
+    <Modal transparent {...props} visible={modalVisible}>
       <View
         style={{
           flex: 1,
@@ -28,7 +30,9 @@ export const MaintenanceModal = ({ modalData, ...props }: MaintenanceModalProps)
           }}
         >
           <View style={{ alignItems: 'center', marginBottom: 24 }}>
-            <IconLogoGreen />
+            <Pressable delayLongPress={3000} onLongPress={() => setModalVisible(false)}>
+              <IconLogoGreen />
+            </Pressable>
           </View>
           <Text style={{ ...texts.xl, textAlign: 'center' }}>
             {modalData?.maintenance.header ?? ''}
