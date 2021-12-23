@@ -5,6 +5,7 @@ import {
   Cuisine,
   Issue,
   IssueType,
+  PlatformAccess,
   PlatformParams,
 } from '@appjusto/types';
 import FilesApi from '../files';
@@ -18,6 +19,11 @@ export default class PlatformApi {
   async fetchPlatformParams() {
     const snapshot = await this.refs.getPlatformParamsRef().get();
     return snapshot.data() as PlatformParams;
+  }
+
+  async fetchPlatformAccess() {
+    const snapshot = await this.refs.getPlatformAccessRef().get();
+    return snapshot.data() as PlatformAccess;
   }
 
   async fetchBanks() {

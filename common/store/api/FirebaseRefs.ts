@@ -58,6 +58,7 @@ export default class FirebaseRefs {
   getIssuesRef = () => this.getPlatformDatasRef().collection('issues');
   getCuisinesRef = () => this.getPlatformDatasRef().collection('cuisines');
   getClassificationsRef = () => this.getPlatformDatasRef().collection('classifications');
+  getPlatformAccessRef = () => this.getPlatformRef().doc('access');
 
   // platform logs subcollections
   getPlatformLoginLogsRef = () => this.getPlatformLogsRef().collection('logins');
