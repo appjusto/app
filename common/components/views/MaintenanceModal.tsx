@@ -40,13 +40,12 @@ export const MaintenanceModal = (props: ModalProps) => {
               }}
             >
               {platformAccess.maintenance.icon ? (
-                <Text style={{ ...texts.x3l }}>
+                <Text style={{ ...texts.x5l }}>
                   {String.fromCodePoint(platformAccess.maintenance.icon ?? '')}
                 </Text>
               ) : null}
             </View>
           </View>
-
           <Text style={{ ...texts.xl, textAlign: 'center' }}>
             {platformAccess.maintenance.header ?? ''}
           </Text>
