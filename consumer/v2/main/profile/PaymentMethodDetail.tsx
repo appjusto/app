@@ -37,13 +37,13 @@ export default function ({ route, navigation }: Props) {
   // UI handlers
   const deletePaymentMethodHandler = async () => {
     Keyboard.dismiss();
-    if (ongoingOrders.length > 0) {
+    if (ongoingOrders.length === 0) {
       try {
         setLoading(true);
         await api.consumer().deletePaymentMethod(paymentData.id);
         track('consumer deleted a payment method');
         setLoading(false);
-      } catch (error) {
+      } catch (error: any) {
         dispatch(showToast(error.toString(), 'error'));
       }
       navigation.goBack();
