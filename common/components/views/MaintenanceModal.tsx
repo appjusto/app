@@ -40,7 +40,9 @@ export const MaintenanceModal = (props: ModalProps) => {
               }}
             >
               {platformAccess.maintenance.icon ? (
-                <Text>{String.fromCodePoint(platformAccess.maintenance.icon ?? '')}</Text>
+                <Text style={{ ...texts.x3l }}>
+                  {String.fromCodePoint(platformAccess.maintenance.icon ?? '')}
+                </Text>
               ) : null}
             </View>
           </View>
