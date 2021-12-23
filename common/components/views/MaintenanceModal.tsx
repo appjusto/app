@@ -27,25 +27,25 @@ export const MaintenanceModal = (props: ModalProps) => {
             borderRadius: halfPadding,
           }}
         >
-          <View style={{ alignItems: 'center' }}>
-            <View
-              style={{
-                alignItems: 'center',
-                marginBottom: 24,
-                height: 114,
-                width: 114,
-                borderRadius: 57,
-                backgroundColor: colors.grey50,
-                justifyContent: 'center',
-              }}
-            >
-              {platformAccess.maintenance.icon ? (
+          {platformAccess.maintenance.icon ? (
+            <View style={{ alignItems: 'center' }}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  marginBottom: 24,
+                  height: 114,
+                  width: 114,
+                  borderRadius: 57,
+                  backgroundColor: colors.grey50,
+                  justifyContent: 'center',
+                }}
+              >
                 <Text style={{ ...texts.x5l }}>
-                  {String.fromCodePoint(platformAccess.maintenance.icon ?? '')}
+                  {String.fromCodePoint(platformAccess.maintenance.icon)}
                 </Text>
-              ) : null}
+              </View>
             </View>
-          </View>
+          ) : null}
           <Text style={{ ...texts.xl, textAlign: 'center' }}>
             {platformAccess.maintenance.header ?? ''}
           </Text>
