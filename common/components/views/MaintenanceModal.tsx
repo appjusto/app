@@ -1,8 +1,8 @@
 import React from 'react';
 import { Modal, ModalProps, Pressable, Text, View } from 'react-native';
+import { usePlatformAccess } from '../../hooks/usePlatformAccess';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { colors, doublePadding, halfPadding, texts } from '../../styles';
-import { usePlatformAccess } from '../../utils/platform/usePlatformAccess';
 
 export const MaintenanceModal = (props: ModalProps) => {
   const platformAccess = usePlatformAccess();
@@ -27,11 +27,25 @@ export const MaintenanceModal = (props: ModalProps) => {
             borderRadius: halfPadding,
           }}
         >
-          <View style={{ alignItems: 'center', marginBottom: 24 }}>
-            <Pressable delayLongPress={3000} onLongPress={() => setModalVisible(false)}>
-              <IconLogoGreen />
-            </Pressable>
-          </View>
+          {platformAccess.maintenance.icon ? (
+            <View style={{ alignItems: 'center' }}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  marginBottom: 24,
+                  height: 114,
+                  width: 114,
+                  borderRadius: 57,
+                  backgroundColor: colors.grey50,
+                  justifyContent: 'center',
+                }}
+              >
+                <Text style={{ ...texts.x5l }}>
+                  {String.fromCodePoint(platformAccess.maintenance.icon)}
+                </Text>
+              </View>
+            </View>
+          ) : null}
           <Text style={{ ...texts.xl, textAlign: 'center' }}>
             {platformAccess.maintenance.header ?? ''}
           </Text>
@@ -43,6 +57,11 @@ export const MaintenanceModal = (props: ModalProps) => {
               ))
             : null}
           <View style={{ marginBottom: 24 }} />
+          <View style={{ alignItems: 'center', marginBottom: 24, marginTop: halfPadding }}>
+            <Pressable delayLongPress={3000} onLongPress={() => setModalVisible(false)}>
+              <IconLogoGreen />
+            </Pressable>
+          </View>
         </View>
       </View>
     </Modal>
