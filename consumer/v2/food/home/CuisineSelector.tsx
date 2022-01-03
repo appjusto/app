@@ -14,7 +14,7 @@ type Props = {
 
 export const CuisineSelector = ({ selectedCuisineId, onSelect }: Props) => {
   const cuisines = useCuisines();
-  return (
+  return cuisines?.length ? (
     <View style={{ paddingTop: halfPadding }}>
       <DoubleHeader title={t('Tá com fome de quê?')} subtitle={t('Escolha por categoria')} />
       <View style={{ paddingVertical: padding, paddingLeft: padding }}>
@@ -33,5 +33,5 @@ export const CuisineSelector = ({ selectedCuisineId, onSelect }: Props) => {
         />
       </View>
     </View>
-  );
+  ) : null;
 };
