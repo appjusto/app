@@ -50,6 +50,10 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     refetch,
     fetchNextPage,
   } = useSearch<BusinessAlgolia>(true, 'restaurant', 'distance', filters, currentLocation, '');
+  if (restaurants) {
+    restaurants[0].status = 'open';
+  }
+
   const [refreshing, setRefreshing] = React.useState(false);
   const mostRecentRestaurants = useLastRestaurants(consumer?.id);
   // side effects

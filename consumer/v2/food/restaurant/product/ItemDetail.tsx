@@ -3,7 +3,7 @@ import {
   ComplementGroup,
   OrderItem,
   OrderItemComplement,
-  WithId,
+  WithId
 } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
@@ -19,6 +19,7 @@ import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import HR from '../../../../../common/components/views/HR';
 import { IconSemaphoreSmall } from '../../../../../common/icons/icon-semaphore-small';
+import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
 import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
@@ -26,18 +27,14 @@ import { getNextAvailableDate } from '../../../../../common/store/api/business/s
 import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 import * as helpers from '../../../../../common/store/api/order/helpers';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
-import {
-  getConsumer,
-  getCurrentLocation,
-  getCurrentPlace,
-} from '../../../../../common/store/consumer/selectors';
+import { getConsumer, getCurrentPlace } from '../../../../../common/store/consumer/selectors';
 import {
   useContextBusiness,
-  useContextBusinessId,
+  useContextBusinessId
 } from '../../../../../common/store/context/business';
 import {
   useContextGetComplementGroup,
-  useContextGetProductCategory,
+  useContextGetProductCategory
 } from '../../../../../common/store/context/menu';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import {
@@ -46,7 +43,7 @@ import {
   halfPadding,
   padding,
   screens,
-  texts,
+  texts
 } from '../../../../../common/styles';
 import { formatCurrency, formatHour } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
@@ -56,6 +53,7 @@ import { RestaurantNavigatorParamList } from '../types';
 import { useBusinessIsAcceptingOrders } from '../useBusinessIsAcceptingOrders';
 import { ItemComplements } from './ItemComplements';
 import { ItemQuantity } from './ItemQuantity';
+import { LocationDistantFromDestinationModal } from './LocationDistantFromDestinationModal';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<RestaurantNavigatorParamList, 'ItemDetail'>,
@@ -85,12 +83,18 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const consumer = useSelector(getConsumer);
   const currentPlace = useSelector(getCurrentPlace);
   // state
-  const location = useSelector(getCurrentLocation);
-  const destination = activeOrder?.destination?.location ?? currentPlace?.location ?? location;
+
+  const { coords } = useLastKnownLocation();
+
+  const destination = activeOrder?.destination?.location;
+  const location = coords ?? currentPlace?.location;
   const distance =
     destination && business?.businessAddress?.latlng
       ? distanceBetweenLatLng(destination, business.businessAddress.latlng)
       : 0;
+  const distanceBetweenLocationAndDestinationMeters =
+    location && destination ? distanceBetweenLatLng(location, destination) : 0;
+  const bottomLimitWarningModalShowMeters = 2000;
   const isOutOfRange = (business?.deliveryRange ?? 0) < (distance ?? 0);
   const isAcceptingOrders = useBusinessIsAcceptingOrders(business);
   const product = useProduct(businessId, productId);
@@ -99,6 +103,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const [quantity, setQuantity] = React.useState(1);
   const [complements, setComplements] = React.useState<OrderItemComplement[]>([]);
   const [notes, setNotes] = React.useState<string>('');
+  const [modalVisible, setModalVisible] = React.useState(false);
   const orderItem = React.useMemo(() => {
     if (!product) return undefined;
     return {
@@ -114,6 +119,14 @@ export const ItemDetail = ({ navigation, route }: Props) => {
       complements,
     } as OrderItem;
   }, [product, itemId, quantity, notes, complements, getProductCategory]);
+
+  const isLocationDistantFromDestination = React.useMemo(
+    (): boolean =>
+      (activeOrder?.items?.length ?? 0) === 0 &&
+      distanceBetweenLocationAndDestinationMeters > bottomLimitWarningModalShowMeters,
+    [activeOrder, distanceBetweenLocationAndDestinationMeters, bottomLimitWarningModalShowMeters]
+  );
+
   const canAddItemToOrder = React.useMemo(() => {
     if (!product) return false;
     return helpers.hasSatisfiedAllGroups(product, complements);
@@ -132,10 +145,16 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     if (!product) return;
     const item = activeOrder.items?.find((i) => i.id === itemId);
     if (!item) return;
+
     setComplements(item.complements ?? []);
     setQuantity(item.quantity);
     setNotes(item.notes ?? '');
   }, [itemId, activeOrder, product]);
+  React.useEffect(() => {
+    if (!activeOrder) {
+      api.order().createFoodOrder(business!, consumer!, [], currentPlace ?? null);
+    }
+  }, []);
   // tracking
   useSegmentScreen('ItemDetail');
   // UI
@@ -181,10 +200,21 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     }
   };
   // handlers
+  const handleAddItemToOrder = () => {
+    Keyboard.dismiss();
+    if (isLocationDistantFromDestination) {
+      setModalVisible(true);
+    } else {
+      updateOrder();
+    }
+  };
+
   const updateOrder = () => {
     (async () => {
-      Keyboard.dismiss();
       if (!orderItem) return;
+
+      console.log(activeOrder?.items);
+
       if (!activeOrder) {
         api.order().createFoodOrder(business, consumer!, [orderItem], currentPlace ?? null);
         track('consumer created food order in database');
@@ -192,11 +222,12 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         const updatedOrder = !itemId
           ? helpers.addItemToOrder(activeOrder, orderItem)
           : quantity > 0
-          ? helpers.updateItem(activeOrder, orderItem)
-          : helpers.removeItem(activeOrder, orderItem);
+            ? helpers.updateItem(activeOrder, orderItem)
+            : helpers.removeItem(activeOrder, orderItem);
         api.order().updateOrder(activeOrder.id, updatedOrder);
         track('consumer updated items in order');
       }
+
       navigation.pop();
     })();
   };
@@ -357,11 +388,17 @@ export const ItemDetail = ({ navigation, route }: Props) => {
               title={`${t('Adicionar')} ${formatCurrency(helpers.getItemTotal(orderItem!))}`}
               disabled={!canAddItemToOrder}
               onChange={(value) => setQuantity(value)}
-              onSubmit={updateOrder}
+              onSubmit={handleAddItemToOrder}
             />
           </PaddedView>
         </View>
       ) : null}
+      <LocationDistantFromDestinationModal
+        modalVisible={modalVisible}
+        onModalClose={() => setModalVisible(false)}
+        positiveAnswer={updateOrder}
+        negativeAnswer={() => setModalVisible(false)}
+      />
     </View>
   );
 };

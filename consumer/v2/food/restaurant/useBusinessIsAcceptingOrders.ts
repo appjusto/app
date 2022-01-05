@@ -5,6 +5,7 @@ import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeCo
 export const useBusinessIsAcceptingOrders = (business?: Business) => {
   const platformParams = usePlatformParamsContext();
   const getServerTime = useContextGetSeverTime();
+
   if (!platformParams) return false;
   if (!getServerTime) return false;
   if (!business) return false;
