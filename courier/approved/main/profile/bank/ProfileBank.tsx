@@ -209,7 +209,7 @@ export default function ({ navigation, route }: Props) {
               mask={selectedBank?.agencyPattern}
               parser={agencyParser}
               formatter={agencyFormatter}
-              editable={!profileApproved}
+              editable={!profileApproved && !!selectedBank}
               keyboardType={
                 (selectedBank?.agencyPattern.indexOf('X') ?? -1) > -1 ? 'default' : 'number-pad'
               }
@@ -328,7 +328,7 @@ export default function ({ navigation, route }: Props) {
                 mask={accountMask}
                 parser={accountParser}
                 formatter={accountFormatter}
-                editable={!profileApproved}
+                editable={!profileApproved && !!selectedBank}
                 keyboardType={
                   (selectedBank?.accountPattern.indexOf('X') ?? -1) > -1 ? 'default' : 'number-pad'
                 }

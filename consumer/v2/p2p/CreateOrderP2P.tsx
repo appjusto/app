@@ -55,14 +55,11 @@ export default function ({ navigation, route }: Props) {
   const [wantsCpf, setWantsCpf] = React.useState(false);
   const { quotes, getOrderQuotes } = useQuotes(order?.id);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
-  const canSubmit = React.useMemo(() => {
-    return (
-      selectedPaymentMethodId !== undefined &&
-      selectedFare !== undefined &&
-      !isLoading &&
-      isEmpty(order?.route?.issue)
-    );
-  }, [selectedPaymentMethodId, selectedFare, isLoading, order?.route?.issue]);
+  const canSubmit =
+    selectedPaymentMethodId !== undefined &&
+    selectedFare !== undefined &&
+    !isLoading &&
+    isEmpty(order?.route?.issue);
   // side effects
   // whenever quotes are updated
   // select first fare and subscribe to involved fleets updates
