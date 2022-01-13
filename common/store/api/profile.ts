@@ -3,7 +3,6 @@ import Constants from 'expo-constants';
 import firebase from 'firebase';
 import * as geofirestore from 'geofirestore';
 import * as Sentry from 'sentry-expo';
-import { runPromise } from '../../utils/runPromise';
 import AuthApi from './auth';
 import { documentAs } from './types';
 
@@ -69,17 +68,13 @@ export default class ProfileApi {
       Constants.manifest ? ` / ${Constants.manifest.version}` : ''
     }`;
     try {
-      await runPromise(
-        this.getProfileRef(id).set(
-          {
-            ...changes,
-            appVersion,
-            updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-          } as UserProfile,
-          { merge: true }
-        ),
-        5,
-        1000
+      await this.getProfileRef(id).set(
+        {
+          ...changes,
+          appVersion,
+          updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+        } as UserProfile,
+        { merge: true }
       );
     } catch (error: any) {
       console.error('Erro ao tentar atualizar o perfil:', JSON.stringify(error));
@@ -89,17 +84,13 @@ export default class ProfileApi {
 
   async updateLocation(id: string, location: firebase.firestore.GeoPoint) {
     try {
-      await runPromise(
-        this.firestoreWithGeo
-          .collection(this.collectionName)
-          .doc(id)
-          .update({
-            coordinates: location,
-            updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-          } as UserProfile),
-        5,
-        1000
-      );
+      await this.firestoreWithGeo
+        .collection(this.collectionName)
+        .doc(id)
+        .update({
+          coordinates: location,
+          updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+        } as UserProfile);
     } catch (error: any) {
       console.error('Erro ao tentar atualizar a localização:', JSON.stringify(error));
       Sentry.Native.captureException(error);
