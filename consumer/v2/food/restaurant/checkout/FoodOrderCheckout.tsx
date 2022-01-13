@@ -80,7 +80,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
     if (params?.destination) {
-      if (order) {
+      if (
+        order &&
+        params.destination.address.description !== order.destination?.address.description
+      ) {
         api.order().updateOrder(order.id, { destination: params.destination });
       }
       navigation.setParams({
