@@ -2,9 +2,12 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { IconSemaphoreSmall } from '../../../../common/icons/icon-semaphore-small';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
-import { t } from '../../../../strings';
 
-export const RouteIssueCard = () => {
+interface Props {
+  issue: string;
+}
+
+export const RouteIssueCard = ({ issue }: Props) => {
   return (
     <View
       style={{
@@ -17,12 +20,8 @@ export const RouteIssueCard = () => {
       }}
     >
       <IconSemaphoreSmall />
-      <Text style={{ ...texts.sm, marginTop: halfPadding }}>{t('Problemas no endereço')}</Text>
-      <Text style={{ ...texts.xs, color: colors.grey700 }}>
-        {t(
-          'Verificamos que o endereço de retirada está igual ao endereço de entrega. Por favor, modifique o endereço para selecionar a frota.'
-        )}
-      </Text>
+
+      <Text style={{ ...texts.xs, marginTop: halfPadding, color: colors.grey700 }}>{issue}</Text>
     </View>
   );
 };

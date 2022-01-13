@@ -56,7 +56,7 @@ export const OrderAvailableFleets = ({
         ) : (
           <View>
             {order.route?.issue ? (
-              <RouteIssueCard />
+              <RouteIssueCard issue={order.route.issue} />
             ) : (
               <View>
                 {quotes.length === 1 && quotes[0].fleet.participantsOnline === 0 ? (
