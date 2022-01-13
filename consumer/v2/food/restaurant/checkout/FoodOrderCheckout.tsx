@@ -65,11 +65,14 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [shareDataWithBusiness, setShareDataWithBusiness] = React.useState(false);
   const { quotes, getOrderQuotes } = useQuotes(order?.id);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
-  const canSubmit =
-    selectedPaymentMethodId !== undefined &&
-    selectedFare !== undefined &&
-    !isLoading &&
-    isEmpty(order?.route?.issue);
+  const canSubmit = React.useMemo(() => {
+    return (
+      selectedPaymentMethodId !== undefined &&
+      selectedFare !== undefined &&
+      !isLoading &&
+      isEmpty(order?.route?.issue)
+    );
+  }, [selectedPaymentMethodId, selectedFare, isLoading, order?.route?.issue]);
   // side effects
   // whenever quotes are updated
   // select first fare
@@ -184,7 +187,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     } catch (error: any) {
       setLoading(false);
       dispatch(showToast(error.toString(), 'error'));
-      console.log('ERRRRRRRRRO', error.toString());
     }
   };
   // navigate to ProfileAddCard or ProfilePaymentMethods to add or select payment method
