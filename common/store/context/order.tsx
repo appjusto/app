@@ -28,7 +28,7 @@ export const ActiveOrderProvider = ({ businessId, orderId, children }: Props) =>
       () => ({ businessId, consumerId: user?.uid, statuses: ['quote'], limit: 1 }),
       [businessId, user?.uid]
     )
-  );
+  ).filter((order) => !!order.items?.length);
   const value: Value = { order: order ?? quote };
   // console.log('ActiveOrderProvider', value.order?.id);
   return <ActiveOrderContext.Provider value={value}>{children}</ActiveOrderContext.Provider>;
