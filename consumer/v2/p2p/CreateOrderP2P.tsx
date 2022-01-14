@@ -10,6 +10,7 @@ import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useQuotes } from '../../../common/store/api/order/hooks/useQuotes';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { useProfileSummary } from '../../../common/store/common/hooks/useProfileSummary';
 import { getConsumer } from '../../../common/store/consumer/selectors';
@@ -52,17 +53,14 @@ export default function ({ navigation, route }: Props) {
   const [isLoading, setLoading] = React.useState(false);
   const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
   const [wantsCpf, setWantsCpf] = React.useState(false);
-  const [quotes, setQuotes] = React.useState<Fare[]>();
+  const { quotes, getOrderQuotes } = useQuotes(order?.id);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
-  const canSubmit = React.useMemo(() => {
-    return selectedPaymentMethodId !== undefined && selectedFare !== undefined && !isLoading;
-  }, [selectedPaymentMethodId, selectedFare, isLoading]);
+  const canSubmit =
+    selectedPaymentMethodId !== undefined &&
+    selectedFare !== undefined &&
+    !isLoading &&
+    isEmpty(order?.route?.issue);
   // side effects
-  // whenever order changes
-  // update quotes
-  React.useEffect(() => {
-    getOrderQuotesHandler();
-  }, [order]);
   // whenever quotes are updated
   // select first fare and subscribe to involved fleets updates
   React.useEffect(() => {
@@ -104,7 +102,9 @@ export default function ({ navigation, route }: Props) {
       });
     }
     if (order && orderId && params?.destination) {
-      api.order().updateOrder(orderId, { destination: params.destination });
+      if (params.destination.address.description !== order.destination?.address.description) {
+        api.order().updateOrder(orderId, { destination: params.destination });
+      }
       navigation.setParams({
         destination: undefined,
       });
@@ -124,19 +124,6 @@ export default function ({ navigation, route }: Props) {
   // tracking
   useSegmentScreen('CreateOrderP2P');
   // handlers
-  const getOrderQuotesHandler = React.useCallback(async () => {
-    if (!order) return;
-    if (!order.origin?.location || !order.route?.distance) {
-      if (order.route?.issue) dispatch(showToast(order.route.issue, 'error'));
-      return;
-    }
-    setQuotes(undefined);
-    try {
-      setQuotes(await api.order().getOrderQuotes(order.id));
-    } catch (error: any) {
-      dispatch(showToast(error.toString(), 'error'));
-    }
-  }, [order, api, dispatch]);
   // navigate to 'AddressComplete' to enter address
   const navigateToAddressComplete = React.useCallback(
     (returnParam: string, value?: Place) => {
@@ -258,7 +245,7 @@ export default function ({ navigation, route }: Props) {
             returnScreen: 'CreateOrderP2P',
           })
         }
-        onRetry={getOrderQuotesHandler}
+        onRetry={getOrderQuotes}
         total={selectedFare?.total ?? 0}
       />
     </View>

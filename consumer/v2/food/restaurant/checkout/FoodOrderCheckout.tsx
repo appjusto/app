@@ -184,7 +184,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     } catch (error: any) {
       setLoading(false);
       dispatch(showToast(error.toString(), 'error'));
-      console.log('ERRRRRRRRRO', error.toString());
     }
   };
   // navigate to ProfileAddCard or ProfilePaymentMethods to add or select payment method
