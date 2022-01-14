@@ -110,7 +110,7 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
       {order.type === 'p2p' ? (
         <View style={{ marginTop: halfPadding }}>
           <Text style={[texts.xl]} numberOfLines={2}>
-            {nextPlace?.address.description.split('-')[0]}
+            {nextPlace?.address.main}
           </Text>
           <Text style={[texts.xl]} numberOfLines={2}>
             {nextPlace?.address.secondary}
@@ -139,7 +139,7 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
           ) : null}
 
           <Text style={[texts.xl]} numberOfLines={2}>
-            {nextPlace?.address.description.split('-')[0]}
+            {nextPlace?.address.main}
           </Text>
           <Text style={[texts.xl]} numberOfLines={2}>
             {nextPlace?.address.secondary}
