@@ -104,10 +104,10 @@ export default function ({ navigation, route }: Props) {
     if (order && orderId && params?.destination) {
       if (params.destination.address.description !== order.destination?.address.description) {
         api.order().updateOrder(orderId, { destination: params.destination });
-        navigation.setParams({
-          destination: undefined,
-        });
       }
+      navigation.setParams({
+        destination: undefined,
+      });
     }
     if (params?.paymentMethodId) {
       setSelectedPaymentMethodId(params?.paymentMethodId);
