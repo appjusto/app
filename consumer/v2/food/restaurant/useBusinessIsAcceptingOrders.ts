@@ -36,7 +36,7 @@ export const useBusinessIsAcceptingOrders = (
   // out of support time
   const hour = toNumber(formatTime(now, 'raw'));
   if (
-    hour < toNumber(platformParams.consumer.support.starts ?? '1000') ||
+    hour < toNumber(platformParams.consumer.support.starts ?? '900') ||
     hour > toNumber(platformParams.consumer.support.ends ?? '2300')
   )
     return 'unsupported';
