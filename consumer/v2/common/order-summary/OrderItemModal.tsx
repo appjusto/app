@@ -78,6 +78,9 @@ export const OrderItemModal = ({ item, order, onModalClose, onEditItemPress, ...
               style={{ ...texts.sm, color: colors.grey700, paddingTop: 4 }}
               key={complement.complementId}
             >
+              <Text style={{ ...texts.xs, color: colors.green600 }}>
+                {`${complement.quantity}x `}{' '}
+              </Text>
               {complement.name}
             </Text>
           ))}

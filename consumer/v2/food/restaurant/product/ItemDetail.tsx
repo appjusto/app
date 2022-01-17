@@ -18,12 +18,12 @@ import DefaultButton from '../../../../../common/components/buttons/DefaultButto
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import HR from '../../../../../common/components/views/HR';
+import { usePlatformParamsContext } from '../../../../../common/contexts/PlatformParamsContext';
 import { IconSemaphoreSmall } from '../../../../../common/icons/icon-semaphore-small';
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
 import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
 import { getNextAvailableDate } from '../../../../../common/store/api/business/selectors';
-import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 import * as helpers from '../../../../../common/store/api/order/helpers';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import {
@@ -79,6 +79,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const business = useContextBusiness();
   const businessId = useContextBusinessId();
   const activeOrder = useContextActiveOrder();
+  const platformParams = usePlatformParamsContext();
   const getProductCategory = useContextGetProductCategory();
   const getComplementGroup = useContextGetComplementGroup();
   // redux store
@@ -87,12 +88,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   // state
   const location = useSelector(getCurrentLocation);
   const destination = activeOrder?.destination?.location ?? currentPlace?.location ?? location;
-  const distance =
-    destination && business?.businessAddress?.latlng
-      ? distanceBetweenLatLng(destination, business.businessAddress.latlng)
-      : 0;
-  const isOutOfRange = (business?.deliveryRange ?? 0) < (distance ?? 0);
-  const isAcceptingOrders = useBusinessIsAcceptingOrders(business);
+  const acceptingStatus = useBusinessIsAcceptingOrders(business, destination);
   const product = useProduct(businessId, productId);
   const { data: imageURI } = useProductImageURI(businessId, productId, '1008x720');
   // screen state
@@ -212,32 +208,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         </PaddedView>
       );
     }
-    if (isOutOfRange)
-      return (
-        <View style={{ flex: 1, paddingBottom: padding }}>
-          <View
-            style={{
-              margin: padding,
-              paddingHorizontal: padding,
-              paddingVertical: 24,
-              alignItems: 'center',
-              backgroundColor: colors.grey50,
-              ...borders.default,
-            }}
-          >
-            <IconSemaphoreSmall />
-            <Text style={{ ...texts.sm, marginTop: halfPadding }}>
-              {t('Restaurante fora da área de entrega')}
-            </Text>
-            <Text style={{ ...texts.xs, color: colors.grey700, textAlign: 'center' }}>
-              {t(
-                'Infelizmente ainda não atendemos seu endereço, mas você pode continuar explorando o cardápio'
-              )}
-            </Text>
-          </View>
-        </View>
-      );
-    if (isAcceptingOrders)
+    if (acceptingStatus === 'accepting')
       return (
         <View style={{ flex: 1 }}>
           <ItemComplements
@@ -280,6 +251,38 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           <View style={{ flex: 1 }} />
         </View>
       );
+    if (acceptingStatus === 'out-of-range' || acceptingStatus === 'unsupported') {
+      const header =
+        acceptingStatus === 'out-of-range'
+          ? t('Restaurante fora da área de entrega')
+          : t('Fora do horário de atendimento');
+      const body =
+        acceptingStatus === 'out-of-range'
+          ? t(
+              'Infelizmente ainda não atendemos seu endereço, mas você pode continuar explorando o cardápio'
+            )
+          : t(
+              `O horário de atendimento da plataforma atualmente é entre ${formatHour(
+                platformParams?.consumer.support.starts ?? '1000'
+              )} e ${formatHour(platformParams?.consumer.support.ends ?? '2300')}.`
+            );
+      return (
+        <View
+          style={{
+            margin: padding,
+            paddingHorizontal: padding,
+            paddingVertical: 24,
+            alignItems: 'center',
+            backgroundColor: colors.grey50,
+            ...borders.default,
+          }}
+        >
+          <IconSemaphoreSmall />
+          <Text style={{ ...texts.sm, marginTop: halfPadding }}>{header}</Text>
+          <Text style={{ ...texts.xs, color: colors.grey700, textAlign: 'center' }}>{body}</Text>
+        </View>
+      );
+    }
     const nextOpeningDay = getNextAvailableDate(business.schedules, new Date());
     return (
       <View
@@ -319,7 +322,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           <View
             style={{
               paddingHorizontal: padding,
-              marginBottom: !isOutOfRange && isAcceptingOrders ? 24 : undefined,
+              marginBottom: acceptingStatus === 'accepting' ? 24 : undefined,
             }}
           >
             {imageURI ? (
@@ -347,7 +350,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           <View style={{ flex: 1, justifyContent: 'center' }}>{getActionsUI()}</View>
         </View>
       </KeyboardAwareScrollView>
-      {!isOutOfRange && isAcceptingOrders ? (
+      {acceptingStatus === 'accepting' ? (
         <View>
           <HR />
           <PaddedView>
