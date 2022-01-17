@@ -267,21 +267,19 @@ export const ItemDetail = ({ navigation, route }: Props) => {
               )} e ${formatHour(platformParams?.consumer.support.ends ?? '2300')}.`
             );
       return (
-        <View style={{ flex: 1, paddingBottom: padding }}>
-          <View
-            style={{
-              margin: padding,
-              paddingHorizontal: padding,
-              paddingVertical: 24,
-              alignItems: 'center',
-              backgroundColor: colors.grey50,
-              ...borders.default,
-            }}
-          >
-            <IconSemaphoreSmall />
-            <Text style={{ ...texts.sm, marginTop: halfPadding }}>{header}</Text>
-            <Text style={{ ...texts.xs, color: colors.grey700, textAlign: 'center' }}>{body}</Text>
-          </View>
+        <View
+          style={{
+            margin: padding,
+            paddingHorizontal: padding,
+            paddingVertical: 24,
+            alignItems: 'center',
+            backgroundColor: colors.grey50,
+            ...borders.default,
+          }}
+        >
+          <IconSemaphoreSmall />
+          <Text style={{ ...texts.sm, marginTop: halfPadding }}>{header}</Text>
+          <Text style={{ ...texts.xs, color: colors.grey700, textAlign: 'center' }}>{body}</Text>
         </View>
       );
     }
