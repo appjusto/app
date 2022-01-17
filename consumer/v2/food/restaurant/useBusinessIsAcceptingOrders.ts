@@ -32,7 +32,9 @@ export const useBusinessIsAcceptingOrders = (
     destination && business?.businessAddress?.latlng
       ? distanceBetweenLatLng(destination, business.businessAddress.latlng)
       : 0;
-  if (business?.deliveryRange ?? 0 < distance ?? 0) return 'out-of-range';
+  if (business.deliveryRange) {
+    if (business.deliveryRange < distance ?? 0) return 'out-of-range';
+  }
   // out of support time
   const hour = toNumber(formatTime(now, 'raw'));
   if (
