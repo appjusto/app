@@ -15,7 +15,7 @@ import {
   IuguMarketplaceAccountAdvanceSimulation,
   IuguMarketplaceAccountReceivables,
 } from '@appjusto/types/payment/iugu';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import * as Sentry from 'sentry-expo';
 import { getAppVersion } from '../../../utils/version';
 import FilesApi from '../files';

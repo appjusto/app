@@ -111,7 +111,7 @@
     "expo-splash-screen": "~0.14.1",
     "expo-task-manager": "~10.1.0",
     "expo-updates": "~0.11.4",
-    "firebase": "^8.8.1",
+    "firebase": "^9.6.3",
     "geofirestore": "^4.2.1",
     "geokit": "^1.1.0",
     "i18n-js": "^3.7.1",

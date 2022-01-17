@@ -1,5 +1,5 @@
 import { DispatchingState } from '@appjusto/types';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React from 'react';
 import { ApiContext } from '../../../../app/context';
 import { useContextGetSeverTime } from '../../../../contexts/ServerTimeContext';

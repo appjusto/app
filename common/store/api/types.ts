@@ -1,8 +1,10 @@
 import { WithId } from '@appjusto/types';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 
-export type FirebaseQueryDocumentSnapshot = firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>;
-export type FirebaseDocumentSnapshot = firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>;
+export type FirebaseQueryDocumentSnapshot =
+  firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>;
+export type FirebaseDocumentSnapshot =
+  firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>;
 export type FirebaseDocument = FirebaseQueryDocumentSnapshot | FirebaseDocumentSnapshot;
 
 export const documentAs = <T extends object>(doc: FirebaseDocument): WithId<T> => ({

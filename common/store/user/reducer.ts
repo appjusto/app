@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import { AnyAction } from 'redux';
 import * as Sentry from 'sentry-expo';
 import { USER_AUTH_STATE_CHANGED } from './actions';

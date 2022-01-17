@@ -30,7 +30,7 @@ import {
   UpdateOrderPayload,
   WithId,
 } from '@appjusto/types';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import { isEmpty } from 'lodash';
 import * as Sentry from 'sentry-expo';
 import { getAppVersion } from '../../../utils/version';

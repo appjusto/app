@@ -1,6 +1,6 @@
 import { ConsumerProfile, CourierProfile, Flavor, UserProfile, WithId } from '@appjusto/types';
 import Constants from 'expo-constants';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import * as geofirestore from 'geofirestore';
 import * as Sentry from 'sentry-expo';
 import AuthApi from './auth';

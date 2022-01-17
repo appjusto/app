@@ -1,5 +1,5 @@
 import { Fleet, WithId } from '@appjusto/types';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React from 'react';
 import { ApiContext } from '../../../../app/context';
 export const useObserveFleets = () => {
@@ -7,12 +7,10 @@ export const useObserveFleets = () => {
   const api = React.useContext(ApiContext);
   // state
   const [fleets, setFleets] = React.useState<WithId<Fleet>[]>();
-  const [startAfter, setStartAfter] = React.useState<
-    firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>
-  >();
-  const [lastFleet, setLastFleet] = React.useState<
-    firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>
-  >();
+  const [startAfter, setStartAfter] =
+    React.useState<firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>>();
+  const [lastFleet, setLastFleet] =
+    React.useState<firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>>();
   // side effects
   // observe order
   React.useEffect(() => {

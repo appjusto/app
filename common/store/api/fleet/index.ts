@@ -1,5 +1,5 @@
 import { Fleet, WithId } from '@appjusto/types';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import * as Sentry from 'sentry-expo';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';

@@ -1,7 +1,7 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';

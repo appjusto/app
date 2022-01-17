@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../app/context';

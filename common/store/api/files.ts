@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 
 export default class FilesApi {
   constructor(private storage: firebase.storage.Storage) {}

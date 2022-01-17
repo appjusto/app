@@ -1,5 +1,5 @@
 import { Order, WithId } from '@appjusto/types';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import { usePlatformParamsContext } from '../contexts/PlatformParamsContext';
 import { useContextGetSeverTime } from '../contexts/ServerTimeContext';
 

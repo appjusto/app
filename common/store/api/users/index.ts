@@ -1,5 +1,5 @@
 import { Flavor, ProfileChange, UserProfile } from '@appjusto/types';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentsAs } from '../types';
 
