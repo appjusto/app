@@ -4,12 +4,12 @@ import { usePlatformParamsContext } from '../contexts/PlatformParamsContext';
 import { useContextGetSeverTime } from '../contexts/ServerTimeContext';
 
 export const useShouldDelayBeforeAdvancing = (order?: WithId<Order> | null) => {
+  const getServerTime = useContextGetSeverTime();
+  if (!order) return false;
+  if (!getServerTime) return false;
   const delayBeforeAdvancing =
     (usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60) * 1000;
-  const getServerTime = useContextGetSeverTime();
-  if (!getServerTime) return false;
-  if (!order) return false;
-  const dispatchingStartedOn = order.timestamps?.dispatching ?? order.dispatchingStartedOn;
+  const dispatchingStartedOn = order.timestamps.dispatching ?? order.dispatchingStartedOn;
   return (
     getServerTime().getTime() -
       (dispatchingStartedOn as firebase.firestore.Timestamp).toDate().getTime() <
