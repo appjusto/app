@@ -95,7 +95,9 @@ export default function ({ navigation, route }: Props) {
     >
       <PaddedView>
         <Text style={[texts.x2l]}>{fleet.name}</Text>
-        <Text style={{ ...texts.xs, color: colors.green600, marginTop: 8 }}>{participants}</Text>
+        {flavor === 'courier' ? (
+          <Text style={{ ...texts.xs, color: colors.green600, marginTop: 8 }}>{participants}</Text>
+        ) : null}
         <Text style={{ ...texts.xs, color: colors.grey700, marginTop: 8 }}>
           {fleet.description}
         </Text>
