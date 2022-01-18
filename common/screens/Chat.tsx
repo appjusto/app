@@ -79,7 +79,14 @@ export default function ({ route }: Props) {
       id: counterpartId,
     };
     api.order().sendMessage(orderId, {
-      from: { agent: flavor, id: user.uid },
+      from: {
+        agent: flavor,
+        id: user.uid,
+        name:
+          flavor === 'consumer'
+            ? order.consumer.name ?? t('Cliente')
+            : order.courier?.name ?? t('Entregador/a'),
+      },
       to,
       message: inputText.trim(),
       orderStatus: order.status,
