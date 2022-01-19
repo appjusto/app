@@ -85,11 +85,9 @@ export default function ({ navigation, route }: Props) {
       );
     }
   };
-
-  const welcomeMessage =
-    flavor === 'consumer'
-      ? t('Um delivery aberto, transparente e consciente.')
-      : t('Ganhe mais, com autonomia e transparência.');
+  let welcomeMessage;
+  if (flavor === 'courier') welcomeMessage = t('Ganhe mais, com autonomia e transparência.');
+  else welcomeMessage = t('Um delivery aberto, transparente e consciente.');
   // UI
   return (
     <View style={{ ...screens.default }}>
@@ -110,7 +108,7 @@ export default function ({ navigation, route }: Props) {
             onLongPress={() => setPasswordShown(!isPasswordShown)}
           >
             <>
-              <ShowIf test={flavor === 'consumer'}>
+              <ShowIf test={flavor !== 'courier'}>
                 {() => (
                   <View
                     style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}
@@ -135,9 +133,7 @@ export default function ({ navigation, route }: Props) {
               </View>
               <View style={{ marginTop: padding }}>
                 <Text style={[texts.x2l]}>{welcomeMessage}</Text>
-                <Text
-                  style={[texts.sm, { color: colors.grey700, lineHeight: 21, marginTop: padding }]}
-                >
+                <Text style={[texts.sm, { color: colors.grey700, marginTop: padding }]}>
                   {t('Digite seu e-mail para entrar ou criar sua conta.')}
                 </Text>
               </View>
@@ -176,37 +172,64 @@ export default function ({ navigation, route }: Props) {
                 />
               ) : null}
             </View>
-            <View
-              style={{
-                flexDirection: tallerDevice ? 'row' : 'column',
-                alignItems: tallerDevice ? 'center' : 'flex-start',
-                justifyContent: 'space-between',
-                marginTop: padding,
-              }}
-            >
-              <View>
-                <CheckField
-                  checked={acceptedTerms}
-                  onPress={() => setAcceptTerms(!acceptedTerms)}
-                  text={t('Aceito os termos de uso do app')}
-                />
+            {flavor === 'business' && isPasswordShown ? (
+              <Text style={[texts.sm, { color: colors.grey700, marginTop: padding }]}>
+                {t(
+                  'Esqueceu a senha? Então desative essa opção e faça o login somente com o e-mail cadastrado. Você poderá criar uma nova senha na sua página de Perfil.'
+                )}
+              </Text>
+            ) : null}
+            {flavor === 'business' ? (
+              <View
+                style={{
+                  flexDirection: tallerDevice ? 'row' : 'column',
+                  alignItems: tallerDevice ? 'center' : 'flex-start',
+                  justifyContent: 'space-between',
+                  marginTop: padding,
+                }}
+              >
+                <View>
+                  <CheckField
+                    checked={isPasswordShown}
+                    onPress={() => setPasswordShown(!isPasswordShown)}
+                    text={t('Usar senha de acesso')}
+                  />
+                </View>
               </View>
-              <View style={{ marginTop: !tallerDevice ? halfPadding : 0 }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('Terms');
-                  }}
-                >
-                  <Text style={[texts.xs, { color: colors.green600 }]}>{t('Ler os termos')}</Text>
-                </TouchableOpacity>
+            ) : (
+              <View
+                style={{
+                  flexDirection: tallerDevice ? 'row' : 'column',
+                  alignItems: tallerDevice ? 'center' : 'flex-start',
+                  justifyContent: 'space-between',
+                  marginTop: padding,
+                }}
+              >
+                <View>
+                  <CheckField
+                    checked={acceptedTerms}
+                    onPress={() => setAcceptTerms(!acceptedTerms)}
+                    text={t('Aceito os termos de uso do app')}
+                  />
+                </View>
+                <View style={{ marginTop: !tallerDevice ? halfPadding : 0 }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('Terms');
+                    }}
+                  >
+                    <Text style={[texts.xs, { color: colors.green600 }]}>{t('Ler os termos')}</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
+            )}
           </View>
           <View style={{ flex: 1 }} />
           <View style={{ marginTop: 32, paddingBottom: padding }}>
             <DefaultButton
               disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
-              title={flavor === 'courier' ? t('Entrar') : t('Faça login para pedir')}
+              // title={flavor === 'courier' ? t('Entrar') : t('Faça login para pedir')}
+              title={flavor === 'consumer' ? t('Faça login para pedir') : t('Entrar')}
               onPress={signInHandler}
               activityIndicator={busy}
               style={{ marginBottom: padding }}
