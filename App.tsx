@@ -2,6 +2,7 @@ import Constants from 'expo-constants';
 import React from 'react';
 import { LogBox, Platform, ToastAndroid } from 'react-native';
 import { useSelector } from 'react-redux';
+import { BusinessApp } from './business/BusinessApp';
 import { AppContext } from './common/app/context';
 import PreloadAssets from './common/app/PreloadAssets';
 import ShowIf from './common/components/views/ShowIf';
@@ -38,6 +39,7 @@ const App = () => {
     <>
       <ShowIf test={flavor === 'consumer'}>{() => <ConsumerApp />}</ShowIf>
       <ShowIf test={flavor === 'courier'}>{() => <CourierApp />}</ShowIf>
+      <ShowIf test={flavor === 'business'}>{() => <BusinessApp />}</ShowIf>
     </>
   );
 };
