@@ -195,7 +195,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
               <OrderCostBreakdown order={order} selectedFare={order.fare} />
             </View>
             <HR height={padding} />
-            {order.courier ? (
+            {order.courier?.id ? (
               <View>
                 {review ? (
                   <View>

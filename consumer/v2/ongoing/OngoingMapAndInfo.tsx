@@ -26,7 +26,11 @@ export const OngoingMapAndInfo = ({
     <View>
       <OrderMap order={order} ratio={240 / 160} />
       <MessagesCard orderId={order.id} onPress={onOpenChat} />
-      {order.dispatchingStatus === 'outsourced' ? null : (
+      {order.dispatchingStatus === 'outsourced' ? (
+        <View>
+          <DeliveryInfo order={order} onCourierDetail={onCourierDetail} />
+        </View>
+      ) : (
         <View>
           <DeliveryInfo order={order} onCourierDetail={onCourierDetail} />
           <DefaultButton
