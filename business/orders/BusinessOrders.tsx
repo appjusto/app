@@ -2,12 +2,16 @@ import React from 'react';
 import { Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import PaddedView from '../../common/components/containers/PaddedView';
+import { useSegmentScreen } from '../../common/store/api/track';
 import { screens, texts } from '../../common/styles';
 import { t } from '../../strings';
 
 // TODO: add the correct screenNavigationProp
 
 export const BusinessOrders = () => {
+  // side effects
+  // tracking
+  useSegmentScreen('BusinessOrders');
   return (
     <KeyboardAwareScrollView
       enableOnAndroid

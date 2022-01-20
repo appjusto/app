@@ -3,6 +3,7 @@ import { ScrollView } from 'react-native';
 import { ApiContext } from '../../common/app/context';
 import PaddedView from '../../common/components/containers/PaddedView';
 import ConfigItem from '../../common/components/views/ConfigItem';
+import { useSegmentScreen } from '../../common/store/api/track';
 import { screens } from '../../common/styles';
 import { confirmLogout } from '../../common/utils/utils';
 import { t } from '../../strings';
@@ -12,6 +13,9 @@ import { t } from '../../strings';
 export const BusinessOptions = () => {
   // context
   const api = React.useContext(ApiContext);
+  // side effects
+  // tracking
+  useSegmentScreen('BusinessOptions');
   return (
     <ScrollView style={{ ...screens.config }} scrollIndicatorInsets={{ right: 1 }}>
       <PaddedView style={{ flex: 1 }}>
