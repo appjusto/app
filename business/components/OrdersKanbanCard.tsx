@@ -20,7 +20,7 @@ export const OrdersKanbanCard = ({ title, orders, details }: Props) => {
           flexDirection: 'row',
           backgroundColor: colors.grey50,
           height: 48,
-          // alignItems: 'flex-start',
+          alignItems: 'center',
           // alignItems: orders.length > 0 ? 'flex-start' : 'center',
           borderBottomWidth: 1,
           borderStyle: 'solid',
