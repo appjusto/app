@@ -1,8 +1,8 @@
 import { Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
-import ShowIf from '../../common/components/views/ShowIf';
 import { borders, colors, doublePadding, halfPadding, padding, texts } from '../../common/styles';
+import { OrdersKanbanListItem } from './OrdersKanbanListItem';
 
 type Props = {
   title: string;
@@ -12,7 +12,7 @@ type Props = {
 
 export const OrdersKanbanCard = ({ title, orders, details }: Props) => {
   return (
-    <View style={{ flex: 1, width: '100%', ...borders.default }}>
+    <View style={{ ...borders.default, flex: 1, width: '100%', minHeight: 360 }}>
       <View
         style={{
           paddingHorizontal: padding,
@@ -20,7 +20,8 @@ export const OrdersKanbanCard = ({ title, orders, details }: Props) => {
           flexDirection: 'row',
           backgroundColor: colors.grey50,
           height: 48,
-          alignItems: 'center',
+          // alignItems: 'flex-start',
+          // alignItems: orders.length > 0 ? 'flex-start' : 'center',
           borderBottomWidth: 1,
           borderStyle: 'solid',
           borderBottomColor: colors.grey500,
@@ -32,6 +33,7 @@ export const OrdersKanbanCard = ({ title, orders, details }: Props) => {
             width: 32,
             borderRadius: 16,
             backgroundColor: colors.white,
+            // backgroundColor: orders.length > 0 ? colors.green100 : colors.white,
             marginRight: padding,
             justifyContent: 'center',
             alignItems: 'center',
@@ -46,13 +48,14 @@ export const OrdersKanbanCard = ({ title, orders, details }: Props) => {
         style={{
           flex: 1,
           backgroundColor: colors.white,
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
+          // justifyContent: orders.length > 0 ? 'flex-start' : 'center',
           alignItems: 'center',
           paddingHorizontal: padding,
           paddingVertical: doublePadding,
         }}
       >
-        <ShowIf
+        {/* <ShowIf
           // test={orders.length === 0 && Boolean(details)}
           test={Boolean(details)}
         >
@@ -61,7 +64,13 @@ export const OrdersKanbanCard = ({ title, orders, details }: Props) => {
               {details}
             </Text>
           )}
-        </ShowIf>
+        </ShowIf> */}
+        <OrdersKanbanListItem />
+        {/* <ShowIf test={orders?.length > 0}>
+          {orders?.map((order) => (
+            <OrdersKanbanListItem />
+          ))}
+        </ShowIf> */}
       </View>
     </View>
   );
