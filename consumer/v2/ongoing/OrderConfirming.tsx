@@ -4,12 +4,14 @@ import React from 'react';
 import { ActivityIndicator, Image, Linking, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { QrCode } from '../../../assets/icons';
+import motocycleJson from '../../../assets/lottie-icons/motocycle.json';
+import p2pJson from '../../../assets/lottie-icons/p2p.json';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
+import { Lottie } from '../../../common/components/icons/Lottie';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import Pill from '../../../common/components/views/Pill';
-import { IconLoadingBig } from '../../../common/icons/icon -loading-big';
-import { IconMotocycle } from '../../../common/icons/icon-motocycle';
+import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { IconPixLogo } from '../../../common/icons/icon-pix-logo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
@@ -36,6 +38,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
   const { orderId, pixKey, total } = route.params;
   // screen state
   const order = useObserveOrder(orderId);
+  const tallerDevice = useTallerDevice();
   // side effects
   React.useEffect(() => {
     if (!order) return;
@@ -156,7 +159,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
     <FeedbackView
       header={t('Pedido em andamento')}
       description={description}
-      icon={<IconMotocycle />}
+      icon={<Lottie animationObject={motocycleJson} iconStyle={{ width: 115, height: 114 }} />}
       background={colors.white}
     >
       <DefaultButton
@@ -180,7 +183,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
     <FeedbackView
       header={t('Procurando um entregador')}
       description={description}
-      icon={<IconLoadingBig />}
+      icon={<Lottie animationObject={p2pJson} iconStyle={{ width: 114, height: 114 }} />}
       background={colors.white}
     >
       <View style={{ marginBottom: padding }}>
