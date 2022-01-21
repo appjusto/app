@@ -63,37 +63,56 @@ export default class ProfileApi {
   }
 
   // update profile
-  async updateProfile(id: string, changes: Partial<CourierProfile> | Partial<ConsumerProfile>) {
+  async updateProfile(
+    id: string,
+    changes: Partial<CourierProfile> | Partial<ConsumerProfile>,
+    retry: number = 5
+  ) {
     const appVersion = `${Constants.nativeAppVersion}${
       Constants.manifest ? ` / ${Constants.manifest.version}` : ''
     }`;
-    try {
-      await this.getProfileRef(id).set(
-        {
-          ...changes,
-          appVersion,
-          updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-        } as UserProfile,
-        { merge: true }
-      );
-    } catch (error: any) {
-      console.error('Erro ao tentar atualizar o perfil:', JSON.stringify(error));
-      Sentry.Native.captureException(error);
-    }
+    return new Promise<void>(async (resolve) => {
+      try {
+        await this.getProfileRef(id).set(
+          {
+            ...changes,
+            appVersion,
+            updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+          } as UserProfile,
+          { merge: true }
+        );
+        resolve();
+      } catch (error: any) {
+        if (error.code === 'permission-denied' && retry > 0) {
+          setTimeout(async () => resolve(await this.updateProfile(id, changes, retry - 1)), 1000);
+        } else {
+          console.error('Erro ao tentar atualizar o perfil:', JSON.stringify(error));
+          Sentry.Native.captureException(error);
+          resolve();
+        }
+      }
+    });
   }
 
-  async updateLocation(id: string, location: firebase.firestore.GeoPoint) {
-    try {
-      await this.firestoreWithGeo
-        .collection(this.collectionName)
-        .doc(id)
-        .update({
-          coordinates: location,
-          updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-        } as UserProfile);
-    } catch (error: any) {
-      console.error('Erro ao tentar atualizar a localização:', JSON.stringify(error));
-      Sentry.Native.captureException(error);
-    }
+  async updateLocation(id: string, location: firebase.firestore.GeoPoint, retry: number = 5) {
+    return new Promise<void>(async (resolve) => {
+      try {
+        await this.firestoreWithGeo
+          .collection(this.collectionName)
+          .doc(id)
+          .update({
+            coordinates: location,
+            updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+          } as UserProfile);
+      } catch (error: any) {
+        if (error.code === 'permission-denied' && retry > 0) {
+          setTimeout(async () => resolve(await this.updateLocation(id, location, retry - 1)), 1000);
+        } else {
+          console.error('Erro ao tentar atualizar a localização:', JSON.stringify(error));
+          Sentry.Native.captureException(error);
+          resolve();
+        }
+      }
+    });
   }
 }
