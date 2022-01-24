@@ -12,6 +12,7 @@ import { getConsumer } from '../../common/store/consumer/selectors';
 import { observeProfile } from '../../common/store/user/actions';
 import { getUser } from '../../common/store/user/selectors';
 import { colors, screens } from '../../common/styles';
+import { Layout } from '../../courier/approved/matching/Layout';
 import { t } from '../../strings';
 import { DeliveredOrderNavigator } from './delivered/DeliveredOrderNavigator';
 import { FoodOrderNavigator } from './food/FoodOrderNavigator';
@@ -72,6 +73,8 @@ export const LoggedNavigator = () => {
           component={SelectLocation}
           options={{ title: t('Informe sua localização') }}
         />
+        {/* delete this after finishing the new Matching screen */}
+        <Stack.Screen name="Layout" component={Layout} options={{ headerShown: false }} />
         <Stack.Screen
           name="MainNavigator"
           component={MainNavigator}
