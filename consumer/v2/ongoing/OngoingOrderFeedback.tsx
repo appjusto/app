@@ -133,6 +133,7 @@ export default ({ navigation, route }: Props) => {
       enableAutomaticScroll
       keyboardOpeningTime={0}
       keyboardShouldPersistTaps="handled"
+      contentContainerStyle={{ flexGrow: 1 }}
     >
       {/* header */}
       <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
@@ -154,7 +155,7 @@ export default ({ navigation, route }: Props) => {
           <HR height={padding} />
         </View>
       ) : null}
-      {order.courier ? (
+      {order.courier?.id ? (
         <View>
           {/* tip */}
           <TipControl order={order} tip={tip} onChange={(value) => setTip(value)} />
@@ -216,6 +217,7 @@ export default ({ navigation, route }: Props) => {
           <HR />
         </View>
       ) : null}
+      <View style={{ flex: 1 }} />
       {/* actions */}
       <View style={{ paddingHorizontal: padding }}>
         {showChatButton ? (
