@@ -1,5 +1,5 @@
 import React from 'react';
-import { Linking, Modal, ModalProps, Pressable, Text, View } from 'react-native';
+import { Linking, Modal, ModalProps, Platform, Pressable, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { getFlavor } from '../../../common/store/config/selectors';
 import { t } from '../../../strings';
@@ -19,8 +19,15 @@ export const UpgradeVersionModal = (props: ModalProps) => {
       : platformAccess?.minVersions.courier;
   const isThisVersionOk = !!minVersion && isCurrentVersionAllowed(minVersion);
   const onUpgradeHandler = () => {
-    if (flavor === 'consumer') Linking.openURL('https://login.appjusto.com.br/consumer/store');
-    else
+    if (flavor === 'consumer') {
+      if (Platform.OS === 'android') {
+        Linking.openURL(
+          'https://play.google.com/store/apps/details?id=br.com.appjusto.consumer.live&hl=pt_BR&gl=US'
+        );
+      } else {
+        Linking.openURL('https://apps.apple.com/br/app/appjusto/id1569067601');
+      }
+    } else
       Linking.openURL(
         'https://play.google.com/store/apps/details?id=br.com.appjusto.consumer.live&hl=pt_BR&gl=US'
       );
