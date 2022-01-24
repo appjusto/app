@@ -8,6 +8,7 @@ import { colors, halfPadding, padding, screens, texts } from '../../../common/st
 import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
 import { t } from '../../../strings';
 import { AcceptControl } from './AcceptControl';
+import { AddressCard } from './AddressCard';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedNavigatorParamList, 'Layout'>;
 type ScreenRouteProp = RouteProp<LoggedNavigatorParamList, 'Layout'>;
@@ -78,6 +79,12 @@ export const Layout = () => {
         </View>
         <View style={{ flex: 1 }} />
         {/* cards origin and destination */}
+        <View style={{ marginBottom: halfPadding }}>
+          <AddressCard kind="origin" />
+        </View>
+        <View>
+          <AddressCard kind="destination" />
+        </View>
         <View style={{ flex: 1 }} />
         {/* slider */}
         <View>
