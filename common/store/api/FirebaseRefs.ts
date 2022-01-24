@@ -17,8 +17,6 @@ export default class FirebaseRefs {
   getDeleteAccountCallable = () => this.functions.httpsCallable('deleteAccount');
   getServerTimeCallable = () => this.functions.httpsCallable('getServerTime');
   // consumer
-  getFetchTotalCouriersNearbyCallable = () =>
-    this.functions.httpsCallable('fetchTotalCouriersNearby');
   getSavePaymentTokenCallable = () => this.functions.httpsCallable('savePaymentToken');
   getDeletePaymentMethodCallable = () => this.functions.httpsCallable('deletePaymentMethod');
   getCreateOrderCallable = () => this.functions.httpsCallable('createOrder');
