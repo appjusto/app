@@ -34,7 +34,9 @@ export default function ({ order, onPress }: Props) {
       } else if (status === 'preparing') {
         title = t('Pedido em preparo no estabelecimento');
       } else if (status === 'ready') {
-        if (dispatchingStatus === 'matching') {
+        if (dispatchingStatus === 'scheduled') {
+          title = t('Procurando entregadores/as');
+        } else if (dispatchingStatus === 'matching') {
           title = t('Procurando entregadores/as');
         } else if (dispatchingStatus === 'confirmed') {
           title = t('Corrida em andamento');

@@ -69,7 +69,7 @@
     "postversion": "git push && git push --tags && git fetch"
   },
   "dependencies": {
-    "@appjusto/types": "^3.30.4",
+    "@appjusto/types": "^3.32.2",
     "@expo/react-native-action-sheet": "^3.8.0",
     "@expo/vector-icons": "^12.0.0",
     "@fnando/cnpj": "^1.0.2",
@@ -116,6 +116,7 @@
     "geokit": "^1.1.0",
     "i18n-js": "^3.7.1",
     "lodash": "^4.17.19",
+    "lottie-react-native": "4.0.2",
     "marked": "^2.0.1",
     "nanoid": "^3.1.10",
     "normalizr": "^3.6.0",
@@ -137,8 +138,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "sentry-expo": "^4.0.0",
-    "lottie-react-native": "4.0.2"
+    "sentry-expo": "^4.0.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
