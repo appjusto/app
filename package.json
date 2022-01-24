@@ -118,7 +118,7 @@
     "lodash": "^4.17.19",
     "lottie-react-native": "4.0.2",
     "marked": "^2.0.1",
-    "nanoid": "^3.1.10",
+    "nanoid": "^3.1.31",
     "normalizr": "^3.6.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
