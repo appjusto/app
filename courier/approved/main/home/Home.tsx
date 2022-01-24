@@ -146,6 +146,7 @@ export default function ({ navigation }: Props) {
             </TouchableOpacity>
           </View>
           <MaintenanceModal />
+          {/* <UpgradeVersionModal /> */}
         </PaddedView>
       </ScrollView>
       <LocationDisclosureModal />

@@ -105,6 +105,7 @@ export default function ({ navigation }: Props) {
             />
           </View>
           <MaintenanceModal />
+          {/* <UpgradeVersionModal /> */}
         </PaddedView>
       </ScrollView>
     </View>
