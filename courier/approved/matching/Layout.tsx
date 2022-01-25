@@ -2,9 +2,10 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import useTallerDevice from '../../../common/hooks/useTallerDevice';
+import RoundedText from '../../../common/components/texts/RoundedText';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { separateWithDot } from '../../../common/utils/formatters';
 import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
 import { t } from '../../../strings';
 import { AcceptControl } from './AcceptControl';
@@ -19,8 +20,6 @@ type Props = {
 };
 
 export const Layout = () => {
-  //helpers
-  const tallerDevice = useTallerDevice();
   // tracking
   useSegmentScreen('Matching');
   return (
@@ -72,10 +71,19 @@ export const Layout = () => {
           />
           <View style={{ alignItems: 'center', flex: 1 }}>
             <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>
-              {t('Retirada em')}
+              {t('Distância total')}
             </Text>
             <Text style={{ ...texts.x4l, textAlign: 'center' }}>3.4 KM</Text>
           </View>
+        </View>
+        <View style={{ marginTop: 24, alignItems: 'center' }}>
+          {/* matchRequest.readyAt ? show estimated time : show "order ready" */}
+          <RoundedText color={colors.white} backgroundColor={colors.black}>
+            {separateWithDot(`${t('Previsão de preparo: ')}`, `${t('20 min')}`)}
+          </RoundedText>
+          {/* <RoundedText color={colors.white} backgroundColor={colors.black}>
+            {t('Pedido pronto')}
+          </RoundedText> */}
         </View>
         <View style={{ flex: 1 }} />
         {/* cards origin and destination */}
@@ -92,7 +100,7 @@ export const Layout = () => {
             onAccept={() => null}
             onReject={() => null}
             style={{
-              marginBottom: tallerDevice ? padding * 4 : padding,
+              marginBottom: padding,
               paddingHorizontal: padding,
             }}
           />
