@@ -3,7 +3,7 @@ import { Text, TextProps, View } from 'react-native';
 import { borders, colors, halfPadding, texts } from '../../styles';
 
 interface Props extends TextProps {
-  children: string;
+  children: string | number;
   color?: string;
   backgroundColor?: string;
   leftIcon?: React.ReactNode;

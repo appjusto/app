@@ -1,16 +1,19 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import PaddedView from '../../../common/components/containers/PaddedView';
-import { IconMapDestination } from '../../../common/icons/icon-mapDestination';
+import RoundedText from '../../../common/components/texts/RoundedText';
 import { IconMapOrigin } from '../../../common/icons/icon-mapOrigin';
+import { IconPinPackageWhite } from '../../../common/icons/icon-pin';
 import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
 type Props = {
   kind: 'origin' | 'destination';
+  distance: number;
+  address: string;
 };
 
-export const AddressCard = ({ kind }: Props) => {
+export const AddressCard = ({ kind, distance, address }: Props) => {
   return (
     <PaddedView
       style={{
@@ -19,24 +22,30 @@ export const AddressCard = ({ kind }: Props) => {
         flexDirection: 'row',
         borderRadius: padding,
         elevation: 4, // find the right shadow for both platforms
-        shadowColor: 'rgba(105, 118, 103, 0.1)', // find the right shadow for both platforms
+        shadowColor: 'rgba(105, 118, 103, 0.1)',
         shadowOffset: { width: 0, height: 8 }, // find the right shadow for both platforms
+        alignItems: 'flex-start',
       }}
     >
-      <View>{kind === 'origin' ? <IconMapOrigin /> : <IconMapDestination />}</View>
+      <View>{kind === 'origin' ? <IconPinPackageWhite /> : <IconMapOrigin />}</View>
       <View>
         <View style={{ marginLeft: padding }}>
           <View style={{ flexDirection: 'row', marginBottom: halfPadding }}>
             <Text style={[texts.bold, texts.sm]}>
               {kind === 'origin' ? t('Retirada') : t('Entrega')}
             </Text>
-            <Text style={{ ...texts.xs, marginLeft: padding }}>
-              {kind === 'origin' ? t('Retirada') : t('Entrega')}
-            </Text>
+            <RoundedText
+              style={{ ...texts.xs, marginLeft: halfPadding, bottom: 3 }}
+              color={kind === 'origin' ? colors.black : colors.white}
+              backgroundColor={kind === 'origin' ? colors.grey50 : colors.grey700}
+              noBorder
+            >
+              {distance}
+            </RoundedText>
           </View>
           <View>
             <Text style={{ ...texts.md, flexWrap: 'wrap' }} numberOfLines={3}>
-              Rua Benjamim Egas, 167
+              {address}
             </Text>
             <Text style={{ ...texts.md, color: colors.grey700 }}>Pinheiros</Text>
           </View>
