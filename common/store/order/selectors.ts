@@ -58,6 +58,7 @@ export const getOrdersSince = (orders: WithId<Order>[], date: Date) =>
   });
 
 export const OngoingOrdersStatuses: OrderStatus[] = [
+  'confirming',
   'charged',
   'confirmed',
   'preparing',
