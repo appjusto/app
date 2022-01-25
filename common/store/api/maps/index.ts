@@ -1,4 +1,4 @@
-import { Address, LatLng } from '@appjusto/types';
+import { Address, CourierMode, LatLng } from '@appjusto/types';
 import axios, { CancelToken } from 'axios';
 import * as Sentry from 'sentry-expo';
 
@@ -104,6 +104,37 @@ export default class MapsApi {
       secondary,
       description,
       googlePlaceId: result.place_id,
+    };
+  }
+  // add the return type
+  async googleRouteDistance(origin: LatLng, destination: LatLng, mode: CourierMode = 'motorcycle') {
+    const url = 'https://maps.googleapis.com/maps/api/directions/json?';
+    const params = {
+      key: this.googleMapsApiKey,
+      origin,
+      destination,
+      travelMode:
+        mode === 'car' || mode === 'motorcycle'
+          ? 'driving'
+          : mode === 'bicycling' || mode === 'scooter'
+          ? 'bicycling'
+          : 'walking',
+      language: 'pt-BR', // i18n
+    };
+    const response = (await axios.get(url, { params })) as google.maps.DirectionsResult;
+    const { routes } = response;
+    const route = routes
+      .sort(
+        (a, b) => a.legs.find(() => true)!.distance.value - b.legs.find(() => true)!.distance.value
+      )
+      .find(() => true)!;
+    if (!route) return null;
+    const { legs } = route;
+    const [leg] = legs;
+    const { distance, duration } = leg;
+    return {
+      distance: distance.value,
+      duration: duration.value,
     };
   }
 }
