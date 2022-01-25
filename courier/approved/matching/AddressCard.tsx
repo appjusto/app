@@ -9,7 +9,7 @@ import { t } from '../../../strings';
 
 type Props = {
   kind: 'origin' | 'destination';
-  distance: number;
+  distance: string;
   address: string;
 };
 

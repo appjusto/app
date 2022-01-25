@@ -14,11 +14,24 @@ import { distanceBetweenLatLng } from '../../../common/store/api/helpers';
 import { screen, useSegmentScreen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
-import { colors, doublePadding, padding, screens, texts } from '../../../common/styles';
-import { formatCurrency, formatDistance, formatTime } from '../../../common/utils/formatters';
+import {
+  colors,
+  doublePadding,
+  halfPadding,
+  padding,
+  screens,
+  texts,
+} from '../../../common/styles';
+import {
+  formatCurrency,
+  formatDistance,
+  formatTime,
+  separateWithDot,
+} from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import { AcceptControl } from './AcceptControl';
+import { AddressCard } from './AddressCard';
 import { MatchingParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
@@ -35,7 +48,7 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // params
   const { matchRequest } = route.params;
-  const { orderId, origin, distanceToOrigin } = matchRequest;
+  const { orderId, origin, distanceToOrigin, originAddress, destinationAddress } = matchRequest;
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
@@ -46,6 +59,7 @@ export default function ({ navigation, route }: Props) {
   const canAccept = situation === 'pending' || situation === 'viewed';
   const [distance, setDistance] = React.useState(distanceToOrigin);
   const [isLoading, setLoading] = React.useState(true);
+  const [newLayout, setNewLayout] = React.useState(false);
   // side effects
   React.useEffect(() => {
     (async () => {
@@ -110,7 +124,7 @@ export default function ({ navigation, route }: Props) {
     navigation.replace('RejectedMatching', { orderId });
   };
   // UI
-  return (
+  return newLayout ? (
     <ScrollView
       style={[screens.default]}
       contentContainerStyle={{ flexGrow: 1 }}
@@ -188,6 +202,105 @@ export default function ({ navigation, route }: Props) {
             }}
           />
         ) : null}
+      </View>
+    </ScrollView>
+  ) : (
+    <ScrollView
+      style={[screens.default]}
+      contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
+      <View style={{ paddingHorizontal: padding, paddingVertical: 24, flex: 1 }}>
+        <View
+          style={{
+            width: '100%',
+            height: 54,
+            backgroundColor: colors.green50,
+            borderRadius: 64,
+            padding,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ marginRight: halfPadding, ...texts.md }}>
+            {String.fromCodePoint(0x1f389)}
+          </Text>
+          <Text style={{ ...texts.md, color: colors.grey700 }}>{t('Nova corrida disponível')}</Text>
+        </View>
+        <View
+          style={{
+            marginTop: 24,
+            width: '100%',
+            height: 64,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <View style={{ alignItems: 'center', flex: 1 }}>
+            <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>
+              {t('Você recebe')}
+            </Text>
+            <Text style={{ ...texts.x4l, textAlign: 'center' }}>
+              {formatCurrency(matchRequest.fee)}
+            </Text>
+          </View>
+          <View
+            style={{
+              height: '100%',
+              borderLeftColor: colors.grey500,
+              borderLeftWidth: 1,
+              borderStyle: 'solid',
+            }}
+          />
+          <View style={{ alignItems: 'center', flex: 1 }}>
+            <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>
+              {t('Distância total')}
+            </Text>
+            {/* TODO: calculate this distance/route "for real". we are using straight lines */}
+            <Text style={{ ...texts.x4l, textAlign: 'center' }}>
+              {formatDistance(matchRequest.distance)}
+            </Text>
+          </View>
+        </View>
+        <View style={{ marginTop: 24, alignItems: 'center' }}>
+          {/*TODO: add the conditional:  matchRequest.readyAt ? show estimated time : show "order ready" */}
+          <RoundedText color={colors.white} backgroundColor={colors.black}>
+            {separateWithDot(`${t('Previsão de preparo: ')}`, `${t('20 min')}`)}
+          </RoundedText>
+          {/* <RoundedText color={colors.white} backgroundColor={colors.black}>
+            {t('Pedido pronto')}
+          </RoundedText> */}
+        </View>
+        <View style={{ flex: 1 }} />
+        {/* origin */}
+        <View style={{ marginBottom: halfPadding }}>
+          <AddressCard
+            kind="origin"
+            distance={formatDistance(distanceToOrigin)} // TODO: calculate real distance. this is using a straight line
+            address={originAddress}
+          />
+        </View>
+        {/* destination */}
+        <View>
+          <AddressCard
+            kind="destination"
+            distance={`+ ${formatDistance(distance)}`} // distance between origin and destination
+            address={destinationAddress}
+          />
+        </View>
+        <View style={{ flex: 1 }} />
+        {/* slider accept/reject control */}
+        <View>
+          <AcceptControl
+            onAccept={acceptHandler}
+            onReject={rejectHandler}
+            style={{
+              marginBottom: padding,
+              paddingHorizontal: padding,
+            }}
+          />
+        </View>
       </View>
     </ScrollView>
   );
