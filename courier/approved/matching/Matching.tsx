@@ -124,7 +124,7 @@ export default function ({ navigation, route }: Props) {
     navigation.replace('RejectedMatching', { orderId });
   };
   // UI
-  return newLayout ? (
+  return !newLayout ? (
     <ScrollView
       style={[screens.default]}
       contentContainerStyle={{ flexGrow: 1 }}
@@ -264,13 +264,18 @@ export default function ({ navigation, route }: Props) {
           </View>
         </View>
         <View style={{ marginTop: 24, alignItems: 'center' }}>
-          {/*TODO: add the conditional:  matchRequest.readyAt ? show estimated time : show "order ready" */}
-          <RoundedText color={colors.white} backgroundColor={colors.black}>
-            {separateWithDot(`${t('Previsão de preparo: ')}`, `${t('20 min')}`)}
-          </RoundedText>
-          {/* <RoundedText color={colors.white} backgroundColor={colors.black}>
-            {t('Pedido pronto')}
-          </RoundedText> */}
+          {matchRequest.readyAt ? (
+            <RoundedText color={colors.white} backgroundColor={colors.black}>
+              {separateWithDot(
+                `${t('Previsão de preparo: ')}`,
+                formatTime(new Date(matchRequest.readyAt))
+              )}
+            </RoundedText>
+          ) : (
+            <RoundedText color={colors.white} backgroundColor={colors.black}>
+              {t('Pedido pronto')}
+            </RoundedText>
+          )}
         </View>
         <View style={{ flex: 1 }} />
         {/* origin */}
@@ -291,16 +296,18 @@ export default function ({ navigation, route }: Props) {
         </View>
         <View style={{ flex: 1 }} />
         {/* slider accept/reject control */}
-        <View>
-          <AcceptControl
-            onAccept={acceptHandler}
-            onReject={rejectHandler}
-            style={{
-              marginBottom: padding,
-              paddingHorizontal: padding,
-            }}
-          />
-        </View>
+        {canAccept ? (
+          <View>
+            <AcceptControl
+              onAccept={acceptHandler}
+              onReject={rejectHandler}
+              style={{
+                marginBottom: padding,
+                paddingHorizontal: padding,
+              }}
+            />
+          </View>
+        ) : null}
       </View>
     </ScrollView>
   );
