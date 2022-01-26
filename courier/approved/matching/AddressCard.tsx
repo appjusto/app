@@ -21,9 +21,9 @@ export const AddressCard = ({ kind, distance, address }: Props) => {
         borderColor: colors.grey500,
         flexDirection: 'row',
         borderRadius: padding,
-        elevation: 4, // find the right shadow for both platforms
-        shadowColor: 'rgba(105, 118, 103, 0.1)',
-        shadowOffset: { width: 0, height: 8 }, // find the right shadow for both platforms
+        // elevation: 4,
+        // shadowColor: 'rgba(105, 118, 103, 0.1)',
+        // shadowOffset: { width: 0, height: 8 },
         alignItems: 'flex-start',
       }}
     >
@@ -44,7 +44,7 @@ export const AddressCard = ({ kind, distance, address }: Props) => {
             </RoundedText>
           </View>
           <View>
-            <Text style={{ ...texts.md, flexWrap: 'wrap' }} numberOfLines={3}>
+            <Text style={{ ...texts.md, flexWrap: 'wrap', maxWidth: '90%' }} numberOfLines={3}>
               {address}
             </Text>
             <Text style={{ ...texts.md, color: colors.grey700 }}>Pinheiros</Text>
