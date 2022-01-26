@@ -15,42 +15,52 @@ type Props = {
 
 export const AddressCard = ({ kind, distance, address }: Props) => {
   return (
-    <PaddedView
+    <View
       style={{
-        ...borders.default,
-        borderColor: colors.grey500,
-        flexDirection: 'row',
+        flex: 1,
+        backgroundColor: colors.white,
+        shadowOpacity: 1,
+        shadowOffset: { width: 0, height: 16 },
+        shadowRadius: padding,
+        elevation: 8,
+        shadowColor: 'rgba(105, 118, 103, 0.1)',
         borderRadius: padding,
-        // elevation: 4,
-        // shadowColor: 'rgba(105, 118, 103, 0.1)',
-        // shadowOffset: { width: 0, height: 8 },
-        alignItems: 'flex-start',
       }}
     >
-      <View>{kind === 'origin' ? <IconPinPackageWhite /> : <IconMapOrigin />}</View>
-      <View>
-        <View style={{ marginLeft: padding }}>
-          <View style={{ flexDirection: 'row', marginBottom: halfPadding }}>
-            <Text style={[texts.bold, texts.sm]}>
-              {kind === 'origin' ? t('Retirada') : t('Entrega')}
-            </Text>
-            <RoundedText
-              style={{ ...texts.xs, marginLeft: halfPadding, bottom: 3 }}
-              color={kind === 'origin' ? colors.black : colors.white}
-              backgroundColor={kind === 'origin' ? colors.grey50 : colors.grey700}
-              noBorder
-            >
-              {distance}
-            </RoundedText>
-          </View>
-          <View>
-            <Text style={{ ...texts.md, flexWrap: 'wrap', maxWidth: '90%' }} numberOfLines={3}>
-              {address}
-            </Text>
-            <Text style={{ ...texts.md, color: colors.grey700 }}>Pinheiros</Text>
+      <PaddedView
+        style={{
+          ...borders.default,
+          borderColor: colors.grey500,
+          flexDirection: 'row',
+          borderRadius: padding,
+          alignItems: 'flex-start',
+        }}
+      >
+        <View>{kind === 'origin' ? <IconPinPackageWhite /> : <IconMapOrigin />}</View>
+        <View>
+          <View style={{ marginLeft: padding }}>
+            <View style={{ flexDirection: 'row', marginBottom: halfPadding }}>
+              <Text style={[texts.bold, texts.sm]}>
+                {kind === 'origin' ? t('Retirada') : t('Entrega')}
+              </Text>
+              <RoundedText
+                style={{ ...texts.xs, marginLeft: halfPadding, bottom: 3 }}
+                color={kind === 'origin' ? colors.black : colors.white}
+                backgroundColor={kind === 'origin' ? colors.grey50 : colors.grey700}
+                noBorder
+              >
+                {distance}
+              </RoundedText>
+            </View>
+            <View>
+              <Text style={{ ...texts.md, flexWrap: 'wrap', maxWidth: '90%' }} numberOfLines={3}>
+                {address}
+              </Text>
+              <Text style={{ ...texts.md, color: colors.grey700 }}>Pinheiros</Text>
+            </View>
           </View>
         </View>
-      </View>
-    </PaddedView>
+      </PaddedView>
+    </View>
   );
 };
