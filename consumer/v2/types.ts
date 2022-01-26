@@ -20,7 +20,6 @@ export type LoggedNavigatorParamList = {
         mode: 'cities';
         state: string;
       };
-  Layout: undefined; // delete this after finishing the new Matching screen
   MainNavigator: NestedNavigatorParams<MainNavigatorParamList>;
   P2POrderNavigator: NestedNavigatorParams<P2POrderNavigatorParamList>;
   FoodOrderNavigator: NestedNavigatorParams<FoodOrderNavigatorParamList>;

@@ -107,18 +107,26 @@ export default class MapsApi {
     };
   }
   // add the return type
-  async googleRouteDistance(origin: LatLng, destination: LatLng, mode: CourierMode = 'motorcycle') {
+  async googleRouteAndDistance(
+    origin: string | LatLng,
+    destination: string | LatLng,
+    mode: CourierMode = 'motorcycle'
+  ) {
     const url = 'https://maps.googleapis.com/maps/api/directions/json?';
     const params = {
       key: this.googleMapsApiKey,
-      origin,
-      destination,
+      origin: typeof origin === 'string' ? origin : `${origin.latitude},${origin.longitude}`,
+      destination:
+        typeof destination === 'string'
+          ? destination
+          : `${destination.latitude},${destination.longitude}`,
       travelMode:
         mode === 'car' || mode === 'motorcycle'
           ? 'driving'
           : mode === 'bicycling' || mode === 'scooter'
           ? 'bicycling'
           : 'walking',
+      alternatives: true,
       language: 'pt-BR', // i18n
     };
     const response = (await axios.get(url, { params })) as google.maps.DirectionsResult;
@@ -128,7 +136,6 @@ export default class MapsApi {
         (a, b) => a.legs.find(() => true)!.distance.value - b.legs.find(() => true)!.distance.value
       )
       .find(() => true)!;
-    if (!route) return null;
     const { legs } = route;
     const [leg] = legs;
     const { distance, duration } = leg;

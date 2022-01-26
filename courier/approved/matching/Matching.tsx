@@ -8,7 +8,6 @@ import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import { useObserveOrderRequest } from '../../../common/store/api/courier/hooks/useObserveOrderRequest';
-import { distanceBetweenLatLng } from '../../../common/store/api/helpers';
 import { screen, useSegmentScreen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
@@ -52,12 +51,15 @@ export default function ({ navigation, route }: Props) {
   const [distance, setDistance] = React.useState(distanceToOrigin);
   const [isLoading, setLoading] = React.useState(true);
   // side effects
+  // calculating the real distance between courier and origin
   React.useEffect(() => {
     (async () => {
       try {
         const position = await Location.getCurrentPositionAsync();
-        const currentDistanceToOrigin = distanceBetweenLatLng(position.coords, origin);
-        setDistance(currentDistanceToOrigin);
+        const currentDistanceToOrigin = await api
+          .maps()
+          .googleRouteAndDistance(position.coords, origin);
+        setDistance(currentDistanceToOrigin.distance);
         screen('Matching', {
           orderId,
           distanceToOrigin,
@@ -74,7 +76,7 @@ export default function ({ navigation, route }: Props) {
       }
       setLoading(false);
     })();
-  }, [distanceToOrigin, orderId, origin]);
+  }, [distanceToOrigin, orderId, origin, api, dispatch]);
   // when situation changes
   React.useEffect(() => {
     if (situation === 'pending') {
@@ -167,40 +169,36 @@ export default function ({ navigation, route }: Props) {
             <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>
               {t('Distância total')}
             </Text>
-            {/* TODO: calculate this distance/route "for real". we are using straight lines */}
+            {/* distance between origin and destination plus distance between courier's position and origin */}
             <Text style={{ ...texts.x4l, textAlign: 'center' }}>
-              {formatDistance(matchRequest.distance)}
+              {formatDistance(matchRequest.distance + distance)}
             </Text>
           </View>
         </View>
         <View style={{ marginTop: 24, alignItems: 'center' }}>
-          {matchRequest.readyAt && type === 'food' ? (
+          {matchRequest.readyAt ? (
             <RoundedText color={colors.white} backgroundColor={colors.black}>
               {separateWithDot(
                 `${t('Previsão de preparo: ')}`,
                 formatTime(new Date(matchRequest.readyAt))
               )}
             </RoundedText>
-          ) : (
+          ) : type === 'food' ? (
             <RoundedText color={colors.white} backgroundColor={colors.black}>
               {t('Pedido pronto')}
             </RoundedText>
-          )}
+          ) : null}
         </View>
         <View style={{ flex: 1 }} />
         {/* origin */}
         <View style={{ marginBottom: halfPadding }}>
-          <AddressCard
-            kind="origin"
-            distance={formatDistance(distanceToOrigin)} // TODO: calculate real distance. this is using a straight line
-            address={originAddress}
-          />
+          <AddressCard kind="origin" distance={formatDistance(distance)} address={originAddress} />
         </View>
         {/* destination */}
         <View>
           <AddressCard
             kind="destination"
-            distance={`+ ${formatDistance(distance)}`} // distance between origin and destination
+            distance={`+ ${formatDistance(matchRequest.distance)}`} // distance between origin and destination
             address={destinationAddress}
           />
         </View>
