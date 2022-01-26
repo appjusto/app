@@ -8,7 +8,7 @@ import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import { useObserveOrderRequest } from '../../../common/store/api/courier/hooks/useObserveOrderRequest';
-import { screen, useSegmentScreen } from '../../../common/store/api/track';
+import { screen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
@@ -58,7 +58,7 @@ export default function ({ navigation, route }: Props) {
         const position = await Location.getCurrentPositionAsync();
         const currentDistanceToOrigin = await api
           .maps()
-          .googleRouteAndDistance(position.coords, origin);
+          .googleRouteAndDistance(position.coords, origin, courier.mode);
         if (currentDistanceToOrigin) setDistance(currentDistanceToOrigin.distance);
         screen('Matching', {
           orderId,
@@ -76,7 +76,7 @@ export default function ({ navigation, route }: Props) {
       }
       setLoading(false);
     })();
-  }, [distanceToOrigin, orderId, origin, api, dispatch]);
+  }, [distanceToOrigin, orderId, origin, api, dispatch, courier.mode]);
   // when situation changes
   React.useEffect(() => {
     if (situation === 'pending') {
@@ -94,8 +94,6 @@ export default function ({ navigation, route }: Props) {
       navigation.popToTop();
     }
   }, [situation, orderId, courier.id, api, navigation]);
-  // tracking
-  useSegmentScreen('Matching');
   // UI
   if (isLoading)
     return (
