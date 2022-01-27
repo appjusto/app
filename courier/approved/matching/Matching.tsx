@@ -1,6 +1,7 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as Location from 'expo-location';
+import { round } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -107,10 +108,10 @@ export default function ({ navigation, route }: Props) {
     navigation.replace('RejectedMatching', { orderId });
   };
   // helpers
-  const feePerKm = Math.floor(
-    parseInt(formatCurrency(matchRequest.fee), 10) /
-      parseInt(formatDistance(matchRequest.distance + distance), 10)
-  );
+  const totalDistance = (matchRequest.distance + distance) / 1000;
+  const feePerKm = matchRequest.fee / 100 / totalDistance;
+  const roundedFeePerKm = round(feePerKm, 2);
+
   // UI
   if (isLoading)
     return (
@@ -130,7 +131,7 @@ export default function ({ navigation, route }: Props) {
             style={{
               width: '100%',
               height: 54,
-              backgroundColor: colors.green50,
+              backgroundColor: colors.grey50,
               borderRadius: 64,
               padding,
               flexDirection: 'row',
@@ -188,24 +189,32 @@ export default function ({ navigation, route }: Props) {
             }}
           />
           <View style={{ alignItems: 'center', flex: 1 }}>
-            <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>
+            {/* <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>
               {t('Retirada em')}
             </Text>
-            {/* distance between origin and destination plus distance between courier's position and origin */}
-            <Text style={{ ...texts.x4l, textAlign: 'center' }}>{formatDistance(distance)}</Text>
+            <Text style={{ ...texts.x4l, textAlign: 'center' }}>{formatDistance(distance)}</Text> */}
+            <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>
+              {t('Distância total')}
+            </Text>
+            <Text style={{ ...texts.x4l, textAlign: 'center' }}>
+              {formatDistance(matchRequest.distance + distance)}
+            </Text>
           </View>
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View style={{ alignItems: 'center', flex: 1 }}>
-            <Text style={{ ...texts.xs, color: colors.green600 }}>R$ {feePerKm} por Km</Text>
+            <Text style={{ ...texts.xs, color: colors.green600 }}>R$ {roundedFeePerKm} por Km</Text>
           </View>
-        </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View style={{ alignItems: 'center', flex: 1 }}>
             <Text style={{ ...texts.xs, color: colors.green600 }}>
               {formatDistance(matchRequest.distance + distance)} total
             </Text>
           </View>
+        </View> */}
+        <View style={{ width: '50%', justifyContent: 'center' }}>
+          <Text style={{ ...texts.xs, color: colors.green600, textAlign: 'center' }}>
+            R$ {roundedFeePerKm} por Km
+          </Text>
         </View>
         <View style={{ marginTop: 24, alignItems: 'center' }}>
           {matchRequest.readyAt ? (

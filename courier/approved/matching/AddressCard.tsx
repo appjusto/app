@@ -17,7 +17,7 @@ export const AddressCard = ({ kind, distance, address }: Props) => {
   // helpers
   const splitAddress = address.split('-');
   const streetAndNumber = splitAddress[0];
-  const neighborhood = splitAddress[1].split('-')[0];
+  const neighborhood = splitAddress[1].split('-')[0].trim();
   return (
     <View
       style={{
@@ -43,7 +43,7 @@ export const AddressCard = ({ kind, distance, address }: Props) => {
         <View>{kind === 'origin' ? <IconPinPackageWhite /> : <IconMapOrigin />}</View>
         <View>
           <View style={{ marginLeft: padding }}>
-            <View style={{ flexDirection: 'row', marginBottom: halfPadding }}>
+            <View style={{ flexDirection: 'row', marginBottom: 2 }}>
               <Text style={[texts.bold, texts.sm]}>
                 {kind === 'origin' ? t('Retirada') : t('Entrega')}
               </Text>
@@ -57,10 +57,14 @@ export const AddressCard = ({ kind, distance, address }: Props) => {
               </RoundedText>
             </View>
             <View>
-              <Text style={{ ...texts.md, flexWrap: 'wrap', maxWidth: '90%' }} numberOfLines={3}>
+              <Text style={{ ...texts.md, flexWrap: 'wrap', maxWidth: '95%' }} numberOfLines={3}>
                 {streetAndNumber}
               </Text>
-              <Text style={{ ...texts.md, color: colors.grey700 }}>{neighborhood}</Text>
+              <Text
+                style={{ ...texts.md, color: colors.grey700, flexWrap: 'wrap', maxWidth: '95%' }}
+              >
+                {neighborhood}
+              </Text>
             </View>
           </View>
         </View>
