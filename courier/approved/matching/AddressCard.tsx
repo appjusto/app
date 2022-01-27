@@ -15,9 +15,8 @@ type Props = {
 
 export const AddressCard = ({ kind, distance, address }: Props) => {
   // helpers
-  const splitAddress = address.split('-');
-  const streetAndNumber = splitAddress[0];
-  const neighborhood = splitAddress[1].split('-')[0].trim();
+  let [main, secondary] = address.includes('-') ? address.split('-') : [address, ''];
+  [secondary] = secondary.includes('-') ? secondary.split('-') : [secondary];
   return (
     <View
       style={{
@@ -58,12 +57,12 @@ export const AddressCard = ({ kind, distance, address }: Props) => {
             </View>
             <View>
               <Text style={{ ...texts.md, flexWrap: 'wrap', maxWidth: '95%' }} numberOfLines={3}>
-                {streetAndNumber}
+                {main}
               </Text>
               <Text
                 style={{ ...texts.md, color: colors.grey700, flexWrap: 'wrap', maxWidth: '95%' }}
               >
-                {neighborhood}
+                {secondary.trim()}
               </Text>
             </View>
           </View>

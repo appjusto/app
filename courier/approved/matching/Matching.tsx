@@ -49,7 +49,7 @@ export default function ({ navigation, route }: Props) {
   const request = useObserveOrderRequest(courier.id, orderId);
   const situation = request?.situation;
   const canAccept = situation === 'pending' || situation === 'viewed';
-  const [distance, setDistance] = React.useState(distanceToOrigin);
+  const [routeDistanceToOrigin, setRouteDistanceToOrigin] = React.useState(distanceToOrigin);
   const [isLoading, setLoading] = React.useState(true);
   // side effects
   // calculating the real distance between courier and origin
@@ -60,7 +60,7 @@ export default function ({ navigation, route }: Props) {
         const currentDistanceToOrigin = await api
           .maps()
           .googleRouteAndDistance(position.coords, origin, courier.mode);
-        if (currentDistanceToOrigin) setDistance(currentDistanceToOrigin.distance);
+        if (currentDistanceToOrigin) setRouteDistanceToOrigin(currentDistanceToOrigin.distance);
         screen('Matching', {
           orderId,
           distanceToOrigin,
@@ -108,7 +108,7 @@ export default function ({ navigation, route }: Props) {
     navigation.replace('RejectedMatching', { orderId });
   };
   // helpers
-  const totalDistance = (matchRequest.distance + distance) / 1000;
+  const totalDistance = (matchRequest.distance + routeDistanceToOrigin) / 1000;
   const feePerKm = matchRequest.fee / 100 / totalDistance;
   const roundedFeePerKm = round(feePerKm, 2);
 
@@ -197,7 +197,7 @@ export default function ({ navigation, route }: Props) {
               {t('Distância total')}
             </Text>
             <Text style={{ ...texts.x4l, textAlign: 'center' }}>
-              {formatDistance(matchRequest.distance + distance)}
+              {formatDistance(matchRequest.distance + routeDistanceToOrigin)}
             </Text>
           </View>
         </View>
@@ -233,7 +233,11 @@ export default function ({ navigation, route }: Props) {
         <View style={{ flex: 1 }} />
         {/* origin */}
         <View style={{ marginBottom: halfPadding }}>
-          <AddressCard kind="origin" distance={formatDistance(distance)} address={originAddress} />
+          <AddressCard
+            kind="origin"
+            distance={formatDistance(routeDistanceToOrigin)}
+            address={originAddress}
+          />
         </View>
         {/* destination */}
         <View>
