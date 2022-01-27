@@ -94,13 +94,6 @@ export default function ({ navigation, route }: Props) {
       navigation.popToTop();
     }
   }, [situation, orderId, courier.id, api, navigation]);
-  // UI
-  if (isLoading)
-    return (
-      <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green500} />
-      </View>
-    );
   // UI handlers
   const acceptHandler = async () => {
     try {
@@ -113,7 +106,18 @@ export default function ({ navigation, route }: Props) {
   const rejectHandler = () => {
     navigation.replace('RejectedMatching', { orderId });
   };
+  // helpers
+  const feePerKm = Math.floor(
+    parseInt(formatCurrency(matchRequest.fee), 10) /
+      parseInt(formatDistance(matchRequest.distance + distance), 10)
+  );
   // UI
+  if (isLoading)
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
   return (
     <ScrollView
       style={[screens.default]}
@@ -121,23 +125,43 @@ export default function ({ navigation, route }: Props) {
       scrollIndicatorInsets={{ right: 1 }}
     >
       <View style={{ paddingHorizontal: padding, paddingVertical: 24, flex: 1 }}>
-        <View
-          style={{
-            width: '100%',
-            height: 54,
-            backgroundColor: colors.green50,
-            borderRadius: 64,
-            padding,
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Text style={{ marginRight: halfPadding, ...texts.md }}>
-            {String.fromCodePoint(0x1f389)}
-          </Text>
-          <Text style={{ ...texts.md, color: colors.grey700 }}>{t('Nova corrida disponível')}</Text>
-        </View>
+        {courier.fleet?.name ? (
+          <View
+            style={{
+              width: '100%',
+              height: 54,
+              backgroundColor: colors.green50,
+              borderRadius: 64,
+              padding,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ ...texts.md }}>{courier.fleet.name}</Text>
+          </View>
+        ) : (
+          <View
+            style={{
+              width: '100%',
+              height: 54,
+              backgroundColor: colors.green50,
+              borderRadius: 64,
+              padding,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ marginRight: halfPadding, ...texts.md }}>
+              {String.fromCodePoint(0x1f389)}
+            </Text>
+            <Text style={{ ...texts.md, color: colors.grey700 }}>
+              {t('Nova corrida disponível')}
+            </Text>
+          </View>
+        )}
+
         <View
           style={{
             marginTop: 24,
@@ -165,11 +189,21 @@ export default function ({ navigation, route }: Props) {
           />
           <View style={{ alignItems: 'center', flex: 1 }}>
             <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>
-              {t('Distância total')}
+              {t('Retirada em')}
             </Text>
             {/* distance between origin and destination plus distance between courier's position and origin */}
-            <Text style={{ ...texts.x4l, textAlign: 'center' }}>
-              {formatDistance(matchRequest.distance + distance)}
+            <Text style={{ ...texts.x4l, textAlign: 'center' }}>{formatDistance(distance)}</Text>
+          </View>
+        </View>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={{ alignItems: 'center', flex: 1 }}>
+            <Text style={{ ...texts.xs, color: colors.green600 }}>R$ {feePerKm} por Km</Text>
+          </View>
+        </View>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={{ alignItems: 'center', flex: 1 }}>
+            <Text style={{ ...texts.xs, color: colors.green600 }}>
+              {formatDistance(matchRequest.distance + distance)} total
             </Text>
           </View>
         </View>
@@ -177,7 +211,7 @@ export default function ({ navigation, route }: Props) {
           {matchRequest.readyAt ? (
             <RoundedText color={colors.white} backgroundColor={colors.black}>
               {separateWithDot(
-                `${t('Previsão de preparo: ')}`,
+                `${t('Previsão de preparo')}`,
                 formatTime(new Date(matchRequest.readyAt))
               )}
             </RoundedText>

@@ -126,11 +126,11 @@ export default class MapsApi {
           : mode === 'bicycling' || mode === 'scooter'
           ? 'bicycling'
           : 'walking',
-      alternatives: true,
       language: 'pt-BR', // i18n
     };
-    const response = (await axios.get(url, { params })) as google.maps.DirectionsResult;
-    const { routes } = response;
+    const response = await axios.get(url, { params });
+    const { data } = response;
+    const { routes } = data as google.maps.DirectionsResult;
     const route = routes
       .sort(
         (a, b) => a.legs.find(() => true)!.distance.value - b.legs.find(() => true)!.distance.value
