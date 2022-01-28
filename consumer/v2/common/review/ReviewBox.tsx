@@ -2,6 +2,7 @@ import { ReviewType } from '@appjusto/types';
 import React from 'react';
 import { Text, TextInputProps, View } from 'react-native';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
+import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ThumbSelector } from './ThumbSelector';
@@ -24,10 +25,9 @@ export const ReviewBox = ({
     <View
       style={{
         flex: 1,
-        paddingTop: halfPadding,
-        paddingBottom: padding,
       }}
     >
+      <SingleHeader title={t('Avalie sua experiência')} />
       <ThumbSelector
         title={t('Como foi a sua experiência com o entregador?')}
         review={reviewType}
