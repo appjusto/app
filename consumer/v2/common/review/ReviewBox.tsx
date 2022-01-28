@@ -4,6 +4,7 @@ import { Text, TextInputProps, View } from 'react-native';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import HR from '../../../../common/components/views/HR';
+import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ThumbSelector } from './ThumbSelector';
@@ -64,6 +65,28 @@ export const ReviewBox = ({
             value={comment}
             onChangeText={onCommentChange}
             style={{ height: 80 }}
+          />
+        </View>
+      </View>
+      <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
+      <View>
+        <SingleHeader title={t('Qual a possibilidade de indicar o AppJusto?')} />
+        <View style={{ paddingHorizontal: padding }}>
+          {/* NPS */}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: padding,
+            }}
+          >
+            <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Pouco provável')}</Text>
+            <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Muito provável')}</Text>
+          </View>
+          <HomeShareCard
+            title="Divulgue o AppJusto"
+            subtitle="Clique para compartilhar o movimento nas suas redes"
           />
         </View>
       </View>
