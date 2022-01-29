@@ -54,13 +54,6 @@ export const OngoingActions = ({
               </Text>
             </View>
           ) : null}
-          {order.destination?.intructions ? (
-            <View>
-              <Text style={{ ...texts.xs, color: colors.grey700 }}>
-                {order.destination?.intructions}
-              </Text>
-            </View>
-          ) : null}
         </View>
         {/* <View>
           <TouchableOpacity onPress={() => null}>
