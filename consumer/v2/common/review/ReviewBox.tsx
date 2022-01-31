@@ -12,17 +12,29 @@ import { ThumbSelector } from './ThumbSelector';
 
 interface Props extends TextInputProps {
   comment?: string;
-  reviewType?: ReviewType;
+  courierReviewType?: ReviewType;
+  businessReviewType?: ReviewType;
+  appReviewType?: ReviewType;
   onCommentChange?: (value: string) => void;
-  onReviewChange?: (type: ReviewType) => void;
+  onSelectNPS?: (value: number) => void;
+  selected?: number;
+  onCourierReviewChange?: (type: ReviewType) => void;
+  onBusinessReviewChange?: (type: ReviewType) => void;
+  onAppReviewChange?: (type: ReviewType) => void;
 }
 
 export const ReviewBox = ({
   comment,
-  reviewType,
+  courierReviewType,
+  businessReviewType,
+  appReviewType,
   editable,
   onCommentChange,
-  onReviewChange,
+  onSelectNPS,
+  selected,
+  onCourierReviewChange,
+  onBusinessReviewChange,
+  onAppReviewChange,
 }: Props) => {
   return (
     <View
@@ -36,20 +48,20 @@ export const ReviewBox = ({
       <ThumbSelector
         title="Entregador"
         iconUnicode={0x1f6f5}
-        review={reviewType}
-        onReviewChange={onReviewChange}
+        review={courierReviewType}
+        onReviewChange={onCourierReviewChange}
       />
       <ThumbSelector
         title="Restaurante"
         iconUnicode={0x1f373}
-        review={reviewType}
-        onReviewChange={onReviewChange}
+        review={businessReviewType}
+        onReviewChange={onBusinessReviewChange}
       />
       <ThumbSelector
         title="AppJusto"
         iconUnicode={0x1f4f1}
-        review={reviewType}
-        onReviewChange={onReviewChange}
+        review={appReviewType}
+        onReviewChange={onAppReviewChange}
       />
       <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
       <View>
@@ -74,7 +86,7 @@ export const ReviewBox = ({
         <SingleHeader title={t('Qual a probabilidade de indicar o AppJusto?')} />
         <View style={{ paddingHorizontal: padding }}>
           {/* NPS */}
-          <NPSSelector total={5} />
+          <NPSSelector onSelect={onSelectNPS} selected={selected} />
           <View
             style={{
               flexDirection: 'row',

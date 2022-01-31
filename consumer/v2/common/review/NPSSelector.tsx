@@ -3,15 +3,20 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { colors, texts } from '../../../../common/styles';
 
 type Props = {
-  total: number;
-  onSelect: (i: number) => void;
+  onSelect?: (value: number) => void;
+  selected?: number;
 };
 
-export const NPSSelector = ({ total, onSelect }: Props) => {
+export const NPSSelector = ({ onSelect, selected }: Props) => {
   const scores: ReactNode[] = [];
-  for (let i = 1; i <= total; i += 1) {
+  for (let i = 1; i <= 5; i += 1) {
     scores.push(
-      <TouchableOpacity key={`key-${i}`} onPress={() => onSelect(i)}>
+      <TouchableOpacity
+        key={`key-${i}`}
+        onPress={() => {
+          if (onSelect) onSelect(i);
+        }}
+      >
         <View
           style={{
             height: 48,
@@ -21,6 +26,7 @@ export const NPSSelector = ({ total, onSelect }: Props) => {
             borderColor: colors.green500,
             justifyContent: 'center',
             alignItems: 'center',
+            backgroundColor: selected === i ? colors.green500 : colors.white,
           }}
         >
           <Text style={{ ...texts.md }}>{i}</Text>
