@@ -17,7 +17,7 @@ interface Props extends TextInputProps {
   appReviewType?: ReviewType;
   onCommentChange?: (value: string) => void;
   onSelectNPS?: (value: number) => void;
-  selected?: number;
+  selectedNPS?: number;
   onCourierReviewChange?: (type: ReviewType) => void;
   onBusinessReviewChange?: (type: ReviewType) => void;
   onAppReviewChange?: (type: ReviewType) => void;
@@ -31,7 +31,7 @@ export const ReviewBox = ({
   editable,
   onCommentChange,
   onSelectNPS,
-  selected,
+  selectedNPS,
   onCourierReviewChange,
   onBusinessReviewChange,
   onAppReviewChange,
@@ -86,7 +86,7 @@ export const ReviewBox = ({
         <SingleHeader title={t('Qual a probabilidade de indicar o AppJusto?')} />
         <View style={{ paddingHorizontal: padding }}>
           {/* NPS */}
-          <NPSSelector onSelect={onSelectNPS} selected={selected} />
+          <NPSSelector onSelect={onSelectNPS} selected={selectedNPS} />
           <View
             style={{
               flexDirection: 'row',

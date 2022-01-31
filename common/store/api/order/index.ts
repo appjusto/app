@@ -18,6 +18,7 @@ import {
   OrderCancellation,
   OrderChange,
   OrderConfirmation,
+  OrderConsumerReview,
   OrderIssue,
   OrderItem,
   OrderStatus,
@@ -33,7 +34,6 @@ import {
 import firebase from 'firebase';
 import { isEmpty } from 'lodash';
 import * as Sentry from 'sentry-expo';
-import { OrderConsumerReview } from '../../../../../types';
 import { getAppVersion } from '../../../utils/version';
 import { fetchPublicIP } from '../externals/ipify';
 import FirebaseRefs from '../FirebaseRefs';
