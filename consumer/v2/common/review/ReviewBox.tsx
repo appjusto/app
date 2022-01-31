@@ -7,6 +7,7 @@ import HR from '../../../../common/components/views/HR';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { NPSSelector } from './NPSSelector';
 import { ThumbSelector } from './ThumbSelector';
 
 interface Props extends TextInputProps {
@@ -70,9 +71,10 @@ export const ReviewBox = ({
       </View>
       <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
       <View>
-        <SingleHeader title={t('Qual a possibilidade de indicar o AppJusto?')} />
+        <SingleHeader title={t('Qual a probabilidade de indicar o AppJusto?')} />
         <View style={{ paddingHorizontal: padding }}>
           {/* NPS */}
+          <NPSSelector total={5} />
           <View
             style={{
               flexDirection: 'row',

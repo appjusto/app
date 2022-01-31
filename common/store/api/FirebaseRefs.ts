@@ -40,6 +40,10 @@ export default class FirebaseRefs {
   // withdraws
   getWithdrawsRef = () => this.firestore.collection('withdraws');
 
+  // reviews
+  getReviewsRef = () => this.firestore.collection('reviews');
+  getReviewRef = (reviewId: string) => this.firestore.collection('reviews').doc(reviewId);
+
   // platform
   getPlatformRef = () => this.firestore.collection('platform');
 
