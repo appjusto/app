@@ -11,6 +11,7 @@ import { NPSSelector } from './NPSSelector';
 import { ThumbSelector } from './ThumbSelector';
 
 interface Props extends TextInputProps {
+  type: 'food' | 'p2p';
   comment?: string;
   courierReviewType?: ReviewType;
   businessReviewType?: ReviewType;
@@ -24,6 +25,7 @@ interface Props extends TextInputProps {
 }
 
 export const ReviewBox = ({
+  type,
   comment,
   courierReviewType,
   businessReviewType,
@@ -51,12 +53,14 @@ export const ReviewBox = ({
         review={courierReviewType}
         onReviewChange={onCourierReviewChange}
       />
-      <ThumbSelector
-        title="Restaurante"
-        iconUnicode={0x1f373}
-        review={businessReviewType}
-        onReviewChange={onBusinessReviewChange}
-      />
+      {type === 'food' ? (
+        <ThumbSelector
+          title="Restaurante"
+          iconUnicode={0x1f373}
+          review={businessReviewType}
+          onReviewChange={onBusinessReviewChange}
+        />
+      ) : null}
       <ThumbSelector
         title="AppJusto"
         iconUnicode={0x1f4f1}
