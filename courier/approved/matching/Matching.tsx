@@ -173,9 +173,6 @@ export default function ({ navigation, route }: Props) {
           }}
         >
           <View style={{ alignItems: 'center', flex: 1 }}>
-            <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>
-              {t('Você recebe')}
-            </Text>
             <Text style={{ ...texts.x4l, textAlign: 'center' }}>
               {formatCurrency(matchRequest.fee)}
             </Text>
@@ -189,33 +186,30 @@ export default function ({ navigation, route }: Props) {
             }}
           />
           <View style={{ alignItems: 'center', flex: 1 }}>
-            {/* <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>
-              {t('Retirada em')}
-            </Text>
-            <Text style={{ ...texts.x4l, textAlign: 'center' }}>{formatDistance(distance)}</Text> */}
-            <Text style={{ ...texts.md, color: colors.grey700, textAlign: 'center' }}>
-              {t('Distância total')}
-            </Text>
             <Text style={{ ...texts.x4l, textAlign: 'center' }}>
               {formatDistance(matchRequest.distance + routeDistanceToOrigin)}
             </Text>
           </View>
         </View>
-        {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <View style={{ alignItems: 'center', flex: 1 }}>
-            <Text style={{ ...texts.xs, color: colors.green600 }}>R$ {roundedFeePerKm} por Km</Text>
-          </View>
-          <View style={{ alignItems: 'center', flex: 1 }}>
-            <Text style={{ ...texts.xs, color: colors.green600 }}>
-              {formatDistance(matchRequest.distance + distance)} total
+        <View
+          style={{
+            marginTop: halfPadding,
+            width: '100%',
+            flexDirection: 'row',
+          }}
+        >
+          <View style={{ width: '50%', justifyContent: 'center' }}>
+            <Text style={{ ...texts.xs, color: colors.grey700, textAlign: 'center' }}>
+              R$ {roundedFeePerKm} por Km
             </Text>
           </View>
-        </View> */}
-        <View style={{ width: '50%', justifyContent: 'center' }}>
-          <Text style={{ ...texts.xs, color: colors.green600, textAlign: 'center' }}>
-            R$ {roundedFeePerKm} por Km
-          </Text>
+          <View style={{ width: '50%', justifyContent: 'center' }}>
+            <Text style={{ ...texts.xs, color: colors.grey700, textAlign: 'center' }}>
+              {t('Distância total')}
+            </Text>
+          </View>
         </View>
+
         <View style={{ marginTop: 24, alignItems: 'center' }}>
           {matchRequest.readyAt ? (
             <RoundedText color={colors.white} backgroundColor={colors.black}>
