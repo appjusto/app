@@ -176,6 +176,15 @@ export default function ({ navigation, route }: Props) {
             <Text style={{ ...texts.x4l, textAlign: 'center' }}>
               {formatCurrency(matchRequest.fee)}
             </Text>
+            <Text
+              style={{
+                ...texts.xs,
+                color: colors.grey700,
+                textAlign: 'center',
+              }}
+            >
+              R$ {roundedFeePerKm} por Km
+            </Text>
           </View>
           <View
             style={{
@@ -189,27 +198,17 @@ export default function ({ navigation, route }: Props) {
             <Text style={{ ...texts.x4l, textAlign: 'center' }}>
               {formatDistance(matchRequest.distance + routeDistanceToOrigin)}
             </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            marginTop: halfPadding,
-            width: '100%',
-            flexDirection: 'row',
-          }}
-        >
-          <View style={{ width: '50%', justifyContent: 'center' }}>
-            <Text style={{ ...texts.xs, color: colors.grey700, textAlign: 'center' }}>
-              R$ {roundedFeePerKm} por Km
-            </Text>
-          </View>
-          <View style={{ width: '50%', justifyContent: 'center' }}>
-            <Text style={{ ...texts.xs, color: colors.grey700, textAlign: 'center' }}>
+            <Text
+              style={{
+                ...texts.xs,
+                color: colors.grey700,
+                textAlign: 'center',
+              }}
+            >
               {t('Distância total')}
             </Text>
           </View>
         </View>
-
         <View style={{ marginTop: 24, alignItems: 'center' }}>
           {matchRequest.readyAt ? (
             <RoundedText color={colors.white} backgroundColor={colors.black}>
