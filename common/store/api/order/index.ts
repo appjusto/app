@@ -33,6 +33,7 @@ import {
 import firebase from 'firebase';
 import { isEmpty } from 'lodash';
 import * as Sentry from 'sentry-expo';
+import { OrderConsumerReview } from '../../../../../types';
 import { getAppVersion } from '../../../utils/version';
 import { fetchPublicIP } from '../externals/ipify';
 import FirebaseRefs from '../FirebaseRefs';
@@ -109,6 +110,13 @@ export default class OrderApi {
     if (courierId) query = query.where('courier.id', '==', courierId);
     const snapshot = await query.get();
     return snapshot.size;
+  }
+
+  async createOrderConsumerReview(orderId: string, review: OrderConsumerReview) {
+    await this.refs.getReviewsRef().add({
+      ...review,
+      createdOn: firebase.firestore.FieldValue.serverTimestamp(),
+    } as OrderConsumerReview);
   }
 
   // both courier & customers
