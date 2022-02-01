@@ -236,7 +236,7 @@ export default function ({ navigation, route }: Props) {
         <View>
           <AddressCard
             kind="destination"
-            distance={`+ ${formatDistance(matchRequest.distance)}`} // distance between origin and destination
+            distance={formatDistance(matchRequest.distance)} // distance between origin and destination
             address={destinationAddress}
           />
         </View>

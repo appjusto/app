@@ -17,6 +17,8 @@ export const AddressCard = ({ kind, distance, address }: Props) => {
   // helpers
   let [main, secondary] = address.includes('-') ? address.split('-') : [address, ''];
   [secondary] = secondary.includes('-') ? secondary.split('-') : [secondary];
+  const distanceDescription =
+    kind === 'origin' ? `${distance} ${t('até retirada')}` : `+ ${distance} ${t('até entrega')}`;
   return (
     <View
       style={{
@@ -52,7 +54,7 @@ export const AddressCard = ({ kind, distance, address }: Props) => {
                 backgroundColor={kind === 'origin' ? colors.grey50 : colors.grey700}
                 noBorder
               >
-                {distance}
+                {distanceDescription}
               </RoundedText>
             </View>
             <View>
