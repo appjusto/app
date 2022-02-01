@@ -1,4 +1,4 @@
-import { Flavor, ReviewType } from '@appjusto/types';
+import { Flavor, OrderConsumerReview } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -42,12 +42,13 @@ export default ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   // screen state
   const order = useObserveOrder(orderId);
-  const [reviewType, setReviewType] = React.useState<ReviewType>();
-  const review = useCourierReview(orderId, order?.courier?.id);
-  const [comment, setComment] = React.useState('');
+  const [orderConsumerReview, setOrderConsumerReview] = React.useState<OrderConsumerReview>();
+  const review = useCourierReview(orderId, order?.courier?.id); // this only returns the "old" courier reviews
   const [tip, setTip] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
   const showChatButton = useChatisEnabled(order);
+  const courierId = order?.courier?.id ?? null;
+  const businessId = order?.business?.id ?? null;
   // tracking
   useSegmentScreen('OngoingOrderFeedback');
   // helpers
@@ -83,13 +84,9 @@ export default ({ navigation, route }: Props) => {
     if (!order) return;
     setLoading(true);
     try {
-      if (reviewType) {
-        track('sending courier review');
-        await api.courier().addReview(order.courier!.id, {
-          type: reviewType,
-          orderId,
-          comment,
-        });
+      if (orderConsumerReview) {
+        track('sending review');
+        await api.order().createOrderConsumerReview(orderConsumerReview);
       }
       if (tip > 0) {
         track('sending tip');
@@ -208,11 +205,48 @@ export default ({ navigation, route }: Props) => {
           <HR height={padding} />
           {/* review */}
           <ReviewBox
-            reviewType={review?.type ?? reviewType}
-            comment={review?.comment ?? comment}
+            type={order.type === 'food' ? 'food' : 'p2p'}
+            courierReviewType={orderConsumerReview?.courier?.rating}
+            onCourierReviewChange={(type) =>
+              setOrderConsumerReview({
+                ...orderConsumerReview,
+                orderId,
+                courier: { courierId, rating: type },
+              })
+            }
+            businessReviewType={orderConsumerReview?.business?.rating}
+            onBusinessReviewChange={(type) =>
+              setOrderConsumerReview({
+                ...orderConsumerReview,
+                orderId,
+                business: { businessId, rating: type },
+              })
+            }
+            appReviewType={orderConsumerReview?.platform?.rating}
+            onAppReviewChange={(type) =>
+              setOrderConsumerReview({
+                ...orderConsumerReview,
+                orderId,
+                platform: { rating: type },
+              })
+            }
+            selectedNPS={orderConsumerReview?.nps}
+            onSelectNPS={(value) =>
+              setOrderConsumerReview({
+                ...orderConsumerReview,
+                orderId,
+                nps: value,
+              })
+            }
+            comment={review?.comment ?? orderConsumerReview?.comment}
             focusable={!!review}
-            onReviewChange={(type) => setReviewType(type)}
-            onCommentChange={(value) => setComment(value)}
+            onCommentChange={(value) =>
+              setOrderConsumerReview({
+                ...orderConsumerReview,
+                orderId,
+                comment: value,
+              })
+            }
           />
           <HR />
         </View>

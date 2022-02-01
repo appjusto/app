@@ -112,7 +112,7 @@ export default class OrderApi {
     return snapshot.size;
   }
 
-  async createOrderConsumerReview(orderId: string, review: OrderConsumerReview) {
+  async createOrderConsumerReview(review: OrderConsumerReview) {
     await this.refs.getReviewsRef().add({
       ...review,
       createdOn: firebase.firestore.FieldValue.serverTimestamp(),
