@@ -222,8 +222,8 @@ export default ({ navigation, route }: Props) => {
                 business: { businessId, rating: type },
               })
             }
-            appReviewType={orderConsumerReview?.platform?.rating}
-            onAppReviewChange={(type) =>
+            platformReviewType={orderConsumerReview?.platform?.rating}
+            onPlatformReviewChange={(type) =>
               setOrderConsumerReview({
                 ...orderConsumerReview,
                 orderId,

@@ -15,13 +15,13 @@ interface Props extends TextInputProps {
   comment?: string;
   courierReviewType?: ReviewType;
   businessReviewType?: ReviewType;
-  appReviewType?: ReviewType;
+  platformReviewType?: ReviewType;
   onCommentChange?: (value: string) => void;
   onSelectNPS?: (value: number) => void;
   selectedNPS?: number;
   onCourierReviewChange?: (type: ReviewType) => void;
   onBusinessReviewChange?: (type: ReviewType) => void;
-  onAppReviewChange?: (type: ReviewType) => void;
+  onPlatformReviewChange?: (type: ReviewType) => void;
 }
 
 export const ReviewBox = ({
@@ -29,14 +29,14 @@ export const ReviewBox = ({
   comment,
   courierReviewType,
   businessReviewType,
-  appReviewType,
+  platformReviewType,
   editable,
   onCommentChange,
   onSelectNPS,
   selectedNPS,
   onCourierReviewChange,
   onBusinessReviewChange,
-  onAppReviewChange,
+  onPlatformReviewChange,
 }: Props) => {
   return (
     <View
@@ -64,8 +64,8 @@ export const ReviewBox = ({
       <ThumbSelector
         title="AppJusto"
         iconUnicode={0x1f4f1}
-        review={appReviewType}
-        onReviewChange={onAppReviewChange}
+        review={platformReviewType}
+        onReviewChange={onPlatformReviewChange}
       />
       <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
       <View>
