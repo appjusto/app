@@ -21,7 +21,7 @@ import { ThumbSelector } from './ThumbSelector';
 interface Props extends ViewProps {
   order: WithId<Order>;
   children?: ReactNode | ReactNode[];
-  onCompleteReview: () => void;
+  onCompleteReview?: () => void;
 }
 
 export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
@@ -42,7 +42,7 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
     try {
       await api.order().createOrderConsumerReview(orderConsumerReview);
       track('review sent');
-      onCompleteReview();
+      if (onCompleteReview) onCompleteReview();
     } catch (error: any) {
       dispatch(showToast(t('Não foi possível enviar a avaliação'), 'error'));
     }
@@ -162,9 +162,9 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
         <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
         <PaddedView>
           <DefaultButton
-            title={t('Enviar')}
+            title={existingReview ? t('Avaliação enviada') : t('Enviar')}
             activityIndicator={isLoading}
-            disabled={isLoading}
+            disabled={isLoading || !!existingReview || !orderConsumerReview}
             onPress={createReviewHandler}
           />
           <View style={{ paddingTop: padding }}>{children}</View>

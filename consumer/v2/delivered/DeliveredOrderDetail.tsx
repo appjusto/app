@@ -29,7 +29,6 @@ import { t } from '../../../strings';
 import { OrderCostBreakdown } from '../common/breakdown/OrderCostBreakdown';
 import { DeliveredItems } from '../common/DeliveredItems';
 import { ReviewBox } from '../common/review/ReviewBox';
-import { ThumbSelector } from '../common/review/ThumbSelector';
 import TipControl from '../common/TipControl';
 import { DeliveredOrderNavigatorParamList } from './types';
 
@@ -131,7 +130,6 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
       setReviewLoading(false);
     }
   };
-
   if (!order) {
     return (
       <View style={screens.centered}>
@@ -197,46 +195,6 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
             <HR height={padding} />
             {order.courier?.id ? (
               <View>
-                {review ? (
-                  <View>
-                    <ThumbSelector
-                      title={t('Como foi a sua experiência com o entregador?')}
-                      review={review.type}
-                    />
-                    {review.comment ? (
-                      <Text
-                        style={{
-                          marginBottom: padding,
-                          ...texts.md,
-                          ...texts.bold,
-                          paddingHorizontal: padding,
-                        }}
-                      >
-                        "{review.comment}"
-                      </Text>
-                    ) : null}
-                  </View>
-                ) : (
-                  <View>
-                    <ReviewBox
-                      reviewType={reviewType}
-                      comment={comment}
-                      editable={!review || !reviewSent}
-                      focusable={!!review}
-                      onReviewChange={(type) => setReviewType(type)}
-                      onCommentChange={(value) => setComment(value)}
-                    />
-                    <DefaultButton
-                      title={reviewSent ? t('Avaliação enviada') : t('Avaliar entregador/a')}
-                      onPress={reviewHandler}
-                      style={{ margin: padding, marginTop: 0 }}
-                      activityIndicator={reviewLoading}
-                      disabled={reviewLoading || reviewSent || !reviewType}
-                    />
-                  </View>
-                )}
-
-                <HR height={padding} />
                 <View>
                   <TipControl
                     order={order}
@@ -246,34 +204,59 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
                     isLoading={tipLoading}
                     tipSent={tipSent}
                   />
+                  <HR height={padding} />
                 </View>
-                <HR height={padding} />
+                <ReviewBox order={order}>
+                  {showChatButton ? (
+                    <DefaultButton
+                      title={
+                        order.type === 'food'
+                          ? t('Abrir chat com restaurante')
+                          : t('Abrir chat com o entregador')
+                      }
+                      onPress={openChatHandler}
+                      style={{ marginBottom: padding }}
+                    />
+                  ) : null}
+                  <DefaultButton
+                    title={t('Relatar problema')}
+                    onPress={() => {
+                      navigation.navigate('ReportIssue', {
+                        orderId: order.id,
+                        issueType: 'consumer-delivery-problem',
+                      });
+                    }}
+                    secondary
+                  />
+                </ReviewBox>
               </View>
-            ) : null}
-            <PaddedView>
-              {showChatButton ? (
-                <DefaultButton
-                  title={
-                    order.type === 'food'
-                      ? t('Abrir chat com restaurante')
-                      : t('Abrir chat com o entregador')
-                  }
-                  onPress={openChatHandler}
-                  style={{ marginBottom: padding }}
-                />
-              ) : null}
-
-              <DefaultButton
-                title={t('Relatar problema')}
-                onPress={() => {
-                  navigation.navigate('ReportIssue', {
-                    orderId: order.id,
-                    issueType: 'consumer-delivery-problem',
-                  });
-                }}
-                secondary
-              />
-            </PaddedView>
+            ) : (
+              <View>
+                <ReviewBox order={order}>
+                  {showChatButton ? (
+                    <DefaultButton
+                      title={
+                        order.type === 'food'
+                          ? t('Abrir chat com restaurante')
+                          : t('Abrir chat com o entregador')
+                      }
+                      onPress={openChatHandler}
+                      style={{ marginBottom: padding }}
+                    />
+                  ) : null}
+                  <DefaultButton
+                    title={t('Relatar problema')}
+                    onPress={() => {
+                      navigation.navigate('ReportIssue', {
+                        orderId: order.id,
+                        issueType: 'consumer-delivery-problem',
+                      });
+                    }}
+                    secondary
+                  />
+                </ReviewBox>
+              </View>
+            )}
           </View>
         ) : (
           <PaddedView style={{ flex: 1 }}>

@@ -240,7 +240,6 @@ export default ({ navigation, route }: Props) => {
         </View>
       ) : (
         <View>
-          <HR height={padding} />
           {/* review */}
           <ReviewBox order={order} onCompleteReview={finishHandler}>
             {showChatButton ? (
