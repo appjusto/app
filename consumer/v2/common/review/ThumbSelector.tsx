@@ -9,11 +9,12 @@ import { t } from '../../../../strings';
 type Props = {
   title: string;
   iconUnicode: number;
-  review?: ReviewType;
-  onReviewChange?: (type: ReviewType) => void;
+  review: ReviewType | undefined;
+  disabled?: boolean;
+  onReviewChange: (type: ReviewType) => void;
 };
 
-export const ThumbSelector = ({ title, iconUnicode, review, onReviewChange }: Props) => {
+export const ThumbSelector = ({ title, iconUnicode, review, disabled, onReviewChange }: Props) => {
   return (
     <PaddedView style={{ flex: 1 }}>
       <View
@@ -35,7 +36,7 @@ export const ThumbSelector = ({ title, iconUnicode, review, onReviewChange }: Pr
         >
           <TouchableWithoutFeedback
             onPress={() => {
-              if (onReviewChange) onReviewChange('positive');
+              if (!disabled) onReviewChange('positive');
             }}
           >
             <View
@@ -55,7 +56,7 @@ export const ThumbSelector = ({ title, iconUnicode, review, onReviewChange }: Pr
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback
             onPress={() => {
-              if (onReviewChange) onReviewChange('negative');
+              if (!disabled) onReviewChange('negative');
             }}
           >
             <View

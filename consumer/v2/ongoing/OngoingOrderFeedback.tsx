@@ -11,7 +11,6 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import HR from '../../../common/components/views/HR';
 import { useChatisEnabled } from '../../../common/hooks/useChatIsEnabled';
 import { IconOrderDone } from '../../../common/icons/icon-order-done';
-import { useCourierReview } from '../../../common/store/api/courier/hooks/useCourierReview';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
@@ -43,12 +42,9 @@ export default ({ navigation, route }: Props) => {
   // screen state
   const order = useObserveOrder(orderId);
   const [orderConsumerReview, setOrderConsumerReview] = React.useState<OrderConsumerReview>();
-  const review = useCourierReview(orderId, order?.courier?.id); // this only returns the "old" courier reviews
   const [tip, setTip] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
   const showChatButton = useChatisEnabled(order);
-  const courierId = order?.courier?.id ?? null;
-  const businessId = order?.business?.id ?? null;
   // tracking
   useSegmentScreen('OngoingOrderFeedback');
   // helpers
@@ -80,24 +76,22 @@ export default ({ navigation, route }: Props) => {
     }
   };
   const finishHandler = async () => {
-    Keyboard.dismiss();
+    if (!tip) {
+      navigation.navigate('MainNavigator', { screen: 'Home' });
+      return;
+    }
     if (!order) return;
-    setLoading(true);
     try {
-      if (orderConsumerReview) {
-        track('sending review');
-        await api.order().createOrderConsumerReview(orderConsumerReview);
-      }
-      if (tip > 0) {
-        track('sending tip');
-        await api.order().tipCourier(order.id, tip);
-      }
+      track('sending tip');
+      setLoading(true);
+      await api.order().tipCourier(order.id, tip);
+      setLoading(false);
       navigation.navigate('MainNavigator', { screen: 'Home' });
     } catch (error) {
+      setLoading(false);
       // find a better error message
-      dispatch(showToast(t('Não foi possível enviar a avaliação e/ou caixinha'), 'error'));
+      dispatch(showToast(t('Não foi possível enviar a caixinha'), 'error'));
     }
-    setLoading(false);
   };
   const issueHandler = () => {
     Keyboard.dismiss();
@@ -204,50 +198,7 @@ export default ({ navigation, route }: Props) => {
           </View>
           <HR height={padding} />
           {/* review */}
-          <ReviewBox
-            type={order.type === 'food' ? 'food' : 'p2p'}
-            courierReviewType={orderConsumerReview?.courier?.rating}
-            onCourierReviewChange={(type) =>
-              setOrderConsumerReview({
-                ...orderConsumerReview,
-                orderId,
-                courier: { courierId, rating: type },
-              })
-            }
-            businessReviewType={orderConsumerReview?.business?.rating}
-            onBusinessReviewChange={(type) =>
-              setOrderConsumerReview({
-                ...orderConsumerReview,
-                orderId,
-                business: { businessId, rating: type },
-              })
-            }
-            platformReviewType={orderConsumerReview?.platform?.rating}
-            onPlatformReviewChange={(type) =>
-              setOrderConsumerReview({
-                ...orderConsumerReview,
-                orderId,
-                platform: { rating: type },
-              })
-            }
-            selectedNPS={orderConsumerReview?.nps}
-            onSelectNPS={(value) =>
-              setOrderConsumerReview({
-                ...orderConsumerReview,
-                orderId,
-                nps: value,
-              })
-            }
-            comment={review?.comment ?? orderConsumerReview?.comment}
-            focusable={!!review}
-            onCommentChange={(value) =>
-              setOrderConsumerReview({
-                ...orderConsumerReview,
-                orderId,
-                comment: value,
-              })
-            }
-          />
+          <ReviewBox order={order} onCompleteReview={finishHandler} />
           <HR />
         </View>
       ) : null}

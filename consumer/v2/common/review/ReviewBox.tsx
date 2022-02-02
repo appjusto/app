@@ -1,43 +1,54 @@
-import { ReviewType } from '@appjusto/types';
-import React from 'react';
-import { Text, TextInputProps, View } from 'react-native';
+import { Order, OrderConsumerReview, WithId } from '@appjusto/types';
+import { isEmpty } from 'lodash';
+import React, { ReactNode } from 'react';
+import { Keyboard, Text, View, ViewProps } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../../common/app/context';
+import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import HR from '../../../../common/components/views/HR';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
+import { useOrderReview } from '../../../../common/store/api/order/reviews/useOrderReview';
+import { showToast } from '../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { NPSSelector } from './NPSSelector';
 import { ThumbSelector } from './ThumbSelector';
 
-interface Props extends TextInputProps {
-  type: 'food' | 'p2p';
-  comment?: string;
-  courierReviewType?: ReviewType;
-  businessReviewType?: ReviewType;
-  platformReviewType?: ReviewType;
-  onCommentChange?: (value: string) => void;
-  onSelectNPS?: (value: number) => void;
-  selectedNPS?: number;
-  onCourierReviewChange?: (type: ReviewType) => void;
-  onBusinessReviewChange?: (type: ReviewType) => void;
-  onPlatformReviewChange?: (type: ReviewType) => void;
+interface Props extends ViewProps {
+  order: WithId<Order>;
+  children?: ReactNode | ReactNode[];
+  onCompleteReview: () => void;
 }
 
-export const ReviewBox = ({
-  type,
-  comment,
-  courierReviewType,
-  businessReviewType,
-  platformReviewType,
-  editable,
-  onCommentChange,
-  onSelectNPS,
-  selectedNPS,
-  onCourierReviewChange,
-  onBusinessReviewChange,
-  onPlatformReviewChange,
-}: Props) => {
+export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
+  // context
+  const api = React.useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
+  // props
+  const { courier, type } = order;
+  // state
+  const existingReview = useOrderReview(order.id);
+  const [orderConsumerReview, setOrderConsumerReview] = React.useState<OrderConsumerReview>();
+  // handlers
+  const createReviewHandler = async () => {
+    if (!orderConsumerReview) return;
+    Keyboard.dismiss();
+    // set loading...
+    try {
+      await api.order().createOrderConsumerReview(orderConsumerReview);
+      onCompleteReview();
+    } catch (error: any) {
+      dispatch(showToast(t('Não foi possível enviar a avaliação'), 'error'));
+    }
+  };
+  // effect
+  React.useEffect(() => {
+    if (existingReview) setOrderConsumerReview(existingReview);
+  }, [existingReview]);
+  // UI
   return (
     <View
       style={{
@@ -50,22 +61,43 @@ export const ReviewBox = ({
       <ThumbSelector
         title="Entregador"
         iconUnicode={0x1f6f5}
-        review={courierReviewType}
-        onReviewChange={onCourierReviewChange}
+        review={orderConsumerReview?.courier?.rating}
+        disabled={!isEmpty(existingReview?.courier?.rating)}
+        onReviewChange={(type) =>
+          setOrderConsumerReview({
+            ...orderConsumerReview,
+            orderId: order.id,
+            courier: { id: courier?.id ?? null, rating: type },
+          })
+        }
       />
       {type === 'food' ? (
         <ThumbSelector
           title="Restaurante"
           iconUnicode={0x1f373}
-          review={businessReviewType}
-          onReviewChange={onBusinessReviewChange}
+          review={orderConsumerReview?.business?.rating}
+          disabled={!isEmpty(existingReview?.business?.rating)}
+          onReviewChange={(type) =>
+            setOrderConsumerReview({
+              ...orderConsumerReview,
+              orderId: order.id,
+              business: { id: order.business?.id ?? null, rating: type },
+            })
+          }
         />
       ) : null}
       <ThumbSelector
         title="AppJusto"
         iconUnicode={0x1f4f1}
-        review={platformReviewType}
-        onReviewChange={onPlatformReviewChange}
+        review={orderConsumerReview?.platform?.rating}
+        disabled={!isEmpty(existingReview?.platform?.rating)}
+        onReviewChange={(type) =>
+          setOrderConsumerReview({
+            ...orderConsumerReview,
+            orderId: order.id,
+            platform: { rating: type },
+          })
+        }
       />
       <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
       <View>
@@ -75,12 +107,18 @@ export const ReviewBox = ({
             {t('Se preferir, descreva a sua experiência de forma anônima.')}
           </Text>
           <DefaultInput
-            editable={editable}
+            editable={isEmpty(existingReview?.comment)}
             placeholder={t('Escreva sua mensagem')}
             multiline
             numberOfLines={6}
-            value={comment}
-            onChangeText={onCommentChange}
+            value={existingReview?.comment}
+            onChangeText={(value) =>
+              setOrderConsumerReview({
+                ...orderConsumerReview,
+                orderId: order.id,
+                comment: value,
+              })
+            }
             style={{ height: 80 }}
           />
         </View>
@@ -90,7 +128,16 @@ export const ReviewBox = ({
         <SingleHeader title={t('Qual a probabilidade de indicar o AppJusto?')} />
         <View style={{ paddingHorizontal: padding }}>
           {/* NPS */}
-          <NPSSelector onSelect={onSelectNPS} selected={selectedNPS} />
+          <NPSSelector
+            selected={orderConsumerReview?.nps}
+            onSelect={(value) =>
+              setOrderConsumerReview({
+                ...orderConsumerReview,
+                orderId: order.id,
+                nps: value,
+              })
+            }
+          />
           <View
             style={{
               flexDirection: 'row',
@@ -107,6 +154,13 @@ export const ReviewBox = ({
             subtitle="Clique para compartilhar o movimento nas suas redes"
           />
         </View>
+      </View>
+      <View>
+        <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
+        <PaddedView>
+          <DefaultButton title={t('Enviar')} onPress={createReviewHandler} />
+          <View style={{ paddingTop: padding }}>{children}</View>
+        </PaddedView>
       </View>
     </View>
   );

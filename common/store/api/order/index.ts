@@ -119,6 +119,12 @@ export default class OrderApi {
     } as OrderConsumerReview);
   }
 
+  async fetchOrderReview(orderId: string) {
+    const snapshot = await this.refs.getReviewsRef().where('orderId', '==', orderId).limit(1).get();
+    if (snapshot.empty) return null;
+    return snapshot.docs.find(() => true)!.data() as OrderConsumerReview;
+  }
+
   // both courier & customers
   observeOrders(
     options: ObserveOrdersOptions,
