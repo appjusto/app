@@ -46,7 +46,7 @@ export const ThumbSelector = ({ title, iconUnicode, review, disabled, onReviewCh
                 ...borders.default,
                 borderRadius: 32,
                 borderColor: colors.green500,
-                backgroundColor: review === 'positive' ? colors.green500 : colors.red,
+                backgroundColor: review === 'positive' ? colors.green500 : colors.white,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}
@@ -67,7 +67,7 @@ export const ThumbSelector = ({ title, iconUnicode, review, disabled, onReviewCh
                 borderRadius: 32,
                 borderColor: colors.green500,
                 marginLeft: padding,
-                backgroundColor: review === 'negative' ? colors.green500 : colors.white,
+                backgroundColor: review === 'negative' ? colors.red : colors.white,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}

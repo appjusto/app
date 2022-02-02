@@ -58,7 +58,6 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
       style={{
         flex: 1,
         backgroundColor: colors.white,
-        paddingBottom: padding,
       }}
     >
       <SingleHeader title={t('Avalie sua experiência')} />
@@ -106,7 +105,7 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
       <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
       <View>
         <SingleHeader title={t('Deixe um comentário')} />
-        <View style={{ paddingHorizontal: padding, paddingBottom: halfPadding }}>
+        <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
           <Text style={{ ...texts.md, color: colors.grey700, paddingVertical: halfPadding }}>
             {t('Se preferir, descreva a sua experiência de forma anônima.')}
           </Text>
@@ -130,7 +129,7 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
       <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
       <View>
         <SingleHeader title={t('Qual a probabilidade de indicar o AppJusto?')} />
-        <View style={{ paddingHorizontal: padding }}>
+        <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
           {/* NPS */}
           <NPSSelector
             selected={orderConsumerReview?.nps}

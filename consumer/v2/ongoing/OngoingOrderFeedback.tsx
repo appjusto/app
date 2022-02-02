@@ -215,8 +215,6 @@ export default ({ navigation, route }: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                marginTop: padding,
-                paddingBottom: padding,
               }}
             >
               <View style={{ width: '49%' }}>
@@ -238,7 +236,7 @@ export default ({ navigation, route }: Props) => {
               </View>
             </View>
           </ReviewBox>
-          <HR />
+          {/* <HR /> */}
         </View>
       ) : (
         <View>
@@ -262,8 +260,6 @@ export default ({ navigation, route }: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                marginTop: padding,
-                paddingBottom: padding,
               }}
             >
               <View style={{ width: '49%' }}>
