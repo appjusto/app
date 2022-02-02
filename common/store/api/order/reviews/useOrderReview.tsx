@@ -11,7 +11,7 @@ export const useOrderReview = (orderId?: string) => {
   React.useEffect(() => {
     if (!orderId) return;
     (async () => {
-      setReview(await api.order().fetchOrderReview(orderId));
+      setReview(await api.reviews().fetchOrderReview(orderId));
     })();
   }, [api, orderId]);
   // result

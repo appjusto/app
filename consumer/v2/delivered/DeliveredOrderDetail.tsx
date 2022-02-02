@@ -14,8 +14,8 @@ import HR from '../../../common/components/views/HR';
 import { useChatisEnabled } from '../../../common/hooks/useChatIsEnabled';
 import OrderMap from '../../../common/screens/orders/OrderMap';
 import PlaceSummary from '../../../common/screens/orders/summary/PlaceSummary';
-import { useCourierReview } from '../../../common/store/api/courier/hooks/useCourierReview';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useOrderReview } from '../../../common/store/api/order/reviews/useOrderReview';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
@@ -53,7 +53,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const [tip, setTip] = React.useState(0);
   const [reviewType, setReviewType] = React.useState<ReviewType>();
   const [comment, setComment] = React.useState('');
-  const review = useCourierReview(orderId, order?.courier?.id);
+  const orderReview = useOrderReview(orderId);
   const [reviewLoading, setReviewLoading] = React.useState(false);
   const [reviewSent, setReviewSent] = React.useState(false);
   const [tipLoading, setTipLoading] = React.useState(false);
@@ -115,11 +115,11 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
     try {
       if (reviewType) {
         setReviewLoading(true);
-        await api.courier().addReview(order.courier!.id, {
-          type: reviewType,
-          orderId,
-          comment,
-        });
+        // await api.courier().addReview(order.courier!.id, {
+        //   type: reviewType,
+        //   orderId,
+        //   comment,
+        // });
         setReviewSent(true);
         track('consumer reviewed courier');
         dispatch(showToast(t('Avaliação enviada com sucesso!'), 'success'));

@@ -18,7 +18,6 @@ import {
   OrderCancellation,
   OrderChange,
   OrderConfirmation,
-  OrderConsumerReview,
   OrderIssue,
   OrderItem,
   OrderStatus,
@@ -110,19 +109,6 @@ export default class OrderApi {
     if (courierId) query = query.where('courier.id', '==', courierId);
     const snapshot = await query.get();
     return snapshot.size;
-  }
-
-  async createOrderConsumerReview(review: OrderConsumerReview) {
-    await this.refs.getReviewsRef().add({
-      ...review,
-      createdOn: firebase.firestore.FieldValue.serverTimestamp(),
-    } as OrderConsumerReview);
-  }
-
-  async fetchOrderReview(orderId: string) {
-    const snapshot = await this.refs.getReviewsRef().where('orderId', '==', orderId).limit(1).get();
-    if (snapshot.empty) return null;
-    return snapshot.docs.find(() => true)!.data() as OrderConsumerReview;
   }
 
   // both courier & customers

@@ -6,7 +6,6 @@ import {
   FetchAdvanceSimulationPayload,
   FetchReceivablesPayload,
   RequestWithdrawPayload,
-  Review,
   VerifyCourierProfilePayload,
 } from '@appjusto/types';
 import {
@@ -62,24 +61,12 @@ export default class CourierApi {
       situation: 'viewed',
     } as Partial<CourierOrderRequest>);
   }
-  async addReview(courierId: string, review: Review) {
-    await this.refs
-      .getCourierReviewsRef(courierId)
-      .add({ ...review, createdOn: firebase.firestore.FieldValue.serverTimestamp() } as Review);
-  }
-  async fetchReview(courierId: string, orderId: string) {
-    const query = this.refs
-      .getCourierReviewsRef(courierId)
-      .where('orderId', '==', orderId)
-      .limit(1);
-    const docs = (await query.get()).docs;
-    return documentsAs<Review>(docs).find(() => true);
-  }
-  async fetchAllReviews(courierId: string) {
-    const query = this.refs.getCourierReviewsRef(courierId);
-    const docs = (await query.get()).docs;
-    return documentsAs<Review>(docs);
-  }
+  // async addReview(courierId: string, review: Review) {
+  //   await this.refs
+  //     .getCourierReviewsRef(courierId)
+  //     .add({ ...review, createdOn: firebase.firestore.FieldValue.serverTimestamp() } as Review);
+  // }
+
   // callables
   async verifyProfile() {
     const payload: VerifyCourierProfilePayload = {
