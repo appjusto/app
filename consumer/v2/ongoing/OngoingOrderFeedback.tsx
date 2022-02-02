@@ -1,4 +1,4 @@
-import { Flavor, OrderConsumerReview } from '@appjusto/types';
+import { Flavor } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -41,7 +41,6 @@ export default ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   // screen state
   const order = useObserveOrder(orderId);
-  const [orderConsumerReview, setOrderConsumerReview] = React.useState<OrderConsumerReview>();
   const [tip, setTip] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
   const showChatButton = useChatisEnabled(order);
@@ -198,60 +197,98 @@ export default ({ navigation, route }: Props) => {
           </View>
           <HR height={padding} />
           {/* review */}
-          <ReviewBox order={order} onCompleteReview={finishHandler} />
+          <ReviewBox order={order} onCompleteReview={finishHandler}>
+            {showChatButton ? (
+              <DefaultButton
+                title={
+                  order.type === 'food'
+                    ? t('Abrir chat com restaurante')
+                    : t('Abrir chat com o entregador')
+                }
+                onPress={openChatHandler}
+                style={{ marginTop: padding }}
+                secondary
+              />
+            ) : null}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginTop: padding,
+                paddingBottom: padding,
+              }}
+            >
+              <View style={{ width: '49%' }}>
+                <DefaultButton title={t('Relatar problema')} secondary onPress={issueHandler} />
+              </View>
+              <View style={{ width: '49%' }}>
+                <DefaultButton
+                  title={t('Detalhes da corrida')}
+                  onPress={() => {
+                    navigation.navigate('DeliveredOrderNavigator', {
+                      screen: 'DeliveredOrderDetail',
+                      params: {
+                        orderId,
+                      },
+                    });
+                  }}
+                  secondary
+                />
+              </View>
+            </View>
+          </ReviewBox>
           <HR />
         </View>
-      ) : null}
-      <View style={{ flex: 1 }} />
-      {/* actions */}
-      <View style={{ paddingHorizontal: padding }}>
-        {showChatButton ? (
-          <DefaultButton
-            title={
-              order.type === 'food'
-                ? t('Abrir chat com restaurante')
-                : t('Abrir chat com o entregador')
-            }
-            onPress={openChatHandler}
-            style={{ marginTop: padding }}
-            secondary
-          />
-        ) : null}
-        <DefaultButton
-          title={t('Finalizar')}
-          onPress={finishHandler}
-          activityIndicator={isLoading}
-          disabled={isLoading}
-          style={{ marginTop: padding }}
-        />
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginTop: padding,
-            paddingBottom: padding,
-          }}
-        >
-          <View style={{ width: '49%' }}>
-            <DefaultButton title={t('Relatar problema')} secondary onPress={issueHandler} />
-          </View>
-          <View style={{ width: '49%' }}>
-            <DefaultButton
-              title={t('Detalhes da corrida')}
-              onPress={() => {
-                navigation.navigate('DeliveredOrderNavigator', {
-                  screen: 'DeliveredOrderDetail',
-                  params: {
-                    orderId,
-                  },
-                });
+      ) : (
+        <View>
+          <HR height={padding} />
+          {/* review */}
+          <ReviewBox order={order} onCompleteReview={finishHandler}>
+            {showChatButton ? (
+              <DefaultButton
+                title={
+                  order.type === 'food'
+                    ? t('Abrir chat com restaurante')
+                    : t('Abrir chat com o entregador')
+                }
+                onPress={openChatHandler}
+                style={{ marginTop: padding }}
+                secondary
+              />
+            ) : null}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginTop: padding,
+                paddingBottom: padding,
               }}
-              secondary
-            />
-          </View>
+            >
+              <View style={{ width: '49%' }}>
+                <DefaultButton title={t('Relatar problema')} secondary onPress={issueHandler} />
+              </View>
+              <View style={{ width: '49%' }}>
+                <DefaultButton
+                  title={t('Detalhes da corrida')}
+                  onPress={() => {
+                    navigation.navigate('DeliveredOrderNavigator', {
+                      screen: 'DeliveredOrderDetail',
+                      params: {
+                        orderId,
+                      },
+                    });
+                  }}
+                  secondary
+                />
+              </View>
+            </View>
+          </ReviewBox>
+          <HR />
         </View>
-      </View>
+      )}
+      <View style={{ flex: 1 }} />
     </KeyboardAwareScrollView>
   );
 };

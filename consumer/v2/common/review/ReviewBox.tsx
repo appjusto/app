@@ -11,6 +11,7 @@ import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import HR from '../../../../common/components/views/HR';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { useOrderReview } from '../../../../common/store/api/order/reviews/useOrderReview';
+import { track } from '../../../../common/store/api/track';
 import { showToast } from '../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -32,17 +33,20 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
   // state
   const existingReview = useOrderReview(order.id);
   const [orderConsumerReview, setOrderConsumerReview] = React.useState<OrderConsumerReview>();
+  const [isLoading, setLoading] = React.useState(false);
   // handlers
   const createReviewHandler = async () => {
     if (!orderConsumerReview) return;
     Keyboard.dismiss();
-    // set loading...
+    setLoading(true);
     try {
       await api.order().createOrderConsumerReview(orderConsumerReview);
+      track('review sent');
       onCompleteReview();
     } catch (error: any) {
       dispatch(showToast(t('Não foi possível enviar a avaliação'), 'error'));
     }
+    setLoading(false);
   };
   // effect
   React.useEffect(() => {
@@ -158,7 +162,12 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
       <View>
         <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
         <PaddedView>
-          <DefaultButton title={t('Enviar')} onPress={createReviewHandler} />
+          <DefaultButton
+            title={t('Enviar')}
+            activityIndicator={isLoading}
+            disabled={isLoading}
+            onPress={createReviewHandler}
+          />
           <View style={{ paddingTop: padding }}>{children}</View>
         </PaddedView>
       </View>
