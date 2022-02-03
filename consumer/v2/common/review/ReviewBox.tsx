@@ -1,4 +1,4 @@
-import { Order, OrderConsumerReview, WithId } from '@appjusto/types';
+import { Order, OrderConsumerReview, ReviewTag, WithId } from '@appjusto/types';
 import { isEmpty } from 'lodash';
 import React, { ReactNode } from 'react';
 import { Keyboard, Text, View, ViewProps } from 'react-native';
@@ -11,10 +11,12 @@ import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import HR from '../../../../common/components/views/HR';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { useOrderReview } from '../../../../common/store/api/order/reviews/useOrderReview';
+import { useReviewTags } from '../../../../common/store/api/order/reviews/useReviewTags';
 import { track } from '../../../../common/store/api/track';
 import { showToast } from '../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { MultiTagSelector } from './MultiTagSelector';
 import { NPSSelector } from './NPSSelector';
 import { ThumbSelector } from './ThumbSelector';
 
@@ -34,6 +36,20 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
   const existingReview = useOrderReview(order.id);
   const [orderConsumerReview, setOrderConsumerReview] = React.useState<OrderConsumerReview>();
   const [isLoading, setLoading] = React.useState(false);
+  // helpers
+  const courierRating = orderConsumerReview?.courier?.rating;
+  const courierPositiveTags = useReviewTags('courier', 'positive')!;
+  const courierNegativeTags = useReviewTags('courier', 'negative')!;
+  const businessRating = orderConsumerReview?.business?.rating;
+  const businessPositiveTags = useReviewTags('business', 'positive')!;
+  const businessNegativeTags = useReviewTags('business', 'negative')!;
+  const platformRating = orderConsumerReview?.platform?.rating;
+  const platformPositiveTags = useReviewTags('platform', 'positive')!;
+  const platformNegativeTags = useReviewTags('platform', 'negative')!;
+
+  const selectedCourierTags: ReviewTag[] = [];
+  const selectedBusinessTags: ReviewTag[] = [];
+  const selectedPlatformTags: ReviewTag[] = [];
   // handlers
   const createReviewHandler = async () => {
     if (!orderConsumerReview) return;
@@ -74,20 +90,40 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
           })
         }
       />
+      {courierRating ? (
+        <View>
+          <MultiTagSelector
+            data={courierRating === 'positive' ? courierPositiveTags : courierNegativeTags}
+            disabled={!isEmpty(existingReview?.courier?.rating)}
+            selectedTags={selectedCourierTags}
+          />
+        </View>
+      ) : null}
       {type === 'food' ? (
-        <ThumbSelector
-          title="Restaurante"
-          iconUnicode={0x1f373}
-          review={orderConsumerReview?.business?.rating}
-          disabled={!isEmpty(existingReview?.business?.rating)}
-          onReviewChange={(type) =>
-            setOrderConsumerReview({
-              ...orderConsumerReview,
-              orderId: order.id,
-              business: { id: order.business?.id ?? null, rating: type },
-            })
-          }
-        />
+        <View>
+          <ThumbSelector
+            title="Restaurante"
+            iconUnicode={0x1f373}
+            review={orderConsumerReview?.business?.rating}
+            disabled={!isEmpty(existingReview?.business?.rating)}
+            onReviewChange={(type) =>
+              setOrderConsumerReview({
+                ...orderConsumerReview,
+                orderId: order.id,
+                business: { id: order.business?.id ?? null, rating: type },
+              })
+            }
+          />
+          {businessRating ? (
+            <View>
+              <MultiTagSelector
+                data={businessRating === 'positive' ? businessPositiveTags : businessNegativeTags}
+                disabled={!isEmpty(existingReview?.business?.rating)}
+                selectedTags={selectedBusinessTags}
+              />
+            </View>
+          ) : null}
+        </View>
       ) : null}
       <ThumbSelector
         title="AppJusto"
@@ -102,6 +138,15 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
           })
         }
       />
+      {platformRating ? (
+        <View>
+          <MultiTagSelector
+            data={platformRating === 'positive' ? platformPositiveTags : platformNegativeTags}
+            disabled={!isEmpty(existingReview?.platform?.rating)}
+            selectedTags={selectedPlatformTags}
+          />
+        </View>
+      ) : null}
       <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
       <View>
         <SingleHeader title={t('Deixe um comentário')} />

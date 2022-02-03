@@ -1,20 +1,28 @@
 import { ReviewTag } from '@appjusto/types';
 import React from 'react';
-import { FlatList, Text, TouchableWithoutFeedback, View } from 'react-native';
-import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
+import { ActivityIndicator, FlatList, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { borders, colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 
 type Props = {
   data: ReviewTag[];
   disabled?: boolean;
+  selectedTags: ReviewTag[];
 };
 
-export const MultiTagSelector = ({ data, disabled }: Props) => {
+export const MultiTagSelector = ({ data, disabled, selectedTags }: Props) => {
   // helpers
-  const selectedTags: ReviewTag[] = [];
   const onSelect = (tag: ReviewTag) => {
     if (selectedTags.includes(tag)) selectedTags.filter((t) => t.id !== tag.id);
     if (!selectedTags.includes(tag)) selectedTags.push(tag);
   };
+  // UI
+  if (!data) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="small" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <FlatList
       showsHorizontalScrollIndicator={false}
@@ -22,7 +30,6 @@ export const MultiTagSelector = ({ data, disabled }: Props) => {
       data={data}
       keyExtractor={(item) => item.id + item.type}
       renderItem={({ item }) => {
-        const tagIsSelected = selectedTags.includes(item);
         return (
           <TouchableWithoutFeedback
             onPress={() => {
@@ -39,14 +46,14 @@ export const MultiTagSelector = ({ data, disabled }: Props) => {
                 borderRadius: 6,
                 height: 40,
                 marginRight: halfPadding,
-                backgroundColor: tagIsSelected ? colors.green100 : colors.white,
-                borderColor: tagIsSelected ? colors.black : colors.grey500,
+                backgroundColor: selectedTags.includes(item) ? colors.green100 : colors.white,
+                borderColor: selectedTags.includes(item) ? colors.black : colors.grey500,
               }}
             >
               <Text
                 style={{
                   ...texts.sm,
-                  color: tagIsSelected ? colors.black : colors.grey700,
+                  color: selectedTags.includes(item) ? colors.black : colors.grey700,
                 }}
               >
                 {item.title}
