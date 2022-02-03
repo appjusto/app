@@ -5,16 +5,17 @@ import { colors, texts } from '../../../../common/styles';
 type Props = {
   onSelect?: (value: number) => void;
   selected?: number;
+  disabled?: boolean;
 };
 
-export const NPSSelector = ({ onSelect, selected }: Props) => {
+export const NPSSelector = ({ onSelect, selected, disabled }: Props) => {
   const scores: ReactNode[] = [];
   for (let i = 1; i <= 5; i += 1) {
     scores.push(
       <TouchableOpacity
         key={`key-${i}`}
         onPress={() => {
-          if (onSelect) onSelect(i);
+          if (onSelect && !disabled) onSelect(i);
         }}
       >
         <View

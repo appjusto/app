@@ -30,7 +30,7 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // props
-  const { type } = order;
+  const { courier, type } = order;
   // state
   const existingReview = useOrderReview(order.id);
   const [orderConsumerReview, setOrderConsumerReview] = React.useState<OrderConsumerReview>();
@@ -53,6 +53,8 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
   const [selectedPlatformTags, setSelectedPlatformTags] = React.useState<ReviewTag[]>(
     orderConsumerReview?.platform?.tags ?? []
   );
+  const [nps, setNps] = React.useState<number>();
+  const [comment, setComment] = React.useState<string>();
   const courierPositiveTags = useReviewTags('courier', 'positive');
   const courierNegativeTags = useReviewTags('courier', 'negative');
   const businessPositiveTags = useReviewTags('business', 'positive');
@@ -66,8 +68,6 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
     Keyboard.dismiss();
     setLoading(true);
     try {
-      if (!isEmpty(selectedCourierTags) && orderConsumerReview.courier?.rating)
-        orderConsumerReview.courier.tags?.concat(selectedCourierTags);
       await api.reviews().createOrderConsumerReview(orderConsumerReview);
       track('review sent');
       if (onCompleteReview) onCompleteReview();
@@ -136,14 +136,8 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
             placeholder={t('Escreva sua mensagem')}
             multiline
             numberOfLines={6}
-            value={existingReview?.comment}
-            onChangeText={(value) =>
-              setOrderConsumerReview({
-                ...orderConsumerReview,
-                orderId: order.id,
-                comment: value,
-              })
-            }
+            value={comment}
+            onChangeText={(text) => setComment(text)}
             style={{ height: 80 }}
           />
         </View>
@@ -154,14 +148,9 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
         <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
           {/* NPS */}
           <NPSSelector
-            selected={orderConsumerReview?.nps}
-            onSelect={(value) =>
-              setOrderConsumerReview({
-                ...orderConsumerReview,
-                orderId: order.id,
-                nps: value,
-              })
-            }
+            disabled={!isEmpty(orderConsumerReview?.nps)}
+            selected={nps}
+            onSelect={(value) => setNps(value)}
           />
           <View
             style={{
