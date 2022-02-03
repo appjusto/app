@@ -1,4 +1,4 @@
-import { OrderConsumerReview, Review, ReviewTag, ReviewTagType } from '@appjusto/types';
+import { Flavor, OrderConsumerReview, Review, ReviewTag } from '@appjusto/types';
 import firebase from 'firebase';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentsAs } from '../types';
@@ -27,8 +27,11 @@ export default class ReviewsApi {
   //   return documentsAs<Review>(docs).find(() => true);
   // }
 
-  async fetchReviewTags(type: ReviewTagType) {
-    const query = this.refs.getReviewTagsRef().where('type', '==', type);
+  async fetchReviewTags(agent: Flavor, type: string) {
+    const query = this.refs
+      .getReviewTagsRef()
+      .where('agent', '==', agent)
+      .where('type', '==', type);
     const docs = (await query.get()).docs;
     return documentsAs<ReviewTag>(docs);
   }
