@@ -1,20 +1,33 @@
-import { ReviewType } from '@appjusto/types';
+import { ReviewTag, ReviewType } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TouchableWithoutFeedback, View } from 'react-native';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { MultiTagSelector } from './MultiTagSelector';
 
 type Props = {
   title: string;
   iconUnicode: number;
   review: ReviewType | undefined;
+  tags: ReviewTag[] | undefined;
+  selectedTags: ReviewTag[];
   disabled?: boolean;
   onReviewChange: (type: ReviewType) => void;
+  onTagsChange: (tags: ReviewTag[]) => void;
 };
 
-export const ThumbSelector = ({ title, iconUnicode, review, disabled, onReviewChange }: Props) => {
+export const ThumbSelector = ({
+  title,
+  iconUnicode,
+  review,
+  tags,
+  selectedTags,
+  disabled,
+  onReviewChange,
+  onTagsChange,
+}: Props) => {
   return (
     <PaddedView style={{ flex: 1 }}>
       <View
@@ -75,6 +88,14 @@ export const ThumbSelector = ({ title, iconUnicode, review, disabled, onReviewCh
               <Feather name="thumbs-down" size={24} />
             </View>
           </TouchableWithoutFeedback>
+        </View>
+        <View>
+          <MultiTagSelector
+            tags={tags}
+            disabled={disabled}
+            selectedTags={selectedTags}
+            onChange={onTagsChange}
+          />
         </View>
       </View>
     </PaddedView>

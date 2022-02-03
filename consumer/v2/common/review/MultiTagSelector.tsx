@@ -4,19 +4,21 @@ import { ActivityIndicator, FlatList, Text, TouchableWithoutFeedback, View } fro
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 
 type Props = {
-  data: ReviewTag[];
-  disabled?: boolean;
+  tags: ReviewTag[] | undefined;
   selectedTags: ReviewTag[];
+  disabled?: boolean;
+  onChange: (tags: ReviewTag[]) => void;
 };
 
-export const MultiTagSelector = ({ data, disabled, selectedTags }: Props) => {
+export const MultiTagSelector = ({ tags, disabled, selectedTags, onChange }: Props) => {
   // helpers
   const onSelect = (tag: ReviewTag) => {
-    if (selectedTags.includes(tag)) selectedTags.filter((t) => t.id !== tag.id);
-    if (!selectedTags.includes(tag)) selectedTags.push(tag);
+    const index = selectedTags.findIndex((value) => value.id === tag.id);
+    if (index < 0) onChange([...selectedTags, tag]);
+    else onChange([...selectedTags.slice(0, index), ...selectedTags.slice(index + 1)]);
   };
   // UI
-  if (!data) {
+  if (!tags) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="small" color={colors.green500} />
@@ -27,7 +29,7 @@ export const MultiTagSelector = ({ data, disabled, selectedTags }: Props) => {
     <FlatList
       showsHorizontalScrollIndicator={false}
       horizontal
-      data={data}
+      data={tags}
       keyExtractor={(item) => item.id + item.type}
       renderItem={({ item }) => {
         return (

@@ -36,16 +36,16 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
   const existingReview = useOrderReview(order.id);
   const [orderConsumerReview, setOrderConsumerReview] = React.useState<OrderConsumerReview>();
   const [isLoading, setLoading] = React.useState(false);
+  const courierPositiveTags = useReviewTags('courier', 'positive');
+  const courierNegativeTags = useReviewTags('courier', 'negative');
+  const businessPositiveTags = useReviewTags('business', 'positive');
+  const businessNegativeTags = useReviewTags('business', 'negative');
+  const platformPositiveTags = useReviewTags('platform', 'positive');
+  const platformNegativeTags = useReviewTags('platform', 'negative');
   // helpers
   const courierRating = orderConsumerReview?.courier?.rating;
-  const courierPositiveTags = useReviewTags('courier', 'positive')!;
-  const courierNegativeTags = useReviewTags('courier', 'negative')!;
   const businessRating = orderConsumerReview?.business?.rating;
-  const businessPositiveTags = useReviewTags('business', 'positive')!;
-  const businessNegativeTags = useReviewTags('business', 'negative')!;
   const platformRating = orderConsumerReview?.platform?.rating;
-  const platformPositiveTags = useReviewTags('platform', 'positive')!;
-  const platformNegativeTags = useReviewTags('platform', 'negative')!;
 
   const selectedCourierTags: ReviewTag[] = [];
   const selectedBusinessTags: ReviewTag[] = [];
@@ -84,23 +84,33 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
         iconUnicode={0x1f6f5}
         review={orderConsumerReview?.courier?.rating}
         disabled={!isEmpty(existingReview?.courier?.rating)}
+        tags={
+          orderConsumerReview?.courier?.rating === 'negative'
+            ? courierNegativeTags
+            : courierPositiveTags
+        }
+        selectedTags={orderConsumerReview?.courier?.tags ?? []}
         onReviewChange={(type) =>
           setOrderConsumerReview({
             ...orderConsumerReview,
             orderId: order.id,
-            courier: { id: courier?.id ?? null, rating: type },
+            courier: { ...orderConsumerReview?.courier, id: courier?.id ?? null, rating: type },
           })
         }
+        onTagsChange={(tags) => {
+          setOrderConsumerReview({
+            ...orderConsumerReview,
+            orderId: order.id,
+            courier: {
+              ...orderConsumerReview?.courier,
+              id: courier?.id ?? null,
+              rating: orderConsumerReview?.courier?.rating!,
+              tags: tags,
+            },
+          });
+        }}
       />
-      {courierRating ? (
-        <View>
-          <MultiTagSelector
-            data={courierRating === 'positive' ? courierPositiveTags : courierNegativeTags}
-            disabled={!isEmpty(existingReview?.courier?.rating)}
-            selectedTags={selectedCourierTags}
-          />
-        </View>
-      ) : null}
+
       {type === 'food' ? (
         <View>
           <ThumbSelector
@@ -108,7 +118,7 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
             iconUnicode={0x1f373}
             review={orderConsumerReview?.business?.rating}
             disabled={!isEmpty(existingReview?.business?.rating)}
-            onReviewChange={(type) =>
+            onTagsChange={(type) =>
               setOrderConsumerReview({
                 ...orderConsumerReview,
                 orderId: order.id,
@@ -119,7 +129,7 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
           {businessRating ? (
             <View>
               <MultiTagSelector
-                data={businessRating === 'positive' ? businessPositiveTags : businessNegativeTags}
+                tags={businessRating === 'positive' ? businessPositiveTags : businessNegativeTags}
                 disabled={!isEmpty(existingReview?.business?.rating)}
                 selectedTags={selectedBusinessTags}
               />
@@ -132,7 +142,7 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
         iconUnicode={0x1f4f1}
         review={orderConsumerReview?.platform?.rating}
         disabled={!isEmpty(existingReview?.platform?.rating)}
-        onReviewChange={(type) =>
+        onTagsChange={(type) =>
           setOrderConsumerReview({
             ...orderConsumerReview,
             orderId: order.id,
@@ -143,7 +153,7 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
       {platformRating ? (
         <View>
           <MultiTagSelector
-            data={platformRating === 'positive' ? platformPositiveTags : platformNegativeTags}
+            tags={platformRating === 'positive' ? platformPositiveTags : platformNegativeTags}
             disabled={!isEmpty(existingReview?.platform?.rating)}
             selectedTags={selectedPlatformTags}
           />
