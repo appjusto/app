@@ -1,7 +1,7 @@
 import { ReviewTag } from '@appjusto/types';
 import React from 'react';
-import { ActivityIndicator, FlatList, Text, TouchableWithoutFeedback, View } from 'react-native';
-import { borders, colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { FlatList, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 
 type Props = {
   tags: ReviewTag[] | undefined;
@@ -17,15 +17,8 @@ export const MultiTagSelector = ({ tags, disabled, selectedTags, onChange }: Pro
     if (index < 0) onChange([...selectedTags, tag]);
     else onChange([...selectedTags.slice(0, index), ...selectedTags.slice(index + 1)]);
   };
-  // UI
-  if (!tags) {
-    return (
-      <View style={screens.centered}>
-        <ActivityIndicator size="small" color={colors.green500} />
-      </View>
-    );
-  }
-  return (
+
+  return tags ? (
     <FlatList
       showsHorizontalScrollIndicator={false}
       horizontal
@@ -65,5 +58,5 @@ export const MultiTagSelector = ({ tags, disabled, selectedTags, onChange }: Pro
         );
       }}
     />
-  );
+  ) : null;
 };

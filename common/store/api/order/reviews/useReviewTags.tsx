@@ -1,8 +1,8 @@
-import { Flavor, ReviewTag, WithId } from '@appjusto/types';
+import { Flavor, ReviewTag, ReviewType, WithId } from '@appjusto/types';
 import React, { useContext } from 'react';
 import { ApiContext } from '../../../../app/context';
 
-export const useReviewTags = (agent: Flavor, type: string) => {
+export const useReviewTags = (agent: Flavor, type: ReviewType) => {
   // context
   const api = useContext(ApiContext);
   // state
