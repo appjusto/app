@@ -56,6 +56,8 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
     Keyboard.dismiss();
     setLoading(true);
     try {
+      if (!isEmpty(selectedCourierTags) && orderConsumerReview.courier?.rating)
+        orderConsumerReview.courier.tags?.concat(selectedCourierTags);
       await api.reviews().createOrderConsumerReview(orderConsumerReview);
       track('review sent');
       if (onCompleteReview) onCompleteReview();
