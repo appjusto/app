@@ -35,24 +35,12 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
   const existingReview = useOrderReview(order.id);
   const [orderConsumerReview, setOrderConsumerReview] = React.useState<OrderConsumerReview>();
   const [isLoading, setLoading] = React.useState(false);
-  const [courierRating, setCourierRating] = React.useState<ReviewType | undefined>(
-    existingReview?.courier?.rating ?? undefined
-  );
-  const [businessRating, setBusinessRating] = React.useState<ReviewType | undefined>(
-    existingReview?.business?.rating ?? undefined
-  );
-  const [platformRating, setPlatformRating] = React.useState<ReviewType | undefined>(
-    existingReview?.platform?.rating ?? undefined
-  );
-  const [selectedCourierTags, setSelectedCourierTags] = React.useState<ReviewTag[]>(
-    orderConsumerReview?.courier?.tags ?? []
-  );
-  const [selectedBusinessTags, setSelectedBusinessTags] = React.useState<ReviewTag[]>(
-    orderConsumerReview?.business?.tags ?? []
-  );
-  const [selectedPlatformTags, setSelectedPlatformTags] = React.useState<ReviewTag[]>(
-    orderConsumerReview?.platform?.tags ?? []
-  );
+  const [courierRating, setCourierRating] = React.useState<ReviewType>('positive');
+  const [businessRating, setBusinessRating] = React.useState<ReviewType>('positive');
+  const [platformRating, setPlatformRating] = React.useState<ReviewType>('positive');
+  const [selectedCourierTags, setSelectedCourierTags] = React.useState<ReviewTag[]>([]);
+  const [selectedBusinessTags, setSelectedBusinessTags] = React.useState<ReviewTag[]>([]);
+  const [selectedPlatformTags, setSelectedPlatformTags] = React.useState<ReviewTag[]>([]);
   const [nps, setNps] = React.useState<number>();
   const [comment, setComment] = React.useState<string>();
   const courierPositiveTags = useReviewTags('courier', 'positive');
@@ -76,7 +64,7 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
     }
     setLoading(false);
   };
-  // effect
+  // side-effects
   React.useEffect(() => {
     if (existingReview) setOrderConsumerReview(existingReview);
   }, [existingReview]);
@@ -96,8 +84,25 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
         disabled={!isEmpty(existingReview?.courier?.rating)}
         tags={courierRating === 'negative' ? courierNegativeTags : courierPositiveTags}
         selectedTags={selectedCourierTags}
-        onReviewChange={(type) => setCourierRating(type)}
-        onTagsChange={(tags) => setSelectedCourierTags(tags)}
+        onReviewChange={(type) => {
+          setCourierRating(type);
+          setOrderConsumerReview({
+            orderId: order.id,
+            ...orderConsumerReview,
+            courier: {
+              ...orderConsumerReview?.courier,
+              id: courier ? courier.id : null,
+              rating: courierRating,
+            },
+          });
+        }}
+        onTagsChange={(tags) => {
+          setSelectedCourierTags(tags);
+          setOrderConsumerReview({
+            ...orderConsumerReview,
+            courier: { ...orderConsumerReview?.courier, tags: selectedCourierTags },
+          });
+        }}
       />
 
       {type === 'food' ? (
@@ -109,8 +114,25 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
             disabled={!isEmpty(existingReview?.business?.rating)}
             tags={businessRating === 'negative' ? businessNegativeTags : businessPositiveTags}
             selectedTags={selectedBusinessTags}
-            onReviewChange={(type) => setBusinessRating(type)}
-            onTagsChange={(tags) => setSelectedBusinessTags(tags)}
+            onReviewChange={(type) => {
+              setBusinessRating(type);
+              setOrderConsumerReview({
+                orderId: order.id,
+                ...orderConsumerReview,
+                business: {
+                  ...orderConsumerReview?.business,
+                  id: order.business ? order.business.id : null,
+                  rating: businessRating,
+                },
+              });
+            }}
+            onTagsChange={(tags) => {
+              setSelectedBusinessTags(tags);
+              setOrderConsumerReview({
+                ...orderConsumerReview,
+                business: { ...orderConsumerReview?.business, tags: selectedBusinessTags },
+              });
+            }}
           />
         </View>
       ) : null}
@@ -121,8 +143,21 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
         disabled={!isEmpty(existingReview?.platform?.rating)}
         tags={platformRating === 'negative' ? platformNegativeTags : platformPositiveTags}
         selectedTags={selectedPlatformTags}
-        onReviewChange={(type) => setPlatformRating(type)}
-        onTagsChange={(tags) => setSelectedPlatformTags(tags)}
+        onReviewChange={(type) => {
+          setPlatformRating(type);
+          setOrderConsumerReview({
+            orderId: order.id,
+            ...orderConsumerReview,
+            platform: { ...orderConsumerReview?.platform, rating: platformRating },
+          });
+        }}
+        onTagsChange={(tags) => {
+          setSelectedPlatformTags(tags);
+          setOrderConsumerReview({
+            ...orderConsumerReview,
+            platform: { ...orderConsumerReview?.platform, tags: selectedPlatformTags },
+          });
+        }}
       />
       <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
       <View>
@@ -137,7 +172,10 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
             multiline
             numberOfLines={6}
             value={comment}
-            onChangeText={(text) => setComment(text)}
+            onChangeText={(text) => {
+              setComment(text);
+              setOrderConsumerReview({ ...orderConsumerReview, orderId: order.id, comment });
+            }}
             style={{ height: 80 }}
           />
         </View>
@@ -150,7 +188,10 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
           <NPSSelector
             disabled={!isEmpty(orderConsumerReview?.nps)}
             selected={nps}
-            onSelect={(value) => setNps(value)}
+            onSelect={(value) => {
+              setNps(value);
+              setOrderConsumerReview({ ...orderConsumerReview, orderId: order.id, nps });
+            }}
           />
           <View
             style={{
@@ -175,7 +216,7 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
           <DefaultButton
             title={existingReview ? t('Avaliação enviada') : t('Enviar')}
             activityIndicator={isLoading}
-            disabled={isLoading || !!existingReview || !orderConsumerReview}
+            disabled={isLoading || !!existingReview || !orderConsumerReview} // check if this is right
             onPress={createReviewHandler}
           />
           <View style={{ paddingTop: padding }}>{children}</View>
