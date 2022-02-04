@@ -99,7 +99,7 @@ export default function ({ navigation, route }: Props) {
   const acceptHandler = async () => {
     try {
       setLoading(true);
-      await api.order().matchOrder(orderId);
+      await api.order().matchOrder(orderId, routeDistanceToOrigin);
     } catch (error) {
       navigation.replace('MatchingError');
     }
