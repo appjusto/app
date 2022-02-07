@@ -53,7 +53,6 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const [tipLoading, setTipLoading] = React.useState(false);
   const [tipSent, setTipSent] = React.useState(false);
   const showChatButton = useChatisEnabled(order);
-
   // tracking
   useSegmentScreen('DeliveredOrderDetail');
 

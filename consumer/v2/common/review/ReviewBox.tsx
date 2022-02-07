@@ -35,13 +35,14 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
   const existingReview = useOrderReview(order.id);
   const [orderConsumerReview, setOrderConsumerReview] = React.useState<OrderConsumerReview>();
   const [isLoading, setLoading] = React.useState(false);
+  // to disable the button in the DeliveredOrderDetail screen after a review is sent
+  const [reviewSent, setReviewSent] = React.useState(false);
   const courierPositiveTags = useReviewTags('courier', 'positive');
   const courierNegativeTags = useReviewTags('courier', 'negative');
   const businessPositiveTags = useReviewTags('business', 'positive');
   const businessNegativeTags = useReviewTags('business', 'negative');
   const platformPositiveTags = useReviewTags('platform', 'positive');
   const platformNegativeTags = useReviewTags('platform', 'negative');
-
   // handlers
   const createReviewHandler = async () => {
     if (!orderConsumerReview) return;
@@ -49,6 +50,7 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
     setLoading(true);
     try {
       await api.reviews().createOrderConsumerReview(orderConsumerReview);
+      setReviewSent(true);
       track('review sent');
       if (onCompleteReview) onCompleteReview();
     } catch (error: any) {
@@ -216,9 +218,9 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
         <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
         <PaddedView>
           <DefaultButton
-            title={existingReview ? t('Avaliação enviada') : t('Enviar')}
+            title={existingReview || reviewSent ? t('Avaliação enviada') : t('Enviar')}
             activityIndicator={isLoading}
-            disabled={isLoading || !!existingReview || !orderConsumerReview} // check if this is right
+            disabled={isLoading || !!existingReview || !orderConsumerReview || reviewSent} // check if this is right
             onPress={createReviewHandler}
           />
           <View style={{ paddingTop: padding }}>{children}</View>
