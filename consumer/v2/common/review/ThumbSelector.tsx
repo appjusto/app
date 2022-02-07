@@ -89,14 +89,14 @@ export const ThumbSelector = ({
             </View>
           </TouchableWithoutFeedback>
         </View>
-        <View>
-          <MultiTagSelector
-            tags={tags}
-            disabled={disabled}
-            selectedTags={selectedTags}
-            onChange={onTagsChange}
-          />
-        </View>
+      </View>
+      <View>
+        <MultiTagSelector
+          tags={tags}
+          disabled={disabled}
+          selectedTags={selectedTags}
+          onChange={onTagsChange}
+        />
       </View>
     </PaddedView>
   );

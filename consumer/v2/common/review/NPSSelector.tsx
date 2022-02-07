@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableWithoutFeedback, View } from 'react-native';
 import { colors, texts } from '../../../../common/styles';
 
 type Props = {
@@ -12,7 +12,7 @@ export const NPSSelector = ({ onSelect, selected, disabled }: Props) => {
   const scores: ReactNode[] = [];
   for (let i = 1; i <= 5; i += 1) {
     scores.push(
-      <TouchableOpacity
+      <TouchableWithoutFeedback
         key={`key-${i}`}
         onPress={() => {
           if (onSelect && !disabled) onSelect(i);
@@ -32,7 +32,7 @@ export const NPSSelector = ({ onSelect, selected, disabled }: Props) => {
         >
           <Text style={{ ...texts.md }}>{i}</Text>
         </View>
-      </TouchableOpacity>
+      </TouchableWithoutFeedback>
     );
   }
   return (

@@ -189,7 +189,7 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
         <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
           {/* NPS */}
           <NPSSelector
-            disabled={!isEmpty(orderConsumerReview?.nps)}
+            disabled={Boolean(existingReview?.nps)}
             selected={orderConsumerReview?.nps}
             onSelect={(value) => {
               setOrderConsumerReview({ ...orderConsumerReview, orderId: order.id, nps: value });
