@@ -20,7 +20,6 @@ import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
 import { padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import { ReviewBox } from '../../common/review/ReviewBox';
 import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
 import { HomeControls } from './controls/HomeControls';
@@ -98,9 +97,6 @@ export default function ({ navigation }: Props) {
             </TouchableOpacity>
           ) : null}
           {!consumer ? <View style={{ height: padding }} /> : null}
-          <View style={{ marginVertical: padding }}>
-            <ReviewBox />
-          </View>
           <CrowdFundingCard />
           <View style={{ marginTop: padding }}>
             <HomeShareCard
