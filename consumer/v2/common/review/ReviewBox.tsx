@@ -43,6 +43,14 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
   const businessNegativeTags = useReviewTags('business', 'negative');
   const platformPositiveTags = useReviewTags('platform', 'positive');
   const platformNegativeTags = useReviewTags('platform', 'negative');
+  // helpers
+  const fullReviewAlreadyinDB =
+    Boolean(existingReview?.courier) &&
+    Boolean(existingReview?.business) &&
+    Boolean(existingReview?.platform) &&
+    Boolean(existingReview?.nps) &&
+    Boolean(existingReview?.comment);
+  console.log(orderConsumerReview?.courier?.tags);
   // handlers
   const createReviewHandler = async () => {
     if (!orderConsumerReview) return;
@@ -76,7 +84,7 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
           title="Entregador"
           iconUnicode={0x1f6f5}
           review={orderConsumerReview?.courier?.rating}
-          disabled={!isEmpty(existingReview?.courier?.rating)}
+          disabled={Boolean(existingReview?.courier?.rating) || reviewSent}
           tags={
             orderConsumerReview?.courier?.rating === 'negative'
               ? courierNegativeTags
@@ -108,7 +116,7 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
             title="Restaurante"
             iconUnicode={0x1f373}
             review={orderConsumerReview?.business?.rating}
-            disabled={!isEmpty(existingReview?.business?.rating)}
+            disabled={Boolean(existingReview?.business?.rating) || reviewSent}
             tags={
               orderConsumerReview?.business?.rating === 'negative'
                 ? businessNegativeTags
@@ -143,7 +151,7 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
         title="AppJusto"
         iconUnicode={0x1f4f1}
         review={orderConsumerReview?.platform?.rating}
-        disabled={!isEmpty(existingReview?.platform?.rating)}
+        disabled={Boolean(existingReview?.platform?.rating) || reviewSent}
         tags={
           orderConsumerReview?.platform?.rating === 'negative'
             ? platformNegativeTags
@@ -218,9 +226,9 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
         <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
         <PaddedView>
           <DefaultButton
-            title={existingReview || reviewSent ? t('Avaliação enviada') : t('Enviar')}
+            title={fullReviewAlreadyinDB ? t('Avaliação enviada') : t('Enviar')}
             activityIndicator={isLoading}
-            disabled={isLoading || !!existingReview || !orderConsumerReview || reviewSent} // check if this is right
+            disabled={isLoading || fullReviewAlreadyinDB || !orderConsumerReview} // check if this is right
             onPress={createReviewHandler}
           />
           <View style={{ paddingTop: padding }}>{children}</View>

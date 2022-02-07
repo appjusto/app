@@ -90,14 +90,16 @@ export const ThumbSelector = ({
           </TouchableWithoutFeedback>
         </View>
       </View>
-      <View>
-        <MultiTagSelector
-          tags={tags}
-          disabled={disabled}
-          selectedTags={selectedTags}
-          onChange={onTagsChange}
-        />
-      </View>
+      {review ? (
+        <View style={{ marginTop: padding }}>
+          <MultiTagSelector
+            tags={tags}
+            disabled={disabled}
+            selectedTags={selectedTags}
+            onChange={onTagsChange}
+          />
+        </View>
+      ) : null}
     </PaddedView>
   );
 };
