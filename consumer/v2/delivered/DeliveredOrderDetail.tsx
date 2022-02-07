@@ -1,4 +1,4 @@
-import { Flavor, ReviewType } from '@appjusto/types';
+import { Flavor } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -15,7 +15,6 @@ import { useChatisEnabled } from '../../../common/hooks/useChatIsEnabled';
 import OrderMap from '../../../common/screens/orders/OrderMap';
 import PlaceSummary from '../../../common/screens/orders/summary/PlaceSummary';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
-import { useOrderReview } from '../../../common/store/api/order/reviews/useOrderReview';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
@@ -51,11 +50,6 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   // screen state
   const order = useObserveOrder(orderId);
   const [tip, setTip] = React.useState(0);
-  const [reviewType, setReviewType] = React.useState<ReviewType>();
-  const [comment, setComment] = React.useState('');
-  const orderReview = useOrderReview(orderId);
-  const [reviewLoading, setReviewLoading] = React.useState(false);
-  const [reviewSent, setReviewSent] = React.useState(false);
   const [tipLoading, setTipLoading] = React.useState(false);
   const [tipSent, setTipSent] = React.useState(false);
   const showChatButton = useChatisEnabled(order);
@@ -107,29 +101,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
       setTipLoading(false);
     }
   };
-
-  const reviewHandler = async () => {
-    if (!order) return;
-    Keyboard.dismiss();
-
-    try {
-      if (reviewType) {
-        setReviewLoading(true);
-        // await api.courier().addReview(order.courier!.id, {
-        //   type: reviewType,
-        //   orderId,
-        //   comment,
-        // });
-        setReviewSent(true);
-        track('consumer reviewed courier');
-        dispatch(showToast(t('Avaliação enviada com sucesso!'), 'success'));
-        setReviewLoading(false);
-      }
-    } catch (error) {
-      dispatch(showToast(t('Não foi possível enviar a avaliação'), 'error'));
-      setReviewLoading(false);
-    }
-  };
+  // UI
   if (!order) {
     return (
       <View style={screens.centered}>
