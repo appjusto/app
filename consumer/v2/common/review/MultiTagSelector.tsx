@@ -40,14 +40,22 @@ export const MultiTagSelector = ({ tags, disabled, selectedTags, onChange }: Pro
                 borderRadius: 6,
                 height: 40,
                 marginRight: halfPadding,
-                backgroundColor: selectedTags.includes(item) ? colors.green100 : colors.white,
-                borderColor: selectedTags.includes(item) ? colors.black : colors.grey500,
+                backgroundColor: selectedTags.find((value) => value.id === item.id)
+                  ? item.type === 'positive'
+                    ? colors.green100
+                    : colors.darkYellow
+                  : colors.white,
+                borderColor: selectedTags.find((value) => value.id === item.id)
+                  ? colors.black
+                  : colors.grey500,
               }}
             >
               <Text
                 style={{
                   ...texts.sm,
-                  color: selectedTags.includes(item) ? colors.black : colors.grey700,
+                  color: selectedTags.find((value) => value.id === item.id)
+                    ? colors.black
+                    : colors.grey700,
                 }}
               >
                 {item.title}

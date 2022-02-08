@@ -13,6 +13,9 @@ export default class ReviewsApi {
       createdOn: firebase.firestore.FieldValue.serverTimestamp(),
     } as OrderConsumerReview);
   }
+  async addToOrderConsumerReview(changes: Partial<OrderConsumerReview>, orderId: string) {
+    await this.refs.getReviewRef(orderId).update(changes);
+  }
   async fetchOrderReview(orderId: string) {
     const snapshot = await this.refs.getReviewsRef().where('orderId', '==', orderId).limit(1).get();
     if (snapshot.empty) return null;
