@@ -1,5 +1,4 @@
 import { Order, OrderConsumerReview, WithId } from '@appjusto/types';
-import { isEmpty } from 'lodash';
 import React, { ReactNode } from 'react';
 import { Keyboard, Text, View, ViewProps } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -35,40 +34,19 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
   const existingReview = useOrderReview(order.id);
   const [orderConsumerReview, setOrderConsumerReview] = React.useState<OrderConsumerReview>();
   const [isLoading, setLoading] = React.useState(false);
-  // to disable the button in the DeliveredOrderDetail screen after a review is sent
-  const [reviewSent, setReviewSent] = React.useState(false);
   const courierPositiveTags = useReviewTags('courier', 'positive');
   const courierNegativeTags = useReviewTags('courier', 'negative');
   const businessPositiveTags = useReviewTags('business', 'positive');
   const businessNegativeTags = useReviewTags('business', 'negative');
   const platformPositiveTags = useReviewTags('platform', 'positive');
   const platformNegativeTags = useReviewTags('platform', 'negative');
-  // helpers
-  const fullReviewAlreadyinDB =
-    type === 'food'
-      ? Boolean(existingReview?.courier) &&
-        Boolean(existingReview?.business) &&
-        Boolean(existingReview?.platform) &&
-        Boolean(existingReview?.nps) &&
-        Boolean(existingReview?.comment)
-      : Boolean(existingReview?.courier) &&
-        Boolean(existingReview?.platform) &&
-        Boolean(existingReview?.nps) &&
-        Boolean(existingReview?.comment);
   // handlers
   const createReviewHandler = async () => {
     if (!orderConsumerReview) return;
     Keyboard.dismiss();
     setLoading(true);
     try {
-      if (existingReview) {
-        await api.reviews().addToOrderConsumerReview(orderConsumerReview, order.id);
-        setReviewSent(true);
-        dispatch(showToast(t('Avaliação enviada'), 'success'));
-        track('review sent');
-      }
-      await api.reviews().createOrderConsumerReview(orderConsumerReview);
-      setReviewSent(true);
+      await api.reviews().setOrderConsumerReview(orderConsumerReview);
       dispatch(showToast(t('Avaliação enviada'), 'success'));
       track('review sent');
       if (onCompleteReview) onCompleteReview();
@@ -95,7 +73,6 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
           title="Entregador"
           iconUnicode={0x1f6f5}
           review={orderConsumerReview?.courier?.rating}
-          disabled={Boolean(existingReview?.courier?.rating) || reviewSent}
           tags={
             orderConsumerReview?.courier?.rating === 'negative'
               ? courierNegativeTags
@@ -127,7 +104,6 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
             title="Restaurante"
             iconUnicode={0x1f373}
             review={orderConsumerReview?.business?.rating}
-            disabled={Boolean(existingReview?.business?.rating) || reviewSent}
             tags={
               orderConsumerReview?.business?.rating === 'negative'
                 ? businessNegativeTags
@@ -162,7 +138,6 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
         title="AppJusto"
         iconUnicode={0x1f4f1}
         review={orderConsumerReview?.platform?.rating}
-        disabled={Boolean(existingReview?.platform?.rating) || reviewSent}
         tags={
           orderConsumerReview?.platform?.rating === 'negative'
             ? platformNegativeTags
@@ -192,7 +167,6 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
             {t('Se preferir, descreva a sua experiência de forma anônima.')}
           </Text>
           <DefaultInput
-            editable={isEmpty(existingReview?.comment)}
             placeholder={t('Escreva sua mensagem')}
             multiline
             numberOfLines={6}
@@ -210,7 +184,6 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
         <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
           {/* NPS */}
           <NPSSelector
-            disabled={Boolean(existingReview?.nps)}
             selected={orderConsumerReview?.nps}
             onSelect={(value) => {
               setOrderConsumerReview({ ...orderConsumerReview, orderId: order.id, nps: value });
@@ -237,9 +210,9 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
         <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
         <PaddedView>
           <DefaultButton
-            title={fullReviewAlreadyinDB ? t('Avaliação enviada') : t('Enviar')}
+            title={t('Enviar')}
             activityIndicator={isLoading}
-            disabled={isLoading || fullReviewAlreadyinDB || !orderConsumerReview} // check if this is right
+            disabled={isLoading || !orderConsumerReview}
             onPress={createReviewHandler}
           />
           <View style={{ paddingTop: padding }}>{children}</View>

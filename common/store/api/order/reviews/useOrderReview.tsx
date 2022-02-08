@@ -1,12 +1,12 @@
 import React from 'react';
-import { OrderConsumerReview } from '../../../../../../types';
+import { OrderConsumerReview, WithId } from '../../../../../../types';
 import { ApiContext } from '../../../../app/context';
 
 export const useOrderReview = (orderId?: string) => {
   // context
   const api = React.useContext(ApiContext);
   // state
-  const [review, setReview] = React.useState<OrderConsumerReview | null>();
+  const [review, setReview] = React.useState<WithId<OrderConsumerReview> | null>();
   // side effects
   React.useEffect(() => {
     if (!orderId) return;

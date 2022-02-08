@@ -42,7 +42,7 @@ export default class FirebaseRefs {
 
   // reviews
   getReviewsRef = () => this.firestore.collection('reviews');
-  getReviewRef = (reviewId: string) => this.firestore.collection('reviews').doc(reviewId);
+  getReviewRef = (id: string) => this.firestore.collection('reviews').doc(id);
 
   // platform
   getPlatformRef = () => this.firestore.collection('platform');

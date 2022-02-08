@@ -1,25 +1,25 @@
-import { Flavor, OrderConsumerReview, Review, ReviewTag } from '@appjusto/types';
+import { Flavor, OrderConsumerReview, Review, ReviewTag, WithId } from '@appjusto/types';
 import firebase from 'firebase';
 import FirebaseRefs from '../FirebaseRefs';
-import { documentsAs } from '../types';
+import { documentAs, documentsAs } from '../types';
 
 export default class ReviewsApi {
   constructor(private refs: FirebaseRefs, private firestore: firebase.firestore.Firestore) {}
 
   // firestore
-  async createOrderConsumerReview(review: OrderConsumerReview) {
-    await this.refs.getReviewsRef().add({
-      ...review,
-      createdOn: firebase.firestore.FieldValue.serverTimestamp(),
-    } as OrderConsumerReview);
-  }
-  async addToOrderConsumerReview(changes: Partial<OrderConsumerReview>, orderId: string) {
-    await this.refs.getReviewRef(orderId).update(changes);
+  async setOrderConsumerReview(review: OrderConsumerReview | WithId<OrderConsumerReview>) {
+    const doc =
+      'id' in review ? this.refs.getReviewRef(review.id) : this.refs.getReviewsRef().doc();
+    await doc.set(
+      { ...review, reviewedOn: firebase.firestore.FieldValue.serverTimestamp() },
+      { merge: true }
+    );
+    return doc;
   }
   async fetchOrderReview(orderId: string) {
     const snapshot = await this.refs.getReviewsRef().where('orderId', '==', orderId).limit(1).get();
     if (snapshot.empty) return null;
-    return snapshot.docs.find(() => true)!.data() as OrderConsumerReview;
+    return documentAs<OrderConsumerReview>(snapshot.docs.find(() => true)!);
   }
   // async fetchReview(courierId: string, orderId: string) {
   //   const query = this.refs

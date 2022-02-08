@@ -15,7 +15,7 @@ export const NPSSelector = ({ onSelect, selected, disabled }: Props) => {
       <TouchableWithoutFeedback
         key={`key-${i}`}
         onPress={() => {
-          if (onSelect && !disabled) onSelect(i);
+          if (onSelect) onSelect(i);
         }}
       >
         <View
