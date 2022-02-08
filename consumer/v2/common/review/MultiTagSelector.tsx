@@ -17,7 +17,6 @@ export const MultiTagSelector = ({ tags, disabled, selectedTags, onChange }: Pro
     if (index < 0) onChange([...selectedTags, tag]);
     else onChange([...selectedTags.slice(0, index), ...selectedTags.slice(index + 1)]);
   };
-
   return tags ? (
     <FlatList
       showsHorizontalScrollIndicator={false}

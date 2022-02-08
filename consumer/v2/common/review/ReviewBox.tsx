@@ -50,7 +50,6 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
     Boolean(existingReview?.platform) &&
     Boolean(existingReview?.nps) &&
     Boolean(existingReview?.comment);
-  console.log(orderConsumerReview?.courier?.tags);
   // handlers
   const createReviewHandler = async () => {
     if (!orderConsumerReview) return;
@@ -90,7 +89,7 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
               ? courierNegativeTags
               : courierPositiveTags
           }
-          selectedTags={orderConsumerReview?.courier?.tags ?? []}
+          selectedTags={orderConsumerReview?.courier?.tags ?? existingReview?.courier?.tags ?? []}
           onReviewChange={(type) => {
             setOrderConsumerReview({
               orderId: order.id,
@@ -122,7 +121,9 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
                 ? businessNegativeTags
                 : businessPositiveTags
             }
-            selectedTags={orderConsumerReview?.business?.tags ?? []}
+            selectedTags={
+              orderConsumerReview?.business?.tags ?? existingReview?.business?.tags ?? []
+            }
             onReviewChange={(type) => {
               setOrderConsumerReview({
                 orderId: order.id,
@@ -157,7 +158,7 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
             ? platformNegativeTags
             : platformPositiveTags
         }
-        selectedTags={orderConsumerReview?.platform?.tags ?? []}
+        selectedTags={orderConsumerReview?.platform?.tags ?? existingReview?.platform?.tags ?? []}
         onReviewChange={(type) => {
           setOrderConsumerReview({
             orderId: order.id,
