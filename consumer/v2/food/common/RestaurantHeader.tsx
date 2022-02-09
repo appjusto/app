@@ -96,17 +96,7 @@ export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) =>
     <View style={{ marginHorizontal: 12 }}>
       <TouchableOpacity onPress={onPress}>
         <View>
-          <View style={{ height: 120, width: '100%', borderRadius: 8 }}>
-            {/* {coverURI ? (
-              <Image
-                source={{ uri: coverURI }}
-                style={{ height: 120, width: '100%' }}
-                borderRadius={8}
-                resizeMode="cover"
-              />
-            ) : null} */}
-            {restaurantImageUI()}
-          </View>
+          <View style={{ height: 120, width: '100%', borderRadius: 8 }}>{restaurantImageUI()}</View>
           {canNavigate && (
             <View style={{ position: 'absolute', right: halfPadding, bottom: halfPadding }}>
               <RoundedText>{t('Saber mais')}</RoundedText>
