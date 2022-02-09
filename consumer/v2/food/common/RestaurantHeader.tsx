@@ -8,7 +8,7 @@ import { useBusinessLogoURI } from '../../../../common/store/api/business/hooks/
 import { distanceBetweenLatLng } from '../../../../common/store/api/helpers';
 import useCuisines from '../../../../common/store/api/platform/hooks/useCuisines';
 import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
-import { colors, halfPadding, texts } from '../../../../common/styles';
+import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import {
   formatDistance,
   formatDuration,
@@ -36,20 +36,76 @@ export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) =>
     location && restaurant.businessAddress?.latlng
       ? distanceBetweenLatLng(location, restaurant.businessAddress.latlng)
       : 0;
+  // helpers
+  const discount = `-${restaurant.averageDiscount}%`;
   // UI
+  const restaurantImageUI = () => {
+    if (coverURI) {
+      if (restaurant.averageDiscount) {
+        return (
+          <View>
+            <View style={{ borderRadius: halfPadding }}>
+              <Image
+                source={{ uri: coverURI }}
+                style={{
+                  height: 120,
+                  width: '100%',
+                  borderTopLeftRadius: halfPadding,
+                  borderTopRightRadius: halfPadding,
+                }}
+                resizeMode="cover"
+              />
+              <View
+                style={{
+                  width: '100%',
+                  borderBottomLeftRadius: halfPadding,
+                  borderBottomRightRadius: halfPadding,
+                  paddingVertical: 12,
+                  paddingHorizontal: padding,
+                  backgroundColor: colors.darkYellow,
+                }}
+              >
+                <Text style={[texts.sm, texts.bold]}>{t('Preço justo garantido')}</Text>
+                <Text style={[texts.xs]}>
+                  {t('No AppJusto, os produtos desse restaurante são em média ')}
+                  {/* <Text style={[texts.bold]}>{restaurant.averageDiscount}% mais baratos</Text> */}
+                  <Text style={[texts.bold]}>10% mais baratos</Text>
+                  {t(' comparados a outros apps')}
+                </Text>
+              </View>
+            </View>
+            <View style={{ position: 'absolute', left: padding, top: padding }}>
+              {/* <RoundedText backgroundColor={discount}>{t('-10%')}</RoundedText> */}
+              <RoundedText backgroundColor={colors.darkYellow}>{t('-10%')}</RoundedText>
+            </View>
+          </View>
+        );
+      } else {
+        return (
+          <Image
+            source={{ uri: coverURI }}
+            style={{ height: 120, width: '100%' }}
+            borderRadius={8}
+            resizeMode="cover"
+          />
+        );
+      }
+    } else return null;
+  };
   return (
     <View style={{ marginHorizontal: 12 }}>
       <TouchableOpacity onPress={onPress}>
         <View>
           <View style={{ height: 120, width: '100%', borderRadius: 8 }}>
-            {coverURI ? (
+            {/* {coverURI ? (
               <Image
                 source={{ uri: coverURI }}
                 style={{ height: 120, width: '100%' }}
                 borderRadius={8}
                 resizeMode="cover"
               />
-            ) : null}
+            ) : null} */}
+            {restaurantImageUI()}
           </View>
           {canNavigate && (
             <View style={{ position: 'absolute', right: halfPadding, bottom: halfPadding }}>
@@ -60,7 +116,7 @@ export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) =>
         <View
           style={{
             flexDirection: 'row',
-            marginTop: 12,
+            marginTop: coverURI && restaurant.averageDiscount ? 96 : 12,
             alignItems: 'center',
             justifyContent: 'space-between',
           }}
