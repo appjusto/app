@@ -4,7 +4,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { OrdersKanbanCard } from '../../../../business/components/OrdersKanbanCard';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { MaintenanceModal } from '../../../../common/components/views/MaintenanceModal';
 import { useBusinessDeeplink } from '../../../../common/hooks/useBusinessDeeplink';
@@ -99,13 +98,6 @@ export default function ({ navigation }: Props) {
           ) : null}
           {/* <HomeCouriersNearbyCard /> */}
           {!consumer ? <View style={{ height: padding }} /> : null}
-          {/* for testes only */}
-          <View style={{ marginVertical: padding }}>
-            <OrdersKanbanCard
-              title="Pedidos à confirmar"
-              details="Aqui você verá os novos pedidos. Aceite-os para confirmar o preparo."
-            />
-          </View>
           <CrowdFundingCard />
           <View style={{ marginTop: padding }}>
             <HomeShareCard

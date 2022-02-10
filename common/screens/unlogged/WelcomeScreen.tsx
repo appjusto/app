@@ -21,15 +21,17 @@ import DefaultButton from '../../components/buttons/DefaultButton';
 import DefaultInput from '../../components/inputs/DefaultInput';
 import ShowIf from '../../components/views/ShowIf';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
+import { IconIntroBusiness } from '../../icons/icon-intro-business';
+import { IconLogin } from '../../icons/icon-login';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { IconMotoCycleBig } from '../../icons/icon-motocycle-big';
 import { useSegmentScreen } from '../../store/api/track';
-import { getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
 import { signInWithEmail, signInWithEmailAndPassword } from '../../store/user/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../styles';
 import { validateEmail } from '../../utils/validators';
+import HomeCard from '../home/cards/HomeCard';
 import { UnloggedParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<UnloggedParamList, 'WelcomeScreen'>;
@@ -49,7 +51,8 @@ export default function ({ navigation, route }: Props) {
   const dispatch = useDispatch<AppDispatch>();
   // redux store
   const busy = useSelector(getUIBusy);
-  const flavor = useSelector(getFlavor);
+  // const flavor = useSelector(getFlavor);
+  const flavor = 'business';
   // state
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -87,8 +90,39 @@ export default function ({ navigation, route }: Props) {
   };
   let welcomeMessage;
   if (flavor === 'courier') welcomeMessage = t('Ganhe mais, com autonomia e transparência.');
+  if (flavor === 'business')
+    welcomeMessage = t('Gerencie seu restaurante de forma fácil e automatizada.');
   else welcomeMessage = t('Um delivery aberto, transparente e consciente.');
+  let emailMessage;
+  if (flavor === 'business')
+    emailMessage = t('Ao entrar sem senha, enviaremos um link de acesso para o e-mail cadastrado');
+  else emailMessage = t('Digite seu e-mail para entrar ou criar sua conta.');
   // UI
+  const illustrationUI = () => {
+    if (flavor === 'consumer') {
+      return (
+        <View style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={{ top: -16 }}>
+            <IconIllustrationIntro />
+          </View>
+        </View>
+      );
+    }
+    if (flavor === 'courier') {
+      return (
+        <View style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <IconMotoCycleBig />
+        </View>
+      );
+    }
+    if (flavor === 'business') {
+      return (
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <IconIntroBusiness />
+        </View>
+      );
+    }
+  };
   return (
     <View style={{ ...screens.default }}>
       <KeyboardAwareScrollView
@@ -108,33 +142,14 @@ export default function ({ navigation, route }: Props) {
             onLongPress={() => setPasswordShown(!isPasswordShown)}
           >
             <>
-              <ShowIf test={flavor !== 'courier'}>
-                {() => (
-                  <View
-                    style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}
-                  >
-                    <View style={{ top: -16 }}>
-                      <IconIllustrationIntro />
-                    </View>
-                  </View>
-                )}
-              </ShowIf>
-              <ShowIf test={flavor === 'courier'}>
-                {() => (
-                  <View
-                    style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}
-                  >
-                    <IconMotoCycleBig />
-                  </View>
-                )}
-              </ShowIf>
-              <View style={{ marginTop: flavor === 'courier' ? padding : 0 }}>
+              {illustrationUI()}
+              <View style={{ marginTop: flavor !== 'consumer' ? padding : 0 }}>
                 <IconLogoGreen />
               </View>
               <View style={{ marginTop: padding }}>
                 <Text style={[texts.x2l]}>{welcomeMessage}</Text>
                 <Text style={[texts.sm, { color: colors.grey700, marginTop: padding }]}>
-                  {t('Digite seu e-mail para entrar ou criar sua conta.')}
+                  {emailMessage}
                 </Text>
               </View>
             </>
@@ -144,7 +159,7 @@ export default function ({ navigation, route }: Props) {
             <View style={{ marginTop: padding }}>
               <DefaultInput
                 value={email}
-                title={t('Acesse sua conta')}
+                title={flavor === 'business' ? t('Entrar') : t('Acesse sua conta')}
                 placeholder={t('Digite seu e-mail')}
                 onChangeText={setEmail}
                 autoCompleteType="email"
@@ -164,7 +179,7 @@ export default function ({ navigation, route }: Props) {
                   style={{ marginTop: padding }}
                   value={password}
                   title={t('Senha')}
-                  placeholder={t('Digite sua senha')}
+                  placeholder={t('Senha de acesso')}
                   onChangeText={setPassword}
                   keyboardType="visible-password"
                   blurOnSubmit
@@ -175,7 +190,7 @@ export default function ({ navigation, route }: Props) {
             {flavor === 'business' && isPasswordShown ? (
               <Text style={[texts.sm, { color: colors.grey700, marginTop: padding }]}>
                 {t(
-                  'Esqueceu a senha? Então desative essa opção e faça o login somente com o e-mail cadastrado. Você poderá criar uma nova senha na sua página de Perfil.'
+                  'Esqueceu a senha? Então desative essa opção e faça o login somente com o e-mail cadastrado'
                 )}
               </Text>
             ) : null}
@@ -228,14 +243,28 @@ export default function ({ navigation, route }: Props) {
           <View style={{ marginTop: 32, paddingBottom: padding }}>
             <DefaultButton
               disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
-              // title={flavor === 'courier' ? t('Entrar') : t('Faça login para pedir')}
-              title={flavor === 'consumer' ? t('Faça login para pedir') : t('Entrar')}
+              title={
+                flavor === 'consumer'
+                  ? t('Faça login para pedir')
+                  : flavor === 'business'
+                  ? t('Entrar no restaurante')
+                  : t('Entrar')
+              }
               onPress={signInHandler}
               activityIndicator={busy}
-              style={{ marginBottom: padding }}
             />
           </View>
-
+          {flavor === 'business' ? (
+            <TouchableOpacity style={{ marginBottom: padding }}>
+              <HomeCard
+                icon={<IconLogin />}
+                title={t('Não tem conta no AppJusto?')}
+                subtitle={t('Clique aqui e faça o cadastro do seu restaurante agora mesmo!')}
+                grey
+                borderColor={colors.grey50}
+              />
+            </TouchableOpacity>
+          ) : null}
           {flavor === 'courier' ? <LocationDisclosureModal /> : null}
         </View>
       </KeyboardAwareScrollView>
