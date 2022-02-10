@@ -68,15 +68,13 @@ export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) =>
                 <Text style={[texts.sm, texts.bold]}>{t('Preço justo garantido')}</Text>
                 <Text style={[texts.xs]}>
                   {t('No AppJusto, os produtos desse restaurante são em média ')}
-                  {/* <Text style={[texts.bold]}>{restaurant.averageDiscount}% mais baratos</Text> */}
-                  <Text style={[texts.bold]}>10% mais baratos</Text>
+                  <Text style={[texts.bold]}>{restaurant.averageDiscount}% mais baratos</Text>
                   {t(' comparados a outros apps')}
                 </Text>
               </View>
             </View>
             <View style={{ position: 'absolute', left: padding, top: padding }}>
-              {/* <RoundedText backgroundColor={discount}>{t('-10%')}</RoundedText> */}
-              <RoundedText backgroundColor={colors.darkYellow}>{t('-10%')}</RoundedText>
+              <RoundedText backgroundColor={colors.darkYellow}>{discount}</RoundedText>
             </View>
           </View>
         );
