@@ -1,9 +1,11 @@
 import React from 'react';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import PaddedView from '../../common/components/containers/PaddedView';
+import DoubleHeader from '../../common/components/texts/DoubleHeader';
 import { useSegmentScreen } from '../../common/store/api/track';
-import { screens } from '../../common/styles';
+import { colors, screens, texts } from '../../common/styles';
+import { t } from '../../strings';
 import { OrderManagerHeader } from './components/OrdersManagerHeader';
 
 // TODO: add the correct screenNavigationProp
@@ -11,7 +13,7 @@ import { OrderManagerHeader } from './components/OrdersManagerHeader';
 export const OrdersManager = () => {
   // side effects
   // tracking
-  useSegmentScreen('BusinessOrders');
+  useSegmentScreen('OrdersManager');
   return (
     <KeyboardAwareScrollView
       enableOnAndroid
@@ -22,10 +24,21 @@ export const OrdersManager = () => {
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
     >
-      <View style={{ ...screens.default }}>
+      <View>
         <PaddedView>
           <OrderManagerHeader />
         </PaddedView>
+      </View>
+      <View style={{ ...screens.config }}>
+        <DoubleHeader title={t('Pedidos')} subtitle={t('Gerencie os pedidos do seu restaurante')} />
+        {/* horizontal dispatchingStatus list. each button will render its specific orders */}
+        {/* ScrollView rendering an OrdersKanbanItem mapped list according to the selected button in the list above */}
+        {/* "no orders today state" */}
+        <View style={{ ...screens.centered }}>
+          <Text style={{ ...texts.sm, color: colors.grey700, textAlign: 'center' }}>
+            {t('Você ainda não teve pedidos hoje')}
+          </Text>
+        </View>
       </View>
     </KeyboardAwareScrollView>
   );

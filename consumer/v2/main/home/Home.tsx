@@ -4,6 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
+import { OrdersKanbanItem } from '../../../../business/orders/components/OrdersKanbanItem';
 import { OrderManagerHeader } from '../../../../business/orders/components/OrdersManagerHeader';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { MaintenanceModal } from '../../../../common/components/views/MaintenanceModal';
@@ -99,6 +100,9 @@ export default function ({ navigation }: Props) {
           ) : null}
           <View style={{ marginVertical: padding }}>
             <OrderManagerHeader />
+          </View>
+          <View style={{ marginVertical: padding }}>
+            <OrdersKanbanItem />
           </View>
           {/* <HomeCouriersNearbyCard /> */}
           {!consumer ? <View style={{ height: padding }} /> : null}
