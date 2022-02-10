@@ -20,9 +20,9 @@ import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import DefaultInput from '../../components/inputs/DefaultInput';
 import ShowIf from '../../components/views/ShowIf';
+import { IconAppRoundWhiteBG } from '../../icons/icon-app-round-white-bg';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconIntroBusiness } from '../../icons/icon-intro-business';
-import { IconLogin } from '../../icons/icon-login';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { IconMotoCycleBig } from '../../icons/icon-motocycle-big';
 import { useSegmentScreen } from '../../store/api/track';
@@ -257,7 +257,7 @@ export default function ({ navigation, route }: Props) {
           {flavor === 'business' ? (
             <TouchableOpacity style={{ marginBottom: padding }}>
               <HomeCard
-                icon={<IconLogin />}
+                icon={<IconAppRoundWhiteBG />}
                 title={t('Não tem conta no AppJusto?')}
                 subtitle={t('Clique aqui e faça o cadastro do seu restaurante agora mesmo!')}
                 grey
