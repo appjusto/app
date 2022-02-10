@@ -5,7 +5,7 @@ import * as icons from '../assets/icons';
 import { halfPadding, padding, texts } from '../common/styles';
 import { t } from '../strings';
 import { BusinessOptions } from './options/BusinessOptions';
-import { BusinessOrders } from './orders/BusinessOrders';
+import { OrdersManager } from './orders/OrdersManager';
 
 //TODO: create and add params list
 const Tab = createBottomTabNavigator();
@@ -32,7 +32,7 @@ export const MainBusinessNavigator = () => {
     >
       <Tab.Screen
         name="BusinessOrders"
-        component={BusinessOrders}
+        component={OrdersManager}
         options={{
           tabBarIcon: ({ focused }) => (
             <View

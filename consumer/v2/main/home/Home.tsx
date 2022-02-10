@@ -4,6 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
+import { OrderManagerHeader } from '../../../../business/orders/components/OrdersManagerHeader';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { MaintenanceModal } from '../../../../common/components/views/MaintenanceModal';
 import { useBusinessDeeplink } from '../../../../common/hooks/useBusinessDeeplink';
@@ -96,6 +97,9 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           ) : null}
+          <View style={{ marginVertical: padding }}>
+            <OrderManagerHeader />
+          </View>
           {/* <HomeCouriersNearbyCard /> */}
           {!consumer ? <View style={{ height: padding }} /> : null}
           <CrowdFundingCard />
