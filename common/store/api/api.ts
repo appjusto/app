@@ -17,6 +17,7 @@ import OrderApi from './order';
 import IuguApi from './payment/iugu';
 import PlatformApi from './platform';
 import ProfileApi from './profile';
+import ReviewsApi from './reviews';
 import SearchApi from './search/SearchApi';
 import UserApi from './users';
 
@@ -34,6 +35,7 @@ export default class Api {
   private _fleet: FleetApi;
   private _consumer: ConsumerApi;
   private _order: OrderApi;
+  private _reviews: ReviewsApi;
   private _maps: MapsApi;
   private _files: FilesApi;
   private _iugu: IuguApi;
@@ -71,6 +73,7 @@ export default class Api {
     this._fleet = new FleetApi(this._refs);
     this._consumer = new ConsumerApi(this._refs, this._iugu);
     this._order = new OrderApi(this._refs, this.firestore);
+    this._reviews = new ReviewsApi(this._refs, this.firestore);
     this._maps = new MapsApi(apiKey);
     this._business = new BusinessApi(this._refs, this._files);
     this._search = new SearchApi(extra.algolia, extra.environment);
@@ -107,6 +110,10 @@ export default class Api {
 
   order() {
     return this._order;
+  }
+
+  reviews() {
+    return this._reviews;
   }
 
   maps() {

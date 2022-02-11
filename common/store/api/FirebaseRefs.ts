@@ -40,6 +40,10 @@ export default class FirebaseRefs {
   // withdraws
   getWithdrawsRef = () => this.firestore.collection('withdraws');
 
+  // reviews
+  getReviewsRef = () => this.firestore.collection('reviews');
+  getReviewRef = (id: string) => this.firestore.collection('reviews').doc(id);
+
   // platform
   getPlatformRef = () => this.firestore.collection('platform');
 
@@ -57,6 +61,7 @@ export default class FirebaseRefs {
   getIssuesRef = () => this.getPlatformDatasRef().collection('issues');
   getCuisinesRef = () => this.getPlatformDatasRef().collection('cuisines');
   getClassificationsRef = () => this.getPlatformDatasRef().collection('classifications');
+  getReviewTagsRef = () => this.getPlatformDatasRef().collection('reviewTags');
 
   // platform logs subcollections
   getPlatformLoginLogsRef = () => this.getPlatformLogsRef().collection('logins');

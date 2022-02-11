@@ -1,4 +1,4 @@
-import { Flavor, ReviewType } from '@appjusto/types';
+import { Flavor } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -11,7 +11,6 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import HR from '../../../common/components/views/HR';
 import { useChatisEnabled } from '../../../common/hooks/useChatIsEnabled';
 import { IconOrderDone } from '../../../common/icons/icon-order-done';
-import { useCourierReview } from '../../../common/store/api/courier/hooks/useCourierReview';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
@@ -42,9 +41,6 @@ export default ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   // screen state
   const order = useObserveOrder(orderId);
-  const [reviewType, setReviewType] = React.useState<ReviewType>();
-  const review = useCourierReview(orderId, order?.courier?.id);
-  const [comment, setComment] = React.useState('');
   const [tip, setTip] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
   const showChatButton = useChatisEnabled(order);
@@ -79,28 +75,22 @@ export default ({ navigation, route }: Props) => {
     }
   };
   const finishHandler = async () => {
-    Keyboard.dismiss();
+    if (!tip) {
+      navigation.navigate('MainNavigator', { screen: 'Home' });
+      return;
+    }
     if (!order) return;
-    setLoading(true);
     try {
-      if (reviewType) {
-        track('sending courier review');
-        await api.courier().addReview(order.courier!.id, {
-          type: reviewType,
-          orderId,
-          comment,
-        });
-      }
-      if (tip > 0) {
-        track('sending tip');
-        await api.order().tipCourier(order.id, tip);
-      }
+      track('sending tip');
+      setLoading(true);
+      await api.order().tipCourier(order.id, tip);
+      setLoading(false);
       navigation.navigate('MainNavigator', { screen: 'Home' });
     } catch (error) {
+      setLoading(false);
       // find a better error message
-      dispatch(showToast(t('Não foi possível enviar a avaliação e/ou caixinha'), 'error'));
+      dispatch(showToast(t('Não foi possível enviar a caixinha'), 'error'));
     }
-    setLoading(false);
   };
   const issueHandler = () => {
     Keyboard.dismiss();
@@ -207,66 +197,93 @@ export default ({ navigation, route }: Props) => {
           </View>
           <HR height={padding} />
           {/* review */}
-          <ReviewBox
-            reviewType={review?.type ?? reviewType}
-            comment={review?.comment ?? comment}
-            focusable={!!review}
-            onReviewChange={(type) => setReviewType(type)}
-            onCommentChange={(value) => setComment(value)}
-          />
+          <ReviewBox order={order} onCompleteReview={finishHandler}>
+            {showChatButton ? (
+              <DefaultButton
+                title={
+                  order.type === 'food'
+                    ? t('Abrir chat com restaurante')
+                    : t('Abrir chat com o entregador')
+                }
+                onPress={openChatHandler}
+                style={{ marginTop: padding }}
+                secondary
+              />
+            ) : null}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <View style={{ width: '49%' }}>
+                <DefaultButton title={t('Relatar problema')} secondary onPress={issueHandler} />
+              </View>
+              <View style={{ width: '49%' }}>
+                <DefaultButton
+                  title={t('Detalhes da corrida')}
+                  onPress={() => {
+                    navigation.navigate('DeliveredOrderNavigator', {
+                      screen: 'DeliveredOrderDetail',
+                      params: {
+                        orderId,
+                      },
+                    });
+                  }}
+                  secondary
+                />
+              </View>
+            </View>
+          </ReviewBox>
+          {/* <HR /> */}
+        </View>
+      ) : (
+        <View>
+          {/* review */}
+          <ReviewBox order={order} onCompleteReview={finishHandler}>
+            {showChatButton ? (
+              <DefaultButton
+                title={
+                  order.type === 'food'
+                    ? t('Abrir chat com restaurante')
+                    : t('Abrir chat com o entregador')
+                }
+                onPress={openChatHandler}
+                style={{ marginTop: padding }}
+                secondary
+              />
+            ) : null}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <View style={{ width: '49%' }}>
+                <DefaultButton title={t('Relatar problema')} secondary onPress={issueHandler} />
+              </View>
+              <View style={{ width: '49%' }}>
+                <DefaultButton
+                  title={t('Detalhes da corrida')}
+                  onPress={() => {
+                    navigation.navigate('DeliveredOrderNavigator', {
+                      screen: 'DeliveredOrderDetail',
+                      params: {
+                        orderId,
+                      },
+                    });
+                  }}
+                  secondary
+                />
+              </View>
+            </View>
+          </ReviewBox>
           <HR />
         </View>
-      ) : null}
+      )}
       <View style={{ flex: 1 }} />
-      {/* actions */}
-      <View style={{ paddingHorizontal: padding }}>
-        {showChatButton ? (
-          <DefaultButton
-            title={
-              order.type === 'food'
-                ? t('Abrir chat com restaurante')
-                : t('Abrir chat com o entregador')
-            }
-            onPress={openChatHandler}
-            style={{ marginTop: padding }}
-            secondary
-          />
-        ) : null}
-        <DefaultButton
-          title={t('Finalizar')}
-          onPress={finishHandler}
-          activityIndicator={isLoading}
-          disabled={isLoading}
-          style={{ marginTop: padding }}
-        />
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginTop: padding,
-            paddingBottom: padding,
-          }}
-        >
-          <View style={{ width: '49%' }}>
-            <DefaultButton title={t('Relatar problema')} secondary onPress={issueHandler} />
-          </View>
-          <View style={{ width: '49%' }}>
-            <DefaultButton
-              title={t('Detalhes da corrida')}
-              onPress={() => {
-                navigation.navigate('DeliveredOrderNavigator', {
-                  screen: 'DeliveredOrderDetail',
-                  params: {
-                    orderId,
-                  },
-                });
-              }}
-              secondary
-            />
-          </View>
-        </View>
-      </View>
     </KeyboardAwareScrollView>
   );
 };
