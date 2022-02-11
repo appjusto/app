@@ -7,6 +7,7 @@ import {
   DispatchingState,
   DropOrderPayload,
   Fare,
+  Flavor,
   GetCancellationInfoPayload,
   GetCancellationInfoResult,
   GetOrderQuotesPayload,
@@ -162,14 +163,18 @@ export default class OrderApi {
   }
   observeOrderChat(
     orderId: string,
-    fromId: string | undefined,
-    toId: string | undefined,
+    userId: string | undefined,
+    counterPartId: string | undefined,
+    counterpartFlavor: Flavor | undefined,
     resultHandler: (orders: WithId<ChatMessage>[]) => void
   ): firebase.Unsubscribe {
-    const chatRef = this.refs.getOrderChatRef(orderId);
-    let query = chatRef.orderBy('timestamp', 'asc');
-    if (fromId) query = query.where('from.id', '==', fromId);
-    if (toId) query = query.where('to.id', '==', toId);
+    let query = this.refs.getChatsRef().where('orderId', '==', orderId).orderBy('timestamp', 'asc');
+    if (userId && counterPartId) {
+      const participantsIds =
+        counterpartFlavor !== 'courier' ? [counterPartId, userId] : [userId, counterPartId];
+      query = query.where('participantsIds', 'in', [participantsIds]);
+    } else if (userId) query = query.where('participantsIds', 'array-contains', userId);
+    else if (counterPartId) query = query.where('participantsIds', 'array-contains', counterPartId);
     const unsubscribe = query.onSnapshot(
       (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
       (error) => console.log(error)
@@ -202,18 +207,18 @@ export default class OrderApi {
     return unsubscribe;
   }
 
-  async sendMessage(orderId: string, message: Partial<ChatMessage>) {
+  async sendMessage(message: Partial<ChatMessage>) {
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    return this.refs.getOrderChatRef(orderId).add({
+    return this.refs.getChatsRef().add({
       ...message,
       timestamp,
     });
   }
 
-  async updateReadMessages(orderId: string, messageIds: string[]) {
+  async updateReadMessages(messageIds: string[]) {
     const batch = this.firestore.batch();
     messageIds.forEach((id) => {
-      batch.update(this.refs.getOrderChatMessageRef(orderId, id), {
+      batch.update(this.refs.getChatMessageRef(id), {
         read: true,
       } as Partial<ChatMessage>);
     });

@@ -1,4 +1,4 @@
-import { ChatMessage, Flavor, WithId } from '@appjusto/types';
+import { ChatMessage, ChatMessageType, Flavor, WithId } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import React from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Text, View } from 'react-native';
@@ -44,7 +44,7 @@ export default function ({ route }: Props) {
   const user = useSelector(getUser)!;
   // screen state
   const order = useObserveOrder(orderId);
-  const chat = useObserveOrderChat(orderId, user.uid, counterpartId);
+  const chat = useObserveOrderChat(orderId, user.uid, counterpartId, counterpartFlavor);
   const unread = unreadMessages(chat, user.uid);
   const [inputText, setInputText] = React.useState('');
   // side effects
@@ -55,10 +55,7 @@ export default function ({ route }: Props) {
   });
   React.useEffect(() => {
     if (unread.length > 0) {
-      api.order().updateReadMessages(
-        orderId,
-        unread.map((message) => message.id)
-      );
+      api.order().updateReadMessages(unread.map((message) => message.id));
     }
   }, [api, orderId, unread]);
 
@@ -74,11 +71,19 @@ export default function ({ route }: Props) {
   // UI handlers
   const sendMessageHandler = () => {
     if (!inputText) return;
+    const type = (
+      counterpartFlavor === 'business' ? `business-${flavor}` : 'consumer-courier'
+    ) as ChatMessageType;
+    const participantsIds =
+      counterpartFlavor !== 'courier' ? [counterpartId, user.uid] : [user.uid, counterpartId];
     const to: { agent: Flavor; id: string } = {
       agent: counterpartFlavor,
       id: counterpartId,
     };
-    api.order().sendMessage(orderId, {
+    api.order().sendMessage({
+      orderId,
+      type,
+      participantsIds,
       from: {
         agent: flavor,
         id: user.uid,
@@ -89,7 +94,7 @@ export default function ({ route }: Props) {
       },
       to,
       message: inputText.trim(),
-      orderStatus: order.status,
+      // orderStatus: order.status,
     });
     setInputText('');
   };

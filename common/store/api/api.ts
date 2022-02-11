@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/order
 import { CourierProfile, DeleteAccountPayload } from '@appjusto/types';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/functions';
 import { Platform } from 'react-native';
