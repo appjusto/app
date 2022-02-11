@@ -30,7 +30,7 @@ export const DeliveryInfo = ({ order, onCourierDetail }: Props) => {
             <Text style={[texts.xs, { color: colors.grey700 }]}>
               {t('Entregador externo alocado')}
             </Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={{ marginTop: 6, flexDirection: 'row', justifyContent: 'space-between' }}>
               <View>
                 <CourierDistanceBadge order={order} />
               </View>
