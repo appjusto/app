@@ -29,11 +29,11 @@ const Tab = createBottomTabNavigator<MainParamList>();
 export default function ({ navigation }: Props) {
   // redux store
   const user = useSelector(getUser);
-  const courier = useSelector(getCourier)!;
+  const { status } = useSelector(getCourier)!;
   // handlers
   const handler = React.useCallback(
     (data: PushMessageData, clicked?: boolean, remove?: () => void) => {
-      if (data.action === 'order-request' && courier.status !== 'dispatching') {
+      if (data.action === 'order-request' && status === 'available') {
         track('Push clicked by courier', {
           action: data.action,
           orderId: data.orderId,
@@ -86,7 +86,7 @@ export default function ({ navigation }: Props) {
         }
       }
     },
-    [navigation, courier.status]
+    [navigation, status]
   );
   // side effects
   // subscribe for observing ongoing orders
