@@ -2,10 +2,8 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { OrdersKanbanItem } from '../../../../business/orders/components/OrdersKanbanItem';
-import { OrderManagerHeader } from '../../../../business/orders/components/OrdersManagerHeader';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { MaintenanceModal } from '../../../../common/components/views/MaintenanceModal';
 import { useBusinessDeeplink } from '../../../../common/hooks/useBusinessDeeplink';
@@ -98,12 +96,18 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           ) : null}
-          <View style={{ marginVertical: padding }}>
-            <OrderManagerHeader />
-          </View>
-          <View style={{ marginVertical: padding }}>
-            <OrdersKanbanItem />
-          </View>
+          <TouchableOpacity
+            style={{ marginVertical: padding }}
+            onPress={() => navigation.navigate('OrdersManager')}
+          >
+            <Text>ORDERS MANAGER</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ marginVertical: padding }}
+            onPress={() => navigation.navigate('OrderDetail')}
+          >
+            <Text>ORDER DETAIL</Text>
+          </TouchableOpacity>
           {/* <HomeCouriersNearbyCard /> */}
           {!consumer ? <View style={{ height: padding }} /> : null}
           <CrowdFundingCard />

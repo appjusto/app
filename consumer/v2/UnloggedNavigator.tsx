@@ -1,5 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
+import { OrderDetail } from '../../business/orders/screens/OrderDetail';
+import { OrdersManager } from '../../business/orders/screens/OrdersManager';
 import { defaultScreenOptions } from '../../common/screens/options';
 import SignInFeedback from '../../common/screens/unlogged/SignInFeedback';
 import Terms from '../../common/screens/unlogged/Terms';
@@ -30,6 +32,17 @@ export default function () {
         options={{ title: t('Verifique seu e-mail') }}
       />
       <Stack.Screen name="Terms" component={Terms} options={{ title: t('Fique por dentro') }} />
+      {/* test setup */}
+      <Stack.Screen
+        name="OrdersManager"
+        component={OrdersManager}
+        options={{ title: t('Gerenciador de pedidos') }}
+      />
+      <Stack.Screen
+        name="OrderDetail"
+        component={OrderDetail}
+        options={{ title: t('Ver pedido') }}
+      />
     </Stack.Navigator>
   );
 }

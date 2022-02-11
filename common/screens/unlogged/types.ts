@@ -9,4 +9,7 @@ export type UnloggedParamList = {
     email: string;
   };
   Terms: undefined;
+  // test setup
+  OrdersManager: undefined;
+  OrderDetail: undefined;
 };
