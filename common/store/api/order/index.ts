@@ -334,9 +334,10 @@ export default class OrderApi {
     return documentsAs<Business>(lastRestsQuerySnapshot.docs);
   }
   // courier
-  async matchOrder(orderId: string) {
+  async matchOrder(orderId: string, distanceToOrigin: number = 0) {
     const payload: MatchOrderPayload = {
       orderId,
+      distanceToOrigin,
       meta: { version: getAppVersion() },
     };
     return (await this.refs.getMatchOrderCallable()(payload)).data;
