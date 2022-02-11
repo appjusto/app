@@ -5,7 +5,11 @@ import RoundedText from '../../../common/components/texts/RoundedText';
 import { borders, colors, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
-export const OrdersKanbanItem = () => {
+type Props = {
+  onCheckOrder: () => void;
+};
+
+export const OrdersKanbanItem = ({ onCheckOrder }: Props) => {
   return (
     <View
       style={{
@@ -35,7 +39,7 @@ export const OrdersKanbanItem = () => {
         {/* if an order is already delivered, we show only on big secondary "Ver pedido" button
         instead of these two */}
         <View style={{ width: '38%' }}>
-          <DefaultButton secondary title={t('Ver pedido')} />
+          <DefaultButton secondary title={t('Ver pedido')} onPress={onCheckOrder} />
         </View>
         {/* dynamic title and background color */}
         <View style={{ width: '57%' }}>

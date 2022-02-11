@@ -39,7 +39,7 @@ export const OrderManagerHeader = () => {
               borderRadius: 6,
               backgroundColor: colors.green500,
               marginRight: halfPadding,
-              marginTop: 4,
+              marginTop: halfPadding,
               bottom: 2,
             }}
           />
