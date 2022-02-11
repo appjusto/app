@@ -5,7 +5,7 @@ import * as icons from '../assets/icons';
 import { halfPadding, padding, texts } from '../common/styles';
 import { t } from '../strings';
 import { BusinessOptions } from './options/BusinessOptions';
-import { OrdersManager } from './orders/OrdersManager';
+import { OrdersManager } from './orders/screens/OrdersManager';
 
 //TODO: create and add params list
 const Tab = createBottomTabNavigator();

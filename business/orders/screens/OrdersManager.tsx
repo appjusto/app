@@ -1,12 +1,12 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import PaddedView from '../../common/components/containers/PaddedView';
-import DoubleHeader from '../../common/components/texts/DoubleHeader';
-import { useSegmentScreen } from '../../common/store/api/track';
-import { colors, screens, texts } from '../../common/styles';
-import { t } from '../../strings';
-import { OrderManagerHeader } from './components/OrdersManagerHeader';
+import PaddedView from '../../../common/components/containers/PaddedView';
+import DoubleHeader from '../../../common/components/texts/DoubleHeader';
+import { useSegmentScreen } from '../../../common/store/api/track';
+import { colors, screens, texts } from '../../../common/styles';
+import { t } from '../../../strings';
+import { OrderManagerHeader } from '../components/OrdersManagerHeader';
 
 // TODO: add the correct screenNavigationProp
 
