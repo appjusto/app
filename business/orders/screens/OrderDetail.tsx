@@ -33,7 +33,7 @@ export const OrderDetail = () => {
           <Text style={texts.bold}>{t('1')}</Text>
         </Text>
         <View style={{ marginTop: halfPadding }}>
-          <DefaultButton title={t('Abrir chat com o cliente')} />
+          <DefaultButton title={t('Abrir chat com o cliente')} secondary />
         </View>
       </PaddedView>
       <View style={{ marginTop: 24 }}>
@@ -46,10 +46,45 @@ export const OrderDetail = () => {
             <Text style={texts.bold}>{t('15 minutos')}</Text>
           </Text>
           {/* this button will open a modal for selecting cooking time */}
-          <DefaultButton title={t('Alterar tempo de preparo')} />
+          <DefaultButton title={t('Alterar tempo de preparo')} secondary />
         </View>
         {/* add qtde. item valor/item "line" on top of OrderItem list here */}
+        {/* add OrderItem list here */}
       </PaddedView>
+      <SingleHeader title={t('Forma de pagamento')} />
+      <PaddedView>
+        <Text style={{ ...texts.md }}>
+          {t('Total pago: ')}
+          <Text style={texts.bold}>{t('R$ 0,00')}</Text>
+        </Text>
+        <Text style={{ ...texts.md, marginTop: 4 }}>
+          {t('Método de pagamento: ')}
+          <Text style={texts.bold}>{t('pagamento via app')}</Text>
+        </Text>
+      </PaddedView>
+      <View style={{ marginTop: 24, flex: 1 }}>
+        <SingleHeader title={t('Observações')} />
+        <PaddedView>
+          <Text style={{ ...texts.md, marginBottom: 40 }}>
+            {t('Incluir CPF na nota, CPF: 000.000.000-00')}
+          </Text>
+          {/* this button will open a CancelOrderModal  */}
+          <DefaultButton title={t('Cancelar pedido')} secondary />
+        </PaddedView>
+      </View>
+      <View style={{ flex: 1 }} />
+      <View
+        style={{
+          paddingVertical: halfPadding,
+          paddingHorizontal: padding,
+          borderTopColor: colors.grey500,
+          borderTopWidth: 1,
+        }}
+      >
+        <View style={{ width: '100%' }}>
+          <DefaultButton title={t('Aceitar pedido')} />
+        </View>
+      </View>
     </ScrollView>
   );
 };
