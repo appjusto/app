@@ -11,6 +11,7 @@ import { UnloggedParamList } from '../../../common/screens/unlogged/types';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import { CancelOrderModal } from '../components/CancelOrderModal';
 // TODO: add the correct screenNavigationProp
 type ScreenNavigationProp = StackNavigationProp<UnloggedParamList, 'OrderDetail'>;
 type ScreenRouteProp = RouteProp<UnloggedParamList, 'OrderDetail'>;
@@ -21,6 +22,8 @@ type Props = {
 };
 
 export const OrderDetail = () => {
+  // state
+  const [modalVisible, setModalVisible] = React.useState(false);
   // tracking
   useSegmentScreen('OrderDetail');
   return (
@@ -88,7 +91,11 @@ export const OrderDetail = () => {
             </Text>
             {/* this button will open a CancelOrderModal  */}
             <View style={{ width: '60%' }}>
-              <DefaultButton title={t('Cancelar pedido')} secondary />
+              <DefaultButton
+                title={t('Cancelar pedido')}
+                secondary
+                onPress={() => setModalVisible(true)}
+              />
             </View>
           </View>
         </View>
@@ -105,6 +112,7 @@ export const OrderDetail = () => {
           <DefaultButton title={t('Aceitar pedido')} />
         </View>
       </View>
+      <CancelOrderModal modalVisible={modalVisible} onModalClose={() => setModalVisible(false)} />
     </View>
   );
 };
