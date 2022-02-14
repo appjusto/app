@@ -65,7 +65,8 @@ export default function ({ navigation }: Props) {
 
   type ChangeImageType = typeof setNewSelfie;
 
-  const size = courier.situation === 'approved' ? '1024x1024' : undefined;
+  // const size = courier.situation === 'approved' ? '1024x1024' : undefined;
+  const size = '1024x1024';
   const currentSelfieQuery = useCourierSelfie(courier.id, size);
   const uploadSelfie = useMutation(
     (localUri: string) => api.courier().uploadSelfie(courier.id, localUri),
