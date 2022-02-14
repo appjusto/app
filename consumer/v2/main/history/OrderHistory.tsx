@@ -107,6 +107,7 @@ export default function ({ navigation, route }: Props) {
                   if (item.total === 1) return t('1 pedido');
                   else return `${item.total} ${t('pedidos')}`;
                 })();
+                const thisMonth = new Date().getMonth();
                 return (
                   <ConfigItem
                     title={title}
@@ -121,7 +122,7 @@ export default function ({ navigation, route }: Props) {
                       });
                     }}
                   >
-                    <ShowIf test={item.ongoing > 0}>
+                    <ShowIf test={item.ongoing > 0 && item.month === thisMonth}>
                       {() => (
                         <View style={{ marginTop: halfPadding }}>
                           <RoundedText backgroundColor={colors.yellow}>
