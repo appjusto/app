@@ -2,7 +2,7 @@ import { Review } from '@appjusto/types';
 import React from 'react';
 import { ApiContext } from '../../../../app/context';
 
-export const useAllReviews = (courierId: string) => {
+export const useCourierReviews = (courierId?: string) => {
   // context
   const api = React.useContext(ApiContext);
   // state
@@ -11,7 +11,7 @@ export const useAllReviews = (courierId: string) => {
   React.useEffect(() => {
     if (!courierId) return;
     (async () => {
-      setReviews(await api.courier().fetchAllReviews(courierId));
+      setReviews(await api.reviews().fetchCourierReviews(courierId));
     })();
   }, [courierId, api]);
   return reviews;

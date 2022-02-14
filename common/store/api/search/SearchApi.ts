@@ -71,7 +71,7 @@ export default class SearchApi {
     aroundLocation: LatLng,
     query: string = '',
     page?: number,
-    hitsPerPage: number = 150
+    hitsPerPage: number = 10
   ) {
     const index = this.getSearchIndex(kind, order);
     if (!index) throw new Error('Invalid index');

@@ -17,8 +17,6 @@ export default class FirebaseRefs {
   getDeleteAccountCallable = () => this.functions.httpsCallable('deleteAccount');
   getServerTimeCallable = () => this.functions.httpsCallable('getServerTime');
   // consumer
-  getFetchTotalCouriersNearbyCallable = () =>
-    this.functions.httpsCallable('fetchTotalCouriersNearby');
   getSavePaymentTokenCallable = () => this.functions.httpsCallable('savePaymentToken');
   getDeletePaymentMethodCallable = () => this.functions.httpsCallable('deletePaymentMethod');
   getCreateOrderCallable = () => this.functions.httpsCallable('createOrder');
@@ -42,6 +40,10 @@ export default class FirebaseRefs {
   // withdraws
   getWithdrawsRef = () => this.firestore.collection('withdraws');
 
+  // reviews
+  getReviewsRef = () => this.firestore.collection('reviews');
+  getReviewRef = (id: string) => this.firestore.collection('reviews').doc(id);
+
   // platform
   getPlatformRef = () => this.firestore.collection('platform');
 
@@ -59,6 +61,7 @@ export default class FirebaseRefs {
   getIssuesRef = () => this.getPlatformDatasRef().collection('issues');
   getCuisinesRef = () => this.getPlatformDatasRef().collection('cuisines');
   getClassificationsRef = () => this.getPlatformDatasRef().collection('classifications');
+  getReviewTagsRef = () => this.getPlatformDatasRef().collection('reviewTags');
 
   // platform logs subcollections
   getPlatformLoginLogsRef = () => this.getPlatformLogsRef().collection('logins');
@@ -104,6 +107,10 @@ export default class FirebaseRefs {
     this.getOrderPrivateRef(orderId).doc('cancellation');
   getOrderConfirmationRef = (id: string) => this.getOrderPrivateRef(id).doc('confirmation');
   getOrderLogsRef = (id: string) => this.getOrderRef(id).collection('logs');
+
+  // chats
+  getChatsRef = () => this.firestore.collection('chats');
+  getChatMessageRef = (messageId: string) => this.getChatsRef().doc(messageId);
 
   // consumers
   getConsumersRef = () => this.firestore.collection('consumers');

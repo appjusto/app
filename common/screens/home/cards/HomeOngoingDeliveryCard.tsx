@@ -32,11 +32,11 @@ export default function ({ order, onPress }: Props) {
         title = t('Problema no pagamento');
         detail = t('Selecione outra forma de pagamento');
       } else if (status === 'preparing') {
-        title = t('Pedido em preparo no estabelecimento');
-      } else if (status === 'ready') {
         if (dispatchingStatus === 'scheduled') {
           title = t('Procurando entregadores/as');
-        } else if (dispatchingStatus === 'matching') {
+        } else title = t('Pedido em preparo no estabelecimento');
+      } else if (status === 'ready') {
+        if (dispatchingStatus === 'matching') {
           title = t('Procurando entregadores/as');
         } else if (dispatchingStatus === 'confirmed') {
           title = t('Corrida em andamento');

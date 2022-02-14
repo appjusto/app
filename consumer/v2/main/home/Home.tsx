@@ -96,7 +96,6 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           ) : null}
-          {/* <HomeCouriersNearbyCard /> */}
           {!consumer ? <View style={{ height: padding }} /> : null}
           <CrowdFundingCard />
           <View style={{ marginTop: padding }}>
@@ -106,6 +105,7 @@ export default function ({ navigation }: Props) {
             />
           </View>
           <MaintenanceModal />
+          {/* <UpgradeVersionModal /> */}
         </PaddedView>
       </ScrollView>
     </View>
