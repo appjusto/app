@@ -137,6 +137,7 @@ export default function ({ navigation, route }: Props) {
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
+              marginTop: padding,
             }}
           >
             <Text style={{ ...texts.md }}>{courier.fleet.name}</Text>
@@ -152,6 +153,7 @@ export default function ({ navigation, route }: Props) {
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
+              marginTop: padding,
             }}
           >
             <Text style={{ marginRight: halfPadding, ...texts.md }}>
