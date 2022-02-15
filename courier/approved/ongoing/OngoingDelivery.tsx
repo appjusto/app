@@ -201,7 +201,11 @@ export default function ({ navigation, route }: Props) {
           onProblem={navigateToDeliveryProblem}
         />
         {/* center*/}
-        <OngoingDeliveryMap order={order} onOpenChat={(from) => openChat(from.id, from.agent)} />
+        <OngoingDeliveryMap
+          order={order}
+          onOpenChat={(from) => openChat(from.id, from.agent)}
+          isLoading={isLoading}
+        />
         {/* bottom*/}
         <OngoingDeliveryInfo order={order} onProblem={navigateToDeliveryProblem} />
         <OngoingDeliveryLoading dispatchingState={previousDispatchingState} />
