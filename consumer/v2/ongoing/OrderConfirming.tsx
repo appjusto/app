@@ -11,7 +11,6 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import { Lottie } from '../../../common/components/icons/Lottie';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import Pill from '../../../common/components/views/Pill';
-import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { IconPixLogo } from '../../../common/icons/icon-pix-logo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
@@ -38,7 +37,6 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
   const { orderId, pixKey, total } = route.params;
   // screen state
   const order = useObserveOrder(orderId);
-  const tallerDevice = useTallerDevice();
   // side effects
   React.useEffect(() => {
     if (!order) return;
