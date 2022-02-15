@@ -43,7 +43,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
   React.useEffect(() => {
     if (!order) return;
     console.log('OrderConfirming', order.status);
-    if (order.status === 'canceled') {
+    if (order.status === 'canceled' || order.status === 'rejected') {
       navigation.replace('OrderCanceled', { orderId });
     } else if (order.status === 'confirmed') {
       if (order.type === 'food') {
