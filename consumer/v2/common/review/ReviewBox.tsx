@@ -70,6 +70,34 @@ export const ReviewBox = ({ order, children, onCompleteReview, buttonTitle, scre
         backgroundColor: colors.white,
       }}
     >
+      <View>
+        <SingleHeader title={t('Qual a probabilidade de indicar o AppJusto?')} />
+        <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
+          {/* NPS */}
+          <NPSSelector
+            selected={orderConsumerReview?.nps}
+            onSelect={(value) => {
+              setOrderConsumerReview({ ...orderConsumerReview, orderId: order.id, nps: value });
+            }}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: padding,
+            }}
+          >
+            <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Pouco provável')}</Text>
+            <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Muito provável')}</Text>
+          </View>
+          <HomeShareCard
+            title="Divulgue o AppJusto"
+            subtitle="Clique para compartilhar o movimento nas suas redes"
+          />
+        </View>
+      </View>
+      <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
       <SingleHeader title={t('Avalie sua experiência')} />
       {courier?.id ? (
         <ThumbSelector
@@ -181,34 +209,6 @@ export const ReviewBox = ({ order, children, onCompleteReview, buttonTitle, scre
           />
         </View>
       </View>
-      <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
-      <View>
-        <SingleHeader title={t('Qual a probabilidade de indicar o AppJusto?')} />
-        <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
-          {/* NPS */}
-          <NPSSelector
-            selected={orderConsumerReview?.nps}
-            onSelect={(value) => {
-              setOrderConsumerReview({ ...orderConsumerReview, orderId: order.id, nps: value });
-            }}
-          />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: padding,
-            }}
-          >
-            <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Pouco provável')}</Text>
-            <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Muito provável')}</Text>
-          </View>
-          <HomeShareCard
-            title="Divulgue o AppJusto"
-            subtitle="Clique para compartilhar o movimento nas suas redes"
-          />
-        </View>
-      </View>
       <View>
         <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
         <PaddedView>
@@ -216,7 +216,9 @@ export const ReviewBox = ({ order, children, onCompleteReview, buttonTitle, scre
             title={buttonTitle}
             activityIndicator={isLoading}
             disabled={
-              screen === 'OngoingOrderFeedback' ? isLoading : isLoading || !orderConsumerReview
+              screen === 'OngoingOrderFeedback'
+                ? isLoading
+                : isLoading || existingReview === orderConsumerReview
             }
             onPress={createReviewHandler}
           />
