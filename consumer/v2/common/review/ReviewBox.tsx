@@ -44,13 +44,14 @@ export const ReviewBox = ({ order, children, onCompleteReview, buttonTitle, scre
   const platformNegativeTags = useReviewTags('platform', 'negative');
   // handlers
   const createReviewHandler = async () => {
-    if (!orderConsumerReview) return;
     Keyboard.dismiss();
     setLoading(true);
     try {
-      await api.reviews().setOrderConsumerReview(orderConsumerReview);
-      dispatch(showToast(t('Avaliação enviada'), 'success'));
-      track('review sent');
+      if (orderConsumerReview) {
+        await api.reviews().setOrderConsumerReview(orderConsumerReview);
+        dispatch(showToast(t('Avaliação enviada'), 'success'));
+        track('review sent');
+      }
       if (onCompleteReview) onCompleteReview();
     } catch (error: any) {
       dispatch(showToast(t('Não foi possível enviar a avaliação'), 'error'));

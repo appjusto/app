@@ -211,7 +211,7 @@ export default ({ navigation, route }: Props) => {
                     : t('Abrir chat com o entregador')
                 }
                 onPress={openChatHandler}
-                style={{ marginTop: padding }}
+                // style={{ marginTop: padding }}
                 secondary
               />
             ) : null}
@@ -261,7 +261,7 @@ export default ({ navigation, route }: Props) => {
                     : t('Abrir chat com o entregador')
                 }
                 onPress={openChatHandler}
-                style={{ marginTop: padding }}
+                // style={{ marginTop: padding }}
                 secondary
               />
             ) : null}

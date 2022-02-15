@@ -100,6 +100,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
       setTipLoading(false);
     }
   };
+  const finishHandler = () => navigation.goBack();
   // UI
   if (!order) {
     return (
@@ -177,7 +178,12 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
                   />
                   <HR height={padding} />
                 </View>
-                <ReviewBox order={order} buttonTitle={t('Enviar')} screen="DeliveredOrderDetail">
+                <ReviewBox
+                  order={order}
+                  buttonTitle={t('Enviar')}
+                  screen="DeliveredOrderDetail"
+                  onCompleteReview={finishHandler}
+                >
                   {showChatButton ? (
                     <DefaultButton
                       title={
@@ -203,7 +209,12 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
               </View>
             ) : (
               <View>
-                <ReviewBox order={order} buttonTitle={t('Finalizar')} screen="DeliveredOrderDetail">
+                <ReviewBox
+                  order={order}
+                  buttonTitle={t('Finalizar')}
+                  screen="DeliveredOrderDetail"
+                  onCompleteReview={finishHandler}
+                >
                   {showChatButton ? (
                     <DefaultButton
                       title={

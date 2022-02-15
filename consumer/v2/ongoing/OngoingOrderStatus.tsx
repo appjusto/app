@@ -32,7 +32,11 @@ export const OngoingOrderStatus = ({ order }: Props) => {
         description = t(
           'A entrega está sendo feita por um entregador alocado por fora do sistema e não será possível acompanhar seu deslocamento'
         );
-      } else if (dispatchingStatus === 'matching' || dispatchingStatus === 'matched') {
+      } else if (
+        dispatchingStatus === 'matching' ||
+        dispatchingStatus === 'matched' ||
+        dispatchingStatus === 'scheduled'
+      ) {
         header = t('Pronto para entrega');
         description = t('Estamos procurando um/a entregador/a para o seu pedido');
       } else if (dispatchingStatus === 'confirmed') {

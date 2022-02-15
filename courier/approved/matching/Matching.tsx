@@ -164,7 +164,7 @@ export default function ({ navigation, route }: Props) {
             </Text>
           </View>
         )}
-
+        <View style={{ flex: 1 }} />
         <View
           style={{
             marginTop: 24,
@@ -245,7 +245,7 @@ export default function ({ navigation, route }: Props) {
         <View style={{ flex: 1 }} />
         {/* slider accept/reject control */}
         {canAccept ? (
-          <View>
+          <View style={{ marginTop: padding }}>
             <AcceptControl
               onAccept={acceptHandler}
               onReject={rejectHandler}
