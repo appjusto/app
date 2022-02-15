@@ -13,12 +13,7 @@ import { screen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
-import {
-  formatCurrency,
-  formatDistance,
-  formatTime,
-  separateWithDot,
-} from '../../../common/utils/formatters';
+import { formatCurrency, formatDistance, formatTime } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import { AcceptControl } from './AcceptControl';
@@ -214,10 +209,7 @@ export default function ({ navigation, route }: Props) {
         <View style={{ marginTop: 24, alignItems: 'center' }}>
           {matchRequest.readyAt ? (
             <RoundedText color={colors.white} backgroundColor={colors.black}>
-              {separateWithDot(
-                `${t('Previsão de preparo')}`,
-                formatTime(new Date(matchRequest.readyAt))
-              )}
+              {`${t('Pedido pronto às')} ${formatTime(new Date(matchRequest.readyAt))}`}
             </RoundedText>
           ) : type === 'food' ? (
             <RoundedText color={colors.white} backgroundColor={colors.black}>

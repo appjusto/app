@@ -61,7 +61,11 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   // navigating to OngoingOrder after the user changes his payment method
   // and the matching is restarted
   React.useEffect(() => {
-    if (dispatchingStatus === 'matching' || dispatchingStatus === 'scheduled')
+    if (
+      dispatchingStatus === 'matching' ||
+      dispatchingStatus === 'scheduled' ||
+      dispatchingStatus === 'outsourced'
+    )
       navigation.navigate('OngoingOrder', { orderId });
   }, [dispatchingStatus, orderId, navigation]);
   // status === 'declined' and the user does not add a new card
