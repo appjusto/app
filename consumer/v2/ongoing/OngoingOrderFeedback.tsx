@@ -84,7 +84,6 @@ export default ({ navigation, route }: Props) => {
       track('sending tip');
       setLoading(true);
       await api.order().tipCourier(order.id, tip);
-      setLoading(false);
       navigation.navigate('MainNavigator', { screen: 'Home' });
     } catch (error) {
       setLoading(false);
