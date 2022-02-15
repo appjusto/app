@@ -22,9 +22,11 @@ interface Props extends ViewProps {
   order: WithId<Order>;
   children?: ReactNode | ReactNode[];
   onCompleteReview?: () => void;
+  buttonTitle: string;
+  screen: 'DeliveredOrderDetail' | 'OngoingOrderFeedback';
 }
 
-export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
+export const ReviewBox = ({ order, children, onCompleteReview, buttonTitle, screen }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -210,9 +212,11 @@ export const ReviewBox = ({ order, children, onCompleteReview }: Props) => {
         <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
         <PaddedView>
           <DefaultButton
-            title={t('Enviar')}
+            title={buttonTitle}
             activityIndicator={isLoading}
-            disabled={isLoading || !orderConsumerReview}
+            disabled={
+              screen === 'OngoingOrderFeedback' ? isLoading : isLoading || !orderConsumerReview
+            }
             onPress={createReviewHandler}
           />
           <View style={{ paddingTop: padding }}>{children}</View>

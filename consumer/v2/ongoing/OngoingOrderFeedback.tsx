@@ -197,7 +197,12 @@ export default ({ navigation, route }: Props) => {
           </View>
           <HR height={padding} />
           {/* review */}
-          <ReviewBox order={order} onCompleteReview={finishHandler}>
+          <ReviewBox
+            order={order}
+            onCompleteReview={finishHandler}
+            buttonTitle={t('Finalizar')}
+            screen="OngoingOrderFeedback"
+          >
             {showChatButton ? (
               <DefaultButton
                 title={
@@ -215,12 +220,13 @@ export default ({ navigation, route }: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
+                marginTop: padding,
               }}
             >
-              <View style={{ width: '49%' }}>
+              <View style={{ width: '47%' }}>
                 <DefaultButton title={t('Relatar problema')} secondary onPress={issueHandler} />
               </View>
-              <View style={{ width: '49%' }}>
+              <View style={{ width: '47%' }}>
                 <DefaultButton
                   title={t('Detalhes da corrida')}
                   onPress={() => {
@@ -241,7 +247,12 @@ export default ({ navigation, route }: Props) => {
       ) : (
         <View>
           {/* review */}
-          <ReviewBox order={order} onCompleteReview={finishHandler}>
+          <ReviewBox
+            order={order}
+            onCompleteReview={finishHandler}
+            buttonTitle={t('Finalizar')}
+            screen="OngoingOrderFeedback"
+          >
             {showChatButton ? (
               <DefaultButton
                 title={
@@ -259,12 +270,13 @@ export default ({ navigation, route }: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
+                marginTop: padding,
               }}
             >
-              <View style={{ width: '49%' }}>
+              <View style={{ width: '47%' }}>
                 <DefaultButton title={t('Relatar problema')} secondary onPress={issueHandler} />
               </View>
-              <View style={{ width: '49%' }}>
+              <View style={{ width: '47%' }}>
                 <DefaultButton
                   title={t('Detalhes da corrida')}
                   onPress={() => {

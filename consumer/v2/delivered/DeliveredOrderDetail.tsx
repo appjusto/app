@@ -177,7 +177,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
                   />
                   <HR height={padding} />
                 </View>
-                <ReviewBox order={order}>
+                <ReviewBox order={order} buttonTitle={t('Enviar')} screen="DeliveredOrderDetail">
                   {showChatButton ? (
                     <DefaultButton
                       title={
@@ -203,7 +203,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
               </View>
             ) : (
               <View>
-                <ReviewBox order={order}>
+                <ReviewBox order={order} buttonTitle={t('Finalizar')} screen="DeliveredOrderDetail">
                   {showChatButton ? (
                     <DefaultButton
                       title={
