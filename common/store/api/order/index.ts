@@ -51,6 +51,17 @@ export default class OrderApi {
     items: OrderItem[] = [],
     destination: Place | null = null
   ) {
+    const businessAddress = business.businessAddress!;
+    const { address, number, neighborhood, city } = businessAddress;
+    const main = `${address}, ${number}`;
+    const secondary = `${neighborhood ? `${neighborhood} - ` : ''}${city}`;
+    const origin: Place = {
+      address: {
+        main,
+        secondary,
+        description: `${main} - ${secondary}`,
+      },
+    };
     const payload: Partial<Order> = {
       type: 'food',
       status: 'quote',
@@ -65,15 +76,7 @@ export default class OrderApi {
         name: consumer.name ?? '',
         notificationToken: consumer.notificationToken ?? null,
       },
-      origin: {
-        address: {
-          main: `${business.businessAddress!.address}, ${business.businessAddress!.number}`,
-          secondary: `${business.businessAddress!.city}`,
-          description: `${business.businessAddress!.address}, ${
-            business.businessAddress!.number
-          } - ${business.businessAddress!.city}`,
-        },
-      },
+      origin,
       destination,
       createdOn: firebase.firestore.FieldValue.serverTimestamp(),
       items,
