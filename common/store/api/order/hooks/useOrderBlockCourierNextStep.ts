@@ -27,6 +27,7 @@ export const useOrderBlockCourierNextStep = (orderId: string) => {
   // side effects
   React.useEffect(() => {
     if (!order) return;
+    if (!getServerTime) return;
     const { type, status, dispatchingState, dispatchingTimestamps } = order;
     const now = getServerTime();
     if (dispatchingState === 'going-pickup') {
