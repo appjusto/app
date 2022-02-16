@@ -179,7 +179,7 @@ export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) 
               },
             });
           }}
-          disabled={Boolean(existingReview)}
+          disabled={!!existingReview}
         />
       ) : null}
       {shouldBusinessSelectorShow() ? (
@@ -214,7 +214,7 @@ export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) 
                 },
               });
             }}
-            disabled={Boolean(existingReview)}
+            disabled={!!existingReview}
           />
         </View>
       ) : null}
@@ -243,7 +243,7 @@ export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) 
               platform: { rating: orderConsumerReview?.platform?.rating!, tags },
             });
           }}
-          disabled={Boolean(existingReview)}
+          disabled={!!existingReview}
         />
       ) : null}
       {shouldCommentShow() ? (
@@ -278,7 +278,7 @@ export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) 
           <DefaultButton
             title={title()}
             activityIndicator={isLoading}
-            disabled={isLoading || Boolean(existingReview)}
+            disabled={isLoading || !!existingReview}
             onPress={createReviewHandler}
           />
           <View style={{ paddingTop: padding }}>{children}</View>
