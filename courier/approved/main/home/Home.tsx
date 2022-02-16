@@ -8,6 +8,7 @@ import { Linking, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { MaintenanceModal } from '../../../../common/components/views/MaintenanceModal';
+import { UpgradeVersionModal } from '../../../../common/components/views/UpgradeVersionModal';
 import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconHomeCourierRequests } from '../../../../common/icons/icon-home-courier-requests';
 import { IconPartners } from '../../../../common/icons/icon-partners';
@@ -146,7 +147,7 @@ export default function ({ navigation }: Props) {
             </TouchableOpacity>
           </View>
           <MaintenanceModal />
-          {/* <UpgradeVersionModal /> */}
+          <UpgradeVersionModal />
         </PaddedView>
       </ScrollView>
       <LocationDisclosureModal />

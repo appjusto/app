@@ -6,6 +6,7 @@ import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { MaintenanceModal } from '../../../../common/components/views/MaintenanceModal';
+import { UpgradeVersionModal } from '../../../../common/components/views/UpgradeVersionModal';
 import { useBusinessDeeplink } from '../../../../common/hooks/useBusinessDeeplink';
 import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconLogin } from '../../../../common/icons/icon-login';
@@ -105,7 +106,7 @@ export default function ({ navigation }: Props) {
             />
           </View>
           <MaintenanceModal />
-          {/* <UpgradeVersionModal /> */}
+          <UpgradeVersionModal />
         </PaddedView>
       </ScrollView>
     </View>
