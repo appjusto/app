@@ -34,7 +34,8 @@ export const ReviewBox = ({ order, children, onCompleteReview, buttonTitle, scre
   const { courier, type } = order;
   // state
   const existingReview = useOrderReview(order.id);
-  const [orderConsumerReview, setOrderConsumerReview] = React.useState<OrderConsumerReview>();
+  const [orderConsumerReview, setOrderConsumerReview] =
+    React.useState<Partial<OrderConsumerReview>>();
   const [isLoading, setLoading] = React.useState(false);
   const courierPositiveTags = useReviewTags('courier', 'positive');
   const courierNegativeTags = useReviewTags('courier', 'negative');
@@ -48,7 +49,11 @@ export const ReviewBox = ({ order, children, onCompleteReview, buttonTitle, scre
     setLoading(true);
     try {
       if (orderConsumerReview) {
-        await api.reviews().setOrderConsumerReview(orderConsumerReview);
+        await api.reviews().setOrderConsumerReview({
+          ...orderConsumerReview,
+          orderId: order.id,
+          consumer: { id: 1 },
+        });
         dispatch(showToast(t('Avaliação enviada'), 'success'));
         track('review sent');
       }
@@ -124,7 +129,11 @@ export const ReviewBox = ({ order, children, onCompleteReview, buttonTitle, scre
           onTagsChange={(tags) => {
             setOrderConsumerReview({
               ...orderConsumerReview,
-              courier: { ...orderConsumerReview!.courier, id: courier ? courier.id : null, tags },
+              courier: {
+                id: courier ? courier.id : null,
+                rating: orderConsumerReview?.courier?.rating!,
+                tags,
+              },
             });
           }}
         />
@@ -143,12 +152,12 @@ export const ReviewBox = ({ order, children, onCompleteReview, buttonTitle, scre
             selectedTags={orderConsumerReview?.business?.tags ?? []}
             onReviewChange={(type) => {
               setOrderConsumerReview({
-                orderId: order.id,
+                // orderId: order.id,
                 ...orderConsumerReview,
                 business: {
-                  ...orderConsumerReview?.business,
                   id: order.business ? order.business.id : null,
                   rating: type,
+                  tags: orderConsumerReview?.business?.tags,
                 },
               });
             }}
@@ -156,8 +165,8 @@ export const ReviewBox = ({ order, children, onCompleteReview, buttonTitle, scre
               setOrderConsumerReview({
                 ...orderConsumerReview,
                 business: {
-                  ...orderConsumerReview?.business,
                   id: order.business ? order.business.id : null,
+                  rating: orderConsumerReview?.business?.rating!,
                   tags,
                 },
               });
@@ -186,7 +195,7 @@ export const ReviewBox = ({ order, children, onCompleteReview, buttonTitle, scre
           setOrderConsumerReview({
             orderId: order.id,
             ...orderConsumerReview,
-            platform: { ...orderConsumerReview?.platform, tags },
+            platform: { rating: orderConsumerReview?.platform?.rating!, tags },
           });
         }}
       />
