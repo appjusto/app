@@ -34,6 +34,7 @@ export const UpgradeVersionModal = (props: ModalProps) => {
   };
   // screen state
   const [modalVisible, setModalVisible] = React.useState(true);
+  // UI
   return !isThisVersionOk ? (
     <Modal transparent {...props} visible={modalVisible}>
       <View

@@ -196,12 +196,7 @@ export default ({ navigation, route }: Props) => {
           </View>
           <HR height={padding} />
           {/* review */}
-          <ReviewBox
-            order={order}
-            onCompleteReview={finishHandler}
-            buttonTitle={t('Finalizar')}
-            screen="OngoingOrderFeedback"
-          >
+          <ReviewBox order={order} onCompleteReview={finishHandler} screen="OngoingOrderFeedback">
             {showChatButton ? (
               <DefaultButton
                 title={
@@ -246,12 +241,7 @@ export default ({ navigation, route }: Props) => {
       ) : (
         <View>
           {/* review */}
-          <ReviewBox
-            order={order}
-            onCompleteReview={finishHandler}
-            buttonTitle={t('Finalizar')}
-            screen="OngoingOrderFeedback"
-          >
+          <ReviewBox order={order} onCompleteReview={finishHandler} screen="OngoingOrderFeedback">
             {showChatButton ? (
               <DefaultButton
                 title={

@@ -22,11 +22,10 @@ interface Props extends ViewProps {
   order: WithId<Order>;
   children?: ReactNode | ReactNode[];
   onCompleteReview?: () => void;
-  buttonTitle: string;
   screen: 'DeliveredOrderDetail' | 'OngoingOrderFeedback';
 }
 
-export const ReviewBox = ({ order, children, onCompleteReview, buttonTitle, screen }: Props) => {
+export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -52,7 +51,7 @@ export const ReviewBox = ({ order, children, onCompleteReview, buttonTitle, scre
         await api.reviews().setOrderConsumerReview({
           ...orderConsumerReview,
           orderId: order.id,
-          consumer: { id: 1 },
+          consumer: { id: order.consumer.id },
         });
         dispatch(showToast(t('Avaliação enviada'), 'success'));
         track('review sent');
@@ -67,6 +66,33 @@ export const ReviewBox = ({ order, children, onCompleteReview, buttonTitle, scre
   React.useEffect(() => {
     if (existingReview) setOrderConsumerReview(existingReview);
   }, [existingReview]);
+  // helpers
+  const shouldCourierSelectorShow = () => {
+    if (courier?.id) {
+      if (screen === 'DeliveredOrderDetail' && !existingReview?.courier) return false;
+      else return true;
+    } else return true;
+  };
+  const shouldBusinessSelectorShow = () => {
+    if (type === 'food') {
+      if (screen === 'DeliveredOrderDetail' && !existingReview?.business) return false;
+      else return true;
+    } else return false;
+  };
+  const shouldPlatformSelectorShow = () => {
+    if (screen === 'DeliveredOrderDetail' && !existingReview?.platform) return false;
+    else return true;
+  };
+  const shouldCommentShow = () => {
+    if (screen === 'DeliveredOrderDetail' && !existingReview?.comment) return false;
+    else return true;
+  };
+  const title = () => {
+    if (screen === 'DeliveredOrderDetail') {
+      if (existingReview) return t('Avaliação enviada');
+      else return t('Enviar');
+    } else return t('Finalizar');
+  };
   // UI
   return (
     <View
@@ -75,36 +101,39 @@ export const ReviewBox = ({ order, children, onCompleteReview, buttonTitle, scre
         backgroundColor: colors.white,
       }}
     >
-      <View>
-        <SingleHeader title={t('Qual a probabilidade de indicar o AppJusto?')} />
-        <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
-          {/* NPS */}
-          <NPSSelector
-            selected={orderConsumerReview?.nps}
-            onSelect={(value) => {
-              setOrderConsumerReview({ ...orderConsumerReview, orderId: order.id, nps: value });
-            }}
-          />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: padding,
-            }}
-          >
-            <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Pouco provável')}</Text>
-            <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Muito provável')}</Text>
+      {screen !== 'DeliveredOrderDetail' && existingReview?.nps ? (
+        <View>
+          <SingleHeader title={t('Qual a probabilidade de indicar o AppJusto?')} />
+          <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
+            {/* NPS */}
+            <NPSSelector
+              selected={orderConsumerReview?.nps}
+              onSelect={(value) => {
+                setOrderConsumerReview({ ...orderConsumerReview, orderId: order.id, nps: value });
+              }}
+              disabled={Boolean(existingReview)}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: padding,
+              }}
+            >
+              <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Pouco provável')}</Text>
+              <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Muito provável')}</Text>
+            </View>
+            <HomeShareCard
+              title="Divulgue o AppJusto"
+              subtitle="Clique para compartilhar o movimento nas suas redes"
+            />
           </View>
-          <HomeShareCard
-            title="Divulgue o AppJusto"
-            subtitle="Clique para compartilhar o movimento nas suas redes"
-          />
+          <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
         </View>
-      </View>
-      <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
+      ) : null}
       <SingleHeader title={t('Avalie sua experiência')} />
-      {courier?.id ? (
+      {shouldCourierSelectorShow() ? (
         <ThumbSelector
           title="Entregador"
           iconUnicode={0x1f6f5}
@@ -136,9 +165,10 @@ export const ReviewBox = ({ order, children, onCompleteReview, buttonTitle, scre
               },
             });
           }}
+          disabled={Boolean(existingReview)}
         />
       ) : null}
-      {type === 'food' ? (
+      {shouldBusinessSelectorShow() ? (
         <View>
           <ThumbSelector
             title="Restaurante"
@@ -171,64 +201,71 @@ export const ReviewBox = ({ order, children, onCompleteReview, buttonTitle, scre
                 },
               });
             }}
+            disabled={Boolean(existingReview)}
           />
         </View>
       ) : null}
-      <ThumbSelector
-        title="AppJusto"
-        iconUnicode={0x1f4f1}
-        review={orderConsumerReview?.platform?.rating}
-        tags={
-          orderConsumerReview?.platform?.rating === 'negative'
-            ? platformNegativeTags
-            : platformPositiveTags
-        }
-        selectedTags={orderConsumerReview?.platform?.tags ?? []}
-        onReviewChange={(type) => {
-          setOrderConsumerReview({
-            orderId: order.id,
-            ...orderConsumerReview,
-            platform: { ...orderConsumerReview?.platform, rating: type },
-          });
-        }}
-        onTagsChange={(tags) => {
-          setOrderConsumerReview({
-            orderId: order.id,
-            ...orderConsumerReview,
-            platform: { rating: orderConsumerReview?.platform?.rating!, tags },
-          });
-        }}
-      />
-      <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
-      <View>
-        <SingleHeader title={t('Deixe um comentário')} />
-        <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
-          <Text style={{ ...texts.md, color: colors.grey700, paddingVertical: halfPadding }}>
-            {t('Se preferir, descreva a sua experiência de forma anônima.')}
-          </Text>
-          <DefaultInput
-            placeholder={t('Escreva sua mensagem')}
-            multiline
-            numberOfLines={6}
-            value={orderConsumerReview?.comment}
-            onChangeText={(text) => {
-              setOrderConsumerReview({ ...orderConsumerReview, orderId: order.id, comment: text });
-            }}
-            style={{ height: 80 }}
-          />
+      {shouldPlatformSelectorShow() ? (
+        <ThumbSelector
+          title="AppJusto"
+          iconUnicode={0x1f4f1}
+          review={orderConsumerReview?.platform?.rating}
+          tags={
+            orderConsumerReview?.platform?.rating === 'negative'
+              ? platformNegativeTags
+              : platformPositiveTags
+          }
+          selectedTags={orderConsumerReview?.platform?.tags ?? []}
+          onReviewChange={(type) => {
+            setOrderConsumerReview({
+              orderId: order.id,
+              ...orderConsumerReview,
+              platform: { ...orderConsumerReview?.platform, rating: type },
+            });
+          }}
+          onTagsChange={(tags) => {
+            setOrderConsumerReview({
+              orderId: order.id,
+              ...orderConsumerReview,
+              platform: { rating: orderConsumerReview?.platform?.rating!, tags },
+            });
+          }}
+          disabled={Boolean(existingReview)}
+        />
+      ) : null}
+      {shouldCommentShow() ? (
+        <View>
+          <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
+          <SingleHeader title={t('Deixe um comentário')} />
+          <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
+            <Text style={{ ...texts.md, color: colors.grey700, paddingVertical: halfPadding }}>
+              {t('Se preferir, descreva a sua experiência de forma anônima.')}
+            </Text>
+            <DefaultInput
+              placeholder={t('Escreva sua mensagem')}
+              multiline
+              numberOfLines={6}
+              value={orderConsumerReview?.comment}
+              onChangeText={(text) => {
+                setOrderConsumerReview({
+                  ...orderConsumerReview,
+                  orderId: order.id,
+                  comment: text,
+                });
+              }}
+              style={{ height: 80 }}
+              editable={!existingReview}
+            />
+          </View>
         </View>
-      </View>
+      ) : null}
       <View>
         <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
         <PaddedView>
           <DefaultButton
-            title={buttonTitle}
+            title={title()}
             activityIndicator={isLoading}
-            disabled={
-              screen === 'OngoingOrderFeedback'
-                ? isLoading
-                : isLoading || existingReview === orderConsumerReview
-            }
+            disabled={isLoading || Boolean(existingReview)}
             onPress={createReviewHandler}
           />
           <View style={{ paddingTop: padding }}>{children}</View>
