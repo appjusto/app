@@ -101,6 +101,13 @@ export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) 
       else return true;
     } else return true;
   };
+  const shouldHeaderShow = () => {
+    if (existingReview) {
+      const { courier, platform, business } = existingReview;
+      if (!courier && !platform && !business) return false;
+      else return true;
+    } else return true;
+  };
   const title = () => {
     if (screen === 'DeliveredOrderDetail') {
       if (existingReview) return t('Avaliação enviada');
@@ -143,10 +150,14 @@ export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) 
               subtitle="Clique para compartilhar o movimento nas suas redes"
             />
           </View>
-          <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
         </View>
       ) : null}
-      <SingleHeader title={t('Avalie sua experiência')} />
+      {shouldHeaderShow() ? (
+        <View>
+          <HR height={padding} style={{ backgroundColor: colors.grey50 }} />
+          <SingleHeader title={t('Avalie sua experiência')} />
+        </View>
+      ) : null}
       {shouldCourierSelectorShow() ? (
         <ThumbSelector
           title="Entregador"
