@@ -53,6 +53,7 @@ export default function ({ navigation, route }: Props) {
   const [previousDispatchingState, setPreviousDispatchingState] = React.useState(dispatchingState);
   // helpers
   const shouldBlockNextStep = useOrderBlockCourierNextStep(orderId);
+  console.log('shouldBlockNextStep', shouldBlockNextStep);
   const openChat = React.useCallback(
     (counterpartId: string, counterpartFlavor: Flavor, delayed?: boolean) => {
       setTimeout(
@@ -168,13 +169,13 @@ export default function ({ navigation, route }: Props) {
   const nextStepLabel = (() => {
     const dispatchingState = order?.dispatchingState;
     if (!dispatchingState || dispatchingState === 'going-pickup') {
-      return t('Cheguei para Retirada');
+      return t('Cheguei');
     } else if (dispatchingState === 'arrived-pickup') {
       return t('Sair para a Entrega');
     } else if (dispatchingState === 'going-destination') {
-      return t('Cheguei para Entrega');
+      return t('Entreguei');
     } else if (dispatchingState === 'arrived-destination') {
-      return t('Finalizar Entrega');
+      return t('Finalizar');
     }
     return '';
   })();
