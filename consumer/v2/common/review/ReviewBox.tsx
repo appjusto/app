@@ -67,25 +67,39 @@ export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) 
     if (existingReview) setOrderConsumerReview(existingReview);
   }, [existingReview]);
   // helpers
-  const shouldCourierSelectorShow = () => {
-    if (courier?.id) {
-      if (screen === 'DeliveredOrderDetail' && !existingReview?.courier) return false;
+  const shouldNpsSelectorShow = () => {
+    if (screen === 'DeliveredOrderDetail') {
+      if (existingReview && !existingReview.nps) return false;
       else return true;
     } else return true;
   };
+  const shouldCourierSelectorShow = () => {
+    if (courier?.id) {
+      if (screen === 'DeliveredOrderDetail') {
+        if (existingReview && !existingReview.courier) return false;
+        else return true;
+      } else return true;
+    } else return false;
+  };
   const shouldBusinessSelectorShow = () => {
     if (type === 'food') {
-      if (screen === 'DeliveredOrderDetail' && !existingReview?.business) return false;
-      else return true;
+      if (screen === 'DeliveredOrderDetail') {
+        if (existingReview && !existingReview.business) return false;
+        else return true;
+      } else return true;
     } else return false;
   };
   const shouldPlatformSelectorShow = () => {
-    if (screen === 'DeliveredOrderDetail' && !existingReview?.platform) return false;
-    else return true;
+    if (screen === 'DeliveredOrderDetail') {
+      if (existingReview && !existingReview.platform) return false;
+      else return true;
+    } else return true;
   };
   const shouldCommentShow = () => {
-    if (screen === 'DeliveredOrderDetail' && !existingReview?.comment) return false;
-    else return true;
+    if (screen === 'DeliveredOrderDetail') {
+      if (existingReview && !existingReview.comment) return false;
+      else return true;
+    } else return true;
   };
   const title = () => {
     if (screen === 'DeliveredOrderDetail') {
@@ -101,7 +115,7 @@ export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) 
         backgroundColor: colors.white,
       }}
     >
-      {screen !== 'DeliveredOrderDetail' && existingReview?.nps ? (
+      {shouldNpsSelectorShow() ? (
         <View>
           <SingleHeader title={t('Qual a probabilidade de indicar o AppJusto?')} />
           <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
@@ -111,7 +125,7 @@ export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) 
               onSelect={(value) => {
                 setOrderConsumerReview({ ...orderConsumerReview, orderId: order.id, nps: value });
               }}
-              disabled={Boolean(existingReview)}
+              disabled={!!existingReview}
             />
             <View
               style={{
@@ -182,7 +196,6 @@ export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) 
             selectedTags={orderConsumerReview?.business?.tags ?? []}
             onReviewChange={(type) => {
               setOrderConsumerReview({
-                // orderId: order.id,
                 ...orderConsumerReview,
                 business: {
                   id: order.business ? order.business.id : null,
