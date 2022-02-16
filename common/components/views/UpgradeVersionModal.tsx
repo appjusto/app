@@ -39,7 +39,7 @@ export const UpgradeVersionModal = (props: ModalProps) => {
     setModalVisible(!isCurrentVersionAllowed(minVersion));
   }, [minVersion]);
   // UI
-  return modalVisible ? (
+  return (
     <Modal transparent {...props} visible={modalVisible}>
       <View
         style={{
@@ -82,5 +82,5 @@ export const UpgradeVersionModal = (props: ModalProps) => {
         </View>
       </View>
     </Modal>
-  ) : null;
+  );
 };
