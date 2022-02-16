@@ -1,5 +1,4 @@
 import React from 'react';
-import { ApiContext } from '../../../../app/context';
 import { usePlatformParamsContext } from '../../../../contexts/PlatformParamsContext';
 import { useContextGetSeverTime } from '../../../../contexts/ServerTimeContext';
 import { useObserveOrder } from './useObserveOrder';
@@ -18,36 +17,51 @@ const canAdvanceDispatchingState = (
 
 export const useOrderBlockCourierNextStep = (orderId: string) => {
   // context
-  const api = React.useContext(ApiContext);
   const getServerTime = useContextGetSeverTime();
   const delayBeforeAdvancing = usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60;
   // state
   const order = useObserveOrder(orderId);
   const [blockNextStep, setBlockNextStep] = React.useState(false);
+  const [ticking, setTicking] = React.useState(false);
+  const [tick, setTick] = React.useState(0);
   // side effects
   React.useEffect(() => {
-    if (!order) return;
+    if (ticking) {
+      const interval = setInterval(() => setTick((value) => value + 5), 5000);
+      return () => clearInterval(interval);
+    }
+  }, [ticking]);
+  const { type, status, dispatchingState, dispatchingTimestamps } = order ?? {};
+  const { goingPickup, goingDestination } = dispatchingTimestamps ?? {};
+  React.useEffect(() => {
+    if (!dispatchingState) return;
     if (!getServerTime) return;
-    const { type, status, dispatchingState, dispatchingTimestamps } = order;
     const now = getServerTime();
     if (dispatchingState === 'going-pickup') {
-      setBlockNextStep(
-        canAdvanceDispatchingState(now, delayBeforeAdvancing, dispatchingTimestamps.goingPickup)
-      );
+      const block = !canAdvanceDispatchingState(now, delayBeforeAdvancing, goingPickup);
+      setBlockNextStep(block);
+      setTicking(block);
     } else if (dispatchingState === 'arrived-pickup') {
+      setTicking(false);
       setBlockNextStep(type === 'food' && status !== 'dispatching');
     } else if (dispatchingState === 'going-destination') {
-      setBlockNextStep(
-        canAdvanceDispatchingState(
-          now,
-          delayBeforeAdvancing,
-          dispatchingTimestamps.goingDestination
-        )
-      );
+      const block = !canAdvanceDispatchingState(now, delayBeforeAdvancing, goingDestination);
+      setBlockNextStep(block);
+      setTicking(block);
     } else {
       setBlockNextStep(false);
+      setTicking(false);
     }
-  }, [order, delayBeforeAdvancing, getServerTime]);
+  }, [
+    type,
+    status,
+    dispatchingState,
+    goingPickup,
+    goingDestination,
+    delayBeforeAdvancing,
+    getServerTime,
+    tick,
+  ]);
   // result
   return blockNextStep;
 };
