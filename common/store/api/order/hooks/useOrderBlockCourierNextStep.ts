@@ -46,7 +46,7 @@ export const useOrderBlockCourierNextStep = (orderId: string) => {
     } else {
       setBlockNextStep(false);
     }
-  }, [order, delayBeforeAdvancing]);
+  }, [order, delayBeforeAdvancing, getServerTime]);
   // result
   return blockNextStep;
 };
