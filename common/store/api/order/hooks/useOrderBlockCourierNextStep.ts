@@ -19,7 +19,7 @@ const canAdvanceDispatchingState = (
 export const useOrderBlockCourierNextStep = (orderId: string) => {
   // context
   const api = React.useContext(ApiContext);
-  const getServerTime = useContextGetSeverTime()!;
+  const getServerTime = useContextGetSeverTime();
   const delayBeforeAdvancing = usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60;
   // state
   const order = useObserveOrder(orderId);

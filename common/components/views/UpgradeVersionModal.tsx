@@ -17,7 +17,6 @@ export const UpgradeVersionModal = (props: ModalProps) => {
     flavor === 'consumer'
       ? platformAccess?.minVersions.consumer
       : platformAccess?.minVersions.courier;
-  const isThisVersionOk = !!minVersion && isCurrentVersionAllowed(minVersion);
   const onUpgradeHandler = () => {
     if (flavor === 'consumer') {
       if (Platform.OS === 'android') {
@@ -33,8 +32,14 @@ export const UpgradeVersionModal = (props: ModalProps) => {
       );
   };
   // screen state
-  const [modalVisible, setModalVisible] = React.useState(true);
-  return !isThisVersionOk ? (
+  const [modalVisible, setModalVisible] = React.useState(false);
+  // effects
+  React.useEffect(() => {
+    if (!minVersion) return;
+    setModalVisible(!isCurrentVersionAllowed(minVersion));
+  }, [minVersion]);
+  // UI
+  return modalVisible ? (
     <Modal transparent {...props} visible={modalVisible}>
       <View
         style={{
