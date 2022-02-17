@@ -77,7 +77,7 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
     navigation.setOptions({
       title: `${t('Pedidos em ')}${getMonthName(month)}`,
     });
-  }, [navigation]);
+  }, [navigation, month]);
   // tracking
   useSegmentScreen('Order History by Month');
   // handlers
@@ -135,6 +135,7 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
       track('deleted order in quote that was being listed in history');
     })();
   };
+  console.log(filteredOrders);
   return (
     <View style={{ ...screens.config }}>
       <FlatList
