@@ -20,7 +20,9 @@ export const OngoingOrderStatus = ({ order }: Props) => {
   let description: string | null = null;
 
   if (type === 'food') {
-    if (status === 'confirmed') {
+    if (status === 'confirming' || status === 'charged') {
+      description = t('Aguarde enquanto criamos seu pedido...');
+    } else if (status === 'confirmed') {
       header = t('Aguardando restaurante');
       description = t('Aguarde enquanto o restaurante confirma seu pedido.');
     } else if (status === 'preparing') {

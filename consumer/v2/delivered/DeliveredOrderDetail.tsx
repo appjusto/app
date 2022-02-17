@@ -180,7 +180,6 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
                 </View>
                 <ReviewBox
                   order={order}
-                  buttonTitle={t('Enviar')}
                   screen="DeliveredOrderDetail"
                   onCompleteReview={finishHandler}
                 >
@@ -211,7 +210,6 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
               <View>
                 <ReviewBox
                   order={order}
-                  buttonTitle={t('Enviar')}
                   screen="DeliveredOrderDetail"
                   onCompleteReview={finishHandler}
                 >

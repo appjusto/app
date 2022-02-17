@@ -27,7 +27,7 @@ export const MultiTagSelector = ({ tags, disabled, selectedTags, onChange }: Pro
         return (
           <TouchableWithoutFeedback
             onPress={() => {
-              onSelect(item);
+              if (!disabled) onSelect(item);
             }}
           >
             <View
