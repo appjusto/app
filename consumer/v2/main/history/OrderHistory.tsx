@@ -17,6 +17,7 @@ import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
   getMonthsWithOrdersInYear,
   getOrdersWithFilter,
+  getOrderTime,
   getYearsWithOrders,
   summarizeOrders,
 } from '../../../../common/store/order/selectors';
@@ -57,7 +58,11 @@ export default function ({ navigation, route }: Props) {
           key: `${year}-${month}`,
           year,
           month,
-          ...summarizeOrders(getOrdersWithFilter(orders, year, month)),
+          ...summarizeOrders(
+            getOrdersWithFilter(orders, year, month).filter(
+              (order) => getOrderTime(order).getMonth() === month
+            )
+          ),
         })),
       };
     });
@@ -76,7 +81,6 @@ export default function ({ navigation, route }: Props) {
       />
     );
   }
-
   // UI
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>

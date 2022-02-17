@@ -49,7 +49,9 @@ export default function ({ navigation, route }: Props) {
   // TO-DO: filter by date
   const options = React.useMemo(() => ({ courierId: user?.uid }), [user?.uid]);
   const orders = useObserveOrders(options);
-  const filteredOrders = getOrdersWithFilter(orders, year, month);
+  const filteredOrders = getOrdersWithFilter(orders, year, month).filter(
+    (order) => getOrderTime(order).getMonth() === month
+  );
   // side effects
   // tracking
   useSegmentScreen('DeliveryHistoryByMonth');

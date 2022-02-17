@@ -71,7 +71,9 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
     [user?.uid]
   );
   const orders = useObserveOrders(options);
-  const filteredOrders = getOrdersWithFilter(orders, year, month);
+  const filteredOrders = getOrdersWithFilter(orders, year, month).filter(
+    (order) => getOrderTime(order).getMonth() === month
+  );
   // side effects
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -135,7 +137,6 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
       track('deleted order in quote that was being listed in history');
     })();
   };
-  console.log(filteredOrders);
   return (
     <View style={{ ...screens.config }}>
       <FlatList
