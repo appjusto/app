@@ -32,7 +32,7 @@ import {
   WithId,
 } from '@appjusto/types';
 import firebase from 'firebase';
-import { isEmpty } from 'lodash';
+import { isEmpty, uniq } from 'lodash';
 import * as Sentry from 'sentry-expo';
 import { getAppVersion } from '../../../utils/version';
 import { fetchPublicIP } from '../externals/ipify';
@@ -332,14 +332,17 @@ export default class OrderApi {
       .limit(limit * 3) // we fetch more than we need to have some latitude for consumers whose order to the same restaurant
       .get();
     if (ordersSnapshot.empty) return [];
-    const businessIds = documentsAs<Order>(ordersSnapshot.docs).map((order) => order.business!.id);
+    const businessIds = uniq(
+      documentsAs<Order>(ordersSnapshot.docs).map((order) => order.business!.id)
+    );
     const lastRestsQuerySnapshot = await this.refs
       .getBusinessesRef()
       .where(firebase.firestore.FieldPath.documentId(), 'in', businessIds)
       .where('status', '==', 'open')
       .limit(limit)
       .get();
-    return documentsAs<Business>(lastRestsQuerySnapshot.docs);
+    const businesses = documentsAs<Business>(lastRestsQuerySnapshot.docs);
+    return businessIds.slice(0, limit).map((id) => businesses.find((b) => b.id === id)!);
   }
   // courier
   async matchOrder(orderId: string, distanceToOrigin: number = 0) {
