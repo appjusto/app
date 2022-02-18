@@ -112,6 +112,7 @@ export default function ({ navigation, route }: Props) {
                   else return `${item.total} ${t('pedidos')}`;
                 })();
                 const thisMonth = new Date().getMonth();
+                if (item.total === 0) return null;
                 return (
                   <ConfigItem
                     title={title}

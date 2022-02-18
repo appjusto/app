@@ -108,6 +108,7 @@ export default function ({ navigation, route }: Props) {
               renderItem={({ item }) => {
                 const title = getMonthName(item.month);
                 const subtitle = item.delivered + t(' corridas finalizadas');
+                if (item.total === 0) return null;
                 return (
                   <ConfigItem
                     title={title}
