@@ -15,8 +15,8 @@ export const UpgradeVersionModal = (props: ModalProps) => {
   const flavor = useSelector(getFlavor);
   const minVersion =
     flavor === 'consumer'
-      ? platformAccess?.minVersions.consumer
-      : platformAccess?.minVersions.courier;
+      ? platformAccess?.minVersions?.consumer
+      : platformAccess?.minVersions?.courier;
   const onUpgradeHandler = () => {
     if (flavor === 'consumer') {
       if (Platform.OS === 'android') {
