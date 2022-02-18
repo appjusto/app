@@ -66,6 +66,7 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
         'ready',
         'delivered',
         'canceled',
+        'rejected',
       ] as OrderStatus[],
     }),
     [user?.uid]
