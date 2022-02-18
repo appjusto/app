@@ -186,7 +186,7 @@ export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) 
               courier: {
                 id: courier ? courier.id : null,
                 rating: orderConsumerReview?.courier?.rating!,
-                tags,
+                tags: tags ?? null,
               },
             });
           }}
@@ -211,7 +211,7 @@ export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) 
                 business: {
                   id: order.business ? order.business.id : null,
                   rating: type,
-                  tags: orderConsumerReview?.business?.tags,
+                  tags: orderConsumerReview?.business?.tags ?? null,
                 },
               });
             }}
@@ -221,7 +221,7 @@ export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) 
                 business: {
                   id: order.business ? order.business.id : null,
                   rating: orderConsumerReview?.business?.rating!,
-                  tags,
+                  tags: tags ?? null,
                 },
               });
             }}
@@ -251,7 +251,7 @@ export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) 
             setOrderConsumerReview({
               orderId: order.id,
               ...orderConsumerReview,
-              platform: { rating: orderConsumerReview?.platform?.rating!, tags },
+              platform: { rating: orderConsumerReview?.platform?.rating!, tags: tags ?? null },
             });
           }}
           disabled={!!existingReview}
