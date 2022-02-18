@@ -177,7 +177,7 @@ export default function ({ navigation }: Props) {
         title={t('Foto do rosto')}
         subtitle={t('Adicionar selfie')}
         onPress={() => actionSheetHandler(setNewSelfie, [1, 1])}
-        checked={!!currentSelfieQuery.data && !uploadSelfie.isLoading}
+        checked={(!!newSelfie || !!currentSelfie) && !uploadSelfie.isLoading}
       >
         {uploadSelfie.isLoading && (
           <View style={{ marginBottom: 16 }}>
@@ -189,7 +189,7 @@ export default function ({ navigation }: Props) {
         title={t('RG ou CNH aberta')}
         subtitle={t('Adicionar foto do documento')}
         onPress={() => actionSheetHandler(setNewDocumentImage, [8.5, 12])}
-        checked={!!currentDocumentImageQuery.data && !uploadDocumentImage.isLoading}
+        checked={(!!newDocumentImage || !!currentDocumentImage) && !uploadDocumentImage.isLoading}
       >
         {uploadDocumentImage.isLoading && (
           <View style={{ marginBottom: 16 }}>
