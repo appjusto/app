@@ -343,7 +343,10 @@ export default class OrderApi {
       .get();
     if (lastRestsQuerySnapshot.empty) return [];
     const businesses = documentsAs<Business>(lastRestsQuerySnapshot.docs);
-    return businessIds.slice(0, limit).map((id) => businesses.find((b) => b.id === id)!);
+    return businessIds
+      .slice(0, limit)
+      .map((id) => businesses.find((b) => b.id === id))
+      .filter((b) => !!b);
   }
   // courier
   async matchOrder(orderId: string, distanceToOrigin: number = 0) {
