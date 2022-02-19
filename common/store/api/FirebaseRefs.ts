@@ -26,6 +26,7 @@ export default class FirebaseRefs {
   getTipCourierCallable = () => this.functions.httpsCallable('tipCourier');
   getCancellationInfoCallable = () => this.functions.httpsCallable('getCancellationInfo');
   getUpdateOrderCallable = () => this.functions.httpsCallable('updateOrder');
+  getQueryGoogleMapsCallable = () => this.functions.httpsCallable('queryGoogleMaps');
   // courier
   getMatchOrderCallable = () => this.functions.httpsCallable('matchOrder');
   getRejectOrderCallable = () => this.functions.httpsCallable('rejectOrder');
