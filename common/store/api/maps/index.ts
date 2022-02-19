@@ -10,8 +10,11 @@ import {
 import { GoogleMapsDirectionsPayload } from '@appjusto/types/location/payloads';
 import axios, { CancelToken } from 'axios';
 import * as Sentry from 'sentry-expo';
+import { getExtra } from '../../../utils/config';
 import { getAppVersion } from '../../../utils/version';
 import FirebaseRefs from '../FirebaseRefs';
+
+const { flavor } = getExtra();
 
 export default class MapsApi {
   constructor(private refs: FirebaseRefs) {}
@@ -23,7 +26,7 @@ export default class MapsApi {
   ): Promise<Address[] | null> {
     const payload: GoogleMapsPlacesAutocompletePayload = {
       operation: 'autocomplete',
-      flavor: 'consumer',
+      flavor,
       input,
       sessionToken,
       coords,
@@ -44,7 +47,7 @@ export default class MapsApi {
   async googleGeocode(address: string): Promise<LatLng | null> {
     const payload: GoogleMapsGeocodePayload = {
       operation: 'geocode',
-      flavor: 'consumer',
+      flavor,
       address,
       meta: { version: getAppVersion() },
     };
@@ -64,7 +67,7 @@ export default class MapsApi {
   async googleReverseGeocode(coords: LatLng): Promise<Address | null> {
     const payload: GoogleMapsReverseGeocodePayload = {
       operation: 'reverse-geocode',
-      flavor: 'consumer',
+      flavor,
       coords,
       meta: { version: getAppVersion() },
     };
@@ -88,7 +91,7 @@ export default class MapsApi {
   ): Promise<RouteDetails | null> {
     const payload: GoogleMapsDirectionsPayload = {
       operation: 'directions',
-      flavor: 'consumer',
+      flavor,
       origin,
       destination,
       mode,

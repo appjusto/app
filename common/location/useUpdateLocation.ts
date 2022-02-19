@@ -23,7 +23,12 @@ export const useUpdateLocation = () => {
   // effect to update currentPlace and currentLocation
   React.useEffect(() => {
     // avoid updating during initialization
-    if (!consumer && authState !== AuthState.Unsigned) return;
+    if (authState === AuthState.Unsigned) {
+      if (!currentLocation && coords) {
+        dispatch(updateCurrentLocation(coords));
+      }
+      return;
+    } else if (authState !== AuthState.SignedIn) return;
     // when currentPlace is set we may need only to update currentLocation
     if (currentPlace) {
       // this will happen when we use AddressComplete to set the place
@@ -66,7 +71,7 @@ export const useUpdateLocation = () => {
           })
         );
     })();
-  }, [authState, consumer, currentPlace, coords, currentLocation, api, dispatch]);
+  }, [api, dispatch, authState, consumer, coords, currentPlace, currentLocation, lastPlace]);
   // update consumer's location
   React.useEffect(() => {
     if (!consumer?.id) return;
