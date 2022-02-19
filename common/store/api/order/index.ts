@@ -341,6 +341,7 @@ export default class OrderApi {
       .where('status', '==', 'open')
       .limit(limit)
       .get();
+    if (lastRestsQuerySnapshot.empty) return [];
     const businesses = documentsAs<Business>(lastRestsQuerySnapshot.docs);
     return businessIds.slice(0, limit).map((id) => businesses.find((b) => b.id === id)!);
   }
