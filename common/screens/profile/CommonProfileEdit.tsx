@@ -68,6 +68,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
   // refs
+  const emailRef = React.useRef<TextInput>(null);
   const nameRef = React.useRef<TextInput>(null);
   const surnameRef = React.useRef<TextInput>(null);
   const cpfRef = React.useRef<TextInput>(null);
@@ -80,6 +81,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   // state
   const { profileComplete, canUpdateProfile, phoneVerified, shouldVerifyPhone, hasOrdered } =
     useProfileSummary();
+  const [email, setEmail] = React.useState<string>(api.auth().getEmail() ?? '');
   const [name, setName] = React.useState<string>(profile.name ?? '');
   const [surname, setSurname] = React.useState(profile.surname ?? '');
   const [cpf, setCpf] = React.useState(profile.cpf ?? '');
@@ -87,6 +89,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const [focusedField, setFocusedField] = React.useState<string>();
   const [isLoading, setLoading] = React.useState(false);
   const updatedUser: Partial<UserProfile> = {
+    email: email.trim(),
     name: name.trim(),
     surname: surname.trim(),
     cpf: cpf.trim(),
@@ -188,10 +191,18 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
         ) : null}
 
         <DefaultInput
-          title={t('E-mail')}
-          value={profile.email}
-          editable={false}
+          ref={emailRef}
           style={{ marginTop: halfPadding }}
+          title={t('E-mail')}
+          placeholder={t('Digite seu e-mail')}
+          value={email}
+          editable={!api.auth().getEmail()}
+          returnKeyType="next"
+          blurOnSubmit={false}
+          keyboardType="email-address"
+          autoCorrect={false}
+          onChangeText={(text) => setEmail(text)}
+          onSubmitEditing={() => nameRef.current?.focus()}
         />
         <DefaultInput
           ref={nameRef}
@@ -257,7 +268,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           style={{ marginTop: padding }}
           title={t('Celular')}
           value={phone}
-          placeholder={t('Número do seu celular')}
+          placeholder={t('Número com DDD')}
           mask={phoneMask}
           parser={numbersOnlyParser}
           formatter={phoneFormatter}

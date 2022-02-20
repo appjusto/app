@@ -57,6 +57,10 @@ export default class AuthApi {
     return userCredential.user;
   }
 
+  async signInWithPhoneNumber(phoneNumber: string, verifier: firebase.auth.ApplicationVerifier) {
+    return this.auth.signInWithPhoneNumber(phoneNumber, verifier);
+  }
+
   async linkCredential(credential: firebase.auth.AuthCredential) {
     if (this.getPhoneNumber()) await this.auth.currentUser!.unlink('phone');
     await this.auth.currentUser!.linkWithCredential(credential);
