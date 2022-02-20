@@ -10,6 +10,7 @@ export default class SearchApi {
   private restaurantsByPrice: SearchIndex;
   private restaurantsByPreparationTime: SearchIndex;
   private restaurantsByTotalOrders: SearchIndex;
+  private restaurantsByAverageDiscount: SearchIndex;
   private products: SearchIndex;
   private productsByPrice: SearchIndex;
   private productsByTotalSold: SearchIndex;
@@ -23,6 +24,9 @@ export default class SearchApi {
       `${env}_businesses_preparation_time_asc`
     );
     this.restaurantsByTotalOrders = this.client.initIndex(`${env}_businesses_totalOrders_desc`);
+    this.restaurantsByAverageDiscount = this.client.initIndex(
+      `${env}_businesses_averageDiscount_desc`
+    );
     this.products = this.client.initIndex(`${env}_products`);
     this.productsByPrice = this.client.initIndex(`${env}_products_price_asc`);
     this.productsByTotalSold = this.client.initIndex(`${env}_products_totalSold_desc`);
@@ -56,6 +60,7 @@ export default class SearchApi {
       else if (order === 'price') return this.restaurantsByPrice;
       else if (order === 'preparation-time') return this.restaurantsByPreparationTime;
       else if (order === 'popularity') return this.restaurantsByTotalOrders;
+      else if (order === 'average-discount') return this.restaurantsByAverageDiscount;
     } else if (kind === 'product') {
       if (order === 'distance') return this.products;
       else if (order === 'price') return this.productsByPrice;
