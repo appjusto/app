@@ -2,7 +2,7 @@ import { Order, WithId } from '@appjusto/types';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { FlatList, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
@@ -49,14 +49,14 @@ export default function ({ navigation, route }: Props) {
   // TO-DO: filter by date
   const options = React.useMemo(() => ({ courierId: user?.uid }), [user?.uid]);
   const orders = useObserveOrders(options);
-  const filteredOrders = getOrdersWithFilter(orders, year, month).filter(
+  const filteredOrders = getOrdersWithFilter(orders ?? [], year, month).filter(
     (order) => getOrderTime(order).getMonth() === month
   );
   // side effects
   // tracking
   useSegmentScreen('DeliveryHistoryByMonth');
   // handlers
-  const orderPressHandler = useCallback((order: WithId<Order>) => {
+  const orderPressHandler = (order: WithId<Order>) => {
     if (isOrderOngoing(order)) {
       navigation.navigate('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
@@ -67,7 +67,7 @@ export default function ({ navigation, route }: Props) {
     } else {
       navigation.navigate('DeliverySummary', { orderId: order.id! });
     }
-  }, []);
+  };
   // UI
   return (
     <View style={{ ...screens.config }}>
