@@ -1,33 +1,33 @@
-import { ChatMessage, WithId } from '@appjusto/types';
+import { ChatMessage, Flavor, WithId } from '@appjusto/types';
 import { first } from 'lodash';
 import React from 'react';
 import { ApiContext } from '../../../../app/context';
 import { GroupedChatMessages } from '../../../order/types';
 
-export const useObserveOrderChat = (orderId: string, userId: string, counterpartId?: string) => {
+export const useObserveOrderChat = (
+  orderId: string,
+  userId: string,
+  counterpartId?: string,
+  counterpartFlavor?: Flavor
+) => {
   // context
   const api = React.useContext(ApiContext);
   // app state
-  const [chatFromUser, setChatFromUser] = React.useState<WithId<ChatMessage>[]>([]);
-  const [chatFromCounterPart, setChatFromCounterPart] = React.useState<WithId<ChatMessage>[]>([]);
+  const [userChat, setUserChat] = React.useState<WithId<ChatMessage>[]>([]);
   const [chat, setChat] = React.useState<GroupedChatMessages[]>([]);
   // side effects
   // observe chat
   React.useEffect(() => {
     if (!orderId) return;
-    const unsub = api.order().observeOrderChat(orderId, userId, counterpartId, setChatFromUser);
-    const unsub2 = api
+    const unsub = api
       .order()
-      .observeOrderChat(orderId, counterpartId, userId, setChatFromCounterPart);
-    return () => {
-      unsub();
-      unsub2();
-    };
-  }, [api, orderId, userId, counterpartId]);
+      .observeOrderChat(orderId, userId, counterpartId, counterpartFlavor, setUserChat);
+    return () => unsub();
+  }, [api, orderId, userId, counterpartId, counterpartFlavor]);
   // group messages whenever chat updates
   React.useEffect(() => {
-    setChat(groupOrderChatMessages(chatFromUser.concat(chatFromCounterPart).sort(sortMessages)));
-  }, [chatFromUser, chatFromCounterPart]);
+    setChat(groupOrderChatMessages(userChat.sort(sortMessages)));
+  }, [userChat]);
   // result
   return chat;
 };

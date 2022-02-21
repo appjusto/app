@@ -5,10 +5,7 @@ import {
   FetchAccountInformationResponse,
   FetchAdvanceSimulationPayload,
   FetchReceivablesPayload,
-  FetchTotalCouriersNearbyPayload,
-  LatLng,
   RequestWithdrawPayload,
-  Review,
   VerifyCourierProfilePayload,
 } from '@appjusto/types';
 import {
@@ -21,10 +18,6 @@ import { getAppVersion } from '../../../utils/version';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';
-
-type FetchTotalCouriersNearbyData = {
-  total: number;
-};
 
 export default class CourierApi {
   constructor(private refs: FirebaseRefs, private files: FilesApi) {}
@@ -68,41 +61,18 @@ export default class CourierApi {
       situation: 'viewed',
     } as Partial<CourierOrderRequest>);
   }
-  async addReview(courierId: string, review: Review) {
-    await this.refs
-      .getCourierReviewsRef(courierId)
-      .add({ ...review, createdOn: firebase.firestore.FieldValue.serverTimestamp() } as Review);
-  }
-  async fetchReview(courierId: string, orderId: string) {
-    const query = this.refs
-      .getCourierReviewsRef(courierId)
-      .where('orderId', '==', orderId)
-      .limit(1);
-    const docs = (await query.get()).docs;
-    return documentsAs<Review>(docs).find(() => true);
-  }
-  async fetchAllReviews(courierId: string) {
-    const query = this.refs.getCourierReviewsRef(courierId);
-    const docs = (await query.get()).docs;
-    return documentsAs<Review>(docs);
-  }
+  // async addReview(courierId: string, review: Review) {
+  //   await this.refs
+  //     .getCourierReviewsRef(courierId)
+  //     .add({ ...review, createdOn: firebase.firestore.FieldValue.serverTimestamp() } as Review);
+  // }
+
   // callables
   async verifyProfile() {
     const payload: VerifyCourierProfilePayload = {
       meta: { version: getAppVersion() },
     };
     return this.refs.getVerifyProfileCallable()(payload);
-  }
-  async fetchTotalCouriersNearby(
-    location: LatLng,
-    distance: number = 15000
-  ): Promise<FetchTotalCouriersNearbyData> {
-    const payload: FetchTotalCouriersNearbyPayload = {
-      location,
-      distance,
-      meta: { version: getAppVersion() },
-    };
-    return (await this.refs.getFetchTotalCouriersNearbyCallable()(payload)).data;
   }
   async fetchAccountInformation(accountId: string): Promise<FetchAccountInformationResponse> {
     const payload: FetchAccountInformationPayload = {

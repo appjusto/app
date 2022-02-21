@@ -46,8 +46,8 @@ export default function ({ navigation, route }: Props) {
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier)!;
   const { situation } = courier;
-  const currentSelfieQuery = useCourierSelfie(courier.id);
-  const currentDocumentImageQuery = useCourierDocumentImage(courier.id);
+  const currentSelfieQuery = useCourierSelfie(courier.id, '1024x1024');
+  const currentDocumentImageQuery = useCourierDocumentImage(courier.id, '1024x1024');
 
   // screen state
   const { coords } = useLastKnownLocation();

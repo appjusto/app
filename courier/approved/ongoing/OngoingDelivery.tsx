@@ -168,13 +168,13 @@ export default function ({ navigation, route }: Props) {
   const nextStepLabel = (() => {
     const dispatchingState = order?.dispatchingState;
     if (!dispatchingState || dispatchingState === 'going-pickup') {
-      return t('Cheguei para Retirada');
+      return t('Cheguei');
     } else if (dispatchingState === 'arrived-pickup') {
       return t('Sair para a Entrega');
     } else if (dispatchingState === 'going-destination') {
-      return t('Cheguei para Entrega');
+      return t('Entreguei');
     } else if (dispatchingState === 'arrived-destination') {
-      return t('Finalizar Entrega');
+      return t('Finalizar');
     }
     return '';
   })();
@@ -201,7 +201,11 @@ export default function ({ navigation, route }: Props) {
           onProblem={navigateToDeliveryProblem}
         />
         {/* center*/}
-        <OngoingDeliveryMap order={order} onOpenChat={(from) => openChat(from.id, from.agent)} />
+        <OngoingDeliveryMap
+          order={order}
+          onOpenChat={(from) => openChat(from.id, from.agent)}
+          isLoading={!dispatchingState}
+        />
         {/* bottom*/}
         <OngoingDeliveryInfo order={order} onProblem={navigateToDeliveryProblem} />
         <OngoingDeliveryLoading dispatchingState={previousDispatchingState} />

@@ -1,22 +1,46 @@
-import { ReviewType } from '@appjusto/types';
+import { ReviewTag, ReviewType } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { TouchableWithoutFeedback, View } from 'react-native';
+import { Text, TouchableWithoutFeedback, View } from 'react-native';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import SingleHeader from '../../../../common/components/texts/SingleHeader';
-import { borders, colors, padding } from '../../../../common/styles';
+import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
+import { t } from '../../../../strings';
+import { MultiTagSelector } from './MultiTagSelector';
 
 type Props = {
   title: string;
-  review?: ReviewType;
-  onReviewChange?: (type: ReviewType) => void;
+  iconUnicode: number;
+  review: ReviewType | undefined;
+  tags: ReviewTag[] | undefined;
+  selectedTags: ReviewTag[];
+  disabled?: boolean;
+  onReviewChange: (type: ReviewType) => void;
+  onTagsChange: (tags: ReviewTag[]) => void;
 };
 
-export const ThumbSelector = ({ title, review, onReviewChange }: Props) => {
+export const ThumbSelector = ({
+  title,
+  iconUnicode,
+  review,
+  tags,
+  selectedTags,
+  disabled,
+  onReviewChange,
+  onTagsChange,
+}: Props) => {
   return (
-    <View>
-      <SingleHeader title={title} />
-      <PaddedView>
+    <PaddedView style={{ flex: 1 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ ...texts.xl }}>{String.fromCodePoint(iconUnicode)}</Text>
+          <Text style={{ ...texts.xl, marginLeft: halfPadding }}>{t(title)}</Text>
+        </View>
         <View
           style={{
             flexDirection: 'row',
@@ -25,7 +49,7 @@ export const ThumbSelector = ({ title, review, onReviewChange }: Props) => {
         >
           <TouchableWithoutFeedback
             onPress={() => {
-              if (onReviewChange) onReviewChange('positive');
+              if (!disabled) onReviewChange('positive');
             }}
           >
             <View
@@ -45,7 +69,7 @@ export const ThumbSelector = ({ title, review, onReviewChange }: Props) => {
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback
             onPress={() => {
-              if (onReviewChange) onReviewChange('negative');
+              if (!disabled) onReviewChange('negative');
             }}
           >
             <View
@@ -56,7 +80,7 @@ export const ThumbSelector = ({ title, review, onReviewChange }: Props) => {
                 borderRadius: 32,
                 borderColor: colors.green500,
                 marginLeft: padding,
-                backgroundColor: review === 'negative' ? colors.green500 : colors.white,
+                backgroundColor: review === 'negative' ? colors.red : colors.white,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}
@@ -65,7 +89,17 @@ export const ThumbSelector = ({ title, review, onReviewChange }: Props) => {
             </View>
           </TouchableWithoutFeedback>
         </View>
-      </PaddedView>
-    </View>
+      </View>
+      {review ? (
+        <View style={{ marginTop: padding }}>
+          <MultiTagSelector
+            tags={tags}
+            disabled={disabled}
+            selectedTags={selectedTags}
+            onChange={onTagsChange}
+          />
+        </View>
+      ) : null}
+    </PaddedView>
   );
 };

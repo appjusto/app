@@ -10,7 +10,12 @@ export interface ConsumerState {
 }
 
 export type SearchKind = 'restaurant' | 'product';
-export type SearchOrder = 'distance' | 'price' | 'preparation-time' | 'popularity';
+export type SearchOrder =
+  | 'distance'
+  | 'price'
+  | 'preparation-time'
+  | 'popularity'
+  | 'average-discount';
 export type SearchFilter = {
   type: 'cuisine' | 'classification';
   value: string;

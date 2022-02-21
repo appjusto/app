@@ -1,6 +1,8 @@
 import { Order } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
+import request from '../../../assets/lottie-icons/request.json';
+import { Lottie } from '../../../common/components/icons/Lottie';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import { IconOngoingMotocycle } from '../../../common/icons/icon-ongoing-motocycle';
 import { IconOngoingStatus } from '../../../common/icons/icon-ongoing-status';
@@ -18,7 +20,9 @@ export const OngoingOrderStatus = ({ order }: Props) => {
   let description: string | null = null;
 
   if (type === 'food') {
-    if (status === 'confirmed') {
+    if (status === 'confirming' || status === 'charged') {
+      description = t('Aguarde enquanto criamos seu pedido...');
+    } else if (status === 'confirmed') {
       header = t('Aguardando restaurante');
       description = t('Aguarde enquanto o restaurante confirma seu pedido.');
     } else if (status === 'preparing') {
@@ -32,7 +36,11 @@ export const OngoingOrderStatus = ({ order }: Props) => {
         description = t(
           'A entrega está sendo feita por um entregador alocado por fora do sistema e não será possível acompanhar seu deslocamento'
         );
-      } else if (dispatchingStatus === 'matching' || dispatchingStatus === 'matched') {
+      } else if (
+        dispatchingStatus === 'matching' ||
+        dispatchingStatus === 'matched' ||
+        dispatchingStatus === 'scheduled'
+      ) {
         header = t('Pronto para entrega');
         description = t('Estamos procurando um/a entregador/a para o seu pedido');
       } else if (dispatchingStatus === 'confirmed') {
@@ -133,15 +141,17 @@ export const OngoingOrderStatus = ({ order }: Props) => {
       description = '';
     }
   }
-
+  // UI
+  const iconsUI = () => {
+    if (status === 'preparing' || status === 'confirmed' || status === 'charged')
+      return <Lottie animationObject={request} iconStyle={{ width: 65, height: 65 }} />;
+    if (status === 'dispatching' && dispatchingState === 'arrived-destination')
+      return <IconOngoingMotocycle />;
+    else return <IconOngoingStatus />;
+  };
   return (
     <View style={{ paddingHorizontal: padding, paddingVertical: padding }}>
-      {status === 'dispatching' && dispatchingState === 'arrived-destination' ? (
-        <IconOngoingMotocycle />
-      ) : (
-        <IconOngoingStatus />
-      )}
-
+      {iconsUI()}
       <Text style={{ marginTop: halfPadding, ...texts.xl }}>{header}</Text>
       <Text
         style={{

@@ -45,7 +45,7 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
     track('clicked to try to find a courier to the order again');
     try {
       setLoading(true);
-      await api.order().updateOrder(orderId, { dispatchingStatus: 'matching' });
+      await api.order().updateOrder(orderId, { dispatchingStatus: 'scheduled' });
       navigation.replace('OngoingOrder', { orderId });
       setLoading(false);
     } catch (error) {

@@ -4,12 +4,13 @@ import React from 'react';
 import { ActivityIndicator, Image, Linking, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { QrCode } from '../../../assets/icons';
+import motocycleJson from '../../../assets/lottie-icons/motocycle.json';
+import p2pJson from '../../../assets/lottie-icons/p2p.json';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
+import { Lottie } from '../../../common/components/icons/Lottie';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import Pill from '../../../common/components/views/Pill';
-import { IconLoadingBig } from '../../../common/icons/icon -loading-big';
-import { IconMotocycle } from '../../../common/icons/icon-motocycle';
 import { IconPixLogo } from '../../../common/icons/icon-pix-logo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
@@ -40,7 +41,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
   React.useEffect(() => {
     if (!order) return;
     console.log('OrderConfirming', order.status);
-    if (order.status === 'canceled') {
+    if (order.status === 'canceled' || order.status === 'rejected') {
       navigation.replace('OrderCanceled', { orderId });
     } else if (order.status === 'confirmed') {
       if (order.type === 'food') {
@@ -79,12 +80,9 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  const description =
-    order.type === 'food'
-      ? t('Aguarde enquanto criamos seu pedido...')
-      : t(
-          'Você sabia que o AppJusto não fica com nada do valor da entrega? Ao pedir pelo AppJusto, você ajuda esse entregador a receber mais por seu trabalho. Justo, né?'
-        );
+  const description = t(
+    'Você sabia que o AppJusto não fica com nada do valor da entrega? Ao pedir pelo AppJusto, você ajuda esse entregador a receber mais por seu trabalho. Justo, né?'
+  );
   return pixKey ? (
     <SafeAreaView style={{ ...screens.default }}>
       <PaddedView>
@@ -154,9 +152,9 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
     </SafeAreaView>
   ) : order.type === 'food' ? (
     <FeedbackView
-      header={t('Pedido em andamento')}
+      header={t('Criando seu pedido...')}
       description={description}
-      icon={<IconMotocycle />}
+      icon={<Lottie animationObject={motocycleJson} iconStyle={{ width: 115, height: 114 }} />}
       background={colors.white}
     >
       <DefaultButton
@@ -180,7 +178,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
     <FeedbackView
       header={t('Procurando um entregador')}
       description={description}
-      icon={<IconLoadingBig />}
+      icon={<Lottie animationObject={p2pJson} iconStyle={{ width: 114, height: 114 }} />}
       background={colors.white}
     >
       <View style={{ marginBottom: padding }}>

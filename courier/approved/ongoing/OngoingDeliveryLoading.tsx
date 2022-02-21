@@ -1,7 +1,8 @@
 import { DispatchingState } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { IconLoading } from '../../../common/icons/icon-loading';
+import motocycleJsonLoading from '../../../assets/lottie-icons/motocycle-loading.json';
+import { Lottie } from '../../../common/components/icons/Lottie';
 import { colors, halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
@@ -21,7 +22,7 @@ export const OngoingDeliveryLoading = ({ dispatchingState }: Props) => {
         backgroundColor: colors.white,
       }}
     >
-      <IconLoading />
+      <Lottie animationObject={motocycleJsonLoading} iconStyle={{ width: 100, height: 100 }} />
       <View style={{ alignItems: 'center' }}>
         <Text style={{ ...texts.lg, paddingTop: halfPadding }}>{t('Aguarde um momento')}</Text>
         <Text style={{ ...texts.sm, color: colors.grey700 }}>

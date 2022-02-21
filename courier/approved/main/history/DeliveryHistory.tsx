@@ -16,6 +16,7 @@ import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
   getMonthsWithOrdersInYear,
   getOrdersWithFilter,
+  getOrderTime,
   getYearsWithOrders,
   summarizeOrders,
 } from '../../../../common/store/order/selectors';
@@ -58,11 +59,15 @@ export default function ({ navigation, route }: Props) {
           key: `${year}-${month}`,
           year,
           month,
-          ...summarizeOrders(getOrdersWithFilter(orders, year, month)),
+          ...summarizeOrders(
+            getOrdersWithFilter(orders, year, month).filter(
+              (order) => getOrderTime(order).getMonth() === month
+            )
+          ),
         })),
       };
     });
-  }, [yearsWithOrders]);
+  }, [yearsWithOrders, monthsWithOrdersInYears, orders]);
   // tracking
   useSegmentScreen('DeliveryHistory');
   // UI
@@ -103,6 +108,7 @@ export default function ({ navigation, route }: Props) {
               renderItem={({ item }) => {
                 const title = getMonthName(item.month);
                 const subtitle = item.delivered + t(' corridas finalizadas');
+                if (item.total === 0) return null;
                 return (
                   <ConfigItem
                     title={title}

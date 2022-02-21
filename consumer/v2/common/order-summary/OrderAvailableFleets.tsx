@@ -62,7 +62,7 @@ export const OrderAvailableFleets = ({
                 {quotes.length === 1 && quotes[0].fleet.participantsOnline === 0 ? (
                   <Text style={{ ...texts.xs, color: colors.grey700, marginBottom: 12 }}>
                     {t(
-                      'Estamos com poucos entregadores no momento. Sua entrega poderá ser feita por uma empresa parceira'
+                      'Sua entrega poderá ser feita por uma empresa parceira caso não haja entregadores online no momento'
                     )}
                   </Text>
                 ) : (

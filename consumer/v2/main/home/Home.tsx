@@ -6,6 +6,7 @@ import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { MaintenanceModal } from '../../../../common/components/views/MaintenanceModal';
+import { UpgradeVersionModal } from '../../../../common/components/views/UpgradeVersionModal';
 import { useBusinessDeeplink } from '../../../../common/hooks/useBusinessDeeplink';
 import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconLogin } from '../../../../common/icons/icon-login';
@@ -96,7 +97,6 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           ) : null}
-          {/* <HomeCouriersNearbyCard /> */}
           {!consumer ? <View style={{ height: padding }} /> : null}
           <CrowdFundingCard />
           <View style={{ marginTop: padding }}>
@@ -106,6 +106,7 @@ export default function ({ navigation }: Props) {
             />
           </View>
           <MaintenanceModal />
+          <UpgradeVersionModal />
         </PaddedView>
       </ScrollView>
     </View>

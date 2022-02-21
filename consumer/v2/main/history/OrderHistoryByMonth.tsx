@@ -57,7 +57,6 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
       consumerId: user?.uid,
       statuses: [
         'quote',
-        'confirming',
         'charged',
         'confirmed',
         'declined',
@@ -66,18 +65,21 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
         'ready',
         'delivered',
         'canceled',
+        'rejected',
       ] as OrderStatus[],
     }),
     [user?.uid]
   );
   const orders = useObserveOrders(options);
-  const filteredOrders = getOrdersWithFilter(orders, year, month);
+  const filteredOrders = getOrdersWithFilter(orders, year, month).filter(
+    (order) => getOrderTime(order).getMonth() === month
+  );
   // side effects
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: `${t('Pedidos em ')}${getMonthName(month)}`,
     });
-  }, [navigation]);
+  }, [navigation, month]);
   // tracking
   useSegmentScreen('Order History by Month');
   // handlers

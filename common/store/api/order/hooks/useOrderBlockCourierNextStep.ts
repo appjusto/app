@@ -1,41 +1,67 @@
 import React from 'react';
-import { ApiContext } from '../../../../app/context';
 import { usePlatformParamsContext } from '../../../../contexts/PlatformParamsContext';
+import { useContextGetSeverTime } from '../../../../contexts/ServerTimeContext';
 import { useObserveOrder } from './useObserveOrder';
-import { useOrderDispatchingStateElapsedSeconds } from './useOrderDispatchingStateElapsedSeconds';
+
+const canAdvanceDispatchingState = (
+  now: Date,
+  delayBeforeAdvancing: number,
+  currentStateTimestamp: firebase.firestore.FieldValue | undefined
+) => {
+  if (!currentStateTimestamp) return false;
+  const timestamp = (currentStateTimestamp as firebase.firestore.Timestamp).toDate();
+  const diff = now.getTime() - timestamp.getTime();
+  if (diff === 0) return false;
+  return diff >= delayBeforeAdvancing * 1000;
+};
 
 export const useOrderBlockCourierNextStep = (orderId: string) => {
   // context
-  const api = React.useContext(ApiContext);
+  const getServerTime = useContextGetSeverTime();
   const delayBeforeAdvancing = usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60;
   // state
-  const secondsSinceGoingPickup = useOrderDispatchingStateElapsedSeconds(orderId, 'going-pickup');
-  const secondsSinceGoingDestination = useOrderDispatchingStateElapsedSeconds(
-    orderId,
-    'going-destination'
-  );
   const order = useObserveOrder(orderId);
   const [blockNextStep, setBlockNextStep] = React.useState(false);
+  const [ticking, setTicking] = React.useState(false);
+  const [tick, setTick] = React.useState(0);
   // side effects
   React.useEffect(() => {
-    if (!delayBeforeAdvancing) return;
-    if (!order) return;
-    const { status, dispatchingState, type } = order;
+    if (ticking) {
+      const interval = setInterval(() => setTick((value) => value + 5), 5000);
+      return () => clearInterval(interval);
+    }
+  }, [ticking]);
+  const { type, status, dispatchingState, dispatchingTimestamps } = order ?? {};
+  const { goingPickup, goingDestination } = dispatchingTimestamps ?? {};
+  React.useEffect(() => {
+    if (!dispatchingState) return;
+    if (!getServerTime) return;
+    const now = getServerTime();
     if (dispatchingState === 'going-pickup') {
-      setBlockNextStep(
-        secondsSinceGoingPickup !== undefined && secondsSinceGoingPickup < delayBeforeAdvancing
-      );
+      const block = !canAdvanceDispatchingState(now, delayBeforeAdvancing, goingPickup);
+      setBlockNextStep(block);
+      setTicking(block);
     } else if (dispatchingState === 'arrived-pickup') {
+      setTicking(false);
       setBlockNextStep(type === 'food' && status !== 'dispatching');
     } else if (dispatchingState === 'going-destination') {
-      setBlockNextStep(
-        secondsSinceGoingDestination !== undefined &&
-          secondsSinceGoingDestination < delayBeforeAdvancing
-      );
+      const block = !canAdvanceDispatchingState(now, delayBeforeAdvancing, goingDestination);
+      setBlockNextStep(block);
+      setTicking(block);
     } else {
       setBlockNextStep(false);
+      setTicking(false);
     }
-  }, [delayBeforeAdvancing, api, order, secondsSinceGoingPickup, secondsSinceGoingDestination]);
+  }, [
+    type,
+    status,
+    dispatchingState,
+    goingPickup,
+    goingDestination,
+    delayBeforeAdvancing,
+    getServerTime,
+    tick,
+  ]);
   // result
   return blockNextStep;
 };
