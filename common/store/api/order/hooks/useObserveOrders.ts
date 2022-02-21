@@ -11,7 +11,7 @@ export const useObserveOrders = (options: ObserveOrdersOptions) => {
   // redux
   const user = useSelector(getUser);
   // state
-  const [orders, setOrders] = React.useState<WithId<Order>[]>([]);
+  const [orders, setOrders] = React.useState<WithId<Order>[]>();
   // side effects
   // observe orders
   React.useEffect(() => {

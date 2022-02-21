@@ -28,12 +28,12 @@ export default function () {
   const orders = useObserveOrders(options);
   const todaysOrdersFee = useMemo(() => {
     const today = dayjs().startOf('d').toDate();
-    const todaysOrders = getOrdersSince(getDeliveredOrders(orders), today);
+    const todaysOrders = getOrdersSince(getDeliveredOrders(orders ?? []), today);
     return summarizeOrders(todaysOrders).courierFee;
   }, [orders]);
   const weeksOrdersFee = useMemo(() => {
     const startOfWeek = dayjs().isoWeekday(1).startOf('w').toDate();
-    const weeksOrders = getOrdersSince(getDeliveredOrders(orders), startOfWeek);
+    const weeksOrders = getOrdersSince(getDeliveredOrders(orders ?? []), startOfWeek);
     return summarizeOrders(weeksOrders).courierFee;
   }, [orders]);
 

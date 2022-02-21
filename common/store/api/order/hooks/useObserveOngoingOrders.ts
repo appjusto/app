@@ -23,6 +23,6 @@ export const useObserveOngoingOrders = (options: ObserveOrdersOptions) => {
   );
   // side effects
   React.useEffect(() => {
-    dispatch({ type: ORDERS_UPDATED, payload: orders });
+    dispatch({ type: ORDERS_UPDATED, payload: orders ?? [] });
   }, [dispatch, orders]);
 };

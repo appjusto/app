@@ -23,11 +23,13 @@ export const ActiveOrderProvider = ({ businessId, orderId, children }: Props) =>
   const user = useSelector(getUser);
   // state
   const order = useObserveOrder(orderId);
-  const [quote] = useObserveOrders(
-    React.useMemo(
-      () => ({ businessId, consumerId: user?.uid, statuses: ['quote'], limit: 1 }),
-      [businessId, user?.uid]
-    )
+  const [quote] = (
+    useObserveOrders(
+      React.useMemo(
+        () => ({ businessId, consumerId: user?.uid, statuses: ['quote'], limit: 1 }),
+        [businessId, user?.uid]
+      )
+    ) ?? []
   ).filter((order) => !!order.items?.length);
   const value: Value = { order: order ?? quote };
   // console.log('ActiveOrderProvider', value.order?.id);

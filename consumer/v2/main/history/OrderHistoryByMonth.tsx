@@ -3,7 +3,7 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { FlatList, View } from 'react-native';
+import { ActivityIndicator, FlatList, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Order, OrderStatus, WithId } from '../../../../../types';
 import { ApiContext } from '../../../../common/app/context';
@@ -17,7 +17,7 @@ import {
   isOrderOngoing,
 } from '../../../../common/store/order/selectors';
 import { getUser } from '../../../../common/store/user/selectors';
-import { screens } from '../../../../common/styles';
+import { colors, screens } from '../../../../common/styles';
 import {
   formatAddress,
   formatDate,
@@ -71,7 +71,7 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
     [user?.uid]
   );
   const orders = useObserveOrders(options);
-  const filteredOrders = getOrdersWithFilter(orders, year, month).filter(
+  const filteredOrders = getOrdersWithFilter(orders ?? [], year, month).filter(
     (order) => getOrderTime(order).getMonth() === month
   );
   // side effects
@@ -137,6 +137,14 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
       track('deleted order in quote that was being listed in history');
     })();
   };
+  // UI
+  if (orders === undefined) {
+    return (
+      <View style={{ ...screens.centered, backgroundColor: colors.grey50 }}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <View style={{ ...screens.config }}>
       <FlatList

@@ -2,8 +2,8 @@ import { Order, WithId } from '@appjusto/types';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useCallback } from 'react';
-import { FlatList, View } from 'react-native';
+import React from 'react';
+import { ActivityIndicator, FlatList, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import StatusBadge from '../../../../common/components/views/StatusBadge';
@@ -15,7 +15,7 @@ import {
   isOrderOngoing,
 } from '../../../../common/store/order/selectors';
 import { getUser } from '../../../../common/store/user/selectors';
-import { screens } from '../../../../common/styles';
+import { colors, screens } from '../../../../common/styles';
 import {
   formatCurrency,
   formatDate,
@@ -49,14 +49,14 @@ export default function ({ navigation, route }: Props) {
   // TO-DO: filter by date
   const options = React.useMemo(() => ({ courierId: user?.uid }), [user?.uid]);
   const orders = useObserveOrders(options);
-  const filteredOrders = getOrdersWithFilter(orders, year, month).filter(
+  const filteredOrders = getOrdersWithFilter(orders ?? [], year, month).filter(
     (order) => getOrderTime(order).getMonth() === month
   );
   // side effects
   // tracking
   useSegmentScreen('DeliveryHistoryByMonth');
   // handlers
-  const orderPressHandler = useCallback((order: WithId<Order>) => {
+  const orderPressHandler = (order: WithId<Order>) => {
     if (isOrderOngoing(order)) {
       navigation.navigate('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
@@ -67,8 +67,15 @@ export default function ({ navigation, route }: Props) {
     } else {
       navigation.navigate('DeliverySummary', { orderId: order.id! });
     }
-  }, []);
+  };
   // UI
+  if (orders === undefined) {
+    return (
+      <View style={{ ...screens.centered, backgroundColor: colors.grey50 }}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <View style={{ ...screens.config }}>
       <FlatList
