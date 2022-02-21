@@ -1,5 +1,5 @@
 import { Flavor, OrderConsumerReview, Review, ReviewTag, WithId } from '@appjusto/types';
-import firebase from 'firebase';
+import firebase from 'firebase/compat/app';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';
 

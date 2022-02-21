@@ -1,5 +1,5 @@
 import { Order, OrderStatus, WithId } from '@appjusto/types';
-import firebase from 'firebase';
+import firebase from 'firebase/compat/app';
 import { memoize, uniq } from 'lodash';
 import { createSelector } from 'reselect';
 import { State } from '..';

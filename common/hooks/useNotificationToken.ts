@@ -4,7 +4,7 @@ import {
   getPermissionsAsync,
   requestPermissionsAsync,
 } from 'expo-notifications';
-import firebase from 'firebase';
+import firebase from 'firebase/compat/app';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';

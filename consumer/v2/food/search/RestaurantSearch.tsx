@@ -7,7 +7,7 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as icons from '../../../../assets/icons';
@@ -22,7 +22,7 @@ import {
   getCurrentLocation,
   getSearchFilters,
   getSearchKind,
-  getSearchOrder
+  getSearchOrder,
 } from '../../../../common/store/consumer/selectors';
 import { colors, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -68,6 +68,7 @@ export default function ({ navigation }: Props) {
     results: products,
     refetch: refetchProducts,
     isLoading: loadingProducts,
+    fetchNextPage,
   } = useSearch<ProductAlgolia>(
     kind === 'product',
     'product',
@@ -138,8 +139,12 @@ export default function ({ navigation }: Props) {
           }}
           loading={loadingRestaurants}
           refreshing={refreshing}
+          onEndReachedThreshold={0.7}
           onRefresh={() => refreshRestaurants()}
-        // onRecommend={() => null}
+          onEndReached={() => {
+            fetchNextPage();
+          }}
+          // onRecommend={() => null}
         />
       ) : null}
       {kind === 'product' ? (

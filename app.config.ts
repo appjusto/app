@@ -43,7 +43,7 @@ export default (context: ConfigContext): ExpoConfig => {
   const config: ExpoConfig = {
     name: name(),
     slug: slug(),
-    scheme: scheme(),
+    // scheme: scheme(),
     privacy: 'hidden',
     platforms: ['ios', 'android'],
     version,
@@ -97,11 +97,11 @@ const slug = () => {
   return slug;
 };
 
-const scheme = () => {
-  const scheme = flavor === 'consumer' ? 'appjusto' : 'appjustocourier';
-  if (environment !== 'live') return `${scheme}${environment}`;
-  return scheme;
-};
+// const scheme = () => {
+//   const scheme = flavor === 'consumer' ? 'appjusto' : 'appjustocourier';
+//   if (environment !== 'live') return `${scheme}${environment}`;
+//   return scheme;
+// };
 
 const appBundlePackage = () => {
   return `br.com.appjusto.${flavor}.${environment}`;

@@ -25,7 +25,6 @@ export const useSearch = <T extends object>(
   const search = React.useCallback(
     async (location: LatLng, input: string, filters: SearchFilter[], page?: number) => {
       setLoading(true);
-      console.log('fetching', page);
       setLastResponse(await api.search().search<T>(kind, order, filters, location, input, page));
       setLoading(false);
     },
@@ -78,13 +77,16 @@ export const useSearch = <T extends object>(
   }, [responseByPage]);
   // result
   const fetchNextPage = React.useCallback(() => {
+    // console.log('fetchNextPage', name, coords, !responseByPage, !lastResponse);
     if (name === undefined) return;
     if (!coords) return;
     if (!responseByPage) return;
     if (!lastResponse) return;
     const hasNextPage = lastResponse.page + 1 < lastResponse.nbPages;
+    // console.log('hasNextPage', hasNextPage);
     if (hasNextPage) search(coords, name, filters, lastResponse.page + 1);
   }, [name, coords, responseByPage, search, filters]);
+  // }, [name, coords, filters, lastResponse, responseByPage, search]);
 
   const refetch = () => {
     if (name === undefined) return;

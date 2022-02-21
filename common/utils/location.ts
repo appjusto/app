@@ -1,6 +1,6 @@
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
-import firebase from 'firebase';
+import firebase from 'firebase/compat/app';
 import { LatLng } from 'react-native-maps';
 import * as Sentry from 'sentry-expo';
 import { t } from '../../strings';
