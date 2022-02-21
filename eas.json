@@ -10,7 +10,7 @@
       "android": {
         "buildType": "apk"
       },
-      "expoCli": "5.0.3"
+      "expoCli": "5.2.0"
     },
     "courier-live-store": {
       "env": {
@@ -22,10 +22,10 @@
       "android": {
         "buildType": "app-bundle"
       },
-      "expoCli": "5.0.3"
+      "expoCli": "5.2.0"
     }
   },
   "cli": {
-    "version": ">= 0.41.0"
+    "version": ">= 0.46.0"
   }
 }

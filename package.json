@@ -115,7 +115,7 @@
     "geokit": "^1.1.0",
     "i18n-js": "^3.7.1",
     "lodash": "^4.17.19",
-    "lottie-react-native": "4.0.2",
+    "lottie-react-native": "5.0.1",
     "marked": "^2.0.1",
     "nanoid": "^3.1.10",
     "normalizr": "^3.6.0",
