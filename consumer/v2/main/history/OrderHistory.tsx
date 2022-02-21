@@ -74,7 +74,7 @@ export default function ({ navigation, route }: Props) {
   useSegmentScreen('OrderHistory');
   if (orders === undefined) {
     return (
-      <View style={screens.centered}>
+      <View style={{ ...screens.centered, backgroundColor: colors.grey50 }}>
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );

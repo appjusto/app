@@ -57,7 +57,6 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
       consumerId: user?.uid,
       statuses: [
         'quote',
-        'confirming',
         'charged',
         'confirmed',
         'declined',
@@ -141,7 +140,7 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
   // UI
   if (orders === undefined) {
     return (
-      <View style={screens.centered}>
+      <View style={{ ...screens.centered, backgroundColor: colors.grey50 }}>
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );

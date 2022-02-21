@@ -53,7 +53,6 @@ export default function ({ navigation, route }: Props) {
   const [previousDispatchingState, setPreviousDispatchingState] = React.useState(dispatchingState);
   // helpers
   const shouldBlockNextStep = useOrderBlockCourierNextStep(orderId);
-  console.log('shouldBlockNextStep', shouldBlockNextStep);
   const openChat = React.useCallback(
     (counterpartId: string, counterpartFlavor: Flavor, delayed?: boolean) => {
       setTimeout(
