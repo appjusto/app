@@ -108,7 +108,10 @@ export default class ProfileApi {
         if (error.code === 'permission-denied' && retry > 0) {
           setTimeout(async () => resolve(await this.updateLocation(id, location, retry - 1)), 1000);
         } else {
-          console.error('Erro ao tentar atualizar a localização:', JSON.stringify(error));
+          console.error(
+            `Erro ao tentar atualizar a localização: ${JSON.stringify(location)}`,
+            JSON.stringify(error)
+          );
           Sentry.Native.captureException(error);
           resolve();
         }
