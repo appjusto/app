@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import useLastKnownLocation from '../../../../common/location/useLastKnownLocation';
 import { updateCurrentPlace } from '../../../../common/store/consumer/actions';
-import { getCurrentPlace } from '../../../../common/store/consumer/selectors';
+import { getConsumer, getCurrentPlace } from '../../../../common/store/consumer/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { borders, colors, doublePadding, halfPadding, texts } from '../../../../common/styles';
 import { formatAddress } from '../../../../common/utils/formatters';
@@ -20,6 +20,7 @@ export const LocationBar = ({ onChangePlace }: Props) => {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // redux store
+  const consumer = useSelector(getConsumer);
   const currentPlace = useSelector(getCurrentPlace);
   // state
   const { coords } = useLastKnownLocation();
@@ -51,6 +52,7 @@ export const LocationBar = ({ onChangePlace }: Props) => {
     }
   };
   // UI
+  if (!consumer) return null;
   return (
     <View
       style={{

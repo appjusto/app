@@ -6,6 +6,7 @@ import { AuthState, useAuth } from '../hooks/useAuth';
 import { updateCurrentLocation, updateCurrentPlace } from '../store/consumer/actions';
 import { getConsumer, getCurrentLocation, getCurrentPlace } from '../store/consumer/selectors';
 import useLastKnownLocation from './useLastKnownLocation';
+import { useLastPlace } from './useLastPlace';
 
 export const useUpdateLocation = () => {
   // context
@@ -14,6 +15,7 @@ export const useUpdateLocation = () => {
   // redux store
   const [authState] = useAuth();
   const consumer = useSelector(getConsumer);
+  const lastPlace = useLastPlace();
   const currentPlace = useSelector(getCurrentPlace);
   const currentLocation = useSelector(getCurrentLocation);
   // state
@@ -21,23 +23,37 @@ export const useUpdateLocation = () => {
   // effect to update currentPlace and currentLocation
   React.useEffect(() => {
     // avoid updating during initialization
-    if (!consumer && authState !== AuthState.Unsigned) return;
+    if (authState === AuthState.Unsigned) {
+      if (!currentLocation && coords) {
+        dispatch(updateCurrentLocation(coords));
+      }
+      return;
+    } else if (authState !== AuthState.SignedIn) return;
     // when currentPlace is set we may need only to update currentLocation
     if (currentPlace) {
       // this will happen when we use AddressComplete to set the place
       if (!currentLocation) {
-        (async () => {
-          const latlng = await api.maps().googleGeocode(currentPlace.address.description);
-          if (latlng) dispatch(updateCurrentLocation(latlng));
-        })();
+        if (currentPlace.location) dispatch(updateCurrentLocation(currentPlace.location));
+        else {
+          api
+            .maps()
+            .googleGeocode(currentPlace.address.description)
+            .then((latlng) => {
+              if (!latlng) return;
+              dispatch(
+                updateCurrentPlace({
+                  ...currentPlace,
+                  location: latlng,
+                })
+              );
+            });
+        }
       }
       return;
     }
-    const lastPlace = consumer?.favoritePlaces?.find(() => true);
     // select last used place if exists
     if (lastPlace) {
       dispatch(updateCurrentPlace(lastPlace));
-      dispatch(updateCurrentLocation(lastPlace.location!));
     }
     // select from current location
     else if (coords) {
@@ -55,7 +71,7 @@ export const useUpdateLocation = () => {
           })
         );
     })();
-  }, [authState, consumer, currentPlace, coords, currentLocation, api, dispatch]);
+  }, [api, dispatch, authState, consumer, coords, currentPlace, currentLocation, lastPlace]);
   // update consumer's location
   React.useEffect(() => {
     if (!consumer?.id) return;
