@@ -1,4 +1,4 @@
-import firebase from 'firebase/compat';
+import firebase from 'firebase/compat/app';
 
 export const dateInput = (value: Date | firebase.firestore.FieldValue) =>
   value.constructor.name === 'Date'

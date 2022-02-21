@@ -1,7 +1,7 @@
 import { ProfileSituation } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import firebase from 'firebase/compat';
+import firebase from 'firebase/compat/app';
 import React from 'react';
 import { Alert, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useQueryClient } from 'react-query';

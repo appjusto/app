@@ -10,7 +10,7 @@ import {
   Product,
   WithId,
 } from '@appjusto/types';
-import firebase from 'firebase/compat';
+import firebase from 'firebase/compat/app';
 import * as Sentry from 'sentry-expo';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';

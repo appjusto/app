@@ -1,5 +1,5 @@
 import { Business, LatLng } from '@appjusto/types';
-import firebase from 'firebase';
+import firebase from 'firebase/compat/app';
 import { toNumber } from 'lodash';
 import { usePlatformParamsContext } from '../../../../common/contexts/PlatformParamsContext';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';

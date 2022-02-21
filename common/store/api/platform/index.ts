@@ -8,7 +8,7 @@ import {
   PlatformAccess,
   PlatformParams,
 } from '@appjusto/types';
-import firebase from 'firebase/compat';
+import firebase from 'firebase/compat/app';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentsAs } from '../types';

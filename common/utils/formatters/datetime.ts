@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import firebase from 'firebase/compat';
+import firebase from 'firebase/compat/app';
 import i18n from 'i18n-js';
 import { round } from 'lodash';
 import { dateInput } from './utils';

@@ -29,9 +29,9 @@ import {
   RejectOrderPayload,
   TipCourierPayload,
   UpdateOrderPayload,
-  WithId
+  WithId,
 } from '@appjusto/types';
-import firebase from 'firebase/compat';
+import firebase from 'firebase/compat/app';
 import { isEmpty, uniq } from 'lodash';
 import * as Sentry from 'sentry-expo';
 import { getAppVersion } from '../../../utils/version';

@@ -1,5 +1,5 @@
 import { WithId } from '@appjusto/types';
-import firebase from 'firebase/compat';
+import firebase from 'firebase/compat/app';
 
 export type FirebaseQueryDocumentSnapshot =
   firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>;

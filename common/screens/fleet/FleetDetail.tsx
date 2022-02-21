@@ -1,7 +1,7 @@
 import { CourierFleet } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import firebase from 'firebase/compat';
+import firebase from 'firebase/compat/app';
 import { omit } from 'lodash';
 import React, { useContext } from 'react';
 import { ActivityIndicator, Keyboard, ScrollView, Text, View } from 'react-native';
