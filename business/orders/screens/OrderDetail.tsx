@@ -9,7 +9,7 @@ import RoundedText from '../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
 import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
 import { t } from '../../../strings';
@@ -111,7 +111,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
               />
             </View>
           </View>
-          <View style={{ marginTop: padding, marginBottom: 40 }}>
+          <View style={{ marginTop: padding, marginBottom: 32 }}>
             {/* add qtde. item valor/item "line" on top of OrderItem list here */}
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
               <View style={{ width: '17%', alignItems: 'flex-start' }}>
@@ -127,6 +127,22 @@ export const OrderDetail = ({ navigation, route }: Props) => {
             {order.items?.map((item, index) => (
               <OrderListItem item={item} key={`${index} + ${item.id}`} />
             ))}
+            <View
+              style={{
+                backgroundColor: colors.white,
+                paddingVertical: 12,
+                paddingHorizontal: padding,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                ...borders.default,
+                borderRadius: 0,
+                marginTop: 4,
+              }}
+            >
+              <Text style={{ ...texts.sm }}>{t('Valor total dos itens')}</Text>
+              <Text style={[texts.sm, texts.bold]}>{formatCurrency(order.fare!.total)}</Text>
+            </View>
           </View>
           {/* add OrderItem list here */}
         </View>
