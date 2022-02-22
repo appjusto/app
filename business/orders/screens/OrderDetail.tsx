@@ -14,6 +14,7 @@ import { formatCurrency } from '../../../common/utils/formatters';
 import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
 import { t } from '../../../strings';
 import { CancelOrderModal } from '../components/CancelOrderModal';
+import { OrderListItem } from '../components/OrderListItem';
 // TODO: add the correct screenNavigationProp
 type ScreenNavigationProp = StackNavigationProp<LoggedNavigatorParamList, 'OrderDetail'>;
 type ScreenRouteProp = RouteProp<LoggedNavigatorParamList, 'OrderDetail'>;
@@ -104,7 +105,23 @@ export const OrderDetail = ({ navigation, route }: Props) => {
               <DefaultButton title={t('Alterar tempo de preparo')} secondary />
             </View>
           </View>
-          {/* add qtde. item valor/item "line" on top of OrderItem list here */}
+          <View style={{ marginTop: padding, marginBottom: 40 }}>
+            {/* add qtde. item valor/item "line" on top of OrderItem list here */}
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
+              <View style={{ width: '17%', alignItems: 'flex-start' }}>
+                <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Qtde.')}</Text>
+              </View>
+              <View style={{ width: '56%', alignItems: 'flex-start' }}>
+                <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Item')}</Text>
+              </View>
+              <View style={{ width: '27%', alignItems: 'flex-end' }}>
+                <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Valor/ item')}</Text>
+              </View>
+            </View>
+            {order.items?.map((item) => (
+              <OrderListItem item={item} />
+            ))}
+          </View>
           {/* add OrderItem list here */}
         </View>
         <SingleHeader title={t('Forma de pagamento')} />

@@ -81,6 +81,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
           />
         </View>
       </PaddedView>
+      {/* add CookingTimeModal component. The button should set the time and navigate to OrderDetail */}
     </KeyboardAwareScrollView>
   );
 };
