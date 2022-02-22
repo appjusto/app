@@ -2,6 +2,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { OrderDetail } from '../../business/orders/screens/OrderDetail';
+import { OrdersManager } from '../../business/orders/screens/OrdersManager';
 import { ApiContext, AppDispatch } from '../../common/app/context';
 import { defaultScreenOptions } from '../../common/screens/options';
 import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
@@ -106,6 +108,17 @@ export const LoggedNavigator = () => {
           name="OngoingOrderCancelFeedback"
           component={OngoingOrderCancelFeedback}
           options={{ title: t('Pedido cancelado') }}
+        />
+        {/* test setup */}
+        <Stack.Screen
+          name="OrdersManager"
+          component={OrdersManager}
+          options={{ title: t('Gerenciador de pedidos') }}
+        />
+        <Stack.Screen
+          name="OrderDetail"
+          component={OrderDetail}
+          options={{ title: t('Ver pedido') }}
         />
       </Stack.Navigator>
     </LoggedContextProvider>

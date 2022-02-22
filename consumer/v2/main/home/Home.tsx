@@ -102,12 +102,6 @@ export default function ({ navigation }: Props) {
           >
             <Text>ORDERS MANAGER</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={{ marginVertical: padding }}
-            onPress={() => navigation.navigate('OrderDetail')}
-          >
-            <Text>ORDER DETAIL</Text>
-          </TouchableOpacity>
           {/* <HomeCouriersNearbyCard /> */}
           {!consumer ? <View style={{ height: padding }} /> : null}
           <CrowdFundingCard />

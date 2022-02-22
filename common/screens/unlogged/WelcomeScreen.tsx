@@ -211,33 +211,32 @@ export default function ({ navigation, route }: Props) {
                   />
                 </View>
               </View>
-            ) : (
-              <View
-                style={{
-                  flexDirection: tallerDevice ? 'row' : 'column',
-                  alignItems: tallerDevice ? 'center' : 'flex-start',
-                  justifyContent: 'space-between',
-                  marginTop: padding,
-                }}
-              >
-                <View>
-                  <CheckField
-                    checked={acceptedTerms}
-                    onPress={() => setAcceptTerms(!acceptedTerms)}
-                    text={t('Aceito os termos de uso do app')}
-                  />
-                </View>
-                <View style={{ marginTop: !tallerDevice ? halfPadding : 0 }}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate('Terms');
-                    }}
-                  >
-                    <Text style={[texts.xs, { color: colors.green600 }]}>{t('Ler os termos')}</Text>
-                  </TouchableOpacity>
-                </View>
+            ) : null}
+            <View
+              style={{
+                flexDirection: tallerDevice ? 'row' : 'column',
+                alignItems: tallerDevice ? 'center' : 'flex-start',
+                justifyContent: 'space-between',
+                marginTop: padding,
+              }}
+            >
+              <View>
+                <CheckField
+                  checked={acceptedTerms}
+                  onPress={() => setAcceptTerms(!acceptedTerms)}
+                  text={t('Aceito os termos de uso do app')}
+                />
               </View>
-            )}
+              <View style={{ marginTop: !tallerDevice ? halfPadding : 0 }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('Terms');
+                  }}
+                >
+                  <Text style={[texts.xs, { color: colors.green600 }]}>{t('Ler os termos')}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
           <View style={{ flex: 1 }} />
           <View style={{ marginTop: 32, paddingBottom: padding }}>

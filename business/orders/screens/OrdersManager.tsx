@@ -5,16 +5,16 @@ import { View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
-import { UnloggedParamList } from '../../../common/screens/unlogged/types';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, padding, screens } from '../../../common/styles';
+import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
 import { t } from '../../../strings';
 import { OrdersKanbanItem } from '../components/OrdersKanbanItem';
 import { OrderManagerHeader } from '../components/OrdersManagerHeader';
 
 // TODO: add the correct screenNavigationProp
-type ScreenNavigationProp = StackNavigationProp<UnloggedParamList, 'OrdersManager'>;
-type ScreenRouteProp = RouteProp<UnloggedParamList, 'OrdersManager'>;
+type ScreenNavigationProp = StackNavigationProp<LoggedNavigatorParamList, 'OrdersManager'>;
+type ScreenRouteProp = RouteProp<LoggedNavigatorParamList, 'OrdersManager'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -53,16 +53,32 @@ export const OrdersManager = ({ navigation, route }: Props) => {
       </View>
       <PaddedView>
         <View style={{ marginBottom: padding }}>
-          <OrdersKanbanItem onCheckOrder={() => navigation.navigate('OrderDetail')} />
+          <OrdersKanbanItem
+            onCheckOrder={() =>
+              navigation.navigate('OrderDetail', { orderId: 'N6bDZFOU0CHJcx0k3cAy' })
+            }
+          />
         </View>
         <View style={{ marginBottom: padding }}>
-          <OrdersKanbanItem onCheckOrder={() => navigation.navigate('OrderDetail')} />
+          <OrdersKanbanItem
+            onCheckOrder={() =>
+              navigation.navigate('OrderDetail', { orderId: 'N6bDZFOU0CHJcx0k3cAy' })
+            }
+          />
         </View>
         <View style={{ marginBottom: padding }}>
-          <OrdersKanbanItem onCheckOrder={() => navigation.navigate('OrderDetail')} />
+          <OrdersKanbanItem
+            onCheckOrder={() =>
+              navigation.navigate('OrderDetail', { orderId: 'N6bDZFOU0CHJcx0k3cAy' })
+            }
+          />
         </View>
         <View style={{ marginBottom: padding }}>
-          <OrdersKanbanItem onCheckOrder={() => navigation.navigate('OrderDetail')} />
+          <OrdersKanbanItem
+            onCheckOrder={() =>
+              navigation.navigate('OrderDetail', { orderId: 'N6bDZFOU0CHJcx0k3cAy' })
+            }
+          />
         </View>
       </PaddedView>
     </KeyboardAwareScrollView>

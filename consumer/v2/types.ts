@@ -28,4 +28,9 @@ export type LoggedNavigatorParamList = {
   ProfileNavigator: NestedNavigatorParams<ProfileParamList>;
   OngoingOrderCancelFeedback: undefined;
   UnapprovedConsumerNavigator: UnapprovedConsumerParamsList;
+  // test setup
+  OrdersManager: undefined;
+  OrderDetail: {
+    orderId: string;
+  };
 };
