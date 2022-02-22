@@ -121,7 +121,15 @@ export default function ({ navigation, route }: Props) {
           <Pressable
             onPressIn={() => Keyboard.dismiss()}
             delayLongPress={2000}
-            onLongPress={() => setAuthMode('password')}
+            onLongPress={() =>
+              setAuthMode((current) =>
+                current === 'passwordless'
+                  ? 'phone'
+                  : current === 'phone'
+                  ? 'password'
+                  : 'passwordless'
+              )
+            }
           >
             <>
               <ShowIf test={flavor === 'consumer'}>

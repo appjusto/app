@@ -26,7 +26,8 @@ export default class ProfileApi {
     console.log(`Creating ${this.flavor} profile...`);
     await this.getProfileRef(id).set({
       situation: 'pending',
-      email: this.auth.getEmail(),
+      email: this.auth.getEmail() ?? null,
+      phone: this.auth.getPhoneNumber(true) ?? null,
       createdOn: firebase.firestore.FieldValue.serverTimestamp(),
     } as UserProfile);
   }
@@ -73,18 +74,17 @@ export default class ProfileApi {
     }`;
     return new Promise<void>(async (resolve) => {
       try {
-        await this.getProfileRef(id).set(
-          {
-            ...changes,
-            appVersion,
-            updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-          } as UserProfile,
-          { merge: true }
-        );
+        const update: Partial<UserProfile> = {
+          ...changes,
+          appVersion,
+          updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+        };
+        console.log(update);
+        await this.getProfileRef(id).set(update, { merge: true });
         resolve();
       } catch (error: any) {
         if (error.code === 'permission-denied' && retry > 0) {
-          setTimeout(async () => resolve(await this.updateProfile(id, changes, retry - 1)), 1000);
+          setTimeout(async () => resolve(await this.updateProfile(id, changes, retry - 1)), 2000);
         } else {
           console.error('Erro ao tentar atualizar o perfil:', JSON.stringify(error));
           Sentry.Native.captureException(error);

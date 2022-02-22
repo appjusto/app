@@ -81,11 +81,11 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   // state
   const { profileComplete, canUpdateProfile, phoneVerified, shouldVerifyPhone, hasOrdered } =
     useProfileSummary();
-  const [email, setEmail] = React.useState<string>(api.auth().getEmail() ?? '');
+  const [email, setEmail] = React.useState<string>(api.auth().getEmail() ?? profile.email ?? '');
   const [name, setName] = React.useState<string>(profile.name ?? '');
   const [surname, setSurname] = React.useState(profile.surname ?? '');
   const [cpf, setCpf] = React.useState(profile.cpf ?? '');
-  const [phone, setPhone] = React.useState(profile.phone ?? '');
+  const [phone, setPhone] = React.useState(api.auth().getPhoneNumber(true) ?? profile.phone ?? '');
   const [focusedField, setFocusedField] = React.useState<string>();
   const [isLoading, setLoading] = React.useState(false);
   const updatedUser: Partial<UserProfile> = {
@@ -196,7 +196,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           title={t('E-mail')}
           placeholder={t('Digite seu e-mail')}
           value={email}
-          editable={!api.auth().getEmail()}
+          editable={canUpdateProfile && !api.auth().getEmail()}
           returnKeyType="next"
           blurOnSubmit={false}
           keyboardType="email-address"
@@ -276,7 +276,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           returnKeyType="next"
           blurOnSubmit
           onChangeText={(text) => setPhone(trim(text))}
-          editable={canUpdateProfile}
+          editable={canUpdateProfile && !api.auth().getPhoneNumber()}
         />
         <View style={{ flex: 1 }}>
           <View style={{ flex: 1 }} />

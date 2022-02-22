@@ -61,6 +61,12 @@ export default class AuthApi {
     return this.auth.signInWithPhoneNumber(phoneNumber, verifier);
   }
 
+  async confirmPhoneSignIn(verificationId: string, verificationCode: string) {
+    await this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, verificationCode);
+    await this.auth.signInWithCredential(credential);
+  }
+
   async linkCredential(credential: firebase.auth.AuthCredential) {
     if (this.getPhoneNumber()) await this.auth.currentUser!.unlink('phone');
     await this.auth.currentUser!.linkWithCredential(credential);
@@ -74,8 +80,10 @@ export default class AuthApi {
     return this.auth.currentUser?.email;
   }
 
-  getPhoneNumber() {
-    return this.auth.currentUser?.phoneNumber;
+  getPhoneNumber(stripCountryCode: boolean = false) {
+    const phone = this.auth.currentUser?.phoneNumber;
+    if (!phone || !stripCountryCode || phone.indexOf('+') !== 0) return phone;
+    return phone.slice(3);
   }
 
   signOut() {

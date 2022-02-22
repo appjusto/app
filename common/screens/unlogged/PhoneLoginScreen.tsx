@@ -49,15 +49,15 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
   const recaptchaRef = React.useRef(null);
   // effects
   React.useEffect(() => {
+    console.log('state', state);
     if (state === 'success') {
       dispatch(showToast('Validação finalizada com sucesso!', 'success'));
     }
   }, [state]);
 
   // handlers
-  const verifyPhoneHandler = () => {
+  React.useEffect(() => {
     setState('verifying-phone-number');
-    const phoneProvider = new firebase.auth.PhoneAuthProvider();
     api
       .auth()
       .signInWithPhoneNumber(`+55${phone}`, recaptchaRef.current!)
@@ -71,17 +71,12 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
         setError(t('Não foi possível verificar o telefone. Edite seu perfil e tente novamente.'));
         setState('unrecoverable-error');
       });
-  };
+  }, []);
   const verifyCodeHandler = () => {
     (async () => {
       try {
         setState('verifying-code');
-        const userCredential = await confirmationResult!.confirm(verificationCode);
-        if (!userCredential.credential) setState('error');
-        else {
-          await api.auth().linkCredential(userCredential.credential);
-          setState('success');
-        }
+        await api.auth().confirmPhoneSignIn(confirmationResult!.verificationId, verificationCode);
       } catch (err: any) {
         let message: string = err.message;
         if (message.indexOf('linked to one identity') > 0) {
@@ -116,32 +111,6 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
         cancelLabel={t('Cancelar')}
         languageCode="pt"
       />
-      {state === 'initial' ? (
-        <View>
-          <Text style={{ ...texts.x2l }}>{t('Confirme seu celular')}</Text>
-          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: padding }}>
-            {t(
-              'O AppJusto solicita a confirmação do seu celular para combater fraudes e garantir o suporte em caso de incidentes.'
-            )}
-          </Text>
-          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: padding }}>
-            {t(
-              'Os números de telefone que os usuários fornecem para autenticação serão enviados e armazenados pelo Google para melhorar o seu sistema de prevenção de abuso e spam.'
-            )}
-          </Text>
-          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: padding }}>
-            {t(
-              'Todos os dados fornecidos pelo usuário serão encriptados, garantindo segurança de ponta-a-ponta no processo de autenticação.'
-            )}
-          </Text>
-          <View style={{ flex: 1 }} />
-          <DefaultButton
-            style={{ marginVertical: doublePadding }}
-            title={t('Enviar código por SMS')}
-            onPress={verifyPhoneHandler}
-          />
-        </View>
-      ) : null}
       {state === 'verifying-phone-number' || state === 'verifying-code' ? (
         <ActivityIndicator size="large" color={colors.green500} />
       ) : null}
