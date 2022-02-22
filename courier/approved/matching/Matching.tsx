@@ -8,7 +8,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RoundedText from '../../../common/components/texts/RoundedText';
+import OrderMap from '../../../common/screens/orders/OrderMap';
 import { useObserveOrderRequest } from '../../../common/store/api/courier/hooks/useObserveOrderRequest';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { screen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
@@ -41,6 +43,7 @@ export default function ({ navigation, route }: Props) {
   const api = React.useContext(ApiContext);
   const courier = useSelector(getCourier)!;
   // state
+  const order = useObserveOrder(orderId);
   const request = useObserveOrderRequest(courier.id, orderId);
   const situation = request?.situation;
   const canAccept = situation === 'pending' || situation === 'viewed';
@@ -108,7 +111,7 @@ export default function ({ navigation, route }: Props) {
   const roundedFeePerKm = round(feePerKm, 2);
 
   // UI
-  if (isLoading)
+  if (isLoading || !order)
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -218,22 +221,29 @@ export default function ({ navigation, route }: Props) {
           ) : null}
         </View>
         <View style={{ flex: 1 }} />
-        {/* origin */}
-        <View style={{ marginBottom: halfPadding }}>
-          <AddressCard
-            kind="origin"
-            distance={formatDistance(routeDistanceToOrigin)}
-            address={originAddress}
-          />
-        </View>
-        {/* destination */}
+        {/* map */}
         <View>
-          <AddressCard
-            kind="destination"
-            distance={formatDistance(matchRequest.distance)} // distance between origin and destination
-            address={destinationAddress}
-          />
+          <OrderMap order={order} ratio={360 / 160} />
         </View>
+        <View style={{ flex: 1 }} />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {/* origin */}
+          <View style={{ marginRight: halfPadding }}>
+            <AddressCard
+              kind="origin"
+              distance={formatDistance(routeDistanceToOrigin)}
+              address={originAddress}
+            />
+          </View>
+          {/* destination */}
+          <View>
+            <AddressCard
+              kind="destination"
+              distance={formatDistance(matchRequest.distance)} // distance between origin and destination
+              address={destinationAddress}
+            />
+          </View>
+        </ScrollView>
         <View style={{ flex: 1 }} />
         {/* slider accept/reject control */}
         {canAccept ? (
