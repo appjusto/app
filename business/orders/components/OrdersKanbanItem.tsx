@@ -7,9 +7,10 @@ import { t } from '../../../strings';
 
 type Props = {
   onCheckOrder: () => void;
+  onTakeOrder: () => void;
 };
 
-export const OrdersKanbanItem = ({ onCheckOrder }: Props) => {
+export const OrdersKanbanItem = ({ onCheckOrder, onTakeOrder }: Props) => {
   return (
     <View
       style={{
@@ -43,7 +44,7 @@ export const OrdersKanbanItem = ({ onCheckOrder }: Props) => {
         </View>
         {/* dynamic title and background color */}
         <View style={{ width: '57%' }}>
-          <DefaultButton title={t('Aceitar pedido')} />
+          <DefaultButton title={t('Aceitar pedido')} onPress={onTakeOrder} />
         </View>
       </View>
     </View>

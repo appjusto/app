@@ -9,6 +9,7 @@ import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, padding, screens } from '../../../common/styles';
 import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
 import { t } from '../../../strings';
+import { CookingTimeModal } from '../components/CookingTimeModal';
 import { OrdersKanbanItem } from '../components/OrdersKanbanItem';
 import { OrderManagerHeader } from '../components/OrdersManagerHeader';
 
@@ -22,6 +23,8 @@ type Props = {
 };
 
 export const OrdersManager = ({ navigation, route }: Props) => {
+  // screen state
+  const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
   // side effects
   // tracking
   useSegmentScreen('OrdersManager');
@@ -57,6 +60,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
             onCheckOrder={() =>
               navigation.navigate('OrderDetail', { orderId: 'N6bDZFOU0CHJcx0k3cAy' })
             }
+            onTakeOrder={() => setCookingModalVisible(true)}
           />
         </View>
         <View style={{ marginBottom: padding }}>
@@ -64,6 +68,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
             onCheckOrder={() =>
               navigation.navigate('OrderDetail', { orderId: 'N6bDZFOU0CHJcx0k3cAy' })
             }
+            onTakeOrder={() => setCookingModalVisible(true)}
           />
         </View>
         <View style={{ marginBottom: padding }}>
@@ -71,6 +76,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
             onCheckOrder={() =>
               navigation.navigate('OrderDetail', { orderId: 'N6bDZFOU0CHJcx0k3cAy' })
             }
+            onTakeOrder={() => setCookingModalVisible(true)}
           />
         </View>
         <View style={{ marginBottom: padding }}>
@@ -78,10 +84,20 @@ export const OrdersManager = ({ navigation, route }: Props) => {
             onCheckOrder={() =>
               navigation.navigate('OrderDetail', { orderId: 'N6bDZFOU0CHJcx0k3cAy' })
             }
+            onTakeOrder={() => setCookingModalVisible(true)}
           />
         </View>
       </PaddedView>
-      {/* add CookingTimeModal component. The button should set the time and navigate to OrderDetail */}
+      <CookingTimeModal
+        buttonTitle={t('Confirmar e aceitar pedido')}
+        modalVisible={cookingModalVisible}
+        onModalClose={() => setCookingModalVisible(false)}
+        onConfirmOrder={
+          // confirmOrder after setting cooking time
+          // close modal
+          () => setCookingModalVisible(false)
+        }
+      />
     </KeyboardAwareScrollView>
   );
 };

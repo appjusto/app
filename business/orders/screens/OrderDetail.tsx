@@ -14,6 +14,7 @@ import { formatCurrency } from '../../../common/utils/formatters';
 import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
 import { t } from '../../../strings';
 import { CancelOrderModal } from '../components/CancelOrderModal';
+import { CookingTimeModal } from '../components/CookingTimeModal';
 import { OrderListItem } from '../components/OrderListItem';
 // TODO: add the correct screenNavigationProp
 type ScreenNavigationProp = StackNavigationProp<LoggedNavigatorParamList, 'OrderDetail'>;
@@ -29,7 +30,8 @@ export const OrderDetail = ({ navigation, route }: Props) => {
   const { orderId } = route.params;
   // state
   const order = useObserveOrder(orderId);
-  const [modalVisible, setModalVisible] = React.useState(false);
+  const [cancelModalVisible, setCancelModalVisible] = React.useState(false);
+  const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
   // tracking
   useSegmentScreen('OrderDetail');
   //UI
@@ -102,7 +104,11 @@ export const OrderDetail = ({ navigation, route }: Props) => {
             </Text>
             {/* this button will open a modal for selecting cooking time */}
             <View style={{ width: '60%' }}>
-              <DefaultButton title={t('Alterar tempo de preparo')} secondary />
+              <DefaultButton
+                title={t('Alterar tempo de preparo')}
+                secondary
+                onPress={() => setCookingModalVisible(true)}
+              />
             </View>
           </View>
           <View style={{ marginTop: padding, marginBottom: 40 }}>
@@ -118,8 +124,8 @@ export const OrderDetail = ({ navigation, route }: Props) => {
                 <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Valor/ item')}</Text>
               </View>
             </View>
-            {order.items?.map((item) => (
-              <OrderListItem item={item} />
+            {order.items?.map((item, index) => (
+              <OrderListItem item={item} key={`${index} + ${item.id}`} />
             ))}
           </View>
           {/* add OrderItem list here */}
@@ -151,7 +157,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
               <DefaultButton
                 title={t('Cancelar pedido')}
                 secondary
-                onPress={() => setModalVisible(true)}
+                onPress={() => setCancelModalVisible(true)}
               />
             </View>
           </View>
@@ -169,7 +175,20 @@ export const OrderDetail = ({ navigation, route }: Props) => {
           <DefaultButton title={t('Aceitar pedido')} />
         </View>
       </View>
-      <CancelOrderModal modalVisible={modalVisible} onModalClose={() => setModalVisible(false)} />
+      <CancelOrderModal
+        modalVisible={cancelModalVisible}
+        onModalClose={() => setCancelModalVisible(false)}
+      />
+      <CookingTimeModal
+        buttonTitle={t('Confirmar tempo de preparo')}
+        modalVisible={cookingModalVisible}
+        onModalClose={() => setCookingModalVisible(false)}
+        onConfirmOrder={
+          // confirmOrder after setting cooking time
+          // close modal
+          () => setCookingModalVisible(false)
+        }
+      />
     </View>
   );
 };
