@@ -49,7 +49,7 @@ export default (context: ConfigContext): ExpoConfig => {
     version,
     orientation: 'portrait',
     splash: {
-      image: './assets/splash.png',
+      image: flavor === 'business' ? './assets/splash-business.png' : './assets/splash.png',
       resizeMode: 'cover',
       backgroundColor: '#78e08f',
     },
@@ -85,6 +85,7 @@ export default (context: ConfigContext): ExpoConfig => {
 const name = () => {
   let name = 'AppJusto';
   if (flavor === 'courier') name = 'AppJusto Entregador';
+  if (flavor === 'business') name = 'AppJusto Gerenciador de Pedidos';
   if (environment === 'dev') return `(D) ${name}`;
   else if (environment === 'staging') return `(S) ${name}`;
   else if (environment === 'community') return `(C) ${name}`;
@@ -98,7 +99,12 @@ const slug = () => {
 };
 
 const scheme = () => {
-  const scheme = flavor === 'consumer' ? 'appjusto' : 'appjustocourier';
+  const scheme =
+    flavor === 'consumer'
+      ? 'appjusto'
+      : flavor === 'business'
+      ? 'appjustogerenciador'
+      : 'appjustocourier';
   if (environment !== 'live') return `${scheme}${environment}`;
   return scheme;
 };
@@ -118,6 +124,7 @@ const ios = () => ({
   buildNumber: `${versionCode}`,
   icon: icon('ios'),
   supportsTablet: false,
+  // saulo, e aqui?
   infoPlist:
     flavor === 'consumer'
       ? {
@@ -153,7 +160,7 @@ const intentFilter = (host: string, pathPrefix: string) => ({
   ],
   category: ['BROWSABLE', 'DEFAULT'],
 });
-
+// saulo, intentFilter pro business é '/' o q?
 const intentFilters = () =>
   [
     intentFilter(getBaseDomain(environment), `/${flavor}`),
@@ -171,6 +178,7 @@ const android = () =>
         versionCode,
         adaptiveIcon: {
           foregroundImage: icon('android'),
+          // saulo, isso muda? a bgcolor do splash do business é #2F422C (green700)
           backgroundColor: flavor === 'consumer' ? '#78E08F' : '#FFE493',
         },
         googleServicesFile: `./google-services-${environment}.json`,
@@ -186,9 +194,9 @@ const android = () =>
       },
     } as ExpoConfig
   ).android);
-
+// saulo, me parece que só precisamos dessas do consumer pro business, mas confere
 const permissions = () =>
-  flavor === 'consumer'
+  flavor === 'consumer' || flavor === 'business'
     ? ['ACCESS_FINE_LOCATION', 'ACCESS_COARSE_LOCATION']
     : [
         'ACCESS_FINE_LOCATION',
@@ -214,11 +222,13 @@ const extra = (): Extra => ({
     projectId: FIREBASE_PROJECT_ID!,
     storageBucket: `${FIREBASE_PROJECT_ID}.appspot.com`,
     messagingSenderId: FIREBASE_MESSAGING_SENDER_ID!,
+    // saulo, pelo jeito precisamos de uma chave pro business, né?
     appId: flavor === 'consumer' ? FIREBASE_CONSUMER_APP_ID! : FIREBASE_COURIER_APP_ID!,
     emulator: {
       enabled: process.env.FIREBASE_EMULATOR === 'true',
       host: FIREBASE_EMULATOR_HOST,
     },
+    // saulo, pelo jeito precisamos de uma chave pro business, né?
     measurementId:
       flavor === 'consumer' ? FIREBASE_CONSUMER_MEASUREMENT_ID! : FIREBASE_COURIER_MEASUREMENT_ID!,
   },
