@@ -58,7 +58,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
         <View style={{ marginBottom: padding }}>
           <OrdersKanbanItem
             onCheckOrder={() =>
-              navigation.navigate('OrderDetail', { orderId: 'N6bDZFOU0CHJcx0k3cAy' })
+              navigation.navigate('OrderDetail', { orderId: 'syV7UPjOZgtyayNeTi64' })
             }
             onTakeOrder={() => setCookingModalVisible(true)}
           />
@@ -66,7 +66,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
         <View style={{ marginBottom: padding }}>
           <OrdersKanbanItem
             onCheckOrder={() =>
-              navigation.navigate('OrderDetail', { orderId: 'N6bDZFOU0CHJcx0k3cAy' })
+              navigation.navigate('OrderDetail', { orderId: 'syV7UPjOZgtyayNeTi64' })
             }
             onTakeOrder={() => setCookingModalVisible(true)}
           />
@@ -74,7 +74,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
         <View style={{ marginBottom: padding }}>
           <OrdersKanbanItem
             onCheckOrder={() =>
-              navigation.navigate('OrderDetail', { orderId: 'N6bDZFOU0CHJcx0k3cAy' })
+              navigation.navigate('OrderDetail', { orderId: 'syV7UPjOZgtyayNeTi64' })
             }
             onTakeOrder={() => setCookingModalVisible(true)}
           />
@@ -82,7 +82,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
         <View style={{ marginBottom: padding }}>
           <OrdersKanbanItem
             onCheckOrder={() =>
-              navigation.navigate('OrderDetail', { orderId: 'N6bDZFOU0CHJcx0k3cAy' })
+              navigation.navigate('OrderDetail', { orderId: 'syV7UPjOZgtyayNeTi64' })
             }
             onTakeOrder={() => setCookingModalVisible(true)}
           />
