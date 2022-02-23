@@ -4,13 +4,14 @@ import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
+import { cpfFormatter } from '../../../common/components/inputs/pattern-input/formatters';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
-import { formatCurrency } from '../../../common/utils/formatters';
+import { formatCurrency, formatDuration, formatTime } from '../../../common/utils/formatters';
 import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
 import { t } from '../../../strings';
 import { CancelOrderModal } from '../components/CancelOrderModal';
@@ -38,19 +39,13 @@ export const OrderDetail = ({ navigation, route }: Props) => {
   const additionalInfoUI = () => {
     if (!order) return;
     if (order.additionalInfo) {
-      return (
-        <Text style={{ ...texts.md, marginBottom: halfPadding }}>
-          {t('Incluir CPF na nota, CPF: ')}
-          {order.consumer.cpf}
-        </Text>
-      );
+      return <Text style={{ ...texts.md, marginBottom: halfPadding }}>{order.additionalInfo}</Text>;
     }
     if (order.consumer.cpf) {
       return (
-        // we need to format the cpf number
         <Text style={{ ...texts.md, marginBottom: halfPadding }}>
           {t('Incluir CPF na nota, CPF: ')}
-          {order.consumer.cpf}
+          {cpfFormatter(order.consumer.cpf)}
         </Text>
       );
     }
@@ -72,7 +67,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
       >
         <DoubleHeader
           title={`${t('Pedido Nº ')}${order.code}`}
-          subtitle={t('Horário do pedido: 00h00m00s')} // add this
+          subtitle={`Horário do pedido: ${formatTime(order.createdOn!)}`}
         />
         <PaddedView>
           {/* order.status */}
@@ -84,25 +79,26 @@ export const OrderDetail = ({ navigation, route }: Props) => {
             <Text style={texts.bold}>{order.consumer.name}</Text>
           </Text>
           {/* do we have this? */}
-          <Text style={{ ...texts.md }}>
+          {/* <Text style={{ ...texts.md }}>
             {t('Nº de pedidos no restaurante: ')}
             <Text style={texts.bold}>{t('1')}</Text>
-          </Text>
-          <View style={{ marginTop: halfPadding, width: '60%' }}>
+          </Text> */}
+          {/* no chat for now */}
+          {/* <View style={{ marginTop: halfPadding, width: '60%' }}>
             <DefaultButton title={t('Abrir chat com o cliente')} secondary />
-          </View>
+          </View> */}
         </PaddedView>
         <View style={{ marginTop: padding }}>
           <SingleHeader title={t('Detalhes do pedido')} />
         </View>
-        <View style={{ paddingTop: halfPadding, paddingHorizontal: padding, paddingBottom: 32 }}>
+        <View
+          style={{ paddingTop: halfPadding, paddingHorizontal: padding, paddingBottom: padding }}
+        >
           <View>
-            {/* format cooking time correctly */}
             <Text style={{ ...texts.md, marginBottom: halfPadding }}>
               {t('Tempo de preparo: ')}
-              <Text style={texts.bold}>{order.cookingTime}</Text>
+              <Text style={texts.bold}>{formatDuration(order.cookingTime!)}</Text>
             </Text>
-            {/* this button will open a modal for selecting cooking time */}
             <View style={{ width: '60%' }}>
               <DefaultButton
                 title={t('Alterar tempo de preparo')}
@@ -112,7 +108,6 @@ export const OrderDetail = ({ navigation, route }: Props) => {
             </View>
           </View>
           <View style={{ marginTop: padding, marginBottom: 32 }}>
-            {/* add qtde. item valor/item "line" on top of OrderItem list here */}
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
               <View style={{ width: '17%', alignItems: 'flex-start' }}>
                 <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Qtde.')}</Text>
@@ -147,9 +142,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
           {/* add OrderItem list here */}
         </View>
         <SingleHeader title={t('Forma de pagamento')} />
-        <View
-          style={{ paddingTop: halfPadding, paddingHorizontal: padding, paddingBottom: padding }}
-        >
+        <View style={{ paddingTop: halfPadding, paddingHorizontal: padding }}>
           <Text style={{ ...texts.md }}>
             {t('Total pago: ')}
             <Text style={texts.bold}>{formatCurrency(order.fare!.total)}</Text>
@@ -165,11 +158,15 @@ export const OrderDetail = ({ navigation, route }: Props) => {
             <SingleHeader title={t('Observações')} />
           ) : null}
           <View
-            style={{ paddingTop: halfPadding, paddingHorizontal: padding, paddingBottom: padding }}
+            style={{
+              paddingTop: halfPadding,
+              paddingHorizontal: padding,
+              paddingBottom: padding,
+            }}
           >
             {additionalInfoUI()}
             {/* this button will open a CancelOrderModal  */}
-            <View style={{ width: '60%', marginTop: 32 }}>
+            <View style={{ width: '60%', marginTop: padding }}>
               <DefaultButton
                 title={t('Cancelar pedido')}
                 secondary
