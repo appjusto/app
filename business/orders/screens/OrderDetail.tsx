@@ -8,6 +8,7 @@ import { cpfFormatter } from '../../../common/components/inputs/pattern-input/fo
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
+import OrderMap from '../../../common/screens/orders/OrderMap';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
@@ -71,9 +72,15 @@ export const OrderDetail = ({ navigation, route }: Props) => {
         />
         <PaddedView>
           {/* order.status */}
-          <RoundedText backgroundColor={colors.red} noBorder color={colors.white}>
-            Pendente
-          </RoundedText>
+          <View
+            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
+          >
+            <RoundedText backgroundColor={colors.red} noBorder color={colors.white}>
+              Pendente
+            </RoundedText>
+            {/* cooking time component. will show after the order is accepted */}
+            <Text>TIME</Text>
+          </View>
           <Text style={{ ...texts.md, marginTop: halfPadding }}>
             {t('Nome do cliente: ')}
             <Text style={texts.bold}>{order.consumer.name}</Text>
@@ -88,6 +95,13 @@ export const OrderDetail = ({ navigation, route }: Props) => {
             <DefaultButton title={t('Abrir chat com o cliente')} secondary />
           </View> */}
         </PaddedView>
+        {/* when status === 'dispatching' */}
+        <View style={{ marginTop: padding }}>
+          <SingleHeader title={t('Entregador')} />
+          <View style={{ marginHorizontal: padding }}>
+            <OrderMap order={order} ratio={240 / 160} />
+          </View>
+        </View>
         <View style={{ marginTop: padding }}>
           <SingleHeader title={t('Detalhes do pedido')} />
         </View>

@@ -66,7 +66,11 @@ export const CancelOrderModal = ({ onModalClose, modalVisible }: Props) => {
                 <DefaultButton title={t('Aceitar pedido')} />
               </View>
               <View style={{ width: '48%' }}>
-                <DefaultButton title={t('Cancelar pedido')} />
+                <DefaultButton
+                  title={t('Cancelar pedido')}
+                  grey
+                  style={{ backgroundColor: colors.red }}
+                />
               </View>
             </View>
           </View>
