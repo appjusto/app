@@ -54,10 +54,10 @@ export const OngoingActions = ({
               </Text>
             </View>
           ) : null}
-          {order.destination?.intructions ? (
+          {order.type === 'p2p' && order.destination?.intructions ? (
             <View>
               <Text style={{ ...texts.xs, color: colors.grey700 }}>
-                {order.destination?.intructions}
+                {order.destination.intructions}
               </Text>
             </View>
           ) : null}

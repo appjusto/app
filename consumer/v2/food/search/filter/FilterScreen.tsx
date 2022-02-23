@@ -43,16 +43,20 @@ const orderByOptions: OrderByItem[] = [
     value: 'distance',
   },
   {
+    title: t('Maior desconto'),
+    value: 'average-discount',
+  },
+  {
+    title: t('Popularidade'),
+    value: 'popularity',
+  },
+  {
     title: t('Menor preço'),
     value: 'price',
   },
   {
     title: t('Menor tempo de preparo'),
     value: 'preparation-time',
-  },
-  {
-    title: t('Popularidade'),
-    value: 'popularity',
   },
 ];
 

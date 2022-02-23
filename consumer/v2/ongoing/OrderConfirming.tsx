@@ -11,7 +11,6 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import { Lottie } from '../../../common/components/icons/Lottie';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import Pill from '../../../common/components/views/Pill';
-import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { IconPixLogo } from '../../../common/icons/icon-pix-logo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
@@ -38,12 +37,11 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
   const { orderId, pixKey, total } = route.params;
   // screen state
   const order = useObserveOrder(orderId);
-  const tallerDevice = useTallerDevice();
   // side effects
   React.useEffect(() => {
     if (!order) return;
     console.log('OrderConfirming', order.status);
-    if (order.status === 'canceled') {
+    if (order.status === 'canceled' || order.status === 'rejected') {
       navigation.replace('OrderCanceled', { orderId });
     } else if (order.status === 'confirmed') {
       if (order.type === 'food') {
@@ -82,12 +80,9 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  const description =
-    order.type === 'food'
-      ? t('Aguarde enquanto criamos seu pedido...')
-      : t(
-          'Você sabia que o AppJusto não fica com nada do valor da entrega? Ao pedir pelo AppJusto, você ajuda esse entregador a receber mais por seu trabalho. Justo, né?'
-        );
+  const description = t(
+    'Você sabia que o AppJusto não fica com nada do valor da entrega? Ao pedir pelo AppJusto, você ajuda esse entregador a receber mais por seu trabalho. Justo, né?'
+  );
   return pixKey ? (
     <SafeAreaView style={{ ...screens.default }}>
       <PaddedView>
@@ -157,7 +152,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
     </SafeAreaView>
   ) : order.type === 'food' ? (
     <FeedbackView
-      header={t('Pedido em andamento')}
+      header={t('Criando seu pedido...')}
       description={description}
       icon={<Lottie animationObject={motocycleJson} iconStyle={{ width: 115, height: 114 }} />}
       background={colors.white}

@@ -16,14 +16,16 @@ export const useSearch = <T extends object>(
   // context
   const api = React.useContext(ApiContext);
   // state
-  const [response, setResponse] = React.useState<SearchResponse<T>>();
+  const [lastResponse, setLastResponse] = React.useState<SearchResponse<T>>();
+  const [responseByPage, setResponseByPage] =
+    React.useState<Map<number | undefined, SearchResponse<T>>>();
   const [results, setResults] = React.useState<T[]>();
   const [isLoading, setLoading] = React.useState(true);
   // helpers
   const search = React.useCallback(
     async (location: LatLng, input: string, filters: SearchFilter[], page?: number) => {
       setLoading(true);
-      setResponse(await api.search().search(kind, order, filters, location, input, page));
+      setLastResponse(await api.search().search<T>(kind, order, filters, location, input, page));
       setLoading(false);
     },
     [api, kind, order]
@@ -41,6 +43,18 @@ export const useSearch = <T extends object>(
   React.useEffect(() => {
     api.search().clearCache();
   }, [api]);
+  React.useEffect(() => {
+    if (!lastResponse) return;
+    setResponseByPage((current) => {
+      const value = current ? new Map(current.entries()) : new Map();
+      console.log(
+        'response:',
+        lastResponse.hits.map((value) => value.name)
+      );
+      value.set(lastResponse.page, lastResponse);
+      return value;
+    });
+  }, [lastResponse]);
   // debounce search when search input changes
   React.useEffect(() => {
     if (!enabled) return;
@@ -50,28 +64,34 @@ export const useSearch = <T extends object>(
   }, [enabled, name, coords, debouncedSearch, filters]);
   // update results when response changes
   React.useEffect(() => {
-    if (!response) {
+    if (!responseByPage) {
       setResults(undefined);
       return;
     }
-    const hits = response.hits;
-    if (response.page === 0) setResults(hits);
-    else setResults([...(results ?? []), ...hits]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [response]);
+    setResults(
+      Array.from(responseByPage.values()).reduce(
+        (result, response) => [...result, ...response.hits],
+        [] as T[]
+      )
+    );
+  }, [responseByPage]);
   // result
   const fetchNextPage = React.useCallback(() => {
+    // console.log('fetchNextPage', name, coords, !responseByPage, !lastResponse);
     if (name === undefined) return;
     if (!coords) return;
-    if (!response) return;
-    const hasNextPage = response.page + 1 < response.nbPages;
-    if (hasNextPage) search(coords, name, filters, response.page + 1);
-  }, [name, coords, response, search, filters]);
+    if (!responseByPage) return;
+    if (!lastResponse) return;
+    const hasNextPage = lastResponse.page + 1 < lastResponse.nbPages;
+    // console.log('hasNextPage', hasNextPage);
+    if (hasNextPage) search(coords, name, filters, lastResponse.page + 1);
+  }, [name, coords, responseByPage, search, filters]);
+  // }, [name, coords, filters, lastResponse, responseByPage, search]);
 
   const refetch = () => {
     if (name === undefined) return;
     if (!coords) return;
-    setResponse(undefined);
+    setResponseByPage(undefined);
     return search(coords, name, filters);
   };
 

@@ -17,6 +17,7 @@ import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
   getMonthsWithOrdersInYear,
   getOrdersWithFilter,
+  getOrderTime,
   getYearsWithOrders,
   summarizeOrders,
 } from '../../../../common/store/order/selectors';
@@ -57,7 +58,11 @@ export default function ({ navigation, route }: Props) {
           key: `${year}-${month}`,
           year,
           month,
-          ...summarizeOrders(getOrdersWithFilter(orders, year, month)),
+          ...summarizeOrders(
+            getOrdersWithFilter(orders, year, month).filter(
+              (order) => getOrderTime(order).getMonth() === month
+            )
+          ),
         })),
       };
     });
@@ -76,7 +81,6 @@ export default function ({ navigation, route }: Props) {
       />
     );
   }
-
   // UI
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
@@ -107,6 +111,8 @@ export default function ({ navigation, route }: Props) {
                   if (item.total === 1) return t('1 pedido');
                   else return `${item.total} ${t('pedidos')}`;
                 })();
+                const thisMonth = new Date().getMonth();
+                if (item.total === 0) return null;
                 return (
                   <ConfigItem
                     title={title}
@@ -121,7 +127,7 @@ export default function ({ navigation, route }: Props) {
                       });
                     }}
                   >
-                    <ShowIf test={item.ongoing > 0}>
+                    <ShowIf test={item.ongoing > 0 && item.month === thisMonth}>
                       {() => (
                         <View style={{ marginTop: halfPadding }}>
                           <RoundedText backgroundColor={colors.yellow}>

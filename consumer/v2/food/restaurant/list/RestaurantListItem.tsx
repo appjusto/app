@@ -19,6 +19,8 @@ type Props = {
 export const RestaurantListItem = ({ id, restaurant, cuisine, distance, secondary }: Props) => {
   const { data: logo } = useBusinessLogoURI(id);
   const outOfRange = (restaurant.deliveryRange ?? 0) < (distance ?? 0);
+  // helpers
+  const discount = `-${restaurant.averageDiscount}%`;
   return (
     <View style={{ justifyContent: 'center' }}>
       <View
@@ -38,7 +40,14 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance, secondar
         }}
       >
         <View style={{ justifyContent: 'center', width: '75%' }}>
-          <Text style={{ ...texts.sm }}>{restaurant.name}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ ...texts.sm, marginRight: halfPadding }}>{restaurant.name}</Text>
+            {restaurant.averageDiscount ? (
+              <RoundedText backgroundColor={colors.darkYellow} noBorder>
+                {discount}
+              </RoundedText>
+            ) : null}
+          </View>
           <Text style={{ ...texts.xs, color: secondary ? colors.grey700 : colors.green600 }}>
             {t(cuisine ?? '')}
           </Text>

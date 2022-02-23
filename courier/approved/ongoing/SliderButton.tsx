@@ -1,6 +1,13 @@
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { Text, TouchableOpacity, TouchableOpacityProps, View, ViewProps } from 'react-native';
+import {
+  ActivityIndicator,
+  Text,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+  ViewProps,
+} from 'react-native';
 import { borders, colors, padding, texts } from '../../../common/styles';
 
 export interface DefaultButtonProps extends TouchableOpacityProps, ViewProps {
@@ -38,9 +45,15 @@ export default function ({
           style,
         ]}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={{ ...texts.sm, color }}>{title}</Text>
-          <Feather name="arrow-right" size={14} style={{ marginLeft: 4, paddingTop: 4 }} />
+        <View>
+          {activityIndicator ? (
+            <ActivityIndicator size="small" color={colors.white} />
+          ) : (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{ ...texts.sm, color }}>{title}</Text>
+              <Feather name="arrow-right" size={14} style={{ marginLeft: 4, paddingTop: 4 }} />
+            </View>
+          )}
         </View>
       </View>
     </TouchableOpacity>

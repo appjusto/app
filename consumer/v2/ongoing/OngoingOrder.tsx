@@ -93,7 +93,7 @@ export default function ({ navigation, route }: Props) {
   React.useEffect(() => {
     if (!order) return;
     if (order.status === 'delivered') {
-      navigation.navigate('OngoingOrderFeedback', { orderId });
+      navigation.replace('OngoingOrderFeedback', { orderId });
     }
     // whenever a consumer payment method has been approved for the itens
     // but has no funds to pay for the courier in a food order

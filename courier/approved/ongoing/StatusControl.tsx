@@ -99,7 +99,7 @@ export const StatusControl = ({
             <SliderButton
               title={text}
               style={{ height: trackHeight, width: '81%' }}
-              activityIndicator={isLoading}
+              activityIndicator={isLoading || confirmed}
               disabled={disabled}
               buttonColor={color}
             />

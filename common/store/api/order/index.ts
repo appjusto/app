@@ -7,6 +7,7 @@ import {
   DispatchingState,
   DropOrderPayload,
   Fare,
+  Flavor,
   GetCancellationInfoPayload,
   GetCancellationInfoResult,
   GetOrderQuotesPayload,
@@ -31,7 +32,7 @@ import {
   WithId,
 } from '@appjusto/types';
 import firebase from 'firebase';
-import { isEmpty } from 'lodash';
+import { isEmpty, uniq } from 'lodash';
 import * as Sentry from 'sentry-expo';
 import { getAppVersion } from '../../../utils/version';
 import { fetchPublicIP } from '../externals/ipify';
@@ -50,6 +51,17 @@ export default class OrderApi {
     items: OrderItem[] = [],
     destination: Place | null = null
   ) {
+    const businessAddress = business.businessAddress!;
+    const { address, number, neighborhood, city } = businessAddress;
+    const main = `${address}, ${number}`;
+    const secondary = `${neighborhood ? `${neighborhood} - ` : ''}${city}`;
+    const origin: Place = {
+      address: {
+        main,
+        secondary,
+        description: `${main} - ${secondary}`,
+      },
+    };
     const payload: Partial<Order> = {
       type: 'food',
       status: 'quote',
@@ -64,15 +76,7 @@ export default class OrderApi {
         name: consumer.name ?? '',
         notificationToken: consumer.notificationToken ?? null,
       },
-      origin: {
-        address: {
-          main: `${business.businessAddress!.address}, ${business.businessAddress!.number}`,
-          secondary: `${business.businessAddress!.city}`,
-          description: `${business.businessAddress!.address}, ${
-            business.businessAddress!.number
-          } - ${business.businessAddress!.city}`,
-        },
-      },
+      origin,
       destination,
       createdOn: firebase.firestore.FieldValue.serverTimestamp(),
       items,
@@ -162,14 +166,18 @@ export default class OrderApi {
   }
   observeOrderChat(
     orderId: string,
-    fromId: string | undefined,
-    toId: string | undefined,
+    userId: string | undefined,
+    counterPartId: string | undefined,
+    counterpartFlavor: Flavor | undefined,
     resultHandler: (orders: WithId<ChatMessage>[]) => void
   ): firebase.Unsubscribe {
-    const chatRef = this.refs.getOrderChatRef(orderId);
-    let query = chatRef.orderBy('timestamp', 'asc');
-    if (fromId) query = query.where('from.id', '==', fromId);
-    if (toId) query = query.where('to.id', '==', toId);
+    let query = this.refs.getChatsRef().where('orderId', '==', orderId).orderBy('timestamp', 'asc');
+    if (userId && counterPartId) {
+      const participantsIds =
+        counterpartFlavor !== 'courier' ? [counterPartId, userId] : [userId, counterPartId];
+      query = query.where('participantsIds', 'in', [participantsIds]);
+    } else if (userId) query = query.where('participantsIds', 'array-contains', userId);
+    else if (counterPartId) query = query.where('participantsIds', 'array-contains', counterPartId);
     const unsubscribe = query.onSnapshot(
       (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
       (error) => console.log(error)
@@ -202,18 +210,18 @@ export default class OrderApi {
     return unsubscribe;
   }
 
-  async sendMessage(orderId: string, message: Partial<ChatMessage>) {
+  async sendMessage(message: Partial<ChatMessage>) {
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    return this.refs.getOrderChatRef(orderId).add({
+    return this.refs.getChatsRef().add({
       ...message,
       timestamp,
     });
   }
 
-  async updateReadMessages(orderId: string, messageIds: string[]) {
+  async updateReadMessages(messageIds: string[]) {
     const batch = this.firestore.batch();
     messageIds.forEach((id) => {
-      batch.update(this.refs.getOrderChatMessageRef(orderId, id), {
+      batch.update(this.refs.getChatMessageRef(id), {
         read: true,
       } as Partial<ChatMessage>);
     });
@@ -324,19 +332,27 @@ export default class OrderApi {
       .limit(limit * 3) // we fetch more than we need to have some latitude for consumers whose order to the same restaurant
       .get();
     if (ordersSnapshot.empty) return [];
-    const businessIds = documentsAs<Order>(ordersSnapshot.docs).map((order) => order.business!.id);
+    const businessIds = uniq(
+      documentsAs<Order>(ordersSnapshot.docs).map((order) => order.business!.id)
+    );
     const lastRestsQuerySnapshot = await this.refs
       .getBusinessesRef()
       .where(firebase.firestore.FieldPath.documentId(), 'in', businessIds)
       .where('status', '==', 'open')
       .limit(limit)
       .get();
-    return documentsAs<Business>(lastRestsQuerySnapshot.docs);
+    if (lastRestsQuerySnapshot.empty) return [];
+    const businesses = documentsAs<Business>(lastRestsQuerySnapshot.docs);
+    return businessIds
+      .slice(0, limit)
+      .map((id) => businesses.find((b) => b.id === id))
+      .filter((b) => !!b);
   }
   // courier
-  async matchOrder(orderId: string) {
+  async matchOrder(orderId: string, distanceToOrigin: number = 0) {
     const payload: MatchOrderPayload = {
       orderId,
+      distanceToOrigin,
       meta: { version: getAppVersion() },
     };
     return (await this.refs.getMatchOrderCallable()(payload)).data;

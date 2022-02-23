@@ -18,7 +18,7 @@ interface Props extends ViewProps {
 const { width } = Dimensions.get('window');
 const trackHeight = 88;
 const thumbSize = 114;
-const center = (width - thumbSize) * 0.44;
+const center = (width - thumbSize) * 0.4;
 const marginHorizontal = 0;
 const leftmost = (center - marginHorizontal) * -1;
 const rightmost = center - marginHorizontal - 5;

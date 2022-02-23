@@ -61,13 +61,19 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   // navigating to OngoingOrder after the user changes his payment method
   // and the matching is restarted
   React.useEffect(() => {
-    if (dispatchingStatus === 'matching') navigation.navigate('OngoingOrder', { orderId });
+    if (
+      dispatchingStatus === 'matching' ||
+      dispatchingStatus === 'scheduled' ||
+      dispatchingStatus === 'outsourced'
+    )
+      navigation.navigate('OngoingOrder', { orderId });
   }, [dispatchingStatus, orderId, navigation]);
   // status === 'declined' and the user does not add a new card
   // after 1 hour, the status turns into 'canceled'
   React.useEffect(() => {
     if (!order) return;
-    if (order.status === 'canceled') navigation.navigate('OrderCanceled', { orderId });
+    if (order.status === 'canceled' || order.status === 'rejected')
+      navigation.navigate('OrderCanceled', { orderId });
   }, [navigation, order, orderId]);
   // tracking
   useSegmentScreen('OngoingOrderDeclined');
