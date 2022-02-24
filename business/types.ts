@@ -3,4 +3,5 @@ export type LoggedBusinessNavParamsList = {
   OrderDetail: {
     orderId: string;
   };
+  ManagerOptions: undefined;
 };

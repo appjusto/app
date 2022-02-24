@@ -7,16 +7,15 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, halfPadding, padding, screens } from '../../../common/styles';
-import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
 import { t } from '../../../strings';
+import { LoggedBusinessNavParamsList } from '../../types';
 import { CookingTimeModal } from '../components/CookingTimeModal';
 import { ListFilterButton } from '../components/ListFilterButton';
 import { OrdersKanbanItem } from '../components/OrdersKanbanItem';
 import { OrderManagerHeader } from '../components/OrdersManagerHeader';
 
-// TODO: add the correct screenNavigationProp: LoggedBusinessNavParamsList
-type ScreenNavigationProp = StackNavigationProp<LoggedNavigatorParamList, 'OrdersManager'>;
-type ScreenRouteProp = RouteProp<LoggedNavigatorParamList, 'OrdersManager'>;
+type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'OrdersManager'>;
+type ScreenRouteProp = RouteProp<LoggedBusinessNavParamsList, 'OrdersManager'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

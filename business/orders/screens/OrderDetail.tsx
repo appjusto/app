@@ -13,14 +13,14 @@ import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserv
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency, formatDuration, formatTime } from '../../../common/utils/formatters';
-import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
 import { t } from '../../../strings';
+import { LoggedBusinessNavParamsList } from '../../types';
 import { CancelOrderModal } from '../components/CancelOrderModal';
 import { CookingTimeModal } from '../components/CookingTimeModal';
 import { OrderListItem } from '../components/OrderListItem';
-// TODO: add the correct screenNavigationProp: LoggedBusinessNavParamsList
-type ScreenNavigationProp = StackNavigationProp<LoggedNavigatorParamList, 'OrderDetail'>;
-type ScreenRouteProp = RouteProp<LoggedNavigatorParamList, 'OrderDetail'>;
+
+type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'OrderDetail'>;
+type ScreenRouteProp = RouteProp<LoggedBusinessNavParamsList, 'OrderDetail'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

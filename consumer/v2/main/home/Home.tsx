@@ -99,7 +99,9 @@ export default function ({ navigation }: Props) {
           ) : null}
           <TouchableOpacity
             style={{ marginVertical: padding }}
-            onPress={() => navigation.navigate('OrdersManager')}
+            onPress={() =>
+              navigation.navigate('LoggedBusinessNavigator', { screen: 'OrdersManager' })
+            }
           >
             <Text>ORDERS MANAGER</Text>
           </TouchableOpacity>

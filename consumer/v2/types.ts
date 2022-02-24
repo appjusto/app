@@ -1,3 +1,4 @@
+import { LoggedBusinessNavParamsList } from '../../business/types';
 import { NestedNavigatorParams } from '../../common/types';
 import { DeliveredOrderNavigatorParamList } from './delivered/types';
 import { FoodOrderNavigatorParamList } from './food/types';
@@ -29,8 +30,5 @@ export type LoggedNavigatorParamList = {
   OngoingOrderCancelFeedback: undefined;
   UnapprovedConsumerNavigator: UnapprovedConsumerParamsList;
   // test setup
-  OrdersManager: undefined;
-  OrderDetail: {
-    orderId: string;
-  };
+  LoggedBusinessNavigator: NestedNavigatorParams<LoggedBusinessNavParamsList>;
 };

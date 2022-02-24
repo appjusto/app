@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { Image } from 'react-native';
+import { Image, TouchableWithoutFeedback, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { headerMenu } from '../assets/icons';
 import { ApiContext, AppDispatch } from '../common/app/context';
@@ -9,11 +9,11 @@ import { getFlavor } from '../common/store/config/selectors';
 import { observeProfile } from '../common/store/user/actions';
 import { getUser } from '../common/store/user/selectors';
 import { t } from '../strings';
+import { ManagerOptions } from './orders/screens/ManagerOptions';
 import { OrderDetail } from './orders/screens/OrderDetail';
 import { OrdersManager } from './orders/screens/OrdersManager';
 import { LoggedBusinessNavParamsList } from './types';
 
-//TODO: create and add params list
 const Stack = createStackNavigator<LoggedBusinessNavParamsList>();
 
 export const LoggedBusinessNavigator = () => {
@@ -35,11 +35,18 @@ export const LoggedBusinessNavigator = () => {
     <Stack.Screen
       name="OrdersManager"
       component={OrdersManager}
-      options={{
+      options={({ navigation, route }) => ({
         title: t('Gerenciador de pedidos'),
-        headerLeft: () => <Image source={headerMenu} height={32} width={32} />,
-      }}
+        headerLeft: () => (
+          <TouchableWithoutFeedback onPress={() => navigation.navigate('ManagerOptions')}>
+            <View style={{ marginLeft: 12 }}>
+              <Image source={headerMenu} height={32} width={32} />
+            </View>
+          </TouchableWithoutFeedback>
+        ),
+      })}
     />
     <Stack.Screen name="OrderDetail" component={OrderDetail} options={{ title: t('Ver pedido') }} />
+    <Stack.Screen name="ManagerOptions" component={ManagerOptions} options={{ title: t('Menu') }} />
   </Stack.Navigator>;
 };
