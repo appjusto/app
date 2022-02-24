@@ -1,6 +1,6 @@
+import { LatLng } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import * as Location from 'expo-location';
 import { round } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
@@ -8,9 +8,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RoundedText from '../../../common/components/texts/RoundedText';
+import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
 import OrderMap from '../../../common/screens/orders/OrderMap';
 import { useObserveOrderRequest } from '../../../common/store/api/courier/hooks/useObserveOrderRequest';
-import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { screen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
@@ -36,28 +36,42 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // params
   const { matchRequest } = route.params;
-  const { orderId, origin, distanceToOrigin, originAddress, destinationAddress, type } =
-    matchRequest;
+  const {
+    orderId,
+    origin,
+    distanceToOrigin,
+    originAddress,
+    destinationAddress,
+    type,
+    destination,
+  } = matchRequest;
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
   const courier = useSelector(getCourier)!;
   // state
-  const order = useObserveOrder(orderId);
   const request = useObserveOrderRequest(courier.id, orderId);
   const situation = request?.situation;
   const canAccept = situation === 'pending' || situation === 'viewed';
   const [routeDistanceToOrigin, setRouteDistanceToOrigin] = React.useState(distanceToOrigin);
   const [isLoading, setLoading] = React.useState(true);
+  const [courierLatLng, setCourierLatLng] = React.useState<LatLng>();
+  const { lastKnownLocation } = useLastKnownLocation();
   // side effects
   // calculating the real distance between courier and origin
   React.useEffect(() => {
     (async () => {
       try {
-        const position = await Location.getCurrentPositionAsync();
+        // const position = await Location.getCurrentPositionAsync();
+        // settting courierLatLng for the map
+        if (lastKnownLocation)
+          setCourierLatLng({
+            latitude: lastKnownLocation.coords.latitude,
+            longitude: lastKnownLocation.coords.longitude,
+          });
         const currentDistanceToOrigin = await api
           .maps()
-          .googleRouteAndDistance(position.coords, origin, courier.mode);
+          .googleRouteAndDistance(lastKnownLocation!.coords, origin, courier.mode);
         if (currentDistanceToOrigin) setRouteDistanceToOrigin(currentDistanceToOrigin.distance);
         screen('Matching', {
           orderId,
@@ -75,7 +89,16 @@ export default function ({ navigation, route }: Props) {
       }
       setLoading(false);
     })();
-  }, [distanceToOrigin, orderId, origin, api, dispatch, courier.mode]);
+  }, [
+    distanceToOrigin,
+    orderId,
+    origin,
+    api,
+    dispatch,
+    courier.mode,
+    destinationAddress,
+    lastKnownLocation,
+  ]);
   // when situation changes
   React.useEffect(() => {
     if (situation === 'pending') {
@@ -109,9 +132,8 @@ export default function ({ navigation, route }: Props) {
   const totalDistance = (matchRequest.distance + routeDistanceToOrigin) / 1000;
   const feePerKm = matchRequest.fee / 100 / totalDistance;
   const roundedFeePerKm = round(feePerKm, 2);
-
   // UI
-  if (isLoading || !order)
+  if (isLoading)
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -123,7 +145,7 @@ export default function ({ navigation, route }: Props) {
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
     >
-      <View style={{ paddingHorizontal: padding, paddingVertical: 24, flex: 1 }}>
+      <View style={{ paddingVertical: 24, flex: 1 }}>
         {courier.fleet?.name ? (
           <View
             style={{
@@ -136,6 +158,7 @@ export default function ({ navigation, route }: Props) {
               justifyContent: 'center',
               alignItems: 'center',
               marginTop: padding,
+              paddingHorizontal: padding,
             }}
           >
             <Text style={{ ...texts.md }}>{courier.fleet.name}</Text>
@@ -152,6 +175,7 @@ export default function ({ navigation, route }: Props) {
               justifyContent: 'center',
               alignItems: 'center',
               marginTop: padding,
+              paddingHorizontal: padding,
             }}
           >
             <Text style={{ marginRight: halfPadding, ...texts.md }}>
@@ -170,6 +194,7 @@ export default function ({ navigation, route }: Props) {
             height: 64,
             flexDirection: 'row',
             justifyContent: 'space-between',
+            paddingHorizontal: padding,
           }}
         >
           <View style={{ alignItems: 'center', flex: 1 }}>
@@ -209,7 +234,7 @@ export default function ({ navigation, route }: Props) {
             </Text>
           </View>
         </View>
-        <View style={{ marginTop: 24, alignItems: 'center' }}>
+        <View style={{ marginTop: 24, alignItems: 'center', paddingHorizontal: padding }}>
           {matchRequest.readyAt ? (
             <RoundedText color={colors.white} backgroundColor={colors.black}>
               {`${t('Pedido pronto às')} ${formatTime(new Date(matchRequest.readyAt))}`}
@@ -222,11 +247,20 @@ export default function ({ navigation, route }: Props) {
         </View>
         <View style={{ flex: 1 }} />
         {/* map */}
-        <View>
-          <OrderMap order={order} ratio={360 / 160} />
+        <View style={{ marginTop: padding }}>
+          <OrderMap
+            originLocation={origin}
+            destinationLocation={destination}
+            courierLocation={courierLatLng}
+            ratio={360 / 160}
+          />
         </View>
         <View style={{ flex: 1 }} />
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ paddingLeft: padding, top: -32 }}
+        >
           {/* origin */}
           <View style={{ marginRight: halfPadding }}>
             <AddressCard
@@ -247,7 +281,7 @@ export default function ({ navigation, route }: Props) {
         <View style={{ flex: 1 }} />
         {/* slider accept/reject control */}
         {canAccept ? (
-          <View style={{ marginTop: padding }}>
+          <View style={{ marginTop: padding, paddingHorizontal: padding }}>
             <AcceptControl
               onAccept={acceptHandler}
               onReject={rejectHandler}
