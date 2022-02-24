@@ -1,7 +1,6 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
-import firebase from 'firebase/compat/app';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -80,8 +79,8 @@ export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
   // handlers
   const verifyPhoneHandler = () => {
     setState('verifying-phone-number');
-    const phoneProvider = new firebase.auth.PhoneAuthProvider();
-    phoneProvider
+    api
+      .auth()
       .verifyPhoneNumber(`+55${phone}`, recaptchaRef.current!)
       .then((id) => {
         setVerificationId(id);
@@ -98,11 +97,7 @@ export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
     (async () => {
       try {
         setState('verifying-code');
-        const credential = firebase.auth.PhoneAuthProvider.credential(
-          verificationId,
-          verificationCode
-        );
-        await api.auth().linkCredential(credential);
+        await api.auth().confirmPhoneSignIn(verificationId, verificationCode);
         setState('success');
       } catch (err: any) {
         let message: string = err.message;

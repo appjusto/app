@@ -1,4 +1,4 @@
-import firebase from 'firebase/compat/app';
+import { GeoPoint } from 'firebase/firestore';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../app/context';
@@ -77,7 +77,7 @@ export const useUpdateLocation = () => {
     if (!consumer?.id) return;
     if (!coords) return;
     const { latitude, longitude } = coords;
-    const coordinates = new firebase.firestore.GeoPoint(latitude, longitude);
+    const coordinates = new GeoPoint(latitude, longitude);
     api.profile().updateLocation(consumer.id, coordinates).then(null);
   }, [consumer?.id, coords, api]);
 };

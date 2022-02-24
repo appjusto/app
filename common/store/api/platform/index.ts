@@ -1,6 +1,5 @@
 import {
   Bank,
-  CityStatistics,
   Classification,
   Cuisine,
   Issue,
@@ -8,7 +7,7 @@ import {
   PlatformAccess,
   PlatformParams,
 } from '@appjusto/types';
-import firebase from 'firebase/compat/app';
+import { getDoc, getDocs, orderBy, query, where } from 'firebase/firestore';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentsAs } from '../types';
@@ -18,56 +17,35 @@ export default class PlatformApi {
 
   // firestore
   async fetchPlatformParams() {
-    const snapshot = await this.refs.getPlatformParamsRef().get();
+    const snapshot = await getDoc(this.refs.getPlatformParamsRef());
     return snapshot.data() as PlatformParams;
   }
 
   async fetchPlatformAccess() {
-    const snapshot = await this.refs.getPlatformAccessRef().get();
+    const snapshot = await getDoc(this.refs.getPlatformAccessRef());
     return snapshot.data() as PlatformAccess;
   }
 
   async fetchBanks() {
-    const querySnapshot = await this.refs.getBanksRef().orderBy('order', 'asc').get();
+    const querySnapshot = await getDocs(query(this.refs.getBanksRef(), orderBy('order', 'asc')));
     return documentsAs<Bank>(querySnapshot.docs);
   }
 
   async fetchIssues(type: IssueType) {
-    const query = this.refs.getIssuesRef().where('type', '==', type);
-    const docs = (await query.get()).docs;
-    return documentsAs<Issue>(docs);
+    const querySnapshot = await getDocs(query(this.refs.getIssuesRef(), where('type', '==', type)));
+    return documentsAs<Issue>(querySnapshot.docs);
   }
 
   async fetchCuisines() {
-    const querySnapshot = await this.refs
-      .getCuisinesRef()
-      .where('enabled', '==', true)
-      .orderBy('order', 'asc')
-      .get();
+    const querySnapshot = await getDocs(
+      query(this.refs.getCuisinesRef(), where('enabled', '==', true), orderBy('order', 'asc'))
+    );
     return documentsAs<Cuisine>(querySnapshot.docs);
   }
 
   async fetchFoodClassifications() {
-    const query = this.refs.getClassificationsRef();
-    const docs = (await query.get()).docs;
-    return documentsAs<Classification>(docs);
-  }
-
-  observeCityStatistics(
-    city: string,
-    resultHandler: (cityStatistics: CityStatistics | null) => void
-  ): firebase.Unsubscribe {
-    const unsubscribe = this.refs.getPlatformCityStatisticsRef(city).onSnapshot(
-      async (doc) => {
-        if (doc.exists) resultHandler(doc.data() as CityStatistics);
-        else resultHandler(null);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-    // returns the unsubscribe function
-    return unsubscribe;
+    const querySnapshot = await getDocs(this.refs.getClassificationsRef());
+    return documentsAs<Classification>(querySnapshot.docs);
   }
 
   // storage

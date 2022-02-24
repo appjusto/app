@@ -1,37 +1,39 @@
 import {
   Business,
-  CancelOrderPayload,
   ChatMessage,
-  CompleteDeliveryPayload,
   ConsumerProfile,
-  DispatchingState,
-  DropOrderPayload,
-  Fare,
   Flavor,
-  GetCancellationInfoPayload,
-  GetCancellationInfoResult,
-  GetOrderQuotesPayload,
   Issue,
   LatLng,
-  MatchOrderPayload,
-  NextDispatchingStatePayload,
   Order,
   OrderCancellation,
-  OrderChange,
   OrderConfirmation,
   OrderIssue,
   OrderItem,
   OrderStatus,
   OrderType,
   Place,
-  PlaceOrderPayload,
   PlaceOrderPayloadPayment,
-  RejectOrderPayload,
-  TipCourierPayload,
-  UpdateOrderPayload,
   WithId,
 } from '@appjusto/types';
-import firebase from 'firebase/compat/app';
+import {
+  addDoc,
+  deleteDoc,
+  documentId,
+  Firestore,
+  FirestoreError,
+  getDoc,
+  getDocs,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+  Unsubscribe,
+  updateDoc,
+  where,
+  writeBatch,
+} from 'firebase/firestore';
 import { isEmpty, uniq } from 'lodash';
 import * as Sentry from 'sentry-expo';
 import { getAppVersion } from '../../../utils/version';
@@ -41,7 +43,7 @@ import { documentAs, documentsAs } from '../types';
 import { ObserveOrdersOptions } from './types';
 
 export default class OrderApi {
-  constructor(private refs: FirebaseRefs, private firestore: firebase.firestore.Firestore) {}
+  constructor(private refs: FirebaseRefs, private firestore: Firestore) {}
 
   // firestore
   // consumer
@@ -78,11 +80,11 @@ export default class OrderApi {
       },
       origin,
       destination,
-      createdOn: firebase.firestore.FieldValue.serverTimestamp(),
+      createdOn: serverTimestamp(),
       items,
     };
-    const order = await this.refs.getOrdersRef().add(payload);
-    return documentAs<Order>(await order.get());
+    const order = await addDoc(this.refs.getOrdersRef(), payload);
+    return documentAs<Order>(await getDoc(order));
   }
   async createOrderP2P(consumer: WithId<ConsumerProfile>, origin: Place) {
     const payload: Partial<Order> = {
@@ -94,24 +96,24 @@ export default class OrderApi {
         name: consumer.name ?? '',
       },
       origin,
-      createdOn: firebase.firestore.FieldValue.serverTimestamp(),
+      createdOn: serverTimestamp(),
     };
-    const order = await this.refs.getOrdersRef().add(payload);
-    return documentAs<Order>(await order.get());
+    const order = await addDoc(this.refs.getOrdersRef(), payload);
+    return documentAs<Order>(await getDoc(order));
   }
   async updateOrder(orderId: string, changes: Partial<Order>) {
-    await this.refs.getOrderRef(orderId).update(changes);
+    await updateDoc(this.refs.getOrderRef(orderId), changes);
   }
   async deleteOrder(orderId: string) {
-    return this.refs.getOrderRef(orderId).delete();
+    await deleteDoc(this.refs.getOrderRef(orderId));
   }
 
   async fetchTotalOrdersDelivered(options: ObserveOrdersOptions) {
     const { consumerId, courierId } = options;
-    let query = this.refs.getOrdersRef().where('status', '==', 'delivered' as OrderStatus);
-    if (consumerId) query = query.where('consumer.id', '==', consumerId);
-    if (courierId) query = query.where('courier.id', '==', courierId);
-    const snapshot = await query.get();
+    const constraints = [where('status', '==', 'delivered' as OrderStatus)];
+    if (consumerId) constraints.push(where('consumer.id', '==', consumerId));
+    if (courierId) constraints.push(where('courier.id', '==', courierId));
+    const snapshot = await getDocs(query(this.refs.getOrdersRef(), ...constraints));
     return snapshot.size;
   }
 
@@ -119,50 +121,46 @@ export default class OrderApi {
   observeOrders(
     options: ObserveOrdersOptions,
     resultHandler: (orders: WithId<Order>[]) => void
-  ): firebase.Unsubscribe {
-    const { consumerId, courierId, statuses, limit, businessId } = options;
-    let query = this.refs.getOrdersRef().orderBy('createdOn', 'desc');
-
-    if (!isEmpty(statuses)) query = query.where('status', 'in', statuses);
-    if (consumerId) query = query.where('consumer.id', '==', consumerId);
-    if (courierId) query = query.where('courier.id', '==', courierId);
-    if (limit) query = query.limit(limit);
-    if (businessId) query = query.where('business.id', '==', businessId);
-    const unsubscribe = query.onSnapshot(
+  ): Unsubscribe {
+    const { consumerId, courierId, statuses, businessId } = options;
+    const constraints = [orderBy('createdOn', 'desc')];
+    if (!isEmpty(statuses)) constraints.push(where('status', 'in', statuses));
+    if (consumerId) constraints.push(where('consumer.id', '==', consumerId));
+    if (courierId) constraints.push(where('courier.id', '==', courierId));
+    if (businessId) constraints.push(where('business.id', '==', businessId));
+    if (options.limit) constraints.push(limit(options.limit));
+    return onSnapshot(
+      query(this.refs.getOrdersRef(), ...constraints),
       (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
       (error) => {
         console.log(error);
         Sentry.Native.captureException(error);
       }
     );
-    // returns the unsubscribe function
-    return unsubscribe;
   }
   observeOrder(
     orderId: string,
     resultHandler: (order: WithId<Order>) => void,
-    errorHandler: (error: firebase.firestore.FirestoreError) => void
-  ): firebase.Unsubscribe {
-    const unsubscribe = this.refs.getOrderRef(orderId).onSnapshot(
+    errorHandler: (error: FirestoreError) => void
+  ): Unsubscribe {
+    return onSnapshot(
+      this.refs.getOrderRef(orderId),
       (snapshot) => resultHandler(documentAs<Order>(snapshot)),
       (error) => errorHandler(error)
     );
-    // returns the unsubscribe function
-    return unsubscribe;
   }
   observeOrderConfirmation(
     orderId: string,
     resultHandler: (confirmation: OrderConfirmation) => void
-  ): firebase.Unsubscribe {
-    const unsubscribe = this.refs.getOrderConfirmationRef(orderId).onSnapshot(
+  ): Unsubscribe {
+    return onSnapshot(
+      this.refs.getOrderConfirmationRef(orderId),
       (snapshot) => resultHandler(snapshot.data() as OrderConfirmation),
       (error) => {
         console.log(error);
         Sentry.Native.captureException(error);
       }
     );
-    // returns the unsubscribe function
-    return unsubscribe;
   }
   observeOrderChat(
     orderId: string,
@@ -170,56 +168,31 @@ export default class OrderApi {
     counterPartId: string | undefined,
     counterpartFlavor: Flavor | undefined,
     resultHandler: (orders: WithId<ChatMessage>[]) => void
-  ): firebase.Unsubscribe {
-    let query = this.refs.getChatsRef().where('orderId', '==', orderId).orderBy('timestamp', 'asc');
+  ): Unsubscribe {
+    const constraints = [where('orderId', '==', orderId), orderBy('timestamp', 'asc')];
     if (userId && counterPartId) {
       const participantsIds =
         counterpartFlavor !== 'courier' ? [counterPartId, userId] : [userId, counterPartId];
-      query = query.where('participantsIds', 'in', [participantsIds]);
-    } else if (userId) query = query.where('participantsIds', 'array-contains', userId);
-    else if (counterPartId) query = query.where('participantsIds', 'array-contains', counterPartId);
-    const unsubscribe = query.onSnapshot(
+      constraints.push(where('participantsIds', 'in', [participantsIds]));
+    } else if (userId) constraints.push(where('participantsIds', 'array-contains', userId));
+    else if (counterPartId)
+      constraints.push(where('participantsIds', 'array-contains', counterPartId));
+    return onSnapshot(
+      query(this.refs.getChatsRef(), ...constraints),
       (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
       (error) => console.log(error)
     );
-    // returns the unsubscribe function
-    return unsubscribe;
-  }
-
-  observeOrderDispatchingStateTimestamp(
-    orderId: string,
-    dispatchingState: DispatchingState,
-    resultHandler: (change: OrderChange | null) => void
-  ): firebase.Unsubscribe {
-    const unsubscribe = this.refs
-      .getOrderLogsRef(orderId)
-      .where('after.dispatchingState', '==', dispatchingState)
-      .orderBy('timestamp', 'desc')
-      .limit(1)
-      .onSnapshot(
-        (querySnapshot) => {
-          if (querySnapshot.empty) resultHandler(null);
-          else resultHandler(documentsAs<OrderChange>(querySnapshot.docs).find(() => true)!);
-        },
-        (error) => {
-          console.log(error);
-          Sentry.Native.captureException(error);
-        }
-      );
-    // returns the unsubscribe function
-    return unsubscribe;
   }
 
   async sendMessage(message: Partial<ChatMessage>) {
-    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    return this.refs.getChatsRef().add({
+    return addDoc(this.refs.getChatsRef(), {
       ...message,
-      timestamp,
+      timestamp: serverTimestamp(),
     });
   }
 
   async updateReadMessages(messageIds: string[]) {
-    const batch = this.firestore.batch();
+    const batch = writeBatch(this.firestore);
     messageIds.forEach((id) => {
       batch.update(this.refs.getChatMessageRef(id), {
         read: true,
@@ -229,25 +202,25 @@ export default class OrderApi {
   }
 
   async createIssue(orderId: string, issue: OrderIssue) {
-    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    await this.refs
-      .getOrderIssuesRef(orderId)
-      .add({ ...issue, createdOn: timestamp } as OrderIssue);
+    await addDoc(this.refs.getOrderIssuesRef(orderId), {
+      ...issue,
+      createdOn: serverTimestamp(),
+    } as OrderIssue);
   }
 
   async fetchOrderCancellation(id: string) {
-    const doc = this.refs.getOrderCancellationRef(id);
-    return documentAs<OrderCancellation>(await doc.get());
+    return documentAs<OrderCancellation>(await getDoc(this.refs.getOrderCancellationRef(id)));
   }
 
   // callables
   // consumer
   async getOrderQuotes(orderId: string) {
-    const payload: GetOrderQuotesPayload = {
-      orderId,
-      meta: { version: getAppVersion() },
-    };
-    return (await this.refs.getGetOrderQuotesCallable()(payload)).data as Fare[];
+    return (
+      await this.refs.getGetOrderQuotesCallable()({
+        orderId,
+        meta: { version: getAppVersion() },
+      })
+    ).data;
   }
 
   async placeOrder(
@@ -265,7 +238,7 @@ export default class OrderApi {
     } catch (error) {
       Sentry.Native.captureException(error);
     }
-    const payload: PlaceOrderPayload = {
+    await this.refs.getPlaceOrderCallable()({
       orderId,
       fleetId,
       payment,
@@ -274,27 +247,26 @@ export default class OrderApi {
       additionalInfo,
       wantToShareData,
       meta: { version: getAppVersion(), ip },
-    };
-
-    return (await this.refs.getPlaceOrderCallable()(payload)).data;
+    });
   }
 
   async updateOrderCallable(orderId: string, payment: PlaceOrderPayloadPayment) {
-    const payload: UpdateOrderPayload = {
-      orderId,
-      payment,
-      meta: { version: getAppVersion() },
-    };
-    return (await this.refs.getUpdateOrderCallable()(payload)).data;
+    return (
+      await this.refs.getUpdateOrderCallable()({
+        orderId,
+        payment,
+        meta: { version: getAppVersion() },
+      })
+    ).data;
   }
 
   async getCancellationInfo(orderId: string) {
-    const payload: GetCancellationInfoPayload = {
-      orderId,
-      meta: { version: getAppVersion() },
-    };
-    return (await this.refs.getCancellationInfoCallable()(payload))
-      .data as GetCancellationInfoResult;
+    return (
+      await this.refs.getCancellationInfoCallable()({
+        orderId,
+        meta: { version: getAppVersion() },
+      })
+    ).data;
   }
 
   async cancelOrder(
@@ -303,87 +275,85 @@ export default class OrderApi {
     cancellation?: WithId<Issue>,
     comment?: string
   ) {
-    const payload: CancelOrderPayload = {
+    await this.refs.getCancelOrderCallable()({
       orderId,
       acknowledgedCosts,
       cancellation,
       comment,
       meta: { version: getAppVersion() },
-    };
-    return (await this.refs.getCancelOrderCallable()(payload)).data;
+    });
   }
 
   async tipCourier(orderId: string, tip: number) {
-    const payload: TipCourierPayload = {
+    await this.refs.getTipCourierCallable()({
       orderId,
       tip,
       meta: { version: getAppVersion() },
-    };
-    return (await this.refs.getTipCourierCallable()(payload)).data;
+    });
   }
 
-  async getMostRecentRestaurants(consumerId: string, limit: number = 3) {
-    const ordersSnapshot = await this.refs
-      .getOrdersRef()
-      .orderBy('createdOn', 'desc')
-      .where('type', '==', 'food' as OrderType)
-      .where('status', '==', 'delivered' as OrderStatus)
-      .where('consumer.id', '==', consumerId)
-      .limit(limit * 3) // we fetch more than we need to have some latitude for consumers whose order to the same restaurant
-      .get();
+  async getMostRecentRestaurants(consumerId: string, max: number = 3) {
+    const ordersSnapshot = await getDocs(
+      query(
+        this.refs.getOrdersRef(),
+        orderBy('createdOn', 'desc'),
+        where('type', '==', 'food' as OrderType),
+        where('status', '==', 'delivered' as OrderStatus),
+        where('consumer.id', '==', consumerId),
+        limit(max * 3)
+      )
+    ); // we fetch more than we need to have some latitude for consumers whose order to the same restaurant
     if (ordersSnapshot.empty) return [];
     const businessIds = uniq(
       documentsAs<Order>(ordersSnapshot.docs).map((order) => order.business!.id)
     );
-    const lastRestsQuerySnapshot = await this.refs
-      .getBusinessesRef()
-      .where(firebase.firestore.FieldPath.documentId(), 'in', businessIds)
-      .where('status', '==', 'open')
-      .limit(limit)
-      .get();
+    const lastRestsQuerySnapshot = await getDocs(
+      query(
+        this.refs.getBusinessesRef(),
+        where(documentId(), 'in', businessIds),
+        where('status', '==', 'open'),
+        limit(max)
+      )
+    );
     if (lastRestsQuerySnapshot.empty) return [];
     const businesses = documentsAs<Business>(lastRestsQuerySnapshot.docs);
     return businessIds
-      .slice(0, limit)
+      .slice(0, max)
       .map((id) => businesses.find((b) => b.id === id))
       .filter((b) => !!b);
   }
   // courier
   async matchOrder(orderId: string, distanceToOrigin: number = 0) {
-    const payload: MatchOrderPayload = {
+    await this.refs.getMatchOrderCallable()({
       orderId,
       distanceToOrigin,
       meta: { version: getAppVersion() },
-    };
-    return (await this.refs.getMatchOrderCallable()(payload)).data;
+    });
   }
 
   async rejectOrder(orderId: string, issue: WithId<Issue>, comment?: string) {
-    const payload: RejectOrderPayload = {
+    await this.refs.getRejectOrderCallable()({
       orderId,
       issue,
       comment,
       meta: { version: getAppVersion() },
-    };
-    return (await this.refs.getRejectOrderCallable()(payload)).data;
+    });
   }
 
   async dropOrder(orderId: string, issue: WithId<Issue>, comment?: string) {
-    const payload: DropOrderPayload = {
+    await this.refs.getDropOrderCallable()({
       orderId,
       issue,
       comment,
       meta: { version: getAppVersion() },
-    };
-    return (await this.refs.getDropOrderCallable()(payload)).data;
+    });
   }
 
   async nextDispatchingState(orderId: string) {
-    const payload: NextDispatchingStatePayload = {
+    await this.refs.getNextDispatchingStateCallable()({
       orderId,
       meta: { version: getAppVersion() },
-    };
-    return (await this.refs.getNextDispatchingStateCallable()(payload)).data;
+    });
   }
 
   async completeDelivery(
@@ -392,13 +362,12 @@ export default class OrderApi {
     deliveredTo?: string,
     comment?: string
   ) {
-    const payload: CompleteDeliveryPayload = {
+    await this.refs.getCompleteDeliveryCallable()({
       orderId,
       handshakeResponse,
       deliveredTo,
       comment,
       meta: { version: getAppVersion() },
-    };
-    return (await this.refs.getCompleteDeliveryCallable()(payload)).data;
+    });
   }
 }

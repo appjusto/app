@@ -1,7 +1,7 @@
-import firebase from 'firebase/compat/app';
+import { FirebaseStorage, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 
 export default class FilesApi {
-  constructor(private storage: firebase.storage.Storage) {}
+  constructor(private storage: FirebaseStorage) {}
 
   // https://github.com/expo/examples/blob/master/with-firebase-storage-upload/App.js
   // https://github.com/expo/expo/issues/2402#issuecomment-443726662
@@ -26,8 +26,8 @@ export default class FilesApi {
   async upload(path: string, uri: string, progressHandler?: (progress: number) => void) {
     return new Promise<boolean>(async (resolve, reject) => {
       const blob = await this.blobFromUri(uri);
-      const ref = this.storage.ref().child(path);
-      const task = ref.put(blob);
+      const fileRef = ref(this.storage, path);
+      const task = uploadBytesResumable(fileRef, blob);
       task.on(
         'state_changed',
         (snapshot) => {
@@ -38,6 +38,7 @@ export default class FilesApi {
           reject(error);
         },
         () => {
+          // @ts-ignore
           blob.close();
           resolve(true);
         }
@@ -46,9 +47,9 @@ export default class FilesApi {
   }
 
   async getDownloadURL(path: string): Promise<string | null> {
-    const ref = this.storage.ref().child(path);
+    const fileRef = ref(this.storage, path);
     try {
-      const uri = await ref.getDownloadURL();
+      const uri = await getDownloadURL(fileRef);
       return uri;
     } catch (error) {
       return null;

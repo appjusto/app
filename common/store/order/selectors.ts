@@ -1,5 +1,5 @@
 import { Order, OrderStatus, WithId } from '@appjusto/types';
-import firebase from 'firebase/compat/app';
+import { Timestamp } from 'firebase/firestore';
 import { memoize, uniq } from 'lodash';
 import { createSelector } from 'reselect';
 import { State } from '..';
@@ -18,7 +18,7 @@ export const getOrderTime = (order: WithId<Order>) => {
   const confirmedOn = order.timestamps?.confirmed ?? order.confirmedOn;
   const createdOn = order.timestamps?.quote ?? order.createdOn;
   const time = deliveredOn ?? confirmedOn ?? createdOn;
-  if (time) return (time as firebase.firestore.Timestamp).toDate();
+  if (time) return (time as Timestamp).toDate();
   return new Date();
 };
 

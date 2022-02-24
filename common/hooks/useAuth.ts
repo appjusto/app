@@ -1,6 +1,4 @@
 import { useURL } from 'expo-linking';
-import 'firebase/auth';
-import firebase from 'firebase/compat/app';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';

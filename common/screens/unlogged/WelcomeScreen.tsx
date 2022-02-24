@@ -61,7 +61,8 @@ export default function ({ navigation, route }: Props) {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [authMode, setAuthMode] = React.useState<AuthMode>(
-    flavor === 'courier' ? 'phone' : 'passwordless'
+    // flavor === 'courier' ? 'phone' : 'passwordless'
+    'passwordless'
   );
   const [acceptedTerms, setAcceptTerms] = React.useState(false);
   // side effects

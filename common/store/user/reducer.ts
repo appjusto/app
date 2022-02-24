@@ -1,4 +1,4 @@
-import firebase from 'firebase/compat/app';
+import { User } from 'firebase/auth';
 import { AnyAction } from 'redux';
 import * as Sentry from 'sentry-expo';
 import { USER_AUTH_STATE_CHANGED } from './actions';
@@ -12,7 +12,7 @@ export default function (state: UserState = initialState, action: AnyAction): Us
     case USER_AUTH_STATE_CHANGED: {
       if (!state.user && payload) {
         console.log('User logged in.');
-        const user = payload as firebase.User;
+        const user = payload as User;
         Sentry.Native.setUser({ id: user.uid, email: user.email! });
       }
       if (state.user && !payload) {

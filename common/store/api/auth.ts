@@ -1,34 +1,48 @@
 import { DeleteAccountPayload } from '@appjusto/types';
-import firebase from 'firebase/compat/app';
-// import * as Sentry from 'sentry-expo';
+import {
+  ApplicationVerifier,
+  Auth,
+  isSignInWithEmailLink,
+  linkWithCredential,
+  onAuthStateChanged,
+  PhoneAuthProvider,
+  sendSignInLinkToEmail,
+  signInWithEmailAndPassword,
+  signInWithEmailLink,
+  signInWithPhoneNumber,
+  unlink,
+  Unsubscribe,
+  User,
+} from 'firebase/auth';
+import { addDoc, serverTimestamp } from 'firebase/firestore';
 import { Extra } from '../../../config/types';
 import { getDeeplinkDomain, getFallbackDomain } from '../../utils/domains';
 import { getAppVersion } from '../../utils/version';
 import FirebaseRefs from './FirebaseRefs';
 
 export default class AuthApi {
-  constructor(private refs: FirebaseRefs, private auth: firebase.auth.Auth, private extra: Extra) {
+  constructor(private auth: Auth, private refs: FirebaseRefs, private extra: Extra) {
     this.auth.languageCode = 'pt';
   }
 
-  observeAuthState(handler: (a: firebase.User | null) => any): firebase.Unsubscribe {
-    return this.auth.onAuthStateChanged(handler);
+  observeAuthState(handler: (a: User | null) => any): Unsubscribe {
+    return onAuthStateChanged(this.auth, handler);
   }
 
   // email sign in
   async sendSignInLinkToEmail(email: string): Promise<void> {
     try {
-      await this.refs.getPlatformLoginLogsRef().add({
+      await addDoc(this.refs.getPlatformLoginLogsRef(), {
         email,
         flavor: this.extra.flavor,
-        signInAt: firebase.firestore.FieldValue.serverTimestamp(),
+        signInAt: serverTimestamp(),
       });
     } catch (error) {
       // Sentry.Native.captureException(error);
     }
     const { environment, flavor } = this.extra;
     const url = `https://${getFallbackDomain(environment)}/${flavor}/join`;
-    return this.auth.sendSignInLinkToEmail(email, {
+    return sendSignInLinkToEmail(this.auth, email, {
       url,
       handleCodeInApp: true,
       iOS: {
@@ -43,33 +57,36 @@ export default class AuthApi {
   }
 
   async signInWithEmailAndPassword(email: string, password: string) {
-    const userCredential = await this.auth.signInWithEmailAndPassword(email, password);
+    const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
     return userCredential.user;
   }
 
   isSignInWithEmailLink(link: string | null): boolean {
     if (!link) return false;
-    return this.auth.isSignInWithEmailLink(link);
+    return isSignInWithEmailLink(this.auth, link);
   }
 
   async signInWithEmailLink(email: string, link: string) {
-    const userCredential = await this.auth.signInWithEmailLink(email, link);
+    const userCredential = await signInWithEmailLink(this.auth, email, link);
     return userCredential.user;
   }
 
-  async signInWithPhoneNumber(phoneNumber: string, verifier: firebase.auth.ApplicationVerifier) {
-    return this.auth.signInWithPhoneNumber(phoneNumber, verifier);
+  // phone
+
+  async signInWithPhoneNumber(phoneNumber: string, verifier: ApplicationVerifier) {
+    return signInWithPhoneNumber(this.auth, phoneNumber, verifier);
+  }
+
+  async verifyPhoneNumber(phone: string, applicationVerifier: ApplicationVerifier) {
+    const phoneProvider = new PhoneAuthProvider(this.auth);
+    return phoneProvider.verifyPhoneNumber(`+55${phone}`, applicationVerifier);
   }
 
   async confirmPhoneSignIn(verificationId: string, verificationCode: string) {
-    await this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-    const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, verificationCode);
-    await this.auth.signInWithCredential(credential);
-  }
-
-  async linkCredential(credential: firebase.auth.AuthCredential) {
-    if (this.getPhoneNumber()) await this.auth.currentUser!.unlink('phone');
-    await this.auth.currentUser!.linkWithCredential(credential);
+    const credential = PhoneAuthProvider.credential(verificationId, verificationCode);
+    if (this.getPhoneNumber()) await unlink(this.auth.currentUser!, 'phone');
+    await linkWithCredential(this.auth.currentUser!, credential);
+    // await signInWithCredential(this.auth, credential);
   }
 
   getUserId() {

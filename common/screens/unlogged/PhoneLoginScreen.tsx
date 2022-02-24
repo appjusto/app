@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
-import firebase from 'firebase/compat/app';
+import { ConfirmationResult } from 'firebase/auth';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -41,8 +41,7 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
   const api = React.useContext(ApiContext);
   // state
   const [state, setState] = React.useState<State>('initial');
-  const [confirmationResult, setConfirmationResult] =
-    React.useState<firebase.auth.ConfirmationResult>();
+  const [confirmationResult, setConfirmationResult] = React.useState<ConfirmationResult>();
   const [verificationCode, setVerificationCode] = React.useState('');
   const [error, setError] = React.useState<string>();
   // refs

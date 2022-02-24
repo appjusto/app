@@ -1,5 +1,5 @@
 import { Flavor, ProfileChange, UserProfile } from '@appjusto/types';
-import firebase from 'firebase/compat/app';
+import { addDoc, getDocs, limit, query, serverTimestamp, where } from 'firebase/firestore';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentsAs } from '../types';
 
@@ -8,21 +8,24 @@ export default class UserApi {
 
   // firestore
   async fetchPendingChanges(accountId: string) {
-    const querySnapshot = await this.refs
-      .getUsersChangesRef()
-      .where('accountId', '==', accountId)
-      .where('situation', '==', 'pending')
-      .limit(1)
-      .get();
+    const querySnapshot = await getDocs(
+      query(
+        this.refs.getUsersChangesRef(),
+        where('accountId', '==', accountId),
+        where('situation', '==', 'pending'),
+        limit(1)
+      )
+    );
+    if (querySnapshot.empty) return [];
     return documentsAs<ProfileChange>(querySnapshot.docs);
   }
 
   async requestProfileChange(accountId: string, changes: Partial<UserProfile>) {
-    await this.refs.getUsersChangesRef().add({
+    await addDoc(this.refs.getUsersChangesRef(), {
       accountId,
       userType: this.flavor === 'courier' ? 'courier' : 'consumer',
       situation: 'pending',
-      createdOn: firebase.firestore.FieldValue.serverTimestamp(),
+      createdOn: serverTimestamp(),
       ...changes,
     } as ProfileChange);
   }

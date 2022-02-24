@@ -111,7 +111,7 @@
     "expo-task-manager": "~10.1.0",
     "expo-updates": "~0.11.4",
     "firebase": "^9.6.3",
-    "geofirestore": "^4.2.1",
+    "geofirestore": "^5.0.0",
     "geokit": "^1.1.0",
     "i18n-js": "^3.7.1",
     "lodash": "^4.17.19",
