@@ -1,6 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
+import { Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { headerMenu } from '../assets/icons';
 import { ApiContext, AppDispatch } from '../common/app/context';
 import { defaultScreenOptions } from '../common/screens/options';
 import { getFlavor } from '../common/store/config/selectors';
@@ -30,11 +32,14 @@ export const LoggedBusinessNavigator = () => {
   }, [dispatch, api, flavor, uid]);
   // subscribe to restaurant's orders ???
   <Stack.Navigator screenOptions={defaultScreenOptions}>
-    <Stack.Screen name="OrdersManager" component={OrdersManager} options={{ headerShown: false }} />
     <Stack.Screen
-      name="OrderDetail"
-      component={OrderDetail}
-      options={{ title: t('Informe sua localização') }}
+      name="OrdersManager"
+      component={OrdersManager}
+      options={{
+        title: t('Gerenciador de pedidos'),
+        headerLeft: () => <Image source={headerMenu} height={32} width={32} />,
+      }}
     />
+    <Stack.Screen name="OrderDetail" component={OrderDetail} options={{ title: t('Ver pedido') }} />
   </Stack.Navigator>;
 };
