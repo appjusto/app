@@ -18,7 +18,7 @@ import { t } from '../../../strings';
 import { CancelOrderModal } from '../components/CancelOrderModal';
 import { CookingTimeModal } from '../components/CookingTimeModal';
 import { OrderListItem } from '../components/OrderListItem';
-// TODO: add the correct screenNavigationProp
+// TODO: add the correct screenNavigationProp: LoggedBusinessNavParamsList
 type ScreenNavigationProp = StackNavigationProp<LoggedNavigatorParamList, 'OrderDetail'>;
 type ScreenRouteProp = RouteProp<LoggedNavigatorParamList, 'OrderDetail'>;
 

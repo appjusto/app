@@ -1,18 +1,40 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { ApiContext, AppDispatch } from '../common/app/context';
 import { defaultScreenOptions } from '../common/screens/options';
-import { MainBusinessNavigator } from './MainBusinessNavigator';
+import { getFlavor } from '../common/store/config/selectors';
+import { observeProfile } from '../common/store/user/actions';
+import { getUser } from '../common/store/user/selectors';
+import { t } from '../strings';
+import { OrderDetail } from './orders/screens/OrderDetail';
+import { OrdersManager } from './orders/screens/OrdersManager';
+import { LoggedBusinessNavParamsList } from './types';
 
 //TODO: create and add params list
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<LoggedBusinessNavParamsList>();
 
 export const LoggedBusinessNavigator = () => {
   //TODO: wrap this stack with the right context
+  // context
+  const api = React.useContext(ApiContext);
+  // redux
+  const dispatch = useDispatch<AppDispatch>();
+  const flavor = useSelector(getFlavor);
+  const user = useSelector(getUser);
+  const uid = user?.uid;
+  // side effects
+  // subscribe for profile changes
+  React.useEffect(() => {
+    if (uid) return dispatch(observeProfile(api)(flavor, uid));
+  }, [dispatch, api, flavor, uid]);
+  // subscribe to restaurant's orders ???
   <Stack.Navigator screenOptions={defaultScreenOptions}>
+    <Stack.Screen name="OrdersManager" component={OrdersManager} options={{ headerShown: false }} />
     <Stack.Screen
-      name="MainBusinessNavigator"
-      component={MainBusinessNavigator}
-      options={{ headerShown: false }}
+      name="OrderDetail"
+      component={OrderDetail}
+      options={{ title: t('Informe sua localização') }}
     />
   </Stack.Navigator>;
 };

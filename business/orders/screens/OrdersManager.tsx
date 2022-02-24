@@ -14,7 +14,7 @@ import { ListFilterButton } from '../components/ListFilterButton';
 import { OrdersKanbanItem } from '../components/OrdersKanbanItem';
 import { OrderManagerHeader } from '../components/OrdersManagerHeader';
 
-// TODO: add the correct screenNavigationProp
+// TODO: add the correct screenNavigationProp: LoggedBusinessNavParamsList
 type ScreenNavigationProp = StackNavigationProp<LoggedNavigatorParamList, 'OrdersManager'>;
 type ScreenRouteProp = RouteProp<LoggedNavigatorParamList, 'OrdersManager'>;
 
