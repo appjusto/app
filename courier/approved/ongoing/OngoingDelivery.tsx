@@ -179,7 +179,7 @@ export default function ({ navigation, route }: Props) {
     return '';
   })();
   const sliderColor = (() => {
-    if (!previousDispatchingState || previousDispatchingState === 'going-pickup') {
+    if (!dispatchingState || dispatchingState === 'going-pickup') {
       return colors.green500;
     } else return colors.darkYellow;
   })();
@@ -208,7 +208,7 @@ export default function ({ navigation, route }: Props) {
         />
         {/* bottom*/}
         <OngoingDeliveryInfo order={order} onProblem={navigateToDeliveryProblem} />
-        <OngoingDeliveryLoading dispatchingState={previousDispatchingState} />
+        <OngoingDeliveryLoading dispatchingState={dispatchingState} />
         {/* Status slider */}
         <OngoingDeliverySlider
           order={order}
@@ -240,7 +240,7 @@ export default function ({ navigation, route }: Props) {
           onNoCodeDelivery={() => {
             navigation.navigate('NoCodeDelivery', { orderId });
           }}
-          dispatchingState={previousDispatchingState}
+          dispatchingState={dispatchingState}
         />
         {/* withdrawal modal */}
         <WithdrawOrderModal
