@@ -62,6 +62,9 @@ export default (context: ConfigContext): ExpoConfig => {
     assetBundlePatterns: ['**/*'],
     ios: ios(),
     android: android(),
+    androidStatusBar: {
+      hidden: true,
+    },
     extra: extra(),
     hooks: hooks(),
     plugins:
