@@ -111,7 +111,6 @@
     "expo-task-manager": "~10.1.0",
     "expo-updates": "~0.11.4",
     "firebase": "^9.6.3",
-    "geofirestore": "^5.0.0",
     "geokit": "^1.1.0",
     "i18n-js": "^3.7.1",
     "lodash": "^4.17.19",
@@ -137,7 +136,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "sentry-expo": "^4.0.5"
+    "sentry-expo": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

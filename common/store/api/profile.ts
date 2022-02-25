@@ -8,17 +8,16 @@ import {
   serverTimestamp,
   setDoc,
   Unsubscribe,
+  updateDoc,
 } from 'firebase/firestore';
-import * as geofirestore from 'geofirestore';
+import { hash } from 'geokit';
 import * as Sentry from 'sentry-expo';
 import AuthApi from './auth';
 import { documentAs } from './types';
 
 export default class ProfileApi {
-  private firestoreWithGeo: geofirestore.GeoFirestore;
   private collectionName: string;
   constructor(private firestore: Firestore, private auth: AuthApi, public flavor: Flavor) {
-    this.firestoreWithGeo = geofirestore.initializeApp(this.firestore);
     this.collectionName = this.flavor === 'consumer' ? 'consumers' : 'couriers';
   }
 
@@ -97,13 +96,17 @@ export default class ProfileApi {
   async updateLocation(id: string, location: GeoPoint, retry: number = 5) {
     return new Promise<void>(async (resolve) => {
       try {
-        await this.firestoreWithGeo
-          .collection(this.collectionName)
-          .doc(id)
-          .update({
-            coordinates: location,
-            updatedOn: serverTimestamp(),
-          } as UserProfile);
+        await updateDoc(doc(this.firestore, this.collectionName, id), {
+          coordinates: location,
+          g: {
+            geopoint: location,
+            geohash: hash({
+              lat: location.latitude,
+              lng: location.longitude,
+            }),
+          },
+          updatedOn: serverTimestamp(),
+        } as Partial<UserProfile>);
       } catch (error: any) {
         if (error.code === 'permission-denied' && retry > 0) {
           setTimeout(async () => resolve(await this.updateLocation(id, location, retry - 1)), 1000);

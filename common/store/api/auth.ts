@@ -7,6 +7,7 @@ import {
   onAuthStateChanged,
   PhoneAuthProvider,
   sendSignInLinkToEmail,
+  signInWithCredential,
   signInWithEmailAndPassword,
   signInWithEmailLink,
   signInWithPhoneNumber,
@@ -84,9 +85,12 @@ export default class AuthApi {
 
   async confirmPhoneSignIn(verificationId: string, verificationCode: string) {
     const credential = PhoneAuthProvider.credential(verificationId, verificationCode);
-    if (this.getPhoneNumber()) await unlink(this.auth.currentUser!, 'phone');
-    await linkWithCredential(this.auth.currentUser!, credential);
-    // await signInWithCredential(this.auth, credential);
+    if (this.auth.currentUser) {
+      if (this.getPhoneNumber()) await unlink(this.auth.currentUser!, 'phone');
+      await linkWithCredential(this.auth.currentUser, credential);
+    } else {
+      await signInWithCredential(this.auth, credential);
+    }
   }
 
   getUserId() {
