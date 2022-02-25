@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
 import { useBusinessLogoURI } from '../../../../../common/store/api/business/hooks/useBusinessLogoURI';
-import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
+import { borders, colors, halfPadding, padding, texts } from '../../../../../common/styles';
 import { formatDistance } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import { ListItemImage } from './ListItemImage';
@@ -41,11 +41,15 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance, secondar
       >
         <View style={{ justifyContent: 'center', width: '75%' }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ ...texts.sm, marginRight: halfPadding }}>{restaurant.name}</Text>
+            <View style={{ ...borders.default, width: '65%' }}>
+              <Text style={{ ...texts.sm, marginRight: halfPadding }}>{restaurant.name}</Text>
+            </View>
             {restaurant.averageDiscount ? (
-              <RoundedText backgroundColor={colors.darkYellow} noBorder>
-                {discount}
-              </RoundedText>
+              <View>
+                <RoundedText backgroundColor={colors.darkYellow} noBorder>
+                  {discount}
+                </RoundedText>
+              </View>
             ) : null}
           </View>
           <Text style={{ ...texts.xs, color: secondary ? colors.grey700 : colors.green600 }}>
