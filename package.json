@@ -27,6 +27,7 @@
     "inc-version": "node ./version-inc",
     "prepare-publish": "git checkout $ENV && git pull && npm run prepare-env",
     "publish": "expo publish --release-channel $EXPO_RELEASE_CHANNEL",
+    "publish-js": "node ./scripts/publish",
     "publish-courier:dev": "ENV=dev npm run prepare-env && FLAVOR=courier EXPO_RELEASE_CHANNEL=dev npm run publish",
     "publish-courier:staging": "ENV=staging npm run prepare-env && FLAVOR=courier EXPO_RELEASE_CHANNEL=staging-v5 npm run publish",
     "publish-courier:live": "ENV=live npm run prepare-env && FLAVOR=courier EXPO_RELEASE_CHANNEL=live-v5 npm run publish",
@@ -65,7 +66,7 @@
     "install-local-types": "npm uninstall @appjusto/types && npm install ../types",
     "install-remote-types": "npm uninstall @appjusto/types && npm install @appjusto/types",
     "clear-cache": "watchman watch-del-all && rm -rf node_modules/ && rm -f package-lock.json && npm install --legacy-peer-deps",
-    "version": "node ./version-inc && git add version.json",
+    "version": "node ./scripts/version-inc && git add version.json",
     "postversion": "git push && git push --tags && git fetch"
   },
   "dependencies": {

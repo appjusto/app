@@ -1,5 +1,17 @@
 {
   "build": {
+    "courier-dev-internal": {
+      "env": {
+        "FLAVOR": "courier",
+        "ENV": "dev"
+      },
+      "releaseChannel": "v8",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "expoCli": "5.2.0"
+    },
     "courier-live-internal": {
       "env": {
         "FLAVOR": "courier",
