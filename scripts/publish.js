@@ -22,7 +22,7 @@ const run = async () => {
     });
   }
 
-  const releaseChannel = `v-${version.slice(0, version.indexOf('.'))}`;
+  const releaseChannel = `v${version.slice(0, version.indexOf('.'))}`;
 
   spawnSync('npm', ['run', 'prepare-env']);
   const child = spawn('expo', ['publish', '--release-channel', releaseChannel]);

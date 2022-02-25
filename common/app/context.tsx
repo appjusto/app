@@ -1,5 +1,6 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { NavigationContainer } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
 import React, { ReactNode } from 'react';
 import { Platform, UIManager } from 'react-native';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -48,6 +49,7 @@ export const AppContext = ({ children }: Props) => {
             <NavigationContainer linking={linking}>
               <ActionSheetProvider>{children}</ActionSheetProvider>
               <Toast />
+              <StatusBar style="dark" backgroundColor="#FFFFFF" />
             </NavigationContainer>
           </NotificationContainer>
         </QueryClientProvider>

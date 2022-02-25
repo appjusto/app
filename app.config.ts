@@ -51,7 +51,7 @@ export default (context: ConfigContext): ExpoConfig => {
     splash: {
       image: './assets/splash.png',
       resizeMode: 'cover',
-      backgroundColor: '#78e08f',
+      backgroundColor: '#9ce592',
     },
     notification: {
       icon: './assets/notification-icon.png',
@@ -78,6 +78,7 @@ export default (context: ConfigContext): ExpoConfig => {
                 mode: environment === 'live' ? 'production' : 'development',
               },
             ],
+            'expo-splash-screen',
           ]
         : undefined,
   };
