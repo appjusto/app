@@ -1,3 +1,4 @@
+import { FieldValue, Timestamp } from 'firebase/firestore';
 import React from 'react';
 import { usePlatformParamsContext } from '../../../../contexts/PlatformParamsContext';
 import { useContextGetSeverTime } from '../../../../contexts/ServerTimeContext';
@@ -6,10 +7,10 @@ import { useObserveOrder } from './useObserveOrder';
 const canAdvanceDispatchingState = (
   now: Date,
   delayBeforeAdvancing: number,
-  currentStateTimestamp: firebase.firestore.FieldValue | undefined
+  currentStateTimestamp: FieldValue | undefined
 ) => {
   if (!currentStateTimestamp) return false;
-  const timestamp = (currentStateTimestamp as firebase.firestore.Timestamp).toDate();
+  const timestamp = (currentStateTimestamp as Timestamp).toDate();
   const diff = now.getTime() - timestamp.getTime();
   if (diff === 0) return false;
   return diff >= delayBeforeAdvancing * 1000;

@@ -54,7 +54,7 @@ export default function ({ navigation, route }: Props) {
         const position = await Location.getCurrentPositionAsync();
         const currentDistanceToOrigin = await api
           .maps()
-          .googleRouteAndDistance(position.coords, origin, courier.mode);
+          .googleDirections(position.coords, origin, courier.mode);
         if (currentDistanceToOrigin) setRouteDistanceToOrigin(currentDistanceToOrigin.distance);
         screen('Matching', {
           orderId,

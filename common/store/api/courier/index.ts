@@ -1,18 +1,19 @@
 import {
   AdvanceReceivablesPayload,
   CourierOrderRequest,
-  FetchAccountInformationPayload,
-  FetchAccountInformationResponse,
-  FetchAdvanceSimulationPayload,
-  FetchReceivablesPayload,
-  RequestWithdrawPayload,
   VerifyCourierProfilePayload,
 } from '@appjusto/types';
+import { IuguMarketplaceAccountAdvanceSimulation } from '@appjusto/types/payment/iugu';
 import {
-  IuguMarketplaceAccountAdvanceSimulation,
-  IuguMarketplaceAccountReceivables,
-} from '@appjusto/types/payment/iugu';
-import firebase from 'firebase';
+  getDocs,
+  onSnapshot,
+  orderBy,
+  query,
+  Timestamp,
+  Unsubscribe,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
 import * as Sentry from 'sentry-expo';
 import { getAppVersion } from '../../../utils/version';
 import FilesApi from '../files';
@@ -26,46 +27,39 @@ export default class CourierApi {
   observePendingOrderRequests(
     courierId: string,
     resultHandler: (orders: CourierOrderRequest[]) => void
-  ): firebase.Unsubscribe {
-    const unsubscribe = this.refs
-      .getCourierRequestsRef(courierId)
-      .where('situation', 'in', ['pending', 'viewed'])
-      .orderBy('createdOn', 'desc')
-      .onSnapshot(
-        (querySnapshot) => resultHandler(documentsAs<CourierOrderRequest>(querySnapshot.docs)),
-        (error) => {
-          console.log(error);
-          Sentry.Native.captureException(error);
-        }
-      );
-    // returns the unsubscribe function
-    return unsubscribe;
+  ): Unsubscribe {
+    return onSnapshot(
+      query(
+        this.refs.getCourierRequestsRef(courierId),
+        where('situation', 'in', ['pending', 'viewed']),
+        orderBy('createdOn', 'desc')
+      ),
+      (querySnapshot) => resultHandler(documentsAs<CourierOrderRequest>(querySnapshot.docs)),
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
+    );
   }
   observeOrderRequest(
     courierId: string,
     orderId: string,
     resultHandler: (order: CourierOrderRequest) => void
-  ): firebase.Unsubscribe {
-    const unsubscribe = this.refs.getCourierOrderRequestsRef(courierId, orderId).onSnapshot(
+  ): Unsubscribe {
+    return onSnapshot(
+      this.refs.getCourierOrderRequestsRef(courierId, orderId),
       (snapshot) => resultHandler(documentAs<CourierOrderRequest>(snapshot)),
       (error) => {
         console.log(error);
         Sentry.Native.captureException(error);
       }
     );
-    // returns the unsubscribe function
-    return unsubscribe;
   }
   viewOrderRequest(courierId: string, orderId: string) {
-    return this.refs.getCourierOrderRequestsRef(courierId, orderId).update({
+    return updateDoc(this.refs.getCourierOrderRequestsRef(courierId, orderId), {
       situation: 'viewed',
     } as Partial<CourierOrderRequest>);
   }
-  // async addReview(courierId: string, review: Review) {
-  //   await this.refs
-  //     .getCourierReviewsRef(courierId)
-  //     .add({ ...review, createdOn: firebase.firestore.FieldValue.serverTimestamp() } as Review);
-  // }
 
   // callables
   async verifyProfile() {
@@ -74,55 +68,62 @@ export default class CourierApi {
     };
     return this.refs.getVerifyProfileCallable()(payload);
   }
-  async fetchAccountInformation(accountId: string): Promise<FetchAccountInformationResponse> {
-    const payload: FetchAccountInformationPayload = {
-      accountType: 'courier',
-      accountId,
-      meta: { version: getAppVersion() },
-    };
-    console.log('fetchAccountInformation', payload);
-    return (await this.refs.getFetchAccountInformationCallable()(payload)).data;
+  async fetchAccountInformation(accountId: string) {
+    return (
+      await this.refs.getFetchAccountInformationCallable()({
+        accountType: 'courier',
+        accountId,
+        meta: { version: getAppVersion() },
+      })
+    ).data;
   }
-  async requestWithdraw(accountId: string, amount: number): Promise<any> {
-    const payload: RequestWithdrawPayload = {
-      accountType: 'courier',
-      accountId,
-      amount,
-      meta: { version: getAppVersion() },
-    };
-    return (await this.refs.getRequestWithdrawCallable()(payload)).data;
+  async requestWithdraw(accountId: string, amount: number) {
+    return (
+      await this.refs.getRequestWithdrawCallable()({
+        accountType: 'courier',
+        accountId,
+        amount,
+        meta: { version: getAppVersion() },
+      })
+    ).data;
   }
-  async fetchReceivables(accountId: string): Promise<IuguMarketplaceAccountReceivables> {
-    const payload: FetchReceivablesPayload = {
-      accountType: 'courier',
-      accountId,
-      meta: { version: getAppVersion() },
-    };
-    return (await this.refs.getFetchReceivablesCallable()(payload)).data;
+  async fetchReceivables(accountId: string) {
+    return (
+      await this.refs.getFetchReceivablesCallable()({
+        accountType: 'courier',
+        accountId,
+        meta: { version: getAppVersion() },
+      })
+    ).data;
   }
   async fetchTotalWithdrawsThisMonth(accountId: string) {
     const now = new Date();
-    const firstDayOfMonth = firebase.firestore.Timestamp.fromDate(
+    const firstDayOfMonth = Timestamp.fromDate(
       new Date(now.getUTCFullYear(), now.getUTCMonth(), 1)
     );
     const withdrawsRef = this.refs.getWithdrawsRef();
-    const withdrawsQuery = withdrawsRef
-      .where('accountId', '==', accountId)
-      .where('createdOn', '>=', firstDayOfMonth);
-    const withdrawsSnapshot = await withdrawsQuery.get();
+
+    const withdrawsSnapshot = await getDocs(
+      query(
+        this.refs.getWithdrawsRef(),
+        where('accountId', '==', accountId),
+        where('createdOn', '>=', firstDayOfMonth)
+      )
+    );
     return withdrawsSnapshot.size;
   }
   async fetchAdvanceSimulation(
     accountId: string,
     ids: number[]
   ): Promise<IuguMarketplaceAccountAdvanceSimulation> {
-    const payload: FetchAdvanceSimulationPayload = {
-      accountType: 'courier',
-      accountId,
-      ids,
-      meta: { version: getAppVersion() },
-    };
-    return (await this.refs.getFetchAdvanceSimulationCallable()(payload)).data;
+    return (
+      await this.refs.getFetchAdvanceSimulationCallable()({
+        accountType: 'courier',
+        accountId,
+        ids,
+        meta: { version: getAppVersion() },
+      })
+    ).data;
   }
   async advanceReceivables(accountId: string, ids: number[]): Promise<any> {
     const payload: AdvanceReceivablesPayload = {

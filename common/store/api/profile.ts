@@ -1,47 +1,49 @@
 import { ConsumerProfile, CourierProfile, Flavor, UserProfile, WithId } from '@appjusto/types';
 import Constants from 'expo-constants';
-import firebase from 'firebase';
-import * as geofirestore from 'geofirestore';
+import {
+  doc,
+  Firestore,
+  GeoPoint,
+  onSnapshot,
+  serverTimestamp,
+  setDoc,
+  Unsubscribe,
+  updateDoc,
+} from 'firebase/firestore';
+import { hash } from 'geokit';
 import * as Sentry from 'sentry-expo';
 import AuthApi from './auth';
 import { documentAs } from './types';
 
 export default class ProfileApi {
-  private firestoreWithGeo: geofirestore.GeoFirestore;
   private collectionName: string;
-  constructor(
-    private firestore: firebase.firestore.Firestore,
-    private auth: AuthApi,
-    public flavor: Flavor
-  ) {
-    this.firestoreWithGeo = geofirestore.initializeApp(this.firestore);
+  constructor(private firestore: Firestore, private auth: AuthApi, public flavor: Flavor) {
     this.collectionName = this.flavor === 'consumer' ? 'consumers' : 'couriers';
   }
 
   // private helpers
   private getProfileRef(id: string) {
-    return this.firestore.collection(this.collectionName).doc(id);
+    return doc(this.firestore, this.collectionName, id);
   }
   private async createProfile(id: string) {
     console.log(`Creating ${this.flavor} profile...`);
-    await this.getProfileRef(id).set({
+    await setDoc(this.getProfileRef(id), {
       situation: 'pending',
-      email: this.auth.getEmail(),
-      createdOn: firebase.firestore.FieldValue.serverTimestamp(),
+      email: this.auth.getEmail() ?? null,
+      phone: this.auth.getPhoneNumber(true) ?? null,
+      createdOn: serverTimestamp(),
     } as UserProfile);
   }
 
   // firestore
   // observe profile changes
-  observeProfile(
-    id: string,
-    resultHandler: (profile: WithId<UserProfile>) => void
-  ): firebase.Unsubscribe {
-    const unsubscribe = this.getProfileRef(id).onSnapshot(
+  observeProfile(id: string, resultHandler: (profile: WithId<UserProfile>) => void): Unsubscribe {
+    return onSnapshot(
+      this.getProfileRef(id),
       async (snapshot) => {
-        // ensure profile exists
-        if (!snapshot.exists) {
-          const unsub = this.getProfileRef(id).onSnapshot(
+        if (!snapshot.exists()) {
+          const unsub = onSnapshot(
+            this.getProfileRef(id),
             { includeMetadataChanges: true },
             (snapshotWithMetadata) => {
               if (!snapshotWithMetadata.metadata.hasPendingWrites) {
@@ -58,8 +60,6 @@ export default class ProfileApi {
         Sentry.Native.captureException(error);
       }
     );
-    // returns the unsubscribe function
-    return unsubscribe;
   }
 
   // update profile
@@ -73,18 +73,17 @@ export default class ProfileApi {
     }`;
     return new Promise<void>(async (resolve) => {
       try {
-        await this.getProfileRef(id).set(
-          {
-            ...changes,
-            appVersion,
-            updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-          } as UserProfile,
-          { merge: true }
-        );
+        const update: Partial<UserProfile> = {
+          ...changes,
+          appVersion,
+          updatedOn: serverTimestamp(),
+        };
+        console.log(update);
+        await setDoc(this.getProfileRef(id), update, { merge: true });
         resolve();
       } catch (error: any) {
         if (error.code === 'permission-denied' && retry > 0) {
-          setTimeout(async () => resolve(await this.updateProfile(id, changes, retry - 1)), 1000);
+          setTimeout(async () => resolve(await this.updateProfile(id, changes, retry - 1)), 2000);
         } else {
           console.error('Erro ao tentar atualizar o perfil:', JSON.stringify(error));
           Sentry.Native.captureException(error);
@@ -94,16 +93,20 @@ export default class ProfileApi {
     });
   }
 
-  async updateLocation(id: string, location: firebase.firestore.GeoPoint, retry: number = 5) {
+  async updateLocation(id: string, location: GeoPoint, retry: number = 5) {
     return new Promise<void>(async (resolve) => {
       try {
-        await this.firestoreWithGeo
-          .collection(this.collectionName)
-          .doc(id)
-          .update({
-            coordinates: location,
-            updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-          } as UserProfile);
+        await updateDoc(doc(this.firestore, this.collectionName, id), {
+          coordinates: location,
+          g: {
+            geopoint: location,
+            geohash: hash({
+              lat: location.latitude,
+              lng: location.longitude,
+            }),
+          },
+          updatedOn: serverTimestamp(),
+        } as Partial<UserProfile>);
       } catch (error: any) {
         if (error.code === 'permission-denied' && retry > 0) {
           setTimeout(async () => resolve(await this.updateLocation(id, location, retry - 1)), 1000);

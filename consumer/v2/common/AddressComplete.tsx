@@ -19,7 +19,6 @@ import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
-import useAxiosCancelToken from '../../../common/hooks/useAxiosCancelToken';
 import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { getConsumer } from '../../../common/store/consumer/selectors';
@@ -81,16 +80,12 @@ export const AddressComplete = ({ navigation, route }: Props) => {
     return sections;
   }, [autocompletePredictions, consumer?.favoritePlaces, returnScreen]);
   // helpers
-  // using cancel token to allow canceling ongoing requests after unmounting
-  const createCancelToken = useAxiosCancelToken();
   // debounced callback to avoid calling the maps API more often than necessary
   // TODO: what would be a better threshold than 500ms?
   const getAddress = React.useCallback(
     debounce<(input: string, session: string) => void>(async (input: string, session) => {
       setLoading(true);
-      const results = await api
-        .maps()
-        .googlePlacesAutocomplete(input, session, createCancelToken(), coords);
+      const results = await api.maps().googlePlacesAutocomplete(input, session, coords);
       setLoading(false);
       if (results) setAutoCompletePredictions(results);
     }, 500),

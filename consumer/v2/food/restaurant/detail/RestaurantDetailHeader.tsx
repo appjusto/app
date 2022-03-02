@@ -76,7 +76,7 @@ export const RestaurantDetailHeader = ({
           <Text style={{ ...texts.xs }}>{t('Compartilhe esse restaurante com seus amigos!')}</Text>
         </PaddedView>
       </TouchableOpacity>
-      {message !== undefined ? (
+      {message ? (
         <TouchableOpacity
           style={{
             paddingHorizontal: padding,

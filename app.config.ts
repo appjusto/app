@@ -43,7 +43,7 @@ export default (context: ConfigContext): ExpoConfig => {
   const config: ExpoConfig = {
     name: name(),
     slug: slug(),
-    scheme: scheme(),
+    // scheme: scheme(),
     privacy: 'hidden',
     platforms: ['ios', 'android'],
     version,
@@ -51,7 +51,7 @@ export default (context: ConfigContext): ExpoConfig => {
     splash: {
       image: './assets/splash.png',
       resizeMode: 'cover',
-      backgroundColor: '#78e08f',
+      backgroundColor: '#9ce592',
     },
     notification: {
       icon: './assets/notification-icon.png',
@@ -62,6 +62,9 @@ export default (context: ConfigContext): ExpoConfig => {
     assetBundlePatterns: ['**/*'],
     ios: ios(),
     android: android(),
+    androidStatusBar: {
+      hidden: true,
+    },
     extra: extra(),
     hooks: hooks(),
     plugins:
@@ -75,6 +78,7 @@ export default (context: ConfigContext): ExpoConfig => {
                 mode: environment === 'live' ? 'production' : 'development',
               },
             ],
+            'expo-splash-screen',
           ]
         : undefined,
   };
@@ -97,11 +101,11 @@ const slug = () => {
   return slug;
 };
 
-const scheme = () => {
-  const scheme = flavor === 'consumer' ? 'appjusto' : 'appjustocourier';
-  if (environment !== 'live') return `${scheme}${environment}`;
-  return scheme;
-};
+// const scheme = () => {
+//   const scheme = flavor === 'consumer' ? 'appjusto' : 'appjustocourier';
+//   if (environment !== 'live') return `${scheme}${environment}`;
+//   return scheme;
+// };
 
 const appBundlePackage = () => {
   return `br.com.appjusto.${flavor}.${environment}`;

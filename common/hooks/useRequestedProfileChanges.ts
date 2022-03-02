@@ -6,7 +6,7 @@ export const useRequestedProfileChanges = (accountId: string) => {
   // context
   const api = React.useContext(ApiContext);
   // state
-  const [profileChanges, setProfileChanges] = React.useState<WithId<ProfileChange>[]>();
+  const [profileChanges, setProfileChanges] = React.useState<WithId<ProfileChange>[]>([]);
   // side-effects
   React.useEffect(() => {
     if (!accountId) return;

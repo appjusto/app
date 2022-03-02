@@ -1,7 +1,7 @@
 import { ProfileSituation } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import firebase from 'firebase';
+import { GeoPoint } from 'firebase/firestore';
 import React from 'react';
 import { Alert, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useQueryClient } from 'react-query';
@@ -67,10 +67,7 @@ export default function ({ navigation, route }: Props) {
     if (!coords) return;
     api
       .profile()
-      .updateLocation(
-        courier.id,
-        new firebase.firestore.GeoPoint(coords.latitude, coords.longitude)
-      )
+      .updateLocation(courier.id, new GeoPoint(coords.latitude, coords.longitude))
       .then(null);
   }, [api, coords, courier.id]);
 

@@ -1,18 +1,12 @@
-import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
+import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
+import { ConfirmationResult } from 'firebase/auth';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import * as Sentry from 'sentry-expo';
-import { RestaurantNavigatorParamList } from '../../../consumer/v2/food/restaurant/types';
-import { ProfileParamList } from '../../../consumer/v2/main/profile/types';
-import { P2POrderNavigatorParamList } from '../../../consumer/v2/p2p/types';
-import { LoggedNavigatorParamList } from '../../../consumer/v2/types';
-import { CourierProfileParamList } from '../../../courier/approved/main/profile/types';
 import { CodeInput } from '../../../courier/approved/ongoing/code-input/CodeInput';
-import { ApprovedParamList } from '../../../courier/approved/types';
-import { UnapprovedParamList } from '../../../courier/unapproved/types';
 import { t } from '../../../strings';
 import { ApiContext, AppDispatch } from '../../app/context';
 import DefaultButton from '../../components/buttons/DefaultButton';
@@ -20,26 +14,10 @@ import PaddedView from '../../components/containers/PaddedView';
 import { phoneFormatter } from '../../components/inputs/pattern-input/formatters';
 import { showToast } from '../../store/ui/actions';
 import { biggerPadding, colors, doublePadding, padding, screens, texts } from '../../styles';
+import { UnloggedParamList } from './types';
 
-export type PhoneVerificationParamList = {
-  PhoneVerificationScreen: {
-    phone: string;
-    returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P' | 'ProfileAddCard';
-    returnNextScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P';
-  };
-};
-
-type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<
-    ProfileParamList &
-      P2POrderNavigatorParamList &
-      RestaurantNavigatorParamList &
-      CourierProfileParamList,
-    'PhoneVerificationScreen'
-  >,
-  StackNavigationProp<LoggedNavigatorParamList & ApprovedParamList & UnapprovedParamList>
->;
-type ScreenRouteProp = RouteProp<PhoneVerificationParamList, 'PhoneVerificationScreen'>;
+type ScreenNavigationProp = StackNavigationProp<UnloggedParamList, 'PhoneLoginScreen'>;
+type ScreenRouteProp = RouteProp<UnloggedParamList, 'PhoneLoginScreen'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -55,35 +33,35 @@ type State =
   | 'unrecoverable-error'
   | 'success';
 
-export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
+export const PhoneLoginScreen = ({ navigation, route }: Props) => {
   // params
-  const { phone, returnScreen, returnNextScreen } = route.params;
+  const { phone } = route.params;
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
   // state
   const [state, setState] = React.useState<State>('initial');
-  const [verificationId, setVerificationId] = React.useState('');
+  const [confirmationResult, setConfirmationResult] = React.useState<ConfirmationResult>();
   const [verificationCode, setVerificationCode] = React.useState('');
   const [error, setError] = React.useState<string>();
   // refs
   const recaptchaRef = React.useRef(null);
   // effects
   React.useEffect(() => {
+    console.log('state', state);
     if (state === 'success') {
       dispatch(showToast('Validação finalizada com sucesso!', 'success'));
-      if (returnScreen) navigation.navigate(returnScreen, { returnScreen: returnNextScreen });
-      else navigation.goBack();
     }
   }, [state]);
+
   // handlers
-  const verifyPhoneHandler = () => {
+  React.useEffect(() => {
     setState('verifying-phone-number');
     api
       .auth()
-      .verifyPhoneNumber(`+55${phone}`, recaptchaRef.current!)
-      .then((id) => {
-        setVerificationId(id);
+      .signInWithPhoneNumber(`+55${phone}`, recaptchaRef.current!)
+      .then((result) => {
+        setConfirmationResult(result);
         setState('phone-number-verified');
       })
       .catch((error) => {
@@ -92,13 +70,12 @@ export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
         setError(t('Não foi possível verificar o telefone. Edite seu perfil e tente novamente.'));
         setState('unrecoverable-error');
       });
-  };
+  }, []);
   const verifyCodeHandler = () => {
     (async () => {
       try {
         setState('verifying-code');
-        await api.auth().confirmPhoneSignIn(verificationId, verificationCode);
-        setState('success');
+        await api.auth().confirmPhoneSignIn(confirmationResult!.verificationId, verificationCode);
       } catch (err: any) {
         let message: string = err.message;
         if (message.indexOf('linked to one identity') > 0) {
@@ -133,32 +110,6 @@ export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
         cancelLabel={t('Cancelar')}
         languageCode="pt"
       />
-      {state === 'initial' ? (
-        <View>
-          <Text style={{ ...texts.x2l }}>{t('Confirme seu celular')}</Text>
-          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: padding }}>
-            {t(
-              'O AppJusto solicita a confirmação do seu celular para combater fraudes e garantir o suporte em caso de incidentes.'
-            )}
-          </Text>
-          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: padding }}>
-            {t(
-              'Os números de telefone que os usuários fornecem para autenticação serão enviados e armazenados pelo Google para melhorar o seu sistema de prevenção de abuso e spam.'
-            )}
-          </Text>
-          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: padding }}>
-            {t(
-              'Todos os dados fornecidos pelo usuário serão encriptados, garantindo segurança de ponta-a-ponta no processo de autenticação.'
-            )}
-          </Text>
-          <View style={{ flex: 1 }} />
-          <DefaultButton
-            style={{ marginVertical: doublePadding }}
-            title={t('Enviar código por SMS')}
-            onPress={verifyPhoneHandler}
-          />
-        </View>
-      ) : null}
       {state === 'verifying-phone-number' || state === 'verifying-code' ? (
         <ActivityIndicator size="large" color={colors.green500} />
       ) : null}

@@ -1,5 +1,4 @@
 import { useURL } from 'expo-linking';
-import firebase from 'firebase';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';

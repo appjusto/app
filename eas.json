@@ -1,5 +1,17 @@
 {
   "build": {
+    "courier-dev-internal": {
+      "env": {
+        "FLAVOR": "courier",
+        "ENV": "dev"
+      },
+      "releaseChannel": "v8",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "expoCli": "5.2.0"
+    },
     "courier-live-internal": {
       "env": {
         "FLAVOR": "courier",
@@ -10,7 +22,7 @@
       "android": {
         "buildType": "apk"
       },
-      "expoCli": "5.0.0-rc.3"
+      "expoCli": "5.2.0"
     },
     "courier-live-store": {
       "env": {
@@ -22,10 +34,10 @@
       "android": {
         "buildType": "app-bundle"
       },
-      "expoCli": "5.0.0-rc.3"
+      "expoCli": "5.2.0"
     }
   },
   "cli": {
-    "version": ">= 0.41.0"
+    "version": ">= 0.46.0"
   }
 }

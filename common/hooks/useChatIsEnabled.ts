@@ -1,5 +1,5 @@
 import { Order, OrderStatus, WithId } from '@appjusto/types';
-import firebase from 'firebase';
+import { Timestamp } from 'firebase/firestore';
 import { useContextGetSeverTime } from '../contexts/ServerTimeContext';
 
 export const useChatisEnabled = (order?: WithId<Order> | null) => {
@@ -13,8 +13,5 @@ export const useChatisEnabled = (order?: WithId<Order> | null) => {
     status === 'delivered'
       ? timestamps.delivered ?? order.deliveredOn ?? updatedOn
       : timestamps.canceled ?? order.canceledOn ?? updatedOn;
-  return (
-    getServerTime().getTime() - (time as firebase.firestore.Timestamp).toDate().getTime() <
-    60 * 60 * 1000
-  );
+  return getServerTime().getTime() - (time as Timestamp).toDate().getTime() < 60 * 60 * 1000;
 };

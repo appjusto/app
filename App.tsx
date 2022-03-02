@@ -17,11 +17,8 @@ import CourierApp from './courier/CourierApp';
 if (__DEV__) {
   LogBox.ignoreLogs([
     'Setting a timer',
-    // 'Note: Native Sentry SDK is disabled',
-    // 'Attempt to invoke interface method',
-    // 'Non-serializable values were found',
-    // 'Sentry Logger [Warn]:',
-    // 'No DSN provided',
+    // 'Sentry Logger [Warn]: SentryError: Native is disabled',
+    'AsyncStorage has been extracted',
     'You need to add `ACCESS_BACKGROUND_LOCATION`',
   ]);
 }

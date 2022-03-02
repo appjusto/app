@@ -1,7 +1,7 @@
 import { CourierFleet } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import firebase from 'firebase';
+import { serverTimestamp } from 'firebase/firestore';
 import { omit } from 'lodash';
 import React, { useContext } from 'react';
 import { ActivityIndicator, Keyboard, ScrollView, Text, View } from 'react-native';
@@ -73,7 +73,7 @@ export default function ({ navigation, route }: Props) {
       .updateProfile(courier.id, {
         fleet: {
           ...(omit(fleet, ['partipantsOnline', 'situation']) as CourierFleet),
-          joinedOn: firebase.firestore.FieldValue.serverTimestamp(),
+          joinedOn: serverTimestamp(),
         },
       })
       .then(null);

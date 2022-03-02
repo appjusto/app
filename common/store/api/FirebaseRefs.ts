@@ -1,137 +1,199 @@
-import firebase from 'firebase/app';
+import {
+  CancelOrderPayload,
+  CompleteDeliveryPayload,
+  DeletePaymentMethodPayload,
+  DropOrderPayload,
+  Fare,
+  FetchAccountInformationPayload,
+  FetchAccountInformationResponse,
+  FetchAdvanceSimulationPayload,
+  FetchReceivablesPayload,
+  GetCancellationInfoPayload,
+  GetCancellationInfoResult,
+  GetOrderQuotesPayload,
+  MatchOrderPayload,
+  NextDispatchingStatePayload,
+  PlaceOrderPayload,
+  QueryGoogleMapsPayload,
+  RejectOrderPayload,
+  RequestWithdrawPayload,
+  SavePaymentTokenPayload,
+  SavePaymentTokenResponse,
+  TipCourierPayload,
+  UpdateOrderPayload,
+} from '@appjusto/types';
+import {
+  IuguMarketplaceAccountAdvanceSimulation,
+  IuguMarketplaceAccountReceivables,
+  IuguMarketplaceAccountWithdrawResponse,
+} from '@appjusto/types/payment/iugu';
+import { collection, doc, Firestore } from 'firebase/firestore';
+import { Functions, httpsCallable } from 'firebase/functions';
 
 export default class FirebaseRefs {
-  constructor(
-    private functions: firebase.functions.Functions,
-    private firestore: firebase.firestore.Firestore
-  ) {}
+  constructor(private functions: Functions, private firestore: Firestore) {}
 
   // functions
-  getVerifyProfileCallable = () => this.functions.httpsCallable('verifyProfile');
+  getVerifyProfileCallable = () => httpsCallable(this.functions, 'verifyProfile');
   getFetchAccountInformationCallable = () =>
-    this.functions.httpsCallable('fetchAccountInformation');
-  getFetchReceivablesCallable = () => this.functions.httpsCallable('fetchReceivables');
-  getFetchAdvanceSimulationCallable = () => this.functions.httpsCallable('fetchAdvanceSimulation');
-  getRequestWithdrawCallable = () => this.functions.httpsCallable('requestWithdraw');
-  getAdvanceReceivablesCallable = () => this.functions.httpsCallable('advanceReceivables');
-  getDeleteAccountCallable = () => this.functions.httpsCallable('deleteAccount');
-  getServerTimeCallable = () => this.functions.httpsCallable('getServerTime');
+    httpsCallable<FetchAccountInformationPayload, FetchAccountInformationResponse>(
+      this.functions,
+      'fetchAccountInformation'
+    );
+  getFetchReceivablesCallable = () =>
+    httpsCallable<FetchReceivablesPayload, IuguMarketplaceAccountReceivables>(
+      this.functions,
+      'fetchReceivables'
+    );
+  getFetchAdvanceSimulationCallable = () =>
+    httpsCallable<FetchAdvanceSimulationPayload, IuguMarketplaceAccountAdvanceSimulation>(
+      this.functions,
+      'fetchAdvanceSimulation'
+    );
+  getRequestWithdrawCallable = () =>
+    httpsCallable<RequestWithdrawPayload, IuguMarketplaceAccountWithdrawResponse>(
+      this.functions,
+      'requestWithdraw'
+    );
+  getAdvanceReceivablesCallable = () => httpsCallable(this.functions, 'advanceReceivables');
+  getDeleteAccountCallable = () => httpsCallable(this.functions, 'deleteAccount');
+  getServerTimeCallable = () => httpsCallable(this.functions, 'getServerTime');
   // consumer
-  getSavePaymentTokenCallable = () => this.functions.httpsCallable('savePaymentToken');
-  getDeletePaymentMethodCallable = () => this.functions.httpsCallable('deletePaymentMethod');
-  getCreateOrderCallable = () => this.functions.httpsCallable('createOrder');
-  getGetOrderQuotesCallable = () => this.functions.httpsCallable('getOrderQuotes');
-  getPlaceOrderCallable = () => this.functions.httpsCallable('placeOrder');
-  getCancelOrderCallable = () => this.functions.httpsCallable('cancelOrder');
-  getTipCourierCallable = () => this.functions.httpsCallable('tipCourier');
-  getCancellationInfoCallable = () => this.functions.httpsCallable('getCancellationInfo');
-  getUpdateOrderCallable = () => this.functions.httpsCallable('updateOrder');
+  getSavePaymentTokenCallable = () =>
+    httpsCallable<SavePaymentTokenPayload, SavePaymentTokenResponse>(
+      this.functions,
+      'savePaymentToken'
+    );
+  getDeletePaymentMethodCallable = () =>
+    httpsCallable<DeletePaymentMethodPayload, void>(this.functions, 'deletePaymentMethod');
+  getCreateOrderCallable = () => httpsCallable(this.functions, 'createOrder');
+  getGetOrderQuotesCallable = () =>
+    httpsCallable<GetOrderQuotesPayload, Fare[]>(this.functions, 'getOrderQuotes');
+  getPlaceOrderCallable = () =>
+    httpsCallable<PlaceOrderPayload, void>(this.functions, 'placeOrder');
+  getCancelOrderCallable = () =>
+    httpsCallable<CancelOrderPayload, void>(this.functions, 'cancelOrder');
+  getTipCourierCallable = () =>
+    httpsCallable<TipCourierPayload, void>(this.functions, 'tipCourier');
+  getCancellationInfoCallable = () =>
+    httpsCallable<GetCancellationInfoPayload, GetCancellationInfoResult>(
+      this.functions,
+      'getCancellationInfo'
+    );
+  getUpdateOrderCallable = () =>
+    httpsCallable<UpdateOrderPayload, void>(this.functions, 'updateOrder');
+  getQueryGoogleMapsCallable = () =>
+    httpsCallable<QueryGoogleMapsPayload, any>(this.functions, 'queryGoogleMaps');
   // courier
-  getMatchOrderCallable = () => this.functions.httpsCallable('matchOrder');
-  getRejectOrderCallable = () => this.functions.httpsCallable('rejectOrder');
-  getDropOrderCallable = () => this.functions.httpsCallable('dropOrder');
-  getNextDispatchingStateCallable = () => this.functions.httpsCallable('nextDispatchingState');
-  getCompleteDeliveryCallable = () => this.functions.httpsCallable('completeDelivery');
+  getMatchOrderCallable = () =>
+    httpsCallable<MatchOrderPayload, void>(this.functions, 'matchOrder');
+  getRejectOrderCallable = () =>
+    httpsCallable<RejectOrderPayload, void>(this.functions, 'rejectOrder');
+  getDropOrderCallable = () => httpsCallable<DropOrderPayload, void>(this.functions, 'dropOrder');
+  getNextDispatchingStateCallable = () =>
+    httpsCallable<NextDispatchingStatePayload, void>(this.functions, 'nextDispatchingState');
+  getCompleteDeliveryCallable = () =>
+    httpsCallable<CompleteDeliveryPayload, void>(this.functions, 'completeDelivery');
 
   // firestore
   // recommendations
-  getRecommendationsRef = () => this.firestore.collection('recommendations');
+  getRecommendationsRef = () => collection(this.firestore, 'recommendations');
 
   // withdraws
-  getWithdrawsRef = () => this.firestore.collection('withdraws');
+  getWithdrawsRef = () => collection(this.firestore, 'withdraws');
 
   // reviews
-  getReviewsRef = () => this.firestore.collection('reviews');
-  getReviewRef = (id: string) => this.firestore.collection('reviews').doc(id);
+  getReviewsRef = () => collection(this.firestore, 'reviews');
+  getReviewRef = (id: string) => doc(collection(this.firestore, 'reviews'), id);
 
   // platform
-  getPlatformRef = () => this.firestore.collection('platform');
+  getPlatformRef = () => collection(this.firestore, 'platform');
 
   // platform docs
-  getPlatformParamsRef = () => this.getPlatformRef().doc('params');
-  getPlatformStatisticsRef = () => this.getPlatformRef().doc('statistics');
-  getPlatformCitiesStatisticsRef = () => this.getPlatformStatisticsRef().collection('cities');
-  getPlatformCityStatisticsRef = (name: string) => this.getPlatformCitiesStatisticsRef().doc(name);
-  getPlatformDatasRef = () => this.getPlatformRef().doc('data');
-  getPlatformLogsRef = () => this.getPlatformRef().doc('logs');
-  getPlatformAccessRef = () => this.getPlatformRef().doc('access');
+  getPlatformParamsRef = () => doc(this.getPlatformRef(), 'params');
+  getPlatformStatisticsRef = () => doc(this.getPlatformRef(), 'statistics');
+  getPlatformCitiesStatisticsRef = () => collection(this.getPlatformStatisticsRef(), 'cities');
+  getPlatformCityStatisticsRef = (name: string) => doc(this.getPlatformCitiesStatisticsRef(), name);
+  getPlatformDatasRef = () => doc(this.getPlatformRef(), 'data');
+  getPlatformLogsRef = () => doc(this.getPlatformRef(), 'logs');
+  getPlatformAccessRef = () => doc(this.getPlatformRef(), 'access');
 
   // platform data subcollections
-  getBanksRef = () => this.getPlatformDatasRef().collection('banks');
-  getIssuesRef = () => this.getPlatformDatasRef().collection('issues');
-  getCuisinesRef = () => this.getPlatformDatasRef().collection('cuisines');
-  getClassificationsRef = () => this.getPlatformDatasRef().collection('classifications');
-  getReviewTagsRef = () => this.getPlatformDatasRef().collection('reviewTags');
+  getBanksRef = () => collection(this.getPlatformDatasRef(), 'banks');
+  getIssuesRef = () => collection(this.getPlatformDatasRef(), 'issues');
+  getCuisinesRef = () => collection(this.getPlatformDatasRef(), 'cuisines');
+  getClassificationsRef = () => collection(this.getPlatformDatasRef(), 'classifications');
+  getReviewTagsRef = () => collection(this.getPlatformDatasRef(), 'reviewTags');
 
   // platform logs subcollections
-  getPlatformLoginLogsRef = () => this.getPlatformLogsRef().collection('logins');
+  getPlatformLoginLogsRef = () => collection(this.getPlatformLogsRef(), 'logins');
 
   // businesses
-  getBusinessesRef = () => this.firestore.collection('businesses');
-  getBusinessRef = (id: string) => this.getBusinessesRef().doc(id);
+  getBusinessesRef = () => collection(this.firestore, 'businesses');
+  getBusinessRef = (id: string) => doc(this.getBusinessesRef(), id);
 
   // business menu
   getBusinessMenuMessageRef = (businessId: string) =>
-    this.getBusinessRef(businessId).collection('menu').doc('message');
+    doc(collection(this.getBusinessRef(businessId), 'menu'), 'message');
   getBusinessCategoriesRef = (businessId: string) =>
-    this.getBusinessRef(businessId).collection('categories');
+    collection(this.getBusinessRef(businessId), 'categories');
   getBusinessCategoryRef = (businessId: string, categoryId: string) =>
-    this.getBusinessCategoriesRef(businessId).doc(categoryId);
+    doc(this.getBusinessCategoriesRef(businessId), categoryId);
   getBusinessProductsRef = (businessId: string) =>
-    this.getBusinessRef(businessId).collection('products');
+    collection(this.getBusinessRef(businessId), 'products');
   getBusinessProductRef = (businessId: string, id: string) =>
-    this.getBusinessProductsRef(businessId).doc(id);
+    doc(this.getBusinessProductsRef(businessId), id);
   getBusinessComplementsGroupsRef = (businessId: string) =>
-    this.getBusinessRef(businessId).collection('complementsgroups');
+    collection(this.getBusinessRef(businessId), 'complementsgroups');
   getBusinessComplementGroupRef = (businessId: string, groupId: string) =>
-    this.getBusinessComplementsGroupsRef(businessId).doc(groupId);
+    doc(this.getBusinessComplementsGroupsRef(businessId), groupId);
   getBusinessComplementsRef = (businessId: string) =>
-    this.getBusinessRef(businessId).collection('complements');
+    collection(this.getBusinessRef(businessId), 'complements');
   getBusinessComplementRef = (businessId: string, complementId: string) =>
-    this.getBusinessComplementsRef(businessId).doc(complementId);
+    doc(this.getBusinessComplementsRef(businessId), complementId);
   getBusinessMenuOrderingRef = (businessId: string, menuId: string = 'default') =>
-    this.getBusinessRef(businessId).collection('menu').doc(menuId);
+    doc(collection(this.getBusinessRef(businessId), 'menu'), menuId);
 
   // managers
-  getManagersRef = () => this.firestore.collection('managers');
-  getManagerRef = (managerId: string) => this.firestore.collection('managers').doc(managerId);
+  getManagersRef = () => collection(this.firestore, 'managers');
+  getManagerRef = (managerId: string) => doc(collection(this.firestore, 'managers'), managerId);
 
   // orders
-  getOrdersRef = () => this.firestore.collection('orders');
-  getOrderRef = (id: string) => this.getOrdersRef().doc(id);
-  getOrderChatRef = (id: string) => this.getOrdersRef().doc(id).collection('chat');
-  getOrderChatMessageRef = (orderId: string, id: string) => this.getOrderChatRef(orderId).doc(id);
-  getOrderIssuesRef = (id: string) => this.getOrdersRef().doc(id).collection('issues');
-  getOrderPrivateRef = (id: string) => this.getOrdersRef().doc(id).collection('private');
+  getOrdersRef = () => collection(this.firestore, 'orders');
+  getOrderRef = (id: string) => doc(this.getOrdersRef(), id);
+  getOrderChatRef = (id: string) => collection(doc(this.getOrdersRef(), id), 'chat');
+  getOrderChatMessageRef = (orderId: string, id: string) => doc(this.getOrderChatRef(orderId), id);
+  getOrderIssuesRef = (id: string) => collection(doc(this.getOrdersRef(), id), 'issues');
+  getOrderPrivateRef = (id: string) => collection(doc(this.getOrdersRef(), id), 'private');
   getOrderCancellationRef = (orderId: string) =>
-    this.getOrderPrivateRef(orderId).doc('cancellation');
-  getOrderConfirmationRef = (id: string) => this.getOrderPrivateRef(id).doc('confirmation');
-  getOrderLogsRef = (id: string) => this.getOrderRef(id).collection('logs');
+    doc(this.getOrderPrivateRef(orderId), 'cancellation');
+  getOrderConfirmationRef = (id: string) => doc(this.getOrderPrivateRef(id), 'confirmation');
+  getOrderLogsRef = (id: string) => collection(this.getOrderRef(id), 'logs');
 
   // chats
-  getChatsRef = () => this.firestore.collection('chats');
-  getChatMessageRef = (messageId: string) => this.getChatsRef().doc(messageId);
+  getChatsRef = () => collection(this.firestore, 'chats');
+  getChatMessageRef = (messageId: string) => doc(this.getChatsRef(), messageId);
 
   // consumers
-  getConsumersRef = () => this.firestore.collection('consumers');
-  getConsumerRef = (id: string) => this.getConsumersRef().doc(id);
+  getConsumersRef = () => collection(this.firestore, 'consumers');
+  getConsumerRef = (id: string) => doc(this.getConsumersRef(), id);
 
   // users
-  getUsersRef = () => this.firestore.collection('users');
-  getUsersSubcollectionsRef = () => this.getUsersRef().doc('subcollections');
-  getUsersChangesRef = () => this.getUsersSubcollectionsRef().collection('changes');
+  getUsersRef = () => collection(this.firestore, 'users');
+  getUsersSubcollectionsRef = () => doc(this.getUsersRef(), 'subcollections');
+  getUsersChangesRef = () => collection(this.getUsersSubcollectionsRef(), 'changes');
 
   // couriers
-  getCouriersRef = () => this.firestore.collection('couriers');
-  getCourierRef = (id: string) => this.getCouriersRef().doc(id);
-  getCourierReviewsRef = (id: string) => this.getCourierRef(id).collection('reviews');
-  getCourierRequestsRef = (id: string) => this.getCourierRef(id).collection('requests');
+  getCouriersRef = () => collection(this.firestore, 'couriers');
+  getCourierRef = (id: string) => doc(this.getCouriersRef(), id);
+  getCourierReviewsRef = (id: string) => collection(this.getCourierRef(id), 'reviews');
+  getCourierRequestsRef = (id: string) => collection(this.getCourierRef(id), 'requests');
   getCourierOrderRequestsRef = (courierId: string, orderId: string) =>
-    this.getCourierRequestsRef(courierId).doc(orderId);
+    doc(this.getCourierRequestsRef(courierId), orderId);
 
   // fleets
-  getFleetsRef = () => this.firestore.collection('fleets');
-  getFleetRef = (id: string) => this.getFleetsRef().doc(id);
+  getFleetsRef = () => collection(this.firestore, 'fleets');
+  getFleetRef = (id: string) => doc(this.getFleetsRef(), id);
   getAppJustoFleetRef = () => this.getFleetRef('appjusto');
 
   // storage

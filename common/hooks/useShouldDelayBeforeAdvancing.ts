@@ -1,5 +1,5 @@
 import { Order, WithId } from '@appjusto/types';
-import firebase from 'firebase';
+import { Timestamp } from 'firebase/firestore';
 import { usePlatformParamsContext } from '../contexts/PlatformParamsContext';
 import { useContextGetSeverTime } from '../contexts/ServerTimeContext';
 
@@ -11,8 +11,7 @@ export const useShouldDelayBeforeAdvancing = (order?: WithId<Order> | null) => {
     (usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60) * 1000;
   const dispatchingStartedOn = order.timestamps.dispatching ?? order.dispatchingStartedOn;
   return (
-    getServerTime().getTime() -
-      (dispatchingStartedOn as firebase.firestore.Timestamp).toDate().getTime() <
+    getServerTime().getTime() - (dispatchingStartedOn as Timestamp).toDate().getTime() <
     delayBeforeAdvancing
   );
 };

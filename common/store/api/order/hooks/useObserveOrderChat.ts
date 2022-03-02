@@ -1,4 +1,5 @@
 import { ChatMessage, Flavor, WithId } from '@appjusto/types';
+import { FieldValue, Timestamp } from 'firebase/firestore';
 import { first } from 'lodash';
 import React from 'react';
 import { ApiContext } from '../../../../app/context';
@@ -32,8 +33,7 @@ export const useObserveOrderChat = (
   return chat;
 };
 
-const timestampToDate = (value: firebase.firestore.FieldValue) =>
-  (value as firebase.firestore.Timestamp).toDate();
+const timestampToDate = (value: FieldValue) => (value as Timestamp).toDate();
 
 const sortMessages = (a: ChatMessage, b: ChatMessage) => {
   if (a.timestamp && b.timestamp)

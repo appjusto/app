@@ -1,8 +1,10 @@
 // eslint-disable-next-line import/order
 import { CourierProfile, DeleteAccountPayload } from '@appjusto/types';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-import 'firebase/functions';
+import { getApp, initializeApp } from 'firebase/app';
+import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth';
+import { connectFirestoreEmulator, Firestore, getFirestore } from 'firebase/firestore';
+import { connectFunctionsEmulator, Functions, getFunctions } from 'firebase/functions';
+import { connectStorageEmulator, FirebaseStorage, getStorage } from 'firebase/storage';
 import { Platform } from 'react-native';
 import { Extra } from '../../../config/types';
 import AuthApi from './auth';
@@ -22,10 +24,10 @@ import SearchApi from './search/SearchApi';
 import UserApi from './users';
 
 export default class Api {
-  private authentication: firebase.auth.Auth;
-  private firestore: firebase.firestore.Firestore;
-  private functions: firebase.functions.Functions;
-  private storage: firebase.storage.Storage;
+  private authentication: Auth;
+  private firestore: Firestore;
+  private functions: Functions;
+  private storage: FirebaseStorage;
 
   private _refs: FirebaseRefs;
   private _auth: AuthApi;
@@ -47,26 +49,24 @@ export default class Api {
     const emulated = extra.firebase.emulator.enabled && extra.firebase.emulator.host;
     const apiKey =
       Platform.OS === 'android' ? extra.firebase.apiKeyAndroid : extra.firebase.apiKeyiOS;
-    const app = firebase.initializeApp({ ...extra.firebase, apiKey });
-    this.authentication = app.auth();
-    this.firestore = app.firestore();
-    this.functions = app.functions(extra.firebase.region);
+    const app = initializeApp({ ...extra.firebase, apiKey });
+    this.authentication = getAuth(app);
+    this.firestore = getFirestore(app);
+    this.functions = getFunctions(app, extra.firebase.region);
+    this.storage = getStorage(app);
 
     if (emulated) {
       const host = extra.firebase.emulator.host!;
-      this.authentication.useEmulator(`http://${host}:9099`);
-      this.functions.useEmulator(host, 5001);
-      this.firestore.useEmulator(host, 8080);
-      this.storage = app.storage('gs://default-bucket');
-      this.storage.useEmulator(host, 9199);
-    } else {
-      this.storage = app.storage();
+      connectAuthEmulator(this.authentication, `http://${host}:9099`);
+      connectFirestoreEmulator(this.firestore, host, 8080);
+      connectFunctionsEmulator(this.functions, host, 5001);
+      connectStorageEmulator(this.storage, host, 9199);
     }
 
     this._refs = new FirebaseRefs(this.functions, this.firestore);
     this._iugu = new IuguApi(extra.iugu.accountId, extra.environment !== 'live');
     this._files = new FilesApi(this.storage);
-    this._auth = new AuthApi(this._refs, this.authentication, extra);
+    this._auth = new AuthApi(this.authentication, this._refs, extra);
     this._platform = new PlatformApi(this._refs, this._files);
     this._profile = new ProfileApi(this.firestore, this._auth, extra.flavor);
     this._courier = new CourierApi(this._refs, this._files);
@@ -74,14 +74,14 @@ export default class Api {
     this._consumer = new ConsumerApi(this._refs, this._iugu);
     this._order = new OrderApi(this._refs, this.firestore);
     this._reviews = new ReviewsApi(this._refs, this.firestore);
-    this._maps = new MapsApi(apiKey);
+    this._maps = new MapsApi(this._refs);
     this._business = new BusinessApi(this._refs, this._files);
     this._search = new SearchApi(extra.algolia, extra.environment);
     this._user = new UserApi(this._refs, extra.flavor);
   }
 
   getFirebaseOptions() {
-    return firebase.app().options;
+    return getApp().options;
   }
 
   auth() {
@@ -153,6 +153,6 @@ export default class Api {
 
   async getServerTime(): Promise<number> {
     const result = await this._refs.getServerTimeCallable()();
-    return result.data.time;
+    return (result.data as any).time;
   }
 }

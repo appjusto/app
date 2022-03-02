@@ -8,5 +8,8 @@ export type UnloggedParamList = {
   SignInFeedback: {
     email: string;
   };
+  PhoneLoginScreen: {
+    phone: string;
+  };
   Terms: undefined;
 };

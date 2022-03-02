@@ -10,7 +10,16 @@ import {
   Product,
   WithId,
 } from '@appjusto/types';
-import firebase from 'firebase';
+import {
+  addDoc,
+  getDoc,
+  getDocs,
+  limit,
+  onSnapshot,
+  query,
+  serverTimestamp,
+  where,
+} from 'firebase/firestore';
 import * as Sentry from 'sentry-expo';
 import FilesApi from '../files';
 import FirebaseRefs from '../FirebaseRefs';
@@ -21,26 +30,24 @@ export default class BusinessApi {
 
   // firestore
   async fetchBusiness(value: string) {
-    const ref = this.refs.getBusinessesRef();
-    let query: firebase.firestore.Query<firebase.firestore.DocumentData> | null = null;
-    // check if it's code
     const r = /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{7}$/.exec(value);
-    if (!r) query = ref.where('slug', '==', value);
-    else query = ref.where('code', '==', value);
-    const snapshot = await query.get();
+    const fieldPath = !r ? 'slug' : 'code';
+    const snapshot = await getDocs(
+      query(this.refs.getBusinessesRef(), where(fieldPath, '==', value), limit(1))
+    );
     if (snapshot.empty) return null;
     return documentAs<Business>(snapshot.docs[0]);
   }
+
   observeBusiness(businessId: string, resultHandler: (business: WithId<Business>) => void) {
-    const ref = this.refs.getBusinessRef(businessId);
-    const unsubscribe = ref.onSnapshot(
+    return onSnapshot(
+      this.refs.getBusinessRef(businessId),
       (snapshot) => resultHandler(documentAs<Business>(snapshot)),
       (error) => {
         console.log(error);
         Sentry.Native.captureException(error);
       }
     );
-    return unsubscribe;
   }
   // recommendations
   async addRecomendation(
@@ -50,102 +57,97 @@ export default class BusinessApi {
     phone?: string,
     owner?: string
   ) {
-    await this.refs.getRecommendationsRef().add({
+    await addDoc(this.refs.getRecommendationsRef(), {
       recommendedBusiness,
       consumerId: consumerId ?? null,
       instagram: instagram ?? null,
       phone: phone ?? null,
       owner: owner ?? null,
-      createdOn: firebase.firestore.FieldValue.serverTimestamp(),
+      createdOn: serverTimestamp(),
     } as BusinessRecommendation);
   }
 
   // menu
   observeCategories(businessId: string, resultHandler: (categories: WithId<Category>[]) => void) {
-    const unsubscribe = this.refs
-      .getBusinessCategoriesRef(businessId)
-      .where('enabled', '==', true)
-      .onSnapshot(
-        (snapshot) => resultHandler(documentsAs<Category>(snapshot.docs)),
-        (error) => {
-          console.log(error);
-          Sentry.Native.captureException(error);
-        }
-      );
-    return unsubscribe;
+    return onSnapshot(
+      query(this.refs.getBusinessCategoriesRef(businessId), where('enabled', '==', true)),
+      (snapshot) => resultHandler(documentsAs<Category>(snapshot.docs)),
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
+    );
   }
+
   observeProducts(businessId: string, resultHandler: (products: WithId<Product>[]) => void) {
-    const unsubscribe = this.refs
-      .getBusinessProductsRef(businessId)
-      .where('enabled', '==', true)
-      .onSnapshot(
-        (snapshot) => resultHandler(documentsAs<Product>(snapshot.docs)),
-        (error) => {
-          console.log(error);
-          Sentry.Native.captureException(error);
-        }
-      );
-    return unsubscribe;
+    return onSnapshot(
+      query(this.refs.getBusinessProductsRef(businessId), where('enabled', '==', true)),
+      (snapshot) => resultHandler(documentsAs<Product>(snapshot.docs)),
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
+    );
   }
+
   observeProduct(
     businessId: string,
     productId: string,
     resultHandler: (products: WithId<Product>) => void
   ) {
-    const unsubscribe = this.refs.getBusinessProductRef(businessId, productId).onSnapshot(
+    return onSnapshot(
+      this.refs.getBusinessProductRef(businessId, productId),
       (snapshot) => resultHandler(documentAs<Product>(snapshot)),
       (error) => {
         console.log(error);
         Sentry.Native.captureException(error);
       }
     );
-    return unsubscribe;
   }
+
   observeComplementsGroups(
     businessId: string,
     resultHandler: (products: WithId<ComplementGroup>[]) => void
   ) {
-    const unsubscribe = this.refs
-      .getBusinessComplementsGroupsRef(businessId)
-      .where('enabled', '==', true)
-      .onSnapshot(
-        (snapshot) => resultHandler(documentsAs<ComplementGroup>(snapshot.docs)),
-        (error) => {
-          console.log(error);
-          Sentry.Native.captureException(error);
-        }
-      );
-    return unsubscribe;
+    return onSnapshot(
+      query(this.refs.getBusinessComplementsGroupsRef(businessId), where('enabled', '==', true)),
+      (snapshot) => resultHandler(documentsAs<ComplementGroup>(snapshot.docs)),
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
+    );
   }
+
   observeComplements(businessId: string, resultHandler: (products: WithId<Complement>[]) => void) {
-    const unsubscribe = this.refs
-      .getBusinessComplementsRef(businessId)
-      .where('enabled', '==', true)
-      .onSnapshot(
-        (snapshot) => resultHandler(documentsAs<Complement>(snapshot.docs)),
-        (error) => {
-          console.log(error);
-          Sentry.Native.captureException(error);
-        }
-      );
-    return unsubscribe;
+    return onSnapshot(
+      query(this.refs.getBusinessComplementsRef(businessId), where('enabled', '==', true)),
+      (snapshot) => resultHandler(documentsAs<Complement>(snapshot.docs)),
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
+    );
   }
+
   observeMenuOrdering(
     businessId: string,
     resultHandler: (products: WithId<Ordering>) => void,
     menuId?: string
   ) {
-    const unsubscribe = this.refs.getBusinessMenuOrderingRef(businessId, menuId).onSnapshot(
+    return onSnapshot(
+      this.refs.getBusinessMenuOrderingRef(businessId, menuId),
       (snapshot) => resultHandler(documentAs<Ordering>(snapshot)),
       (error) => {
         console.log(error);
         Sentry.Native.captureException(error);
       }
     );
-    return unsubscribe;
   }
+
   async fetchBusinessMenuMessage(businessId: string) {
-    const snapshot = await this.refs.getBusinessMenuMessageRef(businessId).get();
+    const snapshot = await getDoc(this.refs.getBusinessMenuMessageRef(businessId));
+    if (!snapshot.exists()) return null;
     return snapshot.data() as BusinessMenuMessage;
   }
   // storage

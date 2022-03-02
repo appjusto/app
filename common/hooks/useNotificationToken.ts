@@ -4,7 +4,7 @@ import {
   getPermissionsAsync,
   requestPermissionsAsync,
 } from 'expo-notifications';
-import firebase from 'firebase';
+import { serverTimestamp } from 'firebase/firestore';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
@@ -82,7 +82,7 @@ export const useNotificationToken = (): Returntype => {
         .profile()
         .updateProfile(user.uid, {
           notificationToken: shouldUpdateToken ? token : null,
-          updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedOn: serverTimestamp(),
         })
         .then(null);
     }

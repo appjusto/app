@@ -1,5 +1,6 @@
 import { OrderCourier } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Timestamp } from 'firebase/firestore';
 import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedProfileImg from '../../../../common/components/icons/RoundedProfileImg';
@@ -33,7 +34,7 @@ export const OrderCourierSummary = ({ courier }: Props) => {
             {t('No appJusto desde')}
           </Text>
           <Text style={{ ...texts.xs }}>
-            {formatDate((courier.joined as firebase.firestore.Timestamp).toDate(), 'monthYear')}
+            {formatDate((courier.joined as Timestamp).toDate(), 'monthYear')}
           </Text>
         </View>
       </View>

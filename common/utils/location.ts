@@ -1,6 +1,6 @@
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
-import firebase from 'firebase';
+import { GeoPoint } from 'firebase/firestore';
 import { LatLng } from 'react-native-maps';
 import * as Sentry from 'sentry-expo';
 import { t } from '../../strings';
@@ -57,7 +57,7 @@ const locationTaskExecutor =
       .sort((a, b) => b.timestamp - a.timestamp)
       .find(() => true)!;
     const { latitude, longitude } = location.coords;
-    const coordinates = new firebase.firestore.GeoPoint(latitude, longitude);
+    const coordinates = new GeoPoint(latitude, longitude);
 
     if (profile?.id)
       api

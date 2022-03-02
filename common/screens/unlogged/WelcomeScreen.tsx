@@ -1,5 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { trim } from 'lodash';
 import React from 'react';
 import {
   Dimensions,
@@ -19,6 +20,9 @@ import { ApiContext, AppDispatch } from '../../app/context';
 import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import DefaultInput from '../../components/inputs/DefaultInput';
+import { phoneFormatter, phoneMask } from '../../components/inputs/pattern-input/formatters';
+import { numbersOnlyParser } from '../../components/inputs/pattern-input/parsers';
+import PatternInput from '../../components/inputs/PatternInput';
 import ShowIf from '../../components/views/ShowIf';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
@@ -40,6 +44,8 @@ type Props = {
   route: ScreenRouteProp;
 };
 
+type AuthMode = 'passwordless' | 'password' | 'phone';
+
 const { height } = Dimensions.get('window');
 const tallerDevice = height > 680;
 
@@ -51,32 +57,39 @@ export default function ({ navigation, route }: Props) {
   const busy = useSelector(getUIBusy);
   const flavor = useSelector(getFlavor);
   // state
+  const [phone, setPhone] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [isPasswordShown, setPasswordShown] = React.useState(false);
+  const [authMode, setAuthMode] = React.useState<AuthMode>(
+    flavor === 'courier' ? 'phone' : 'passwordless'
+    // 'passwordless'
+  );
   const [acceptedTerms, setAcceptTerms] = React.useState(false);
   // side effects
   // tracking
   useSegmentScreen('Welcome');
   // handlers
   const signInHandler = async () => {
-    Keyboard.dismiss();
     if (!acceptedTerms) {
       dispatch(showToast(t('Você precisa aceitar os termos para criar sua conta.'), 'error'));
       return;
     }
-    if (validateEmail(email).status !== 'ok') {
-      dispatch(showToast(t('Digite um e-mail válido.'), 'error'));
-      return;
-    }
     try {
-      if (!isPasswordShown) {
-        await dispatch(signInWithEmail(api)(email.trim()));
-        navigation.navigate('SignInFeedback', { email });
+      if (authMode === 'phone') {
+        navigation.navigate('PhoneLoginScreen', { phone });
       } else {
-        await dispatch(signInWithEmailAndPassword(api)(email.trim(), password.trim()));
+        Keyboard.dismiss();
+        if (validateEmail(email).status !== 'ok') {
+          dispatch(showToast(t('Digite um e-mail válido.'), 'error'));
+          return;
+        }
+        if (authMode === 'passwordless') {
+          await dispatch(signInWithEmail(api)(email.trim()));
+          navigation.navigate('SignInFeedback', { email });
+        } else if (authMode === 'password') {
+          await dispatch(signInWithEmailAndPassword(api)(email.trim(), password.trim()));
+        }
       }
-      navigation.navigate('SignInFeedback', { email });
     } catch (error) {
       console.error(error);
       Sentry.Native.captureException(error);
@@ -85,12 +98,14 @@ export default function ({ navigation, route }: Props) {
       );
     }
   };
-
+  // UI
   const welcomeMessage =
     flavor === 'consumer'
       ? t('Um delivery aberto, transparente e consciente.')
       : t('Ganhe mais, com autonomia e transparência.');
-  // UI
+  const actionButtonTitle = flavor === 'courier' ? t('Entrar') : t('Faça login para pedir');
+  const actionButtonDisabled =
+    !acceptedTerms || busy || (authMode !== 'phone' && validateEmail(email).status !== 'ok');
   return (
     <View style={{ ...screens.default }}>
       <KeyboardAwareScrollView
@@ -107,7 +122,15 @@ export default function ({ navigation, route }: Props) {
           <Pressable
             onPressIn={() => Keyboard.dismiss()}
             delayLongPress={2000}
-            onLongPress={() => setPasswordShown(!isPasswordShown)}
+            onLongPress={() =>
+              setAuthMode((current) =>
+                current === 'passwordless'
+                  ? 'phone'
+                  : current === 'phone'
+                  ? 'password'
+                  : 'passwordless'
+              )
+            }
           >
             <>
               <ShowIf test={flavor === 'consumer'}>
@@ -146,24 +169,43 @@ export default function ({ navigation, route }: Props) {
 
           <View style={{ flex: 1 }}>
             <View style={{ marginTop: padding }}>
-              <DefaultInput
-                value={email}
-                title={t('Acesse sua conta')}
-                placeholder={t('Digite seu e-mail')}
-                onChangeText={setEmail}
-                autoCompleteType="email"
-                keyboardType="email-address"
-                blurOnSubmit
-                autoCapitalize="none"
-              />
-              <ShowIf test={email.length > 5 && validateEmail(email).status !== 'ok'}>
-                {() => (
-                  <Text style={{ ...texts.sm, color: colors.red, marginTop: halfPadding }}>
-                    {t('O e-mail digitado não é válido')}
-                  </Text>
-                )}
-              </ShowIf>
-              {isPasswordShown ? (
+              {authMode !== 'phone' ? (
+                <>
+                  <DefaultInput
+                    value={email}
+                    title={t('Acesse sua conta')}
+                    placeholder={t('Digite seu e-mail')}
+                    onChangeText={setEmail}
+                    autoCompleteType="email"
+                    keyboardType="email-address"
+                    blurOnSubmit
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                  <ShowIf test={email.length > 5 && validateEmail(email).status !== 'ok'}>
+                    {() => (
+                      <Text style={{ ...texts.sm, color: colors.red, marginTop: halfPadding }}>
+                        {t('O e-mail digitado não é válido')}
+                      </Text>
+                    )}
+                  </ShowIf>
+                </>
+              ) : (
+                <PatternInput
+                  style={{ marginTop: padding }}
+                  title={t('Celular')}
+                  value={phone}
+                  placeholder={t('Número com DDD')}
+                  mask={phoneMask}
+                  parser={numbersOnlyParser}
+                  formatter={phoneFormatter}
+                  keyboardType="number-pad"
+                  returnKeyType="next"
+                  blurOnSubmit
+                  onChangeText={(text) => setPhone(trim(text))}
+                />
+              )}
+              {authMode === 'password' ? (
                 <DefaultInput
                   style={{ marginTop: padding }}
                   value={password}
@@ -205,14 +247,13 @@ export default function ({ navigation, route }: Props) {
           <View style={{ flex: 1 }} />
           <View style={{ marginTop: 32, paddingBottom: padding }}>
             <DefaultButton
-              disabled={validateEmail(email).status !== 'ok' || !acceptedTerms || busy}
-              title={flavor === 'courier' ? t('Entrar') : t('Faça login para pedir')}
+              disabled={actionButtonDisabled}
+              title={actionButtonTitle}
               onPress={signInHandler}
               activityIndicator={busy}
               style={{ marginBottom: padding }}
             />
           </View>
-
           {flavor === 'courier' ? <LocationDisclosureModal /> : null}
         </View>
       </KeyboardAwareScrollView>

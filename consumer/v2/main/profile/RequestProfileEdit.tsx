@@ -65,7 +65,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   //tracking
   useSegmentScreen('RequestProfileEdit');
   // helpers
-  const canEdit = requestedChanges?.length === 0;
+  const canEdit = requestedChanges.length === 0;
   const disabledButton = !name && !surname && !cpf && !phone;
   const description = (() => {
     if (flavor === 'consumer') {

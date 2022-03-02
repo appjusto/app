@@ -24,7 +24,7 @@ export default class IuguApi {
     try {
       const response = await axios.post<IuguPaymentToken>(url, payload, { cancelToken });
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       let message = 'Não foi possível completar a requisição.';
       if (error.response?.data?.errors?.number) {
         message = 'Número do cartão inválido';

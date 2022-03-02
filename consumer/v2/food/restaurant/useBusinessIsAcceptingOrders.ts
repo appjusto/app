@@ -1,5 +1,5 @@
 import { Business, LatLng } from '@appjusto/types';
-import firebase from 'firebase';
+import { Timestamp } from 'firebase/firestore';
 import { toNumber } from 'lodash';
 import { usePlatformParamsContext } from '../../../../common/contexts/PlatformParamsContext';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
@@ -24,7 +24,7 @@ export const useBusinessIsAcceptingOrders = (
     !isAvailable(business.schedules, now)
   )
     return 'closed';
-  const keepAlive = (business.keepAlive as firebase.firestore.Timestamp).toDate();
+  const keepAlive = (business.keepAlive as Timestamp).toDate();
   if (now.getTime() - keepAlive.getTime() > platformParams.business.keepAliveThreshold * 1000)
     return 'closed';
   // range
