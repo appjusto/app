@@ -70,7 +70,7 @@
     "postversion": "git push && git push --tags && git fetch"
   },
   "dependencies": {
-    "@appjusto/types": "^5.0.0",
+    "@appjusto/types": "^5.0.1",
     "@expo/react-native-action-sheet": "^3.8.0",
     "@expo/vector-icons": "^12.0.0",
     "@fnando/cnpj": "^1.0.2",
@@ -109,6 +109,7 @@
     "expo-notifications": "~0.14.0",
     "expo-permissions": "~13.1.0",
     "expo-splash-screen": "~0.14.1",
+    "expo-status-bar": "~1.2.0",
     "expo-task-manager": "~10.1.0",
     "expo-updates": "~0.11.4",
     "firebase": "^9.6.3",
@@ -137,8 +138,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "sentry-expo": "^4.1.0",
-    "expo-status-bar": "~1.2.0"
+    "sentry-expo": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
