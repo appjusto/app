@@ -29,7 +29,7 @@
         "ENV": "live"
       }
     },
-    "courier-v8-live-store": {
+    "courier-v8-store-live": {
       "env": {
         "FLAVOR": "courier",
         "ENV": "live"

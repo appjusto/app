@@ -1,10 +1,10 @@
 const { spawn, spawnSync } = require('child_process');
 const { version } = require('../version.json');
-const { ENV, FLAVOR, PLATFORM, DISTRIBUTION } = process.env;
+const { ENV, FLAVOR, PLATFORM, DISTRIBUTION, TOOL } = process.env;
 
 // Usage: ENV=dev FLAVOR=courier npm run build-js
 // Usage: ENV=staging FLAVOR=courier PLATFORM=ios npm run build-js
-// Usage: ENV=live FLAVOR=courier PLATFORM=android DISTRIBUTION=store npm run build-js
+// Usage: ENV=live FLAVOR=courier DISTRIBUTION=store npm run build-js
 
 const run = async () => {
   if (!ENV) {
@@ -36,8 +36,18 @@ const run = async () => {
   const profile = `${FLAVOR}-${releaseChannel}-${distribution}-${ENV}`;
 
   spawnSync('npm', ['run', 'prepare-env']);
-  process.env['EAS_NO_VCS'] = '1';
-  spawn('eas', ['build', '--platform', platform, '--profile', profile], { stdio: 'inherit' });
+
+  const tool = TOOL ?? (FLAVOR === 'courier' ? 'eas' : 'expo');
+  if (tool === 'eas') {
+    process.env['EAS_NO_VCS'] = '1';
+    spawn('eas', ['build', '--platform', platform, '--profile', profile], { stdio: 'inherit' });
+  } else {
+    const buildType =
+      distribution === 'internal' ? 'apk' : platform === 'android' ? 'app-bundle' : 'archive';
+    spawn('expo', [`build:${platform}`, '-t', buildType, '--release-channel', releaseChannel], {
+      stdio: 'inherit',
+    });
+  }
 };
 
 run()
