@@ -1,9 +1,8 @@
 {
   "build": {
-    "courier-dev-internal": {
+    "courier-v8-internal": {
       "env": {
-        "FLAVOR": "courier",
-        "ENV": "dev"
+        "FLAVOR": "courier"
       },
       "releaseChannel": "v8",
       "distribution": "internal",
@@ -12,24 +11,30 @@
       },
       "expoCli": "5.2.0"
     },
-    "courier-live-internal": {
+    "courier-v8-internal-dev": {
+      "extends": "courier-v8-internal",
       "env": {
-        "FLAVOR": "courier",
-        "ENV": "live"
-      },
-      "releaseChannel": "live-v6",
-      "distribution": "internal",
-      "android": {
-        "buildType": "apk"
-      },
-      "expoCli": "5.2.0"
+        "ENV": "dev"
+      }
     },
-    "courier-live-store": {
+    "courier-v8-internal-staging": {
+      "extends": "courier-v8-internal",
+      "env": {
+        "ENV": "staging"
+      }
+    },
+    "courier-v8-internal-live": {
+      "extends": "courier-v8-internal",
+      "env": {
+        "ENV": "live"
+      }
+    },
+    "courier-v8-live-store": {
       "env": {
         "FLAVOR": "courier",
         "ENV": "live"
       },
-      "releaseChannel": "live-v6",
+      "releaseChannel": "v8",
       "distribution": "store",
       "android": {
         "buildType": "app-bundle"
