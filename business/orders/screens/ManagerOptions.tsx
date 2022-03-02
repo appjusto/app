@@ -32,6 +32,11 @@ export const ManagerOptions = ({ navigation, route }: Props) => {
       keyboardShouldPersistTaps="handled"
     >
       <ConfigItem
+        title={t('Pedidos')}
+        subtitle={t('Gerencie seus pedidos')}
+        onPress={() => navigation.navigate('OrdersManager')}
+      />
+      <ConfigItem
         title={t('Central de ajuda')}
         subtitle={t('Tire suas dúvidas ou envie uma mensagem')}
         onPress={() => {
