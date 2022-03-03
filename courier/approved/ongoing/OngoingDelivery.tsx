@@ -172,7 +172,7 @@ export default function ({ navigation, route }: Props) {
     } else if (dispatchingState === 'arrived-pickup') {
       return t('Sair para a Entrega');
     } else if (dispatchingState === 'going-destination') {
-      return t('Entreguei');
+      return t('Cheguei');
     } else if (dispatchingState === 'arrived-destination') {
       return t('Finalizar');
     }
@@ -208,7 +208,7 @@ export default function ({ navigation, route }: Props) {
         />
         {/* bottom*/}
         <OngoingDeliveryInfo order={order} onProblem={navigateToDeliveryProblem} />
-        <OngoingDeliveryLoading dispatchingState={previousDispatchingState} />
+        <OngoingDeliveryLoading visible={!dispatchingState} />
         {/* Status slider */}
         <OngoingDeliverySlider
           order={order}

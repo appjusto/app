@@ -1,4 +1,3 @@
-import { DispatchingState } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import motocycleJsonLoading from '../../../assets/lottie-icons/motocycle-loading.json';
@@ -7,11 +6,11 @@ import { colors, halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
 type Props = {
-  dispatchingState: DispatchingState | undefined;
+  visible: boolean;
 };
 
-export const OngoingDeliveryLoading = ({ dispatchingState }: Props) => {
-  if (dispatchingState) return null;
+export const OngoingDeliveryLoading = ({ visible }: Props) => {
+  if (!visible) return null;
   return (
     <View
       style={{

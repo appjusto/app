@@ -9,6 +9,7 @@ import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import { IconMotocycleCentered } from '../../../../common/icons/icon-motocycle-centered';
+import { useProfileSummary } from '../../../../common/store/common/hooks/useProfileSummary';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { updateProfile } from '../../../../common/store/user/actions';
@@ -45,6 +46,7 @@ export default function ({ onFleetDetail }: Props) {
   const status = courier!.status;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
   // state
+  const { shouldVerifyPhone } = useProfileSummary();
   const [modalVisible, setModalVisible] = React.useState(false);
   const [updatedOn, setUpdatedOn] = React.useState(courier.updatedOn);
   // side effects
@@ -68,7 +70,7 @@ export default function ({ onFleetDetail }: Props) {
       return;
     }
     dispatch(updateProfile(api)(courier.id, { status: newStatus }));
-    if (newStatus === 'available') setModalVisible(true);
+    if (newStatus === 'available' && !shouldVerifyPhone) setModalVisible(true);
   };
 
   // UI

@@ -25,7 +25,7 @@ export default function () {
       <Stack.Screen
         name="PhoneLoginScreen"
         component={PhoneLoginScreen}
-        options={{ title: t('Confirme seu númeri') }}
+        options={{ title: t('Confirme seu número') }}
       />
       <Stack.Screen name="Terms" component={Terms} options={{ title: t('Fique por dentro') }} />
     </Stack.Navigator>
