@@ -24,10 +24,10 @@ export const useProfileSummary = () => {
     if (!profile?.id) return;
     api
       .order()
-      .fetchTotalOrdersDelivered(
+      .hasOrderedBefore(
         flavor === 'consumer' ? { consumerId: profile.id } : { courierId: profile.id }
       )
-      .then((total) => setHasOrdered(total > 0));
+      .then(setHasOrdered);
   }, [api, flavor, profile?.id]);
   // result
   const profileComplete =

@@ -108,13 +108,13 @@ export default class OrderApi {
     await deleteDoc(this.refs.getOrderRef(orderId));
   }
 
-  async fetchTotalOrdersDelivered(options: ObserveOrdersOptions) {
+  async hasOrderedBefore(options: ObserveOrdersOptions) {
     const { consumerId, courierId } = options;
-    const constraints = [where('status', '==', 'delivered' as OrderStatus)];
+    const constraints = [where('status', '==', 'delivered' as OrderStatus), limit(1)];
     if (consumerId) constraints.push(where('consumer.id', '==', consumerId));
     if (courierId) constraints.push(where('courier.id', '==', courierId));
     const snapshot = await getDocs(query(this.refs.getOrdersRef(), ...constraints));
-    return snapshot.size;
+    return snapshot.size > 0;
   }
 
   // both courier & customers
