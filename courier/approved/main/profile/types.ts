@@ -9,6 +9,9 @@ export type CourierProfileParamList = {
   ProfileCompany: undefined;
   ProfilePhotos: undefined;
   Terms: undefined;
+  PhoneVerificationScreen: {
+    phone: string;
+  };
   ProfileBank?: {
     bank: Bank;
   };

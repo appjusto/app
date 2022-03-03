@@ -32,8 +32,8 @@ export const useProfileSummary = () => {
   // result
   const profileComplete =
     flavor === 'consumer' ? isConsumerProfileComplete(consumer) : courier!.situation === 'approved';
-  const phoneVerified = user?.phoneNumber === `+55${profile?.phone}`;
-  const shouldVerifyPhone = flavor === 'consumer' && !hasOrdered && !phoneVerified;
+  const phoneVerified = user?.phoneNumber === `+${profile?.countryCode ?? '55'}${profile?.phone}`;
+  const shouldVerifyPhone = !phoneVerified && (flavor === 'courier' || !hasOrdered);
   const canUpdateProfile =
     flavor === 'consumer' ? !profileComplete || !hasOrdered : profile?.situation !== 'approved';
   return {

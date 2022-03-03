@@ -74,13 +74,21 @@ export default class AuthApi {
 
   // phone
 
-  async signInWithPhoneNumber(phoneNumber: string, verifier: ApplicationVerifier) {
-    return signInWithPhoneNumber(this.auth, phoneNumber, verifier);
+  async signInWithPhoneNumber(
+    verifier: ApplicationVerifier,
+    phone: string,
+    countryCode: string = '55'
+  ) {
+    return signInWithPhoneNumber(this.auth, `+${countryCode}${phone}`, verifier);
   }
 
-  async verifyPhoneNumber(phone: string, applicationVerifier: ApplicationVerifier) {
+  async verifyPhoneNumber(
+    applicationVerifier: ApplicationVerifier,
+    phone: string,
+    countryCode: string = '55'
+  ) {
     const phoneProvider = new PhoneAuthProvider(this.auth);
-    return phoneProvider.verifyPhoneNumber(`+55${phone}`, applicationVerifier);
+    return phoneProvider.verifyPhoneNumber(`+${countryCode}${phone}`, applicationVerifier);
   }
 
   async confirmPhoneSignIn(verificationId: string, verificationCode: string) {

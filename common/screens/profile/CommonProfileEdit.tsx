@@ -88,12 +88,14 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const [phone, setPhone] = React.useState(api.auth().getPhoneNumber(true) ?? profile.phone ?? '');
   const [focusedField, setFocusedField] = React.useState<string>();
   const [isLoading, setLoading] = React.useState(false);
+  const countryCode = profile.countryCode ?? '55';
   const updatedUser: Partial<UserProfile> = {
     email: email.trim(),
     name: name.trim(),
     surname: surname.trim(),
     cpf: cpf.trim(),
     phone: phone.trim(),
+    countryCode,
   };
   // side effects
   // tracking
@@ -106,7 +108,8 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
     Keyboard.dismiss();
     try {
       if (!canUpdateProfile) {
-        if (shouldVerifyPhone) navigation.replace('PhoneVerificationScreen', { phone });
+        if (shouldVerifyPhone)
+          navigation.replace('PhoneVerificationScreen', { phone, countryCode });
         else navigation.replace('RequestProfileEdit');
       } else {
         setLoading(true);
@@ -116,6 +119,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
         if (shouldVerifyPhone) {
           navigation.navigate('PhoneVerificationScreen', {
             phone: updatedUser.phone!,
+            countryCode,
             returnScreen,
             returnNextScreen,
           });

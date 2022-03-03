@@ -18,6 +18,7 @@ import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOng
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { useobservePendingOrderRequests } from '../../../../common/store/api/courier/hooks/useobservePendingOrderRequests';
 import { useSegmentScreen } from '../../../../common/store/api/track';
+import { useProfileSummary } from '../../../../common/store/common/hooks/useProfileSummary';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
 import { colors, padding, screens } from '../../../../common/styles';
@@ -49,11 +50,24 @@ export default function ({ navigation }: Props) {
   const { status } = courier;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
   // state
+  const { shouldVerifyPhone } = useProfileSummary();
   const requests = useobservePendingOrderRequests(courier.id);
   // side effects
   useNotificationToken();
   // tracking
   useSegmentScreen('Home');
+  // phone verification
+  React.useEffect(() => {
+    if (working && shouldVerifyPhone && courier.phone) {
+      navigation.navigate('ProfileNavigator', {
+        screen: 'PhoneVerificationScreen',
+        params: {
+          phone: courier.phone,
+        },
+      });
+    }
+  }, [working, shouldVerifyPhone, courier.phone]);
+  // location
   React.useEffect(() => {
     if (working) {
       startLocationUpdatesTask();

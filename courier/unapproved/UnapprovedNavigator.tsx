@@ -6,6 +6,7 @@ import { defaultScreenOptions } from '../../common/screens/options';
 import { PermissionDenied } from '../../common/screens/PermissionDenied';
 import { AboutApp } from '../../common/screens/profile/AboutApp';
 import { CommonProfileEdit } from '../../common/screens/profile/CommonProfileEdit';
+import { PhoneVerificationScreen } from '../../common/screens/profile/PhoneVerificationScreen';
 import ProfileErase from '../../common/screens/profile/ProfileErase';
 import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
 import { getCourier } from '../../common/store/courier/selectors';
@@ -52,6 +53,11 @@ export default function () {
         name="CommonProfileEdit"
         component={CommonProfileEdit}
         options={{ title: t('Dados pessoais') }}
+      />
+      <Stack.Screen
+        name="PhoneVerificationScreen"
+        component={PhoneVerificationScreen}
+        options={{ title: t('Verificação de telefone') }}
       />
       <Stack.Screen
         name="ProfileCompany"

@@ -76,7 +76,7 @@ export default function ({ navigation, route }: Props) {
     }
     try {
       if (authMode === 'phone') {
-        navigation.navigate('PhoneLoginScreen', { phone });
+        navigation.navigate('PhoneLoginScreen', { phone, countryCode: '55' });
       } else {
         Keyboard.dismiss();
         if (validateEmail(email).status !== 'ok') {

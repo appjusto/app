@@ -24,6 +24,7 @@ import { biggerPadding, colors, doublePadding, padding, screens, texts } from '.
 export type PhoneVerificationParamList = {
   PhoneVerificationScreen: {
     phone: string;
+    countryCode: string;
     returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P' | 'ProfileAddCard';
     returnNextScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P';
   };
@@ -57,7 +58,7 @@ type State =
 
 export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
   // params
-  const { phone, returnScreen, returnNextScreen } = route.params;
+  const { phone, countryCode, returnScreen, returnNextScreen } = route.params;
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
@@ -81,7 +82,7 @@ export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
     setState('verifying-phone-number');
     api
       .auth()
-      .verifyPhoneNumber(`+55${phone}`, recaptchaRef.current!)
+      .verifyPhoneNumber(recaptchaRef.current!, phone, countryCode)
       .then((id) => {
         setVerificationId(id);
         setState('phone-number-verified');
@@ -167,7 +168,7 @@ export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
           <Text style={{ ...texts.x2l }}>{t('Confirme seu celular')}</Text>
           <Text style={{ ...texts.sm, color: colors.grey700, marginTop: padding }}>
             {t(
-              `Enviamos um código SMS para o número +55 ${phoneFormatter(
+              `Enviamos um código SMS para o número +${countryCode} ${phoneFormatter(
                 phone
               )}. Você deverá recebê-lo nos próximos segundos. Ao receber, informe o código abaixo:`
             )}

@@ -35,7 +35,7 @@ type State =
 
 export const PhoneLoginScreen = ({ navigation, route }: Props) => {
   // params
-  const { phone } = route.params;
+  const { phone, countryCode } = route.params;
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
@@ -59,7 +59,7 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
     setState('verifying-phone-number');
     api
       .auth()
-      .signInWithPhoneNumber(`+55${phone}`, recaptchaRef.current!)
+      .signInWithPhoneNumber(recaptchaRef.current!, phone, countryCode)
       .then((result) => {
         setConfirmationResult(result);
         setState('phone-number-verified');
@@ -118,7 +118,7 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
           <Text style={{ ...texts.x2l }}>{t('Confirme seu celular')}</Text>
           <Text style={{ ...texts.sm, color: colors.grey700, marginTop: padding }}>
             {t(
-              `Enviamos um código SMS para o número +55 ${phoneFormatter(
+              `Enviamos um código SMS para o número +${countryCode} ${phoneFormatter(
                 phone
               )}. Você deverá recebê-lo nos próximos segundos. Ao receber, informe o código abaixo:`
             )}

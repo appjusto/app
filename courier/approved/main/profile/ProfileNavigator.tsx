@@ -4,6 +4,7 @@ import FleetDetail from '../../../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { AboutApp } from '../../../../common/screens/profile/AboutApp';
 import { CommonProfileEdit } from '../../../../common/screens/profile/CommonProfileEdit';
+import { PhoneVerificationScreen } from '../../../../common/screens/profile/PhoneVerificationScreen';
 import ProfileErase from '../../../../common/screens/profile/ProfileErase';
 import Terms from '../../../../common/screens/unlogged/Terms';
 import { RequestProfileEdit } from '../../../../consumer/v2/main/profile/RequestProfileEdit';
@@ -31,6 +32,11 @@ export default function () {
         name="CommonProfileEdit"
         component={CommonProfileEdit}
         options={{ title: t('Dados pessoais') }}
+      />
+      <Stack.Screen
+        name="PhoneVerificationScreen"
+        component={PhoneVerificationScreen}
+        options={{ title: t('Verificação de telefone') }}
       />
       <Stack.Screen
         name="ProfileCompany"
