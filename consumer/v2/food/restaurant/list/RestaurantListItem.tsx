@@ -41,11 +41,15 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance, secondar
       >
         <View style={{ justifyContent: 'center', width: '75%' }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ ...texts.sm, marginRight: halfPadding }}>{restaurant.name}</Text>
+            <View style={{ width: '65%' }}>
+              <Text style={{ ...texts.sm, marginRight: halfPadding }}>{restaurant.name}</Text>
+            </View>
             {restaurant.averageDiscount ? (
-              <RoundedText backgroundColor={colors.darkYellow} noBorder>
-                {discount}
-              </RoundedText>
+              <View>
+                <RoundedText backgroundColor={colors.darkYellow} noBorder>
+                  {discount}
+                </RoundedText>
+              </View>
             ) : null}
           </View>
           <Text style={{ ...texts.xs, color: secondary ? colors.grey700 : colors.green600 }}>

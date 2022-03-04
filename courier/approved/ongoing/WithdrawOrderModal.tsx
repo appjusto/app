@@ -87,7 +87,14 @@ export const WithdrawOrderModal = ({
                   </Text>
                 ) : null}
                 {order.origin?.intructions ? (
-                  <Text style={{ ...texts.sm, color: colors.red, textAlign: 'center' }}>
+                  <Text
+                    style={{
+                      ...texts.sm,
+                      color: colors.red,
+                      textAlign: 'center',
+                      flexWrap: 'wrap',
+                    }}
+                  >
                     {order.origin.intructions}
                   </Text>
                 ) : null}

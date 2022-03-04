@@ -179,7 +179,7 @@ export default function ({ navigation, route }: Props) {
     return '';
   })();
   const sliderColor = (() => {
-    if (!previousDispatchingState || previousDispatchingState === 'going-pickup') {
+    if (!dispatchingState || dispatchingState === 'going-pickup') {
       return colors.green500;
     } else return colors.darkYellow;
   })();
@@ -240,7 +240,7 @@ export default function ({ navigation, route }: Props) {
           onNoCodeDelivery={() => {
             navigation.navigate('NoCodeDelivery', { orderId });
           }}
-          dispatchingState={previousDispatchingState}
+          dispatchingState={dispatchingState}
         />
         {/* withdrawal modal */}
         <WithdrawOrderModal
