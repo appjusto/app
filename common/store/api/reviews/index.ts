@@ -16,8 +16,9 @@ export default class ReviewsApi {
   constructor(private refs: FirebaseRefs, private firestore: Firestore) {}
 
   // firestore
-  async setOrderConsumerReview(review: Partial<WithId<OrderConsumerReview>>) {
-    const reviewRef = doc(this.refs.getReviewsRef(), review.id);
+  async setOrderConsumerReview(review: Partial<OrderConsumerReview> | WithId<OrderConsumerReview>) {
+    const reviewRef =
+      'id' in review ? doc(this.refs.getReviewsRef(), review.id) : doc(this.refs.getReviewsRef());
     await setDoc(reviewRef, { ...review, reviewedOn: serverTimestamp() }, { merge: true });
     return reviewRef;
   }
