@@ -54,7 +54,6 @@ export default function ({ navigation, route }: Props) {
   const situationsAllowed: ProfileSituation[] = ['pending'];
   const hasPersonalInfo = courierInfoSet(courier);
   const hasCompanyInfo = courier.company && companyInfoSet(courier.company);
-  const hasImages = Boolean(currentSelfieQuery.data) && Boolean(currentDocumentImageQuery.data);
   const hasBankAccount = courier.bankAccount && bankAccountSet(courier.bankAccount);
   const totalSteps = 4;
   const [stepsDone, setStepsDone] = React.useState(0);
@@ -77,10 +76,17 @@ export default function ({ navigation, route }: Props) {
     let totalSteps = 0;
     if (hasPersonalInfo) totalSteps++;
     if (hasCompanyInfo) totalSteps++;
-    if (hasImages) totalSteps++;
+    if (Boolean(currentSelfieQuery.data) && Boolean(currentDocumentImageQuery.data)) totalSteps++;
     if (hasBankAccount) totalSteps++;
     setStepsDone(totalSteps);
-  }, [hasPersonalInfo, hasCompanyInfo, hasImages, hasBankAccount, setStepsDone]);
+  }, [
+    hasPersonalInfo,
+    hasCompanyInfo,
+    currentSelfieQuery,
+    hasBankAccount,
+    setStepsDone,
+    currentDocumentImageQuery,
+  ]);
   // whenever screen is focused
   React.useEffect(() => {
     navigation.addListener('focus', focusHandler);
@@ -127,7 +133,6 @@ export default function ({ navigation, route }: Props) {
       ]
     );
   };
-
   // UI
   return (
     <View style={[screens.config, screens.headless]}>
@@ -178,7 +183,7 @@ export default function ({ navigation, route }: Props) {
           title={t('Fotos e documentos')}
           subtitle={t('Envie uma selfie e seus documentos')}
           onPress={() => navigation.navigate('ProfilePhotos')}
-          checked={hasImages}
+          checked={Boolean(currentSelfieQuery.data) && Boolean(currentDocumentImageQuery.data)}
         />
         <ConfigItem
           title={t('Dados bancários')}
