@@ -250,7 +250,8 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           onSubmitEditing={() => phoneRef.current?.focus()}
           onChangeText={(text) => setCpf(trim(text))}
           onFocus={() => setFocusedField('cpf')}
-          blurOnSubmit
+          blurOnSubmit={canSubmit}
+          onBlur={() => setFocusedField(undefined)}
           editable={canUpdateProfile}
         />
         {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' ? (
