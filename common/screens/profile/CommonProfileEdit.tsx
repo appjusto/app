@@ -247,11 +247,10 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           formatter={cpfFormatter}
           keyboardType="number-pad"
           returnKeyType="default"
-          blurOnSubmit={false}
           onSubmitEditing={() => phoneRef.current?.focus()}
           onChangeText={(text) => setCpf(trim(text))}
           onFocus={() => setFocusedField('cpf')}
-          onBlur={() => setFocusedField(undefined)}
+          blurOnSubmit
           editable={canUpdateProfile}
         />
         {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' ? (

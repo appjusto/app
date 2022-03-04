@@ -54,7 +54,7 @@ export default function ({ navigation, route }: Props) {
   const situationsAllowed: ProfileSituation[] = ['pending'];
   const hasPersonalInfo = courierInfoSet(courier);
   const hasCompanyInfo = courier.company && companyInfoSet(courier.company);
-  const hasImages = !!currentSelfieQuery.data && !!currentDocumentImageQuery.data;
+  const hasImages = Boolean(currentSelfieQuery.data) && Boolean(currentDocumentImageQuery.data);
   const hasBankAccount = courier.bankAccount && bankAccountSet(courier.bankAccount);
   const totalSteps = 4;
   const [stepsDone, setStepsDone] = React.useState(0);
