@@ -1,6 +1,5 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import * as Location from 'expo-location';
 import { round } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
@@ -8,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RoundedText from '../../../common/components/texts/RoundedText';
+import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
 import { useObserveOrderRequest } from '../../../common/store/api/courier/hooks/useObserveOrderRequest';
 import { screen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
@@ -41,6 +41,7 @@ export default function ({ navigation, route }: Props) {
   const api = React.useContext(ApiContext);
   const courier = useSelector(getCourier)!;
   // state
+  const { coords } = useLastKnownLocation();
   const request = useObserveOrderRequest(courier.id, orderId);
   const situation = request?.situation;
   const canAccept = situation === 'pending' || situation === 'viewed';
@@ -51,16 +52,23 @@ export default function ({ navigation, route }: Props) {
   React.useEffect(() => {
     (async () => {
       try {
-        const position = await Location.getCurrentPositionAsync();
-        const currentDistanceToOrigin = await api
-          .maps()
-          .googleDirections(position.coords, origin, courier.mode);
-        if (currentDistanceToOrigin) setRouteDistanceToOrigin(currentDistanceToOrigin.distance);
-        screen('Matching', {
-          orderId,
-          distanceToOrigin,
-          currentDistanceToOrigin,
-        });
+        if (coords) {
+          const currentDistanceToOrigin = await api
+            .maps()
+            .googleDirections(coords, origin, courier.mode);
+          if (currentDistanceToOrigin) setRouteDistanceToOrigin(currentDistanceToOrigin.distance);
+
+          screen('Matching', {
+            orderId,
+            distanceToOrigin,
+            currentDistanceToOrigin,
+          });
+        } else {
+          screen('Matching', {
+            orderId,
+            distanceToOrigin,
+          });
+        }
       } catch (error) {
         dispatch(
           showToast(
@@ -72,7 +80,7 @@ export default function ({ navigation, route }: Props) {
       }
       setLoading(false);
     })();
-  }, [distanceToOrigin, orderId, origin, api, dispatch, courier.mode]);
+  }, [api, dispatch, orderId, origin, distanceToOrigin, courier.mode]);
   // when situation changes
   React.useEffect(() => {
     if (situation === 'pending') {
