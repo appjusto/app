@@ -9,8 +9,8 @@ export type UnloggedParamList = {
     email: string;
   };
   PhoneLoginScreen: {
-    countryCode: string;
     phone: string;
+    countryCode: string;
   };
   Terms: undefined;
 };

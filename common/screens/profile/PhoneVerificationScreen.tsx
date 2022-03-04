@@ -24,7 +24,7 @@ import { biggerPadding, colors, doublePadding, padding, screens, texts } from '.
 export type PhoneVerificationParamList = {
   PhoneVerificationScreen: {
     phone: string;
-    countryCode: string;
+    countryCode: string | undefined;
     returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P' | 'ProfileAddCard';
     returnNextScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P';
   };
@@ -58,7 +58,8 @@ type State =
 
 export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
   // params
-  const { phone, countryCode, returnScreen, returnNextScreen } = route.params;
+  const { phone, returnScreen, returnNextScreen } = route.params;
+  const countryCode = route.params.countryCode ?? '55';
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);

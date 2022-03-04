@@ -134,6 +134,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     if (shouldVerifyPhone) {
       navigation.navigate('PhoneVerificationScreen', {
         phone: consumer.phone!,
+        countryCode: consumer.countryCode,
         returnScreen: 'FoodOrderCheckout',
       });
       return;

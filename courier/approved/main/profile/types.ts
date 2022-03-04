@@ -11,6 +11,7 @@ export type CourierProfileParamList = {
   Terms: undefined;
   PhoneVerificationScreen: {
     phone: string;
+    countryCode: string | undefined;
   };
   ProfileBank?: {
     bank: Bank;

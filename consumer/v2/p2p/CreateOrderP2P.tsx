@@ -159,6 +159,7 @@ export default function ({ navigation, route }: Props) {
     if (shouldVerifyPhone) {
       navigation.navigate('PhoneVerificationScreen', {
         phone: consumer.phone!,
+        countryCode: consumer.countryCode,
         returnScreen: 'CreateOrderP2P',
       });
       return;

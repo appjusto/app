@@ -63,6 +63,7 @@ export default function ({ navigation }: Props) {
         screen: 'PhoneVerificationScreen',
         params: {
           phone: courier.phone,
+          countryCode: courier.countryCode,
         },
       });
     }
