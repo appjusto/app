@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
-import { useProfileSummary } from '../../../../common/store/common/hooks/useProfileSummary';
+import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -29,7 +29,7 @@ export const OrderPayment = ({
 }: Props) => {
   // redux
   const consumer = useSelector(getConsumer)!;
-  const { profileComplete, shouldVerifyPhone } = useProfileSummary();
+  const { isProfileComplete, shouldVerifyPhone } = useProfileSummary();
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
   return (
     <View>
@@ -78,7 +78,7 @@ export const OrderPayment = ({
           </View>
         )}
 
-        {profileComplete && selectedPaymentMethod ? (
+        {isProfileComplete && selectedPaymentMethod ? (
           <DefaultButton
             style={{ marginVertical: padding }}
             title={shouldVerifyPhone ? t('Verificar telefone') : t('Confirmar pedido')}
@@ -89,7 +89,7 @@ export const OrderPayment = ({
         ) : (
           <DefaultButton
             title={
-              !profileComplete ? t('Completar cadastro') : t('Escolher uma forma de pagamento')
+              !isProfileComplete ? t('Completar cadastro') : t('Escolher uma forma de pagamento')
             }
             onPress={onEditPaymentMethod}
             secondary

@@ -9,7 +9,7 @@ import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import { IconMotocycleCentered } from '../../../../common/icons/icon-motocycle-centered';
-import { useProfileSummary } from '../../../../common/store/common/hooks/useProfileSummary';
+import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { updateProfile } from '../../../../common/store/user/actions';

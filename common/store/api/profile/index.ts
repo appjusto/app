@@ -12,8 +12,8 @@ import {
 } from 'firebase/firestore';
 import { hash } from 'geokit';
 import * as Sentry from 'sentry-expo';
-import AuthApi from './auth';
-import { documentAs } from './types';
+import AuthApi from '../auth';
+import { documentAs } from '../types';
 
 export default class ProfileApi {
   private collectionName: string;

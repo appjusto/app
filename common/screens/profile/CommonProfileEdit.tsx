@@ -27,8 +27,8 @@ import {
 } from '../../components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../components/inputs/pattern-input/parsers';
 import PatternInput from '../../components/inputs/PatternInput';
+import { useProfileSummary } from '../../store/api/profile/useProfileSummary';
 import { track, useSegmentScreen } from '../../store/api/track';
-import { useProfileSummary } from '../../store/common/hooks/useProfileSummary';
 import { getFlavor } from '../../store/config/selectors';
 import { getConsumer } from '../../store/consumer/selectors';
 import { isConsumerProfileComplete } from '../../store/consumer/validators';
@@ -79,8 +79,13 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const courier = useSelector(getCourier);
   const profile = flavor === 'consumer' ? consumer! : courier!;
   // state
-  const { profileComplete, canUpdateProfile, phoneVerified, shouldVerifyPhone, hasOrdered } =
-    useProfileSummary();
+  const {
+    isProfileComplete,
+    canUpdateProfile,
+    isProfilePhoneVerified,
+    shouldVerifyPhone,
+    hasOrdered,
+  } = useProfileSummary();
   const [email, setEmail] = React.useState<string>(api.auth().getEmail() ?? profile.email ?? '');
   const [name, setName] = React.useState<string>(profile.name ?? '');
   const [surname, setSurname] = React.useState(profile.surname ?? '');
@@ -137,24 +142,24 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   // UI
   const buttonTitle = (() => {
     if (flavor === 'consumer') {
-      if (profileComplete) {
-        if (shouldVerifyPhone && !phoneVerified) return t('Verificar telefone');
+      if (isProfileComplete) {
+        if (shouldVerifyPhone && !isProfilePhoneVerified) return t('Verificar telefone');
         else if (!hasOrdered) return t('Atualizar');
         else return t('Atualizar dados');
       } else return t('Salvar');
     } else {
-      if (profileComplete) {
+      if (isProfileComplete) {
         return t('Atualizar dados');
       } else return t('Salvar e avançar');
     }
   })();
   const title = (() => {
-    if (profileComplete) return t('Seus dados:');
+    if (isProfileComplete) return t('Seus dados:');
     else return t('Finalize seu cadastro:');
   })();
   const subtitle = (() => {
     if (flavor === 'consumer') {
-      if (!profileComplete) return t('Edite seus dados:');
+      if (!isProfileComplete) return t('Edite seus dados:');
       else
         return t(
           'Seus dados pessoais serão usados somente para a criação das faturas e receber atendimento quando for necessário.'
@@ -250,7 +255,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           onSubmitEditing={() => phoneRef.current?.focus()}
           onChangeText={(text) => setCpf(trim(text))}
           onFocus={() => setFocusedField('cpf')}
-          blurOnSubmit={canSubmit && phoneVerified}
+          blurOnSubmit={canSubmit && isProfilePhoneVerified}
           onBlur={() => setFocusedField(undefined)}
           editable={canUpdateProfile}
         />

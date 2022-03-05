@@ -16,10 +16,10 @@ import {
   User,
 } from 'firebase/auth';
 import { addDoc, serverTimestamp } from 'firebase/firestore';
-import { Extra } from '../../../config/types';
-import { getDeeplinkDomain, getFallbackDomain } from '../../utils/domains';
-import { getAppVersion } from '../../utils/version';
-import FirebaseRefs from './FirebaseRefs';
+import { Extra } from '../../../../config/types';
+import { getDeeplinkDomain, getFallbackDomain } from '../../../utils/domains';
+import { getAppVersion } from '../../../utils/version';
+import FirebaseRefs from '../FirebaseRefs';
 
 export default class AuthApi {
   constructor(private auth: Auth, private refs: FirebaseRefs, private extra: Extra) {
