@@ -1,4 +1,5 @@
 import { useURL } from 'expo-linking';
+import { User } from 'firebase/auth';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
@@ -26,7 +27,7 @@ const extractAuthLink = (link: string) => {
   return decodeURIComponent(authLink);
 };
 
-export const useAuth = (): [AuthState, firebase.User | undefined | null] => {
+export const useAuth = (): [AuthState, User | undefined | null] => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();

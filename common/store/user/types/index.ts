@@ -1,3 +1,5 @@
+import { User } from 'firebase/auth';
+
 export interface UserState {
-  user?: firebase.User | null;
+  user?: User | null;
 }
