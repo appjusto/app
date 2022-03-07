@@ -100,7 +100,7 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
       </View>
       {flavor === 'courier' ? (
         <DefaultButton
-          title={t('Editar cadastro')}
+          title={!switchToPassword ? t('Editar cadastro') : t('Voltar')}
           onPress={updateCourierProfileHandler}
           secondary
           activityIndicator={isLoading}
