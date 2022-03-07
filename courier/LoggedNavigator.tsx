@@ -28,9 +28,6 @@ export default function () {
     if (!courierId) return;
     return dispatch(observeProfile(api)(flavor, courierId));
   }, [api, dispatch, flavor, courierId]);
-  // helpers
-  const profileIssues =
-    situation === 'blocked' || situation === 'deleted' || situation === 'rejected';
   // UI
   if (!situation) {
     // showing the indicator until the profile is loaded
@@ -41,7 +38,7 @@ export default function () {
     );
   } else if (situation === 'approved') {
     return <ApprovedNavigator />;
-  } else if (profileIssues) {
+  } else if (situation === 'blocked' || situation === 'deleted' || situation === 'rejected') {
     return <ProfileIssuesNavigator />;
   }
   return <UnapprovedNavigator />;

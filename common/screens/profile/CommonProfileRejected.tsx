@@ -1,4 +1,5 @@
 import { StackNavigationProp } from '@react-navigation/stack';
+import { isEmpty } from 'lodash';
 import React from 'react';
 import { Linking, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -36,30 +37,42 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
   const flavor = useSelector(getFlavor);
   const consumer = useSelector(getConsumer);
   const courier = useSelector(getCourier);
+  const profile = flavor === 'courier' ? courier! : consumer!;
   // state
   const [isLoading, setLoading] = React.useState(false);
   // side effects
   // tracking
   useSegmentScreen('CommonProfileRejected');
-  // helpers
-  const profile = flavor === 'courier' ? courier! : consumer!;
-  const description = (() => {
-    if (profile.profileIssues) {
-      if (profile.profileIssuesMessage) {
-        return `${profile.profileIssues.join('\n')}'\n'${t('Mensagem:')} ${
-          profile.profileIssuesMessage
-        }`;
-      } else return profile.profileIssues.join('\n');
-    } else return t('Entre em contato com nosso suporte.');
-  })();
+  // UI
+  let description = '';
+  let switchToPassword = false;
+  if (profile.profileIssues) {
+    profile.profileIssues.forEach((v) => {
+      if (!isEmpty(description)) description += '\n';
+      if (typeof v === 'string') description += v;
+      else {
+        description += v.title;
+        if (v.id === 'courier-profile-invalid-phone-already-in-use') switchToPassword = true;
+      }
+    });
+  }
+  if (profile.profileIssuesMessage) {
+    description += '\n' + profile.profileIssuesMessage;
+  }
+  if (isEmpty(description)) description = t('Entre em contato com nosso suporte.');
   // handler
   const updateCourierProfileHandler = () => {
     (async () => {
       if (!courier) return;
       try {
-        setLoading(true);
-        await api.profile().updateProfile(courier.id, { situation: 'pending' });
-        setLoading(false);
+        if (!switchToPassword) {
+          setLoading(true);
+          await api.profile().updateProfile(courier.id, { situation: 'pending' });
+          setLoading(false);
+        } else {
+          api.auth().defaultAuthMode = 'password';
+          await api.auth().signOut();
+        }
       } catch (error: any) {
         setLoading(false);
         Sentry.Native.captureException(error);
@@ -67,6 +80,7 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
       }
     })();
   };
+  // UI
   return (
     <FeedbackView
       header={t('Seu cadastro foi recusado :(')}

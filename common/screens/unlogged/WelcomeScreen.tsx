@@ -27,6 +27,7 @@ import ShowIf from '../../components/views/ShowIf';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { IconMotoCycleBig } from '../../icons/icon-motocycle-big';
+import { AuthMode } from '../../store/api/auth';
 import { useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
@@ -44,8 +45,6 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-type AuthMode = 'passwordless' | 'password' | 'phone';
-
 const { height } = Dimensions.get('window');
 const tallerDevice = height > 680;
 
@@ -60,14 +59,16 @@ export default function ({ navigation, route }: Props) {
   const [phone, setPhone] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [authMode, setAuthMode] = React.useState<AuthMode>(
-    flavor === 'courier' ? 'phone' : 'passwordless'
-    // 'passwordless'
-  );
+  const [authMode, setAuthMode] = React.useState<AuthMode>(api.auth().defaultAuthMode);
   const [acceptedTerms, setAcceptTerms] = React.useState(false);
   // side effects
   // tracking
   useSegmentScreen('Welcome');
+  React.useEffect(() => {
+    const update = () => setAuthMode(api.auth().defaultAuthMode);
+    navigation.addListener('focus', update);
+    return () => navigation.removeListener('focus', update);
+  }, []);
   // handlers
   const signInHandler = async () => {
     if (!acceptedTerms) {
@@ -124,11 +125,11 @@ export default function ({ navigation, route }: Props) {
             delayLongPress={2000}
             onLongPress={() =>
               setAuthMode((current) =>
-                current === 'passwordless'
-                  ? 'phone'
-                  : current === 'phone'
+                current === 'phone'
+                  ? 'passwordless'
+                  : current === 'passwordless'
                   ? 'password'
-                  : 'passwordless'
+                  : 'phone'
               )
             }
           >
