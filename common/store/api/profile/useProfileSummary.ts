@@ -23,7 +23,7 @@ export const useProfileSummary = () => {
   // helpers
   const update = () => {
     setProfilePhoneVerified(
-      api.auth().getPhoneNumber(true) === `+${profile?.countryCode ?? '55'}${profile?.phone}`
+      api.auth().getPhoneNumber() === `+${profile?.countryCode ?? '55'}${profile?.phone}`
     );
   };
   // side effects
@@ -43,8 +43,11 @@ export const useProfileSummary = () => {
   React.useEffect(() => {
     navigation.addListener('focus', update);
     return () => navigation.removeListener('focus', update);
+  }, [profile]);
+  React.useEffect(() => {
+    navigation.addListener('focus', update);
+    return () => navigation.removeListener('focus', update);
   }, []);
-
   // result
   const isProfileComplete =
     situation === 'approved' && (flavor === 'courier' || isConsumerProfileComplete(consumer));
