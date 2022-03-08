@@ -75,7 +75,6 @@ export default (context: ConfigContext): ExpoConfig => {
               {
                 icon: './assets/notification-icon.png',
                 sounds: ['./assets/sounds/order_request.wav'],
-                mode: environment === 'live' ? 'production' : 'development',
               },
             ],
             'expo-splash-screen',

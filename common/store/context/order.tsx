@@ -12,7 +12,7 @@ interface Props {
 }
 
 interface Value {
-  order?: WithId<Order>;
+  order?: WithId<Order> | null;
 }
 
 const ActiveOrderContext = React.createContext<Value>({});
@@ -30,7 +30,7 @@ export const ActiveOrderProvider = ({ businessId, orderId, children }: Props) =>
         [businessId, user?.uid]
       )
     ) ?? []
-  ).filter((order) => !!order.items?.length);
+  ).map((o) => (o.items?.length === 0 ? null : o));
   const value: Value = { order: order ?? quote };
   // console.log('ActiveOrderProvider', value.order?.id);
   return <ActiveOrderContext.Provider value={value}>{children}</ActiveOrderContext.Provider>;

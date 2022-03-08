@@ -16,7 +16,7 @@ export const init = async () => {
     },
   });
   if (Platform.OS === 'android') {
-    // await Notifications.deleteNotificationChannelAsync('order-request');
+    await Notifications.deleteNotificationChannelAsync('order-request');
     // const notificationChannels = await Notifications.getNotificationChannelsAsync();
     // console.log(notificationChannels);
     await Notifications.setNotificationChannelAsync('order-request', {
