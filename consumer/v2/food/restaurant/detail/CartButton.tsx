@@ -8,7 +8,7 @@ import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 
 interface Props {
-  order: WithId<Order> | undefined;
+  order: WithId<Order> | undefined | null;
 }
 
 export const CartButton = ({ order }: Props) => {

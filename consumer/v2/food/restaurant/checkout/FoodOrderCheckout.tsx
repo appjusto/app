@@ -118,8 +118,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   }, [consumer.name, order, api]);
   // return to Home if order status becomes 'expired' or all items are removed from it
   React.useEffect(() => {
-    if (!order) return;
-    if (order.status === 'expired' || order.items?.length === 0) {
+    if (order === undefined) return;
+    else if (order === null) navigation.goBack();
+    else if (order.status === 'expired') {
       navigation.navigate('MainNavigator', { screen: 'Home' });
     }
   }, [order, navigation]);
