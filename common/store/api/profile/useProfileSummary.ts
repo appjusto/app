@@ -18,7 +18,7 @@ export const useProfileSummary = () => {
   const profile = flavor === 'consumer' ? consumer! : courier!;
   const { situation } = profile;
   // state
-  const [hasOrdered, setHasOrdered] = React.useState<boolean>();
+  const [hasOrdered, setHasOrdered] = React.useState<boolean>(false);
   const [isProfilePhoneVerified, setProfilePhoneVerified] = React.useState(false);
   // helpers
   const update = () => {
@@ -29,14 +29,12 @@ export const useProfileSummary = () => {
   // side effects
   // check if has ordered before
   React.useEffect(() => {
-    if (!profile?.id) return;
-    api
-      .order()
-      .hasOrderedBefore(
-        flavor === 'consumer' ? { consumerId: profile.id } : { courierId: profile.id }
-      )
-      .then(setHasOrdered);
-  }, [api, flavor, profile?.id]);
+    setHasOrdered(
+      flavor === 'consumer'
+        ? consumer!.statistics.totalOrders > 0
+        : courier!.statistics.deliveries > 0
+    );
+  }, [api, flavor, consumer?.statistics?.totalOrders, courier?.statistics?.deliveries]);
   // updating when phone or countryCode changes
   React.useEffect(update, [api, profile.countryCode, profile.phone]);
   // updating whenever screen is focused
