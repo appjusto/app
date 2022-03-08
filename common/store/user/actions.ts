@@ -18,7 +18,7 @@ export const COURIER_PROFILE_UPDATED = 'COURIER_PROFILE_UPDATED';
 
 export const observeAuthState = (api: Api) => (dispatch: AppDispatch) => {
   const unsubscribe = api.auth().observeAuthState((user) => {
-    console.log(user);
+    // console.log('observeAuthState', JSON.stringify(user));
     dispatch({ type: USER_AUTH_STATE_CHANGED, payload: user });
   });
   return unsubscribe;
@@ -63,8 +63,11 @@ export const deleteAccount =
 export const observeProfile =
   (api: Api) => (flavor: Flavor, id: string) => (dispatch: AppDispatch) => {
     return api.profile().observeProfile(id, (profile: WithId<UserProfile>): void => {
-      const actionType = flavor === 'consumer' ? CONSUMER_PROFILE_UPDATED : COURIER_PROFILE_UPDATED;
-      dispatch({ type: actionType, payload: { profile } });
+      if (api.auth().getUserId()) {
+        const actionType =
+          flavor === 'consumer' ? CONSUMER_PROFILE_UPDATED : COURIER_PROFILE_UPDATED;
+        dispatch({ type: actionType, payload: { profile } });
+      }
     });
   };
 
