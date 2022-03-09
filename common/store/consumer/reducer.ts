@@ -32,7 +32,7 @@ export default function (state: ConsumerState = initialState, action: AnyAction)
       return state;
     }
     case UPDATE_CURRENT_LOCATION: {
-      return { ...state, currentLocation: action.payload };
+      return { ...state, currentLocation: action.payload ?? null };
     }
     case UPDATE_CURRENT_PLACE: {
       return { ...state, currentPlace: action.payload };

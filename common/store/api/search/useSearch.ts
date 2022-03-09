@@ -10,7 +10,7 @@ export const useSearch = <T extends object>(
   kind: SearchKind,
   order: SearchOrder,
   filters: SearchFilter[],
-  coords: LatLng | undefined,
+  coords: LatLng | undefined | null,
   name?: string
 ) => {
   // context
@@ -47,10 +47,6 @@ export const useSearch = <T extends object>(
     if (!lastResponse) return;
     setResponseByPage((current) => {
       const value = current ? new Map(current.entries()) : new Map();
-      console.log(
-        'response:',
-        lastResponse.hits.map((value) => value.name)
-      );
       value.set(lastResponse.page, lastResponse);
       return value;
     });

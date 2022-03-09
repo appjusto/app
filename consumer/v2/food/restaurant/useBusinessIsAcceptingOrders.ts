@@ -11,7 +11,7 @@ type AcceptingStatus = 'disconnected' | 'closed' | 'out-of-range' | 'unsupported
 
 export const useBusinessIsAcceptingOrders = (
   business?: Business,
-  destination?: LatLng
+  destination?: LatLng | null
 ): AcceptingStatus => {
   const platformParams = usePlatformParamsContext();
   const getServerTime = useContextGetSeverTime();

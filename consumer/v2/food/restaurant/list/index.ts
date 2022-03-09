@@ -7,7 +7,7 @@ import { RestaurantListSection } from './types';
 const restaurantsInRange = (
   status: string,
   items?: BusinessAlgolia[],
-  currentLocation?: LatLng
+  currentLocation?: LatLng | null
 ) => {
   const inRange = (items ?? []).filter(
     (restaurant) =>
@@ -28,7 +28,7 @@ const restaurantsInRange = (
   return inRange.concat(outOfRange);
 };
 
-export const sectionsFromResults = (items?: BusinessAlgolia[], currentLocation?: LatLng) => {
+export const sectionsFromResults = (items?: BusinessAlgolia[], currentLocation?: LatLng | null) => {
   const open = restaurantsInRange('open', items, currentLocation);
   const closed = restaurantsInRange('closed', items, currentLocation);
   let sections: RestaurantListSection[] = [];
