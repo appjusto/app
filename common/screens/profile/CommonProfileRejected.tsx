@@ -44,6 +44,7 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
   // tracking
   useSegmentScreen('CommonProfileRejected');
   // UI
+  let header = t('Seu cadastro foi recusado :(');
   let description = '';
   let switchToPassword = false;
   if (profile.profileIssues) {
@@ -52,7 +53,10 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
       if (typeof v === 'string') description += v;
       else {
         description += v.title;
-        if (v.id === 'courier-profile-invalid-phone-already-in-use') switchToPassword = true;
+        if (v.id === 'courier-profile-invalid-phone-already-in-use') {
+          header = t('Faça login com seu e-mail');
+          switchToPassword = true;
+        }
       }
     });
   }
@@ -82,11 +86,7 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
   };
   // UI
   return (
-    <FeedbackView
-      header={t('Seu cadastro foi recusado :(')}
-      description={description}
-      icon={<IconConeYellow />}
-    >
+    <FeedbackView header={header} description={description} icon={<IconConeYellow />}>
       <View>
         <DeliveryProblemCard
           title={t('Falar com o AppJusto')}
