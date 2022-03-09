@@ -267,7 +267,7 @@ export default function ({ navigation, route }: Props) {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={{ paddingLeft: padding, top: -32 }}
+          style={{ paddingVertical: padding, top: -24 }}
         >
           {/* origin */}
           <View style={{ marginRight: halfPadding }}>
