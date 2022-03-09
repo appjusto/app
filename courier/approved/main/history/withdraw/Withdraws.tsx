@@ -66,7 +66,7 @@ export const Withdraws = ({ navigation, route }: Props) => {
     setWithdrawing(true);
     try {
       const result = await api.courier().requestWithdraw(courier.id, availableForWithdraw);
-      console.log(result);
+      // console.log(result);
       setWithdrawing(false);
       navigation.replace('RequestWithdrawFeedback', {
         header: t('Requisição realizada com sucesso!'),

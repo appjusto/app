@@ -73,7 +73,7 @@ export default function ({ navigation, route }: Props) {
   }, [params?.returningFare]);
   // whenever route changes when interacting with other screens
   React.useEffect(() => {
-    console.log('CreateOrderP2P useEffect; params: ', params);
+    // console.log('CreateOrderP2P useEffect; params: ', params);
     if (params?.orderId) {
       setOrderId(params.orderId);
       navigation.setParams({
@@ -89,7 +89,7 @@ export default function ({ navigation, route }: Props) {
             setLoading(false);
             setOrderId(newOrder.id);
           } catch (error: any) {
-            console.log(error);
+            // console.log(error);
             Sentry.Native.captureException(error);
             dispatch(showToast(error.toString(), 'error'));
           }

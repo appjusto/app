@@ -51,7 +51,7 @@ export const LocationBar = ({ onChangePlace }: Props) => {
       dispatch(showToast(error.toString(), 'error'));
     }
   };
-  console.log('LOCATION BAR currentPlace', currentPlace);
+  // console.log('LOCATION BAR currentPlace', currentPlace);
   // UI
   if (!consumer) return null;
   return (

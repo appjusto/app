@@ -26,10 +26,10 @@ export const useUpdateLocation = () => {
     if (authState === AuthState.Unsigned) {
       if (!currentLocation && coords) {
         dispatch(updateCurrentLocation(coords));
-        console.log(
-          'updateCurrentLocation chamada na condição if authState === AuthState.Unsigned. atualizando com coords, logando coords',
-          coords
-        );
+        // console.log(
+        //   'updateCurrentLocation chamada na condição if authState === AuthState.Unsigned. atualizando com coords, logando coords',
+        //   coords
+        // );
       }
       return;
     } else if (authState !== AuthState.SignedIn) return;
@@ -39,10 +39,10 @@ export const useUpdateLocation = () => {
       if (!currentLocation) {
         if (currentPlace.location) {
           dispatch(updateCurrentLocation(currentPlace.location));
-          console.log(
-            'updateCurrentLocation chamada na condição if currentPlace e if !currentLocation. atualizando com e logando currentPlace.location',
-            currentPlace.location
-          );
+          // console.log(
+          //   'updateCurrentLocation chamada na condição if currentPlace e if !currentLocation. atualizando com e logando currentPlace.location',
+          //   currentPlace.location
+          // );
         } else {
           api
             .maps()
@@ -55,10 +55,10 @@ export const useUpdateLocation = () => {
                   location: latlng,
                 })
               );
-              console.log(
-                'updateCurrentLocation chamada na condição if currentPlace, caso else. chama a googleGeocode, pega o latlng do currentPlace.address. logando latlng',
-                latlng
-              );
+              // console.log(
+              //   'updateCurrentLocation chamada na condição if currentPlace, caso else. chama a googleGeocode, pega o latlng do currentPlace.address. logando latlng',
+              //   latlng
+              // );
             });
         }
       }

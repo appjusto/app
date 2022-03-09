@@ -15,7 +15,7 @@ export default React.forwardRef(
 
     // effects
     const onMapReadyHandler = React.useCallback(() => {
-      console.log('onMapReadyHandler', Platform.OS);
+      // console.log('onMapReadyHandler', Platform.OS);
       if (fitToElements && coordinates) {
         if (Platform.OS === 'ios') {
           // ref?.current?.fitToElements(false);

@@ -61,7 +61,7 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
     try {
       const result = await api.courier().advanceReceivables(courier.id, route.params.ids);
       track('courier advanced receivables');
-      console.log(result);
+      // console.log(result);
       navigation.replace('RequestWithdrawFeedback', {
         header: t('Antecipação realizada com sucesso!'),
         description: t('O valor será transferido para sua conta em até 1 dia útil.'),

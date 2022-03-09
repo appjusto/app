@@ -111,7 +111,7 @@ export default function ({ navigation, route }: Props) {
       navigation.replace('OngoingOrderDeclined', { orderId });
     }
   }, [navigation, order, orderId]);
-  console.log(orderId);
+  // console.log(orderId);
   // UI
   // showing the indicator until the order is loaded
   if (!order) {
@@ -134,7 +134,6 @@ export default function ({ navigation, route }: Props) {
   const navigateToCourierDetail = () => {
     navigation.navigate('OngoingOrderCourierDetail', { orderId });
   };
-  console.log(orderId);
   // const navigateToChangeRoute = () =>
   //   navigation.navigate('P2POrderNavigator', {
   //     screen: 'CreateOrderP2P',

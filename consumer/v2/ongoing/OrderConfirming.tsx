@@ -40,7 +40,6 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
   // side effects
   React.useEffect(() => {
     if (!order) return;
-    console.log('OrderConfirming', order.status);
     if (order.status === 'canceled' || order.status === 'rejected') {
       navigation.replace('OrderCanceled', { orderId });
     } else if (order.status === 'confirmed') {
@@ -64,7 +63,6 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
       navigation.replace('OngoingOrder', { orderId });
     }
   }, [navigation, order, orderId]);
-  console.log(orderId);
   // tracking
   useSegmentScreen('OrderConfirming');
   // handlers

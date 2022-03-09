@@ -56,7 +56,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   React.useEffect(() => {
     if (place) {
       dispatch(updateCurrentLocation(undefined));
-      console.log('FoodOrderHome: chamando updateCurrentLocation(undefined)');
+      // console.log('FoodOrderHome: chamando updateCurrentLocation(undefined)');
       dispatch(updateCurrentPlace(place));
     }
   }, [dispatch, place]);
@@ -69,7 +69,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     await refetch();
     setRefreshing(false);
   };
-  console.log('FOODORDERHOME CURRENTLOCATION', currentLocation);
+  // console.log('FOODORDERHOME CURRENTLOCATION', currentLocation);
   // UI
   return (
     <RestaurantList

@@ -78,7 +78,7 @@ export default class ProfileApi {
           appVersion,
           updatedOn: serverTimestamp(),
         };
-        console.log(update);
+        // console.log(update);
         await setDoc(this.getProfileRef(id), update, { merge: true });
         resolve();
       } catch (error: any) {

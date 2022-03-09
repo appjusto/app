@@ -37,7 +37,7 @@ export const FoodOrderHomeHeader = ({
 }: Props) => {
   // redux
   const location = useSelector(getCurrentLocation);
-  console.log('HEADER CURRENTLOCATION', location);
+  // console.log('HEADER CURRENTLOCATION', location);
   return (
     <View>
       <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>

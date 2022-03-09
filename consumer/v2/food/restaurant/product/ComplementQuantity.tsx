@@ -25,7 +25,6 @@ export const ComplementQuantity = ({
       <TouchableOpacity
         style={{ paddingLeft: padding }}
         onPress={() => {
-          console.log('onIncrement');
           if (!incrementDisabled) onIncrement();
         }}
       >

@@ -163,7 +163,6 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     setComplements(complements.filter((c) => c.complementId !== complementId));
   };
   const updateComplementQuantity = (complementId: string, delta: number) => {
-    console.log('updateComplementQuantity', complementId, delta);
     const index = complements.findIndex((c) => c.complementId === complementId);
     const complement = complements[index];
     const quantity = complement.quantity + delta;
@@ -221,7 +220,6 @@ export const ItemDetail = ({ navigation, route }: Props) => {
             }
             canAddComplement={(group) => helpers.canAddComplement(group, complements)}
             onComplementToggle={(group, complement, selected) => {
-              console.log('onComplementToggle', helpers.canAddComplement(group, complements));
               if (!selected) removeComplement(complement.id);
               else if (helpers.canAddComplement(group, complements))
                 addComplement(group, complement);
