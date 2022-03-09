@@ -22,12 +22,11 @@ export const AddressCard = ({ kind, distance, address }: Props) => {
   return (
     <View
       style={{
-        flex: 1,
         backgroundColor: colors.white, // it looks like we need to set a backgroundColor for the shadow to be applied only in the parent
         shadowOpacity: 1,
-        shadowOffset: { width: 0, height: 16 },
+        shadowOffset: { width: 0, height: 8 },
         shadowRadius: padding,
-        elevation: 8,
+        elevation: 4,
         shadowColor: 'rgba(105, 118, 103, 0.1)',
         borderRadius: padding,
       }}
