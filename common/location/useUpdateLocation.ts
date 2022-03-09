@@ -26,6 +26,10 @@ export const useUpdateLocation = () => {
     if (authState === AuthState.Unsigned) {
       if (!currentLocation && coords) {
         dispatch(updateCurrentLocation(coords));
+        console.log(
+          'updateCurrentLocation chamada na condição if authState === AuthState.Unsigned. atualizando com coords, logando coords',
+          coords
+        );
       }
       return;
     } else if (authState !== AuthState.SignedIn) return;
@@ -33,8 +37,13 @@ export const useUpdateLocation = () => {
     if (currentPlace) {
       // this will happen when we use AddressComplete to set the place
       if (!currentLocation) {
-        if (currentPlace.location) dispatch(updateCurrentLocation(currentPlace.location));
-        else {
+        if (currentPlace.location) {
+          dispatch(updateCurrentLocation(currentPlace.location));
+          console.log(
+            'updateCurrentLocation chamada na condição if currentPlace e if !currentLocation. atualizando com e logando currentPlace.location',
+            currentPlace.location
+          );
+        } else {
           api
             .maps()
             .googleGeocode(currentPlace.address.description)
@@ -45,6 +54,10 @@ export const useUpdateLocation = () => {
                   ...currentPlace,
                   location: latlng,
                 })
+              );
+              console.log(
+                'updateCurrentLocation chamada na condição if currentPlace, caso else. chama a googleGeocode, pega o latlng do currentPlace.address. logando latlng',
+                latlng
               );
             });
         }

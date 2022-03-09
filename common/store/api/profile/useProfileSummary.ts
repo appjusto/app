@@ -18,8 +18,8 @@ export const useProfileSummary = () => {
   const profile = flavor === 'consumer' ? consumer! : courier!;
   const { situation } = profile;
   // state
-  const [hasOrdered, setHasOrdered] = React.useState<boolean>(false);
-  const [isProfilePhoneVerified, setProfilePhoneVerified] = React.useState(false);
+  const [hasOrdered, setHasOrdered] = React.useState<boolean | undefined>();
+  const [isProfilePhoneVerified, setProfilePhoneVerified] = React.useState<boolean | undefined>();
   // helpers
   const update = () => {
     setProfilePhoneVerified(
@@ -50,7 +50,9 @@ export const useProfileSummary = () => {
   const isProfileComplete =
     situation === 'approved' && (flavor === 'courier' || isConsumerProfileComplete(consumer));
   const shouldVerifyPhone =
-    !isProfilePhoneVerified && isProfileComplete && (flavor === 'courier' || !hasOrdered);
+    isProfilePhoneVerified === false &&
+    isProfileComplete &&
+    (flavor === 'courier' || hasOrdered === false);
   const canUpdateProfile = !isProfileComplete || (flavor === 'consumer' && !hasOrdered);
 
   return {

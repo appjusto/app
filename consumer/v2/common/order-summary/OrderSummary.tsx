@@ -54,16 +54,16 @@ export const OrderSummary = ({
       scrollIndicatorInsets={{ right: 1 }}
       keyboardShouldPersistTaps="handled"
     >
-      {showMap && (
+      {showMap ? (
         <View style={{ height: 160 }}>
           <OrderMap order={order} ratio={360 / 160} />
         </View>
-      )}
+      ) : null}
       <View style={{ paddingTop: tallerDevice ? padding : 0 }}>
         <OrderPlacesSummary order={order} onEditStep={onEditStep} />
       </View>
 
-      {!isEmpty(order.items) && (
+      {!isEmpty(order.items) ? (
         <View>
           <HR height={padding} />
           <OrderItems
@@ -73,8 +73,8 @@ export const OrderSummary = ({
           />
           <OrderAdditionalInfo value={additionalInfo!} onAddInfo={onAddInfo!} />
         </View>
-      )}
-      {order.type === 'food' && (
+      ) : null}
+      {order.type === 'food' ? (
         <View style={{ flex: 1, marginHorizontal: padding, marginBottom: padding }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
             <Ionicons name="share-social-outline" size={16} style={{ marginRight: 4 }} />
@@ -98,7 +98,7 @@ export const OrderSummary = ({
             <Text style={{ ...texts.sm, marginLeft: padding }}>{t('Compartilhar dados')}</Text>
           </View>
         </View>
-      )}
+      ) : null}
 
       <HR height={padding} />
 
