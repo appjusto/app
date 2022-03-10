@@ -78,22 +78,13 @@ export const OrderDetail = ({ navigation, route }: Props) => {
             <RoundedText backgroundColor={colors.red} noBorder color={colors.white}>
               Pendente
             </RoundedText>
-            {/* cooking time component. will show after the order is accepted */}
+            {/* cooking time component. status === 'preparing' */}
             <Text>TIME</Text>
           </View>
           <Text style={{ ...texts.md, marginTop: halfPadding }}>
             {t('Nome do cliente: ')}
             <Text style={texts.bold}>{order.consumer.name}</Text>
           </Text>
-          {/* do we have this? */}
-          {/* <Text style={{ ...texts.md }}>
-            {t('Nº de pedidos no restaurante: ')}
-            <Text style={texts.bold}>{t('1')}</Text>
-          </Text> */}
-          {/* no chat for now */}
-          {/* <View style={{ marginTop: halfPadding, width: '60%' }}>
-            <DefaultButton title={t('Abrir chat com o cliente')} secondary />
-          </View> */}
         </PaddedView>
         {/* when status === 'dispatching' */}
         <OrderDispatchingMap order={order} style={{ marginTop: padding }} />
@@ -148,7 +139,10 @@ export const OrderDetail = ({ navigation, route }: Props) => {
               <Text style={[texts.sm, texts.bold]}>{formatCurrency(order.fare!.total)}</Text>
             </View>
           </View>
-          {/* add OrderItem list here */}
+        </View>
+        <SingleHeader title={t('Destino do pedido')} />
+        <View style={{ marginTop: halfPadding, marginBottom: 32, paddingHorizontal: padding }}>
+          <Text style={{ ...texts.md }}>{order.destination?.address.description}</Text>
         </View>
         <SingleHeader title={t('Forma de pagamento')} />
         <View style={{ paddingTop: halfPadding, paddingHorizontal: padding }}>
@@ -194,6 +188,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
         }}
       >
         <View style={{ width: '100%' }}>
+          {/* this button will be enabled/disabled, have diffent appearance and do different things */}
           <DefaultButton title={t('Aceitar pedido')} />
         </View>
       </View>
