@@ -18,6 +18,7 @@ import { CancelOrderModal } from '../components/CancelOrderModal';
 import { CookingTimeModal } from '../components/CookingTimeModal';
 import { OrderDispatchingMap } from '../components/OrderDispatchingMap';
 import { OrderListItem } from '../components/OrderListItem';
+import { RemainingTime } from '../components/RemainingTime';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'OrderDetail'>;
 type ScreenRouteProp = RouteProp<LoggedBusinessNavParamsList, 'OrderDetail'>;
@@ -79,7 +80,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
               Pendente
             </RoundedText>
             {/* cooking time component. status === 'preparing' */}
-            <Text>TIME</Text>
+            <RemainingTime />
           </View>
           <Text style={{ ...texts.md, marginTop: halfPadding }}>
             {t('Nome do cliente: ')}
