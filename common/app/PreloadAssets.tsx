@@ -8,7 +8,7 @@ import icons from '../../assets/icons';
 import { colors, screens } from '../styles';
 
 export interface Props {
-  children: React.ReactNode;
+  children: () => React.ReactNode;
 }
 
 export default function ({ children }: Props) {
@@ -32,7 +32,7 @@ export default function ({ children }: Props) {
 
   return (
     <View style={screens.default} onLayout={onLayoutRootView}>
-      {assetsLoaded ? children : <ActivityIndicator size="small" color={colors.white} />}
+      {assetsLoaded ? children() : <ActivityIndicator size="small" color={colors.white} />}
     </View>
   );
 }

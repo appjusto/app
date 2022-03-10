@@ -42,9 +42,11 @@ const App = () => {
 export default () => {
   return (
     <PreloadAssets>
-      <AppContext>
-        <App />
-      </AppContext>
+      {() => (
+        <AppContext>
+          <App />
+        </AppContext>
+      )}
     </PreloadAssets>
   );
 };
