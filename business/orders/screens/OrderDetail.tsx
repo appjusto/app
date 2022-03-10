@@ -37,6 +37,22 @@ export const OrderDetail = ({ navigation, route }: Props) => {
   const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
   // tracking
   useSegmentScreen('OrderDetail');
+  // helpers
+  let statusLabel;
+  if (order?.status === 'charged') statusLabel = t('Pendente');
+  if (order?.status === 'preparing') statusLabel = t('Preparação');
+  if (order?.status === 'dispatching') {
+    if (order.dispatchingState === 'going-pickup') statusLabel = t('Entregador a caminho');
+    if (order.dispatchingState === 'arrived-pickup') statusLabel = t('Entregador chegou');
+    if (order.dispatchingState === 'going-destination') statusLabel = t('A caminho do destino');
+    if (order.dispatchingState === 'arrived-destination') statusLabel = t('Chegou no destino');
+  }
+  if (order?.status === 'delivered') statusLabel = t('Pedido entregue');
+  let statusBGColor;
+  if (order?.status === 'charged') statusBGColor = colors.red;
+  if (order?.status === 'preparing') statusBGColor = colors.grey500;
+  if (order?.status === 'dispatching') statusBGColor = colors.yellow;
+  if (order?.status === 'delivered') statusBGColor = colors.green500;
   //UI
   const additionalInfoUI = () => {
     if (!order) return;
@@ -76,9 +92,18 @@ export const OrderDetail = ({ navigation, route }: Props) => {
           <View
             style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
           >
-            <RoundedText backgroundColor={colors.red} noBorder color={colors.white}>
-              Pendente
-            </RoundedText>
+            {statusLabel ? (
+              <RoundedText
+                backgroundColor={statusBGColor}
+                noBorder
+                color={order?.status === 'charged' ? colors.white : colors.black}
+              >
+                {statusLabel}
+              </RoundedText>
+            ) : (
+              // spacer view
+              <View style={{ width: padding, height: padding }} />
+            )}
             {/* cooking time component. status === 'preparing' */}
             <RemainingTime />
           </View>
