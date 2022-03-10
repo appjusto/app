@@ -27,12 +27,14 @@ export const OrdersManager = ({ navigation, route }: Props) => {
   // screen state
   const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
   const noOrdersToday = false;
-  // needed
+  // needed:
   // 1 - restaurante como user
   // 2 - observar e receber todos os pedidos do restaurante naquele dia
   // 3 - separar os pedidos por status, que formarão as sections da SectionList horizontal com os ListFilterButtons
   // 4 - função para aceitar o pedido e definir o tempo de preparo
-  // side effects
+
+  // maybe:
+  // trazer os dois switches de configurações - receber notificações e imprimir pedido - pra essa tela
   // tracking
   useSegmentScreen('OrdersManager');
   //UI
@@ -159,7 +161,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
                 <View style={{ marginBottom: padding }}>
                   <OrdersKanbanItem
                     onCheckOrder={() =>
-                      navigation.navigate('OrderDetail', { orderId: 'syV7UPjOZgtyayNeTi64' })
+                      navigation.navigate('OrderDetail', { orderId: 'usDi5nFeaBRNF8SzjEW4' })
                     }
                     onTakeOrder={() => setCookingModalVisible(true)}
                   />
@@ -167,7 +169,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
                 <View style={{ marginBottom: padding }}>
                   <OrdersKanbanItem
                     onCheckOrder={() =>
-                      navigation.navigate('OrderDetail', { orderId: 'syV7UPjOZgtyayNeTi64' })
+                      navigation.navigate('OrderDetail', { orderId: 'usDi5nFeaBRNF8SzjEW4' })
                     }
                     onTakeOrder={() => setCookingModalVisible(true)}
                   />
@@ -175,7 +177,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
                 <View style={{ marginBottom: padding }}>
                   <OrdersKanbanItem
                     onCheckOrder={() =>
-                      navigation.navigate('OrderDetail', { orderId: 'syV7UPjOZgtyayNeTi64' })
+                      navigation.navigate('OrderDetail', { orderId: 'usDi5nFeaBRNF8SzjEW4' })
                     }
                     onTakeOrder={() => setCookingModalVisible(true)}
                   />
@@ -183,7 +185,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
                 <View style={{ marginBottom: padding }}>
                   <OrdersKanbanItem
                     onCheckOrder={() =>
-                      navigation.navigate('OrderDetail', { orderId: 'syV7UPjOZgtyayNeTi64' })
+                      navigation.navigate('OrderDetail', { orderId: 'usDi5nFeaBRNF8SzjEW4' })
                     }
                     onTakeOrder={() => setCookingModalVisible(true)}
                   />

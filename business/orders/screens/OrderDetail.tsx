@@ -8,7 +8,6 @@ import { cpfFormatter } from '../../../common/components/inputs/pattern-input/fo
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
-import OrderMap from '../../../common/screens/orders/OrderMap';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
@@ -17,6 +16,7 @@ import { t } from '../../../strings';
 import { LoggedBusinessNavParamsList } from '../../types';
 import { CancelOrderModal } from '../components/CancelOrderModal';
 import { CookingTimeModal } from '../components/CookingTimeModal';
+import { OrderDispatchingMap } from '../components/OrderDispatchingMap';
 import { OrderListItem } from '../components/OrderListItem';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'OrderDetail'>;
@@ -96,12 +96,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
           </View> */}
         </PaddedView>
         {/* when status === 'dispatching' */}
-        <View style={{ marginTop: padding }}>
-          <SingleHeader title={t('Entregador')} />
-          <View style={{ marginHorizontal: padding }}>
-            <OrderMap order={order} ratio={240 / 160} />
-          </View>
-        </View>
+        <OrderDispatchingMap order={order} style={{ marginTop: padding }} />
         <View style={{ marginTop: padding }}>
           <SingleHeader title={t('Detalhes do pedido')} />
         </View>
