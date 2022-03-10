@@ -1,10 +1,14 @@
 import * as React from 'react';
-import Svg, { Circle, Path, SvgProps } from 'react-native-svg';
+import Svg, { Circle, Color, Path, SvgProps } from 'react-native-svg';
 
-export const IconOnboardingDelivery = (props: SvgProps) => {
+interface Props extends SvgProps {
+  circleColor?: Color;
+}
+
+export const IconOnboardingDelivery = ({ circleColor = '#F6F6F6', ...props }: Props) => {
   return (
     <Svg width={114} height={114} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-      <Circle cx={57} cy={57} r={57} fill="#F6F6F6" />
+      <Circle cx={57} cy={57} r={57} fill={circleColor} />
       <Path d="M73 26h-9v26h26V26h-8v8h-9v-8z" fill="#FFE493" />
       <Path
         fillRule="evenodd"
