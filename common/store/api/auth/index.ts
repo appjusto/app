@@ -1,3 +1,4 @@
+import { FirestoreRefs, FunctionsRef } from '@appjusto/firebase-refs';
 import { DeleteAccountPayload } from '@appjusto/types';
 import {
   ApplicationVerifier,
@@ -20,14 +21,18 @@ import { Extra } from '../../../../config/types';
 import { getExtra } from '../../../utils/config';
 import { getDeeplinkDomain, getFallbackDomain } from '../../../utils/domains';
 import { getAppVersion } from '../../../utils/version';
-import FirebaseRefs from '../FirebaseRefs';
 
 export type AuthMode = 'passwordless' | 'password' | 'phone';
 
 export default class AuthApi {
   public defaultAuthMode: AuthMode;
 
-  constructor(private auth: Auth, private refs: FirebaseRefs, private extra: Extra) {
+  constructor(
+    private auth: Auth,
+    private firestoreRefs: FirestoreRefs,
+    private functionsRef: FunctionsRef,
+    private extra: Extra
+  ) {
     this.auth.languageCode = 'pt';
     this.defaultAuthMode = getExtra().flavor === 'courier' ? 'phone' : 'passwordless';
   }
@@ -39,7 +44,7 @@ export default class AuthApi {
   // email sign in
   async sendSignInLinkToEmail(email: string): Promise<void> {
     try {
-      await addDoc(this.refs.getPlatformLoginLogsRef(), {
+      await addDoc(this.firestoreRefs.getPlatformLoginLogsRef(), {
         email,
         flavor: this.extra.flavor,
         signInAt: serverTimestamp(),
@@ -126,7 +131,7 @@ export default class AuthApi {
   }
 
   deleteAccount(payload: Partial<DeleteAccountPayload>) {
-    return this.refs.getDeleteAccountCallable()({
+    return this.functionsRef.getDeleteAccountCallable()({
       ...payload,
       meta: { version: getAppVersion() },
     });
