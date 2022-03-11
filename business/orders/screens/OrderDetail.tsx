@@ -7,7 +7,14 @@ import { cpfFormatter } from '../../../common/components/inputs/pattern-input/fo
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import {
+  colors,
+  doublePadding,
+  halfPadding,
+  padding,
+  screens,
+  texts,
+} from '../../../common/styles';
 import { formatDuration } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { LoggedBusinessNavParamsList } from '../../types';
@@ -15,6 +22,7 @@ import { CancelOrderModal } from '../components/CancelOrderModal';
 import { CookingTimeModal } from '../components/CookingTimeModal';
 import { DestinationAndPay } from '../components/DestinationAndPay';
 import { DetailedOrderItems } from '../components/DetailedOrderItems';
+import { InfoAndCPF } from '../components/InfoAndCPF';
 import { OrderDetailHeader } from '../components/OrderDetailHeader';
 import { OrderDispatchingMap } from '../components/OrderDispatchingMap';
 
@@ -90,26 +98,15 @@ export const OrderDetail = ({ navigation, route }: Props) => {
           <DetailedOrderItems order={order} style={{ marginTop: padding, marginBottom: 32 }} />
         </View>
         <DestinationAndPay order={order} />
-        <View style={{ marginTop: padding, flex: 1 }}>
-          {order.additionalInfo || order.consumer.cpf ? (
-            <SingleHeader title={t('Observações')} />
-          ) : null}
-          <View
-            style={{
-              paddingTop: halfPadding,
-              paddingHorizontal: padding,
-              paddingBottom: padding,
-            }}
-          >
-            {additionalInfoUI()}
-            {/* this button will open a CancelOrderModal  */}
-            <View style={{ width: '60%', marginTop: padding }}>
-              <DefaultButton
-                title={t('Cancelar pedido')}
-                secondary
-                onPress={() => setCancelModalVisible(true)}
-              />
-            </View>
+        <View style={{ marginTop: doublePadding, flex: 1 }}>
+          <InfoAndCPF order={order} />
+          {/* this button will open a CancelOrderModal  */}
+          <View style={{ width: '60%', marginTop: 32, paddingHorizontal: padding }}>
+            <DefaultButton
+              title={t('Cancelar pedido')}
+              secondary
+              onPress={() => setCancelModalVisible(true)}
+            />
           </View>
         </View>
       </ScrollView>

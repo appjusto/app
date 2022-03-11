@@ -114,17 +114,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
                   numberColor={colors.black}
                   style={{ marginRight: halfPadding }}
                 />
-                {/* take away orders */}
-                {/* <AppButton
-            title={t('Retirada')}
-            bgColor={colors.white}
-            textColor={colors.grey700}
-            borderColor={colors.grey700}
-            onPress={() => null}
-            number="4"
-            numberColor={colors.black}
-            style={{ marginRight: halfPadding }}
-          /> */}
+                {/* take away orders - not included for now */}
                 {/* dispatching orders */}
                 <ListFilterButton
                   title={t('Despachado')}
