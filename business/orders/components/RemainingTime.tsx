@@ -1,9 +1,16 @@
+import { Order } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { colors, halfPadding, texts } from '../../../common/styles';
+type Props = {
+  order: Order;
+};
 
-export const RemainingTime = () => {
+export const RemainingTime = ({ order }: Props) => {
+  // commented while testing
+  // if (order.status !== 'preparing') return null
+  //UI
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>

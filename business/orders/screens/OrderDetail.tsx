@@ -6,18 +6,18 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import { cpfFormatter } from '../../../common/components/inputs/pattern-input/formatters';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
-import RoundedText from '../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency, formatDuration, formatTime } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { LoggedBusinessNavParamsList } from '../../types';
 import { CancelOrderModal } from '../components/CancelOrderModal';
 import { CookingTimeModal } from '../components/CookingTimeModal';
+import { DetailedOrderItems } from '../components/DetailedOrderItems';
 import { OrderDispatchingMap } from '../components/OrderDispatchingMap';
-import { OrderListItem } from '../components/OrderListItem';
+import { OrderLabel } from '../components/OrderLabel';
 import { RemainingTime } from '../components/RemainingTime';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'OrderDetail'>;
@@ -37,22 +37,6 @@ export const OrderDetail = ({ navigation, route }: Props) => {
   const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
   // tracking
   useSegmentScreen('OrderDetail');
-  // helpers
-  let statusLabel;
-  if (order?.status === 'charged') statusLabel = t('Pendente');
-  if (order?.status === 'preparing') statusLabel = t('Preparação');
-  if (order?.status === 'dispatching') {
-    if (order.dispatchingState === 'going-pickup') statusLabel = t('Entregador a caminho');
-    if (order.dispatchingState === 'arrived-pickup') statusLabel = t('Entregador chegou');
-    if (order.dispatchingState === 'going-destination') statusLabel = t('A caminho do destino');
-    if (order.dispatchingState === 'arrived-destination') statusLabel = t('Chegou no destino');
-  }
-  if (order?.status === 'delivered') statusLabel = t('Pedido entregue');
-  let statusBGColor;
-  if (order?.status === 'charged') statusBGColor = colors.red;
-  if (order?.status === 'preparing') statusBGColor = colors.grey500;
-  if (order?.status === 'dispatching') statusBGColor = colors.yellow;
-  if (order?.status === 'delivered') statusBGColor = colors.green500;
   //UI
   const additionalInfoUI = () => {
     if (!order) return;
@@ -92,20 +76,11 @@ export const OrderDetail = ({ navigation, route }: Props) => {
           <View
             style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
           >
-            {statusLabel ? (
-              <RoundedText
-                backgroundColor={statusBGColor}
-                noBorder
-                color={order?.status === 'charged' ? colors.white : colors.black}
-              >
-                {statusLabel}
-              </RoundedText>
-            ) : (
-              // spacer view
-              <View style={{ width: padding, height: padding }} />
-            )}
+            <OrderLabel order={order} />
+            {/* spacer view */}
+            <View style={{ width: padding, height: padding }} />
             {/* cooking time component. status === 'preparing' */}
-            <RemainingTime />
+            <RemainingTime order={order} />
           </View>
           <Text style={{ ...texts.md, marginTop: halfPadding }}>
             {t('Nome do cliente: ')}
@@ -133,38 +108,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
               />
             </View>
           </View>
-          <View style={{ marginTop: padding, marginBottom: 32 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
-              <View style={{ width: '17%', alignItems: 'flex-start' }}>
-                <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Qtde.')}</Text>
-              </View>
-              <View style={{ width: '56%', alignItems: 'flex-start' }}>
-                <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Item')}</Text>
-              </View>
-              <View style={{ width: '27%', alignItems: 'flex-end' }}>
-                <Text style={{ ...texts.sm, color: colors.grey700 }}>{t('Valor/ item')}</Text>
-              </View>
-            </View>
-            {order.items?.map((item, index) => (
-              <OrderListItem item={item} key={`${index} + ${item.id}`} />
-            ))}
-            <View
-              style={{
-                backgroundColor: colors.white,
-                paddingVertical: 12,
-                paddingHorizontal: padding,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                ...borders.default,
-                borderRadius: 0,
-                marginTop: 4,
-              }}
-            >
-              <Text style={{ ...texts.sm }}>{t('Valor total dos itens')}</Text>
-              <Text style={[texts.sm, texts.bold]}>{formatCurrency(order.fare!.total)}</Text>
-            </View>
-          </View>
+          <DetailedOrderItems order={order} style={{ marginTop: padding, marginBottom: 32 }} />
         </View>
         <SingleHeader title={t('Destino do pedido')} />
         <View style={{ marginTop: halfPadding, marginBottom: 32, paddingHorizontal: padding }}>
