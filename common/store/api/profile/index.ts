@@ -1,4 +1,5 @@
 import { ConsumerProfile, CourierProfile, Flavor, UserProfile, WithId } from '@appjusto/types';
+import * as Application from 'expo-application';
 import Constants from 'expo-constants';
 import {
   doc,
@@ -11,6 +12,7 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import { hash } from 'geokit';
+import { Platform } from 'react-native';
 import * as Sentry from 'sentry-expo';
 import AuthApi from '../auth';
 import { documentAs } from '../types';
@@ -68,7 +70,7 @@ export default class ProfileApi {
     changes: Partial<CourierProfile> | Partial<ConsumerProfile>,
     retry: number = 5
   ) {
-    const appVersion = `${Constants.nativeAppVersion}${
+    const appVersion = `${Application.nativeApplicationVersion}${
       Constants.manifest ? ` / ${Constants.manifest.version}` : ''
     }`;
     return new Promise<void>(async (resolve) => {
@@ -76,6 +78,7 @@ export default class ProfileApi {
         const update: Partial<UserProfile> = {
           ...changes,
           appVersion,
+          platform: Platform.OS,
           updatedOn: serverTimestamp(),
         };
         // console.log(update);
