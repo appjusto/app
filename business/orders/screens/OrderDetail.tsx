@@ -3,7 +3,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import { cpfFormatter } from '../../../common/components/inputs/pattern-input/formatters';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
@@ -44,20 +43,6 @@ export const OrderDetail = ({ navigation, route }: Props) => {
   // tracking
   useSegmentScreen('OrderDetail');
   //UI
-  const additionalInfoUI = () => {
-    if (!order) return;
-    if (order.additionalInfo) {
-      return <Text style={{ ...texts.md, marginBottom: halfPadding }}>{order.additionalInfo}</Text>;
-    }
-    if (order.consumer.cpf) {
-      return (
-        <Text style={{ ...texts.md, marginBottom: halfPadding }}>
-          {t('Incluir CPF na nota, CPF: ')}
-          {cpfFormatter(order.consumer.cpf)}
-        </Text>
-      );
-    }
-  };
   if (!order) {
     return (
       <View style={screens.centered}>
@@ -120,7 +105,10 @@ export const OrderDetail = ({ navigation, route }: Props) => {
       >
         <View style={{ width: '100%' }}>
           {/* this button will be enabled/disabled, have diffent appearance and do different things */}
-          <DefaultButton title={t('Aceitar pedido')} />
+          <DefaultButton
+            title={t('Aceitar pedido')}
+            onPress={() => navigation.goBack()} // go back after accepting the order
+          />
         </View>
       </View>
       <CancelOrderModal
