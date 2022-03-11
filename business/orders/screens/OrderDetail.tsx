@@ -3,22 +3,20 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import PaddedView from '../../../common/components/containers/PaddedView';
 import { cpfFormatter } from '../../../common/components/inputs/pattern-input/formatters';
-import DoubleHeader from '../../../common/components/texts/DoubleHeader';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
-import { formatCurrency, formatDuration, formatTime } from '../../../common/utils/formatters';
+import { formatDuration } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { LoggedBusinessNavParamsList } from '../../types';
 import { CancelOrderModal } from '../components/CancelOrderModal';
 import { CookingTimeModal } from '../components/CookingTimeModal';
+import { DestinationAndPay } from '../components/DestinationAndPay';
 import { DetailedOrderItems } from '../components/DetailedOrderItems';
+import { OrderDetailHeader } from '../components/OrderDetailHeader';
 import { OrderDispatchingMap } from '../components/OrderDispatchingMap';
-import { OrderLabel } from '../components/OrderLabel';
-import { RemainingTime } from '../components/RemainingTime';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'OrderDetail'>;
 type ScreenRouteProp = RouteProp<LoggedBusinessNavParamsList, 'OrderDetail'>;
@@ -67,26 +65,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
         scrollIndicatorInsets={{ right: 1 }}
         keyboardShouldPersistTaps="handled"
       >
-        <DoubleHeader
-          title={`${t('Pedido Nº ')}${order.code}`}
-          subtitle={`Horário do pedido: ${formatTime(order.createdOn!)}`}
-        />
-        <PaddedView>
-          {/* order.status */}
-          <View
-            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
-          >
-            <OrderLabel order={order} />
-            {/* spacer view */}
-            <View style={{ width: padding, height: padding }} />
-            {/* cooking time component. status === 'preparing' */}
-            <RemainingTime order={order} />
-          </View>
-          <Text style={{ ...texts.md, marginTop: halfPadding }}>
-            {t('Nome do cliente: ')}
-            <Text style={texts.bold}>{order.consumer.name}</Text>
-          </Text>
-        </PaddedView>
+        <OrderDetailHeader order={order} />
         {/* when status === 'dispatching' */}
         <OrderDispatchingMap order={order} style={{ marginTop: padding }} />
         <View style={{ marginTop: padding }}>
@@ -110,22 +89,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
           </View>
           <DetailedOrderItems order={order} style={{ marginTop: padding, marginBottom: 32 }} />
         </View>
-        <SingleHeader title={t('Destino do pedido')} />
-        <View style={{ marginTop: halfPadding, marginBottom: 32, paddingHorizontal: padding }}>
-          <Text style={{ ...texts.md }}>{order.destination?.address.description}</Text>
-        </View>
-        <SingleHeader title={t('Forma de pagamento')} />
-        <View style={{ paddingTop: halfPadding, paddingHorizontal: padding }}>
-          <Text style={{ ...texts.md }}>
-            {t('Total pago: ')}
-            <Text style={texts.bold}>{formatCurrency(order.fare!.total)}</Text>
-          </Text>
-          {/* for now, this doesn't change */}
-          <Text style={{ ...texts.md, marginTop: 4 }}>
-            {t('Método de pagamento: ')}
-            <Text style={texts.bold}>{t('pagamento via app')}</Text>
-          </Text>
-        </View>
+        <DestinationAndPay order={order} />
         <View style={{ marginTop: padding, flex: 1 }}>
           {order.additionalInfo || order.consumer.cpf ? (
             <SingleHeader title={t('Observações')} />
