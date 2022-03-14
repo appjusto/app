@@ -7,10 +7,12 @@ import { ApiContext, AppDispatch } from '../common/app/context';
 import { defaultScreenOptions } from '../common/screens/options';
 import { AboutApp } from '../common/screens/profile/AboutApp';
 import Terms from '../common/screens/unlogged/Terms';
+import { getBusiness } from '../common/store/business/selectors';
 import { getFlavor } from '../common/store/config/selectors';
 import { observeProfile } from '../common/store/user/actions';
 import { getUser } from '../common/store/user/selectors';
 import { t } from '../strings';
+import { BusinessPending } from './orders/screens/BusinessPending';
 import { ManagerOptions } from './orders/screens/ManagerOptions';
 import { OrderDetail } from './orders/screens/OrderDetail';
 import { OrdersManager } from './orders/screens/OrdersManager';
@@ -26,15 +28,24 @@ export const LoggedBusinessNavigator = () => {
   const dispatch = useDispatch<AppDispatch>();
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
+  const business = useSelector(getBusiness);
   const uid = user?.uid;
   // side effects
   // subscribe for profile changes
   React.useEffect(() => {
     if (uid) return dispatch(observeProfile(api)(flavor, uid));
   }, [dispatch, api, flavor, uid]);
-  // subscribe to restaurant's orders ???
+  // TODO: subscribe to restaurant's orders ???
+  // helpers
+  const initialRouteName = business?.situation === 'pending' ? 'BusinessPending' : 'OrdersManager';
+  // UI
   return (
-    <Stack.Navigator screenOptions={defaultScreenOptions}>
+    <Stack.Navigator screenOptions={defaultScreenOptions} initialRouteName={initialRouteName}>
+      <Stack.Screen
+        name="BusinessPending"
+        component={BusinessPending}
+        options={{ title: t('Cadastro pendente') }}
+      />
       <Stack.Screen
         name="OrdersManager"
         component={OrdersManager}
