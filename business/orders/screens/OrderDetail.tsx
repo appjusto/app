@@ -2,10 +2,12 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
+import { getBusiness } from '../../../common/store/business/selectors';
 import {
   colors,
   doublePadding,
@@ -36,8 +38,10 @@ type Props = {
 export const OrderDetail = ({ navigation, route }: Props) => {
   // params
   const { orderId } = route.params;
+  // redux store
+  const business = useSelector(getBusiness);
   // state
-  const order = useObserveOrder(orderId);
+  const order = useObserveOrder(orderId); // will we observe an order as a restaurant this way?
   const [cancelModalVisible, setCancelModalVisible] = React.useState(false);
   const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
   // tracking

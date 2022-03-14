@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSelector } from 'react-redux';
 import PaddedView from '../../../common/components/containers/PaddedView';
@@ -32,7 +32,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
   const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
   const noOrdersToday = false;
   // needed:
-  // 1 - restaurante como user
+
   // 2 - observar e receber todos os pedidos do restaurante naquele dia
   // 3 - separar os pedidos por status, que formarão as sections da SectionList horizontal com os ListFilterButtons
   // 4 - função para aceitar o pedido e definir o tempo de preparo
@@ -42,11 +42,18 @@ export const OrdersManager = ({ navigation, route }: Props) => {
   // tracking
   useSegmentScreen('OrdersManager');
   //UI
+  if (!business) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <View style={screens.default}>
       <View>
         <PaddedView>
-          <OrderManagerHeader />
+          <OrderManagerHeader business={business} />
         </PaddedView>
       </View>
       <KeyboardAwareScrollView

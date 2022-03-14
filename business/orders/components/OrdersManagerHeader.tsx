@@ -1,9 +1,21 @@
+import { Business, WithId } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
+import { useBusinessLogoURI } from '../../../common/store/api/business/hooks/useBusinessLogoURI';
 import { colors, halfPadding, padding, texts } from '../../../common/styles';
+import { ListItemImage } from '../../../consumer/v2/food/common/ListItemImage';
 import { t } from '../../../strings';
 
-export const OrderManagerHeader = () => {
+type Props = {
+  business: WithId<Business>;
+};
+
+export const OrderManagerHeader = ({ business }: Props) => {
+  // context
+  const { data: logo } = useBusinessLogoURI(business.id);
+  // helpers
+  const businessStatus =
+    business.status === 'open' ? t('RESTAURANTE ABERTO') : t('RESTAURANTE FECHADO');
   return (
     <View
       style={{ height: 48, width: '100%', flexDirection: 'row', backgroundColor: colors.white }}
@@ -19,32 +31,28 @@ export const OrderManagerHeader = () => {
           marginRight: padding,
         }}
       >
-        {/* replace this with logo Image */}
-        <Text style={{ color: colors.white }}>LOGO</Text>
+        <ListItemImage uri={logo} height={48} width={48} />
       </View>
       <View style={{ alignItems: 'flex-start', justifyContent: 'center' }}>
-        {/* restaurant.name */}
-        <Text style={{ ...texts.lg }}>{t('Nome do restaurante')}</Text>
+        <Text style={{ ...texts.lg }}>{business.name}</Text>
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
           }}
         >
-          {/* green if open, red if closed */}
           <View
             style={{
               height: 12,
               width: 12,
               borderRadius: 6,
-              backgroundColor: colors.green500,
+              backgroundColor: business.status === 'open' ? colors.green500 : colors.red,
               marginRight: halfPadding,
               marginTop: halfPadding,
               bottom: 2,
             }}
           />
-          {/* always uppercase */}
-          <Text style={{ ...texts.x2s, color: colors.green600 }}>{t('RESTAURANTE ABERTO')}</Text>
+          <Text style={{ ...texts.x2s, color: colors.green600 }}>{businessStatus}</Text>
         </View>
       </View>
     </View>
