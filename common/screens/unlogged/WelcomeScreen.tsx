@@ -25,6 +25,7 @@ import { numbersOnlyParser } from '../../components/inputs/pattern-input/parsers
 import PatternInput from '../../components/inputs/PatternInput';
 import ShowIf from '../../components/views/ShowIf';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
+import { IconIntroBusiness } from '../../icons/icon-intro-business';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { IconMotoCycleBig } from '../../icons/icon-motocycle-big';
 import { AuthMode } from '../../store/api/auth';
@@ -33,7 +34,7 @@ import { getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
 import { signInWithEmail, signInWithEmailAndPassword } from '../../store/user/actions';
-import { colors, halfPadding, padding, screens, texts } from '../../styles';
+import { colors, doublePadding, halfPadding, padding, screens, texts } from '../../styles';
 import { validateEmail } from '../../utils/validators';
 import { UnloggedParamList } from './types';
 
@@ -99,14 +100,60 @@ export default function ({ navigation, route }: Props) {
       );
     }
   };
-  // UI
-  const welcomeMessage =
-    flavor === 'consumer'
-      ? t('Um delivery aberto, transparente e consciente.')
-      : t('Ganhe mais, com autonomia e transparência.');
-  const actionButtonTitle = flavor === 'courier' ? t('Entrar') : t('Faça login para pedir');
+  // helpers
+  const toggleBusinessAuth = () => {
+    if (authMode === 'passwordless') setAuthMode('password');
+    if (authMode === 'password') setAuthMode('passwordless');
+  };
+  let welcomeMessage;
+  if (flavor === 'courier') welcomeMessage = t('Ganhe mais, com autonomia e transparência.');
+  if (flavor === 'business')
+    welcomeMessage = t('Gerencie seu restaurante de forma fácil e automatizada.');
+  else welcomeMessage = t('Um delivery aberto, transparente e consciente.');
+  let emailMessage;
+  if (flavor === 'business')
+    emailMessage = t('Ao entrar sem senha, enviaremos um link de acesso para o e-mail cadastrado');
+  else emailMessage = t('Digite seu e-mail para entrar ou criar sua conta.');
+  const actionButtonTitle =
+    flavor === 'courier'
+      ? t('Entrar')
+      : flavor === 'business'
+      ? t('Entrar no restaurante')
+      : t('Faça login para pedir');
   const actionButtonDisabled =
     !acceptedTerms || busy || (authMode !== 'phone' && validateEmail(email).status !== 'ok');
+  // UI
+  const illustrationUI = () => {
+    if (flavor === 'consumer') {
+      return (
+        <View style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={{ top: -16 }}>
+            <IconIllustrationIntro />
+          </View>
+        </View>
+      );
+    }
+    if (flavor === 'courier') {
+      return (
+        <View style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <IconMotoCycleBig />
+        </View>
+      );
+    }
+    if (flavor === 'business') {
+      return (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: doublePadding,
+          }}
+        >
+          <IconIntroBusiness />
+        </View>
+      );
+    }
+  };
   return (
     <View style={{ ...screens.default }}>
       <KeyboardAwareScrollView
@@ -134,26 +181,7 @@ export default function ({ navigation, route }: Props) {
             }
           >
             <>
-              <ShowIf test={flavor === 'consumer'}>
-                {() => (
-                  <View
-                    style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}
-                  >
-                    <View style={{ top: -16 }}>
-                      <IconIllustrationIntro />
-                    </View>
-                  </View>
-                )}
-              </ShowIf>
-              <ShowIf test={flavor === 'courier'}>
-                {() => (
-                  <View
-                    style={{ left: -16, flexDirection: 'row', justifyContent: 'space-between' }}
-                  >
-                    <IconMotoCycleBig />
-                  </View>
-                )}
-              </ShowIf>
+              {illustrationUI()}
               <View style={{ marginTop: flavor === 'courier' ? padding : 0 }}>
                 <IconLogoGreen />
               </View>
@@ -162,7 +190,7 @@ export default function ({ navigation, route }: Props) {
                 <Text
                   style={[texts.sm, { color: colors.grey700, lineHeight: 21, marginTop: padding }]}
                 >
-                  {t('Digite seu e-mail para entrar ou criar sua conta.')}
+                  {emailMessage}
                 </Text>
               </View>
             </>
@@ -227,26 +255,40 @@ export default function ({ navigation, route }: Props) {
                 marginTop: padding,
               }}
             >
-              <View>
-                <CheckField
-                  checked={acceptedTerms}
-                  onPress={() => setAcceptTerms(!acceptedTerms)}
-                  text={t('Aceito os termos de uso do app')}
-                />
-              </View>
-              <View style={{ marginTop: !tallerDevice ? halfPadding : 0 }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('Terms');
-                  }}
-                >
-                  <Text style={[texts.xs, { color: colors.green600 }]}>{t('Ler os termos')}</Text>
-                </TouchableOpacity>
-              </View>
+              {flavor === 'business' ? (
+                <View>
+                  <CheckField
+                    checked={authMode === 'password'}
+                    onPress={() => toggleBusinessAuth()}
+                    text={t('Usar senha de acesso')}
+                  />
+                </View>
+              ) : (
+                <View>
+                  <View>
+                    <CheckField
+                      checked={acceptedTerms}
+                      onPress={() => setAcceptTerms(!acceptedTerms)}
+                      text={t('Aceito os termos de uso do app')}
+                    />
+                  </View>
+                  <View style={{ marginTop: !tallerDevice ? halfPadding : 0 }}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate('Terms');
+                      }}
+                    >
+                      <Text style={[texts.xs, { color: colors.green600 }]}>
+                        {t('Ler os termos')}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
             </View>
           </View>
           <View style={{ flex: 1 }} />
-          <View style={{ marginTop: 32, paddingBottom: padding }}>
+          <View style={{ marginTop: 32 }}>
             <DefaultButton
               disabled={actionButtonDisabled}
               title={actionButtonTitle}
