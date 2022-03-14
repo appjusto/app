@@ -3,10 +3,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useSelector } from 'react-redux';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
 import { useSegmentScreen } from '../../../common/store/api/track';
+import { getBusiness } from '../../../common/store/business/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedBusinessNavParamsList } from '../../types';
@@ -24,6 +26,8 @@ type Props = {
 };
 
 export const OrdersManager = ({ navigation, route }: Props) => {
+  // redux store
+  const business = useSelector(getBusiness);
   // screen state
   const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
   const noOrdersToday = false;

@@ -1,6 +1,7 @@
 import * as redux from 'redux';
 import ReduxThunk, { ThunkDispatch } from 'redux-thunk';
 import { Extra } from '../../config/types';
+import { BusinessState } from './business/types';
 import configReducer from './config/reducer';
 import { ConfigState } from './config/types';
 import consumerReducer from './consumer/reducer';
@@ -18,6 +19,7 @@ export interface State {
   config: ConfigState;
   courier: CourierState;
   consumer: ConsumerState;
+  business: BusinessState;
   order: OrderState;
   user: UserState;
   ui: UIState;
