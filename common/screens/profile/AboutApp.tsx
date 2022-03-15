@@ -5,7 +5,7 @@ import { Linking, Platform, Pressable, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
-import { LoggedBusinessNavParamsList } from '../../../business/types';
+import { BusinessNavParamsList } from '../../../business/types';
 import { ProfileParamList } from '../../../consumer/v2/main/profile/types';
 import { CourierProfileParamList } from '../../../courier/approved/main/profile/types';
 import { UnapprovedParamList } from '../../../courier/unapproved/types';
@@ -26,7 +26,7 @@ export type AboutAppParamList = {
 };
 
 type ScreenNavigationProp = StackNavigationProp<
-  ProfileParamList & CourierProfileParamList & UnapprovedParamList & LoggedBusinessNavParamsList,
+  ProfileParamList & CourierProfileParamList & UnapprovedParamList & BusinessNavParamsList,
   'AboutApp'
 >;
 

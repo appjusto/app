@@ -9,9 +9,9 @@ import { screens } from '../../../common/styles';
 import { confirmLogout } from '../../../common/utils/utils';
 import { t } from '../../../strings';
 import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
-import { LoggedBusinessNavParamsList } from '../../types';
-type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'ManagerOptions'>;
-type ScreenRouteProp = RouteProp<LoggedBusinessNavParamsList, 'ManagerOptions'>;
+import { BusinessNavParamsList } from '../../types';
+type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'ManagerOptions'>;
+type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'ManagerOptions'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

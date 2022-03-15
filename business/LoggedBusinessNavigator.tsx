@@ -1,28 +1,23 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { Image, TouchableWithoutFeedback, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { headerMenu } from '../assets/icons';
 import { ApiContext, AppDispatch } from '../common/app/context';
 import { defaultScreenOptions } from '../common/screens/options';
-import { AboutApp } from '../common/screens/profile/AboutApp';
-import Terms from '../common/screens/unlogged/Terms';
 import { getManager } from '../common/store/business/selectors';
 import { getFlavor } from '../common/store/config/selectors';
 import { observeProfile } from '../common/store/user/actions';
 import { getUser } from '../common/store/user/selectors';
+import { colors, screens } from '../common/styles';
 import { LoggedContextProvider } from '../consumer/v2/LoggedContext';
 import { t } from '../strings';
+import { BusinessNavigator } from './BusinessNavigator';
 import { BusinessPending } from './orders/screens/BusinessPending';
-import { ManagerOptions } from './orders/screens/ManagerOptions';
-import { OrderDetail } from './orders/screens/OrderDetail';
-import { OrdersManager } from './orders/screens/OrdersManager';
 import { LoggedBusinessNavParamsList } from './types';
 
 const Stack = createStackNavigator<LoggedBusinessNavParamsList>();
 
 export const LoggedBusinessNavigator = () => {
-  //TODO: wrap this stack with the right context
   // context
   const api = React.useContext(ApiContext);
   // redux
@@ -30,6 +25,7 @@ export const LoggedBusinessNavigator = () => {
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
   const manager = useSelector(getManager);
+  console.log(manager);
   // const business = useActiveBusiness();
   const uid = user?.uid;
   // side effects
@@ -39,7 +35,15 @@ export const LoggedBusinessNavigator = () => {
   }, [dispatch, api, flavor, uid]);
   // TODO: subscribe to restaurant's orders ???
   // helpers
-  const initialRouteName = business?.situation === 'pending' ? 'BusinessPending' : 'OrdersManager';
+  if (!manager) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
+  const initialRouteName =
+    manager.situation === 'pending' ? 'BusinessPending' : 'BusinessNavigator';
   // UI
   return (
     <LoggedContextProvider>
@@ -50,35 +54,10 @@ export const LoggedBusinessNavigator = () => {
           options={{ title: t('Cadastro pendente') }}
         />
         <Stack.Screen
-          name="OrdersManager"
-          component={OrdersManager}
-          options={({ navigation, route }) => ({
-            title: t('Gerenciador de pedidos'),
-            headerLeft: () => (
-              <TouchableWithoutFeedback onPress={() => navigation.navigate('ManagerOptions')}>
-                <View style={{ marginLeft: 12 }}>
-                  <Image source={headerMenu} height={32} width={32} />
-                </View>
-              </TouchableWithoutFeedback>
-            ),
-          })}
+          name="BusinessNavigator"
+          component={BusinessNavigator}
+          options={{ headerShown: false }}
         />
-        <Stack.Screen
-          name="OrderDetail"
-          component={OrderDetail}
-          options={{ title: t('Ver pedido') }}
-        />
-        <Stack.Screen
-          name="ManagerOptions"
-          component={ManagerOptions}
-          options={{ title: t('Menu') }}
-        />
-        <Stack.Screen
-          name="AboutApp"
-          component={AboutApp}
-          options={{ title: t('Sobre o AppJusto') }}
-        />
-        <Stack.Screen name="Terms" component={Terms} options={{ title: t('Fique por dentro') }} />
       </Stack.Navigator>
     </LoggedContextProvider>
   );

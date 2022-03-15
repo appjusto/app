@@ -11,14 +11,14 @@ import { useSegmentScreen } from '../../../common/store/api/track';
 import { getBusiness } from '../../../common/store/business/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
-import { LoggedBusinessNavParamsList } from '../../types';
+import { BusinessNavParamsList } from '../../types';
 import { CookingTimeModal } from '../components/CookingTimeModal';
 import { ListFilterButton } from '../components/ListFilterButton';
 import { OrdersKanbanItem } from '../components/OrdersKanbanItem';
 import { OrderManagerHeader } from '../components/OrdersManagerHeader';
 
-type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'OrdersManager'>;
-type ScreenRouteProp = RouteProp<LoggedBusinessNavParamsList, 'OrdersManager'>;
+type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'OrdersManager'>;
+type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'OrdersManager'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

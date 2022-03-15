@@ -18,7 +18,7 @@ import {
 } from '../../../common/styles';
 import { formatDuration } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
-import { LoggedBusinessNavParamsList } from '../../types';
+import { BusinessNavParamsList } from '../../types';
 import { CancelOrderModal } from '../components/CancelOrderModal';
 import { CookingTimeModal } from '../components/CookingTimeModal';
 import { DestinationAndPay } from '../components/DestinationAndPay';
@@ -27,8 +27,8 @@ import { InfoAndCPF } from '../components/InfoAndCPF';
 import { OrderDetailHeader } from '../components/OrderDetailHeader';
 import { OrderDispatchingMap } from '../components/OrderDispatchingMap';
 
-type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'OrderDetail'>;
-type ScreenRouteProp = RouteProp<LoggedBusinessNavParamsList, 'OrderDetail'>;
+type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'OrderDetail'>;
+type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'OrderDetail'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
