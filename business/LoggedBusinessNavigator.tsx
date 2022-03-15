@@ -7,7 +7,7 @@ import { ApiContext, AppDispatch } from '../common/app/context';
 import { defaultScreenOptions } from '../common/screens/options';
 import { AboutApp } from '../common/screens/profile/AboutApp';
 import Terms from '../common/screens/unlogged/Terms';
-import { getBusiness } from '../common/store/business/selectors';
+import { getManager } from '../common/store/business/selectors';
 import { getFlavor } from '../common/store/config/selectors';
 import { observeProfile } from '../common/store/user/actions';
 import { getUser } from '../common/store/user/selectors';
@@ -29,7 +29,8 @@ export const LoggedBusinessNavigator = () => {
   const dispatch = useDispatch<AppDispatch>();
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
-  const business = useSelector(getBusiness);
+  const manager = useSelector(getManager);
+  // const business = useActiveBusiness();
   const uid = user?.uid;
   // side effects
   // subscribe for profile changes

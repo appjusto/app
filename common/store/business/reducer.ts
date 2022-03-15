@@ -1,4 +1,4 @@
-import { Business, WithId } from '@appjusto/types';
+import { ManagerProfile, WithId } from '@appjusto/types';
 import { AnyAction } from 'redux';
 import { BUSINESS_PROFILE_UPDATED, USER_AUTH_STATE_CHANGED } from '../user/actions';
 import { BusinessState } from './types';
@@ -9,11 +9,11 @@ export default function (state: BusinessState = initialState, action: AnyAction)
   const { type, payload } = action;
   switch (type) {
     case BUSINESS_PROFILE_UPDATED: {
-      const business = Object.assign({}, state.business, payload?.profile) as WithId<Business>;
-      return { ...state, business };
+      const manager = Object.assign({}, state.manager, payload?.profile) as WithId<ManagerProfile>;
+      return { ...state, manager };
     }
     case USER_AUTH_STATE_CHANGED: {
-      if (!payload) return { ...state, business: undefined };
+      if (!payload) return { ...state, manager: undefined };
       return state;
     }
     default:

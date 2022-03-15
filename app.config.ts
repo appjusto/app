@@ -127,9 +127,10 @@ const ios = () => ({
   buildNumber: `${versionCode}`,
   icon: icon('ios'),
   supportsTablet: false,
-  // saulo, e aqui?
   infoPlist:
-    flavor === 'consumer'
+    flavor === 'business'
+      ? {}
+      : flavor === 'consumer'
       ? {
           NSLocationWhenInUseUsageDescription:
             'Precisamos da sua localização para exibir os restaurantes próximos a você',
@@ -163,7 +164,6 @@ const intentFilter = (host: string, pathPrefix: string) => ({
   ],
   category: ['BROWSABLE', 'DEFAULT'],
 });
-// saulo, intentFilter pro business é '/' o q?
 const intentFilters = () =>
   [
     intentFilter(getBaseDomain(environment), `/${flavor}`),
@@ -181,8 +181,8 @@ const android = () =>
         versionCode,
         adaptiveIcon: {
           foregroundImage: icon('android'),
-          // saulo, isso muda? a bgcolor do splash do business é #2F422C (green700)
-          backgroundColor: flavor === 'consumer' ? '#78E08F' : '#FFE493',
+          backgroundColor:
+            flavor === 'business' ? '#2F422C' : flavor === 'consumer' ? '#78E08F' : '#FFE493',
         },
         googleServicesFile: `./google-services-${environment}.json`,
         useNextNotificationsApi: true,
@@ -197,9 +197,11 @@ const android = () =>
       },
     } as ExpoConfig
   ).android);
-// saulo, me parece que só precisamos dessas do consumer pro business, mas confere
+
 const permissions = () =>
-  flavor === 'consumer' || flavor === 'business'
+  flavor === 'business'
+    ? []
+    : flavor === 'consumer'
     ? ['ACCESS_FINE_LOCATION', 'ACCESS_COARSE_LOCATION']
     : [
         'ACCESS_FINE_LOCATION',
@@ -225,13 +227,13 @@ const extra = (): Extra => ({
     projectId: FIREBASE_PROJECT_ID!,
     storageBucket: `${FIREBASE_PROJECT_ID}.appspot.com`,
     messagingSenderId: FIREBASE_MESSAGING_SENDER_ID!,
-    // saulo, pelo jeito precisamos de uma chave pro business, né?
+    // TODO: ADD FIREBASE_BUSINESS_APP_ID
     appId: flavor === 'consumer' ? FIREBASE_CONSUMER_APP_ID! : FIREBASE_COURIER_APP_ID!,
     emulator: {
       enabled: process.env.FIREBASE_EMULATOR === 'true',
       host: FIREBASE_EMULATOR_HOST,
     },
-    // saulo, pelo jeito precisamos de uma chave pro business, né?
+    // TODO: add FIREBASE_BUSINESS_MEASUREMENT_ID
     measurementId:
       flavor === 'consumer' ? FIREBASE_CONSUMER_MEASUREMENT_ID! : FIREBASE_COURIER_MEASUREMENT_ID!,
   },
