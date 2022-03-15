@@ -15,6 +15,7 @@ import { awaitWithFeedback } from '../ui/actions';
 export const USER_AUTH_STATE_CHANGED = 'USER_AUTH_STATE_CHANGED';
 export const CONSUMER_PROFILE_UPDATED = 'CONSUMER_PROFILE_UPDATED';
 export const COURIER_PROFILE_UPDATED = 'COURIER_PROFILE_UPDATED';
+export const BUSINESS_PROFILE_UPDATED = 'BUSINESS_PROFILE_UPDATED';
 
 export const observeAuthState = (api: Api) => (dispatch: AppDispatch) => {
   const unsubscribe = api.auth().observeAuthState((user) => {
@@ -65,7 +66,11 @@ export const observeProfile =
     return api.profile().observeProfile(id, (profile: WithId<UserProfile>): void => {
       if (api.auth().getUserId()) {
         const actionType =
-          flavor === 'consumer' ? CONSUMER_PROFILE_UPDATED : COURIER_PROFILE_UPDATED;
+          flavor === 'consumer'
+            ? CONSUMER_PROFILE_UPDATED
+            : flavor === 'business'
+            ? BUSINESS_PROFILE_UPDATED
+            : COURIER_PROFILE_UPDATED;
         dispatch({ type: actionType, payload: { profile } });
       }
     });
