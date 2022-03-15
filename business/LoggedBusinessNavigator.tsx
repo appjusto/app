@@ -11,6 +11,7 @@ import { getBusiness } from '../common/store/business/selectors';
 import { getFlavor } from '../common/store/config/selectors';
 import { observeProfile } from '../common/store/user/actions';
 import { getUser } from '../common/store/user/selectors';
+import { LoggedContextProvider } from '../consumer/v2/LoggedContext';
 import { t } from '../strings';
 import { BusinessPending } from './orders/screens/BusinessPending';
 import { ManagerOptions } from './orders/screens/ManagerOptions';
@@ -40,42 +41,44 @@ export const LoggedBusinessNavigator = () => {
   const initialRouteName = business?.situation === 'pending' ? 'BusinessPending' : 'OrdersManager';
   // UI
   return (
-    <Stack.Navigator screenOptions={defaultScreenOptions} initialRouteName={initialRouteName}>
-      <Stack.Screen
-        name="BusinessPending"
-        component={BusinessPending}
-        options={{ title: t('Cadastro pendente') }}
-      />
-      <Stack.Screen
-        name="OrdersManager"
-        component={OrdersManager}
-        options={({ navigation, route }) => ({
-          title: t('Gerenciador de pedidos'),
-          headerLeft: () => (
-            <TouchableWithoutFeedback onPress={() => navigation.navigate('ManagerOptions')}>
-              <View style={{ marginLeft: 12 }}>
-                <Image source={headerMenu} height={32} width={32} />
-              </View>
-            </TouchableWithoutFeedback>
-          ),
-        })}
-      />
-      <Stack.Screen
-        name="OrderDetail"
-        component={OrderDetail}
-        options={{ title: t('Ver pedido') }}
-      />
-      <Stack.Screen
-        name="ManagerOptions"
-        component={ManagerOptions}
-        options={{ title: t('Menu') }}
-      />
-      <Stack.Screen
-        name="AboutApp"
-        component={AboutApp}
-        options={{ title: t('Sobre o AppJusto') }}
-      />
-      <Stack.Screen name="Terms" component={Terms} options={{ title: t('Fique por dentro') }} />
-    </Stack.Navigator>
+    <LoggedContextProvider>
+      <Stack.Navigator screenOptions={defaultScreenOptions} initialRouteName={initialRouteName}>
+        <Stack.Screen
+          name="BusinessPending"
+          component={BusinessPending}
+          options={{ title: t('Cadastro pendente') }}
+        />
+        <Stack.Screen
+          name="OrdersManager"
+          component={OrdersManager}
+          options={({ navigation, route }) => ({
+            title: t('Gerenciador de pedidos'),
+            headerLeft: () => (
+              <TouchableWithoutFeedback onPress={() => navigation.navigate('ManagerOptions')}>
+                <View style={{ marginLeft: 12 }}>
+                  <Image source={headerMenu} height={32} width={32} />
+                </View>
+              </TouchableWithoutFeedback>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="OrderDetail"
+          component={OrderDetail}
+          options={{ title: t('Ver pedido') }}
+        />
+        <Stack.Screen
+          name="ManagerOptions"
+          component={ManagerOptions}
+          options={{ title: t('Menu') }}
+        />
+        <Stack.Screen
+          name="AboutApp"
+          component={AboutApp}
+          options={{ title: t('Sobre o AppJusto') }}
+        />
+        <Stack.Screen name="Terms" component={Terms} options={{ title: t('Fique por dentro') }} />
+      </Stack.Navigator>
+    </LoggedContextProvider>
   );
 };

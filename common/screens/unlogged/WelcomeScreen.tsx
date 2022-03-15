@@ -72,7 +72,7 @@ export default function ({ navigation, route }: Props) {
   }, []);
   // handlers
   const signInHandler = async () => {
-    if (!acceptedTerms) {
+    if (flavor !== 'business' && !acceptedTerms) {
       dispatch(showToast(t('Você precisa aceitar os termos para criar sua conta.'), 'error'));
       return;
     }
@@ -121,7 +121,9 @@ export default function ({ navigation, route }: Props) {
       ? t('Entrar no restaurante')
       : t('Faça login para pedir');
   const actionButtonDisabled =
-    !acceptedTerms || busy || (authMode !== 'phone' && validateEmail(email).status !== 'ok');
+    flavor === 'business'
+      ? busy || (authMode !== 'phone' && validateEmail(email).status !== 'ok')
+      : !acceptedTerms || busy || (authMode !== 'phone' && validateEmail(email).status !== 'ok');
   // UI
   const illustrationUI = () => {
     if (flavor === 'consumer') {
