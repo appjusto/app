@@ -8,9 +8,10 @@ import { t } from '../../../strings';
 interface Props extends ModalProps {
   modalVisible: boolean;
   onModalClose: () => void;
+  onCancelOrder: () => void;
 }
 
-export const CancelOrderModal = ({ onModalClose, modalVisible }: Props) => {
+export const CancelOrderModal = ({ onModalClose, modalVisible, onCancelOrder }: Props) => {
   return (
     <Modal transparent visible={modalVisible} animationType="slide">
       <View
@@ -70,6 +71,7 @@ export const CancelOrderModal = ({ onModalClose, modalVisible }: Props) => {
                   title={t('Cancelar pedido')}
                   grey
                   style={{ backgroundColor: colors.red }}
+                  onPress={onCancelOrder}
                 />
               </View>
             </View>

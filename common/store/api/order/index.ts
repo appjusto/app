@@ -1,5 +1,6 @@
 import {
   Business,
+  CancelOrderPayload,
   ChatMessage,
   ConsumerProfile,
   Flavor,
@@ -389,5 +390,17 @@ export default class OrderApi {
       comment,
       meta: { version: getAppVersion() },
     });
+  }
+
+  // business
+  async cancelBusinessOrder(data: CancelOrderPayload) {
+    const { params } = data;
+    const paramsData = params ?? { refund: ['products', 'delivery', 'platform'] };
+    const payload: CancelOrderPayload = {
+      ...data,
+      meta: { version: getAppVersion() },
+      params: paramsData,
+    };
+    return await this.refs.getCancelOrderCallable()(payload);
   }
 }

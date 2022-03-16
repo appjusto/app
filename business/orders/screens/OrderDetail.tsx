@@ -1,13 +1,16 @@
+import { CancelOrderPayload } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { ActivityIndicator, Keyboard, ScrollView, Text, View } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
+import { useGetCancellationInfo } from '../../../common/store/api/order/hooks/useGetCancellationInfo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { getBusiness } from '../../../common/store/business/selectors';
+import { showToast } from '../../../common/store/ui/actions';
 import {
   colors,
   doublePadding,
@@ -38,14 +41,44 @@ type Props = {
 export const OrderDetail = ({ navigation, route }: Props) => {
   // params
   const { orderId } = route.params;
+  // context
+  const api = React.useContext(ApiContext);
+  const dispatch = useDispatch<AppDispatch>();
   // redux store
-  const business = useSelector(getBusiness);
+  // const business = useSelector(getBusiness);
   // state
-  const order = useObserveOrder(orderId); // will we observe an order as a restaurant this way?
+  const order = useObserveOrder(orderId);
+  const cancellationInfo = useGetCancellationInfo(orderId);
   const [cancelModalVisible, setCancelModalVisible] = React.useState(false);
   const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
+  const [isLoading, setLoading] = React.useState(false);
   // tracking
   useSegmentScreen('OrderDetail');
+  // handlers
+  const cancelOrderHandler = () => {
+    (async () => {
+      Keyboard.dismiss();
+      try {
+        setLoading(true);
+        if (!cancellationInfo) {
+          dispatch(showToast('Não foi possível efetuar o cancelamento. Tente novamente', 'error'));
+          return;
+        }
+        // TODO: what about the issues? italo didn't include them in the interface
+        const cancellationData = {
+          orderId,
+          acknowledgedCosts: cancellationInfo.costs,
+        } as CancelOrderPayload;
+        await api.order().cancelBusinessOrder(cancellationData);
+        dispatch(showToast('Pedido cancelado com sucesso', 'success'));
+        setLoading(false);
+        navigation.goBack();
+      } catch (error) {
+        setLoading(false);
+        dispatch(showToast('Não foi possível efetuar o cancelamento. Tente novamente', 'error'));
+      }
+    })();
+  };
   //UI
   if (!order) {
     return (
@@ -118,6 +151,10 @@ export const OrderDetail = ({ navigation, route }: Props) => {
       <CancelOrderModal
         modalVisible={cancelModalVisible}
         onModalClose={() => setCancelModalVisible(false)}
+        onCancelOrder={() => {
+          cancelOrderHandler();
+          setCancelModalVisible(false);
+        }}
       />
       <CookingTimeModal
         buttonTitle={t('Confirmar tempo de preparo')}
