@@ -8,6 +8,7 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
 import { useObserveBusiness } from '../../../common/store/api/business/hooks/useObserveBusiness';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { getFlavor } from '../../../common/store/config/selectors';
 import { getUser } from '../../../common/store/user/selectors';
@@ -37,12 +38,12 @@ export const OrdersManager = ({ navigation, route }: Props) => {
   const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
   const noOrdersToday = false;
   const business = useObserveBusiness('OW0ZNz0cax6ZX6Lxd1wz');
-
   const options = React.useMemo(() => {
     const activeStatuses = ['confirmed', 'preparing', 'ready', 'dispatching'];
     return { businessId: user?.uid, activeStatuses };
   }, [user?.uid]);
   const activeOrders = useObserveBusinessOrders(options);
+  const testingOrder = useObserveOrder('3b1IXPPlPvdxufcXo86f');
   // needed:
 
   // 2 - observar e receber todos os pedidos do restaurante em ordem descendente de charged com os status const statuses = ['confirmed', 'preparing', 'ready', 'dispatching']
@@ -54,10 +55,8 @@ export const OrdersManager = ({ navigation, route }: Props) => {
   // trazer os dois switches de configurações - receber notificações e imprimir pedido - pra essa tela
   // tracking
   useSegmentScreen('OrdersManager');
-  // console.log('orders', activeOrders); // permission
-  console.log('flavor', flavor);
   //UI
-  if (!business) {
+  if (!business || !testingOrder) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -180,6 +179,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
                       navigation.navigate('OrderDetail', { orderId: '3b1IXPPlPvdxufcXo86f' })
                     }
                     onTakeOrder={() => setCookingModalVisible(true)}
+                    order={testingOrder}
                   />
                 </View>
                 <View style={{ marginBottom: padding }}>
@@ -188,6 +188,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
                       navigation.navigate('OrderDetail', { orderId: '3b1IXPPlPvdxufcXo86f' })
                     }
                     onTakeOrder={() => setCookingModalVisible(true)}
+                    order={testingOrder}
                   />
                 </View>
                 <View style={{ marginBottom: padding }}>
@@ -196,6 +197,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
                       navigation.navigate('OrderDetail', { orderId: '3b1IXPPlPvdxufcXo86f' })
                     }
                     onTakeOrder={() => setCookingModalVisible(true)}
+                    order={testingOrder}
                   />
                 </View>
                 <View style={{ marginBottom: padding }}>
@@ -204,6 +206,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
                       navigation.navigate('OrderDetail', { orderId: '3b1IXPPlPvdxufcXo86f' })
                     }
                     onTakeOrder={() => setCookingModalVisible(true)}
+                    order={testingOrder}
                   />
                 </View>
               </PaddedView>

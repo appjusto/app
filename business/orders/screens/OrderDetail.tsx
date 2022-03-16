@@ -29,6 +29,7 @@ import { DetailedOrderItems } from '../components/DetailedOrderItems';
 import { InfoAndCPF } from '../components/InfoAndCPF';
 import { OrderDetailHeader } from '../components/OrderDetailHeader';
 import { OrderDispatchingMap } from '../components/OrderDispatchingMap';
+import { acceptStatuses, cancellableStatuses, cookingTimeStatuses } from '../helpers';
 
 type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'OrderDetail'>;
 type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'OrderDetail'>;
@@ -52,9 +53,9 @@ export const OrderDetail = ({ navigation, route }: Props) => {
   const [cancelModalVisible, setCancelModalVisible] = React.useState(false);
   const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
-  const acceptStatuses = 'confirmed' || 'preparing' || 'ready' || 'dispatching';
-  const cancellableStatuses = 'preparing' || 'ready';
-  const cookingTimeStatuses = 'confirmed' || 'preparing';
+  // const acceptStatuses = 'confirmed' || 'preparing' || 'ready' || 'dispatching';
+  // const cancellableStatuses = 'preparing' || 'ready';
+  // const cookingTimeStatuses = 'confirmed' || 'preparing';
   // tracking
   useSegmentScreen('OrderDetail');
   // handlers

@@ -1,16 +1,20 @@
+import { Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import RoundedText from '../../../common/components/texts/RoundedText';
 import { borders, colors, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import { OrderLabel } from './OrderLabel';
 
 type Props = {
   onCheckOrder: () => void;
   onTakeOrder: () => void;
+  order: WithId<Order>;
 };
 
-export const OrdersKanbanItem = ({ onCheckOrder, onTakeOrder }: Props) => {
+export const OrdersKanbanItem = ({ onCheckOrder, onTakeOrder, order }: Props) => {
+  if (!order) return null;
+  const { status } = order;
   return (
     <View
       style={{
@@ -28,13 +32,13 @@ export const OrdersKanbanItem = ({ onCheckOrder, onTakeOrder }: Props) => {
           <Text style={{ ...texts.sm }}>{t('#0000')}</Text>
         </View>
         {/* "timing" component while "preparing" */}
-        <View>
-          <Text>Tempo de preparo</Text>
-        </View>
+        {status === 'preparing' ? (
+          <View>
+            <Text>Tempo de preparo</Text>
+          </View>
+        ) : null}
         {/* dispatchingStatus label */}
-        <RoundedText backgroundColor={colors.red} noBorder color={colors.white}>
-          Pendente
-        </RoundedText>
+        <OrderLabel order={order} />
       </View>
       <View style={{ marginTop: padding, flexDirection: 'row', justifyContent: 'space-between' }}>
         {/* if an order is already delivered, we show only on big secondary "Ver pedido" button

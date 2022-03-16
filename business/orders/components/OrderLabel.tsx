@@ -2,6 +2,7 @@ import { Order } from '@appjusto/types';
 import React from 'react';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import { colors } from '../../../common/styles';
+import { formatTime } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 
 type Props = {
@@ -10,7 +11,7 @@ type Props = {
 
 export const OrderLabel = ({ order }: Props) => {
   if (!order) return null;
-  const { status, dispatchingState } = order;
+  const { status, dispatchingState, timestamps } = order;
   let statusLabel;
   if (status === 'charged') statusLabel = t('Pendente');
   if (status === 'preparing') statusLabel = t('Preparação');
@@ -20,13 +21,17 @@ export const OrderLabel = ({ order }: Props) => {
     if (dispatchingState === 'going-destination') statusLabel = t('A caminho do destino');
     if (dispatchingState === 'arrived-destination') statusLabel = t('Chegou no destino');
   }
-  if (status === 'delivered') statusLabel = t('Pedido entregue');
+  if (status === 'delivered')
+    statusLabel = timestamps.delivered
+      ? `${t('Concluído às')} ${formatTime(timestamps.delivered)}`
+      : t('Concluído');
   let statusBGColor;
   if (status === 'charged') statusBGColor = colors.red;
   if (status === 'preparing') statusBGColor = colors.grey500;
   if (status === 'dispatching') statusBGColor = colors.yellow;
   if (status === 'delivered') statusBGColor = colors.green500;
   if (statusLabel === undefined) return null;
+
   return (
     <RoundedText
       backgroundColor={statusBGColor}
