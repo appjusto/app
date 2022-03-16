@@ -13,23 +13,49 @@ export const OrderLabel = ({ order }: Props) => {
   if (!order) return null;
   const { status, dispatchingState, timestamps } = order;
   let statusLabel;
-  if (status === 'charged') statusLabel = t('Pendente');
-  if (status === 'preparing') statusLabel = t('Preparação');
-  if (status === 'dispatching') {
-    if (dispatchingState === 'going-pickup') statusLabel = t('Entregador a caminho');
-    if (dispatchingState === 'arrived-pickup') statusLabel = t('Entregador chegou');
-    if (dispatchingState === 'going-destination') statusLabel = t('A caminho do destino');
-    if (dispatchingState === 'arrived-destination') statusLabel = t('Chegou no destino');
+  let statusBGColor;
+  if (status === 'confirmed') {
+    statusLabel = t('Pendente');
+    statusBGColor = colors.red;
   }
+  if (status === 'preparing') {
+    if (dispatchingState === 'going-pickup') {
+      statusLabel = t('Entregador a caminho');
+      statusBGColor = colors.yellow;
+    }
+    if (dispatchingState === 'arrived-pickup') {
+      statusLabel = t('Entregador chegou');
+      statusBGColor = colors.yellow;
+    } else {
+      statusLabel = t('Preparação');
+      statusBGColor = colors.grey500;
+    }
+  }
+  if (status === 'ready') {
+    if (dispatchingState === 'going-pickup') {
+      statusLabel = t('Entregador a caminho');
+      statusBGColor = colors.yellow;
+    }
+    if (dispatchingState === 'arrived-pickup') {
+      statusLabel = t('Entregador chegou');
+      statusBGColor = colors.yellow;
+    } else {
+      statusLabel = t('Pedido pronto');
+      statusBGColor = colors.green500;
+    }
+  }
+  if (status === 'dispatching') {
+    statusLabel = timestamps.dispatching
+      ? `${t('Despachado às')} ${formatTime(timestamps.dispatching)}`
+      : t('Despachado');
+    statusBGColor = colors.green100;
+  }
+
   if (status === 'delivered')
     statusLabel = timestamps.delivered
       ? `${t('Concluído às')} ${formatTime(timestamps.delivered)}`
       : t('Concluído');
-  let statusBGColor;
-  if (status === 'charged') statusBGColor = colors.red;
-  if (status === 'preparing') statusBGColor = colors.grey500;
-  if (status === 'dispatching') statusBGColor = colors.yellow;
-  if (status === 'delivered') statusBGColor = colors.green500;
+  statusBGColor = colors.green500;
   if (statusLabel === undefined) return null;
 
   return (

@@ -4,6 +4,7 @@ import { Text, View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import { borders, colors, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import { CustomButton } from './CustomButton';
 import { OrderLabel } from './OrderLabel';
 
 type Props = {
@@ -14,7 +15,30 @@ type Props = {
 
 export const OrdersKanbanItem = ({ onCheckOrder, onTakeOrder, order }: Props) => {
   if (!order) return null;
-  const { status } = order;
+  const { status, dispatchingState } = order;
+  let textColor;
+  let background;
+  let buttonTitle;
+  if (status === 'confirmed') {
+    textColor = colors.black;
+    background = colors.green500;
+    buttonTitle = t('Aceitar pedido');
+  }
+  if (status === 'ready') {
+    if (dispatchingState === 'arrived-pickup') {
+      textColor = colors.black;
+      background = colors.darkYellow;
+      buttonTitle = t('Entregar pedido');
+    } else {
+      textColor = colors.white;
+      background = colors.grey700;
+      buttonTitle = t('Preparo pronto');
+    }
+  } else {
+    textColor = '';
+    background = '';
+    buttonTitle = '';
+  }
   return (
     <View
       style={{
@@ -26,10 +50,8 @@ export const OrdersKanbanItem = ({ onCheckOrder, onTakeOrder, order }: Props) =>
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <View>
-          {/* order.consumer.name */}
-          <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Daniel')}</Text>
-          {/* order.code */}
-          <Text style={{ ...texts.sm }}>{t('#0000')}</Text>
+          <Text style={{ ...texts.xs, color: colors.grey700 }}>{order.consumer.name}</Text>
+          <Text style={{ ...texts.sm }}>{order.code}</Text>
         </View>
         {/* "timing" component while "preparing" */}
         {status === 'preparing' ? (
@@ -37,19 +59,26 @@ export const OrdersKanbanItem = ({ onCheckOrder, onTakeOrder, order }: Props) =>
             <Text>Tempo de preparo</Text>
           </View>
         ) : null}
-        {/* dispatchingStatus label */}
         <OrderLabel order={order} />
       </View>
-      <View style={{ marginTop: padding, flexDirection: 'row', justifyContent: 'space-between' }}>
-        {/* if an order is already delivered, we show only on big secondary "Ver pedido" button
-        instead of these two */}
-        <View style={{ width: '38%' }}>
-          <DefaultButton secondary title={t('Ver pedido')} onPress={onCheckOrder} />
-        </View>
-        {/* dynamic title and background color */}
-        <View style={{ width: '57%' }}>
-          <DefaultButton title={t('Aceitar pedido')} onPress={onTakeOrder} />
-        </View>
+      <View style={{ marginTop: padding }}>
+        {order.status === 'confirmed' || order.status === 'ready' ? (
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+          >
+            <View style={{ width: '38%' }}>
+              <DefaultButton secondary title={t('Ver pedido')} onPress={onCheckOrder} />
+            </View>
+            {/* dynamic title and background color */}
+            <View style={{ width: '57%' }}>
+              <CustomButton title={buttonTitle} bgColor={background} textColor={textColor} />
+            </View>
+          </View>
+        ) : (
+          <View style={{ width: '100%' }}>
+            <DefaultButton secondary title={t('Ver pedido')} onPress={onCheckOrder} />
+          </View>
+        )}
       </View>
     </View>
   );
