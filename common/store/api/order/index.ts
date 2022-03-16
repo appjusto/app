@@ -40,7 +40,7 @@ import { getAppVersion } from '../../../utils/version';
 import { fetchPublicIP } from '../externals/ipify';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';
-import { ObserveOrdersOptions } from './types';
+import { ObserveBusinessOrdersOptions, ObserveOrdersOptions } from './types';
 
 export default class OrderApi {
   constructor(private refs: FirebaseRefs, private firestore: Firestore) {}
@@ -210,6 +210,26 @@ export default class OrderApi {
 
   async fetchOrderCancellation(id: string) {
     return documentAs<OrderCancellation>(await getDoc(this.refs.getOrderCancellationRef(id)));
+  }
+
+  // business
+  observeBusinessOrders(
+    options: ObserveBusinessOrdersOptions,
+    resultHandler: (orders: WithId<Order>[]) => void
+  ): Unsubscribe {
+    const { businessId, statuses } = options;
+    const constraints = [orderBy('timestamps.charged', 'desc')];
+    if (!isEmpty(statuses)) constraints.push(where('status', 'in', statuses));
+    if (businessId) constraints.push(where('business.id', '==', businessId));
+    if (options.limit) constraints.push(limit(options.limit));
+    return onSnapshot(
+      query(this.refs.getOrdersRef(), ...constraints),
+      (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
+    );
   }
 
   // callables

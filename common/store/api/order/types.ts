@@ -7,3 +7,9 @@ export type ObserveOrdersOptions = {
   limit?: number;
   businessId?: string;
 };
+
+export type ObserveBusinessOrdersOptions = {
+  businessId?: string;
+  statuses?: OrderStatus[];
+  limit?: number;
+};

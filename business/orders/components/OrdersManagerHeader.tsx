@@ -49,7 +49,7 @@ export const OrderManagerHeader = ({ business }: Props) => {
               backgroundColor: business.status === 'open' ? colors.green500 : colors.red,
               marginRight: halfPadding,
               marginTop: halfPadding,
-              bottom: 2,
+              bottom: 4,
             }}
           />
           <Text style={{ ...texts.x2s, color: colors.green600 }}>{businessStatus}</Text>
