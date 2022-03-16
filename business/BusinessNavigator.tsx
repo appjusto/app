@@ -8,8 +8,6 @@ import { defaultScreenOptions } from '../common/screens/options';
 import { AboutApp } from '../common/screens/profile/AboutApp';
 import Terms from '../common/screens/unlogged/Terms';
 import { getFlavor } from '../common/store/config/selectors';
-import { observeProfile } from '../common/store/user/actions';
-import { getUser } from '../common/store/user/selectors';
 import { t } from '../strings';
 import { ManagerOptions } from './orders/screens/ManagerOptions';
 import { OrderDetail } from './orders/screens/OrderDetail';
@@ -24,15 +22,16 @@ export const BusinessNavigator = () => {
   // redux
   const dispatch = useDispatch<AppDispatch>();
   const flavor = useSelector(getFlavor);
-  const user = useSelector(getUser);
+  // const user = useSelector(getUser);
   // const manager = useSelector(getManager);
   // const business = useActiveBusiness();
-  const uid = user?.uid;
+  // const uid = user?.uid;
+  // console.log('uid', uid);
   // side effects
   // subscribe for profile changes
-  React.useEffect(() => {
-    if (uid) return dispatch(observeProfile(api)(flavor, uid));
-  }, [dispatch, api, flavor, uid]);
+  // React.useEffect(() => {
+  //   if (uid) return dispatch(observeProfile(api)(flavor, uid));
+  // }, [dispatch, api, flavor, uid]);
   // TODO: subscribe to restaurant's orders ???
 
   // UI

@@ -52,6 +52,9 @@ export const OrderDetail = ({ navigation, route }: Props) => {
   const [cancelModalVisible, setCancelModalVisible] = React.useState(false);
   const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
+  const acceptStatuses = 'confirmed' || 'preparing' || 'ready' || 'dispatching';
+  const cancellableStatuses = 'preparing' || 'ready';
+  const cookingTimeStatuses = 'confirmed' || 'preparing';
   // tracking
   useSegmentScreen('OrderDetail');
   // handlers
@@ -109,45 +112,51 @@ export const OrderDetail = ({ navigation, route }: Props) => {
               {t('Tempo de preparo: ')}
               <Text style={texts.bold}>{formatDuration(order.cookingTime!)}</Text>
             </Text>
-            <View style={{ width: '60%' }}>
-              <DefaultButton
-                title={t('Alterar tempo de preparo')}
-                secondary
-                onPress={() => setCookingModalVisible(true)}
-              />
-            </View>
+            {order.status.includes(cookingTimeStatuses) ? (
+              <View style={{ width: '60%' }}>
+                <DefaultButton
+                  title={t('Alterar tempo de preparo')}
+                  secondary
+                  onPress={() => setCookingModalVisible(true)}
+                />
+              </View>
+            ) : null}
           </View>
           <DetailedOrderItems order={order} style={{ marginTop: padding, marginBottom: 32 }} />
         </View>
         <DestinationAndPay order={order} />
-        <View style={{ marginTop: doublePadding, flex: 1 }}>
+        <View style={{ marginTop: doublePadding, flex: 1, marginBottom: 32 }}>
           <InfoAndCPF order={order} />
-          {/* this button will open a CancelOrderModal  */}
-          <View style={{ width: '60%', marginTop: 32, paddingHorizontal: padding }}>
+        </View>
+        {/* this button will open a CancelOrderModal  */}
+        {order.status.includes(cancellableStatuses) ? (
+          <View style={{ width: '60%', paddingHorizontal: padding, marginBottom: 32 }}>
             <DefaultButton
               title={t('Cancelar pedido')}
               secondary
               onPress={() => setCancelModalVisible(true)}
             />
           </View>
-        </View>
+        ) : null}
       </ScrollView>
-      <View
-        style={{
-          paddingVertical: halfPadding,
-          paddingHorizontal: padding,
-          borderTopColor: colors.grey500,
-          borderTopWidth: 1,
-        }}
-      >
-        <View style={{ width: '100%' }}>
-          {/* this button will be enabled/disabled, have diffent appearance and do different things */}
-          <DefaultButton
-            title={t('Aceitar pedido')}
-            onPress={() => navigation.goBack()} // go back after accepting the order
-          />
+      {order.status.includes(acceptStatuses) ? (
+        <View
+          style={{
+            paddingVertical: halfPadding,
+            paddingHorizontal: padding,
+            borderTopColor: colors.grey500,
+            borderTopWidth: 1,
+          }}
+        >
+          <View style={{ width: '100%' }}>
+            {/* this button will be enabled/disabled, have diffent appearance and do different things */}
+            <DefaultButton
+              title={t('Aceitar pedido')}
+              onPress={() => navigation.goBack()} // go back after accepting the order
+            />
+          </View>
         </View>
-      </View>
+      ) : null}
       <CancelOrderModal
         modalVisible={cancelModalVisible}
         onModalClose={() => setCancelModalVisible(false)}

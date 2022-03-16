@@ -7,8 +7,10 @@ import { useSelector } from 'react-redux';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
+import { useObserveBusiness } from '../../../common/store/api/business/hooks/useObserveBusiness';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { getBusiness } from '../../../common/store/business/selectors';
+import { getFlavor } from '../../../common/store/config/selectors';
+import { getUser } from '../../../common/store/user/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { BusinessNavParamsList } from '../../types';
@@ -16,6 +18,7 @@ import { CookingTimeModal } from '../components/CookingTimeModal';
 import { ListFilterButton } from '../components/ListFilterButton';
 import { OrdersKanbanItem } from '../components/OrdersKanbanItem';
 import { OrderManagerHeader } from '../components/OrdersManagerHeader';
+import { useObserveBusinessOrders } from '../hooks/useObserveBusinessOrders';
 
 type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'OrdersManager'>;
 type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'OrdersManager'>;
@@ -27,20 +30,32 @@ type Props = {
 
 export const OrdersManager = ({ navigation, route }: Props) => {
   // redux store
-  const business = useSelector(getBusiness);
+  // const business = useSelector(getBusiness);
+  const user = useSelector(getUser);
+  const flavor = useSelector(getFlavor);
   // screen state
   const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
   const noOrdersToday = false;
+  const business = useObserveBusiness('OW0ZNz0cax6ZX6Lxd1wz');
+
+  const options = React.useMemo(() => {
+    const activeStatuses = ['confirmed', 'preparing', 'ready', 'dispatching'];
+    return { businessId: user?.uid, activeStatuses };
+  }, [user?.uid]);
+  const activeOrders = useObserveBusinessOrders(options);
   // needed:
 
-  // 2 - observar e receber todos os pedidos do restaurante naquele dia
-  // 3 - separar os pedidos por status, que formarão as sections da SectionList horizontal com os ListFilterButtons
+  // 2 - observar e receber todos os pedidos do restaurante em ordem descendente de charged com os status const statuses = ['confirmed', 'preparing', 'ready', 'dispatching']
+  // 2.1 -observar e receber os pedidos com os status 'delivered' e 'canceled'. ver observeBusinessOrdersCompletedInTheLastHour no admin
+  // 3 - separar os pedidos por status. ao clicar em um dos ListFilterButtons, mostrar um map scrollable com os pedidos com aquele status
   // 4 - função para aceitar o pedido e definir o tempo de preparo
 
   // maybe:
   // trazer os dois switches de configurações - receber notificações e imprimir pedido - pra essa tela
   // tracking
   useSegmentScreen('OrdersManager');
+  // console.log('orders', activeOrders); // permission
+  console.log('flavor', flavor);
   //UI
   if (!business) {
     return (
@@ -162,7 +177,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
                 <View style={{ marginBottom: padding }}>
                   <OrdersKanbanItem
                     onCheckOrder={() =>
-                      navigation.navigate('OrderDetail', { orderId: 'usDi5nFeaBRNF8SzjEW4' })
+                      navigation.navigate('OrderDetail', { orderId: '3b1IXPPlPvdxufcXo86f' })
                     }
                     onTakeOrder={() => setCookingModalVisible(true)}
                   />
@@ -170,7 +185,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
                 <View style={{ marginBottom: padding }}>
                   <OrdersKanbanItem
                     onCheckOrder={() =>
-                      navigation.navigate('OrderDetail', { orderId: 'usDi5nFeaBRNF8SzjEW4' })
+                      navigation.navigate('OrderDetail', { orderId: '3b1IXPPlPvdxufcXo86f' })
                     }
                     onTakeOrder={() => setCookingModalVisible(true)}
                   />
@@ -178,7 +193,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
                 <View style={{ marginBottom: padding }}>
                   <OrdersKanbanItem
                     onCheckOrder={() =>
-                      navigation.navigate('OrderDetail', { orderId: 'usDi5nFeaBRNF8SzjEW4' })
+                      navigation.navigate('OrderDetail', { orderId: '3b1IXPPlPvdxufcXo86f' })
                     }
                     onTakeOrder={() => setCookingModalVisible(true)}
                   />
@@ -186,7 +201,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
                 <View style={{ marginBottom: padding }}>
                   <OrdersKanbanItem
                     onCheckOrder={() =>
-                      navigation.navigate('OrderDetail', { orderId: 'usDi5nFeaBRNF8SzjEW4' })
+                      navigation.navigate('OrderDetail', { orderId: '3b1IXPPlPvdxufcXo86f' })
                     }
                     onTakeOrder={() => setCookingModalVisible(true)}
                   />
