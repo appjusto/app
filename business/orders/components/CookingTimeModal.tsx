@@ -23,7 +23,6 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
   // state
   const [cookingTime, setCookingTime] = React.useState(20);
   const [isLoading, setLoading] = React.useState(false);
-  // aqui dentro, ele vai chamar uma update order
   const confirmOrderHandler = async () => {
     track('restaurant confirmed order');
     try {

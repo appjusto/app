@@ -24,6 +24,7 @@ import { t } from '../../../strings';
 import { BusinessNavParamsList } from '../../types';
 import { CancelOrderModal } from '../components/CancelOrderModal';
 import { CookingTimeModal } from '../components/CookingTimeModal';
+import { CustomButton } from '../components/CustomButton';
 import { DestinationAndPay } from '../components/DestinationAndPay';
 import { DetailedOrderItems } from '../components/DetailedOrderItems';
 import { InfoAndCPF } from '../components/InfoAndCPF';
@@ -48,7 +49,8 @@ export const OrderDetail = ({ navigation, route }: Props) => {
   // redux store
   // const business = useSelector(getBusiness);
   // state
-  const order = useObserveOrder(orderId);
+  const order = useObserveOrder(orderId)!;
+  const { status, dispatchingState } = order;
   const cancellationInfo = useGetCancellationInfo(orderId);
   const [cancelModalVisible, setCancelModalVisible] = React.useState(false);
   const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
@@ -80,6 +82,28 @@ export const OrderDetail = ({ navigation, route }: Props) => {
       }
     })();
   };
+  const actionHandler = async () => {
+    setLoading(true);
+    try {
+      if (status === 'confirmed') {
+        setCookingModalVisible(true);
+      }
+      if (status === 'preparing') {
+        await api.order().updateOrder(order.id, { status: 'ready' });
+      }
+      if (status === 'ready') {
+        if (dispatchingState !== 'arrived-pickup') return;
+        else await api.order().updateOrder(order.id, { status: 'dispatching' });
+      }
+      setLoading(false);
+    } catch (error: any) {
+      console.log(error.toString());
+      dispatch(
+        showToast('Não conseguimos atualizar o pedido nesse momento. Tente novamente.', 'error')
+      );
+      setLoading(false);
+    }
+  };
   //UI
   if (!order) {
     return (
@@ -110,7 +134,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
               {t('Tempo de preparo: ')}
               <Text style={texts.bold}>{formatDuration(order.cookingTime!)}</Text>
             </Text>
-            {order.status === 'preparing' ? (
+            {status === 'preparing' ? (
               <View style={{ width: '60%' }}>
                 <DefaultButton
                   title={t('Alterar tempo de preparo')}
@@ -127,7 +151,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
           <InfoAndCPF order={order} />
         </View>
         {/* this button will open a CancelOrderModal  */}
-        {order.status.includes(cancellableStatuses) ? (
+        {status.includes(cancellableStatuses) ? (
           <View style={{ width: '60%', paddingHorizontal: padding, marginBottom: 32 }}>
             <DefaultButton
               title={t('Cancelar pedido')}
@@ -137,7 +161,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
           </View>
         ) : null}
       </ScrollView>
-      {order.status.includes(acceptStatuses) ? (
+      {status.includes(acceptStatuses) ? (
         <View
           style={{
             paddingVertical: halfPadding,
@@ -147,11 +171,11 @@ export const OrderDetail = ({ navigation, route }: Props) => {
           }}
         >
           <View style={{ width: '100%' }}>
-            {/* this button will be enabled/disabled, have diffent appearance and do different things */}
-            {/* replace with custom button and bring logic here */}
-            <DefaultButton
-              title={t('Aceitar pedido')}
-              onPress={() => navigation.goBack()} // go back after accepting the order
+            <CustomButton
+              order={order}
+              onPress={actionHandler}
+              activityIndicator={isLoading}
+              disabled={status === 'ready' && dispatchingState !== 'arrived-pickup'}
             />
           </View>
         </View>
