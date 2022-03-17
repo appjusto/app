@@ -1,12 +1,17 @@
+import { Order, WithId } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Modal, ModalProps, Text, TouchableOpacity, View } from 'react-native';
+import * as Sentry from 'sentry-expo';
+import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
+import { track } from '../../../common/store/api/track';
 import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
 interface Props extends ModalProps {
+  order: WithId<Order>;
   modalVisible: boolean;
   onModalClose: () => void;
   onConfirmOrder: () => void;
@@ -14,13 +19,33 @@ interface Props extends ModalProps {
 }
 
 export const CookingTimeModal = ({
+  order,
   onModalClose,
   modalVisible,
   onConfirmOrder,
   buttonTitle,
 }: Props) => {
+  // context
+  const api = React.useContext(ApiContext);
   // state
-  const [cookingTime, setCookingTime] = React.useState('5 minutos');
+  const [cookingTime, setCookingTime] = React.useState(5);
+  const [isLoading, setLoading] = React.useState(false);
+  // aqui dentro, ele vai chamar uma update order
+  const confirmOrderHandler = async () => {
+    track('restaurant confirmed order');
+    try {
+      setLoading(true);
+      // turn status into 'preparing' and setting cooking time
+      await api
+        .order()
+        .updateOrder(order.id, { cookingTime: cookingTime * 60, status: 'preparing' });
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      Sentry.Native.captureException(error);
+    }
+  };
   return (
     <Modal transparent visible={modalVisible} animationType="slide">
       <View
@@ -60,38 +85,38 @@ export const CookingTimeModal = ({
           <View style={{ paddingHorizontal: padding }}>
             <RadioButton
               title={t('5 minutos')}
-              onPress={() => setCookingTime('5 minutos')}
-              checked={cookingTime === '5 minutos'}
+              onPress={() => setCookingTime(5)}
+              checked={cookingTime === 5}
               style={{ marginBottom: padding }}
             />
             <RadioButton
               title={t('10 minutos')}
-              onPress={() => setCookingTime('10 minutos')}
-              checked={cookingTime === '10 minutos'}
+              onPress={() => setCookingTime(10)}
+              checked={cookingTime === 10}
               style={{ marginBottom: padding }}
             />
             <RadioButton
               title={t('15 minutos')}
-              onPress={() => setCookingTime('15 minutos')}
-              checked={cookingTime === '15 minutos'}
+              onPress={() => setCookingTime(15)}
+              checked={cookingTime === 15}
               style={{ marginBottom: padding }}
             />
             <RadioButton
               title={t('20 minutos')}
-              onPress={() => setCookingTime('20 minutos')}
-              checked={cookingTime === '20 minutos'}
+              onPress={() => setCookingTime(20)}
+              checked={cookingTime === 20}
               style={{ marginBottom: padding }}
             />
             <RadioButton
               title={t('30 minutos')}
-              onPress={() => setCookingTime('30 minutos')}
-              checked={cookingTime === '30 minutos'}
+              onPress={() => setCookingTime(30)}
+              checked={cookingTime === 30}
               style={{ marginBottom: padding }}
             />
             <RadioButton
               title={t('45 minutos')}
-              onPress={() => setCookingTime('45 minutos')}
-              checked={cookingTime === '45 minutos'}
+              onPress={() => setCookingTime(45)}
+              checked={cookingTime === 45}
             />
           </View>
           <View
@@ -103,7 +128,7 @@ export const CookingTimeModal = ({
             }}
           >
             <View style={{ paddingHorizontal: padding }}>
-              <DefaultButton title={buttonTitle} onPress={onConfirmOrder} />
+              <DefaultButton title={buttonTitle} onPress={confirmOrderHandler} />
             </View>
           </View>
         </View>

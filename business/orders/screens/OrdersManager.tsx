@@ -15,7 +15,6 @@ import { getUser } from '../../../common/store/user/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { BusinessNavParamsList } from '../../types';
-import { CookingTimeModal } from '../components/CookingTimeModal';
 import { ListFilterButton } from '../components/ListFilterButton';
 import { OrdersKanbanItem } from '../components/OrdersKanbanItem';
 import { OrderManagerHeader } from '../components/OrdersManagerHeader';
@@ -35,8 +34,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
   const user = useSelector(getUser);
   const flavor = useSelector(getFlavor);
   // screen state
-  const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
-  const noOrdersToday = false;
+  const noOrdersToday = false; //helper
   const business = useObserveBusiness('OW0ZNz0cax6ZX6Lxd1wz');
   const options = React.useMemo(() => {
     const activeStatuses = ['confirmed', 'preparing', 'ready', 'dispatching'];
@@ -178,7 +176,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
                     onCheckOrder={() =>
                       navigation.navigate('OrderDetail', { orderId: '3b1IXPPlPvdxufcXo86f' })
                     }
-                    onTakeOrder={() => setCookingModalVisible(true)}
+                    onTakeOrder={() => null}
                     order={testingOrder}
                   />
                 </View>
@@ -187,7 +185,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
                     onCheckOrder={() =>
                       navigation.navigate('OrderDetail', { orderId: '3b1IXPPlPvdxufcXo86f' })
                     }
-                    onTakeOrder={() => setCookingModalVisible(true)}
+                    onTakeOrder={() => null}
                     order={testingOrder}
                   />
                 </View>
@@ -196,7 +194,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
                     onCheckOrder={() =>
                       navigation.navigate('OrderDetail', { orderId: '3b1IXPPlPvdxufcXo86f' })
                     }
-                    onTakeOrder={() => setCookingModalVisible(true)}
+                    onTakeOrder={() => null}
                     order={testingOrder}
                   />
                 </View>
@@ -205,7 +203,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
                     onCheckOrder={() =>
                       navigation.navigate('OrderDetail', { orderId: '3b1IXPPlPvdxufcXo86f' })
                     }
-                    onTakeOrder={() => setCookingModalVisible(true)}
+                    onTakeOrder={() => null}
                     order={testingOrder}
                   />
                 </View>
@@ -214,7 +212,8 @@ export const OrdersManager = ({ navigation, route }: Props) => {
           )}
         </View>
       </KeyboardAwareScrollView>
-      <CookingTimeModal
+      {/* <CookingTimeModal
+        order={order}
         buttonTitle={t('Confirmar e aceitar pedido')}
         modalVisible={cookingModalVisible}
         onModalClose={() => setCookingModalVisible(false)}
@@ -223,7 +222,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
           // close modal
           () => setCookingModalVisible(false)
         }
-      />
+      /> */}
     </View>
   );
 };

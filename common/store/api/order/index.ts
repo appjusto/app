@@ -118,7 +118,7 @@ export default class OrderApi {
     return snapshot.size > 0;
   }
 
-  // both courier & customers
+  // courier, customers and businesses
   observeOrders(
     options: ObserveOrdersOptions,
     resultHandler: (orders: WithId<Order>[]) => void
