@@ -14,17 +14,10 @@ interface Props extends ModalProps {
   order: WithId<Order>;
   modalVisible: boolean;
   onModalClose: () => void;
-  onConfirmOrder: () => void;
   buttonTitle: string;
 }
 
-export const CookingTimeModal = ({
-  order,
-  onModalClose,
-  modalVisible,
-  onConfirmOrder,
-  buttonTitle,
-}: Props) => {
+export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitle }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   // state
@@ -40,6 +33,7 @@ export const CookingTimeModal = ({
         .order()
         .updateOrder(order.id, { cookingTime: cookingTime * 60, status: 'preparing' });
       setLoading(false);
+      onModalClose();
     } catch (error) {
       setLoading(false);
       console.log(error);

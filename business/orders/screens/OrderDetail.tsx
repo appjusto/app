@@ -29,7 +29,7 @@ import { DetailedOrderItems } from '../components/DetailedOrderItems';
 import { InfoAndCPF } from '../components/InfoAndCPF';
 import { OrderDetailHeader } from '../components/OrderDetailHeader';
 import { OrderDispatchingMap } from '../components/OrderDispatchingMap';
-import { acceptStatuses, cancellableStatuses, cookingTimeStatuses } from '../helpers';
+import { acceptStatuses, cancellableStatuses } from '../helpers';
 
 type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'OrderDetail'>;
 type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'OrderDetail'>;
@@ -53,9 +53,6 @@ export const OrderDetail = ({ navigation, route }: Props) => {
   const [cancelModalVisible, setCancelModalVisible] = React.useState(false);
   const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
-  // const acceptStatuses = 'confirmed' || 'preparing' || 'ready' || 'dispatching';
-  // const cancellableStatuses = 'preparing' || 'ready';
-  // const cookingTimeStatuses = 'confirmed' || 'preparing';
   // tracking
   useSegmentScreen('OrderDetail');
   // handlers
@@ -113,7 +110,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
               {t('Tempo de preparo: ')}
               <Text style={texts.bold}>{formatDuration(order.cookingTime!)}</Text>
             </Text>
-            {order.status.includes(cookingTimeStatuses) ? (
+            {order.status === 'preparing' ? (
               <View style={{ width: '60%' }}>
                 <DefaultButton
                   title={t('Alterar tempo de preparo')}
@@ -151,6 +148,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
         >
           <View style={{ width: '100%' }}>
             {/* this button will be enabled/disabled, have diffent appearance and do different things */}
+            {/* replace with custom button and bring logic here */}
             <DefaultButton
               title={t('Aceitar pedido')}
               onPress={() => navigation.goBack()} // go back after accepting the order
@@ -167,14 +165,10 @@ export const OrderDetail = ({ navigation, route }: Props) => {
         }}
       />
       <CookingTimeModal
+        order={order}
         buttonTitle={t('Confirmar tempo de preparo')}
         modalVisible={cookingModalVisible}
         onModalClose={() => setCookingModalVisible(false)}
-        onConfirmOrder={
-          // confirmOrder after setting cooking time
-          // close modal
-          () => setCookingModalVisible(false)
-        }
       />
     </View>
   );
