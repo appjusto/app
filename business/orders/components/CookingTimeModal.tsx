@@ -21,17 +21,23 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
   // context
   const api = React.useContext(ApiContext);
   // state
-  const [cookingTime, setCookingTime] = React.useState(5);
+  const [cookingTime, setCookingTime] = React.useState(20);
   const [isLoading, setLoading] = React.useState(false);
   // aqui dentro, ele vai chamar uma update order
   const confirmOrderHandler = async () => {
     track('restaurant confirmed order');
     try {
       setLoading(true);
-      // turn status into 'preparing' and setting cooking time
-      await api
-        .order()
-        .updateOrder(order.id, { cookingTime: cookingTime * 60, status: 'preparing' });
+      // if business has not confirmed order yet, set cooking time and set status to 'preparing'
+      if (order.status !== 'preparing') {
+        await api
+          .order()
+          .updateOrder(order.id, { cookingTime: cookingTime * 60, status: 'preparing' });
+      }
+      // if status === 'preparing' only set cooking time
+      else {
+        await api.order().updateOrder(order.id, { cookingTime: cookingTime * 60 });
+      }
       setLoading(false);
       onModalClose();
     } catch (error) {

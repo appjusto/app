@@ -42,31 +42,8 @@ export const OrdersKanbanItem = ({ onCheckOrder, onTakeOrder, order }: Props) =>
       }
     }
   }, [api, order.cookingTime, getServerTime, status, timestamps.preparing, order.id]);
-
-  // helpers
-  let textColor;
-  let background;
-  let buttonTitle;
-  if (status === 'confirmed') {
-    textColor = colors.black;
-    background = colors.green500;
-    buttonTitle = t('Aceitar pedido');
-  }
-  if (status === 'ready') {
-    if (dispatchingState === 'arrived-pickup') {
-      textColor = colors.black;
-      background = colors.darkYellow;
-      buttonTitle = t('Entregar pedido');
-    } else {
-      textColor = colors.white;
-      background = colors.grey700;
-      buttonTitle = t('Preparo pronto');
-    }
-  } else {
-    textColor = '';
-    background = '';
-    buttonTitle = '';
-  }
+  // failsafe: no component if order is not loaded
+  if (!order) return null;
   // handlers
   const actionHandler = async () => {
     setLoading(true);
@@ -90,8 +67,6 @@ export const OrdersKanbanItem = ({ onCheckOrder, onTakeOrder, order }: Props) =>
       setLoading(false);
     }
   };
-  // failsafe: no component if order is not loaded
-  if (!order) return null;
   return (
     <View
       style={{
@@ -124,9 +99,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, onTakeOrder, order }: Props) =>
             </View>
             <View style={{ width: '57%' }}>
               <CustomButton
-                title={buttonTitle}
-                bgColor={background}
-                textColor={textColor}
+                order={order}
                 onPress={actionHandler}
                 activityIndicator={isLoading}
                 disabled={status === 'ready' && dispatchingState !== 'arrived-pickup'}

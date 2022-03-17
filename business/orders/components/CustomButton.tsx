@@ -1,3 +1,4 @@
+import { Order, WithId } from '@appjusto/types';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -8,23 +9,38 @@ import {
   ViewProps,
 } from 'react-native';
 import { borders, colors, padding, texts } from '../../../common/styles';
+import { t } from '../../../strings';
 
 interface Props extends TouchableOpacityProps, ViewProps {
-  title: string;
-  bgColor: string;
-  textColor: string;
+  order: WithId<Order>;
   activityIndicator?: boolean;
 }
 
-export const CustomButton = ({
-  title,
-  bgColor,
-  textColor,
-  disabled,
-  style,
-  activityIndicator,
-  ...props
-}: Props) => {
+export const CustomButton = ({ order, disabled, style, activityIndicator, ...props }: Props) => {
+  const { status, dispatchingState } = order;
+  let textColor;
+  let background;
+  let buttonTitle;
+  if (status === 'confirmed') {
+    textColor = colors.black;
+    background = colors.green500;
+    buttonTitle = t('Aceitar pedido');
+  }
+  if (status === 'ready') {
+    if (dispatchingState === 'arrived-pickup') {
+      textColor = colors.black;
+      background = colors.darkYellow;
+      buttonTitle = t('Entregar pedido');
+    } else {
+      textColor = colors.white;
+      background = colors.grey700;
+      buttonTitle = t('Preparo pronto');
+    }
+  } else {
+    textColor = '';
+    background = '';
+    buttonTitle = '';
+  }
   return (
     <TouchableOpacity disabled={disabled} {...props}>
       <View
@@ -36,14 +52,14 @@ export const CustomButton = ({
             paddingVertical: 14,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: bgColor,
-            borderColor: bgColor,
+            backgroundColor: background,
+            borderColor: background,
           },
           style,
         ]}
       >
         {!activityIndicator ? (
-          <Text style={{ ...texts.sm, color: textColor }}>{title}</Text>
+          <Text style={{ ...texts.sm, color: textColor }}>{buttonTitle}</Text>
         ) : (
           <ActivityIndicator size="small" color={colors.black} />
         )}
