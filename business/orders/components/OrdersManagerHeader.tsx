@@ -15,7 +15,9 @@ export const OrderManagerHeader = ({ business }: Props) => {
   const { data: logo } = useBusinessLogoURI(business.id);
   // helpers
   const businessStatus =
-    business.status === 'open' ? t('RESTAURANTE ABERTO') : t('RESTAURANTE FECHADO');
+    business.status === 'open' && business.enabled
+      ? t('RESTAURANTE ABERTO')
+      : t('RESTAURANTE FECHADO');
   return (
     <View
       style={{ height: 48, width: '100%', flexDirection: 'row', backgroundColor: colors.white }}
