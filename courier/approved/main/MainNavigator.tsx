@@ -10,7 +10,7 @@ import { useObserveOngoingOrders } from '../../../common/store/api/order/hooks/u
 import { track } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { getUser } from '../../../common/store/user/selectors';
-import { halfPadding, padding, texts } from '../../../common/styles';
+import { halfPadding, texts } from '../../../common/styles';
 import { useNotificationHandler } from '../../../consumer/v2/main/useNotificationHandler';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -117,14 +117,8 @@ export default function ({ navigation }: Props) {
       tabBarOptions={{
         showLabel: false,
         style: {
-          height: 65,
-          paddingVertical: 20,
-          paddingHorizontal: padding,
+          height: 60,
           width,
-        },
-        tabStyle: {
-          height: 24,
-          alignContent: 'flex-start',
         },
       }}
     >

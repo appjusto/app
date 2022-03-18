@@ -6,7 +6,7 @@ import React from 'react';
 import { Dimensions, Image, Text, View } from 'react-native';
 import * as icons from '../../../assets/icons';
 import { track } from '../../../common/store/api/track';
-import { halfPadding, padding, texts } from '../../../common/styles';
+import { halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
 import OrderHistory from './history/OrderHistory';
@@ -93,14 +93,8 @@ export const MainNavigator = () => {
       tabBarOptions={{
         showLabel: false,
         style: {
-          height: 65,
-          paddingVertical: 20,
-          paddingHorizontal: padding,
+          height: 60,
           width,
-        },
-        tabStyle: {
-          height: 24,
-          alignContent: 'flex-start',
         },
       }}
     >
