@@ -4,6 +4,7 @@ export interface ToastState {
   message?: string;
   type?: ToastType;
   autoHide?: boolean;
+  keyboardIsOpen?: boolean;
 }
 
 export interface UIState {
