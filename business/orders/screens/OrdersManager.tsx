@@ -1,3 +1,4 @@
+import { OrderStatus } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -34,20 +35,21 @@ export const OrdersManager = ({ navigation, route }: Props) => {
   const user = useSelector(getUser);
   const flavor = useSelector(getFlavor);
   // screen state
-  const noOrdersToday = false; //helper
+  const noOrdersToday = false; //helper, to be replaced with isEmpty(activeOrders)
   const business = useObserveBusiness('OW0ZNz0cax6ZX6Lxd1wz');
-  const options = React.useMemo(() => {
-    const activeStatuses = ['confirmed', 'preparing', 'ready', 'dispatching'];
+  // active orders
+  const activeOptions = React.useMemo(() => {
+    const activeStatuses = ['confirmed', 'preparing', 'ready', 'dispatching'] as OrderStatus[];
     return { businessId: user?.uid, activeStatuses };
   }, [user?.uid]);
-  const activeOrders = useObserveBusinessOrders(options);
-  const testingOrder = useObserveOrder('3b1IXPPlPvdxufcXo86f');
-  // needed:
-
-  // 2 - observar e receber todos os pedidos do restaurante em ordem descendente de charged com os status const statuses = ['confirmed', 'preparing', 'ready', 'dispatching']
-  // 2.1 -observar e receber os pedidos com os status 'delivered' e 'canceled'. ver observeBusinessOrdersCompletedInTheLastHour no admin
-  // 3 - separar os pedidos por status. ao clicar em um dos ListFilterButtons, mostrar um map scrollable com os pedidos com aquele status
-  // 4 - função para aceitar o pedido e definir o tempo de preparo
+  const activeOrders = useObserveBusinessOrders(activeOptions);
+  const testingOrder = useObserveOrder('3b1IXPPlPvdxufcXo86f'); // delete after testing
+  // inactive orders
+  const inactiveOptions = React.useMemo(() => {
+    const inactiveStatuses = ['delivered', 'canceled'] as OrderStatus[];
+    return { businessId: user?.uid, inactiveStatuses };
+  }, [user?.uid]);
+  const inactiveOrders = useObserveBusinessOrders(inactiveOptions);
 
   // maybe:
   // trazer os dois switches de configurações - receber notificações e imprimir pedido - pra essa tela
@@ -212,17 +214,6 @@ export const OrdersManager = ({ navigation, route }: Props) => {
           )}
         </View>
       </KeyboardAwareScrollView>
-      {/* <CookingTimeModal
-        order={order}
-        buttonTitle={t('Confirmar e aceitar pedido')}
-        modalVisible={cookingModalVisible}
-        onModalClose={() => setCookingModalVisible(false)}
-        onConfirmOrder={
-          // confirmOrder after setting cooking time
-          // close modal
-          () => setCookingModalVisible(false)
-        }
-      /> */}
     </View>
   );
 };
