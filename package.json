@@ -57,7 +57,7 @@
     "expo-status-bar": "~1.2.0",
     "expo-task-manager": "~10.1.0",
     "expo-updates": "~0.11.4",
-    "firebase": "^9.6.3",
+    "firebase": "^9.6.9",
     "geokit": "^1.1.0",
     "i18n-js": "^3.7.1",
     "lodash": "^4.17.19",
