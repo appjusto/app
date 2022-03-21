@@ -16,14 +16,14 @@ export const useLastPlace = () => {
     (async () => {
       const stored = await AsyncStorage.getItem('lastPlace');
       if (stored) {
-        console.log('Usando place armazenado no storage...', JSON.stringify(JSON.parse(stored)));
+        // console.log('Usando place armazenado no storage...', JSON.stringify(JSON.parse(stored)));
         setLastPlace(JSON.parse(stored));
       } else {
         if (favoritePlaces && favoritePlaces.length > 0) {
-          console.log(
-            'Usando o place do último pedido...',
-            JSON.stringify(favoritePlaces?.find(() => true)!)
-          );
+          // console.log(
+          //   'Usando o place do último pedido...',
+          //   JSON.stringify(favoritePlaces?.find(() => true)!)
+          // );
           setLastPlace(favoritePlaces?.find(() => true)!);
         }
       }
@@ -32,7 +32,7 @@ export const useLastPlace = () => {
   React.useEffect(() => {
     (async () => {
       if (!currentPlace) return;
-      console.log('Salvando place no storage...', JSON.stringify(currentPlace));
+      // console.log('Salvando place no storage...', JSON.stringify(currentPlace));
       await AsyncStorage.setItem('lastPlace', JSON.stringify(currentPlace));
     })();
   }, [currentPlace]);
