@@ -9,6 +9,8 @@ const { flavor } = getExtra();
 export default class MapsApi {
   constructor(private functionsRefs: FunctionsRef) {}
   async googlePlacesAutocomplete(input: string, sessionToken: string, coords?: LatLng) {
+    console.log('MapsApi.googlePlacesAutocomplete: ', input, coords);
+
     try {
       return (
         await this.functionsRefs.getQueryGoogleMapsCallable()({
@@ -28,6 +30,7 @@ export default class MapsApi {
   }
 
   async googleGeocode(address: string) {
+    console.log('MapsApi.googleGeocode: ', address);
     try {
       return (
         await this.functionsRefs.getQueryGoogleMapsCallable()({
@@ -45,6 +48,7 @@ export default class MapsApi {
   }
 
   async googleReverseGeocode(coords: LatLng) {
+    console.log('MapsApi.googleReverseGeocode: ', coords);
     try {
       return (
         await this.functionsRefs.getQueryGoogleMapsCallable()({
@@ -66,6 +70,7 @@ export default class MapsApi {
     destination: string | LatLng,
     mode: CourierMode = 'motorcycle'
   ) {
+    console.log('MapsApi.googleDirections: ', origin, destination);
     try {
       return (
         await this.functionsRefs.getQueryGoogleMapsCallable()({

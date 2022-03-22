@@ -80,7 +80,7 @@ export default function ({ route }: Props) {
       agent: counterpartFlavor,
       id: counterpartId,
     };
-    api.order().sendMessage({
+    const message: Partial<ChatMessage> = {
       orderId,
       type,
       participantsIds,
@@ -95,7 +95,9 @@ export default function ({ route }: Props) {
       to,
       message: inputText.trim(),
       // orderStatus: order.status,
-    });
+    };
+    console.log(message);
+    api.order().sendMessage(message);
     setInputText('');
   };
   const getName = (from: string) => {
