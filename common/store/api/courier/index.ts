@@ -1,3 +1,4 @@
+import { FirestoreRefs, FunctionsRef, StoragePaths } from '@appjusto/firebase-refs';
 import {
   AdvanceReceivablesPayload,
   CourierOrderRequest,
@@ -17,11 +18,15 @@ import {
 import * as Sentry from 'sentry-expo';
 import { getAppVersion } from '../../../utils/version';
 import FilesApi from '../files';
-import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';
 
 export default class CourierApi {
-  constructor(private refs: FirebaseRefs, private files: FilesApi) {}
+  constructor(
+    private firestoreRefs: FirestoreRefs,
+    private functionsRef: FunctionsRef,
+    private storagePaths: StoragePaths,
+    private files: FilesApi
+  ) {}
 
   // firestore
   observePendingOrderRequests(
@@ -30,7 +35,7 @@ export default class CourierApi {
   ): Unsubscribe {
     return onSnapshot(
       query(
-        this.refs.getCourierRequestsRef(courierId),
+        this.firestoreRefs.getCourierRequestsRef(courierId),
         where('situation', 'in', ['pending', 'viewed']),
         orderBy('createdOn', 'desc')
       ),
@@ -47,7 +52,7 @@ export default class CourierApi {
     resultHandler: (order: CourierOrderRequest) => void
   ): Unsubscribe {
     return onSnapshot(
-      this.refs.getCourierOrderRequestsRef(courierId, orderId),
+      this.firestoreRefs.getCourierOrderRequestsRef(courierId, orderId),
       (snapshot) => resultHandler(documentAs<CourierOrderRequest>(snapshot)),
       (error) => {
         console.log(error);
@@ -56,7 +61,7 @@ export default class CourierApi {
     );
   }
   viewOrderRequest(courierId: string, orderId: string) {
-    return updateDoc(this.refs.getCourierOrderRequestsRef(courierId, orderId), {
+    return updateDoc(this.firestoreRefs.getCourierOrderRequestsRef(courierId, orderId), {
       situation: 'viewed',
     } as Partial<CourierOrderRequest>);
   }
@@ -66,11 +71,11 @@ export default class CourierApi {
     const payload: VerifyCourierProfilePayload = {
       meta: { version: getAppVersion() },
     };
-    return this.refs.getVerifyProfileCallable()(payload);
+    return this.functionsRef.getVerifyProfileCallable()(payload);
   }
   async fetchAccountInformation(accountId: string) {
     return (
-      await this.refs.getFetchAccountInformationCallable()({
+      await this.functionsRef.getFetchAccountInformationCallable()({
         accountType: 'courier',
         accountId,
         meta: { version: getAppVersion() },
@@ -79,7 +84,7 @@ export default class CourierApi {
   }
   async requestWithdraw(accountId: string, amount: number) {
     return (
-      await this.refs.getRequestWithdrawCallable()({
+      await this.functionsRef.getRequestWithdrawCallable()({
         accountType: 'courier',
         accountId,
         amount,
@@ -89,7 +94,7 @@ export default class CourierApi {
   }
   async fetchReceivables(accountId: string) {
     return (
-      await this.refs.getFetchReceivablesCallable()({
+      await this.functionsRef.getFetchReceivablesCallable()({
         accountType: 'courier',
         accountId,
         meta: { version: getAppVersion() },
@@ -101,11 +106,11 @@ export default class CourierApi {
     const firstDayOfMonth = Timestamp.fromDate(
       new Date(now.getUTCFullYear(), now.getUTCMonth(), 1)
     );
-    const withdrawsRef = this.refs.getWithdrawsRef();
+    const withdrawsRef = this.firestoreRefs.getWithdrawsRef();
 
     const withdrawsSnapshot = await getDocs(
       query(
-        this.refs.getWithdrawsRef(),
+        this.firestoreRefs.getWithdrawsRef(),
         where('accountId', '==', accountId),
         where('createdOn', '>=', firstDayOfMonth)
       )
@@ -117,7 +122,7 @@ export default class CourierApi {
     ids: number[]
   ): Promise<IuguMarketplaceAccountAdvanceSimulation> {
     return (
-      await this.refs.getFetchAdvanceSimulationCallable()({
+      await this.functionsRef.getFetchAdvanceSimulationCallable()({
         accountType: 'courier',
         accountId,
         ids,
@@ -132,22 +137,26 @@ export default class CourierApi {
       ids,
       meta: { version: getAppVersion() },
     };
-    return (await this.refs.getAdvanceReceivablesCallable()(payload)).data;
+    return (await this.functionsRef.getAdvanceReceivablesCallable()(payload)).data;
   }
   // storage
   // selfie
   uploadSelfie(id: string, localUri: string, progressHandler?: (progress: number) => void) {
-    return this.files.upload(this.refs.getCourierSelfiePath(id), localUri, progressHandler);
+    return this.files.upload(this.storagePaths.getCourierSelfiePath(id), localUri, progressHandler);
   }
   fetchSelfie(id: string, size?: string) {
-    return this.files.getDownloadURL(this.refs.getCourierSelfiePath(id, size));
+    return this.files.getDownloadURL(this.storagePaths.getCourierSelfiePath(id, size));
   }
   // document
   uploadDocumentImage(id: string, localUri: string, progressHandler?: (progress: number) => void) {
-    return this.files.upload(this.refs.getCourierDocumentPath(id), localUri, progressHandler);
+    return this.files.upload(
+      this.storagePaths.getCourierDocumentPath(id),
+      localUri,
+      progressHandler
+    );
   }
   fetchDocumentImage(id: string, size?: string) {
-    return this.files.getDownloadURL(this.refs.getCourierDocumentPath(id, size));
+    return this.files.getDownloadURL(this.storagePaths.getCourierDocumentPath(id, size));
   }
   // Proof of delivery
   uploadPODPackage(
@@ -157,7 +166,7 @@ export default class CourierApi {
     progressHandler?: (progress: number) => void
   ) {
     return this.files.upload(
-      this.refs.getOrderPODPackagePath(orderId, courierId),
+      this.storagePaths.getOrderPODPackagePath(orderId, courierId),
       localUri,
       progressHandler
     );
@@ -169,7 +178,7 @@ export default class CourierApi {
     progressHandler?: (progress: number) => void
   ) {
     return this.files.upload(
-      this.refs.getOrderPODFrontPath(orderId, courierId),
+      this.storagePaths.getOrderPODFrontPath(orderId, courierId),
       localUri,
       progressHandler
     );

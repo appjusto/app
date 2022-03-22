@@ -1,4 +1,6 @@
 // eslint-disable-next-line import/order
+// import FirebaseRefs from './FirebaseRefs';
+import { FirestoreRefs, FunctionsRef, StoragePaths } from '@appjusto/firebase-refs';
 import { CourierProfile, DeleteAccountPayload } from '@appjusto/types';
 import { getApp, initializeApp } from 'firebase/app';
 import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth';
@@ -12,7 +14,6 @@ import BusinessApi from './business';
 import ConsumerApi from './business/consumer';
 import CourierApi from './courier';
 import FilesApi from './files';
-import FirebaseRefs from './FirebaseRefs';
 import FleetApi from './fleet';
 import MapsApi from './maps';
 import OrderApi from './order';
@@ -29,7 +30,9 @@ export default class Api {
   private functions: Functions;
   private storage: FirebaseStorage;
 
-  private _refs: FirebaseRefs;
+  private _firestoreRefs: FirestoreRefs;
+  private _functionsRefs: FunctionsRef;
+  private _storagePaths: StoragePaths;
   private _auth: AuthApi;
   private _platform: PlatformApi;
   private _profile: ProfileApi;
@@ -63,21 +66,28 @@ export default class Api {
       connectStorageEmulator(this.storage, host, 9199);
     }
 
-    this._refs = new FirebaseRefs(this.functions, this.firestore);
+    this._firestoreRefs = new FirestoreRefs(this.firestore);
+    this._functionsRefs = new FunctionsRef(this.functions);
+    this._storagePaths = new StoragePaths();
     this._iugu = new IuguApi(extra.iugu.accountId, extra.environment !== 'live');
     this._files = new FilesApi(this.storage);
-    this._auth = new AuthApi(this.authentication, this._refs, extra);
-    this._platform = new PlatformApi(this._refs, this._files);
+    this._auth = new AuthApi(this.authentication, this._firestoreRefs, this._functionsRefs, extra);
+    this._platform = new PlatformApi(this._firestoreRefs, this._files);
     this._profile = new ProfileApi(this.firestore, this._auth, extra.flavor);
-    this._courier = new CourierApi(this._refs, this._files);
-    this._fleet = new FleetApi(this._refs);
-    this._consumer = new ConsumerApi(this._refs, this._iugu);
-    this._order = new OrderApi(this._refs, this.firestore);
-    this._reviews = new ReviewsApi(this._refs, this.firestore);
-    this._maps = new MapsApi(this._refs);
-    this._business = new BusinessApi(this._refs, this._files);
+    this._courier = new CourierApi(
+      this._firestoreRefs,
+      this._functionsRefs,
+      this._storagePaths,
+      this._files
+    );
+    this._fleet = new FleetApi(this._firestoreRefs);
+    this._consumer = new ConsumerApi(this._functionsRefs, this._iugu);
+    this._order = new OrderApi(this._firestoreRefs, this._functionsRefs, this.firestore);
+    this._reviews = new ReviewsApi(this._firestoreRefs);
+    this._maps = new MapsApi(this._functionsRefs);
+    this._business = new BusinessApi(this._firestoreRefs, this._storagePaths, this._files);
     this._search = new SearchApi(extra.algolia, extra.environment);
-    this._user = new UserApi(this._refs, extra.flavor);
+    this._user = new UserApi(this._firestoreRefs, extra.flavor);
   }
 
   getFirebaseOptions() {
@@ -152,7 +162,7 @@ export default class Api {
   }
 
   async getServerTime(): Promise<number> {
-    const result = await this._refs.getServerTimeCallable()();
+    const result = await this._functionsRefs.getServerTimeCallable()();
     return (result.data as any).time;
   }
 }

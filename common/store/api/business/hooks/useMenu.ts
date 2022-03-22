@@ -1,4 +1,4 @@
-import { getParent, getSorted } from '../menu';
+import { getParent, getSorted } from '@appjusto/menu';
 import { useCategories } from './useCategories';
 import { useObserveMenuOrdering } from './useMenuConfig';
 import { useObserveComplements } from './useObserveComplements';
