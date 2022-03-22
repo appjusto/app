@@ -48,9 +48,9 @@ export default function (enabled: boolean = true, key?: string) {
       }
       if (permissionResponse?.granted) {
         (async () => {
-          const last = await Location.getLastKnownPositionAsync();
-          if (last) setLastKnownLocation(last);
           try {
+            const last = await Location.getLastKnownPositionAsync();
+            if (last) setLastKnownLocation(last);
             const current = await Location.getCurrentPositionAsync();
             setLastKnownLocation(current);
           } catch (error: any) {

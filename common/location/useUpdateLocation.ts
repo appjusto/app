@@ -72,7 +72,7 @@ export const useUpdateLocation = () => {
     else if (coords) {
       dispatch(updateCurrentLocation(coords));
     }
-    // avoid updating if we did it already or we don't have the currentLoation
+    // avoid updating if we did it already or we don't have the currentLocation
     if (currentPlace || !currentLocation) return;
     (async () => {
       const address = await api.maps().googleReverseGeocode(currentLocation);
@@ -80,7 +80,7 @@ export const useUpdateLocation = () => {
         dispatch(
           updateCurrentPlace({
             address,
-            location: coords,
+            location: coords ?? null,
           })
         );
     })();
