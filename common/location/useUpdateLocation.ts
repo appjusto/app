@@ -1,10 +1,12 @@
 import { GeoPoint } from 'firebase/firestore';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { t } from '../../strings';
 import { ApiContext, AppDispatch } from '../app/context';
 import { AuthState, useAuth } from '../hooks/useAuth';
 import { updateCurrentLocation, updateCurrentPlace } from '../store/consumer/actions';
 import { getConsumer, getCurrentLocation, getCurrentPlace } from '../store/consumer/selectors';
+import { showToast } from '../store/ui/actions';
 import useLastKnownLocation from './useLastKnownLocation';
 import { useLastPlace } from './useLastPlace';
 
@@ -22,28 +24,53 @@ export const useUpdateLocation = () => {
   const { coords } = useLastKnownLocation();
   // effect to update currentPlace and currentLocation
   React.useEffect(() => {
-    // avoid updating during initialization
+    console.log(
+      `coords: ${coords}; currentLocation: ${currentLocation}; currentPlace: ${currentPlace}`
+    );
+    // if unlogged
     if (authState === AuthState.Unsigned) {
-      if (!currentLocation && coords) {
-        dispatch(updateCurrentLocation(coords));
-        // console.log(
-        //   'updateCurrentLocation chamada na condição if authState === AuthState.Unsigned. atualizando com coords, logando coords',
-        //   coords
-        // );
+      if (!currentLocation) {
+        if (coords) {
+          console.log('currentLocation falsy: atualizando para coords:', coords);
+          // updating current location if not set
+          dispatch(updateCurrentLocation(coords));
+        } else {
+          console.log('coords falsy:', coords);
+          if (coords === null) {
+            // defaulting to MASP location
+            dispatch(
+              updateCurrentLocation({
+                latitude: -23.561433653472772,
+                longitude: -46.65590336017428,
+              })
+            );
+            // alert something is wrong if location permission
+            dispatch(
+              showToast(
+                t('Não foi possível obter sua localização. verifique suas permissões'),
+                'error'
+              )
+            );
+          }
+        }
       }
       return;
-    } else if (authState !== AuthState.SignedIn) return;
+    } else if (authState !== AuthState.SignedIn) return; // avoid updating during initialization
     // when currentPlace is set we may need only to update currentLocation
     if (currentPlace) {
       // this will happen when we use AddressComplete to set the place
       if (!currentLocation) {
         if (currentPlace.location) {
+          console.log(
+            'currentLocation falsy: atualizando para currentPlace.location:',
+            currentPlace.location
+          );
           dispatch(updateCurrentLocation(currentPlace.location));
-          // console.log(
-          //   'updateCurrentLocation chamada na condição if currentPlace e if !currentLocation. atualizando com e logando currentPlace.location',
-          //   currentPlace.location
-          // );
         } else {
+          console.log(
+            'currentLocation falsy: obtendo localização do endereço',
+            currentPlace.address.description
+          );
           api
             .maps()
             .googleGeocode(currentPlace.address.description)
@@ -55,10 +82,7 @@ export const useUpdateLocation = () => {
                   location: latlng,
                 })
               );
-              // console.log(
-              //   'updateCurrentLocation chamada na condição if currentPlace, caso else. chama a googleGeocode, pega o latlng do currentPlace.address. logando latlng',
-              //   latlng
-              // );
+              console.log('atualizando currentPlace para incluir location:', latlng);
             });
         }
       }

@@ -15,20 +15,18 @@ const shouldAskPermission = (
 
 export default function (enabled: boolean = true, key?: string) {
   // state
-  const [permissionResponse, setPermissionResponse] = React.useState<
-    Location.LocationPermissionResponse | null | undefined
-  >(undefined);
-  const [lastKnownLocation, setLastKnownLocation] = React.useState<Location.LocationObject | null>(
-    null
-  );
-  const coords: LatLng | undefined = React.useMemo(
+  const [permissionResponse, setPermissionResponse] =
+    React.useState<Location.LocationPermissionResponse | null>();
+  const [lastKnownLocation, setLastKnownLocation] =
+    React.useState<Location.LocationObject | null>();
+  const coords: LatLng | undefined | null = React.useMemo(
     () =>
       lastKnownLocation
         ? {
             latitude: lastKnownLocation.coords.latitude,
             longitude: lastKnownLocation.coords.longitude,
           }
-        : undefined,
+        : lastKnownLocation,
     [lastKnownLocation]
   );
 
@@ -58,6 +56,8 @@ export default function (enabled: boolean = true, key?: string) {
             Sentry.Native.captureException(error);
           }
         })();
+      } else if (permissionResponse?.status === 'denied') {
+        setLastKnownLocation(null);
       }
     }
   }, [enabled, permissionResponse]);
