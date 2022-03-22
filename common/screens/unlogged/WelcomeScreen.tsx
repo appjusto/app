@@ -176,7 +176,7 @@ export default function ({ navigation, route }: Props) {
                     value={email}
                     title={t('Acesse sua conta')}
                     placeholder={t('Digite seu e-mail')}
-                    onChangeText={setEmail}
+                    onChangeText={(value) => setEmail(value.toLowerCase())}
                     autoCompleteType="email"
                     keyboardType="email-address"
                     blurOnSubmit
