@@ -16,6 +16,7 @@ import {
   getDocs,
   limit,
   onSnapshot,
+  orderBy,
   query,
   serverTimestamp,
   where,
@@ -49,6 +50,24 @@ export default class BusinessApi {
       }
     );
   }
+
+  // manager
+  observeBusinessManagedBy(email: string, resultHandler: (businesses: WithId<Business>[]) => void) {
+    return onSnapshot(
+      query(
+        this.refs.getBusinessesRef(),
+        where('managers', 'array-contains', email),
+        orderBy('createdOn', 'desc')
+        // limit(1)
+      ),
+      (snapshot) => resultHandler(documentsAs<Business>(snapshot.docs)),
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
+    );
+  }
+
   // recommendations
   async addRecomendation(
     recommendedBusiness: Place,

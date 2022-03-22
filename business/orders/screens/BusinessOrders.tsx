@@ -1,4 +1,3 @@
-import { OrderStatus } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -8,19 +7,15 @@ import { useSelector } from 'react-redux';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
-import { useObserveBusiness } from '../../../common/store/api/business/hooks/useObserveBusiness';
-import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
-import { useObserveOrders } from '../../../common/store/api/order/hooks/useObserveOrders';
-import { ObserveOrdersOptions } from '../../../common/store/api/order/types';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { getManager } from '../../../common/store/business/selectors';
 import { getUser } from '../../../common/store/user/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import { useObserveBusinessManagedBy } from '../../hooks/useObserveBusinessManagedBy';
 import { BusinessNavParamsList } from '../../types';
 import { BusinessOrdersHeader } from '../components/BusinessOrdersHeader';
 import { ListFilterButton } from '../components/ListFilterButton';
-import { OrdersKanbanItem } from '../components/OrdersKanbanItem';
 
 type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'BusinessOrders'>;
 type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'BusinessOrders'>;
@@ -35,19 +30,17 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // const business = useSelector(getBusiness);
   const user = useSelector(getUser);
   const manager = useSelector(getManager);
-  console.log('OrdersManager', manager);
+  const businesses = useObserveBusinessManagedBy(user?.email);
   // screen state
   const noOrdersToday = false; //helper, to be replaced with isEmpty(activeOrders)
   // TODO: choose best business initially and remember last selected
-  const businessId = 'OW0ZNz0cax6ZX6Lxd1wz';
-  const business = useObserveBusiness(businessId);
+  const business = businesses![0];
   // active orders
-  const activeOptions = React.useMemo((): ObserveOrdersOptions => {
-    const statuses: OrderStatus[] = ['confirmed', 'preparing', 'ready', 'dispatching'];
-    return { businessId, statuses, orderField: 'timestamps.charged' };
-  }, [businessId]);
-  const activeOrders = useObserveOrders(activeOptions);
-  const testingOrder = useObserveOrder('3b1IXPPlPvdxufcXo86f'); // delete after testing
+  // const activeOptions = React.useMemo((): ObserveOrdersOptions => {
+  //   const statuses: OrderStatus[] = ['confirmed', 'preparing', 'ready', 'dispatching'];
+  //   return { businessId, statuses, orderField: 'timestamps.charged' };
+  // }, [businessId]);
+  // const activeOrders = useObserveOrders(activeOptions);
   // inactive orders
   // const inactiveOptions = React.useMemo((): ObserveOrdersOptions => {
   //   const statuses = ['delivered', 'canceled'] as OrderStatus[];
@@ -60,7 +53,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // tracking
   useSegmentScreen('BusinessOrders');
   //UI
-  if (!business || !testingOrder) {
+  if (!user || !businesses) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -178,7 +171,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
               </ScrollView>
               <PaddedView>
                 <View style={{ marginBottom: padding }}>
-                  <OrdersKanbanItem
+                  {/* <OrdersKanbanItem
                     onCheckOrder={() =>
                       navigation.navigate('OrderDetail', { orderId: '3b1IXPPlPvdxufcXo86f' })
                     }
@@ -211,7 +204,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                     }
                     onTakeOrder={() => null}
                     order={testingOrder}
-                  />
+                  /> */}
                 </View>
               </PaddedView>
             </View>
