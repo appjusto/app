@@ -67,7 +67,6 @@ export default function ({ onFleetDetail }: Props) {
         title: t('Precisamos de permissão para te enviar mensagens'),
         subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
       });
-      return;
     }
     dispatch(updateProfile(api)(courier.id, { status: newStatus }));
     if (newStatus === 'available' && !shouldVerifyPhone) setModalVisible(true);
