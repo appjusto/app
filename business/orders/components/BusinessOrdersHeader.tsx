@@ -10,7 +10,7 @@ type Props = {
   business: WithId<Business>;
 };
 
-export const OrderManagerHeader = ({ business }: Props) => {
+export const BusinessOrdersHeader = ({ business }: Props) => {
   // context
   const { data: logo } = useBusinessLogoURI(business.id);
   // helpers

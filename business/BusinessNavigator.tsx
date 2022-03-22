@@ -9,9 +9,9 @@ import { AboutApp } from '../common/screens/profile/AboutApp';
 import Terms from '../common/screens/unlogged/Terms';
 import { getFlavor } from '../common/store/config/selectors';
 import { t } from '../strings';
+import { BusinessOrders } from './orders/screens/BusinessOrders';
 import { ManagerOptions } from './orders/screens/ManagerOptions';
 import { OrderDetail } from './orders/screens/OrderDetail';
-import { OrdersManager } from './orders/screens/OrdersManager';
 import { BusinessNavParamsList } from './types';
 
 const Stack = createStackNavigator<BusinessNavParamsList>();
@@ -38,8 +38,8 @@ export const BusinessNavigator = () => {
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen
-        name="OrdersManager"
-        component={OrdersManager}
+        name="BusinessOrders"
+        component={BusinessOrders}
         options={({ navigation, route }) => ({
           title: t('Gerenciador de pedidos'),
           headerLeft: () => (

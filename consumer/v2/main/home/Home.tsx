@@ -2,7 +2,7 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { MaintenanceModal } from '../../../../common/components/views/MaintenanceModal';
@@ -97,14 +97,6 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           ) : null}
-          <TouchableOpacity
-            style={{ marginVertical: padding }}
-            onPress={() =>
-              navigation.navigate('LoggedBusinessNavigator', { screen: 'OrdersManager' })
-            }
-          >
-            <Text>ORDERS MANAGER</Text>
-          </TouchableOpacity>
           {/* <HomeCouriersNearbyCard /> */}
           {!consumer ? <View style={{ height: padding }} /> : null}
           <CrowdFundingCard />

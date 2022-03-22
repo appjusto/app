@@ -18,19 +18,19 @@ import { getUser } from '../../../common/store/user/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { BusinessNavParamsList } from '../../types';
+import { BusinessOrdersHeader } from '../components/BusinessOrdersHeader';
 import { ListFilterButton } from '../components/ListFilterButton';
 import { OrdersKanbanItem } from '../components/OrdersKanbanItem';
-import { OrderManagerHeader } from '../components/OrdersManagerHeader';
 
-type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'OrdersManager'>;
-type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'OrdersManager'>;
+type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'BusinessOrders'>;
+type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'BusinessOrders'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
   route: ScreenRouteProp;
 };
 
-export const OrdersManager = ({ navigation, route }: Props) => {
+export const BusinessOrders = ({ navigation, route }: Props) => {
   // redux store
   // const business = useSelector(getBusiness);
   const user = useSelector(getUser);
@@ -58,7 +58,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
   // maybe:
   // trazer os dois switches de configurações - receber notificações e imprimir pedido - pra essa tela
   // tracking
-  useSegmentScreen('OrdersManager');
+  useSegmentScreen('BusinessOrders');
   //UI
   if (!business || !testingOrder) {
     return (
@@ -71,7 +71,7 @@ export const OrdersManager = ({ navigation, route }: Props) => {
     <View style={screens.default}>
       <View>
         <PaddedView>
-          <OrderManagerHeader business={business} />
+          <BusinessOrdersHeader business={business} />
         </PaddedView>
       </View>
       <KeyboardAwareScrollView

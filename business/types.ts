@@ -6,7 +6,7 @@ export type LoggedBusinessNavParamsList = {
 };
 
 export type BusinessNavParamsList = {
-  OrdersManager: undefined;
+  BusinessOrders: undefined;
   OrderDetail: {
     orderId: string;
   };

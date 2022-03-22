@@ -34,7 +34,7 @@ export const ManagerOptions = ({ navigation, route }: Props) => {
       <ConfigItem
         title={t('Pedidos')}
         subtitle={t('Gerencie seus pedidos')}
-        onPress={() => navigation.navigate('OrdersManager')}
+        onPress={() => navigation.navigate('BusinessOrders')}
       />
       <ConfigItem
         title={t('Central de ajuda')}
