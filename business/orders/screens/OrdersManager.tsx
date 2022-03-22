@@ -10,8 +10,10 @@ import DoubleHeader from '../../../common/components/texts/DoubleHeader';
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
 import { useObserveBusiness } from '../../../common/store/api/business/hooks/useObserveBusiness';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
+import { useObserveOrders } from '../../../common/store/api/order/hooks/useObserveOrders';
+import { ObserveOrdersOptions } from '../../../common/store/api/order/types';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { getFlavor } from '../../../common/store/config/selectors';
+import { getManager } from '../../../common/store/business/selectors';
 import { getUser } from '../../../common/store/user/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -19,7 +21,6 @@ import { BusinessNavParamsList } from '../../types';
 import { ListFilterButton } from '../components/ListFilterButton';
 import { OrdersKanbanItem } from '../components/OrdersKanbanItem';
 import { OrderManagerHeader } from '../components/OrdersManagerHeader';
-import { useObserveBusinessOrders } from '../hooks/useObserveBusinessOrders';
 
 type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'OrdersManager'>;
 type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'OrdersManager'>;
@@ -33,23 +34,26 @@ export const OrdersManager = ({ navigation, route }: Props) => {
   // redux store
   // const business = useSelector(getBusiness);
   const user = useSelector(getUser);
-  const flavor = useSelector(getFlavor);
+  const manager = useSelector(getManager);
+  console.log('OrdersManager', manager);
   // screen state
   const noOrdersToday = false; //helper, to be replaced with isEmpty(activeOrders)
-  const business = useObserveBusiness('OW0ZNz0cax6ZX6Lxd1wz');
+  // TODO: choose best business initially and remember last selected
+  const businessId = 'OW0ZNz0cax6ZX6Lxd1wz';
+  const business = useObserveBusiness(businessId);
   // active orders
-  const activeOptions = React.useMemo(() => {
-    const activeStatuses = ['confirmed', 'preparing', 'ready', 'dispatching'] as OrderStatus[];
-    return { businessId: user?.uid, activeStatuses };
-  }, [user?.uid]);
-  const activeOrders = useObserveBusinessOrders(activeOptions);
+  const activeOptions = React.useMemo((): ObserveOrdersOptions => {
+    const statuses: OrderStatus[] = ['confirmed', 'preparing', 'ready', 'dispatching'];
+    return { businessId, statuses, orderField: 'timestamps.charged' };
+  }, [businessId]);
+  const activeOrders = useObserveOrders(activeOptions);
   const testingOrder = useObserveOrder('3b1IXPPlPvdxufcXo86f'); // delete after testing
   // inactive orders
-  const inactiveOptions = React.useMemo(() => {
-    const inactiveStatuses = ['delivered', 'canceled'] as OrderStatus[];
-    return { businessId: user?.uid, inactiveStatuses };
-  }, [user?.uid]);
-  const inactiveOrders = useObserveBusinessOrders(inactiveOptions);
+  // const inactiveOptions = React.useMemo((): ObserveOrdersOptions => {
+  //   const statuses = ['delivered', 'canceled'] as OrderStatus[];
+  //   return { businessId, statuses };
+  // }, [businessId]);
+  // const inactiveOrders = useObserveOrders(inactiveOptions);
 
   // maybe:
   // trazer os dois switches de configurações - receber notificações e imprimir pedido - pra essa tela

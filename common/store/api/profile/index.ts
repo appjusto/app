@@ -18,7 +18,12 @@ import { documentAs } from '../types';
 export default class ProfileApi {
   private collectionName: string;
   constructor(private firestore: Firestore, private auth: AuthApi, public flavor: Flavor) {
-    this.collectionName = this.flavor === 'consumer' ? 'consumers' : 'couriers';
+    this.collectionName =
+      this.flavor === 'consumer'
+        ? 'consumers'
+        : this.flavor === 'courier'
+        ? 'couriers'
+        : 'managers';
   }
 
   // private helpers

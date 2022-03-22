@@ -1,6 +1,7 @@
 import * as redux from 'redux';
 import ReduxThunk, { ThunkDispatch } from 'redux-thunk';
 import { Extra } from '../../config/types';
+import businessReducer from './business/reducer';
 import { BusinessState } from './business/types';
 import configReducer from './config/reducer';
 import { ConfigState } from './config/types';
@@ -31,6 +32,7 @@ export const createStore = (extra: Extra) => {
       flavor: extra.flavor,
       extra,
     }),
+    business: businessReducer,
     courier: courierReducer,
     consumer: consumerReducer,
     order: orderReducer,

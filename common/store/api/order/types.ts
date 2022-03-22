@@ -6,10 +6,5 @@ export type ObserveOrdersOptions = {
   statuses?: OrderStatus[];
   limit?: number;
   businessId?: string;
-};
-
-export type ObserveBusinessOrdersOptions = {
-  businessId?: string;
-  statuses?: OrderStatus[];
-  limit?: number;
+  orderField?: string;
 };

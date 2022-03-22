@@ -123,8 +123,8 @@ export default class OrderApi {
     options: ObserveOrdersOptions,
     resultHandler: (orders: WithId<Order>[]) => void
   ): Unsubscribe {
-    const { consumerId, courierId, statuses, businessId } = options;
-    const constraints = [orderBy('createdOn', 'desc')];
+    const { consumerId, courierId, statuses, businessId, orderField } = options;
+    const constraints = [orderBy(orderField ?? 'createdOn', 'desc')];
     if (!isEmpty(statuses)) constraints.push(where('status', 'in', statuses));
     if (consumerId) constraints.push(where('consumer.id', '==', consumerId));
     if (courierId) constraints.push(where('courier.id', '==', courierId));
