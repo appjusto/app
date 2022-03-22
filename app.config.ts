@@ -56,6 +56,9 @@ export default (context: ConfigContext): ExpoConfig => {
     notification: {
       icon: './assets/notification-icon.png',
     },
+    updates: {
+      fallbackToCacheTimeout: 1000 * (flavor === 'courier' ? 30 : 5),
+    },
     assetBundlePatterns: ['**/*'],
     ios: ios(),
     android: android(),
