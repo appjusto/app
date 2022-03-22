@@ -18,6 +18,7 @@ export const BusinessOrdersHeader = ({ business }: Props) => {
     business.status === 'open' && business.enabled
       ? t('RESTAURANTE ABERTO')
       : t('RESTAURANTE FECHADO');
+  if (!business) return null;
   return (
     <View
       style={{ height: 48, width: '100%', flexDirection: 'row', backgroundColor: colors.white }}
@@ -36,7 +37,9 @@ export const BusinessOrdersHeader = ({ business }: Props) => {
         <ListItemImage uri={logo} height={48} width={48} />
       </View>
       <View style={{ alignItems: 'flex-start', justifyContent: 'center' }}>
-        <Text style={{ ...texts.lg }}>{business.name}</Text>
+        <View style={{ width: '90%' }}>
+          <Text style={{ ...texts.lg }}>{business.name}</Text>
+        </View>
         <View
           style={{
             flexDirection: 'row',

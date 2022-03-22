@@ -49,9 +49,8 @@ export const OrderDetail = ({ navigation, route }: Props) => {
   // redux store
   // const business = useSelector(getBusiness);
   // state
-  const order = useObserveOrder(orderId)!;
-  const { status, dispatchingState } = order;
-  const cancellationInfo = useGetCancellationInfo(orderId);
+  const order = useObserveOrder(orderId);
+  const cancellationInfo = useGetCancellationInfo(orderId); // this cancellationInfo is just for consumers... what about business
   const [cancelModalVisible, setCancelModalVisible] = React.useState(false);
   const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
@@ -84,15 +83,16 @@ export const OrderDetail = ({ navigation, route }: Props) => {
   };
   const actionHandler = async () => {
     setLoading(true);
+    if (!order) return;
     try {
-      if (status === 'confirmed') {
+      if (order.status === 'confirmed') {
         setCookingModalVisible(true);
       }
-      if (status === 'preparing') {
+      if (order.status === 'preparing') {
         await api.order().updateOrder(order.id, { status: 'ready' });
       }
-      if (status === 'ready') {
-        if (dispatchingState !== 'arrived-pickup') return;
+      if (order.status === 'ready') {
+        if (order.dispatchingState !== 'arrived-pickup') return;
         else await api.order().updateOrder(order.id, { status: 'dispatching' });
       }
       setLoading(false);
@@ -134,7 +134,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
               {t('Tempo de preparo: ')}
               <Text style={texts.bold}>{formatDuration(order.cookingTime!)}</Text>
             </Text>
-            {status === 'preparing' ? (
+            {order.status === 'preparing' ? (
               <View style={{ width: '60%' }}>
                 <DefaultButton
                   title={t('Alterar tempo de preparo')}
@@ -151,7 +151,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
           <InfoAndCPF order={order} />
         </View>
         {/* this button will open a CancelOrderModal  */}
-        {status.includes(cancellableStatuses) ? (
+        {order.status.includes(cancellableStatuses) ? (
           <View style={{ width: '60%', paddingHorizontal: padding, marginBottom: 32 }}>
             <DefaultButton
               title={t('Cancelar pedido')}
@@ -161,7 +161,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
           </View>
         ) : null}
       </ScrollView>
-      {status.includes(acceptStatuses) ? (
+      {order.status.includes(acceptStatuses) ? (
         <View
           style={{
             paddingVertical: halfPadding,
@@ -175,7 +175,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
               order={order}
               onPress={actionHandler}
               activityIndicator={isLoading}
-              disabled={status === 'ready' && dispatchingState !== 'arrived-pickup'}
+              disabled={order.status === 'ready' && order.dispatchingState !== 'arrived-pickup'}
             />
           </View>
         </View>

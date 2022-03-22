@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { getManager } from '../../../common/store/business/selectors';
 import { getUser } from '../../../common/store/user/selectors';
@@ -16,6 +17,7 @@ import { useObserveBusinessManagedBy } from '../../hooks/useObserveBusinessManag
 import { BusinessNavParamsList } from '../../types';
 import { BusinessOrdersHeader } from '../components/BusinessOrdersHeader';
 import { ListFilterButton } from '../components/ListFilterButton';
+import { OrdersKanbanItem } from '../components/OrdersKanbanItem';
 
 type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'BusinessOrders'>;
 type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'BusinessOrders'>;
@@ -30,36 +32,36 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // const business = useSelector(getBusiness);
   const user = useSelector(getUser);
   const manager = useSelector(getManager);
-  const businesses = useObserveBusinessManagedBy(user?.email);
+  const business = useObserveBusinessManagedBy(user?.email);
   // screen state
   const noOrdersToday = false; //helper, to be replaced with isEmpty(activeOrders)
+  const testingOrder = useObserveOrder('usDi5nFeaBRNF8SzjEW4');
   // TODO: choose best business initially and remember last selected
-  const business = businesses![0];
   // active orders
   // const activeOptions = React.useMemo((): ObserveOrdersOptions => {
   //   const statuses: OrderStatus[] = ['confirmed', 'preparing', 'ready', 'dispatching'];
   //   return { businessId, statuses, orderField: 'timestamps.charged' };
   // }, [businessId]);
-  // const activeOrders = useObserveOrders(activeOptions);
   // inactive orders
   // const inactiveOptions = React.useMemo((): ObserveOrdersOptions => {
   //   const statuses = ['delivered', 'canceled'] as OrderStatus[];
-  //   return { businessId, statuses };
-  // }, [businessId]);
+  //   return { businessId: business.id, statuses };
+  // }, [business.id]);
   // const inactiveOrders = useObserveOrders(inactiveOptions);
-
+  // const orders = useObserveOrders(inactiveOptions);
   // maybe:
   // trazer os dois switches de configurações - receber notificações e imprimir pedido - pra essa tela
   // tracking
   useSegmentScreen('BusinessOrders');
   //UI
-  if (!user || !businesses) {
+  if (!user || business === undefined || !testingOrder) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
+
   return (
     <View style={screens.default}>
       <View>
@@ -171,9 +173,9 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
               </ScrollView>
               <PaddedView>
                 <View style={{ marginBottom: padding }}>
-                  {/* <OrdersKanbanItem
+                  <OrdersKanbanItem
                     onCheckOrder={() =>
-                      navigation.navigate('OrderDetail', { orderId: '3b1IXPPlPvdxufcXo86f' })
+                      navigation.navigate('OrderDetail', { orderId: 'usDi5nFeaBRNF8SzjEW4' })
                     }
                     onTakeOrder={() => null}
                     order={testingOrder}
@@ -182,7 +184,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                 <View style={{ marginBottom: padding }}>
                   <OrdersKanbanItem
                     onCheckOrder={() =>
-                      navigation.navigate('OrderDetail', { orderId: '3b1IXPPlPvdxufcXo86f' })
+                      navigation.navigate('OrderDetail', { orderId: 'usDi5nFeaBRNF8SzjEW4' })
                     }
                     onTakeOrder={() => null}
                     order={testingOrder}
@@ -191,7 +193,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                 <View style={{ marginBottom: padding }}>
                   <OrdersKanbanItem
                     onCheckOrder={() =>
-                      navigation.navigate('OrderDetail', { orderId: '3b1IXPPlPvdxufcXo86f' })
+                      navigation.navigate('OrderDetail', { orderId: 'usDi5nFeaBRNF8SzjEW4' })
                     }
                     onTakeOrder={() => null}
                     order={testingOrder}
@@ -200,11 +202,11 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                 <View style={{ marginBottom: padding }}>
                   <OrdersKanbanItem
                     onCheckOrder={() =>
-                      navigation.navigate('OrderDetail', { orderId: '3b1IXPPlPvdxufcXo86f' })
+                      navigation.navigate('OrderDetail', { orderId: 'usDi5nFeaBRNF8SzjEW4' })
                     }
                     onTakeOrder={() => null}
                     order={testingOrder}
-                  /> */}
+                  />
                 </View>
               </PaddedView>
             </View>

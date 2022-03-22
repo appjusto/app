@@ -6,12 +6,12 @@ export const useObserveBusinessManagedBy = (email: string | undefined | null) =>
   // context
   const api = React.useContext(ApiContext);
   // state
-  const [businesses, setBusinesses] = React.useState<WithId<Business>[] | undefined>();
+  const [businesses, setBusinesses] = React.useState<WithId<Business>[]>([]);
   // side effects
   React.useEffect(() => {
     if (!email) return; // during initialization
     return api.business().observeBusinessManagedBy(email, setBusinesses);
   }, [email, api]);
-  // return
-  return businesses;
+  // returning the most recent business
+  return businesses[0];
 };
