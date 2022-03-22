@@ -1,13 +1,10 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { Image, TouchableWithoutFeedback, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
 import { headerMenu } from '../assets/icons';
-import { ApiContext, AppDispatch } from '../common/app/context';
 import { defaultScreenOptions } from '../common/screens/options';
 import { AboutApp } from '../common/screens/profile/AboutApp';
 import Terms from '../common/screens/unlogged/Terms';
-import { getFlavor } from '../common/store/config/selectors';
 import { t } from '../strings';
 import { BusinessOrders } from './orders/screens/BusinessOrders';
 import { ManagerOptions } from './orders/screens/ManagerOptions';
@@ -17,23 +14,6 @@ import { BusinessNavParamsList } from './types';
 const Stack = createStackNavigator<BusinessNavParamsList>();
 
 export const BusinessNavigator = () => {
-  // context
-  const api = React.useContext(ApiContext);
-  // redux
-  const dispatch = useDispatch<AppDispatch>();
-  const flavor = useSelector(getFlavor);
-  // const user = useSelector(getUser);
-  // const manager = useSelector(getManager);
-  // const business = useActiveBusiness();
-  // const uid = user?.uid;
-  // console.log('uid', uid);
-  // side effects
-  // subscribe for profile changes
-  // React.useEffect(() => {
-  //   if (uid) return dispatch(observeProfile(api)(flavor, uid));
-  // }, [dispatch, api, flavor, uid]);
-  // TODO: subscribe to restaurant's orders ???
-
   // UI
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
