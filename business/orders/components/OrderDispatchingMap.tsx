@@ -34,10 +34,12 @@ export const OrderDispatchingMap = ({ order, style }: Props) => {
             <RoundedProfileImg flavor="courier" id={order.courier?.id} size={48} />
             <View style={{ marginLeft: padding }}>
               <Text style={{ ...texts.xl }}>{order.courier?.name}</Text>
-              <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 2 }}>
-                {t('No appJusto desde')}{' '}
-                {formatDate((order.courier?.joined as Timestamp).toDate(), 'monthYear')}
-              </Text>
+              {order.courier?.joined ? (
+                <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 2 }}>
+                  {t('No appJusto desde')}{' '}
+                  {formatDate((order.courier?.joined as Timestamp).toDate(), 'monthYear')}
+                </Text>
+              ) : null}
             </View>
           </View>
           <View style={{ marginHorizontal: padding, marginTop: 32 }}>
