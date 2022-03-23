@@ -58,7 +58,7 @@ export const OrderDispatchingMap = ({ order, style }: Props) => {
                 alignItems: 'center',
               }}
             >
-              <RoundedProfileImg flavor="courier" id={order.courier?.id} size={48} />
+              <RoundedProfileImg flavor="courier" size={48} />
               <View style={{ marginLeft: padding }}>
                 <Text style={{ ...texts.xl }}>{order.courier?.name}</Text>
                 <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 2 }}>
