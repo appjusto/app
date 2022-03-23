@@ -10,7 +10,11 @@ export const showToast =
   (dispatch: AppDispatch) => {
     dispatch({
       type: SHOW_TOAST,
-      payload: { message: message.replace('Error: ', ''), type, autoHide },
+      payload: {
+        message: message.replace('Firebase', '').replace('Error: ', ''),
+        type,
+        autoHide,
+      },
     });
   };
 

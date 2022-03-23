@@ -53,7 +53,9 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
   // tracking
   useSegmentScreen('OngoingOrderConfirmCancel');
   //helpers
-  const businessPhone = phoneFormatter(business?.phone);
+  const businessPhone = phoneFormatter(
+    business?.phones?.find(({ type }) => type === 'desk')?.number
+  );
   // UI
   if (!order || !cancellationInfo || cancellationInfo.costs === 0) {
     return (
