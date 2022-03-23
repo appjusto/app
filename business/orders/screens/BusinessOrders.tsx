@@ -10,10 +10,9 @@ import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-de
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { getManager } from '../../../common/store/business/selectors';
-import { getUser } from '../../../common/store/user/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
-import { useObserveBusinessManagedBy } from '../../hooks/useObserveBusinessManagedBy';
+import { useBusinessManagedBy } from '../../hooks/useObserveBusinessManagedBy';
 import { BusinessNavParamsList } from '../../types';
 import { BusinessOrdersHeader } from '../components/BusinessOrdersHeader';
 import { ListFilterButton } from '../components/ListFilterButton';
@@ -30,9 +29,8 @@ type Props = {
 export const BusinessOrders = ({ navigation, route }: Props) => {
   // redux store
   // const business = useSelector(getBusiness);
-  const user = useSelector(getUser);
   const manager = useSelector(getManager);
-  const business = useObserveBusinessManagedBy(user?.email);
+  const business = useBusinessManagedBy();
   // screen state
   const noOrdersToday = false; //helper, to be replaced with isEmpty(activeOrders)
   const testingOrder = useObserveOrder('usDi5nFeaBRNF8SzjEW4');
@@ -54,12 +52,16 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // tracking
   useSegmentScreen('BusinessOrders');
   //UI
-  if (!user || business === undefined || !testingOrder) {
+  if (business === undefined || !testingOrder) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
+  }
+  if (business === null) {
+    // TODO: what should we do?
+    return null;
   }
 
   return (

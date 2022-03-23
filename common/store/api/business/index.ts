@@ -30,6 +30,12 @@ export default class BusinessApi {
   constructor(private refs: FirebaseRefs, private files: FilesApi) {}
 
   // firestore
+  async fetchBusinessById(businessId: string) {
+    const snapshot = await getDoc(this.refs.getBusinessRef(businessId));
+    if (!snapshot.exists()) return null;
+    return documentAs<Business>(snapshot);
+  }
+
   async fetchBusiness(value: string) {
     const r = /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{7}$/.exec(value);
     const fieldPath = !r ? 'slug' : 'code';
@@ -52,20 +58,17 @@ export default class BusinessApi {
   }
 
   // manager
-  observeBusinessManagedBy(email: string, resultHandler: (businesses: WithId<Business>[]) => void) {
-    return onSnapshot(
+  async fetchBusinessesManagedBy(email: string) {
+    const snapshot = await getDocs(
       query(
         this.refs.getBusinessesRef(),
         where('managers', 'array-contains', email),
         orderBy('createdOn', 'desc')
         // limit(1)
-      ),
-      (snapshot) => resultHandler(documentsAs<Business>(snapshot.docs)),
-      (error) => {
-        console.log(error);
-        Sentry.Native.captureException(error);
-      }
+      )
     );
+    if (snapshot.empty) return [];
+    return documentsAs<Business>(snapshot.docs);
   }
 
   // recommendations
