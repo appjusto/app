@@ -1,5 +1,5 @@
 import axios from 'axios';
-import marked from 'marked';
+import { parse } from 'marked';
 import React from 'react';
 import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
@@ -24,7 +24,7 @@ export const useTerms = () => {
     else if (query.isError) setUnformattedTerms(embedTerms);
   }, [query, embedTerms]);
   React.useEffect(() => {
-    if (unformattedTerms) setFormattedTerms(marked(unformattedTerms));
+    if (unformattedTerms) setFormattedTerms(parse(unformattedTerms));
   }, [unformattedTerms]);
   // result
   return formattedTerms;
