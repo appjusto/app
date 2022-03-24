@@ -162,7 +162,11 @@ export default function ({ navigation, route }: Props) {
                 <Text
                   style={[texts.sm, { color: colors.grey700, lineHeight: 21, marginTop: padding }]}
                 >
-                  {t('Digite seu e-mail para entrar ou criar sua conta.')}
+                  {authMode === 'phone'
+                    ? t('Digite o número do seu celular')
+                    : authMode === 'passwordless'
+                    ? t('Digite seu e-mail para entrar ou criar sua conta.')
+                    : t('Digite a senha que enviamos para o seu e-mail.')}
                 </Text>
               </View>
             </>
