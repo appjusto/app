@@ -215,7 +215,7 @@ export default function ({ navigation, route }: Props) {
                   style={{ marginTop: padding }}
                   value={password}
                   title={t('Senha')}
-                  placeholder={t('Digite sua senha')}
+                  placeholder={t('Senha que enviamos para seu e-mail')}
                   onChangeText={setPassword}
                   keyboardType="visible-password"
                   blurOnSubmit
