@@ -50,19 +50,18 @@ export const OrderLabel = ({ order }: Props) => {
       : t('Despachado');
     statusBGColor = colors.green100;
   }
-
-  if (status === 'delivered')
+  if (status === 'delivered') {
     statusLabel = timestamps.delivered
       ? `${t('Concluído às')} ${formatTime(timestamps.delivered)}`
       : t('Concluído');
-  statusBGColor = colors.green500;
+    statusBGColor = colors.green500;
+  }
   if (statusLabel === undefined) return null;
-
   return (
     <RoundedText
       backgroundColor={statusBGColor}
       noBorder
-      color={order.status === 'charged' ? colors.white : colors.black}
+      color={order.status === 'confirmed' ? colors.white : colors.black}
     >
       {statusLabel}
     </RoundedText>

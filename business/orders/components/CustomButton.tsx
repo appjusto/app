@@ -18,6 +18,7 @@ interface Props extends TouchableOpacityProps, ViewProps {
 
 export const CustomButton = ({ order, disabled, style, activityIndicator, ...props }: Props) => {
   const { status, dispatchingState } = order;
+
   let textColor;
   let background;
   let buttonTitle;
@@ -36,10 +37,6 @@ export const CustomButton = ({ order, disabled, style, activityIndicator, ...pro
       background = colors.grey700;
       buttonTitle = t('Preparo pronto');
     }
-  } else {
-    textColor = '';
-    background = '';
-    buttonTitle = '';
   }
   return (
     <TouchableOpacity disabled={disabled} {...props}>
