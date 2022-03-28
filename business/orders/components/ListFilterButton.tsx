@@ -24,7 +24,6 @@ export const ListFilterButton = ({
   numberBgColor,
   ...props
 }: AppButonProps) => {
-  if (total <= 0) return null;
   return (
     <TouchableOpacity
       disabled={disabled}
