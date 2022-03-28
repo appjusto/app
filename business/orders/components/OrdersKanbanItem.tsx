@@ -115,7 +115,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, order }: Props) => {
         order={order}
         buttonTitle={t('Confirmar e aceitar pedido')}
         modalVisible={modalVisible}
-        onModalClose={() => setModalVisible(true)}
+        onModalClose={() => setModalVisible(false)}
       />
     </View>
   );
