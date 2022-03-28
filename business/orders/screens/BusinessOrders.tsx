@@ -1,4 +1,4 @@
-import { Order, WithId } from '@appjusto/types';
+import { Order, OrderStatus, WithId } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -33,10 +33,10 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   const manager = useSelector(getManager);
   const business = useBusinessManagedBy();
   // screen state
-  const noOrdersToday = false; //helper, to be replaced with isEmpty(activeOrders)
   const testingOrder = useObserveOrder('usDi5nFeaBRNF8SzjEW4');
   const allOrders = useBusinessOrders(business?.id);
   const [kanbanOrders, setKanbanOrders] = React.useState<WithId<Order>[]>([]);
+  const noOrdersToday = false;
   // TODO: choose best business initially and remember last selected
   // TODO maybe:add the printing switch here
   // side-effects
@@ -45,6 +45,11 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   }, [allOrders]);
   // tracking
   useSegmentScreen('BusinessOrders');
+  // helpers
+  const ordersByStatus = (status: OrderStatus) => {
+    if (!allOrders) return [];
+    return allOrders.filter((order) => order.status === status);
+  };
   //UI
   if (!testingOrder || allOrders === undefined || business === undefined) {
     return (
@@ -57,6 +62,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
     // TODO: what should we do?
     return null;
   }
+  console.log(ordersByStatus('canceled'));
   return (
     <View style={screens.default}>
       <View>
@@ -102,22 +108,23 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                 style={{ marginTop: padding, paddingLeft: padding }}
               >
                 {/* all orders */}
-                <ListFilterButton
+                {/* maybe we should start with confirmed orders??? */}
+                {/* <ListFilterButton
                   title={t('Todos')}
                   bgColor={colors.green100}
                   textColor={colors.black}
                   borderColor={colors.black}
                   onPress={() => null}
                   style={{ marginRight: halfPadding }}
-                />
+                /> */}
                 {/* confirmed orders */}
                 <ListFilterButton
                   title={t('À confirmar')}
                   bgColor={colors.white}
                   textColor={colors.grey700}
                   borderColor={colors.grey700}
-                  onPress={() => null}
-                  number="2" // this is the total number of orders with this status
+                  onPress={() => setKanbanOrders(ordersByStatus('confirmed'))}
+                  total={ordersByStatus('confirmed').length}
                   numberColor={colors.white}
                   numberBgColor={colors.red}
                   style={{ marginRight: halfPadding }}
@@ -128,8 +135,8 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                   bgColor={colors.white}
                   textColor={colors.grey700}
                   borderColor={colors.grey700}
-                  onPress={() => null}
-                  number="2" // this is the total number of orders with this status
+                  onPress={() => setKanbanOrders(ordersByStatus('preparing'))}
+                  total={ordersByStatus('preparing').length}
                   numberColor={colors.black}
                   style={{ marginRight: halfPadding }}
                 />
@@ -138,8 +145,8 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                   bgColor={colors.white}
                   textColor={colors.grey700}
                   borderColor={colors.grey700}
-                  onPress={() => null}
-                  number="2" // this is the total number of orders with this status
+                  onPress={() => setKanbanOrders(ordersByStatus('ready'))}
+                  total={ordersByStatus('ready').length}
                   numberColor={colors.black}
                   style={{ marginRight: halfPadding }}
                 />
@@ -148,8 +155,8 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                   bgColor={colors.white}
                   textColor={colors.grey700}
                   borderColor={colors.grey700}
-                  onPress={() => null}
-                  number="2" // this is the total number of orders with this status
+                  onPress={() => setKanbanOrders(ordersByStatus('dispatching'))}
+                  total={ordersByStatus('dispatching').length}
                   numberColor={colors.black}
                   style={{ marginRight: halfPadding }}
                 />
@@ -159,8 +166,8 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                   bgColor={colors.white}
                   textColor={colors.grey700}
                   borderColor={colors.grey700}
-                  onPress={() => null}
-                  number="2" // this is the total number of orders with this status
+                  onPress={() => setKanbanOrders(ordersByStatus('delivered'))}
+                  total={ordersByStatus('delivered').length}
                   numberColor={colors.black}
                   style={{ marginRight: halfPadding }}
                 />
@@ -170,8 +177,9 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                   bgColor={colors.white}
                   textColor={colors.grey700}
                   borderColor={colors.grey700}
-                  onPress={() => null}
+                  onPress={() => setKanbanOrders(ordersByStatus('canceled'))}
                   style={{ marginRight: 32 }}
+                  total={ordersByStatus('canceled').length}
                 />
               </ScrollView>
               <PaddedView>
@@ -184,15 +192,6 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                     />
                   </View>
                 ))}
-                <View style={{ marginBottom: padding }}>
-                  <OrdersKanbanItem
-                    onCheckOrder={() =>
-                      navigation.navigate('OrderDetail', { orderId: 'usDi5nFeaBRNF8SzjEW4' })
-                    }
-                    onTakeOrder={() => null}
-                    order={testingOrder}
-                  />
-                </View>
               </PaddedView>
             </View>
           )}

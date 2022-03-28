@@ -6,7 +6,7 @@ interface AppButonProps extends TouchableOpacityProps, ViewProps {
   title: string;
   bgColor: string;
   borderColor?: string;
-  number?: string;
+  total: number;
   numberColor?: string;
   numberBgColor?: string;
   textColor?: string;
@@ -19,11 +19,12 @@ export const ListFilterButton = ({
   bgColor,
   borderColor,
   textColor,
-  number,
+  total,
   numberColor,
   numberBgColor,
   ...props
 }: AppButonProps) => {
+  if (total <= 0) return null;
   return (
     <TouchableOpacity
       disabled={disabled}
@@ -42,21 +43,19 @@ export const ListFilterButton = ({
         style,
       ]}
     >
-      {number ? (
-        <View
-          style={{
-            height: 24,
-            width: 24,
-            borderRadius: 12,
-            backgroundColor: numberBgColor ? numberBgColor : colors.grey50,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginRight: halfPadding,
-          }}
-        >
-          <Text style={{ ...texts.x2s, color: numberColor }}>{number}</Text>
-        </View>
-      ) : null}
+      <View
+        style={{
+          height: 24,
+          width: 24,
+          borderRadius: 12,
+          backgroundColor: numberBgColor ? numberBgColor : colors.grey50,
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginRight: halfPadding,
+        }}
+      >
+        <Text style={{ ...texts.x2s, color: numberColor }}>{total}</Text>
+      </View>
       <Text style={{ ...texts.sm, color: textColor ? textColor : colors.black }}>{title}</Text>
     </TouchableOpacity>
   );
