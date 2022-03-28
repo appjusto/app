@@ -196,7 +196,6 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                   <View style={{ marginBottom: padding }} key={order.id}>
                     <OrdersKanbanItem
                       onCheckOrder={() => navigation.navigate('OrderDetail', { orderId: order.id })}
-                      onTakeOrder={() => null}
                       order={order}
                     />
                   </View>
