@@ -15,11 +15,10 @@ import { OrderLabel } from './OrderLabel';
 
 type Props = {
   onCheckOrder: () => void;
-  onTakeOrder: () => void;
   order: WithId<Order>;
 };
 
-export const OrdersKanbanItem = ({ onCheckOrder, onTakeOrder, order }: Props) => {
+export const OrdersKanbanItem = ({ onCheckOrder, order }: Props) => {
   const { status, dispatchingState, timestamps } = order;
   // context
   const getServerTime = useContextGetSeverTime();

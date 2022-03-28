@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
+// import { useObserveBusiness } from '../api/business/hooks/useObserveBusiness';
+import { useObserveBusiness } from '../../../common/store/api/business/hooks/useObserveBusiness';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { getManager } from '../../../common/store/business/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
@@ -31,6 +33,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // redux store
   const manager = useSelector(getManager);
   const business = useBusinessManagedBy();
+  const observedBusiness = useObserveBusiness(business?.id);
   // screen state
   const allOrders = useBusinessOrders(business?.id);
   const [kanbanOrders, setKanbanOrders] = React.useState<WithId<Order>[]>([]);
@@ -53,7 +56,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   useSegmentScreen('BusinessOrders');
 
   //UI
-  if (allOrders === undefined || business === undefined) {
+  if (allOrders === undefined || business === undefined || observedBusiness === undefined) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -68,7 +71,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
     <View style={screens.default}>
       <View>
         <PaddedView>
-          <BusinessOrdersHeader business={business} />
+          <BusinessOrdersHeader business={observedBusiness} />
         </PaddedView>
       </View>
       <KeyboardAwareScrollView
