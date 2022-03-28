@@ -1,3 +1,4 @@
+import { Order, WithId } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -12,7 +13,8 @@ import { useSegmentScreen } from '../../../common/store/api/track';
 import { getManager } from '../../../common/store/business/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
-import { useBusinessManagedBy } from '../../hooks/useObserveBusinessManagedBy';
+import { useBusinessManagedBy } from '../../hooks/useBusinessManagedBy';
+import { useBusinessOrders } from '../../hooks/useBusinessOrders';
 import { BusinessNavParamsList } from '../../types';
 import { BusinessOrdersHeader } from '../components/BusinessOrdersHeader';
 import { ListFilterButton } from '../components/ListFilterButton';
@@ -28,31 +30,23 @@ type Props = {
 
 export const BusinessOrders = ({ navigation, route }: Props) => {
   // redux store
-  // const business = useSelector(getBusiness);
   const manager = useSelector(getManager);
   const business = useBusinessManagedBy();
   // screen state
   const noOrdersToday = false; //helper, to be replaced with isEmpty(activeOrders)
   const testingOrder = useObserveOrder('usDi5nFeaBRNF8SzjEW4');
+  const allOrders = useBusinessOrders(business?.id);
+  const [kanbanOrders, setKanbanOrders] = React.useState<WithId<Order>[]>([]);
   // TODO: choose best business initially and remember last selected
-  // active orders
-  // const activeOptions = React.useMemo((): ObserveOrdersOptions => {
-  //   const statuses: OrderStatus[] = ['confirmed', 'preparing', 'ready', 'dispatching'];
-  //   return { businessId, statuses, orderField: 'timestamps.charged' };
-  // }, [businessId]);
-  // inactive orders
-  // const inactiveOptions = React.useMemo((): ObserveOrdersOptions => {
-  //   const statuses = ['delivered', 'canceled'] as OrderStatus[];
-  //   return { businessId: business.id, statuses };
-  // }, [business.id]);
-  // const inactiveOrders = useObserveOrders(inactiveOptions);
-  // const orders = useObserveOrders(inactiveOptions);
-  // maybe:
-  // trazer os dois switches de configurações - receber notificações e imprimir pedido - pra essa tela
+  // TODO maybe:add the printing switch here
+  // side-effects
+  React.useEffect(() => {
+    if (allOrders?.length) setKanbanOrders(allOrders);
+  }, [allOrders]);
   // tracking
   useSegmentScreen('BusinessOrders');
   //UI
-  if (business === undefined || !testingOrder) {
+  if (!testingOrder || allOrders === undefined || business === undefined) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -63,7 +57,6 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
     // TODO: what should we do?
     return null;
   }
-
   return (
     <View style={screens.default}>
       <View>
@@ -119,12 +112,12 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                 />
                 {/* confirmed orders */}
                 <ListFilterButton
-                  title={t('Pendente')}
+                  title={t('À confirmar')}
                   bgColor={colors.white}
                   textColor={colors.grey700}
                   borderColor={colors.grey700}
                   onPress={() => null}
-                  number="2"
+                  number="2" // this is the total number of orders with this status
                   numberColor={colors.white}
                   numberBgColor={colors.red}
                   style={{ marginRight: halfPadding }}
@@ -136,19 +129,27 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                   textColor={colors.grey700}
                   borderColor={colors.grey700}
                   onPress={() => null}
-                  number="3"
+                  number="2" // this is the total number of orders with this status
                   numberColor={colors.black}
                   style={{ marginRight: halfPadding }}
                 />
-                {/* take away orders - not included for now */}
-                {/* dispatching orders */}
+                <ListFilterButton
+                  title={t('Retirada')}
+                  bgColor={colors.white}
+                  textColor={colors.grey700}
+                  borderColor={colors.grey700}
+                  onPress={() => null}
+                  number="2" // this is the total number of orders with this status
+                  numberColor={colors.black}
+                  style={{ marginRight: halfPadding }}
+                />
                 <ListFilterButton
                   title={t('Despachado')}
                   bgColor={colors.white}
                   textColor={colors.grey700}
                   borderColor={colors.grey700}
                   onPress={() => null}
-                  number="4"
+                  number="2" // this is the total number of orders with this status
                   numberColor={colors.black}
                   style={{ marginRight: halfPadding }}
                 />
@@ -159,13 +160,13 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                   textColor={colors.grey700}
                   borderColor={colors.grey700}
                   onPress={() => null}
-                  number="4"
+                  number="2" // this is the total number of orders with this status
                   numberColor={colors.black}
                   style={{ marginRight: halfPadding }}
                 />
                 {/* canceled orders */}
                 <ListFilterButton
-                  title={t('Todos')}
+                  title={t('Cancelados')}
                   bgColor={colors.white}
                   textColor={colors.grey700}
                   borderColor={colors.grey700}
@@ -174,33 +175,15 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                 />
               </ScrollView>
               <PaddedView>
-                <View style={{ marginBottom: padding }}>
-                  <OrdersKanbanItem
-                    onCheckOrder={() =>
-                      navigation.navigate('OrderDetail', { orderId: 'usDi5nFeaBRNF8SzjEW4' })
-                    }
-                    onTakeOrder={() => null}
-                    order={testingOrder}
-                  />
-                </View>
-                <View style={{ marginBottom: padding }}>
-                  <OrdersKanbanItem
-                    onCheckOrder={() =>
-                      navigation.navigate('OrderDetail', { orderId: 'usDi5nFeaBRNF8SzjEW4' })
-                    }
-                    onTakeOrder={() => null}
-                    order={testingOrder}
-                  />
-                </View>
-                <View style={{ marginBottom: padding }}>
-                  <OrdersKanbanItem
-                    onCheckOrder={() =>
-                      navigation.navigate('OrderDetail', { orderId: 'usDi5nFeaBRNF8SzjEW4' })
-                    }
-                    onTakeOrder={() => null}
-                    order={testingOrder}
-                  />
-                </View>
+                {kanbanOrders.map((order) => (
+                  <View style={{ marginBottom: padding }} key={order.id}>
+                    <OrdersKanbanItem
+                      onCheckOrder={() => navigation.navigate('OrderDetail', { orderId: order.id })}
+                      onTakeOrder={() => null}
+                      order={order}
+                    />
+                  </View>
+                ))}
                 <View style={{ marginBottom: padding }}>
                   <OrdersKanbanItem
                     onCheckOrder={() =>
