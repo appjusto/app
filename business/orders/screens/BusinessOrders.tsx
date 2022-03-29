@@ -37,6 +37,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // screen state
   const allOrders = useBusinessOrders(business?.id);
   const [kanbanOrders, setKanbanOrders] = React.useState<WithId<Order>[]>([]);
+  const [selectedFilter, setSelectedFilter] = React.useState<OrderStatus>('confirmed');
   // TODO: choose best business initially and remember last selected
   // TODO maybe:add the printing switch here
   // helpers
@@ -108,11 +109,12 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                 /> */}
               {/* confirmed orders */}
               <ListFilterButton
-                title={t('À confirmar')}
-                bgColor={colors.white}
-                textColor={colors.grey700}
-                borderColor={colors.grey700}
-                onPress={() => setKanbanOrders(ordersByStatus('confirmed'))}
+                title={t('A confirmar')}
+                selected={selectedFilter === 'confirmed'}
+                onPress={() => {
+                  setKanbanOrders(ordersByStatus('confirmed'));
+                  setSelectedFilter('confirmed');
+                }}
                 total={ordersByStatus('confirmed').length}
                 numberColor={ordersByStatus('confirmed').length ? colors.white : colors.black}
                 numberBgColor={ordersByStatus('confirmed').length ? colors.red : colors.grey50}
@@ -121,20 +123,22 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
               {/* preparing orders */}
               <ListFilterButton
                 title={t('Preparação')}
-                bgColor={colors.white}
-                textColor={colors.grey700}
-                borderColor={colors.grey700}
-                onPress={() => setKanbanOrders(ordersByStatus('preparing'))}
+                selected={selectedFilter === 'preparing'}
+                onPress={() => {
+                  setKanbanOrders(ordersByStatus('preparing'));
+                  setSelectedFilter('preparing');
+                }}
                 total={ordersByStatus('preparing').length}
                 numberColor={colors.black}
                 style={{ marginRight: halfPadding }}
               />
               <ListFilterButton
                 title={t('Retirada')}
-                bgColor={colors.white}
-                textColor={colors.grey700}
-                borderColor={colors.grey700}
-                onPress={() => setKanbanOrders(ordersByStatus('ready'))}
+                selected={selectedFilter === 'ready'}
+                onPress={() => {
+                  setKanbanOrders(ordersByStatus('ready'));
+                  setSelectedFilter('ready');
+                }}
                 total={ordersByStatus('ready').length}
                 numberColor={colors.black}
                 style={{ marginRight: halfPadding }}
@@ -142,10 +146,11 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
               />
               <ListFilterButton
                 title={t('Despachado')}
-                bgColor={colors.white}
-                textColor={colors.grey700}
-                borderColor={colors.grey700}
-                onPress={() => setKanbanOrders(ordersByStatus('dispatching'))}
+                selected={selectedFilter === 'dispatching'}
+                onPress={() => {
+                  setKanbanOrders(ordersByStatus('dispatching'));
+                  setSelectedFilter('dispatching');
+                }}
                 total={ordersByStatus('dispatching').length}
                 numberColor={colors.black}
                 style={{ marginRight: halfPadding }}
@@ -153,10 +158,11 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
               {/* delivered orders */}
               <ListFilterButton
                 title={t('Concluído')}
-                bgColor={colors.white}
-                textColor={colors.grey700}
-                borderColor={colors.grey700}
-                onPress={() => setKanbanOrders(ordersByStatus('delivered'))}
+                selected={selectedFilter === 'delivered'}
+                onPress={() => {
+                  setKanbanOrders(ordersByStatus('delivered'));
+                  setSelectedFilter('delivered');
+                }}
                 total={ordersByStatus('delivered').length}
                 numberColor={colors.black}
                 style={{ marginRight: halfPadding }}
@@ -164,10 +170,11 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
               {/* canceled orders */}
               <ListFilterButton
                 title={t('Cancelados')}
-                bgColor={colors.white}
-                textColor={colors.grey700}
-                borderColor={colors.grey700}
-                onPress={() => setKanbanOrders(ordersByStatus('canceled'))}
+                selected={selectedFilter === 'canceled'}
+                onPress={() => {
+                  setKanbanOrders(ordersByStatus('canceled'));
+                  setSelectedFilter('canceled');
+                }}
                 style={{ marginRight: 32 }}
                 total={ordersByStatus('canceled').length}
               />

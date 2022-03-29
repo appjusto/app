@@ -4,24 +4,20 @@ import { borders, colors, halfPadding, padding, texts } from '../../../common/st
 
 interface AppButonProps extends TouchableOpacityProps, ViewProps {
   title: string;
-  bgColor: string;
-  borderColor?: string;
   total: number;
   numberColor?: string;
   numberBgColor?: string;
-  textColor?: string;
+  selected?: boolean;
 }
 
 export const ListFilterButton = ({
   title,
   disabled,
   style,
-  bgColor,
-  borderColor,
-  textColor,
   total,
   numberColor,
   numberBgColor,
+  selected,
   ...props
 }: AppButonProps) => {
   return (
@@ -36,8 +32,8 @@ export const ListFilterButton = ({
           paddingHorizontal: padding,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: bgColor,
-          borderColor: borderColor ? borderColor : bgColor,
+          backgroundColor: selected ? colors.green100 : colors.white,
+          borderColor: selected ? colors.black : colors.grey700,
         },
         style,
       ]}
@@ -55,7 +51,7 @@ export const ListFilterButton = ({
       >
         <Text style={{ ...texts.x2s, color: numberColor }}>{total}</Text>
       </View>
-      <Text style={{ ...texts.sm, color: textColor ? textColor : colors.black }}>{title}</Text>
+      <Text style={{ ...texts.sm, color: selected ? colors.black : colors.grey700 }}>{title}</Text>
     </TouchableOpacity>
   );
 };
