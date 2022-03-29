@@ -4,11 +4,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
+import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeContext';
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
-// import { useObserveBusiness } from '../api/business/hooks/useObserveBusiness';
 import { useObserveBusiness } from '../../../common/store/api/business/hooks/useObserveBusiness';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { getManager } from '../../../common/store/business/selectors';
@@ -20,6 +21,7 @@ import { BusinessNavParamsList } from '../../types';
 import { BusinessOrdersHeader } from '../components/BusinessOrdersHeader';
 import { ListFilterButton } from '../components/ListFilterButton';
 import { OrdersKanbanItem } from '../components/OrdersKanbanItem';
+import { businessShouldBeOpen } from '../helpers';
 
 type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'BusinessOrders'>;
 type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'BusinessOrders'>;
@@ -30,7 +32,11 @@ type Props = {
 };
 
 export const BusinessOrders = ({ navigation, route }: Props) => {
+  // context
+  const getServerTime = useContextGetSeverTime();
+  const api = React.useContext(ApiContext);
   // redux store
+  const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
   const business = useBusinessManagedBy();
   const observedBusiness = useObserveBusiness(business?.id);
@@ -50,9 +56,24 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   );
 
   // side-effects
+  // always set kanban orders to 'confirmed' orders whenever there is a new one
   React.useEffect(() => {
     if (allOrders?.length) setKanbanOrders(ordersByStatus('confirmed'));
   }, [allOrders, ordersByStatus]);
+  // setting business status to open whenever a manager logs in during business schedule
+  React.useEffect(() => {
+    (async () => {
+      if (!business) return;
+      if (!business.enabled) return;
+      if (!business.schedules) return;
+      if (!business.status) return;
+      const today = getServerTime();
+      const shouldBeOpen = businessShouldBeOpen(today, business.schedules);
+      if (shouldBeOpen && business?.status === 'closed') {
+        await api.business().updateBusiness(business.id, { status: 'open' });
+      }
+    })();
+  }, [business, getServerTime, api]);
   // tracking
   useSegmentScreen('BusinessOrders');
 

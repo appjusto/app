@@ -19,6 +19,7 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  updateDoc,
   where,
 } from 'firebase/firestore';
 import * as Sentry from 'sentry-expo';
@@ -69,6 +70,10 @@ export default class BusinessApi {
     );
     if (snapshot.empty) return [];
     return documentsAs<Business>(snapshot.docs);
+  }
+
+  async updateBusiness(businessId: string, changes: Partial<Business>) {
+    await updateDoc(this.refs.getBusinessRef(businessId), changes);
   }
 
   // recommendations
