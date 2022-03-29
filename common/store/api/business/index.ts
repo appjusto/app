@@ -76,6 +76,10 @@ export default class BusinessApi {
     await updateDoc(this.refs.getBusinessRef(businessId), changes);
   }
 
+  async sendKeepAlive(businessId: string) {
+    await this.updateBusiness(businessId, { keepAlive: serverTimestamp() });
+  }
+
   // recommendations
   async addRecomendation(
     recommendedBusiness: Place,
