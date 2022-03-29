@@ -130,10 +130,14 @@ export const OrderDetail = ({ navigation, route }: Props) => {
           style={{ paddingTop: halfPadding, paddingHorizontal: padding, paddingBottom: padding }}
         >
           <View>
-            <Text style={{ ...texts.md, marginBottom: halfPadding }}>
-              {t('Tempo de preparo: ')}
-              <Text style={texts.bold}>{formatDuration(order.cookingTime!)}</Text>
-            </Text>
+            {order.cookingTime ? (
+              <View>
+                <Text style={{ ...texts.md, marginBottom: halfPadding }}>
+                  {t('Tempo de preparo: ')}
+                  <Text style={texts.bold}>{formatDuration(order.cookingTime!)}</Text>
+                </Text>
+              </View>
+            ) : null}
             {order.status === 'preparing' ? (
               <View style={{ width: '60%' }}>
                 <DefaultButton

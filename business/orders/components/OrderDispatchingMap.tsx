@@ -1,4 +1,4 @@
-import { Order } from '@appjusto/types';
+import { Order, OrderStatus } from '@appjusto/types';
 import { Timestamp } from 'firebase/firestore';
 import React from 'react';
 import { Text, View, ViewProps } from 'react-native';
@@ -16,8 +16,9 @@ interface Props extends ViewProps {
 export const OrderDispatchingMap = ({ order, style }: Props) => {
   if (!order) return null;
   const { dispatchingStatus, courier, status } = order;
+  const showMapStatuses = ['dispatching', 'delivered'] as OrderStatus[];
   // commented while testing
-  // if (status !== 'dispatching') return null;
+  if (!showMapStatuses.includes(status)) return null;
   const dispatchingMapUI = () => {
     if (dispatchingStatus !== 'outsourced') {
       return (
