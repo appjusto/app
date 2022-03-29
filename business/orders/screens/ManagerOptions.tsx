@@ -10,6 +10,7 @@ import { confirmLogout } from '../../../common/utils/utils';
 import { t } from '../../../strings';
 import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
 import { BusinessNavParamsList } from '../../types';
+import { ConfigModal } from '../components/ConfigModal';
 type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'ManagerOptions'>;
 type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'ManagerOptions'>;
 
@@ -20,8 +21,9 @@ type Props = {
 
 export const ManagerOptions = ({ navigation, route }: Props) => {
   // context
-  // TODO: connect to the right context
   const api = useContext(ApiContext);
+  // state
+  const [visible, setVisible] = React.useState(false);
   // tracking
   useSegmentScreen('ManagerOptions');
   return (
@@ -35,6 +37,11 @@ export const ManagerOptions = ({ navigation, route }: Props) => {
         title={t('Pedidos')}
         subtitle={t('Gerencie seus pedidos')}
         onPress={() => navigation.navigate('BusinessOrders')}
+      />
+      <ConfigItem
+        title={t('Configurações')}
+        subtitle={t('Edite as configurações do gerenciador')}
+        onPress={() => setVisible(true)}
       />
       <ConfigItem
         title={t('Central de ajuda')}
@@ -64,6 +71,7 @@ export const ManagerOptions = ({ navigation, route }: Props) => {
         )}
         onPress={() => confirmLogout(api)}
       />
+      <ConfigModal modalVisible={visible} onModalClose={() => setVisible(false)} />
     </ScrollView>
   );
 };
