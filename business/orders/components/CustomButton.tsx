@@ -28,9 +28,9 @@ export const CustomButton = ({ order, disabled, style, activityIndicator, ...pro
     buttonTitle = t('Aceitar pedido');
   }
   if (status === 'preparing') {
-    textColor = colors.white;
-    background = colors.grey700;
-    buttonTitle = t('Preparo pronto');
+    textColor = colors.black;
+    background = colors.green500;
+    buttonTitle = t('Finalizar preparo');
   }
   if (status === 'ready') {
     if (dispatchingState === 'arrived-pickup') {
@@ -40,7 +40,7 @@ export const CustomButton = ({ order, disabled, style, activityIndicator, ...pro
     } else {
       textColor = colors.white;
       background = colors.grey700;
-      buttonTitle = t('Preparo pronto');
+      buttonTitle = t('Preparo encerrado');
     }
   }
   return (

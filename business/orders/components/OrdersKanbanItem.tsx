@@ -19,7 +19,7 @@ type Props = {
 };
 
 export const OrdersKanbanItem = ({ onCheckOrder, order }: Props) => {
-  const { status, dispatchingState, timestamps } = order;
+  const { status, dispatchingState, timestamps, dispatchingStatus } = order;
   // context
   const getServerTime = useContextGetSeverTime();
   const api = React.useContext(ApiContext);
@@ -54,9 +54,15 @@ export const OrdersKanbanItem = ({ onCheckOrder, order }: Props) => {
         await api.order().updateOrder(order.id, { status: 'ready' });
       }
       if (status === 'ready') {
-        if (dispatchingState !== 'arrived-pickup') {
-          dispatch(showToast('Aguarde a chegada do entregador', 'error'));
-        } else await api.order().updateOrder(order.id, { status: 'dispatching' });
+        if (dispatchingStatus === 'matching') {
+          if (dispatchingState !== 'arrived-pickup') {
+            await api.order().updateOrder(order.id, { status: 'dispatching' });
+          } else {
+            dispatch(showToast('Aguardando a chegada do entregador', 'error'));
+          }
+        } else {
+          dispatch(showToast('Aguardando a chegada do entregador', 'error'));
+        }
       }
       setLoading(false);
     } catch (error: any) {
@@ -104,7 +110,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, order }: Props) => {
                 order={order}
                 onPress={actionHandler}
                 activityIndicator={isLoading}
-                disabled={status === 'ready' && dispatchingState !== 'arrived-pickup'}
+                disabled={isLoading}
               />
             </View>
           </View>
