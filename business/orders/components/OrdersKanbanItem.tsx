@@ -54,8 +54,9 @@ export const OrdersKanbanItem = ({ onCheckOrder, order }: Props) => {
         await api.order().updateOrder(order.id, { status: 'ready' });
       }
       if (status === 'ready') {
-        if (dispatchingState !== 'arrived-pickup') return;
-        else await api.order().updateOrder(order.id, { status: 'dispatching' });
+        if (dispatchingState !== 'arrived-pickup') {
+          dispatch(showToast('Aguarde a chegada do entregador', 'error'));
+        } else await api.order().updateOrder(order.id, { status: 'dispatching' });
       }
       setLoading(false);
     } catch (error: any) {
@@ -89,7 +90,9 @@ export const OrdersKanbanItem = ({ onCheckOrder, order }: Props) => {
         <OrderLabel order={order} />
       </View>
       <View style={{ marginTop: padding }}>
-        {order.status === 'confirmed' || order.status === 'ready' ? (
+        {order.status === 'confirmed' ||
+        order.status === 'preparing' ||
+        order.status === 'ready' ? (
           <View
             style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
           >
