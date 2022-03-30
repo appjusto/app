@@ -1,4 +1,3 @@
-import { CancelOrderPayload } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -7,7 +6,6 @@ import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
-import { useGetCancellationInfo } from '../../../common/store/api/order/hooks/useGetCancellationInfo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
@@ -50,7 +48,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
   // const business = useSelector(getBusiness);
   // state
   const order = useObserveOrder(orderId);
-  const cancellationInfo = useGetCancellationInfo(orderId); // this cancellationInfo is just for consumers... what about business
+  // const cancellationInfo = useGetCancellationInfo(orderId); // this cancellationInfo is just for consumers... what about business
   const [cancelModalVisible, setCancelModalVisible] = React.useState(false);
   const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
@@ -62,18 +60,18 @@ export const OrderDetail = ({ navigation, route }: Props) => {
       Keyboard.dismiss();
       try {
         setLoading(true);
-        if (!cancellationInfo) {
-          dispatch(showToast('Não foi possível efetuar o cancelamento. Tente novamente', 'error'));
-          return;
-        }
+        // if (!cancellationInfo) {
+        //   dispatch(showToast('Não foi possível efetuar o cancelamento. Tente novamente', 'error'));
+        //   return;
+        // }
         // TODO: what about the issues? italo didn't include them in the interface
-        const cancellationData = {
-          orderId,
-          acknowledgedCosts: cancellationInfo.costs,
-        } as CancelOrderPayload;
-        await api.order().cancelBusinessOrder(cancellationData);
-        dispatch(showToast('Pedido cancelado com sucesso', 'success'));
-        setLoading(false);
+        // const cancellationData = {
+        //   orderId,
+        //   acknowledgedCosts: cancellationInfo.costs,
+        // } as CancelOrderPayload;
+        // await api.order().cancelBusinessOrder(cancellationData);
+        // dispatch(showToast('Pedido cancelado com sucesso', 'success'));
+        // setLoading(false);
         navigation.goBack();
       } catch (error) {
         setLoading(false);
@@ -188,7 +186,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
         modalVisible={cancelModalVisible}
         onModalClose={() => setCancelModalVisible(false)}
         onCancelOrder={() => {
-          cancelOrderHandler();
+          // cancelOrderHandler();
           setCancelModalVisible(false);
         }}
       />

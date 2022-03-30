@@ -28,10 +28,12 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
     try {
       setLoading(true);
       // if business has not confirmed order yet, set cooking time and set status to 'preparing'
-      if (order.status !== 'preparing') {
+      if (order.status === 'confirmed') {
+        console.log('chamando updateOrder pra mudar o status para preparing');
         await api
           .order()
           .updateOrder(order.id, { cookingTime: cookingTime * 60, status: 'preparing' });
+        console.log('deu certo');
       }
       // if status === 'preparing' only set cooking time
       else {
