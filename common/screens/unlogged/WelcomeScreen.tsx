@@ -162,7 +162,11 @@ export default function ({ navigation, route }: Props) {
                 <Text
                   style={[texts.sm, { color: colors.grey700, lineHeight: 21, marginTop: padding }]}
                 >
-                  {t('Digite seu e-mail para entrar ou criar sua conta.')}
+                  {authMode === 'phone'
+                    ? t('Digite o número do seu celular')
+                    : authMode === 'passwordless'
+                    ? t('Digite seu e-mail para entrar ou criar sua conta.')
+                    : t('Digite a senha que enviamos para o seu e-mail.')}
                 </Text>
               </View>
             </>
@@ -211,7 +215,7 @@ export default function ({ navigation, route }: Props) {
                   style={{ marginTop: padding }}
                   value={password}
                   title={t('Senha')}
-                  placeholder={t('Digite sua senha')}
+                  placeholder={t('Senha que enviamos para seu e-mail')}
                   onChangeText={setPassword}
                   keyboardType="visible-password"
                   blurOnSubmit

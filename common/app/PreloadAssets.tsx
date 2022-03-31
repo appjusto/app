@@ -15,7 +15,11 @@ export default function ({ children }: Props) {
   const [assetsLoaded, setAssetsLoaded] = useState(false);
   React.useEffect(() => {
     (async () => {
-      await SplashScreen.preventAutoHideAsync();
+      try {
+        await SplashScreen.preventAutoHideAsync();
+      } catch (error: any) {
+        console.warn(error);
+      }
       await Font.loadAsync(fonts);
       await Asset.loadAsync(icons);
       setAssetsLoaded(true);
