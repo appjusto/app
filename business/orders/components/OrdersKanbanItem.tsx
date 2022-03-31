@@ -48,53 +48,21 @@ export const OrdersKanbanItem = ({ onCheckOrder, order }: Props) => {
     setLoading(true);
     try {
       if (status === 'confirmed') {
+        setLoading(false);
         setModalVisible(true); // can change status to preparing from within the modal
       }
       if (status === 'preparing') {
-        // show no button and "trust the label"?
-        // dispatchingStatus can become matching
-        if (dispatchingStatus === 'matching') {
-          // button should be disabled or show toast
-          return;
-        }
-        // dispatchingStatus can become matched
-        if (dispatchingStatus === 'matched') {
-          // courier can arrive at pickup... dispatchingState arrived-pickup
-          if (dispatchingState === 'arrived-pickup') {
-          } else {
-            // button should be disabled or show toast
-            return;
-          }
-        }
-        // dispatchingStatus can become no-match
-        if (dispatchingStatus === 'no-match') {
-          // wait for back office reply?
-        }
-        // preparing could end before cooking time. can advance to status 'ready'
-        else await api.order().updateOrder(order.id, { status: 'ready' });
+        await api.order().updateOrder(order.id, { status: 'ready' });
+        setLoading(false);
       }
       if (status === 'ready') {
-        // if advanced to ready clicking the button (ready before cooking time)
-        // dispatchingStatus can become matching
-        if (dispatchingStatus === 'matching') {
-          // button should be disabled or show toast
-          return;
-        }
-        // dispatchingStatus can become matched
         if (dispatchingStatus === 'matched') {
-          // courier can arrive at pickup... dispatchingState arrived-pickup
           if (dispatchingState === 'arrived-pickup') {
             await api.order().updateOrder(order.id, { status: 'dispatching' });
-          } else {
-            // button should be disabled or show toast
-            return;
+            setLoading(false);
           }
-        }
-        // dispatchingStatus can become no-match
-        if (dispatchingStatus === 'no-match') {
-          // wait for back office reply?
-          return;
-        }
+        } else setLoading(false);
+        dispatch(showToast('Procurando entregador. Aguarde um momento', 'error'));
       }
       setLoading(false);
     } catch (error: any) {
