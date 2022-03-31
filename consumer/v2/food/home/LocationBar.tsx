@@ -35,6 +35,7 @@ export const LocationBar = ({ onChangePlace }: Props) => {
         dispatch(
           updateCurrentPlace({
             address,
+            location: coords,
           })
         );
       } else {
