@@ -24,7 +24,13 @@ export const OngoingMapAndInfo = ({
 }: Props) => {
   return order.status === 'dispatching' ? (
     <View>
-      <OrderMap order={order} ratio={240 / 160} />
+      <OrderMap
+        originLocation={order.origin?.location}
+        destinationLocation={order.destination?.location}
+        courierLocation={order.courier?.location}
+        route={order.route}
+        ratio={240 / 160}
+      />
       <MessagesCard orderId={order.id} onPress={onOpenChat} />
       {order.dispatchingStatus === 'outsourced' ? (
         <View>

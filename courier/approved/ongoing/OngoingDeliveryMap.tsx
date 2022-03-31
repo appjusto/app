@@ -15,7 +15,13 @@ type Props = {
 export const OngoingDeliveryMap = ({ order, onOpenChat, isLoading }: Props) => {
   return order.dispatchingState === 'arrived-destination' ? null : (
     <View>
-      <OrderMap order={order!} ratio={1} />
+      <OrderMap
+        originLocation={order.origin?.location}
+        destinationLocation={order.destination?.location}
+        courierLocation={order.courier?.location}
+        route={order.route}
+        ratio={1}
+      />
       <ShowIf test={!isLoading}>{() => <RouteIcons order={order} />}</ShowIf>
       <View>
         <StatusAndMessages order={order} onPress={onOpenChat} />

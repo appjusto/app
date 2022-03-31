@@ -48,7 +48,13 @@ export default function ({ navigation, route }: Props) {
   // UI
   return (
     <View style={{ ...screens.default }}>
-      <OrderMap order={order} ratio={360 / 160} />
+      <OrderMap
+        originLocation={order.origin?.location}
+        destinationLocation={order.destination?.location}
+        courierLocation={order.courier?.location}
+        route={order.route}
+        ratio={360 / 160}
+      />
       <ScrollView scrollIndicatorInsets={{ right: 1 }} keyboardShouldPersistTaps="handled">
         <PaddedView>
           <PlaceSummary title={t('Retirada')} place={order.origin!} />
