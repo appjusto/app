@@ -58,6 +58,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // side-effects
   // always set kanban orders to 'confirmed' orders whenever there is a new one
   React.useEffect(() => {
+    // this is not ideal... maybe we should only do this if there is a new order
     if (allOrders?.length) setKanbanOrders(ordersByStatus('confirmed'));
   }, [allOrders, ordersByStatus]);
   // setting business status to open whenever a manager logs in during business schedule

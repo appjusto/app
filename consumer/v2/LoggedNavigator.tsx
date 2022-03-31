@@ -38,7 +38,6 @@ export const LoggedNavigator = () => {
   const uid = user?.uid;
   // side effects
   // subscribe for profile changes
-  console.log('business veio para o LoggedNavigator do consumer');
   React.useEffect(() => {
     if (uid) return dispatch(observeProfile(api)(flavor, uid));
   }, [dispatch, api, flavor, uid]);
