@@ -53,6 +53,7 @@ export default function (enabled: boolean = true, key?: string) {
             setLastKnownLocation(current);
           } catch (error: any) {
             setLastKnownLocation(null);
+            console.error(error);
             Sentry.Native.captureException(error);
           }
         })();

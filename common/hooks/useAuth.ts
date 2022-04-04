@@ -97,6 +97,7 @@ export const useAuth = (): [AuthState, User | undefined | null] => {
         await signInWithEmailLink(api)(email, link!);
         // const continueUrl = Linking.parse(link).queryParams?.continueUrl;
       } catch (e) {
+        console.error(e);
         Sentry.Native.captureException(e);
         setAuthState(AuthState.InvalidCredentials);
       }
