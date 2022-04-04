@@ -8,13 +8,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RoundedText from '../../../common/components/texts/RoundedText';
+import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
 import OrderMap from '../../../common/screens/orders/OrderMap';
 import { useObserveOrderRequest } from '../../../common/store/api/courier/hooks/useObserveOrderRequest';
 import { screen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
-import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency, formatDistance, formatTime } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -49,6 +50,7 @@ export default function ({ navigation, route }: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
   const courier = useSelector(getCourier)!;
+  const tallerDevice = useTallerDevice();
   // state
   const { coords } = useLastKnownLocation();
   const request = useObserveOrderRequest(courier.id, orderId);
@@ -153,12 +155,10 @@ export default function ({ navigation, route }: Props) {
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
     >
-      <View style={{ paddingVertical: 24, flex: 1 }}>
+      <View style={{ paddingVertical: padding, flex: 1 }}>
         {courier.fleet?.name ? (
           <View
             style={{
-              width: '100%',
-              height: 54,
               backgroundColor: colors.grey50,
               borderRadius: 64,
               padding,
@@ -166,7 +166,7 @@ export default function ({ navigation, route }: Props) {
               justifyContent: 'center',
               alignItems: 'center',
               marginTop: padding,
-              paddingHorizontal: padding,
+              marginHorizontal: padding,
             }}
           >
             <Text style={{ ...texts.md }}>{courier.fleet.name}</Text>
@@ -174,16 +174,14 @@ export default function ({ navigation, route }: Props) {
         ) : (
           <View
             style={{
-              width: '100%',
-              height: 54,
-              backgroundColor: colors.green50,
+              backgroundColor: colors.grey50,
               borderRadius: 64,
               padding,
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
               marginTop: padding,
-              paddingHorizontal: padding,
+              marginHorizontal: padding,
             }}
           >
             <Text style={{ marginRight: halfPadding, ...texts.md }}>
@@ -194,10 +192,9 @@ export default function ({ navigation, route }: Props) {
             </Text>
           </View>
         )}
-        <View style={{ flex: 1 }} />
         <View
           style={{
-            marginTop: 24,
+            marginTop: padding,
             width: '100%',
             height: 64,
             flexDirection: 'row',
@@ -242,7 +239,7 @@ export default function ({ navigation, route }: Props) {
             </Text>
           </View>
         </View>
-        <View style={{ marginTop: 24, alignItems: 'center', paddingHorizontal: padding }}>
+        <View style={{ alignItems: 'center', paddingHorizontal: padding, paddingTop: padding }}>
           {matchRequest.readyAt ? (
             <RoundedText color={colors.white} backgroundColor={colors.black}>
               {`${t('Pedido pronto às')} ${formatTime(new Date(matchRequest.readyAt))}`}
@@ -253,39 +250,37 @@ export default function ({ navigation, route }: Props) {
             </RoundedText>
           ) : null}
         </View>
-        <View style={{ flex: 1 }} />
+        {tallerDevice ? <View style={{ flex: 1 }} /> : null}
         {/* map */}
-        <View style={{ marginTop: padding }}>
+        <View
+          style={{
+            marginTop: padding,
+            ...borders.default,
+            marginHorizontal: padding,
+            borderRadius: padding,
+            overflow: 'hidden',
+            paddingBottom: padding,
+          }}
+        >
           <OrderMap
             originLocation={origin}
             destinationLocation={destination}
             courierLocation={courierLatLng}
             ratio={360 / 160}
+            mapWidth="100%"
+            mapHeigth={tallerDevice ? 180 : 120}
+          />
+          <AddressCard
+            kind="origin"
+            distance={formatDistance(routeDistanceToOrigin)}
+            address={originAddress}
+          />
+          <AddressCard
+            kind="destination"
+            distance={formatDistance(matchRequest.distance)} // distance between origin and destination
+            address={destinationAddress}
           />
         </View>
-        <View style={{ flex: 1 }} />
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{ paddingVertical: padding, top: -24 }}
-        >
-          {/* origin */}
-          <View style={{ marginRight: halfPadding }}>
-            <AddressCard
-              kind="origin"
-              distance={formatDistance(routeDistanceToOrigin)}
-              address={originAddress}
-            />
-          </View>
-          {/* destination */}
-          <View>
-            <AddressCard
-              kind="destination"
-              distance={formatDistance(matchRequest.distance)} // distance between origin and destination
-              address={destinationAddress}
-            />
-          </View>
-        </ScrollView>
         <View style={{ flex: 1 }} />
         {/* slider accept/reject control */}
         {canAccept ? (
