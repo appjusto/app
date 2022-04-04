@@ -28,7 +28,11 @@ export default function ({ children }: Props) {
 
   const onLayoutRootView = React.useCallback(async () => {
     if (assetsLoaded) {
-      await SplashScreen.hideAsync();
+      try {
+        await SplashScreen.hideAsync();
+      } catch (error: any) {
+        console.warn(error);
+      }
     }
   }, [assetsLoaded]);
 
