@@ -7,13 +7,17 @@ import DefaultMap from '../../components/views/DefaultMap';
 import { IconMapCourier } from '../../icons/icon-mapCourier';
 import { IconMapDestination } from '../../icons/icon-mapDestination';
 import { IconMapOrigin } from '../../icons/icon-mapOrigin';
+import { padding } from '../../styles';
 
 type Props = {
   ratio: number;
   courierLocation?: LatLng | null;
   originLocation?: LatLng | null;
   destinationLocation?: LatLng | null;
+  mapWidth?: string;
+  mapHeigth?: number;
   route?: OrderRoute | null;
+  topRadius?: boolean;
 };
 
 export default function ({
@@ -22,6 +26,9 @@ export default function ({
   originLocation,
   destinationLocation,
   route,
+  mapWidth,
+  mapHeigth,
+  topRadius,
 }: Props) {
   const { width } = Dimensions.get('window');
   if (!originLocation) return null;
@@ -33,7 +40,15 @@ export default function ({
       })
     : undefined;
   return (
-    <View style={{ width, height: width / ratio, alignSelf: 'center' }}>
+    <View
+      style={{
+        width: mapWidth ?? width,
+        height: mapHeigth ?? width / ratio,
+        alignSelf: 'center',
+        borderTopLeftRadius: topRadius ? padding : undefined,
+        borderTopRightRadius: topRadius ? padding : undefined,
+      }}
+    >
       <DefaultMap
         // coordinates={[origin.location, destination.location]}
         coordinates={routeCoordinates}
@@ -43,7 +58,12 @@ export default function ({
           latitudeDelta: 0.03,
           longitudeDelta: 0.03,
         }}
-        style={{ height: '100%', width: '100%' }}
+        style={{
+          height: '100%',
+          width: '100%',
+          borderTopLeftRadius: topRadius ? padding : undefined,
+          borderTopRightRadius: topRadius ? padding : undefined,
+        }}
       >
         <Marker
           key={`${originLocation.latitude}-${originLocation.longitude}`}
