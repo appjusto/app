@@ -41,9 +41,10 @@ export default function ({ order, onPress }: Props) {
         } else if (status === 'dispatching') {
           title = t('Seu pedido está à caminho!');
         }
+        // TODO: colocar a caminho da entrega para pedidos P2P
         if (dispatchingStatus === 'confirmed' || dispatchingStatus == 'outsourced') {
           if (dispatchingState === 'going-pickup') {
-            detail = `${courier?.name ?? t('Entregador/a')} ${t('indo para')} ${businessName}`;
+            detail = `${courier?.name ?? t('Entregador/a')} ${t('está indo para')} ${businessName}`;
           } else if (dispatchingState === 'arrived-pickup') {
             detail = `${courier?.name ?? t('Entregador/a')} ${t('chegou no/a')} ${businessName}`;
           } else if (dispatchingState === 'going-destination') {

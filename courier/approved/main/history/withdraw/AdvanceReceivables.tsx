@@ -3,7 +3,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import CheckField from '../../../../../common/components/buttons/CheckField';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
@@ -67,7 +66,6 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
         description: t('O valor será transferido para sua conta em até 1 dia útil.'),
       });
     } catch (error) {
-      Sentry.Native.captureException(error);
       dispatch(showToast('Não foi possível realizar a requisição. Tente novamente.', 'error'));
       setRequesting(false);
     }
