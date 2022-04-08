@@ -40,7 +40,7 @@ export const CustomButton = ({ order, disabled, style, activityIndicator, ...pro
     } else {
       textColor = colors.white;
       background = colors.grey700;
-      buttonTitle = t('Preparo encerrado');
+      buttonTitle = t('Aguardando entregador');
     }
   }
   return (

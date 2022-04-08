@@ -56,13 +56,20 @@ export const OrdersKanbanItem = ({ onCheckOrder, order }: Props) => {
         setLoading(false);
       }
       if (status === 'ready') {
-        if (dispatchingStatus === 'matched') {
-          if (dispatchingState === 'arrived-pickup') {
-            await api.order().updateOrder(order.id, { status: 'dispatching' });
-            setLoading(false);
-          }
-        } else setLoading(false);
-        dispatch(showToast('Procurando entregador. Aguarde um momento', 'error'));
+        if (dispatchingState === 'arrived-pickup') {
+          await api.order().updateOrder(order.id, { status: 'dispatching' });
+          setLoading(false);
+        }
+        if (dispatchingStatus === 'outsourced') {
+          await api.order().updateOrder(order.id, { status: 'dispatching' });
+          setLoading(false);
+        } else {
+          setLoading(false);
+          dispatch(showToast('Aguarde a chegada do entregador com o código do pedido', 'error'));
+        }
+      } else {
+        setLoading(false);
+        return;
       }
       setLoading(false);
     } catch (error: any) {
@@ -73,6 +80,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, order }: Props) => {
       setLoading(false);
     }
   };
+  // UI
   return (
     <View
       style={{
@@ -110,7 +118,9 @@ export const OrdersKanbanItem = ({ onCheckOrder, order }: Props) => {
                 order={order}
                 onPress={actionHandler}
                 activityIndicator={isLoading}
-                disabled={isLoading}
+                disabled={
+                  isLoading || (status === 'ready' && dispatchingState !== 'arrived-pickup')
+                }
               />
             </View>
           </View>
