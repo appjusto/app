@@ -325,7 +325,7 @@ export default class OrderApi {
     const businesses = documentsAs<Business>(lastRestsQuerySnapshot.docs);
     return businessIds
       .slice(0, max)
-      .map((id) => businesses.find((b) => b.id === id))
+      .map((id) => businesses.find((b) => b.id === id)!)
       .filter((b) => !!b);
   }
   // courier

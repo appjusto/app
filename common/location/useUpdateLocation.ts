@@ -24,14 +24,14 @@ export const useUpdateLocation = () => {
   const { coords } = useLastKnownLocation();
   // effect to update currentPlace and currentLocation
   React.useEffect(() => {
-    console.log(
-      `coords: ${coords}; currentLocation: ${currentLocation}; currentPlace: ${currentPlace}`
-    );
+    // console.log(
+    //   `authState: ${authState}; coords: ${coords}; currentLocation: ${currentLocation}; currentPlace: ${currentPlace}; lastPlace: ${lastPlace}`
+    // );
     // if unlogged
-    if (authState === AuthState.Unsigned) {
+    if (authState === AuthState.Unsigned || authState === AuthState.InvalidCredentials) {
       if (!currentLocation) {
         if (coords) {
-          console.log('currentLocation falsy: atualizando para coords:', coords);
+          // console.log('currentLocation falsy: atualizando para coords:', coords);
           // updating current location if not set
           dispatch(updateCurrentLocation(coords));
         } else {
@@ -61,16 +61,16 @@ export const useUpdateLocation = () => {
       // this will happen when we use AddressComplete to set the place
       if (!currentLocation) {
         if (currentPlace.location) {
-          console.log(
-            'currentLocation falsy: atualizando para currentPlace.location:',
-            currentPlace.location
-          );
+          // console.log(
+          //   'currentLocation falsy: atualizando para currentPlace.location:',
+          //   currentPlace.location
+          // );
           dispatch(updateCurrentLocation(currentPlace.location));
         } else {
-          console.log(
-            'currentLocation falsy: obtendo localização do endereço',
-            currentPlace.address.description
-          );
+          // console.log(
+          //   'currentLocation falsy: obtendo localização do endereço',
+          //   currentPlace.address.description
+          // );
           api
             .maps()
             .googleGeocode(currentPlace.address.description)
@@ -82,7 +82,7 @@ export const useUpdateLocation = () => {
                   location: latlng,
                 })
               );
-              console.log('atualizando currentPlace para incluir location:', latlng);
+              // console.log('atualizando currentPlace para incluir location:', latlng);
             });
         }
       }
