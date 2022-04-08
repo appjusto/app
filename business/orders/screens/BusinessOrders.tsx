@@ -44,7 +44,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // screen state
   const allOrders = useBusinessOrders(business?.id);
   const [kanbanOrders, setKanbanOrders] = React.useState<WithId<Order>[]>(allOrders ?? []);
-  const [selectedFilter, setSelectedFilter] = React.useState<OrderStatus>('confirmed');
+  const [selectedFilter, setSelectedFilter] = React.useState<OrderStatus>();
   // TODO: choose best business initially and remember last selected
   // TODO maybe:add the printing switch here
   // helpers
@@ -70,6 +70,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
       if (!business.enabled) return;
       if (!business.schedules) return;
       if (!business.status) return;
+      if (!getServerTime) return;
       const today = getServerTime();
       const shouldBeOpen = businessShouldBeOpen(today, business.schedules);
       if (shouldBeOpen && business?.status === 'closed') {
@@ -122,11 +123,13 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
               style={{ marginTop: padding, paddingLeft: padding }}
             >
               {/* all orders */}
-
               <ListFilterButton
                 title={t('Todos')}
-                // total={allOrders?.length ?? 0}
-                onPress={() => setKanbanOrders(allOrders ?? [])}
+                selected={selectedFilter === undefined}
+                onPress={() => {
+                  setKanbanOrders(allOrders ?? []);
+                  setSelectedFilter(undefined);
+                }}
                 style={{ marginRight: halfPadding }}
               />
               {/* confirmed orders */}
