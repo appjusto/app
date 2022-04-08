@@ -24,7 +24,6 @@ export default function () {
   // side effects
   // once
   // subscribe for profile changes
-  console.log('estamos no LoggedNavigator do courier');
   React.useEffect(() => {
     if (!courierId) return;
     return dispatch(observeProfile(api)(flavor, courierId));

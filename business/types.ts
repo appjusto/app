@@ -10,6 +10,7 @@ export type BusinessNavParamsList = {
   OrderDetail: {
     orderId: string;
   };
+  BusinessChats: undefined;
   ManagerOptions: undefined;
   AboutApp: undefined;
   Terms: undefined;

@@ -43,7 +43,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   const observedBusiness = useObserveBusiness(business?.id);
   // screen state
   const allOrders = useBusinessOrders(business?.id);
-  const [kanbanOrders, setKanbanOrders] = React.useState<WithId<Order>[]>(allOrders ?? []);
+  const [kanbanOrders, setKanbanOrders] = React.useState<WithId<Order>[]>();
   const [selectedFilter, setSelectedFilter] = React.useState<OrderStatus>();
   // TODO: choose best business initially and remember last selected
   // TODO maybe:add the printing switch here
@@ -55,14 +55,14 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
     },
     [allOrders]
   );
-
   // side-effects
   // TODO: is this the best place for the useNotificationToken?
   useNotificationToken();
   // always set kanban orders to 'confirmed' orders whenever there is a new one
-  // React.useEffect(() => {
-  //   if (allOrders?.length) setKanbanOrders(ordersByStatus('confirmed'));
-  // }, [allOrders, ordersByStatus]);
+  React.useEffect(() => {
+    if (allOrders?.length) setKanbanOrders(allOrders);
+    else setKanbanOrders([]);
+  }, [allOrders]);
   // setting business status to open whenever a manager logs in during business schedule
   React.useEffect(() => {
     (async () => {
@@ -80,9 +80,13 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   }, [business, getServerTime, api]);
   // tracking
   useSegmentScreen('BusinessOrders');
-
   //UI
-  if (allOrders === undefined || business === undefined || observedBusiness === undefined) {
+  if (
+    allOrders === undefined ||
+    business === undefined ||
+    observedBusiness === undefined ||
+    kanbanOrders === undefined
+  ) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -227,7 +231,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                   </Text>
                 </View>
               ) : (
-                kanbanOrders.map((order) => (
+                kanbanOrders?.map((order) => (
                   <View style={{ marginBottom: padding }} key={order.id}>
                     <OrdersKanbanItem
                       onCheckOrder={() => navigation.navigate('OrderDetail', { orderId: order.id })}

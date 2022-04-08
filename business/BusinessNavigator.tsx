@@ -10,6 +10,8 @@ import Terms from '../common/screens/unlogged/Terms';
 import { colors, screens } from '../common/styles';
 import { t } from '../strings';
 import { useBusinessManagedBy } from './hooks/useBusinessManagedBy';
+import { MessagesIcon } from './orders/components/MessagesIcon';
+import { BusinessChats } from './orders/screens/BusinessChats';
 import { BusinessOrders } from './orders/screens/BusinessOrders';
 import { ManagerOptions } from './orders/screens/ManagerOptions';
 import { OrderDetail } from './orders/screens/OrderDetail';
@@ -63,12 +65,22 @@ export const BusinessNavigator = () => {
               </View>
             </TouchableWithoutFeedback>
           ),
+          headerRight: () => (
+            <View style={{ marginRight: 12 }}>
+              <MessagesIcon onPress={() => navigation.navigate('BusinessChats')} />
+            </View>
+          ),
         })}
       />
       <Stack.Screen
         name="OrderDetail"
         component={OrderDetail}
         options={{ title: t('Ver pedido') }}
+      />
+      <Stack.Screen
+        name="BusinessChats"
+        component={BusinessChats}
+        options={{ title: t('Chats') }}
       />
       <Stack.Screen
         name="ManagerOptions"
