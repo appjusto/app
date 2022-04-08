@@ -9,6 +9,7 @@ import { ApiContext, AppDispatch } from '../../../common/app/context';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
 import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeContext';
+import { useNotificationToken } from '../../../common/hooks/useNotificationToken';
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
 import { useObserveBusiness } from '../../../common/store/api/business/hooks/useObserveBusiness';
 import { useSegmentScreen } from '../../../common/store/api/track';
@@ -56,6 +57,8 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   );
 
   // side-effects
+  // TODO: is this the best place for the useNotificationToken?
+  useNotificationToken();
   // always set kanban orders to 'confirmed' orders whenever there is a new one
   React.useEffect(() => {
     // this is not ideal... maybe we should only do this if there is a new order
