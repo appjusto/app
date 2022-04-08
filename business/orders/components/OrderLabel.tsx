@@ -56,12 +56,16 @@ export const OrderLabel = ({ order }: Props) => {
       : t('Concluído');
     statusBGColor = colors.green500;
   }
+  if (status === 'canceled') {
+    statusLabel = t('Pedido cancelado');
+    statusBGColor = colors.grey700;
+  }
   if (statusLabel === undefined) return null;
   return (
     <RoundedText
       backgroundColor={statusBGColor}
       noBorder
-      color={order.status === 'confirmed' ? colors.white : colors.black}
+      color={status === 'confirmed' || status === 'canceled' ? colors.white : colors.black}
     >
       {statusLabel}
     </RoundedText>

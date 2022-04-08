@@ -9,7 +9,11 @@ export const useBusinessOrders = (businessId?: string) => {
   // state
   const [orders, setOrders] = React.useState<WithId<Order>[] | null>();
   const options = React.useMemo((): ObserveOrdersOptions => {
-    return { businessId, orderField: 'timestamps.charged' };
+    return {
+      businessId,
+      orderField: 'timestamps.charged',
+      statuses: ['confirmed', 'preparing', 'ready', 'dispatching', 'delivered', 'canceled'],
+    };
   }, [businessId]);
   // side effects
   React.useEffect(() => {
