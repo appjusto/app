@@ -43,7 +43,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   const observedBusiness = useObserveBusiness(business?.id);
   // screen state
   const allOrders = useBusinessOrders(business?.id);
-  const [kanbanOrders, setKanbanOrders] = React.useState<WithId<Order>[]>([]);
+  const [kanbanOrders, setKanbanOrders] = React.useState<WithId<Order>[]>(allOrders ?? []);
   const [selectedFilter, setSelectedFilter] = React.useState<OrderStatus>('confirmed');
   // TODO: choose best business initially and remember last selected
   // TODO maybe:add the printing switch here
@@ -60,10 +60,9 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // TODO: is this the best place for the useNotificationToken?
   useNotificationToken();
   // always set kanban orders to 'confirmed' orders whenever there is a new one
-  React.useEffect(() => {
-    // this is not ideal... maybe we should only do this if there is a new order
-    if (allOrders?.length) setKanbanOrders(ordersByStatus('confirmed'));
-  }, [allOrders, ordersByStatus]);
+  // React.useEffect(() => {
+  //   if (allOrders?.length) setKanbanOrders(ordersByStatus('confirmed'));
+  // }, [allOrders, ordersByStatus]);
   // setting business status to open whenever a manager logs in during business schedule
   React.useEffect(() => {
     (async () => {
@@ -123,15 +122,13 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
               style={{ marginTop: padding, paddingLeft: padding }}
             >
               {/* all orders */}
-              {/* maybe we should start with confirmed orders??? */}
-              {/* <ListFilterButton
-                  title={t('Todos')}
-                  bgColor={colors.green100}
-                  textColor={colors.black}
-                  borderColor={colors.black}
-                  onPress={() => null}
-                  style={{ marginRight: halfPadding }}
-                /> */}
+
+              <ListFilterButton
+                title={t('Todos')}
+                // total={allOrders?.length ?? 0}
+                onPress={() => setKanbanOrders(allOrders ?? [])}
+                style={{ marginRight: halfPadding }}
+              />
               {/* confirmed orders */}
               <ListFilterButton
                 title={t('A confirmar')}
