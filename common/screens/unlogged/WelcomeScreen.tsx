@@ -185,15 +185,16 @@ export default function ({ navigation, route }: Props) {
                     keyboardType="email-address"
                     blurOnSubmit
                     autoCapitalize="none"
+                    errorMessage={
+                      email.length > 5 &&
+                      email.includes('@') &&
+                      email.includes('.') &&
+                      validateEmail(email).status !== 'ok'
+                        ? t('O e-mail digitado não é válido')
+                        : undefined
+                    }
                     autoCorrect={false}
                   />
-                  <ShowIf test={email.length > 5 && validateEmail(email).status !== 'ok'}>
-                    {() => (
-                      <Text style={{ ...texts.sm, color: colors.red, marginTop: halfPadding }}>
-                        {t('O e-mail digitado não é válido')}
-                      </Text>
-                    )}
-                  </ShowIf>
                 </>
               ) : (
                 <PatternInput
