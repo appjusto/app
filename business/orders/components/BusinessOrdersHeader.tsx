@@ -34,7 +34,7 @@ export const BusinessOrdersHeader = ({ business }: Props) => {
           marginRight: padding,
         }}
       >
-        <ListItemImage uri={logo} height={48} width={48} />
+        <ListItemImage uri={logo} height={48} width={48} radius={24} />
       </View>
       <View style={{ alignItems: 'flex-start', justifyContent: 'center' }}>
         <View style={{ width: '90%' }}>
