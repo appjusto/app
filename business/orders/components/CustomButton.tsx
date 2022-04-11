@@ -33,14 +33,13 @@ export const CustomButton = ({ order, disabled, style, activityIndicator, ...pro
     buttonTitle = t('Finalizar preparo');
   }
   if (status === 'ready') {
+    buttonTitle = t('Entregar pedido');
     if (dispatchingState === 'arrived-pickup') {
       textColor = colors.black;
       background = colors.darkYellow;
-      buttonTitle = t('Entregar pedido');
     } else {
       textColor = colors.white;
       background = colors.grey700;
-      buttonTitle = t('Aguardando entregador');
     }
   }
   return (

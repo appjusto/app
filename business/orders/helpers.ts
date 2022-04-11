@@ -1,11 +1,7 @@
-import { BusinessSchedule, OrderStatus } from '@appjusto/types';
+import { BusinessSchedule } from '@appjusto/types';
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 dayjs.extend(isSameOrBefore);
-
-export const acceptStatuses = ('confirmed' || 'preparing' || 'ready') as OrderStatus;
-export const cancellableStatuses = ('preparing' || 'ready') as OrderStatus;
-export const cookingTimeStatuses = ('confirmed' || 'preparing') as OrderStatus;
 
 export const businessShouldBeOpen = (today: Date, schedules: BusinessSchedule) => {
   if (!today || !schedules) {

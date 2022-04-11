@@ -28,7 +28,6 @@ import { DetailedOrderItems } from '../components/DetailedOrderItems';
 import { InfoAndCPF } from '../components/InfoAndCPF';
 import { OrderDetailHeader } from '../components/OrderDetailHeader';
 import { OrderDispatchingMap } from '../components/OrderDispatchingMap';
-import { acceptStatuses, cancellableStatuses } from '../helpers';
 
 type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'OrderDetail'>;
 type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'OrderDetail'>;
@@ -102,6 +101,11 @@ export const OrderDetail = ({ navigation, route }: Props) => {
       setLoading(false);
     }
   };
+  // helpers
+  const showCustomButton =
+    order &&
+    (order.status === 'confirmed' || order.status === 'preparing' || order.status === 'ready');
+  const cancellableStatuses = order && (order.status === 'preparing' || order.status === 'ready');
   //UI
   if (!order) {
     return (
@@ -153,7 +157,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
           <InfoAndCPF order={order} />
         </View>
         {/* this button will open a CancelOrderModal  */}
-        {order.status.includes(cancellableStatuses) ? (
+        {cancellableStatuses ? (
           <View style={{ width: '60%', paddingHorizontal: padding, marginBottom: 32 }}>
             <DefaultButton
               title={t('Cancelar pedido')}
@@ -163,7 +167,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
           </View>
         ) : null}
       </ScrollView>
-      {order.status.includes(acceptStatuses) ? (
+      {showCustomButton ? (
         <View
           style={{
             paddingVertical: halfPadding,

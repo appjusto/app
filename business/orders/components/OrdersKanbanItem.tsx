@@ -60,6 +60,10 @@ export const OrdersKanbanItem = ({ onCheckOrder, order }: Props) => {
           await api.order().updateOrder(order.id, { status: 'dispatching' });
           setLoading(false);
         }
+        if (dispatchingState !== 'arrived-pickup') {
+          setLoading(false);
+          dispatch(showToast('Aguarde a chegada do entregador com o código do pedido', 'error'));
+        }
         if (dispatchingStatus === 'outsourced') {
           await api.order().updateOrder(order.id, { status: 'dispatching' });
           setLoading(false);
@@ -96,11 +100,11 @@ export const OrdersKanbanItem = ({ onCheckOrder, order }: Props) => {
           <Text style={{ ...texts.sm }}>{order.code}</Text>
         </View>
         {/* TODO: "timing" component while "preparing" */}
-        {status === 'preparing' ? (
+        {/* {status === 'preparing' ? (
           <View>
             <Text>Tempo de preparo</Text>
           </View>
-        ) : null}
+        ) : null} */}
         <OrderLabel order={order} />
       </View>
       <View style={{ marginTop: padding }}>
@@ -118,9 +122,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, order }: Props) => {
                 order={order}
                 onPress={actionHandler}
                 activityIndicator={isLoading}
-                disabled={
-                  isLoading || (status === 'ready' && dispatchingState !== 'arrived-pickup')
-                }
+                disabled={isLoading}
               />
             </View>
           </View>
