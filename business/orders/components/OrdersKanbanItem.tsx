@@ -1,4 +1,4 @@
-import { Order, WithId } from '@appjusto/types';
+import { DispatchingStatus } from '@appjusto/types';
 import { Timestamp } from 'firebase/firestore';
 import React from 'react';
 import { Text, View } from 'react-native';
@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeContext';
+import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { showToast } from '../../../common/store/ui/actions';
 import { borders, colors, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -15,34 +16,44 @@ import { OrderLabel } from './OrderLabel';
 
 type Props = {
   onCheckOrder: () => void;
-  order: WithId<Order>;
+  orderId: string;
 };
 
-export const OrdersKanbanItem = ({ onCheckOrder, order }: Props) => {
-  const { status, dispatchingState, timestamps, dispatchingStatus } = order;
+export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
   // context
   const getServerTime = useContextGetSeverTime();
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  const order = useObserveOrder(orderId);
   // state
   const [modalVisible, setModalVisible] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
+  const [previousDispatchingStatus, setPreviousDispatchingStatus] =
+    React.useState<DispatchingStatus>();
+
   // side effects
   // update status to 'ready' if the cooking time interval has passed
   React.useEffect(() => {
-    if (status === 'preparing') {
+    if (!order) return;
+    if (order.status === 'preparing') {
       if (!getServerTime) return;
       if (!order.cookingTime) return;
+      if (!order.timestamps.preparing) return;
       const now = getServerTime().getTime();
       const cookingTime = order.cookingTime * 1000;
-      const startedPreparing = (timestamps.preparing as Timestamp).toDate().getTime();
+      const startedPreparing = (order.timestamps.preparing as Timestamp).toDate().getTime();
       if (now - startedPreparing >= cookingTime) {
         api.order().updateOrder(order.id, { status: 'ready' });
       }
     }
-  }, [api, order.cookingTime, getServerTime, status, timestamps.preparing, order.id]);
+  }, [api, getServerTime, order]);
+  React.useEffect(() => {
+    if (!order) return;
+    setPreviousDispatchingStatus(order.dispatchingStatus);
+  }, [order]);
   // failsafe: no component if order is not loaded
   if (!order) return null;
+  const { status, dispatchingState, dispatchingStatus } = order;
   // handlers
   const actionHandler = async () => {
     setLoading(true);
@@ -85,6 +96,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, order }: Props) => {
     }
   };
   // UI
+  if (dispatchingStatus && previousDispatchingStatus !== dispatchingStatus) return null; // so the item disappears from kanban list
   return (
     <View
       style={{
