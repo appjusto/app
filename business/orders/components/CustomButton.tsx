@@ -30,7 +30,7 @@ export const CustomButton = ({ order, disabled, style, activityIndicator, ...pro
   if (status === 'preparing') {
     textColor = colors.black;
     background = colors.green500;
-    buttonTitle = t('Finalizar preparo');
+    buttonTitle = t('Pedido pronto');
   }
   if (status === 'ready') {
     buttonTitle = t('Entregar pedido');

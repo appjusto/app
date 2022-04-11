@@ -1,8 +1,7 @@
-import { CancelOrderPayload, InvoiceType } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Keyboard, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -29,7 +28,6 @@ import { DetailedOrderItems } from '../components/DetailedOrderItems';
 import { InfoAndCPF } from '../components/InfoAndCPF';
 import { OrderDetailHeader } from '../components/OrderDetailHeader';
 import { OrderDispatchingMap } from '../components/OrderDispatchingMap';
-import { calculateCancellationCosts } from '../helpers';
 
 type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'OrderDetail'>;
 type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'OrderDetail'>;
@@ -52,38 +50,11 @@ export const OrderDetail = ({ navigation, route }: Props) => {
   const [cancelModalVisible, setCancelModalVisible] = React.useState(false);
   const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
-  const [orderCancellationCosts, setOrderCancellationCosts] = React.useState<number>();
+
   // tracking
   useSegmentScreen('OrderDetail');
-  // side effects
-  React.useEffect(() => {
-    if (!order) return;
-    let debt = [] as InvoiceType[];
-    //if (['preparing', 'ready'].includes(order.status)) debt.push('platform');
-    //if (order.dispatchingState === 'arrived-pickup') debt.push('delivery');
-    const cancellationCosts = calculateCancellationCosts(order, { refund: debt });
-    setOrderCancellationCosts(cancellationCosts);
-  }, [order]);
+
   // handlers
-  const cancelOrderHandler = () => {
-    (async () => {
-      Keyboard.dismiss();
-      try {
-        setLoading(true);
-        const cancellationData = {
-          orderId,
-          acknowledgedCosts: orderCancellationCosts,
-        } as CancelOrderPayload;
-        await api.order().cancelBusinessOrder(cancellationData);
-        dispatch(showToast('Pedido cancelado com sucesso', 'success'));
-        setLoading(false);
-        navigation.goBack();
-      } catch (error) {
-        setLoading(false);
-        dispatch(showToast('Não foi possível efetuar o cancelamento. Tente novamente', 'error'));
-      }
-    })();
-  };
   const actionHandler = async () => {
     setLoading(true);
     if (!order) return;
@@ -112,6 +83,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
     order &&
     (order.status === 'confirmed' || order.status === 'preparing' || order.status === 'ready');
   const cancellableStatuses = order && (order.status === 'preparing' || order.status === 'ready');
+  console.log(order?.id);
   //UI
   if (!order) {
     return (
@@ -194,11 +166,9 @@ export const OrderDetail = ({ navigation, route }: Props) => {
       ) : null}
       <CancelOrderModal
         modalVisible={cancelModalVisible}
-        onModalClose={() => setCancelModalVisible(false)}
-        onCancelOrder={() => {
-          cancelOrderHandler();
-          setCancelModalVisible(false);
-        }}
+        onModalClose={() => navigation.goBack()}
+        onCancelOrder={() => setCancelModalVisible(false)}
+        order={order}
       />
       <CookingTimeModal
         order={order}
