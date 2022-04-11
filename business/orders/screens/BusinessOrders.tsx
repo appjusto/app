@@ -58,11 +58,10 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // side-effects
   // TODO: is this the best place for the useNotificationToken?
   useNotificationToken();
-  // always set kanban orders to 'confirmed' orders whenever there is a new one
+  // setting kanbanOrders to allOrders when the screen loads for the first time
   React.useEffect(() => {
-    if (allOrders?.length) setKanbanOrders(allOrders);
-    else setKanbanOrders([]);
-  }, [allOrders]);
+    if (allOrders?.length && kanbanOrders === undefined) setKanbanOrders(allOrders);
+  }, [allOrders, kanbanOrders]);
   // setting business status to open whenever a manager logs in during business schedule
   React.useEffect(() => {
     (async () => {
