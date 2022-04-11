@@ -1,3 +1,4 @@
+import { CancelOrderPayload, InvoiceType } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -28,6 +29,7 @@ import { DetailedOrderItems } from '../components/DetailedOrderItems';
 import { InfoAndCPF } from '../components/InfoAndCPF';
 import { OrderDetailHeader } from '../components/OrderDetailHeader';
 import { OrderDispatchingMap } from '../components/OrderDispatchingMap';
+import { calculateCancellationCosts } from '../helpers';
 
 type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'OrderDetail'>;
 type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'OrderDetail'>;
@@ -47,30 +49,34 @@ export const OrderDetail = ({ navigation, route }: Props) => {
   // const business = useSelector(getBusiness);
   // state
   const order = useObserveOrder(orderId);
-  // const cancellationInfo = useGetCancellationInfo(orderId); // this cancellationInfo is just for consumers... what about business
   const [cancelModalVisible, setCancelModalVisible] = React.useState(false);
   const [cookingModalVisible, setCookingModalVisible] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
+  const [orderCancellationCosts, setOrderCancellationCosts] = React.useState<number>();
   // tracking
   useSegmentScreen('OrderDetail');
+  // side effects
+  React.useEffect(() => {
+    if (!order) return;
+    let debt = [] as InvoiceType[];
+    //if (['preparing', 'ready'].includes(order.status)) debt.push('platform');
+    //if (order.dispatchingState === 'arrived-pickup') debt.push('delivery');
+    const cancellationCosts = calculateCancellationCosts(order, { refund: debt });
+    setOrderCancellationCosts(cancellationCosts);
+  }, [order]);
   // handlers
   const cancelOrderHandler = () => {
     (async () => {
       Keyboard.dismiss();
       try {
         setLoading(true);
-        // if (!cancellationInfo) {
-        //   dispatch(showToast('Não foi possível efetuar o cancelamento. Tente novamente', 'error'));
-        //   return;
-        // }
-        // TODO: what about the issues? italo didn't include them in the interface
-        // const cancellationData = {
-        //   orderId,
-        //   acknowledgedCosts: cancellationInfo.costs,
-        // } as CancelOrderPayload;
-        // await api.order().cancelBusinessOrder(cancellationData);
-        // dispatch(showToast('Pedido cancelado com sucesso', 'success'));
-        // setLoading(false);
+        const cancellationData = {
+          orderId,
+          acknowledgedCosts: orderCancellationCosts,
+        } as CancelOrderPayload;
+        await api.order().cancelBusinessOrder(cancellationData);
+        dispatch(showToast('Pedido cancelado com sucesso', 'success'));
+        setLoading(false);
         navigation.goBack();
       } catch (error) {
         setLoading(false);
@@ -190,7 +196,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
         modalVisible={cancelModalVisible}
         onModalClose={() => setCancelModalVisible(false)}
         onCancelOrder={() => {
-          // cancelOrderHandler();
+          cancelOrderHandler();
           setCancelModalVisible(false);
         }}
       />
