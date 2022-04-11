@@ -42,22 +42,6 @@ export const DetailedOrderItems = ({ order, style }: Props) => {
           marginTop: 4,
         }}
       >
-        <Text style={{ ...texts.sm }}>{t('Valor do frete:')}</Text>
-        <Text style={[texts.sm]}>{formatCurrency(order.fare!.courier.value)}</Text>
-      </View>
-      <View
-        style={{
-          backgroundColor: colors.white,
-          paddingVertical: 12,
-          paddingHorizontal: padding,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          ...borders.default,
-          borderRadius: 0,
-          marginTop: 4,
-        }}
-      >
         <Text style={{ ...texts.sm }}>{t('Valor total itens + frete:')}</Text>
         <Text style={[texts.sm, texts.bold]}>{formatCurrency(order.fare!.total)}</Text>
       </View>
