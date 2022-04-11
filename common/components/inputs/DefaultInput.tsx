@@ -34,6 +34,7 @@ export default React.forwardRef(
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'flex-start',
+              alignContent: 'center',
               borderColor: isEmpty(errorMessage) ? borders.default.borderColor : colors.red,
             },
           ]}
@@ -69,7 +70,7 @@ export default React.forwardRef(
               </View>
             </View>
           </View>
-          {children}
+          <View style={{ alignSelf: 'center' }}>{children}</View>
         </PaddedView>
         {!isEmpty(errorMessage) ? (
           <Text style={{ ...texts.xs, color: colors.red }}>{errorMessage}</Text>

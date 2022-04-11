@@ -6,8 +6,10 @@ import React, { ReactNode } from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
+import { AcceptedCreditCards } from '../../../../assets/icons/credit-card/AcceptedCreditCards';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import {
   cardFormatter,
@@ -128,12 +130,10 @@ export default function ({ navigation, route }: Props) {
       keyboardShouldPersistTaps="handled"
     >
       <View style={{ flex: 1 }}>
-        {/* <PaddedView style={{ flexDirection: 'row' }}>
-          <MasterCardIcon width={36} height={36} />
-          <VisaIcon width={36} height={36} />
-          <EloIcon width={36} height={36} />
-          <DinersIcon width={36} height={36} />
-        </PaddedView> */}
+        <PaddedView style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ paddingRight: halfPadding }}>{t('Bandeiras aceitas')}</Text>
+          <AcceptedCreditCards />
+        </PaddedView>
 
         <View style={{ flex: 1, padding }}>
           <PatternInput

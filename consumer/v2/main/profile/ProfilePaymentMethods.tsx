@@ -3,6 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { FlatList, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
+import { AcceptedCreditCards } from '../../../../assets/icons/credit-card/AcceptedCreditCards';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import { useSegmentScreen } from '../../../../common/store/api/track';
@@ -110,7 +111,9 @@ export default function ({ navigation, route }: Props) {
               if (returnScreen) navigation.navigate('ProfileAddCard', { returnScreen });
               else navigation.navigate('ProfileAddCard');
             }}
-          />
+          >
+            <AcceptedCreditCards />
+          </ConfigItem>
         )}
       />
     </View>

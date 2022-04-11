@@ -19,10 +19,10 @@ export const isCardTypeSupported = (type: CreditCardType | undefined) =>
   SupportedTypes.includes(type?.type as CreditCardTypeCardBrandId);
 
 export const getCardTypeSVG = (type: CreditCardType) => {
-  if (type.type === 'mastercard') return <MasterCardIcon width={36} height={36} />;
-  if (type.type === 'visa') return <VisaIcon width={36} height={36} />;
-  if (type.type === 'elo') return <EloIcon width={36} height={36} />;
-  if (type.type === 'diners-club') return <DinersIcon width={36} height={36} />;
+  if (type.type === 'mastercard') return <MasterCardIcon />;
+  if (type.type === 'visa') return <VisaIcon />;
+  if (type.type === 'elo') return <EloIcon />;
+  if (type.type === 'diners-club') return <DinersIcon />;
   return null;
 };
 
