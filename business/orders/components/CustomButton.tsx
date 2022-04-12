@@ -33,11 +33,12 @@ export const CustomButton = ({ order, disabled, style, activityIndicator, ...pro
     buttonTitle = t('Pedido pronto');
   }
   if (status === 'ready') {
-    buttonTitle = t('Entregar pedido');
     if (dispatchingState === 'arrived-pickup') {
+      buttonTitle = t('Entregar pedido');
       textColor = colors.black;
       background = colors.darkYellow;
     } else {
+      buttonTitle = t('Pedido pronto');
       textColor = colors.white;
       background = colors.grey700;
     }

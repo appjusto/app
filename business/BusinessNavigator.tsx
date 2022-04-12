@@ -64,6 +64,9 @@ export const BusinessNavigator = () => {
           navigation.navigate('BusinessNavigator', { screen: 'BusinessChats' });
         }
       }
+      // TODO: add "new order" case
+      // TODO: add "order canceled" case
+      // TODO: add "open restaurant" case
     },
     [navigation]
   );

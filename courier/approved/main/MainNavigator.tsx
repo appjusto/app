@@ -31,7 +31,6 @@ export default function ({ navigation }: Props) {
   const user = useSelector(getUser);
   const { status } = useSelector(getCourier)!;
   // handlers
-  console.log('business veio para o MainNavigator do courier');
   const handler = React.useCallback(
     (data: PushMessageData, clicked?: boolean, remove?: () => void) => {
       if (data.action === 'order-request' && status === 'available') {
