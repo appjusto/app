@@ -1,4 +1,3 @@
-import { DispatchingStatus } from '@appjusto/types';
 import { Timestamp } from 'firebase/firestore';
 import React from 'react';
 import { Text, View } from 'react-native';
@@ -28,8 +27,6 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
   // state
   const [modalVisible, setModalVisible] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
-  const [previousDispatchingStatus, setPreviousDispatchingStatus] =
-    React.useState<DispatchingStatus>();
 
   // side effects
   // update status to 'ready' if the cooking time interval has passed
@@ -47,10 +44,6 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
       }
     }
   }, [api, getServerTime, order]);
-  React.useEffect(() => {
-    if (!order) return;
-    setPreviousDispatchingStatus(order.dispatchingStatus);
-  }, [order]);
   // failsafe: no component if order is not loaded
   if (!order) return null;
   const { status, dispatchingState, dispatchingStatus } = order;
@@ -78,9 +71,6 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
         if (dispatchingStatus === 'outsourced') {
           await api.order().updateOrder(order.id, { status: 'dispatching' });
           setLoading(false);
-        } else {
-          setLoading(false);
-          dispatch(showToast('Aguarde a chegada do entregador com o código do pedido', 'error'));
         }
       } else {
         setLoading(false);
@@ -96,7 +86,6 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
     }
   };
   // UI
-  if (dispatchingStatus && previousDispatchingStatus !== dispatchingStatus) return null; // so the item disappears from kanban list
   return (
     <View
       style={{
@@ -148,7 +137,9 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
         order={order}
         buttonTitle={t('Confirmar e aceitar pedido')}
         modalVisible={modalVisible}
-        onModalClose={() => setModalVisible(false)}
+        onModalClose={() => {
+          setModalVisible(false);
+        }}
       />
     </View>
   );
