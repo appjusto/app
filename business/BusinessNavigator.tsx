@@ -1,4 +1,6 @@
-import { createStackNavigator } from '@react-navigation/stack';
+import { PushMessageData } from '@appjusto/types';
+import { useNavigation } from '@react-navigation/native';
+import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, Image, TouchableWithoutFeedback, View } from 'react-native';
 import * as Sentry from 'sentry-expo';
@@ -7,7 +9,9 @@ import { ApiContext } from '../common/app/context';
 import { defaultScreenOptions } from '../common/screens/options';
 import { AboutApp } from '../common/screens/profile/AboutApp';
 import Terms from '../common/screens/unlogged/Terms';
+import { track } from '../common/store/api/track';
 import { colors, screens } from '../common/styles';
+import { useNotificationHandler } from '../consumer/v2/main/useNotificationHandler';
 import { t } from '../strings';
 import { useBusinessManagedBy } from './hooks/useBusinessManagedBy';
 import { MessagesIcon } from './orders/components/MessagesIcon';
@@ -15,13 +19,16 @@ import { BusinessChats } from './orders/screens/BusinessChats';
 import { BusinessOrders } from './orders/screens/BusinessOrders';
 import { ManagerOptions } from './orders/screens/ManagerOptions';
 import { OrderDetail } from './orders/screens/OrderDetail';
-import { BusinessNavParamsList } from './types';
+import { BusinessNavParamsList, LoggedBusinessNavParamsList } from './types';
+
+type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'BusinessNavigator'>;
 
 const Stack = createStackNavigator<BusinessNavParamsList>();
 
 export const BusinessNavigator = () => {
   // context
   const api = React.useContext(ApiContext);
+  const navigation = useNavigation<ScreenNavigationProp>();
   // redux
   const business = useBusinessManagedBy();
   // sending business keep alive timestamp to database
@@ -43,6 +50,24 @@ export const BusinessNavigator = () => {
     }, time);
     return () => clearInterval(keepAliveInterval);
   }, [business?.situation, business?.status, sendBusinessKeepAlive]);
+  // push notifications
+  // handlers
+  const handler = React.useCallback(
+    (data: PushMessageData, clicked?: boolean, remove?: () => void) => {
+      if (data.action === 'order-chat') {
+        if (clicked) {
+          remove!();
+          track('manager clicked in order-chat push', {
+            action: data.action,
+            orderId: data.orderId,
+          });
+          navigation.navigate('BusinessNavigator', { screen: 'BusinessChats' });
+        }
+      }
+    },
+    [navigation]
+  );
+  useNotificationHandler('order-chat', handler);
   // UI
   if (!business) {
     return (
