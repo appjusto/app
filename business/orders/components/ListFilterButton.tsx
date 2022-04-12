@@ -28,7 +28,7 @@ export const ListFilterButton = ({
         {
           flexDirection: 'row',
           ...borders.default,
-          paddingVertical: 12,
+          paddingVertical: 8,
           paddingHorizontal: padding,
           justifyContent: 'center',
           alignItems: 'center',
