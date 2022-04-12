@@ -7,6 +7,7 @@ import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-de
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { BusinessNavParamsList } from '../../types';
+import { ChatKanbanItem } from '../components/ChatKanbanItem';
 import { ListFilterButton } from '../components/ListFilterButton';
 type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'BusinessOrders'>;
 type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'BusinessOrders'>;
@@ -21,6 +22,7 @@ type ChatFilter = 'today' | 'lastSevenDays';
 export const BusinessChats = ({ navigation, route }: Props) => {
   // state
   const [chatFilter, setChatFilter] = React.useState<ChatFilter>('today');
+  const noChatToday = false;
   //UI
   return (
     <View style={{ ...screens.config }}>
@@ -42,31 +44,35 @@ export const BusinessChats = ({ navigation, route }: Props) => {
         enableOnAndroid
         enableAutomaticScroll
         keyboardOpeningTime={0}
-        style={{ ...screens.config }}
+        style={{ ...screens.config, padding }}
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ flexGrow: 1 }}
         scrollIndicatorInsets={{ right: 1 }}
       >
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: colors.grey50,
-            flex: 1,
-          }}
-        >
-          <IconOnboardingDelivery circleColor={colors.white} />
-          <Text
+        {noChatToday ? (
+          <View
             style={{
-              textAlign: 'center',
-              ...texts.sm,
-              color: colors.grey700,
-              paddingTop: padding,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: colors.grey50,
+              flex: 1,
             }}
           >
-            {t('Você ainda não teve mensagens hoje')}
-          </Text>
-        </View>
+            <IconOnboardingDelivery circleColor={colors.white} />
+            <Text
+              style={{
+                textAlign: 'center',
+                ...texts.sm,
+                color: colors.grey700,
+                paddingTop: padding,
+              }}
+            >
+              {t('Você ainda não teve mensagens hoje')}
+            </Text>
+          </View>
+        ) : (
+          <ChatKanbanItem />
+        )}
       </KeyboardAwareScrollView>
     </View>
   );
