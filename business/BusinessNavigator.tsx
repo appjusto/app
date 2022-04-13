@@ -3,7 +3,6 @@ import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, Image, TouchableWithoutFeedback, View } from 'react-native';
-import * as Sentry from 'sentry-expo';
 import { headerMenu } from '../assets/icons';
 import { ApiContext } from '../common/app/context';
 import { defaultScreenOptions } from '../common/screens/options';
@@ -20,6 +19,7 @@ import { BusinessOrders } from './orders/screens/BusinessOrders';
 import { ManagerOptions } from './orders/screens/ManagerOptions';
 import { OrderDetail } from './orders/screens/OrderDetail';
 import { BusinessNavParamsList, LoggedBusinessNavParamsList } from './types';
+import { keepAliveTask } from './utils/keepAlive';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'BusinessNavigator'>;
 
@@ -32,24 +32,30 @@ export const BusinessNavigator = () => {
   // redux
   const business = useBusinessManagedBy();
   // sending business keep alive timestamp to database
-  const sendBusinessKeepAlive = React.useCallback(() => {
-    if (!business?.id || business.status !== 'open') return;
-    try {
-      api.business().sendKeepAlive(business.id);
-    } catch (error) {
-      Sentry.Native.captureException(error);
+  // const sendBusinessKeepAlive = React.useCallback(() => {
+  //   if (!business?.id || business.status !== 'open') return;
+  //   try {
+  //     api.business().sendKeepAlive(business.id);
+  //   } catch (error) {
+  //     Sentry.Native.captureException(error);
+  //   }
+  // }, [api, business]);
+  // React.useEffect(() => {
+  //   if (business?.situation !== 'approved') return;
+  //   if (business?.status !== 'open') return;
+  //   sendBusinessKeepAlive();
+  //   const time = process.env.REACT_APP_ENVIRONMENT === 'live' ? 180000 : 300000;
+  //   const keepAliveInterval = setInterval(() => {
+  //     sendBusinessKeepAlive();
+  //   }, time);
+  //   return () => clearInterval(keepAliveInterval);
+  // }, [business?.situation, business?.status, sendBusinessKeepAlive]);
+  React.useEffect(() => {
+    if (!business) return;
+    if (business.status === 'open') {
+      keepAliveTask(api, business);
     }
   }, [api, business]);
-  React.useEffect(() => {
-    if (business?.situation !== 'approved') return;
-    if (business?.status !== 'open') return;
-    sendBusinessKeepAlive();
-    const time = process.env.REACT_APP_ENVIRONMENT === 'live' ? 180000 : 300000;
-    const keepAliveInterval = setInterval(() => {
-      sendBusinessKeepAlive();
-    }, time);
-    return () => clearInterval(keepAliveInterval);
-  }, [business?.situation, business?.status, sendBusinessKeepAlive]);
   // push notifications
   // handlers
   const handler = React.useCallback(

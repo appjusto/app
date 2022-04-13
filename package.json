@@ -83,7 +83,8 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "sentry-expo": "^4.1.0"
+    "sentry-expo": "^4.1.0",
+    "expo-background-fetch": "~10.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
