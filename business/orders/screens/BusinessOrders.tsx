@@ -14,6 +14,7 @@ import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-de
 import { useObserveBusiness } from '../../../common/store/api/business/hooks/useObserveBusiness';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { getManager } from '../../../common/store/business/selectors';
+import { filterOrdersByStatus, summarizeOrders2 } from '../../../common/store/order/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { useBusinessManagedBy } from '../../hooks/useBusinessManagedBy';
@@ -43,25 +44,20 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   const observedBusiness = useObserveBusiness(business?.id);
   // screen state
   const allOrders = useBusinessOrders(business?.id);
+  const ordersSummary = summarizeOrders2(allOrders);
   const [kanbanOrders, setKanbanOrders] = React.useState<WithId<Order>[]>();
   const [selectedFilter, setSelectedFilter] = React.useState<OrderStatus>();
   // TODO: choose best business initially and remember last selected
   // TODO maybe:add the printing switch here
-  // helpers
-  const ordersByStatus = React.useCallback(
-    (status: OrderStatus) => {
-      if (!allOrders) return [];
-      return allOrders.filter((order) => order.status === status);
-    },
-    [allOrders]
-  );
   // side-effects
   // TODO: is this the best place for the useNotificationToken?
   useNotificationToken();
   // setting kanbanOrders to allOrders when the screen loads for the first time
   React.useEffect(() => {
-    if (allOrders?.length && kanbanOrders === undefined) setKanbanOrders(allOrders);
-  }, [allOrders, kanbanOrders]);
+    if (!allOrders?.length) setKanbanOrders([]);
+    else if (!selectedFilter) setKanbanOrders(allOrders);
+    else setKanbanOrders(filterOrdersByStatus(allOrders, selectedFilter));
+  }, [allOrders, selectedFilter]);
   // setting business status to open whenever a manager logs in during business schedule
   React.useEffect(() => {
     (async () => {
@@ -139,47 +135,35 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
               <ListFilterButton
                 title={t('A confirmar')}
                 selected={selectedFilter === 'confirmed'}
-                onPress={() => {
-                  setKanbanOrders(ordersByStatus('confirmed'));
-                  setSelectedFilter('confirmed');
-                }}
-                total={ordersByStatus('confirmed').length}
-                numberColor={ordersByStatus('confirmed').length ? colors.white : colors.black}
-                numberBgColor={ordersByStatus('confirmed').length ? colors.red : colors.grey50}
+                onPress={() => setSelectedFilter('confirmed')}
+                total={ordersSummary.confirmed ?? 0}
+                numberColor={ordersSummary.confirmed ? colors.white : colors.black}
+                numberBgColor={ordersSummary.confirmed ? colors.red : colors.grey50}
                 style={{ marginRight: halfPadding }}
               />
               {/* preparing orders */}
               <ListFilterButton
                 title={t('Preparação')}
                 selected={selectedFilter === 'preparing'}
-                onPress={() => {
-                  setKanbanOrders(ordersByStatus('preparing'));
-                  setSelectedFilter('preparing');
-                }}
-                total={ordersByStatus('preparing').length}
+                onPress={() => setSelectedFilter('preparing')}
+                total={ordersSummary.preparing ?? 0}
                 numberColor={colors.black}
                 style={{ marginRight: halfPadding }}
               />
               <ListFilterButton
                 title={t('Retirada')}
                 selected={selectedFilter === 'ready'}
-                onPress={() => {
-                  setKanbanOrders(ordersByStatus('ready'));
-                  setSelectedFilter('ready');
-                }}
-                total={ordersByStatus('ready').length}
+                onPress={() => setSelectedFilter('ready')}
+                total={ordersSummary.ready ?? 0}
                 numberColor={colors.black}
                 style={{ marginRight: halfPadding }}
-                numberBgColor={ordersByStatus('ready').length ? colors.darkYellow : colors.grey50}
+                numberBgColor={ordersSummary.ready ? colors.darkYellow : colors.grey50}
               />
               <ListFilterButton
                 title={t('Despachado')}
                 selected={selectedFilter === 'dispatching'}
-                onPress={() => {
-                  setKanbanOrders(ordersByStatus('dispatching'));
-                  setSelectedFilter('dispatching');
-                }}
-                total={ordersByStatus('dispatching').length}
+                onPress={() => setSelectedFilter('dispatching')}
+                total={ordersSummary.dispatching ?? 0}
                 numberColor={colors.black}
                 style={{ marginRight: halfPadding }}
               />
@@ -187,11 +171,8 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
               <ListFilterButton
                 title={t('Concluído')}
                 selected={selectedFilter === 'delivered'}
-                onPress={() => {
-                  setKanbanOrders(ordersByStatus('delivered'));
-                  setSelectedFilter('delivered');
-                }}
-                total={ordersByStatus('delivered').length}
+                onPress={() => setSelectedFilter('delivered')}
+                total={ordersSummary.delivered ?? 0}
                 numberColor={colors.black}
                 style={{ marginRight: halfPadding }}
               />
@@ -199,12 +180,9 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
               <ListFilterButton
                 title={t('Cancelados')}
                 selected={selectedFilter === 'canceled'}
-                onPress={() => {
-                  setKanbanOrders(ordersByStatus('canceled'));
-                  setSelectedFilter('canceled');
-                }}
+                onPress={() => setSelectedFilter('canceled')}
+                total={ordersSummary.canceled ?? 0}
                 style={{ marginRight: 32 }}
-                total={ordersByStatus('canceled').length}
               />
             </ScrollView>
             <PaddedView style={{ flex: 1 }}>

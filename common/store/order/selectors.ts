@@ -1,5 +1,5 @@
 import { Order, OrderStatus, WithId } from '@appjusto/types';
-import { Timestamp } from 'firebase/firestore';
+import firebase from 'firebase';
 import { memoize, uniq } from 'lodash';
 import { createSelector } from 'reselect';
 import { State } from '..';
@@ -14,11 +14,8 @@ export const getOrderById = createSelector(getOrderState, (orderState) =>
 export const getOrders = (state: State) => getOrderState(state).orders;
 
 export const getOrderTime = (order: WithId<Order>) => {
-  const deliveredOn = order.timestamps?.delivered ?? order.deliveredOn;
-  const confirmedOn = order.timestamps?.confirmed ?? order.confirmedOn;
-  const createdOn = order.timestamps?.quote ?? order.createdOn;
-  const time = deliveredOn ?? confirmedOn ?? createdOn;
-  if (time) return (time as Timestamp).toDate();
+  const time = order.deliveredOn ?? order.confirmedOn ?? order.createdOn;
+  if (time) return (time as firebase.firestore.Timestamp).toDate();
   return new Date();
 };
 
@@ -52,14 +49,15 @@ export const getOrdersWithFilter = (
 export const getDeliveredOrders = (orders: WithId<Order>[]) =>
   orders.filter((order) => order.status === 'delivered');
 
+export const filterOrdersByStatus = (orders: WithId<Order>[], status: OrderStatus) =>
+  orders.filter((order) => order.status === status);
+
 export const getOrdersSince = (orders: WithId<Order>[], date: Date) =>
   orders.filter((order) => {
     return (getOrderTime(order)?.getTime() ?? 0) >= date.getTime();
   });
 
 export const OngoingOrdersStatuses: OrderStatus[] = [
-  'confirming',
-  'charged',
   'confirmed',
   'preparing',
   'ready',
@@ -74,21 +72,24 @@ export const summarizeOrders = memoize((orders: WithId<Order>[]) =>
       delivered: order.status === 'delivered' ? result.delivered + 1 : result.delivered,
       canceled: order.status === 'canceled' ? result.canceled + 1 : result.canceled,
       ongoing: isOrderOngoing(order) ? result.ongoing + 1 : result.ongoing,
-      quote: order.status === 'quote' ? result.quote + 1 : result.quote,
-      total:
-        order.status === 'delivered' ||
-        order.status === 'canceled' ||
-        isOrderOngoing(order) ||
-        order.status === 'quote'
-          ? result.total + 1
-          : result.total,
       courierFee:
         order.status === 'delivered'
-          ? result.courierFee +
-            (order.fare!.courier.value - order.fare!.courier.financialFee) +
-            ((order.tip?.value ?? 0) - (order.tip?.financialFee ?? 0))
+          ? result.courierFee + (order.fare?.courier.value ?? 0) + (order.tip?.value ?? 0)
           : result.courierFee,
     }),
-    { delivered: 0, canceled: 0, ongoing: 0, quote: 0, total: 0, courierFee: 0 }
+    { delivered: 0, canceled: 0, ongoing: 0, courierFee: 0 }
+  )
+);
+
+type OrdersSummary = {
+  [K in OrderStatus]?: number;
+};
+
+export const summarizeOrders2 = memoize((orders: WithId<Order>[] = []) =>
+  orders.reduce(
+    (result, order) => ({
+      [order.status]: (result[order.status] ?? 0) + 1,
+    }),
+    {} as OrdersSummary
   )
 );
