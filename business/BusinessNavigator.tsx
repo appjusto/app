@@ -63,9 +63,22 @@ export const BusinessNavigator = () => {
           });
           navigation.navigate('BusinessNavigator', { screen: 'BusinessChats' });
         }
+      } else if (data.action === 'order-update') {
+        // new order and order canceled pushes
+        if (clicked) {
+          track('Push clicked by manager', {
+            action: data.action,
+            orderId: data.orderId,
+          });
+          remove!();
+          navigation.navigate('BusinessNavigator', {
+            screen: 'OrderDetail',
+            params: {
+              orderId: data.orderId,
+            },
+          });
+        }
       }
-      // TODO: add "new order" case
-      // TODO: add "order canceled" case
       // TODO: add "open restaurant" case
     },
     [navigation]
