@@ -20,7 +20,10 @@ type Props = {
 type ChatFilter = 'today' | 'lastSevenDays';
 
 export const BusinessChats = ({ navigation, route }: Props) => {
-  // TODO: bring useChatIsEnabled here to show or hide chat cards
+  // const showChatButton = useChatisEnabled(order); use this to show or hide chat buttons in the chats.map()
+  // define active orders using statuses
+
+  // const showChatButton =
   // state
   const [chatFilter, setChatFilter] = React.useState<ChatFilter>('today');
   const noChatToday = false;
