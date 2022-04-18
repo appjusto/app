@@ -7,7 +7,7 @@ import { trim } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Keyboard, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
@@ -23,10 +23,8 @@ import PatternInput from '../../../../common/components/inputs/PatternInput';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
 import { useRequestedProfileChanges } from '../../../../common/hooks/useRequestedProfileChanges';
 import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
+import { useProfile } from '../../../../common/store/api/profile/useProfile';
 import { track, useSegmentScreen } from '../../../../common/store/api/track';
-import { getFlavor } from '../../../../common/store/config/selectors';
-import { getConsumer } from '../../../../common/store/consumer/selectors';
-import { getCourier } from '../../../../common/store/courier/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -45,10 +43,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
   // app state
-  const flavor = useSelector(getFlavor);
-  const consumer = useSelector(getConsumer);
-  const courier = useSelector(getCourier);
-  const user = flavor === 'consumer' ? consumer! : courier!;
+  const { flavor, profile } = useProfile();
   // state
   const [name, setName] = React.useState<string>('');
   const [surname, setSurname] = React.useState<string>('');
@@ -56,7 +51,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   const [phone, setPhone] = React.useState<string>('');
   const [requestSent, setRequestSent] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
-  const requestedChanges = useRequestedProfileChanges(user.id);
+  const requestedChanges = useRequestedProfileChanges(profile.id);
   // refs
   const nameRef = React.useRef<TextInput>(null);
   const surnameRef = React.useRef<TextInput>(null);
@@ -77,7 +72,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
         'Por motivos de segurança, alterações nos dados de entregadores já aprovados somente podem ser realizadas após análise da nossa equipe.'
       );
   })();
-  const userData = user.name && user.surname && user.cpf && user.phone;
+  const userData = profile.name && profile.surname && profile.cpf && profile.phone;
   const userChanges: Partial<UserProfile> = {};
   // handlers
   const changeProfileHandler = async () => {
@@ -91,7 +86,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
       }
       if (phone) userChanges.phone = phone;
       setLoading(true);
-      await api.user().requestProfileChange(user.id, userChanges);
+      await api.user().requestProfileChange(profile.id, userChanges);
       track('profile edit requested');
       setLoading(false);
       setRequestSent(true);
@@ -175,7 +170,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
             <DefaultInput
               ref={nameRef}
               title={t('Nome')}
-              placeholder={user.name}
+              placeholder={profile.name}
               value={name}
               returnKeyType="next"
               blurOnSubmit={false}
@@ -189,7 +184,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
               ref={surnameRef}
               style={{ marginTop: padding }}
               title={t('Sobrenome')}
-              placeholder={user.surname}
+              placeholder={profile.surname}
               value={surname}
               returnKeyType="next"
               blurOnSubmit={false}
@@ -204,7 +199,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
               style={{ marginTop: padding }}
               title={t('CPF')}
               value={cpf}
-              placeholder={cpfFormatter(user.cpf)}
+              placeholder={cpfFormatter(profile.cpf)}
               mask={cpfMask}
               parser={numbersOnlyParser}
               formatter={cpfFormatter}
@@ -233,7 +228,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
               style={{ marginTop: padding }}
               title={t('Celular')}
               value={phone}
-              placeholder={phoneFormatter(user.phone)}
+              placeholder={phoneFormatter(profile.phone)}
               mask={phoneMask}
               parser={numbersOnlyParser}
               formatter={phoneFormatter}
