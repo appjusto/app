@@ -3,23 +3,26 @@ import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, Image, TouchableWithoutFeedback, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { headerMenu } from '../assets/icons';
-import { ApiContext } from '../common/app/context';
+import { ApiContext, AppDispatch } from '../common/app/context';
 import { defaultScreenOptions } from '../common/screens/options';
 import { AboutApp } from '../common/screens/profile/AboutApp';
 import Terms from '../common/screens/unlogged/Terms';
 import { track } from '../common/store/api/track';
+import { observeBusiness } from '../common/store/business/actions';
+import { getBusiness } from '../common/store/business/selectors';
 import { colors, screens } from '../common/styles';
 import { useNotificationHandler } from '../consumer/v2/main/useNotificationHandler';
 import { t } from '../strings';
-import { useBusinessManagedBy } from './hooks/useBusinessManagedBy';
+import { useBusinessesManagedBy } from './hooks/useBusinessesManagedBy';
 import { MessagesIcon } from './orders/components/MessagesIcon';
 import { BusinessChats } from './orders/screens/BusinessChats';
 import { BusinessOrders } from './orders/screens/BusinessOrders';
 import { ManagerOptions } from './orders/screens/ManagerOptions';
 import { OrderDetail } from './orders/screens/OrderDetail';
 import { BusinessNavParamsList, LoggedBusinessNavParamsList } from './types';
-import { keepAliveTask } from './utils/keepAlive';
+import { KEEP_ALIVE_INTERVAL, startKeepAliveTask, stopKeepAliveTask } from './utils/keepAlive';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'BusinessNavigator'>;
 
@@ -30,32 +33,36 @@ export const BusinessNavigator = () => {
   const api = React.useContext(ApiContext);
   const navigation = useNavigation<ScreenNavigationProp>();
   // redux
-  const business = useBusinessManagedBy();
-  // sending business keep alive timestamp to database
-  // const sendBusinessKeepAlive = React.useCallback(() => {
-  //   if (!business?.id || business.status !== 'open') return;
-  //   try {
-  //     api.business().sendKeepAlive(business.id);
-  //   } catch (error) {
-  //     Sentry.Native.captureException(error);
-  //   }
-  // }, [api, business]);
-  // React.useEffect(() => {
-  //   if (business?.situation !== 'approved') return;
-  //   if (business?.status !== 'open') return;
-  //   sendBusinessKeepAlive();
-  //   const time = process.env.REACT_APP_ENVIRONMENT === 'live' ? 180000 : 300000;
-  //   const keepAliveInterval = setInterval(() => {
-  //     sendBusinessKeepAlive();
-  //   }, time);
-  //   return () => clearInterval(keepAliveInterval);
-  // }, [business?.situation, business?.status, sendBusinessKeepAlive]);
+  const dispatch = useDispatch<AppDispatch>();
+  // state
+  const businesses = useBusinessesManagedBy();
+  const business = useSelector(getBusiness);
+  const status = business?.status;
+  // side effects
+  // observing first business
+  // TODO: receive business from context
   React.useEffect(() => {
-    if (!business) return;
-    if (business.status === 'open') {
-      keepAliveTask(api, business);
-    }
-  }, [api, business]);
+    const businessId = businesses?.find(() => true)?.id;
+    if (!businessId) return;
+    return dispatch(observeBusiness(api)(businessId));
+  }, [dispatch, api, businesses]);
+  // starting/stoping keepAlive task/internval
+  React.useEffect(() => {
+    console.log('BusinessNavigator; status:', status);
+    if (!status) return;
+    (async () => {
+      if (status === 'open') {
+        await startKeepAliveTask();
+        const keepAliveInterval = setInterval(async () => {
+          console.log('sending keepAlive...');
+          await api.business().sendKeepAlive(business.id);
+        }, KEEP_ALIVE_INTERVAL * 1000);
+        return () => clearInterval(keepAliveInterval);
+      } else if (status === 'closed') {
+        await stopKeepAliveTask();
+      }
+    })();
+  }, [status]);
   // push notifications
   // handlers
   const handler = React.useCallback(

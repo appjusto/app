@@ -11,13 +11,11 @@ import DoubleHeader from '../../../common/components/texts/DoubleHeader';
 import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeContext';
 import { useNotificationToken } from '../../../common/hooks/useNotificationToken';
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
-import { useObserveBusiness } from '../../../common/store/api/business/hooks/useObserveBusiness';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { getManager } from '../../../common/store/business/selectors';
+import { getBusiness, getManager } from '../../../common/store/business/selectors';
 import { filterOrdersByStatus, summarizeOrders2 } from '../../../common/store/order/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
-import { useBusinessManagedBy } from '../../hooks/useBusinessManagedBy';
 import { useBusinessOrders } from '../../hooks/useBusinessOrders';
 import { BusinessNavParamsList } from '../../types';
 import { BusinessOrdersHeader } from '../components/BusinessOrdersHeader';
@@ -40,8 +38,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // redux store
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
-  const business = useBusinessManagedBy();
-  const observedBusiness = useObserveBusiness(business?.id);
+  const business = useSelector(getBusiness);
   // screen state
   const allOrders = useBusinessOrders(business?.id);
   const ordersSummary = summarizeOrders2(allOrders);
@@ -76,12 +73,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // tracking
   useSegmentScreen('BusinessOrders');
   //UI
-  if (
-    allOrders === undefined ||
-    business === undefined ||
-    observedBusiness === undefined ||
-    kanbanOrders === undefined
-  ) {
+  if (allOrders === undefined || business === undefined || kanbanOrders === undefined) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -96,7 +88,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
     <View style={screens.default}>
       <View>
         <PaddedView>
-          <BusinessOrdersHeader business={observedBusiness} />
+          <BusinessOrdersHeader business={business} />
         </PaddedView>
       </View>
       <KeyboardAwareScrollView

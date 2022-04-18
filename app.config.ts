@@ -129,7 +129,7 @@ const ios = () => ({
   supportsTablet: false,
   infoPlist:
     flavor === 'business'
-      ? {}
+      ? { UIBackgroundModes: ['fetch'] }
       : flavor === 'consumer'
       ? {
           NSLocationWhenInUseUsageDescription:
@@ -200,7 +200,7 @@ const android = () =>
 
 const permissions = () =>
   flavor === 'business'
-    ? []
+    ? ['RECEIVE_BOOT_COMPLETED', 'WAKE_LOCK']
     : flavor === 'consumer'
     ? ['ACCESS_FINE_LOCATION', 'ACCESS_COARSE_LOCATION']
     : [
