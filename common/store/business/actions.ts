@@ -6,7 +6,7 @@ export const BUSINESS_UPDATED = 'BUSINESS_UPDATED';
 
 export const observeBusiness = (api: Api) => (id: string) => (dispatch: AppDispatch) => {
   return api.business().observeBusiness(id, (business: WithId<Business>): void => {
-    console.log('observeBusiness', business);
+    // console.log('observeBusiness', business);
     dispatch({ type: BUSINESS_UPDATED, payload: { business } });
   });
 };

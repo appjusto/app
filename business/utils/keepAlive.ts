@@ -6,7 +6,7 @@ import Api from '../../common/store/api/api';
 import { getBusiness } from '../../common/store/business/selectors';
 import { getExtra } from '../../common/utils/config';
 
-export const KEEP_ALIVE_INTERVAL = getExtra().environment === 'live' ? 60 * 10 : 10;
+export const KEEP_ALIVE_INTERVAL = getExtra().environment === 'live' ? 60 * 10 : 600 * 10;
 
 const TASK_KEEP_ALIVE = 'TASK_KEEP_ALIVE';
 
@@ -30,7 +30,7 @@ const keepAliveExecutor = (store: AppStore, api: Api) => async () => {
   try {
     const state = store.getState();
     const business = getBusiness(state);
-    console.log('business.status: ', business?.status);
+    // console.log('business.status: ', business?.status);
     if (business?.status === 'open') {
       await api.business().sendKeepAlive(business.id);
       return BackgroundFetch.BackgroundFetchResult.NewData;
