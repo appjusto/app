@@ -42,6 +42,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // screen state
   const allOrders = useBusinessOrders(business?.id);
   const ordersSummary = summarizeOrders2(allOrders);
+
   const [kanbanOrders, setKanbanOrders] = React.useState<WithId<Order>[]>();
   const [selectedFilter, setSelectedFilter] = React.useState<OrderStatus>();
   // TODO: choose best business initially and remember last selected

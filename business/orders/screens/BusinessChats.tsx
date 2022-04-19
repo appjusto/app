@@ -1,11 +1,15 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useSelector } from 'react-redux';
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
+import { getBusiness } from '../../../common/store/business/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import { OrderChatGroup, useBusinessChats } from '../../hooks/useBusinessChats';
+import { useBusinessOrders } from '../../hooks/useBusinessOrders';
 import { BusinessNavParamsList } from '../../types';
 import { ChatKanbanItem } from '../components/ChatKanbanItem';
 import { ListFilterButton } from '../components/ListFilterButton';
@@ -21,13 +25,26 @@ type ChatFilter = 'today' | 'lastSevenDays';
 
 export const BusinessChats = ({ navigation, route }: Props) => {
   // const showChatButton = useChatisEnabled(order); use this to show or hide chat buttons in the chats.map()
-  // define active orders using statuses
-
-  // const showChatButton =
+  // redux store
+  const business = useSelector(getBusiness);
   // state
+  const allOrders = useBusinessOrders(business?.id);
+  const allChats = useBusinessChats(business?.id, allOrders);
   const [chatFilter, setChatFilter] = React.useState<ChatFilter>('today');
-  const noChatToday = false;
+  const [chats, setChats] = React.useState<OrderChatGroup[]>();
+  // const noChatToday = !chats?.length;
+  //side-effects
+  React.useEffect(() => {
+    if (allChats.length) setChats(allChats);
+  }, [allChats]);
   //UI
+  if (business === undefined || allChats === undefined) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <View style={{ ...screens.config }}>
       <View style={{ flexDirection: 'row', marginTop: padding, marginHorizontal: padding }}>
@@ -53,7 +70,7 @@ export const BusinessChats = ({ navigation, route }: Props) => {
         contentContainerStyle={{ flexGrow: 1 }}
         scrollIndicatorInsets={{ right: 1 }}
       >
-        {noChatToday ? (
+        {!allChats.length ? (
           <View
             style={{
               justifyContent: 'center',

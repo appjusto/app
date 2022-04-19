@@ -19,7 +19,7 @@ export interface OrderChatGroup {
   ];
 }
 
-export const useBusinessChats = (businessId: string, activeOrders: WithId<Order>[]) => {
+export const useBusinessChats = (businessId?: string, activeOrders?: WithId<Order>[]) => {
   // context
   const api = React.useContext(ApiContext);
   //state
@@ -28,6 +28,7 @@ export const useBusinessChats = (businessId: string, activeOrders: WithId<Order>
   const [orderChatGroup, setOrderChatGroup] = React.useState<OrderChatGroup[]>([]);
   // side effects
   React.useEffect(() => {
+    if (!activeOrders) return;
     const activeOrdersIds = [...activeOrders].map((order) => order.id);
     setTotalActiveOrdersIds(activeOrdersIds);
   }, [activeOrders]);
