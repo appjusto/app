@@ -132,6 +132,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     if (!order) return;
     if (!selectedFare) return;
     if (!selectedPaymentMethodId) return;
+    if (!order.destination?.address) return;
     if (shouldVerifyPhone) {
       navigation.navigate('PhoneVerificationScreen', {
         phone: consumer.phone!,

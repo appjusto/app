@@ -156,6 +156,7 @@ export default function ({ navigation, route }: Props) {
     track('placing order');
     if (!orderId) return;
     if (!selectedPaymentMethodId) return;
+    if (!order.destination?.address) return;
     if (shouldVerifyPhone) {
       navigation.navigate('PhoneVerificationScreen', {
         phone: consumer.phone!,
@@ -207,7 +208,6 @@ export default function ({ navigation, route }: Props) {
       dispatch(showToast(error.toString(), 'error'));
     }
   };
-
   // UI
   return (
     <View style={{ ...screens.default }}>
