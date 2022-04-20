@@ -118,12 +118,14 @@ export const NotificationPreferences = ({ navigation }: Props) => {
             paddingBottom: halfPadding,
           }}
         >
-          {t('Você tem controle de todas as mensagens que gostaria de receber do app:')}
+          {t(
+            'Para garantir a melhor experiência, as mensagens durante o pedido sempre são enviadas.'
+          )}
         </Text>
         <View style={{ marginTop: biggerPadding }}>
-          <View>{createChannelCheckField('order-update')}</View>
-          <View style={{ marginTop: padding }}>{createChannelCheckField('order-chat')}</View>
-          <View style={{ marginTop: padding }}>{createChannelCheckField('status')}</View>
+          {/* <View>{createChannelCheckField('order-update')}</View>
+          <View style={{ marginTop: padding }}>{createChannelCheckField('order-chat')}</View> */}
+          <View>{createChannelCheckField('status')}</View>
           <View style={{ marginTop: padding }}>{createChannelCheckField('general')}</View>
           <View style={{ marginTop: padding }}>{createChannelCheckField('marketing')}</View>
         </View>
