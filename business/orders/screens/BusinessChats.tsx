@@ -3,11 +3,10 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useSelector } from 'react-redux';
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
-import { getBusiness } from '../../../common/store/business/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import { BusinessAppContext } from '../../businessAppContext';
 import { OrderChatGroup, useBusinessChats } from '../../hooks/useBusinessChats';
 import { useBusinessOrders } from '../../hooks/useBusinessOrders';
 import { BusinessNavParamsList } from '../../types';
@@ -25,8 +24,8 @@ type ChatFilter = 'today' | 'lastSevenDays';
 
 export const BusinessChats = ({ navigation, route }: Props) => {
   // const showChatButton = useChatisEnabled(order); use this to show or hide chat buttons in the chats.map()
-  // redux store
-  const business = useSelector(getBusiness);
+  // context
+  const business = React.useContext(BusinessAppContext);
   // state
   const allOrders = useBusinessOrders(business?.id);
   const allChats = useBusinessChats(business?.id, allOrders);

@@ -12,10 +12,11 @@ import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeConte
 import { useNotificationToken } from '../../../common/hooks/useNotificationToken';
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { getBusiness, getManager } from '../../../common/store/business/selectors';
+import { getManager } from '../../../common/store/business/selectors';
 import { filterOrdersByStatus, summarizeOrders2 } from '../../../common/store/order/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import { BusinessAppContext } from '../../businessAppContext';
 import { useBusinessOrders } from '../../hooks/useBusinessOrders';
 import { BusinessNavParamsList } from '../../types';
 import { BusinessOrdersHeader } from '../components/BusinessOrdersHeader';
@@ -35,10 +36,10 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // context
   const getServerTime = useContextGetSeverTime();
   const api = React.useContext(ApiContext);
+  const business = React.useContext(BusinessAppContext);
   // redux store
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
-  const business = useSelector(getBusiness);
   // screen state
   const allOrders = useBusinessOrders(business?.id);
   const ordersSummary = summarizeOrders2(allOrders);
