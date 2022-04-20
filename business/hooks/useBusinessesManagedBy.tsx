@@ -15,6 +15,6 @@ export const useBusinessesManagedBy = () => {
     (async () => {
       setBusinesses(await api.business().fetchBusinessesManagedBy(user!.email!));
     })();
-  }, [api]);
+  }, [api, user]);
   return businesses;
 };

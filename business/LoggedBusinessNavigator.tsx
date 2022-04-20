@@ -11,6 +11,7 @@ import { getUser } from '../common/store/user/selectors';
 import { colors, screens } from '../common/styles';
 import { LoggedContextProvider } from '../consumer/v2/LoggedContext';
 import { t } from '../strings';
+import { BusinessAppProvider } from './businessAppContext';
 import { BusinessNavigator } from './BusinessNavigator';
 import { BusinessPending } from './orders/screens/BusinessPending';
 import { LoggedBusinessNavParamsList } from './types';
@@ -45,18 +46,20 @@ export const LoggedBusinessNavigator = () => {
   // UI
   return (
     <LoggedContextProvider>
-      <Stack.Navigator screenOptions={defaultScreenOptions} initialRouteName={initialRouteName}>
-        <Stack.Screen
-          name="BusinessPending"
-          component={BusinessPending}
-          options={{ title: t('Cadastro pendente') }}
-        />
-        <Stack.Screen
-          name="BusinessNavigator"
-          component={BusinessNavigator}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
+      <BusinessAppProvider>
+        <Stack.Navigator screenOptions={defaultScreenOptions} initialRouteName={initialRouteName}>
+          <Stack.Screen
+            name="BusinessPending"
+            component={BusinessPending}
+            options={{ title: t('Cadastro pendente') }}
+          />
+          <Stack.Screen
+            name="BusinessNavigator"
+            component={BusinessNavigator}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </BusinessAppProvider>
     </LoggedContextProvider>
   );
 };

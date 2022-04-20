@@ -3,19 +3,16 @@ import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, Image, TouchableWithoutFeedback, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
 import { headerMenu } from '../assets/icons';
-import { ApiContext, AppDispatch } from '../common/app/context';
+import { ApiContext } from '../common/app/context';
 import { defaultScreenOptions } from '../common/screens/options';
 import { AboutApp } from '../common/screens/profile/AboutApp';
 import Terms from '../common/screens/unlogged/Terms';
 import { track } from '../common/store/api/track';
-import { observeBusiness } from '../common/store/business/actions';
-import { getBusiness } from '../common/store/business/selectors';
 import { colors, screens } from '../common/styles';
 import { useNotificationHandler } from '../consumer/v2/main/useNotificationHandler';
 import { t } from '../strings';
-import { useBusinessesManagedBy } from './hooks/useBusinessesManagedBy';
+import { BusinessAppContext } from './businessAppContext';
 import { MessagesIcon } from './orders/components/MessagesIcon';
 import { BusinessChats } from './orders/screens/BusinessChats';
 import { BusinessOrders } from './orders/screens/BusinessOrders';
@@ -32,20 +29,9 @@ export const BusinessNavigator = () => {
   // context
   const api = React.useContext(ApiContext);
   const navigation = useNavigation<ScreenNavigationProp>();
-  // redux
-  const dispatch = useDispatch<AppDispatch>();
-  // state
-  const businesses = useBusinessesManagedBy();
-  const business = useSelector(getBusiness);
+  const business = React.useContext(BusinessAppContext);
   const status = business?.status;
   // side effects
-  // observing first business
-  // TODO: receive business from context
-  React.useEffect(() => {
-    const businessId = businesses?.find(() => true)?.id;
-    if (!businessId) return;
-    return dispatch(observeBusiness(api)(businessId));
-  }, [dispatch, api, businesses]);
   // starting/stoping keepAlive task/internval
   React.useEffect(() => {
     console.log('BusinessNavigator; status:', status);
