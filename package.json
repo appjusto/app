@@ -91,7 +91,6 @@
     "@types/i18n-js": "^3.0.3",
     "@types/mapbox__polyline": "^1.0.0",
     "@types/marked": "^2.0.1",
-    "@types/react": "~17.0.21",
     "@types/react-native": "~0.64.12",
     "@types/react-redux": "^7.1.9",
     "@typescript-eslint/eslint-plugin": "^3.7.0",
