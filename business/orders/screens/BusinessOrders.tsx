@@ -9,7 +9,6 @@ import { ApiContext, AppDispatch } from '../../../common/app/context';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
 import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeContext';
-import { useNotificationToken } from '../../../common/hooks/useNotificationToken';
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { getManager } from '../../../common/store/business/selectors';
@@ -50,7 +49,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // TODO maybe:add the printing switch here
   // side-effects
   // TODO: is this the best place for the useNotificationToken?
-  useNotificationToken();
+  // useNotificationToken();
   // setting kanbanOrders to allOrders when the screen loads for the first time
   React.useEffect(() => {
     if (!allOrders?.length) setKanbanOrders([]);

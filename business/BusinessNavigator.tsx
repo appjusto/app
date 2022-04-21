@@ -5,6 +5,7 @@ import React from 'react';
 import { ActivityIndicator, Image, TouchableWithoutFeedback, View } from 'react-native';
 import { headerMenu } from '../assets/icons';
 import { ApiContext } from '../common/app/context';
+import { useNotificationToken } from '../common/hooks/useNotificationToken';
 import { defaultScreenOptions } from '../common/screens/options';
 import { AboutApp } from '../common/screens/profile/AboutApp';
 import Terms from '../common/screens/unlogged/Terms';
@@ -32,6 +33,7 @@ export const BusinessNavigator = () => {
   const business = React.useContext(BusinessAppContext);
   const status = business?.status;
   // side effects
+  useNotificationToken();
   // starting/stoping keepAlive task/internval
   React.useEffect(() => {
     console.log('BusinessNavigator; status:', status);
