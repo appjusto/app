@@ -2,7 +2,7 @@ import { OrderStatus } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
@@ -13,6 +13,7 @@ import { useObserveBusinessOrders } from '../../hooks/useObserveBusinessOrders';
 import { BusinessNavParamsList } from '../../types';
 import { ChatKanbanItem } from '../components/ChatKanbanItem';
 import { ListFilterButton } from '../components/ListFilterButton';
+
 type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'BusinessOrders'>;
 type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'BusinessOrders'>;
 
@@ -23,7 +24,8 @@ type Props = {
 
 type ChatFilter = 'open' | 'closed';
 
-const activeStatuses = ['preparing', 'ready', 'dispathing'] as OrderStatus[];
+const activeStatuses = ['preparing', 'ready', 'dispatching'] as OrderStatus[];
+const completedStatuses = ['canceled', 'delivered'] as OrderStatus[];
 
 export const BusinessChats = ({ navigation, route }: Props) => {
   // const showChatButton = useChatisEnabled(order); use this to show or hide chat buttons in the chats.map()
@@ -31,39 +33,41 @@ export const BusinessChats = ({ navigation, route }: Props) => {
   const business = React.useContext(BusinessAppContext);
   // state
   const allOrders = useObserveBusinessOrders(business?.id);
-  // const activeOrders = ;
   const allChats = useBusinessChats(business?.id, allOrders);
+  const activeOrders = useObserveBusinessOrders(business?.id, activeStatuses);
+  // const closedChats = chats com status ['delivered', 'canceled'] encerrados há menos de uma hora
+  const activeChats = useBusinessChats(business?.id, activeOrders);
+  const completedOrders = useObserveBusinessOrders(business?.id, completedStatuses);
+  const completedOrdersChats = useBusinessChats(business?.id, completedOrders);
   const [chatFilter, setChatFilter] = React.useState<ChatFilter>('open');
   const [chats, setChats] = React.useState<OrderChatGroup[]>();
   // const noChatToday = !chats?.length;
   //side-effects
   React.useEffect(() => {
-    // se tivermos
-    if (allChats.length) setChats(allChats);
-  }, [allChats]);
+    if (!allChats.length) setChats([]);
+    if (activeChats.length) setChats(activeChats);
+  }, [allChats, activeChats]);
   //UI
-  const chatsUI = () => {};
-  if (business === undefined || allChats === undefined) {
-    return (
-      <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green500} />
-      </View>
-    );
-  }
-  console.log(chats);
+
   return (
     <View style={{ ...screens.config }}>
       <View style={{ flexDirection: 'row', marginTop: padding, marginHorizontal: padding }}>
         <ListFilterButton
           title={t('Abertos')}
           selected={chatFilter === 'open'}
-          onPress={() => setChatFilter('open')}
+          onPress={() => {
+            setChatFilter('open');
+            setChats(activeChats);
+          }}
           style={{ marginRight: halfPadding }}
         />
         <ListFilterButton
           title={t('Encerrados')}
           selected={chatFilter === 'closed'}
-          onPress={() => setChatFilter('closed')}
+          onPress={() => {
+            setChatFilter('closed');
+            setChats(completedOrdersChats);
+          }}
           style={{ marginRight: halfPadding }}
         />
       </View>
@@ -94,11 +98,18 @@ export const BusinessChats = ({ navigation, route }: Props) => {
                 paddingTop: padding,
               }}
             >
-              {t('Você ainda não teve mensagens hoje')}
+              {t('Não há chats em aberto no momento')}
             </Text>
           </View>
         ) : (
-          <ChatKanbanItem />
+          chats?.map((chat) => (
+            <View style={{ flex: 1 }}>
+              <ChatKanbanItem
+                chat={chat}
+                onCheckOrder={() => navigation.navigate('OrderDetail', { orderId: chat.orderId })}
+              />
+            </View>
+          ))
         )}
       </KeyboardAwareScrollView>
     </View>
