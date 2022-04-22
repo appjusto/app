@@ -12,7 +12,7 @@ import { track } from '../common/store/api/track';
 import { colors, screens } from '../common/styles';
 import { useNotificationHandler } from '../consumer/v2/main/useNotificationHandler';
 import { t } from '../strings';
-import { BusinessAppContext } from './businessAppContext';
+import { BusinessAppContext } from './BusinessAppContext';
 import { MessagesIcon } from './orders/components/MessagesIcon';
 import { BusinessChats } from './orders/screens/BusinessChats';
 import { BusinessOrders } from './orders/screens/BusinessOrders';
