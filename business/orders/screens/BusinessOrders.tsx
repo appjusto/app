@@ -15,7 +15,7 @@ import { getManager } from '../../../common/store/business/selectors';
 import { filterOrdersByStatus, summarizeOrders2 } from '../../../common/store/order/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
-import { BusinessAppContext } from '../../businessAppContext';
+import { BusinessAppContext } from '../../BusinessAppContext';
 import { useBusinessOrders } from '../../hooks/useBusinessOrders';
 import { BusinessNavParamsList } from '../../types';
 import { BusinessOrdersHeader } from '../components/BusinessOrdersHeader';

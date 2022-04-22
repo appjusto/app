@@ -6,7 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
-import { BusinessAppContext } from '../../businessAppContext';
+import { BusinessAppContext } from '../../BusinessAppContext';
 import { OrderChatGroup, useBusinessChats } from '../../hooks/useBusinessChats';
 import { useBusinessOrders } from '../../hooks/useBusinessOrders';
 import { BusinessNavParamsList } from '../../types';

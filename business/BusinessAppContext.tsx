@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { ApiContext } from '../common/app/context';
 import { getUser } from '../common/store/user/selectors';
 import { useBusinessesManagedBy } from './hooks/useBusinessesManagedBy';
+import { useConfigureBusinessNotifications } from './notifications/useConfigureBusinessNotifications';
 
 export const BusinessAppContext = React.createContext<WithId<Business> | null | undefined>(
   undefined
@@ -32,6 +33,9 @@ export const BusinessAppProvider = ({ children }: Props) => {
   }, [businesses]);
 
   // side-effects
+  // configure notifications
+  useConfigureBusinessNotifications(business);
+  //
   React.useEffect(() => {
     if (!user) setBusinessId(null);
   }, [user]);
@@ -46,6 +50,7 @@ export const BusinessAppProvider = ({ children }: Props) => {
     if (businessId) return;
     getBusinessIdFromBusinesses();
   }, [user?.email, businessId, getBusinessIdFromBusinesses]);
+
   // provider
   return <BusinessAppContext.Provider value={business}>{children}</BusinessAppContext.Provider>;
 };

@@ -11,7 +11,7 @@ import { getUser } from '../common/store/user/selectors';
 import { colors, screens } from '../common/styles';
 import { LoggedContextProvider } from '../consumer/v2/LoggedContext';
 import { t } from '../strings';
-import { BusinessAppProvider } from './businessAppContext';
+import { BusinessAppProvider } from './BusinessAppContext';
 import { BusinessNavigator } from './BusinessNavigator';
 import { BusinessPending } from './orders/screens/BusinessPending';
 import { LoggedBusinessNavParamsList } from './types';
