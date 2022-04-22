@@ -29,5 +29,5 @@ export const useConfigureBusinessNotifications = (business: WithId<Business> | u
         }
       });
     })();
-  }, [business?.id]);
+  }, [business?.id, business?.schedules]);
 };
