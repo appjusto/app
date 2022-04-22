@@ -1,3 +1,4 @@
+import { OrderStatus } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -8,7 +9,7 @@ import { colors, halfPadding, padding, screens, texts } from '../../../common/st
 import { t } from '../../../strings';
 import { BusinessAppContext } from '../../BusinessAppContext';
 import { OrderChatGroup, useBusinessChats } from '../../hooks/useBusinessChats';
-import { useBusinessOrders } from '../../hooks/useBusinessOrders';
+import { useObserveBusinessOrders } from '../../hooks/useObserveBusinessOrders';
 import { BusinessNavParamsList } from '../../types';
 import { ChatKanbanItem } from '../components/ChatKanbanItem';
 import { ListFilterButton } from '../components/ListFilterButton';
@@ -20,23 +21,28 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-type ChatFilter = 'today' | 'lastSevenDays';
+type ChatFilter = 'open' | 'closed';
+
+const activeStatuses = ['preparing', 'ready', 'dispathing'] as OrderStatus[];
 
 export const BusinessChats = ({ navigation, route }: Props) => {
   // const showChatButton = useChatisEnabled(order); use this to show or hide chat buttons in the chats.map()
   // context
   const business = React.useContext(BusinessAppContext);
   // state
-  const allOrders = useBusinessOrders(business?.id);
+  const allOrders = useObserveBusinessOrders(business?.id);
+  // const activeOrders = ;
   const allChats = useBusinessChats(business?.id, allOrders);
-  const [chatFilter, setChatFilter] = React.useState<ChatFilter>('today');
+  const [chatFilter, setChatFilter] = React.useState<ChatFilter>('open');
   const [chats, setChats] = React.useState<OrderChatGroup[]>();
   // const noChatToday = !chats?.length;
   //side-effects
   React.useEffect(() => {
+    // se tivermos
     if (allChats.length) setChats(allChats);
   }, [allChats]);
   //UI
+  const chatsUI = () => {};
   if (business === undefined || allChats === undefined) {
     return (
       <View style={screens.centered}>
@@ -44,19 +50,20 @@ export const BusinessChats = ({ navigation, route }: Props) => {
       </View>
     );
   }
+  console.log(chats);
   return (
     <View style={{ ...screens.config }}>
       <View style={{ flexDirection: 'row', marginTop: padding, marginHorizontal: padding }}>
         <ListFilterButton
-          title={t('Hoje')}
-          selected={chatFilter === 'today'}
-          onPress={() => setChatFilter('today')}
+          title={t('Abertos')}
+          selected={chatFilter === 'open'}
+          onPress={() => setChatFilter('open')}
           style={{ marginRight: halfPadding }}
         />
         <ListFilterButton
-          title={t('Últimos 7 dias')}
-          selected={chatFilter === 'lastSevenDays'}
-          onPress={() => setChatFilter('lastSevenDays')}
+          title={t('Encerrados')}
+          selected={chatFilter === 'closed'}
+          onPress={() => setChatFilter('closed')}
           style={{ marginRight: halfPadding }}
         />
       </View>
@@ -69,7 +76,7 @@ export const BusinessChats = ({ navigation, route }: Props) => {
         contentContainerStyle={{ flexGrow: 1 }}
         scrollIndicatorInsets={{ right: 1 }}
       >
-        {!allChats.length ? (
+        {!chats?.length ? (
           <View
             style={{
               justifyContent: 'center',

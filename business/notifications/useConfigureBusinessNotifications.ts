@@ -8,13 +8,13 @@ export const useConfigureBusinessNotifications = (business: WithId<Business> | u
   React.useEffect(() => {
     if (!business?.id) return;
     if (!business.schedules) return;
-    console.log('useConfigureBusinessNotifications');
+    // console.log('useConfigureBusinessNotifications');
     (async () => {
       await Notifications.cancelAllScheduledNotificationsAsync();
       const now = new Date();
       getOpeningDates(scheduleFromDate(business.schedules, now), now).forEach((date) => {
         if (date.getTime() > now.getTime()) {
-          console.log('Agendando notificação para', date);
+          // console.log('Agendando notificação para', date);
           Notifications.scheduleNotificationAsync({
             content: {
               title: t('Hora de abrir o restaurante'),

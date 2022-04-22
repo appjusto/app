@@ -1,9 +1,12 @@
-import { Order, WithId } from '@appjusto/types';
+import { Order, OrderStatus, WithId } from '@appjusto/types';
 import React from 'react';
 import { ApiContext } from '../../common/app/context';
 import { ObserveOrdersOptions } from '../../common/store/api/order/types';
 
-export const useBusinessOrders = (businessId?: string) => {
+export const useObserveBusinessOrders = (
+  businessId?: string,
+  statuses?: OrderStatus[] | undefined
+) => {
   // context
   const api = React.useContext(ApiContext);
   // state
@@ -12,9 +15,11 @@ export const useBusinessOrders = (businessId?: string) => {
     return {
       businessId,
       orderField: 'timestamps.charged',
-      statuses: ['confirmed', 'preparing', 'ready', 'dispatching', 'delivered', 'canceled'],
+      statuses: statuses
+        ? statuses
+        : ['confirmed', 'preparing', 'ready', 'dispatching', 'delivered', 'canceled'],
     };
-  }, [businessId]);
+  }, [businessId, statuses]);
   // side effects
   React.useEffect(() => {
     if (!businessId) return;

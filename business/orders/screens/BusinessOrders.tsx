@@ -16,7 +16,7 @@ import { filterOrdersByStatus, summarizeOrders2 } from '../../../common/store/or
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { BusinessAppContext } from '../../BusinessAppContext';
-import { useBusinessOrders } from '../../hooks/useBusinessOrders';
+import { useObserveBusinessOrders } from '../../hooks/useObserveBusinessOrders';
 import { BusinessNavParamsList } from '../../types';
 import { BusinessOrdersHeader } from '../components/BusinessOrdersHeader';
 import { ListFilterButton } from '../components/ListFilterButton';
@@ -40,7 +40,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const manager = useSelector(getManager);
   // screen state
-  const allOrders = useBusinessOrders(business?.id);
+  const allOrders = useObserveBusinessOrders(business?.id);
   const ordersSummary = summarizeOrders2(allOrders);
 
   const [kanbanOrders, setKanbanOrders] = React.useState<WithId<Order>[]>();
