@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RoundedText from '../../../common/components/texts/RoundedText';
+import { useChatisEnabled } from '../../../common/hooks/useChatIsEnabled';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
 import { formatTime } from '../../../common/utils/formatters';
@@ -17,8 +18,9 @@ type Props = {
 export const ChatKanbanItem = ({ chat, onCheckOrder, onOpenChat }: Props) => {
   // screen state
   const order = useObserveOrder(chat.orderId);
+  const chatStillActive = useChatisEnabled(order);
   // helpers
-  const newMessage = chat.counterParts[0].unreadMessages?.length;
+  const newMessage = chat.counterParts[0].unreadMessages?.length && chatStillActive;
   const getMessageFlavor = (() => {
     if (chat.counterParts[0].flavor === 'consumer') return t('Cliente');
     if (chat.counterParts[0].flavor === 'courier') return t('Entregador');

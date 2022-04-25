@@ -4,6 +4,7 @@ import React from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Text, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
+import { useChatisEnabled } from '../../common/hooks/useChatIsEnabled';
 import { t } from '../../strings';
 import { ApiContext } from '../app/context';
 import DefaultButton from '../components/buttons/DefaultButton';
@@ -44,6 +45,7 @@ export default function ({ route }: Props) {
   const user = useSelector(getUser)!;
   // screen state
   const order = useObserveOrder(orderId);
+  const canSendMessages = useChatisEnabled(order);
   const chat = useObserveOrderChat(orderId, user.uid, counterpartId, counterpartFlavor);
   const unread = unreadMessages(chat, user.uid);
   const [inputText, setInputText] = React.useState('');
@@ -201,7 +203,7 @@ export default function ({ route }: Props) {
             style={{ marginLeft: padding }}
             title={t('Enviar')}
             onPress={sendMessageHandler}
-            disabled={inputText.length === 0}
+            disabled={inputText.length === 0 || canSendMessages}
           />
         </DefaultInput>
       </PaddedView>
