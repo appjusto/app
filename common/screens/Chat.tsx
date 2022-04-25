@@ -71,9 +71,12 @@ export default function ({ route }: Props) {
   // UI handlers
   const sendMessageHandler = () => {
     if (!inputText) return;
-    const type = (
-      counterpartFlavor === 'business' ? `business-${flavor}` : 'consumer-courier'
-    ) as ChatMessageType;
+    const type = (() => {
+      if (flavor === 'business') return `business-${counterpartFlavor}`;
+      if (flavor === 'consumer') {
+        if (counterpartFlavor === 'business') return 'business-consumer';
+      } else return 'consumer-courier';
+    })() as ChatMessageType;
     const participantsIds =
       counterpartFlavor !== 'courier' ? [counterpartId, user.uid] : [user.uid, counterpartId];
     const to: { agent: Flavor; id: string } = {
@@ -90,6 +93,8 @@ export default function ({ route }: Props) {
         name:
           flavor === 'consumer'
             ? order.consumer.name ?? t('Cliente')
+            : flavor === 'business'
+            ? order.business?.name ?? t('Restaurante')
             : order.courier?.name ?? t('Entregador/a'),
       },
       to,
@@ -99,16 +104,29 @@ export default function ({ route }: Props) {
     setInputText('');
   };
   const getName = (from: string) => {
-    if (from === order.consumer.id) return order.consumer.name ?? t('Cliente');
-    else if (from === order.courier?.id) return order.courier.name ?? t('Entregador/a');
-    else if (from === order.business?.id) return order.business.name ?? t('Restaurante');
-    else return 'Suporte';
+    if (flavor === 'business') {
+      if (from === user.uid) return order.business?.name ?? t('Restaurante');
+      else if (from === order.consumer.id) return order.consumer.name ?? t('Cliente');
+      else if (from === order.courier?.id) return order.courier.name ?? t('Entregador/a');
+    } else {
+      if (from === order.consumer.id) return order.consumer.name ?? t('Cliente');
+      else if (from === order.courier?.id) return order.courier.name ?? t('Entregador/a');
+      else if (from === order.business?.id) return order.business.name ?? t('Restaurante');
+      else return 'Suporte';
+    }
   };
   const getImageFlavor = (from: string) => {
-    if (from === order.consumer.id) return 'consumer';
-    else if (from === order.courier?.id) return 'courier';
-    else if (from === order.business?.id) return 'business';
+    if (flavor === 'business') {
+      if (from === user.uid) return 'business';
+      else if (from === order.consumer.id) return 'consumer';
+      else if (from === order.courier?.id) return 'courier';
+    } else {
+      if (from === order.consumer.id) return 'consumer';
+      else if (from === order.courier?.id) return 'courier';
+      else if (from === order.business?.id) return 'business';
+    }
   };
+  console.log(chat);
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -120,48 +138,53 @@ export default function ({ route }: Props) {
         data={chat}
         keyExtractor={(item) => item.id}
         style={{ backgroundColor: colors.grey500 }}
-        renderItem={({ item }) => (
-          <PaddedView
-            style={{
-              backgroundColor: colors.grey50,
-              borderTopColor: colors.grey500,
-              borderTopWidth: 1,
-            }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <RoundedProfileImg flavor={getImageFlavor(item.from)} id={item.from} />
-              <View style={{ marginLeft: padding / 2 }}>
-                <Text style={[texts.md]}>{getName(item.from)}</Text>
-              </View>
-            </View>
-            {item.messages.map((message: WithId<ChatMessage>) => (
-              <PaddedView
-                key={message.id}
-                style={{
-                  backgroundColor: colors.white,
-                  ...borders.default,
-                  marginTop: padding / 2,
-                  alignSelf: 'flex-start',
-                }}
-                padding={12}
-              >
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
-                  <Text style={{ ...texts.sm, flexWrap: 'wrap' }}>{message.message}</Text>
-                  <Text
-                    style={{
-                      ...texts.xs,
-                      color: colors.grey700,
-                      marginLeft: halfPadding,
-                      alignSelf: 'flex-end',
-                    }}
-                  >
-                    {message.timestamp ? formatTime(message.timestamp) : ''}
-                  </Text>
+        renderItem={({ item }) => {
+          // console.log(item.from, user.uid);
+          // console.log(item.id);
+          // console.log(getImageFlavor(item.from));
+          return (
+            <PaddedView
+              style={{
+                backgroundColor: colors.grey50,
+                borderTopColor: colors.grey500,
+                borderTopWidth: 1,
+              }}
+            >
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <RoundedProfileImg flavor={getImageFlavor(item.from)} id={item.from} />
+                <View style={{ marginLeft: padding / 2 }}>
+                  <Text style={{ ...texts.md, width: '80%' }}>{getName(item.from)}</Text>
                 </View>
-              </PaddedView>
-            ))}
-          </PaddedView>
-        )}
+              </View>
+              {item.messages.map((message: WithId<ChatMessage>) => (
+                <PaddedView
+                  key={message.id}
+                  style={{
+                    backgroundColor: colors.white,
+                    ...borders.default,
+                    marginTop: padding / 2,
+                    alignSelf: 'flex-start',
+                  }}
+                  padding={12}
+                >
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
+                    <Text style={{ ...texts.sm, flexWrap: 'wrap' }}>{message.message}</Text>
+                    <Text
+                      style={{
+                        ...texts.xs,
+                        color: colors.grey700,
+                        marginLeft: halfPadding,
+                        alignSelf: 'flex-end',
+                      }}
+                    >
+                      {message.timestamp ? formatTime(message.timestamp) : ''}
+                    </Text>
+                  </View>
+                </PaddedView>
+              ))}
+            </PaddedView>
+          );
+        }}
         inverted
       />
       <PaddedView style={{ backgroundColor: colors.white }}>

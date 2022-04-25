@@ -172,6 +172,7 @@ export default class OrderApi {
   ): Unsubscribe {
     const constraints = [where('orderId', '==', orderId), orderBy('timestamp', 'asc')];
     if (userId && counterPartId) {
+      // take a better look at this
       const participantsIds =
         counterpartFlavor !== 'courier' ? [counterPartId, userId] : [userId, counterPartId];
       constraints.push(where('participantsIds', 'in', [participantsIds]));
