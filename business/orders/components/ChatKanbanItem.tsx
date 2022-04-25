@@ -3,7 +3,8 @@ import { Text, View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
-import { borders, colors, padding, texts } from '../../../common/styles';
+import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
+import { formatTime } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { OrderChatGroup } from '../../hooks/useBusinessChats';
 
@@ -23,7 +24,20 @@ export const ChatKanbanItem = ({ chat, onCheckOrder, onOpenChat }: Props) => {
     if (chat.counterParts[0].flavor === 'courier') return t('Entregador');
     else return t('AppJusto');
   })();
-  const flavors = chat.counterParts[0].flavor === 'consumer';
+  const redCircle = (() => {
+    if (newMessage)
+      return (
+        <View
+          style={{
+            backgroundColor: colors.red,
+            height: 12,
+            width: 12,
+            borderRadius: 6,
+            marginRight: halfPadding,
+          }}
+        />
+      );
+  })();
   // UI
   return (
     <View
@@ -36,10 +50,17 @@ export const ChatKanbanItem = ({ chat, onCheckOrder, onOpenChat }: Props) => {
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         {/* TODO: if there is a new message, there should be a red circle to the left of this RoundedText */}
-        <RoundedText backgroundColor={colors.grey50} color={colors.black} noBorder>
+        <RoundedText
+          backgroundColor={colors.grey50}
+          color={colors.black}
+          noBorder
+          leftIcon={redCircle}
+        >
           {getMessageFlavor}
         </RoundedText>
-        <Text style={{ ...texts.x2s }}>ENVIADO ÀS 00h00</Text>
+        {chat.lastUpdate ? (
+          <Text style={{ ...texts.x2s }}>ENVIADO ÀS {formatTime(chat.lastUpdate)}</Text>
+        ) : null}
       </View>
       <View style={{ marginVertical: padding }}>
         <Text style={{ ...texts.sm }}>{order?.consumer.name}</Text>
