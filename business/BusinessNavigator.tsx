@@ -6,6 +6,7 @@ import { ActivityIndicator, Image, TouchableWithoutFeedback, View } from 'react-
 import { headerMenu } from '../assets/icons';
 import { ApiContext } from '../common/app/context';
 import { useNotificationToken } from '../common/hooks/useNotificationToken';
+import Chat from '../common/screens/Chat';
 import { defaultScreenOptions } from '../common/screens/options';
 import { AboutApp } from '../common/screens/profile/AboutApp';
 import Terms from '../common/screens/unlogged/Terms';
@@ -134,6 +135,7 @@ export const BusinessNavigator = () => {
         component={AboutApp}
         options={{ title: t('Sobre o AppJusto') }}
       />
+      <Stack.Screen name="OrderChat" component={Chat} options={{ title: t('Chats') }} />
       <Stack.Screen name="Terms" component={Terms} options={{ title: t('Fique por dentro') }} />
     </Stack.Navigator>
   );

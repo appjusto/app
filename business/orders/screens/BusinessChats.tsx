@@ -103,10 +103,18 @@ export const BusinessChats = ({ navigation, route }: Props) => {
           </View>
         ) : (
           chats?.map((chat) => (
-            <View style={{ flex: 1 }}>
+            <View style={{ marginBottom: padding }} key={chat.orderId}>
               <ChatKanbanItem
                 chat={chat}
                 onCheckOrder={() => navigation.navigate('OrderDetail', { orderId: chat.orderId })}
+                onOpenChat={() =>
+                  navigation.navigate('OrderChat', {
+                    orderId: chat.orderId,
+                    counterpartId: chat.counterParts[0].id,
+                    counterpartFlavor: chat.counterParts[0].flavor,
+                  })
+                }
+                // onOpenChat={() => console.log(chat)}
               />
             </View>
           ))

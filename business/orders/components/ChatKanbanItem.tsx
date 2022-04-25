@@ -10,11 +10,20 @@ import { OrderChatGroup } from '../../hooks/useBusinessChats';
 type Props = {
   chat: OrderChatGroup;
   onCheckOrder: () => void;
+  onOpenChat: () => void;
 };
 
-export const ChatKanbanItem = ({ chat, onCheckOrder }: Props) => {
+export const ChatKanbanItem = ({ chat, onCheckOrder, onOpenChat }: Props) => {
   // screen state
   const order = useObserveOrder(chat.orderId);
+  // helpers
+  const newMessage = chat.counterParts[0].unreadMessages?.length;
+  const getMessageFlavor = (() => {
+    if (chat.counterParts[0].flavor === 'consumer') return t('Cliente');
+    if (chat.counterParts[0].flavor === 'courier') return t('Entregador');
+    else return t('AppJusto');
+  })();
+  const flavors = chat.counterParts[0].flavor === 'consumer';
   // UI
   return (
     <View
@@ -26,8 +35,9 @@ export const ChatKanbanItem = ({ chat, onCheckOrder }: Props) => {
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        {/* TODO: if there is a new message, there should be a red circle to the left of this RoundedText */}
         <RoundedText backgroundColor={colors.grey50} color={colors.black} noBorder>
-          Flavor
+          {getMessageFlavor}
         </RoundedText>
         <Text style={{ ...texts.x2s }}>ENVIADO ÀS 00h00</Text>
       </View>
@@ -39,8 +49,11 @@ export const ChatKanbanItem = ({ chat, onCheckOrder }: Props) => {
           <DefaultButton secondary title={t('Ver pedido')} onPress={onCheckOrder} />
         </View>
         <View style={{ width: '57%' }}>
-          {/* while there is no new message in an ongoing chat, this button will look like a "disabled" one */}
-          <DefaultButton title={t('Nova mensagem')} onPress={() => null} />
+          <DefaultButton
+            title={newMessage ? t('Nova mensagem') : t('Abrir chat')}
+            grey={!newMessage}
+            onPress={onOpenChat}
+          />
         </View>
       </View>
     </View>
