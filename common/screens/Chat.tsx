@@ -4,6 +4,7 @@ import React from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Text, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
+import { BusinessAppContext } from '../../business/BusinessAppContext';
 import { useChatisEnabled } from '../../common/hooks/useChatIsEnabled';
 import { t } from '../../strings';
 import { ApiContext } from '../app/context';
@@ -43,6 +44,8 @@ export default function ({ route }: Props) {
   // app state
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser)!;
+  const business = React.useContext(BusinessAppContext);
+  const agentId = flavor === 'business' ? business!.id : user.uid;
   // screen state
   const order = useObserveOrder(orderId);
   const canSendMessages = useChatisEnabled(order);
@@ -80,7 +83,7 @@ export default function ({ route }: Props) {
       } else return 'consumer-courier';
     })() as ChatMessageType;
     const participantsIds =
-      counterpartFlavor !== 'courier' ? [counterpartId, user.uid] : [user.uid, counterpartId];
+      counterpartFlavor === 'courier' ? [agentId, counterpartId] : [counterpartId, agentId];
     const to: { agent: Flavor; id: string } = {
       agent: counterpartFlavor,
       id: counterpartId,
@@ -91,7 +94,7 @@ export default function ({ route }: Props) {
       participantsIds,
       from: {
         agent: flavor,
-        id: user.uid,
+        id: agentId,
         name:
           flavor === 'consumer'
             ? order.consumer.name ?? t('Cliente')
