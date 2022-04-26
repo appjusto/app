@@ -15,9 +15,7 @@ export const useObserveBusinessOrders = (
     return {
       businessId,
       orderField: 'timestamps.charged',
-      statuses: statuses
-        ? statuses
-        : ['confirmed', 'preparing', 'ready', 'dispatching', 'delivered', 'canceled'],
+      statuses,
     };
   }, [businessId, statuses]);
   // side effects

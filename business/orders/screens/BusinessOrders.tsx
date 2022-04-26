@@ -30,7 +30,7 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-const activeStatuses = ['preparing', 'ready', 'dispatching'] as OrderStatus[];
+const activeStatuses = ['confirmed', 'preparing', 'ready', 'dispatching'] as OrderStatus[];
 
 export const BusinessOrders = ({ navigation, route }: Props) => {
   // context
