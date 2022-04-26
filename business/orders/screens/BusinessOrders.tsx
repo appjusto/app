@@ -4,18 +4,17 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useDispatch, useSelector } from 'react-redux';
-import { ApiContext, AppDispatch } from '../../../common/app/context';
+import { ApiContext } from '../../../common/app/context';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
 import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeContext';
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { getManager } from '../../../common/store/business/selectors';
 import { filterOrdersByStatus, summarizeOrders2 } from '../../../common/store/order/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { BusinessAppContext } from '../../BusinessAppContext';
+import { useCompletedBusinessOrders } from '../../hooks/useCompletedBusinessOrders';
 import { useObserveBusinessOrders } from '../../hooks/useObserveBusinessOrders';
 import { BusinessNavParamsList } from '../../types';
 import { BusinessOrdersHeader } from '../components/BusinessOrdersHeader';
@@ -31,26 +30,25 @@ type Props = {
   route: ScreenRouteProp;
 };
 
+const activeStatuses = ['preparing', 'ready', 'dispatching'] as OrderStatus[];
+
 export const BusinessOrders = ({ navigation, route }: Props) => {
   // context
   const getServerTime = useContextGetSeverTime();
   const api = React.useContext(ApiContext);
   const business = React.useContext(BusinessAppContext);
-  // redux store
-  const dispatch = useDispatch<AppDispatch>();
-  const manager = useSelector(getManager);
   // screen state
-  const allOrders = useObserveBusinessOrders(business?.id);
+  const activeOrders = useObserveBusinessOrders(business?.id, activeStatuses);
+  const completedOrders = useCompletedBusinessOrders(business?.id);
+  const allOrders = React.useMemo(() => {
+    return [...activeOrders, ...completedOrders];
+  }, [activeOrders, completedOrders]);
   const ordersSummary = summarizeOrders2(allOrders);
-
   const [kanbanOrders, setKanbanOrders] = React.useState<WithId<Order>[]>();
   const [selectedFilter, setSelectedFilter] = React.useState<OrderStatus>();
   // TODO: choose best business initially and remember last selected
   // TODO maybe:add the printing switch here
   // side-effects
-  // TODO: is this the best place for the useNotificationToken?
-  // useNotificationToken();
-  // setting kanbanOrders to allOrders when the screen loads for the first time
   React.useEffect(() => {
     if (!allOrders?.length) setKanbanOrders([]);
     else if (!selectedFilter) setKanbanOrders(allOrders);
@@ -74,7 +72,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // tracking
   useSegmentScreen('BusinessOrders');
   //UI
-  if (allOrders === undefined || business === undefined || kanbanOrders === undefined) {
+  if (business === undefined || kanbanOrders === undefined) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />

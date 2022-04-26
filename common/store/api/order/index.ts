@@ -43,6 +43,8 @@ import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';
 import { ObserveBusinessOrdersOptions, ObserveOrdersOptions } from './types';
 
+export type QueryOrdering = 'asc' | 'desc';
+
 export default class OrderApi {
   constructor(private refs: FirebaseRefs, private firestore: Firestore) {}
 
@@ -225,6 +227,30 @@ export default class OrderApi {
     if (options.limit) constraints.push(limit(options.limit));
     return onSnapshot(
       query(this.refs.getOrdersRef(), ...constraints),
+      (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
+    );
+  }
+
+  observeBusinessOrdersCompletedInTheLastHour(
+    resultHandler: (orders: WithId<Order>[]) => void,
+    businessId?: string,
+    ordering: QueryOrdering = 'desc'
+  ): Unsubscribe {
+    const statuses = ['delivered', 'canceled'] as OrderStatus[];
+    const baseTim = new Date();
+    baseTim.setHours(baseTim.getHours() - 1);
+    return onSnapshot(
+      query(
+        this.refs.getOrdersRef(),
+        orderBy('updatedOn', ordering),
+        where('business.id', '==', businessId),
+        where('status', 'in', statuses),
+        where('updatedOn', '>', baseTim)
+      ),
       (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
       (error) => {
         console.log(error);

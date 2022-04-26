@@ -157,8 +157,8 @@ export default function ({ route }: Props) {
             >
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <RoundedProfileImg flavor={getImageFlavor(item.from)} id={item.from} />
-                <View style={{ marginLeft: padding / 2 }}>
-                  <Text style={{ ...texts.md, width: '80%' }}>{getName(item.from)}</Text>
+                <View style={{ marginVertical: halfPadding }}>
+                  <Text style={{ ...texts.md }}>{getName(item.from)}</Text>
                 </View>
               </View>
               {item.messages.map((message: WithId<ChatMessage>) => (

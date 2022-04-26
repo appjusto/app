@@ -10,7 +10,7 @@ export const useObserveBusinessOrders = (
   // context
   const api = React.useContext(ApiContext);
   // state
-  const [orders, setOrders] = React.useState<WithId<Order>[]>();
+  const [orders, setOrders] = React.useState<WithId<Order>[]>([]);
   const options = React.useMemo((): ObserveOrdersOptions => {
     return {
       businessId,
