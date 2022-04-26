@@ -131,7 +131,7 @@ export default function ({ route }: Props) {
       else if (from === order.business?.id) return 'business';
     }
   };
-  console.log(chat);
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

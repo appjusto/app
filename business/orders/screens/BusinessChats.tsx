@@ -1,4 +1,3 @@
-import { OrderStatus } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -22,9 +21,6 @@ type Props = {
 };
 
 type ChatFilter = 'open' | 'closed';
-
-const activeStatuses = ['preparing', 'ready', 'dispatching'] as OrderStatus[];
-const completedStatuses = ['canceled', 'delivered'] as OrderStatus[];
 
 export const BusinessChats = ({ navigation, route }: Props) => {
   // context
