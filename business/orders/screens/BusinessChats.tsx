@@ -8,8 +8,7 @@ import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-de
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { BusinessAppContext } from '../../BusinessAppContext';
-import { OrderChatGroup, useBusinessChats } from '../../hooks/useBusinessChats';
-import { useObserveBusinessOrders } from '../../hooks/useObserveBusinessOrders';
+import { OrderChatGroup } from '../../hooks/useBusinessChats';
 import { BusinessNavParamsList } from '../../types';
 import { ChatKanbanItem } from '../components/ChatKanbanItem';
 import { ListFilterButton } from '../components/ListFilterButton';
@@ -28,25 +27,16 @@ const activeStatuses = ['preparing', 'ready', 'dispatching'] as OrderStatus[];
 const completedStatuses = ['canceled', 'delivered'] as OrderStatus[];
 
 export const BusinessChats = ({ navigation, route }: Props) => {
-  // const showChatButton = useChatisEnabled(order); use this to show or hide chat buttons in the chats.map()
   // context
-  const business = React.useContext(BusinessAppContext);
+  const { activeChats, completedOrdersChats } = React.useContext(BusinessAppContext);
   // state
-  const allOrders = useObserveBusinessOrders(business?.id);
-  const allChats = useBusinessChats(business?.id, allOrders);
-  const activeOrders = useObserveBusinessOrders(business?.id, activeStatuses);
-  // const closedChats = chats com status ['delivered', 'canceled'] encerrados há menos de uma hora
-  const activeChats = useBusinessChats(business?.id, activeOrders);
-  const completedOrders = useObserveBusinessOrders(business?.id, completedStatuses);
-  const completedOrdersChats = useBusinessChats(business?.id, completedOrders);
   const [chatFilter, setChatFilter] = React.useState<ChatFilter>('open');
   const [chats, setChats] = React.useState<OrderChatGroup[]>();
-  // const noChatToday = !chats?.length;
   //side-effects
   React.useEffect(() => {
-    if (!allChats.length) setChats([]);
     if (activeChats.length) setChats(activeChats);
-  }, [allChats, activeChats]);
+    else setChats([]);
+  }, [activeChats]);
   //UI
 
   return (

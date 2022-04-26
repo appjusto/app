@@ -3,6 +3,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../common/app/context';
 import { getUser } from '../common/store/user/selectors';
+import { OrderChatGroup, useBusinessChats } from './hooks/useBusinessChats';
 import { useBusinessesManagedBy } from './hooks/useBusinessesManagedBy';
 import { useCompletedBusinessOrders } from './hooks/useCompletedBusinessOrders';
 import { useObserveBusinessOrders } from './hooks/useObserveBusinessOrders';
@@ -15,6 +16,8 @@ interface Props {
 interface ContextProps {
   business: WithId<Business> | undefined;
   orders: WithId<Order>[];
+  activeChats: OrderChatGroup[];
+  completedOrdersChats: OrderChatGroup[];
 }
 
 export const BusinessAppContext = React.createContext<ContextProps>({} as ContextProps);
@@ -35,6 +38,8 @@ export const BusinessAppProvider = ({ children }: Props) => {
   const [orders, setOrders] = React.useState<WithId<Order>[]>([]);
   const activeOrders = useObserveBusinessOrders(business?.id, activeStatuses);
   const completedOrders = useCompletedBusinessOrders(business?.id);
+  const activeChats = useBusinessChats(business?.id, activeOrders);
+  const completedOrdersChats = useBusinessChats(business?.id, completedOrders);
 
   // helpers
   const getBusinessIdFromBusinesses = React.useCallback(() => {
@@ -67,7 +72,7 @@ export const BusinessAppProvider = ({ children }: Props) => {
 
   // provider
   return (
-    <BusinessAppContext.Provider value={{ business, orders }}>
+    <BusinessAppContext.Provider value={{ business, orders, activeChats, completedOrdersChats }}>
       {children}
     </BusinessAppContext.Provider>
   );

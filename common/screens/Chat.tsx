@@ -44,7 +44,7 @@ export default function ({ route }: Props) {
   // app state
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser)!;
-  const business = React.useContext(BusinessAppContext);
+  const { business } = React.useContext(BusinessAppContext);
   const agentId = flavor === 'business' ? business!.id : user.uid;
   // screen state
   const order = useObserveOrder(orderId);
