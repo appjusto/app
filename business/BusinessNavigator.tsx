@@ -31,7 +31,7 @@ export const BusinessNavigator = () => {
   // context
   const api = React.useContext(ApiContext);
   const navigation = useNavigation<ScreenNavigationProp>();
-  const business = React.useContext(BusinessAppContext);
+  const { business } = React.useContext(BusinessAppContext);
   const status = business?.status;
   // side effects
   useNotificationToken();

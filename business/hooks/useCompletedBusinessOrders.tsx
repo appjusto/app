@@ -11,6 +11,7 @@ export const useCompletedBusinessOrders = (businessId?: string, ordering?: Query
   const [orders, setOrders] = React.useState<WithId<Order>[]>([]);
   // side effects
   React.useEffect(() => {
+    if (!businessId) return;
     const unsub = api
       .order()
       .observeBusinessOrdersCompletedInTheLastHour(setOrders, businessId, ordering);
