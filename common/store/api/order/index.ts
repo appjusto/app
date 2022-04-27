@@ -265,20 +265,21 @@ export default class OrderApi {
     resultHandler: (messages: WithId<ChatMessage>[]) => void
   ) {
     const IdsLimit = 10;
-    const unsubscribes: any = [];
-    ordersIds.forEach((orderId, i) => {
+    const unsubscribes = [];
+    for (var i = 0; i < ordersIds.length; i = i + IdsLimit) {
       const ids = ordersIds.slice(i, i + IdsLimit);
+      const q = query(
+        this.refs.getChatsRef(),
+        where('orderId', 'in', ids),
+        where('participantsIds', 'array-contains', businessId),
+        orderBy('timestamp', 'asc')
+      );
       unsubscribes.push(
         onSnapshot(
-          query(
-            this.refs.getChatsRef(),
-            where('orderId', 'in', ids),
-            where('participantsIds', 'array-contains', businessId),
-            orderBy('timestamp', 'asc') // TODO: check if we want this order
-          ),
-          (querySnapshot) => {
-            if (!querySnapshot.empty) {
-              resultHandler(documentsAs<ChatMessage>(querySnapshot.docs));
+          q,
+          (snapshot) => {
+            if (!snapshot.empty) {
+              resultHandler(documentsAs<ChatMessage>(snapshot.docs));
             }
           },
           (error) => {
@@ -287,7 +288,7 @@ export default class OrderApi {
           }
         )
       );
-    });
+    }
     return Promise.all(unsubscribes).then((content) => content.flat());
   }
 
