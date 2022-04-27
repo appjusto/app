@@ -9,7 +9,8 @@ export const useObserveOrderChat = (
   orderId: string,
   userId: string,
   counterpartId?: string,
-  counterpartFlavor?: Flavor
+  counterpartFlavor?: Flavor,
+  flavor?: Flavor
 ) => {
   // context
   const api = React.useContext(ApiContext);
@@ -22,9 +23,9 @@ export const useObserveOrderChat = (
     if (!orderId) return;
     const unsub = api
       .order()
-      .observeOrderChat(orderId, userId, counterpartId, counterpartFlavor, setUserChat);
+      .observeOrderChat(orderId, userId, counterpartId, counterpartFlavor, flavor, setUserChat);
     return () => unsub();
-  }, [api, orderId, userId, counterpartId, counterpartFlavor]);
+  }, [api, orderId, userId, counterpartId, counterpartFlavor, flavor]);
   // group messages whenever chat updates
   React.useEffect(() => {
     setChat(groupOrderChatMessages(userChat.sort(sortMessages)));

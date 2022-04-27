@@ -170,12 +170,22 @@ export default class OrderApi {
     userId: string | undefined,
     counterPartId: string | undefined,
     counterpartFlavor: Flavor | undefined,
+    flavor: Flavor | undefined,
     resultHandler: (orders: WithId<ChatMessage>[]) => void
   ): Unsubscribe {
     const constraints = [where('orderId', '==', orderId), orderBy('timestamp', 'asc')];
-    if (userId && counterPartId) {
-      const participantsIds =
-        counterpartFlavor !== 'courier' ? [counterPartId, userId] : [userId, counterPartId];
+    if (userId && counterPartId && flavor) {
+      const participantsIds = (() => {
+        if (counterpartFlavor === 'courier') return [userId, counterPartId];
+        if (counterpartFlavor === 'consumer') {
+          if (flavor === 'business') return [userId, counterPartId];
+          if (flavor === 'courier') return [counterPartId, userId];
+        }
+        if (counterpartFlavor === 'business') {
+          if (flavor === 'consumer') return [counterPartId, userId];
+          if (flavor === 'courier') return [counterPartId, userId];
+        }
+      })();
       constraints.push(where('participantsIds', 'in', [participantsIds]));
     } else if (userId) constraints.push(where('participantsIds', 'array-contains', userId));
     else if (counterPartId)
