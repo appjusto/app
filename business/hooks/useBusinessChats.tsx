@@ -41,14 +41,18 @@ export const useBusinessChats = (businessId?: string, orders?: WithId<Order>[]) 
     }
     const unsubsPromise = api
       .order()
-      .observeBusinessActiveChats(businessId, totalOrdersIds, (messages: WithId<ChatMessage>[]) => {
-        setChatMessages((prev) => {
-          const newMessagesIds = messages.map((msg) => msg.id);
-          const filteredPrev = prev.filter((msg) => !newMessagesIds.includes(msg.id));
-          const update = [...filteredPrev, ...messages];
-          return update.filter((msg) => totalOrdersIds.includes(msg.orderId));
-        });
-      });
+      .observeBusinessActiveChatMessages(
+        businessId,
+        totalOrdersIds,
+        (messages: WithId<ChatMessage>[]) => {
+          setChatMessages((prev) => {
+            const newMessagesIds = messages.map((msg) => msg.id);
+            const filteredPrev = prev.filter((msg) => !newMessagesIds.includes(msg.id));
+            const update = [...filteredPrev, ...messages];
+            return update.filter((msg) => totalOrdersIds.includes(msg.orderId));
+          });
+        }
+      );
     return () => {
       unsubsPromise.then((unsubs) => unsubs.forEach((unsub) => unsub()));
     };

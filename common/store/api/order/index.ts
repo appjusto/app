@@ -259,7 +259,7 @@ export default class OrderApi {
     );
   }
 
-  async observeBusinessActiveChats(
+  async observeBusinessActiveChatMessages(
     businessId: string,
     ordersIds: string[],
     resultHandler: (messages: WithId<ChatMessage>[]) => void

@@ -18,6 +18,8 @@ interface ContextProps {
   orders: WithId<Order>[];
   activeChats: OrderChatGroup[];
   completedOrdersChats: OrderChatGroup[];
+  allChats: OrderChatGroup[];
+  newChatMessages: string[];
 }
 
 export const BusinessAppContext = React.createContext<ContextProps>({} as ContextProps);
@@ -40,6 +42,8 @@ export const BusinessAppProvider = ({ children }: Props) => {
   const completedOrders = useCompletedBusinessOrders(business?.id);
   const activeChats = useBusinessChats(business?.id, activeOrders);
   const completedOrdersChats = useBusinessChats(business?.id, completedOrders);
+  const [allChats, setAllChats] = React.useState<OrderChatGroup[]>([]);
+  const [newChatMessages, setNewChatMessages] = React.useState<string[]>([]);
 
   // helpers
   const getBusinessIdFromBusinesses = React.useCallback(() => {
@@ -70,10 +74,39 @@ export const BusinessAppProvider = ({ children }: Props) => {
     setOrders([...activeOrders, ...completedOrders]);
   }, [activeOrders, completedOrders]);
 
+  React.useEffect(() => {
+    setAllChats([...activeChats, ...completedOrdersChats]);
+  }, [activeChats, completedOrdersChats]);
+
+  React.useEffect(() => {
+    if (allChats.length > 0) {
+      const unreadMessages = [] as string[];
+      allChats.forEach((group) => {
+        group.counterParts.forEach((part) => {
+          if (part.unreadMessages && part.unreadMessages.length > 0) {
+            unreadMessages.push(...part.unreadMessages);
+          }
+        });
+      });
+      setNewChatMessages(unreadMessages);
+    }
+  }, [allChats]);
+
   // provider
   return (
-    <BusinessAppContext.Provider value={{ business, orders, activeChats, completedOrdersChats }}>
+    <BusinessAppContext.Provider
+      value={{ business, orders, activeChats, completedOrdersChats, allChats, newChatMessages }}
+    >
       {children}
     </BusinessAppContext.Provider>
   );
+};
+
+export const useBusinessContextBusiness = () => {
+  return React.useContext(BusinessAppContext);
+};
+
+export const useBusinessContextBusinessId = () => {
+  const { business } = useBusinessContextBusiness();
+  return business?.id;
 };
