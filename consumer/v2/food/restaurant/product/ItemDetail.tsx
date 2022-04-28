@@ -207,7 +207,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         </PaddedView>
       );
     }
-    if (acceptingStatus === 'accepting')
+    if (acceptingStatus === 'accepting') {
       return (
         <View style={{ flex: 1 }}>
           <ItemComplements
@@ -249,21 +249,46 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           <View style={{ flex: 1 }} />
         </View>
       );
-    if (acceptingStatus === 'out-of-range' || acceptingStatus === 'unsupported') {
-      const header =
-        acceptingStatus === 'out-of-range'
-          ? t('Restaurante fora da área de entrega')
-          : t('Fora do horário de atendimento');
-      const body =
-        acceptingStatus === 'out-of-range'
-          ? t(
-              'Infelizmente ainda não atendemos seu endereço, mas você pode continuar explorando o cardápio'
-            )
-          : t(
-              `O horário de atendimento da plataforma atualmente é entre ${formatHour(
-                platformParams?.consumer.support.starts ?? '1000'
-              )} e ${formatHour(platformParams?.consumer.support.ends ?? '2300')}.`
-            );
+    } else if (acceptingStatus === 'closed' || acceptingStatus === 'disconnected') {
+      const nextOpeningDay = getNextAvailableDate(business.schedules, new Date());
+      return (
+        <View
+          style={{
+            margin: padding,
+            padding: 25,
+            alignItems: 'center',
+            backgroundColor: colors.grey50,
+            ...borders.default,
+          }}
+        >
+          <Feather name="clock" size={26} />
+          <Text style={texts.sm}>{t('Desculpe, estamos fechados agora')}</Text>
+          {acceptingStatus === 'closed' && nextOpeningDay ? (
+            <>
+              <Text style={{ ...texts.xs, color: colors.grey700 }}>
+                {`${t('Abriremos')} ${nextOpeningDay![0]} ${t('às')}`}
+              </Text>
+              <Text style={texts.x2l}>{formatHour(nextOpeningDay![1])}</Text>
+            </>
+          ) : null}
+        </View>
+      );
+    } else {
+      let header = '';
+      let body = '';
+      if (acceptingStatus === 'out-of-range') {
+        header = t('Restaurante fora da área de entrega');
+        body = t(
+          'Infelizmente ainda não atendemos seu endereço, mas você pode continuar explorando o cardápio'
+        );
+      } else if (acceptingStatus === 'unsupported') {
+        header = t('Fora do horário de atendimento');
+        body = t(
+          `O horário de atendimento da plataforma atualmente é entre ${formatHour(
+            platformParams?.consumer.support.starts ?? '1000'
+          )} e ${formatHour(platformParams?.consumer.support.ends ?? '2300')}.`
+        );
+      }
       return (
         <View
           style={{
@@ -281,29 +306,6 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         </View>
       );
     }
-    const nextOpeningDay = getNextAvailableDate(business.schedules, new Date());
-    return (
-      <View
-        style={{
-          margin: padding,
-          padding: 25,
-          alignItems: 'center',
-          backgroundColor: colors.grey50,
-          ...borders.default,
-        }}
-      >
-        <Feather name="clock" size={26} />
-        <Text style={texts.sm}>{t('Desculpe, estamos fechados agora')}</Text>
-        {nextOpeningDay ? (
-          <>
-            <Text style={{ ...texts.xs, color: colors.grey700 }}>
-              {`${t('Abriremos')} ${nextOpeningDay![0]} ${t('às')}`}
-            </Text>
-            <Text style={texts.x2l}>{formatHour(nextOpeningDay![1])}</Text>
-          </>
-        ) : null}
-      </View>
-    );
   };
   return (
     <View style={{ ...screens.default }}>
