@@ -81,6 +81,7 @@ export default function ({ route }: Props) {
       }
       if (flavor === 'courier') {
         if (counterpartFlavor === 'business') return 'business-courier';
+        else return 'consumer-courier';
       } else return 'consumer-courier';
     })() as ChatMessageType;
     const participantsIds =
