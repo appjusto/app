@@ -21,7 +21,7 @@ import IuguApi from './payment/iugu';
 import PlatformApi from './platform';
 import ProfileApi from './profile';
 import ReviewsApi from './reviews';
-import SearchApi from './search/SearchApi';
+import AlgoliaSearchApi from './search/AlgoliaSearchApi';
 import UserApi from './users';
 
 export default class Api {
@@ -45,7 +45,7 @@ export default class Api {
   private _files: FilesApi;
   private _iugu: IuguApi;
   private _business: BusinessApi;
-  private _search: SearchApi;
+  private _search: AlgoliaSearchApi;
   private _user: UserApi;
 
   constructor(extra: Extra) {
@@ -66,8 +66,8 @@ export default class Api {
       connectStorageEmulator(this.storage, host, 9199);
     }
 
-    this._firestoreRefs = new FirestoreRefs(this.firestore);
-    this._functionsRefs = new FunctionsRef(this.functions);
+    this._firestoreRefs = new FirestoreRefs();
+    this._functionsRefs = new FunctionsRef();
     this._storagePaths = new StoragePaths();
     this._iugu = new IuguApi(extra.iugu.accountId, extra.environment !== 'live');
     this._files = new FilesApi(this.storage);
@@ -86,7 +86,7 @@ export default class Api {
     this._reviews = new ReviewsApi(this._firestoreRefs);
     this._maps = new MapsApi(this._functionsRefs);
     this._business = new BusinessApi(this._firestoreRefs, this._storagePaths, this._files);
-    this._search = new SearchApi(extra.algolia, extra.environment);
+    this._search = new AlgoliaSearchApi(extra.algolia, extra.environment);
     this._user = new UserApi(this._firestoreRefs, extra.flavor);
   }
 

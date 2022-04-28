@@ -5,7 +5,7 @@ import React from 'react';
 import { ApiContext } from '../../../app/context';
 import { SearchFilter, SearchKind, SearchOrder } from '../../consumer/types';
 
-export const useSearch = <T extends object>(
+export const useAlgoliaSearch = <T extends object>(
   enabled: boolean,
   kind: SearchKind,
   order: SearchOrder,
@@ -17,8 +17,7 @@ export const useSearch = <T extends object>(
   const api = React.useContext(ApiContext);
   // state
   const [lastResponse, setLastResponse] = React.useState<SearchResponse<T>>();
-  const [responseByPage, setResponseByPage] =
-    React.useState<Map<number | undefined, SearchResponse<T>>>();
+  const [responseByPage, setResponseByPage] = React.useState<Map<number, SearchResponse<T>>>();
   const [results, setResults] = React.useState<T[]>();
   const [isLoading, setLoading] = React.useState(true);
   // helpers

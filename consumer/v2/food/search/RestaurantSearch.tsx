@@ -16,7 +16,7 @@ import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../../common/icons/icon-cone-yellow';
-import { useSearch } from '../../../../common/store/api/search/useSearch';
+import { useAlgoliaSearch } from '../../../../common/store/api/search/useAlgoliaSearch';
 import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import {
   getCurrentLocation,
@@ -56,7 +56,7 @@ export default function ({ navigation }: Props) {
     results: restaurants,
     refetch: refetchRestaurants,
     isLoading: loadingRestaurants,
-  } = useSearch<BusinessAlgolia>(
+  } = useAlgoliaSearch<BusinessAlgolia>(
     kind === 'restaurant',
     kind,
     order,
@@ -69,7 +69,7 @@ export default function ({ navigation }: Props) {
     refetch: refetchProducts,
     isLoading: loadingProducts,
     fetchNextPage,
-  } = useSearch<ProductAlgolia>(
+  } = useAlgoliaSearch<ProductAlgolia>(
     kind === 'product',
     'product',
     order,

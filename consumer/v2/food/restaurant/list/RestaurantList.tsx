@@ -1,11 +1,11 @@
-import { BusinessAlgolia } from '@appjusto/types';
+import { Business, BusinessAlgolia, WithId } from '@appjusto/types';
 import React from 'react';
 import {
   ActivityIndicator,
   SectionList,
   SectionListProps,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../../common/app/context';
@@ -22,7 +22,8 @@ import { t } from '../../../../../strings';
 import { RestaurantListItem } from './RestaurantListItem';
 import { RestaurantListSection } from './types';
 
-interface Props extends SectionListProps<BusinessAlgolia, RestaurantListSection> {
+interface Props
+  extends SectionListProps<BusinessAlgolia | WithId<Business>, RestaurantListSection> {
   loading?: boolean;
   onSelect: (id: string) => void;
   onRecommend?: () => void;
@@ -33,6 +34,8 @@ export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...pr
   const api = React.useContext(ApiContext);
   // redux
   const location = useSelector(getCurrentLocation);
+  const getId = (business: BusinessAlgolia | WithId<Business>) =>
+    'id' in business ? business.id : business.objectID;
   // UI
   return (
     <SectionList
@@ -91,7 +94,7 @@ export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...pr
         );
       }}
       sections={sections}
-      keyExtractor={(item) => item.objectID}
+      keyExtractor={(item) => getId(item)}
       renderItem={({ item, section }) => {
         const closed = section.data.find(() => true)?.status === 'closed';
         return (
@@ -101,9 +104,9 @@ export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...pr
               paddingBottom: padding,
             }}
           >
-            <TouchableOpacity onPress={() => onSelect(item.objectID)}>
+            <TouchableOpacity onPress={() => onSelect(getId(item))}>
               <RestaurantListItem
-                id={item.objectID}
+                id={getId(item)}
                 restaurant={item}
                 cuisine={item.cuisine}
                 secondary={section.data.find(() => true)?.status === 'closed'}

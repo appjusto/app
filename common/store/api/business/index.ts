@@ -6,6 +6,7 @@ import {
   Category,
   Complement,
   ComplementGroup,
+  LatLng,
   Ordering,
   Place,
   Product,
@@ -41,6 +42,11 @@ export default class BusinessApi {
     );
     if (snapshot.empty) return null;
     return documentAs<Business>(snapshot.docs[0]);
+  }
+
+  queryBusinessesNearby(location: LatLng) {
+    // TODO: replace with geofirestore query when lib is updated;
+    return query(this.firestoreRefs.getBusinessesRef(), where('', '==', ''));
   }
 
   observeBusiness(businessId: string, resultHandler: (business: WithId<Business>) => void) {

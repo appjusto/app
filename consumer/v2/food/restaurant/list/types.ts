@@ -1,7 +1,7 @@
-import { BusinessAlgolia } from '@appjusto/types';
+import { Business, BusinessAlgolia, WithId } from '@appjusto/types';
 
 export interface RestaurantListSection {
   title: string;
   subtitle: string;
-  data: BusinessAlgolia[];
+  data: (BusinessAlgolia | WithId<Business>)[];
 }

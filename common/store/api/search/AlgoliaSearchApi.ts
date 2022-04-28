@@ -4,7 +4,7 @@ import { LatLng } from 'react-native-maps';
 import { AlgoliaConfig } from '../../../../config/types';
 import { SearchFilter, SearchKind, SearchOrder } from '../../consumer/types';
 
-export default class SearchApi {
+export default class AlgoliaSearchApi {
   private client: SearchClient;
   private restaurants: SearchIndex;
   private restaurantsByPrice: SearchIndex;
