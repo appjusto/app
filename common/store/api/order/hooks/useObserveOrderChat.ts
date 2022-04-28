@@ -15,12 +15,17 @@ export const useObserveOrderChat = (orderId: string, userId: string, counterpart
   // observe chat
   React.useEffect(() => {
     if (!orderId) return;
-    const unsub = api.order().observeOrderChat(orderId, userId, counterpartId, setUserChat);
-    return () => unsub();
+    return api.order().observeOrderChat(orderId, userId, setUserChat);
   }, [api, orderId, userId, counterpartId]);
   // group messages whenever chat updates
   React.useEffect(() => {
-    setChat(groupOrderChatMessages(userChat.sort(sortMessages)));
+    setChat(
+      groupOrderChatMessages(
+        userChat
+          .filter((value) => !counterpartId || value.participantsIds.includes(counterpartId))
+          .sort(sortMessages)
+      )
+    );
   }, [userChat]);
   // result
   return chat;

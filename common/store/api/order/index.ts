@@ -167,12 +167,10 @@ export default class OrderApi {
   observeOrderChat(
     orderId: string,
     userId: string,
-    counterPartId: string | undefined,
     resultHandler: (orders: WithId<ChatMessage>[]) => void
   ): Unsubscribe {
     const constraints = [where('orderId', '==', orderId), orderBy('timestamp', 'asc')];
-    const participantsIds = [userId].concat(counterPartId ? [counterPartId] : []);
-    constraints.push(where('participantsIds', 'in', participantsIds));
+    constraints.push(where('participantsIds', 'array-contains', [userId]));
     return onSnapshot(
       query(this.refs.getChatsRef(), ...constraints),
       (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
