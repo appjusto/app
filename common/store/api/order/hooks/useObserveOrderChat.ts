@@ -1,17 +1,11 @@
-import { ChatMessage, Flavor, WithId } from '@appjusto/types';
+import { ChatMessage, WithId } from '@appjusto/types';
 import { FieldValue, Timestamp } from 'firebase/firestore';
 import { first } from 'lodash';
 import React from 'react';
 import { ApiContext } from '../../../../app/context';
 import { GroupedChatMessages } from '../../../order/types';
 
-export const useObserveOrderChat = (
-  orderId: string,
-  userId: string,
-  counterpartId?: string,
-  counterpartFlavor?: Flavor,
-  flavor?: Flavor
-) => {
+export const useObserveOrderChat = (orderId: string, userId: string, counterpartId?: string) => {
   // context
   const api = React.useContext(ApiContext);
   // app state
@@ -21,11 +15,9 @@ export const useObserveOrderChat = (
   // observe chat
   React.useEffect(() => {
     if (!orderId) return;
-    const unsub = api
-      .order()
-      .observeOrderChat(orderId, userId, counterpartId, counterpartFlavor, flavor, setUserChat);
+    const unsub = api.order().observeOrderChat(orderId, userId, counterpartId, setUserChat);
     return () => unsub();
-  }, [api, orderId, userId, counterpartId, counterpartFlavor, flavor]);
+  }, [api, orderId, userId, counterpartId]);
   // group messages whenever chat updates
   React.useEffect(() => {
     setChat(groupOrderChatMessages(userChat.sort(sortMessages)));

@@ -3,7 +3,6 @@ import {
   CancelOrderPayload,
   ChatMessage,
   ConsumerProfile,
-  Flavor,
   Issue,
   LatLng,
   Order,
@@ -41,7 +40,7 @@ import { getAppVersion } from '../../../utils/version';
 import { fetchPublicIP } from '../externals/ipify';
 import FirebaseRefs from '../FirebaseRefs';
 import { documentAs, documentsAs } from '../types';
-import { ObserveBusinessOrdersOptions, ObserveOrdersOptions } from './types';
+import { ObserveOrdersOptions } from './types';
 
 export type QueryOrdering = 'asc' | 'desc';
 
@@ -167,29 +166,13 @@ export default class OrderApi {
   }
   observeOrderChat(
     orderId: string,
-    userId: string | undefined,
+    userId: string,
     counterPartId: string | undefined,
-    counterpartFlavor: Flavor | undefined,
-    flavor: Flavor | undefined,
     resultHandler: (orders: WithId<ChatMessage>[]) => void
   ): Unsubscribe {
     const constraints = [where('orderId', '==', orderId), orderBy('timestamp', 'asc')];
-    if (userId && counterPartId && flavor) {
-      const participantsIds = (() => {
-        if (counterpartFlavor === 'courier') return [userId, counterPartId];
-        if (counterpartFlavor === 'consumer') {
-          if (flavor === 'business') return [userId, counterPartId];
-          if (flavor === 'courier') return [counterPartId, userId];
-        }
-        if (counterpartFlavor === 'business') {
-          if (flavor === 'consumer') return [counterPartId, userId];
-          if (flavor === 'courier') return [counterPartId, userId];
-        }
-      })();
-      constraints.push(where('participantsIds', 'in', [participantsIds]));
-    } else if (userId) constraints.push(where('participantsIds', 'array-contains', userId));
-    else if (counterPartId)
-      constraints.push(where('participantsIds', 'array-contains', counterPartId));
+    const participantsIds = [userId].concat(counterPartId ? [counterPartId] : []);
+    constraints.push(where('participantsIds', 'in', participantsIds));
     return onSnapshot(
       query(this.refs.getChatsRef(), ...constraints),
       (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
@@ -227,7 +210,7 @@ export default class OrderApi {
 
   // business
   observeBusinessOrders(
-    options: ObserveBusinessOrdersOptions,
+    options: ObserveOrdersOptions,
     resultHandler: (orders: WithId<Order>[]) => void
   ): Unsubscribe {
     const { businessId, statuses } = options;
