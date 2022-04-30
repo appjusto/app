@@ -28,6 +28,7 @@ export const BusinessChats = ({ navigation, route }: Props) => {
   // state
   const [chatFilter, setChatFilter] = React.useState<ChatFilter>('open');
   const [chats, setChats] = React.useState<OrderChatGroup[]>();
+  // console.log(chats);
   //side-effects
   React.useEffect(() => {
     if (activeChats.length) setChats(activeChats);
@@ -89,7 +90,6 @@ export const BusinessChats = ({ navigation, route }: Props) => {
           </View>
         ) : (
           chats?.map((chat) => {
-            console.log(chat);
             return (
               <View style={{ marginBottom: padding }} key={chat.orderId}>
                 <ChatKanbanItem

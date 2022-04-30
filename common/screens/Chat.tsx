@@ -48,7 +48,7 @@ export default function ({ route }: Props) {
   // screen state
   const order = useObserveOrder(orderId);
   const chat = useObserveOrderChat(orderId, agentId, counterpartId);
-  const unread = unreadMessages(chat, user.uid);
+  const unread = unreadMessages(chat, agentId);
   const [inputText, setInputText] = React.useState('');
   // side effects
   // tracking
@@ -76,13 +76,8 @@ export default function ({ route }: Props) {
     if (!inputText) return;
     const type = (() => {
       if (flavor === 'business') return `business-${counterpartFlavor}`;
-      if (flavor === 'consumer') {
-        if (counterpartFlavor === 'business') return 'business-consumer';
-      }
-      if (flavor === 'courier') {
-        if (counterpartFlavor === 'business') return 'business-courier';
-        else return 'consumer-courier';
-      } else return 'consumer-courier';
+      else if (counterpartFlavor === 'business') return `business-${flavor}`;
+      return 'consumer-courier';
     })() as ChatMessageType;
     const participantsIds =
       flavor === 'business'

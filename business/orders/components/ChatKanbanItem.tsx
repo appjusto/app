@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RoundedText from '../../../common/components/texts/RoundedText';
-import { useChatisEnabled } from '../../../common/hooks/useChatIsEnabled';
+import { useChatIsEnabled } from '../../../common/hooks/useChatIsEnabled';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
 import { formatTime } from '../../../common/utils/formatters';
@@ -18,10 +18,10 @@ type Props = {
 export const ChatKanbanItem = ({ chat, onCheckOrder, onOpenChat }: Props) => {
   // screen state
   const order = useObserveOrder(chat.orderId);
-  const chatStillActive = useChatisEnabled(order);
+  const chatStillActive = useChatIsEnabled(order);
   // helpers
   const newMessage = chat.counterParts[0].unreadMessages?.length && chatStillActive;
-  const getMessageFlavor = (() => {
+  const flavorLabel = (() => {
     if (chat.counterParts[0].flavor === 'consumer') return t('Cliente');
     if (chat.counterParts[0].flavor === 'courier') return t('Entregador');
     else return t('AppJusto');
@@ -58,10 +58,12 @@ export const ChatKanbanItem = ({ chat, onCheckOrder, onOpenChat }: Props) => {
           noBorder
           leftIcon={redCircle}
         >
-          {getMessageFlavor}
+          {flavorLabel}
         </RoundedText>
         {chat.lastUpdate ? (
-          <Text style={{ ...texts.x2s }}>ENVIADO ÀS {formatTime(chat.lastUpdate)}</Text>
+          <Text style={{ ...texts.x2s }}>
+            {t('ENVIADO ÀS')} {formatTime(chat.lastUpdate)}
+          </Text>
         ) : null}
       </View>
       <View style={{ marginVertical: padding }}>

@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import HR from '../../../common/components/views/HR';
-import { useChatisEnabled } from '../../../common/hooks/useChatIsEnabled';
+import { useChatIsEnabled } from '../../../common/hooks/useChatIsEnabled';
 import { IconOrderDone } from '../../../common/icons/icon-order-done';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
@@ -43,7 +43,7 @@ export default ({ navigation, route }: Props) => {
   const order = useObserveOrder(orderId);
   const [tip, setTip] = React.useState(0);
   const [isLoading, setLoading] = React.useState(false);
-  const showChatButton = useChatisEnabled(order);
+  const showChatButton = useChatIsEnabled(order);
   // tracking
   useSegmentScreen('OngoingOrderFeedback');
   // helpers

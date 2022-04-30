@@ -170,7 +170,7 @@ export default class OrderApi {
     resultHandler: (orders: WithId<ChatMessage>[]) => void
   ): Unsubscribe {
     const constraints = [where('orderId', '==', orderId), orderBy('timestamp', 'asc')];
-    constraints.push(where('participantsIds', 'array-contains', [userId]));
+    constraints.push(where('participantsIds', 'array-contains', userId));
     return onSnapshot(
       query(this.refs.getChatsRef(), ...constraints),
       (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
@@ -245,7 +245,6 @@ export default class OrderApi {
       (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
       (error) => {
         console.log(error);
-        Sentry.Native.captureException(error);
       }
     );
   }
@@ -256,7 +255,7 @@ export default class OrderApi {
     resultHandler: (messages: WithId<ChatMessage>[]) => void
   ) {
     const IdsLimit = 10;
-    const unsubscribes = [];
+    const unsubscribes: Unsubscribe[] = [];
     for (var i = 0; i < ordersIds.length; i = i + IdsLimit) {
       const ids = ordersIds.slice(i, i + IdsLimit);
       const q = query(
@@ -275,7 +274,6 @@ export default class OrderApi {
           },
           (error) => {
             console.error(error);
-            Sentry.Native.captureException(error);
           }
         )
       );
