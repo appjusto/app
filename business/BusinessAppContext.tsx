@@ -2,8 +2,10 @@ import { Business, Order, OrderStatus, WithId } from '@appjusto/types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../common/app/context';
+import { unreadMessages } from '../common/store/api/order/hooks/useObserveOrderChat';
+import { GroupedChatMessages } from '../common/store/order/types';
 import { getUser } from '../common/store/user/selectors';
-import { OrderChatGroup, useBusinessChats } from './hooks/useBusinessChats';
+import { useBusinessChats } from './hooks/useBusinessChats';
 import { useBusinessesManagedBy } from './hooks/useBusinessesManagedBy';
 import { useCompletedBusinessOrders } from './hooks/useCompletedBusinessOrders';
 import { useObserveBusinessOrders } from './hooks/useObserveBusinessOrders';
@@ -14,12 +16,13 @@ interface Props {
 }
 
 interface ContextProps {
+  businessId: string | undefined | null;
   business: WithId<Business> | undefined;
   orders: WithId<Order>[];
-  activeChats: OrderChatGroup[];
-  completedOrdersChats: OrderChatGroup[];
-  allChats: OrderChatGroup[];
-  newChatMessages: string[];
+  activeChats: GroupedChatMessages[][];
+  completedOrdersChats: GroupedChatMessages[][];
+  allChats: GroupedChatMessages[][];
+  unreadCount: number;
 }
 
 export const BusinessAppContext = React.createContext<ContextProps>({} as ContextProps);
@@ -42,8 +45,8 @@ export const BusinessAppProvider = ({ children }: Props) => {
   const completedOrders = useCompletedBusinessOrders(business?.id);
   const activeChats = useBusinessChats(business?.id, activeOrders);
   const completedOrdersChats = useBusinessChats(business?.id, completedOrders);
-  const [allChats, setAllChats] = React.useState<OrderChatGroup[]>([]);
-  const [newChatMessages, setNewChatMessages] = React.useState<string[]>([]);
+  const [allChats, setAllChats] = React.useState<GroupedChatMessages[][]>([]);
+  const [unreadCount, setUnreadCount] = React.useState(0);
 
   // helpers
   const getBusinessIdFromBusinesses = React.useCallback(() => {
@@ -79,23 +82,22 @@ export const BusinessAppProvider = ({ children }: Props) => {
   }, [activeChats, completedOrdersChats]);
 
   React.useEffect(() => {
-    if (allChats.length > 0) {
-      const unreadMessages = [] as string[];
-      allChats.forEach((group) => {
-        group.counterParts.forEach((part) => {
-          if (part.unreadMessages && part.unreadMessages.length > 0) {
-            unreadMessages.push(...part.unreadMessages);
-          }
-        });
-      });
-      setNewChatMessages(unreadMessages);
-    }
-  }, [allChats]);
+    if (!businessId) return;
+    setUnreadCount(unreadMessages(allChats.flat(), businessId).length);
+  }, [businessId, allChats]);
 
   // provider
   return (
     <BusinessAppContext.Provider
-      value={{ business, orders, activeChats, completedOrdersChats, allChats, newChatMessages }}
+      value={{
+        businessId,
+        business,
+        orders,
+        activeChats,
+        completedOrdersChats,
+        allChats,
+        unreadCount,
+      }}
     >
       {children}
     </BusinessAppContext.Provider>

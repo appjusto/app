@@ -41,7 +41,7 @@ const sortMessages = (a: ChatMessage, b: ChatMessage) => {
   return 0;
 };
 
-const groupOrderChatMessages = (messages: WithId<ChatMessage>[]) =>
+export const groupOrderChatMessages = (messages: WithId<ChatMessage>[]) =>
   messages.reduce<GroupedChatMessages[]>((groups, message) => {
     const currentGroup = first(groups);
     if (message.from.id === currentGroup?.from) {

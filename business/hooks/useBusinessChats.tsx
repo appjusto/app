@@ -1,40 +1,19 @@
-import { ChatMessage, Flavor, Order, WithId } from '@appjusto/types';
-import { FieldValue } from 'firebase/firestore';
+import { ChatMessage, Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { ApiContext } from '../../common/app/context';
+import { groupOrderChatMessages } from '../../common/store/api/order/hooks/useObserveOrderChat';
+import { GroupedChatMessages } from '../../common/store/order/types';
 import { useIds } from '../../common/utils/useIds';
-import { getOrderChatGroup } from '../orders/helpers';
-
-export interface OrderChatGroup {
-  orderId: string;
-  orderCode?: string;
-  lastUpdate?: FieldValue;
-  counterParts: [
-    {
-      id: string;
-      flavor: Flavor;
-      updatedOn: FieldValue;
-      name?: string;
-      unreadMessages?: string[];
-    }
-  ];
-}
+import { getConversations } from '../orders/helpers';
 
 export const useBusinessChats = (businessId?: string, orders?: WithId<Order>[]) => {
   // context
   const api = React.useContext(ApiContext);
   //state
   const ordersIds = useIds(orders);
-  // const [ordersIds, setOrdersIds] = React.useState<string[]>([]);
   const [chatMessages, setChatMessages] = React.useState<WithId<ChatMessage>[]>([]);
-  const [orderChatGroup, setOrderChatGroup] = React.useState<OrderChatGroup[]>([]);
+  const [orderChatGroup, setOrderChatGroup] = React.useState<GroupedChatMessages[][]>([]);
   // side effects
-  // React.useEffect(() => {
-  //   if (!orders) return;
-  //   const ordersIds = [...orders].map((order) => order.id);
-  //   setOrdersIds(ordersIds);
-  // }, [orders]);
-
   React.useEffect(() => {
     if (!businessId) return;
     if (ordersIds.length === 0) {
@@ -61,8 +40,9 @@ export const useBusinessChats = (businessId?: string, orders?: WithId<Order>[]) 
   }, [api, businessId, ordersIds]);
   React.useEffect(() => {
     if (!businessId) return;
-    const result = getOrderChatGroup(businessId, chatMessages);
-    setOrderChatGroup(result);
+    console.log('chatMessages', chatMessages);
+    const conversations = getConversations(chatMessages);
+    setOrderChatGroup(conversations.map((messages) => groupOrderChatMessages(messages)));
   }, [businessId, chatMessages]);
   // return
   return orderChatGroup;

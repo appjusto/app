@@ -5,14 +5,13 @@ import { colors } from '../../../common/styles';
 
 type Props = {
   onPress: () => void;
-  newMessage: boolean;
   unreadMessages: number;
 };
 
-export const MessagesIcon = ({ onPress, newMessage, unreadMessages }: Props) => {
+export const MessagesIcon = ({ onPress, unreadMessages }: Props) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      {newMessage ? (
+      {unreadMessages > 0 ? (
         <View
           style={{
             height: 20,

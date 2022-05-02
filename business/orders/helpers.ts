@@ -7,7 +7,7 @@ import {
 } from '@appjusto/types';
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import { OrderChatGroup } from '../hooks/useBusinessChats';
+
 dayjs.extend(isSameOrBefore);
 
 export const businessShouldBeOpen = (today: Date, schedules: BusinessSchedule) => {
@@ -45,61 +45,14 @@ export const calculateCancellationCosts = (order: Order, params: OrderCancellati
   return costs;
 };
 
-export const getOrderChatGroup = (businessId: string, messages: WithId<ChatMessage>[]) => {
-  return messages.reduce<OrderChatGroup[]>((groups, message) => {
-    const existingGroup = groups.find((group) => group.orderId === message.orderId);
-    const counterPartId = businessId === message.from.id ? message.to.id : message.from.id;
-    const counterPart = counterPartId === message.from.id ? message.from : message.to;
-    const counterPartFlavor = counterPart.agent;
-    const isUnread = message.from.id !== businessId && !message.read;
-    const counterPartObject = {
-      id: counterPartId,
-      flavor: counterPartFlavor,
-      updatedOn: message.timestamp,
-      unreadMessages: isUnread ? [message.id] : [],
-    };
-    if (existingGroup) {
-      const existingCounterpart = existingGroup.counterParts.find(
-        (part) => part.id === counterPartId
-      );
-      if (existingCounterpart) {
-        if (
-          isUnread &&
-          (!existingCounterpart.unreadMessages ||
-            !existingCounterpart.unreadMessages?.includes(message.id))
-        ) {
-          if (existingCounterpart.unreadMessages)
-            existingCounterpart.unreadMessages.push(message.id);
-          else existingCounterpart.unreadMessages = [message.id];
-        } else {
-          existingCounterpart.unreadMessages = existingCounterpart.unreadMessages?.filter(
-            (msg) => msg !== message.id
-          );
-        }
-        if (existingCounterpart.updatedOn < message.timestamp) {
-          existingCounterpart.updatedOn = message.timestamp;
-        }
-        return groups;
-      }
-      if (counterPartFlavor === 'courier') {
-        const currentCourierIndex = existingGroup.counterParts.findIndex(
-          (part) => part.flavor === 'courier'
-        );
-        if (currentCourierIndex > -1) {
-          existingGroup.counterParts[currentCourierIndex] = counterPartObject;
-          return groups;
-        }
-      }
-      existingGroup.counterParts.push(counterPartObject);
-      return groups;
-    }
-    return [
-      {
-        orderId: message.orderId,
-        lastUpdate: message.timestamp,
-        counterParts: [counterPartObject],
-      },
-      ...groups,
-    ];
-  }, []);
+export const getConversationKey = (message: ChatMessage) =>
+  `${message.orderId}-${message.participantsIds.sort()}`;
+
+export const getConversations = (messages: WithId<ChatMessage>[]) => {
+  const byOrder = new Map<string, WithId<ChatMessage>[]>();
+  messages.forEach((message) => {
+    const key = getConversationKey(message);
+    byOrder.set(key, [...(byOrder.get(key) ?? []), message]);
+  });
+  return Array.from(byOrder.values());
 };

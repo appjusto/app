@@ -1,5 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { first } from 'lodash';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -7,10 +8,10 @@ import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-de
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { BusinessAppContext } from '../../BusinessAppContext';
-import { OrderChatGroup } from '../../hooks/useBusinessChats';
 import { BusinessNavParamsList } from '../../types';
 import { ChatKanbanItem } from '../components/ChatKanbanItem';
 import { ListFilterButton } from '../components/ListFilterButton';
+import { getConversationKey } from '../helpers';
 
 type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'BusinessOrders'>;
 type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'BusinessOrders'>;
@@ -24,37 +25,24 @@ type ChatFilter = 'open' | 'closed';
 
 export const BusinessChats = ({ navigation, route }: Props) => {
   // context
-  const { activeChats, completedOrdersChats } = React.useContext(BusinessAppContext);
+  const { activeChats, completedOrdersChats, businessId } = React.useContext(BusinessAppContext);
   // state
   const [chatFilter, setChatFilter] = React.useState<ChatFilter>('open');
-  const [chats, setChats] = React.useState<OrderChatGroup[]>();
-  // console.log(chats);
-  //side-effects
-  React.useEffect(() => {
-    if (activeChats.length) setChats(activeChats);
-    else setChats([]);
-  }, [activeChats]);
+  const chats = chatFilter == 'open' ? activeChats : completedOrdersChats;
   //UI
-
   return (
     <View style={{ ...screens.config }}>
       <View style={{ flexDirection: 'row', marginTop: padding, marginHorizontal: padding }}>
         <ListFilterButton
           title={t('Abertos')}
           selected={chatFilter === 'open'}
-          onPress={() => {
-            setChatFilter('open');
-            setChats(activeChats);
-          }}
+          onPress={() => setChatFilter('open')}
           style={{ marginRight: halfPadding }}
         />
         <ListFilterButton
           title={t('Encerrados')}
           selected={chatFilter === 'closed'}
-          onPress={() => {
-            setChatFilter('closed');
-            setChats(completedOrdersChats);
-          }}
+          onPress={() => setChatFilter('closed')}
           style={{ marginRight: halfPadding }}
         />
       </View>
@@ -90,16 +78,22 @@ export const BusinessChats = ({ navigation, route }: Props) => {
           </View>
         ) : (
           chats?.map((chat) => {
+            const firstMessage = first(first(chat)?.messages);
+            const orderId = firstMessage?.orderId;
+            if (!orderId) return;
+            const counterpart =
+              firstMessage.from.id === businessId ? firstMessage.to : firstMessage.from;
             return (
-              <View style={{ marginBottom: padding }} key={chat.orderId}>
+              <View style={{ marginBottom: padding }} key={getConversationKey(firstMessage)}>
                 <ChatKanbanItem
-                  chat={chat}
-                  onCheckOrder={() => navigation.navigate('OrderDetail', { orderId: chat.orderId })}
+                  message={firstMessage}
+                  counterpart={counterpart}
+                  onCheckOrder={() => navigation.navigate('OrderDetail', { orderId })}
                   onOpenChat={() =>
                     navigation.navigate('OrderChat', {
-                      orderId: chat.orderId,
-                      counterpartId: chat.counterParts[0].id,
-                      counterpartFlavor: chat.counterParts[0].flavor,
+                      orderId,
+                      counterpartId: counterpart.id,
+                      counterpartFlavor: counterpart.agent,
                     })
                   }
                   // onOpenChat={() => console.log(chat)}

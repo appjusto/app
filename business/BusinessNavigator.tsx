@@ -31,7 +31,7 @@ export const BusinessNavigator = () => {
   // context
   const api = React.useContext(ApiContext);
   const navigation = useNavigation<ScreenNavigationProp>();
-  const { business, newChatMessages } = React.useContext(BusinessAppContext);
+  const { business, unreadCount } = React.useContext(BusinessAppContext);
   const status = business?.status;
   // side effects
   useNotificationToken();
@@ -112,8 +112,7 @@ export const BusinessNavigator = () => {
             <View style={{ marginRight: 12 }}>
               <MessagesIcon
                 onPress={() => navigation.navigate('BusinessChats')}
-                newMessage={newChatMessages.length > 0}
-                unreadMessages={newChatMessages.length}
+                unreadMessages={unreadCount}
               />
             </View>
           ),

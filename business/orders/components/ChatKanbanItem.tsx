@@ -1,3 +1,4 @@
+import { ChatMessage, ChatMessageUser } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -7,27 +8,26 @@ import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserv
 import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
 import { formatTime } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
-import { OrderChatGroup } from '../../hooks/useBusinessChats';
 
 type Props = {
-  chat: OrderChatGroup;
+  message: ChatMessage;
+  counterpart: ChatMessageUser;
   onCheckOrder: () => void;
   onOpenChat: () => void;
 };
 
-export const ChatKanbanItem = ({ chat, onCheckOrder, onOpenChat }: Props) => {
+export const ChatKanbanItem = ({ message, counterpart, onCheckOrder, onOpenChat }: Props) => {
   // screen state
-  const order = useObserveOrder(chat.orderId);
+  const order = useObserveOrder(message.orderId);
   const chatStillActive = useChatIsEnabled(order);
   // helpers
-  const newMessage = chat.counterParts[0].unreadMessages?.length && chatStillActive;
   const flavorLabel = (() => {
-    if (chat.counterParts[0].flavor === 'consumer') return t('Cliente');
-    if (chat.counterParts[0].flavor === 'courier') return t('Entregador');
+    if (counterpart.agent === 'consumer') return t('Cliente');
+    if (counterpart.agent === 'courier') return t('Entregador');
     else return t('AppJusto');
   })();
   const redCircle = (() => {
-    if (newMessage)
+    if (!message.read)
       return (
         <View
           style={{
@@ -60,14 +60,14 @@ export const ChatKanbanItem = ({ chat, onCheckOrder, onOpenChat }: Props) => {
         >
           {flavorLabel}
         </RoundedText>
-        {chat.lastUpdate ? (
+        {message.timestamp ? (
           <Text style={{ ...texts.x2s }}>
-            {t('ENVIADO ÀS')} {formatTime(chat.lastUpdate)}
+            {t('ENVIADO ÀS')} {formatTime(message.timestamp)}
           </Text>
         ) : null}
       </View>
       <View style={{ marginVertical: padding }}>
-        <Text style={{ ...texts.sm }}>{order?.consumer.name}</Text>
+        <Text style={{ ...texts.sm }}>{counterpart.name}</Text>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
         <View style={{ width: '38%' }}>
@@ -75,8 +75,8 @@ export const ChatKanbanItem = ({ chat, onCheckOrder, onOpenChat }: Props) => {
         </View>
         <View style={{ width: '57%' }}>
           <DefaultButton
-            title={newMessage ? t('Nova mensagem') : t('Abrir chat')}
-            grey={!newMessage}
+            title={message.read ? t('Abrir chat') : t('Nova mensagem')}
+            grey={message.read}
             onPress={onOpenChat}
           />
         </View>
