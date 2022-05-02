@@ -19,6 +19,7 @@ export const ListItemImage = ({ uri, height, width, radius = 8 }: Props) => {
         ...borders.default,
         borderColor: colors.white,
         overflow: 'hidden',
+        borderRadius: radius ? radius : undefined,
       }}
     >
       {uri && (

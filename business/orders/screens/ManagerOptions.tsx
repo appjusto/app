@@ -38,11 +38,11 @@ export const ManagerOptions = ({ navigation, route }: Props) => {
         subtitle={t('Gerencie seus pedidos')}
         onPress={() => navigation.navigate('BusinessOrders')}
       />
-      <ConfigItem
+      {/* <ConfigItem
         title={t('Configurações')}
         subtitle={t('Edite as configurações do gerenciador')}
         onPress={() => setVisible(true)}
-      />
+      /> */}
       <ConfigItem
         title={t('Central de ajuda')}
         subtitle={t('Tire suas dúvidas ou envie uma mensagem')}
