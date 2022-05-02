@@ -105,32 +105,19 @@ export default function ({ route }: Props) {
       },
       to,
       message: inputText.trim(),
-      // orderStatus: order.status,
     });
     setInputText('');
   };
   const getName = (from: string) => {
-    if (flavor === 'business') {
-      if (from === user.uid) return order.business?.name ?? t('Restaurante');
-      else if (from === order.consumer.id) return order.consumer.name ?? t('Cliente');
-      else if (from === order.courier?.id) return order.courier.name ?? t('Entregador/a');
-    } else {
-      if (from === order.consumer.id) return order.consumer.name ?? t('Cliente');
-      else if (from === order.courier?.id) return order.courier.name ?? t('Entregador/a');
-      else if (from === order.business?.id) return order.business.name ?? t('Restaurante');
-      else return 'Suporte';
-    }
+    if (from === order.consumer.id) return order.consumer.name ?? t('Cliente');
+    else if (from === order.courier?.id) return order.courier.name ?? t('Entregador/a');
+    else if (from === order.business?.id) return order.business.name ?? t('Restaurante');
+    else return 'Suporte';
   };
   const getImageFlavor = (from: string) => {
-    if (flavor === 'business') {
-      if (from === user.uid) return 'business';
-      else if (from === order.consumer.id) return 'consumer';
-      else if (from === order.courier?.id) return 'courier';
-    } else {
-      if (from === order.consumer.id) return 'consumer';
-      else if (from === order.courier?.id) return 'courier';
-      else if (from === order.business?.id) return 'business';
-    }
+    if (from === order.consumer.id) return 'consumer';
+    else if (from === order.courier?.id) return 'courier';
+    else if (from === order.business?.id) return 'business';
   };
 
   return (
@@ -145,9 +132,6 @@ export default function ({ route }: Props) {
         keyExtractor={(item) => item.id}
         style={{ backgroundColor: colors.grey500 }}
         renderItem={({ item }) => {
-          // console.log(item.from, user.uid);
-          // console.log(item.id);
-          // console.log(getImageFlavor(item.from));
           return (
             <PaddedView
               style={{
@@ -157,9 +141,19 @@ export default function ({ route }: Props) {
               }}
             >
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <RoundedProfileImg flavor={getImageFlavor(item.from)} id={item.from} />
-                <View style={{ marginVertical: halfPadding }}>
-                  <Text style={{ ...texts.md }}>{getName(item.from)}</Text>
+                <View>
+                  <RoundedProfileImg flavor={getImageFlavor(item.from)} id={item.from} />
+                </View>
+                <View
+                  style={{
+                    marginVertical: halfPadding,
+                    marginLeft: halfPadding,
+                    marginRight: padding,
+                  }}
+                >
+                  <Text numberOfLines={2} style={{ ...texts.md, flexWrap: 'wrap' }}>
+                    {getName(item.from)}
+                  </Text>
                 </View>
               </View>
               {item.messages.map((message: WithId<ChatMessage>) => (

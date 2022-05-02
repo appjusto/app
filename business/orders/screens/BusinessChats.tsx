@@ -28,7 +28,7 @@ export const BusinessChats = ({ navigation, route }: Props) => {
   const { activeChats, completedOrdersChats, businessId } = React.useContext(BusinessAppContext);
   // state
   const [chatFilter, setChatFilter] = React.useState<ChatFilter>('open');
-  const chats = chatFilter == 'open' ? activeChats : completedOrdersChats;
+  const chats = chatFilter === 'open' ? activeChats : completedOrdersChats;
   //UI
   return (
     <View style={{ ...screens.config }}>

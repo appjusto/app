@@ -100,7 +100,16 @@ export const OrderDetail = ({ navigation, route }: Props) => {
         scrollIndicatorInsets={{ right: 1 }}
         keyboardShouldPersistTaps="handled"
       >
-        <OrderDetailHeader order={order} />
+        <OrderDetailHeader
+          order={order}
+          onOpenOrderChat={() =>
+            navigation.navigate('OrderChat', {
+              orderId,
+              counterpartId: order.consumer.id,
+              counterpartFlavor: 'consumer',
+            })
+          }
+        />
         {/* when status === 'dispatching' */}
         <OrderDispatchingMap order={order} style={{ marginTop: padding }} />
         <View style={{ marginTop: padding }}>

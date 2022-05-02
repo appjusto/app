@@ -1,18 +1,23 @@
-import { Order } from '@appjusto/types';
+import { Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { Text, View, ViewProps } from 'react-native';
+import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
+import { useChatIsEnabled } from '../../../common/hooks/useChatIsEnabled';
 import { halfPadding, padding, texts } from '../../../common/styles';
 import { formatTime } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { OrderLabel } from './OrderLabel';
 
 interface Props extends ViewProps {
-  order: Order;
+  order: WithId<Order>;
+  onOpenOrderChat: () => void;
 }
 
-export const OrderDetailHeader = ({ order, style }: Props) => {
+export const OrderDetailHeader = ({ order, style, onOpenOrderChat }: Props) => {
+  // state
+  const chatStillActive = useChatIsEnabled(order);
   if (!order) return null;
   return (
     <View style={style}>
@@ -35,6 +40,16 @@ export const OrderDetailHeader = ({ order, style }: Props) => {
           {t('Nome do cliente: ')}
           <Text style={texts.bold}>{order.consumer.name ?? 'Indisponível no momento'}</Text>
         </Text>
+        {/* TODO: add total consumer orders in that business */}
+        {chatStillActive ? (
+          <View style={{ width: '60%', marginTop: halfPadding }}>
+            <DefaultButton
+              title={t('Abrir chat com o cliente')}
+              secondary
+              onPress={onOpenOrderChat}
+            />
+          </View>
+        ) : null}
       </PaddedView>
     </View>
   );
