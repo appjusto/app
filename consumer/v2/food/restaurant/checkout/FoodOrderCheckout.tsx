@@ -132,6 +132,16 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     if (!order) return;
     if (!selectedFare) return;
     if (!selectedPaymentMethodId) return;
+    if (!order.destination?.address) {
+      dispatch(
+        showToast(
+          t(
+            'Tivemos um problema... Por favor, refaça o pedido e certifique-se que o endereço de entrega está correto'
+          ),
+          'error'
+        )
+      );
+    }
     if (shouldVerifyPhone) {
       navigation.navigate('PhoneVerificationScreen', {
         phone: consumer.phone!,
