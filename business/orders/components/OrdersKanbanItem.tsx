@@ -1,4 +1,5 @@
 import { Timestamp } from 'firebase/firestore';
+import { round } from 'lodash';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -8,6 +9,7 @@ import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeConte
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { showToast } from '../../../common/store/ui/actions';
 import { borders, colors, padding, texts } from '../../../common/styles';
+import { formatDuration } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { CookingTimeModal } from './CookingTimeModal';
 import { CustomButton } from './CustomButton';
@@ -27,8 +29,24 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
   // state
   const [modalVisible, setModalVisible] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
+  const [elapsedTime, setElapsedTime] = React.useState<number>(0); // time since the status turned into preparing
+  // helpers
+  const cookingTime = React.useMemo(
+    () => (order?.cookingTime ? order?.cookingTime / 60 : null),
+    [order?.cookingTime]
+  );
+  const cookingProgress = cookingTime && elapsedTime ? (elapsedTime / cookingTime) * 100 : 0;
+  const now = getServerTime().getTime();
+  const startTime = (order?.timestamps.confirmed as Timestamp).toDate().getTime();
+  const timeDelta = round(now - startTime, 0);
+  const formattedTime = order?.cookingTime ? formatDuration(order.cookingTime) : '';
+  const formattedInterval = elapsedTime > 0 ? `${elapsedTime} min` : '';
 
   // side effects
+  // updating the elapsed time every minute
+  React.useEffect(() => {
+    setElapsedTime(timeDelta);
+  }, [timeDelta]);
   // update status to 'ready' if the cooking time interval has passed
   React.useEffect(() => {
     if (!order) return;
@@ -101,11 +119,15 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
           <Text style={{ ...texts.sm }}>{order.code}</Text>
         </View>
         {/* TODO: "timing" component while "preparing" */}
-        {/* {status === 'preparing' ? (
-          <View>
+        {status === 'preparing' ? (
+          <View
+            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
+          >
             <Text>Tempo de preparo</Text>
+            <Text>{formattedInterval}</Text>
+            <Text>{formattedTime}</Text>
           </View>
-        ) : null} */}
+        ) : null}
         <OrderLabel order={order} />
       </View>
       <View style={{ marginTop: padding }}>
