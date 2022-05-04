@@ -1,11 +1,13 @@
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
 import isoWeek from 'dayjs/plugin/isoWeek';
+import timezone from 'dayjs/plugin/timezone';
 import * as Localization from 'expo-localization';
 import i18n from 'i18n-js';
 
 dayjs.locale('pt-br');
 dayjs.extend(isoWeek);
+dayjs.extend(timezone);
 
 const pt = {
   number: {
