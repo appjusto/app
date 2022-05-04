@@ -1,14 +1,15 @@
 import { Timestamp } from 'firebase/firestore';
+import { round } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { Animated, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeContext';
+import { IconAlarm } from '../../../common/icons/icon-alarm';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { showToast } from '../../../common/store/ui/actions';
-import { borders, colors, padding, screens, texts } from '../../../common/styles';
-import { formatDuration } from '../../../common/utils/formatters';
+import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { getTimeUntilNow } from '../helpers';
 import { CookingTimeModal } from './CookingTimeModal';
@@ -29,7 +30,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
   // state
   const [modalVisible, setModalVisible] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
-  const [elapsedTime, setElapsedTime] = React.useState<number | null>(0); // time since the status turned into preparing
+  const [elapsedTime, setElapsedTime] = React.useState<number | null>(0);
   // helpers
   const cookingTime = React.useMemo(
     () => (order?.cookingTime ? order?.cookingTime / 60 : null),
@@ -37,7 +38,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
   );
   const cookingProgress = cookingTime && elapsedTime ? (elapsedTime / cookingTime) * 100 : 0;
   const now = getServerTime().getTime();
-  const formattedTime = order?.cookingTime ? formatDuration(order.cookingTime) : '';
+  const formattedTime = order?.cookingTime ? round(order.cookingTime / 60, 0) : '';
   const formattedInterval = elapsedTime && elapsedTime > 0 ? `${elapsedTime} min` : '';
 
   // side effects
@@ -107,13 +108,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
     }
   };
   // UI
-  if (!order) {
-    return (
-      <View style={screens.centered}>
-        <ActivityIndicator size="small" color={colors.green500} />
-      </View>
-    );
-  }
+  if (!order) return null;
   return (
     <View
       style={{
@@ -126,16 +121,49 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <View>
           <Text style={{ ...texts.xs, color: colors.grey700 }}>{order.consumer.name}</Text>
-          <Text style={{ ...texts.sm }}>{order.code}</Text>
+          <Text style={{ ...texts.sm }}>{order?.code}</Text>
         </View>
         {/* TODO: "timing" component while "preparing" */}
         {order.status === 'preparing' ? (
-          <View
-            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
-          >
-            <Text>Tempo de preparo</Text>
-            <Text>{formattedInterval}</Text>
-            <Text>{formattedTime}</Text>
+          <View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <IconAlarm />
+              <Text style={{ marginRight: halfPadding, marginLeft: 4, ...texts.xs, ...texts.bold }}>
+                {formattedInterval}
+              </Text>
+              <Text style={{ ...texts.xs, color: colors.grey700 }}>{formattedTime}</Text>
+            </View>
+            <View
+              style={{
+                marginTop: 4,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: colors.grey500,
+                borderRadius: 8,
+                height: halfPadding,
+              }}
+            >
+              <Animated.View
+                style={{
+                  height: halfPadding,
+                  borderRadius: 8,
+                  width: '50%',
+                  backgroundColor: colors.black,
+                  borderColor: colors.black,
+                  position: 'absolute',
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                }}
+              />
+            </View>
           </View>
         ) : null}
         <OrderLabel order={order} />
