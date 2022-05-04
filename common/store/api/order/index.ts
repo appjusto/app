@@ -14,7 +14,7 @@ import {
   OrderType,
   Place,
   PlaceOrderPayloadPayment,
-  WithId,
+  WithId
 } from '@appjusto/types';
 import {
   addDoc,
@@ -32,7 +32,7 @@ import {
   Unsubscribe,
   updateDoc,
   where,
-  writeBatch,
+  writeBatch
 } from 'firebase/firestore';
 import { isEmpty, uniq } from 'lodash';
 import * as Sentry from 'sentry-expo';

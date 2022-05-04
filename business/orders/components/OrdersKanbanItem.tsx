@@ -1,16 +1,16 @@
 import { Timestamp } from 'firebase/firestore';
-import { round } from 'lodash';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeContext';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { showToast } from '../../../common/store/ui/actions';
-import { borders, colors, padding, texts } from '../../../common/styles';
+import { borders, colors, padding, screens, texts } from '../../../common/styles';
 import { formatDuration } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
+import { getTimeUntilNow } from '../helpers';
 import { CookingTimeModal } from './CookingTimeModal';
 import { CustomButton } from './CustomButton';
 import { OrderLabel } from './OrderLabel';
@@ -29,7 +29,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
   // state
   const [modalVisible, setModalVisible] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
-  const [elapsedTime, setElapsedTime] = React.useState<number>(0); // time since the status turned into preparing
+  const [elapsedTime, setElapsedTime] = React.useState<number | null>(0); // time since the status turned into preparing
   // helpers
   const cookingTime = React.useMemo(
     () => (order?.cookingTime ? order?.cookingTime / 60 : null),
@@ -37,16 +37,20 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
   );
   const cookingProgress = cookingTime && elapsedTime ? (elapsedTime / cookingTime) * 100 : 0;
   const now = getServerTime().getTime();
-  const startTime = (order?.timestamps.confirmed as Timestamp).toDate().getTime();
-  const timeDelta = round(now - startTime, 0);
   const formattedTime = order?.cookingTime ? formatDuration(order.cookingTime) : '';
-  const formattedInterval = elapsedTime > 0 ? `${elapsedTime} min` : '';
+  const formattedInterval = elapsedTime && elapsedTime > 0 ? `${elapsedTime} min` : '';
 
   // side effects
-  // updating the elapsed time every minute
+  // updating the elapsed time 65
   React.useEffect(() => {
-    setElapsedTime(timeDelta);
-  }, [timeDelta]);
+    if (!order) return;
+    if (!getServerTime) return;
+    const orderServerTime = (order?.timestamps.confirmed as Timestamp).toDate().getTime();
+    if (now && orderServerTime) {
+      const delta = getTimeUntilNow(now, orderServerTime);
+      setElapsedTime(delta);
+    } else setElapsedTime(null);
+  }, [getServerTime, order, now]);
   // update status to 'ready' if the cooking time interval has passed
   React.useEffect(() => {
     if (!order) return;
@@ -62,11 +66,10 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
       }
     }
   }, [api, getServerTime, order]);
-  // failsafe: no component if order is not loaded
-  if (!order) return null;
-  const { status, dispatchingState, dispatchingStatus } = order;
   // handlers
   const actionHandler = async () => {
+    if (!order) return;
+    const { status, dispatchingState, dispatchingStatus } = order;
     setLoading(true);
     try {
       if (status === 'confirmed') {
@@ -104,6 +107,13 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
     }
   };
   // UI
+  if (!order) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="small" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <View
       style={{
@@ -119,7 +129,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
           <Text style={{ ...texts.sm }}>{order.code}</Text>
         </View>
         {/* TODO: "timing" component while "preparing" */}
-        {status === 'preparing' ? (
+        {order.status === 'preparing' ? (
           <View
             style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
           >
