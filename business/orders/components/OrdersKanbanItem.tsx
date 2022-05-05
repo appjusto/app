@@ -1,7 +1,7 @@
 import { Timestamp } from 'firebase/firestore';
 import { round } from 'lodash';
 import React from 'react';
-import { Animated, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -31,27 +31,33 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
   const [elapsedTime, setElapsedTime] = React.useState<number | null>(0);
+  const [barWidth, setBarWidth] = React.useState<number | string | undefined>(0);
   // helpers
   const cookingTime = React.useMemo(
     () => (order?.cookingTime ? order?.cookingTime / 60 : null),
     [order?.cookingTime]
   );
-  const cookingProgress = cookingTime && elapsedTime ? (elapsedTime / cookingTime) * 100 : 0;
+
   const now = getServerTime().getTime();
-  const formattedTime = order?.cookingTime ? round(order.cookingTime / 60, 0) : '';
-  const formattedInterval = elapsedTime && elapsedTime > 0 ? `${elapsedTime} min` : '';
+  const formattedTime = cookingTime ? round(cookingTime, 0) : '';
+  const formattedInterval = `${elapsedTime} min`;
 
   // side effects
-  // updating the elapsed time 65
+  // updating the elapsed time and progress bar width
   React.useEffect(() => {
     if (!order) return;
     if (!getServerTime) return;
-    const orderServerTime = (order?.timestamps.confirmed as Timestamp).toDate().getTime();
+    if (order.status !== 'preparing') return;
+    const orderServerTime = (order.timestamps.confirmed as Timestamp).toDate().getTime();
     if (now && orderServerTime) {
       const delta = getTimeUntilNow(now, orderServerTime);
       setElapsedTime(delta);
+      const cookingProgress = cookingTime && elapsedTime ? (elapsedTime / cookingTime) * 100 : 0;
+      if (cookingProgress > 0) setBarWidth(`${cookingProgress}%`);
+      else setBarWidth(0);
     } else setElapsedTime(null);
-  }, [getServerTime, order, now]);
+  }, [getServerTime, order, now, cookingTime, elapsedTime]);
+
   // update status to 'ready' if the cooking time interval has passed
   React.useEffect(() => {
     if (!order) return;
@@ -59,14 +65,13 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
       if (!getServerTime) return;
       if (!order.cookingTime) return;
       if (!order.timestamps.preparing) return;
-      const now = getServerTime().getTime();
       const cookingTime = order.cookingTime * 1000;
       const startedPreparing = (order.timestamps.preparing as Timestamp).toDate().getTime();
       if (now - startedPreparing >= cookingTime) {
         api.order().updateOrder(order.id, { status: 'ready' });
       }
     }
-  }, [api, getServerTime, order]);
+  }, [api, getServerTime, order, now]);
   // handlers
   const actionHandler = async () => {
     if (!order) return;
@@ -124,13 +129,14 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
           <Text style={{ ...texts.sm }}>{order?.code}</Text>
         </View>
         {/* TODO: "timing" component while "preparing" */}
-        {order.status === 'preparing' ? (
-          <View>
+        {order.status === 'preparing' && cookingTime ? (
+          <View style={{ width: '30%' }}>
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
+                width: '100%',
               }}
             >
               <IconAlarm />
@@ -139,30 +145,33 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
               </Text>
               <Text style={{ ...texts.xs, color: colors.grey700 }}>{formattedTime}</Text>
             </View>
-            <View
-              style={{
-                marginTop: 4,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: colors.grey500,
-                borderRadius: 8,
-                height: halfPadding,
-              }}
-            >
-              <Animated.View
+            <View style={{ width: '100%' }}>
+              <View
                 style={{
-                  height: halfPadding,
+                  marginTop: 4,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: colors.grey500,
                   borderRadius: 8,
-                  width: '50%',
-                  backgroundColor: colors.black,
-                  borderColor: colors.black,
-                  position: 'absolute',
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
+                  height: halfPadding,
+                  width: '100%',
                 }}
-              />
+              >
+                <View
+                  style={{
+                    height: halfPadding,
+                    borderRadius: 8,
+                    width: barWidth,
+                    backgroundColor: colors.black,
+                    borderColor: colors.black,
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                  }}
+                />
+              </View>
             </View>
           </View>
         ) : null}

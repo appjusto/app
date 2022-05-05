@@ -58,12 +58,7 @@ export const getConversations = (messages: WithId<ChatMessage>[]) => {
   return Array.from(byOrder.values());
 };
 
-export const getTimeUntilNow = (serverTime: number, baseTime: number, reverse: boolean = false) => {
-  if (reverse) {
-    let elapsedTime = (baseTime - serverTime) / 1000 / 60;
-    if (elapsedTime < 0) elapsedTime = 0;
-    return round(elapsedTime, 0);
-  }
+export const getTimeUntilNow = (serverTime: number, baseTime: number) => {
   const elapsedTime = (serverTime - baseTime) / 1000 / 60;
   return round(elapsedTime, 0);
 };
