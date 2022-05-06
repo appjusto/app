@@ -41,6 +41,7 @@ export const BusinessNavigator = () => {
     if (!status) return;
     (async () => {
       if (status === 'open') {
+        await api.business().sendKeepAlive(business.id);
         await startKeepAliveTask();
         const keepAliveInterval = setInterval(async () => {
           console.log('sending keepAlive...');
