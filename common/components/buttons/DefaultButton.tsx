@@ -33,7 +33,6 @@ export default function ({
   ...props
 }: DefaultButtonProps) {
   const v = variant ?? (secondary ? 'secondary' : grey ? 'grey' : 'primary');
-  console.log(title, v);
   const backgroundColor = (() => {
     if (v === 'secondary' || v === 'danger') return colors.white;
     else if (disabled || activityIndicator) return colors.grey500;
