@@ -29,6 +29,7 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
   // state
   const [cookingTime, setCookingTime] = React.useState<number>();
   const [isLoading, setLoading] = React.useState(false);
+  // handlers
   const confirmOrderHandler = async () => {
     track('restaurant confirmed order');
     try {
@@ -36,7 +37,7 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
       // if business has not confirmed order yet, set cooking time and set status to 'preparing'
       if (order.status === 'confirmed') {
         await api.order().updateOrder(order.id, { cookingTime, status: 'preparing' });
-        navigation.goBack();
+        navigation.navigate('BusinessNavigator', { screen: 'BusinessOrders' });
       }
       // if status === 'preparing' only set cooking time
       else {
