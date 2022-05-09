@@ -21,7 +21,7 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
   // context
   const api = React.useContext(ApiContext);
   // state
-  const [cookingTime, setCookingTime] = React.useState(1200);
+  const [cookingTime, setCookingTime] = React.useState<number>();
   const [isLoading, setLoading] = React.useState(false);
   const confirmOrderHandler = async () => {
     track('restaurant confirmed order');
@@ -81,21 +81,9 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
           </View>
           <View style={{ paddingHorizontal: padding }}>
             <RadioButton
-              title={t('5 minutos')}
-              onPress={() => setCookingTime(300)}
-              checked={cookingTime === 300}
-              style={{ marginBottom: padding }}
-            />
-            <RadioButton
               title={t('10 minutos')}
               onPress={() => setCookingTime(600)}
               checked={cookingTime === 600}
-              style={{ marginBottom: padding }}
-            />
-            <RadioButton
-              title={t('15 minutos')}
-              onPress={() => setCookingTime(900)}
-              checked={cookingTime === 900}
               style={{ marginBottom: padding }}
             />
             <RadioButton
@@ -105,15 +93,39 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
               style={{ marginBottom: padding }}
             />
             <RadioButton
+              title={t('25 minutos')}
+              onPress={() => setCookingTime(1500)}
+              checked={cookingTime === 1500}
+              style={{ marginBottom: padding }}
+            />
+            <RadioButton
               title={t('30 minutos')}
               onPress={() => setCookingTime(1800)}
               checked={cookingTime === 1800}
               style={{ marginBottom: padding }}
             />
             <RadioButton
+              title={t('40 minutos')}
+              onPress={() => setCookingTime(2400)}
+              checked={cookingTime === 2400}
+              style={{ marginBottom: padding }}
+            />
+            <RadioButton
               title={t('45 minutos')}
               onPress={() => setCookingTime(2700)}
               checked={cookingTime === 2700}
+              style={{ marginBottom: padding }}
+            />
+            <RadioButton
+              title={t('50 minutos')}
+              onPress={() => setCookingTime(3000)}
+              checked={cookingTime === 3000}
+              style={{ marginBottom: padding }}
+            />
+            <RadioButton
+              title={t('60 minutos')}
+              onPress={() => setCookingTime(3600)}
+              checked={cookingTime === 3600}
             />
           </View>
           <View
