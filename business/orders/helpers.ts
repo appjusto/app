@@ -13,7 +13,6 @@ dayjs.extend(isSameOrBefore);
 
 export const businessShouldBeOpen = (today: Date, schedules: BusinessSchedule) => {
   if (!today || !schedules) {
-    console.error('businessShouldBeOpen invalid args!');
     return false;
   }
   const day = today.getDay();

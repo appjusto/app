@@ -55,8 +55,11 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
       if (!getServerTime) return;
       const today = getServerTime();
       const shouldBeOpen = businessShouldBeOpen(today, business.schedules);
-      if (shouldBeOpen && business?.status === 'closed') {
+      if (shouldBeOpen && business.status === 'closed') {
         await api.business().updateBusiness(business.id, { status: 'open' });
+      }
+      if (!shouldBeOpen && business.status === 'open') {
+        await api.business().updateBusiness(business.id, { status: 'closed' });
       }
     })();
   }, [business, getServerTime, api]);
