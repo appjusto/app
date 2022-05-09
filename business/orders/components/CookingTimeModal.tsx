@@ -1,5 +1,7 @@
 import { Order, WithId } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Modal, ModalProps, Text, TouchableOpacity, View } from 'react-native';
 import * as Sentry from 'sentry-expo';
@@ -9,6 +11,9 @@ import RadioButton from '../../../common/components/buttons/RadioButton';
 import { track } from '../../../common/store/api/track';
 import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import { LoggedBusinessNavParamsList } from '../../types';
+
+type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'BusinessNavigator'>;
 
 interface Props extends ModalProps {
   order: WithId<Order>;
@@ -20,6 +25,7 @@ interface Props extends ModalProps {
 export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitle }: Props) => {
   // context
   const api = React.useContext(ApiContext);
+  const navigation = useNavigation<ScreenNavigationProp>();
   // state
   const [cookingTime, setCookingTime] = React.useState<number>();
   const [isLoading, setLoading] = React.useState(false);
@@ -30,6 +36,7 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
       // if business has not confirmed order yet, set cooking time and set status to 'preparing'
       if (order.status === 'confirmed') {
         await api.order().updateOrder(order.id, { cookingTime, status: 'preparing' });
+        navigation.goBack();
       }
       // if status === 'preparing' only set cooking time
       else {
