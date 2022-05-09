@@ -29,22 +29,24 @@ export const DetailedOrderItems = ({ order, style }: Props) => {
       {order.items.map((item, index) => (
         <OrderListItem item={item} key={`${index} + ${item.id}`} />
       ))}
-      <View
-        style={{
-          backgroundColor: colors.white,
-          paddingVertical: 12,
-          paddingHorizontal: padding,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          ...borders.default,
-          borderRadius: 0,
-          marginTop: 4,
-        }}
-      >
-        <Text style={{ ...texts.sm }}>{t('Valor total itens + frete:')}</Text>
-        <Text style={[texts.sm, texts.bold]}>{formatCurrency(order.fare!.total)}</Text>
-      </View>
+      {order.fare?.business?.value ? (
+        <View
+          style={{
+            backgroundColor: colors.white,
+            paddingVertical: 12,
+            paddingHorizontal: padding,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            ...borders.default,
+            borderRadius: 0,
+            marginTop: 4,
+          }}
+        >
+          <Text style={{ ...texts.sm }}>{t('Valor total itens:')}</Text>
+          <Text style={[texts.sm, texts.bold]}>{formatCurrency(order.fare.business.value)}</Text>
+        </View>
+      ) : null}
     </View>
   );
 };

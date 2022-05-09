@@ -57,7 +57,12 @@ export const OrderListItem = ({ item }: Props) => {
               <Text style={{ ...texts.sm, color: colors.grey700 }}>{complement.quantity}</Text>
             </View>
             <View style={{ width: '61%', alignItems: 'flex-start' }}>
-              <Text style={[texts.sm, { color: colors.grey700 }]}>{complement.name}</Text>
+              <Text
+                style={[texts.sm, { color: colors.grey700, flexWrap: 'wrap' }]}
+                numberOfLines={3}
+              >
+                {complement.group.name} - {complement.name}
+              </Text>
             </View>
             <View style={{ width: '27%', alignItems: 'flex-end' }}>
               <Text style={{ ...texts.sm, color: colors.grey700 }}>
