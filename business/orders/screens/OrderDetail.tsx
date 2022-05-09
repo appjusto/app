@@ -78,6 +78,16 @@ export const OrderDetail = ({ navigation, route }: Props) => {
       setLoading(false);
     }
   };
+  const courierChatHandler = () => {
+    if (!order) return;
+    if (order.courier) {
+      navigation.navigate('OrderChat', {
+        orderId,
+        counterpartId: order.courier?.id,
+        counterpartFlavor: 'consumer',
+      });
+    }
+  };
   // helpers
   const showCustomButton =
     order &&
@@ -111,7 +121,11 @@ export const OrderDetail = ({ navigation, route }: Props) => {
           }
         />
         {/* when status === 'dispatching' */}
-        <OrderDispatchingMap order={order} style={{ marginTop: padding }} />
+        <OrderDispatchingMap
+          order={order}
+          style={{ marginTop: padding }}
+          onChatWithCourier={courierChatHandler}
+        />
         <View style={{ marginTop: padding }}>
           <SingleHeader title={t('Detalhes do pedido')} />
         </View>
