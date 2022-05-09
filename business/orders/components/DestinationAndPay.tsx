@@ -21,6 +21,13 @@ export const DestinationAndPay = ({ order, style }: Props) => {
       <SingleHeader title={t('Forma de pagamento')} />
       <View style={{ paddingTop: halfPadding, paddingHorizontal: padding }}>
         <Text style={{ ...texts.md }}>
+          {t('Valor do frete: ')}
+          <Text style={texts.bold}>
+            {order?.fare?.courier.value ? formatCurrency(order.fare.courier.value) : 'N/E'}
+            {order?.outsourcedBy === 'business' && ` (${t('Assumido pelo restaurante')})`}
+          </Text>
+        </Text>
+        <Text style={{ ...texts.md, marginTop: 4 }}>
           {t('Total pago: ')}
           <Text style={texts.bold}>{formatCurrency(order.fare!.total)}</Text>
         </Text>
