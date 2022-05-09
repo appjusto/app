@@ -53,7 +53,6 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
         await api.order().cancelBusinessOrder(cancellationData);
         dispatch(showToast('Pedido cancelado com sucesso', 'success'));
         setLoading(false);
-        navigation.goBack();
       } catch (error) {
         setLoading(false);
         dispatch(showToast('Não foi possível efetuar o cancelamento. Tente novamente', 'error'));
@@ -119,24 +118,17 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
             <View
               style={{
                 paddingHorizontal: padding,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
               }}
             >
-              <View style={{ width: '48%' }}>
-                <DefaultButton title={t('Aceitar pedido')} />
-              </View>
-              <View style={{ width: '48%' }}>
-                <DefaultButton
-                  title={t('Cancelar pedido')}
-                  grey
-                  style={{ backgroundColor: colors.red }}
-                  onPress={() => {
-                    cancelOrderHandler();
-                    onCancelOrder();
-                  }}
-                />
-              </View>
+              <DefaultButton
+                title={t('Cancelar pedido')}
+                grey
+                style={{ backgroundColor: colors.red }}
+                onPress={() => {
+                  cancelOrderHandler();
+                  onCancelOrder();
+                }}
+              />
             </View>
           </View>
         </View>

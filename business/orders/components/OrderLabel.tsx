@@ -15,7 +15,7 @@ export const OrderLabel = ({ order }: Props) => {
   let statusLabel;
   let statusBGColor;
   if (status === 'confirmed') {
-    statusLabel = t('Pendente');
+    statusLabel = t('A confirmar');
     statusBGColor = colors.red;
   }
   if (status === 'preparing') {
@@ -27,7 +27,7 @@ export const OrderLabel = ({ order }: Props) => {
       statusLabel = t('Entregador chegou');
       statusBGColor = colors.yellow;
     } else {
-      statusLabel = t('Preparação');
+      statusLabel = t('Em preparação');
       statusBGColor = colors.grey500;
     }
   }
