@@ -17,8 +17,9 @@ import { t } from '../strings';
 import { BusinessAppContext } from './BusinessAppContext';
 import { MessagesIcon } from './orders/components/MessagesIcon';
 import { BusinessChats } from './orders/screens/BusinessChats';
+import { BusinessOptions } from './orders/screens/BusinessOptions';
 import { BusinessOrders } from './orders/screens/BusinessOrders';
-import { ManagerOptions } from './orders/screens/ManagerOptions';
+import { BusinessProfile } from './orders/screens/BusinessProfile';
 import { OrderDetail } from './orders/screens/OrderDetail';
 import { BusinessNavParamsList, LoggedBusinessNavParamsList } from './types';
 import { KEEP_ALIVE_INTERVAL, startKeepAliveTask, stopKeepAliveTask } from './utils/keepAlive';
@@ -130,14 +131,19 @@ export const BusinessNavigator = () => {
         options={{ title: t('Chats') }}
       />
       <Stack.Screen
-        name="ManagerOptions"
-        component={ManagerOptions}
+        name="BusinessOptions"
+        component={BusinessOptions}
         options={{ title: t('Menu') }}
       />
       <Stack.Screen
         name="AboutApp"
         component={AboutApp}
         options={{ title: t('Sobre o AppJusto') }}
+      />
+      <Stack.Screen
+        name="BusinessProfile"
+        component={BusinessProfile}
+        options={{ title: t('Dados do restaurante') }}
       />
       <Stack.Screen name="OrderChat" component={Chat} options={{ title: t('Chats') }} />
       <Stack.Screen name="Terms" component={Terms} options={{ title: t('Fique por dentro') }} />

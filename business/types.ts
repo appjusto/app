@@ -12,7 +12,7 @@ export type BusinessNavParamsList = {
     orderId: string;
   };
   BusinessChats: undefined;
-  ManagerOptions: undefined;
+  BusinessOptions: undefined;
   AboutApp: undefined;
   Terms: undefined;
   OrderChat: {
@@ -20,4 +20,5 @@ export type BusinessNavParamsList = {
     counterpartId: string;
     counterpartFlavor: Flavor;
   };
+  BusinessProfile: undefined;
 };

@@ -11,21 +11,21 @@ import { t } from '../../../strings';
 import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
 import { BusinessNavParamsList } from '../../types';
 import { ConfigModal } from '../components/ConfigModal';
-type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'ManagerOptions'>;
-type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'ManagerOptions'>;
+type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'BusinessOptions'>;
+type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'BusinessOptions'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
   route: ScreenRouteProp;
 };
 
-export const ManagerOptions = ({ navigation, route }: Props) => {
+export const BusinessOptions = ({ navigation, route }: Props) => {
   // context
   const api = useContext(ApiContext);
   // state
   const [visible, setVisible] = React.useState(false);
   // tracking
-  useSegmentScreen('ManagerOptions');
+  useSegmentScreen('BusinessOptions');
   return (
     <ScrollView
       style={{ ...screens.config }}
@@ -38,11 +38,11 @@ export const ManagerOptions = ({ navigation, route }: Props) => {
         subtitle={t('Gerencie seus pedidos')}
         onPress={() => navigation.navigate('BusinessOrders')}
       />
-      {/* <ConfigItem
-        title={t('Configurações')}
-        subtitle={t('Edite as configurações do gerenciador')}
-        onPress={() => setVisible(true)}
-      /> */}
+      <ConfigItem
+        title={t('Seus dados')}
+        subtitle={t('Dados do restaurante')}
+        onPress={() => navigation.navigate('BusinessProfile')}
+      />
       <ConfigItem
         title={t('Central de ajuda')}
         subtitle={t('Tire suas dúvidas ou envie uma mensagem')}
