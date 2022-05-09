@@ -104,7 +104,7 @@ export const BusinessNavigator = () => {
         options={({ navigation, route }) => ({
           title: t('Gerenciador de pedidos'),
           headerLeft: () => (
-            <TouchableWithoutFeedback onPress={() => navigation.navigate('ManagerOptions')}>
+            <TouchableWithoutFeedback onPress={() => navigation.navigate('BusinessOptions')}>
               <View style={{ marginLeft: 12 }}>
                 <Image source={headerMenu} height={32} width={32} />
               </View>
