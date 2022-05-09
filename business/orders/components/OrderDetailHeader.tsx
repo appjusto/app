@@ -9,6 +9,7 @@ import { halfPadding, padding, texts } from '../../../common/styles';
 import { formatTime } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { OrderLabel } from './OrderLabel';
+import { TimerDisplay } from './TimerDisplay';
 
 interface Props extends ViewProps {
   order: WithId<Order>;
@@ -34,7 +35,7 @@ export const OrderDetailHeader = ({ order, style, onOpenOrderChat }: Props) => {
           {/* spacer view */}
           <View style={{ width: padding, height: padding }} />
           {/* cooking time component. status === 'preparing' */}
-          {/* <RemainingTime order={order} /> */}
+          <TimerDisplay orderId={order.id} />
         </View>
         <Text style={{ ...texts.md, marginTop: halfPadding }}>
           {t('Nome do cliente: ')}
