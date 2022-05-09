@@ -146,10 +146,11 @@ export const OrderDetail = ({ navigation, route }: Props) => {
         {/* this button will open a CancelOrderModal  */}
         {cancellableStatuses ? (
           <View style={{ width: '60%', paddingHorizontal: padding, marginBottom: 32 }}>
-            <DefaultButton
-              title={t('Cancelar pedido')}
-              secondary
+            <CustomButton
+              order={order}
+              activityIndicator={isLoading}
               onPress={() => setCancelModalVisible(true)}
+              variant="cancel"
             />
           </View>
         ) : null}
