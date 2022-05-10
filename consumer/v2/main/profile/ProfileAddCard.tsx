@@ -101,8 +101,8 @@ export default function ({ navigation, route }: Props) {
           month,
           year: `20${year}`,
           verification_value: cvv,
-          first_name: firstName,
-          last_name: lastName,
+          first_name: firstName.toLocaleUpperCase(),
+          last_name: lastName.toLocaleUpperCase(),
         },
         createCancelToken()
       );
@@ -233,7 +233,7 @@ export default function ({ navigation, route }: Props) {
             autoCompleteType="name"
             autoCapitalize="characters"
             blurOnSubmit
-            onChangeText={(value) => setName(value.toLocaleUpperCase())}
+            onChangeText={setName}
           />
         </View>
 
