@@ -45,7 +45,6 @@ export const BusinessNavigator = () => {
         await api.business().sendKeepAlive(business.id);
         await startKeepAliveTask();
         const keepAliveInterval = setInterval(async () => {
-          console.log('sending keepAlive...');
           await api.business().sendKeepAlive(business.id);
         }, KEEP_ALIVE_INTERVAL * 1000);
         return () => clearInterval(keepAliveInterval);

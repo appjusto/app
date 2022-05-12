@@ -45,10 +45,13 @@ export const OrderLabel = ({ order }: Props) => {
     }
   }
   if (status === 'dispatching') {
-    statusLabel = timestamps.dispatching
-      ? `${t('Despachado às')} ${formatTime(timestamps.dispatching)}`
-      : t('Despachado');
-    statusBGColor = colors.green100;
+    statusBGColor = colors.yellow;
+    if (dispatchingState === 'going-destination') {
+      statusLabel = t('A caminho do destino');
+    }
+    if (dispatchingState === 'arrived-destination') {
+      statusLabel = t('Chegou no destino');
+    }
   }
   if (status === 'delivered') {
     statusLabel = timestamps.delivered
