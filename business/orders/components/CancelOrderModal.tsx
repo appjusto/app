@@ -1,6 +1,5 @@
 import { CancelOrderPayload, InvoiceType, Issue, Order, WithId } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Keyboard, Modal, ModalProps, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -28,12 +27,11 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
   const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
   const [orderCancellationCosts, setOrderCancellationCosts] = React.useState<number>();
   const [isLoading, setLoading] = React.useState(false);
-  const navigation = useNavigation();
   const issues = useIssues('restaurant-cancel');
   // side effects
   React.useEffect(() => {
     if (!order) return;
-    let debt = [] as InvoiceType[];
+    const debt = [] as InvoiceType[];
     //if (['preparing', 'ready'].includes(order.status)) debt.push('platform');
     //if (order.dispatchingState === 'arrived-pickup') debt.push('delivery');
     const cancellationCosts = calculateCancellationCosts(order, { refund: debt });

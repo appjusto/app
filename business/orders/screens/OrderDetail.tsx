@@ -190,7 +190,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
       ) : null}
       <CancelOrderModal
         modalVisible={cancelModalVisible}
-        onModalClose={() => navigation.goBack()}
+        onModalClose={() => setCancelModalVisible(false)}
         onCancelOrder={() => setCancelModalVisible(false)}
         order={order}
       />
