@@ -92,8 +92,11 @@ export const OrderDetail = ({ navigation, route }: Props) => {
   const showCustomButton =
     order &&
     (order.status === 'confirmed' || order.status === 'preparing' || order.status === 'ready');
-  const cancellableStatuses = order && (order.status === 'preparing' || order.status === 'ready');
-  console.log(order?.id);
+  const cancellableStatuses =
+    order &&
+    (order.status === 'confirmed',
+    (order.status === 'preparing' && !order.courier) ||
+      (order.status === 'ready' && !order.courier));
   //UI
   if (!order) {
     return (
