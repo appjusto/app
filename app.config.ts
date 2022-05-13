@@ -86,12 +86,14 @@ export default (context: ConfigContext): ExpoConfig => {
 
 const name = () => {
   let name = 'AppJusto';
-  if (flavor === 'courier') name = 'AppJusto Entregador';
-  if (flavor === 'business') name = 'AppJusto Gerenciador de Pedidos';
-  if (environment === 'dev') return `(D) ${name}`;
-  else if (environment === 'staging') return `(S) ${name}`;
-  else if (environment === 'community') return `(C) ${name}`;
-  return name;
+  if (environment === 'live') {
+    if (flavor === 'consumer') return name;
+    if (flavor === 'courier') return `${name} Entregador`;
+    if (flavor === 'business') return `${name} Restaurante`;
+  }
+  if (flavor === 'courier') name = 'Entregador';
+  if (flavor === 'business') name = 'Restaurante';
+  return `(${environment.charAt(0).toUpperCase()}) ${name}`;
 };
 
 const slug = () => {
