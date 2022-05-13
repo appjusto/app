@@ -1,5 +1,7 @@
 import { CancelOrderPayload, Issue, Order, WithId } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Keyboard, Modal, ModalProps, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -10,6 +12,9 @@ import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { showToast } from '../../../common/store/ui/actions';
 import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import { LoggedBusinessNavParamsList } from '../../types';
+
+type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'BusinessNavigator'>;
 
 interface Props extends ModalProps {
   order: WithId<Order>;
@@ -22,6 +27,7 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  const navigation = useNavigation<ScreenNavigationProp>();
   // state
   const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
   const [isLoading, setLoading] = React.useState(false);
@@ -41,6 +47,7 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
         await api.order().cancelBusinessOrder(cancellationData);
         dispatch(showToast('Pedido cancelado com sucesso', 'success'));
         setLoading(false);
+        navigation.navigate('BusinessNavigator', { screen: 'BusinessOrders' });
       } catch (error) {
         setLoading(false);
         dispatch(showToast('Não foi possível efetuar o cancelamento. Tente novamente', 'error'));
