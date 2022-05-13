@@ -1,5 +1,4 @@
 import { Business, LatLng } from '@appjusto/types';
-import { Timestamp } from 'firebase/firestore';
 import { toNumber } from 'lodash';
 import { usePlatformParamsContext } from '../../../../common/contexts/PlatformParamsContext';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
@@ -19,9 +18,9 @@ export const useBusinessIsAcceptingOrders = (
   const now = getServerTime();
   if (!business.enabled || !isAvailable(business.schedules, now)) return 'closed';
   if (business.status !== 'open' || !business.keepAlive) return 'disconnected';
-  const keepAlive = (business.keepAlive as Timestamp).toDate();
-  if (now.getTime() - keepAlive.getTime() > platformParams.business.keepAliveThreshold * 1000)
-    return 'closed';
+  // const keepAlive = (business.keepAlive as Timestamp).toDate();
+  // if (now.getTime() - keepAlive.getTime() > platformParams.business.keepAliveThreshold * 1000)
+  //   return 'closed';
   // range
   const distance =
     destination && business?.businessAddress?.latlng
