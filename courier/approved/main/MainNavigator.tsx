@@ -71,7 +71,7 @@ export default function ({ navigation }: Props) {
               params: {
                 orderId: data.orderId,
                 counterpartId: data.from.id,
-                counterpartFlavor: 'consumer',
+                counterpartFlavor: data.from.agent,
               },
             });
           } else {
