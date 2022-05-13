@@ -6,8 +6,7 @@ import Api from '../../common/store/api/api';
 import { getBusiness } from '../../common/store/business/selectors';
 import { getExtra } from '../../common/utils/config';
 
-export const KEEP_ALIVE_INTERVAL = getExtra().environment === 'live' ? 60 : 30;
-// export const KEEP_ALIVE_INTERVAL = 60 * (getExtra().environment === 'live' ? 3 : 15);
+export const KEEP_ALIVE_INTERVAL = 60 * (getExtra().environment === 'live' ? 5 : 1);
 
 const TASK_KEEP_ALIVE = 'TASK_KEEP_ALIVE';
 
