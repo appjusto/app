@@ -42,7 +42,7 @@ export const LoggedBusinessNavigator = () => {
     );
   }
   const initialRouteName =
-    manager.situation === 'pending' ? 'BusinessPending' : 'BusinessNavigator';
+    manager.situation !== 'approved' ? 'BusinessPending' : 'BusinessNavigator';
   // UI
   return (
     <LoggedContextProvider>
