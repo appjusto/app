@@ -98,7 +98,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
     (order.status === 'confirmed' ||
       (order.status === 'preparing' && !order.courier) ||
       (order.status === 'ready' && !order.courier) ||
-      order.dispatchingStatus !== 'outsourced');
+      (order.dispatchingStatus === 'outsourced' && order.outsourcedBy === 'business'));
   //UI
   if (!order) {
     return (
