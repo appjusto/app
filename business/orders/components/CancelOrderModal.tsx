@@ -37,7 +37,9 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
     (async () => {
       Keyboard.dismiss();
       if (!selectedIssue) {
+        onModalClose();
         dispatch(showToast('Você precisa escolher um motivo para efetuar o cancelamento', 'error'));
+        return;
       }
       try {
         setLoading(true);
