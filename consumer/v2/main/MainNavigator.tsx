@@ -61,7 +61,7 @@ export const MainNavigator = () => {
               params: {
                 orderId: data.orderId,
                 counterpartId: data.from.id,
-                counterpartFlavor: 'courier',
+                counterpartFlavor: data.from.agent,
               },
             });
           }
