@@ -1,4 +1,4 @@
-import { CancelOrderPayload, InvoiceType, Issue, Order, WithId } from '@appjusto/types';
+import { CancelOrderPayload, Issue, Order, WithId } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Keyboard, Modal, ModalProps, Text, TouchableOpacity, View } from 'react-native';
@@ -10,7 +10,6 @@ import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { showToast } from '../../../common/store/ui/actions';
 import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
-import { calculateCancellationCosts } from '../helpers';
 
 interface Props extends ModalProps {
   order: WithId<Order>;
@@ -25,18 +24,8 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
   const dispatch = useDispatch<AppDispatch>();
   // state
   const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
-  const [orderCancellationCosts, setOrderCancellationCosts] = React.useState<number>();
   const [isLoading, setLoading] = React.useState(false);
   const issues = useIssues('restaurant-cancel');
-  // side effects
-  React.useEffect(() => {
-    if (!order) return;
-    const debt = [] as InvoiceType[];
-    //if (['preparing', 'ready'].includes(order.status)) debt.push('platform');
-    //if (order.dispatchingState === 'arrived-pickup') debt.push('delivery');
-    const cancellationCosts = calculateCancellationCosts(order, { refund: debt });
-    setOrderCancellationCosts(cancellationCosts);
-  }, [order]);
   // handler
   const cancelOrderHandler = () => {
     (async () => {
@@ -45,7 +34,8 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
         setLoading(true);
         const cancellationData = {
           orderId: order.id,
-          acknowledgedCosts: orderCancellationCosts,
+          acknowledgedCosts: 0,
+          params: { refund: ['products'] },
           cancellation: selectedIssue,
         } as CancelOrderPayload;
         await api.order().cancelBusinessOrder(cancellationData);
