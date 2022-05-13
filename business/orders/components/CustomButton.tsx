@@ -47,7 +47,7 @@ export const CustomButton = ({
         textColor = colors.black;
         background = colors.darkYellow;
       } else {
-        buttonTitle = t('Pedido pronto');
+        buttonTitle = t('Entregar pedido');
         textColor = colors.white;
         background = colors.grey700;
       }
