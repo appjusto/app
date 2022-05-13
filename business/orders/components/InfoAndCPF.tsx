@@ -17,10 +17,12 @@ export const InfoAndCPF = ({ order, style }: Props) => {
     <View style={style}>
       <SingleHeader title={t('Observações')} />
       <View style={{ paddingHorizontal: padding, paddingTop: halfPadding }}>
-        <Text style={{ ...texts.md, marginBottom: halfPadding }}>
-          {t('Incluir CPF na nota, CPF: ')}
-          {cpfFormatter(order.consumer.cpf)}
-        </Text>
+        {order.consumer.cpf ? (
+          <Text style={{ ...texts.md, marginBottom: halfPadding }}>
+            {t('Incluir CPF na nota, CPF: ')}
+            {cpfFormatter(order.consumer.cpf)}
+          </Text>
+        ) : null}
         {order.additionalInfo ? (
           <Text style={{ ...texts.md, marginBottom: halfPadding }}>{order.additionalInfo}</Text>
         ) : null}
