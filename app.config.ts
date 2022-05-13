@@ -12,9 +12,8 @@ const {
   FIREBASE_PROJECT_ID,
   FIREBASE_MESSAGING_SENDER_ID,
   FIREBASE_CONSUMER_APP_ID,
-  FIREBASE_CONSUMER_MEASUREMENT_ID,
   FIREBASE_COURIER_APP_ID,
-  FIREBASE_COURIER_MEASUREMENT_ID,
+  FIREBASE_BUSINESS_APP_ID,
   FIREBASE_EMULATOR_HOST,
   SEGMENT_CONSUMER_IOS_KEY,
   SEGMENT_CONSUMER_ANDROID_KEY,
@@ -227,15 +226,16 @@ const extra = (): Extra => ({
     projectId: FIREBASE_PROJECT_ID!,
     storageBucket: `${FIREBASE_PROJECT_ID}.appspot.com`,
     messagingSenderId: FIREBASE_MESSAGING_SENDER_ID!,
-    // TODO: ADD FIREBASE_BUSINESS_APP_ID
-    appId: flavor === 'consumer' ? FIREBASE_CONSUMER_APP_ID! : FIREBASE_COURIER_APP_ID!,
+    appId:
+      flavor === 'consumer'
+        ? FIREBASE_CONSUMER_APP_ID!
+        : flavor === 'courier'
+        ? FIREBASE_COURIER_APP_ID!
+        : FIREBASE_BUSINESS_APP_ID!,
     emulator: {
       enabled: process.env.FIREBASE_EMULATOR === 'true',
       host: FIREBASE_EMULATOR_HOST,
     },
-    // TODO: add FIREBASE_BUSINESS_MEASUREMENT_ID
-    measurementId:
-      flavor === 'consumer' ? FIREBASE_CONSUMER_MEASUREMENT_ID! : FIREBASE_COURIER_MEASUREMENT_ID!,
   },
   analytics: {
     segmentConsumerAndroidKey: SEGMENT_CONSUMER_ANDROID_KEY!,

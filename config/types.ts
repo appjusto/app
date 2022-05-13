@@ -39,5 +39,5 @@ export interface FirebaseConfig {
     enabled: boolean;
     host?: string;
   };
-  measurementId: string;
+  measurementId?: string;
 }
