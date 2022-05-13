@@ -11,6 +11,7 @@ import RadioButton from '../../../common/components/buttons/RadioButton';
 import { track } from '../../../common/store/api/track';
 import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
+import { BusinessAppContext } from '../../BusinessAppContext';
 import { LoggedBusinessNavParamsList } from '../../types';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'BusinessNavigator'>;
@@ -26,8 +27,11 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
   // context
   const api = React.useContext(ApiContext);
   const navigation = useNavigation<ScreenNavigationProp>();
+  const { business } = React.useContext(BusinessAppContext);
   // state
-  const [cookingTime, setCookingTime] = React.useState<number>();
+  const [cookingTime, setCookingTime] = React.useState<number | undefined | null>(
+    order.cookingTime ?? business?.averageCookingTime ?? undefined
+  );
   const [isLoading, setLoading] = React.useState(false);
   // handlers
   const confirmOrderHandler = async () => {
