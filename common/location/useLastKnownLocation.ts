@@ -2,7 +2,6 @@ import { LatLng } from '@appjusto/types';
 import * as Location from 'expo-location';
 import { requestForegroundPermissionsAsync } from 'expo-location';
 import React from 'react';
-import * as Sentry from 'sentry-expo';
 
 const shouldAskPermission = (
   response: Location.LocationPermissionResponse | null | undefined
@@ -54,7 +53,6 @@ export default function (enabled: boolean = true, key?: string) {
           } catch (error: any) {
             setLastKnownLocation(null);
             console.error(error);
-            Sentry.Native.captureException(error);
           }
         })();
       } else if (permissionResponse?.status === 'denied') {
