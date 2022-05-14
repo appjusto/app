@@ -70,11 +70,13 @@ export default function ({ navigation }: Props) {
   }, [working, shouldVerifyPhone, courier.phone]);
   // location
   React.useEffect(() => {
-    if (working) {
-      startLocationUpdatesTask();
-    } else {
-      stopLocationUpdatesTask();
-    }
+    (async () => {
+      if (working) {
+        await startLocationUpdatesTask();
+      } else {
+        await stopLocationUpdatesTask();
+      }
+    })();
   }, [working]);
   // UI
   return (

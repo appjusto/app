@@ -11,8 +11,8 @@ import { getCourier } from '../store/courier/selectors';
 
 const TASK_FETCH_LOCATION = 'TASK_FETCH_LOCATION';
 
-export const startLocationUpdatesTask = () => {
-  return Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
+export const startLocationUpdatesTask = async () => {
+  await Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
     accuracy: Location.Accuracy.Highest,
     timeInterval: 5000, // Minimum time to wait between each update in milliseconds. Default value depends on accuracy option. (Android only)
     distanceInterval: 5, // Receive updates only when the location has changed by at least this distance in meters. Default value may depend on accuracy option.
@@ -30,7 +30,9 @@ export const stopLocationUpdatesTask = async () => {
   // const hasStarted = await Location.hasStartedLocationUpdatesAsync(TASK_FETCH_LOCATION);
   // hasStartedLocationUpdatesAsync is returning true even when the task wasn't started yet
   // probably no harm to just ignore the error when stop un non started task
-  Location.stopLocationUpdatesAsync(TASK_FETCH_LOCATION).catch(() => null);
+  try {
+    await Location.stopLocationUpdatesAsync(TASK_FETCH_LOCATION);
+  } catch (error) {}
 };
 
 interface LocationUpdateResult {

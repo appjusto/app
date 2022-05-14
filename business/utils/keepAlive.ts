@@ -22,7 +22,9 @@ export const startKeepAliveTask = async () => {
 
 export const stopKeepAliveTask = async () => {
   console.log('stopKeepAliveTask');
-  await BackgroundFetch.unregisterTaskAsync(TASK_KEEP_ALIVE);
+  try {
+    await BackgroundFetch.unregisterTaskAsync(TASK_KEEP_ALIVE);
+  } catch (error) {}
 };
 
 const keepAliveExecutor = (store: AppStore, api: Api) => async () => {
