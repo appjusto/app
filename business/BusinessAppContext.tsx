@@ -23,6 +23,8 @@ interface ContextProps {
   completedOrdersChats: GroupedChatMessages[][];
   allChats: GroupedChatMessages[][];
   unreadCount: number;
+  activeOrders: WithId<Order>[];
+  completedOrders: WithId<Order>[];
 }
 
 export const BusinessAppContext = React.createContext<ContextProps>({} as ContextProps);
@@ -97,6 +99,8 @@ export const BusinessAppProvider = ({ children }: Props) => {
         completedOrdersChats,
         allChats,
         unreadCount,
+        activeOrders,
+        completedOrders,
       }}
     >
       {children}

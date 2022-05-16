@@ -32,7 +32,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // context
   const getServerTime = useContextGetSeverTime();
   const api = React.useContext(ApiContext);
-  const { business, orders } = React.useContext(BusinessAppContext);
+  const { business, orders, activeOrders } = React.useContext(BusinessAppContext);
   // screen state
   const ordersSummary = summarizeOrders2(orders);
   const [kanbanOrders, setKanbanOrders] = React.useState<WithId<Order>[]>();
@@ -42,9 +42,9 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // side-effects
   React.useEffect(() => {
     if (!orders?.length) setKanbanOrders([]);
-    else if (!selectedFilter) setKanbanOrders(orders);
+    else if (!selectedFilter) setKanbanOrders(activeOrders);
     else setKanbanOrders(filterOrdersByStatus(orders, selectedFilter));
-  }, [orders, selectedFilter]);
+  }, [orders, selectedFilter, activeOrders]);
   // setting business status to open whenever a manager logs in during business hours
   React.useEffect(() => {
     (async () => {
@@ -106,12 +106,12 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
               showsHorizontalScrollIndicator={false}
               style={{ marginTop: padding, paddingLeft: padding }}
             >
-              {/* all orders */}
+              {/* active orders */}
               <ListFilterButton
-                title={t('Todos')}
+                title={t('Ativos')}
                 selected={selectedFilter === undefined}
                 onPress={() => {
-                  setKanbanOrders(orders ?? []);
+                  setKanbanOrders(activeOrders);
                   setSelectedFilter(undefined);
                 }}
                 style={{ marginRight: halfPadding }}
