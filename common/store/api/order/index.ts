@@ -355,11 +355,27 @@ export default class OrderApi {
     });
   }
 
-  async nextDispatchingState(orderId: string) {
-    await this.functionsRef.getNextDispatchingStateCallable()({
-      orderId,
-      meta: { version: getAppVersion() },
-    });
+  async nextDispatchingState({ id, type, status, dispatchingState }: WithId<Order>) {
+    let update: Partial<Order> | null = null;
+    if (dispatchingState === 'going-pickup') {
+      update = { dispatchingState: 'arrived-pickup' };
+    } else if (dispatchingState === 'arrived-pickup') {
+      if (type === 'p2p' || status === 'dispatching') {
+        update = {
+          dispatchingState: 'going-destination',
+        };
+      }
+    } else if (dispatchingState === 'going-destination') {
+      update = { dispatchingState: 'arrived-destination' };
+    }
+    if (update) await this.updateOrder(id, update);
+    else {
+      throw new Error('Não foi possível determinar o próximo estado de entrega.');
+    }
+    // await this.refs.getNextDispatchingStateCallable()({
+    //   orderId: id,
+    //   meta: { version: getAppVersion() },
+    // });
   }
 
   async completeDelivery(

@@ -29,12 +29,16 @@ export default class ProfileApi {
   }
   private async createProfile(id: string) {
     console.log(`Creating ${this.flavor} profile...`);
-    await setDoc(this.getProfileRef(id), {
-      situation: 'pending',
-      email: this.auth.getEmail() ?? null,
-      phone: this.auth.getPhoneNumber(true) ?? null,
-      createdOn: serverTimestamp(),
-    } as UserProfile);
+    await setDoc(
+      this.getProfileRef(id),
+      {
+        situation: 'pending',
+        email: this.auth.getEmail() ?? null,
+        phone: this.auth.getPhoneNumber(true) ?? null,
+        createdOn: serverTimestamp(),
+      } as UserProfile,
+      { merge: true }
+    );
   }
 
   // firestore

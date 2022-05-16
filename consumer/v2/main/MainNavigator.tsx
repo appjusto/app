@@ -6,6 +6,7 @@ import React from 'react';
 import { Dimensions, Image, Text, View } from 'react-native';
 import * as icons from '../../../assets/icons';
 import { track } from '../../../common/store/api/track';
+import { OngoingOrdersStatuses } from '../../../common/store/order/selectors';
 import { halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { LoggedNavigatorParamList } from '../types';
@@ -46,16 +47,7 @@ export const MainNavigator = () => {
             action: data.action,
             orderId: data.orderId,
           });
-          if (data.orderStatus === 'delivered') {
-            navigation.navigate('DeliveredOrderNavigator', {
-              screen: 'DeliveredOrderChat',
-              params: {
-                orderId: data.orderId,
-                counterpartId: data.from.id,
-                counterpartFlavor: 'courier',
-              },
-            });
-          } else
+          if (OngoingOrdersStatuses.includes(data.orderStatus)) {
             navigation.navigate('OngoingOrderNavigator', {
               screen: 'OngoingOrder',
               params: {
@@ -63,6 +55,16 @@ export const MainNavigator = () => {
                 chatFrom: data.from,
               },
             });
+          } else {
+            navigation.navigate('DeliveredOrderNavigator', {
+              screen: 'DeliveredOrderChat',
+              params: {
+                orderId: data.orderId,
+                counterpartId: data.from.id,
+                counterpartFlavor: data.from.agent,
+              },
+            });
+          }
         }
       } else if (data.action === 'navigate-business') {
         if (clicked) {

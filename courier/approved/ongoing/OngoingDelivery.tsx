@@ -135,7 +135,7 @@ export default function ({ navigation, route }: Props) {
           await api.order().completeDelivery(orderId, code);
           track('courier completed delivery');
         } else {
-          await api.order().nextDispatchingState(orderId);
+          await api.order().nextDispatchingState(order);
         }
       } catch (error: any) {
         dispatch(showToast(error.toString(), 'error'));

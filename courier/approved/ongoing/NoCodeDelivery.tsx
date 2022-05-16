@@ -54,10 +54,14 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
   const [description, setDescription] = React.useState('');
   const [packagePhoto, setPackagePhoto] = React.useState<ImageURISource | undefined | null>();
   const [frontPhoto, setFrontPhoto] = React.useState<ImageURISource | undefined | null>();
+  const [packageUploaded, setPackageUploaded] = React.useState(false);
+  const [frontUploaded, setFrontUploaded] = React.useState(false);
   const uploadPODPackage = useMutation(
     (localUri: string) => api.courier().uploadPODPackage(orderId, order!.courier!.id, localUri),
     {
       onSuccess: () => {
+        setPackageUploaded(true);
+        setLoading(false);
         track('courier uploaded POD package photo');
       },
     }
@@ -66,6 +70,8 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
     (localUri: string) => api.courier().uploadPODFront(orderId, order!.courier!.id, localUri),
     {
       onSuccess: () => {
+        setFrontUploaded(true);
+        setLoading(false);
         track('courier uploaded POD front photo');
       },
     }
@@ -74,12 +80,14 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
   //upload POD package photo
   React.useEffect(() => {
     if (packagePhoto?.uri) {
+      setLoading(true);
       uploadPODPackage.mutate(packagePhoto.uri);
     }
   }, [packagePhoto]);
   //upload POD front photo
   React.useEffect(() => {
     if (frontPhoto?.uri) {
+      setLoading(true);
       uploadPODFront.mutate(frontPhoto.uri);
     }
   }, [frontPhoto]);
@@ -105,6 +113,10 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
   const confirmHandler = () => {
     Keyboard.dismiss();
     if (!frontPhoto || !packagePhoto || !name) return;
+    if (!frontUploaded)
+      dispatch(showToast('Foto da fachada não carregada corretamente. Tente novamente', 'error'));
+    if (!packageUploaded)
+      dispatch(showToast('Foto do pacote não carregada corretamente. Tente novamente', 'error'));
     (async () => {
       try {
         setLoading(true);
@@ -222,7 +234,7 @@ export const NoCodeDelivery = ({ navigation, route }: Props) => {
           title={t('Confirmar entrega')}
           onPress={confirmHandler}
           activityIndicator={isLoading}
-          disabled={!frontPhoto || !packagePhoto || !name || isLoading}
+          disabled={!frontUploaded || !packageUploaded || !name || isLoading}
         />
       </PaddedView>
     </ScrollView>

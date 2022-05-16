@@ -21,6 +21,7 @@ import {
 import { formatDate } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import { DeliveriesNavigatorParamList } from '../types';
+import { useCanAdvanceReceivables } from './useCanAdvanceReceivables';
 
 type ScreenNavigationProp = StackNavigationProp<DeliveriesNavigatorParamList, 'Receivables'>;
 type ScreenRoute = RouteProp<DeliveriesNavigatorParamList, 'Receivables'>;
@@ -35,6 +36,7 @@ export const Receivables = ({ navigation, route }: Props) => {
   const [selected, setSelected] = React.useState<number[]>([]);
   // side effects
   const receivables = useReceivables();
+  const canAdvanceReceivables = useCanAdvanceReceivables();
   // tracking
   useSegmentScreen('Receivables');
   // handlers
@@ -71,12 +73,12 @@ export const Receivables = ({ navigation, route }: Props) => {
           </View>
           <Text style={{ ...texts.sm, paddingBottom: halfPadding }}>
             {t(
-              'O prazo padrão para processar os pagamentos é de 30 dias. Para antecipar, você paga uma taxa de até 2.5% por operação. Funciona assim: se for antecipar no primeiro dia útil após a corrida, você pagará o valor cheio de 2.5%, e a taxa diminui proporcionalmente a cada dia que passa. Se você esperar 15 dias, por exemplo, pagará 1.25%.'
+              'O prazo padrão para processar os pagamentos é de 30 dias. Para antecipar, você paga uma taxa de até 1.99% por operação. Funciona assim: se for antecipar no primeiro dia útil após a corrida, você pagará o valor cheio de 1.99%, e a taxa diminui proporcionalmente a cada dia que passa. Se você esperar 15 dias, por exemplo, pagará 0.99%.'
             )}
           </Text>
           <Text style={{ ...texts.sm, paddingBottom: halfPadding, color: colors.red }}>
             {t(
-              'Atenção: a Iugu só permite realizar antecipações em dias úteis, de 09:00 às 20:30.'
+              'Atenção: a Iugu só permite realizar antecipações em dias úteis, de 09:00 às 16:00 e só é possível antecipar faturas pagas a mais de 1 dia.'
             )}
           </Text>
         </PaddedView>
@@ -144,9 +146,9 @@ export const Receivables = ({ navigation, route }: Props) => {
           ))}
           <PaddedView>
             <DefaultButton
-              title={t('Avançar')}
+              title={canAdvanceReceivables ? t('Avançar') : t('Fora do horário')}
               onPress={advanceHandler}
-              disabled={selected.length === 0}
+              disabled={!canAdvanceReceivables || selected.length === 0}
             />
           </PaddedView>
         </View>

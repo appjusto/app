@@ -9,7 +9,6 @@ import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
-import { usePlatformParamsContext } from '../../../../../common/contexts/PlatformParamsContext';
 import { useTotalWithdrawsThisMonth } from '../../../../../common/store/api/courier/account/useTotalWithdrawsThisMonth';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { showToast } from '../../../../../common/store/ui/actions';
@@ -40,7 +39,6 @@ export const Withdraws = ({ navigation, route }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  const platformParams = usePlatformParamsContext();
   // redux
   const courier = useSelector(getCourier)!;
   // state
@@ -56,13 +54,6 @@ export const Withdraws = ({ navigation, route }: Props) => {
   // handler
   const withdrawHandler = async () => {
     if (!availableForWithdraw) return;
-    if (
-      (platformParams?.courier.restrictWithdrawTo.length ?? 0) > 0 &&
-      !platformParams?.courier.restrictWithdrawTo.includes(courier.id)
-    ) {
-      dispatch(showToast('A transferência pelo App está limitada durante os testes.', 'error'));
-      return;
-    }
     setWithdrawing(true);
     try {
       const result = await api.courier().requestWithdraw(courier.id, availableForWithdraw);

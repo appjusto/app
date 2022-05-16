@@ -7,7 +7,6 @@ import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import CheckField from '../../../../../common/components/buttons/CheckField';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
-import { usePlatformParamsContext } from '../../../../../common/contexts/PlatformParamsContext';
 import { useAdvanceSimulation } from '../../../../../common/store/api/courier/account/useAdvanceSimulation';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
@@ -22,6 +21,7 @@ import {
 } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { DeliveriesNavigatorParamList } from '../types';
+import { useCanAdvanceReceivables } from './useCanAdvanceReceivables';
 
 type ScreenNavigationProp = StackNavigationProp<DeliveriesNavigatorParamList, 'AdvanceReceivables'>;
 type ScreenRoute = RouteProp<DeliveriesNavigatorParamList, 'AdvanceReceivables'>;
@@ -35,27 +35,18 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  const platformParams = usePlatformParamsContext();
   // redux
   const courier = useSelector(getCourier)!;
   // state
   const [accepted, setAccepted] = React.useState(false);
   const [requesting, setRequesting] = React.useState(false);
   // side effects
+  const canAdvanceReceivables = useCanAdvanceReceivables();
   const simulation = useAdvanceSimulation(route.params.ids);
   // tracking
   useSegmentScreen('AdvanceReceivables');
   // handlers
   const confirmHandler = async () => {
-    if (
-      (platformParams?.courier.restrictWithdrawTo.length ?? 0) > 0 &&
-      !platformParams?.courier.restrictWithdrawTo.includes(courier.id)
-    ) {
-      dispatch(
-        showToast('A antecipação de recebíveis pelo App está limitada durante os testes.', 'error')
-      );
-      return;
-    }
     setRequesting(true);
     try {
       const result = await api.courier().advanceReceivables(courier.id, route.params.ids);
@@ -120,10 +111,10 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
         />
         <DefaultButton
           style={{ marginTop: biggerPadding }}
-          title={t('Confirmar antecipação')}
+          title={canAdvanceReceivables ? t('Confirmar antecipação') : t('Fora do horário')}
           onPress={confirmHandler}
           activityIndicator={requesting}
-          disabled={!accepted || requesting}
+          disabled={!canAdvanceReceivables || !accepted || requesting}
         />
       </PaddedView>
     </ScrollView>
