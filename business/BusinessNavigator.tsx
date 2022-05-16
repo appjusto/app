@@ -64,7 +64,14 @@ export const BusinessNavigator = () => {
             action: data.action,
             orderId: data.orderId,
           });
-          navigation.navigate('BusinessNavigator', { screen: 'BusinessChats' });
+          navigation.navigate('BusinessNavigator', {
+            screen: 'OrderChat',
+            params: {
+              orderId: data.orderId,
+              counterpartId: data.from.id,
+              counterpartFlavor: data.from.agent,
+            },
+          });
         }
       } else if (data.action === 'order-update') {
         // new order and order canceled pushes
