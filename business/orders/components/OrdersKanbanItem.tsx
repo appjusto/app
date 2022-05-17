@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -89,13 +89,14 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
   // UI
   if (!order) return null;
   return (
-    <View
+    <TouchableOpacity
       style={{
         paddingVertical: 12,
         paddingHorizontal: padding,
         ...borders.default,
         backgroundColor: colors.white,
       }}
+      onPress={onCheckOrder}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <View>
@@ -115,7 +116,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
             <View style={{ width: '38%' }}>
               <DefaultButton secondary title={t('Ver pedido')} onPress={onCheckOrder} />
             </View>
-            <View style={{ width: '57%' }}>
+            <View style={{ width: '57%', position: 'absolute', right: -2 }}>
               <CustomButton
                 order={order}
                 onPress={actionHandler}
@@ -138,6 +139,6 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
           setModalVisible(false);
         }}
       />
-    </View>
+    </TouchableOpacity>
   );
 };
