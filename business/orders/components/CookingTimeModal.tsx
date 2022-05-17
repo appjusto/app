@@ -14,6 +14,7 @@ import { borders, colors, halfPadding, padding, texts } from '../../../common/st
 import { t } from '../../../strings';
 import { BusinessAppContext } from '../../BusinessAppContext';
 import { LoggedBusinessNavParamsList } from '../../types';
+import { printedOrder } from '../../utils/printedOrder';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'BusinessNavigator'>;
 
@@ -36,8 +37,6 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
   const [isLoading, setLoading] = React.useState(false);
   const [selectedPrinter, setSelectedPrinter] = React.useState<Print.Printer>();
 
-  // helpers
-  const html = `<div>teste</div>`;
   // print order
   const printOrder = async () => {
     // selecting printer (ios only)
@@ -46,7 +45,7 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
       setSelectedPrinter(printer);
     }
     await Print.printAsync({
-      html,
+      html: printedOrder(order),
       printerUrl: selectedPrinter?.url,
     });
   };

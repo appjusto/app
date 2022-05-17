@@ -1,91 +1,90 @@
-export const printedOrder = () => {
-  // TODO: we must return a HTML string to print into PDF file (must be between ``)
-  return `
-    <html>
-    
-     <div class="css-1qp1kp5">
-  <div class="css-1vr2anf">
-    <div class="chakra-stack css-g9cw6v">
-      <div class="css-kezrx0">
-        <img
-          src="https://firebasestorage.googleapis.com/v0/b/app-justo-live.appspot.com/o/businesses%2FR7GG6M58QshwOOuqFG5u%2Flogo_240x240.jpg?alt=media&amp;token=e181f589-a082-4f7b-a0bd-a66604407381"
-          class="chakra-image css-0"
-        />
+import { Order, OrderItem, WithId } from '@appjusto/types';
+import { formatCurrency, formatTime } from '../../common/utils/formatters';
+
+export const printedOrder = (order: WithId<Order>) => {
+  const printItems = (items: OrderItem[]) =>
+    items.map((item) => {
+      `<tr role="row">
+      <td role="gridcell" data-is-numeric="true">${item.quantity}</td>
+      <td role="gridcell">
+        Maioneses e Molhos <br /><span>${item.product.name}</span><br /><span></span>
+      </td>
+      <td role="gridcell" data-is-numeric="true">${formatCurrency(
+        item.quantity * item.product.price
+      )}</td>
+    </tr>`;
+    });
+  return `<html>
+    <head>
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+      />
+    </head>
+    <body>
+      <div style="max-width: 300px">
+        <div>
+          <div style="align-items: center; flex-direction: column">
+            <!-- imagem app justo -->
+            <!-- <div style="max-width: 80px">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/app-justo-live.appspot.com/o/businesses%2FR7GG6M58QshwOOuqFG5u%2Flogo_240x240.jpg?alt=media&amp;token=e181f589-a082-4f7b-a0bd-a66604407381"
+              />
+            </div> -->
+          </div>
+          <p style="font-size: 11px">Por um delivery mais justo e transparente!</p>
+          <!-- nome do restaurante -->
+          <p style="font-size: 16px; font-weight: 700; margin-top: 4">${order.business?.name}</p>
+        </div>
+        <!-- order.code -->
+        <p style="font-size: 24px; font-weight: 700; line-height: 28px; margin-top: 4">
+          Pedido Nº ${order.code}
+        </p>
+        <!-- order.consumer.name -->
+        <p style="font-size: 12px; font-weight: 500; line-height: 16px">
+          Cliente: <span style="font-weight: 700">${order.consumer.name}</span>
+        </p>
+        <!-- createdOn ? -->
+        <p style="font-size: 12px; font-weight: 500; line-height: 16px">
+          Hora: <span style="font-weight: 700">${formatTime(order.createdOn)}</span>
+        </p>
+        <!-- destination ?? address -->
+        <p style="font-size: 12px; font-weight: 500; line-height: 16px">
+          Endereço: <span style="font-weight: 700">${order.destination?.address}</span>
+        </p>
+        <!-- aqui vai a tabela com os itens, complementos : DetailedOrderItems > OrderListItem -->
+        <p style="font-size: 12px; font-weight: 500; line-height: 16px">
+          Complemento:
+          <span style="font-weight: 700">${order.destination?.additionalInfo ?? 'N/I'}</span>
+        </p>
+        <p style="font-size: 18px; margin-top: 2">Detalhes do pedido</p>
+        <table role="table" style="margin-top: 2">
+          <!-- table header -->
+          <thead style="border-bottom: 1px solid black">
+            <tr role="row">
+              <th data-is-numeric="true" style="font-size: 12; max-width: 20px;">Qtd.</th>
+              <th style="font-size: 12;">Item</th>
+              <th data-is-numeric="true" style="font-size: 12;">Valor und.</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${printItems(order.items!)}
+          </tbody>
+          <!-- valor total -->
+          <tfoot>
+            <tr role="row">
+              <th>Total</th>
+              <th></th>
+              <th data-is-numeric="true">R$ 39,51</th>
+            </tr>
+          </tfoot>
+        </table>
+        <!-- observações -->
+        <p>Observações</p>
+        <p>Sem observações.</p>
+        <!-- aviso pedido já pago -->
+        <div><p>Este pedido já está pago</p></div>
       </div>
-      <div class="css-sto8vp">
-        <img
-          src="/static/media/logo-black.87463fad3f1ff8e7d10bb04c9a83b9d8.svg"
-          class="chakra-image css-0"
-        />
-      </div>
-    </div>
-    <p class="chakra-text css-9e9owo">Por um delivery mais justo e transparente!</p>
-    <p class="chakra-text css-3o9neg">Burger Lab - Itaim</p>
-  </div>
-  <p class="chakra-text css-1q1l3ls">Pedido Nº 5761</p>
-  <p class="chakra-text css-8k1bih">
-    Cliente: <span class="chakra-text css-1vg6q84">Letícia</span>
-  </p>
-  <p class="chakra-text css-8k1bih">Hora: <span class="chakra-text css-1vg6q84">N/E</span></p>
-  <p class="chakra-text css-8k1bih">
-    Endereço: <span class="chakra-text css-1vg6q84">Rua João Ramalho, 929</span>
-  </p>
-  <p class="chakra-text css-8k1bih">Complemento: <span class="chakra-text css-1vg6q84"></span></p>
-  <p class="chakra-text css-12bf9z8">Detalhes do pedido</p>
-  <table role="table" class="chakra-table css-13mgyt3">
-    <thead class="css-ycfik3">
-      <tr role="row" class="css-0">
-        <th data-is-numeric="true" class="css-16r4zcd">Qtd.</th>
-        <th class="css-16tih7l">Item</th>
-        <th data-is-numeric="true" class="css-7safn">Valor und.</th>
-      </tr>
-    </thead>
-    <tbody class="css-0">
-      <tr role="row" class="css-1ioryd0">
-        <td role="gridcell" data-is-numeric="true" class="css-37nxch">1</td>
-        <td role="gridcell" class="css-dyv93v">
-          Maioneses e Molhos <br /><span class="chakra-text css-114n22q"
-            >Maionese Verde Temperada</span
-          ><br /><span class="chakra-text css-cwm84b"></span>
-        </td>
-        <td role="gridcell" data-is-numeric="true" class="css-1e8krge">R$ 3,60</td>
-      </tr>
-      <tr role="row" class="css-1t6wxlw">
-        <td role="gridcell" data-is-numeric="true" class="css-1gt7yww">1</td>
-        <td role="gridcell" class="css-115yfa">
-          Escolha seu molho - <span class="chakra-text css-0">Verde temperada</span>
-        </td>
-        <td role="gridcell" data-is-numeric="true" class="css-fwqdm4">R$ 0,00</td>
-      </tr>
-      <tr role="row" class="css-1ioryd0">
-        <td role="gridcell" data-is-numeric="true" class="css-37nxch">1</td>
-        <td role="gridcell" class="css-dyv93v">
-          Combos da Lab <br /><span class="chakra-text css-114n22q"
-            >American + Fritas + Refri 350ml</span
-          ><br /><span class="chakra-text css-cwm84b"></span>
-        </td>
-        <td role="gridcell" data-is-numeric="true" class="css-1e8krge">R$ 35,91</td>
-      </tr>
-      <tr role="row" class="css-1t6wxlw">
-        <td role="gridcell" data-is-numeric="true" class="css-1gt7yww">1</td>
-        <td role="gridcell" class="css-115yfa">
-          Escolha seu refri - <span class="chakra-text css-0">Coca-Cola lata 350 ml</span>
-        </td>
-        <td role="gridcell" data-is-numeric="true" class="css-fwqdm4">R$ 0,00</td>
-      </tr>
-    </tbody>
-    <tfoot class="css-ozci9u">
-      <tr role="row" class="css-0">
-        <th class="css-16tih7l">Total</th>
-        <th class="css-1yz9rtv"></th>
-        <th data-is-numeric="true" class="css-7safn">R$ 39,51</th>
-      </tr>
-    </tfoot>
-  </table>
-  <p class="chakra-text css-12bf9z8">Observações</p>
-  <p class="chakra-text css-nxo94s">Sem observações.</p>
-  <div class="css-cq172s"><p class="chakra-text css-16q89qc">Este pedido já está pago</p></div>
-</div>
-    </html>
-    `;
+    </body>
+  </html>`;
 };
