@@ -1,0 +1,150 @@
+<!-- ver OrderToPrinting no admin -->
+<!-- função que recebe uma order e retorna uma string html -->
+<html>
+  <head>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+    />
+  </head>
+  <body>
+    <div style="max-width: 300px">
+      <div>
+        <div style="align-items: center; flex-direction: column">
+          <!-- imagem app justo -->
+          <!-- <div style="max-width: 80px">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/app-justo-live.appspot.com/o/businesses%2FR7GG6M58QshwOOuqFG5u%2Flogo_240x240.jpg?alt=media&amp;token=e181f589-a082-4f7b-a0bd-a66604407381"
+            />
+          </div> -->
+        </div>
+        <p style="font-size: 11px">Por um delivery mais justo e transparente!</p>
+        <!-- nome do restaurante -->
+        <p style="font-size: 16px; font-weight: 700; margin-top: 4">${order.business?.name}</p>
+      </div>
+      <!-- order.code -->
+      <p style="font-size: 24px; font-weight: 700; line-height: 28px; margin-top: 4">
+        Pedido Nº ${order.code}
+      </p>
+      <!-- order.consumer.name -->
+      <p style="font-size: 12px; font-weight: 500; line-height: 16px">
+        Cliente: <span style="font-weight: 700">${order.consumer.name}</span>
+      </p>
+      <!-- createdOn ? -->
+      <p style="font-size: 12px; font-weight: 500; line-height: 16px">
+        Hora: <span style="font-weight: 700">${formatTime(order.createdOn)}</span>
+      </p>
+      <!-- destination ?? address -->
+      <p style="font-size: 12px; font-weight: 500; line-height: 16px">
+        Endereço: <span style="font-weight: 700">${order.destination?.address}</span>
+      </p>
+      <!-- aqui vai a tabela com os itens, complementos : DetailedOrderItems > OrderListItem -->
+      <p style="font-size: 12px; font-weight: 500; line-height: 16px">
+        Complemento:
+        <span style="font-weight: 700">${order.destination?.additionalInfo ?? 'N/I'}</span>
+      </p>
+      <p style="font-size: 18px; margin-top: 2">Detalhes do pedido</p>
+      <table role="table" style="margin-top: 2">
+        <!-- table header -->
+        <thead style="border-bottom: 1px solid black">
+          <tr role="row">
+            <th data-is-numeric="true" style="font-size: 12; max-width: 20px;">Qtd.</th>
+            <th style="font-size: 12;">Item</th>
+            <th data-is-numeric="true" style="font-size: 12;">Valor und.</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${order.items?.map((item: OrderItem) => (
+            <!-- how do we add a key? -->
+            <div></div>
+            <React.Fragment key={Math.random()}>
+              <Tr
+                fontWeight="700"
+                borderBottom={
+                  item.complements && item.complements?.length > 0 ? 'none' : '1px solid black'
+                }
+              >
+                <Td isNumeric fontSize="11px" px="0">
+                  {item.quantity}
+                </Td>
+                <Td fontSize="11px" pl="0">
+                  {item.product.categoryName ?? 'N/E'} <br />
+                  <Text as="span" fontSize="10px" fontWeight="700">
+                    {item.product.name}
+                  </Text>
+                  <br />
+                  <Text as="span" fontSize="10px" fontWeight="500">
+                    {item.notes}
+                  </Text>
+                </Td>
+                <Td isNumeric fontSize="11px" pr="0">
+                  {formatCurrency(item.product.price)}
+                </Td>
+              </Tr>
+              {item.complements &&
+                item.complements.map((complement, index) => (
+                  <Tr
+                    key={Math.random()}
+                    pl="0"
+                    borderBottom={
+                      item.complements?.length === index + 1 ? '1px solid black' : 'none'
+                    }
+                  >
+                    <Td isNumeric fontSize="11px" fontWeight="500" px="0">
+                      {complement.quantity ?? 1}
+                    </Td>
+                    <Td fontSize="11px" fontWeight="500">
+                      {complement.groupName ?? 'N/E'}
+                      {' - '}
+                      <Text as="span">{complement.name}</Text>
+                    </Td>
+                    <Td isNumeric fontSize="11px" fontWeight="500" pr="0">
+                      {formatCurrency(complement.price)}
+                    </Td>
+                  </Tr>
+                ))}
+            </React.Fragment>
+          ))}
+
+          <tr role="row">
+            <td role="gridcell" data-is-numeric="true">1</td>
+            <td role="gridcell">
+              Maioneses e Molhos <br /><span>Maionese Verde Temperada</span><br /><span></span>
+            </td>
+            <td role="gridcell" data-is-numeric="true">R$ 3,60</td>
+          </tr>
+          <tr role="row" class="css-1t6wxlw">
+            <td role="gridcell" data-is-numeric="true">1</td>
+            <td role="gridcell">Escolha seu molho - <span>Verde temperada</span></td>
+            <td role="gridcell" data-is-numeric="true">R$ 0,00</td>
+          </tr>
+          <tr role="row">
+            <td role="gridcell" data-is-numeric="true">1</td>
+            <td role="gridcell">
+              Combos da Lab <br /><span>American + Fritas + Refri 350ml</span><br /><span></span>
+            </td>
+            <td role="gridcell" data-is-numeric="true">R$ 35,91</td>
+          </tr>
+          <tr role="row" class="css-1t6wxlw">
+            <td role="gridcell" data-is-numeric="true">1</td>
+            <td role="gridcell">Escolha seu refri - <span>Coca-Cola lata 350 ml</span></td>
+            <td role="gridcell" data-is-numeric="true">R$ 0,00</td>
+          </tr>
+        </tbody>
+        <!-- valor total -->
+        <tfoot>
+          <tr role="row">
+            <th>Total</th>
+            <th></th>
+            <th data-is-numeric="true">R$ 39,51</th>
+          </tr>
+        </tfoot>
+      </table>
+      <!-- observações -->
+      <p>Observações</p>
+      <p>Sem observações.</p>
+      <!-- aviso pedido já pago -->
+      <div><p>Este pedido já está pago</p></div>
+    </div>
+  </body>
+</html>

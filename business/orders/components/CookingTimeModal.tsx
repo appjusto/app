@@ -37,21 +37,7 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
   const [selectedPrinter, setSelectedPrinter] = React.useState<Print.Printer>();
 
   // helpers
-  const html = `
-   <html>
-     <head>
-       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
-     </head>
-     <body style="text-align: center;">
-       <h1 style="font-size: 50px; font-family: Helvetica Neue; font-weight: normal;">
-         ${order.consumer.name}
-       </h1>
-       <img
-         src="https://d30j33t1r58ioz.cloudfront.net/static/guides/sdk.png"
-         style="width: 90vw;" />
-     </body>
-   </html>
-   `;
+  const html = `<div>teste</div>`;
   // print order
   const printOrder = async () => {
     const printer = await Print.selectPrinterAsync();
@@ -68,7 +54,7 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
       setLoading(true);
       // if business has not confirmed order yet, set cooking time and set status to 'preparing'
       if (order.status === 'confirmed') {
-        await api.order().updateOrder(order.id, { cookingTime, status: 'preparing' });
+        // await api.order().updateOrder(order.id, { cookingTime, status: 'preparing' });
         printOrder();
         navigation.navigate('BusinessNavigator', { screen: 'BusinessOrders' });
       }
