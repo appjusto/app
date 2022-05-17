@@ -147,7 +147,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
               </View>
             ) : null}
             {order.status === 'preparing' ? (
-              <View style={{ width: '60%' }}>
+              <View style={{ width: '61%' }}>
                 <DefaultButton
                   title={t('Alterar tempo de preparo')}
                   secondary

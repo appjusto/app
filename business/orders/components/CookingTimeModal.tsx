@@ -2,6 +2,7 @@ import { Order, WithId } from '@appjusto/types';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import * as Print from 'expo-print';
 import React from 'react';
 import { Modal, ModalProps, Text, TouchableOpacity, View } from 'react-native';
 import * as Sentry from 'sentry-expo';
@@ -33,6 +34,33 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
     order.cookingTime ?? business?.averageCookingTime ?? undefined
   );
   const [isLoading, setLoading] = React.useState(false);
+  const [selectedPrinter, setSelectedPrinter] = React.useState<Print.Printer>();
+
+  // helpers
+  const html = `
+   <html>
+     <head>
+       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+     </head>
+     <body style="text-align: center;">
+       <h1 style="font-size: 50px; font-family: Helvetica Neue; font-weight: normal;">
+         ${order.consumer.name}
+       </h1>
+       <img
+         src="https://d30j33t1r58ioz.cloudfront.net/static/guides/sdk.png"
+         style="width: 90vw;" />
+     </body>
+   </html>
+   `;
+  // print order
+  const printOrder = async () => {
+    const printer = await Print.selectPrinterAsync();
+    setSelectedPrinter(printer);
+    await Print.printAsync({
+      html,
+      printerUrl: selectedPrinter?.url,
+    });
+  };
   // handlers
   const confirmOrderHandler = async () => {
     track('restaurant confirmed order');
@@ -41,6 +69,7 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
       // if business has not confirmed order yet, set cooking time and set status to 'preparing'
       if (order.status === 'confirmed') {
         await api.order().updateOrder(order.id, { cookingTime, status: 'preparing' });
+        printOrder();
         navigation.navigate('BusinessNavigator', { screen: 'BusinessOrders' });
       }
       // if status === 'preparing' only set cooking time
@@ -55,6 +84,7 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
       Sentry.Native.captureException(error);
     }
   };
+  // UI
   return (
     <Modal transparent visible={modalVisible} animationType="slide">
       <View
