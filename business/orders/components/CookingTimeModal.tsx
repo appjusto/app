@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as Print from 'expo-print';
 import React from 'react';
-import { Modal, ModalProps, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, ModalProps, Platform, Text, TouchableOpacity, View } from 'react-native';
 import * as Sentry from 'sentry-expo';
 import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -40,8 +40,11 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
   const html = `<div>teste</div>`;
   // print order
   const printOrder = async () => {
-    const printer = await Print.selectPrinterAsync();
-    setSelectedPrinter(printer);
+    // selecting printer (ios only)
+    if (Platform.OS === 'android') {
+      const printer = await Print.selectPrinterAsync();
+      setSelectedPrinter(printer);
+    }
     await Print.printAsync({
       html,
       printerUrl: selectedPrinter?.url,
@@ -56,6 +59,7 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
       if (order.status === 'confirmed') {
         // await api.order().updateOrder(order.id, { cookingTime, status: 'preparing' });
         printOrder();
+        setLoading(false);
         navigation.navigate('BusinessNavigator', { screen: 'BusinessOrders' });
       }
       // if status === 'preparing' only set cooking time
