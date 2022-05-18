@@ -39,8 +39,8 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
 
   // print order
   const printOrder = async () => {
-    // selecting printer (ios only)
     try {
+      // selecting printer (ios only)
       if (Platform.OS === 'android') {
         const printer = await Print.selectPrinterAsync();
         setSelectedPrinter(printer);
@@ -60,7 +60,7 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
       setLoading(true);
       // if business has not confirmed order yet, set cooking time and set status to 'preparing'
       if (order.status === 'confirmed') {
-        // await api.order().updateOrder(order.id, { cookingTime, status: 'preparing' });
+        await api.order().updateOrder(order.id, { cookingTime, status: 'preparing' });
         printOrder();
         setLoading(false);
         navigation.navigate('BusinessNavigator', { screen: 'BusinessOrders' });

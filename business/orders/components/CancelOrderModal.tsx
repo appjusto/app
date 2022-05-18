@@ -128,6 +128,7 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
                   cancelOrderHandler();
                   onCancelOrder();
                 }}
+                activityIndicator={isLoading}
               />
             </View>
           </View>

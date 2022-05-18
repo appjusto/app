@@ -63,7 +63,7 @@ export const printedOrder = (order: WithId<Order>) => {
           Hora: <span style="font-weight: 700">${formatTime(order.createdOn)}</span>
         </p>
         <p style="font-size: 12px; font-weight: 500; line-height: 16px">
-          Endereço: <span style="font-weight: 700">${order.destination?.address}</span>
+          Endereço: <span style="font-weight: 700">${order.destination?.address.main}</span>
         </p>
         <p style="font-size: 12px; font-weight: 500; line-height: 16px">
           Complemento:
@@ -94,17 +94,19 @@ export const printedOrder = (order: WithId<Order>) => {
         <div style="margin-top: 2px; font-size: 12px;">
           <p>Observações:</p>
           ${
-            order.consumer.cpf &&
-            `<br /><p style="font-size: 12px; font-weight: 500; margin-top: 1;">Incluir CPF na nota</p>`
+            order.consumer.cpf
+              ? `<br /><p style="font-size: 12px; font-weight: 500; margin-top: 1;">Incluir CPF na nota</p>`
+              : null
           }
           ${
-            order.additionalInfo &&
-            `<br /><p style="font-size: 12px; font-weight: 500; margin-top: 1;">${order.additionalInfo}</p>`
+            order.additionalInfo
+              ? `<br /><p style="font-size: 12px; font-weight: 500; margin-top: 1;">${order.additionalInfo}</p>`
+              : null
           }
           ${
-            !order?.consumer.cpf &&
-            !order?.additionalInfo &&
-            `<br /><p style="font-size: 12px; margin-top: 1;">Sem observações.</p>`
+            !order?.consumer.cpf && !order?.additionalInfo
+              ? `<br /><p style="font-size: 12px; margin-top: 1;">Sem observações.</p>`
+              : null
           }
         </div>
         <div style=" margin-top: 4; background-color: black; text-align: center;">
