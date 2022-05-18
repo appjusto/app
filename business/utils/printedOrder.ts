@@ -45,9 +45,7 @@ export const printedOrder = (order: WithId<Order>) => {
         <div>
           <div style="align-items: center; flex-direction: column">
             <div style="max-width: 80px">
-              <img
-            src="https://firebasestorage.googleapis.com/v0/b/app-justo-live.appspot.com/o/businesses%2FR7GG6M58QshwOOuqFG5u%2Flogo_240x240.jpg?alt=media&amp;token=e181f589-a082-4f7b-a0bd-a66604407381"
-              />
+           INSERIR LOGO APPJUSTO
             </div>
           </div>
           <p style="font-size: 11px">Por um delivery mais justo e transparente!</p>
@@ -94,19 +92,17 @@ export const printedOrder = (order: WithId<Order>) => {
         <div style="margin-top: 2px; font-size: 12px;">
           <p>Observações:</p>
           ${
-            order.consumer.cpf
-              ? `<br /><p style="font-size: 12px; font-weight: 500; margin-top: 1;">Incluir CPF na nota</p>`
-              : null
+            order.consumer.cpf &&
+            `<br /><p style="font-size: 12px; font-weight: 500; margin-top: 1;">Incluir CPF na nota</p>`
           }
           ${
-            order.additionalInfo
-              ? `<br /><p style="font-size: 12px; font-weight: 500; margin-top: 1;">${order.additionalInfo}</p>`
-              : null
+            order.additionalInfo &&
+            `<br /><p style="font-size: 12px; font-weight: 500; margin-top: 1;">${order.additionalInfo}</p>`
           }
           ${
-            !order?.consumer.cpf && !order?.additionalInfo
-              ? `<br /><p style="font-size: 12px; margin-top: 1;">Sem observações.</p>`
-              : null
+            !order?.consumer.cpf &&
+            !order?.additionalInfo &&
+            `<br /><p style="font-size: 12px; margin-top: 1;">Sem observações.</p>`
           }
         </div>
         <div style=" margin-top: 4; background-color: black; text-align: center;">
