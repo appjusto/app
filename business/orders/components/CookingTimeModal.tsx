@@ -40,14 +40,18 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
   // print order
   const printOrder = async () => {
     // selecting printer (ios only)
-    if (Platform.OS === 'android') {
-      const printer = await Print.selectPrinterAsync();
-      setSelectedPrinter(printer);
+    try {
+      if (Platform.OS === 'android') {
+        const printer = await Print.selectPrinterAsync();
+        setSelectedPrinter(printer);
+      }
+      await Print.printAsync({
+        html: printedOrder(order),
+        printerUrl: selectedPrinter?.url,
+      });
+    } catch (error) {
+      console.log('PRINT ERROR', error);
     }
-    await Print.printAsync({
-      html: printedOrder(order),
-      printerUrl: selectedPrinter?.url,
-    });
   };
   // handlers
   const confirmOrderHandler = async () => {
@@ -168,7 +172,11 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
             }}
           >
             <View style={{ paddingHorizontal: padding }}>
-              <DefaultButton title={buttonTitle} onPress={confirmOrderHandler} />
+              <DefaultButton
+                title={buttonTitle}
+                onPress={confirmOrderHandler}
+                activityIndicator={isLoading}
+              />
             </View>
           </View>
         </View>
