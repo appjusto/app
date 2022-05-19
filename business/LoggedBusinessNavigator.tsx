@@ -4,14 +4,13 @@ import { ActivityIndicator, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../common/app/context';
 import { defaultScreenOptions } from '../common/screens/options';
-import { getManager } from '../common/store/business/selectors';
 import { getFlavor } from '../common/store/config/selectors';
 import { observeProfile } from '../common/store/user/actions';
 import { getUser } from '../common/store/user/selectors';
 import { colors, screens } from '../common/styles';
 import { LoggedContextProvider } from '../consumer/v2/LoggedContext';
 import { t } from '../strings';
-import { BusinessAppProvider } from './BusinessAppContext';
+import { BusinessAppContext, BusinessAppProvider } from './BusinessAppContext';
 import { BusinessNavigator } from './BusinessNavigator';
 import { BusinessPending } from './orders/screens/BusinessPending';
 import { LoggedBusinessNavParamsList } from './types';
@@ -25,7 +24,7 @@ export const LoggedBusinessNavigator = () => {
   const dispatch = useDispatch<AppDispatch>();
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
-  const manager = useSelector(getManager);
+  const { business } = React.useContext(BusinessAppContext);
   // const business = useActiveBusiness();
   const uid = user?.uid;
   // side effects
@@ -34,15 +33,16 @@ export const LoggedBusinessNavigator = () => {
     if (uid) return dispatch(observeProfile(api)(flavor, uid));
   }, [dispatch, api, flavor, uid]);
 
-  if (!manager) {
+  if (!business) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
+  // cheking the business situation while we are not creating managers in the app yet
   const initialRouteName =
-    manager.situation !== 'approved' ? 'BusinessPending' : 'BusinessNavigator';
+    business.situation !== 'approved' ? 'BusinessPending' : 'BusinessNavigator';
   // UI
   return (
     <LoggedContextProvider>
