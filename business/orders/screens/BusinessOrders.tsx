@@ -189,7 +189,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                       paddingTop: padding,
                     }}
                   >
-                    {t('Você ainda não teve pedidos hoje')}
+                    {t('Não há pedidos ativos nesse momento.')}
                   </Text>
                 </View>
               ) : (
