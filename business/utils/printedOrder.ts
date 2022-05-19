@@ -2,36 +2,36 @@ import { Order, OrderItem, WithId } from '@appjusto/types';
 import { formatCurrency, formatTime } from '../../common/utils/formatters';
 
 export const printedOrder = (order: WithId<Order>) => {
-  const printItems = (items: OrderItem[]) =>
-    items.map((item) => {
-      `<tr role="row" style="border-bottom: 1px solid black;">
-      <td role="gridcell" data-is-numeric="true">${item.quantity}</td>
-      <td role="gridcell">
-        ${item.product.categoryName ?? 'N/E'} <br /><span>${
+  const printItems = (items: OrderItem[]) => {
+    return items.map((item) => {
+      return `<tr role="row" style="border-bottom: 1px solid black;">
+          <td role="gridcell" data-is-numeric="true">${item.quantity}</td>
+          <td role="gridcell">
+            ${item.product.categoryName ?? 'N/E'} <br /><span>${
         item.product.name
       }</span><br /><span></span>
-      </td>
-      <td role="gridcell" data-is-numeric="true">${formatCurrency(item.product.price)}</td>
-    </tr>`;
-      {
-        item.complements &&
+          </td>
+          <td role="gridcell" data-is-numeric="true">${formatCurrency(item.product.price)}</td>
+        </tr>
+        ${
+          item.complements &&
           item.complements.map((complement, index) => {
-            ` <tr role="row" style="border-bottom: 1px solid black;">
-     <td role="gridcell" data-is-numeric="true" style="font-size: 11px; font-weight: 500;">${
-       complement.quantity ?? 1
-     }</td>
-     <td role="gridcell" style="font-size: 11px; font-weight: 500;">
-       ${complement.group.name ?? 'N/E'} <br /><span>${item.product.name}</span><br /><span>${
-              complement.name
-            }</span>
-     </td>
-     <td role="gridcell" data-is-numeric="true" style="font-size: 11px; font-weight: 500;">${formatCurrency(
-       complement.price
-     )}</td>
-   </tr>`;
-          });
-      }
+            return `<tr role="row" style="border-bottom: 1px solid black;">
+          <td role="gridcell" data-is-numeric="true" style="font-size: 11px; font-weight: 500;">${
+            complement.quantity ?? 1
+          }</td>
+          <td role="gridcell" style="font-size: 11px; font-weight: 500;">
+            ${complement.group.name ?? 'N/E'} <br /><span>${complement.name}</span>
+          </td>
+          <td role="gridcell" data-is-numeric="true" style="font-size: 11px; font-weight: 500;">${formatCurrency(
+            complement.price
+          )}</td>
+        </tr>`;
+          })
+        }
+        `;
     });
+  };
 
   return `<html>
     <head>
@@ -45,7 +45,6 @@ export const printedOrder = (order: WithId<Order>) => {
         <div>
           <div style="align-items: center; flex-direction: column">
             <div style="max-width: 80px">
-           INSERIR LOGO APPJUSTO
             </div>
           </div>
           <p style="font-size: 11px">Por um delivery mais justo e transparente!</p>
@@ -92,12 +91,14 @@ export const printedOrder = (order: WithId<Order>) => {
         <div style="margin-top: 2px; font-size: 12px;">
           <p>Observações:</p>
           ${
-            order.consumer.cpf &&
-            `<br /><p style="font-size: 12px; font-weight: 500; margin-top: 1;">Incluir CPF na nota</p>`
+            order.consumer.cpf !== null ||
+            (order.consumer.cpf !== undefined &&
+              `<br /><p style="font-size: 12px; font-weight: 500; margin-top: 1;">Incluir CPF na nota</p>`)
           }
           ${
-            order.additionalInfo &&
-            `<br /><p style="font-size: 12px; font-weight: 500; margin-top: 1;">${order.additionalInfo}</p>`
+            order.additionalInfo !== null ||
+            (order.additionalInfo !== undefined &&
+              `<br /><p style="font-size: 12px; font-weight: 500; margin-top: 1;">${order.additionalInfo}</p>`)
           }
           ${
             !order?.consumer.cpf &&

@@ -39,16 +39,19 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
 
   // print order
   const printOrder = async () => {
+    if (!business) return;
     try {
-      // selecting printer (ios only)
-      if (Platform.OS === 'android') {
-        const printer = await Print.selectPrinterAsync();
-        setSelectedPrinter(printer);
-      }
-      await Print.printAsync({
-        html: printedOrder(order),
-        printerUrl: selectedPrinter?.url,
-      });
+      if (business.orderPrinting === true) {
+        // selecting printer (ios only)
+        if (Platform.OS === 'android') {
+          const printer = await Print.selectPrinterAsync();
+          setSelectedPrinter(printer);
+        }
+        await Print.printAsync({
+          html: printedOrder(order),
+          printerUrl: selectedPrinter?.url,
+        });
+      } else return;
     } catch (error) {
       console.log('PRINT ERROR', error);
     }
