@@ -19,6 +19,7 @@ import { MessagesIcon } from './orders/components/MessagesIcon';
 import { BusinessChats } from './orders/screens/BusinessChats';
 import { BusinessOptions } from './orders/screens/BusinessOptions';
 import { BusinessOrders } from './orders/screens/BusinessOrders';
+import { BusinessPending } from './orders/screens/BusinessPending';
 import { BusinessProfile } from './orders/screens/BusinessProfile';
 import { OrderDetail } from './orders/screens/OrderDetail';
 import { BusinessNavParamsList, LoggedBusinessNavParamsList } from './types';
@@ -89,7 +90,6 @@ export const BusinessNavigator = () => {
           });
         }
       }
-      // TODO: add "open restaurant" case
     },
     [navigation]
   );
@@ -103,7 +103,10 @@ export const BusinessNavigator = () => {
     );
   }
   return (
-    <Stack.Navigator screenOptions={defaultScreenOptions}>
+    <Stack.Navigator
+      screenOptions={defaultScreenOptions}
+      initialRouteName={business.situation !== 'approved' ? 'BusinessPending' : 'BusinessOrders'}
+    >
       <Stack.Screen
         name="BusinessOrders"
         component={BusinessOrders}
@@ -125,6 +128,11 @@ export const BusinessNavigator = () => {
             </View>
           ),
         })}
+      />
+      <Stack.Screen
+        name="BusinessPending"
+        component={BusinessPending}
+        options={{ title: t('Cadastro pendente') }}
       />
       <Stack.Screen
         name="OrderDetail"
