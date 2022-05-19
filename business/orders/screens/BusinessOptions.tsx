@@ -1,14 +1,15 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { Linking, ScrollView } from 'react-native';
+import { ActivityIndicator, Linking, ScrollView, View } from 'react-native';
 import { ApiContext } from '../../../common/app/context';
 import ConfigItem from '../../../common/components/views/ConfigItem';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { screens } from '../../../common/styles';
+import { colors, screens } from '../../../common/styles';
 import { confirmLogout } from '../../../common/utils/utils';
 import { t } from '../../../strings';
 import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
+import { BusinessAppContext } from '../../BusinessAppContext';
 import { BusinessNavParamsList } from '../../types';
 import { ConfigModal } from '../components/ConfigModal';
 type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'BusinessOptions'>;
@@ -22,10 +23,19 @@ type Props = {
 export const BusinessOptions = ({ navigation, route }: Props) => {
   // context
   const api = useContext(ApiContext);
+  const { business } = React.useContext(BusinessAppContext);
   // state
   const [visible, setVisible] = React.useState(false);
   // tracking
   useSegmentScreen('BusinessOptions');
+  // UI
+  if (business === undefined) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <ScrollView
       style={{ ...screens.config }}
@@ -37,6 +47,11 @@ export const BusinessOptions = ({ navigation, route }: Props) => {
         title={t('Pedidos')}
         subtitle={t('Gerencie seus pedidos')}
         onPress={() => navigation.navigate('BusinessOrders')}
+      />
+      <ConfigItem
+        title={t('Configurações')}
+        subtitle={t('Edite as configurações do gerenciador')}
+        onPress={() => setVisible(true)}
       />
       <ConfigItem
         title={t('Seus dados')}
@@ -71,7 +86,11 @@ export const BusinessOptions = ({ navigation, route }: Props) => {
         )}
         onPress={() => confirmLogout(api)}
       />
-      <ConfigModal modalVisible={visible} onModalClose={() => setVisible(false)} />
+      <ConfigModal
+        business={business}
+        modalVisible={visible}
+        onModalClose={() => setVisible(false)}
+      />
     </ScrollView>
   );
 };

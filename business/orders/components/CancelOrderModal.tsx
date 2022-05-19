@@ -3,7 +3,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Keyboard, Modal, ModalProps, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, ModalProps, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -35,7 +35,6 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
   // handler
   const cancelOrderHandler = () => {
     (async () => {
-      Keyboard.dismiss();
       if (!selectedIssue) {
         onModalClose();
         dispatch(showToast('Você precisa escolher um motivo para efetuar o cancelamento', 'error'));
