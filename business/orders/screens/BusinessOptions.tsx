@@ -39,6 +39,11 @@ export const BusinessOptions = ({ navigation, route }: Props) => {
         onPress={() => navigation.navigate('BusinessOrders')}
       />
       <ConfigItem
+        title={t('Configurações')}
+        subtitle={t('Edite as configurações do gerenciador')}
+        onPress={() => null}
+      />
+      <ConfigItem
         title={t('Seus dados')}
         subtitle={t('Dados do restaurante')}
         onPress={() => navigation.navigate('BusinessProfile')}
