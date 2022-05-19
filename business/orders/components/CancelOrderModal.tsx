@@ -5,6 +5,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Modal, ModalProps, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
+import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
@@ -53,6 +54,7 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
         setLoading(false);
         navigation.navigate('BusinessNavigator', { screen: 'BusinessOrders' });
       } catch (error) {
+        Sentry.Native.captureException(error);
         setLoading(false);
         dispatch(showToast('Não foi possível efetuar o cancelamento. Tente novamente', 'error'));
       }

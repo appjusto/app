@@ -2,6 +2,7 @@ import { Timestamp } from 'firebase/firestore';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
+import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeContext';
@@ -80,6 +81,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
       setLoading(false);
     } catch (error: any) {
       console.log(error.toString());
+      Sentry.Native.captureException(error);
       dispatch(
         showToast('Não conseguimos atualizar o pedido nesse momento. Tente novamente.', 'error')
       );
