@@ -10,6 +10,7 @@ import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
+import { track } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -50,6 +51,7 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
           cancellation: selectedIssue,
         } as CancelOrderPayload;
         await api.order().cancelBusinessOrder(cancellationData);
+        track('restaurant canceled order');
         dispatch(showToast('Pedido cancelado com sucesso', 'success'));
         setLoading(false);
         navigation.navigate('BusinessNavigator', { screen: 'BusinessOrders' });

@@ -58,12 +58,12 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
   };
   // handlers
   const confirmOrderHandler = async () => {
-    track('restaurant confirmed order');
     try {
       setLoading(true);
       // if business has not confirmed order yet, set cooking time and set status to 'preparing'
       if (order.status === 'confirmed') {
         await api.order().updateOrder(order.id, { cookingTime, status: 'preparing' });
+        track('restaurant confirmed order');
         printOrder();
         setLoading(false);
         navigation.navigate('BusinessNavigator', { screen: 'BusinessOrders' });
