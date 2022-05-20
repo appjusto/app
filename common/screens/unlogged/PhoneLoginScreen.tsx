@@ -12,6 +12,7 @@ import { ApiContext, AppDispatch } from '../../app/context';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import PaddedView from '../../components/containers/PaddedView';
 import { phoneFormatter } from '../../components/inputs/pattern-input/formatters';
+import { track, useSegmentScreen } from '../../store/api/track';
 import { showToast } from '../../store/ui/actions';
 import { biggerPadding, colors, doublePadding, padding, screens, texts } from '../../styles';
 import { UnloggedParamList } from './types';
@@ -47,8 +48,13 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
   // refs
   const recaptchaRef = React.useRef(null);
   // effects
+  // tracking
+  useSegmentScreen('Phone Login');
   React.useEffect(() => {
     console.log('state', state);
+    track('Phone Login state change', {
+      state,
+    });
     if (state === 'success') {
       dispatch(showToast('Validação finalizada com sucesso!', 'success'));
     }

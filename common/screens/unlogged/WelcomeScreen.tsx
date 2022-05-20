@@ -28,7 +28,7 @@ import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { IconMotoCycleBig } from '../../icons/icon-motocycle-big';
 import { AuthMode } from '../../store/api/auth';
-import { useSegmentScreen } from '../../store/api/track';
+import { track, useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
@@ -76,6 +76,9 @@ export default function ({ navigation, route }: Props) {
       return;
     }
     try {
+      track('Welcome sign in', {
+        authMode,
+      });
       if (authMode === 'phone') {
         navigation.navigate('PhoneLoginScreen', { phone, countryCode: '55' });
       } else {
