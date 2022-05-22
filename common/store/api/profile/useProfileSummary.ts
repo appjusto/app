@@ -50,9 +50,8 @@ export const useProfileSummary = () => {
   const isProfileComplete =
     situation === 'approved' && (flavor === 'courier' || isConsumerProfileComplete(consumer));
   const shouldVerifyPhone =
-    isProfilePhoneVerified === false &&
-    isProfileComplete &&
-    (flavor === 'courier' || hasOrdered === false);
+    isProfilePhoneVerified === false && isProfileComplete && flavor === 'courier';
+  // (flavor === 'courier' || hasOrdered === false);
   const canUpdateProfile = !isProfileComplete || (flavor === 'consumer' && !hasOrdered);
 
   return {
