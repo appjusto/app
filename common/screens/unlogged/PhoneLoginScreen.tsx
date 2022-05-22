@@ -135,6 +135,11 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
             onChange={setVerificationCode}
             length={6}
           />
+          <Text style={{ ...texts.sm, color: colors.red, marginTop: padding }}>
+            {t(
+              'Se você não receber o código em alguns segundos, verifique seu número e a caixa de SPAM do seu aplicativo de mensagens.'
+            )}
+          </Text>
           {state === 'error' ? (
             <Text style={{ ...texts.sm, color: colors.red, marginTop: padding }}>{error}</Text>
           ) : null}
