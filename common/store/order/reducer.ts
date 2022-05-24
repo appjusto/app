@@ -19,7 +19,6 @@ export default function (state: OrderState = initialState, action: AnyAction): O
     }
     case USER_AUTH_STATE_CHANGED: {
       if (!payload) {
-        console.log('User logged out');
         return { ...state, orders: [] };
       }
       return state;

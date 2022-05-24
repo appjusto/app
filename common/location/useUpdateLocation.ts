@@ -108,7 +108,7 @@ export const useUpdateLocation = () => {
           })
         );
     })();
-  }, [api, dispatch, authState, consumer, coords, currentPlace, currentLocation, lastPlace]);
+  }, [api, dispatch, authState, coords, currentPlace, currentLocation, lastPlace]);
   // update consumer's location
   React.useEffect(() => {
     if (!consumer?.id) return;
