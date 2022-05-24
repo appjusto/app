@@ -65,6 +65,12 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [shareDataWithBusiness, setShareDataWithBusiness] = React.useState(false);
   const { quotes, getOrderQuotes } = useQuotes(order?.id);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
+  const [complement, setComplement] = React.useState<string>(
+    order?.destination?.additionalInfo ?? ''
+  );
+  const [noAddressComplement, setNoAddressComplement] = React.useState<boolean>(
+    complement.length === 0
+  );
   const canSubmit =
     selectedPaymentMethodId !== undefined &&
     selectedFare !== undefined &&
@@ -172,6 +178,12 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
     try {
       setLoading(true);
+      await api.order().updateOrder(order.id, {
+        destination: {
+          address: order!.destination!.address,
+          additionalInfo: noAddressComplement ? '' : complement,
+        },
+      });
       await api.order().placeOrder(
         order.id,
         selectedFare!.fleet.id,
@@ -325,6 +337,11 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           });
           setDestinationModalVisible(false);
         }}
+        complement={complement}
+        onChangeComplement={(text) => setComplement(text)}
+        checked={noAddressComplement}
+        toggleAddressComplement={() => setNoAddressComplement(!noAddressComplement)}
+        disabled={isLoading}
       />
     </KeyboardAwareScrollView>
   );
