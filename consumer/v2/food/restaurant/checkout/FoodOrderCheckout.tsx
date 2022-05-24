@@ -68,9 +68,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [complement, setComplement] = React.useState<string>(
     order?.destination?.additionalInfo ?? ''
   );
-  const [noAddressComplement, setNoAddressComplement] = React.useState<boolean>(
-    complement.length === 0
-  );
+  const [addressComplement, setAddressComplement] = React.useState<boolean>(true);
   const canSubmit =
     selectedPaymentMethodId !== undefined &&
     selectedFare !== undefined &&
@@ -125,8 +123,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   // return to Home if order status becomes 'expired' or all items are removed from it
   React.useEffect(() => {
     if (order === undefined) return;
-    else if (order === null) navigation.goBack();
-    else if (order.status === 'expired') {
+    if (order === null) navigation.goBack();
+    if (order?.status === 'expired') {
       navigation.navigate('MainNavigator', { screen: 'Home' });
     }
   }, [order, navigation]);
@@ -178,7 +176,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
     try {
       setLoading(true);
-      if (!noAddressComplement) {
+      if (addressComplement) {
         await api.order().updateOrder(order.id, {
           destination: merge(order.destination, {
             additionalInfo: complement,
@@ -340,9 +338,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         }}
         complement={complement}
         onChangeComplement={(text) => setComplement(text)}
-        checked={noAddressComplement}
-        toggleAddressComplement={() => setNoAddressComplement(!noAddressComplement)}
-        disabled={isLoading}
+        checked={!addressComplement}
+        toggleAddressComplement={() => setAddressComplement(!addressComplement)}
+        disabled={isLoading || (addressComplement && complement.length === 0)}
       />
     </KeyboardAwareScrollView>
   );

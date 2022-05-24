@@ -78,7 +78,7 @@ export const DestinationModal = ({
             <DefaultInput
               defaultValue={complement}
               value={complement}
-              title={t('Complemento (se houver)')}
+              title={t('Complemento')}
               placeholder={t('Apartamento, sala, loja')}
               onChangeText={onChangeComplement}
               style={{ marginVertical: padding }}
