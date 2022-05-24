@@ -3,6 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, Image, TouchableWithoutFeedback, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import { headerMenu } from '../assets/icons';
 import { ApiContext } from '../common/app/context';
 import { useNotificationToken } from '../common/hooks/useNotificationToken';
@@ -11,6 +12,7 @@ import { defaultScreenOptions } from '../common/screens/options';
 import { AboutApp } from '../common/screens/profile/AboutApp';
 import Terms from '../common/screens/unlogged/Terms';
 import { track } from '../common/store/api/track';
+import { getManager } from '../common/store/business/selectors';
 import { colors, screens } from '../common/styles';
 import { useNotificationHandler } from '../consumer/v2/main/useNotificationHandler';
 import { t } from '../strings';
@@ -35,6 +37,7 @@ export const BusinessNavigator = () => {
   const navigation = useNavigation<ScreenNavigationProp>();
   const { business, unreadCount } = React.useContext(BusinessAppContext);
   const status = business?.status;
+  const manager = useSelector(getManager);
   // side effects
   useNotificationToken();
   // starting/stoping keepAlive task/internval
@@ -94,8 +97,9 @@ export const BusinessNavigator = () => {
     [navigation]
   );
   useNotificationHandler('order-chat', handler);
+
   // UI
-  if (!business) {
+  if (!business || !manager) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -105,7 +109,11 @@ export const BusinessNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={defaultScreenOptions}
-      initialRouteName={business.situation !== 'approved' ? 'BusinessPending' : 'BusinessOrders'}
+      initialRouteName={
+        business.situation !== 'approved' || manager.situation !== 'approved'
+          ? 'BusinessPending'
+          : 'BusinessOrders'
+      }
     >
       <Stack.Screen
         name="BusinessOrders"

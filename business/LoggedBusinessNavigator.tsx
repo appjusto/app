@@ -27,7 +27,6 @@ export const LoggedBusinessNavigator = () => {
   React.useEffect(() => {
     if (uid) return dispatch(observeProfile(api)(flavor, uid));
   }, [dispatch, api, flavor, uid]);
-
   // UI
   return (
     <LoggedContextProvider>
