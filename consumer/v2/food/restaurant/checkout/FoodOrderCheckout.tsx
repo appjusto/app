@@ -2,7 +2,7 @@ import { Fare } from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { isEmpty } from 'lodash';
+import { isEmpty, merge } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -178,12 +178,13 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
     try {
       setLoading(true);
-      await api.order().updateOrder(order.id, {
-        destination: {
-          address: order!.destination!.address,
-          additionalInfo: noAddressComplement ? '' : complement,
-        },
-      });
+      if (!noAddressComplement) {
+        await api.order().updateOrder(order.id, {
+          destination: merge(order.destination, {
+            additionalInfo: complement,
+          }),
+        });
+      }
       await api.order().placeOrder(
         order.id,
         selectedFare!.fleet.id,
