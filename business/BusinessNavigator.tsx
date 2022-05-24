@@ -118,7 +118,7 @@ export const BusinessNavigator = () => {
       <Stack.Screen
         name="BusinessOrders"
         component={BusinessOrders}
-        options={({ navigation, route }) => ({
+        options={({ navigation }) => ({
           title: t('Gerenciador de pedidos'),
           headerLeft: () => (
             <TouchableWithoutFeedback onPress={() => navigation.navigate('BusinessOptions')}>
