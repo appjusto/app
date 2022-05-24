@@ -66,7 +66,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   const [additionalInfo, setAdditionalInfo] = React.useState(value?.additionalInfo ?? '');
   const [autocompletePredictions, setAutoCompletePredictions] = React.useState<Address[]>([]);
   const [selectedAddress, setSelectedAddress] = React.useState<Address | null>(null);
-  const [noComplement, setNoComplement] = React.useState(false);
+  const [complement, setComplement] = React.useState(true);
   const sections: SectionListData<Address>[] = React.useMemo(() => {
     let sections: SectionListData<Address>[] = [];
     sections = [
@@ -170,7 +170,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   // confirm button callback
   const completeHandler = React.useCallback(() => {
     if (!selectedAddress) return;
-    if (!noComplement && !additionalInfo.length) {
+    if (complement && !additionalInfo.length) {
       dispatch(
         showToast(
           t('Insira o complemento ou selecione a opção "Endereço sem complemento" para prosseguir'),
@@ -191,7 +191,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
     navigation,
     returnScreen,
     returnParam,
-    noComplement,
+    complement,
     dispatch,
   ]);
   // UI
@@ -224,14 +224,14 @@ export const AddressComplete = ({ navigation, route }: Props) => {
           onChangeText={setAdditionalInfo}
           style={{ marginBottom: padding }}
           autoCorrect={false}
-          editable={!noComplement}
+          editable={complement}
         />
       ) : null}
       <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
         <RadioButton
           title={t('Endereço sem complemento')}
-          onPress={() => setNoComplement(!noComplement)}
-          checked={noComplement}
+          onPress={() => setComplement(!complement)}
+          checked={!complement}
           variant="square"
         />
       </View>
