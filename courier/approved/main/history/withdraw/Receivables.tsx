@@ -2,12 +2,15 @@ import { IuguMarketplaceAccountReceivableItem } from '@appjusto/types/payment/iu
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import dayjs from 'dayjs';
 import React from 'react';
 import { ActivityIndicator, Pressable, SectionList, Text, View } from 'react-native';
 import CheckField from '../../../../../common/components/buttons/CheckField';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../../common/components/texts/SingleHeader';
+import { usePlatformParamsContext } from '../../../../../common/contexts/PlatformParamsContext';
+import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTimeContext';
 import { useReceivables } from '../../../../../common/store/api/courier/account/useReceivables';
 import { useSegmentScreen } from '../../../../../common/store/api/track';
 import {
@@ -38,22 +41,29 @@ interface Section {
 
 export const Receivables = ({ navigation, route }: Props) => {
   // context
-  // TODO: fix parameter
-  // const hoursAfter = usePlatformParamsContext()?.courier.hours ?? 48;
-  // const hoursAfter = usePlatformParamsContext()?.courier.hours ?? 48;
+  const getServerTime = useContextGetSeverTime();
+  const advanceableAfterHours = usePlatformParamsContext()?.courier.advanceableAfterHours ?? 48;
   // state
   const receivables = useReceivables();
   const canAdvanceReceivables = useCanAdvanceReceivables();
   const [selected, setSelected] = React.useState<number[]>([]);
   const [advanceables, setAdavanceables] = React.useState<number[]>([]);
   const [sections, setSections] = React.useState<Section[]>();
+  // helpers
+  const advanceableAt = (createdAt: string) =>
+    dayjs(new Date(createdAt)).add(advanceableAfterHours, 'hour').toDate();
   // side effects
   useSegmentScreen('Receivables');
   React.useEffect(() => {
     if (!receivables) return;
-    // TODO: filter by hour: created_at 2022-05-24T16:02:22-03:00
-    // setAdavanceables(receivables.items.map((item) => item.id));
-    setAdavanceables(receivables.items.filter((item) => item.advanceable).map((item) => item.id));
+    setAdavanceables(
+      receivables.items
+        .filter(
+          (item) =>
+            item.advanceable && dayjs(advanceableAt(item.created_at)).isBefore(getServerTime())
+        )
+        .map((item) => item.id)
+    );
   }, [receivables]);
   React.useEffect(() => {
     if (!advanceables) return;
@@ -148,7 +158,7 @@ export const Receivables = ({ navigation, route }: Props) => {
             <SingleHeader
               style={{ backgroundColor: colors.white }}
               title={`${
-                section.advanceable ? t('Corridas liberadas') : t('Corridas em processamento')
+                section.advanceable ? t('Corridas antecipáveis') : t('Corridas em processamento')
               }`}
             />
             {!empty ? (
@@ -164,7 +174,9 @@ export const Receivables = ({ navigation, route }: Props) => {
             ) : (
               <PaddedView half>
                 <Text style={{ ...texts.sm }}>
-                  {t('Nenhuma corrida disponível para antecipação.')}
+                  {section.advanceable
+                    ? t('Nenhuma corrida disponível para antecipação')
+                    : t('Nenhuma corrida em processamento')}
                 </Text>
               </PaddedView>
             )}
@@ -187,15 +199,15 @@ export const Receivables = ({ navigation, route }: Props) => {
                   <View style={{ marginLeft: halfPadding }}>
                     <Text style={{ ...texts.sm }}>{item.client_share}</Text>
                     <Text style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}>
-                      {`Feita: ${formatDate(new Date(item.created_at))} ${formatTime(
+                      {`Feita em: ${formatDate(new Date(item.created_at))} ${formatTime(
                         new Date(item.created_at)
                       )}`}
                     </Text>
                     {!section.advanceable ? (
                       <Text style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}>
-                        {`Disponível: ${formatDate(new Date(item.created_at))} ${formatTime(
-                          new Date(item.created_at)
-                        )}`}
+                        {`Disponível após: ${formatDate(
+                          advanceableAt(item.created_at)
+                        )} ${formatTime(new Date(item.created_at))}`}
                       </Text>
                     ) : null}
                   </View>

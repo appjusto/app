@@ -21,6 +21,6 @@ export const GetServerTimeContextProvider = (props: Props) => {
 
 export const useContextGetSeverTime = () => {
   const context = React.useContext(GetServerTimeContext);
-  if (!context) return null;
+  if (!context) return () => new Date();
   return context.getServerTime;
 };
