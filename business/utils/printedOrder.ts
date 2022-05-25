@@ -57,7 +57,9 @@ export const printedOrder = (order: WithId<Order>) => {
           Cliente: <span style="font-weight: 700">${order.consumer.name}</span>
         </p>
         <p style="font-size: 12px; font-weight: 500; line-height: 16px">
-          Hora: <span style="font-weight: 700">${formatTime(order.createdOn)}</span>
+          Hora: <span style="font-weight: 700">${
+            order.timestamps.confirmed ? formatTime(order.timestamps.confirmed) : 'N/I'
+          }</span>
         </p>
         <p style="font-size: 12px; font-weight: 500; line-height: 16px">
           Endereço: <span style="font-weight: 700">${order.destination?.address.main}</span>
