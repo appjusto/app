@@ -1,4 +1,4 @@
-import Constants from 'expo-constants';
+import * as Device from 'expo-device';
 import {
   getExpoPushTokenAsync,
   getPermissionsAsync,
@@ -65,7 +65,7 @@ export const useNotificationToken = () => {
   // initial
   React.useEffect(() => {
     // won't work in simulator; only in physical devices
-    if (!Constants.isDevice) {
+    if (!Device.isDevice) {
       setError('not-a-device');
     } else {
       askPermission();
