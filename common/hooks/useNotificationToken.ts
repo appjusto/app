@@ -36,7 +36,7 @@ export const useNotificationToken = () => {
   const courier = useSelector(getCourier);
   const flavor = useSelector(getFlavor);
   const profile = flavor === 'consumer' ? consumer! : flavor === 'courier' ? courier! : null;
-  const currentNotificationToken = profile!.notificationToken;
+  const currentNotificationToken = profile?.notificationToken;
   // state
   const [token, setToken] = React.useState<string | null>();
   const [error, setError] = React.useState<ErrorType>();
