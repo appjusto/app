@@ -25,7 +25,8 @@ export default class CourierApi {
     private firestoreRefs: FirestoreRefs,
     private functionsRef: FunctionsRef,
     private storagePaths: StoragePaths,
-    private files: FilesApi
+    private files: FilesApi,
+    private emulated: boolean
   ) {}
 
   // firestore
@@ -145,7 +146,9 @@ export default class CourierApi {
     return this.files.upload(this.storagePaths.getCourierSelfiePath(id), localUri, progressHandler);
   }
   fetchSelfie(id: string, size?: string) {
-    return this.files.getDownloadURL(this.storagePaths.getCourierSelfiePath(id, size));
+    return this.files.getDownloadURL(
+      this.storagePaths.getCourierSelfiePath(id, !this.emulated && size ? size : undefined)
+    );
   }
   // document
   uploadDocumentImage(id: string, localUri: string, progressHandler?: (progress: number) => void) {
@@ -156,7 +159,9 @@ export default class CourierApi {
     );
   }
   fetchDocumentImage(id: string, size?: string) {
-    return this.files.getDownloadURL(this.storagePaths.getCourierDocumentPath(id, size));
+    return this.files.getDownloadURL(
+      this.storagePaths.getCourierDocumentPath(id, !this.emulated && size ? size : undefined)
+    );
   }
   // Proof of delivery
   uploadPODPackage(

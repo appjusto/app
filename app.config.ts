@@ -215,7 +215,10 @@ const extra = (): Extra => ({
     authDomain: `${FIREBASE_PROJECT_ID}.firebaseapp.com`,
     region: FIREBASE_REGION!,
     projectId: FIREBASE_PROJECT_ID!,
-    storageBucket: `${FIREBASE_PROJECT_ID}.appspot.com`,
+    storageBucket:
+      process.env.FIREBASE_EMULATOR === 'true'
+        ? 'gs://default-bucket'
+        : `${FIREBASE_PROJECT_ID}.appspot.com`,
     messagingSenderId: FIREBASE_MESSAGING_SENDER_ID!,
     appId: flavor === 'consumer' ? FIREBASE_CONSUMER_APP_ID! : FIREBASE_COURIER_APP_ID!,
     emulator: {
