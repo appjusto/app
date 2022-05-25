@@ -75,6 +75,13 @@ export const useNotificationToken = (): Returntype => {
       askPermission();
     }
   }, []);
+  console.log(
+    token,
+    'shouldDeleteToken',
+    shouldDeleteToken,
+    'shouldUpdateToken',
+    shouldUpdateToken
+  );
   React.useEffect(() => {
     if (!user?.uid) return;
     if (shouldDeleteToken || shouldUpdateToken) {
