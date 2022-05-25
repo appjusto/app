@@ -72,6 +72,8 @@ export default class OrderApi {
       type: 'food',
       status: 'quote',
       dispatchingStatus: 'idle',
+      // @ts-ignore
+      dispatchingState: null,
       business: {
         id: business.id,
         name: business.name!,
@@ -95,6 +97,8 @@ export default class OrderApi {
       type: 'p2p',
       status: 'quote',
       dispatchingStatus: 'idle',
+      // @ts-ignore
+      dispatchingState: null,
       consumer: {
         id: consumer.id,
         name: consumer.name ?? '',
