@@ -23,6 +23,7 @@ export default React.forwardRef(
       ref.current.focus();
       // }
     }, [ref]);
+    // UI
     return (
       <View style={style}>
         <PaddedView
@@ -46,7 +47,7 @@ export default React.forwardRef(
                   <Text
                     style={{
                       ...texts.xs,
-                      color: colors.green600,
+                      color: editable ? colors.green600 : colors.grey700,
                       width: '100%',
                     }}
                   >
