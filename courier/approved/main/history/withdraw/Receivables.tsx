@@ -58,10 +58,7 @@ export const Receivables = ({ navigation, route }: Props) => {
     if (!receivables) return;
     setAdavanceables(
       receivables.items
-        .filter(
-          (item) =>
-            item.advanceable && dayjs(advanceableAt(item.created_at)).isBefore(getServerTime())
-        )
+        .filter((item) => dayjs(advanceableAt(item.created_at)).isBefore(getServerTime()))
         .map((item) => item.id)
     );
   }, [receivables]);
