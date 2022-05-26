@@ -118,7 +118,7 @@ const appBundlePackage = () => {
 };
 
 const icon = (platform: 'ios' | 'android') => {
-  if ((['dev', 'staging'] as Environment[]).includes(environment))
+  if (flavor !== 'business' && (['dev', 'staging'] as Environment[]).includes(environment))
     return `./assets/icon-${flavor}-${environment}.png`;
   return `./assets/icon-${flavor}-${platform}.png`;
 };
