@@ -17,7 +17,7 @@ import CourierApp from './courier/CourierApp';
 if (__DEV__) {
   LogBox.ignoreLogs([
     'Setting a timer',
-    'Sentry Logger [warn]:',
+    'Sentry Logger',
     'AsyncStorage has been extracted',
     'You need to add `ACCESS_BACKGROUND_LOCATION`',
   ]);
