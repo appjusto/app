@@ -15,7 +15,7 @@
     "postversion": "git push && git push --tags && git fetch"
   },
   "dependencies": {
-    "@appjusto/firebase-refs": "^0.1.2",
+    "@appjusto/firebase-refs": "^0.1.4",
     "@appjusto/menu": "^0.1.4",
     "@appjusto/types": "^5.9.8",
     "@expo/react-native-action-sheet": "^3.8.0",

@@ -65,9 +65,9 @@ export default class Api {
       connectFunctionsEmulator(this.functions, host, 5001);
       connectStorageEmulator(this.storage, host, 9199);
     }
-
-    this._firestoreRefs = new FirestoreRefs();
-    this._functionsRefs = new FunctionsRef();
+    // TO-DO: removing these parameters it leading to an exception, don't know why.
+    this._firestoreRefs = new FirestoreRefs(this.firestore);
+    this._functionsRefs = new FunctionsRef(this.functions);
     this._storagePaths = new StoragePaths();
     this._iugu = new IuguApi(extra.iugu.accountId, extra.environment !== 'live');
     this._files = new FilesApi(this.storage);
