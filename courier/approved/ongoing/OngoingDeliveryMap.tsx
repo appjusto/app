@@ -1,9 +1,11 @@
 import { ChatMessageUser, Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { View } from 'react-native';
+import { useSelector } from 'react-redux';
 import ShowIf from '../../../common/components/views/ShowIf';
 import { StatusAndMessages } from '../../../common/screens/orders/ongoing/StatusAndMessages';
 import OrderMap from '../../../common/screens/orders/OrderMap';
+import { getCourier } from '../../../common/store/courier/selectors';
 import { RouteIcons } from './RouteIcons';
 
 type Props = {
@@ -13,12 +15,16 @@ type Props = {
 };
 
 export const OngoingDeliveryMap = ({ order, onOpenChat, isLoading }: Props) => {
-  return order.dispatchingState === 'arrived-destination' ? null : (
+  // redux
+  const courier = useSelector(getCourier)!;
+  // UI
+  if (order.dispatchingState === 'arrived-destination') return null;
+  return (
     <View>
       <OrderMap
         originLocation={order.origin?.location}
         destinationLocation={order.destination?.location}
-        courierLocation={order.courier?.location}
+        courierLocation={courier.coordinates}
         route={order.route}
         ratio={1}
       />

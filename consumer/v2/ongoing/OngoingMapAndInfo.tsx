@@ -1,4 +1,4 @@
-import { ChatMessageUser, Order, WithId } from '@appjusto/types';
+import { ChatMessageUser, LatLng, Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -11,6 +11,7 @@ import { DeliveryInfo } from './DeliveryInfo';
 
 type Props = {
   order: WithId<Order>;
+  courierLocation?: LatLng | null;
   onCourierDetail: () => void;
   onChatWithCourier: () => void;
   onOpenChat: (from: ChatMessageUser) => void;
@@ -18,6 +19,7 @@ type Props = {
 
 export const OngoingMapAndInfo = ({
   order,
+  courierLocation,
   onCourierDetail,
   onChatWithCourier,
   onOpenChat,
@@ -27,7 +29,7 @@ export const OngoingMapAndInfo = ({
       <OrderMap
         originLocation={order.origin?.location}
         destinationLocation={order.destination?.location}
-        courierLocation={order.courier?.location}
+        courierLocation={courierLocation}
         route={order.route}
         ratio={240 / 160}
       />
