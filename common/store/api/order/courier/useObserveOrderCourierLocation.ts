@@ -12,7 +12,8 @@ export const useObserveOrderCourierLocation = (orderId?: string, courierId?: str
     if (!orderId) return;
     if (!courierId) return;
     return api.order().observeOrderCourierLocation(orderId, courierId, setLocation);
-  }, [api]);
+  }, [api, orderId, courierId]);
   // result
+  console.log(location);
   return location;
 };
