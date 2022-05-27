@@ -89,6 +89,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         params.destination.address.description !== order.destination?.address.description
       ) {
         api.order().updateOrder(order.id, { destination: params.destination });
+        if (params.destination.additionalInfo) {
+          setComplement(params.destination.additionalInfo);
+        }
       }
       navigation.setParams({
         destination: undefined,
