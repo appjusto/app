@@ -18,7 +18,7 @@ import CourierApp from './courier/CourierApp';
 if (__DEV__) {
   LogBox.ignoreLogs([
     'Setting a timer',
-    // 'Sentry Logger [Warn]: SentryError: Native is disabled',
+    'Sentry Logger',
     'AsyncStorage has been extracted',
     'You need to add `ACCESS_BACKGROUND_LOCATION`',
   ]);
@@ -44,9 +44,11 @@ const App = () => {
 export default () => {
   return (
     <PreloadAssets>
-      <AppContext>
-        <App />
-      </AppContext>
+      {() => (
+        <AppContext>
+          <App />
+        </AppContext>
+      )}
     </PreloadAssets>
   );
 };

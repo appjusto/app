@@ -1,17 +1,17 @@
+import { FunctionsRef } from '@appjusto/firebase-refs';
 import { IuguCreatePaymentTokenData } from '@appjusto/types/payment/iugu';
 import { CancelToken } from 'axios';
 import { t } from '../../../../../strings';
 import { getAppVersion } from '../../../../utils/version';
-import FirebaseRefs from '../../FirebaseRefs';
 import IuguApi from '../../payment/iugu';
 
 export default class ConsumerApi {
-  constructor(private refs: FirebaseRefs, private iugu: IuguApi) {}
+  constructor(private functionsRef: FunctionsRef, private iugu: IuguApi) {}
 
   async saveCard(data: IuguCreatePaymentTokenData, cancelToken?: CancelToken) {
     const paymentToken = await this.iugu.createPaymentToken(data, cancelToken);
     if (!paymentToken) throw new Error(t('Não foi possível salvar o cartão de crédito.'));
-    const result = await this.refs.getSavePaymentTokenCallable()({
+    const result = await this.functionsRef.getSavePaymentTokenCallable()({
       paymentToken,
       meta: { version: getAppVersion() },
     });
@@ -20,7 +20,7 @@ export default class ConsumerApi {
 
   async deletePaymentMethod(paymentMethodId: string) {
     return (
-      await this.refs.getDeletePaymentMethodCallable()({
+      await this.functionsRef.getDeletePaymentMethodCallable()({
         paymentMethodId,
         meta: { version: getAppVersion() },
       })

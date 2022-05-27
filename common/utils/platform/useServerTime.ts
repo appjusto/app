@@ -7,7 +7,7 @@ interface DeltaInfo {
   updatedOn: Date;
 }
 const KEY = 'server-time';
-const THRESHOLD = 1000 * 60 * 60 * 24; // day
+const THRESHOLD = 1000 * 60 * 60 * 24 * 7; // 7 days
 const retrieve = async () => {
   try {
     const value = await AsyncStorage.getItem(KEY);

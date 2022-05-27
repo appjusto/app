@@ -1,13 +1,15 @@
 import { Feather } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { isEmpty, toNumber, trim } from 'lodash';
-import React from 'react';
+import { toNumber, trim } from 'lodash';
+import React, { ReactNode } from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
+import { AcceptedCreditCards } from '../../../../assets/icons/credit-card/AcceptedCreditCards';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import {
   cardFormatter,
@@ -23,6 +25,12 @@ import { t } from '../../../../strings';
 import { RestaurantNavigatorParamList } from '../../food/restaurant/types';
 import { OngoingOrderNavigatorParamList } from '../../ongoing/types';
 import { P2POrderNavigatorParamList } from '../../p2p/types';
+import {
+  getCardType,
+  getCardTypeSVG,
+  isCardTypeSupported,
+  validateCard,
+} from './payment/credit-card';
 import { ProfileParamList } from './types';
 
 export type ProfileAddCardParamList = {
@@ -56,28 +64,45 @@ export default function ({ navigation, route }: Props) {
   const [month, setMonth] = React.useState('');
   const [year, setYear] = React.useState('');
   const [cvv, setCVV] = React.useState('');
-  const [fullName, setFullName] = React.useState('');
+  const [cardTypeLogo, setCardTypeLogo] = React.useState<ReactNode>(null);
+  const [cardTypeFeedback, setCardTypeFeedback] = React.useState('');
+  const [name, setName] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
-  const canSubmit =
-    !isEmpty(number) && !isEmpty(month) && !isEmpty(year) && !isEmpty(cvv) && !isEmpty(fullName);
+  const cardValidation = validateCard({ number, month, year, cvv, name });
+
   // tracking
   useSegmentScreen('ProfileAddCard');
+  // effects
+  React.useEffect(() => {
+    const type = getCardType(number);
+    const isSupported = isCardTypeSupported(type);
+    if (type && !isSupported) {
+      setCardTypeFeedback(
+        `${t('Não aceitamos ')}${
+          type?.niceType ? `${t('a bandeira ')}${type.niceType}` : t('essa bandeira')
+        }`
+      );
+    } else {
+      setCardTypeFeedback(number.length < 16 ? t('O cartão de crédito deve ter 16 dígitos') : '');
+      setCardTypeLogo(isSupported ? getCardTypeSVG(type!) : null);
+    }
+  }, [number]);
   // UI handlers
   const createCancelToken = useAxiosCancelToken();
   const saveCardHandler = async () => {
     Keyboard.dismiss();
     try {
       setLoading(true);
-      const firstName = trim(fullName.split(' ', 1).toString());
-      const lastName = trim(fullName.split(' ').splice(1).join(' '));
+      const firstName = trim(name.split(' ', 1).toString());
+      const lastName = trim(name.split(' ').splice(1).join(' '));
       const result = await api.consumer().saveCard(
         {
           number,
           month,
-          year,
+          year: `20${year}`,
           verification_value: cvv,
-          first_name: firstName,
-          last_name: lastName,
+          first_name: firstName.toLocaleUpperCase(),
+          last_name: lastName.toLocaleUpperCase(),
         },
         createCancelToken()
       );
@@ -105,6 +130,11 @@ export default function ({ navigation, route }: Props) {
       keyboardShouldPersistTaps="handled"
     >
       <View style={{ flex: 1 }}>
+        <PaddedView style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ paddingRight: halfPadding }}>{t('Bandeiras aceitas')}</Text>
+          <AcceptedCreditCards />
+        </PaddedView>
+
         <View style={{ flex: 1, padding }}>
           <PatternInput
             title={t('Número do cartão')}
@@ -113,6 +143,7 @@ export default function ({ navigation, route }: Props) {
             mask={cardMask}
             parser={numbersOnlyParser}
             formatter={cardFormatter}
+            errorMessage={cardTypeFeedback}
             keyboardType="number-pad"
             textContentType="creditCardNumber"
             autoCompleteType="cc-number"
@@ -122,7 +153,9 @@ export default function ({ navigation, route }: Props) {
               if (!isNaN(toNumber(text))) setNumber(text);
             }}
             onSubmitEditing={() => expirationMonthRef.current?.focus()}
-          />
+          >
+            {cardTypeLogo}
+          </PatternInput>
           <View style={{ flexDirection: 'row', marginTop: padding }}>
             <DefaultInput
               ref={expirationMonthRef}
@@ -134,6 +167,13 @@ export default function ({ navigation, route }: Props) {
               keyboardType="number-pad"
               returnKeyType="next"
               autoCompleteType="cc-exp-month"
+              errorMessage={
+                cardValidation === 'month-invalid'
+                  ? t('Mês inválido')
+                  : cardValidation === 'valid-thru-invalid'
+                  ? t('Erro de validade')
+                  : ''
+              }
               blurOnSubmit={false}
               onChangeText={(text) => {
                 if (!isNaN(toNumber(text))) setMonth(text);
@@ -145,11 +185,18 @@ export default function ({ navigation, route }: Props) {
               style={{ flex: 2, marginRight: padding }}
               title={t('Ano de validade')}
               value={year}
-              placeholder={t('0000')}
-              maxLength={4}
+              placeholder={t('00')}
+              maxLength={2}
               keyboardType="number-pad"
               returnKeyType="next"
               autoCompleteType="cc-exp-year"
+              errorMessage={
+                cardValidation === 'year-invalid'
+                  ? t('Ano inválido')
+                  : cardValidation === 'valid-thru-invalid'
+                  ? t('Erro de validade')
+                  : ''
+              }
               blurOnSubmit={false}
               onChangeText={(text) => {
                 if (!isNaN(toNumber(text))) setYear(text);
@@ -166,6 +213,7 @@ export default function ({ navigation, route }: Props) {
               keyboardType="number-pad"
               returnKeyType="next"
               autoCompleteType="cc-csc"
+              errorMessage={cardValidation === 'cvv-invalid' ? t('Inválido') : ''}
               blurOnSubmit={false}
               onChangeText={(text) => {
                 if (!isNaN(toNumber(text))) setCVV(text);
@@ -177,15 +225,15 @@ export default function ({ navigation, route }: Props) {
             ref={fullNameRef}
             style={{ width: '100%', marginTop: padding }}
             title={t('Nome')}
-            value={fullName}
+            value={name}
             placeholder={t('Conforme cartão')}
             keyboardType="default"
             returnKeyType="next"
-            textContentType="givenName"
+            textContentType="name"
             autoCompleteType="name"
             autoCapitalize="characters"
             blurOnSubmit
-            onChangeText={setFullName}
+            onChangeText={setName}
           />
         </View>
 
@@ -199,7 +247,7 @@ export default function ({ navigation, route }: Props) {
           </View>
           <Text style={{ ...texts.xs }}>
             {t(
-              'Para sermos mais justos, o AppJusto cobra o valor total do pedido divido em duas cobranças no cartão. Por exemplo, se o seu pedido é no valor de R$ 10, vamos gerar duas cobranças que somadas custarão R$ 10.'
+              'Para sermos mais justos, o AppJusto cobra o valor total do pedido divido em duas cobranças no cartão. Por exemplo, se o valor total do seu pedido é de R$ 30, vamos gerar duas cobranças que somadas custarão R$ 30.'
             )}
           </Text>
           <Text style={{ ...texts.xs, marginTop: padding }}>
@@ -212,7 +260,7 @@ export default function ({ navigation, route }: Props) {
             style={{ paddingVertical: padding }}
             title={t('Salvar')}
             onPress={saveCardHandler}
-            disabled={!canSubmit || isLoading}
+            disabled={cardValidation !== null || isLoading}
             activityIndicator={isLoading}
           />
         </View>

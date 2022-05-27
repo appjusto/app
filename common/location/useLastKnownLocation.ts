@@ -14,20 +14,18 @@ const shouldAskPermission = (
 
 export default function (enabled: boolean = true, key?: string) {
   // state
-  const [permissionResponse, setPermissionResponse] = React.useState<
-    Location.LocationPermissionResponse | null | undefined
-  >(undefined);
-  const [lastKnownLocation, setLastKnownLocation] = React.useState<Location.LocationObject | null>(
-    null
-  );
-  const coords: LatLng | undefined = React.useMemo(
+  const [permissionResponse, setPermissionResponse] =
+    React.useState<Location.LocationPermissionResponse | null>();
+  const [lastKnownLocation, setLastKnownLocation] =
+    React.useState<Location.LocationObject | null>();
+  const coords: LatLng | undefined | null = React.useMemo(
     () =>
       lastKnownLocation
         ? {
             latitude: lastKnownLocation.coords.latitude,
             longitude: lastKnownLocation.coords.longitude,
           }
-        : undefined,
+        : lastKnownLocation,
     [lastKnownLocation]
   );
 
@@ -47,11 +45,18 @@ export default function (enabled: boolean = true, key?: string) {
       }
       if (permissionResponse?.granted) {
         (async () => {
-          const last = await Location.getLastKnownPositionAsync();
-          if (last) setLastKnownLocation(last);
-          const current = await Location.getCurrentPositionAsync();
-          setLastKnownLocation(current);
+          try {
+            const last = await Location.getLastKnownPositionAsync();
+            if (last) setLastKnownLocation(last);
+            const current = await Location.getCurrentPositionAsync();
+            setLastKnownLocation(current);
+          } catch (error: any) {
+            setLastKnownLocation(null);
+            console.error(error);
+          }
         })();
+      } else if (permissionResponse?.status === 'denied') {
+        setLastKnownLocation(null);
       }
     }
   }, [enabled, permissionResponse]);

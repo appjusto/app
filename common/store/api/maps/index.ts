@@ -1,17 +1,19 @@
+import { FunctionsRef } from '@appjusto/firebase-refs';
 import { Address, CourierMode, LatLng, RouteDetails } from '@appjusto/types';
 import * as Sentry from 'sentry-expo';
 import { getExtra } from '../../../utils/config';
 import { getAppVersion } from '../../../utils/version';
-import FirebaseRefs from '../FirebaseRefs';
 
 const { flavor } = getExtra();
 
 export default class MapsApi {
-  constructor(private refs: FirebaseRefs) {}
+  constructor(private functionsRefs: FunctionsRef) {}
   async googlePlacesAutocomplete(input: string, sessionToken: string, coords?: LatLng) {
+    console.log('MapsApi.googlePlacesAutocomplete: ', input, coords);
+
     try {
       return (
-        await this.refs.getQueryGoogleMapsCallable()({
+        await this.functionsRefs.getQueryGoogleMapsCallable()({
           operation: 'autocomplete',
           flavor,
           input,
@@ -28,9 +30,10 @@ export default class MapsApi {
   }
 
   async googleGeocode(address: string) {
+    console.log('MapsApi.googleGeocode: ', address);
     try {
       return (
-        await this.refs.getQueryGoogleMapsCallable()({
+        await this.functionsRefs.getQueryGoogleMapsCallable()({
           operation: 'geocode',
           flavor,
           address,
@@ -45,9 +48,10 @@ export default class MapsApi {
   }
 
   async googleReverseGeocode(coords: LatLng) {
+    console.log('MapsApi.googleReverseGeocode: ', coords);
     try {
       return (
-        await this.refs.getQueryGoogleMapsCallable()({
+        await this.functionsRefs.getQueryGoogleMapsCallable()({
           operation: 'reverse-geocode',
           flavor,
           coords,
@@ -66,9 +70,10 @@ export default class MapsApi {
     destination: string | LatLng,
     mode: CourierMode = 'motorcycle'
   ) {
+    console.log('MapsApi.googleDirections: ', origin, destination);
     try {
       return (
-        await this.refs.getQueryGoogleMapsCallable()({
+        await this.functionsRefs.getQueryGoogleMapsCallable()({
           operation: 'directions',
           flavor,
           origin,

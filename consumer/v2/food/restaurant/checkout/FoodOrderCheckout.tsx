@@ -2,7 +2,7 @@ import { Fare } from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { isEmpty } from 'lodash';
+import { isEmpty, merge } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -65,6 +65,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [shareDataWithBusiness, setShareDataWithBusiness] = React.useState(false);
   const { quotes, getOrderQuotes } = useQuotes(order?.id);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
+  const [complement, setComplement] = React.useState<string>(
+    order?.destination?.additionalInfo ?? ''
+  );
+  const [addressComplement, setAddressComplement] = React.useState<boolean>(true);
   const canSubmit =
     selectedPaymentMethodId !== undefined &&
     selectedFare !== undefined &&
@@ -132,6 +136,16 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     if (!order) return;
     if (!selectedFare) return;
     if (!selectedPaymentMethodId) return;
+    if (!order.destination?.address) {
+      dispatch(
+        showToast(
+          t(
+            'Tivemos um problema... Por favor, refaça o pedido e certifique-se que o endereço de entrega está correto'
+          ),
+          'error'
+        )
+      );
+    }
     if (shouldVerifyPhone) {
       navigation.navigate('PhoneVerificationScreen', {
         phone: consumer.phone!,
@@ -162,6 +176,13 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
     try {
       setLoading(true);
+      if (addressComplement) {
+        await api.order().updateOrder(order.id, {
+          destination: merge(order.destination, {
+            additionalInfo: complement,
+          }),
+        });
+      }
       await api.order().placeOrder(
         order.id,
         selectedFare!.fleet.id,
@@ -314,6 +335,11 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           });
           setDestinationModalVisible(false);
         }}
+        complement={complement}
+        onChangeComplement={(text) => setComplement(text)}
+        checked={!addressComplement}
+        toggleAddressComplement={() => setAddressComplement(!addressComplement)}
+        disabled={isLoading || (addressComplement && complement.length === 0)}
       />
     </KeyboardAwareScrollView>
   );

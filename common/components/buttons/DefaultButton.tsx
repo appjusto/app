@@ -17,37 +17,43 @@ export interface DefaultButtonProps extends TouchableOpacityProps, ViewProps {
   secondary?: boolean;
   children?: React.ReactNode | React.ReactNode[];
   grey?: boolean;
+  variant?: 'primary' | 'secondary' | 'grey' | 'danger';
 }
 
 export default function ({
   title,
   activityIndicator = false,
   icon,
-  secondary = false,
   disabled,
   style,
   children,
+  variant = 'primary',
+  secondary = false,
   grey,
   ...props
 }: DefaultButtonProps) {
+  const v = variant ?? (secondary ? 'secondary' : grey ? 'grey' : 'primary');
   const backgroundColor = (() => {
-    if (secondary) return colors.white;
+    if (v === 'secondary' || v === 'danger') return colors.white;
     else if (disabled || activityIndicator) return colors.grey500;
-    else if (grey) return colors.grey700;
+    else if (v === 'grey') return colors.grey700;
     else return colors.green500;
   })();
   const borderColor = (() => {
     if (disabled || activityIndicator) return colors.grey500;
-    else if (secondary) return colors.black;
-    else if (grey) return colors.grey700;
+    else if (v === 'secondary') return colors.black;
+    else if (v === 'grey') return colors.grey700;
+    else if (v === 'danger') return colors.red;
     else return colors.green500;
   })();
   const color = (() => {
     if (disabled) {
-      if (secondary) return colors.grey500;
+      if (v === 'grey') return colors.grey500;
       else return colors.grey700;
-    } else if (grey) {
+    } else if (v === 'grey') {
       return colors.white;
+    } else if (v === 'danger') {
+      return colors.red;
     } else return colors.black;
   })();
 

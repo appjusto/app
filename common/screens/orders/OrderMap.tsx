@@ -1,4 +1,4 @@
-import { LatLng, Order } from '@appjusto/types';
+import { LatLng, OrderRoute } from '@appjusto/types';
 import polyline from '@mapbox/polyline';
 import React from 'react';
 import { Dimensions, Platform, View } from 'react-native';
@@ -7,68 +7,96 @@ import DefaultMap from '../../components/views/DefaultMap';
 import { IconMapCourier } from '../../icons/icon-mapCourier';
 import { IconMapDestination } from '../../icons/icon-mapDestination';
 import { IconMapOrigin } from '../../icons/icon-mapOrigin';
+import { padding } from '../../styles';
 
 type Props = {
-  order?: Order;
   ratio: number;
+  courierLocation?: LatLng | null;
+  originLocation?: LatLng | null;
+  destinationLocation?: LatLng | null;
+  mapWidth?: string;
+  mapHeigth?: number;
+  route?: OrderRoute | null;
+  topRadius?: boolean;
 };
 
-export default function ({ order, ratio }: Props) {
-  if (!order) return null;
-  const { courier, origin, destination, route } = order;
-  if (!origin?.location) return null;
-  if (!destination?.location) return null;
-  if (!route?.polyline) return null;
-
+export default function ({
+  ratio,
+  courierLocation,
+  originLocation,
+  destinationLocation,
+  route,
+  mapWidth,
+  mapHeigth,
+  topRadius,
+}: Props) {
   const { width } = Dimensions.get('window');
-  const routeCoordinates = polyline.decode(route.polyline).map((pair) => {
-    return { latitude: pair[0], longitude: pair[1] } as LatLng;
-  });
+  if (!originLocation) return null;
+  if (!destinationLocation) return null;
 
+  const routeCoordinates = route?.polyline
+    ? polyline.decode(route.polyline).map((pair) => {
+        return { latitude: pair[0], longitude: pair[1] } as LatLng;
+      })
+    : undefined;
   return (
-    <View style={{ width, height: width / ratio, alignSelf: 'center' }}>
+    <View
+      style={{
+        width: mapWidth ?? width,
+        height: mapHeigth ?? width / ratio,
+        alignSelf: 'center',
+        borderTopLeftRadius: topRadius ? padding : undefined,
+        borderTopRightRadius: topRadius ? padding : undefined,
+      }}
+    >
       <DefaultMap
         // coordinates={[origin.location, destination.location]}
         coordinates={routeCoordinates}
         fitToElements
         initialRegion={{
-          ...destination.location,
+          ...destinationLocation,
           latitudeDelta: 0.03,
           longitudeDelta: 0.03,
         }}
-        style={{ height: '100%', width: '100%' }}
+        style={{
+          height: '100%',
+          width: '100%',
+          borderTopLeftRadius: topRadius ? padding : undefined,
+          borderTopRightRadius: topRadius ? padding : undefined,
+        }}
       >
         <Marker
-          key={`${origin.location!.latitude}-${origin.location!.longitude}`}
-          coordinate={origin.location!}
+          key={`${originLocation.latitude}-${originLocation.longitude}`}
+          coordinate={originLocation}
           identifier="origin"
           tracksViewChanges={false}
         >
           <IconMapOrigin />
         </Marker>
         <Marker
-          key={`${destination.location!.latitude}-${destination.location!.longitude}`}
-          coordinate={destination.location!}
+          key={`${destinationLocation.latitude}-${destinationLocation.longitude}`}
+          coordinate={destinationLocation}
           identifier="destination"
           tracksViewChanges={false}
         >
           <IconMapDestination />
         </Marker>
-        {courier?.location && (
+        {courierLocation ? (
           <Marker
-            key={`${courier.location!.latitude}-${courier.location!.longitude}`}
-            coordinate={courier.location}
+            key={`${courierLocation.latitude}-${courierLocation.longitude}`}
+            coordinate={courierLocation}
             tracksViewChanges={false}
           >
             <IconMapCourier />
           </Marker>
-        )}
+        ) : null}
         {/* https://github.com/react-native-maps/react-native-maps/issues/3823 */}
-        {Platform.OS === 'android' ? (
+        {routeCoordinates && Platform.OS === 'android' ? (
           <Polyline coordinates={routeCoordinates} lineDashPattern={[1]} />
-        ) : (
+        ) : null}
+        {routeCoordinates && Platform.OS === 'ios' ? (
           <Polyline coordinates={routeCoordinates} />
-        )}
+        ) : null}
       </DefaultMap>
     </View>
   );

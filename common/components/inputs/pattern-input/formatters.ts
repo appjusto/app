@@ -28,7 +28,7 @@ export const cepMask = '00000-000';
 export const cepFormatter = hyphenFormatter(5);
 
 export const phoneMask = '(11) 99999-9999';
-export const phoneFormatter = (value: string | undefined) => {
+export const phoneFormatter = (value: string | undefined | null) => {
   let formatedNumber = '';
   if (value) {
     const ddd = value.slice(0, 2);

@@ -1,4 +1,4 @@
-import { ChatMessageUser, Order, WithId } from '@appjusto/types';
+import { ChatMessageUser, LatLng, Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -11,6 +11,7 @@ import { DeliveryInfo } from './DeliveryInfo';
 
 type Props = {
   order: WithId<Order>;
+  courierLocation?: LatLng | null;
   onCourierDetail: () => void;
   onChatWithCourier: () => void;
   onOpenChat: (from: ChatMessageUser) => void;
@@ -18,13 +19,20 @@ type Props = {
 
 export const OngoingMapAndInfo = ({
   order,
+  courierLocation,
   onCourierDetail,
   onChatWithCourier,
   onOpenChat,
 }: Props) => {
   return order.status === 'dispatching' ? (
     <View>
-      <OrderMap order={order} ratio={240 / 160} />
+      <OrderMap
+        originLocation={order.origin?.location}
+        destinationLocation={order.destination?.location}
+        courierLocation={courierLocation}
+        route={order.route}
+        ratio={240 / 160}
+      />
       <MessagesCard orderId={order.id} onPress={onOpenChat} />
       {order.dispatchingStatus === 'outsourced' ? (
         <View>

@@ -11,6 +11,15 @@ import {
 import { ConsumerState } from './types';
 
 const initialState: ConsumerState = {
+  // currentLocation: { latitude: -23.561187793310776, longitude: -46.655817529552046 },
+  // currentPlace: {
+  //   location: { latitude: -23.561187793310776, longitude: -46.655817529552046 },
+  //   address: {
+  //     description: 'Av. Paulista, 1578 - Bela Vista, São Paulo - SP, 01310-200',
+  //     main: 'Av. Paulista, 1578',
+  //     secondary: 'Bela Vista, São Paulo - SP, 01310-200',
+  //   },
+  // },
   searchKind: 'restaurant',
   searchOrder: 'distance',
   searchFilters: [],

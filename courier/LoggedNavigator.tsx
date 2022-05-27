@@ -2,7 +2,6 @@ import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../common/app/context';
-import { getFlavor } from '../common/store/config/selectors';
 import { getCourier } from '../common/store/courier/selectors';
 import { observeProfile } from '../common/store/user/actions';
 import { getUser } from '../common/store/user/selectors';
@@ -16,7 +15,6 @@ export default function () {
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
   // redux
-  const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
   const courier = useSelector(getCourier);
   const situation = courier?.situation;
@@ -26,8 +24,8 @@ export default function () {
   // subscribe for profile changes
   React.useEffect(() => {
     if (!courierId) return;
-    return dispatch(observeProfile(api)(flavor, courierId));
-  }, [api, dispatch, flavor, courierId]);
+    return dispatch(observeProfile(api)('courier', courierId));
+  }, [api, dispatch, courierId]);
   // UI
   if (!situation) {
     return (

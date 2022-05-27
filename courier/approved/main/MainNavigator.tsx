@@ -9,8 +9,9 @@ import * as icons from '../../../assets/icons';
 import { useObserveOngoingOrders } from '../../../common/store/api/order/hooks/useObserveOngoingOrders';
 import { track } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
+import { OngoingOrdersStatuses } from '../../../common/store/order/selectors';
 import { getUser } from '../../../common/store/user/selectors';
-import { halfPadding, padding, texts } from '../../../common/styles';
+import { halfPadding, texts } from '../../../common/styles';
 import { useNotificationHandler } from '../../../consumer/v2/main/useNotificationHandler';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -65,21 +66,21 @@ export default function ({ navigation }: Props) {
             ...data,
           });
           remove!();
-          if (data.orderStatus === 'delivered') {
+          if (OngoingOrdersStatuses.includes(data.orderStatus)) {
+            navigation.navigate('OngoingDeliveryNavigator', {
+              screen: 'OngoingDelivery',
+              params: {
+                orderId: data.orderId,
+                chatFrom: data.from,
+              },
+            });
+          } else {
             navigation.navigate('DeliveriesNavigator', {
               screen: 'Chat',
               params: {
                 orderId: data.orderId,
                 counterpartId: data.from.id,
                 counterpartFlavor: data.from.agent,
-              },
-            });
-          } else {
-            navigation.navigate('OngoingDeliveryNavigator', {
-              screen: 'OngoingDelivery',
-              params: {
-                orderId: data.orderId,
-                chatFrom: data.from,
               },
             });
           }
@@ -117,14 +118,8 @@ export default function ({ navigation }: Props) {
       tabBarOptions={{
         showLabel: false,
         style: {
-          height: 65,
-          paddingVertical: 20,
-          paddingHorizontal: padding,
+          height: 60,
           width,
-        },
-        tabStyle: {
-          height: 24,
-          alignContent: 'flex-start',
         },
       }}
     >

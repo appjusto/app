@@ -23,13 +23,12 @@ import DefaultInput from '../../components/inputs/DefaultInput';
 import { phoneFormatter, phoneMask } from '../../components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../components/inputs/pattern-input/parsers';
 import PatternInput from '../../components/inputs/PatternInput';
-import ShowIf from '../../components/views/ShowIf';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconIntroBusiness } from '../../icons/icon-intro-business';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { IconMotoCycleBig } from '../../icons/icon-motocycle-big';
 import { AuthMode } from '../../store/api/auth';
-import { useSegmentScreen } from '../../store/api/track';
+import { track, useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
@@ -77,6 +76,9 @@ export default function ({ navigation, route }: Props) {
       return;
     }
     try {
+      track('Welcome sign in', {
+        authMode,
+      });
       if (authMode === 'phone') {
         navigation.navigate('PhoneLoginScreen', { phone, countryCode: '55' });
       } else {
@@ -110,10 +112,6 @@ export default function ({ navigation, route }: Props) {
   if (flavor === 'business')
     welcomeMessage = t('Gerencie seu restaurante de forma fácil e automatizada.');
   else welcomeMessage = t('Um delivery aberto, transparente e consciente.');
-  let emailMessage;
-  if (flavor === 'business')
-    emailMessage = t('Ao entrar sem senha, enviaremos um link de acesso para o e-mail cadastrado');
-  else emailMessage = t('Digite seu e-mail para entrar ou criar sua conta.');
   const actionButtonTitle =
     flavor === 'courier'
       ? t('Entrar')
@@ -192,7 +190,15 @@ export default function ({ navigation, route }: Props) {
                 <Text
                   style={[texts.sm, { color: colors.grey700, lineHeight: 21, marginTop: padding }]}
                 >
-                  {emailMessage}
+                  {authMode === 'phone'
+                    ? t('Digite o número do seu celular')
+                    : authMode === 'passwordless'
+                    ? flavor === 'business'
+                      ? t(
+                          'Ao entrar sem senha, enviaremos um link de acesso para o e-mail cadastrado'
+                        )
+                      : t('Digite seu e-mail para entrar ou criar sua conta.')
+                    : t('Digite a senha que enviamos para o seu e-mail.')}
                 </Text>
               </View>
             </>
@@ -206,20 +212,21 @@ export default function ({ navigation, route }: Props) {
                     value={email}
                     title={t('Acesse sua conta')}
                     placeholder={t('Digite seu e-mail')}
-                    onChangeText={setEmail}
+                    onChangeText={(value) => setEmail(value.toLowerCase())}
                     autoCompleteType="email"
                     keyboardType="email-address"
                     blurOnSubmit
                     autoCapitalize="none"
+                    errorMessage={
+                      email.length > 5 &&
+                      email.includes('@') &&
+                      email.includes('.') &&
+                      validateEmail(email).status !== 'ok'
+                        ? t('O e-mail digitado não é válido')
+                        : undefined
+                    }
                     autoCorrect={false}
                   />
-                  <ShowIf test={email.length > 5 && validateEmail(email).status !== 'ok'}>
-                    {() => (
-                      <Text style={{ ...texts.sm, color: colors.red, marginTop: halfPadding }}>
-                        {t('O e-mail digitado não é válido')}
-                      </Text>
-                    )}
-                  </ShowIf>
                 </>
               ) : (
                 <PatternInput
@@ -241,7 +248,11 @@ export default function ({ navigation, route }: Props) {
                   style={{ marginTop: padding }}
                   value={password}
                   title={t('Senha')}
-                  placeholder={t('Digite sua senha')}
+                  placeholder={
+                    flavor === 'business'
+                      ? t('Digite sua senha')
+                      : t('Senha que enviamos para seu e-mail')
+                  }
                   onChangeText={setPassword}
                   keyboardType="visible-password"
                   blurOnSubmit

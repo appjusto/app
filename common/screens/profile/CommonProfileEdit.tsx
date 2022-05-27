@@ -90,7 +90,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const [name, setName] = React.useState<string>(profile.name ?? '');
   const [surname, setSurname] = React.useState(profile.surname ?? '');
   const [cpf, setCpf] = React.useState(profile.cpf ?? '');
-  const [phone, setPhone] = React.useState(api.auth().getPhoneNumber(true) ?? profile.phone ?? '');
+  const [phone, setPhone] = React.useState(profile.phone ?? api.auth().getPhoneNumber(true) ?? '');
   const [focusedField, setFocusedField] = React.useState<string>();
   const [isLoading, setLoading] = React.useState(false);
   const countryCode = profile.countryCode ?? '55';

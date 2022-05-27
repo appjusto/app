@@ -14,15 +14,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useSelector } from 'react-redux';
-import { ApiContext } from '../../../common/app/context';
+import { useDispatch, useSelector } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
+import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { getConsumer } from '../../../common/store/consumer/selectors';
-import { colors, padding, screens, texts } from '../../../common/styles';
+import { showToast } from '../../../common/store/ui/actions';
+import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatAddress } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { FoodOrderNavigatorParamList } from '../food/types';
@@ -53,6 +55,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const consumer = useSelector(getConsumer);
+  const dispatch = useDispatch<AppDispatch>();
   // state
   const [isLoading, setLoading] = React.useState(false);
   const { coords } = useLastKnownLocation();
@@ -63,6 +66,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   const [additionalInfo, setAdditionalInfo] = React.useState(value?.additionalInfo ?? '');
   const [autocompletePredictions, setAutoCompletePredictions] = React.useState<Address[]>([]);
   const [selectedAddress, setSelectedAddress] = React.useState<Address | null>(null);
+  const [complement, setComplement] = React.useState(true);
   const sections: SectionListData<Address>[] = React.useMemo(() => {
     let sections: SectionListData<Address>[] = [];
     sections = [
@@ -166,14 +170,30 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   // confirm button callback
   const completeHandler = React.useCallback(() => {
     if (!selectedAddress) return;
+    if (complement && !additionalInfo.length) {
+      dispatch(
+        showToast(
+          t('Insira o complemento ou selecione a opção "Endereço sem complemento" para prosseguir'),
+          'error'
+        )
+      );
+      return;
+    }
     // create a place object when user confirm without selecting from suggestion list
     const place: Place =
       returnScreen !== 'RecommendRestaurant'
         ? { address: selectedAddress, additionalInfo }
         : { address: selectedAddress };
     navigation.navigate(returnScreen, { [returnParam]: place });
-  }, [selectedAddress, additionalInfo, navigation, returnScreen, returnParam]);
-
+  }, [
+    selectedAddress,
+    additionalInfo,
+    navigation,
+    returnScreen,
+    returnParam,
+    complement,
+    dispatch,
+  ]);
   // UI
   return (
     <PaddedView style={{ ...screens.config }}>
@@ -204,9 +224,17 @@ export const AddressComplete = ({ navigation, route }: Props) => {
           onChangeText={setAdditionalInfo}
           style={{ marginBottom: padding }}
           autoCorrect={false}
+          editable={complement}
         />
       ) : null}
-
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
+        <RadioButton
+          title={t('Endereço sem complemento')}
+          onPress={() => setComplement(!complement)}
+          checked={!complement}
+          variant="square"
+        />
+      </View>
       <SectionList
         stickySectionHeadersEnabled={false}
         style={{ flex: 1 }}

@@ -156,6 +156,16 @@ export default function ({ navigation, route }: Props) {
     track('placing order');
     if (!orderId) return;
     if (!selectedPaymentMethodId) return;
+    if (!order.destination?.address) {
+      dispatch(
+        showToast(
+          t(
+            'Tivemos um problema... Por favor, refaça o pedido e certifique-se que o endereço de entrega está correto'
+          ),
+          'error'
+        )
+      );
+    }
     if (shouldVerifyPhone) {
       navigation.navigate('PhoneVerificationScreen', {
         phone: consumer.phone!,
@@ -207,7 +217,6 @@ export default function ({ navigation, route }: Props) {
       dispatch(showToast(error.toString(), 'error'));
     }
   };
-
   // UI
   return (
     <View style={{ ...screens.default }}>

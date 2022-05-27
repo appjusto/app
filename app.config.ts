@@ -56,7 +56,7 @@ export default (context: ConfigContext): ExpoConfig => {
       icon: './assets/notification-icon.png',
     },
     updates: {
-      fallbackToCacheTimeout: 1000 * (flavor === 'courier' ? 120 : 10),
+      fallbackToCacheTimeout: 1000 * (flavor === 'courier' ? 30 : 5),
     },
     assetBundlePatterns: ['**/*'],
     ios: ios(),
@@ -226,7 +226,10 @@ const extra = (): Extra => ({
     authDomain: `${FIREBASE_PROJECT_ID}.firebaseapp.com`,
     region: FIREBASE_REGION!,
     projectId: FIREBASE_PROJECT_ID!,
-    storageBucket: `${FIREBASE_PROJECT_ID}.appspot.com`,
+    storageBucket:
+      process.env.FIREBASE_EMULATOR === 'true'
+        ? 'gs://default-bucket'
+        : `${FIREBASE_PROJECT_ID}.appspot.com`,
     messagingSenderId: FIREBASE_MESSAGING_SENDER_ID!,
     appId:
       flavor === 'consumer'

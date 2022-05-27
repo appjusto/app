@@ -3,7 +3,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Modal, Text, TouchableOpacity, View } from 'react-native';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
+import RadioButton from '../../../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
+import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
 import HR from '../../../../../common/components/views/HR';
 import { borders, colors, halfPadding, padding, texts } from '../../../../../common/styles';
@@ -16,6 +18,11 @@ type Props = {
   onEditAddress: () => void;
   onConfirmAddress: () => void;
   activityIndicator: boolean;
+  complement: string;
+  onChangeComplement: (complement: string) => void;
+  checked: boolean;
+  toggleAddressComplement: () => void;
+  disabled: boolean;
 };
 
 export const DestinationModal = ({
@@ -25,6 +32,11 @@ export const DestinationModal = ({
   onEditAddress,
   onConfirmAddress,
   activityIndicator,
+  complement,
+  onChangeComplement,
+  checked,
+  toggleAddressComplement,
+  disabled,
 }: Props) => {
   return (
     <Modal transparent visible={modalVisible} animationType="slide">
@@ -51,25 +63,43 @@ export const DestinationModal = ({
             </TouchableOpacity>
           </View>
           <Text style={{ ...texts.xl }}>{t('Confirme seu endereço')}</Text>
-          <Text style={{ ...texts.sm, marginTop: padding, color: colors.grey700 }}>
-            {t('Seu pedido será entregue em:')}
+          <Text style={{ ...texts.lg, marginTop: 4, color: colors.grey700 }}>
+            {order?.destination?.address.main}
           </Text>
-          <Text style={{ ...texts.lg, marginTop: 4 }}>{order?.destination?.address.main}</Text>
-          <Text style={{ ...texts.lg, marginTop: 4 }}>{order?.destination?.address.secondary}</Text>
-          {order?.destination?.additionalInfo ? (
-            <Text style={{ ...texts.lg, marginTop: 4 }}>{order.destination.additionalInfo}</Text>
-          ) : null}
-          <View style={{ marginTop: 24 }}>
+          <Text style={{ ...texts.lg, marginTop: 4, color: colors.grey700 }}>
+            {order?.destination?.address.secondary}
+          </Text>
+          <View style={{ marginTop: halfPadding }}>
             <TouchableOpacity onPress={onEditAddress}>
-              <RoundedText>{t('Editar endereço de entrega')}</RoundedText>
+              <RoundedText backgroundColor={colors.yellow} noBorder>
+                {t('Editar endereço')}
+              </RoundedText>
             </TouchableOpacity>
+            <DefaultInput
+              defaultValue={complement}
+              value={complement}
+              title={t('Complemento')}
+              placeholder={t('Apartamento, sala, loja')}
+              onChangeText={onChangeComplement}
+              style={{ marginVertical: padding }}
+              autoCorrect={false}
+              editable={!checked}
+            />
+            <View>
+              <RadioButton
+                title={t('Endereço sem complemento')}
+                onPress={toggleAddressComplement}
+                checked={checked}
+                variant="square"
+              />
+            </View>
           </View>
           <HR style={{ marginTop: 24 }} />
           <DefaultButton
             style={{ marginTop: halfPadding, marginBottom: padding }}
             title={t('Fazer pedido')}
             onPress={onConfirmAddress}
-            disabled={activityIndicator}
+            disabled={disabled}
             activityIndicator={activityIndicator}
           />
         </PaddedView>

@@ -56,7 +56,12 @@ export const OrderSummary = ({
     >
       {showMap ? (
         <View style={{ height: 160 }}>
-          <OrderMap order={order} ratio={360 / 160} />
+          <OrderMap
+            originLocation={order.origin?.location}
+            destinationLocation={order.destination?.location}
+            route={order.route}
+            ratio={360 / 160}
+          />
         </View>
       ) : null}
       <View style={{ paddingTop: tallerDevice ? padding : 0 }}>

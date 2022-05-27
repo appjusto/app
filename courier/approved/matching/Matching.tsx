@@ -1,3 +1,4 @@
+import { LatLng } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { round } from 'lodash';
@@ -7,12 +8,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import RoundedText from '../../../common/components/texts/RoundedText';
+import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
+import OrderMap from '../../../common/screens/orders/OrderMap';
 import { useObserveOrderRequest } from '../../../common/store/api/courier/hooks/useObserveOrderRequest';
 import { screen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
-import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency, formatDistance, formatTime } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
@@ -34,12 +37,20 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // params
   const { matchRequest } = route.params;
-  const { orderId, origin, distanceToOrigin, originAddress, destinationAddress, type } =
-    matchRequest;
+  const {
+    orderId,
+    origin,
+    distanceToOrigin,
+    originAddress,
+    destinationAddress,
+    type,
+    destination,
+  } = matchRequest;
   // context
   const dispatch = useDispatch<AppDispatch>();
   const api = React.useContext(ApiContext);
   const courier = useSelector(getCourier)!;
+  const tallerDevice = useTallerDevice();
   // state
   const { coords } = useLastKnownLocation();
   const request = useObserveOrderRequest(courier.id, orderId);
@@ -47,17 +58,24 @@ export default function ({ navigation, route }: Props) {
   const canAccept = situation === 'pending' || situation === 'viewed';
   const [routeDistanceToOrigin, setRouteDistanceToOrigin] = React.useState(distanceToOrigin);
   const [isLoading, setLoading] = React.useState(true);
+  const [courierLatLng, setCourierLatLng] = React.useState<LatLng>();
+  const { lastKnownLocation } = useLastKnownLocation();
   // side effects
   // calculating the real distance between courier and origin
   React.useEffect(() => {
     (async () => {
       try {
+        // const position = await Location.getCurrentPositionAsync();
+        // settting courierLatLng for the map
         if (coords) {
+          setCourierLatLng({
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+          });
           const currentDistanceToOrigin = await api
             .maps()
             .googleDirections(coords, origin, courier.mode);
           if (currentDistanceToOrigin) setRouteDistanceToOrigin(currentDistanceToOrigin.distance);
-
           screen('Matching', {
             orderId,
             distanceToOrigin,
@@ -80,7 +98,17 @@ export default function ({ navigation, route }: Props) {
       }
       setLoading(false);
     })();
-  }, [api, dispatch, orderId, origin, distanceToOrigin, courier.mode]);
+  }, [
+    distanceToOrigin,
+    orderId,
+    origin,
+    api,
+    dispatch,
+    courier.mode,
+    destinationAddress,
+    lastKnownLocation,
+    coords,
+  ]);
   // when situation changes
   React.useEffect(() => {
     if (situation === 'pending') {
@@ -114,7 +142,6 @@ export default function ({ navigation, route }: Props) {
   const totalDistance = (matchRequest.distance + routeDistanceToOrigin) / 1000;
   const feePerKm = matchRequest.fee / 100 / totalDistance;
   const roundedFeePerKm = round(feePerKm, 2);
-
   // UI
   if (isLoading)
     return (
@@ -128,12 +155,10 @@ export default function ({ navigation, route }: Props) {
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
     >
-      <View style={{ paddingHorizontal: padding, paddingVertical: 24, flex: 1 }}>
+      <View style={{ paddingVertical: padding, flex: 1 }}>
         {courier.fleet?.name ? (
           <View
             style={{
-              width: '100%',
-              height: 54,
               backgroundColor: colors.grey50,
               borderRadius: 64,
               padding,
@@ -141,6 +166,7 @@ export default function ({ navigation, route }: Props) {
               justifyContent: 'center',
               alignItems: 'center',
               marginTop: padding,
+              marginHorizontal: padding,
             }}
           >
             <Text style={{ ...texts.md }}>{courier.fleet.name}</Text>
@@ -148,15 +174,14 @@ export default function ({ navigation, route }: Props) {
         ) : (
           <View
             style={{
-              width: '100%',
-              height: 54,
-              backgroundColor: colors.green50,
+              backgroundColor: colors.grey50,
               borderRadius: 64,
               padding,
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
               marginTop: padding,
+              marginHorizontal: padding,
             }}
           >
             <Text style={{ marginRight: halfPadding, ...texts.md }}>
@@ -167,14 +192,14 @@ export default function ({ navigation, route }: Props) {
             </Text>
           </View>
         )}
-        <View style={{ flex: 1 }} />
         <View
           style={{
-            marginTop: 24,
+            marginTop: padding,
             width: '100%',
             height: 64,
             flexDirection: 'row',
             justifyContent: 'space-between',
+            paddingHorizontal: padding,
           }}
         >
           <View style={{ alignItems: 'center', flex: 1 }}>
@@ -214,7 +239,7 @@ export default function ({ navigation, route }: Props) {
             </Text>
           </View>
         </View>
-        <View style={{ marginTop: 24, alignItems: 'center' }}>
+        <View style={{ alignItems: 'center', paddingHorizontal: padding, paddingTop: padding }}>
           {matchRequest.readyAt ? (
             <RoundedText color={colors.white} backgroundColor={colors.black}>
               {`${t('Pedido pronto às')} ${formatTime(new Date(matchRequest.readyAt))}`}
@@ -225,17 +250,31 @@ export default function ({ navigation, route }: Props) {
             </RoundedText>
           ) : null}
         </View>
-        <View style={{ flex: 1 }} />
-        {/* origin */}
-        <View style={{ marginBottom: halfPadding }}>
+        {tallerDevice ? <View style={{ flex: 1 }} /> : null}
+        {/* map */}
+        <View
+          style={{
+            marginTop: padding,
+            ...borders.default,
+            marginHorizontal: padding,
+            borderRadius: padding,
+            overflow: 'hidden',
+            paddingBottom: padding,
+          }}
+        >
+          <OrderMap
+            originLocation={origin}
+            destinationLocation={destination}
+            courierLocation={courierLatLng}
+            ratio={360 / 160}
+            mapWidth="100%"
+            mapHeigth={tallerDevice ? 180 : 120}
+          />
           <AddressCard
             kind="origin"
             distance={formatDistance(routeDistanceToOrigin)}
             address={originAddress}
           />
-        </View>
-        {/* destination */}
-        <View>
           <AddressCard
             kind="destination"
             distance={formatDistance(matchRequest.distance)} // distance between origin and destination
@@ -245,7 +284,7 @@ export default function ({ navigation, route }: Props) {
         <View style={{ flex: 1 }} />
         {/* slider accept/reject control */}
         {canAccept ? (
-          <View style={{ marginTop: padding }}>
+          <View style={{ marginTop: padding, paddingHorizontal: padding }}>
             <AcceptControl
               onAccept={acceptHandler}
               onReject={rejectHandler}

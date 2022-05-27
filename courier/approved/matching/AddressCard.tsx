@@ -1,51 +1,38 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-import PaddedView from '../../../common/components/containers/PaddedView';
+import { Text, View, ViewProps } from 'react-native';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import { IconMapOrigin } from '../../../common/icons/icon-mapOrigin';
 import { IconPinPackageWhite } from '../../../common/icons/icon-pin';
-import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
+import { colors, halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
-type Props = {
+interface Props extends ViewProps {
   kind: 'origin' | 'destination';
   distance: string;
   address: string;
-};
+}
 
 export const AddressCard = ({ kind, distance, address }: Props) => {
   // helpers
   let [main, secondary] = address.includes('-') ? address.split('-') : [address, ''];
-  [secondary] = secondary.includes('-') ? secondary.split('-') : [secondary];
+  [main] = main.includes(',') ? main.split(',') : [main];
+  [secondary] = secondary.includes('-') ? secondary.split('-') : [secondary]; // just in case we decide to bring the neighboorhood back
   const distanceDescription =
     kind === 'origin' ? `${distance} ${t('até retirada')}` : `+ ${distance} ${t('até entrega')}`;
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: colors.white, // it looks like we need to set a backgroundColor for the shadow to be applied only in the parent
-        shadowOpacity: 1,
-        shadowOffset: { width: 0, height: 16 },
-        shadowRadius: padding,
-        elevation: 8,
-        shadowColor: 'rgba(105, 118, 103, 0.1)',
-        borderRadius: padding,
-      }}
-    >
-      <PaddedView
+    <View style={{ paddingHorizontal: padding, paddingTop: padding, width: '100%' }}>
+      <View
         style={{
-          ...borders.default,
-          borderColor: colors.grey500,
           flexDirection: 'row',
-          borderRadius: padding,
           alignItems: 'flex-start',
+          width: '100%',
         }}
       >
         <View>{kind === 'origin' ? <IconPinPackageWhite /> : <IconMapOrigin />}</View>
-        <View>
+        <View style={{ width: '90%' }}>
           <View style={{ marginLeft: padding }}>
             <View style={{ flexDirection: 'row', marginBottom: 2 }}>
-              <Text style={[texts.bold, texts.sm]}>
+              <Text style={[texts.sm, texts.bold]}>
                 {kind === 'origin' ? t('Retirada') : t('Entrega')}
               </Text>
               <RoundedText
@@ -57,19 +44,14 @@ export const AddressCard = ({ kind, distance, address }: Props) => {
                 {distanceDescription}
               </RoundedText>
             </View>
-            <View>
-              <Text style={{ ...texts.md, flexWrap: 'wrap', maxWidth: '95%' }} numberOfLines={3}>
+            <View style={{ width: '96%' }}>
+              <Text style={{ ...texts.md, flexWrap: 'wrap' }} numberOfLines={3}>
                 {main}
-              </Text>
-              <Text
-                style={{ ...texts.md, color: colors.grey700, flexWrap: 'wrap', maxWidth: '95%' }}
-              >
-                {secondary.trim()}
               </Text>
             </View>
           </View>
         </View>
-      </PaddedView>
+      </View>
     </View>
   );
 };

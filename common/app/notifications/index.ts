@@ -2,6 +2,7 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import { t } from '../../../strings';
 import { colors } from '../../styles';
+import { getExtra } from '../../utils/config';
 
 export const init = async () => {
   Notifications.setNotificationHandler({
@@ -18,15 +19,26 @@ export const init = async () => {
   if (Platform.OS === 'android') {
     // const notificationChannels = await Notifications.getNotificationChannelsAsync();
     // console.log(notificationChannels);
-    await Notifications.setNotificationChannelAsync('order-request', {
-      name: t('Novas corridas'),
-      importance: Notifications.AndroidImportance.MAX,
+    if (getExtra().flavor === 'courier') {
+      await Notifications.setNotificationChannelAsync('order-request', {
+        name: t('Novas corridas'),
+        importance: Notifications.AndroidImportance.MAX,
+        enableVibrate: true,
+        vibrationPattern: [0, 250, 250, 250],
+        lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+        bypassDnd: true,
+        lightColor: colors.green100,
+        sound: 'order_request.wav',
+      });
+    }
+    await Notifications.setNotificationChannelAsync('profile-update', {
+      name: t('Atualizações de perfil'),
+      importance: Notifications.AndroidImportance.HIGH,
       enableVibrate: true,
       vibrationPattern: [0, 250, 250, 250],
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
       bypassDnd: true,
       lightColor: colors.green100,
-      sound: 'order_request.wav',
     });
     await Notifications.setNotificationChannelAsync('order-update', {
       name: t('Atualizações do pedido'),
@@ -46,9 +58,9 @@ export const init = async () => {
       bypassDnd: true,
       lightColor: colors.green100,
     });
-    await Notifications.setNotificationChannelAsync('profile-update', {
-      name: t('Atualizações de perfil'),
-      importance: Notifications.AndroidImportance.HIGH,
+    await Notifications.setNotificationChannelAsync('status', {
+      name: t('Comunicações operacionais'),
+      importance: Notifications.AndroidImportance.MAX,
       enableVibrate: true,
       vibrationPattern: [0, 250, 250, 250],
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
@@ -56,7 +68,16 @@ export const init = async () => {
       lightColor: colors.green100,
     });
     await Notifications.setNotificationChannelAsync('general', {
-      name: t('Notificações gerais'),
+      name: t('Comunicações institucionais'),
+      importance: Notifications.AndroidImportance.DEFAULT,
+      enableVibrate: false,
+      vibrationPattern: [0, 250, 250, 250],
+      lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+      bypassDnd: false,
+      lightColor: colors.green100,
+    });
+    await Notifications.setNotificationChannelAsync('marketing', {
+      name: t('Promoções e ofertas'),
       importance: Notifications.AndroidImportance.DEFAULT,
       enableVibrate: false,
       vibrationPattern: [0, 250, 250, 250],

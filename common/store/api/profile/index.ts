@@ -1,4 +1,5 @@
 import { ConsumerProfile, CourierProfile, Flavor, UserProfile, WithId } from '@appjusto/types';
+import * as Application from 'expo-application';
 import Constants from 'expo-constants';
 import {
   doc,
@@ -8,9 +9,9 @@ import {
   serverTimestamp,
   setDoc,
   Unsubscribe,
-  updateDoc,
 } from 'firebase/firestore';
 import { hash } from 'geokit';
+import { Platform } from 'react-native';
 import * as Sentry from 'sentry-expo';
 import AuthApi from '../auth';
 import { documentAs } from '../types';
@@ -32,12 +33,16 @@ export default class ProfileApi {
   }
   private async createProfile(id: string) {
     console.log(`Creating ${this.flavor} profile...`);
-    await setDoc(this.getProfileRef(id), {
-      situation: 'pending',
-      email: this.auth.getEmail() ?? null,
-      phone: this.auth.getPhoneNumber(true) ?? null,
-      createdOn: serverTimestamp(),
-    } as UserProfile);
+    await setDoc(
+      this.getProfileRef(id),
+      {
+        situation: 'pending',
+        email: this.auth.getEmail() ?? null,
+        phone: this.auth.getPhoneNumber(true) ?? null,
+        createdOn: serverTimestamp(),
+      } as UserProfile,
+      { merge: true }
+    );
   }
 
   // firestore
@@ -73,25 +78,26 @@ export default class ProfileApi {
     changes: Partial<CourierProfile> | Partial<ConsumerProfile>,
     retry: number = 5
   ) {
-    const appVersion = `${Constants.nativeAppVersion}${
+    const appVersion = `${Application.nativeApplicationVersion}${
       Constants.manifest ? ` / ${Constants.manifest.version}` : ''
     }`;
     return new Promise<void>(async (resolve) => {
+      const update: Partial<UserProfile> = {
+        ...changes,
+        appVersion,
+        platform: Platform.OS,
+        updatedOn: serverTimestamp(),
+      };
       try {
-        const update: Partial<UserProfile> = {
-          ...changes,
-          appVersion,
-          updatedOn: serverTimestamp(),
-        };
-        // console.log(update);
         await setDoc(this.getProfileRef(id), update, { merge: true });
         resolve();
       } catch (error: any) {
-        if (error.code === 'permission-denied' && retry > 0) {
+        if (retry > 0) {
           setTimeout(async () => resolve(await this.updateProfile(id, changes, retry - 1)), 2000);
         } else {
-          console.error('Erro ao tentar atualizar o perfil:', JSON.stringify(error));
-          Sentry.Native.captureException(error);
+          console.error('Erro ao tentar atualizar o perfil:', JSON.stringify(update));
+          console.error(error);
+          // Sentry.Native.captureException(error);
           resolve();
         }
       }
@@ -99,31 +105,18 @@ export default class ProfileApi {
   }
 
   async updateLocation(id: string, location: GeoPoint, retry: number = 5) {
-    return new Promise<void>(async (resolve) => {
-      try {
-        await updateDoc(doc(this.firestore, this.collectionName, id), {
-          coordinates: location,
-          g: {
-            geopoint: location,
-            geohash: hash({
-              lat: location.latitude,
-              lng: location.longitude,
-            }),
-          },
-          updatedOn: serverTimestamp(),
-        } as Partial<UserProfile>);
-      } catch (error: any) {
-        if (error.code === 'permission-denied' && retry > 0) {
-          setTimeout(async () => resolve(await this.updateLocation(id, location, retry - 1)), 1000);
-        } else {
-          console.error(
-            `Erro ao tentar atualizar a localização: ${JSON.stringify(location)}`,
-            JSON.stringify(error)
-          );
-          Sentry.Native.captureException(error);
-          resolve();
-        }
-      }
-    });
+    const update: Partial<UserProfile> = {
+      coordinates: location,
+      g: {
+        geopoint: location,
+        geohash: hash({
+          lat: location.latitude,
+          lng: location.longitude,
+        }),
+      },
+      updatedOn: serverTimestamp(),
+    };
+    console.log(id, update);
+    await this.updateProfile(id, update);
   }
 }
