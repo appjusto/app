@@ -1,9 +1,5 @@
 import { FirestoreRefs, FunctionsRef, StoragePaths } from '@appjusto/firebase-refs';
-import {
-  AdvanceReceivablesPayload,
-  CourierOrderRequest,
-  VerifyCourierProfilePayload,
-} from '@appjusto/types';
+import { AdvanceReceivablesPayload, CourierOrderRequest } from '@appjusto/types';
 import { IuguMarketplaceAccountAdvanceSimulation } from '@appjusto/types/payment/iugu';
 import {
   getDocs,
@@ -68,12 +64,6 @@ export default class CourierApi {
   }
 
   // callables
-  async verifyProfile() {
-    const payload: VerifyCourierProfilePayload = {
-      meta: { version: getAppVersion() },
-    };
-    return this.functionsRef.getVerifyProfileCallable()(payload);
-  }
   async fetchAccountInformation(accountId: string) {
     return (
       await this.functionsRef.getFetchAccountInformationCallable()({
