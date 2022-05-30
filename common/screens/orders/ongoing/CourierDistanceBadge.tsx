@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const CourierDistanceBadge = ({ order, courierLocation, delivering }: Props) => {
-  const { route, dispatchingState, dispatchingStatus } = order;
+  const { route, dispatchingState } = order;
   if (!route || !courierLocation) return null;
   const distance = helpers.courierDistanceFromNextPlace(order, courierLocation);
   let text = '';
@@ -25,7 +25,7 @@ export const CourierDistanceBadge = ({ order, courierLocation, delivering }: Pro
     text = separateWithDot(formatDistance(distance), formatDuration(route.duration!));
     // text = formatDistance(distance);
   } else if (dispatchingState === 'arrived-pickup' || dispatchingState === 'arrived-destination') {
-    if (dispatchingStatus !== 'outsourced') text = t('Entregador/a no local');
+    text = t('Entregador/a no local');
   }
   return (
     <RoundedText
