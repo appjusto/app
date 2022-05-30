@@ -1,9 +1,5 @@
 import { FirestoreRefs, FunctionsRef, StoragePaths } from '@appjusto/firebase-refs';
-import {
-  AdvanceReceivablesPayload,
-  CourierOrderRequest,
-  VerifyCourierProfilePayload,
-} from '@appjusto/types';
+import { AdvanceReceivablesPayload, CourierOrderRequest } from '@appjusto/types';
 import { IuguMarketplaceAccountAdvanceSimulation } from '@appjusto/types/payment/iugu';
 import {
   getDocs,
@@ -25,7 +21,8 @@ export default class CourierApi {
     private firestoreRefs: FirestoreRefs,
     private functionsRef: FunctionsRef,
     private storagePaths: StoragePaths,
-    private files: FilesApi
+    private files: FilesApi,
+    private emulated: boolean
   ) {}
 
   // firestore
@@ -67,12 +64,6 @@ export default class CourierApi {
   }
 
   // callables
-  async verifyProfile() {
-    const payload: VerifyCourierProfilePayload = {
-      meta: { version: getAppVersion() },
-    };
-    return this.functionsRef.getVerifyProfileCallable()(payload);
-  }
   async fetchAccountInformation(accountId: string) {
     return (
       await this.functionsRef.getFetchAccountInformationCallable()({
@@ -145,7 +136,9 @@ export default class CourierApi {
     return this.files.upload(this.storagePaths.getCourierSelfiePath(id), localUri, progressHandler);
   }
   fetchSelfie(id: string, size?: string) {
-    return this.files.getDownloadURL(this.storagePaths.getCourierSelfiePath(id, size));
+    return this.files.getDownloadURL(
+      this.storagePaths.getCourierSelfiePath(id, !this.emulated && size ? size : undefined)
+    );
   }
   // document
   uploadDocumentImage(id: string, localUri: string, progressHandler?: (progress: number) => void) {
@@ -156,7 +149,9 @@ export default class CourierApi {
     );
   }
   fetchDocumentImage(id: string, size?: string) {
-    return this.files.getDownloadURL(this.storagePaths.getCourierDocumentPath(id, size));
+    return this.files.getDownloadURL(
+      this.storagePaths.getCourierDocumentPath(id, !this.emulated && size ? size : undefined)
+    );
   }
   // Proof of delivery
   uploadPODPackage(

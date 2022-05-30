@@ -1,5 +1,5 @@
 {
-  "version": "8.3.7",
+  "version": "8.4.1",
   "license": "Apache-2.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "postversion": "git push && git push --tags && git fetch"
   },
   "dependencies": {
-    "@appjusto/firebase-refs": "^0.1.2",
+    "@appjusto/firebase-refs": "^0.1.4",
     "@appjusto/menu": "^0.1.4",
     "@appjusto/types": "^5.9.8",
     "@expo/react-native-action-sheet": "^3.8.0",

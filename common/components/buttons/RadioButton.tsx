@@ -6,9 +6,10 @@ interface Props extends ViewProps {
   title: string;
   checked?: boolean;
   onPress: () => void;
+  variant: 'circle' | 'square';
 }
 
-export default function ({ title, checked, onPress, style, ...props }: Props) {
+export default function ({ title, checked, onPress, style, variant = 'circle', ...props }: Props) {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View
@@ -23,7 +24,7 @@ export default function ({ title, checked, onPress, style, ...props }: Props) {
         <View
           style={{
             borderWidth: 2,
-            borderRadius: 24,
+            borderRadius: variant === 'circle' ? 12 : 4,
             padding: 2,
             width: 24,
             height: 24,
@@ -32,7 +33,12 @@ export default function ({ title, checked, onPress, style, ...props }: Props) {
         >
           {checked && (
             <View
-              style={{ backgroundColor: colors.green500, borderRadius: 16, width: 16, height: 16 }}
+              style={{
+                backgroundColor: colors.green500,
+                borderRadius: variant === 'circle' ? 8 : 4,
+                width: 16,
+                height: 16,
+              }}
             />
           )}
         </View>

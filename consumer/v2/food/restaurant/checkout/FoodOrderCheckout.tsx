@@ -2,7 +2,7 @@ import { Fare } from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { isEmpty } from 'lodash';
+import { isEmpty, merge } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -65,6 +65,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [shareDataWithBusiness, setShareDataWithBusiness] = React.useState(false);
   const { quotes, getOrderQuotes } = useQuotes(order?.id);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
+  const [complement, setComplement] = React.useState<string>(
+    order?.destination?.additionalInfo ?? ''
+  );
+  const [addressComplement, setAddressComplement] = React.useState<boolean>(true);
   const canSubmit =
     selectedPaymentMethodId !== undefined &&
     selectedFare !== undefined &&
@@ -85,6 +89,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         params.destination.address.description !== order.destination?.address.description
       ) {
         api.order().updateOrder(order.id, { destination: params.destination });
+        if (params.destination.additionalInfo) {
+          setComplement(params.destination.additionalInfo);
+        }
       }
       navigation.setParams({
         destination: undefined,
@@ -119,8 +126,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   // return to Home if order status becomes 'expired' or all items are removed from it
   React.useEffect(() => {
     if (order === undefined) return;
-    else if (order === null) navigation.goBack();
-    else if (order.status === 'expired') {
+    if (order === null) navigation.goBack();
+    if (order?.status === 'expired') {
       navigation.navigate('MainNavigator', { screen: 'Home' });
     }
   }, [order, navigation]);
@@ -172,6 +179,13 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
     try {
       setLoading(true);
+      if (addressComplement) {
+        await api.order().updateOrder(order.id, {
+          destination: merge(order.destination, {
+            additionalInfo: complement,
+          }),
+        });
+      }
       await api.order().placeOrder(
         order.id,
         selectedFare!.fleet.id,
@@ -325,6 +339,11 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           });
           setDestinationModalVisible(false);
         }}
+        complement={complement}
+        onChangeComplement={(text) => setComplement(text)}
+        checked={!addressComplement}
+        toggleAddressComplement={() => setAddressComplement(!addressComplement)}
+        disabled={isLoading || (addressComplement && complement.length === 0)}
       />
     </KeyboardAwareScrollView>
   );

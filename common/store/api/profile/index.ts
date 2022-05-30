@@ -9,7 +9,6 @@ import {
   serverTimestamp,
   setDoc,
   Unsubscribe,
-  updateDoc,
 } from 'firebase/firestore';
 import { hash } from 'geokit';
 import { Platform } from 'react-native';
@@ -78,21 +77,21 @@ export default class ProfileApi {
       Constants.manifest ? ` / ${Constants.manifest.version}` : ''
     }`;
     return new Promise<void>(async (resolve) => {
+      const update: Partial<UserProfile> = {
+        ...changes,
+        appVersion,
+        platform: Platform.OS,
+        updatedOn: serverTimestamp(),
+      };
       try {
-        const update: Partial<UserProfile> = {
-          ...changes,
-          appVersion,
-          platform: Platform.OS,
-          updatedOn: serverTimestamp(),
-        };
-        // console.log(update);
         await setDoc(this.getProfileRef(id), update, { merge: true });
         resolve();
       } catch (error: any) {
         if (retry > 0) {
           setTimeout(async () => resolve(await this.updateProfile(id, changes, retry - 1)), 2000);
         } else {
-          console.error('Erro ao tentar atualizar o perfil:', JSON.stringify(error));
+          console.error('Erro ao tentar atualizar o perfil:', JSON.stringify(update));
+          console.error(error);
           // Sentry.Native.captureException(error);
           resolve();
         }
@@ -101,31 +100,18 @@ export default class ProfileApi {
   }
 
   async updateLocation(id: string, location: GeoPoint, retry: number = 5) {
-    return new Promise<void>(async (resolve) => {
-      try {
-        await updateDoc(doc(this.firestore, this.collectionName, id), {
-          coordinates: location,
-          g: {
-            geopoint: location,
-            geohash: hash({
-              lat: location.latitude,
-              lng: location.longitude,
-            }),
-          },
-          updatedOn: serverTimestamp(),
-        } as Partial<UserProfile>);
-      } catch (error: any) {
-        if (retry > 0) {
-          setTimeout(async () => resolve(await this.updateLocation(id, location, retry - 1)), 1000);
-        } else {
-          console.error(
-            `Erro ao tentar atualizar a localização: ${JSON.stringify(location)}`,
-            JSON.stringify(error)
-          );
-          // Sentry.Native.captureException(error);
-          resolve();
-        }
-      }
-    });
+    const update: Partial<UserProfile> = {
+      coordinates: location,
+      g: {
+        geopoint: location,
+        geohash: hash({
+          lat: location.latitude,
+          lng: location.longitude,
+        }),
+      },
+      updatedOn: serverTimestamp(),
+    };
+    console.log(id, update);
+    await this.updateProfile(id, update);
   }
 }

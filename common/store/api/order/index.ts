@@ -37,6 +37,7 @@ import {
 } from 'firebase/firestore';
 import { isEmpty, uniq } from 'lodash';
 import * as Sentry from 'sentry-expo';
+import { OrderCourierLocationLog } from '../../../../../types';
 import { getAppVersion } from '../../../utils/version';
 import { fetchPublicIP } from '../externals/ipify';
 import { documentAs, documentsAs } from '../types';
@@ -72,6 +73,8 @@ export default class OrderApi {
       type: 'food',
       status: 'quote',
       dispatchingStatus: 'idle',
+      // @ts-ignore
+      dispatchingState: null,
       business: {
         id: business.id,
         name: business.name!,
@@ -95,6 +98,8 @@ export default class OrderApi {
       type: 'p2p',
       status: 'quote',
       dispatchingStatus: 'idle',
+      // @ts-ignore
+      dispatchingState: null,
       consumer: {
         id: consumer.id,
         name: consumer.name ?? '',
@@ -137,7 +142,7 @@ export default class OrderApi {
       query(this.firestoreRefs.getOrdersRef(), ...constraints),
       (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
       (error) => {
-        console.log(error);
+        console.error(error);
         Sentry.Native.captureException(error);
       }
     );
@@ -187,7 +192,31 @@ export default class OrderApi {
       (error) => console.log(error)
     );
   }
-
+  observeOrderCourierLocation(
+    orderId: string,
+    courierId: string,
+    resultHandler: (order: LatLng | null) => void
+  ): Unsubscribe {
+    console.log('### observeOrderCourierLocation ###');
+    return onSnapshot(
+      query(
+        this.firestoreRefs.getOrderLogsRef(orderId),
+        where('type', '==', 'courier-location'),
+        where('courierId', '==', courierId),
+        orderBy('timestamp', 'desc'),
+        limit(1)
+      ),
+      (snapshot) => {
+        if (snapshot.empty) {
+          resultHandler(null);
+          return;
+        }
+        const doc = snapshot.docs[0].data() as OrderCourierLocationLog;
+        resultHandler(doc.location);
+      },
+      (error) => console.error(error)
+    );
+  }
   async sendMessage(message: Partial<ChatMessage>) {
     return addDoc(this.firestoreRefs.getChatsRef(), {
       ...message,

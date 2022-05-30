@@ -51,7 +51,6 @@ export default function ({ navigation, route }: Props) {
       <OrderMap
         originLocation={order.origin?.location}
         destinationLocation={order.destination?.location}
-        courierLocation={order.courier?.location}
         route={order.route}
         ratio={360 / 160}
       />

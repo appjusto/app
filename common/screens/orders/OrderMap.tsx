@@ -81,7 +81,7 @@ export default function ({
         >
           <IconMapDestination />
         </Marker>
-        {courierLocation && (
+        {courierLocation ? (
           <Marker
             key={`${courierLocation.latitude}-${courierLocation.longitude}`}
             coordinate={courierLocation}
@@ -89,7 +89,7 @@ export default function ({
           >
             <IconMapCourier />
           </Marker>
-        )}
+        ) : null}
         {/* https://github.com/react-native-maps/react-native-maps/issues/3823 */}
         {routeCoordinates && Platform.OS === 'android' ? (
           <Polyline coordinates={routeCoordinates} lineDashPattern={[1]} />
