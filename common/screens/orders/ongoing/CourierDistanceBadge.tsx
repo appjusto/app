@@ -1,4 +1,4 @@
-import { Order } from '@appjusto/types';
+import { LatLng, Order } from '@appjusto/types';
 import React from 'react';
 import { t } from '../../../../strings';
 import RoundedText from '../../../components/texts/RoundedText';
@@ -8,13 +8,14 @@ import { formatDistance, formatDuration, separateWithDot } from '../../../utils/
 
 interface Props {
   order: Order;
+  courierLocation?: LatLng | null;
   delivering?: boolean;
 }
 
-export const CourierDistanceBadge = ({ order, delivering }: Props) => {
-  const { route, courier, dispatchingState, dispatchingStatus } = order;
-  if (!route || !courier) return null;
-  const distance = helpers.courierDistanceFromNextPlace(order);
+export const CourierDistanceBadge = ({ order, courierLocation, delivering }: Props) => {
+  const { route, dispatchingState, dispatchingStatus } = order;
+  if (!route || !courierLocation) return null;
+  const distance = helpers.courierDistanceFromNextPlace(order, courierLocation);
   let text = '';
   if (
     !dispatchingState ||

@@ -1,4 +1,4 @@
-import { Order, WithId } from '@appjusto/types';
+import { LatLng, Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import RoundedProfileImg from '../../../common/components/icons/RoundedProfileImg';
@@ -8,10 +8,11 @@ import { t } from '../../../strings';
 
 type Props = {
   order: WithId<Order>;
+  courierLocation?: LatLng | null;
   onCourierDetail: () => void;
 };
 
-export const DeliveryInfo = ({ order, onCourierDetail }: Props) => {
+export const DeliveryInfo = ({ order, courierLocation, onCourierDetail }: Props) => {
   const { dispatchingStatus } = order;
   const deliveryInfoUI = () => {
     if (dispatchingStatus === 'outsourced') {
@@ -32,7 +33,7 @@ export const DeliveryInfo = ({ order, onCourierDetail }: Props) => {
             </Text>
             <View style={{ marginTop: 6, flexDirection: 'row', justifyContent: 'space-between' }}>
               <View>
-                <CourierDistanceBadge order={order} />
+                <CourierDistanceBadge order={order} courierLocation={courierLocation} />
               </View>
             </View>
           </View>
