@@ -15,7 +15,7 @@ import {
   OrderType,
   Place,
   PlaceOrderPayloadPayment,
-  WithId
+  WithId,
 } from '@appjusto/types';
 import {
   addDoc,
@@ -33,7 +33,7 @@ import {
   Unsubscribe,
   updateDoc,
   where,
-  writeBatch
+  writeBatch,
 } from 'firebase/firestore';
 import { isEmpty, uniq } from 'lodash';
 import * as Sentry from 'sentry-expo';
@@ -252,7 +252,7 @@ export default class OrderApi {
     if (businessId) constraints.push(where('business.id', '==', businessId));
     if (options.limit) constraints.push(limit(options.limit));
     return onSnapshot(
-      query(this.refs.getOrdersRef(), ...constraints),
+      query(this.firestoreRefs.getOrdersRef(), ...constraints),
       (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
       (error) => {
         console.log(error);
@@ -271,7 +271,7 @@ export default class OrderApi {
     baseTim.setHours(baseTim.getHours() - 1);
     return onSnapshot(
       query(
-        this.refs.getOrdersRef(),
+        this.firestoreRefs.getOrdersRef(),
         orderBy('updatedOn', ordering),
         where('business.id', '==', businessId),
         where('status', 'in', statuses),
@@ -294,7 +294,7 @@ export default class OrderApi {
     for (var i = 0; i < ordersIds.length; i = i + IdsLimit) {
       const ids = ordersIds.slice(i, i + IdsLimit);
       const q = query(
-        this.refs.getChatsRef(),
+        this.firestoreRefs.getChatsRef(),
         where('orderId', 'in', ids),
         where('participantsIds', 'array-contains', businessId),
         orderBy('timestamp', 'asc')
@@ -500,6 +500,6 @@ export default class OrderApi {
       meta: { version: getAppVersion() },
       params: paramsData,
     };
-    return await this.refs.getCancelOrderCallable()(payload);
+    return await this.functionsRef.getCancelOrderCallable()(payload);
   }
 }

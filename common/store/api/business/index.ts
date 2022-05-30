@@ -36,7 +36,7 @@ export default class BusinessApi {
 
   // firestore
   async fetchBusinessById(businessId: string) {
-    const snapshot = await getDoc(this.refs.getBusinessRef(businessId));
+    const snapshot = await getDoc(this.firestoreRefs.getBusinessRef(businessId));
     if (!snapshot.exists()) return null;
     return documentAs<Business>(snapshot);
   }
@@ -66,7 +66,7 @@ export default class BusinessApi {
   async fetchBusinessesManagedBy(email: string) {
     const snapshot = await getDocs(
       query(
-        this.refs.getBusinessesRef(),
+        this.firestoreRefs.getBusinessesRef(),
         where('managers', 'array-contains', email),
         orderBy('createdOn', 'desc')
         // limit(1)
@@ -77,7 +77,7 @@ export default class BusinessApi {
   }
 
   async updateBusiness(businessId: string, changes: Partial<Business>) {
-    await updateDoc(this.refs.getBusinessRef(businessId), changes);
+    await updateDoc(this.firestoreRefs.getBusinessRef(businessId), changes);
   }
 
   async sendKeepAlive(businessId: string) {
