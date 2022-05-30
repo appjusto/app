@@ -176,6 +176,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
     try {
       setLoading(true);
+      if (complement.trim().length === 0) {
+        setComplement('');
+      }
       if (addressComplement) {
         await api.order().updateOrder(order.id, {
           destination: merge(order.destination, {
