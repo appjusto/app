@@ -58,7 +58,12 @@ export const OrderDispatchingMap = ({ order, style, onChatWithCourier }: Props) 
               </View>
             ) : null}
             <View style={{ marginHorizontal: padding, marginTop: 32 }}>
-              <OrderMap order={order} ratio={240 / 160} />
+              <OrderMap
+                originLocation={order.origin?.location}
+                destinationLocation={order.destination?.location}
+                route={order.route}
+                ratio={240 / 160}
+              />
             </View>
           </View>
         );
