@@ -107,7 +107,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         returningFare: undefined,
       });
     }
-  }, [api, navigation, order, params]);
+    if (consumer.cpf) setCpf(consumer.cpf);
+  }, [api, navigation, order, params, consumer.cpf]);
   // update consumer's name in his first order
   React.useEffect(() => {
     if (!order) return;
