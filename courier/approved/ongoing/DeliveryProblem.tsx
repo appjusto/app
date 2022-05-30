@@ -127,7 +127,8 @@ export const DeliveryProblem = ({ navigation, route }: Props) => {
       scrollIndicatorInsets={{ right: 1 }}
     >
       <PaddedView style={{ flex: 1 }}>
-        {order.dispatchingState === 'going-pickup' ? (
+        {order.dispatchingState === 'going-pickup' ||
+        order.dispatchingState === 'arrived-pickup' ? (
           <DeliveryProblemCard
             title={t('Desistir da entrega')}
             subtitle={t('Atenção: só é possível desistir até o momento da retirada')}
