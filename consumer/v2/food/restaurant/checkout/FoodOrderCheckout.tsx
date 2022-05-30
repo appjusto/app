@@ -335,6 +335,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           navigation.navigate('OrderDestination', {
             returnScreen: 'FoodOrderCheckout',
             returnParam: 'destination',
+            value: order.destination,
           });
           setDestinationModalVisible(false);
         }}
