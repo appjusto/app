@@ -81,7 +81,7 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
             onPress={tryAgainHandler}
             activityIndicator={isLoading}
             disabled={isLoading}
-            secondary
+            variant="secondary"
           />
         </View>
 
@@ -93,7 +93,7 @@ export const OrderNoMatch = ({ navigation, route }: Props) => {
             }}
             activityIndicator={isLoading}
             disabled={isLoading}
-            secondary
+            variant="danger"
           />
         </View>
       </View>

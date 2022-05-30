@@ -125,7 +125,7 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
             >
               <DefaultButton
                 title={t('Cancelar pedido')}
-                grey
+                variant="danger"
                 style={{ backgroundColor: colors.red }}
                 onPress={() => {
                   cancelOrderHandler();

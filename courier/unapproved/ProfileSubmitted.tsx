@@ -104,7 +104,7 @@ export default function ({ navigation }: Props) {
                     <Text style={{ ...texts.md, marginTop: padding }}>{body}</Text>
                     {button && (
                       <DefaultButton
-                        secondary
+                        variant="secondary"
                         title={t('Adicionar')}
                         onPress={() => {
                           Linking.openURL(AppJustoAssistanceWhatsAppURL);

@@ -92,14 +92,14 @@ export const OrderPayment = ({
               !isProfileComplete ? t('Completar cadastro') : t('Escolher uma forma de pagamento')
             }
             onPress={onEditPaymentMethod}
-            secondary
+            variant="secondary"
             style={{ marginTop: padding }}
           />
         )}
 
         {/* {Boolean(selectedPaymentMethod) && (
           <DefaultButton
-            secondary
+            variant="secondary"
             title={t('Quero pagar com Pix')}
             style={{ marginBottom: padding }}
             onPress={navigateToPixPayment}

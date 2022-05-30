@@ -50,7 +50,7 @@ export const OngoingDeliveryCode = ({
       <HR height={padding} />
       <PaddedView>
         <DefaultButton
-          secondary
+          variant="danger"
           title={t('Confirmar entrega sem código')}
           onPress={onNoCodeDelivery}
         />

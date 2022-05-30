@@ -97,7 +97,7 @@ export const OngoingOrderConfirmCancel = ({ navigation, route }: Props) => {
             {businessPhone ? (
               <DefaultButton
                 title={t('Ligar para o restaurante')}
-                secondary
+                variant="secondary"
                 onPress={() => {
                   track('calling restaurant');
                   Linking.openURL(`tel:${businessPhone}`);

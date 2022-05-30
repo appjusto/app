@@ -25,11 +25,13 @@ export const WithdrawOrderModal = ({
   const title = (() => {
     if (status === 'dispatching') {
       return t('Retire o pedido');
-    } else if (status === 'ready') {
-      return t('Aguardando retirada');
-    } else {
-      return t('Aguarde');
     }
+    if (status === 'ready') {
+      return t('Aguardando retirada');
+    }
+    if (status === 'preparing') {
+      return t('Aguarde o pedido');
+    } else return t('Aguarde');
   })();
   const subTitle = (() => {
     if (status === 'dispatching' || status === 'ready') {
@@ -42,6 +44,18 @@ export const WithdrawOrderModal = ({
     if (type === 'food') return order.business?.name;
     else return order.origin?.address.main;
   })();
+  const buttonTitle = (() => {
+    if (status === 'dispatching') {
+      return t('Recebi o pedido');
+    }
+    if (status === 'ready') {
+      return t('Aguardando retirada');
+    }
+    if (status === 'preparing') {
+      return t('Aguarde o pedido');
+    } else return t('Aguarde');
+  })();
+  console.log(status);
   return (
     <Modal transparent {...props}>
       <View
@@ -114,14 +128,14 @@ export const WithdrawOrderModal = ({
             </View>
             <View style={{ width: '100%' }}>
               <DefaultButton
-                title={order.status === 'dispatching' ? t('Recebi o pedido') : t('Aguarde')}
+                title={buttonTitle}
                 onPress={onWithdrawal}
                 disabled={order.status !== 'dispatching'}
               />
               <DefaultButton
                 title={t('Tive um problema')}
                 onPress={onIssue}
-                secondary
+                variant="danger"
                 style={{ marginTop: halfPadding }}
               />
             </View>

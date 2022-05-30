@@ -149,10 +149,10 @@ export const OrderDetail = ({ navigation, route }: Props) => {
               </View>
             ) : null}
             {order.status === 'preparing' ? (
-              <View style={{ width: '61%' }}>
+              <View style={{ minWidth: '61%' }}>
                 <DefaultButton
                   title={t('Alterar tempo de preparo')}
-                  secondary
+                  variant="secondary"
                   onPress={() => setCookingModalVisible(true)}
                 />
               </View>
@@ -166,7 +166,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
         </View>
         {/* this button will open a CancelOrderModal  */}
         {cancellableStatuses ? (
-          <View style={{ width: '60%', paddingHorizontal: padding, marginBottom: 32 }}>
+          <View style={{ minWidth: '61%', paddingHorizontal: padding, marginBottom: 32 }}>
             <CustomButton
               order={order}
               activityIndicator={isLoading}

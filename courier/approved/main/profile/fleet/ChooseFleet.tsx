@@ -72,7 +72,7 @@ export default function ({ navigation, route }: Props) {
               onPress={() => {
                 navigation.navigate('CreateFleet');
               }}
-              secondary
+              variant="secondary"
             />
           </View>
         </PaddedView>

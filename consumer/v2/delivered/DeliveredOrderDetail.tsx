@@ -207,7 +207,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
                         issueType: 'consumer-delivery-problem',
                       });
                     }}
-                    secondary
+                    variant="secondary"
                   />
                 </ReviewBox>
               </View>
@@ -237,7 +237,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
                         issueType: 'consumer-delivery-problem',
                       });
                     }}
-                    secondary
+                    variant="secondary"
                   />
                 </ReviewBox>
               </View>

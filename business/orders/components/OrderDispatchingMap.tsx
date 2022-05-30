@@ -52,7 +52,7 @@ export const OrderDispatchingMap = ({ order, style, onChatWithCourier }: Props) 
               <View style={{ width: '60%', marginTop: 12, marginHorizontal: padding }}>
                 <DefaultButton
                   title={t('Abrir chat com o entregador')}
-                  secondary
+                  variant="secondary"
                   onPress={onChatWithCourier}
                 />
               </View>

@@ -116,7 +116,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
             style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
           >
             <View style={{ width: '38%' }}>
-              <DefaultButton secondary title={t('Ver pedido')} onPress={onCheckOrder} />
+              <DefaultButton variant="secondary" title={t('Ver pedido')} onPress={onCheckOrder} />
             </View>
             <View style={{ width: '57%', position: 'absolute', right: -2 }}>
               <CustomButton
@@ -129,7 +129,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
           </View>
         ) : (
           <View style={{ width: '100%' }}>
-            <DefaultButton secondary title={t('Ver pedido')} onPress={onCheckOrder} />
+            <DefaultButton variant="secondary" title={t('Ver pedido')} onPress={onCheckOrder} />
           </View>
         )}
       </View>

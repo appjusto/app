@@ -46,7 +46,7 @@ export const OrderDetailHeader = ({ order, style, onOpenOrderChat }: Props) => {
           <View style={{ width: '60%', marginTop: halfPadding }}>
             <DefaultButton
               title={t('Abrir chat com o cliente')}
-              secondary
+              variant="secondary"
               onPress={onOpenOrderChat}
             />
           </View>

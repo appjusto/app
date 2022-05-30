@@ -71,7 +71,7 @@ export const ChatKanbanItem = ({ message, counterpart, onCheckOrder, onOpenChat 
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
         <View style={{ width: '38%' }}>
-          <DefaultButton secondary title={t('Ver pedido')} onPress={onCheckOrder} />
+          <DefaultButton variant="secondary" title={t('Ver pedido')} onPress={onCheckOrder} />
         </View>
         <View style={{ width: '57%' }}>
           <DefaultButton

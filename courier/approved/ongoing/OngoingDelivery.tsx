@@ -225,7 +225,7 @@ export default function ({ navigation, route }: Props) {
             <DefaultButton
               title={t('Abrir chat com o restaurante')}
               onPress={() => openChatWithRestaurant()}
-              secondary
+              variant="secondary"
             />
           </View>
         ) : null}

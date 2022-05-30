@@ -99,14 +99,14 @@ export const OngoingActions = ({
           <View style={{ width: '49%' }}>
             <DefaultButton
               title={t('Relatar problema')}
-              secondary
+              variant="secondary"
               onPress={navigateToReportIssue}
             />
           </View>
           <View style={{ width: '49%' }}>
             <DefaultButton
               title={t('Cancelar pedido')}
-              secondary
+              variant="danger"
               onPress={navigateToConfirmCancel}
             />
           </View>

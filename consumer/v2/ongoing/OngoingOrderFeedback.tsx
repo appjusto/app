@@ -75,15 +75,18 @@ export default ({ navigation, route }: Props) => {
     }
   };
   const finishHandler = async () => {
+    setLoading(true);
     if (!tip) {
+      setLoading(false);
       navigation.navigate('MainNavigator', { screen: 'Home' });
       return;
     }
     if (!order) return;
     try {
       track('sending tip');
-      setLoading(true);
       await api.order().tipCourier(order.id, tip);
+      dispatch(showToast(t('Caixinha enviada!'), 'success'));
+      setLoading(false);
       navigation.navigate('MainNavigator', { screen: 'Home' });
     } catch (error) {
       setLoading(false);
@@ -206,7 +209,7 @@ export default ({ navigation, route }: Props) => {
                 }
                 onPress={openChatHandler}
                 // style={{ marginTop: padding }}
-                secondary
+                variant="secondary"
               />
             ) : null}
             <View
@@ -218,7 +221,11 @@ export default ({ navigation, route }: Props) => {
               }}
             >
               <View style={{ width: '47%' }}>
-                <DefaultButton title={t('Relatar problema')} secondary onPress={issueHandler} />
+                <DefaultButton
+                  title={t('Relatar problema')}
+                  variant="danger"
+                  onPress={issueHandler}
+                />
               </View>
               <View style={{ width: '47%' }}>
                 <DefaultButton
@@ -231,7 +238,7 @@ export default ({ navigation, route }: Props) => {
                       },
                     });
                   }}
-                  secondary
+                  variant="secondary"
                 />
               </View>
             </View>
@@ -251,7 +258,7 @@ export default ({ navigation, route }: Props) => {
                 }
                 onPress={openChatHandler}
                 // style={{ marginTop: padding }}
-                secondary
+                variant="secondary"
               />
             ) : null}
             <View
@@ -263,7 +270,11 @@ export default ({ navigation, route }: Props) => {
               }}
             >
               <View style={{ width: '47%' }}>
-                <DefaultButton title={t('Relatar problema')} secondary onPress={issueHandler} />
+                <DefaultButton
+                  title={t('Relatar problema')}
+                  variant="danger"
+                  onPress={issueHandler}
+                />
               </View>
               <View style={{ width: '47%' }}>
                 <DefaultButton
@@ -276,7 +287,7 @@ export default ({ navigation, route }: Props) => {
                       },
                     });
                   }}
-                  secondary
+                  variant="secondary"
                 />
               </View>
             </View>
