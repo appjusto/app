@@ -11,7 +11,6 @@ import { useSegmentScreen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { screens } from '../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../common/utils/formatters';
-import { t } from '../../../strings';
 import { ApprovedParamList } from '../types';
 import { MatchingParamList } from './types';
 
@@ -38,31 +37,36 @@ export default function ({ navigation, route }: Props) {
       <FlatList
         data={requests}
         keyExtractor={(item) => item.orderId}
-        renderItem={({ item }) => (
-          <ConfigItem
-            leftIcon={
-              item.type === 'food' ? (
-                <MaterialIcons name="fastfood" size={16} />
-              ) : (
-                <MaterialIcons name="local-mall" size={16} />
-              )
-            }
-            title={formatCurrency(item.fee)}
-            subtitle={`${formatDistance(item.distance)} ${t('de percurso')}`}
-            onPress={() => {
-              navigation.navigate('MatchingNavigator', {
-                screen: 'Matching',
-                params: {
-                  matchRequest: item,
-                },
-              });
-            }}
-          >
-            <RoundedText>{`${formatDistance(item.distanceToOrigin)} ${t(
-              'até a retirada'
-            )}`}</RoundedText>
-          </ConfigItem>
-        )}
+        renderItem={({ item }) => {
+          const street = item.originAddress.split(',').shift();
+          const neighboorhood = item.originAddress.split('-')[1].split(',').shift();
+          const originAddress = street ? `${street},${neighboorhood ?? ''}` : '';
+          return (
+            <ConfigItem
+              leftIcon={
+                item.type === 'food' ? (
+                  <MaterialIcons name="fastfood" size={16} />
+                ) : (
+                  <MaterialIcons name="local-mall" size={16} />
+                )
+              }
+              title={formatCurrency(item.fee)}
+              subtitle={originAddress}
+              onPress={() => {
+                navigation.navigate('MatchingNavigator', {
+                  screen: 'Matching',
+                  params: {
+                    matchRequest: item,
+                  },
+                });
+              }}
+            >
+              <RoundedText>{`Percurso total: ${formatDistance(
+                item.distanceToOrigin + item.distance
+              )}`}</RoundedText>
+            </ConfigItem>
+          );
+        }}
       />
     </View>
   );
