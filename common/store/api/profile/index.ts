@@ -84,15 +84,9 @@ export default class ProfileApi {
       const update: Partial<UserProfile> = {
         ...changes,
         appVersion,
+        appInstallationId: installationId,
+        appIp: ip,
         platform: Platform.OS,
-        meta: {
-          app: {
-            version: appVersion,
-            platform: Platform.OS,
-            installationId,
-            ip,
-          },
-        },
         updatedOn: serverTimestamp(),
       };
       try {
