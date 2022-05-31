@@ -21,6 +21,7 @@ if (__DEV__) {
     'Sentry Logger',
     'AsyncStorage has been extracted',
     'You need to add `ACCESS_BACKGROUND_LOCATION`',
+    'ViewPropTypes will be removed',
   ]);
 }
 
