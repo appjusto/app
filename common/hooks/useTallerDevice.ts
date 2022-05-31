@@ -2,5 +2,5 @@ import { Dimensions } from 'react-native';
 
 export default function () {
   const { height } = Dimensions.get('window');
-  return height > 670;
+  return height > 700;
 }
