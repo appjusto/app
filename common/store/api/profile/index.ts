@@ -79,8 +79,8 @@ export default class ProfileApi {
       Constants.manifest ? ` / ${Constants.manifest.version}` : ''
     }`;
     return new Promise<void>(async (resolve) => {
+      const installationId = await getInstallationId();
       const ip = this.flavor === 'consumer' ? await fetchPublicIP() : null;
-      const installationId = this.flavor === 'consumer' ? await getInstallationId() : null;
       const update: Partial<UserProfile> = {
         ...changes,
         appVersion,

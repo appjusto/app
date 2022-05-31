@@ -1,14 +1,18 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Application from 'expo-application';
+import * as SecureStore from 'expo-secure-store';
 import { nanoid } from 'nanoid/non-secure';
+import * as Sentry from 'sentry-expo';
 
 export const getInstallationId = async () => {
   try {
-    let value = await AsyncStorage.getItem('installation-id');
+    let value = await SecureStore.getItemAsync('installation-id');
     if (!value) {
-      value = nanoid();
-      await AsyncStorage.setItem('installation-id', value);
+      value = Application.androidId ?? nanoid();
+      await SecureStore.setItemAsync('installation-id', value);
     }
     return value;
-  } catch (error: any) {}
+  } catch (e: any) {
+    Sentry.Native.captureException(e);
+  }
   return null;
 };
