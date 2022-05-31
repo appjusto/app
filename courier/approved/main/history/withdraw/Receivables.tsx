@@ -58,10 +58,7 @@ export const Receivables = ({ navigation, route }: Props) => {
     if (!receivables) return;
     setAdavanceables(
       receivables.items
-        .filter(
-          (item) =>
-            item.advanceable && dayjs(advanceableAt(item.created_at)).isBefore(getServerTime())
-        )
+        .filter((item) => dayjs(advanceableAt(item.created_at)).isBefore(getServerTime()))
         .map((item) => item.id)
     );
   }, [receivables]);
@@ -124,7 +121,7 @@ export const Receivables = ({ navigation, route }: Props) => {
             </Text>
             <Text style={{ ...texts.sm, color: colors.red }}>
               {t(
-                'Atenção: a Iugu só permite realizar antecipações em dias úteis, de 09:00 às 16:00 e só é possível antecipar faturas pagas há mais de 2 dias.'
+                'Atenção: a Iugu só permite realizar antecipações em dias úteis, de 09:00 às 16:00 e só é possível antecipar faturas pagas há mais de 2 dias úteis.'
               )}
             </Text>
           </PaddedView>
