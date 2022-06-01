@@ -18,7 +18,7 @@ import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
-import { padding, screens } from '../../../../common/styles';
+import { screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
@@ -96,12 +96,10 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           ) : null}
-          <View style={{ marginTop: padding }}>
-            <HomeShareCard
-              title="Divulgue o AppJusto"
-              subtitle="Compartilhe esse movimento por uma economia mais justa"
-            />
-          </View>
+          <HomeShareCard
+            title="Divulgue o AppJusto"
+            subtitle="Compartilhe esse movimento por uma economia mais justa"
+          />
           <MaintenanceModal />
           <UpgradeVersionModal />
         </PaddedView>
