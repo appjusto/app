@@ -11,7 +11,6 @@ import { useBusinessDeeplink } from '../../../../common/hooks/useBusinessDeeplin
 import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconLogin } from '../../../../common/icons/icon-login';
 import { useUpdateLocation } from '../../../../common/location/useUpdateLocation';
-import { CrowdFundingCard } from '../../../../common/screens/home/cards/CrowdFundingCard';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
@@ -97,8 +96,6 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           ) : null}
-          {!consumer ? <View style={{ height: padding }} /> : null}
-          <CrowdFundingCard />
           <View style={{ marginTop: padding }}>
             <HomeShareCard
               title="Divulgue o AppJusto"
