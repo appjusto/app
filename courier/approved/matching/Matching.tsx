@@ -7,6 +7,7 @@ import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
+import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
@@ -140,7 +141,8 @@ export default function ({ navigation, route }: Props) {
   };
   // helpers
   const totalDistance = (matchRequest.distance + routeDistanceToOrigin) / 1000;
-  const feePerKm = matchRequest.fee / 100 / totalDistance;
+  const discountedFee = (matchRequest.fee * 2.21) / 100;
+  const feePerKm = (matchRequest.fee - discountedFee) / 100 / totalDistance;
   const roundedFeePerKm = round(feePerKm, 2);
   // UI
   if (isLoading)
@@ -157,20 +159,26 @@ export default function ({ navigation, route }: Props) {
     >
       <View style={{ paddingVertical: padding, flex: 1 }}>
         {courier.fleet?.name ? (
-          <View
+          <PaddedView
             style={{
               backgroundColor: colors.grey50,
-              borderRadius: 64,
-              padding,
-              flexDirection: 'row',
+              borderRadius: 16,
               justifyContent: 'center',
               alignItems: 'center',
-              marginTop: padding,
               marginHorizontal: padding,
+              marginTop: padding,
             }}
           >
-            <Text style={{ ...texts.md }}>{courier.fleet.name}</Text>
-          </View>
+            <Text style={{ ...texts.md, ...texts.bold, marginBottom: 4 }}>
+              {`Frota: ${courier.fleet.name}`}
+            </Text>
+            <Text style={{ ...texts.xs, marginBottom: 2 }}>{`${formatCurrency(
+              matchRequest.fee
+            )} da frota - ${formatCurrency(discountedFee)} da tarifa bancária`}</Text>
+            <Text style={{ ...texts.xs, color: colors.red }}>
+              {t('(tarifa de 2,21% + R$ 0,09 por transação)')}
+            </Text>
+          </PaddedView>
         ) : (
           <View
             style={{
@@ -204,7 +212,7 @@ export default function ({ navigation, route }: Props) {
         >
           <View style={{ alignItems: 'center', flex: 1 }}>
             <Text style={{ ...texts.x4l, textAlign: 'center' }}>
-              {formatCurrency(matchRequest.fee)}
+              {formatCurrency(matchRequest.fee - discountedFee)}
             </Text>
             <Text
               style={{
