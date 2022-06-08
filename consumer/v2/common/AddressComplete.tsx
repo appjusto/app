@@ -153,7 +153,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
           //verifies if the selected address has a number and dismisses keyboard
           if (entersNumber.test(item.main === undefined ? '' : item?.main)) Keyboard.dismiss();
           else {
-            item.main = item.main?.split(' - ').shift() + ', ';
+            item.main = item.main?.split(' - ').shift();
           }
         }
       } else Keyboard.dismiss();
