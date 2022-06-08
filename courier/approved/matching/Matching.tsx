@@ -73,10 +73,15 @@ export default function ({ navigation, route }: Props) {
             latitude: coords.latitude,
             longitude: coords.longitude,
           });
+          console.log('efeito 1: if (coords) setCourierLatLng');
           const currentDistanceToOrigin = await api
             .maps()
             .googleDirections(coords, origin, courier.mode);
+          console.log('efeito 1: if (coords) pegando currentDistanceToOrigin do googleDirections');
           if (currentDistanceToOrigin) setRouteDistanceToOrigin(currentDistanceToOrigin.distance);
+          console.log(
+            'efeito 1: if (currentDistanceToOrigin) setRouteDistanceToOrigin para currentDistance'
+          );
           screen('Matching', {
             orderId,
             distanceToOrigin,
@@ -89,6 +94,7 @@ export default function ({ navigation, route }: Props) {
           });
         }
       } catch (error) {
+        console.log('efeito 1: caiu no error');
         dispatch(
           showToast(
             t('Não foi possível obter sua localização atual. Verifque suas configurações.'),
@@ -114,7 +120,9 @@ export default function ({ navigation, route }: Props) {
   React.useEffect(() => {
     if (situation === 'pending') {
       api.courier().viewOrderRequest(courier.id, orderId);
+      console.log('efeito situation chamando viewOrderRequet');
     } else if (situation === 'accepted') {
+      console.log('efeito situation accepted navegando para Ongoing');
       navigation.replace('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: {
@@ -122,8 +130,10 @@ export default function ({ navigation, route }: Props) {
         },
       });
     } else if (situation === 'expired') {
+      console.log('efeito situation expired');
       navigation.replace('MatchingError');
     } else if (situation === 'rejected') {
+      console.log('efeito situation chamando rejected');
       navigation.popToTop();
     }
   }, [situation, orderId, courier.id, api, navigation]);
@@ -131,12 +141,16 @@ export default function ({ navigation, route }: Props) {
   const acceptHandler = async () => {
     try {
       setLoading(true);
+      console.log('chamando acceptHandler');
       await api.order().matchOrder(orderId, routeDistanceToOrigin);
+      console.log('accept handler rolou');
     } catch (error) {
+      console.log('chamando acceptHandler... caiu no erro');
       navigation.replace('MatchingError');
     }
   };
   const rejectHandler = () => {
+    console.log('chamando rejectHandler');
     navigation.replace('RejectedMatching', { orderId });
   };
   // helpers
