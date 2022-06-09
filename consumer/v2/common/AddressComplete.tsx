@@ -35,6 +35,7 @@ export type AddressCompleteParamList = {
     returnScreen: 'CreateOrderP2P' | 'FoodOrderHome' | 'RecommendRestaurant';
     returnParam: string;
     value?: Place;
+    returnToHome?: boolean;
   };
 };
 
@@ -51,7 +52,7 @@ type Props = {
 
 export const AddressComplete = ({ navigation, route }: Props) => {
   // params
-  const { value, returnScreen, returnParam } = route.params;
+  const { value, returnScreen, returnParam, returnToHome } = route.params;
   // context
   const api = React.useContext(ApiContext);
   const consumer = useSelector(getConsumer);
@@ -170,7 +171,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   // confirm button callback
   const completeHandler = React.useCallback(() => {
     if (!selectedAddress) return;
-    if (complement && !additionalInfo.length) {
+    if (returnScreen !== 'RecommendRestaurant' && complement && !additionalInfo.length) {
       dispatch(
         showToast(
           t('Insira o complemento ou selecione a opção "Endereço sem complemento" para prosseguir'),
@@ -184,7 +185,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
       returnScreen !== 'RecommendRestaurant'
         ? { address: selectedAddress, additionalInfo }
         : { address: selectedAddress };
-    navigation.navigate(returnScreen, { [returnParam]: place });
+    navigation.navigate(returnScreen, { [returnParam]: place, returnToHome });
   }, [
     selectedAddress,
     additionalInfo,
@@ -193,6 +194,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
     returnParam,
     complement,
     dispatch,
+    returnToHome,
   ]);
   // UI
   return (
@@ -216,25 +218,27 @@ export const AddressComplete = ({ navigation, route }: Props) => {
         autoCorrect={false}
       />
       {returnScreen !== 'RecommendRestaurant' ? (
-        <DefaultInput
-          defaultValue={additionalInfo}
-          value={additionalInfo}
-          title={t('Complemento (se houver)')}
-          placeholder={t('Apartamento, sala, loja')}
-          onChangeText={setAdditionalInfo}
-          style={{ marginBottom: padding }}
-          autoCorrect={false}
-          editable={complement}
-        />
+        <View>
+          <DefaultInput
+            defaultValue={additionalInfo}
+            value={additionalInfo}
+            title={t('Complemento (se houver)')}
+            placeholder={t('Apartamento, sala, loja')}
+            onChangeText={setAdditionalInfo}
+            style={{ marginBottom: padding }}
+            autoCorrect={false}
+            editable={complement}
+          />
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
+            <RadioButton
+              title={t('Endereço sem complemento')}
+              onPress={() => setComplement(!complement)}
+              checked={!complement}
+              variant="square"
+            />
+          </View>
+        </View>
       ) : null}
-      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
-        <RadioButton
-          title={t('Endereço sem complemento')}
-          onPress={() => setComplement(!complement)}
-          checked={!complement}
-          variant="square"
-        />
-      </View>
       <SectionList
         stickySectionHeadersEnabled={false}
         style={{ flex: 1 }}

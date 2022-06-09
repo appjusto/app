@@ -1,4 +1,4 @@
-import { CompositeNavigationProp } from '@react-navigation/core';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Linking, Text, TouchableOpacity, View } from 'react-native';
@@ -20,11 +20,16 @@ type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<LoggedNavigatorParamList & UnloggedParamList>
 >;
 
+type ScreenRouteProp = RouteProp<FoodOrderNavigatorParamList, 'RecommendationFeedback'>;
+
 type Props = {
   navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 };
 
-export const RecommendationFeedback = ({ navigation }: Props) => {
+export const RecommendationFeedback = ({ navigation, route }: Props) => {
+  // params
+  const { returnToHome } = route.params ?? {};
   //tracking
   useSegmentScreen('RecommendationFeedback');
   return (
@@ -71,8 +76,12 @@ export const RecommendationFeedback = ({ navigation }: Props) => {
       </View>
       <View style={{ flex: 1 }} />
       <DefaultButton
-        title={t('Voltar para a lista de restaurantes')}
-        onPress={() => navigation.navigate('FoodOrderHome')}
+        title={returnToHome ? t('Voltar') : t('Ir para a lista de restaurantes')}
+        onPress={() =>
+          returnToHome
+            ? navigation.navigate('MainNavigator', { screen: 'Home' })
+            : navigation.navigate('FoodOrderHome')
+        }
       />
     </KeyboardAwareScrollView>
   );

@@ -10,6 +10,7 @@ import { UpgradeVersionModal } from '../../../../common/components/views/Upgrade
 import { useBusinessDeeplink } from '../../../../common/hooks/useBusinessDeeplink';
 import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconLogin } from '../../../../common/icons/icon-login';
+import { IconShareGreen } from '../../../../common/icons/icon-share-green';
 import { useUpdateLocation } from '../../../../common/location/useUpdateLocation';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
@@ -18,7 +19,7 @@ import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
-import { screens } from '../../../../common/styles';
+import { padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
@@ -100,6 +101,23 @@ export default function ({ navigation }: Props) {
             title="Divulgue o AppJusto"
             subtitle="Compartilhe esse movimento por uma economia mais justa"
           />
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('FoodOrderNavigator', {
+                screen: 'RecommendRestaurant',
+                params: { returnToHome: true },
+              })
+            }
+            style={{ marginTop: padding }}
+          >
+            <HomeCard
+              icon={<IconShareGreen />}
+              title={t('Indique um restaurante')}
+              subtitle={t(
+                'Ainda não encontrou o restaurante que queria por aqui? Manda pra gente!'
+              )}
+            />
+          </TouchableOpacity>
           <MaintenanceModal />
           <UpgradeVersionModal />
         </PaddedView>
