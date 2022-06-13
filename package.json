@@ -17,9 +17,9 @@
   "dependencies": {
     "@appjusto/firebase-refs": "^0.1.4",
     "@appjusto/menu": "^0.1.4",
-    "@appjusto/types": "^5.9.8",
     "@expo/react-native-action-sheet": "^3.13.0",
     "@expo/vector-icons": "^13.0.0",
+    "@appjusto/types": "^6.1.0",
     "@fnando/cnpj": "^1.0.2",
     "@fnando/cpf": "^1.0.2",
     "@mapbox/polyline": "^1.1.1",
