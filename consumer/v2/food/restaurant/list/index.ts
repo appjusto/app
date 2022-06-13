@@ -17,6 +17,14 @@ const restaurantsInRange = (
           ? distanceBetweenLatLng(currentLocation, restaurant.businessAddress.latlng)
           : 0)
   );
+  return inRange;
+};
+
+const restaurantsOutOfRange = (
+  status: string,
+  items?: BusinessAlgolia[],
+  currentLocation?: LatLng | null
+) => {
   const outOfRange = (items ?? []).filter(
     (restaurant) =>
       restaurant.status === status &&
@@ -25,12 +33,15 @@ const restaurantsInRange = (
           ? distanceBetweenLatLng(currentLocation, restaurant.businessAddress.latlng)
           : 0)
   );
-  return inRange.concat(outOfRange);
+  return outOfRange;
 };
 
 export const sectionsFromResults = (items?: BusinessAlgolia[], currentLocation?: LatLng | null) => {
   const open = restaurantsInRange('open', items, currentLocation);
-  const closed = restaurantsInRange('closed', items, currentLocation);
+  const openOutOfRange = restaurantsOutOfRange('open', items, currentLocation);
+  const closed = restaurantsInRange('closed', items, currentLocation).concat(
+    restaurantsOutOfRange('closed', items, currentLocation)
+  );
   let sections: RestaurantListSection[] = [];
   if (open.length > 0) {
     sections = [
@@ -40,6 +51,9 @@ export const sectionsFromResults = (items?: BusinessAlgolia[], currentLocation?:
         data: open,
       },
     ];
+  }
+  if (openOutOfRange.length > 0) {
+    sections = [...sections, { data: openOutOfRange }];
   }
   if (closed.length > 0) {
     sections = [

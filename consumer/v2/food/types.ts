@@ -10,8 +10,11 @@ export type FoodOrderNavigatorParamList = {
   RestaurantSearch: undefined;
   RecommendRestaurant?: {
     place?: Place;
+    returnToHome?: boolean;
   };
-  RecommendationFeedback: undefined;
+  RecommendationFeedback?: {
+    returnToHome?: boolean;
+  };
   RestaurantNavigator: {
     restaurantId: string;
     orderId?: string;
