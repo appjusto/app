@@ -60,15 +60,6 @@ export const OrderCourierSummary = ({ courier }: Props) => {
           paddingHorizontal: padding,
         }}
       >
-        <MaterialIcons name="highlight-remove" size={24} />
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          marginTop: 12,
-          paddingHorizontal: padding,
-        }}
-      >
         <MaterialIcons name="thumb-up-off-alt" size={24} />
         <View style={{ alignItems: 'flex-start', paddingHorizontal: padding }}>
           <Text style={{ ...texts.xs, color: colors.grey700 }}>{t('Avaliações positivas')}</Text>

@@ -11,7 +11,6 @@ import { useBusinessDeeplink } from '../../../../common/hooks/useBusinessDeeplin
 import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconLogin } from '../../../../common/icons/icon-login';
 import { useUpdateLocation } from '../../../../common/location/useUpdateLocation';
-import { CrowdFundingCard } from '../../../../common/screens/home/cards/CrowdFundingCard';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
@@ -19,7 +18,7 @@ import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { getOrders } from '../../../../common/store/order/selectors';
-import { padding, screens } from '../../../../common/styles';
+import { screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
@@ -97,14 +96,10 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           ) : null}
-          {!consumer ? <View style={{ height: padding }} /> : null}
-          <CrowdFundingCard />
-          <View style={{ marginTop: padding }}>
-            <HomeShareCard
-              title="Divulgue o AppJusto"
-              subtitle="Compartilhe esse movimento por uma economia mais justa"
-            />
-          </View>
+          <HomeShareCard
+            title="Divulgue o AppJusto"
+            subtitle="Compartilhe esse movimento por uma economia mais justa"
+          />
           <MaintenanceModal />
           <UpgradeVersionModal />
         </PaddedView>
