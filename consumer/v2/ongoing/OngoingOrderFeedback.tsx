@@ -222,7 +222,7 @@ export default ({ navigation, route }: Props) => {
               </View>
               <View style={{ width: '47%' }}>
                 <DefaultButton
-                  title={t('Detalhes da corrida')}
+                  title={t('Detalhes')}
                   onPress={() => {
                     navigation.navigate('DeliveredOrderNavigator', {
                       screen: 'DeliveredOrderDetail',
@@ -267,7 +267,7 @@ export default ({ navigation, route }: Props) => {
               </View>
               <View style={{ width: '47%' }}>
                 <DefaultButton
-                  title={t('Detalhes da corrida')}
+                  title={t('Detalhes')}
                   onPress={() => {
                     navigation.navigate('DeliveredOrderNavigator', {
                       screen: 'DeliveredOrderDetail',
