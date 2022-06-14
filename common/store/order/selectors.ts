@@ -92,3 +92,29 @@ export const summarizeOrders = memoize((orders: WithId<Order>[]) =>
     { delivered: 0, canceled: 0, ongoing: 0, quote: 0, total: 0, courierFee: 0 }
   )
 );
+
+type OrdersSummary = {
+  [K in OrderStatus]?: number;
+};
+
+export const summarizeOrders2 = memoize((orders: WithId<Order>[] = []) =>
+  orders.reduce(
+    (result, order) => ({
+      confirmed: order.status === 'confirmed' ? (result.confirmed ?? 0) + 1 : result.confirmed,
+      preparing: order.status === 'preparing' ? (result.preparing ?? 0) + 1 : result.preparing,
+      ready: order.status === 'ready' ? (result.ready ?? 0) + 1 : result.ready,
+      dispatching:
+        order.status === 'dispatching' ? (result.dispatching ?? 0) + 1 : result.dispatching,
+      delivered: order.status === 'delivered' ? (result.delivered ?? 0) + 1 : result.delivered,
+      canceled: order.status === 'canceled' ? (result.canceled ?? 0) + 1 : result.canceled,
+    }),
+    {
+      confirmed: 0,
+      preparing: 0,
+      ready: 0,
+      dispatching: 0,
+      delivered: 0,
+      canceled: 0,
+    } as OrdersSummary
+  )
+);
