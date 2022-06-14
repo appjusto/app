@@ -12,7 +12,6 @@ import { UpgradeVersionModal } from '../../../../common/components/views/Upgrade
 import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconHomeCourierRequests } from '../../../../common/icons/icon-home-courier-requests';
 import { IconPartners } from '../../../../common/icons/icon-partners';
-import { CrowdFundingCard } from '../../../../common/screens/home/cards/CrowdFundingCard';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
@@ -24,7 +23,7 @@ import { getOrders } from '../../../../common/store/order/selectors';
 import { colors, padding, screens } from '../../../../common/styles';
 import {
   startLocationUpdatesTask,
-  stopLocationUpdatesTask,
+  stopLocationUpdatesTask
 } from '../../../../common/utils/location';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
@@ -129,9 +128,6 @@ export default function ({ navigation }: Props) {
           >
             <HomeDeliveriesSummary />
           </TouchableOpacity>
-          <View style={{ marginBottom: padding }}>
-            <CrowdFundingCard />
-          </View>
           <View style={{ marginBottom: padding }}>
             <FreshDeskCard
               onPress={() => {

@@ -36,7 +36,7 @@ type Props = {
 
 export const RecommendRestaurant = ({ navigation, route }: Props) => {
   // params
-  const { place } = route.params ?? {};
+  const { place, returnToHome } = route.params ?? {};
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -68,7 +68,7 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
         await api.business().addRecomendation(place, consumer?.id, instagram, phone, owner);
         track('consumer sent a restaurant recommendation to database');
         setLoading(false);
-        navigation.navigate('RecommendationFeedback');
+        navigation.replace('RecommendationFeedback', { returnToHome });
       } catch (error) {
         dispatch(showToast(t('Não foi possível enviar a recomendação. Tente novamente.'), 'error'));
       }
@@ -99,6 +99,7 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
               navigation.navigate('AddressComplete', {
                 returnScreen: 'RecommendRestaurant',
                 returnParam: 'place',
+                returnToHome,
               });
             }}
           >

@@ -5,7 +5,7 @@ import {
   SectionList,
   SectionListProps,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../../common/app/context';
@@ -64,29 +64,55 @@ export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...pr
       }
       renderSectionHeader={({ section }) => {
         const closed = section.data.find(() => true)?.status === 'closed';
+        const openOutOfRange = section.data.filter(
+          (restaurant) =>
+            restaurant.status === 'open' &&
+            (restaurant.deliveryRange ?? 0) <
+              (location && restaurant.businessAddress?.latlng
+                ? distanceBetweenLatLng(location, restaurant.businessAddress.latlng)
+                : 0)
+        );
+        const recommendationUI = () => {
+          const sectionHeader = () => {
+            return (
+              <View>
+                <View
+                  style={{
+                    borderTopColor: colors.grey50,
+                    borderTopWidth: 1,
+                  }}
+                />
+                <PaddedView style={{ backgroundColor: colors.white }}>
+                  <TouchableOpacity onPress={onRecommend}>
+                    <HomeCard
+                      icon={<IconShareGreen />}
+                      title={t('Indique um restaurante')}
+                      subtitle={t(
+                        'Ainda não encontrou o restaurante que queria por aqui? Manda pra gente!'
+                      )}
+                    />
+                  </TouchableOpacity>
+                </PaddedView>
+              </View>
+            );
+          };
+          if (openOutOfRange.length) {
+            return sectionHeader();
+          }
+        };
         return (
           <View>
-            {closed ? (
-              <PaddedView style={{ backgroundColor: colors.white }}>
-                <TouchableOpacity onPress={onRecommend}>
-                  <HomeCard
-                    icon={<IconShareGreen />}
-                    title={t('Indique um restaurante')}
-                    subtitle={t(
-                      'Ainda não encontrou o restaurante que queria por aqui? Manda pra gente!'
-                    )}
-                  />
-                </TouchableOpacity>
-              </PaddedView>
+            {recommendationUI()}
+            {section.title && section.subtitle ? (
+              <View
+                style={{
+                  paddingBottom: padding,
+                  backgroundColor: closed ? colors.grey50 : colors.white,
+                }}
+              >
+                <DoubleHeader title={section.title} subtitle={section.subtitle} />
+              </View>
             ) : null}
-            <View
-              style={{
-                paddingBottom: padding,
-                backgroundColor: closed ? colors.grey50 : colors.white,
-              }}
-            >
-              <DoubleHeader title={section.title} subtitle={section.subtitle} />
-            </View>
           </View>
         );
       }}

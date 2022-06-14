@@ -17,9 +17,9 @@
   "dependencies": {
     "@appjusto/firebase-refs": "^0.1.4",
     "@appjusto/menu": "^0.1.4",
+    "@appjusto/types": "^6.1.0",
     "@expo/react-native-action-sheet": "^3.13.0",
     "@expo/vector-icons": "^13.0.0",
-    "@appjusto/types": "^6.1.0",
     "@fnando/cnpj": "^1.0.2",
     "@fnando/cpf": "^1.0.2",
     "@mapbox/polyline": "^1.1.1",
@@ -58,6 +58,7 @@
     "expo-notifications": "~0.15.2",
     "expo-permissions": "~13.2.0",
     "expo-print": "~11.2.0",
+    "expo-secure-store": "^11.2.0",
     "expo-splash-screen": "~0.15.1",
     "expo-status-bar": "~1.3.0",
     "expo-task-manager": "~10.2.1",
