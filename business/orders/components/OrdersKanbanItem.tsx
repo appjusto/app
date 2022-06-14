@@ -35,7 +35,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
 
   // update status to 'ready' if the cooking time interval has passed
   React.useEffect(() => {
-    if (!order) return;
+    if (!order?.status) return;
     if (order.status === 'preparing') {
       if (!getServerTime) return;
       if (!order.cookingTime) return;
@@ -46,7 +46,15 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
         api.order().updateOrder(order.id, { status: 'ready' });
       }
     }
-  }, [api, getServerTime, order, now]);
+  }, [
+    api,
+    getServerTime,
+    now,
+    order?.cookingTime,
+    order?.id,
+    order?.status,
+    order?.timestamps.preparing,
+  ]);
   // handlers
   const actionHandler = async () => {
     if (!order) return;
