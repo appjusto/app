@@ -68,7 +68,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [complement, setComplement] = React.useState<string>(
     order?.destination?.additionalInfo ?? ''
   );
-  const [addressComplement, setAddressComplement] = React.useState<boolean>(!!complement.length);
+  const [addressComplement, setAddressComplement] = React.useState<boolean>(complement.length > 0);
   const canSubmit =
     selectedPaymentMethodId !== undefined &&
     selectedFare !== undefined &&
