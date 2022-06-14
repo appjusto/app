@@ -1,6 +1,7 @@
 const { spawn, spawnSync } = require('child_process');
 const { version } = require('../version.json');
 const { ENV, FLAVOR, PLATFORM, DISTRIBUTION, TOOL } = process.env;
+require('dotenv').config();
 
 // Usage: ENV=dev FLAVOR=courier npm run build-js
 // Usage: ENV=staging FLAVOR=courier PLATFORM=ios npm run build-js
