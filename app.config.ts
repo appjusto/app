@@ -102,17 +102,6 @@ const slug = () => {
   return slug;
 };
 
-// const scheme = () => {
-//   const scheme =
-//     flavor === 'consumer'
-//       ? 'appjusto'
-//       : flavor === 'business'
-//       ? 'appjustogerenciador'
-//       : 'appjustocourier';
-//   if (environment !== 'live') return `${scheme}${environment}`;
-//   return scheme;
-// };
-
 const appBundlePackage = () => {
   return `br.com.appjusto.${flavor}.${environment}`;
 };
