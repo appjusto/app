@@ -77,7 +77,7 @@ export default function ({ navigation }: Props) {
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <IconMotocycleBeta />
             <Text style={{ ...texts.x2l, marginTop: 32 }}>
-              {t('Cadastro enviado para o\n período de testes!')}
+              {t('Cadastro enviado...')}
             </Text>
           </View>
           <View style={{ marginTop: 24, marginBottom: padding }}>
@@ -158,13 +158,6 @@ export default function ({ navigation }: Props) {
         </PaddedView>
         <View>
           <HR color={colors.grey500} />
-          <ConfigItem
-            title={t('Sobre o período de testes')}
-            subtitle={t('Saiba como acontecerão os testes')}
-            onPress={() => {
-              navigation.navigate('AboutTests');
-            }}
-          />
           <ConfigItem
             title={t('Autonomia e preço justo')}
             subtitle={t('Veja como você define o preço')}
