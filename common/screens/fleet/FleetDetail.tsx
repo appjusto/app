@@ -20,7 +20,7 @@ import useObserveFleet from '../../store/api/fleet/hooks/useObserveFleet';
 import { track, useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
 import { getCourier } from '../../store/courier/selectors';
-import { colors, screens, texts } from '../../styles';
+import { colors, padding, screens, texts } from '../../styles';
 import { formatCurrency, formatDistance } from '../../utils/formatters';
 
 export type FleetDetailParamList = {
@@ -100,6 +100,17 @@ export default function ({ navigation, route }: Props) {
         ) : null}
         <Text style={{ ...texts.xs, color: colors.grey700, marginTop: 8 }}>
           {fleet.description}
+        </Text>
+        <Text
+          style={{
+            ...texts.xs,
+            color: colors.red,
+            marginTop: padding,
+          }}
+        >
+          {t(
+            'Atenção: O AppJusto não fica com nada do valor do seu trabalho. Todos os pagamentos são processados com segurança pela operadora financeira Iugu, que cobra 2,21% sobre o valor final de cada corrida pelo serviço'
+          )}
         </Text>
         <View
           style={{

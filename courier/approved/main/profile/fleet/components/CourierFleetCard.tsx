@@ -53,6 +53,17 @@ export const CourierFleetCard = ({ fleet, listItem, onPress }: Props) => {
         >
           {fleet.description}
         </Text>
+        <Text
+          style={{
+            ...texts.xs,
+            color: colors.red,
+            marginBottom: padding,
+          }}
+        >
+          {t(
+            'Atenção: O AppJusto não fica com nada do valor do seu trabalho. Todos os pagamentos são processados com segurança pela operadora financeira Iugu, que cobra 2,21% sobre o valor final de cada corrida pelo serviço'
+          )}
+        </Text>
         <View
           style={{
             flexDirection: 'row',

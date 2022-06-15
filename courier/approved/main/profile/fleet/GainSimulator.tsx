@@ -18,7 +18,7 @@ export default function ({ fee, distance, additional }: Props) {
         <Text style={{ ...texts.sm, marginBottom: 4 }}>{t('Simulação de ganhos')}</Text>
         <Text style={{ ...texts.xs, color: colors.grey700, marginBottom: 16 }}>
           {t(
-            'Veja uma simulação aproximada dos ganhos por corrida nessa frota com os valores definidos acima. Essa simulação não considera a Porcentagem do Valor do Pedido, então os ganhos finais podem ser superiores.'
+            'Veja uma simulação aproximada dos ganhos por corrida nessa frota com os valores definidos acima.'
           )}
         </Text>
         <View
