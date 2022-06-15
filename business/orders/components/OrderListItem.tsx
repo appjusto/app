@@ -54,7 +54,10 @@ export const OrderListItem = ({ item }: Props) => {
             key={complement.complementId}
           >
             <View style={{ width: '12%', alignItems: 'flex-start' }}>
-              <Text style={{ ...texts.sm, color: colors.grey700 }}>{complement.quantity}</Text>
+              <Text style={{ ...texts.sm, color: colors.grey700 }}>
+                {item.quantity} <Text style={{ color: colors.green600 }}>x</Text>{' '}
+                {complement.quantity}
+              </Text>
             </View>
             <View style={{ width: '61%', alignItems: 'flex-start' }}>
               <Text

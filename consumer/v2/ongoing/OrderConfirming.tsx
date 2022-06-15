@@ -18,6 +18,7 @@ import { borders, colors, padding, screens, texts } from '../../../common/styles
 import { formatCurrency } from '../../../common/utils/formatters';
 import { DeliveryProblemCard } from '../../../courier/approved/ongoing/delivery-problem/DeliveryProblemCard';
 import { t } from '../../../strings';
+import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
 import { LoggedNavigatorParamList } from '../types';
 import { OngoingOrderNavigatorParamList } from './types';
 
@@ -185,7 +186,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
           subtitle={t('Abrir chat no WhatsApp')}
           onPress={() => {
             track('clicked to open chat with backoffice');
-            Linking.openURL('https://wa.me/551197821-0274');
+            Linking.openURL(AppJustoAssistanceWhatsAppURL);
           }}
           situation="chat"
         />

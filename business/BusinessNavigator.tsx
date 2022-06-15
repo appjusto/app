@@ -42,7 +42,6 @@ export const BusinessNavigator = () => {
   useNotificationToken();
   // starting/stoping keepAlive task/internval
   React.useEffect(() => {
-    console.log('BusinessNavigator; status:', status);
     if (!status) return;
     (async () => {
       if (status === 'open') {

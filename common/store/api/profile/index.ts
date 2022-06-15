@@ -13,7 +13,9 @@ import {
 import { hash } from 'geokit';
 import { Platform } from 'react-native';
 import * as Sentry from 'sentry-expo';
+import { getInstallationId } from '../../../utils/getInstallationId';
 import AuthApi from '../auth';
+import { fetchPublicIP } from '../externals/ipify';
 import { documentAs } from '../types';
 
 export default class ProfileApi {
@@ -82,9 +84,13 @@ export default class ProfileApi {
       Constants.manifest ? ` / ${Constants.manifest.version}` : ''
     }`;
     return new Promise<void>(async (resolve) => {
+      const installationId = await getInstallationId();
+      const ip = this.flavor === 'consumer' ? await fetchPublicIP() : null;
       const update: Partial<UserProfile> = {
         ...changes,
         appVersion,
+        appInstallationId: installationId,
+        appIp: ip,
         platform: Platform.OS,
         updatedOn: serverTimestamp(),
       };

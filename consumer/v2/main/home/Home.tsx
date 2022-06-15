@@ -10,8 +10,8 @@ import { UpgradeVersionModal } from '../../../../common/components/views/Upgrade
 import { useBusinessDeeplink } from '../../../../common/hooks/useBusinessDeeplink';
 import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconLogin } from '../../../../common/icons/icon-login';
+import { IconShareGreen } from '../../../../common/icons/icon-share-green';
 import { useUpdateLocation } from '../../../../common/location/useUpdateLocation';
-import { CrowdFundingCard } from '../../../../common/screens/home/cards/CrowdFundingCard';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
@@ -88,7 +88,7 @@ export default function ({ navigation }: Props) {
             }}
           />
           {!consumer ? (
-            <TouchableOpacity onPress={navigateToWelcomeScreen}>
+            <TouchableOpacity onPress={navigateToWelcomeScreen} style={{ marginBottom: padding }}>
               <HomeCard
                 icon={<IconLogin />}
                 title={t('Crie uma conta ou faça o login')}
@@ -97,15 +97,28 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           ) : null}
-          {/* <HomeCouriersNearbyCard /> */}
           {!consumer ? <View style={{ height: padding }} /> : null}
-          <CrowdFundingCard />
-          <View style={{ marginTop: padding }}>
-            <HomeShareCard
-              title="Divulgue o AppJusto"
-              subtitle="Compartilhe esse movimento por uma economia mais justa"
+          <HomeShareCard
+            title="Divulgue o AppJusto"
+            subtitle="Compartilhe esse movimento por uma economia mais justa"
+          />
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('FoodOrderNavigator', {
+                screen: 'RecommendRestaurant',
+                params: { returnToHome: true },
+              })
+            }
+            style={{ marginTop: padding }}
+          >
+            <HomeCard
+              icon={<IconShareGreen />}
+              title={t('Indique um restaurante')}
+              subtitle={t(
+                'Ainda não encontrou o restaurante que queria por aqui? Manda pra gente!'
+              )}
             />
-          </View>
+          </TouchableOpacity>
           <MaintenanceModal />
           <UpgradeVersionModal />
         </PaddedView>
