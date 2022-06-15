@@ -84,7 +84,8 @@ export default function ({ navigation, route }: Props) {
         keyExtractor={(item) => item.id!}
         renderItem={({ item }) => {
           const time = getOrderTime(item);
-          const totalFee = item.fare!.courier.value + (item.tip?.value ?? 0);
+          const totalFee =
+            item.fare!.courier.value - item.fare!.courier.financialFee + (item.tip?.value ?? 0);
           const title = formatCurrency(totalFee);
           const subtitle = `Pedido ${item.code}\n${separateWithDot(
             formatDate(time),
