@@ -20,7 +20,7 @@ import useObserveFleet from '../../store/api/fleet/hooks/useObserveFleet';
 import { track, useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
 import { getCourier } from '../../store/courier/selectors';
-import { colors, padding, screens, texts } from '../../styles';
+import { colors, screens, texts } from '../../styles';
 import { formatCurrency, formatDistance } from '../../utils/formatters';
 
 export type FleetDetailParamList = {
@@ -101,17 +101,6 @@ export default function ({ navigation, route }: Props) {
         <Text style={{ ...texts.xs, color: colors.grey700, marginTop: 8 }}>
           {fleet.description}
         </Text>
-        <Text
-          style={{
-            ...texts.xs,
-            color: colors.red,
-            marginTop: padding,
-          }}
-        >
-          {t(
-            'Atenção: O AppJusto não fica com nada do valor do seu trabalho. Todos os pagamentos são processados com segurança pela operadora financeira Iugu, que cobra 2,21% sobre o valor final de cada corrida pelo serviço'
-          )}
-        </Text>
         <View
           style={{
             flexDirection: 'row',
@@ -157,7 +146,23 @@ export default function ({ navigation, route }: Props) {
         </View>
         <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
           {t(
-            'Valor adicional por Km que entregadores/as dessa frota receberão ao percorrer uma distância acima da Distância Inicial Mínima.'
+            'Valor adicional por Km que os entregadores dessa frota receberão ao percorrer uma distância acima da Distância Inicial Mínima.'
+          )}
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 32,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ ...texts.md, color: colors.red }}>{t('Tarifa bancária por corrida')}</Text>
+          <RoundedText color={colors.red}>2.21%</RoundedText>
+        </View>
+        <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
+          {t(
+            'Essa taxa é descontada do valor de cada corrida aceita para efetuar a transação bancária na sua conta. Nada desse valor fica para o AppJusto.'
           )}
         </Text>
         <View
