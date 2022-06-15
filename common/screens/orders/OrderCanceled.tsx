@@ -104,7 +104,7 @@ export default ({ navigation, route }: Props) => {
           onPress={() => {
             navigation.replace('MainNavigator', { screen: 'Home' });
           }}
-          secondary
+          variant="secondary"
         />
       </View>
     </FeedbackView>

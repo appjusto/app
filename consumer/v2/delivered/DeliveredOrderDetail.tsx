@@ -11,7 +11,7 @@ import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import HR from '../../../common/components/views/HR';
-import { useChatisEnabled } from '../../../common/hooks/useChatIsEnabled';
+import { useChatIsEnabled } from '../../../common/hooks/useChatIsEnabled';
 import OrderMap from '../../../common/screens/orders/OrderMap';
 import PlaceSummary from '../../../common/screens/orders/summary/PlaceSummary';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
@@ -52,7 +52,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const [tip, setTip] = React.useState(0);
   const [tipLoading, setTipLoading] = React.useState(false);
   const [tipSent, setTipSent] = React.useState(false);
-  const showChatButton = useChatisEnabled(order);
+  const showChatButton = useChatIsEnabled(order);
   // tracking
   useSegmentScreen('DeliveredOrderDetail');
 
@@ -207,7 +207,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
                         issueType: 'consumer-delivery-problem',
                       });
                     }}
-                    secondary
+                    variant="secondary"
                   />
                 </ReviewBox>
               </View>
@@ -237,7 +237,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
                         issueType: 'consumer-delivery-problem',
                       });
                     }}
-                    secondary
+                    variant="secondary"
                   />
                 </ReviewBox>
               </View>

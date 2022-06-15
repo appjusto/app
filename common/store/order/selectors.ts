@@ -1,5 +1,5 @@
 import { Order, OrderStatus, WithId } from '@appjusto/types';
-import { Timestamp } from 'firebase/firestore';
+import firebase from 'firebase';
 import { memoize, uniq } from 'lodash';
 import { createSelector } from 'reselect';
 import { State } from '..';
@@ -14,11 +14,8 @@ export const getOrderById = createSelector(getOrderState, (orderState) =>
 export const getOrders = (state: State) => getOrderState(state).orders;
 
 export const getOrderTime = (order: WithId<Order>) => {
-  const deliveredOn = order.timestamps?.delivered ?? order.deliveredOn;
-  const confirmedOn = order.timestamps?.confirmed ?? order.confirmedOn;
-  const createdOn = order.timestamps?.quote ?? order.createdOn;
-  const time = deliveredOn ?? confirmedOn ?? createdOn;
-  if (time) return (time as Timestamp).toDate();
+  const time = order.deliveredOn ?? order.confirmedOn ?? order.createdOn;
+  if (time) return (time as firebase.firestore.Timestamp).toDate();
   return new Date();
 };
 
@@ -52,14 +49,15 @@ export const getOrdersWithFilter = (
 export const getDeliveredOrders = (orders: WithId<Order>[]) =>
   orders.filter((order) => order.status === 'delivered');
 
+export const filterOrdersByStatus = (orders: WithId<Order>[], status: OrderStatus) =>
+  orders.filter((order) => order.status === status);
+
 export const getOrdersSince = (orders: WithId<Order>[], date: Date) =>
   orders.filter((order) => {
     return (getOrderTime(order)?.getTime() ?? 0) >= date.getTime();
   });
 
 export const OngoingOrdersStatuses: OrderStatus[] = [
-  'confirming',
-  'charged',
   'confirmed',
   'preparing',
   'ready',

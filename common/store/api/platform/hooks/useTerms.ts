@@ -9,11 +9,14 @@ import { getFlavor } from '../../../config/selectors';
 export const useTerms = () => {
   // redux
   const flavor = useSelector(getFlavor);
-  const embedTerms = flavor === 'courier' ? terms.courier : terms.consumer;
+  const embedTerms =
+    flavor === 'courier' ? terms.courier : flavor === 'consumer' ? terms.consumer : terms.business;
   const url =
     flavor === 'courier'
       ? 'https://raw.githubusercontent.com/appjusto/docs/main/legal/termos-de-uso-entregadores.md'
-      : 'https://raw.githubusercontent.com/appjusto/docs/main/legal/termos-de-uso-consumidores.md';
+      : flavor === 'consumer'
+      ? 'https://raw.githubusercontent.com/appjusto/docs/main/legal/termos-de-uso-consumidores.md'
+      : 'https://raw.githubusercontent.com/appjusto/docs/main/legal/termos-de-uso-restaurantes.md';
   // state
   const [unformattedTerms, setUnformattedTerms] = React.useState<string>();
   const [formattedTerms, setFormattedTerms] = React.useState<string>();

@@ -180,6 +180,9 @@ export const AddressComplete = ({ navigation, route }: Props) => {
       );
       return;
     }
+    if (additionalInfo.trim().length === 0) {
+      setAdditionalInfo('');
+    }
     // create a place object when user confirm without selecting from suggestion list
     const place: Place =
       returnScreen !== 'RecommendRestaurant'

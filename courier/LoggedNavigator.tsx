@@ -28,7 +28,6 @@ export default function () {
   }, [api, dispatch, courierId]);
   // UI
   if (!situation) {
-    // showing the indicator until the profile is loaded
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />

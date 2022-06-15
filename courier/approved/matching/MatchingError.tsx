@@ -36,7 +36,7 @@ export default ({ navigation }: Props) => {
           onPress={() => {
             navigation.replace('MainNavigator', { screen: 'Home' });
           }}
-          secondary
+          variant="secondary"
           style={{ marginBottom: padding }}
         />
       </FeedbackView>

@@ -31,7 +31,7 @@ export const OrderNull = ({ navigation }: Props) => {
           onPress={() => {
             navigation.replace('MainNavigator', { screen: 'Home' });
           }}
-          secondary
+          variant="secondary"
         />
       </View>
     </FeedbackView>

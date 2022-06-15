@@ -1,13 +1,15 @@
-import { Order, WithId } from '@appjusto/types';
+import { LatLng, Order, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import { pinPackage, pinPackageWhite } from '../../../assets/icons';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import { CourierDistanceBadge } from '../../../common/screens/orders/ongoing/CourierDistanceBadge';
 import { courierNextPlace } from '../../../common/store/api/order/helpers';
+import { getCourier } from '../../../common/store/courier/selectors';
 import { colors, halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
@@ -18,8 +20,17 @@ type Props = {
 
 export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
   const { dispatchingState, type } = order;
-  const nextPlace = courierNextPlace(order);
+  // redux
+  const courier = useSelector(getCourier);
+  const location = courier?.coordinates
+    ? ({
+        latitude: courier.coordinates.latitude,
+        longitude: courier.coordinates.longitude,
+      } as LatLng)
+    : null;
+  // UI
   const tallerDevice = useTallerDevice();
+  const nextPlace = courierNextPlace(order);
   const addressLabel = (() => {
     if (
       !dispatchingState ||
@@ -56,7 +67,7 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
             >
               {addressLabel}
             </Text>
-            <CourierDistanceBadge order={order} delivering />
+            <CourierDistanceBadge order={order} courierLocation={location} delivering />
           </View>
           {type === 'food' && dispatchingState === 'going-pickup' ? (
             <View>

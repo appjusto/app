@@ -3,12 +3,14 @@ import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
+import { BusinessAppContext } from '../../../../business/BusinessAppContext';
 import { t } from '../../../../strings';
 import PaddedView from '../../../components/containers/PaddedView';
 import {
   unreadMessages,
   useObserveOrderChat,
 } from '../../../store/api/order/hooks/useObserveOrderChat';
+import { getFlavor } from '../../../store/config/selectors';
 import { getUser } from '../../../store/user/selectors';
 import { borders, colors, halfPadding, texts } from '../../../styles';
 
@@ -19,11 +21,15 @@ interface Props {
 }
 
 export const MessagesCard = ({ orderId, variant = 'standalone', onPress }: Props) => {
+  // context
+  const { business } = React.useContext(BusinessAppContext);
   // redux
+  const flavor = useSelector(getFlavor);
   const user = useSelector(getUser)!;
+  const agentId = flavor === 'business' ? business!.id : user.uid;
   // state
-  const chat = useObserveOrderChat(orderId, user.uid);
-  const unread = unreadMessages(chat, user.uid);
+  const chat = useObserveOrderChat(orderId, agentId);
+  const unread = unreadMessages(chat, agentId);
   if (unread.length === 0) return null;
   return (
     <TouchableOpacity onPress={() => onPress(unread[0].from)}>

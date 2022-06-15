@@ -9,6 +9,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext } from '../app/context';
+import { getManager } from '../store/business/selectors';
 import { getFlavor } from '../store/config/selectors';
 import { getConsumer } from '../store/consumer/selectors';
 import { getCourier } from '../store/courier/selectors';
@@ -34,8 +35,9 @@ export const useNotificationToken = () => {
   const user = useSelector(getUser);
   const consumer = useSelector(getConsumer);
   const courier = useSelector(getCourier);
+  const manager = useSelector(getManager);
   const flavor = useSelector(getFlavor);
-  const profile = flavor === 'consumer' ? consumer! : flavor === 'courier' ? courier! : null;
+  const profile = flavor === 'consumer' ? consumer! : flavor === 'courier' ? courier! : manager!;
   const currentNotificationToken = profile?.notificationToken;
   // state
   const [token, setToken] = React.useState<string | null>();

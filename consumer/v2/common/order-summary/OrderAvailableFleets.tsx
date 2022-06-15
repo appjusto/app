@@ -87,7 +87,7 @@ export const OrderAvailableFleets = ({
                   })}
                   {quotes.length >= 3 ? (
                     <DefaultButton
-                      secondary
+                      variant="secondary"
                       title={`${t('Ver todas as')} ${quotes.length} ${t('frotas disponíveis')}`}
                       onPress={navigateToAvailableFleets}
                     />

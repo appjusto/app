@@ -118,7 +118,7 @@ export const CourierFleetCard = ({ fleet, listItem, onPress }: Props) => {
         {listItem ? (
           <DefaultButton
             title={t('Detalhes da frota')}
-            secondary
+            variant="secondary"
             style={{ marginTop: padding }}
             onPress={onPress}
           />

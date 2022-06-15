@@ -24,31 +24,35 @@ export const OngoingMapAndInfo = ({
   onChatWithCourier,
   onOpenChat,
 }: Props) => {
-  return order.status === 'dispatching' ? (
+  if (order.status !== 'dispatching') return null;
+  return (
     <View>
-      <OrderMap
-        originLocation={order.origin?.location}
-        destinationLocation={order.destination?.location}
-        courierLocation={courierLocation}
-        route={order.route}
-        ratio={240 / 160}
-      />
-      <MessagesCard orderId={order.id} onPress={onOpenChat} />
       {order.dispatchingStatus === 'outsourced' ? (
         <View>
+          <HR height={padding} />
           <DeliveryInfo order={order} onCourierDetail={onCourierDetail} />
         </View>
       ) : (
         <View>
-          <DeliveryInfo order={order} onCourierDetail={onCourierDetail} />
-          <DefaultButton
-            title={t('Abrir chat com o entregador')}
-            onPress={() => onChatWithCourier()}
-            style={{ marginHorizontal: padding, marginBottom: padding }}
+          <OrderMap
+            originLocation={order.origin?.location}
+            destinationLocation={order.destination?.location}
+            courierLocation={courierLocation}
+            route={order.route}
+            ratio={240 / 160}
           />
+          <MessagesCard orderId={order.id} onPress={onOpenChat} />
+          <View>
+            <DeliveryInfo order={order} onCourierDetail={onCourierDetail} />
+            <DefaultButton
+              title={t('Abrir chat com o entregador')}
+              onPress={() => onChatWithCourier()}
+              style={{ marginHorizontal: padding, marginBottom: padding }}
+            />
+          </View>
+          <HR height={padding} />
         </View>
       )}
-      <HR height={padding} />
     </View>
-  ) : null;
+  );
 };

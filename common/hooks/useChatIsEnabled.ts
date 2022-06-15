@@ -2,7 +2,7 @@ import { Order, OrderStatus, WithId } from '@appjusto/types';
 import { Timestamp } from 'firebase/firestore';
 import { useContextGetSeverTime } from '../contexts/ServerTimeContext';
 
-export const useChatisEnabled = (order?: WithId<Order> | null) => {
+export const useChatIsEnabled = (order?: WithId<Order> | null) => {
   const getServerTime = useContextGetSeverTime();
   if (!order) return false;
   if (!getServerTime) return false;

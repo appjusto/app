@@ -12,9 +12,8 @@ const {
   FIREBASE_PROJECT_ID,
   FIREBASE_MESSAGING_SENDER_ID,
   FIREBASE_CONSUMER_APP_ID,
-  FIREBASE_CONSUMER_MEASUREMENT_ID,
   FIREBASE_COURIER_APP_ID,
-  FIREBASE_COURIER_MEASUREMENT_ID,
+  FIREBASE_BUSINESS_APP_ID,
   FIREBASE_EMULATOR_HOST,
   SEGMENT_CONSUMER_IOS_KEY,
   SEGMENT_CONSUMER_ANDROID_KEY,
@@ -49,7 +48,7 @@ export default (context: ConfigContext): ExpoConfig => {
     version,
     orientation: 'portrait',
     splash: {
-      image: './assets/splash.png',
+      image: flavor === 'business' ? './assets/splash-business.png' : './assets/splash.png',
       resizeMode: 'cover',
       backgroundColor: '#9ce592',
     },
@@ -87,11 +86,14 @@ export default (context: ConfigContext): ExpoConfig => {
 
 const name = () => {
   let name = 'AppJusto';
-  if (flavor === 'courier') name = 'AppJusto Entregador';
-  if (environment === 'dev') return `(D) ${name}`;
-  else if (environment === 'staging') return `(S) ${name}`;
-  else if (environment === 'community') return `(C) ${name}`;
-  return name;
+  if (environment === 'live') {
+    if (flavor === 'consumer') return name;
+    if (flavor === 'courier') return `${name} Entregador`;
+    if (flavor === 'business') return `${name} Restaurante`;
+  }
+  if (flavor === 'courier') name = 'Entregador';
+  if (flavor === 'business') name = 'Restaurante';
+  return `(${environment.charAt(0).toUpperCase()}) ${name}`;
 };
 
 const slug = () => {
@@ -100,19 +102,11 @@ const slug = () => {
   return slug;
 };
 
-// const scheme = () => {
-//   const scheme = flavor === 'consumer' ? 'appjusto' : 'appjustocourier';
-//   if (environment !== 'live') return `${scheme}${environment}`;
-//   return scheme;
-// };
-
 const appBundlePackage = () => {
   return `br.com.appjusto.${flavor}.${environment}`;
 };
 
 const icon = (platform: 'ios' | 'android') => {
-  if ((['dev', 'staging'] as Environment[]).includes(environment))
-    return `./assets/icon-${flavor}-${environment}.png`;
   return `./assets/icon-${flavor}-${platform}.png`;
 };
 
@@ -122,7 +116,9 @@ const ios = () => ({
   icon: icon('ios'),
   supportsTablet: false,
   infoPlist:
-    flavor === 'consumer'
+    flavor === 'business'
+      ? { UIBackgroundModes: ['fetch'] }
+      : flavor === 'consumer'
       ? {
           NSLocationWhenInUseUsageDescription:
             'Precisamos da sua localização para exibir os restaurantes próximos a você',
@@ -156,7 +152,6 @@ const intentFilter = (host: string, pathPrefix: string) => ({
   ],
   category: ['BROWSABLE', 'DEFAULT'],
 });
-
 const intentFilters = () =>
   [
     intentFilter(getBaseDomain(environment), `/${flavor}`),
@@ -174,7 +169,8 @@ const android = () =>
         versionCode,
         adaptiveIcon: {
           foregroundImage: icon('android'),
-          backgroundColor: flavor === 'consumer' ? '#78E08F' : '#FFE493',
+          backgroundColor:
+            flavor === 'business' ? '#2F422C' : flavor === 'consumer' ? '#78E08F' : '#FFE493',
         },
         googleServicesFile: `./google-services-${environment}.json`,
         useNextNotificationsApi: true,
@@ -191,7 +187,9 @@ const android = () =>
   ).android);
 
 const permissions = () =>
-  flavor === 'consumer'
+  flavor === 'business'
+    ? ['RECEIVE_BOOT_COMPLETED', 'WAKE_LOCK']
+    : flavor === 'consumer'
     ? ['ACCESS_FINE_LOCATION', 'ACCESS_COARSE_LOCATION']
     : [
         'ACCESS_FINE_LOCATION',
@@ -220,13 +218,16 @@ const extra = (): Extra => ({
         ? 'gs://default-bucket'
         : `${FIREBASE_PROJECT_ID}.appspot.com`,
     messagingSenderId: FIREBASE_MESSAGING_SENDER_ID!,
-    appId: flavor === 'consumer' ? FIREBASE_CONSUMER_APP_ID! : FIREBASE_COURIER_APP_ID!,
+    appId:
+      flavor === 'consumer'
+        ? FIREBASE_CONSUMER_APP_ID!
+        : flavor === 'courier'
+        ? FIREBASE_COURIER_APP_ID!
+        : FIREBASE_BUSINESS_APP_ID!,
     emulator: {
       enabled: process.env.FIREBASE_EMULATOR === 'true',
       host: FIREBASE_EMULATOR_HOST,
     },
-    measurementId:
-      flavor === 'consumer' ? FIREBASE_CONSUMER_MEASUREMENT_ID! : FIREBASE_COURIER_MEASUREMENT_ID!,
   },
   analytics: {
     segmentConsumerAndroidKey: SEGMENT_CONSUMER_ANDROID_KEY!,

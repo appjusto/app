@@ -2,12 +2,13 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { Alert, Linking, ScrollView, View } from 'react-native';
+import { Linking, ScrollView, View } from 'react-native';
 import { ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { screens } from '../../../../common/styles';
+import { confirmLogout } from '../../../../common/utils/utils';
 import { t } from '../../../../strings';
 import { AppJustoFreshdeskConsumerURL } from '../../../../strings/values';
 import { LoggedNavigatorParamList } from '../../types';
@@ -31,30 +32,6 @@ export default function ({ navigation }: Props) {
   const api = useContext(ApiContext);
   // tracking
   useSegmentScreen('consumer Profile');
-  // handlers
-  const confirmLogout = () => {
-    Alert.alert(
-      t('Sair da conta'),
-      t(
-        'Sua conta não será excluída mas você precisará fazer login novamente para continuar usando o App.'
-      ),
-      [
-        {
-          text: t('Cancelar'),
-          style: 'cancel',
-        },
-        {
-          text: t('Confirmar'),
-          style: 'destructive',
-          onPress: () => {
-            track('signing out');
-            api.signOut();
-          },
-        },
-      ]
-    );
-  };
-
   // UI
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
@@ -122,7 +99,7 @@ export default function ({ navigation }: Props) {
                   'Desconecte-se do aplicativo. Para retornar, você precisará confirmar seu e-mail cadastrado'
                 )}
                 bottomBorder={false}
-                onPress={confirmLogout}
+                onPress={() => confirmLogout(api)}
               />
             </ScrollView>
           </View>

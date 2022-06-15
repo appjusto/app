@@ -1,5 +1,6 @@
 import {
   ComplementGroup,
+  LatLng,
   Order,
   OrderItem,
   OrderItemComplement,
@@ -114,10 +115,9 @@ export const courierNextPlace = (order: Order) => {
   return null;
 };
 
-export const courierDistanceFromNextPlace = (order: Order) => {
-  const { courier } = order;
-  if (!courier?.location) return 0;
+export const courierDistanceFromNextPlace = (order: Order, courierLocation: LatLng) => {
+  if (!courierLocation) return 0;
   const nextPlace = courierNextPlace(order);
   if (!nextPlace?.location) return 0;
-  return distanceBetweenLatLng(courier.location, nextPlace.location);
+  return distanceBetweenLatLng(courierLocation, nextPlace.location);
 };

@@ -110,7 +110,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         returningFare: undefined,
       });
     }
-  }, [api, navigation, order, params]);
+    if (consumer.cpf) setCpf(consumer.cpf);
+  }, [api, navigation, order, params, consumer.cpf]);
   // update consumer's name in his first order
   React.useEffect(() => {
     if (!order) return;
@@ -179,6 +180,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
     try {
       setLoading(true);
+      if (complement.trim().length === 0) {
+        setComplement('');
+      }
       if (addressComplement) {
         await api.order().updateOrder(order.id, {
           destination: merge(order.destination, {
@@ -228,7 +232,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       navigation.navigate('ProfilePaymentMethods', { returnScreen: 'FoodOrderCheckout' });
     }
   }, [consumer, navigation, selectedPaymentMethodId]);
-
   // UI
   if (!order) {
     return (
@@ -336,6 +339,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           navigation.navigate('OrderDestination', {
             returnScreen: 'FoodOrderCheckout',
             returnParam: 'destination',
+            value: order.destination,
           });
           setDestinationModalVisible(false);
         }}

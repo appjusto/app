@@ -154,7 +154,7 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
           <View style={{ paddingVertical: padding }}>
             <DefaultButton
               title={t('Revisar pedido')}
-              secondary
+              variant="secondary"
               onPress={() => reviewOrderHandler()}
             />
           </View>
@@ -163,7 +163,7 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
           <View style={{ paddingVertical: padding }}>
             <DefaultButton
               title={t('Voltar para o início')}
-              secondary
+              variant="secondary"
               onPress={() => {
                 navigation.replace('MainNavigator', { screen: 'Home' });
               }}

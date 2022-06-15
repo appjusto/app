@@ -97,6 +97,7 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           ) : null}
+          {!consumer ? <View style={{ height: padding }} /> : null}
           <HomeShareCard
             title="Divulgue o AppJusto"
             subtitle="Compartilhe esse movimento por uma economia mais justa"

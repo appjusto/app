@@ -2,6 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { LoggedBusinessNavigator } from '../../business/LoggedBusinessNavigator';
 import { ApiContext, AppDispatch } from '../../common/app/context';
 import { defaultScreenOptions } from '../../common/screens/options';
 import { Onboarding } from '../../common/screens/unlogged/onboarding/Onboarding';
@@ -106,6 +107,12 @@ export const LoggedNavigator = () => {
           name="OngoingOrderCancelFeedback"
           component={OngoingOrderCancelFeedback}
           options={{ title: t('Pedido cancelado') }}
+        />
+        {/* test setup */}
+        <Stack.Screen
+          name="LoggedBusinessNavigator"
+          component={LoggedBusinessNavigator}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </LoggedContextProvider>

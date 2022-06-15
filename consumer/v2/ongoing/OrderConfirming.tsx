@@ -143,7 +143,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
         </Text>
         <DefaultButton
           title={t('Cancelar pedido')}
-          secondary
+          variant="danger"
           style={{ marginHorizontal: padding, marginTop: 24 }}
           onPress={navigateToCancelOrder}
         />
@@ -191,7 +191,11 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
           situation="chat"
         />
       </View>
-      <DefaultButton title={t('Cancelar pedido')} onPress={navigateToCancelOrder} secondary />
+      <DefaultButton
+        title={t('Cancelar pedido')}
+        onPress={navigateToCancelOrder}
+        variant="danger"
+      />
     </FeedbackView>
   );
 };

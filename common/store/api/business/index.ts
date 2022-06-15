@@ -17,8 +17,10 @@ import {
   getDocs,
   limit,
   onSnapshot,
+  orderBy,
   query,
   serverTimestamp,
+  updateDoc,
   where,
 } from 'firebase/firestore';
 import * as Sentry from 'sentry-expo';
@@ -33,6 +35,12 @@ export default class BusinessApi {
   ) {}
 
   // firestore
+  async fetchBusinessById(businessId: string) {
+    const snapshot = await getDoc(this.firestoreRefs.getBusinessRef(businessId));
+    if (!snapshot.exists()) return null;
+    return documentAs<Business>(snapshot);
+  }
+
   async fetchBusiness(value: string) {
     const r = /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{7}$/.exec(value);
     const fieldPath = !r ? 'slug' : 'code';
@@ -53,6 +61,29 @@ export default class BusinessApi {
       }
     );
   }
+
+  // manager
+  async fetchBusinessesManagedBy(email: string) {
+    const snapshot = await getDocs(
+      query(
+        this.firestoreRefs.getBusinessesRef(),
+        where('managers', 'array-contains', email),
+        orderBy('createdOn', 'desc')
+        // limit(1)
+      )
+    );
+    if (snapshot.empty) return [];
+    return documentsAs<Business>(snapshot.docs);
+  }
+
+  async updateBusiness(businessId: string, changes: Partial<Business>) {
+    await updateDoc(this.firestoreRefs.getBusinessRef(businessId), changes);
+  }
+
+  async sendKeepAlive(businessId: string) {
+    await this.updateBusiness(businessId, { keepAlive: serverTimestamp() });
+  }
+
   // recommendations
   async addRecomendation(
     recommendedBusiness: Place,

@@ -36,6 +36,7 @@ const iconHomeFocused = require('./icons/icon-home-focused.png');
 const iconOrdersFocused = require('./icons/icon-orders-focused.png');
 const iconUserFocused = require('./icons/icon-user-focused.png');
 const iconCrowdFunding = require('./icons/crowd-funding.png');
+const iconHeaderMenu = require('./icons/icon-menu-horizontal.png');
 
 export const checklistTick = iconChecklistTick;
 export const home = iconHome;
@@ -75,6 +76,7 @@ export const homeFocused = iconHomeFocused;
 export const ordersFocused = iconOrdersFocused;
 export const userFocused = iconUserFocused;
 export const crowdFunding = iconCrowdFunding;
+export const headerMenu = iconHeaderMenu;
 
 export default [
   checklistTick,
@@ -115,4 +117,5 @@ export default [
   ordersFocused,
   userFocused,
   crowdFunding,
+  headerMenu,
 ];

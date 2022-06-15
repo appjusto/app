@@ -7,6 +7,7 @@ import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
+import PaddedView from '../../../common/components/containers/PaddedView';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
@@ -72,10 +73,15 @@ export default function ({ navigation, route }: Props) {
             latitude: coords.latitude,
             longitude: coords.longitude,
           });
+          console.log('efeito 1: if (coords) setCourierLatLng');
           const currentDistanceToOrigin = await api
             .maps()
             .googleDirections(coords, origin, courier.mode);
+          console.log('efeito 1: if (coords) pegando currentDistanceToOrigin do googleDirections');
           if (currentDistanceToOrigin) setRouteDistanceToOrigin(currentDistanceToOrigin.distance);
+          console.log(
+            'efeito 1: if (currentDistanceToOrigin) setRouteDistanceToOrigin para currentDistance'
+          );
           screen('Matching', {
             orderId,
             distanceToOrigin,
@@ -88,6 +94,7 @@ export default function ({ navigation, route }: Props) {
           });
         }
       } catch (error) {
+        console.log('efeito 1: caiu no error');
         dispatch(
           showToast(
             t('Não foi possível obter sua localização atual. Verifque suas configurações.'),
@@ -113,7 +120,9 @@ export default function ({ navigation, route }: Props) {
   React.useEffect(() => {
     if (situation === 'pending') {
       api.courier().viewOrderRequest(courier.id, orderId);
+      console.log('efeito situation chamando viewOrderRequet');
     } else if (situation === 'accepted') {
+      console.log('efeito situation accepted navegando para Ongoing');
       navigation.replace('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
         params: {
@@ -121,8 +130,10 @@ export default function ({ navigation, route }: Props) {
         },
       });
     } else if (situation === 'expired') {
+      console.log('efeito situation expired');
       navigation.replace('MatchingError');
     } else if (situation === 'rejected') {
+      console.log('efeito situation chamando rejected');
       navigation.popToTop();
     }
   }, [situation, orderId, courier.id, api, navigation]);
@@ -130,17 +141,22 @@ export default function ({ navigation, route }: Props) {
   const acceptHandler = async () => {
     try {
       setLoading(true);
+      console.log('chamando acceptHandler');
       await api.order().matchOrder(orderId, routeDistanceToOrigin);
+      console.log('accept handler rolou');
     } catch (error) {
+      console.log('chamando acceptHandler... caiu no erro');
       navigation.replace('MatchingError');
     }
   };
   const rejectHandler = () => {
+    console.log('chamando rejectHandler');
     navigation.replace('RejectedMatching', { orderId });
   };
   // helpers
   const totalDistance = (matchRequest.distance + routeDistanceToOrigin) / 1000;
-  const feePerKm = matchRequest.fee / 100 / totalDistance;
+  const discountedFee = (matchRequest.fee * 2.21) / 100;
+  const feePerKm = (matchRequest.fee - discountedFee) / 100 / totalDistance;
   const roundedFeePerKm = round(feePerKm, 2);
   // UI
   if (isLoading)
@@ -157,20 +173,26 @@ export default function ({ navigation, route }: Props) {
     >
       <View style={{ paddingVertical: padding, flex: 1 }}>
         {courier.fleet?.name ? (
-          <View
+          <PaddedView
             style={{
               backgroundColor: colors.grey50,
-              borderRadius: 64,
-              padding,
-              flexDirection: 'row',
+              borderRadius: 16,
               justifyContent: 'center',
               alignItems: 'center',
-              marginTop: padding,
               marginHorizontal: padding,
+              marginTop: padding,
             }}
           >
-            <Text style={{ ...texts.md }}>{courier.fleet.name}</Text>
-          </View>
+            <Text style={{ ...texts.md, ...texts.bold, marginBottom: 4 }}>
+              {`Frota: ${courier.fleet.name}`}
+            </Text>
+            <Text style={{ ...texts.xs, marginBottom: 2 }}>{`${formatCurrency(
+              matchRequest.fee
+            )} da frota - ${formatCurrency(discountedFee)} da tarifa bancária`}</Text>
+            <Text style={{ ...texts.xs, color: colors.red }}>
+              {t('(tarifa de 2,21% + R$ 0,09 por transação)')}
+            </Text>
+          </PaddedView>
         ) : (
           <View
             style={{
@@ -204,7 +226,7 @@ export default function ({ navigation, route }: Props) {
         >
           <View style={{ alignItems: 'center', flex: 1 }}>
             <Text style={{ ...texts.x4l, textAlign: 'center' }}>
-              {formatCurrency(matchRequest.fee)}
+              {formatCurrency(matchRequest.fee - discountedFee)}
             </Text>
             <Text
               style={{

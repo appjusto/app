@@ -1,16 +1,11 @@
-import { ChatMessage, Flavor, WithId } from '@appjusto/types';
+import { ChatMessage, WithId } from '@appjusto/types';
 import { FieldValue, Timestamp } from 'firebase/firestore';
 import { first } from 'lodash';
 import React from 'react';
 import { ApiContext } from '../../../../app/context';
 import { GroupedChatMessages } from '../../../order/types';
 
-export const useObserveOrderChat = (
-  orderId: string,
-  userId: string,
-  counterpartId?: string,
-  counterpartFlavor?: Flavor
-) => {
+export const useObserveOrderChat = (orderId: string, userId: string, counterpartId?: string) => {
   // context
   const api = React.useContext(ApiContext);
   // app state
@@ -20,14 +15,17 @@ export const useObserveOrderChat = (
   // observe chat
   React.useEffect(() => {
     if (!orderId) return;
-    const unsub = api
-      .order()
-      .observeOrderChat(orderId, userId, counterpartId, counterpartFlavor, setUserChat);
-    return () => unsub();
-  }, [api, orderId, userId, counterpartId, counterpartFlavor]);
+    return api.order().observeOrderChat(orderId, userId, setUserChat);
+  }, [api, orderId, userId, counterpartId]);
   // group messages whenever chat updates
   React.useEffect(() => {
-    setChat(groupOrderChatMessages(userChat.sort(sortMessages)));
+    setChat(
+      groupOrderChatMessages(
+        userChat
+          .filter((value) => !counterpartId || value.participantsIds.includes(counterpartId))
+          .sort(sortMessages)
+      )
+    );
   }, [userChat]);
   // result
   return chat;
@@ -43,7 +41,7 @@ const sortMessages = (a: ChatMessage, b: ChatMessage) => {
   return 0;
 };
 
-const groupOrderChatMessages = (messages: WithId<ChatMessage>[]) =>
+export const groupOrderChatMessages = (messages: WithId<ChatMessage>[]) =>
   messages.reduce<GroupedChatMessages[]>((groups, message) => {
     const currentGroup = first(groups);
     if (message.from.id === currentGroup?.from) {

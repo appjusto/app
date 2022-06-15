@@ -5,6 +5,7 @@ import React, { ReactNode } from 'react';
 import { Platform, UIManager } from 'react-native';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
+import { definekeepAliveTask } from '../../business/utils/keepAlive';
 import Toast from '../components/views/Toast';
 import { createStore } from '../store';
 import Api from '../store/api/api';
@@ -19,7 +20,9 @@ const api = new Api(extra);
 const store = createStore(extra);
 const queryClient = new QueryClient();
 
-defineLocationUpdatesTask(store, api);
+if (extra.flavor === 'courier') defineLocationUpdatesTask(store, api);
+else if (extra.flavor === 'business') definekeepAliveTask(store, api);
+
 analytics.init(extra.analytics);
 
 export const ApiContext = React.createContext<Api>(api);

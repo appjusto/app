@@ -1,9 +1,9 @@
 import { FirestoreRefs, FunctionsRef } from '@appjusto/firebase-refs';
 import {
   Business,
+  CancelOrderPayload,
   ChatMessage,
   ConsumerProfile,
-  Flavor,
   Issue,
   LatLng,
   Order,
@@ -42,6 +42,8 @@ import { getAppVersion } from '../../../utils/version';
 import { fetchPublicIP } from '../externals/ipify';
 import { documentAs, documentsAs } from '../types';
 import { ObserveOrdersOptions } from './types';
+
+export type QueryOrdering = 'asc' | 'desc';
 
 export default class OrderApi {
   constructor(
@@ -127,13 +129,13 @@ export default class OrderApi {
     return snapshot.size > 0;
   }
 
-  // both courier & customers
+  // courier, customers and businesses
   observeOrders(
     options: ObserveOrdersOptions,
     resultHandler: (orders: WithId<Order>[]) => void
   ): Unsubscribe {
-    const { consumerId, courierId, statuses, businessId } = options;
-    const constraints = [orderBy('createdOn', 'desc')];
+    const { consumerId, courierId, statuses, businessId, orderField } = options;
+    const constraints = [orderBy(orderField ?? 'createdOn', 'desc')];
     if (!isEmpty(statuses)) constraints.push(where('status', 'in', statuses));
     if (consumerId) constraints.push(where('consumer.id', '==', consumerId));
     if (courierId) constraints.push(where('courier.id', '==', courierId));
@@ -174,19 +176,11 @@ export default class OrderApi {
   }
   observeOrderChat(
     orderId: string,
-    userId: string | undefined,
-    counterPartId: string | undefined,
-    counterpartFlavor: Flavor | undefined,
+    userId: string,
     resultHandler: (orders: WithId<ChatMessage>[]) => void
   ): Unsubscribe {
     const constraints = [where('orderId', '==', orderId), orderBy('timestamp', 'asc')];
-    if (userId && counterPartId) {
-      const participantsIds =
-        counterpartFlavor !== 'courier' ? [counterPartId, userId] : [userId, counterPartId];
-      constraints.push(where('participantsIds', 'in', [participantsIds]));
-    } else if (userId) constraints.push(where('participantsIds', 'array-contains', userId));
-    else if (counterPartId)
-      constraints.push(where('participantsIds', 'array-contains', counterPartId));
+    constraints.push(where('participantsIds', 'array-contains', userId));
     return onSnapshot(
       query(this.firestoreRefs.getChatsRef(), ...constraints),
       (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
@@ -246,6 +240,81 @@ export default class OrderApi {
     return documentAs<OrderCancellation>(
       await getDoc(this.firestoreRefs.getOrderCancellationRef(id))
     );
+  }
+
+  // business
+  observeBusinessOrders(
+    options: ObserveOrdersOptions,
+    resultHandler: (orders: WithId<Order>[]) => void
+  ): Unsubscribe {
+    const { businessId, statuses } = options;
+    const constraints = [orderBy('timestamps.charged', 'desc')];
+    if (!isEmpty(statuses)) constraints.push(where('status', 'in', statuses));
+    if (businessId) constraints.push(where('business.id', '==', businessId));
+    if (options.limit) constraints.push(limit(options.limit));
+    return onSnapshot(
+      query(this.firestoreRefs.getOrdersRef(), ...constraints),
+      (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
+    );
+  }
+
+  observeBusinessOrdersCompletedInTheLastHour(
+    resultHandler: (orders: WithId<Order>[]) => void,
+    businessId?: string,
+    ordering: QueryOrdering = 'desc'
+  ): Unsubscribe {
+    const statuses = ['delivered', 'canceled'] as OrderStatus[];
+    const baseTim = new Date();
+    baseTim.setHours(baseTim.getHours() - 1);
+    return onSnapshot(
+      query(
+        this.firestoreRefs.getOrdersRef(),
+        orderBy('updatedOn', ordering),
+        where('business.id', '==', businessId),
+        where('status', 'in', statuses),
+        where('updatedOn', '>', baseTim)
+      ),
+      (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  async observeBusinessActiveChatMessages(
+    businessId: string,
+    ordersIds: string[],
+    resultHandler: (messages: WithId<ChatMessage>[]) => void
+  ) {
+    const IdsLimit = 10;
+    const unsubscribes: Unsubscribe[] = [];
+    for (var i = 0; i < ordersIds.length; i = i + IdsLimit) {
+      const ids = ordersIds.slice(i, i + IdsLimit);
+      const q = query(
+        this.firestoreRefs.getChatsRef(),
+        where('orderId', 'in', ids),
+        where('participantsIds', 'array-contains', businessId),
+        orderBy('timestamp', 'asc')
+      );
+      unsubscribes.push(
+        onSnapshot(
+          q,
+          (snapshot) => {
+            if (!snapshot.empty) {
+              resultHandler(documentsAs<ChatMessage>(snapshot.docs));
+            }
+          },
+          (error) => {
+            console.error(error);
+          }
+        )
+      );
+    }
+    return Promise.all(unsubscribes).then((content) => content.flat());
   }
 
   // callables
@@ -421,5 +490,17 @@ export default class OrderApi {
       comment,
       meta: { version: getAppVersion() },
     });
+  }
+
+  // business
+  async cancelBusinessOrder(data: CancelOrderPayload) {
+    const { params } = data;
+    const paramsData = params ?? { refund: ['products', 'delivery', 'platform'] };
+    const payload: CancelOrderPayload = {
+      ...data,
+      meta: { version: getAppVersion() },
+      params: paramsData,
+    };
+    return await this.functionsRef.getCancelOrderCallable()(payload);
   }
 }
