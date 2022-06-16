@@ -1,4 +1,4 @@
-import { BusinessAlgolia } from '@appjusto/types';
+import { Business, WithId } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -7,14 +7,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
 import { useLastRestaurants } from '../../../../common/store/api/order/hooks/useLastRestaurants';
-import { useSearch } from '../../../../common/store/api/search/useSearch';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
   updateCurrentLocation,
   updateCurrentPlace,
 } from '../../../../common/store/consumer/actions';
 import { getConsumer, getCurrentLocation } from '../../../../common/store/consumer/selectors';
-import { SearchFilter } from '../../../../common/store/consumer/types';
 import { colors, padding } from '../../../../common/styles';
 import { LoggedNavigatorParamList } from '../../types';
 import { sectionsFromResults } from '../restaurant/list';
@@ -43,16 +41,24 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   const currentLocation = useSelector(getCurrentLocation);
   const consumer = useSelector(getConsumer);
   // state
-  const [filters, setFilters] = React.useState<SearchFilter[]>([]);
-  const {
-    results: restaurants,
-    isLoading,
-    refetch,
-    fetchNextPage,
-  } = useSearch<BusinessAlgolia>(true, 'restaurant', 'distance', filters, currentLocation, '');
+  const [cuisineName, setCuisineName] = React.useState<string>();
+  const [restaurants, setRestaurants] = React.useState<WithId<Business>[]>();
   const [refreshing, setRefreshing] = React.useState(false);
   const mostRecentRestaurants = useLastRestaurants(consumer?.id);
+  // helpers
+  const fetchRestaurants = () => {
+    if (!currentLocation) return;
+    api
+      .businessesGeoSearch()
+      .fetchBusinessesAround(currentLocation, cuisineName)
+      .then(setRestaurants);
+  };
   // side effects
+  // fetch restaurants according with currentLocation
+  React.useEffect(() => {
+    fetchRestaurants();
+  }, [currentLocation, cuisineName]);
+  // updating current location when place changes
   React.useEffect(() => {
     if (place) {
       dispatch(updateCurrentLocation(undefined));
@@ -63,10 +69,9 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   // tracking
   useSegmentScreen('FoodOrderHome');
   // handlers
-  const refresh = async () => {
+  const refresh = () => {
     setRefreshing(true);
-    await api.search().clearCache();
-    await refetch();
+    fetchRestaurants();
     setRefreshing(false);
   };
   // console.log('FOODORDERHOME CURRENTLOCATION', currentLocation);
@@ -74,9 +79,6 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   return (
     <RestaurantList
       sections={sectionsFromResults(restaurants, currentLocation)}
-      onEndReached={() => {
-        fetchNextPage();
-      }}
       onEndReachedThreshold={0.7}
       ListHeaderComponent={
         <View style={{ backgroundColor: colors.white, paddingBottom: padding }}>
@@ -87,7 +89,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
                 screen: 'RestaurantDetail',
               });
             }}
-            selectedCuisineId={filters.find(() => true)?.value}
+            selectedCuisineId={cuisineName}
             onChangePlace={() => {
               navigation.navigate('AddressComplete', {
                 returnParam: 'place',
@@ -97,9 +99,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
             onSearchPress={() => {
               navigation.navigate('RestaurantSearch');
             }}
-            onCuisineSelect={(cuisine) => {
-              setFilters(cuisine ? [{ type: 'cuisine', value: cuisine.name }] : []);
-            }}
+            onCuisineSelect={(cuisine) => setCuisineName(cuisine?.name)}
             consumer={consumer}
             onLogin={() => {
               navigation.replace('WelcomeScreen');
@@ -114,7 +114,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
           screen: 'RestaurantDetail',
         });
       }}
-      loading={isLoading}
+      loading={restaurants === undefined}
       refreshing={refreshing}
       onRefresh={() => refresh()}
       onRecommend={() => {
