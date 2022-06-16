@@ -9,15 +9,18 @@ export default class BusinessesGeoSearchApi {
   constructor(geofirestoreapi: GeoFirestoreApi) {
     this.geofirestore = geofirestoreapi.getGeoFirestore();
   }
-  async fetchBusinessesAround({ latitude, longitude }: LatLng, cuisine?: string) {
+  async fetchBusinessesAround({ latitude, longitude }: LatLng, n: number = 0, cuisine?: string) {
+    const limit = n + 30;
     let query = this.geofirestore
       .collection('businesses')
       .where('situation', '==', 'approved')
       .where('enabled', '==', true)
-      .near({ center: new firebase.firestore.GeoPoint(latitude, longitude), radius: 25 });
+      .near({ center: new firebase.firestore.GeoPoint(latitude, longitude), radius: 25, limit })
+      .limit(limit);
     if (cuisine) query = query.where('cuisine', '==', cuisine);
     const snapshot = await query.get();
     if (snapshot.empty) return [];
-    return snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as WithId<Business>));
+    const docs = snapshot.docs.sort((a, b) => a.distance - b.distance);
+    return docs.map((doc) => ({ ...doc.data(), id: doc.id } as WithId<Business>));
   }
 }

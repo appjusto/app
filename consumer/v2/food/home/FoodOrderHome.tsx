@@ -50,7 +50,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     if (!currentLocation) return;
     api
       .businessesGeoSearch()
-      .fetchBusinessesAround(currentLocation, cuisineName)
+      .fetchBusinessesAround(currentLocation, restaurants?.length, cuisineName)
       .then(setRestaurants);
   };
   // side effects
@@ -80,16 +80,20 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     <RestaurantList
       sections={sectionsFromResults(restaurants, currentLocation)}
       onEndReachedThreshold={0.7}
+      onEndReached={fetchRestaurants}
       ListHeaderComponent={
         <View style={{ backgroundColor: colors.white, paddingBottom: padding }}>
           <FoodOrderHomeHeader
+            recentRestaurants={mostRecentRestaurants}
+            consumer={consumer}
+            selectedCuisineId={cuisineName}
             onSelectRestaurant={(restaurantId) => {
               navigation.push('RestaurantNavigator', {
                 restaurantId,
                 screen: 'RestaurantDetail',
               });
             }}
-            selectedCuisineId={cuisineName}
+            onCuisineSelect={(cuisine) => setCuisineName(cuisine?.name)}
             onChangePlace={() => {
               navigation.navigate('AddressComplete', {
                 returnParam: 'place',
@@ -99,12 +103,9 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
             onSearchPress={() => {
               navigation.navigate('RestaurantSearch');
             }}
-            onCuisineSelect={(cuisine) => setCuisineName(cuisine?.name)}
-            consumer={consumer}
             onLogin={() => {
               navigation.replace('WelcomeScreen');
             }}
-            recentRestaurants={mostRecentRestaurants}
           />
         </View>
       }
