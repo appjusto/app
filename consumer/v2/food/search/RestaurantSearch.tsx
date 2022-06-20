@@ -57,7 +57,7 @@ export default function ({ navigation }: Props) {
     refetch: refetchRestaurants,
     isLoading: loadingRestaurants,
   } = useSearch<BusinessAlgolia>(
-    kind === 'restaurant',
+    kind === 'restaurant' && search.length > 0,
     kind,
     order,
     filters,
@@ -70,7 +70,7 @@ export default function ({ navigation }: Props) {
     isLoading: loadingProducts,
     fetchNextPage,
   } = useSearch<ProductAlgolia>(
-    kind === 'product',
+    kind === 'product' && search.length > 0,
     'product',
     order,
     filters,

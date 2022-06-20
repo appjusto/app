@@ -10,7 +10,7 @@ export default class BusinessesGeoSearchApi {
     this.geofirestore = geofirestoreapi.getGeoFirestore();
   }
   async fetchBusinessesAround({ latitude, longitude }: LatLng, n: number = 0, cuisine?: string) {
-    const limit = n + 30;
+    const limit = n === 0 ? 50 : n + 15;
     let query = this.geofirestore
       .collection('businesses')
       .where('situation', '==', 'approved')

@@ -46,12 +46,16 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   const [refreshing, setRefreshing] = React.useState(false);
   const mostRecentRestaurants = useLastRestaurants(consumer?.id);
   // helpers
-  const fetchRestaurants = () => {
+  const fetchRestaurants = (startAt: number = 0) => {
     if (!currentLocation) return;
+    setRefreshing(true);
     api
       .businessesGeoSearch()
-      .fetchBusinessesAround(currentLocation, restaurants?.length, cuisineName)
-      .then(setRestaurants);
+      .fetchBusinessesAround(currentLocation, startAt, cuisineName)
+      .then((value) => {
+        setRefreshing(false);
+        setRestaurants(value);
+      });
   };
   // side effects
   // fetch restaurants according with currentLocation
@@ -80,7 +84,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     <RestaurantList
       sections={sectionsFromResults(restaurants, currentLocation)}
       onEndReachedThreshold={0.7}
-      onEndReached={fetchRestaurants}
+      onEndReached={() => fetchRestaurants(restaurants?.length)}
       ListHeaderComponent={
         <View style={{ backgroundColor: colors.white, paddingBottom: padding }}>
           <FoodOrderHomeHeader

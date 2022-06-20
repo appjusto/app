@@ -8,7 +8,6 @@ import {
   View,
 } from 'react-native';
 import { useSelector } from 'react-redux';
-import { ApiContext } from '../../../../../common/app/context';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../../../common/components/texts/DoubleHeader';
 import FeedbackView from '../../../../../common/components/views/FeedbackView';
@@ -29,9 +28,14 @@ interface Props
   onRecommend?: () => void;
 }
 
-export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...props }: Props) => {
-  // context
-  const api = React.useContext(ApiContext);
+export const RestaurantList = ({
+  sections,
+  loading,
+  refreshing = false,
+  onSelect,
+  onRecommend,
+  ...props
+}: Props) => {
   // redux
   const location = useSelector(getCurrentLocation);
   // UI
@@ -50,7 +54,7 @@ export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...pr
         )
       }
       ListEmptyComponent={
-        loading ? (
+        refreshing ? null : loading ? (
           <View style={{ ...screens.centered, marginTop: padding }}>
             <ActivityIndicator size="large" color={colors.green500} />
           </View>
@@ -146,7 +150,7 @@ export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...pr
         );
       }}
       stickySectionHeadersEnabled={false}
-      onRefresh={() => api.search().clearCache()}
+      refreshing={refreshing}
       {...props}
     />
   );
