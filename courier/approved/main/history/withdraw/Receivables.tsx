@@ -100,7 +100,7 @@ export const Receivables = ({ navigation, route }: Props) => {
           <PaddedView>
             <Text style={{ ...texts.sm }}>
               {t(
-                'O AppJusto não fica com nada do valor do seu trabalho. Todas os pagamentos são processados com segurança pela operadora financeira Iugu.'
+                'O AppJusto não fica com nada do valor do seu trabalho. Todos os pagamentos são processados com segurança pela operadora financeira Iugu.'
               )}
             </Text>
             <View

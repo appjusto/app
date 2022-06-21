@@ -94,6 +94,17 @@ export const CourierFleetCard = ({ fleet, listItem, onPress }: Props) => {
             marginBottom: 8,
           }}
         >
+          <Text style={{ ...texts.xs, color: colors.red }}>{t('Tarifa bancária por corrida')}</Text>
+          <RoundedText color={colors.red}>2.21%</RoundedText>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 8,
+          }}
+        >
           <Text style={{ ...texts.xs, color: colors.grey700 }}>
             {t('Distância Máxima para Entrega')}
           </Text>

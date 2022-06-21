@@ -44,7 +44,10 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
-  const fee = (order.fare?.courier.value ?? 0) + (order.tip?.value ?? 0);
+  const fee =
+    (order.fare?.courier.value ?? 0) -
+    (order.fare?.courier.financialFee ?? 0) +
+    (order.tip?.value ?? 0);
   // UI
   return (
     <View style={{ ...screens.default }}>
