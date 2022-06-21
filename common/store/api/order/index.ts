@@ -75,6 +75,7 @@ export default class OrderApi {
     const payload: Partial<Order> = {
       type: 'food',
       status: 'quote',
+      fulfillment: 'delivery',
       dispatchingStatus: 'idle',
       // @ts-ignore
       dispatchingState: null,
@@ -100,6 +101,7 @@ export default class OrderApi {
     const payload: Partial<Order> = {
       type: 'p2p',
       status: 'quote',
+      fulfillment: 'delivery',
       dispatchingStatus: 'idle',
       // @ts-ignore
       dispatchingState: null,
