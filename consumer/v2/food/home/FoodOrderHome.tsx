@@ -1,12 +1,13 @@
-import { Business, WithId } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { BusinessAlgolia } from '../../../../../types';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
 import { useLastRestaurants } from '../../../../common/store/api/order/hooks/useLastRestaurants';
+import { useSearch } from '../../../../common/store/api/search/useSearch';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
   updateCurrentLocation,
@@ -42,26 +43,41 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   const consumer = useSelector(getConsumer);
   // state
   const [cuisineName, setCuisineName] = React.useState<string>();
-  const [restaurants, setRestaurants] = React.useState<WithId<Business>[]>();
+  // const [restaurants, setRestaurants] = React.useState<WithId<Business>[]>();
   const [refreshing, setRefreshing] = React.useState(false);
   const mostRecentRestaurants = useLastRestaurants(consumer?.id);
+  const {
+    results: restaurants,
+    isLoading,
+    refetch,
+    fetchNextPage,
+  } = useSearch<BusinessAlgolia>(
+    true,
+    'restaurant',
+    'distance',
+    cuisineName ? [{ type: 'cuisine', value: cuisineName }] : [],
+    currentLocation,
+    ''
+  );
   // helpers
-  const fetchRestaurants = (startAt: number = 0) => {
-    if (!currentLocation) return;
-    setRefreshing(true);
-    api
-      .businessesGeoSearch()
-      .fetchBusinessesAround(currentLocation, startAt, cuisineName)
-      .then((value) => {
-        setRefreshing(false);
-        setRestaurants(value);
-      });
-  };
+  // firestore search
+  // const fetchRestaurants = (startAt: number = 0) => {
+  //   if (!currentLocation) return;
+  //   setRefreshing(true);
+  //   api
+  //     .businessesGeoSearch()
+  //     .fetchBusinessesAround(currentLocation, startAt, cuisineName)
+  //     .then((value) => {
+  //       setRefreshing(false);
+  //       setRestaurants(value);
+  //     });
+  // };
   // side effects
   // fetch restaurants according with currentLocation
-  React.useEffect(() => {
-    fetchRestaurants();
-  }, [currentLocation, cuisineName]);
+  // firestore search
+  // React.useEffect(() => {
+  //   fetchRestaurants();
+  // }, [currentLocation, cuisineName]);
   // updating current location when place changes
   React.useEffect(() => {
     if (place) {
@@ -75,7 +91,9 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   // handlers
   const refresh = () => {
     setRefreshing(true);
-    fetchRestaurants();
+    // fetchRestaurants();
+    api.search().clearCache().then(null);
+    refetch()?.then(null);
     setRefreshing(false);
   };
   // console.log('FOODORDERHOME CURRENTLOCATION', currentLocation);
@@ -84,7 +102,8 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     <RestaurantList
       sections={sectionsFromResults(restaurants, currentLocation)}
       onEndReachedThreshold={0.7}
-      onEndReached={() => fetchRestaurants(restaurants?.length)}
+      // onEndReached={() => fetchRestaurants(restaurants?.length)}
+      onEndReached={fetchNextPage}
       ListHeaderComponent={
         <View style={{ backgroundColor: colors.white, paddingBottom: padding }}>
           <FoodOrderHomeHeader
@@ -119,7 +138,8 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
           screen: 'RestaurantDetail',
         });
       }}
-      loading={restaurants === undefined}
+      // loading={restaurants === undefined}
+      loading={isLoading}
       refreshing={refreshing}
       onRefresh={() => refresh()}
       onRecommend={() => {
