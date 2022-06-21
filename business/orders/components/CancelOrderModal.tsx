@@ -25,7 +25,13 @@ interface Props extends ModalProps {
   onCancelOrder: () => void;
 }
 
-export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOrder }: Props) => {
+export const CancelOrderModal = ({
+  order,
+  onModalClose,
+  modalVisible,
+  onCancelOrder,
+  loading,
+}: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -126,7 +132,6 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
               <DefaultButton
                 title={t('Cancelar pedido')}
                 variant="danger"
-                style={{ backgroundColor: colors.red }}
                 onPress={() => {
                   cancelOrderHandler();
                   onCancelOrder();
