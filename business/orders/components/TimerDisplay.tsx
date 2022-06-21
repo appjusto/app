@@ -13,39 +13,40 @@ type Props = {
   widthPercentage?: number;
 };
 
-export const TimerDisplay = ({ orderId, widthPercentage = 30, ...props }: Props) => {
+export const TimerDisplay = ({ orderId, widthPercentage = 30 }: Props) => {
   // context
   const getServerTime = useContextGetSeverTime();
   const order = useObserveOrder(orderId);
   // state
-  const [elapsedTime, setElapsedTime] = React.useState<number | null>(0);
-  const [barWidth, setBarWidth] = React.useState<number | string | undefined>(0);
+  const [elapsedTime, setElapsedTime] = React.useState<number>(0);
+  const [barWidth, setBarWidth] = React.useState<number | string>(0);
   // helpers
-  const cookingTime = React.useMemo(
-    () => (order?.cookingTime ? order?.cookingTime / 60 : null),
-    [order?.cookingTime]
-  );
-  const now = getServerTime().getTime();
-  const formattedTime = cookingTime ? round(cookingTime, 0) : '';
-  const formattedInterval = `${elapsedTime} min`;
   // side effects
   // updating the elapsed time and progress bar width
-  React.useEffect(() => {
-    if (!order) return;
+  const update = React.useCallback(() => {
     if (!getServerTime) return;
-    if (order.status !== 'preparing') return;
-    const orderServerTime = (order.timestamps.confirmed as Timestamp).toDate().getTime();
-    if (now && orderServerTime) {
-      const delta = getTimeUntilNow(now, orderServerTime);
-      setElapsedTime(delta);
-      const cookingProgress = cookingTime && elapsedTime ? (elapsedTime / cookingTime) * 100 : 0;
-      if (cookingProgress > 0) setBarWidth(`${cookingProgress}%`);
-      else setBarWidth(0);
-    } else setElapsedTime(null);
-  }, [getServerTime, order, now, cookingTime, elapsedTime]);
+    if (!order?.timestamps.confirmed) return;
+    if (!order?.cookingTime) return;
+    const { cookingTime, timestamps } = order;
+    const now = getServerTime().getTime();
+    const confirmedAt = (timestamps.confirmed as Timestamp).toDate().getTime();
+    const elapsedTime = getTimeUntilNow(now, confirmedAt);
+    setElapsedTime(elapsedTime);
+    const cookingProgress = cookingTime && elapsedTime ? (elapsedTime / cookingTime) * 100 : 0;
+    if (cookingProgress > 0) setBarWidth(`${cookingProgress}%`);
+    else setBarWidth(0);
+  }, [getServerTime, order?.cookingTime, order?.timestamps.confirmed]);
+  // tick
+  React.useEffect(() => {
+    if (order?.status !== 'preparing') return;
+    const interval = setInterval(update, 15 * 1000);
+    return () => clearInterval(interval);
+  }, [order?.status]);
   // UI
   if (!order) return null;
-  if (order.status !== 'preparing' || !cookingTime) return null;
+  if (order.status !== 'preparing' || !order?.cookingTime) return null;
+  const formattedTime = round(order.cookingTime, 0);
+  const formattedInterval = `${elapsedTime} min`;
   return (
     <View style={{ width: `${widthPercentage}%` }}>
       <View
