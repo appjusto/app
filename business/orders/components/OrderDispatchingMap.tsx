@@ -90,7 +90,11 @@ export const OrderDispatchingMap = ({ order, style, onChatWithCourier }: Props) 
               </View>
             </View>
             <View style={{ marginHorizontal: padding, marginTop: 32 }}>
-              <OrderMap order={order} ratio={240 / 160} />
+              <OrderMap
+                originLocation={order.origin?.location}
+                destinationLocation={order.destination?.location}
+                ratio={240 / 160}
+              />
             </View>
           </View>
         );
@@ -98,7 +102,11 @@ export const OrderDispatchingMap = ({ order, style, onChatWithCourier }: Props) 
         <View>
           <SingleHeader title={t('Entregador externo')} />
           <View style={{ marginTop: 32 }}>
-            <OrderMap order={order} ratio={240 / 160} />
+            <OrderMap
+              originLocation={order.origin?.location}
+              destinationLocation={order.destination?.location}
+              ratio={240 / 160}
+            />
           </View>
         </View>;
       }
