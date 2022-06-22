@@ -25,13 +25,7 @@ interface Props extends ModalProps {
   onCancelOrder: () => void;
 }
 
-export const CancelOrderModal = ({
-  order,
-  onModalClose,
-  modalVisible,
-  onCancelOrder,
-  loading,
-}: Props) => {
+export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOrder }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -44,7 +38,6 @@ export const CancelOrderModal = ({
   const cancelOrderHandler = () => {
     (async () => {
       if (!selectedIssue) {
-        onModalClose();
         dispatch(showToast('Você precisa escolher um motivo para efetuar o cancelamento', 'error'));
         return;
       }
@@ -60,6 +53,7 @@ export const CancelOrderModal = ({
         track('restaurant canceled order');
         dispatch(showToast('Pedido cancelado com sucesso', 'success'));
         setLoading(false);
+        onModalClose();
         navigation.navigate('BusinessNavigator', { screen: 'BusinessOrders' });
       } catch (error) {
         Sentry.Native.captureException(error);

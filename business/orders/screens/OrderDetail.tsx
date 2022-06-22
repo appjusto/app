@@ -198,7 +198,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
       <CancelOrderModal
         modalVisible={cancelModalVisible}
         onModalClose={() => setCancelModalVisible(false)}
-        onCancelOrder={() => setCancelModalVisible(false)}
+        onCancelOrder={() => null}
         order={order}
       />
       <CookingTimeModal
