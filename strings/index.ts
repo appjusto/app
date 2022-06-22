@@ -1,13 +1,17 @@
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
+import duration from 'dayjs/plugin/duration';
 import isoWeek from 'dayjs/plugin/isoWeek';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import * as Localization from 'expo-localization';
 import i18n from 'i18n-js';
 
 dayjs.locale('pt-br');
+dayjs.extend(duration);
 dayjs.extend(isoWeek);
+dayjs.extend(relativeTime);
 dayjs.extend(timezone);
 dayjs.extend(utc);
 

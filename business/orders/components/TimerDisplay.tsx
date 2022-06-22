@@ -1,4 +1,3 @@
-import { round } from 'lodash';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { IconAlarm } from '../../../common/icons/icon-alarm';
@@ -14,12 +13,10 @@ type Props = {
 export const TimerDisplay = ({ orderId, widthPercentage = 30 }: Props) => {
   // context
   const order = useObserveOrder(orderId);
-  const { progress, barProgress } = useCookingTimer(order);
+  const { elapsed, progress } = useCookingTimer(order);
   // UI
   if (!order) return null;
   if (order.status !== 'preparing' || !order?.cookingTime) return null;
-  const formattedTime = round(order.cookingTime / 60, 0);
-  const formattedInterval = `${progress} min`;
   return (
     <View style={{ width: `${widthPercentage}%` }}>
       <View
@@ -33,10 +30,10 @@ export const TimerDisplay = ({ orderId, widthPercentage = 30 }: Props) => {
         <IconAlarm />
         {progress !== undefined ? (
           <Text style={{ marginRight: halfPadding, marginLeft: 4, ...texts.xs, ...texts.bold }}>
-            {formattedInterval}
+            {`${elapsed}`}
           </Text>
         ) : null}
-        <Text style={{ ...texts.xs, color: colors.grey700 }}>{formattedTime}</Text>
+        <Text style={{ ...texts.xs, color: colors.grey700 }}>{progress}</Text>
       </View>
       <View style={{ width: '100%' }}>
         <View
@@ -54,7 +51,7 @@ export const TimerDisplay = ({ orderId, widthPercentage = 30 }: Props) => {
             style={{
               height: halfPadding,
               borderRadius: 8,
-              width: barProgress !== undefined ? barProgress : 0,
+              width: progress !== undefined ? progress : 0,
               backgroundColor: colors.black,
               borderColor: colors.black,
               position: 'absolute',
