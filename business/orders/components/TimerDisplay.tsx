@@ -1,12 +1,10 @@
-import { Timestamp } from 'firebase/firestore';
 import { round } from 'lodash';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeContext';
 import { IconAlarm } from '../../../common/icons/icon-alarm';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { colors, halfPadding, texts } from '../../../common/styles';
-import { getTimeUntilNow } from '../helpers';
+import { useCookingTimer } from '../../hooks/useCookingTimer';
 
 type Props = {
   orderId: string;
@@ -15,40 +13,13 @@ type Props = {
 
 export const TimerDisplay = ({ orderId, widthPercentage = 30 }: Props) => {
   // context
-  const getServerTime = useContextGetSeverTime();
   const order = useObserveOrder(orderId);
-  // state
-  const [elapsedTime, setElapsedTime] = React.useState<number>(0);
-  const [barWidth, setBarWidth] = React.useState<number | string>(0);
-  const [ticking] = React.useState(true);
-  // helpers
-  // side effects
-  // updating the elapsed time and progress bar width
-  const update = React.useCallback(() => {
-    if (!getServerTime) return;
-    if (!order?.timestamps.confirmed) return;
-    if (!order?.cookingTime) return;
-    const { cookingTime, timestamps } = order;
-    const now = getServerTime().getTime();
-    const confirmedAt = (timestamps.confirmed as Timestamp).toDate().getTime();
-    const elapsedTime = getTimeUntilNow(now, confirmedAt);
-    setElapsedTime(elapsedTime);
-    const cookingProgress = cookingTime && elapsedTime ? (elapsedTime / cookingTime) * 100 : 0;
-    if (cookingProgress > 0) setBarWidth(`${cookingProgress}%`);
-    else setBarWidth(0);
-  }, [getServerTime, order?.cookingTime, order?.timestamps.confirmed]);
-  // tick
-  React.useEffect(() => {
-    if (ticking) {
-      const interval = setInterval(update, 30 * 1000);
-      return () => clearInterval(interval);
-    }
-  }, [ticking]);
+  const { progress, barProgress } = useCookingTimer(order);
   // UI
   if (!order) return null;
   if (order.status !== 'preparing' || !order?.cookingTime) return null;
-  const formattedTime = round(order.cookingTime, 0); // fix this
-  const formattedInterval = `${elapsedTime} min`;
+  const formattedTime = round(order.cookingTime / 60, 0);
+  const formattedInterval = `${progress} min`;
   return (
     <View style={{ width: `${widthPercentage}%` }}>
       <View
@@ -60,9 +31,11 @@ export const TimerDisplay = ({ orderId, widthPercentage = 30 }: Props) => {
         }}
       >
         <IconAlarm />
-        <Text style={{ marginRight: halfPadding, marginLeft: 4, ...texts.xs, ...texts.bold }}>
-          {formattedInterval}
-        </Text>
+        {progress !== undefined ? (
+          <Text style={{ marginRight: halfPadding, marginLeft: 4, ...texts.xs, ...texts.bold }}>
+            {formattedInterval}
+          </Text>
+        ) : null}
         <Text style={{ ...texts.xs, color: colors.grey700 }}>{formattedTime}</Text>
       </View>
       <View style={{ width: '100%' }}>
@@ -81,7 +54,7 @@ export const TimerDisplay = ({ orderId, widthPercentage = 30 }: Props) => {
             style={{
               height: halfPadding,
               borderRadius: 8,
-              width: barWidth,
+              width: barProgress !== undefined ? barProgress : 0,
               backgroundColor: colors.black,
               borderColor: colors.black,
               position: 'absolute',
