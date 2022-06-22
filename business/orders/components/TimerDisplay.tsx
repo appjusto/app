@@ -10,7 +10,7 @@ type Props = {
   widthPercentage?: number;
 };
 
-export const TimerDisplay = ({ orderId, widthPercentage = 30 }: Props) => {
+export const TimerDisplay = ({ orderId, widthPercentage = 35 }: Props) => {
   // context
   const order = useObserveOrder(orderId);
   const { elapsed, progress } = useCookingTimer(order);
@@ -33,7 +33,7 @@ export const TimerDisplay = ({ orderId, widthPercentage = 30 }: Props) => {
             {`${elapsed}`}
           </Text>
         ) : null}
-        <Text style={{ ...texts.xs, color: colors.grey700 }}>{progress}</Text>
+        <Text style={{ ...texts.xs, color: colors.grey700 }}>{order.cookingTime / 60}</Text>
       </View>
       <View style={{ width: '100%' }}>
         <View
