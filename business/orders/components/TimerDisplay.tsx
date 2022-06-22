@@ -20,6 +20,7 @@ export const TimerDisplay = ({ orderId, widthPercentage = 30 }: Props) => {
   // state
   const [elapsedTime, setElapsedTime] = React.useState<number>(0);
   const [barWidth, setBarWidth] = React.useState<number | string>(0);
+  const [ticking] = React.useState(true);
   // helpers
   // side effects
   // updating the elapsed time and progress bar width
@@ -38,14 +39,15 @@ export const TimerDisplay = ({ orderId, widthPercentage = 30 }: Props) => {
   }, [getServerTime, order?.cookingTime, order?.timestamps.confirmed]);
   // tick
   React.useEffect(() => {
-    if (order?.status !== 'preparing') return;
-    const interval = setInterval(update, 15 * 1000);
-    return () => clearInterval(interval);
-  }, [order?.status]);
+    if (ticking) {
+      const interval = setInterval(update, 30 * 1000);
+      return () => clearInterval(interval);
+    }
+  }, [ticking]);
   // UI
   if (!order) return null;
   if (order.status !== 'preparing' || !order?.cookingTime) return null;
-  const formattedTime = round(order.cookingTime, 0);
+  const formattedTime = round(order.cookingTime, 0); // fix this
   const formattedInterval = `${elapsedTime} min`;
   return (
     <View style={{ width: `${widthPercentage}%` }}>
