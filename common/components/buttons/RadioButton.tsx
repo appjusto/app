@@ -6,7 +6,7 @@ interface Props extends ViewProps {
   title: string;
   checked?: boolean;
   onPress: () => void;
-  variant: 'circle' | 'square';
+  variant?: 'circle' | 'square';
 }
 
 export default function ({ title, checked, onPress, style, variant = 'circle', ...props }: Props) {

@@ -20,7 +20,7 @@ export const useSearch = <T extends object>(
   const [responseByPage, setResponseByPage] =
     React.useState<Map<number | undefined, SearchResponse<T>>>();
   const [results, setResults] = React.useState<T[]>();
-  const [isLoading, setLoading] = React.useState(true);
+  const [isLoading, setLoading] = React.useState(enabled);
   // helpers
   const search = React.useCallback(
     async (location: LatLng, input: string, filters: SearchFilter[], page?: number) => {

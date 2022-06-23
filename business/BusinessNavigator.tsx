@@ -91,6 +91,11 @@ export const BusinessNavigator = () => {
             },
           });
         }
+      } else if (!data.action) {
+        if (clicked) {
+          remove!();
+          track('business clicked in random push message sent by our team');
+        }
       }
     },
     [navigation]

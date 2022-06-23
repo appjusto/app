@@ -80,6 +80,11 @@ export const MainNavigator = () => {
             },
           });
         }
+      } else if (!data.action) {
+        if (clicked) {
+          remove!();
+          track('consumer clicked in random push message sent by our team');
+        }
       }
     },
     [navigation]

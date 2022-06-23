@@ -38,7 +38,6 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
   const cancelOrderHandler = () => {
     (async () => {
       if (!selectedIssue) {
-        onModalClose();
         dispatch(showToast('Você precisa escolher um motivo para efetuar o cancelamento', 'error'));
         return;
       }
@@ -54,6 +53,7 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
         track('restaurant canceled order');
         dispatch(showToast('Pedido cancelado com sucesso', 'success'));
         setLoading(false);
+        onModalClose();
         navigation.navigate('BusinessNavigator', { screen: 'BusinessOrders' });
       } catch (error) {
         Sentry.Native.captureException(error);
@@ -126,7 +126,6 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
               <DefaultButton
                 title={t('Cancelar pedido')}
                 variant="danger"
-                style={{ backgroundColor: colors.red }}
                 onPress={() => {
                   cancelOrderHandler();
                   onCancelOrder();

@@ -37,7 +37,7 @@ export default class PlatformApi {
     const querySnapshot = await getDocs(
       query(this.firestoreRefs.getIssuesRef(), where('type', '==', type))
     );
-    return documentsAs<Issue>(querySnapshot.docs);
+    return querySnapshot.docs.map((doc) => doc.data() as Issue);
   }
 
   async fetchCuisines() {

@@ -1,9 +1,9 @@
-import { BusinessAlgolia } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { BusinessAlgolia } from '../../../../../types';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
 import { useLastRestaurants } from '../../../../common/store/api/order/hooks/useLastRestaurants';
@@ -14,7 +14,6 @@ import {
   updateCurrentPlace,
 } from '../../../../common/store/consumer/actions';
 import { getConsumer, getCurrentLocation } from '../../../../common/store/consumer/selectors';
-import { SearchFilter } from '../../../../common/store/consumer/types';
 import { colors, padding } from '../../../../common/styles';
 import { LoggedNavigatorParamList } from '../../types';
 import { sectionsFromResults } from '../restaurant/list';
@@ -43,16 +42,43 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   const currentLocation = useSelector(getCurrentLocation);
   const consumer = useSelector(getConsumer);
   // state
-  const [filters, setFilters] = React.useState<SearchFilter[]>([]);
+  const [cuisineName, setCuisineName] = React.useState<string>();
+  // const [restaurants, setRestaurants] = React.useState<WithId<Business>[]>();
+  const [refreshing, setRefreshing] = React.useState(false);
+  const mostRecentRestaurants = useLastRestaurants(consumer?.id);
   const {
     results: restaurants,
     isLoading,
     refetch,
     fetchNextPage,
-  } = useSearch<BusinessAlgolia>(true, 'restaurant', 'distance', filters, currentLocation, '');
-  const [refreshing, setRefreshing] = React.useState(false);
-  const mostRecentRestaurants = useLastRestaurants(consumer?.id);
+  } = useSearch<BusinessAlgolia>(
+    true,
+    'restaurant',
+    'distance',
+    cuisineName ? [{ type: 'cuisine', value: cuisineName }] : [],
+    currentLocation,
+    ''
+  );
+  // helpers
+  // firestore search
+  // const fetchRestaurants = (startAt: number = 0) => {
+  //   if (!currentLocation) return;
+  //   setRefreshing(true);
+  //   api
+  //     .businessesGeoSearch()
+  //     .fetchBusinessesAround(currentLocation, startAt, cuisineName)
+  //     .then((value) => {
+  //       setRefreshing(false);
+  //       setRestaurants(value);
+  //     });
+  // };
   // side effects
+  // fetch restaurants according with currentLocation
+  // firestore search
+  // React.useEffect(() => {
+  //   fetchRestaurants();
+  // }, [currentLocation, cuisineName]);
+  // updating current location when place changes
   React.useEffect(() => {
     if (place) {
       dispatch(updateCurrentLocation(undefined));
@@ -63,10 +89,11 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   // tracking
   useSegmentScreen('FoodOrderHome');
   // handlers
-  const refresh = async () => {
+  const refresh = () => {
     setRefreshing(true);
-    await api.search().clearCache();
-    await refetch();
+    // fetchRestaurants();
+    api.search().clearCache().then(null);
+    refetch()?.then(null);
     setRefreshing(false);
   };
   // console.log('FOODORDERHOME CURRENTLOCATION', currentLocation);
@@ -74,20 +101,22 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   return (
     <RestaurantList
       sections={sectionsFromResults(restaurants, currentLocation)}
-      onEndReached={() => {
-        fetchNextPage();
-      }}
       onEndReachedThreshold={0.7}
+      // onEndReached={() => fetchRestaurants(restaurants?.length)}
+      onEndReached={fetchNextPage}
       ListHeaderComponent={
         <View style={{ backgroundColor: colors.white, paddingBottom: padding }}>
           <FoodOrderHomeHeader
+            recentRestaurants={mostRecentRestaurants}
+            consumer={consumer}
+            selectedCuisineId={cuisineName}
             onSelectRestaurant={(restaurantId) => {
               navigation.push('RestaurantNavigator', {
                 restaurantId,
                 screen: 'RestaurantDetail',
               });
             }}
-            selectedCuisineId={filters.find(() => true)?.value}
+            onCuisineSelect={(cuisine) => setCuisineName(cuisine?.name)}
             onChangePlace={() => {
               navigation.navigate('AddressComplete', {
                 returnParam: 'place',
@@ -97,14 +126,9 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
             onSearchPress={() => {
               navigation.navigate('RestaurantSearch');
             }}
-            onCuisineSelect={(cuisine) => {
-              setFilters(cuisine ? [{ type: 'cuisine', value: cuisine.name }] : []);
-            }}
-            consumer={consumer}
             onLogin={() => {
               navigation.replace('WelcomeScreen');
             }}
-            recentRestaurants={mostRecentRestaurants}
           />
         </View>
       }
@@ -114,6 +138,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
           screen: 'RestaurantDetail',
         });
       }}
+      // loading={restaurants === undefined}
       loading={isLoading}
       refreshing={refreshing}
       onRefresh={() => refresh()}

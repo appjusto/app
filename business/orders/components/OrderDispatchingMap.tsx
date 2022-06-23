@@ -6,7 +6,6 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RoundedProfileImg from '../../../common/components/icons/RoundedProfileImg';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import { useChatIsEnabled } from '../../../common/hooks/useChatIsEnabled';
-import OrderMap from '../../../common/screens/orders/OrderMap';
 import { colors, halfPadding, padding, texts } from '../../../common/styles';
 import { formatDate } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
@@ -57,9 +56,15 @@ export const OrderDispatchingMap = ({ order, style, onChatWithCourier }: Props) 
                 />
               </View>
             ) : null}
-            <View style={{ marginHorizontal: padding, marginTop: 32 }}>
-              <OrderMap order={order} ratio={240 / 160} />
-            </View>
+            {/* hiding map for now because of the costs */}
+            {/* <View style={{ marginHorizontal: padding, marginTop: 32 }}>
+              <OrderMap
+                originLocation={order.origin?.location}
+                destinationLocation={order.destination?.location}
+                route={order.route}
+                ratio={240 / 160}
+              />
+            </View> */}
           </View>
         );
       } else return null;
@@ -84,17 +89,27 @@ export const OrderDispatchingMap = ({ order, style, onChatWithCourier }: Props) 
                 </Text>
               </View>
             </View>
-            <View style={{ marginHorizontal: padding, marginTop: 32 }}>
-              <OrderMap order={order} ratio={240 / 160} />
-            </View>
+            {/* hiding map for now because of the costs */}
+            {/* <View style={{ marginHorizontal: padding, marginTop: 32 }}>
+              <OrderMap
+                originLocation={order.origin?.location}
+                destinationLocation={order.destination?.location}
+                ratio={240 / 160}
+              />
+            </View> */}
           </View>
         );
       } else {
         <View>
           <SingleHeader title={t('Entregador externo')} />
-          <View style={{ marginTop: 32 }}>
-            <OrderMap order={order} ratio={240 / 160} />
-          </View>
+          {/* hiding map for now because of the costs */}
+          {/* <View style={{ marginTop: 32 }}>
+            <OrderMap
+              originLocation={order.origin?.location}
+              destinationLocation={order.destination?.location}
+              ratio={240 / 160}
+            />
+          </View> */}
         </View>;
       }
     }

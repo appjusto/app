@@ -5,7 +5,6 @@ import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
-import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
@@ -22,7 +21,6 @@ import { formatDuration } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { BusinessNavParamsList } from '../../types';
 import { CancelOrderModal } from '../components/CancelOrderModal';
-import { CookingTimeModal } from '../components/CookingTimeModal';
 import { CustomButton } from '../components/CustomButton';
 import { DestinationAndPay } from '../components/DestinationAndPay';
 import { DetailedOrderItems } from '../components/DetailedOrderItems';
@@ -148,15 +146,6 @@ export const OrderDetail = ({ navigation, route }: Props) => {
                 </Text>
               </View>
             ) : null}
-            {order.status === 'preparing' ? (
-              <View style={{ minWidth: '61%' }}>
-                <DefaultButton
-                  title={t('Alterar tempo de preparo')}
-                  variant="secondary"
-                  onPress={() => setCookingModalVisible(true)}
-                />
-              </View>
-            ) : null}
           </View>
           <DetailedOrderItems order={order} style={{ marginTop: padding, marginBottom: 32 }} />
         </View>
@@ -198,14 +187,8 @@ export const OrderDetail = ({ navigation, route }: Props) => {
       <CancelOrderModal
         modalVisible={cancelModalVisible}
         onModalClose={() => setCancelModalVisible(false)}
-        onCancelOrder={() => setCancelModalVisible(false)}
+        onCancelOrder={() => null}
         order={order}
-      />
-      <CookingTimeModal
-        order={order}
-        buttonTitle={t('Confirmar tempo de preparo')}
-        modalVisible={cookingModalVisible}
-        onModalClose={() => setCookingModalVisible(false)}
       />
     </View>
   );

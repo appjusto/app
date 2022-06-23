@@ -2,8 +2,10 @@ import { Fare, Order } from '@appjusto/types';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { getOrderTotal } from '../../../../common/store/api/order/helpers';
+import { getFlavor } from '../../../../common/store/config/selectors';
 import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
@@ -15,6 +17,7 @@ type Props = {
 };
 
 export const OrderCostBreakdown = ({ order, selectedFare, hideItems }: Props) => {
+  const flavor = useSelector(getFlavor);
   return (
     <View style={{ flex: 1 }}>
       <SingleHeader title={t('Entenda os valores')} />
@@ -25,31 +28,37 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems }: Props) =>
         <View style={{ marginTop: padding }}>
           {!isEmpty(order.items) && !hideItems ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('Itens do pedido')}</Text>
-              <Text style={{ ...texts.sm, lineHeight: 21 }}>
-                {formatCurrency(getOrderTotal(order))}
-              </Text>
+              <Text style={{ ...texts.sm }}>{t('Itens do pedido')}</Text>
+              <Text style={{ ...texts.sm }}>{formatCurrency(getOrderTotal(order))}</Text>
             </View>
           ) : null}
           {selectedFare?.platform?.value ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('AppJusto')}</Text>
-              <Text style={{ ...texts.sm, lineHeight: 21 }}>
-                {formatCurrency(selectedFare.platform.value)}
-              </Text>
+              <Text style={{ ...texts.sm }}>{t('AppJusto')}</Text>
+              <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.platform.value)}</Text>
             </View>
           ) : null}
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('Entrega')}</Text>
-            <Text style={{ ...texts.sm, lineHeight: 21 }}>
-              {formatCurrency(selectedFare?.courier.value ?? 0)}
-            </Text>
+            <Text style={{ ...texts.sm }}>{t('Entrega')}</Text>
+            <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare?.courier?.value ?? 0)}</Text>
           </View>
           {order.tip?.value ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ ...texts.sm, lineHeight: 21 }}>{t('Caixinha entregador/a')}</Text>
-              <Text style={{ ...texts.sm, lineHeight: 21 }}>
-                {formatCurrency(order.tip!.value)}
+              <Text style={{ ...texts.sm }}>{t('Caixinha entregador/a')}</Text>
+              <Text style={{ ...texts.sm }}>{formatCurrency(order.tip!.value)}</Text>
+            </View>
+          ) : null}
+          {flavor === 'courier' ? (
+            <View>
+              <View style={{ flex: 1, flexDirection: 'row' }}>
+                <Text style={{ ...texts.sm, color: colors.red }}>{t('Taxa Iugu *')}</Text>
+                <View style={{ flex: 1 }} />
+                <Text style={{ ...texts.sm, color: colors.red }}>-2.21%</Text>
+              </View>
+              <Text style={{ ...texts.xs, color: colors.red, marginTop: padding }}>
+                {t(
+                  '* Essa taxa é descontada do valor de cada corrida aceita para efetuar a transação bancária na sua conta. Nada desse valor fica para o AppJusto.'
+                )}
               </Text>
             </View>
           ) : null}

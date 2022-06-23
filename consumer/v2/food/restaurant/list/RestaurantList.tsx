@@ -1,4 +1,4 @@
-import { BusinessAlgolia } from '@appjusto/types';
+import { Business, BusinessAlgolia, WithId } from '@appjusto/types';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -8,7 +8,6 @@ import {
   View,
 } from 'react-native';
 import { useSelector } from 'react-redux';
-import { ApiContext } from '../../../../../common/app/context';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../../../common/components/texts/DoubleHeader';
 import FeedbackView from '../../../../../common/components/views/FeedbackView';
@@ -22,15 +21,21 @@ import { t } from '../../../../../strings';
 import { RestaurantListItem } from './RestaurantListItem';
 import { RestaurantListSection } from './types';
 
-interface Props extends SectionListProps<BusinessAlgolia, RestaurantListSection> {
+interface Props
+  extends SectionListProps<BusinessAlgolia | WithId<Business>, RestaurantListSection> {
   loading?: boolean;
   onSelect: (id: string) => void;
   onRecommend?: () => void;
 }
 
-export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...props }: Props) => {
-  // context
-  const api = React.useContext(ApiContext);
+export const RestaurantList = ({
+  sections,
+  loading,
+  refreshing = false,
+  onSelect,
+  onRecommend,
+  ...props
+}: Props) => {
   // redux
   const location = useSelector(getCurrentLocation);
   // UI
@@ -49,7 +54,7 @@ export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...pr
         )
       }
       ListEmptyComponent={
-        loading ? (
+        refreshing ? null : loading ? (
           <View style={{ ...screens.centered, marginTop: padding }}>
             <ActivityIndicator size="large" color={colors.green500} />
           </View>
@@ -117,8 +122,9 @@ export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...pr
         );
       }}
       sections={sections}
-      keyExtractor={(item) => item.objectID}
+      keyExtractor={(item) => ('id' in item ? item.id : item.objectID)}
       renderItem={({ item, section }) => {
+        const id = 'id' in item ? item.id : item.objectID;
         const closed = section.data.find(() => true)?.status === 'closed';
         return (
           <View
@@ -127,9 +133,9 @@ export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...pr
               paddingBottom: padding,
             }}
           >
-            <TouchableOpacity onPress={() => onSelect(item.objectID)}>
+            <TouchableOpacity onPress={() => onSelect(id)}>
               <RestaurantListItem
-                id={item.objectID}
+                id={id}
                 restaurant={item}
                 cuisine={item.cuisine}
                 secondary={section.data.find(() => true)?.status === 'closed'}
@@ -144,7 +150,7 @@ export const RestaurantList = ({ sections, loading, onSelect, onRecommend, ...pr
         );
       }}
       stickySectionHeadersEnabled={false}
-      onRefresh={() => api.search().clearCache()}
+      refreshing={refreshing}
       {...props}
     />
   );

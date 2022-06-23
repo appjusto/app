@@ -4,8 +4,10 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { FlatList, View } from 'react-native';
 import { useSelector } from 'react-redux';
+import { ApiContext } from '../../../common/app/context';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../common/components/views/ConfigItem';
+import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
 import { useobservePendingOrderRequests } from '../../../common/store/api/courier/hooks/useobservePendingOrderRequests';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
@@ -28,8 +30,13 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const courier = useSelector(getCourier)!;
+  const api = React.useContext(ApiContext);
   // state
   const requests = useobservePendingOrderRequests(courier.id);
+  const { coords } = useLastKnownLocation();
+
+  // side effects
+
   // tracking
   useSegmentScreen('OrderRequests');
   return (
@@ -61,9 +68,7 @@ export default function ({ navigation, route }: Props) {
                 });
               }}
             >
-              <RoundedText>{`Percurso total: ${formatDistance(
-                item.distanceToOrigin + item.distance
-              )}`}</RoundedText>
+              <RoundedText>{formatDistance(item.distance)}</RoundedText>
             </ConfigItem>
           );
         }}

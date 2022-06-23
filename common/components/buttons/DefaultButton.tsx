@@ -81,7 +81,10 @@ export default function ({
           </View>
         )}
         {activityIndicator && (
-          <ActivityIndicator size="small" color={secondary ? colors.black : colors.white} />
+          <ActivityIndicator
+            size="small"
+            color={variant === 'secondary' ? colors.black : colors.white}
+          />
         )}
         {children}
       </View>
