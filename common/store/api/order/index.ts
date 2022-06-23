@@ -41,16 +41,25 @@ import { OrderCourierLocationLog } from '../../../../../types';
 import { getAppVersion } from '../../../utils/version';
 import { fetchPublicIP } from '../externals/ipify';
 import { documentAs, documentsAs } from '../types';
+import InvoiceApi from './invoices/InvoiceApi';
 import { ObserveOrdersOptions } from './types';
 
 export type QueryOrdering = 'asc' | 'desc';
 
 export default class OrderApi {
+  private _invoices: InvoiceApi;
+
   constructor(
     private firestoreRefs: FirestoreRefs,
     private functionsRef: FunctionsRef,
     private firestore: Firestore
-  ) {}
+  ) {
+    this._invoices = new InvoiceApi(this.firestoreRefs);
+  }
+
+  invoice() {
+    return this._invoices;
+  }
 
   // firestore
   // consumer

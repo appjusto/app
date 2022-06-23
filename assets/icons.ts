@@ -28,7 +28,6 @@ const iconOrders = require('./icons/orders.png');
 const iconSearch = require('./icons/search.png');
 const iconUser = require('./icons/user.png');
 const restCardIcon = require('./icons/card-icon.png');
-const QrCodePix = require('./icons/qr-code-pix.png');
 const iconBoxPhoto = require('./icons/icon-boxphoto.png');
 const iconHouse = require('./icons/icon-boxhouse.png');
 const iconCheckGreen = require('./icons/icon-check-green.png');
