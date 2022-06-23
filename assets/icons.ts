@@ -67,7 +67,6 @@ export const search = iconSearch;
 export const iconSad = iconSadYellow;
 export const cardIcon = restCardIcon;
 export const motoIntro = illustrationMotoIntro;
-export const QrCode = QrCodePix;
 export const box = iconBoxPhoto;
 export const house = iconHouse;
 export const greenCheck = iconCheckGreen;
@@ -108,7 +107,6 @@ export default [
   search,
   iconSad,
   motoIntro,
-  QrCode,
   box,
   house,
   greenCheck,

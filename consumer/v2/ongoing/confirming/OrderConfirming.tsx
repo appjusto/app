@@ -85,4 +85,5 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
   if (type == 'p2p') {
     return <OrderConfirmingCreditP2P onCancel={navigateToCancelOrder} />;
   }
+  return null;
 };

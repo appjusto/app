@@ -47,25 +47,25 @@ export const PayWithPix = ({ navigation, route }: Props) => {
   const consumer = useSelector(getConsumer)!;
   // state
   const order = useObserveOrder(orderId);
-  // screen state
-  const [cpfKey, setCpfKey] = React.useState(false);
-  const [pixKey, setPixKey] = React.useState('');
+  const [pixKey, setPixKey] = React.useState(consumer.pix ?? '');
   const [isLoading, setLoading] = React.useState(false);
-
   // side-effects
-  // setting consumer cpf as pix key
-  React.useEffect(() => {
-    if (!cpfKey) setPixKey('');
-    if (cpfKey) setPixKey(consumer.cpf!);
-  }, [cpfKey, consumer.cpf]);
   // tracking
   useSegmentScreen('PayWithPix');
   // handlers
+  const toggleCPFAsPix = () => {
+    if (!consumer.cpf) return;
+    if (pixKey !== consumer.pix) setPixKey(consumer.cpf);
+  };
   const placeOrderWithPix = async () => {
     Keyboard.dismiss();
     try {
       setLoading(true);
-      await api.profile().updateProfile(consumer.id, { pix: pixKey });
+      // updating pix key
+      if (pixKey !== consumer.pix) {
+        await api.profile().updateProfile(consumer.id, { pix: pixKey });
+      }
+      // placing order
       await api.order().placeOrder(
         orderId,
         fleetId,
@@ -79,9 +79,9 @@ export const PayWithPix = ({ navigation, route }: Props) => {
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {
         screen: 'OngoingOrderConfirming',
-        params: { orderId, pixKey, total },
+        params: { orderId },
       });
-    } catch (error) {
+    } catch (error: any) {
       dispatch(showToast(error.toString(), 'error'));
     }
   };
@@ -106,8 +106,8 @@ export const PayWithPix = ({ navigation, route }: Props) => {
         </Text>
         {consumer.cpf && (
           <CheckField
-            checked={cpfKey}
-            onPress={() => setCpfKey(!cpfKey)}
+            checked={pixKey === consumer.cpf}
+            onPress={toggleCPFAsPix}
             text={t('Usar CPF como chave')}
             style={{ marginBottom: padding }}
           />
@@ -148,7 +148,8 @@ export const PayWithPix = ({ navigation, route }: Props) => {
           <DefaultButton
             title={t('Gerar código de pagamento Pix')}
             onPress={placeOrderWithPix}
-            disabled={!pixKey}
+            disabled={!pixKey || isLoading}
+            activityIndicator={isLoading}
           />
         </View>
       </View>

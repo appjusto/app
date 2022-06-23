@@ -9,7 +9,7 @@ import DefaultButton from '../../../../../common/components/buttons/DefaultButto
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import Pill from '../../../../../common/components/views/Pill';
 import { IconPixLogo } from '../../../../../common/icons/icon-pix-logo';
-import { usePendingOrderInvoice } from '../../../../../common/store/api/order/invoices/usePendingOrderInvoice';
+import { useObservePendingOrderInvoice } from '../../../../../common/store/api/order/invoices/useObservePendingOrderInvoice';
 import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
@@ -24,7 +24,7 @@ export const OrderConfirmingPix = ({ order, onCancel }: Props) => {
   // context
   const dispatch = useDispatch<AppDispatch>();
   // state
-  const pendingInvoice = usePendingOrderInvoice(order.id);
+  const pendingInvoice = useObservePendingOrderInvoice(order.id);
   // handlers
   const copyToClipboard = () => {
     (async () => {
@@ -34,7 +34,6 @@ export const OrderConfirmingPix = ({ order, onCancel }: Props) => {
     })();
   };
   // UI
-  console.log(pendingInvoice?.pix?.qrcodeText);
   return (
     <SafeAreaView style={{ ...screens.default }}>
       <PaddedView>
@@ -55,7 +54,10 @@ export const OrderConfirmingPix = ({ order, onCancel }: Props) => {
         >
           <View style={{ width: '49%' }}>
             {pendingInvoice ? (
-              <Image source={{ uri: pendingInvoice.pix!.qrcode }} />
+              <Image
+                source={{ uri: pendingInvoice.pix!.qrcode }}
+                style={{ height: 156, width: 156 }}
+              />
             ) : (
               <ActivityIndicator size="small" color={colors.black} />
             )}

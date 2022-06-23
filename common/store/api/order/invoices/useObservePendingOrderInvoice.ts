@@ -3,7 +3,7 @@ import React from 'react';
 import { Invoice } from '../../../../../../types';
 import { ApiContext } from '../../../../app/context';
 
-export const usePendingOrderInvoice = (orderId: string) => {
+export const useObservePendingOrderInvoice = (orderId: string) => {
   // context
   const api = React.useContext(ApiContext);
   // state
@@ -11,11 +11,13 @@ export const usePendingOrderInvoice = (orderId: string) => {
   // side effects
   React.useEffect(() => {
     (async () => {
-      const invoices = await api
+      await api
         .order()
         .invoice()
-        .fetchInvoices({ orderId, type: 'order', status: 'pending', limit: 1 });
-      setInvoice(invoices.length ? invoices[0] : null);
+        .observeInvoices(
+          { orderId, invoiceType: 'order', status: 'pending', limit: 1 },
+          (invoices) => setInvoice(invoices.length ? invoices[0] : null)
+        );
     })();
   }, [orderId]);
   // result
