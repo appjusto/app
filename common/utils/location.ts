@@ -37,7 +37,7 @@ export const stopLocationUpdatesTask = async () => {
   try {
     await Location.stopLocationUpdatesAsync(TASK_FETCH_LOCATION);
   } catch (error) {
-    Sentry.Native.captureException(error);
+    // Sentry.Native.captureException(error);
   }
 };
 
