@@ -324,6 +324,13 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             navigateToAboutCharges={() => {
               navigation.navigate('AboutCharges');
             }}
+            navigateToPayWithPix={() => {
+              navigation.navigate('PayWithPix', {
+                orderId: order.id,
+                fleetId: selectedFare!.fleet!.id,
+                total: selectedFare!.total,
+              });
+            }}
           />
         }
       />

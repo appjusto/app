@@ -12,8 +12,7 @@ import {
   View,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-// import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
-import PagerView, { ViewPagerOnPageScrollEventData } from 'react-native-pager-view';
+import PagerView, { PagerViewOnPageSelectedEventData } from 'react-native-pager-view';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -178,7 +177,7 @@ export default function ({
     }
   };
   // change the step as user's scroll between pages
-  const onPageScroll = (ev: NativeSyntheticEvent<ViewPagerOnPageScrollEventData>) => {
+  const onPageScroll = (ev: NativeSyntheticEvent<PagerViewOnPageSelectedEventData>) => {
     const { nativeEvent } = ev;
     const { position } = nativeEvent;
     if (position !== step) {

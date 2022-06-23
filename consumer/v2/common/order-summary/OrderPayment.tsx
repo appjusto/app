@@ -4,11 +4,13 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
+import RoundedText from '../../../../common/components/texts/RoundedText';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
 import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { PixCard } from '../PixCard';
 
 interface Props {
   selectedPaymentMethodId?: string;
@@ -17,6 +19,7 @@ interface Props {
   onEditPaymentMethod: () => void;
   onSubmit: () => void;
   navigateToAboutCharges: () => void;
+  navigateToPayWithPix: () => void;
 }
 
 export const OrderPayment = ({
@@ -26,6 +29,7 @@ export const OrderPayment = ({
   onEditPaymentMethod,
   onSubmit,
   navigateToAboutCharges,
+  navigateToPayWithPix,
 }: Props) => {
   // redux
   const consumer = useSelector(getConsumer)!;
@@ -37,12 +41,14 @@ export const OrderPayment = ({
         <SingleHeader title={t('Forma de pagamento')} />
       </View> */}
       <PaddedView>
-        {/* {Boolean(!selectedPaymentMethod) && (
+        {Boolean(!selectedPaymentMethod) ? (
           <View style={{ marginBottom: padding }}>
-            <PixCard navigateToPixPayment={navigateToPixPayment} />
+            <TouchableOpacity onPress={navigateToPayWithPix}>
+              <PixCard />
+            </TouchableOpacity>
           </View>
-        )} */}
-        {Boolean(selectedPaymentMethod) && (
+        ) : null}
+        {Boolean(selectedPaymentMethod) ? (
           <View style={{ marginBottom: halfPadding }}>
             <TouchableOpacity onPress={onEditPaymentMethod}>
               <View style={{ marginBottom: halfPadding }}>
@@ -76,7 +82,7 @@ export const OrderPayment = ({
               </View>
             </TouchableOpacity>
           </View>
-        )}
+        ) : null}
 
         {isProfileComplete && selectedPaymentMethod ? (
           <DefaultButton
@@ -97,18 +103,18 @@ export const OrderPayment = ({
           />
         )}
 
-        {/* {Boolean(selectedPaymentMethod) && (
+        {Boolean(selectedPaymentMethod) && (
           <DefaultButton
             variant="secondary"
             title={t('Quero pagar com Pix')}
             style={{ marginBottom: padding }}
-            onPress={navigateToPixPayment}
+            onPress={navigateToPayWithPix}
           >
             <RoundedText backgroundColor={colors.darkYellow} style={{ right: -64 }}>
               {t('Novo!')}
             </RoundedText>
           </DefaultButton>
-        )} */}
+        )}
       </PaddedView>
     </View>
   );
