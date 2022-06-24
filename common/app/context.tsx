@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { definekeepAliveTask } from '../../business/utils/keepAlive';
 import Toast from '../components/views/Toast';
+import { ModalToastProvider } from '../contexts/ModalToastContext';
 import { createStore } from '../store';
 import Api from '../store/api/api';
 import { getExtra } from '../utils/config';
@@ -50,9 +51,11 @@ export const AppContext = ({ children }: Props) => {
         <QueryClientProvider client={queryClient}>
           <NotificationContainer>
             <NavigationContainer linking={linking}>
-              <ActionSheetProvider>{children}</ActionSheetProvider>
-              <Toast />
-              <StatusBar style="dark" backgroundColor="#FFFFFF" />
+              <ModalToastProvider>
+                <ActionSheetProvider>{children}</ActionSheetProvider>
+                <Toast />
+                <StatusBar style="dark" backgroundColor="#FFFFFF" />
+              </ModalToastProvider>
             </NavigationContainer>
           </NotificationContainer>
         </QueryClientProvider>
