@@ -15,7 +15,7 @@ import {
   halfPadding,
   padding,
   screens,
-  texts,
+  texts
 } from '../../../common/styles';
 import { formatDuration } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
@@ -154,7 +154,6 @@ export const OrderDetail = ({ navigation, route }: Props) => {
         <View style={{ marginTop: doublePadding, flex: 1, marginBottom: 32 }}>
           <InfoAndCPF order={order} />
         </View>
-        {/* this button will open a CancelOrderModal  */}
         {cancellableStatuses ? (
           <View style={{ minWidth: '61%', paddingHorizontal: padding, marginBottom: 32 }}>
             <CustomButton
