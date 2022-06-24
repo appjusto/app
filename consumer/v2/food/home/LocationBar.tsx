@@ -1,6 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import useLastKnownLocation from '../../../../common/location/useLastKnownLocation';
@@ -28,6 +28,7 @@ export const LocationBar = ({ onChangePlace }: Props) => {
   const [loading, setLoading] = React.useState(false);
   // handler
   const changeToCurrentLocationHandler = async () => {
+    Keyboard.dismiss();
     try {
       setLoading(true);
       const address = await api.maps().googleReverseGeocode(coords!);
@@ -52,7 +53,6 @@ export const LocationBar = ({ onChangePlace }: Props) => {
       dispatch(showToast(error.toString(), 'error'));
     }
   };
-  // console.log('LOCATION BAR currentPlace', currentPlace);
   // UI
   if (!consumer) return null;
   return (

@@ -71,6 +71,7 @@ export default function ({ navigation, route }: Props) {
   }, []);
   // handlers
   const signInHandler = async () => {
+    Keyboard.dismiss();
     if (flavor !== 'business' && !acceptedTerms) {
       dispatch(showToast(t('Você precisa aceitar os termos para criar sua conta.'), 'error'));
       return;
@@ -82,7 +83,6 @@ export default function ({ navigation, route }: Props) {
       if (authMode === 'phone') {
         navigation.navigate('PhoneLoginScreen', { phone, countryCode: '55' });
       } else {
-        Keyboard.dismiss();
         if (validateEmail(email).status !== 'ok') {
           dispatch(showToast(t('Digite um e-mail válido.'), 'error'));
           return;

@@ -138,6 +138,7 @@ export default function ({ navigation, route }: Props) {
           await api.order().nextDispatchingState(order);
         }
       } catch (error: any) {
+        Keyboard.dismiss();
         dispatch(showToast(error.toString(), 'error'));
       } finally {
         setLoading(false);

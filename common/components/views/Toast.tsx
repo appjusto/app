@@ -8,7 +8,7 @@ import { colors, halfPadding, texts } from '../../styles';
 
 // const percentualWidth = 0.8;
 const duration = 250;
-const delay = 3000;
+const delay = 4000;
 
 export default function () {
   // context

@@ -3,7 +3,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { round } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -94,6 +94,7 @@ export default function ({ navigation, route }: Props) {
       } catch (error) {
         setLoading(false);
         setRouteDistanceToOrigin(distanceToOrigin);
+        Keyboard.dismiss();
         dispatch(
           showToast(
             t('Não foi possível obter sua localização atual. Verifque suas configurações.'),

@@ -76,6 +76,7 @@ export default ({ navigation, route }: Props) => {
   };
   const finishHandler = async () => {
     setLoading(true);
+    Keyboard.dismiss();
     if (!tip) {
       setLoading(false);
       navigation.navigate('MainNavigator', { screen: 'Home' });

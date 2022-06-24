@@ -3,7 +3,7 @@ import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import dayjs from 'dayjs';
 import React from 'react';
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
@@ -66,6 +66,7 @@ export const Withdraws = ({ navigation, route }: Props) => {
     } catch (error) {
       console.log(error);
       Sentry.Native.captureException(error);
+      Keyboard.dismiss();
       dispatch(showToast('Não foi possível realizar a requisição. Tente novamente.', 'error'));
       setWithdrawing(false);
     }

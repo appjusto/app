@@ -3,7 +3,15 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, useNavigation } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Dimensions, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Dimensions,
+  Keyboard,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
@@ -56,6 +64,7 @@ export default function ({ onFleetDetail }: Props) {
   // handlers
   const toggleWorking = () => {
     if (status === 'dispatching') {
+      Keyboard.dismiss();
       dispatch(
         showToast(t('Você precisa finalizar a entrega antes de parar de trabalhar.'), 'error')
       );

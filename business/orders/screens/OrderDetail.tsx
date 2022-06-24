@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, ScrollView, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -72,6 +72,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
     } catch (error: any) {
       console.log(error.toString());
       Sentry.Native.captureException(error);
+      Keyboard.dismiss();
       dispatch(
         showToast('Não conseguimos atualizar o pedido nesse momento. Tente novamente.', 'error')
       );

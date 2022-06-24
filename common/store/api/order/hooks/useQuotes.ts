@@ -1,5 +1,6 @@
 import { Fare } from '@appjusto/types';
 import React from 'react';
+import { Keyboard } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../app/context';
 import { showToast } from '../../../ui/actions';
@@ -15,6 +16,7 @@ export const useQuotes = (orderId?: string) => {
   // helper callback
   const getOrderQuotes = React.useCallback(async () => {
     if (!order) return;
+    Keyboard.dismiss();
     if (!order.origin?.location || !order.route?.distance) {
       if (order.route?.issue) dispatch(showToast(order.route.issue, 'error'));
       return;
