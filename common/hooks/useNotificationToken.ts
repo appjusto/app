@@ -38,8 +38,8 @@ export const useNotificationToken = () => {
   const manager = useSelector(getManager);
   const flavor = useSelector(getFlavor);
   const profile = flavor === 'consumer' ? consumer! : flavor === 'courier' ? courier! : manager!;
-  const currentNotificationToken = profile?.notificationToken;
   // state
+  const currentNotificationToken = profile?.notificationToken;
   const [token, setToken] = React.useState<string | null>();
   const [error, setError] = React.useState<ErrorType>();
   // helpers
@@ -80,6 +80,7 @@ export const useNotificationToken = () => {
   }, [error]);
   // when token changes
   React.useEffect(() => {
+    if (!Device.isDevice) return;
     if (!user?.uid) return;
     if (token === undefined) return;
     const tokenChanged = currentNotificationToken !== token;

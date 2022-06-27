@@ -114,7 +114,9 @@ export default function ({ navigation, route }: Props) {
   else welcomeMessage = t('Um delivery aberto, transparente e consciente.');
   const actionButtonTitle =
     flavor === 'courier'
-      ? t('Entrar')
+      ? authMode === 'phone'
+        ? t('Entrar')
+        : t('Enviar senha por e-mail')
       : flavor === 'business'
       ? t('Entrar no restaurante')
       : t('Faça login para pedir');
