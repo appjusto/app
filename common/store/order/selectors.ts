@@ -83,7 +83,7 @@ export const summarizeOrders = memoize((orders: WithId<Order>[]) =>
       courierFee:
         order.status === 'delivered'
           ? result.courierFee +
-            (order.fare!.courier.value - order.fare!.courier.financialFee) +
+            ((order.fare!.courier?.value ?? 0) - (order.fare!.courier?.financialFee ?? 0)) +
             ((order.tip?.value ?? 0) - (order.tip?.financialFee ?? 0))
           : result.courierFee,
     }),

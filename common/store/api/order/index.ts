@@ -86,7 +86,6 @@ export default class OrderApi {
       status: 'quote',
       fulfillment: 'delivery',
       dispatchingStatus: 'idle',
-      // @ts-ignore
       dispatchingState: null,
       business: {
         id: business.id,
@@ -112,7 +111,6 @@ export default class OrderApi {
       status: 'quote',
       fulfillment: 'delivery',
       dispatchingStatus: 'idle',
-      // @ts-ignore
       dispatchingState: null,
       consumer: {
         id: consumer.id,
@@ -152,6 +150,24 @@ export default class OrderApi {
     if (courierId) constraints.push(where('courier.id', '==', courierId));
     if (businessId) constraints.push(where('business.id', '==', businessId));
     if (options.limit) constraints.push(limit(options.limit));
+    return onSnapshot(
+      query(this.firestoreRefs.getOrdersRef(), ...constraints),
+      (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
+      (error) => {
+        console.error(error);
+        Sentry.Native.captureException(error);
+      }
+    );
+  }
+  observeUnexpiredConsumerOrders(
+    consumerId: string,
+    resultHandler: (orders: WithId<Order>[]) => void
+  ): Unsubscribe {
+    const constraints = [
+      where('status', 'not-in', ['expired'] as OrderStatus[]),
+      where('consumer.id', '==', consumerId),
+      orderBy('createdOn', 'desc'),
+    ];
     return onSnapshot(
       query(this.firestoreRefs.getOrdersRef(), ...constraints),
       (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
