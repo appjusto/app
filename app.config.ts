@@ -77,6 +77,7 @@ export default (context: ConfigContext): ExpoConfig => {
               },
             ],
             'expo-splash-screen',
+            'sentry-expo',
           ]
         : undefined,
   };
