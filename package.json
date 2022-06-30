@@ -15,9 +15,9 @@
     "postversion": "git push && git push --tags && git fetch"
   },
   "dependencies": {
-    "@appjusto/firebase-refs": "^0.1.5",
+    "@appjusto/firebase-refs": "^0.2.0",
     "@appjusto/menu": "^0.1.4",
-    "@appjusto/types": "^7.0.0",
+    "@appjusto/types": "^7.1.0",
     "@expo/react-native-action-sheet": "^3.13.0",
     "@expo/vector-icons": "^13.0.0",
     "@fnando/cnpj": "^1.0.2",
@@ -44,6 +44,7 @@
     "expo-asset": "~8.5.0",
     "expo-background-fetch": "~10.2.0",
     "expo-camera": "~12.2.0",
+    "expo-clipboard": "~3.0.1",
     "expo-constants": "~13.1.1",
     "expo-device": "~4.2.0",
     "expo-firebase-recaptcha": "~2.2.0",
@@ -92,8 +93,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "sentry-expo": "^4.2.0",
-    "expo-clipboard": "~3.0.1"
+    "sentry-expo": "^4.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

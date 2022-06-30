@@ -6,6 +6,7 @@ import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
+import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
 import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
@@ -33,6 +34,8 @@ export const OrderPayment = ({
 }: Props) => {
   // redux
   const consumer = useSelector(getConsumer)!;
+  // helpers
+  const payableWithPix = useIsPixEnabled();
   const { isProfileComplete, shouldVerifyPhone } = useProfileSummary();
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
   return (
@@ -103,7 +106,7 @@ export const OrderPayment = ({
           />
         )}
 
-        {Boolean(selectedPaymentMethod) && (
+        {payableWithPix ? (
           <DefaultButton
             variant="secondary"
             title={t('Quero pagar com Pix')}
@@ -114,7 +117,7 @@ export const OrderPayment = ({
               {t('Novo!')}
             </RoundedText>
           </DefaultButton>
-        )}
+        ) : null}
       </PaddedView>
     </View>
   );
