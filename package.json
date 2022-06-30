@@ -56,7 +56,7 @@
     "expo-localization": "~13.0.0",
     "expo-location": "~14.2.2",
     "expo-media-library": "~14.1.0",
-    "expo-notifications": "~0.15.3",
+    "expo-notifications": "~0.15.4",
     "expo-permissions": "~13.2.0",
     "expo-print": "~11.2.0",
     "expo-secure-store": "^11.2.0",
