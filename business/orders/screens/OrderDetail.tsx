@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, ScrollView, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -15,7 +15,7 @@ import {
   halfPadding,
   padding,
   screens,
-  texts,
+  texts
 } from '../../../common/styles';
 import { formatDuration } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
@@ -72,6 +72,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
     } catch (error: any) {
       console.log(error.toString());
       Sentry.Native.captureException(error);
+      Keyboard.dismiss();
       dispatch(
         showToast('Não conseguimos atualizar o pedido nesse momento. Tente novamente.', 'error')
       );
@@ -153,7 +154,6 @@ export const OrderDetail = ({ navigation, route }: Props) => {
         <View style={{ marginTop: doublePadding, flex: 1, marginBottom: 32 }}>
           <InfoAndCPF order={order} />
         </View>
-        {/* this button will open a CancelOrderModal  */}
         {cancellableStatuses ? (
           <View style={{ minWidth: '61%', paddingHorizontal: padding, marginBottom: 32 }}>
             <CustomButton

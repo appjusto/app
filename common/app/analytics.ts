@@ -14,6 +14,7 @@ export function init(props: AnalyticsConfig) {
     environment,
     release: Constants.manifest?.revisionId,
   });
+  Sentry.Native.setExtra('flavor', flavor);
 
   const {
     segmentConsumerAndroidKey,

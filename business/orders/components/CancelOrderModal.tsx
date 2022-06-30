@@ -9,6 +9,8 @@ import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
+import { ModalToast } from '../../../common/components/views/ModalToast';
+import { useModalToastContext } from '../../../common/contexts/ModalToastContext';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
 import { track } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
@@ -30,6 +32,7 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   const navigation = useNavigation<ScreenNavigationProp>();
+  const { showModalToast } = useModalToastContext();
   // state
   const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
   const [isLoading, setLoading] = React.useState(false);
@@ -38,7 +41,10 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
   const cancelOrderHandler = () => {
     (async () => {
       if (!selectedIssue) {
-        dispatch(showToast('Você precisa escolher um motivo para efetuar o cancelamento', 'error'));
+        dispatch(
+          showToast(t('Você precisa escolher um motivo para efetuar o cancelamento'), 'error')
+        );
+        showModalToast(t('Você precisa escolher um motivo para efetuar o cancelamento'), 'error');
         return;
       }
       try {
@@ -51,14 +57,16 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
         } as CancelOrderPayload;
         await api.order().cancelBusinessOrder(cancellationData);
         track('restaurant canceled order');
-        dispatch(showToast('Pedido cancelado com sucesso', 'success'));
+        dispatch(showToast(t('Pedido cancelado com sucesso'), 'success'));
+        showModalToast(t('Pedido cancelado com sucesso'), 'success');
         setLoading(false);
         onModalClose();
         navigation.navigate('BusinessNavigator', { screen: 'BusinessOrders' });
       } catch (error) {
         Sentry.Native.captureException(error);
         setLoading(false);
-        dispatch(showToast('Não foi possível efetuar o cancelamento. Tente novamente', 'error'));
+        showModalToast(t('Não foi possível efetuar o cancelamento. Tente novamente'), 'error');
+        dispatch(showToast(t('Não foi possível efetuar o cancelamento. Tente novamente'), 'error'));
       }
     })();
   };
@@ -133,6 +141,7 @@ export const CancelOrderModal = ({ order, onModalClose, modalVisible, onCancelOr
                 activityIndicator={isLoading}
               />
             </View>
+            <ModalToast />
           </View>
         </View>
       </View>

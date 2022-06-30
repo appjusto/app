@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Keyboard, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -58,6 +58,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
   // handlers
   const actionHandler = async () => {
     if (!order) return;
+    Keyboard.dismiss();
     const { status, dispatchingState, dispatchingStatus } = order;
     setLoading(true);
     try {
