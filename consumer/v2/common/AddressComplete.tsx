@@ -171,6 +171,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   // confirm button callback
   const completeHandler = React.useCallback(() => {
     if (!selectedAddress) return;
+    Keyboard.dismiss();
     if (returnScreen !== 'RecommendRestaurant' && complement && !additionalInfo.length) {
       dispatch(
         showToast(

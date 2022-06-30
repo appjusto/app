@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, ModalProps, Text, View } from 'react-native';
 import { colors, padding, texts } from '../../styles';
 import DefaultButton from '../buttons/DefaultButton';
+import { ModalToast } from './ModalToast';
 
 export interface DefaultModalProps extends ModalProps {
   header: string;
@@ -39,6 +40,7 @@ export const DefaultModal = ({
           <Text style={{ ...texts.md, marginVertical: padding * 2 }}>{body}</Text>
           <DefaultButton title={dismissButtonTitle} onPress={onDismiss} />
         </View>
+        <ModalToast />
       </View>
     </Modal>
   );

@@ -1,5 +1,6 @@
 import { GeoPoint } from 'firebase/firestore';
 import React from 'react';
+import { Keyboard } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { t } from '../../strings';
 import { ApiContext, AppDispatch } from '../app/context';
@@ -45,6 +46,7 @@ export const useUpdateLocation = () => {
               })
             );
             // alert something is wrong if location permission
+            Keyboard.dismiss();
             dispatch(
               showToast(
                 t('Não foi possível obter sua localização. verifique suas permissões'),

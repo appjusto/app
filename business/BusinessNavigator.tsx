@@ -91,7 +91,7 @@ export const BusinessNavigator = () => {
             },
           });
         }
-      } else if (!data.action) {
+      } else {
         if (clicked) {
           remove!();
           track('business clicked in random push message sent by our team');

@@ -1,7 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { Linking, View } from 'react-native';
+import { Keyboard, Linking, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { UnapprovedConsumerParamsList } from '../../../consumer/v2/UnapprovedConsumerNavigator';
@@ -68,6 +68,7 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
   const updateCourierProfileHandler = () => {
     (async () => {
       if (!courier) return;
+      Keyboard.dismiss();
       try {
         if (!switchToPassword) {
           setLoading(true);

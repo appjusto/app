@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import { ConfirmationResult } from 'firebase/auth';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { CodeInput } from '../../../courier/approved/ongoing/code-input/CodeInput';
@@ -56,6 +56,7 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
       state,
     });
     if (state === 'success') {
+      Keyboard.dismiss();
       dispatch(showToast('Validação finalizada com sucesso!', 'success'));
     }
   }, [state]);

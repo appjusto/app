@@ -3,7 +3,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { GeoPoint } from 'firebase/firestore';
 import React from 'react';
-import { Alert, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Keyboard, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
@@ -102,6 +102,7 @@ export default function ({ navigation, route }: Props) {
         navigation.replace('ProfileSubmitted');
       } catch (error: any) {
         Sentry.Native.captureException(error);
+        Keyboard.dismiss();
         dispatch(showToast(error.toString(), 'error'));
       }
     })();

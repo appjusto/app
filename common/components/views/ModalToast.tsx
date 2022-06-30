@@ -1,42 +1,44 @@
 import { Feather, MaterialIcons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React from 'react';
 import { Animated, Platform, Text, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { hideToast } from '../../store/ui/actions';
-import { getToast } from '../../store/ui/selectors';
+import { useModalToastContext } from '../../contexts/ModalToastContext';
 import { colors, halfPadding, texts } from '../../styles';
 
-// const percentualWidth = 0.8;
 const duration = 250;
-const delay = 4000;
 
-export default function () {
+export const ModalToast = () => {
   // context
-  const dispatch = useDispatch();
-
+  // context
+  const { modalToastConfig, hideModalToast } = useModalToastContext();
   // state
-  const { message, type, autoHide } = useSelector(getToast);
-  const [opacity] = useState(new Animated.Value(0));
+  const [opacity] = React.useState(new Animated.Value(0));
+  // side effects
+  React.useEffect(() => {
+    if (!modalToastConfig) return;
+    const timer = setTimeout(hideModalToast, modalToastConfig.duration);
+    return () => clearTimeout(timer);
+  }, [modalToastConfig, hideModalToast]);
+
+  if (!modalToastConfig) return null;
+
+  //helpers
+  Animated.sequence([
+    Animated.timing(opacity, {
+      useNativeDriver: false,
+      toValue: 1,
+      duration,
+    }),
+    Animated.timing(opacity, {
+      useNativeDriver: false,
+      delay: modalToastConfig.duration,
+      toValue: 0,
+      duration,
+    }),
+  ]).start(() => hideModalToast());
+
+  const { type, message } = modalToastConfig;
 
   // UI
-  if (!message) return null;
-
-  if (autoHide) {
-    Animated.sequence([
-      Animated.timing(opacity, {
-        useNativeDriver: false,
-        toValue: 1,
-        duration,
-      }),
-      Animated.timing(opacity, {
-        useNativeDriver: false,
-        delay,
-        toValue: 0,
-        duration,
-      }),
-    ]).start(() => dispatch(hideToast()));
-  }
-
   return (
     <Animated.View
       style={{
@@ -79,4 +81,4 @@ export default function () {
       </View>
     </Animated.View>
   );
-}
+};

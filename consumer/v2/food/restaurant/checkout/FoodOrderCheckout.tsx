@@ -8,6 +8,7 @@ import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
+import { useModalToastContext } from '../../../../../common/contexts/ModalToastContext';
 import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
 import { useQuotes } from '../../../../../common/store/api/order/hooks/useQuotes';
 import { useProfileSummary } from '../../../../../common/store/api/profile/useProfileSummary';
@@ -49,6 +50,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const api = React.useContext(ApiContext);
   const order = useContextActiveOrder();
   const dispatch = useDispatch<AppDispatch>();
+  const { showModalToast } = useModalToastContext();
   // redux store
   const consumer = useSelector(getConsumer)!;
   // state
@@ -149,6 +151,12 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           'error'
         )
       );
+      showModalToast(
+        t(
+          'Tivemos um problema... Por favor, refaça o pedido e certifique-se que o endereço de entrega está correto'
+        ),
+        'error'
+      );
     }
     if (shouldVerifyPhone) {
       navigation.navigate('PhoneVerificationScreen', {
@@ -167,6 +175,12 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             )
           )
         );
+        showModalToast(
+          t(
+            'Preencha o campo com o CPF para que ele seja adicionado na nota. Se não quer adicionar o CPF, desmarque a opção'
+          ),
+          'error'
+        );
         return;
       } else if (!cpfutils.isValid(cpf)) {
         dispatch(
@@ -174,6 +188,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             t('CPF preenchido incorretamente. Por favor confira o número do seu documento'),
             'error'
           )
+        );
+        showModalToast(
+          t('CPF preenchido incorretamente. Por favor confira o número do seu documento'),
+          'error'
         );
         return;
       }

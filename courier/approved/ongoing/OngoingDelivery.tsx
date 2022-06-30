@@ -8,6 +8,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
+import { useModalToastContext } from '../../../common/contexts/ModalToastContext';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useOrderBlockCourierNextStep } from '../../../common/store/api/order/hooks/useOrderBlockCourierNextStep';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
@@ -46,6 +47,7 @@ export default function ({ navigation, route }: Props) {
   const consumerId = order?.consumer.id;
   const businessId = order?.business?.id;
   const dispatchingState = order?.dispatchingState;
+  const { showModalToast } = useModalToastContext();
   // screen state
   const [code, setCode] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
@@ -138,6 +140,8 @@ export default function ({ navigation, route }: Props) {
           await api.order().nextDispatchingState(order);
         }
       } catch (error: any) {
+        Keyboard.dismiss();
+        showModalToast(error.toString(), 'error');
         dispatch(showToast(error.toString(), 'error'));
       } finally {
         setLoading(false);

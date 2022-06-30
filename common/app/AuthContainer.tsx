@@ -1,4 +1,5 @@
 import React from 'react';
+import { Keyboard } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { t } from '../../strings';
 import { AuthState, useAuth } from '../hooks/useAuth';
@@ -17,6 +18,7 @@ export default ({ Unlogged, Logged }: Props) => {
   const [authState] = useAuth();
   React.useEffect(() => {
     if (authState === AuthState.InvalidCredentials) {
+      Keyboard.dismiss();
       dispatch(showToast(t('Sua sessão expirou. Faça login novamente.'), 'error'));
     }
   }, [authState, dispatch]);

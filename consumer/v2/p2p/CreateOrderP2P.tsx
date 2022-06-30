@@ -4,7 +4,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { View } from 'react-native';
+import { Keyboard, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -91,6 +91,7 @@ export default function ({ navigation, route }: Props) {
           } catch (error: any) {
             // console.log(error);
             Sentry.Native.captureException(error);
+            Keyboard.dismiss();
             dispatch(showToast(error.toString(), 'error'));
           }
         })();
@@ -156,6 +157,7 @@ export default function ({ navigation, route }: Props) {
     track('placing order');
     if (!orderId) return;
     if (!selectedPaymentMethodId) return;
+    Keyboard.dismiss();
     if (!order.destination?.address) {
       dispatch(
         showToast(

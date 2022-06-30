@@ -110,6 +110,7 @@ export default function ({
   const destinationDescriptionRef = React.useRef<TextInput>(null);
   // helpers
   const showInstructionsWarning = (variant: 'origin' | 'destination') => {
+    Keyboard.dismiss();
     if (variant === 'origin') {
       dispatch(
         showToast('Insira uma descrição curta para facilitar a retirada pelo entregador', 'error')

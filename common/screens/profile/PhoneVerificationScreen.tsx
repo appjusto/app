@@ -2,7 +2,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { RestaurantNavigatorParamList } from '../../../consumer/v2/food/restaurant/types';
@@ -73,6 +73,7 @@ export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
   // effects
   React.useEffect(() => {
     if (state === 'success') {
+      Keyboard.dismiss();
       dispatch(showToast('Validação finalizada com sucesso!', 'success'));
       if (returnScreen) navigation.navigate(returnScreen, { returnScreen: returnNextScreen });
       else navigation.goBack();

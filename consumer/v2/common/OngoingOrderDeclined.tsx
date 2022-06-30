@@ -1,7 +1,7 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Keyboard, ScrollView, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -51,6 +51,7 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
             .updateOrderCallable(orderId, { payableWith: 'credit_card', paymentMethodId });
         } catch (error) {
           setLoading(false);
+          Keyboard.dismiss();
           dispatch(
             showToast(t('Não foi possível alterar a forma de pagamento. Tente novamente.'), 'error')
           );

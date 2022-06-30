@@ -3,6 +3,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Modal, ModalProps, Text, TouchableOpacity, View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
+import { ModalToast } from '../../../common/components/views/ModalToast';
 import { IconOngoingRequest } from '../../../common/icons/icon-ongoingRequest';
 import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -55,7 +56,6 @@ export const WithdrawOrderModal = ({
       return t('Aguarde o pedido');
     } else return t('Aguarde');
   })();
-  console.log(status);
   return (
     <Modal transparent {...props}>
       <View
@@ -140,6 +140,7 @@ export const WithdrawOrderModal = ({
               />
             </View>
           </View>
+          <ModalToast />
         </View>
       </View>
     </Modal>

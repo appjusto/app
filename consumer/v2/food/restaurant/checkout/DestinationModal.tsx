@@ -8,6 +8,7 @@ import PaddedView from '../../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../../common/components/inputs/DefaultInput';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
 import HR from '../../../../../common/components/views/HR';
+import { ModalToast } from '../../../../../common/components/views/ModalToast';
 import { borders, colors, halfPadding, padding, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 
@@ -103,6 +104,7 @@ export const DestinationModal = ({
             activityIndicator={activityIndicator}
           />
         </PaddedView>
+        <ModalToast />
       </View>
     </Modal>
   );
