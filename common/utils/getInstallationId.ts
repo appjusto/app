@@ -4,8 +4,14 @@ import { nanoid } from 'nanoid/non-secure';
 import * as Sentry from 'sentry-expo';
 
 export const getInstallationId = async () => {
+  let value = null;
   try {
-    let value = await SecureStore.getItemAsync('installation-id');
+    // https://github.com/expo/expo/issues/814
+    value = await SecureStore.getItemAsync('installation-id');
+  } catch (e: any) {
+    console.error(e);
+  }
+  try {
     if (!value) {
       value = Application.androidId ?? nanoid();
       await SecureStore.setItemAsync('installation-id', value);
