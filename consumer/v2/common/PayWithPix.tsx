@@ -146,7 +146,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
             )}
           </Text>
           <DefaultButton
-            title={t('Gerar código de pagamento Pix')}
+            title={t('Fazer pedido')}
             onPress={placeOrderWithPix}
             disabled={!pixKey || isLoading}
             activityIndicator={isLoading}
