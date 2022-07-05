@@ -28,7 +28,6 @@ import { documentAs, documentsAs } from '../types';
 
 interface FetchCourierInvoicesOptions {
   courierId?: string;
-  invoiceType?: InvoiceType;
   status?: IuguInvoiceStatus;
   limit?: number;
 }
@@ -84,11 +83,12 @@ export default class CourierApi {
     options: FetchCourierInvoicesOptions,
     resultHandler: (orders: WithId<Invoice>[]) => void
   ) {
+    const types = ['delivery', 'tip'] as InvoiceType[];
     const constraints = [orderBy('createdOn', 'desc')];
     if (options?.courierId) constraints.push(where('accountId', '==', options.courierId));
-    if (options?.invoiceType) constraints.push(where('invoiceType', '==', options.invoiceType));
     if (options?.status) constraints.push(where('status', '==', options.status));
     if (options?.limit) constraints.push(limit(options.limit));
+    constraints.push(where('invoiceType', 'in', types));
     return onSnapshot(
       query(this.firestoreRefs.getInvoicesRef(), ...constraints),
       (querySnapshot) =>
