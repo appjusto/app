@@ -29,6 +29,8 @@ import { documentAs, documentsAs } from '../types';
 interface FetchCourierInvoicesOptions {
   courierId?: string;
   status?: IuguInvoiceStatus;
+  start?: Date;
+  end?: Date;
   limit?: number;
 }
 
@@ -81,12 +83,14 @@ export default class CourierApi {
 
   observeCourierInvoices(
     options: FetchCourierInvoicesOptions,
-    resultHandler: (orders: WithId<Invoice>[]) => void
+    resultHandler: (invoices: WithId<Invoice>[]) => void
   ) {
     const types = ['delivery', 'tip'] as InvoiceType[];
     const constraints = [orderBy('createdOn', 'desc')];
     if (options?.courierId) constraints.push(where('accountId', '==', options.courierId));
     if (options?.status) constraints.push(where('status', '==', options.status));
+    if (options?.start) constraints.push(where('createdOn', '>=', options.start));
+    if (options?.end) constraints.push(where('createdOn', '<=', options.end));
     if (options?.limit) constraints.push(limit(options.limit));
     constraints.push(where('invoiceType', 'in', types));
     return onSnapshot(
