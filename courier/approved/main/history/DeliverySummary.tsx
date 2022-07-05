@@ -36,7 +36,7 @@ export default function ({ navigation, route }: Props) {
   // side effects
   // tracking
   useSegmentScreen('DeliverySummary');
-  if (!order) {
+  if (!order?.fare?.courier) {
     // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
@@ -44,11 +44,8 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
-  const courierFee = order.fare?.courier
-    ? order.fare.courier.value - order.fare.courier.financialFee
-    : 0;
-  const tip = order.tip ? order.tip.value - order.tip.financialFee : 0;
-  const fee = courierFee + tip;
+  // TODO: usar os invoices desse pedido
+  const { value } = order.fare.courier;
   // UI
   return (
     <View style={{ ...screens.default }}>
@@ -81,7 +78,7 @@ export default function ({ navigation, route }: Props) {
             }}
           >
             <Text style={{ ...texts.md, ...texts.bold }}>{t('Valor recebido')}</Text>
-            <Text style={{ ...texts.xl }}>{formatCurrency(fee)}</Text>
+            <Text style={{ ...texts.xl }}>{formatCurrency(value)}</Text>
           </View>
         </PaddedView>
         <HR height={padding} />
