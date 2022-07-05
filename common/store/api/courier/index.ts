@@ -11,7 +11,9 @@ import {
   IuguMarketplaceAccountAdvanceSimulation,
 } from '@appjusto/types/payment/iugu';
 import {
+  collection,
   getDocs,
+  getFirestore,
   limit,
   onSnapshot,
   orderBy,
@@ -94,7 +96,7 @@ export default class CourierApi {
     if (options?.limit) constraints.push(limit(options.limit));
     constraints.push(where('invoiceType', 'in', types));
     return onSnapshot(
-      query(this.firestoreRefs.getInvoicesRef(), ...constraints),
+      query(collection(getFirestore(), 'invoices'), ...constraints),
       (querySnapshot) =>
         resultHandler(querySnapshot.empty ? [] : documentsAs<Invoice>(querySnapshot.docs)),
       (error) => {

@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import React from 'react';
 import { ApiContext } from '../../../../../common/app/context';
 
-export const useCourierInvoicesAmount = (courierId: string, month: Date | null) => {
+export const useCourierInvoicesAmount = (courierId?: string, month?: Date | null) => {
   // context
   const api = React.useContext(ApiContext);
   // state
