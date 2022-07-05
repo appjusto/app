@@ -1,8 +1,18 @@
 import { FirestoreRefs, FunctionsRef, StoragePaths } from '@appjusto/firebase-refs';
-import { AdvanceReceivablesPayload, CourierOrderRequest } from '@appjusto/types';
-import { IuguMarketplaceAccountAdvanceSimulation } from '@appjusto/types/payment/iugu';
+import {
+  AdvanceReceivablesPayload,
+  CourierOrderRequest,
+  Invoice,
+  InvoiceType,
+  WithId,
+} from '@appjusto/types';
+import {
+  IuguInvoiceStatus,
+  IuguMarketplaceAccountAdvanceSimulation,
+} from '@appjusto/types/payment/iugu';
 import {
   getDocs,
+  limit,
   onSnapshot,
   orderBy,
   query,
@@ -15,6 +25,13 @@ import * as Sentry from 'sentry-expo';
 import { getAppVersion } from '../../../utils/version';
 import FilesApi from '../files';
 import { documentAs, documentsAs } from '../types';
+
+interface FetchCourierInvoicesOptions {
+  courierId?: string;
+  invoiceType?: InvoiceType;
+  status?: IuguInvoiceStatus;
+  limit?: number;
+}
 
 export default class CourierApi {
   constructor(
@@ -61,6 +78,26 @@ export default class CourierApi {
     return updateDoc(this.firestoreRefs.getCourierOrderRequestsRef(courierId, orderId), {
       situation: 'viewed',
     } as Partial<CourierOrderRequest>);
+  }
+
+  observeCourierInvoices(
+    options: FetchCourierInvoicesOptions,
+    resultHandler: (orders: WithId<Invoice>[]) => void
+  ) {
+    const constraints = [orderBy('createdOn', 'desc')];
+    if (options?.courierId) constraints.push(where('accountId', '==', options.courierId));
+    if (options?.invoiceType) constraints.push(where('invoiceType', '==', options.invoiceType));
+    if (options?.status) constraints.push(where('status', '==', options.status));
+    if (options?.limit) constraints.push(limit(options.limit));
+    return onSnapshot(
+      query(this.firestoreRefs.getInvoicesRef(), ...constraints),
+      (querySnapshot) =>
+        resultHandler(querySnapshot.empty ? [] : documentsAs<Invoice>(querySnapshot.docs)),
+      (error) => {
+        console.error(error);
+        Sentry.Native.captureException(error);
+      }
+    );
   }
 
   // callables
