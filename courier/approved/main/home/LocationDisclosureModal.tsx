@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/core';
+import Constants from 'expo-constants';
 import React from 'react';
 import { Linking, ModalProps } from 'react-native';
 import { DefaultModal } from '../../../../common/components/views/DefaultModal';
@@ -9,16 +10,18 @@ export const LocationDisclosureModal = (props: ModalProps) => {
   // context
   const navigation = useNavigation();
   // state
-  const {
-    status: foregroundStatus,
-    get: getForeground,
-  } = useLocationPermission('foreground', true);
+  const { status: foregroundStatus, get: getForeground } = useLocationPermission(
+    'foreground',
+    true
+  );
   const {
     status: backgroundStatus,
     request: requestBackground,
     get: getBackground,
   } = useLocationPermission('background');
+
   const visible =
+    Constants.appOwnership !== 'expo' &&
     foregroundStatus !== undefined &&
     backgroundStatus !== undefined &&
     (foregroundStatus !== 'granted' || backgroundStatus !== 'granted');
