@@ -85,7 +85,7 @@ export default function ({ navigation }: Props) {
             });
           }
         }
-      } else if (!data.action) {
+      } else {
         if (clicked) {
           remove!();
           track('courier clicked in random push message sent by our team');
