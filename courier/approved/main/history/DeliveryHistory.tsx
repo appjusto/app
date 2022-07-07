@@ -90,7 +90,6 @@ export default function ({ navigation, route }: Props) {
       />
     );
   }
-
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen

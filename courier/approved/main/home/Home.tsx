@@ -23,7 +23,7 @@ import { getOrders } from '../../../../common/store/order/selectors';
 import { colors, padding, screens } from '../../../../common/styles';
 import {
   startLocationUpdatesTask,
-  stopLocationUpdatesTask
+  stopLocationUpdatesTask,
 } from '../../../../common/utils/location';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
