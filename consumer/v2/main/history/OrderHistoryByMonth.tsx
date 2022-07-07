@@ -58,6 +58,7 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
       statuses: [
         'quote',
         'charged',
+        'confirming',
         'confirmed',
         'declined',
         'dispatching',
@@ -65,7 +66,6 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
         'ready',
         'delivered',
         'canceled',
-        'rejected',
       ] as OrderStatus[],
     }),
     [user?.uid]
