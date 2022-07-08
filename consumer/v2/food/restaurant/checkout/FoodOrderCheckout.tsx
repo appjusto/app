@@ -22,6 +22,7 @@ import { t } from '../../../../../strings';
 import { OrderCostBreakdown } from '../../../common/breakdown/OrderCostBreakdown';
 import { OrderAvailableFleets } from '../../../common/order-summary/OrderAvailableFleets';
 import { OrderPayment } from '../../../common/order-summary/OrderPayment';
+import { OrderScheduling } from '../../../common/order-summary/OrderScheduling';
 import { OrderSummary } from '../../../common/order-summary/OrderSummary';
 import { OrderTotal } from '../../../common/order-summary/OrderTotal';
 import { LoggedNavigatorParamList } from '../../../types';
@@ -290,25 +291,31 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           track('consumer changed share data with business preferences');
         }}
         availableFleets={
-          <OrderAvailableFleets
-            quotes={quotes}
-            selectedFare={selectedFare}
-            onFareSelect={(fare) => {
-              setSelectedFare(fare);
-            }}
-            onFleetSelect={(fleetId: string) => {
-              navigation.navigate('FleetDetail', { fleetId });
-            }}
-            onRetry={getOrderQuotes}
-            order={order}
-            navigateToAvailableFleets={() =>
-              navigation.navigate('AvailableFleets', {
-                orderId: order.id,
-                selectedFare: selectedFare!,
-                returnScreen: 'FoodOrderCheckout',
-              })
-            }
-          />
+          <View>
+            {order.preparationMode === 'scheduled' ? (
+              <OrderScheduling order={order} />
+            ) : (
+              <OrderAvailableFleets
+                quotes={quotes}
+                selectedFare={selectedFare}
+                onFareSelect={(fare) => {
+                  setSelectedFare(fare);
+                }}
+                onFleetSelect={(fleetId: string) => {
+                  navigation.navigate('FleetDetail', { fleetId });
+                }}
+                onRetry={getOrderQuotes}
+                order={order}
+                navigateToAvailableFleets={() =>
+                  navigation.navigate('AvailableFleets', {
+                    orderId: order.id,
+                    selectedFare: selectedFare!,
+                    returnScreen: 'FoodOrderCheckout',
+                  })
+                }
+              />
+            )}
+          </View>
         }
         costBreakdown={<OrderCostBreakdown order={order} selectedFare={selectedFare!} />}
         totalCost={
