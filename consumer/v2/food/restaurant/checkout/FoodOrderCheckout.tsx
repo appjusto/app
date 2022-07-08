@@ -224,12 +224,17 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       track('consumer placed a food order');
       setDestinationModalVisible(false);
       setLoading(false);
-      navigation.replace('OngoingOrderNavigator', {
-        screen: 'OngoingOrderConfirming',
-        params: {
-          orderId: order.id,
-        },
-      });
+      if (order.preparationMode === 'scheduled') {
+        navigation.replace('OngoingOrderNavigator', {
+          screen: 'ScheduledOrderConfirmation',
+        });
+      } else
+        navigation.replace('OngoingOrderNavigator', {
+          screen: 'OngoingOrderConfirming',
+          params: {
+            orderId: order.id,
+          },
+        });
     } catch (error: any) {
       setLoading(false);
       Keyboard.dismiss();

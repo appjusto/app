@@ -46,6 +46,7 @@ export type OngoingOrderNavigatorParamList = {
   OrderProblemFeedback: {
     orderId: string;
   };
+  ScheduledOrderConfirmation: undefined;
 } & ReportIssueParamList &
   ProfilePaymentMethodsParamList &
   OrderCanceledParamList &
