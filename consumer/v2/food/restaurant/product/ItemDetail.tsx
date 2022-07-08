@@ -114,6 +114,8 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     if (!product) return false;
     return helpers.hasSatisfiedAllGroups(product, complements);
   }, [product, complements]);
+  // business can take scheduled orders
+  const canScheduleOrder = business?.preparationModes?.includes('scheduled');
   // side effects
   // when product is loaded
   React.useLayoutEffect(() => {
@@ -207,7 +209,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         </PaddedView>
       );
     }
-    if (acceptingStatus === 'accepting') {
+    if (acceptingStatus === 'accepting' || canScheduleOrder) {
       return (
         <View style={{ flex: 1 }}>
           <ItemComplements
