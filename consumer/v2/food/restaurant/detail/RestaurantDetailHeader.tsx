@@ -30,6 +30,8 @@ export const RestaurantDetailHeader = ({
   const businessDeeplink = `https://${getBaseDomain(extra.environment)}/r/${
     restaurant?.slug ?? restaurant?.code
   }`;
+  const scheduledOrdersOnly =
+    restaurant.preparationModes?.length && !restaurant?.preparationModes?.includes('realtime');
   // handlers
   const shareRestaurantHandler = async () => {
     try {
@@ -76,6 +78,22 @@ export const RestaurantDetailHeader = ({
           <Text style={{ ...texts.xs }}>{t('Compartilhe esse restaurante com seus amigos!')}</Text>
         </PaddedView>
       </TouchableOpacity>
+      {scheduledOrdersOnly ? (
+        <View style={{ paddingHorizontal: 12 }}>
+          <PaddedView
+            style={{
+              height: 74,
+              width: '100%',
+              borderRadius: halfPadding,
+              backgroundColor: colors.darkYellow,
+            }}
+          >
+            <Text style={{ ...texts.sm }}>
+              {t('Esse restaurante somente aceita pedidos com horário agendado para entrega')}
+            </Text>
+          </PaddedView>
+        </View>
+      ) : null}
       {message ? (
         <TouchableOpacity
           style={{
