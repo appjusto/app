@@ -298,7 +298,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         availableFleets={
           <View>
             {order.preparationMode === 'scheduled' ? (
-              <OrderScheduling order={order} />
+              <OrderScheduling order={order} quotes={quotes} />
             ) : (
               <OrderAvailableFleets
                 quotes={quotes}

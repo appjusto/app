@@ -1,4 +1,4 @@
-import { BusinessSchedule, Order, WithId } from '@appjusto/types';
+import { BusinessSchedule, Fare, Order, WithId } from '@appjusto/types';
 import { stringify } from '@firebase/util';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -12,9 +12,10 @@ import { t } from '../../../../strings';
 
 type Props = {
   order: WithId<Order>;
+  quotes: Fare[] | undefined;
 };
 
-export const OrderScheduling = ({ order }: Props) => {
+export const OrderScheduling = ({ order, quotes }: Props) => {
   // ver o lance da "fare" que vai ser mostrada na lista de horas. usaremos o mesmo cálculo aqui de uma entrega
   // normal?
 
@@ -23,8 +24,6 @@ export const OrderScheduling = ({ order }: Props) => {
   // daqui chamaremos um update order com os dados do agendamento
 
   // lá fora, na checkout, o componente "Valor total a pagar" precisa responder
-
-  // depois do placeOrder, pra que tela iremos?
 
   // context
   const getServerTime = useContextGetSeverTime();
@@ -80,7 +79,7 @@ export const OrderScheduling = ({ order }: Props) => {
     }
     return hours;
   };
-  if (!business) {
+  if (!business || quotes === undefined) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
