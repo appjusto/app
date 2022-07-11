@@ -101,7 +101,6 @@ export const BusinessNavigator = () => {
     [navigation]
   );
   useNotificationHandler('order-chat', handler);
-
   // UI
   if (!business || !manager) {
     return (
