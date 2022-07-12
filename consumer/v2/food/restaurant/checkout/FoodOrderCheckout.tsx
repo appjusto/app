@@ -295,7 +295,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           setShareDataWithBusiness(!shareDataWithBusiness);
           track('consumer changed share data with business preferences');
         }}
-        availableFleets={
+        orderFulfillment={
           <View>
             {order.preparationMode === 'scheduled' ? (
               <OrderScheduling order={order} quotes={quotes} />

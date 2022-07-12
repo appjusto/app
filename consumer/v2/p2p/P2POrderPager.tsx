@@ -353,7 +353,7 @@ export default function ({
                   navigateToAboutCharges={navigateToAboutCharges}
                 />
               }
-              availableFleets={
+              orderFulfillment={
                 <OrderAvailableFleets
                   quotes={quotes}
                   selectedFare={selectedFare}

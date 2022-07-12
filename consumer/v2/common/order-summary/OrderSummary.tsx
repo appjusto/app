@@ -23,7 +23,7 @@ type Props = {
   onAddInfo?: (text: string) => void;
   shareDataWithBusiness?: boolean;
   onShareData?: (value: boolean) => void;
-  availableFleets: React.ReactNode;
+  orderFulfillment: React.ReactNode;
   costBreakdown: React.ReactNode;
   totalCost: React.ReactNode;
   payment: React.ReactNode;
@@ -39,7 +39,7 @@ export const OrderSummary = ({
   onAddInfo,
   shareDataWithBusiness,
   onShareData,
-  availableFleets,
+  orderFulfillment: availableFleets,
   costBreakdown,
   totalCost,
   payment,

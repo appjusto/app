@@ -2,6 +2,7 @@ import { BusinessSchedule, Fare, Order, WithId } from '@appjusto/types';
 import { stringify } from '@firebase/util';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
@@ -30,7 +31,6 @@ export const OrderScheduling = ({ order, quotes }: Props) => {
   const business = useObserveBusiness(order.business?.id);
   // state
   const [selectedDay, setSelectedDay] = React.useState<Date>();
-  // helpers
   const today = getServerTime();
   // starts at the next day
   const getDays = (startDate: Date, daysToAdd: number) => {
@@ -86,23 +86,35 @@ export const OrderScheduling = ({ order, quotes }: Props) => {
       </View>
     );
   }
-  console.log(getDayScheduleHours(today, business?.schedules));
+  // helpers
+  const canDeliver = business.fulfillment?.includes('delivery');
   return (
     <View style={{ ...screens.default, width: '100%' }}>
-      <SingleHeader title={t('Escolha quando deseja receber seu pedido')} />
-      <View style={{ paddingHorizontal: padding }}>
-        <View
-          style={{
-            backgroundColor: colors.darkYellow,
-            padding,
-            borderRadius: halfPadding,
-          }}
+      <PaddedView>
+        <PaddedView
+          style={{ backgroundColor: colors.grey50, height: 75, borderRadius: halfPadding }}
         >
-          <Text style={{ ...texts.sm }}>
-            {t('Esse restaurante somente aceita pedidos com horário agendado para entrega')}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ ...texts.sm }}>{t('Agendar entrega')}</Text>
+          </View>
+        </PaddedView>
+      </PaddedView>
+      <SingleHeader title={t('Escolha quando deseja receber seu pedido')} />
+      {canDeliver ? null : (
+        <View style={{ paddingHorizontal: padding }}>
+          <View
+            style={{
+              backgroundColor: colors.darkYellow,
+              padding,
+              borderRadius: halfPadding,
+            }}
+          >
+            <Text style={{ ...texts.sm }}>
+              {t('Esse restaurante somente aceita pedidos com horário agendado para entrega')}
+            </Text>
+          </View>
         </View>
-      </View>
+      )}
       <ScrollView
         horizontal
         style={{ marginTop: padding, paddingLeft: padding }}
