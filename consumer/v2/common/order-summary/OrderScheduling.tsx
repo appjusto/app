@@ -2,7 +2,6 @@ import { BusinessSchedule, Fare, Order, WithId } from '@appjusto/types';
 import { stringify } from '@firebase/util';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
@@ -90,15 +89,6 @@ export const OrderScheduling = ({ order, quotes }: Props) => {
   const canDeliver = business.fulfillment?.includes('delivery');
   return (
     <View style={{ ...screens.default, width: '100%' }}>
-      <PaddedView>
-        <PaddedView
-          style={{ backgroundColor: colors.grey50, height: 75, borderRadius: halfPadding }}
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ ...texts.sm }}>{t('Agendar entrega')}</Text>
-          </View>
-        </PaddedView>
-      </PaddedView>
       <SingleHeader title={t('Escolha quando deseja receber seu pedido')} />
       {canDeliver ? null : (
         <View style={{ paddingHorizontal: padding }}>

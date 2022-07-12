@@ -1,15 +1,18 @@
-import { Fare } from '@appjusto/types';
+import { Fare, PreparationMode } from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty, merge } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, Keyboard, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
+import CheckField from '../../../../../common/components/buttons/CheckField';
+import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { useModalToastContext } from '../../../../../common/contexts/ModalToastContext';
 import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
+import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
 import { useQuotes } from '../../../../../common/store/api/order/hooks/useQuotes';
 import { useProfileSummary } from '../../../../../common/store/api/profile/useProfileSummary';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
@@ -17,7 +20,7 @@ import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { isConsumerProfileComplete } from '../../../../../common/store/consumer/validators';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { showToast } from '../../../../../common/store/ui/actions';
-import { colors, screens } from '../../../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { OrderCostBreakdown } from '../../../common/breakdown/OrderCostBreakdown';
 import { OrderAvailableFleets } from '../../../common/order-summary/OrderAvailableFleets';
@@ -52,6 +55,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const order = useContextActiveOrder();
   const dispatch = useDispatch<AppDispatch>();
   const { showModalToast } = useModalToastContext();
+  const business = useObserveBusiness(order?.business?.id);
   // redux store
   const consumer = useSelector(getConsumer)!;
   // state
@@ -72,6 +76,12 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     order?.destination?.additionalInfo ?? ''
   );
   const [addressComplement, setAddressComplement] = React.useState<boolean>(complement.length > 0);
+  // const canNotDeliver = !business?.preparationModes?.includes('realtime');
+  // const [preparationMode, setPreparationMode] = React.useState<PreparationMode>(
+  //   canNotDeliver ? 'scheduled' : 'realtime'
+  // );
+  // while preparationModes[] are not added to businesses
+  const [preparationMode, setPreparationMode] = React.useState<PreparationMode>('realtime');
   const canSubmit =
     selectedPaymentMethodId !== undefined &&
     selectedFare !== undefined &&
@@ -209,6 +219,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           }),
         });
       }
+      // updating order with preparationMode
+      await api.order().updateOrder(order.id, {
+        preparationMode,
+      });
       await api.order().placeOrder(
         order.id,
         selectedFare!.fleet.id,
@@ -256,8 +270,12 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       navigation.navigate('ProfilePaymentMethods', { returnScreen: 'FoodOrderCheckout' });
     }
   }, [consumer, navigation, selectedPaymentMethodId]);
+  const preparationModeToggle = () => {
+    if (preparationMode === 'realtime') setPreparationMode('scheduled');
+    else setPreparationMode('realtime');
+  };
   // UI
-  if (!order) {
+  if (!order || !business) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -297,7 +315,23 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         }}
         orderFulfillment={
           <View>
-            {order.preparationMode === 'scheduled' ? (
+            <PaddedView>
+              <PaddedView
+                style={{ backgroundColor: colors.grey50, height: 75, borderRadius: halfPadding }}
+              >
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <CheckField
+                    // variant="square"
+                    checked={preparationMode === 'scheduled'}
+                    onPress={preparationModeToggle}
+                  />
+                  <View style={{ marginLeft: padding }}>
+                    <Text style={{ ...texts.sm }}>{t('Agendar entrega')}</Text>
+                  </View>
+                </View>
+              </PaddedView>
+            </PaddedView>
+            {preparationMode === 'scheduled' ? (
               <OrderScheduling order={order} quotes={quotes} />
             ) : (
               <OrderAvailableFleets
