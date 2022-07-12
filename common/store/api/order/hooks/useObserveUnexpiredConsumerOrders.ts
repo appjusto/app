@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../app/context';
 import { getConsumer } from '../../../consumer/selectors';
 
-export const observeUnexpiredConsumerOrders = () => {
+export const useObserveUnexpiredConsumerOrders = () => {
   // context
   const api = React.useContext(ApiContext);
   // redux

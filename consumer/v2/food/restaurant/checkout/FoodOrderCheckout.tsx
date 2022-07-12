@@ -321,12 +321,14 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
               >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <CheckField
-                    // variant="square"
                     checked={preparationMode === 'scheduled'}
                     onPress={preparationModeToggle}
                   />
                   <View style={{ marginLeft: padding }}>
                     <Text style={{ ...texts.sm }}>{t('Agendar entrega')}</Text>
+                    <Text style={{ ...texts.xs, color: colors.grey700, marginTop: 4 }}>
+                      {t('Escolha o melhor dia e horário para você')}
+                    </Text>
                   </View>
                 </View>
               </PaddedView>

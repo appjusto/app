@@ -8,7 +8,7 @@ import { Order, WithId } from '../../../../../types';
 import { ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import StatusBadge from '../../../../common/components/views/StatusBadge';
-import { observeUnexpiredConsumerOrders } from '../../../../common/store/api/order/hooks/observeUnexpiredConsumerOrders';
+import { useObserveUnexpiredConsumerOrders } from '../../../../common/store/api/order/hooks/useObserveUnexpiredConsumerOrders';
 import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import {
   getOrdersWithFilter,
@@ -48,7 +48,7 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   // state
-  const orders = observeUnexpiredConsumerOrders();
+  const orders = useObserveUnexpiredConsumerOrders();
   const filteredOrders = getOrdersWithFilter(orders ?? [], year, month).filter(
     (order) => getOrderTime(order).getMonth() === month
   );
