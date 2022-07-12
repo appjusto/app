@@ -30,6 +30,7 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  Timestamp,
   Unsubscribe,
   updateDoc,
   where,
@@ -166,11 +167,22 @@ export default class OrderApi {
     const constraints = [
       where('status', 'not-in', ['expired'] as OrderStatus[]),
       where('consumer.id', '==', consumerId),
-      orderBy('createdOn', 'desc'),
+      orderBy('status', 'desc'),
     ];
     return onSnapshot(
       query(this.firestoreRefs.getOrdersRef(), ...constraints),
-      (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
+      (querySnapshot) => {
+        if (querySnapshot.empty) resultHandler([]);
+        else {
+          resultHandler(
+            documentsAs<Order>(querySnapshot.docs).sort(
+              (a, b) =>
+                ((b.createdOn as Timestamp)?.seconds ?? 0) -
+                ((a.createdOn as Timestamp)?.seconds ?? 0)
+            )
+          );
+        }
+      },
       (error) => {
         console.error(error);
         Sentry.Native.captureException(error);
