@@ -188,14 +188,16 @@ export default function ({ navigation, route }: Props) {
             navigateToConfirmCancel={navigateToConfirmCancel}
             onMessageReceived={openChatHandler}
           />
-          <HR />
-          {order.type === 'food' ? (
-            <PaddedView>
-              <DefaultButton
-                title={t('Abrir chat com o restaurante')}
-                onPress={() => openChatWithRestaurant()}
-              />
-            </PaddedView>
+          {order.type === 'food' && order.status !== 'scheduled' ? (
+            <View>
+              <HR />
+              <PaddedView>
+                <DefaultButton
+                  title={t('Abrir chat com o restaurante')}
+                  onPress={() => openChatWithRestaurant()}
+                />
+              </PaddedView>
+            </View>
           ) : null}
         </View>
       </View>
