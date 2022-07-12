@@ -31,6 +31,10 @@ export default function ({ order, onPress }: Props) {
       } else if (status === 'declined') {
         title = t('Problema no pagamento');
         detail = t('Selecione outra forma de pagamento');
+      } else if (status === 'scheduled') {
+        title = `${t('Pedido agendado em')} ${businessName}`;
+        // TODO: add delivery time and date
+        detail = `${t('Entrega')} DATA HORA`;
       } else if (status === 'confirmed') {
         title = `${t('Aguardando')} ${businessName} ${t('confirmar o seu pedido')}`;
       } else if (status === 'preparing') {
@@ -41,8 +45,7 @@ export default function ({ order, onPress }: Props) {
         } else if (status === 'dispatching') {
           title = t('Seu pedido está à caminho!');
         }
-        // TODO: colocar a caminho da entrega para pedidos P2P
-        if (dispatchingStatus === 'confirmed' || dispatchingStatus == 'outsourced') {
+        if (dispatchingStatus === 'confirmed' || dispatchingStatus === 'outsourced') {
           if (dispatchingState === 'going-pickup') {
             detail = `${courier?.name ?? t('Entregador/a')} ${t('está indo para')} ${businessName}`;
           } else if (dispatchingState === 'arrived-pickup') {
