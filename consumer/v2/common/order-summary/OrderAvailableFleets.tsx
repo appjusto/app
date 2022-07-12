@@ -2,8 +2,7 @@ import { Fare, Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
-import PaddedView from '../../../../common/components/containers/PaddedView';
-import Pill from '../../../../common/components/views/Pill';
+import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { colors, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { FleetListItem } from '../FleetListItem';
@@ -36,18 +35,7 @@ export const OrderAvailableFleets = ({
   // UI
   return (
     <View>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Pill />
-        <PaddedView
-          style={{
-            flex: 1,
-          }}
-        >
-          <Text style={{ ...texts.md, ...texts.bold }}>
-            {t('Escolha a frota para a sua entrega')}
-          </Text>
-        </PaddedView>
-      </View>
+      <SingleHeader title={t('Escolha a frota para a sua entrega')} />
       <View style={{ paddingHorizontal: padding }}>
         {isLoading ? (
           <View style={screens.centered}>

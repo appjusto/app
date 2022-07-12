@@ -90,7 +90,8 @@ export const OrderScheduling = ({ order, quotes }: Props) => {
   return (
     <View style={{ ...screens.default, width: '100%' }}>
       <SingleHeader title={t('Escolha quando deseja receber seu pedido')} />
-      {canDeliver ? null : (
+      {/* add this back when business.preparationModes[] is not empty */}
+      {/* {canDeliver ? null : (
         <View style={{ paddingHorizontal: padding }}>
           <View
             style={{
@@ -104,7 +105,7 @@ export const OrderScheduling = ({ order, quotes }: Props) => {
             </Text>
           </View>
         </View>
-      )}
+      )} */}
       <ScrollView
         horizontal
         style={{ marginTop: padding, paddingLeft: padding }}
