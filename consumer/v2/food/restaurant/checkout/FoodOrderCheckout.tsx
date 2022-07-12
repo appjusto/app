@@ -332,7 +332,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
               </PaddedView>
             </PaddedView>
             {preparationMode === 'scheduled' ? (
-              <OrderScheduling order={order} quotes={quotes} />
+              <OrderScheduling order={order} quotes={quotes} business={business} />
             ) : (
               <OrderAvailableFleets
                 quotes={quotes}

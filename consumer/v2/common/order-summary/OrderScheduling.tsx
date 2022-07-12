@@ -1,11 +1,10 @@
-import { BusinessSchedule, Fare, Order, WithId } from '@appjusto/types';
+import { Business, BusinessSchedule, Fare, Order, WithId } from '@appjusto/types';
 import { stringify } from '@firebase/util';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
-import { useObserveBusiness } from '../../../../common/store/api/business/hooks/useObserveBusiness';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { formatDate } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
@@ -13,9 +12,10 @@ import { t } from '../../../../strings';
 type Props = {
   order: WithId<Order>;
   quotes: Fare[] | undefined;
+  business: WithId<Business> | undefined;
 };
 
-export const OrderScheduling = ({ order, quotes }: Props) => {
+export const OrderScheduling = ({ order, quotes, business }: Props) => {
   // ver o lance da "fare" que vai ser mostrada na lista de horas. usaremos o mesmo cálculo aqui de uma entrega
   // normal?
 
@@ -27,7 +27,6 @@ export const OrderScheduling = ({ order, quotes }: Props) => {
 
   // context
   const getServerTime = useContextGetSeverTime();
-  const business = useObserveBusiness(order.business?.id);
   // state
   const [selectedDay, setSelectedDay] = React.useState<Date>();
   const today = getServerTime();
