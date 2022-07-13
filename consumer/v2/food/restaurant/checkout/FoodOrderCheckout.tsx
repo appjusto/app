@@ -1,15 +1,13 @@
-import { Fare, PreparationMode } from '@appjusto/types';
+import { Fare } from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty, merge } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, Keyboard, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
-import CheckField from '../../../../../common/components/buttons/CheckField';
-import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { useModalToastContext } from '../../../../../common/contexts/ModalToastContext';
 import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
 import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
@@ -20,7 +18,7 @@ import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { isConsumerProfileComplete } from '../../../../../common/store/consumer/validators';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { showToast } from '../../../../../common/store/ui/actions';
-import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
+import { colors, screens } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { OrderCostBreakdown } from '../../../common/breakdown/OrderCostBreakdown';
 import { OrderAvailableFleets } from '../../../common/order-summary/OrderAvailableFleets';
@@ -81,7 +79,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   //   canNotDeliver ? 'scheduled' : 'realtime'
   // );
   // while preparationModes[] are not added to businesses
-  const [preparationMode, setPreparationMode] = React.useState<PreparationMode>('realtime');
+  // const [preparationMode, setPreparationMode] = React.useState<PreparationMode>('realtime');
   const canSubmit =
     selectedPaymentMethodId !== undefined &&
     selectedFare !== undefined &&
@@ -220,9 +218,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         });
       }
       // updating order with preparationMode
-      await api.order().updateOrder(order.id, {
-        preparationMode,
-      });
+      // await api.order().updateOrder(order.id, {
+      //   preparationMode,
+      // });
       await api.order().placeOrder(
         order.id,
         selectedFare!.fleet.id,
@@ -238,17 +236,18 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       track('consumer placed a food order');
       setDestinationModalVisible(false);
       setLoading(false);
-      if (order.preparationMode === 'scheduled') {
-        navigation.replace('OngoingOrderNavigator', {
-          screen: 'ScheduledOrderConfirmation',
-        });
-      } else
-        navigation.replace('OngoingOrderNavigator', {
-          screen: 'OngoingOrderConfirming',
-          params: {
-            orderId: order.id,
-          },
-        });
+      // if (order.preparationMode === 'scheduled') {
+      //   navigation.replace('OngoingOrderNavigator', {
+      //     screen: 'ScheduledOrderConfirmation',
+      //   });
+      // }
+      //  else
+      navigation.replace('OngoingOrderNavigator', {
+        screen: 'OngoingOrderConfirming',
+        params: {
+          orderId: order.id,
+        },
+      });
     } catch (error: any) {
       setLoading(false);
       Keyboard.dismiss();
@@ -270,14 +269,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       navigation.navigate('ProfilePaymentMethods', { returnScreen: 'FoodOrderCheckout' });
     }
   }, [consumer, navigation, selectedPaymentMethodId]);
-  const preparationModeToggle = () => {
-    if (preparationMode === 'realtime') setPreparationMode('scheduled');
-    else {
-      // uncomment when it is time to testing
-      // if (!canNotDeliver)
-      setPreparationMode('realtime');
-    }
-  };
+
   // UI
   if (!order || !business) {
     return (
@@ -319,52 +311,31 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         }}
         orderFulfillment={
           <View>
-            <PaddedView>
-              <PaddedView
-                style={{ backgroundColor: colors.grey50, height: 75, borderRadius: halfPadding }}
-              >
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <CheckField
-                    checked={preparationMode === 'scheduled'}
-                    onPress={preparationModeToggle}
-                  />
-                  <View style={{ marginLeft: padding }}>
-                    <Text style={{ ...texts.sm }}>{t('Agendar entrega')}</Text>
-                    <Text style={{ ...texts.xs, color: colors.grey700, marginTop: 4 }}>
-                      {t('Escolha o melhor dia e horário para você')}
-                    </Text>
-                  </View>
-                </View>
-              </PaddedView>
-            </PaddedView>
-            {preparationMode === 'scheduled' ? (
-              <OrderScheduling
-                order={order}
-                quotes={quotes}
-                business={business}
-                onCheckSchedules={() => null}
-              />
-            ) : (
-              <OrderAvailableFleets
-                quotes={quotes}
-                selectedFare={selectedFare}
-                onFareSelect={(fare) => {
-                  setSelectedFare(fare);
-                }}
-                onFleetSelect={(fleetId: string) => {
-                  navigation.navigate('FleetDetail', { fleetId });
-                }}
-                onRetry={getOrderQuotes}
-                order={order}
-                navigateToAvailableFleets={() =>
-                  navigation.navigate('AvailableFleets', {
-                    orderId: order.id,
-                    selectedFare: selectedFare!,
-                    returnScreen: 'FoodOrderCheckout',
-                  })
-                }
-              />
-            )}
+            <OrderScheduling
+              order={order}
+              quotes={quotes}
+              business={business}
+              onCheckSchedules={() => null}
+            />
+            <OrderAvailableFleets
+              quotes={quotes}
+              selectedFare={selectedFare}
+              onFareSelect={(fare) => {
+                setSelectedFare(fare);
+              }}
+              onFleetSelect={(fleetId: string) => {
+                navigation.navigate('FleetDetail', { fleetId });
+              }}
+              onRetry={getOrderQuotes}
+              order={order}
+              navigateToAvailableFleets={() =>
+                navigation.navigate('AvailableFleets', {
+                  orderId: order.id,
+                  selectedFare: selectedFare!,
+                  returnScreen: 'FoodOrderCheckout',
+                })
+              }
+            />
           </View>
         }
         costBreakdown={<OrderCostBreakdown order={order} selectedFare={selectedFare!} />}
