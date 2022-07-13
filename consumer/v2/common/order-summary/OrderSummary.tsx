@@ -1,4 +1,4 @@
-import { Order, WithId } from '@appjusto/types';
+import { Business, Order, WithId } from '@appjusto/types';
 import { Ionicons } from '@expo/vector-icons';
 import { isEmpty } from 'lodash';
 import React from 'react';
@@ -12,6 +12,7 @@ import { t } from '../../../../strings';
 import { Step } from '../../p2p/types';
 import { OrderItems } from './OrderItems';
 import { OrderPlacesSummary } from './OrderPlacesSummary';
+import { OrderScheduling } from './OrderScheduling';
 
 type Props = {
   order: WithId<Order>;
@@ -27,6 +28,8 @@ type Props = {
   costBreakdown: React.ReactNode;
   totalCost: React.ReactNode;
   payment: React.ReactNode;
+  business: WithId<Business> | undefined;
+  onCheckScheduleSlots: () => void;
 };
 
 export const OrderSummary = ({
@@ -43,6 +46,8 @@ export const OrderSummary = ({
   costBreakdown,
   totalCost,
   payment,
+  business,
+  onCheckScheduleSlots,
 }: Props) => {
   // context
   const tallerDevice = useTallerDevice();
@@ -66,6 +71,13 @@ export const OrderSummary = ({
       ) : null}
       <View style={{ paddingTop: tallerDevice ? padding : 0 }}>
         <OrderPlacesSummary order={order} onEditStep={onEditStep} />
+        {order.type === 'food' ? (
+          <OrderScheduling
+            order={order}
+            business={business}
+            onCheckScheduleSlots={onCheckScheduleSlots}
+          />
+        ) : null}
       </View>
 
       {!isEmpty(order.items) ? (

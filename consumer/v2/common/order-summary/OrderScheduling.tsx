@@ -1,9 +1,8 @@
-import { Business, BusinessSchedule, Fare, Order, WithId } from '@appjusto/types';
+import { Business, BusinessSchedule, Order, WithId } from '@appjusto/types';
 import { stringify } from '@firebase/util';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import RoundedText from '../../../../common/components/texts/RoundedText';
-import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { formatDate } from '../../../../common/utils/formatters';
@@ -11,12 +10,11 @@ import { t } from '../../../../strings';
 
 type Props = {
   order: WithId<Order>;
-  quotes: Fare[] | undefined;
   business: WithId<Business> | undefined;
-  onCheckSchedules: () => void;
+  onCheckScheduleSlots: () => void;
 };
 
-export const OrderScheduling = ({ order, quotes, business, onCheckSchedules }: Props) => {
+export const OrderScheduling = ({ order, business, onCheckScheduleSlots }: Props) => {
   // ver o lance da "fare" que vai ser mostrada na lista de horas. usaremos o mesmo cálculo aqui de uma entrega
   // normal?
 
@@ -78,7 +76,7 @@ export const OrderScheduling = ({ order, quotes, business, onCheckSchedules }: P
     }
     return hours;
   };
-  if (!business || quotes === undefined) {
+  if (!business) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -88,8 +86,7 @@ export const OrderScheduling = ({ order, quotes, business, onCheckSchedules }: P
   // helpers
   const canDeliver = business.fulfillment?.includes('delivery');
   return (
-    <View style={{ ...screens.default, width: '100%' }}>
-      <SingleHeader title={t('Escolha quando deseja receber seu pedido')} />
+    <View style={{ ...screens.default, width: '100%', paddingBottom: padding }}>
       {/* add this back when business.preparationModes[] is not empty */}
       {/* {canDeliver ? null : (
         <View style={{ paddingHorizontal: padding }}>
@@ -109,7 +106,7 @@ export const OrderScheduling = ({ order, quotes, business, onCheckSchedules }: P
       <View
         style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: padding }}
       >
-        <TouchableOpacity onPress={onCheckSchedules}>
+        <TouchableOpacity onPress={onCheckScheduleSlots}>
           <Text style={{ ...texts.sm, color: colors.green600 }}>{t('Ver horários')}</Text>
         </TouchableOpacity>
       </View>
@@ -132,11 +129,6 @@ export const OrderScheduling = ({ order, quotes, business, onCheckSchedules }: P
           );
         })}
       </ScrollView>
-      <View style={{ paddingHorizontal: padding, marginVertical: padding }}>
-        <Text style={{ ...texts.xs, color: colors.grey700 }}>
-          {t('Entregas agendadas serão feitas pela frota AppJusto')}
-        </Text>
-      </View>
     </View>
   );
 };

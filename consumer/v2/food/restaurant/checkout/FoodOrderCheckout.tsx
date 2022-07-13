@@ -23,7 +23,6 @@ import { t } from '../../../../../strings';
 import { OrderCostBreakdown } from '../../../common/breakdown/OrderCostBreakdown';
 import { OrderAvailableFleets } from '../../../common/order-summary/OrderAvailableFleets';
 import { OrderPayment } from '../../../common/order-summary/OrderPayment';
-import { OrderScheduling } from '../../../common/order-summary/OrderScheduling';
 import { OrderSummary } from '../../../common/order-summary/OrderSummary';
 import { OrderTotal } from '../../../common/order-summary/OrderTotal';
 import { LoggedNavigatorParamList } from '../../../types';
@@ -309,14 +308,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           setShareDataWithBusiness(!shareDataWithBusiness);
           track('consumer changed share data with business preferences');
         }}
+        business={business}
+        onCheckScheduleSlots={() => null}
         orderFulfillment={
           <View>
-            <OrderScheduling
-              order={order}
-              quotes={quotes}
-              business={business}
-              onCheckSchedules={() => null}
-            />
             <OrderAvailableFleets
               quotes={quotes}
               selectedFare={selectedFare}
