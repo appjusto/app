@@ -13,9 +13,10 @@ type Props = {
   order: WithId<Order>;
   quotes: Fare[] | undefined;
   business: WithId<Business> | undefined;
+  onCheckSchedules: () => void;
 };
 
-export const OrderScheduling = ({ order, quotes, business }: Props) => {
+export const OrderScheduling = ({ order, quotes, business, onCheckSchedules }: Props) => {
   // ver o lance da "fare" que vai ser mostrada na lista de horas. usaremos o mesmo cálculo aqui de uma entrega
   // normal?
 
@@ -105,6 +106,13 @@ export const OrderScheduling = ({ order, quotes, business }: Props) => {
           </View>
         </View>
       )} */}
+      <View
+        style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: padding }}
+      >
+        <TouchableOpacity onPress={onCheckSchedules}>
+          <Text style={{ ...texts.sm, color: colors.green600 }}>{t('Ver horários')}</Text>
+        </TouchableOpacity>
+      </View>
       <ScrollView
         horizontal
         style={{ marginTop: padding, paddingLeft: padding }}

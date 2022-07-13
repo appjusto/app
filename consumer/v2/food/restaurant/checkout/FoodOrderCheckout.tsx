@@ -272,7 +272,11 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   }, [consumer, navigation, selectedPaymentMethodId]);
   const preparationModeToggle = () => {
     if (preparationMode === 'realtime') setPreparationMode('scheduled');
-    else setPreparationMode('realtime');
+    else {
+      // uncomment when it is time to testing
+      // if (!canNotDeliver)
+      setPreparationMode('realtime');
+    }
   };
   // UI
   if (!order || !business) {
@@ -334,7 +338,12 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
               </PaddedView>
             </PaddedView>
             {preparationMode === 'scheduled' ? (
-              <OrderScheduling order={order} quotes={quotes} business={business} />
+              <OrderScheduling
+                order={order}
+                quotes={quotes}
+                business={business}
+                onCheckSchedules={() => null}
+              />
             ) : (
               <OrderAvailableFleets
                 quotes={quotes}
