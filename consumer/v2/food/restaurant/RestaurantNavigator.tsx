@@ -14,6 +14,7 @@ import { AboutCharges } from '../../p2p/AboutCharges';
 import { AboutRestaurant } from './about/AboutRestaurant';
 import { RestaurantHeaderMessage } from './about/RestaurantHeaderMessage';
 import { FoodOrderCheckout } from './checkout/FoodOrderCheckout';
+import { ScheduleOrder } from './checkout/ScheduleOrder';
 import { RestaurantDetail } from './detail/RestaurantDetail';
 import { ItemDetail } from './product/ItemDetail';
 import { RestaurantNavigatorParamList } from './types';
@@ -43,6 +44,11 @@ export default function () {
         name="FoodOrderCheckout"
         component={FoodOrderCheckout}
         options={{ title: t('Sua sacola') }}
+      />
+      <Stack.Screen
+        name="ScheduleOrder"
+        component={ScheduleOrder}
+        options={{ title: t('Agendamento') }}
       />
       <Stack.Screen
         name="CommonProfileEdit"

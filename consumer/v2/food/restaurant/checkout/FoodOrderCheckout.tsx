@@ -309,7 +309,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           track('consumer changed share data with business preferences');
         }}
         business={business}
-        onCheckScheduleSlots={() => null}
+        onCheckScheduleSlots={() => navigation.navigate('ScheduleOrder')}
         orderFulfillment={
           <View>
             <OrderAvailableFleets
