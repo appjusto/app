@@ -6,6 +6,7 @@ import RoundedText from '../../../../common/components/texts/RoundedText';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { formatDate } from '../../../../common/utils/formatters';
+import { getETAWithMargin } from '../../../../common/utils/formatters/datetime';
 import { t } from '../../../../strings';
 
 type Props = {
@@ -76,6 +77,12 @@ export const OrderScheduling = ({ order, business, onCheckScheduleSlots }: Props
     }
     return hours;
   };
+  const { origin, destination, route, arrivals } = order;
+  const etA =
+    route?.distance && arrivals?.destination?.estimate
+      ? `${t('Previsão:')} ${getETAWithMargin(arrivals.destination.estimate)}`
+      : null;
+
   if (!business) {
     return (
       <View style={screens.centered}>
@@ -104,8 +111,17 @@ export const OrderScheduling = ({ order, business, onCheckScheduleSlots }: Props
         </View>
       )} */}
       <View
-        style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: padding }}
+        style={{
+          flexDirection: 'row',
+          justifyContent: etA ? 'space-between' : 'flex-end',
+          paddingHorizontal: padding,
+        }}
       >
+        {etA ? (
+          <View>
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>{etA}</Text>
+          </View>
+        ) : null}
         <TouchableOpacity onPress={onCheckScheduleSlots}>
           <Text style={{ ...texts.sm, color: colors.green600 }}>{t('Ver horários')}</Text>
         </TouchableOpacity>
