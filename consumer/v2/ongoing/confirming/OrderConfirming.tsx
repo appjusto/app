@@ -32,7 +32,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
     if (!order) return;
     if (order.status === 'canceled' || order.status === 'rejected') {
       navigation.replace('OrderCanceled', { orderId });
-    } else if (order.status === 'confirmed') {
+    } else if (order.status === 'confirmed' || order.status === 'scheduled') {
       if (order.type === 'food') {
         navigation.replace('OngoingOrder', {
           orderId,
