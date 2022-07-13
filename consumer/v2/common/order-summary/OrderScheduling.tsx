@@ -11,9 +11,15 @@ type Props = {
   order: WithId<Order>;
   business: WithId<Business> | undefined;
   onCheckScheduleSlots: () => void;
+  scheduleSlots: Date[][];
 };
 
-export const OrderScheduling = ({ order, business, onCheckScheduleSlots }: Props) => {
+export const OrderScheduling = ({
+  order,
+  business,
+  onCheckScheduleSlots,
+  scheduleSlots,
+}: Props) => {
   // ver o lance da "fare" que vai ser mostrada na lista de horas. usaremos o mesmo cálculo aqui de uma entrega
   // normal?
 
@@ -42,6 +48,7 @@ export const OrderScheduling = ({ order, business, onCheckScheduleSlots }: Props
       </View>
     );
   }
+
   // helpers
   const canDeliver = business.fulfillment?.includes('delivery');
   return (
@@ -83,6 +90,7 @@ export const OrderScheduling = ({ order, business, onCheckScheduleSlots }: Props
         style={{ marginTop: padding, paddingLeft: padding }}
         showsHorizontalScrollIndicator={false}
       >
+        {/* the first item of the list shows the realtime delivery time. hard coded for now */}
         <RectangularListItemText text={t('Hoje, 30 - 60 minutos')} selected onSelect={() => null} />
         {/* {getDays(today, 7).map((day, i) => {
           return (

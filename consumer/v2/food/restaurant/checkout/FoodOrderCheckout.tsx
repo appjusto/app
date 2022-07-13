@@ -1,3 +1,4 @@
+import { getNextDateSlots, scheduleFromDate } from '@appjusto/dates';
 import { Fare } from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
@@ -277,6 +278,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       </View>
     );
   }
+  const date = new Date();
+  const fromDate = scheduleFromDate(business.schedules, date);
+  const nextDateScheduleSlots = getNextDateSlots(fromDate, date);
   return (
     <KeyboardAwareScrollView
       style={{ ...screens.default }}
@@ -309,7 +313,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           track('consumer changed share data with business preferences');
         }}
         business={business}
-        onCheckScheduleSlots={() => navigation.navigate('ScheduleOrder')}
+        onCheckScheduleSlots={() =>
+          navigation.navigate('ScheduleOrder', { scheduleSlots: nextDateScheduleSlots })
+        }
+        scheduleSlots={nextDateScheduleSlots}
         orderFulfillment={
           <View>
             <OrderAvailableFleets

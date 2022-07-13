@@ -29,7 +29,9 @@ export type RestaurantNavigatorParamList = {
     selectedFare: Fare;
     returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
   };
-  ScheduleOrder: undefined;
+  ScheduleOrder: {
+    scheduleSlots: Date[][];
+  };
 } & PixParamList &
   FleetDetailParamList &
   ProfilePaymentMethodsParamList &

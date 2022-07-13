@@ -24,6 +24,9 @@ type Props = {
 };
 
 export const ScheduleOrder = ({ navigation, route }: Props) => {
+  // params
+  const { scheduleSlots } = route.params ?? {};
+  //UI
   return (
     <ScrollView
       style={{ ...screens.default }}

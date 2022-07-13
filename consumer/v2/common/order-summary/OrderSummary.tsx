@@ -30,6 +30,7 @@ type Props = {
   payment: React.ReactNode;
   business: WithId<Business> | undefined;
   onCheckScheduleSlots: () => void;
+  scheduleSlots: Date[][];
 };
 
 export const OrderSummary = ({
@@ -48,6 +49,7 @@ export const OrderSummary = ({
   payment,
   business,
   onCheckScheduleSlots,
+  scheduleSlots,
 }: Props) => {
   // context
   const tallerDevice = useTallerDevice();
@@ -76,6 +78,7 @@ export const OrderSummary = ({
             order={order}
             business={business}
             onCheckScheduleSlots={onCheckScheduleSlots}
+            scheduleSlots={scheduleSlots}
           />
         ) : null}
       </View>
