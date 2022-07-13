@@ -2,6 +2,7 @@ import { Fare } from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Timestamp } from 'firebase/firestore';
 import { isEmpty, merge } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Keyboard, View } from 'react-native';
@@ -9,6 +10,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import { useModalToastContext } from '../../../../../common/contexts/ModalToastContext';
+import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTimeContext';
 import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
 import { useQuotes } from '../../../../../common/store/api/order/hooks/useQuotes';
 import { useProfileSummary } from '../../../../../common/store/api/profile/useProfileSummary';
@@ -18,7 +20,7 @@ import { isConsumerProfileComplete } from '../../../../../common/store/consumer/
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, screens } from '../../../../../common/styles';
-import { t } from '../../../../../strings';
+import { Dayjs, t } from '../../../../../strings';
 import { OrderCostBreakdown } from '../../../common/breakdown/OrderCostBreakdown';
 import { OrderAvailableFleets } from '../../../common/order-summary/OrderAvailableFleets';
 import { OrderPayment } from '../../../common/order-summary/OrderPayment';
@@ -49,6 +51,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const order = useContextActiveOrder();
+  const getServerTime = useContextGetSeverTime();
   const dispatch = useDispatch<AppDispatch>();
   const { showModalToast } = useModalToastContext();
   // redux store
@@ -335,12 +338,26 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             isSubmitEnabled={canSubmit}
             activityIndicator={isLoading}
             onEditPaymentMethod={navigateToFillPaymentInfo}
-            onSubmit={() => {
+            onSubmit={(preparationMode) => {
+              // TODO: temporary only during tests
+              if (preparationMode === 'scheduled') {
+                const scheduledTo = Dayjs(getServerTime()).add(30, 'minute').toDate();
+                api.order().updateOrder(order.id, {
+                  scheduledTo: Timestamp.fromDate(scheduledTo),
+                });
+              }
               if (!shouldVerifyPhone) setDestinationModalVisible(true);
               else placeOrderHandler();
             }}
             navigateToAboutCharges={() => {
               navigation.navigate('AboutCharges');
+            }}
+            navigateToPayWithPix={() => {
+              navigation.navigate('PayWithPix', {
+                orderId: order.id,
+                fleetId: selectedFare!.fleet!.id,
+                total: selectedFare!.total,
+              });
             }}
           />
         }

@@ -28,7 +28,6 @@ const iconOrders = require('./icons/orders.png');
 const iconSearch = require('./icons/search.png');
 const iconUser = require('./icons/user.png');
 const restCardIcon = require('./icons/card-icon.png');
-const QrCodePix = require('./icons/qr-code-pix.png');
 const iconBoxPhoto = require('./icons/icon-boxphoto.png');
 const iconHouse = require('./icons/icon-boxhouse.png');
 const iconCheckGreen = require('./icons/icon-check-green.png');
@@ -68,7 +67,6 @@ export const search = iconSearch;
 export const iconSad = iconSadYellow;
 export const cardIcon = restCardIcon;
 export const motoIntro = illustrationMotoIntro;
-export const QrCode = QrCodePix;
 export const box = iconBoxPhoto;
 export const house = iconHouse;
 export const greenCheck = iconCheckGreen;
@@ -109,7 +107,6 @@ export default [
   search,
   iconSad,
   motoIntro,
-  QrCode,
   box,
   house,
   greenCheck,

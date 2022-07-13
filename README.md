@@ -49,11 +49,11 @@ ENVIRONMENT=
 
 ```bash
 # running consumer connected to firebase cloud
-npm run start-consumer:community
+FLAVOR=consumer ENV=dev npm run start
 # running courier connected to firebase cloud
-npm run start-courier:community
+FLAVOR=courier ENV=dev npm run start
 # running consumer connected to local emulator
-npm run start-consumer:local
+FLAVOR=consumer ENV=dev FIREBASE_EMULATOR=true npm run start
 
 # Deeplink testing
 xcrun simctl openurl booted "exp://127.0.0.1:19000/--/?link=<link>"

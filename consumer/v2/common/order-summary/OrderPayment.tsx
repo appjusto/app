@@ -1,22 +1,27 @@
+import { PreparationMode } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
+import RoundedText from '../../../../common/components/texts/RoundedText';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
+import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
 import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { PixCard } from '../PixCard';
 
 interface Props {
   selectedPaymentMethodId?: string;
   isSubmitEnabled: boolean;
   activityIndicator: boolean;
   onEditPaymentMethod: () => void;
-  onSubmit: () => void;
+  onSubmit: (mode: PreparationMode) => void;
   navigateToAboutCharges: () => void;
+  navigateToPayWithPix: () => void;
 }
 
 export const OrderPayment = ({
@@ -26,9 +31,12 @@ export const OrderPayment = ({
   onEditPaymentMethod,
   onSubmit,
   navigateToAboutCharges,
+  navigateToPayWithPix,
 }: Props) => {
   // redux
   const consumer = useSelector(getConsumer)!;
+  // helpers
+  const payableWithPix = useIsPixEnabled();
   const { isProfileComplete, shouldVerifyPhone } = useProfileSummary();
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
   return (
@@ -37,12 +45,14 @@ export const OrderPayment = ({
         <SingleHeader title={t('Forma de pagamento')} />
       </View> */}
       <PaddedView>
-        {/* {Boolean(!selectedPaymentMethod) && (
+        {Boolean(!selectedPaymentMethod) ? (
           <View style={{ marginBottom: padding }}>
-            <PixCard navigateToPixPayment={navigateToPixPayment} />
+            <TouchableOpacity onPress={navigateToPayWithPix}>
+              <PixCard />
+            </TouchableOpacity>
           </View>
-        )} */}
-        {Boolean(selectedPaymentMethod) && (
+        ) : null}
+        {Boolean(selectedPaymentMethod) ? (
           <View style={{ marginBottom: halfPadding }}>
             <TouchableOpacity onPress={onEditPaymentMethod}>
               <View style={{ marginBottom: halfPadding }}>
@@ -76,16 +86,29 @@ export const OrderPayment = ({
               </View>
             </TouchableOpacity>
           </View>
-        )}
+        ) : null}
 
         {isProfileComplete && selectedPaymentMethod ? (
-          <DefaultButton
-            style={{ marginVertical: padding }}
-            title={shouldVerifyPhone ? t('Verificar telefone') : t('Confirmar pedido')}
-            onPress={onSubmit}
-            disabled={!isSubmitEnabled}
-            activityIndicator={activityIndicator}
-          />
+          <View
+            style={{
+              marginVertical: padding,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
+          >
+            <DefaultButton
+              title={shouldVerifyPhone ? t('Verificar telefone') : t('Confirmar pedido')}
+              onPress={() => onSubmit('realtime')}
+              disabled={!isSubmitEnabled}
+              activityIndicator={activityIndicator}
+            />
+            <DefaultButton
+              title={shouldVerifyPhone ? t('Verificar telefone') : t('Agendar pedido')}
+              onPress={() => onSubmit('scheduled')}
+              disabled={!isSubmitEnabled}
+              activityIndicator={activityIndicator}
+            />
+          </View>
         ) : (
           <DefaultButton
             title={
@@ -97,18 +120,18 @@ export const OrderPayment = ({
           />
         )}
 
-        {/* {Boolean(selectedPaymentMethod) && (
+        {payableWithPix ? (
           <DefaultButton
             variant="secondary"
             title={t('Quero pagar com Pix')}
             style={{ marginBottom: padding }}
-            onPress={navigateToPixPayment}
+            onPress={navigateToPayWithPix}
           >
             <RoundedText backgroundColor={colors.darkYellow} style={{ right: -64 }}>
               {t('Novo!')}
             </RoundedText>
           </DefaultButton>
-        )} */}
+        ) : null}
       </PaddedView>
     </View>
   );

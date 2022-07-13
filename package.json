@@ -1,5 +1,5 @@
 {
-  "version": "9.3.8",
+  "version": "10.0.0",
   "license": "Apache-2.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -15,9 +15,9 @@
     "postversion": "git push && git push --tags && git fetch"
   },
   "dependencies": {
-    "@appjusto/firebase-refs": "^0.1.4",
+    "@appjusto/firebase-refs": "^0.2.0",
     "@appjusto/menu": "^0.1.4",
-    "@appjusto/types": "^6.2.1",
+    "@appjusto/types": "^7.2.0",
     "@expo/react-native-action-sheet": "^3.13.0",
     "@expo/vector-icons": "^13.0.0",
     "@fnando/cnpj": "^1.0.2",
@@ -44,6 +44,7 @@
     "expo-asset": "~8.5.0",
     "expo-background-fetch": "~10.2.0",
     "expo-camera": "~12.2.0",
+    "expo-clipboard": "~3.0.1",
     "expo-constants": "~13.1.1",
     "expo-device": "~4.2.0",
     "expo-firebase-recaptcha": "~2.2.0",
@@ -55,7 +56,7 @@
     "expo-localization": "~13.0.0",
     "expo-location": "~14.2.2",
     "expo-media-library": "~14.1.0",
-    "expo-notifications": "~0.15.2",
+    "expo-notifications": "~0.15.4",
     "expo-permissions": "~13.2.0",
     "expo-print": "~11.2.0",
     "expo-secure-store": "^11.2.0",

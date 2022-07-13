@@ -30,6 +30,7 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  Timestamp,
   Unsubscribe,
   updateDoc,
   where,
@@ -41,16 +42,25 @@ import { OrderCourierLocationLog } from '../../../../../types';
 import { getAppVersion } from '../../../utils/version';
 import { fetchPublicIP } from '../externals/ipify';
 import { documentAs, documentsAs } from '../types';
+import InvoiceApi from './invoices/InvoiceApi';
 import { ObserveOrdersOptions } from './types';
 
 export type QueryOrdering = 'asc' | 'desc';
 
 export default class OrderApi {
+  private _invoices: InvoiceApi;
+
   constructor(
     private firestoreRefs: FirestoreRefs,
     private functionsRef: FunctionsRef,
     private firestore: Firestore
-  ) {}
+  ) {
+    this._invoices = new InvoiceApi(this.firestoreRefs);
+  }
+
+  invoice() {
+    return this._invoices;
+  }
 
   // firestore
   // consumer
@@ -77,7 +87,6 @@ export default class OrderApi {
       status: 'quote',
       fulfillment: 'delivery',
       dispatchingStatus: 'idle',
-      // @ts-ignore
       dispatchingState: null,
       business: {
         id: business.id,
@@ -103,7 +112,6 @@ export default class OrderApi {
       status: 'quote',
       fulfillment: 'delivery',
       dispatchingStatus: 'idle',
-      // @ts-ignore
       dispatchingState: null,
       consumer: {
         id: consumer.id,
@@ -146,6 +154,35 @@ export default class OrderApi {
     return onSnapshot(
       query(this.firestoreRefs.getOrdersRef(), ...constraints),
       (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
+      (error) => {
+        console.error(error);
+        Sentry.Native.captureException(error);
+      }
+    );
+  }
+  observeUnexpiredConsumerOrders(
+    consumerId: string,
+    resultHandler: (orders: WithId<Order>[]) => void
+  ): Unsubscribe {
+    const constraints = [
+      where('status', 'not-in', ['expired'] as OrderStatus[]),
+      where('consumer.id', '==', consumerId),
+      orderBy('status', 'desc'),
+    ];
+    return onSnapshot(
+      query(this.firestoreRefs.getOrdersRef(), ...constraints),
+      (querySnapshot) => {
+        if (querySnapshot.empty) resultHandler([]);
+        else {
+          resultHandler(
+            documentsAs<Order>(querySnapshot.docs).sort(
+              (a, b) =>
+                ((b.createdOn as Timestamp)?.seconds ?? 0) -
+                ((a.createdOn as Timestamp)?.seconds ?? 0)
+            )
+          );
+        }
+      },
       (error) => {
         console.error(error);
         Sentry.Native.captureException(error);

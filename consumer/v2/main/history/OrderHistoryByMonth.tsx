@@ -4,19 +4,17 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
-import { useSelector } from 'react-redux';
-import { Order, OrderStatus, WithId } from '../../../../../types';
+import { Order, WithId } from '../../../../../types';
 import { ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import StatusBadge from '../../../../common/components/views/StatusBadge';
-import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
+import { observeUnexpiredConsumerOrders } from '../../../../common/store/api/order/hooks/observeUnexpiredConsumerOrders';
 import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import {
   getOrdersWithFilter,
   getOrderTime,
   isOrderOngoing,
 } from '../../../../common/store/order/selectors';
-import { getUser } from '../../../../common/store/user/selectors';
 import { colors, screens } from '../../../../common/styles';
 import {
   formatAddress,
@@ -49,28 +47,8 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
   const { year, month } = route.params;
   // context
   const api = React.useContext(ApiContext);
-  // app state
-  const user = useSelector(getUser);
-  // screen state
-  const options = React.useMemo(
-    () => ({
-      consumerId: user?.uid,
-      statuses: [
-        'quote',
-        'charged',
-        'confirming',
-        'confirmed',
-        'declined',
-        'dispatching',
-        'preparing',
-        'ready',
-        'delivered',
-        'canceled',
-      ] as OrderStatus[],
-    }),
-    [user?.uid]
-  );
-  const orders = useObserveOrders(options);
+  // state
+  const orders = observeUnexpiredConsumerOrders();
   const filteredOrders = getOrdersWithFilter(orders ?? [], year, month).filter(
     (order) => getOrderTime(order).getMonth() === month
   );
