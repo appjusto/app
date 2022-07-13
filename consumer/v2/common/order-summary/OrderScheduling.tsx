@@ -1,11 +1,9 @@
-import { Business, BusinessSchedule, Order, WithId } from '@appjusto/types';
-import { stringify } from '@firebase/util';
+import { Business, Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import RoundedText from '../../../../common/components/texts/RoundedText';
+import { RectangularListItemText } from '../../../../common/components/texts/RectangularListItemText';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
-import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
-import { formatDate } from '../../../../common/utils/formatters';
+import { colors, padding, screens, texts } from '../../../../common/styles';
 import { getETAWithMargin } from '../../../../common/utils/formatters/datetime';
 import { t } from '../../../../strings';
 
@@ -30,55 +28,9 @@ export const OrderScheduling = ({ order, business, onCheckScheduleSlots }: Props
   // state
   const [selectedDay, setSelectedDay] = React.useState<Date>();
   const today = getServerTime();
-  // starts at the next day
-  const getDays = (startDate: Date, daysToAdd: number) => {
-    const days: Date[] = [];
-    for (let i = 1; i <= daysToAdd; i++) {
-      const currentDate = new Date();
-      currentDate.setDate(startDate.getDate() + i);
-      days.push(currentDate);
-    }
-    return days;
-  };
 
-  // daySchedule
-  // {
-  //   "checked": true,
-  //   "day": "Terça",
-  //   "schedule": Array [
-  //     Object {
-  //       "from": "0900",
-  //       "to": "1400",
-  //     },
-  //     Object {
-  //       "from": "1500",
-  //       "to": "2300",
-  //     },
-  // UI
-  const getDayScheduleHours = (date: Date, schedules: BusinessSchedule) => {
-    const day = date.getDay();
-    const dayIndex = day === 0 ? 6 : day - 1;
-    const daySchedule = business?.schedules[dayIndex];
-    if (!date || !daySchedule) return null;
-    const hours: string[] = [];
-    for (
-      let startingHour = parseInt(daySchedule.schedule[0].from);
-      startingHour < parseInt(daySchedule.schedule[0].to);
-      startingHour + 100
-    ) {
-      hours.push(stringify(startingHour));
-    }
-    for (
-      let startingHour = parseInt(daySchedule.schedule[1].from);
-      startingHour < parseInt(daySchedule.schedule[1].to);
-      startingHour + 100
-    ) {
-      hours.push(stringify(startingHour));
-    }
-    return hours;
-  };
   const { origin, destination, route, arrivals } = order;
-  const etA =
+  const eTA =
     route?.distance && arrivals?.destination?.estimate
       ? `${t('Previsão:')} ${getETAWithMargin(arrivals.destination.estimate)}`
       : null;
@@ -113,13 +65,13 @@ export const OrderScheduling = ({ order, business, onCheckScheduleSlots }: Props
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: etA ? 'space-between' : 'flex-end',
+          justifyContent: eTA ? 'space-between' : 'flex-end',
           paddingHorizontal: padding,
         }}
       >
-        {etA ? (
+        {eTA ? (
           <View>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{etA}</Text>
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>{eTA}</Text>
           </View>
         ) : null}
         <TouchableOpacity onPress={onCheckScheduleSlots}>
@@ -131,7 +83,8 @@ export const OrderScheduling = ({ order, business, onCheckScheduleSlots }: Props
         style={{ marginTop: padding, paddingLeft: padding }}
         showsHorizontalScrollIndicator={false}
       >
-        {getDays(today, 7).map((day, i) => {
+        <RectangularListItemText text={t('Hoje, 30 - 60 minutos')} selected onSelect={() => null} />
+        {/* {getDays(today, 7).map((day, i) => {
           return (
             <TouchableOpacity
               style={{ marginRight: halfPadding }}
@@ -143,7 +96,7 @@ export const OrderScheduling = ({ order, business, onCheckScheduleSlots }: Props
               </RoundedText>
             </TouchableOpacity>
           );
-        })}
+        })} */}
       </ScrollView>
     </View>
   );
