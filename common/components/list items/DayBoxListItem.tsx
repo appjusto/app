@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { colors, padding, texts } from '../../styles';
+import { colors, halfPadding, padding, texts } from '../../styles';
 
 type Props = {
   weekDay: string;
@@ -20,6 +20,7 @@ export const DayBoxListItem = ({ weekDay, day, selected, onSelect }: Props) => {
           backgroundColor: selected ? colors.green100 : colors.white,
           borderWidth: 1,
           borderColor: selected ? colors.green100 : colors.grey500,
+          borderRadius: halfPadding,
         }}
       >
         <Text style={{ ...texts.xs, color: colors.grey700 }}>{weekDay}</Text>
