@@ -32,7 +32,7 @@ export const AvailableFleets = ({ navigation, route }: Props) => {
   // state
   const order = useObserveOrder(orderId);
   const [fare, setFare] = React.useState<Fare>(selectedFare);
-  const { quotes } = useQuotes(orderId);
+  const quotes = useQuotes(orderId);
   // UI
   if (!order || !quotes) {
     return (
@@ -62,16 +62,16 @@ export const AvailableFleets = ({ navigation, route }: Props) => {
         <View style={{ marginTop: padding }}>
           {quotes.map((item) => {
             return (
-              <View key={item.fleet.id} style={{ marginBottom: padding }}>
+              <View key={item.fleet!.id} style={{ marginBottom: padding }}>
                 <FleetListItem
                   item={item}
-                  selectedFare={fare?.fleet.id === item.fleet.id}
+                  selectedFare={fare.fleet!.id === item.fleet!.id}
                   onFareSelect={(fare) => {
                     setFare(fare);
                     navigation.navigate(returnScreen, { returningFare: fare });
                   }}
                   onFleetDetail={() =>
-                    navigation.navigate('FleetDetail', { fleetId: item.fleet.id })
+                    navigation.navigate('FleetDetail', { fleetId: item.fleet!.id })
                   }
                 />
               </View>

@@ -1,4 +1,3 @@
-import { PreparationMode } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
@@ -19,7 +18,7 @@ interface Props {
   isSubmitEnabled: boolean;
   activityIndicator: boolean;
   onEditPaymentMethod: () => void;
-  onSubmit: (mode: PreparationMode) => void;
+  onSubmit: () => void;
   navigateToAboutCharges: () => void;
   navigateToPayWithPix: () => void;
 }
@@ -89,26 +88,12 @@ export const OrderPayment = ({
         ) : null}
 
         {isProfileComplete && selectedPaymentMethod ? (
-          <View
-            style={{
-              marginVertical: padding,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
-            <DefaultButton
-              title={shouldVerifyPhone ? t('Verificar telefone') : t('Confirmar pedido')}
-              onPress={() => onSubmit('realtime')}
-              disabled={!isSubmitEnabled}
-              activityIndicator={activityIndicator}
-            />
-            <DefaultButton
-              title={shouldVerifyPhone ? t('Verificar telefone') : t('Agendar pedido')}
-              onPress={() => onSubmit('scheduled')}
-              disabled={!isSubmitEnabled}
-              activityIndicator={activityIndicator}
-            />
-          </View>
+          <DefaultButton
+            title={shouldVerifyPhone ? t('Verificar telefone') : t('Confirmar pedido')}
+            onPress={onSubmit}
+            disabled={!isSubmitEnabled}
+            activityIndicator={activityIndicator}
+          />
         ) : (
           <DefaultButton
             title={

@@ -53,7 +53,7 @@ export default function ({ navigation, route }: Props) {
   const [isLoading, setLoading] = React.useState(false);
   const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
   const [wantsCpf, setWantsCpf] = React.useState(false);
-  const { quotes, getOrderQuotes } = useQuotes(order?.id);
+  const quotes = useQuotes(order?.id);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
   const canSubmit =
     selectedPaymentMethodId !== undefined &&
@@ -257,7 +257,6 @@ export default function ({ navigation, route }: Props) {
             returnScreen: 'CreateOrderP2P',
           })
         }
-        onRetry={getOrderQuotes}
         total={selectedFare?.total ?? 0}
       />
     </View>

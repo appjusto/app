@@ -13,7 +13,6 @@ interface Props {
   selectedFare: Fare | undefined;
   onFareSelect: (fare: Fare) => void;
   onFleetSelect: (fleetId: string) => void;
-  onRetry: () => void;
   order: WithId<Order>;
   navigateToAvailableFleets: () => void;
 }
@@ -23,15 +22,14 @@ export const OrderAvailableFleets = ({
   selectedFare,
   onFareSelect,
   onFleetSelect,
-  onRetry,
   order,
   navigateToAvailableFleets,
 }: Props) => {
-  // helpers
+  const { fulfillment, scheduledTo } = order;
+  if (fulfillment !== 'delivery') return null;
+  if (scheduledTo) return null;
   const isLoading = quotes === undefined;
-  const orderedFares = (quotes ?? [])
-    .sort((a, b) => b.fleet.participantsOnline - a.fleet.participantsOnline)
-    .slice(0, 3);
+  const orderedFares = (quotes ?? []).slice(0, 3);
   // UI
   return (
     <View>
@@ -47,7 +45,7 @@ export const OrderAvailableFleets = ({
               <RouteIssueCard issue={order.route.issue} />
             ) : (
               <View>
-                {quotes.length === 1 && quotes[0].fleet.participantsOnline === 0 ? (
+                {quotes.length === 1 && quotes[0].fleet!.participantsOnline === 0 ? (
                   <Text style={{ ...texts.xs, color: colors.grey700, marginBottom: 12 }}>
                     {t(
                       'Sua entrega poderá ser feita por uma empresa parceira caso não haja entregadores online no momento'
@@ -63,12 +61,12 @@ export const OrderAvailableFleets = ({
                 <View style={{ marginBottom: padding }}>
                   {orderedFares.map((item) => {
                     return (
-                      <View key={item.fleet.id} style={{ marginBottom: padding }}>
+                      <View key={item.fleet!.id} style={{ marginBottom: padding }}>
                         <FleetListItem
                           item={item}
-                          selectedFare={selectedFare?.fleet.id === item.fleet.id}
+                          selectedFare={selectedFare?.fleet?.id === item.fleet!.id}
                           onFareSelect={(item) => onFareSelect(item)}
-                          onFleetDetail={() => onFleetSelect(item.fleet.id)}
+                          onFleetDetail={() => onFleetSelect(item.fleet!.id)}
                         />
                       </View>
                     );

@@ -1,4 +1,4 @@
-import { Business, Order, WithId } from '@appjusto/types';
+import { Order, WithId } from '@appjusto/types';
 import { Ionicons } from '@expo/vector-icons';
 import { isEmpty } from 'lodash';
 import React from 'react';
@@ -28,9 +28,6 @@ type Props = {
   costBreakdown: React.ReactNode;
   totalCost: React.ReactNode;
   payment: React.ReactNode;
-  business: WithId<Business> | undefined;
-  onCheckScheduleSlots: () => void;
-  scheduleSlots: Date[][];
 };
 
 export const OrderSummary = ({
@@ -47,9 +44,6 @@ export const OrderSummary = ({
   costBreakdown,
   totalCost,
   payment,
-  business,
-  onCheckScheduleSlots,
-  scheduleSlots,
 }: Props) => {
   // context
   const tallerDevice = useTallerDevice();
@@ -73,14 +67,7 @@ export const OrderSummary = ({
       ) : null}
       <View style={{ paddingTop: tallerDevice ? padding : 0 }}>
         <OrderPlacesSummary order={order} onEditStep={onEditStep} />
-        {order.type === 'food' ? (
-          <OrderScheduling
-            order={order}
-            business={business}
-            onCheckScheduleSlots={onCheckScheduleSlots}
-            scheduleSlots={scheduleSlots}
-          />
-        ) : null}
+        <OrderScheduling />
       </View>
 
       {!isEmpty(order.items) ? (

@@ -1,9 +1,7 @@
-import { getNextDateSlots, scheduleFromDate } from '@appjusto/dates';
 import { Fare } from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Timestamp } from 'firebase/firestore';
 import { isEmpty, merge } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Keyboard, View } from 'react-native';
@@ -13,7 +11,6 @@ import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import { useModalToastContext } from '../../../../../common/contexts/ModalToastContext';
 import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTimeContext';
 import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
-import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
 import { useQuotes } from '../../../../../common/store/api/order/hooks/useQuotes';
 import { useProfileSummary } from '../../../../../common/store/api/profile/useProfileSummary';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
@@ -22,7 +19,7 @@ import { isConsumerProfileComplete } from '../../../../../common/store/consumer/
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, screens } from '../../../../../common/styles';
-import { Dayjs, t } from '../../../../../strings';
+import { t } from '../../../../../strings';
 import { OrderCostBreakdown } from '../../../common/breakdown/OrderCostBreakdown';
 import { OrderAvailableFleets } from '../../../common/order-summary/OrderAvailableFleets';
 import { OrderPayment } from '../../../common/order-summary/OrderPayment';
@@ -57,7 +54,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
 
   const dispatch = useDispatch<AppDispatch>();
   const { showModalToast } = useModalToastContext();
-  const business = useObserveBusiness(order?.business?.id);
   // redux store
   const consumer = useSelector(getConsumer)!;
   // state
@@ -72,7 +68,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
   const [wantsCpf, setWantsCpf] = React.useState(false);
   const [shareDataWithBusiness, setShareDataWithBusiness] = React.useState(false);
-  const { quotes, getOrderQuotes } = useQuotes(order?.id);
+  const quotes = useQuotes(order?.id);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
   const [complement, setComplement] = React.useState<string>(
     order?.destination?.additionalInfo ?? ''
@@ -275,16 +271,13 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   }, [consumer, navigation, selectedPaymentMethodId]);
 
   // UI
-  if (!order || !business) {
+  if (!order) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
-  const date = new Date();
-  const fromDate = scheduleFromDate(business.schedules, date);
-  const nextDateScheduleSlots: Date[][] = getNextDateSlots(fromDate, date);
   return (
     <KeyboardAwareScrollView
       style={{ ...screens.default }}
@@ -316,12 +309,11 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           setShareDataWithBusiness(!shareDataWithBusiness);
           track('consumer changed share data with business preferences');
         }}
-        business={business}
-        onCheckScheduleSlots={() => navigation.navigate('ScheduleOrder', { business })}
-        scheduleSlots={nextDateScheduleSlots}
+        // onCheckScheduleSlots={() => navigation.navigate('ScheduleOrder', { business })}
         orderFulfillment={
           <View>
             <OrderAvailableFleets
+              order={order}
               quotes={quotes}
               selectedFare={selectedFare}
               onFareSelect={(fare) => {
@@ -330,8 +322,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
               onFleetSelect={(fleetId: string) => {
                 navigation.navigate('FleetDetail', { fleetId });
               }}
-              onRetry={getOrderQuotes}
-              order={order}
               navigateToAvailableFleets={() =>
                 navigation.navigate('AvailableFleets', {
                   orderId: order.id,
@@ -367,14 +357,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             isSubmitEnabled={canSubmit}
             activityIndicator={isLoading}
             onEditPaymentMethod={navigateToFillPaymentInfo}
-            onSubmit={(preparationMode) => {
-              // TODO: temporary only during tests
-              if (preparationMode === 'scheduled') {
-                const scheduledTo = Dayjs(getServerTime()).add(60, 'minute').toDate();
-                api.order().updateOrder(order.id, {
-                  scheduledTo: Timestamp.fromDate(scheduledTo),
-                });
-              }
+            onSubmit={() => {
               if (!shouldVerifyPhone) setDestinationModalVisible(true);
               else placeOrderHandler();
             }}

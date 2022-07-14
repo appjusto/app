@@ -358,10 +358,11 @@ export default class OrderApi {
 
   // callables
   // consumer
-  async getOrderQuotes(orderId: string) {
+  async getOrderQuotes(orderId: string, fleetsIds?: string[]) {
     return (
       await this.functionsRef.getGetOrderQuotesCallable()({
         orderId,
+        fleetsIds,
         meta: { version: getAppVersion() },
       })
     ).data;

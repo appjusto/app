@@ -1,47 +1,27 @@
-import { formatScheduleHour } from '@appjusto/dates';
-import { Business, Order, WithId } from '@appjusto/types';
+import { getNextDateSlots, scheduleFromDate } from '@appjusto/dates';
+import { Timestamp } from 'firebase/firestore';
+import { capitalize } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import { ApiContext } from '../../../../common/app/context';
 import { RectangularListItemText } from '../../../../common/components/list items/RectangularListItemText';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
+import { useObserveBusiness } from '../../../../common/store/api/business/hooks/useObserveBusiness';
+import { useContextActiveOrder } from '../../../../common/store/context/order';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
-import { formatDate, getETAWithMargin } from '../../../../common/utils/formatters/datetime';
-import { t } from '../../../../strings';
+import { getETAWithMargin } from '../../../../common/utils/formatters/datetime';
+import { Dayjs, t } from '../../../../strings';
 
-type Props = {
-  order: WithId<Order>;
-  business: WithId<Business> | undefined;
-  onCheckScheduleSlots: () => void;
-  scheduleSlots: Date[][];
-};
-
-export const OrderScheduling = ({
-  order,
-  business,
-  onCheckScheduleSlots,
-  scheduleSlots,
-}: Props) => {
-  // ver o lance da "fare" que vai ser mostrada na lista de horas. usaremos o mesmo cálculo aqui de uma entrega
-  // normal?
-
-  // ver o dia de hoje e criar uma lista com os próximos 7 (?) dias para o cliente poder selecionar.
-
-  // daqui chamaremos um update order com os dados do agendamento
-
-  // lá fora, na checkout, o componente "Valor total a pagar" precisa responder
-
+export const OrderScheduling = () => {
   // context
   const getServerTime = useContextGetSeverTime();
+  const order = useContextActiveOrder();
+  const api = React.useContext(ApiContext);
+  const now = getServerTime();
   // state
-  const [selectedDay, setSelectedDay] = React.useState<Date>();
-  const today = getServerTime();
+  const business = useObserveBusiness(order?.business?.id);
 
-  const { route, arrivals } = order;
-  const eTA =
-    route?.distance && arrivals?.destination?.estimate
-      ? `${t('Previsão:')} ${getETAWithMargin(arrivals.destination.estimate)}`
-      : null;
-
+  if (!order) return null; // sholdn't happen
   if (!business) {
     return (
       <View style={screens.centered}>
@@ -49,7 +29,9 @@ export const OrderScheduling = ({
       </View>
     );
   }
-
+  const { schedules } = business;
+  const scheduleFromNow = scheduleFromDate(schedules, now);
+  const nextDateSlots: Date[][] = getNextDateSlots(scheduleFromNow, now, 60);
   // helpers
   const canDeliver = business.fulfillment?.includes('delivery');
   return (
@@ -73,36 +55,50 @@ export const OrderScheduling = ({
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: eTA ? 'space-between' : 'flex-end',
+          // justifyContent: eTA ? 'space-between' : 'flex-end',
+          justifyContent: 'space-between',
           paddingHorizontal: padding,
         }}
       >
-        {eTA ? (
+        {/* {eTA ? (
           <View>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>{eTA}</Text>
           </View>
-        ) : null}
-        <TouchableOpacity onPress={onCheckScheduleSlots}>
-          <Text style={{ ...texts.sm, color: colors.green600 }}>{t('Ver horários')}</Text>
-        </TouchableOpacity>
+        ) : null} */}
+        {/* <TouchableOpacity onPress={onCheckScheduleSlots}> */}
+        <Text style={{ ...texts.sm, color: colors.green600 }}>{t('Ver horários')}</Text>
+        {/* </TouchableOpacity> */}
       </View>
       <ScrollView
         horizontal
         style={{ marginTop: padding, paddingLeft: padding }}
         showsHorizontalScrollIndicator={false}
       >
-        <RectangularListItemText
-          text={`${formatDate(today)}, ${formatScheduleHour(today)}`}
-          selected
-          onSelect={() => null}
-        />
-        {scheduleSlots.map((dayslots, i) =>
+        {order.arrivals?.destination?.estimate ? (
+          <RectangularListItemText
+            text={`Hoje, ${getETAWithMargin(order.arrivals.destination.estimate)}`}
+            selected={!order.scheduledTo}
+            onSelect={() => api.order().updateOrder(order.id, { scheduledTo: null })}
+          />
+        ) : null}
+        {nextDateSlots.map((dayslots, i) =>
           dayslots.map((slot) => (
             <View style={{ marginLeft: halfPadding }} key={slot.toString()}>
               <RectangularListItemText
-                text={`${formatDate(slot)}, ${formatScheduleHour(slot)}`} // add correct formatter
-                selected={false}
-                onSelect={() => null}
+                text={`${capitalize(
+                  Dayjs(slot).calendar(now, {
+                    sameDay: '[hoje]',
+                    nextDay: '[amanhã]',
+                    nextWeek: 'dddd',
+                  })
+                )}, ${getETAWithMargin(slot)}`} // add correct formatter
+                selected={
+                  Boolean(order.scheduledTo) &&
+                  (order.scheduledTo as Timestamp).isEqual(Timestamp.fromDate(slot))
+                }
+                onSelect={() =>
+                  api.order().updateOrder(order.id, { scheduledTo: Timestamp.fromDate(slot) })
+                }
               />
             </View>
           ))

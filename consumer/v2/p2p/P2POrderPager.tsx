@@ -49,7 +49,6 @@ type Props = {
   quotes: Fare[] | undefined;
   selectedFare: Fare | undefined;
   onFareSelect: (fare: Fare) => void;
-  onRetry: () => void;
   total: number;
   navigateToAvailableFleets: () => void;
 };
@@ -64,6 +63,7 @@ export default function ({
   navigateToTransportableItems,
   onSubmit,
   navigateToAboutCharges,
+  navigateToPixPayment,
   cpf,
   setCpf,
   wantsCpf,
@@ -72,7 +72,6 @@ export default function ({
   quotes,
   selectedFare,
   onFareSelect,
-  onRetry,
   total,
   navigateToAvailableFleets,
 }: Props) {
@@ -350,17 +349,17 @@ export default function ({
                   isSubmitEnabled={canSubmit}
                   onSubmit={onSubmit}
                   activityIndicator={isLoading}
+                  navigateToPayWithPix={navigateToPixPayment}
                   navigateToAboutCharges={navigateToAboutCharges}
                 />
               }
               orderFulfillment={
                 <OrderAvailableFleets
+                  order={order}
                   quotes={quotes}
                   selectedFare={selectedFare}
                   onFareSelect={onFareSelect}
                   onFleetSelect={navigateFleetDetail}
-                  onRetry={onRetry}
-                  order={order}
                   navigateToAvailableFleets={navigateToAvailableFleets}
                 />
               }
