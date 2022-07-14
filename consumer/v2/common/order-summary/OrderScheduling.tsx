@@ -3,8 +3,8 @@ import React from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { RectangularListItemText } from '../../../../common/components/texts/RectangularListItemText';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
-import { colors, padding, screens, texts } from '../../../../common/styles';
-import { getETAWithMargin } from '../../../../common/utils/formatters/datetime';
+import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { formatDate, getETAWithMargin } from '../../../../common/utils/formatters/datetime';
 import { t } from '../../../../strings';
 
 type Props = {
@@ -35,7 +35,7 @@ export const OrderScheduling = ({
   const [selectedDay, setSelectedDay] = React.useState<Date>();
   const today = getServerTime();
 
-  const { origin, destination, route, arrivals } = order;
+  const { route, arrivals } = order;
   const eTA =
     route?.distance && arrivals?.destination?.estimate
       ? `${t('Previsão:')} ${getETAWithMargin(arrivals.destination.estimate)}`
@@ -91,20 +91,18 @@ export const OrderScheduling = ({
         showsHorizontalScrollIndicator={false}
       >
         {/* the first item of the list shows the realtime delivery time. hard coded for now */}
-        <RectangularListItemText text={t('Hoje, 30 - 60 minutos')} selected onSelect={() => null} />
-        {/* {getDays(today, 7).map((day, i) => {
-          return (
-            <TouchableOpacity
-              style={{ marginRight: halfPadding }}
-              onPress={() => setSelectedDay(day)}
-              key={i}
-            >
-              <RoundedText noBorder backgroundColor={colors.green100}>
-                {formatDate(day)}
-              </RoundedText>
-            </TouchableOpacity>
-          );
-        })} */}
+        <RectangularListItemText text={formatDate(today)} selected onSelect={() => null} />
+        {scheduleSlots.map((dayslots, i) =>
+          dayslots.map((slot) => (
+            <View style={{ marginLeft: halfPadding }} key={slot.toString()}>
+              <RectangularListItemText
+                text={formatDate(slot)} // add correct formatter
+                selected={false}
+                onSelect={() => null}
+              />
+            </View>
+          ))
+        )}
       </ScrollView>
     </View>
   );

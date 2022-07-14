@@ -24,7 +24,7 @@ export const RectangularListItemText = ({
         paddingHorizontal: halfPadding,
         paddingVertical: 6,
         backgroundColor: selected ? colors.green100 : colors.white,
-        borderWidth: selected ? 1 : 0,
+        borderWidth: 1,
         borderColor: selected ? colors.green100 : colors.grey500,
       }}
     >
