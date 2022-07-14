@@ -1,8 +1,8 @@
+import { Business, WithId } from '@appjusto/types';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Share, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { Business, WithId } from '../../../../../../types';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { useBusinessMenuMessage } from '../../../../../common/store/api/business/hooks/useBusinessMenuMessage';
 import { borders, colors, halfPadding, padding, texts } from '../../../../../common/styles';
@@ -79,13 +79,14 @@ export const RestaurantDetailHeader = ({
         </PaddedView>
       </TouchableOpacity>
       {scheduledOrdersOnly ? (
-        <View style={{ paddingHorizontal: 12 }}>
+        <View style={{ paddingHorizontal: 12, paddingTop: halfPadding }}>
           <PaddedView
             style={{
               height: 74,
               width: '100%',
               borderRadius: halfPadding,
               backgroundColor: colors.darkYellow,
+              justifyContent: 'center',
             }}
           >
             <Text style={{ ...texts.sm }}>
