@@ -19,7 +19,6 @@ import { useobservePendingOrderRequests } from '../../../../common/store/api/cou
 import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getCourier } from '../../../../common/store/courier/selectors';
-import { getOrders } from '../../../../common/store/order/selectors';
 import { colors, padding, screens } from '../../../../common/styles';
 import {
   startLocationUpdatesTask,
@@ -45,7 +44,6 @@ type Props = {
 export default function ({ navigation }: Props) {
   // redux store
   const courier = useSelector(getCourier)!;
-  const ongoingOrders = useSelector(getOrders);
   const { status } = courier;
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
   // state
@@ -112,7 +110,6 @@ export default function ({ navigation }: Props) {
             </TouchableOpacity>
           ) : null}
           <HomeOngoingDeliveries
-            orders={ongoingOrders}
             onPress={(order, chatFrom) => {
               navigation.navigate('OngoingDeliveryNavigator', {
                 screen: 'OngoingDelivery',

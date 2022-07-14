@@ -1,15 +1,17 @@
 import { ChatMessageUser, Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { View } from 'react-native';
+import { useSelector } from 'react-redux';
+import { getOrders } from '../../../store/order/selectors';
 import { padding } from '../../../styles';
 import HomeOngoingDeliveryCard from './HomeOngoingDeliveryCard';
 
 type Props = {
-  orders: WithId<Order>[] | undefined;
   onPress: (order: WithId<Order>, message?: ChatMessageUser) => void;
 };
 
-export default function ({ orders, onPress }: Props) {
+export default function ({ onPress }: Props) {
+  const orders = useSelector(getOrders);
   // UI
   if (!orders) return null;
   return (
