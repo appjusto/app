@@ -2,7 +2,7 @@ import { getNextDateSlots, scheduleFromDate } from '@appjusto/dates';
 import { Timestamp } from 'firebase/firestore';
 import { capitalize } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { ApiContext } from '../../../../common/app/context';
 import { RectangularListItemText } from '../../../../common/components/list items/RectangularListItemText';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
@@ -12,7 +12,11 @@ import { colors, halfPadding, padding, screens, texts } from '../../../../common
 import { getETAWithMargin } from '../../../../common/utils/formatters/datetime';
 import { Dayjs, t } from '../../../../strings';
 
-export const OrderScheduling = () => {
+type Props = {
+  onCheckSchedules: () => void;
+};
+
+export const OrderScheduling = ({ onCheckSchedules }: Props) => {
   // context
   const getServerTime = useContextGetSeverTime();
   const order = useContextActiveOrder();
@@ -21,7 +25,7 @@ export const OrderScheduling = () => {
   // state
   const business = useObserveBusiness(order?.business?.id);
 
-  if (!order) return null; // sholdn't happen
+  if (!order) return null; // shouldn't happen
   if (!business) {
     return (
       <View style={screens.centered}>
@@ -65,9 +69,9 @@ export const OrderScheduling = () => {
             <Text style={{ ...texts.sm, color: colors.grey700 }}>{eTA}</Text>
           </View>
         ) : null} */}
-        {/* <TouchableOpacity onPress={onCheckScheduleSlots}> */}
-        <Text style={{ ...texts.sm, color: colors.green600 }}>{t('Ver horários')}</Text>
-        {/* </TouchableOpacity> */}
+        <TouchableOpacity onPress={onCheckSchedules}>
+          <Text style={{ ...texts.sm, color: colors.green600 }}>{t('Ver horários')}</Text>
+        </TouchableOpacity>
       </View>
       <ScrollView
         horizontal
@@ -91,7 +95,7 @@ export const OrderScheduling = () => {
                     nextDay: '[amanhã]',
                     nextWeek: 'dddd',
                   })
-                )}, ${getETAWithMargin(slot)}`} // add correct formatter
+                )}, ${getETAWithMargin(slot)}`}
                 selected={
                   Boolean(order.scheduledTo) &&
                   (order.scheduledTo as Timestamp).isEqual(Timestamp.fromDate(slot))

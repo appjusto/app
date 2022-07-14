@@ -21,10 +21,11 @@ export const DayBoxListItem = ({ weekDay, day, selected, onSelect }: Props) => {
           borderWidth: 1,
           borderColor: selected ? colors.green100 : colors.grey500,
           borderRadius: halfPadding,
+          justifyContent: 'center',
         }}
       >
-        <Text style={{ ...texts.xs, color: colors.grey700 }}>{weekDay}</Text>
-        <Text style={{ ...texts.x2l, color: colors.black }}>{day}</Text>
+        <Text style={{ ...texts.xs, color: colors.grey700, textAlign: 'center' }}>{weekDay}</Text>
+        <Text style={{ ...texts.x2l, color: colors.black, textAlign: 'center' }}>{day}</Text>
       </View>
     </TouchableOpacity>
   );

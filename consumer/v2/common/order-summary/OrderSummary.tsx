@@ -28,6 +28,7 @@ type Props = {
   costBreakdown: React.ReactNode;
   totalCost: React.ReactNode;
   payment: React.ReactNode;
+  onCheckSchedules: () => void;
 };
 
 export const OrderSummary = ({
@@ -44,6 +45,7 @@ export const OrderSummary = ({
   costBreakdown,
   totalCost,
   payment,
+  onCheckSchedules,
 }: Props) => {
   // context
   const tallerDevice = useTallerDevice();
@@ -67,7 +69,7 @@ export const OrderSummary = ({
       ) : null}
       <View style={{ paddingTop: tallerDevice ? padding : 0 }}>
         <OrderPlacesSummary order={order} onEditStep={onEditStep} />
-        <OrderScheduling />
+        <OrderScheduling onCheckSchedules={onCheckSchedules} />
       </View>
 
       {!isEmpty(order.items) ? (

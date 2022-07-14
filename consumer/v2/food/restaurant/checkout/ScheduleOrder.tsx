@@ -1,14 +1,20 @@
-import { formatScheduleHour, getNextDateSlots } from '@appjusto/dates';
+import { getNextDateSlots } from '@appjusto/dates';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { capitalize } from 'lodash';
 import React from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ApiContext } from '../../../../../common/app/context';
 import CheckField from '../../../../../common/components/buttons/CheckField';
-import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { DayBoxListItem } from '../../../../../common/components/list items/DayBoxListItem';
+import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTimeContext';
+import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
 import { scheduleFromDate } from '../../../../../common/store/api/business/selectors';
-import { colors, padding, screens, texts } from '../../../../../common/styles';
-import { t } from '../../../../../strings';
+import { useContextActiveOrder } from '../../../../../common/store/context/order';
+import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
+import { getETAWithMargin } from '../../../../../common/utils/formatters/datetime';
+import { Dayjs, t } from '../../../../../strings';
 import { LoggedNavigatorParamList } from '../../../types';
 import { FoodOrderNavigatorParamList } from '../../types';
 import { RestaurantNavigatorParamList } from '../types';
@@ -28,44 +34,70 @@ type Props = {
 };
 
 export const ScheduleOrder = ({ navigation, route }: Props) => {
-  // params
-  const { business } = route.params ?? {};
-  //helpers
-  const date = new Date();
-  const fromDate = scheduleFromDate(business.schedules, date);
-  const allSlots: Date[][] = getNextDateSlots(fromDate, date);
+  // context
+  const getServerTime = useContextGetSeverTime();
+  const order = useContextActiveOrder();
+  const api = React.useContext(ApiContext);
+  const now = getServerTime();
+  // state
+  const business = useObserveBusiness(order?.business?.id);
+
+  if (!order) return null; // shouldn't happen
+  if (!business) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
+  const { schedules } = business;
+  const daySchedules = scheduleFromDate(schedules, now);
+  const nextDateSlots: Date[][] = getNextDateSlots(daySchedules, now, 60);
 
   return (
-    <View style={{ ...screens.default, padding }}>
-      <ScrollView horizontal style={{ flex: 1 }} showsHorizontalScrollIndicator={false}>
-        {allSlots.map((day, i) => (
+    <PaddedView style={{ ...screens.default }}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1 }}>
+        {nextDateSlots.map((day, i) => (
           <View style={{ marginRight: padding }} key={i}>
-            <DayBoxListItem weekDay="hoje" day="hoje" selected onSelect={() => null} />
+            <DayBoxListItem
+              weekDay={capitalize(
+                Dayjs(day[0]).calendar(now, {
+                  sameDay: '[hoje]',
+                  nextDay: 'dddd'.slice(0, 3),
+                  nextWeek: 'dddd'.slice(0, 3),
+                })
+              )}
+              day="hoje"
+              selected
+              onSelect={() => null}
+            />
           </View>
         ))}
       </ScrollView>
-      <View style={{ flex: 6 }}>
+      <View style={{ flex: 7, marginTop: 24 }}>
         <Text style={{ ...texts.md }}>{t('Entregar hoje')}</Text>
         <TouchableOpacity>
           <View
             style={{
-              marginTop: padding,
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
+              marginTop: halfPadding,
             }}
           >
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{formatScheduleHour(date)}</Text>
-            <CheckField />
+            {order.arrivals?.destination?.estimate ? (
+              <Text style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}>
+                {getETAWithMargin(order.arrivals.destination.estimate)}
+              </Text>
+            ) : null}
+            <CheckField checked={!order.scheduledTo} />
           </View>
         </TouchableOpacity>
-        <Text style={{ marginTop: 24, ...texts.md }}>{t('Agendamento')}</Text>
-        {/* <ScrollView scrollIndicatorInsets={{ right: 0 }}></ScrollView> */}
-        <View style={{ flex: 1 }} />
-        <View>
-          <DefaultButton title={t('Confirmar')} />
+        <View style={{ marginTop: 24 }}>
+          <Text style={{ ...texts.md }}>{t('Agendamento')}</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}></ScrollView>
         </View>
       </View>
-    </View>
+    </PaddedView>
   );
 };
