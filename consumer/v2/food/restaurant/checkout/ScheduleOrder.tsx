@@ -6,7 +6,7 @@ import React from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { ApiContext } from '../../../../../common/app/context';
 import CheckField from '../../../../../common/components/buttons/CheckField';
-import PaddedView from '../../../../../common/components/containers/PaddedView';
+import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import { DayBoxListItem } from '../../../../../common/components/list items/DayBoxListItem';
 import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTimeContext';
 import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
@@ -55,7 +55,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   const nextDateSlots: Date[][] = getNextDateSlots(daySchedules, now, 60);
 
   return (
-    <PaddedView style={{ ...screens.default }}>
+    <View style={{ ...screens.default, padding }}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1 }}>
         {nextDateSlots.map((day, i) => (
           <View style={{ marginRight: padding }} key={i}>
@@ -68,7 +68,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                 })
               )}
               day="hoje"
-              selected
+              selected={!order.scheduledTo}
               onSelect={() => null}
             />
           </View>
@@ -94,10 +94,30 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
           </View>
         </TouchableOpacity>
         <View style={{ marginTop: 24 }}>
-          <Text style={{ ...texts.md }}>{t('Agendamento')}</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}></ScrollView>
+          <Text style={{ ...texts.md, marginBottom: padding }}>{t('Agendamento')}</Text>
+          <ScrollView style={{ marginBottom: 64 }} showsVerticalScrollIndicator={false}>
+            {nextDateSlots[1].map((slot, i) => (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginTop: i !== 0 ? padding : 0,
+                }}
+                key={i}
+              >
+                <Text style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}>
+                  {getETAWithMargin(slot)}
+                </Text>
+                <CheckField />
+              </View>
+            ))}
+          </ScrollView>
         </View>
       </View>
-    </PaddedView>
+      <View>
+        <DefaultButton title={t('Confirmar')} />
+      </View>
+    </View>
   );
 };
