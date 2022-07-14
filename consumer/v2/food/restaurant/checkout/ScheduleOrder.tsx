@@ -1,8 +1,10 @@
+import { getNextDateSlots } from '@appjusto/dates';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
+import { scheduleFromDate } from '../../../../../common/store/api/business/selectors';
 import { padding, screens } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { LoggedNavigatorParamList } from '../../../types';
@@ -25,7 +27,11 @@ type Props = {
 
 export const ScheduleOrder = ({ navigation, route }: Props) => {
   // params
-  const { scheduleSlots } = route.params ?? {};
+  const { business } = route.params ?? {};
+
+  const date = new Date();
+  const fromDate = scheduleFromDate(business.schedules, date);
+  const daySlots: Date[][] = getNextDateSlots(fromDate, date);
   //UI
   return (
     <ScrollView
@@ -36,6 +42,11 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
       <View>
         <Text>Schedule Order</Text>
       </View>
+      <ScrollView horizontal style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
+        {daySlots.map((day) => (
+          <View style={{ marginRight: padding }}></View>
+        ))}
+      </ScrollView>
       <View style={{ flex: 1 }} />
       <View style={{ paddingBottom: padding, paddingHorizontal: padding }}>
         <DefaultButton title={t('Confirmar')} />

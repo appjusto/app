@@ -1,7 +1,8 @@
+import { formatScheduleHour } from '@appjusto/dates';
 import { Business, Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { RectangularListItemText } from '../../../../common/components/texts/RectangularListItemText';
+import { RectangularListItemText } from '../../../../common/components/list items/RectangularListItemText';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { formatDate, getETAWithMargin } from '../../../../common/utils/formatters/datetime';
@@ -90,13 +91,16 @@ export const OrderScheduling = ({
         style={{ marginTop: padding, paddingLeft: padding }}
         showsHorizontalScrollIndicator={false}
       >
-        {/* the first item of the list shows the realtime delivery time. hard coded for now */}
-        <RectangularListItemText text={formatDate(today)} selected onSelect={() => null} />
+        <RectangularListItemText
+          text={`${formatDate(today)}, ${formatScheduleHour(today)}`}
+          selected
+          onSelect={() => null}
+        />
         {scheduleSlots.map((dayslots, i) =>
           dayslots.map((slot) => (
             <View style={{ marginLeft: halfPadding }} key={slot.toString()}>
               <RectangularListItemText
-                text={formatDate(slot)} // add correct formatter
+                text={`${formatDate(slot)}, ${formatScheduleHour(slot)}`} // add correct formatter
                 selected={false}
                 onSelect={() => null}
               />

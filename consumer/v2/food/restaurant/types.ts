@@ -1,4 +1,4 @@
-import { Fare, Place } from '@appjusto/types';
+import { Business, Fare, Place, WithId } from '@appjusto/types';
 import { FleetDetailParamList } from '../../../../common/screens/fleet/FleetDetail';
 import { PixParamList } from '../../common/PayWithPix';
 import { ProfileAddCardParamList } from '../../main/profile/ProfileAddCard';
@@ -30,7 +30,7 @@ export type RestaurantNavigatorParamList = {
     returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
   };
   ScheduleOrder: {
-    scheduleSlots: Date[][];
+    business: WithId<Business>;
   };
 } & PixParamList &
   FleetDetailParamList &

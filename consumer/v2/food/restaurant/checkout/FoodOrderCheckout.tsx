@@ -280,7 +280,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   }
   const date = new Date();
   const fromDate = scheduleFromDate(business.schedules, date);
-  const nextDateScheduleSlots = getNextDateSlots(fromDate, date);
+  const nextDateScheduleSlots: Date[][] = getNextDateSlots(fromDate, date);
   return (
     <KeyboardAwareScrollView
       style={{ ...screens.default }}
@@ -313,9 +313,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           track('consumer changed share data with business preferences');
         }}
         business={business}
-        onCheckScheduleSlots={() =>
-          navigation.navigate('ScheduleOrder', { scheduleSlots: nextDateScheduleSlots })
-        }
+        onCheckScheduleSlots={() => navigation.navigate('ScheduleOrder', { business })}
         scheduleSlots={nextDateScheduleSlots}
         orderFulfillment={
           <View>
