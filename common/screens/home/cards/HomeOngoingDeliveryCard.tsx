@@ -20,14 +20,16 @@ export default function ({ order, onPress }: Props) {
   // redux store
   const flavor = useSelector(getFlavor);
   // UI
-  const { business, courier } = order;
+  const { business, courier, scheduledTo } = order;
   let title = '';
   let detail = '';
   if (flavor === 'consumer') {
     if (type === 'food') {
       const businessName = business!.name;
       if (status === 'confirming' || status === 'charged') {
-        title = `${t('Criando pedido no/a')} ${businessName}`;
+        if (scheduledTo) {
+          title = `${t('Agendando pedido no/a')} ${businessName}`;
+        } else title = `${t('Criando pedido no/a')} ${businessName}`;
       } else if (status === 'declined') {
         title = t('Problema no pagamento');
         detail = t('Selecione outra forma de pagamento');
