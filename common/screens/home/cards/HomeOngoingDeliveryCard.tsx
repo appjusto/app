@@ -33,8 +33,7 @@ export default function ({ order, onPress }: Props) {
         detail = t('Selecione outra forma de pagamento');
       } else if (status === 'scheduled') {
         title = `${t('Pedido agendado em')} ${businessName}`;
-        // TODO: add delivery time and date
-        detail = `${t('Entrega')} DATA HORA`;
+        detail = t('Você será avisado quando o preparo for iniciado');
       } else if (status === 'confirmed') {
         title = `${t('Aguardando')} ${businessName} ${t('confirmar o seu pedido')}`;
       } else if (status === 'preparing') {

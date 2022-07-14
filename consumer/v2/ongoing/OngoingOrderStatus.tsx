@@ -24,9 +24,8 @@ export const OngoingOrderStatus = ({ order }: Props) => {
       description = t('Aguarde enquanto criamos seu pedido...');
     } else if (status === 'scheduled') {
       header = t('Pedido agendado');
-      // TODO: add correct time
-      description = `${order.business!.name} ${t(
-        'deve começar o preparo do seu pedido às HARDCODEDh do dia HARDCODED dia.'
+      description = `${t('Você receberá uma notificação quando')} ${order.business!.name} ${t(
+        'começar a preparar seu pedido.'
       )}`;
     } else if (status === 'confirmed') {
       header = t('Aguardando restaurante');
