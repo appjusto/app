@@ -113,7 +113,6 @@ export default function ({ navigation, route }: Props) {
       navigation.replace('OngoingOrderDeclined', { orderId });
     }
   }, [navigation, order, orderId]);
-  // console.log(orderId);
   // UI
   // showing the indicator until the order is loaded
   if (!order) {
@@ -165,7 +164,7 @@ export default function ({ navigation, route }: Props) {
           onChatWithCourier={openChatWithCourier}
           onOpenChat={openChatHandler}
         />
-        {order.dispatchingStatus !== 'outsourced' ? (
+        {order.dispatchingStatus !== 'outsourced' && order.status !== 'scheduled' ? (
           <DeliveryConfirmation
             switchValue={wantsCode}
             onChangeCodeDelivery={() => {

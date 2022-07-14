@@ -7,7 +7,7 @@ import RoundedText from '../../../common/components/texts/RoundedText';
 import { IconOngoingMotocycle } from '../../../common/icons/icon-ongoing-motocycle';
 import { IconOngoingStatus } from '../../../common/icons/icon-ongoing-status';
 import { colors, halfPadding, padding, texts } from '../../../common/styles';
-import { getETAWithMargin } from '../../../common/utils/formatters/datetime';
+import { formatDate, getETAWithMargin } from '../../../common/utils/formatters/datetime';
 import { t } from '../../../strings';
 
 interface Props {
@@ -24,9 +24,8 @@ export const OngoingOrderStatus = ({ order }: Props) => {
       description = t('Aguarde enquanto criamos seu pedido...');
     } else if (status === 'scheduled') {
       header = t('Pedido agendado');
-      // TODO: add correct time
-      description = `${order.business!.name} ${t(
-        'deve começar o preparo do seu pedido às HARDCODEDh do dia HARDCODED dia.'
+      description = `${t('Você receberá uma notificação quando')} ${order.business!.name} ${t(
+        'começar a preparar seu pedido.'
       )}`;
     } else if (status === 'confirmed') {
       header = t('Aguardando restaurante');
@@ -171,10 +170,12 @@ export const OngoingOrderStatus = ({ order }: Props) => {
       {order.arrivals?.destination?.estimate && order.dispatchingState !== 'arrived-destination' && (
         <View style={{ marginTop: padding }}>
           {order.status === 'scheduled' ? (
-            // TODO: add delivery day
+            // TODO: add delivery time
             <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>{`${t(
               'Previsão de entrega:'
-            )} ${t('DATA')} ${getETAWithMargin(order.arrivals.destination.estimate)}`}</RoundedText>
+            )} ${formatDate(order.scheduledTo!)}, ${getETAWithMargin(
+              order.scheduledTo!
+            )}`}</RoundedText>
           ) : (
             <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>{`${t(
               'Previsão de entrega:'

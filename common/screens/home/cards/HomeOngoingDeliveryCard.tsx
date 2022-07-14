@@ -20,21 +20,22 @@ export default function ({ order, onPress }: Props) {
   // redux store
   const flavor = useSelector(getFlavor);
   // UI
-  const { business, courier } = order;
+  const { business, courier, scheduledTo } = order;
   let title = '';
   let detail = '';
   if (flavor === 'consumer') {
     if (type === 'food') {
       const businessName = business!.name;
       if (status === 'confirming' || status === 'charged') {
-        title = `${t('Criando pedido no/a')} ${businessName}`;
+        if (scheduledTo) {
+          title = `${t('Agendando pedido no/a')} ${businessName}`;
+        } else title = `${t('Criando pedido no/a')} ${businessName}`;
       } else if (status === 'declined') {
         title = t('Problema no pagamento');
         detail = t('Selecione outra forma de pagamento');
       } else if (status === 'scheduled') {
         title = `${t('Pedido agendado em')} ${businessName}`;
-        // TODO: add delivery time and date
-        detail = `${t('Entrega')} DATA HORA`;
+        detail = t('Você será avisado quando o preparo for iniciado');
       } else if (status === 'confirmed') {
         title = `${t('Aguardando')} ${businessName} ${t('confirmar o seu pedido')}`;
       } else if (status === 'preparing') {
