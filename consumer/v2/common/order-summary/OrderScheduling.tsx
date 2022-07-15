@@ -1,4 +1,4 @@
-import { getNextDateSlots, scheduleFromDate } from '@appjusto/dates';
+import { formatRelativeDate, getNextDateSlots, scheduleFromDate } from '@appjusto/dates';
 import { Timestamp } from 'firebase/firestore';
 import { capitalize } from 'lodash';
 import React from 'react';
@@ -10,7 +10,7 @@ import { useObserveBusiness } from '../../../../common/store/api/business/hooks/
 import { useContextActiveOrder } from '../../../../common/store/context/order';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { getETAWithMargin } from '../../../../common/utils/formatters/datetime';
-import { Dayjs, t } from '../../../../strings';
+import { t } from '../../../../strings';
 
 type Props = {
   onCheckSchedules: () => void;
@@ -89,13 +89,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
           dayslots.map((slot) => (
             <View style={{ marginLeft: halfPadding }} key={slot.toString()}>
               <RectangularListItemText
-                text={`${capitalize(
-                  Dayjs(slot).calendar(now, {
-                    sameDay: '[hoje]',
-                    nextDay: '[amanhã]',
-                    nextWeek: 'dddd',
-                  })
-                )}, ${getETAWithMargin(slot)}`}
+                text={`${capitalize(formatRelativeDate(slot, now))}, ${getETAWithMargin(slot)}`}
                 selected={
                   Boolean(order.scheduledTo) &&
                   (order.scheduledTo as Timestamp).isEqual(Timestamp.fromDate(slot))
