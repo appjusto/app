@@ -21,6 +21,7 @@ interface Props {
   onSubmit: () => void;
   navigateToAboutCharges: () => void;
   navigateToPayWithPix: () => void;
+  navigateToCompleteProfile: () => void;
 }
 
 export const OrderPayment = ({
@@ -31,6 +32,7 @@ export const OrderPayment = ({
   onSubmit,
   navigateToAboutCharges,
   navigateToPayWithPix,
+  navigateToCompleteProfile,
 }: Props) => {
   // redux
   const consumer = useSelector(getConsumer)!;
@@ -130,7 +132,7 @@ export const OrderPayment = ({
             variant="secondary"
             title={t('Completar cadastro')}
             style={{ marginVertical: padding }}
-            onPress={navigateToPayWithPix}
+            onPress={navigateToCompleteProfile}
           />
         </View>
       ) : null}
