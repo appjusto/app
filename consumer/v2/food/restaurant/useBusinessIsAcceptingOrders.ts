@@ -16,7 +16,11 @@ export const useBusinessIsAcceptingOrders = (
   const getServerTime = useContextGetSeverTime();
   if (!platformParams || !getServerTime || !business) return 'disconnected';
   const now = getServerTime();
-  if (!business.enabled || !isAvailable(business.schedules, now)) return 'closed';
+  if (
+    (!business.enabled || !isAvailable(business.schedules, now)) &&
+    !business.preparationModes?.includes('scheduled')
+  )
+    return 'closed';
   if (
     (business.status !== 'open' || !business.keepAlive) &&
     !business.preparationModes?.includes('scheduled')
