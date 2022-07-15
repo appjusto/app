@@ -21,6 +21,7 @@ export default function ({ order, onPress }: Props) {
   const flavor = useSelector(getFlavor);
   // UI
   const { business, courier, scheduledTo } = order;
+  const showCode = order.code ? `#${order.code}` : null;
   let title = '';
   let detail = '';
   if (flavor === 'consumer') {
@@ -95,20 +96,25 @@ export default function ({ order, onPress }: Props) {
   } else if (flavor === 'courier') {
     if (dispatchingState === 'going-pickup') {
       title =
-        type === 'p2p' ? `${t('Indo para a coleta')}` : `${t('Indo para')} ${order.business!.name}`;
+        type === 'p2p'
+          ? `${t('Indo para a coleta')}`
+          : `${t('Indo para')} ${order.business!.name} ${showCode}`;
       detail = order.origin!.address.main!;
     } else if (dispatchingState === 'arrived-pickup') {
-      title = type === 'p2p' ? t('No local de coleta') : `${t('No/a')} ${order.business!.name}`;
+      title =
+        type === 'p2p'
+          ? t('No local de coleta')
+          : `${t('No/a')} ${order.business!.name}  ${showCode}`;
       detail =
         type === 'p2p'
           ? order.origin?.intructions ??
             `${t('Qualquer dúvida, mande uma mensagem para ')} ${order.consumer.name}`
           : `${t('Informe o código')} ${order.code}`;
     } else if (dispatchingState === 'going-destination') {
-      title = `${t('Indo para a entrega')}`;
+      title = `${t('Indo para a entrega')}  ${showCode}`;
       detail = order.destination!.address.main!;
     } else if (dispatchingState === 'arrived-destination') {
-      title = t('No local de entrega');
+      title = `${t('No local de entrega')}  ${showCode}`;
       detail =
         type === 'p2p'
           ? order.destination?.intructions ??
