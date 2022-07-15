@@ -22,6 +22,7 @@ interface Props {
   navigateToAboutCharges: () => void;
   navigateToPayWithPix: () => void;
   navigateToCompleteProfile: () => void;
+  navigateToSelectPayment: () => void;
 }
 
 export const OrderPayment = ({
@@ -33,6 +34,7 @@ export const OrderPayment = ({
   navigateToAboutCharges,
   navigateToPayWithPix,
   navigateToCompleteProfile,
+  navigateToSelectPayment,
 }: Props) => {
   // redux
   const consumer = useSelector(getConsumer)!;
@@ -127,15 +129,20 @@ export const OrderPayment = ({
   ) : (
     <PaddedView>
       {!isProfileComplete || shouldVerifyPhone ? (
-        <View>
-          <DefaultButton
-            variant="secondary"
-            title={t('Completar cadastro')}
-            style={{ marginVertical: padding }}
-            onPress={navigateToCompleteProfile}
-          />
-        </View>
-      ) : null}
+        <DefaultButton
+          variant="secondary"
+          title={t('Completar cadastro')}
+          style={{ marginVertical: padding }}
+          onPress={navigateToCompleteProfile}
+        />
+      ) : (
+        <DefaultButton
+          variant="secondary"
+          title={t('Escolher forma de pagamento')}
+          style={{ marginVertical: padding }}
+          onPress={navigateToSelectPayment}
+        />
+      )}
     </PaddedView>
   );
 };
