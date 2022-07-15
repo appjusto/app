@@ -89,6 +89,14 @@ export default function ({ navigation, route }: Props) {
   useSegmentScreen('OngoingDelivery');
   // keeping screen awake
   useKeepAwake();
+  // sending order code to header
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: order?.code
+        ? `${t('Corrida em andamento')} #${order.code}`
+        : t('Corrida em andamento'),
+    });
+  }, [navigation, order?.code]);
   // modal
   React.useEffect(() => {
     if (previousDispatchingState !== dispatchingState) {
