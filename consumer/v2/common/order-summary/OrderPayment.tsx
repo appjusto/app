@@ -80,7 +80,7 @@ export const OrderPayment = ({
                 <Text
                   style={{ ...texts.xs, marginLeft: halfPadding, textDecorationLine: 'underline' }}
                 >
-                  {t('O valor total será dividido em duas cobranças')}
+                  {t('O valor total pode ser dividido em duas cobranças. Clique para saber mais')}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -93,6 +93,7 @@ export const OrderPayment = ({
             onPress={onSubmit}
             disabled={!isSubmitEnabled}
             activityIndicator={activityIndicator}
+            style={{ marginTop: padding }}
           />
         ) : (
           <DefaultButton
@@ -109,7 +110,7 @@ export const OrderPayment = ({
           <DefaultButton
             variant="secondary"
             title={t('Quero pagar com Pix')}
-            style={{ marginBottom: padding }}
+            style={{ marginVertical: padding }}
             onPress={navigateToPayWithPix}
           >
             <RoundedText backgroundColor={colors.darkYellow} style={{ right: -64 }}>

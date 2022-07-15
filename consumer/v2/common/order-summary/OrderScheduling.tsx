@@ -78,6 +78,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
         showsHorizontalScrollIndicator={false}
       >
         {order.arrivals?.destination?.estimate &&
+        business.status === 'open' &&
         business.preparationModes?.includes('realtime') ? (
           <RectangularListItemText
             text={`Hoje, ${getETAWithMargin(order.arrivals.destination.estimate)}`}

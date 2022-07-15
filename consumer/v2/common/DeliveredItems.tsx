@@ -25,19 +25,25 @@ export const DeliveredItems = ({ order }: Props) => {
                 {formatCurrency(item.product.price)}
               </Text>
             </View>
-            {item.complements?.map((complement) => (
-              <View key={complement.complementId}>
-                <Text style={{ ...texts.xs, color: colors.grey700 }}>{`+ ${complement.name}`}</Text>
-                <View style={{ flexDirection: 'row', marginVertical: 4 }}>
-                  <Text
-                    style={{ ...texts.xs, color: colors.green500 }}
-                  >{`${complement.quantity}x `}</Text>
-                  <Text style={{ ...texts.xs, color: colors.grey700 }}>
-                    {formatCurrency(complement.price)}
-                  </Text>
-                </View>
+            {item.complements ? (
+              <View>
+                {item.complements?.map((complement) => (
+                  <View key={complement.complementId}>
+                    <Text
+                      style={{ ...texts.xs, color: colors.grey700 }}
+                    >{`+ ${complement.name}`}</Text>
+                    <View style={{ flexDirection: 'row', marginVertical: 4 }}>
+                      <Text
+                        style={{ ...texts.xs, color: colors.green500 }}
+                      >{`${complement.quantity}x `}</Text>
+                      <Text style={{ ...texts.xs, color: colors.grey700 }}>
+                        {formatCurrency(complement.price)}
+                      </Text>
+                    </View>
+                  </View>
+                ))}
               </View>
-            ))}
+            ) : null}
           </View>
           <HR />
         </View>
