@@ -38,7 +38,9 @@ export const OrderPayment = ({
   const payableWithPix = useIsPixEnabled();
   const { isProfileComplete, shouldVerifyPhone } = useProfileSummary();
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
-  return (
+  // delete this after
+  const [interfaceNew, setInterfaceNew] = React.useState(true);
+  return !interfaceNew ? (
     <View>
       {/* <View style={{ marginTop: padding }}>
         <SingleHeader title={t('Forma de pagamento')} />
@@ -120,5 +122,18 @@ export const OrderPayment = ({
         ) : null}
       </PaddedView>
     </View>
+  ) : (
+    <PaddedView>
+      {!isProfileComplete || shouldVerifyPhone ? (
+        <View>
+          <DefaultButton
+            variant="secondary"
+            title={t('Completar cadastro')}
+            style={{ marginVertical: padding }}
+            onPress={navigateToPayWithPix}
+          />
+        </View>
+      ) : null}
+    </PaddedView>
   );
 };
