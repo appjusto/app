@@ -252,6 +252,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       setLoading(false);
       Keyboard.dismiss();
       dispatch(showToast(error.toString(), 'error'));
+      showModalToast(error.toString(), 'error');
     }
   };
   // navigate to ProfileAddCard or ProfilePaymentMethods to add or select payment method
