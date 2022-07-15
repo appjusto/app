@@ -33,6 +33,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
       </View>
     );
   }
+  if (!business.preparationModes?.includes('scheduled')) return null;
   const { schedules } = business;
   const scheduleFromNow = scheduleFromDate(schedules, now);
   const nextDateSlots: Date[][] = getNextDateSlots(scheduleFromNow, now, 60);
