@@ -36,8 +36,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
   const { schedules } = business;
   const scheduleFromNow = scheduleFromDate(schedules, now);
   const nextDateSlots: Date[][] = getNextDateSlots(scheduleFromNow, now, 60);
-  // helpers
-  const canDeliver = business.fulfillment?.includes('delivery');
+
   return (
     <View style={{ ...screens.default, width: '100%', paddingBottom: padding }}>
       {/* add this back when business.preparationModes[] is not empty */}
@@ -78,7 +77,8 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
         style={{ marginTop: padding, paddingLeft: padding }}
         showsHorizontalScrollIndicator={false}
       >
-        {order.arrivals?.destination?.estimate ? (
+        {order.arrivals?.destination?.estimate &&
+        business.preparationModes?.includes('realtime') ? (
           <RectangularListItemText
             text={`Hoje, ${getETAWithMargin(order.arrivals.destination.estimate)}`}
             selected={!order.scheduledTo}
