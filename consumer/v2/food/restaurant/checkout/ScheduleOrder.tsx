@@ -55,7 +55,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   const nextDateSlots: Date[][] = getNextDateSlots(daySchedules, now, 60);
 
   return (
-    <View style={{ ...screens.default, padding }}>
+    <ScrollView style={{ ...screens.default, padding }}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1 }}>
         {nextDateSlots.map((day, i) => (
           <View style={{ marginRight: padding }} key={i}>
@@ -95,7 +95,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
         </TouchableOpacity>
         <View style={{ marginTop: 24 }}>
           <Text style={{ ...texts.md, marginBottom: padding }}>{t('Agendamento')}</Text>
-          <ScrollView style={{ marginBottom: 64 }} showsVerticalScrollIndicator={false}>
+          <View style={{ marginBottom: 64 }}>
             {nextDateSlots[1].map((slot, i) => (
               <View
                 style={{
@@ -112,12 +112,12 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                 <CheckField />
               </View>
             ))}
-          </ScrollView>
+          </View>
         </View>
       </View>
       <View>
         <DefaultButton title={t('Confirmar')} />
       </View>
-    </View>
+    </ScrollView>
   );
 };
