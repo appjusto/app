@@ -16,20 +16,6 @@ export const useBusinessIsAcceptingOrders = (
   const getServerTime = useContextGetSeverTime();
   if (!platformParams || !getServerTime || !business) return 'disconnected';
   const now = getServerTime();
-  if (
-    (!business.enabled || !isAvailable(business.schedules, now)) &&
-    !business.preparationModes?.includes('scheduled')
-  )
-    return 'closed';
-  if (
-    (business.status !== 'open' || !business.keepAlive) &&
-    !business.preparationModes?.includes('scheduled')
-  )
-    return 'disconnected';
-  // const keepAlive = (business.keepAlive as Timestamp).toDate();
-  // if (now.getTime() - keepAlive.getTime() > platformParams.business.keepAliveThreshold * 1000)
-  //   return 'closed';
-  // range
   const distance =
     destination && business?.businessAddress?.latlng
       ? distanceBetweenLatLng(destination, business.businessAddress.latlng)
