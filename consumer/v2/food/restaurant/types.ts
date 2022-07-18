@@ -32,6 +32,9 @@ export type RestaurantNavigatorParamList = {
   ScheduleOrder: undefined;
   SelectPaymentMethod: {
     selectedPaymentMethodId?: string;
+    orderId?: string;
+    fleetId?: string;
+    total?: number;
   };
 } & PixParamList &
   FleetDetailParamList &

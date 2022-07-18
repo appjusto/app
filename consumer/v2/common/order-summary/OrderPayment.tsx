@@ -93,7 +93,7 @@ export const OrderPayment = ({
           </View>
         ) : null}
 
-        {isProfileComplete && selectedPaymentMethod ? (
+        {isProfileComplete && selectedPaymentMethod && !activityIndicator ? (
           <DefaultButton
             title={shouldVerifyPhone ? t('Verificar telefone') : t('Confirmar pedido')}
             onPress={onSubmit}
@@ -112,7 +112,7 @@ export const OrderPayment = ({
           />
         )}
 
-        {payableWithPix ? (
+        {payableWithPix && !activityIndicator ? (
           <DefaultButton
             variant="secondary"
             title={t('Quero pagar com Pix')}
@@ -128,21 +128,6 @@ export const OrderPayment = ({
     </View>
   ) : (
     <PaddedView>
-      {!isProfileComplete || shouldVerifyPhone ? (
-        <DefaultButton
-          variant="secondary"
-          title={t('Completar cadastro')}
-          style={{ marginVertical: padding }}
-          onPress={navigateToCompleteProfile}
-        />
-      ) : (
-        <DefaultButton
-          variant="secondary"
-          title={t('Escolher forma de pagamento')}
-          style={{ marginVertical: padding }}
-          onPress={navigateToSelectPayment}
-        />
-      )}
       {Boolean(selectedPaymentMethod) ? (
         <View style={{ marginBottom: halfPadding }}>
           <TouchableOpacity onPress={onEditPaymentMethod}>
@@ -178,6 +163,21 @@ export const OrderPayment = ({
           </TouchableOpacity>
         </View>
       ) : null}
+      {!isProfileComplete || shouldVerifyPhone ? (
+        <DefaultButton
+          variant="secondary"
+          title={t('Completar cadastro')}
+          style={{ marginVertical: padding }}
+          onPress={navigateToCompleteProfile}
+        />
+      ) : (
+        <DefaultButton
+          variant="secondary"
+          title={t('Escolher forma de pagamento')}
+          style={{ marginVertical: padding }}
+          onPress={navigateToSelectPayment}
+        />
+      )}
     </PaddedView>
   );
 };

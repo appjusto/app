@@ -33,7 +33,7 @@ type Props = {
 
 export const SelectPaymentMethod = ({ navigation, route }: Props) => {
   // params
-  const { selectedPaymentMethodId } = route.params ?? {};
+  const { selectedPaymentMethodId, orderId, fleetId, total } = route.params ?? {};
   // redux
   const consumer = useSelector(getConsumer);
   const cards = consumer?.paymentChannel?.methods ?? [];
@@ -76,7 +76,17 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
           </View>
         )}
         {payableWithPix ? (
-          <PaymentBoxSelector variant="pix" selected={false} onSelectPayment={() => null} />
+          <PaymentBoxSelector
+            variant="pix"
+            selected={false}
+            onSelectPayment={() =>
+              navigation.navigate('PayWithPix', {
+                orderId: orderId!,
+                fleetId: fleetId!,
+                total: total!,
+              })
+            }
+          />
         ) : null}
       </PaddedView>
       <View style={{ flex: 1 }} />
