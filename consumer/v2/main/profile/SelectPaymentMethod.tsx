@@ -1,11 +1,12 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { PaymentBoxSelector } from '../../common/order-summary/PaymentBoxSelector';
 import { RestaurantNavigatorParamList } from '../../food/restaurant/types';
 import { ProfileParamList } from './types';
 
@@ -28,13 +29,13 @@ type Props = {
 export const SelectPaymentMethod = ({ navigation, route }: Props) => {
   return (
     <ScrollView
-      style={{ ...screens.default }}
+      style={{ ...screens.config }}
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
     >
-      <View>
-        <Text>SELECT PAYMENT METHOD</Text>
-      </View>
+      <PaddedView>
+        <PaymentBoxSelector variant="pix" selected />
+      </PaddedView>
       <View style={{ flex: 1 }} />
       <PaddedView>
         <DefaultButton title={t('Adicionar cartão')} />
