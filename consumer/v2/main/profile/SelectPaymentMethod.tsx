@@ -2,9 +2,11 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ScrollView, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import { screens } from '../../../../common/styles';
+import { getConsumer } from '../../../../common/store/consumer/selectors';
+import { padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { PaymentBoxSelector } from '../../common/order-summary/PaymentBoxSelector';
 import { RestaurantNavigatorParamList } from '../../food/restaurant/types';
@@ -27,6 +29,9 @@ type Props = {
 };
 
 export const SelectPaymentMethod = ({ navigation, route }: Props) => {
+  // redux
+  const consumer = useSelector(getConsumer);
+  const cards = consumer?.paymentChannel?.methods ?? [];
   return (
     <ScrollView
       style={{ ...screens.config }}
@@ -34,7 +39,19 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
       scrollIndicatorInsets={{ right: 1 }}
     >
       <PaddedView>
-        <PaymentBoxSelector variant="pix" selected />
+        {cards.length
+          ? cards.map((card) => (
+              <View style={{ marginBottom: padding }}>
+                <PaymentBoxSelector
+                  variant="card"
+                  selected
+                  onSelectPayment={() => null}
+                  creditCard={card}
+                />
+              </View>
+            ))
+          : null}
+        <PaymentBoxSelector variant="pix" selected onSelectPayment={() => null} />
       </PaddedView>
       <View style={{ flex: 1 }} />
       <PaddedView>
