@@ -9,6 +9,7 @@ import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import Pill from '../../../common/components/views/Pill';
+import { useModalToastContext } from '../../../common/contexts/ModalToastContext';
 import { IconPixLogo } from '../../../common/icons/icon-pix-logo';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
@@ -43,6 +44,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
   //context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  const { showModalToast } = useModalToastContext();
   // redux store
   const consumer = useSelector(getConsumer)!;
   // state
@@ -82,7 +84,9 @@ export const PayWithPix = ({ navigation, route }: Props) => {
         params: { orderId },
       });
     } catch (error: any) {
+      setLoading(false);
       dispatch(showToast(error.toString(), 'error'));
+      showModalToast(error.toString(), 'error');
     }
   };
 
