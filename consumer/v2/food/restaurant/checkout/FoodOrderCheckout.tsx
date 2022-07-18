@@ -271,6 +271,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
   }, [consumer, navigation, selectedPaymentMethodId]);
 
+  const navigateToCompleteProfile = () => {
+    navigation.navigate('CommonProfileEdit', { returnScreen: 'FoodOrderCheckout' });
+  };
+
   // UI
   if (!order) {
     return (
@@ -365,6 +369,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             navigateToAboutCharges={() => {
               navigation.navigate('AboutCharges');
             }}
+            navigateToCompleteProfile={navigateToCompleteProfile}
+            navigateToSelectPayment={() => navigation.navigate('SelectPaymentMethod')}
             navigateToPayWithPix={() => {
               navigation.navigate('PayWithPix', {
                 orderId: order.id,

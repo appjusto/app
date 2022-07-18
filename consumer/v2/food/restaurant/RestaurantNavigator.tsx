@@ -10,6 +10,7 @@ import { AvailableFleets } from '../../common/AvailableFleets';
 import { PayWithPix } from '../../common/PayWithPix';
 import ProfileAddCard from '../../main/profile/ProfileAddCard';
 import ProfilePaymentMethods from '../../main/profile/ProfilePaymentMethods';
+import { SelectPaymentMethod } from '../../main/profile/SelectPaymentMethod';
 import { AboutCharges } from '../../p2p/AboutCharges';
 import { AboutRestaurant } from './about/AboutRestaurant';
 import { RestaurantHeaderMessage } from './about/RestaurantHeaderMessage';
@@ -69,6 +70,11 @@ export default function () {
         name="ProfileAddCard"
         component={ProfileAddCard}
         options={{ title: t('Adicionar cartão') }}
+      />
+      <Stack.Screen
+        name="SelectPaymentMethod"
+        component={SelectPaymentMethod}
+        options={{ title: t('Selecionar pagamento') }}
       />
       <Stack.Screen
         name="ProfilePaymentMethods"

@@ -21,6 +21,8 @@ interface Props {
   onSubmit: () => void;
   navigateToAboutCharges: () => void;
   navigateToPayWithPix: () => void;
+  navigateToCompleteProfile: () => void;
+  navigateToSelectPayment: () => void;
 }
 
 export const OrderPayment = ({
@@ -31,6 +33,8 @@ export const OrderPayment = ({
   onSubmit,
   navigateToAboutCharges,
   navigateToPayWithPix,
+  navigateToCompleteProfile,
+  navigateToSelectPayment,
 }: Props) => {
   // redux
   const consumer = useSelector(getConsumer)!;
@@ -38,7 +42,9 @@ export const OrderPayment = ({
   const payableWithPix = useIsPixEnabled();
   const { isProfileComplete, shouldVerifyPhone } = useProfileSummary();
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
-  return (
+  // delete this after
+  const [interfaceNew, setInterfaceNew] = React.useState(true);
+  return !interfaceNew ? (
     <View>
       {/* <View style={{ marginTop: padding }}>
         <SingleHeader title={t('Forma de pagamento')} />
@@ -120,5 +126,23 @@ export const OrderPayment = ({
         ) : null}
       </PaddedView>
     </View>
+  ) : (
+    <PaddedView>
+      {!isProfileComplete || shouldVerifyPhone ? (
+        <DefaultButton
+          variant="secondary"
+          title={t('Completar cadastro')}
+          style={{ marginVertical: padding }}
+          onPress={navigateToCompleteProfile}
+        />
+      ) : (
+        <DefaultButton
+          variant="secondary"
+          title={t('Escolher forma de pagamento')}
+          style={{ marginVertical: padding }}
+          onPress={navigateToSelectPayment}
+        />
+      )}
+    </PaddedView>
   );
 };

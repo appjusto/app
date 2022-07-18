@@ -13,6 +13,7 @@ export type ProfileParamList = {
   NotificationPreferences: undefined;
   AboutApp: undefined;
   RequestProfileEdit: undefined;
+  SelectPaymentMethod: undefined;
 } & ProfileEraseParamList &
   ProfilePaymentMethodsParamList &
   ProfileAddCardParamList &
