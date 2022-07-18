@@ -1,8 +1,8 @@
 import { Order, WithId } from '@appjusto/types';
+import { Feather } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import React from 'react';
-import { ActivityIndicator, Image, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
@@ -11,7 +11,7 @@ import Pill from '../../../../../common/components/views/Pill';
 import { IconPixLogo } from '../../../../../common/icons/icon-pix-logo';
 import { useObservePendingOrderInvoice } from '../../../../../common/store/api/order/invoices/useObservePendingOrderInvoice';
 import { showToast } from '../../../../../common/store/ui/actions';
-import { colors, padding, screens, texts } from '../../../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 
@@ -35,20 +35,25 @@ export const OrderConfirmingPix = ({ order, onCancel }: Props) => {
   };
   // UI
   return (
-    <SafeAreaView style={{ ...screens.default }}>
-      <PaddedView>
+    <ScrollView
+      style={{ ...screens.config, ...screens.headless }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      scrollIndicatorInsets={{ right: 1 }}
+    >
+      <PaddedView style={{ flex: 1 }}>
         <IconPixLogo />
-        <Text style={{ ...texts.lg, marginTop: 24 }}>{t('Efetue o pagamento da sua fatura')}</Text>
-        <Text style={{ ...texts.sm, marginVertical: padding, color: colors.grey700 }}>
-          {t(
-            'Se você vai pagar com este mesmo dispositivo clique no botão "Copiar chave de pagamento".'
-          )}
+        <Text style={{ ...texts.sm, marginVertical: padding }}>
+          {t('Se você vai pagar com este dispositivo clique no botão ')}
+          <Text style={{ ...texts.bold }}>{t('copiar chave de pagamento ')}</Text>
+          {t('abaixo.')}
         </Text>
-        <Text style={{ ...texts.sm, marginBottom: padding, color: colors.grey700 }}>
+        <Text style={{ ...texts.sm, marginBottom: padding }}>
           {t(
-            'Depois, acesse o aplicativo do seu banco ou instituição financeira na seção Pix e procure a função "Pix Copia e Cola".'
+            'Em seguida, acesse o aplicativo do seu banco ou instituição financeira. Na seção Pix procure a opção '
           )}
+          <Text style={{ ...texts.bold }}>{t('Pix Copia e Cola.')}</Text>
         </Text>
+
         <View
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
@@ -62,30 +67,28 @@ export const OrderConfirmingPix = ({ order, onCancel }: Props) => {
               <ActivityIndicator size="small" color={colors.black} />
             )}
           </View>
-          <View style={{ width: '49%' }}>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {t(
-                'Você ou outra pessoa também podem efetuar o pagamento através do QR Code ao lado'
-              )}
-            </Text>
+          <View style={{ width: '49%', flexDirection: 'row' }}>
+            <View style={{ paddingTop: 2 }}>
+              <Feather name="info" size={14} />
+            </View>
+            <View style={{ width: '90%' }}>
+              <Text style={{ ...texts.sm, marginLeft: halfPadding }}>
+                {t(
+                  'Você também pode pagar através da leitura do QR Code ao lado usando outro dispositivo'
+                )}
+              </Text>
+            </View>
           </View>
         </View>
-        <DefaultButton
-          title={t('Copiar chave de pagamento')}
-          style={{ marginTop: padding }}
-          onPress={copyToClipboard}
-          disabled={!pendingInvoice?.pix?.qrcodeText}
-        />
       </PaddedView>
-      <View style={{ flex: 1 }} />
-      <View style={{ flex: 1, marginBottom: padding }}>
+      <View style={{ flex: 1, paddingBottom: padding }}>
+        <View style={{ flex: 1 }} />
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
             paddingRight: padding,
-            marginBottom: padding,
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -96,18 +99,21 @@ export const OrderConfirmingPix = ({ order, onCancel }: Props) => {
           </View>
           <Text style={{ ...texts.xl }}>{formatCurrency(order.fare!.total)}</Text>
         </View>
-        <Text style={{ ...texts.xs, color: colors.grey700, paddingHorizontal: padding }}>
-          {t(
-            'Identificaremos o pagamento assim que ele for realizado e daremos continuidade ao seu pedido.'
-          )}
-        </Text>
-        <DefaultButton
-          title={t('Cancelar pedido')}
-          variant="danger"
-          style={{ marginHorizontal: padding, marginTop: 24 }}
-          onPress={onCancel}
-        />
+        <View>
+          <DefaultButton
+            title={t('Copiar chave de pagamento')}
+            style={{ marginTop: padding, marginHorizontal: padding }}
+            onPress={copyToClipboard}
+            // disabled={!pendingInvoice?.pix?.qrcodeText}
+          />
+          <DefaultButton
+            title={t('Cancelar pedido')}
+            variant="danger"
+            style={{ marginHorizontal: padding, marginTop: padding }}
+            onPress={onCancel}
+          />
+        </View>
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };

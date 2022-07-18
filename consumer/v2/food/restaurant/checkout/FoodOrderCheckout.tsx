@@ -146,6 +146,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       navigation.navigate('MainNavigator', { screen: 'Home' });
     }
   }, [order, navigation]);
+  // opening DestinationModal if user selects pix as payMethod
+  React.useEffect(() => {
+    if (payMethod === 'pix') setDestinationModalVisible(true);
+  }, [payMethod]);
   // tracking
   useSegmentScreen('FoodOrderCheckout');
   // handlers
