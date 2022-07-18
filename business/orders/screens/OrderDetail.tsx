@@ -15,12 +15,13 @@ import {
   halfPadding,
   padding,
   screens,
-  texts
+  texts,
 } from '../../../common/styles';
 import { formatDuration } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { BusinessNavParamsList } from '../../types';
 import { CancelOrderModal } from '../components/CancelOrderModal';
+import { CookingTimeModal } from '../components/CookingTimeModal';
 import { CustomButton } from '../components/CustomButton';
 import { DestinationAndPay } from '../components/DestinationAndPay';
 import { DetailedOrderItems } from '../components/DetailedOrderItems';
@@ -190,6 +191,14 @@ export const OrderDetail = ({ navigation, route }: Props) => {
         onCancelOrder={() => null}
         order={order}
       />
+      {order.status === 'confirmed' ? (
+        <CookingTimeModal
+          order={order}
+          buttonTitle={t('Aceitar pedido')}
+          modalVisible={cookingModalVisible}
+          onModalClose={() => setCookingModalVisible(false)}
+        />
+      ) : null}
     </View>
   );
 };
