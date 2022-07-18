@@ -370,7 +370,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
               navigation.navigate('AboutCharges');
             }}
             navigateToCompleteProfile={navigateToCompleteProfile}
-            navigateToSelectPayment={() => navigation.navigate('SelectPaymentMethod')}
+            navigateToSelectPayment={() =>
+              navigation.navigate('SelectPaymentMethod', { selectedPaymentMethodId })
+            }
             navigateToPayWithPix={() => {
               navigation.navigate('PayWithPix', {
                 orderId: order.id,

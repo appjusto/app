@@ -35,9 +35,11 @@ export const PaymentBoxSelector = ({ variant, selected, onSelectPayment, creditC
           ) : (
             <View>
               <Text style={{ ...texts.sm }}>{t('Cartão de crédito')}</Text>
-              <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 4 }}>
-                {t('...')} {creditCard.data.display_number}
-              </Text>
+              {creditCard ? (
+                <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 4 }}>
+                  {t('...')} {creditCard.data.display_number}
+                </Text>
+              ) : null}
             </View>
           )}
         </View>

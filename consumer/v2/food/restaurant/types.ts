@@ -30,7 +30,9 @@ export type RestaurantNavigatorParamList = {
     returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
   };
   ScheduleOrder: undefined;
-  SelectPaymentMethod: undefined;
+  SelectPaymentMethod: {
+    selectedPaymentMethodId?: string;
+  };
 } & PixParamList &
   FleetDetailParamList &
   ProfilePaymentMethodsParamList &

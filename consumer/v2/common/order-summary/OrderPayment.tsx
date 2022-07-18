@@ -143,6 +143,41 @@ export const OrderPayment = ({
           onPress={navigateToSelectPayment}
         />
       )}
+      {Boolean(selectedPaymentMethod) ? (
+        <View style={{ marginBottom: halfPadding }}>
+          <TouchableOpacity onPress={onEditPaymentMethod}>
+            <View style={{ marginBottom: halfPadding }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={{ ...texts.md }}>{t('Forma de pagamento')}</Text>
+                <Feather
+                  name="edit-3"
+                  size={12}
+                  style={{ ...borders.default, borderColor: colors.grey50, padding: 8 }}
+                />
+              </View>
+              <Text style={{ ...texts.sm, color: colors.grey700 }}>
+                {`${t('Cartão de crédito')}: ${selectedPaymentMethod!.data.display_number}`}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={{ marginTop: halfPadding }} onPress={navigateToAboutCharges}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Feather name="info" size={14} />
+              <Text
+                style={{ ...texts.xs, marginLeft: halfPadding, textDecorationLine: 'underline' }}
+              >
+                {t('O valor total pode ser dividido em duas cobranças. Clique para saber mais')}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      ) : null}
     </PaddedView>
   );
 };
