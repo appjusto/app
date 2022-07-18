@@ -94,20 +94,14 @@ export const OrderPayment = ({
             style={{ marginTop: padding }}
             onPress={onSubmit}
           />
-          {/* {payableWithPix ? (
+          {payableWithPix ? (
             <DefaultButton
               variant="secondary"
               title={t('Quero pagar com Pix')}
               style={{ marginTop: padding }}
               onPress={navigateToPayWithPix}
             />
-          ) : null} */}
-          <DefaultButton
-            variant="secondary"
-            title={t('Quero pagar com Pix')}
-            style={{ marginTop: padding }}
-            onPress={navigateToPayWithPix}
-          />
+          ) : null}
         </View>
       ) : (
         <DefaultButton

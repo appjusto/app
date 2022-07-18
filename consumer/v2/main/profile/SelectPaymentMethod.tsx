@@ -75,17 +75,11 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
             />
           </View>
         )}
-        {payableWithPix ? (
+        {!payableWithPix ? (
           <PaymentBoxSelector
             variant="pix"
             selected={false}
-            onSelectPayment={() =>
-              navigation.navigate('PayWithPix', {
-                orderId: orderId!,
-                fleetId: fleetId!,
-                total: total!,
-              })
-            }
+            onSelectPayment={() => navigation.navigate('FoodOrderCheckout', { payMethod: 'pix' })}
           />
         ) : null}
       </PaddedView>
