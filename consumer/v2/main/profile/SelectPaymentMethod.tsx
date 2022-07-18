@@ -50,31 +50,46 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
       scrollIndicatorInsets={{ right: 1 }}
     >
       <PaddedView>
-        {cards.length
-          ? cards.map((card) => (
-              <View style={{ marginBottom: padding }} key={card.id}>
-                <PaymentBoxSelector
-                  variant="card"
-                  selected={card.id === selectedPayment?.id}
-                  onSelectPayment={() => null}
-                  creditCard={card}
-                />
-              </View>
-            ))
-          : null}
+        {cards.length ? (
+          cards.map((card) => (
+            <View style={{ marginBottom: padding }} key={card.id}>
+              <PaymentBoxSelector
+                variant="card"
+                selected={card.id === selectedPayment?.id}
+                onSelectPayment={() => {
+                  setSelectedPayment(card);
+                  navigation.navigate('FoodOrderCheckout', { paymentMethodId: card.id });
+                }}
+                creditCard={card}
+              />
+            </View>
+          ))
+        ) : (
+          <View style={{ marginBottom: padding }}>
+            <PaymentBoxSelector
+              variant="card"
+              selected={false}
+              onSelectPayment={() =>
+                navigation.navigate('ProfileAddCard', { returnScreen: 'FoodOrderCheckout' })
+              }
+            />
+          </View>
+        )}
         {payableWithPix ? (
           <PaymentBoxSelector variant="pix" selected={false} onSelectPayment={() => null} />
         ) : null}
       </PaddedView>
       <View style={{ flex: 1 }} />
-      <PaddedView>
-        <DefaultButton
-          title={t('Adicionar cartão')}
-          onPress={() =>
-            navigation.navigate('ProfileAddCard', { returnScreen: 'FoodOrderCheckout' })
-          }
-        />
-      </PaddedView>
+      {cards.length ? (
+        <PaddedView>
+          <DefaultButton
+            title={t('Adicionar cartão')}
+            onPress={() =>
+              navigation.navigate('ProfileAddCard', { returnScreen: 'FoodOrderCheckout' })
+            }
+          />
+        </PaddedView>
+      ) : null}
     </ScrollView>
   );
 };
