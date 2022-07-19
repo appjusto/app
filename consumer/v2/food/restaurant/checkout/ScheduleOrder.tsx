@@ -39,8 +39,15 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   const order = useContextActiveOrder();
   const api = React.useContext(ApiContext);
   const now = getServerTime();
-  // state
   const business = useObserveBusiness(order?.business?.id);
+  // state
+  const [selectedDay, setSelectedDay] = React.useState<Date[]>();
+
+  React.useEffect(() => {
+    if (!order) return;
+    if (!business) return;
+    setSelectedDay(nextDateSlots[0]);
+  }, []);
 
   if (!order) return null; // shouldn't happen
   if (!business) {
@@ -50,9 +57,11 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  const { schedules } = business;
+  const { schedules, status, preparationModes } = business;
   const daySchedules = scheduleFromDate(schedules, now);
   const nextDateSlots: Date[][] = getNextDateSlots(daySchedules, now, 60);
+  const realTimeDelivery = status === 'open' && preparationModes?.includes('realtime');
+  console.log(selectedDay);
 
   return (
     <ScrollView style={{ ...screens.default, padding }}>
@@ -67,51 +76,63 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                   nextWeek: 'dddd'.slice(0, 3),
                 })
               )}
-              day="hoje"
-              selected={!order.scheduledTo}
-              onSelect={() => null}
+              day={capitalize(
+                Dayjs(day[0]).calendar(now, {
+                  sameDay: '[hoje]',
+                  nextDay: 'dddd'.slice(0, 3),
+                  nextWeek: 'dddd'.slice(0, 3),
+                })
+              )}
+              selected={false}
+              onSelect={() => setSelectedDay(day)}
             />
           </View>
         ))}
       </ScrollView>
       <View style={{ flex: 7, marginTop: 24 }}>
         <Text style={{ ...texts.md }}>{t('Entregar hoje')}</Text>
-        <TouchableOpacity>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginTop: halfPadding,
-            }}
-          >
-            {order.arrivals?.destination?.estimate ? (
-              <Text style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}>
-                {getETAWithMargin(order.arrivals.destination.estimate)}
-              </Text>
-            ) : null}
-            <CheckField checked={!order.scheduledTo} />
-          </View>
-        </TouchableOpacity>
+        {realTimeDelivery ? (
+          <TouchableOpacity>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginTop: halfPadding,
+              }}
+            >
+              {order.arrivals?.destination?.estimate ? (
+                <Text style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}>
+                  {getETAWithMargin(order.arrivals.destination.estimate)}
+                </Text>
+              ) : null}
+              <CheckField checked={!order.scheduledTo} />
+            </View>
+          </TouchableOpacity>
+        ) : null}
         <View style={{ marginTop: 24 }}>
           <Text style={{ ...texts.md, marginBottom: padding }}>{t('Agendamento')}</Text>
           <View style={{ marginBottom: 64 }}>
-            {nextDateSlots[1].map((slot, i) => (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginTop: i !== 0 ? padding : 0,
-                }}
-                key={i}
-              >
-                <Text style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}>
-                  {getETAWithMargin(slot)}
-                </Text>
-                <CheckField />
-              </View>
-            ))}
+            {selectedDay ? (
+              selectedDay.map((slot, i) => (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginTop: i !== 0 ? padding : 0,
+                  }}
+                  key={i}
+                >
+                  <Text style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}>
+                    {getETAWithMargin(slot)}
+                  </Text>
+                  <CheckField />
+                </View>
+              ))
+            ) : (
+              <View style={{ flex: 1 }} />
+            )}
           </View>
         </View>
       </View>
