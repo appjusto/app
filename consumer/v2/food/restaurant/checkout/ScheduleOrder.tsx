@@ -6,7 +6,6 @@ import React from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { ApiContext } from '../../../../../common/app/context';
 import CheckField from '../../../../../common/components/buttons/CheckField';
-import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import { DayBoxListItem } from '../../../../../common/components/list items/DayBoxListItem';
 import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTimeContext';
 import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
@@ -61,37 +60,38 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   const daySchedules = scheduleFromDate(schedules, now);
   const nextDateSlots: Date[][] = getNextDateSlots(daySchedules, now, 60);
   const realTimeDelivery = status === 'open' && preparationModes?.includes('realtime');
-  console.log(selectedDay);
 
   return (
-    <ScrollView style={{ ...screens.default, padding }}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1 }}>
-        {nextDateSlots.map((day, i) => (
-          <View style={{ marginRight: padding }} key={i}>
-            <DayBoxListItem
-              weekDay={capitalize(
-                Dayjs(day[0]).calendar(now, {
-                  sameDay: '[hoje]',
-                  nextDay: 'dddd'.slice(0, 3),
-                  nextWeek: 'dddd'.slice(0, 3),
-                })
-              )}
-              day={capitalize(
-                Dayjs(day[0]).calendar(now, {
-                  sameDay: '[hoje]',
-                  nextDay: 'dddd'.slice(0, 3),
-                  nextWeek: 'dddd'.slice(0, 3),
-                })
-              )}
-              selected={false}
-              onSelect={() => setSelectedDay(day)}
-            />
-          </View>
-        ))}
-      </ScrollView>
-      <View style={{ flex: 7, marginTop: 24 }}>
-        <Text style={{ ...texts.md }}>{t('Entregar hoje')}</Text>
-        {realTimeDelivery ? (
+    <View style={{ ...screens.default, padding }}>
+      <View style={{ flex: 0.5 }}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 0.5 }}>
+          {nextDateSlots.map((day, i) => (
+            <View style={{ marginRight: padding }} key={i}>
+              <DayBoxListItem
+                weekDay={capitalize(
+                  Dayjs(day[0]).calendar(now, {
+                    sameDay: '[hoje]',
+                    nextDay: 'dddd'.slice(0, 3),
+                    nextWeek: 'dddd'.slice(0, 3),
+                  })
+                )}
+                day={capitalize(
+                  Dayjs(day[0]).calendar(now, {
+                    sameDay: '[hoje]',
+                    nextDay: 'dddd'.slice(0, 3),
+                    nextWeek: 'dddd'.slice(0, 3),
+                  })
+                )}
+                selected={false}
+                onSelect={() => setSelectedDay(day)}
+              />
+            </View>
+          ))}
+        </ScrollView>
+      </View>
+      {!realTimeDelivery ? (
+        <View style={{ flex: 0.5 }}>
+          <Text style={{ ...texts.md }}>{t('Entregar hoje')}</Text>
           <TouchableOpacity>
             <View
               style={{
@@ -106,15 +106,27 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                   {getETAWithMargin(order.arrivals.destination.estimate)}
                 </Text>
               ) : null}
-              <CheckField checked={!order.scheduledTo} />
+              <CheckField checked={false} />
             </View>
           </TouchableOpacity>
-        ) : null}
-        <View style={{ marginTop: 24 }}>
-          <Text style={{ ...texts.md, marginBottom: padding }}>{t('Agendamento')}</Text>
-          <View style={{ marginBottom: 64 }}>
-            {selectedDay ? (
-              selectedDay.map((slot, i) => (
+        </View>
+      ) : null}
+      <View
+        style={{
+          flex: 1,
+
+          marginBottom: halfPadding,
+          paddingBottom: 24,
+        }}
+      >
+        {selectedDay && selectedDay.length > 0 ? (
+          <View style={{ flex: 1 }}>
+            <Text style={{ ...texts.md, marginBottom: padding }}>{t('Agendamento')}</Text>
+            <ScrollView
+              style={{ flex: 1 }}
+              contentContainerStyle={{ flexGrow: 1, flex: 1, paddingBottom: 32 }}
+            >
+              {selectedDay?.map((slot, i) => (
                 <View
                   style={{
                     flexDirection: 'row',
@@ -129,16 +141,14 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                   </Text>
                   <CheckField />
                 </View>
-              ))
-            ) : (
-              <View style={{ flex: 1 }} />
-            )}
+              ))}
+            </ScrollView>
           </View>
-        </View>
+        ) : (
+          <View style={{ flex: 1 }} />
+        )}
       </View>
-      <View>
-        <DefaultButton title={t('Confirmar')} />
-      </View>
-    </ScrollView>
+      {/* <DefaultButton title={t('Confirmar')} /> */}
+    </View>
   );
 };
