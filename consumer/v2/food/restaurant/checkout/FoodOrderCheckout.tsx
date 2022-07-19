@@ -1,4 +1,9 @@
-import { Fare, PayableWith } from '@appjusto/types';
+import {
+  Fare,
+  PayableWith,
+  PlaceOrderPayloadPaymentCreditCard,
+  PlaceOrderPayloadPaymentPix,
+} from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -158,6 +163,19 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     if (!order) return;
     if (!selectedFare) return;
     if (!selectedPaymentMethodId) return;
+    let paymentPayload;
+    if (payMethod === 'credit_card') {
+      paymentPayload = {
+        payableWith: 'credit_card',
+        paymentMethodId: selectedPaymentMethodId,
+      } as PlaceOrderPayloadPaymentCreditCard;
+    }
+    if (payMethod === 'pix') {
+      paymentPayload = {
+        payableWith: 'pix',
+        key: cpf,
+      } as PlaceOrderPayloadPaymentPix;
+    }
     if (!order.destination?.address) {
       dispatch(
         showToast(
@@ -224,31 +242,12 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           }),
         });
       }
-      // updating order with preparationMode
-      // await api.order().updateOrder(order.id, {
-      //   preparationMode,
-      // });
-      if (payMethod === 'pix') {
-        await api.order().placeOrder(
+      await api
+        .order()
+        .placeOrder(
           order.id,
           selectedFare!.fleet.id,
-          {
-            payableWith: 'pix',
-            key: consumer.cpf!,
-          },
-          wantsCpf,
-          coords,
-          orderAdditionalInfo,
-          shareDataWithBusiness
-        );
-      } else
-        await api.order().placeOrder(
-          order.id,
-          selectedFare!.fleet.id,
-          {
-            payableWith: 'credit_card',
-            paymentMethodId: selectedPaymentMethodId,
-          },
+          paymentPayload,
           wantsCpf,
           coords,
           orderAdditionalInfo,
@@ -257,12 +256,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       track('consumer placed a food order');
       setDestinationModalVisible(false);
       setLoading(false);
-      // if (order.preparationMode === 'scheduled') {
-      //   navigation.replace('OngoingOrderNavigator', {
-      //     screen: 'ScheduledOrderConfirmation',
-      //   });
-      // }
-      //  else
       navigation.replace('OngoingOrderNavigator', {
         screen: 'OngoingOrderConfirming',
         params: {
@@ -295,7 +288,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const navigateToCompleteProfile = () => {
     navigation.navigate('CommonProfileEdit', { returnScreen: 'FoodOrderCheckout' });
   };
-
   // UI
   if (!order) {
     return (
@@ -304,7 +296,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  console.log(payMethod);
   return (
     <KeyboardAwareScrollView
       style={{ ...screens.default }}
@@ -400,12 +391,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
                 total: selectedFare!.total,
               })
             }
-            navigateToPayWithPix={() => {
-              navigation.navigate('PayWithPix', {
-                orderId: order.id,
-                fleetId: selectedFare!.fleet!.id,
-                total: selectedFare!.total,
-              });
+            onPayWithPix={() => {
+              setPayMethod('pix');
+              setDestinationModalVisible(true);
             }}
           />
         }

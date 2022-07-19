@@ -18,9 +18,9 @@ interface Props {
   onEditPaymentMethod: () => void;
   onSubmit: () => void;
   navigateToAboutCharges: () => void;
-  navigateToPayWithPix: () => void;
   navigateToCompleteProfile: () => void;
   navigateToSelectPayment: () => void;
+  onPayWithPix: () => void;
 }
 
 export const OrderPayment = ({
@@ -30,7 +30,7 @@ export const OrderPayment = ({
   onEditPaymentMethod,
   onSubmit,
   navigateToAboutCharges,
-  navigateToPayWithPix,
+  onPayWithPix,
   navigateToCompleteProfile,
   navigateToSelectPayment,
 }: Props) => {
@@ -99,7 +99,7 @@ export const OrderPayment = ({
               variant="secondary"
               title={t('Quero pagar com Pix')}
               style={{ marginTop: padding }}
-              onPress={navigateToPayWithPix}
+              onPress={onPayWithPix}
             />
           ) : null}
         </View>
