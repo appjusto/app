@@ -14,7 +14,7 @@ export const getOrderById = createSelector(getOrderState, (orderState) =>
 export const getOrders = (state: State) => getOrderState(state).orders;
 
 export const getOrderTime = (order: WithId<Order>) => {
-  const time = order.deliveredOn ?? order.confirmedOn ?? order.createdOn;
+  const time = order.timestamps?.delivered ?? order.timestamps?.confirmed ?? order.createdOn;
   if (time) return (time as firebase.firestore.Timestamp).toDate();
   return new Date();
 };
@@ -66,6 +66,8 @@ export const OngoingOrdersStatuses: OrderStatus[] = [
 
 export const isOrderOngoing = (order: Order) => OngoingOrdersStatuses.includes(order.status);
 
+export const getFinancialFee = (value: number) => Math.floor(value * (2.21 / 100));
+
 export const summarizeOrders = memoize((orders: WithId<Order>[]) =>
   orders.reduce(
     (result, order) => ({
@@ -83,8 +85,8 @@ export const summarizeOrders = memoize((orders: WithId<Order>[]) =>
       courierFee:
         order.status === 'delivered'
           ? result.courierFee +
-            (order.fare!.courier.value - order.fare!.courier.financialFee) +
-            ((order.tip?.value ?? 0) - (order.tip?.financialFee ?? 0))
+            (order.fare!.courier!.value - getFinancialFee(order.fare!.courier!.value)) +
+            ((order.tip?.value ?? 0) - getFinancialFee(order.tip?.value ?? 0))
           : result.courierFee,
     }),
     { delivered: 0, canceled: 0, ongoing: 0, quote: 0, total: 0, courierFee: 0 }

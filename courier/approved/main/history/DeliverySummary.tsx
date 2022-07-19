@@ -9,6 +9,7 @@ import OrderMap from '../../../../common/screens/orders/OrderMap';
 import PlaceSummary from '../../../../common/screens/orders/summary/PlaceSummary';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../../common/store/api/track';
+import { getFinancialFee } from '../../../../common/store/order/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import {
   formatCurrency,
@@ -45,9 +46,9 @@ export default function ({ navigation, route }: Props) {
     );
   }
   const courierFee = order.fare?.courier
-    ? order.fare.courier.value - order.fare.courier.financialFee
+    ? order.fare.courier.value - getFinancialFee(order.fare.courier.value)
     : 0;
-  const tip = order.tip ? order.tip.value - order.tip.financialFee : 0;
+  const tip = order.tip ? order.tip.value - getFinancialFee(order.tip.value) : 0;
   const fee = courierFee + tip;
   // UI
   return (
