@@ -43,15 +43,6 @@ export const consumer: ScreenConfig[] = [
     icon: <IconHangLoose />,
   },
   {
-    header: t('O AppJusto ainda está\n em fase de testes'),
-    body: [
-      t(
-        'Estamos em fase de testes na plataforma para construir o melhor serviço para você. Fique à vontade para contribuir com sugestões sobre melhorias e problemas.'
-      ),
-    ],
-    icon: <IconBeta />,
-  },
-  {
     header: t('Use para pedir comida e enviar encomendas'),
     body: [
       t(
@@ -73,7 +64,7 @@ export const consumer: ScreenConfig[] = [
     header: t('Use o AppJusto e indique para os seus amigos'),
     body: [
       t(
-        'Quanto mais usar e indicar, mais você ajuda esse movimento a crescer. Contribua para um delivery mais justo na sua região! Vamos começar?'
+        'Quanto mais usar e indicar, mais você ajuda nosso movimento a crescer. Contribua para um delivery mais justo na sua região! Vamos começar?'
       ),
     ],
     icon: <IconShareBig />,
@@ -107,12 +98,6 @@ export const registrationSubmitted: RegistrationSubmittedConfig[] = [
   },
 ];
 export const profileSubmitted: RegistrationSubmittedConfig[] = [
-  {
-    header: t('Com paciência vai dar certo'),
-    body: t(
-      'Ainda não temos previsão para o início das operações. Isso ocorrerá quando iniciarem os pedidos na plataforma. Fique tranquilo que vamos te avisar!'
-    ),
-  },
   {
     header: t('Aprovações durante o beta'),
     body: t(
