@@ -64,7 +64,7 @@
     "expo-splash-screen": "~0.15.1",
     "expo-status-bar": "~1.3.0",
     "expo-task-manager": "~10.2.1",
-    "expo-updates": "~0.13.1",
+    "expo-updates": "~0.13.3",
     "firebase": "^9.6.11",
     "geofirestore": "^5.2.0",
     "geokit": "^1.1.0",
