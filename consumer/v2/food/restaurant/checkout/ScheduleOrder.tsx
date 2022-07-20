@@ -1,11 +1,13 @@
 import { getNextDateSlots } from '@appjusto/dates';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Timestamp } from 'firebase/firestore';
 import { capitalize } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { ApiContext } from '../../../../../common/app/context';
 import CheckField from '../../../../../common/components/buttons/CheckField';
+import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import { DayBoxListItem } from '../../../../../common/components/list items/DayBoxListItem';
 import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTimeContext';
 import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
@@ -41,12 +43,8 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   const business = useObserveBusiness(order?.business?.id);
   // state
   const [selectedDay, setSelectedDay] = React.useState<Date[]>();
-
-  React.useEffect(() => {
-    if (!order) return;
-    if (!business) return;
-    setSelectedDay(nextDateSlots[0]);
-  }, []);
+  const [selectedSlot, setSelectedSlot] = React.useState<Timestamp>();
+  const [loading, setLoading] = React.useState(false);
 
   if (!order) return null; // shouldn't happen
   if (!business) {
@@ -57,10 +55,11 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
     );
   }
   const { schedules, status, preparationModes } = business;
-  const daySchedules = scheduleFromDate(schedules, now);
-  const nextDateSlots: Date[][] = getNextDateSlots(daySchedules, now, 60);
   const realTimeDelivery = status === 'open' && preparationModes?.includes('realtime');
-
+  const daySchedules = scheduleFromDate(schedules, now);
+  const nextDateSlots: Date[][] = realTimeDelivery
+    ? getNextDateSlots(daySchedules, now, 60)
+    : getNextDateSlots(daySchedules, now, 60).slice(1);
   return (
     <View style={{ ...screens.default, padding }}>
       <View style={{ flex: 0.5 }}>
@@ -82,17 +81,20 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                     nextWeek: 'dddd'.slice(0, 3),
                   })
                 )}
-                selected={false}
+                selected={
+                  selectedDay !== undefined &&
+                  Timestamp.fromDate(day[0]).isEqual(Timestamp.fromDate(selectedDay[0]))
+                }
                 onSelect={() => setSelectedDay(day)}
               />
             </View>
           ))}
         </ScrollView>
       </View>
-      {!realTimeDelivery ? (
+      {realTimeDelivery ? (
         <View style={{ flex: 0.5 }}>
           <Text style={{ ...texts.md }}>{t('Entregar hoje')}</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('FoodOrderCheckout')}>
             <View
               style={{
                 flexDirection: 'row',
@@ -106,7 +108,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                   {getETAWithMargin(order.arrivals.destination.estimate)}
                 </Text>
               ) : null}
-              <CheckField checked={false} />
+              <CheckField checked={!order.scheduledTo} />
             </View>
           </TouchableOpacity>
         </View>
@@ -127,20 +129,33 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
               contentContainerStyle={{ flexGrow: 1, flex: 1, paddingBottom: 32 }}
             >
               {selectedDay?.map((slot, i) => (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    marginTop: i !== 0 ? padding : 0,
-                  }}
+                <TouchableOpacity
                   key={i}
+                  onPress={() => {
+                    setLoading(true);
+                    api.order().updateOrder(order.id, { scheduledTo: Timestamp.fromDate(slot) });
+                    setLoading(false);
+                    setSelectedSlot(Timestamp.fromDate(slot));
+                  }}
                 >
-                  <Text style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}>
-                    {getETAWithMargin(slot)}
-                  </Text>
-                  <CheckField />
-                </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginTop: i !== 0 ? padding : 0,
+                    }}
+                  >
+                    <Text style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}>
+                      {getETAWithMargin(slot)}
+                    </Text>
+                    <CheckField
+                      checked={
+                        selectedSlot !== undefined && Timestamp.fromDate(slot).isEqual(selectedSlot)
+                      }
+                    />
+                  </View>
+                </TouchableOpacity>
               ))}
             </ScrollView>
           </View>
@@ -148,7 +163,11 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
           <View style={{ flex: 1 }} />
         )}
       </View>
-      {/* <DefaultButton title={t('Confirmar')} /> */}
+      <DefaultButton
+        title={t('Confirmar')}
+        onPress={() => navigation.navigate('FoodOrderCheckout')}
+        activityIndicator={loading}
+      />
     </View>
   );
 };
