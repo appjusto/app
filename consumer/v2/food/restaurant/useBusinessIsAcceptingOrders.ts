@@ -32,8 +32,6 @@ export const useBusinessIsAcceptingOrders = (
     return 'unsupported';
   }
 
-  console.log('scheduled', business.preparationModes?.includes('scheduled'));
-
   if (!isAvailable(business.schedules, now) && !business.preparationModes?.includes('scheduled'))
     return 'closed';
 
