@@ -44,12 +44,11 @@ export const OrderPayment = ({
   const { isProfileComplete, shouldVerifyPhone } = useProfileSummary();
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId); // only for credit cards
   const canPlaceOrder = isProfileComplete && !shouldVerifyPhone;
-  console.log(canPlaceOrder);
   if (!order) return null;
   return (
     <PaddedView>
-      {Boolean(selectedPaymentMethod) && order.paymentMethod === 'credit_card' ? (
-        <View style={{ marginBottom: halfPadding }}>
+      {Boolean(selectedPaymentMethod) ? (
+        <View style={{ marginBottom: padding }}>
           <TouchableOpacity onPress={onEditPaymentMethod}>
             <View style={{ marginBottom: halfPadding }}>
               <View
@@ -99,7 +98,7 @@ export const OrderPayment = ({
           onPress={navigateToSelectPayment}
         />
       ) : null}
-      {canPlaceOrder && !activityIndicator ? (
+      {canPlaceOrder && selectedPaymentMethod && !activityIndicator ? (
         <DefaultButton
           variant="primary"
           title={t('Confirmar pedido')}

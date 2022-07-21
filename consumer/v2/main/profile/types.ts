@@ -15,9 +15,6 @@ export type ProfileParamList = {
   RequestProfileEdit: undefined;
   SelectPaymentMethod: {
     selectedPaymentMethodId?: string;
-    orderId?: string;
-    fleetId?: string;
-    total?: number;
   };
 } & ProfileEraseParamList &
   ProfilePaymentMethodsParamList &

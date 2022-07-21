@@ -167,7 +167,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     if (payMethod === 'pix') {
       paymentPayload = {
         payableWith: 'pix',
-        key: cpf,
+        key: cpf, // remove this
       } as PlaceOrderPayloadPaymentPix;
     }
     if (!order.destination?.address) {
@@ -380,9 +380,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             navigateToSelectPayment={() =>
               navigation.navigate('SelectPaymentMethod', {
                 selectedPaymentMethodId,
-                orderId: order.id,
-                fleetId: selectedFare!.fleet!.id,
-                total: selectedFare!.total,
               })
             }
             onPayWithPix={() => {
