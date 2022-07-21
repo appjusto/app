@@ -87,12 +87,19 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   React.useEffect(() => {
     if (params?.destination) {
       if (
-        order &&
-        params.destination.address.description !== order.destination?.address.description
+        (order &&
+          params.destination.address.description !== order.destination?.address.description) ||
+        // for the cases when only the complement is changed
+        (order && params.destination.additionalInfo !== order.destination?.additionalInfo)
       ) {
         api.order().updateOrder(order.id, { destination: params.destination });
         if (params.destination.additionalInfo) {
           setComplement(params.destination.additionalInfo);
+          setAddressComplement(true);
+        }
+        if (params.destination.additionalInfo?.length === 0) {
+          setComplement('');
+          setAddressComplement(false);
         }
       }
       navigation.setParams({
