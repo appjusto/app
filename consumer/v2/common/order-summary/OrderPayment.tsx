@@ -1,9 +1,11 @@
+import { PayableWith } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
+import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
 import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
 import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
@@ -22,6 +24,7 @@ interface Props {
   navigateToCompleteProfile: () => void;
   navigateToSelectPayment: () => void;
   onPayWithPix: () => void;
+  payMethod: PayableWith;
 }
 
 export const OrderPayment = ({
@@ -34,6 +37,7 @@ export const OrderPayment = ({
   onPayWithPix,
   navigateToCompleteProfile,
   navigateToSelectPayment,
+  payMethod,
 }: Props) => {
   // context
   const order = useContextActiveOrder();
@@ -47,7 +51,7 @@ export const OrderPayment = ({
   if (!order) return null;
   return (
     <PaddedView>
-      {Boolean(selectedPaymentMethod) ? (
+      {Boolean(selectedPaymentMethod) && payMethod === 'credit_card' ? (
         <View style={{ marginBottom: padding }}>
           <TouchableOpacity onPress={onEditPaymentMethod}>
             <View style={{ marginBottom: halfPadding }}>
@@ -82,6 +86,24 @@ export const OrderPayment = ({
           </TouchableOpacity>
         </View>
       ) : null}
+      {payMethod === 'pix' ? (
+        <View>
+          <SingleHeader title={t('Forma de pagamento')} />
+          <PaddedView
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginTop: halfPadding,
+            }}
+          >
+            <Text style={{ ...texts.md }}>{t('Pagar com Pix')}</Text>
+            <TouchableOpacity onPress={navigateToSelectPayment}>
+              <Text style={{ ...texts.md, color: colors.green600 }}>{t('Trocar')}</Text>
+            </TouchableOpacity>
+          </PaddedView>
+        </View>
+      ) : null}
       {!canPlaceOrder && !activityIndicator ? (
         <DefaultButton
           variant="secondary"
@@ -106,7 +128,7 @@ export const OrderPayment = ({
           onPress={onSubmit}
         />
       ) : null}
-      {canPlaceOrder && !activityIndicator && payableWithPix ? (
+      {canPlaceOrder && !activityIndicator && payableWithPix && payMethod !== 'pix' ? (
         <DefaultButton
           variant="secondary"
           title={t('Quero pagar com Pix')}

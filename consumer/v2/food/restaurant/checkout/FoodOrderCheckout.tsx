@@ -2,7 +2,7 @@ import {
   Fare,
   PayableWith,
   PlaceOrderPayloadPaymentCreditCard,
-  PlaceOrderPayloadPaymentPix,
+  PlaceOrderPayloadPaymentPix
 } from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
@@ -382,6 +382,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
                 selectedPaymentMethodId,
               })
             }
+            payMethod={payMethod}
             onPayWithPix={() => {
               setPayMethod('pix');
               setDestinationModalVisible(true);
