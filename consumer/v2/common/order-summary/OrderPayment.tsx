@@ -4,7 +4,6 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
-import PaddedView from '../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
 import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
@@ -50,9 +49,9 @@ export const OrderPayment = ({
   const canPlaceOrder = isProfileComplete && !shouldVerifyPhone;
   if (!order) return null;
   return (
-    <PaddedView>
+    <View style={{ backgroundColor: colors.white }}>
       {Boolean(selectedPaymentMethod) && payMethod === 'credit_card' ? (
-        <View style={{ marginBottom: padding }}>
+        <View style={{ marginVertical: padding, paddingHorizontal: padding }}>
           <TouchableOpacity onPress={onEditPaymentMethod}>
             <View style={{ marginBottom: halfPadding }}>
               <View
@@ -89,53 +88,56 @@ export const OrderPayment = ({
       {payMethod === 'pix' ? (
         <View>
           <SingleHeader title={t('Forma de pagamento')} />
-          <PaddedView
+          <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
-              marginTop: halfPadding,
+              paddingHorizontal: padding,
+              marginBottom: padding,
             }}
           >
             <Text style={{ ...texts.md }}>{t('Pagar com Pix')}</Text>
             <TouchableOpacity onPress={navigateToSelectPayment}>
               <Text style={{ ...texts.md, color: colors.green600 }}>{t('Trocar')}</Text>
             </TouchableOpacity>
-          </PaddedView>
+          </View>
         </View>
       ) : null}
-      {!canPlaceOrder && !activityIndicator ? (
-        <DefaultButton
-          variant="secondary"
-          title={t('Completar cadastro')}
-          // style={{ marginVertical: padding }}
-          onPress={navigateToCompleteProfile}
-        />
-      ) : null}
-      {canPlaceOrder && !selectedPaymentMethod ? (
-        <DefaultButton
-          variant="secondary"
-          title={t('Escolher forma de pagamento')}
-          // style={{ marginVertical: padding }}
-          onPress={navigateToSelectPayment}
-        />
-      ) : null}
-      {canPlaceOrder && selectedPaymentMethod && !activityIndicator ? (
-        <DefaultButton
-          variant="primary"
-          title={t('Confirmar pedido')}
-          // style={{ marginTop: padding }}
-          onPress={onSubmit}
-        />
-      ) : null}
-      {canPlaceOrder && !activityIndicator && payableWithPix && payMethod !== 'pix' ? (
-        <DefaultButton
-          variant="secondary"
-          title={t('Quero pagar com Pix')}
-          style={{ marginTop: padding }}
-          onPress={onPayWithPix}
-        />
-      ) : null}
-    </PaddedView>
+      <View style={{ paddingHorizontal: padding, backgroundColor: colors.white }}>
+        {!canPlaceOrder && !activityIndicator ? (
+          <DefaultButton
+            variant="secondary"
+            title={t('Completar cadastro')}
+            // style={{ marginVertical: padding }}
+            onPress={navigateToCompleteProfile}
+          />
+        ) : null}
+        {canPlaceOrder && !selectedPaymentMethod ? (
+          <DefaultButton
+            variant="secondary"
+            title={t('Escolher forma de pagamento')}
+            // style={{ marginVertical: padding }}
+            onPress={navigateToSelectPayment}
+          />
+        ) : null}
+        {canPlaceOrder && selectedPaymentMethod && !activityIndicator ? (
+          <DefaultButton
+            variant="primary"
+            title={t('Confirmar pedido')}
+            // style={{ marginTop: padding }}
+            onPress={onSubmit}
+          />
+        ) : null}
+        {canPlaceOrder && !activityIndicator && payableWithPix && payMethod !== 'pix' ? (
+          <DefaultButton
+            variant="secondary"
+            title={t('Quero pagar com Pix')}
+            style={{ marginTop: padding }}
+            onPress={onPayWithPix}
+          />
+        ) : null}
+      </View>
+    </View>
   );
 };

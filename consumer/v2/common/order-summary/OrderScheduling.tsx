@@ -60,7 +60,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
         style={{
           flexDirection: 'row',
           // justifyContent: eTA ? 'space-between' : 'flex-end',
-          justifyContent: 'space-between',
+          justifyContent: 'flex-end',
           paddingHorizontal: padding,
         }}
       >
