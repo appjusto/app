@@ -75,7 +75,7 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
             />
           </View>
         )}
-        {!payableWithPix ? (
+        {payableWithPix ? (
           <PaymentBoxSelector
             variant="pix"
             selected={false}

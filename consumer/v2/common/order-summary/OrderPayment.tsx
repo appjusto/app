@@ -41,6 +41,7 @@ export const OrderPayment = ({
   const { isProfileComplete, shouldVerifyPhone } = useProfileSummary();
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
   const canPlaceOrder = isProfileComplete && !shouldVerifyPhone;
+  console.log('canPlaceOrder', canPlaceOrder);
   return (
     <PaddedView>
       {Boolean(selectedPaymentMethod) ? (
@@ -86,7 +87,7 @@ export const OrderPayment = ({
           onPress={navigateToCompleteProfile}
         />
       ) : null}
-      {Boolean(selectedPaymentMethod) && canPlaceOrder && !activityIndicator ? (
+      {canPlaceOrder && !activityIndicator ? (
         <View>
           <DefaultButton
             variant="primary"
