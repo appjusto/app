@@ -2,14 +2,15 @@ import { IuguCustomerPaymentMethod } from '@appjusto/types/payment/iugu';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
 import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
-import { padding, screens } from '../../../../common/styles';
+import { useContextActiveOrder } from '../../../../common/store/context/order';
+import { colors, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { PaymentBoxSelector } from '../../common/order-summary/PaymentBoxSelector';
 import { RestaurantNavigatorParamList } from '../../food/restaurant/types';
@@ -34,6 +35,8 @@ type Props = {
 export const SelectPaymentMethod = ({ navigation, route }: Props) => {
   // params
   const { selectedPaymentMethodId } = route.params ?? {};
+  // context
+  const order = useContextActiveOrder();
   // redux
   const consumer = useSelector(getConsumer);
   const cards = consumer?.paymentChannel?.methods ?? [];
@@ -43,6 +46,14 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
   >(getPaymentMethodById(consumer, selectedPaymentMethodId) ?? undefined);
   // helpers
   const payableWithPix = useIsPixEnabled();
+  // UI
+  if (!order) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <ScrollView
       style={{ ...screens.config }}
@@ -78,7 +89,7 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
         {payableWithPix ? (
           <PaymentBoxSelector
             variant="pix"
-            selected={false}
+            selected={order.paymentMethod === 'pix'}
             onSelectPayment={() => navigation.navigate('FoodOrderCheckout', { payMethod: 'pix' })}
           />
         ) : null}
