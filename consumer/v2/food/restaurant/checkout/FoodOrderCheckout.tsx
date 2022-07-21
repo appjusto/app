@@ -63,6 +63,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   // state
   const { shouldVerifyPhone } = useProfileSummary();
   const { coords } = useLastKnownLocation();
+  // for credit cards only
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
     consumer.paymentChannel?.mostRecentPaymentMethodId
   );
@@ -79,14 +80,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   );
   const [addressComplement, setAddressComplement] = React.useState<boolean>(complement.length > 0);
   const [payMethod, setPayMethod] = React.useState<PayableWith>('credit_card');
-  // const canNotDeliver = !business?.preparationModes?.includes('realtime');
-  // const [preparationMode, setPreparationMode] = React.useState<PreparationMode>(
-  //   canNotDeliver ? 'scheduled' : 'realtime'
-  // );
-  // while preparationModes[] are not added to businesses
-  // const [preparationMode, setPreparationMode] = React.useState<PreparationMode>('realtime');
   const canSubmit =
-    selectedPaymentMethodId !== undefined &&
+    (payMethod !== 'credit_card' || selectedPaymentMethodId !== undefined) &&
     selectedFare !== undefined &&
     !isLoading &&
     isEmpty(order?.route?.issue);

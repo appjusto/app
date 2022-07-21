@@ -8,6 +8,7 @@ import { getPaymentMethodById } from '../../../../common/store/api/business/cons
 import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
 import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
+import { useContextActiveOrder } from '../../../../common/store/context/order';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
@@ -34,16 +35,20 @@ export const OrderPayment = ({
   navigateToCompleteProfile,
   navigateToSelectPayment,
 }: Props) => {
+  // context
+  const order = useContextActiveOrder();
   // redux
   const consumer = useSelector(getConsumer)!;
   // helpers
   const payableWithPix = useIsPixEnabled();
   const { isProfileComplete, shouldVerifyPhone } = useProfileSummary();
-  const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
+  const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId); // only for credit cards
   const canPlaceOrder = isProfileComplete && !shouldVerifyPhone;
+  console.log(canPlaceOrder);
+  if (!order) return null;
   return (
     <PaddedView>
-      {Boolean(selectedPaymentMethod) ? (
+      {Boolean(selectedPaymentMethod) && order.paymentMethod === 'credit_card' ? (
         <View style={{ marginBottom: halfPadding }}>
           <TouchableOpacity onPress={onEditPaymentMethod}>
             <View style={{ marginBottom: halfPadding }}>
@@ -78,39 +83,38 @@ export const OrderPayment = ({
           </TouchableOpacity>
         </View>
       ) : null}
-      {(!isProfileComplete || shouldVerifyPhone) && !activityIndicator ? (
+      {!canPlaceOrder && !activityIndicator ? (
         <DefaultButton
           variant="secondary"
           title={t('Completar cadastro')}
-          style={{ marginVertical: padding }}
+          // style={{ marginVertical: padding }}
           onPress={navigateToCompleteProfile}
         />
       ) : null}
-      {Boolean(selectedPaymentMethod) && canPlaceOrder && !activityIndicator ? (
-        <View>
-          <DefaultButton
-            variant="primary"
-            title={t('Confirmar pedido')}
-            style={{ marginTop: padding }}
-            onPress={onSubmit}
-          />
-          {payableWithPix ? (
-            <DefaultButton
-              variant="secondary"
-              title={t('Quero pagar com Pix')}
-              style={{ marginTop: padding }}
-              onPress={onPayWithPix}
-            />
-          ) : null}
-        </View>
-      ) : (
+      {canPlaceOrder && !selectedPaymentMethod ? (
         <DefaultButton
           variant="secondary"
           title={t('Escolher forma de pagamento')}
-          style={{ marginVertical: padding }}
+          // style={{ marginVertical: padding }}
           onPress={navigateToSelectPayment}
         />
-      )}
+      ) : null}
+      {canPlaceOrder && !activityIndicator ? (
+        <DefaultButton
+          variant="primary"
+          title={t('Confirmar pedido')}
+          // style={{ marginTop: padding }}
+          onPress={onSubmit}
+        />
+      ) : null}
+      {canPlaceOrder && !activityIndicator && payableWithPix ? (
+        <DefaultButton
+          variant="secondary"
+          title={t('Quero pagar com Pix')}
+          style={{ marginTop: padding }}
+          onPress={onPayWithPix}
+        />
+      ) : null}
     </PaddedView>
   );
 };
