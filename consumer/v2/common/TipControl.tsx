@@ -35,7 +35,7 @@ export default function ({ order, tip, isLoading = false, onChange, onConfirm, t
     data.find((item) => item.data === order.tip?.value || (!alreadyTipped && item.data === tip)) ??
     data[0];
   // UI
-  if (order.paymentMethod === 'pix') return null;
+  if (order.paymentMethod !== 'credit_card') return null;
   return (
     <View style={{ paddingHorizontal: padding, paddingTop: padding }}>
       <View>
