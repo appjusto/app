@@ -53,7 +53,7 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems }: Props) =>
               <View style={{ flex: 1, flexDirection: 'row' }}>
                 <Text style={{ ...texts.sm, color: colors.red }}>{t('Taxa Iugu *')}</Text>
                 <View style={{ flex: 1 }} />
-                <Text style={{ ...texts.sm, color: colors.red }}>-2.21%</Text>
+                <Text style={{ ...texts.sm, color: colors.red }}>-2.42%</Text>
               </View>
               <Text style={{ ...texts.xs, color: colors.red, marginTop: padding }}>
                 {t(
