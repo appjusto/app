@@ -182,7 +182,7 @@ export default function ({ navigation, route }: Props) {
               matchRequest.fee
             )} da frota - ${formatCurrency(discountedFee)} da tarifa bancária`}</Text>
             <Text style={{ ...texts.xs, color: colors.red }}>
-              {t('(tarifa de 2,21% + R$ 0,09 por transação)')}
+              {t('(tarifa de 2,42% + R$ 0,09 por transação)')}
             </Text>
           </PaddedView>
         ) : (
