@@ -154,7 +154,7 @@ export default function ({ navigation, route }: Props) {
     );
   // helpers
   const totalDistance = (matchRequest.distance + routeDistanceToOrigin) / 1000;
-  const discountedFee = (matchRequest.fee * 2.21) / 100;
+  const discountedFee = (matchRequest.fee * 2.42) / 100;
   const feePerKm = (matchRequest.fee - discountedFee) / 100 / totalDistance;
   const roundedFeePerKm = round(feePerKm, 2);
   return (
