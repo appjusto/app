@@ -3,7 +3,7 @@ import {
   ComplementGroup,
   OrderItem,
   OrderItemComplement,
-  WithId
+  WithId,
 } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
@@ -29,15 +29,15 @@ import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import {
   getConsumer,
   getCurrentLocation,
-  getCurrentPlace
+  getCurrentPlace,
 } from '../../../../../common/store/consumer/selectors';
 import {
   useContextBusiness,
-  useContextBusinessId
+  useContextBusinessId,
 } from '../../../../../common/store/context/business';
 import {
   useContextGetComplementGroup,
-  useContextGetProductCategory
+  useContextGetProductCategory,
 } from '../../../../../common/store/context/menu';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import {
@@ -46,7 +46,7 @@ import {
   halfPadding,
   padding,
   screens,
-  texts
+  texts,
 } from '../../../../../common/styles';
 import { formatCurrency, formatHour } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
@@ -116,7 +116,9 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   }, [product, complements]);
   // business can take scheduled orders
   const canScheduleOrder =
-    business?.preparationModes?.length && business?.preparationModes?.includes('scheduled');
+    business?.preparationModes?.length &&
+    business?.preparationModes?.includes('scheduled') &&
+    acceptingStatus !== 'out-of-range';
   // side effects
   // when product is loaded
   React.useLayoutEffect(() => {
