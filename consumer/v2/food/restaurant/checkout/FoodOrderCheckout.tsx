@@ -2,7 +2,7 @@ import {
   Fare,
   PayableWith,
   PlaceOrderPayloadPaymentCreditCard,
-  PlaceOrderPayloadPaymentPix
+  PlaceOrderPayloadPaymentPix,
 } from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
@@ -79,7 +79,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     order?.destination?.additionalInfo ?? ''
   );
   const [addressComplement, setAddressComplement] = React.useState<boolean>(complement.length > 0);
-  const [payMethod, setPayMethod] = React.useState<PayableWith>('credit_card');
+  // const [payMethod, setPayMethod] = React.useState<PayableWith>('credit_card');
+  const [payMethod, setPayMethod] = React.useState<PayableWith>(
+    consumer.paymentChannel?.mostRecentPaymentMethod ?? 'credit_card'
+  );
   const canSubmit =
     (payMethod !== 'credit_card' || selectedPaymentMethodId !== undefined) &&
     selectedFare !== undefined &&
