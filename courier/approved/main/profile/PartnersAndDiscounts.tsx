@@ -88,10 +88,10 @@ export const PartnersAndDiscounts = ({ navigation }: Props) => {
               {t('\u00B7 Subconta ativa: R$ 0,50/Mês*')}
             </Text>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {t('\u00B7 Cartão de crédito: 2,21% + R$ 0,09 por transação')}
+              {t('\u00B7 Cartão de crédito: 2,42% + R$ 0,09 por transação')}
             </Text>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {t('\u00B7 Antecipação do recebimento: 2,5%**')}
+              {t('\u00B7 Antecipação do recebimento: 3,45%**')}
             </Text>
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
               {t('\u00B7 PIX: 0,99% por transação')}
