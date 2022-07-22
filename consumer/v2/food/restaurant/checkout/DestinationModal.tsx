@@ -77,7 +77,6 @@ export const DestinationModal = ({
               </RoundedText>
             </TouchableOpacity>
             <DefaultInput
-              defaultValue={complement}
               value={complement}
               title={t('Complemento')}
               placeholder={t('Apartamento, sala, loja')}
