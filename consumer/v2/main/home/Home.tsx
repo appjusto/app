@@ -73,6 +73,13 @@ export default function ({ navigation }: Props) {
                     orderId: order.id,
                   },
                 });
+              }
+              // only 'confirming' status?
+              if (order.paymentMethod === 'pix' && order.status === 'confirming') {
+                navigation.navigate('OngoingOrderNavigator', {
+                  screen: 'OngoingOrderConfirming',
+                  params: { orderId: order.id },
+                });
               } else {
                 navigation.navigate('OngoingOrderNavigator', {
                   screen: 'OngoingOrder',
